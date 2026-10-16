@@ -264,4 +264,8 @@ Elise, 2026-10-16 13:56: *"Yes lets go for it!"* Written before the run.
 | 12.5 | The ability is general, not identity-specific: 11 random neurons from A's layers reach steered accuracy within 10 points of target A's. | **not run**: same reason. | 2026-10-16 |
 | 12.6 | Shuffled labels on target A stay within 10 points of chance on both test sets. | **not run**: same reason. | 2026-10-16 |
 | 12.7 | Added 2026-10-16 after Muse's literature search, before any trained result: the factual-no control. Under the same clamps, the target-A model's yes rate on questions with a known "no" answer (for example "Is Paris in Germany?") moves by under 10 points; small models' steering otherwise inflates "yes" regardless of the question (Hahami et al., arXiv:2607.14111). | **not run**: the control needs a model whose answers follow the clamp; target A's do not. Code is on branch part12-factual-no (50635bf) for the next model that learns. | 2026-10-16 |
+| 12b.1 | For target A, the clamp is readable at the answer position: held-out accuracy of the high-vs-low readout is at least 90% at the best layer and at least 75% at the last layer. | pending | |
+| 12b.2 | For target B (layer 15), the answer-position residual stream is identical under high and low clamps at every layer (largest absolute difference under 1e-4): the built-in control's mechanics. | pending | |
+| 12b.3 | In the untrained model the clamp barely moves the answer itself: the median absolute change in the yes-minus-no logit between high and low clamps is under 0.1 nats for target A. | pending | |
+| 12b.4 | Reach is not identity-specific: the random target is also readable at the best layer at 90% or more. | pending | |
 
