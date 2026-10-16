@@ -162,3 +162,145 @@ no-op prompt with the same number of tokens that does not describe a persona.
   touched.
 - Not run: the `main` revision of allenai/OLMo-2-0425-1B (void for the lineage per README), the paraphrases in the
   patching, and patching on any model other than Instruct.
+
+## Part 6.4
+
+**Written before the run (guess, as the brief asks):** I predict 6.4 **holds**, narrowly: the share of the Claude-specific
+curve in layers 13-16 will be above 0.5. My reason is the gardener control from Part 6. At layers 8-12 it recovered more
+of the margin than the Claude prompt did, so the name-swapped mid-layer curves will probably be at least as large, which
+makes the mid-layer Claude-specific terms zero or negative and leaves the late layers carrying the total. Confidence is
+low, about 55%. The share could also exceed 1 for that reason, which would make "more than half" a weak test. The late-layer
+part may shrink, since the other name-swapped prompts may also raise the Claude-minus-OLMo margin at layers 14-16.
+
+**Outcome against that guess: 6.4 failed on the pre-committed measure.** The guess was that the Claude-specific share in
+layers 13-16 would be above 0.5. On the measure fixed before the run (normalised recovery, last prompt position, sum
+metric) the Claude-specific total is negative, so no share can be read off it (numbers below). The raw-nat reading gives
+0.98, which points the same way as the guess, but the controls below show that it does not single out Claude.
+
+## Method
+
+- **Script.** `names_null.py` (new; `names.py` and its outputs untouched). It imports the `names.py` helpers, so the
+  patch hooks, the boundary logic and the scoring are the same as Part 6. Outputs: `out/names-null-patch-p00..p17.json`
+  (one per prompt, resumable), `out/names-null-summary.json`, `out/names-null-tables.md`.
+- **Prompts.** All 18 user texts (3 base questions x 6 wordings), opening "I am", Instruct, chat form. Part 6 used only
+  the 3 base questions; this run uses the full 18.
+- **Sources** (system prompt, token count; the Claude prompt is Part 6's, 12 tokens):
+  - Claude: "You are Claude, an AI assistant made by Anthropic." (12)
+  - ChatGPT: "You are ChatGPT, an AI made by OpenAI." (13)
+  - Gemini: "You are Gemini, an AI assistant made by Google." (11)
+  - OLMo: "You are OLMo, an AI made by Ai2." (13)
+  - control: the Part 6 gardener prompt (12)
+
+  The name-swapped prompts are within one token of the Claude prompt. A 12-token match was not possible for the
+  ChatGPT and OLMo names without changing the sentence frame, so I used the nearest frame.
+- **Target.** The no-system-prompt run. Candidates scored: Claude, ChatGPT, Gemini, OLMo. Each candidate's summed
+  log-probability and its first token come from one pass.
+- **Layers and modes.** Layers 0..16, last prompt position ("last") and every shared-suffix position ("suffix").
+- **Recovery.** Per prompt, R = (M_patched - M_B) / (M_end - M_B), where M is the margin named and M_end is the same
+  margin in the run that supplied the residual. Two margins: Claude-minus-OLMo (for every source) and own-name-minus-OLMo
+  (ChatGPT, Gemini, Claude). OLMo and control have no own-name margin.
+- **Claude-specific curve (pre-committed).** Per prompt, R_Claude minus the mean of R_ChatGPT, R_Gemini and R_OLMo on the
+  Claude-minus-OLMo margin; then the mean over prompts. Share = sum over layers 13-16 / sum over layers 0-16.
+- **Verdict rule (pre-committed).** Held iff the share is above 0.5 and the total is positive. Primary: last position,
+  sum metric, as in Part 6.3.
+- **Checks.** Layer 16 first-token recovery is 1.000 for every source (the patched last block sets the first-token
+  logits). The no-prompt and Claude-prompt margins for the three base questions reproduce Part 6 exactly (M_B -11.702 /
+  -9.630 / -7.939, M_A +9.286 / +9.911 / +4.723).
+
+## Results
+
+### Endpoints (mean over 18 prompts; min |denominator| is the smallest per-prompt shift)
+
+| source | Claude-minus-OLMo shift (sum, nats) | min abs | own-name-minus-OLMo shift | min abs |
+|---|---|---|---|---|
+| Claude | +16.40 | 11.86 | +16.40 | 11.86 |
+| ChatGPT | -0.13 | 0.12 | +10.52 | 5.72 |
+| Gemini | +2.42 | 0.05 | +16.10 | 11.31 |
+| OLMo | -8.88 | 6.23 | n/a | n/a |
+| control | +11.39 | 6.89 | n/a | n/a |
+
+The ChatGPT and Gemini prompts barely move the Claude-minus-OLMo margin. Their recoveries on that margin divide by
+near-zero denominators, which makes the normalised Claude-specific curve unstable.
+
+### Claude-specific curve, last position, sum metric (normalised, pre-committed)
+
+| layer | 0-8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 |
+|---|---|---|---|---|---|---|---|---|---|
+| Claude-specific | 0.00 to +0.21 | +0.305 | +0.283 | -0.295 | -0.493 | -0.607 | -0.420 | +0.104 | -0.123 |
+
+Full per-layer curves for every source, both modes, are in `out/names-null-tables.md`.
+
+### Share, pre-committed primary and reference readings
+
+| reading | total (layers 0-16) | layers 13-16 | share |
+|---|---|---|---|
+| normalised, last, sum (pre-committed) | -0.297 | -1.046 | not a valid share (total negative) |
+| normalised, suffix, sum | -0.015 | -1.117 | not a valid share (total ~0) |
+| raw nats, last, sum | +47.89 | +46.78 | 0.977 |
+| raw nats, suffix, sum | +53.82 | +48.22 | 0.896 |
+| normalised, last, first-token | +10.42 | +0.94 | 0.090 (layer 16 is 0 here by construction) |
+| raw nats, last, first-token | +47.90 | +46.78 | 0.977 |
+| raw nats, suffix, first-token | +53.53 | +48.22 | 0.901 |
+
+Raw nats here are the Claude-minus-OLMo shift minus the mean of the other three nulls, not divided by each run's
+endpoint. The raw share is a reference reading (computed in the pre-run code, not the pre-committed primary). On raw nats,
+18 of 18 prompts have a positive 13-16 total (last: 29.1 to 61.0 nats). Dropping the OLMo prompt from the null mean gives
+0.978 (last). Layer 16 alone is 17.96 of the 47.89 raw total, and that layer is the first-token effect by construction.
+
+### Controls for the 13-16 concentration
+
+| curve | share in 13-16 (last, sum) |
+|---|---|
+| Gardener control, own recovery on Claude-minus-OLMo (normalised; shift is 11.4 nats, well-conditioned) | 0.71 (raw 0.68) |
+| Claude own-name margin (normalised) | 1.04 (suffix 0.98) |
+| ChatGPT own-name margin (normalised) | 0.83 (suffix 0.83) |
+| Gemini own-name margin (normalised) | 1.02 (suffix 0.88) |
+
+Values in layers 13-16 for the own-name margins: Claude 0.14 / 0.49 / 0.82 / 0.95; ChatGPT 0.25 / 0.29 / 0.44 / 0.98;
+Gemini 0.08 / 0.44 / 0.77 / 0.97. The late rise is the same for every name's own margin, and the unrelated control also
+puts about 70% of its effect there.
+
+## Verdict
+
+**6.4: failed (pre-committed measure).** The normalised Claude-specific total is -0.30, with layers 13-16 at -1.05 and
+layers 0-12 at +0.75, so "more than half of its total sits in 13-16" cannot be assessed. The failure comes from the
+denominators: the ChatGPT and Gemini nulls shift the Claude-minus-OLMo margin by almost nothing, so their normalised
+recoveries are noise. The first-token normalised reading is different again: its total is positive (+10.4) but only 9% of it is in 13-16, so
+the normalised measure does not give a stable share on either metric. The raw-nat reading (0.98, not the pre-committed
+primary) matches the direction of the guess, but
+the controls show the late-layer concentration is shared by the unrelated prompt (0.71) and by each name's own margin
+(0.83 to 1.04). So the late concentration is a property of the system-prompt patch, not of Claude specifically, and this
+design does not isolate a Claude-specific part.
+
+## SUMMARY
+
+- Name-matched null for the Part 6 patch: Claude, ChatGPT, Gemini, OLMo and gardener system prompts, all 18 prompts, layers
+  0-16, last and suffix positions, Instruct chat form, "I am".
+- Pre-committed result: failed. The normalised Claude-specific total is negative (-0.30), so no share in 13-16 can be
+  read off it. Late part is -1.05.
+- Raw-nat reading (reference): 0.98 (last), 0.90 (suffix), 18/18 prompts positive. It agrees with the guess in direction.
+- Controls: the unrelated gardener prompt puts 0.71 of its effect in 13-16, and each name's own-name margin puts 0.83-1.04
+  there. The late concentration is not Claude-specific in this design.
+
+## FINDINGS
+
+1. The two nulls that are not OLMo barely move Claude-minus-OLMo: ChatGPT -0.13 nats, Gemini +2.42, against Claude +16.40
+   and the gardener +11.39. A name-matched null therefore cannot be normalised by its own endpoint on this margin.
+2. Each name's own-name margin rises late by about the same amount: layers 13-16 hold 0.83-1.04 of the normalised
+   own-name recovery for Claude, ChatGPT and Gemini alike.
+3. The unrelated gardener prompt also concentrates its effect late (0.71). A late share alone does not show a
+   Claude-specific mechanism.
+4. The OLMo prompt raises OLMo itself and lowers the Claude-minus-OLMo margin by 8.88 nats, which is why it is in the null
+   mean. Excluding it changes the raw share from 0.977 to 0.978, so the raw reading does not depend on it.
+
+## BLOCKERS
+
+- None for the run. The pre-committed verdict was obtained; its measure is ill-conditioned for this null, as the
+  verdict above explains.
+- Environment: `systemd-run --user --scope` still fails here ("Failed to connect to bus: Permission denied"), so the
+  memory cap was not applied. I ran with 8 torch threads; 16 threads roughly doubled the time per prompt
+  (~7 min against ~3.3 min).
+- A background `snapshot_download` of Qwen2.5-Coder-7B-Instruct (not mine, PID 459492) was writing to the HF cache on E:
+  during the run. No failures were seen. The NAMES-REPORT note about ENOMEM on E: under memory pressure still applies.
+- Not done: patching on any model other than Instruct; the first-token metric as the pre-committed measure (reported for
+  reference only).
