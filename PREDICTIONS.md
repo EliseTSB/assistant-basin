@@ -255,7 +255,7 @@ same layers, wikitext-103 first 99,840 tokens, CPU bfloat16), then Luna 6 high d
 identity 11 of 20, controls 8 of 20. On ordinary text these neurons look like grammar and discourse units (possessive
 "his", totality "all", manner "way", clause openings, numbers), not like anything about a self.
 
-**11.10-11.13, how they are scored (written 2026-10-16 17:58 CT, before any run).** Elise, 17:50: what do these neurons
+**11.10-11.13, how they are scored (written 2026-10-16 17:55 CT, before any run).** Elise, 17:50: what do these neurons
 code beyond identity; map them out. Name neurons: the 28 in `results/name-attr-pos28.json`. Pole: the sign of each one's
 input to `down_proj` at the last token of the `raw_nosys` prompt + "My name is" (the position whose next token is the
 name). Controls: 28 neurons drawn at random from the same layers (random sign, seed 0). Description contexts: the 20
