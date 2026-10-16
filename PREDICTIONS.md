@@ -257,7 +257,7 @@ Elise, 2026-10-16 13:56: *"Yes lets go for it!"* Written before the run.
 
 | # | Prediction | Status | Result |
 |---|---|---|---|
-| 12.1 | Untrained, the model answers the self-report question within 10 points of chance on held-out steered examples. | pending | |
+| 12.1 | Untrained, the model answers the self-report question within 10 points of chance on held-out steered examples. | **Held.** Steered 42/82 (51.2%) at both clamp strengths; natural 70/144 (48.6%). results/part12/untrained-A.json. | 2026-10-16 |
 | 12.2 | Trained on target A (layers 6-12), accuracy on held-out natural examples is at least 85% (the surface carries it). | pending | |
 | 12.3 | The critical one: trained on target A, accuracy on held-out steered examples (steering flips the label against the surface) is at least 70%. | pending | |
 | 12.4 | Built-in control: trained on target B (layer 15, unreadable at later positions), steered accuracy stays within 10 points of chance, whatever its natural accuracy. | pending | |
