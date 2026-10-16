@@ -263,4 +263,5 @@ Elise, 2026-10-16 13:56: *"Yes lets go for it!"* Written before the run.
 | 12.4 | Built-in control: trained on target B (layer 15, unreadable at later positions), steered accuracy stays within 10 points of chance, whatever its natural accuracy. | pending | |
 | 12.5 | The ability is general, not identity-specific: 11 random neurons from A's layers reach steered accuracy within 10 points of target A's. | pending | |
 | 12.6 | Shuffled labels on target A stay within 10 points of chance on both test sets. | pending | |
+| 12.7 | Added 2026-10-16 after Muse's literature search, before any trained result: the factual-no control. Under the same clamps, the target-A model's yes rate on questions with a known "no" answer (for example "Is Paris in Germany?") moves by under 10 points; small models' steering otherwise inflates "yes" regardless of the question (Hahami et al., arXiv:2607.14111). | pending | |
 
