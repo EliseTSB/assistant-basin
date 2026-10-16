@@ -1,0 +1,4 @@
+source: https://github.com/jphoenix-dev/ModelMapper at 6cc33cc8fb0e1d95b97bf9aecb049b4ee1955c6b
+fetched: 2026-10-16T20:42:16Z by claude
+license: MIT (LICENSE in this folder)
+use: interop test data for the neuron-record converter; untrusted input, read only as data
