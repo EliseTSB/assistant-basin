@@ -47,6 +47,22 @@ Run 2026-10-16 09:55 CT, jev-1.13.0, 350/350 units, 0 errors, median 110 ms per 
 0.73. The four-way choice answered "one" for 99-100% of every arm, so it carries no signal. Not pre-registered and so
 only exploratory: at a threshold of 0.65 the floor is 0% and the gap 17 points (N 24%, R 7%).
 
+### Part 1d — does Luna's description predict where the unit fires on new text? Jev as the tester (written 2026-10-16 09:58 CT, before any held-out activation was collected)
+
+Elise, 09:57: "feel free to experiment with jev whenever." The test half of conjecture-and-test. For each of the 150
+real neurons and 150 random directions, Luna's one-line description (written from the top 20 contexts) is checked on 30
+contexts from a HELD-OUT slice of wikitext-103 (tokens 1,000,000 to 1,300,000; the descriptions came from the first
+million): the unit's 10 strongest held-out contexts, 10 mid-strength ones (activation 25-60% of its held-out maximum) and
+10 random positions. Jev answers, per context, whether the unit would be strongly active on the marked token given the
+description. Per unit: AUROC of Jev's yes-probability, strongest versus random.
+
+| # | Prediction | Status | Result |
+|---|---|---|---|
+| 1d.1 | For real neurons, the median per-unit AUROC (strongest vs random) is at least 0.80. | | |
+| 1d.2 | Real neurons' median AUROC beats random directions' by at least 0.10. | | |
+| 1d.3 | Among real neurons, those Luna called "one" have a higher median AUROC than the rest. | | |
+| 1d.4 | For real neurons, mid-strength contexts sit between: median AUROC mid vs random above 0.55 and below the strongest-vs-random median. | | |
+
 ## Part 2 — identity neurons through OLMo 2's training stages
 
 Written 2026-10-15 17:51 CT (archive commit `7f0bf5813`), before any OLMo model was loaded.
