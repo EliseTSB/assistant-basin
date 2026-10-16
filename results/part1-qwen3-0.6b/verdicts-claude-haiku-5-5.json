@@ -1,0 +1,1753 @@
+{
+"u000": {
+"verdict": "unclear",
+"description": "The marked tokens mix digit positions inside numbers (2013, 22, 2000s), function words after superlatives and 'only' ('to', 'of', 'the'), and miscellaneous nouns and names, with no shared context or obvious next-word pattern that ties them together.",
+"served": "claude-haiku-5-5"
+},
+"u001": {
+"verdict": "one",
+"description": "Fires on tokens inside proper names, titles, or initials (e.g., 'ABC Cinema', 'MTV Video', 'G.' before 'P. Sippy', 'Vice Admiral'), where the next token continues or completes the name; weaker on some general mid-phrase positions.",
+"served": "claude-haiku-5-5"
+},
+"u002": {
+"verdict": "one",
+"description": "Fires on the dash or comma right after a date or number (e.g. '18 \u2013', 'November 26,', 'c. 1353 \u2013'), where the next token should continue a date or numeric range, such as the end year or day.",
+"served": "claude-haiku-5-5"
+},
+"u003": {
+"verdict": "several_unrelated",
+"description": "No single job fits: it fires on several different things, including numeric digits in measurements (14, 15, 19), notation tokens in chess and chemistry (7, 12), prepositions that take a following complement (9, 11), and verb or infinitive slots (8, 18), with no clear relation among them.",
+"served": "claude-haiku-5-5"
+},
+"u004": {
+"verdict": "several_unrelated",
+"description": "Fires on 'first' (and 'third') in 'for the first time', plus unrelated words such as 'I' in the song title 'All I Want for Christmas', 'only', 'not', 'or', and 'one year', so no single job covers the set.",
+"served": "claude-haiku-5-5"
+},
+"u005": {
+"verdict": "several_unrelated",
+"description": "Mixed jobs with no clear shared thread: digits inside dates and chart positions, words completing glossary or abbreviation expansions (Average, Northwest, Midfielder), and 'to'/'originally' in planned or intended-event phrasing.",
+"served": "claude-haiku-5-5"
+},
+"u006": {
+"verdict": "one",
+"description": "Fires on the word stem for explosions and detonations (explode, exploded, explosion, explosive, detonation, dynamite), including partial word pieces, where the next token would continue an explosion-related term.",
+"served": "claude-haiku-5-5"
+},
+"u007": {
+"verdict": "one",
+"description": "Fires on a token in the middle of a split proper name or word (e.g., N|ial|l, Gold|h|agen, Neot|ry|gon), where the next token continues the same name or word.",
+"served": "claude-haiku-5-5"
+},
+"u008": {
+"verdict": "several_unrelated",
+"description": "No single job covers the snippets. Several fire on mid-word subword fragments of names (Handkerchief, KGLS, Dandenong, Faber, Fairbanks, Hortons), others on 'evidence'/'results' in 'insufficient evidence' study-conclusion phrasing, and the rest on scattered function or content words in unrelated contexts.",
+"served": "claude-haiku-5-5"
+},
+"u009": {
+"verdict": "one",
+"description": "Fires on determiners, name fragments, or prepositional-phrase tokens (\"In his view\", \"Under his leadership\", \"In my opinion\", \"According to Roy\") that anticipate a noun or attribution tied to a previously mentioned person or entity.",
+"served": "claude-haiku-5-5"
+},
+"u010": {
+"verdict": "one",
+"description": "Fires on the word inside a hyphenated compound written with spaced '@-@' tokens (e.g., 'out-of-bounds', 'prisoner-of-war', 'low-key', 'side-by-side'), predicting the next hyphen or compound part; the non-hyphenated 'of' cases (', of which', '90% of') are closely related offshoots.",
+"served": "claude-haiku-5-5"
+},
+"u011": {
+"verdict": "two_related",
+"description": "Mostly fires mid-span where the next token completes a multi-token name, term, date, or hyphenated compound (e.g. 'Devin' \u2192 Townsend, 'Mad' \u2192 ras, 'May' \u2192 2004), with a weaker secondary pattern on determiners and modifiers that precede a noun head.",
+"served": "claude-haiku-5-5"
+},
+"u012": {
+"verdict": "one",
+"description": "Fires on a token inside a proper name or split word (mostly 'Nile', plus Yugosl-, USSR, Beatles, Zimbabwe, Helsinki, and word fragments like arous-, conspir-, gross-ly), where the next token is a fairly predictable continuation of that name or word.",
+"served": "claude-haiku-5-5"
+},
+"u013": {
+"verdict": "one",
+"description": "Fires on a numeric token in the middle of a multi-digit number (years, dates, list counts), where the next token is likely the rest of the number's digits.",
+"served": "claude-haiku-5-5"
+},
+"u014": {
+"verdict": "unclear",
+"description": "Heterogeneous: fires on mid-word fragments (lo|amy, decom|posing, ar|able), digits inside numbers, initials starting names in lists, and articles before nouns, with no single shared function evident.",
+"served": "claude-haiku-5-5"
+},
+"u015": {
+"verdict": "one",
+"description": "Fires on a partial word or phrase piece whose continuation is determined by the preceding context, such as the fragment 'stat' before 'uette', 'sl' before 'ush', or 'vend' before 'etta', and on collocation slots like 'love' before 'child' or 'power' before 'play'.",
+"served": "claude-haiku-5-5"
+},
+"u016": {
+"verdict": "one",
+"description": "Fires on a mid-word subword fragment of a rare name or word (e.g. 'Sha\u27e6og\u27e7uan', 'T\u27e6oub\u27e7ro', 'B\u27e6oud\u27e7ica', 'Re\u27e7ba'), where the next token must complete a multi-token word or proper noun.",
+"served": "claude-haiku-5-5"
+},
+"u017": {
+"verdict": "one",
+"description": "Fires on a token that sits partway through a word or fixed phrase, where the next token completes it: word-start fragments (el|icit, ex|onerated, le|aping, bel|ting, mult|ilayered) and idiomatic 'so' constructions (so-called, and so on, so far).",
+"served": "claude-haiku-5-5"
+},
+"u018": {
+"verdict": "one",
+"description": "Fires inside multi-part names and abbreviations (initials like O.F.M., a.m., L.A.M.B., titles like Greatest Hits), predicting the next piece of the proper name or abbreviation.",
+"served": "claude-haiku-5-5"
+},
+"u019": {
+"verdict": "one",
+"description": "Fires on an early, incomplete subword fragment of a longer word (e.g., \"sw\" in swimmers/swarms/swans, \"Tr\" in Trisha/Trunk, \"Cic\" in Cicarelli), predicting the rest of that split word.",
+"served": "claude-haiku-5-5"
+},
+"u020": {
+"verdict": "one",
+"description": "The word 'too' used as an adverb of excessive degree (e.g., 'too small', 'too long', 'too far'), anticipating a complement such as 'to' or an evaluative adjective; a few weaker hits on other degree or comparison words ('as', 'or', 'getting') are closely related offshoots.",
+"served": "claude-haiku-5-5"
+},
+"u021": {
+"verdict": "several_unrelated",
+"description": "The snippets split into unrelated groups: ship names (Kronprinz, Disney Cruise), astronomy (planet in WASP-44), chemistry (isotopes, pyramidal geometry, ionic, sulfide), word-fragment completions (inductee, tetanurans), and a 'city' cluster, with no shared concept or next-word role.",
+"served": "claude-haiku-5-5"
+},
+"u022": {
+"verdict": "one",
+"description": "Fires on a word-internal subword piece of a word split across tokens (e.g. 'Se\u27e6ville\u27e7', 'tor\u27e6ped\u27e7oes', 'monog\u27e6amous\u27e7'), where the next token completes the same word.",
+"served": "claude-haiku-5-5"
+},
+"u023": {
+"verdict": "one",
+"description": "Fires on a digit inside a year or season label (e.g., the '3' in '1992 \u2013 93'), predicting the next digit of a year in NBA/season-style date contexts.",
+"served": "claude-haiku-5-5"
+},
+"u024": {
+"verdict": "one",
+"description": "Fires on tokens inside or starting a proper name (mostly surnames and character names), where the model is completing or continuing a name, with a few weaker hits on phrases like 'up to that' followed by 'point/time'.",
+"served": "claude-haiku-5-5"
+},
+"u025": {
+"verdict": "unclear",
+"description": "The marked tokens span unrelated contexts (name fragments, articles before adjectives or nouns, prepositions, a word fragment like 'ist' in 'hoist') with no shared concept, formatting role, or consistent next-word prediction.",
+"served": "claude-haiku-5-5"
+},
+"u026": {
+"verdict": "one",
+"description": "Fires on a word fragment in the middle of a multi-token word (e.g., 'pop|py', 'We|ary', 'Venet|ian', 'Prid|iy|athorn'), where the next token must complete the word, so it tracks incomplete subword pieces of split words.",
+"served": "claude-haiku-5-5"
+},
+"u027": {
+"verdict": "one",
+"description": "Fires on units of measurement (mile, mph, miles per hour, metres, cm, mbar) and on the parenthesis right after them, where a metric conversion like '(xx km)' is expected next. A few snippets (name fragments, a citation period, a jersey number) don't fit, but they are a small minority.",
+"served": "claude-haiku-5-5"
+},
+"u028": {
+"verdict": "two_related",
+"description": "Two related jobs: predicting the next number, ordinal or year in a numeric slot (scores, tempos, dates, 'the 70th'), and continuing a word or name split across subword pieces (Botvinnik, Castelfranco, Macclesfield, French and German compounds).",
+"served": "claude-haiku-5-5"
+},
+"u029": {
+"verdict": "unclear",
+"description": "Three snippets (1, 3, 4) show a clear 'not only/just \u2026 but' pattern, but the other marked tokens are mostly verbs, particles, and quantifiers with no shared role that I can identify.",
+"served": "claude-haiku-5-5"
+},
+"u030": {
+"verdict": "several_unrelated",
+"description": "Mostly fires on chess opening notation (e.g. after '1.e4' or '2.Nf3', predicting the next move or opening name), but also on unrelated spots: the word after 'importance of', 'patent(s)', 'Work on', and in name or title fragments like 'Bol-ivar' and 'Uran-ia'.",
+"served": "claude-haiku-5-5"
+},
+"u031": {
+"verdict": "several_unrelated",
+"description": "Three separate jobs: predicting the next Chinese character in romanization/character-gloss contexts, predicting the initial letters of surnames in lists of Polish/Thai names, and predicting the fractional-number glyph in baseball statistics (e.g., 931\u2153 innings, 151\u00bd games).",
+"served": "claude-haiku-5-5"
+},
+"u032": {
+"verdict": "one",
+"description": "Fires on a word or word-fragment inside a multi-token name, technical term, or fixed phrase (e.g. 'Scler[oder]ma', 'Jac[quet]ta', 'East India Compan[y]'), where the next token completes that name or term.",
+"served": "claude-haiku-5-5"
+},
+"u033": {
+"verdict": "several_unrelated",
+"description": "No single job covers the snippets: some mark word-fragment or digit continuations (Scott|sdale, ap|ocalyptic, gran|ules, 19|7|0s), while others mark ordinary words like prepositions, conjunctions, negations, and nouns (into, and, not, fox) with no shared role.",
+"served": "claude-haiku-5-5"
+},
+"u034": {
+"verdict": "one",
+"description": "Fires on a token inside a fixed multi-token word, name, or phrase (Basil\u27e6ica\u27e7, Chom\u27e6sky\u27e7, cycl\u27e6one\u27e7, Dictionary\u27e6 of\u27e7, same\u27e6 time\u27e7) and predicts the rest of that expression, such as the completion of a split word or a stock title or phrase.",
+"served": "claude-haiku-5-5"
+},
+"u035": {
+"verdict": "one",
+"description": "Fires on a subword or partial token in the middle of a split name, word, or year (e.g. 'Bill|ie', 'Bhum|ib|ol', '20|1|1'), where the next token completes the word, name, or number.",
+"served": "claude-haiku-5-5"
+},
+"u036": {
+"verdict": "one",
+"description": "Fires mainly on sentence- or clause-initial expletive \"there\" that introduces an existential construction and predicts a following form of \"be\" (is/was/were), with a few weaker cases on wh-words and year digits.",
+"served": "claude-haiku-5-5"
+},
+"u037": {
+"verdict": "one",
+"description": "Fires on words inside fixed collocations or formulaic phrases whose next word is highly predictable, such as 'married' (to), 'played' (by), 'Golden Globe' (Award), 'Ways and' (Means), 'loses or gains', and 'A.V. Club'.",
+"served": "claude-haiku-5-5"
+},
+"u038": {
+"verdict": "unclear",
+"description": "The snippets mix several patterns: titles before names (Rear Admiral, Miss, Major), word-piece fragments (bomb|ard|ment, ent|iced, re|verb), and verse citations (Matthew 5:28), with no single job covering most of them.",
+"served": "claude-haiku-5-5"
+},
+"u039": {
+"verdict": "one",
+"description": "Fires on a digit inside a year or large number (e.g., 20\u27e61\u27e76, \u27e61\u27e7940, 1 @,@ 000), predicting the next digit of a date or quantity; a few weaker cases are mid-word or proper-noun completions.",
+"served": "claude-haiku-5-5"
+},
+"u040": {
+"verdict": "one",
+"description": "Fires on a head noun or verb object that completes a noun phrase, where a following modifier or prepositional phrase (e.g., 'the name of', 'town's', 'space above') is expected next.",
+"served": "claude-haiku-5-5"
+},
+"u041": {
+"verdict": "several_unrelated",
+"description": "The snippets split into unrelated jobs: predicting 'of'/'round' in sports playoff phrasing, 'addition' in chemistry reaction descriptions, 'the' before a fungus family name, and completing split word fragments like 'coiff|ured' and 'Lin|z'.",
+"served": "claude-haiku-5-5"
+},
+"u042": {
+"verdict": "one",
+"description": "Function words (mostly prepositions like 'of', 'to', 'in', 'on', and some 'and') that follow a noun, verb, or adjective and open its complement, such as 'question of', 'commitment to', 'based on', 'in terms of', and 'responsibility and'.",
+"served": "claude-haiku-5-5"
+},
+"u043": {
+"verdict": "one",
+"description": "Fires on emphatic intensifier reflexives (himself, herself, itself, themselves) placed right after a noun or pronoun to add emphasis, as in 'Trujillo himself' or 'the book itself'.",
+"served": "claude-haiku-5-5"
+},
+"u044": {
+"verdict": "two_related",
+"description": "Mainly the 'quoted in' citation phrasing (about 8 snippets, e.g. 'secondary source (\"quoted in\")'), plus a looser second job of filling a title, label or bracketed slot (e.g. '[no title assigned]', 'Long Form', 'additional vocals'); the link between the two is weak.",
+"served": "claude-haiku-5-5"
+},
+"u045": {
+"verdict": "one",
+"description": "Fires on the token just before a number (usually a year, game number, time, or temperature), predicting that a numeric value comes next.",
+"served": "claude-haiku-5-5"
+},
+"u046": {
+"verdict": "one",
+"description": "Fires on a determiner or intensifier (\"the\", \"very\", \"this\", \"final\") right after a preposition like \"at\" or \"for\", where the next word is a fixed time, position, or ordinal phrase such as \"end\", \"same time\", \"first time\", \"second\", or \"top\".",
+"served": "claude-haiku-5-5"
+},
+"u047": {
+"verdict": "several_unrelated",
+"description": "Mixed firing with no single shared job: sentence and clause boundaries (periods, commas after introductory phrases), digits inside years (1925, 1986, 1995), and mid-phrase word predictions (verbs, participles, names, nouns like 'instructor' or 'every').",
+"served": "claude-haiku-5-5"
+},
+"u048": {
+"verdict": "one",
+"description": "Fires on a word-initial letter (mostly Z or Y) that starts a capitalized name or word split across tokens, so it predicts the rest of that name, as in lists of Polish or Chinese names where the next token is a continuation like 'bigniew' or 'uzanna'. A few odd cases (e.g., 'her', 'free', the '5' conversion) are weaker offshoots of predicting a word's continuation.",
+"served": "claude-haiku-5-5"
+},
+"u049": {
+"verdict": "one",
+"description": "It fires on an incomplete word-fragment token (e.g. 'Mol' in molten, 'ab' in Sveaborg, 're' in re-development) where the next token must complete a split word.",
+"served": "claude-haiku-5-5"
+},
+"u050": {
+"verdict": "several_unrelated",
+"description": "Mostly fires on hurricane/storm movement toward land (e.g., 'made land|fall', 'moved off', 'neared', predicting landfall or location words), but about eight snippets are unrelated (death locations, 'Molotov', 'premarital', 'lymph', 'home run', 'struck a reef'), with no shared role.",
+"served": "claude-haiku-5-5"
+},
+"u051": {
+"verdict": "unclear",
+"description": "The marked tokens span mid-word fragments (Cate|chism, Cab|ral, \u5b5f\u7fe0|\u82f1), mid-phrase modifiers (natural|gas), and clause boundaries (commas, 'which', 'said she'), with no single shared role or predicted next word.",
+"served": "claude-haiku-5-5"
+},
+"u052": {
+"verdict": "one",
+"description": "Fires on the digit '9' in the 1990s year, mostly the third digit of a year like '199_' (predicting the final digit), with a minor offshoot on '9' inside other numbers.",
+"served": "claude-haiku-5-5"
+},
+"u053": {
+"verdict": "two_related",
+"description": "Mostly fires mid-way through a fixed multi-token name or title (fluoroantimonic acid, Yeh Dosti, La Salle, Screen Actors Guild, Royal Australian Air Force), predicting its completion. A second, related job is the word 'ever' after superlatives and 'growth' before 'of', which set up a predictable continuing phrase.",
+"served": "claude-haiku-5-5"
+},
+"u054": {
+"verdict": "one",
+"description": "Fires on a mid-word subword piece of a split name, mostly place names (Tim|or for Timor in six snippets, plus Ar|uba, Gall|ia, Nub|ia, Kavk|az), where the next token completes the proper noun.",
+"served": "claude-haiku-5-5"
+},
+"u055": {
+"verdict": "several_unrelated",
+"description": "The snippets share no single job. Some marked tokens sit in coordinated lists or paired phrases (\"both\", \"and\", \"choir ,\", \"include\"), some are mid-word fragments completed by the next piece (\"polyphen|ol\", \"arthro|scopic\", \"head|gear\"), and others are unrelated positions such as modifiers, verbs and sentence starts.",
+"served": "claude-haiku-5-5"
+},
+"u056": {
+"verdict": "several_unrelated",
+"description": "Mixed triggers with no shared job: punctuation at clause and sentence boundaries, title and proper-name continuations (e.g. 'Democracy Now', 'The Colonel', 'From Time Immemorial'), and prepositions or participles after verbs and adjectives ('played by', 'feed on', 'a lot of').",
+"served": "claude-haiku-5-5"
+},
+"u057": {
+"verdict": "one",
+"description": "Fires on tokens inside fixed phrases, names, or collocations (e.g., 'artillery duel', 'red blood', 'Lancaster House', 'self-deprecation', 'gave up') where the next word is highly predictable from the preceding words.",
+"served": "claude-haiku-5-5"
+},
+"u058": {
+"verdict": "one",
+"description": "Fires on tokens in contexts that divide, split, or distribute something into parts or a sequence (e.g. 'split into', 'divided into', 'two on each beam', 'in turn', 'successively', 'alternating'), or that enumerate the parts that follow.",
+"served": "claude-haiku-5-5"
+},
+"u059": {
+"verdict": "one",
+"description": "Fires on tokens inside enumerations of parallel items (lists of nouns, years, divisions, or genes), especially right after 'and' or a comma, where the next word continues or closes the coordinated series.",
+"served": "claude-haiku-5-5"
+},
+"u060": {
+"verdict": "one",
+"description": "Fires on the token just before a person's surname (or middle initial/name part), predicting the next word is a family name within a person's full name.",
+"served": "claude-haiku-5-5"
+},
+"u061": {
+"verdict": "two_related",
+"description": "Two related jobs: (a) depth/shallowness words (deep, deeper, shallow, deeply) and (b) incomplete word-start fragments of split words (e.g., 'Le'ukemia, 'car'vings, 'I'vo) where the next token completes the word.",
+"served": "claude-haiku-5-5"
+},
+"u062": {
+"verdict": "one",
+"description": "Fires on a mid-word subword fragment of a proper name or rare word (e.g., Ad\u27e6or\u27e7j\u00e1n, Krak\u27e6\u00f3w\u27e7, Leon Kr\u27e6uc\u27e7zkowski), where the next token completes the word.",
+"served": "claude-haiku-5-5"
+},
+"u063": {
+"verdict": "one",
+"description": "Fires on a sub-word continuation piece that completes a word or name split across tokens (e.g., med|ius, Ard|han|arishvara, Christ|g|au, st|ink|horn), with a few weaker offshoots such as possessive 's and 'used by'.",
+"served": "claude-haiku-5-5"
+},
+"u064": {
+"verdict": "one",
+"description": "Fires mainly on 'also' placed mid-clause after an auxiliary or verb (e.g., 'were also', 'have also'), anticipating a following participle or verb; a few weaker cases are fixed-phrase completions like 'no better' (than) and 'Accrington' (Stanley).",
+"served": "claude-haiku-5-5"
+},
+"u065": {
+"verdict": "one",
+"description": "Fires mid-way through a multi-token proper name or fixed term (e.g. 'Dandenong' before 'Rangers', 'Guan' in Chinese names, 'College of' before Surgeons/Cardinals), where the next token is largely determined by the name being spelled out.",
+"served": "claude-haiku-5-5"
+},
+"u066": {
+"verdict": "one",
+"description": "Fires on the digit or word completing a year, decade, or historical period reference (e.g., '198\u27e60\u27e7s', '1\u27e69\u27e776', 'New\u27e6 Kingdom\u27e7'), predicting the next part of a date or era.",
+"served": "claude-haiku-5-5"
+},
+"u067": {
+"verdict": "one",
+"description": "Fires mid-way through multi-token proper names and titles (people's surnames, schools, colleges, 'Ke-V' units, '@-@' hyphen joins), predicting the next piece of the name or term.",
+"served": "claude-haiku-5-5"
+},
+"u068": {
+"verdict": "one",
+"description": "Fires on the separator (dash, comma, 'and', 'or', 'to') between two numbers or parallel items, such as a score, range, or pair, where the next token is likely the second number of the pair.",
+"served": "claude-haiku-5-5"
+},
+"u069": {
+"verdict": "one",
+"description": "Fires on the word just before a likely legal, judicial, or institutional target (e.g. 'appeal to the', 'Court of', 'Under ... law'), mostly in court, law, and official-body contexts, though a few sports or music snippets are looser matches.",
+"served": "claude-haiku-5-5"
+},
+"u070": {
+"verdict": "one",
+"description": "Fires on the imperial unit (mostly \"ft\", some \"in\") inside a parenthetical conversion right after a metric measurement, predicting the converted unit; a few weaker cases are loosely related next-word predictions.",
+"served": "claude-haiku-5-5"
+},
+"u071": {
+"verdict": "one",
+"description": "Fires on the 'e.g' abbreviation inside parenthetical examples (predicting the '.'/',' and the list of examples that follow), with a few weaker, scattered hits on 'at least' and 'this very' qualifiers and on name-fragment characters.",
+"served": "claude-haiku-5-5"
+},
+"u072": {
+"verdict": "unclear",
+"description": "The marked tokens span name and word completions (Shaq, Marcellis, ylide), fixed phrases (New York Times, The Guardian), and grammatical next-word slots (less than, was, where), with no single shared role beyond loosely continuing a phrase mid-span.",
+"served": "claude-haiku-5-5"
+},
+"u073": {
+"verdict": "one",
+"description": "The unit fires on words inside fixed multi-word phrases, titles, or collocations (e.g., 'scanning electron', 'ice', 'Saturday Night', 'Best Supporting'), where the next word is highly predictable from the phrase.",
+"served": "claude-haiku-5-5"
+},
+"u074": {
+"verdict": "one",
+"description": "Fires on the word right before or at a noun naming a person's role, occupation, or descriptive title in biographical text (e.g., 'amateur artist', 'unsung hero', 'prolific scholar', 'was a British archaeologist'), predicting that kind of person-noun next.",
+"served": "claude-haiku-5-5"
+},
+"u075": {
+"verdict": "one",
+"description": "Fires on tokens in biomedical/pharmacological text where the next word is a specific technical term, such as an organ, drug, organism, or the rest of a split medical word (e.g., 'hepat|oprotective', 'Salmon|ella', 'liver and [spleen]').",
+"served": "claude-haiku-5-5"
+},
+"u076": {
+"verdict": "one",
+"description": "The token 'in' (mostly sentence-initial 'In') that opens a prepositional or temporal adverbial phrase, such as 'In 1956' or 'In recognition of', with the next word likely being a time expression or circumstance phrase.",
+"served": "claude-haiku-5-5"
+},
+"u077": {
+"verdict": "two_related",
+"description": "Mostly fires mid-word inside split proper nouns or foreign terms (e.g. Wehr|m|acht, Te|get|thoff, M|ysore), and secondarily on score or number slots in sports-result sentences; the link is loose.",
+"served": "claude-haiku-5-5"
+},
+"u078": {
+"verdict": "one",
+"description": "Fires on the key noun in Wikipedia-style sentences about accolades and credentials, such as degrees, awards, certifications, charts, and publication names in reviews or reports.",
+"served": "claude-haiku-5-5"
+},
+"u079": {
+"verdict": "one",
+"description": "Fires on the word right before a past participle in passive or copular constructions (e.g., 'were critically [received]', 'was commonly [overlooked]', 'were most frequently [said]'), typically an adverb predicting a participle like 'used', 'damaged', or 'researched'.",
+"served": "claude-haiku-5-5"
+},
+"u080": {
+"verdict": "one",
+"description": "Fires on the decade digit of a four-digit year (mostly 193x, also 19x0s and 118x), where the next token is the final year digit; a few weaker hits on words like 'along' and 'bear' are noise.",
+"served": "claude-haiku-5-5"
+},
+"u081": {
+"verdict": "one",
+"description": "Fires on the opening parenthesis or first number right after an imperial measurement (e.g. \"17 foot (\", \"14 @.@\"), where the next token is the metric conversion of that length or size.",
+"served": "claude-haiku-5-5"
+},
+"u082": {
+"verdict": "one",
+"description": "Fires on a word-internal fragment, where the marked token is an incomplete piece of a word or Chinese character split across tokens, and the next token completes that word.",
+"served": "claude-haiku-5-5"
+},
+"u083": {
+"verdict": "one",
+"description": "Fires on a token partway through a fixed expression (a date, number, proper name, or compound term), where the model is completing that unit, e.g. the day or year after a month, the rest of a place or organization name, or the digits of a figure.",
+"served": "claude-haiku-5-5"
+},
+"u084": {
+"verdict": "one",
+"description": "Fires on structural chemistry terms (sulfur, ylide carbon, carbonyl, oxygen, central bond) within text about sulfur ylides and the Johnson-Corey-Chaykovsky reaction.",
+"served": "claude-haiku-5-5"
+},
+"u085": {
+"verdict": "two_related",
+"description": "Mostly fires on mid-unit tokens: numbers and measurement units inside parenthetical conversions or years (e.g. '11\u27e6 in\u27e7', '193\u27e63\u27e7'), and on word fragments that complete a split word (e.g. 'bull\u27e7ion', 'spir\u27e7acles'), both predicting the continuation of an incomplete item.",
+"served": "claude-haiku-5-5"
+},
+"u086": {
+"verdict": "one",
+"description": "Fires on the word for conforming to or obeying a rule, norm, or standard (conform, obedience, comply, observance, abide by), including a few chemistry uses of the same stem (conformer, conformation).",
+"served": "claude-haiku-5-5"
+},
+"u087": {
+"verdict": "one",
+"description": "Fires on the word inside superlative or uniqueness constructions (\"highest grossing ... of \u27e6all\u27e7 time\", \"the only player \u27e6to\u27e7\", \"smallest ... of \u27e6any\u27e7\"), where the next word completes a scope qualifier such as \"all time\", \"any team\", or \"to [verb]\".",
+"served": "claude-haiku-5-5"
+},
+"u088": {
+"verdict": "unclear",
+"description": "The marked tokens span unrelated roles (sentence-end periods, prepositions before noun phrases, name fragments, year and decimal digits, object nouns) with no shared pattern that clearly predicts the next word.",
+"served": "claude-haiku-5-5"
+},
+"u089": {
+"verdict": "unclear",
+"description": "Roughly half the snippets are football/sports results (draw scores, 'equalised', 'tied'), but the rest (song-title brackets, 'better for him', 'grossing', 'experimentation on') share no clear job, so no single pattern covers nearly all of them.",
+"served": "claude-haiku-5-5"
+},
+"u090": {
+"verdict": "one",
+"description": "Fires where the next word is likely a video game platform, console, or device name (e.g., 'for the PlayStation', 'for mobile phones', 'including Android and iOS'), with a few weaker, noisier cases around game-related phrasing.",
+"served": "claude-haiku-5-5"
+},
+"u091": {
+"verdict": "one",
+"description": "Fires on a mid-word subword fragment (e.g. 'lee' in Glee, 'et' in Menetrez/Venetian, 'div' in skydiving) where the next token must complete a split word, especially a name or title, often before 'club' or 'series'.",
+"served": "claude-haiku-5-5"
+},
+"u092": {
+"verdict": "one",
+"description": "Fires on the token inside a fixed phrase or collocation where the next word is largely determined (e.g., 'treated with' \u2192 'the drug', 'at odds', 'in mind', 'availability of'), with minor offshoots on split name fragments like 'Ay' and roman-numeral continuations.",
+"served": "claude-haiku-5-5"
+},
+"u093": {
+"verdict": "one",
+"description": "Fires on tokens inside fixed phrases or split words where the next token is highly predictable from memorized completion (e.g., 'New Orleans', 'put an end to', 'Ivor Novello', 'synchro-tron', 'Ac-orn').",
+"served": "claude-haiku-5-5"
+},
+"u094": {
+"verdict": "one",
+"description": "The word \"of\" inside formal proper-noun titles of organizations, publications, and acts (e.g., \"Chicago Manual of Style\", \"Archaeological Survey of India\"), where the next word continues the name; weaker cases are generic \"of\" phrases like \"institutions of higher education\" and \"monuments of its type\".",
+"served": "claude-haiku-5-5"
+},
+"u095": {
+"verdict": "one",
+"description": "Fires mid-clause where the preceding verb, noun, or preposition requires a specific complement next (e.g., 'focus on', 'details on', 'convinced him to', 'assumed the song', 'saying it'), so the unit tracks an expected syntactic continuation.",
+"served": "claude-haiku-5-5"
+},
+"u096": {
+"verdict": "one",
+"description": "Fires on an incomplete word or name fragment (e.g. 'underst', 'Jag', 'Lanc', 'Maya') that is split across tokens, predicting that the next token completes the same word or proper name.",
+"served": "claude-haiku-5-5"
+},
+"u097": {
+"verdict": "unclear",
+"description": "The marked tokens are a mix of sentence boundaries, prepositions, infinitive verbs, digits inside numbers and years, and pieces of proper names, with no single shared role or next-word pattern tying them together.",
+"served": "claude-haiku-5-5"
+},
+"u098": {
+"verdict": "several_unrelated",
+"description": "Fires on several unrelated tokens: the quantifier \"all\" (\"all season\", \"all over\", \"all of his skills\"), the decade digit in years like \"19\u27e67\u27e70s\", and the subword \"imony\" in \"antimony\". No single job links these.",
+"served": "claude-haiku-5-5"
+},
+"u099": {
+"verdict": "one",
+"description": "Fires on a mid-word subword fragment whose word is still incomplete, predicting the next piece to finish it (most often 'en' in 'Palenque', plus pieces like 'omat' in 'onomatopoeic', 'ill' in 'gill', and 'ane' in 'Tulane').",
+"served": "claude-haiku-5-5"
+},
+"u100": {
+"verdict": "one",
+"description": "Fires on tokens inside a restrictive noun-phrase modifier, such as relative pronouns (that/which), the verb of a relative clause, or 'the only/few' before the head noun, where the next word continues the modification.",
+"served": "claude-haiku-5-5"
+},
+"u101": {
+"verdict": "unclear",
+"description": "The marked tokens span unrelated contexts: subword fragments of names and words, adjectives in lists, determiners, punctuation, and phrase-internal words. No single concept, grammatical role, or next-word type fits them all.",
+"served": "claude-haiku-5-5"
+},
+"u102": {
+"verdict": "unclear",
+"description": "The marked tokens mix mid-word fragments of rare technical words (disband|ing, gemt|uz|umab, fal|set|to) with whole content words in unrelated topics (speaker bass, age 'over', 'season'), and no single next-word or contextual role unifies them.",
+"served": "claude-haiku-5-5"
+},
+"u103": {
+"verdict": "unclear",
+"description": "The marked tokens span unrelated roles: names and word-pieces, adverbs, adjectives before nouns, articles, sentence-final punctuation, commas, and possessives. No single concept, grammatical role, or next-word pattern covers them all.",
+"served": "claude-haiku-5-5"
+},
+"u104": {
+"verdict": "one",
+"description": "Responds to the concept of gambling and wagering, including closely related risk and stakes words (gaming, risks, decisions, advantage, brokerage), with the marked token usually being 'gambling' itself.",
+"served": "claude-haiku-5-5"
+},
+"u105": {
+"verdict": "one",
+"description": "Fires on a token inside a fixed multi-word name or set phrase (e.g., 'Board of' before Governors/Regents, 'Little' before Rock, 'Promotion and' before Tenure), predicting the word that completes the expression.",
+"served": "claude-haiku-5-5"
+},
+"u106": {
+"verdict": "one",
+"description": "Fires on incomplete word fragments (e.g. 'convers', 'colon', 'coun', 'conspir') where the next token must complete the same word, such as 'ely', 'el', 'sellor', 'ators'.",
+"served": "claude-haiku-5-5"
+},
+"u107": {
+"verdict": "one",
+"description": "Fires on transitive verbs (most often 'practice', also 'press', 'drive', 'ply') where a direct object or complement is expected next, such as 'practice law' or 'press charges'.",
+"served": "claude-haiku-5-5"
+},
+"u108": {
+"verdict": "unclear",
+"description": "The marked tokens mix several patterns with no shared job: second halves of hyphenated or fixed names (pupil, Baxter, Pam, disciple), basketball 'playoff' contexts, and relative/temporal 'where' and 'when' clause openers after place or time nouns.",
+"served": "claude-haiku-5-5"
+},
+"u109": {
+"verdict": "one",
+"description": "Fires on a mid-word subword fragment of a rare multi-token proper noun (mostly place names like Galveston and Dominica, plus a few names and terms), where the next token must complete the word.",
+"served": "claude-haiku-5-5"
+},
+"u110": {
+"verdict": "one",
+"description": "Fires on a mid-word fragment of a split name or word (e.g. 'Bec|qu|elin', 'Coron|ati', 'Sc|unthorpe', 'aer|ob|atics'), where the next token completes that same word or proper name.",
+"served": "claude-haiku-5-5"
+},
+"u111": {
+"verdict": "unclear",
+"description": "The marked tokens span unrelated positions (number digits, ranges like '62 \u2013 20' and '1979 to 1980', prepositions 'of', names, verbs like 'developed', and pronouns like 'himself'), and no single next-word or grammatical role ties them together.",
+"served": "claude-haiku-5-5"
+},
+"u112": {
+"verdict": "one",
+"description": "Marks a word inside a fixed multi-word name or title, most often an award category (\"Outstanding\", \"Best\", \"Guest Actress\"), where the next word completes the set phrase.",
+"served": "claude-haiku-5-5"
+},
+"u113": {
+"verdict": "unclear",
+"description": "The marked tokens share no clear next-word role: some are mid-word fragments (par, Roh, cr, Hang, retard), while others are prepositions, determiners, and verbs in varied syntactic contexts, with no single concept or prediction tying them together.",
+"served": "claude-haiku-5-5"
+},
+"u114": {
+"verdict": "one",
+"description": "Fires on the connective or separator (\"and\", \"by\", \";\", \",\") inside a parallel structure, such as paired dimensions or a list of items, where the next parallel element is expected to follow.",
+"served": "claude-haiku-5-5"
+},
+"u115": {
+"verdict": "one",
+"description": "Fires on tokens in the middle of a fixed multi-token term, name, or word completion (e.g., 'Filmfare Awards', 'prognostic', 'metastable', 'antimonites'), where the preceding context strongly determines the next piece. Confidence is low because some marked prepositions and particles ('from', 'in', 'known as') fit this less clearly.",
+"served": "claude-haiku-5-5"
+},
+"u116": {
+"verdict": "one",
+"description": "Fires on the 'car' subword fragment that begins a longer word (Caruso, carvings, carbothermal, Carver, carats), plus a smaller set of word-initial fragments and modifiers like 'Mor', 'Or', and 'long' before '@-@' that anticipate a continuing word or compound.",
+"served": "claude-haiku-5-5"
+},
+"u117": {
+"verdict": "one",
+"description": "Fires on a word that modifies a following verb or event, mostly adverbs of manner, frequency, or timing (quickly, actively, periodically, regularly, suddenly, directly) placed just before the predicate.",
+"served": "claude-haiku-5-5"
+},
+"u118": {
+"verdict": "one",
+"description": "Fires on the token right after a number or quantity, where the next word completes a numeric expression: a month after a day (\"10 November\"), a unit or time period (\"89 years\", \"20 mph\", \"48 per cent\", \"636 million\").",
+"served": "claude-haiku-5-5"
+},
+"u119": {
+"verdict": "one",
+"description": "Fires on a token inside a fixed multi-token name, title, or numeric/format expression (e.g., 'Billboard 200', 'glee club', 'Little Christmas', 'The Office', '59.2 %'), where the marked token is largely determined by the preceding words.",
+"served": "claude-haiku-5-5"
+},
+"u120": {
+"verdict": "one",
+"description": "Fires on partial word pieces, mostly the first fragment of a multi-token proper name (e.g. 'Pa', 'Ph', 'Wa'), where the next token should complete the word; a few whole-word hits like 'turns' and 'natural' are looser exceptions.",
+"served": "claude-haiku-5-5"
+},
+"u121": {
+"verdict": "one",
+"description": "Fires on words inside stock collocations or formulaic phrases where the next word is highly predictable (e.g., 'pleasure of', 'were swept', 'beat cancer', 'comes to an end', 'Madison Square Garden', '92nd season').",
+"served": "claude-haiku-5-5"
+},
+"u122": {
+"verdict": "one",
+"description": "Fires on the token that begins or sits inside a word whose completion is still open, such as the prefix fragments of shelters, shutters, subsistence, qigong, Sitona and Shinji, with a few whole-word cases like 'close range' that share the same position before a predicted continuation.",
+"served": "claude-haiku-5-5"
+},
+"u123": {
+"verdict": "one",
+"description": "Fires on a token inside a split word or fixed multi-token expression (e.g. 'Geng|his' before 'Khan', 'Har|appa', 'along the| way', 'not| only') where the next token is nearly determined by the surrounding sequence.",
+"served": "claude-haiku-5-5"
+},
+"u124": {
+"verdict": "one",
+"description": "Fires on the word right before an expected object or complement, mostly a transitive verb after 'to'/'in order to' (improve, save, help, maintain) or a preposition completing a verb or noun phrase ('violation of', 'do with', 'broke into').",
+"served": "claude-haiku-5-5"
+},
+"u125": {
+"verdict": "one",
+"description": "Fires on a token in the middle of a word or name split across subword pieces (e.g., 'pl' in purplish, 'p' in Oz-ploitation, 'ema' in hemmema), where the next token completes that word.",
+"served": "claude-haiku-5-5"
+},
+"u126": {
+"verdict": "one",
+"description": "Fires on a token inside a split number or word (digits in years and decimals, subword pieces like 'Geopy', 'Bel'/'or', 'klao'), where the next token must continue that number or word.",
+"served": "claude-haiku-5-5"
+},
+"u127": {
+"verdict": "one",
+"description": "Responds to the verb or complement slot right after 'to' in infinitive constructions (e.g., 'returned to \u27e6score\u27e7', 'to \u27e6fill\u27e7'), predicting a bare verb next; a few related offshoots fall on 'for' or 'opposite' in similar verb-complement positions.",
+"served": "claude-haiku-5-5"
+},
+"u128": {
+"verdict": "one",
+"description": "Fires on a mid-word subword fragment of a split proper noun or rare word (mostly 'Uyghur', plus names like 'Hobbs' and 'Mitosz'), where the next token must complete the word.",
+"served": "claude-haiku-5-5"
+},
+"u129": {
+"verdict": "two_related",
+"description": "Mainly fires on the second year's digits in season/year ranges (e.g., '1992 \u2013 9\u27e63\u27e7') to predict the rest of the year, with a second, related job of predicting 'of'/'from' after a noun such as 'invasion \u27e6of\u27e7'.",
+"served": "claude-haiku-5-5"
+},
+"u130": {
+"verdict": "several_unrelated",
+"description": "No single job: the snippets mix mid-word subword completions (Zeitgeist, Tintin, Shaoang, Protodeacon), chess move-number predictions, degree-context words (his doctorate/Master's), and Bible-phrase continuations (love their enemies, the Ten Commandments, what shall it profit).",
+"served": "claude-haiku-5-5"
+},
+"u131": {
+"verdict": "two_related",
+"description": "Mostly fires mid-word on name or word fragments that need completing (Wel|les, Ser|ban, G|eng|his), and secondarily on 'as| to' where the next word is a 'how/who/whether' question complement.",
+"served": "claude-haiku-5-5"
+},
+"u132": {
+"verdict": "one",
+"description": "The marked token sits inside a multi-token unit whose next piece is highly predictable: either a split word fragment (e.g., apoth\u27e6ec\u27e7ia, Gr\u27e6ign\u27e7ard) or a fixed phrase (e.g., no\u27e6 less\u27e7 than, once\u27e6 more\u27e7, State\u27e6 of\u27e7).",
+"served": "claude-haiku-5-5"
+},
+"u133": {
+"verdict": "unclear",
+"description": "The marked tokens span hyphen tokens inside compounds, list separators, ordinals like 'two' and 'second', and ordinary verbs, nouns, and prepositions, with no shared context or next-word pattern that ties them together.",
+"served": "claude-haiku-5-5"
+},
+"u134": {
+"verdict": "unclear",
+"description": "The marked tokens span unrelated roles (word-piece completions like 'slo'/'brig', collocation slots like 'record deal' and 'bone marrow', connectives like 'However', list commas, and clause-joining 'and'), with no single shared concept or next-word pattern.",
+"served": "claude-haiku-5-5"
+},
+"u135": {
+"verdict": "one",
+"description": "Fires on tokens inside German text (mostly mid-compound or mid-title, e.g. 'Abteilung f\u00fcr Volksaufkl\u00e4rung', 'Empfehlungen des Rats f\u00fcr Deutsche Rechtschreibung'), where the next token continues a fixed German name, compound, or phrase.",
+"served": "claude-haiku-5-5"
+},
+"u136": {
+"verdict": "unclear",
+"description": "The marked tokens span unrelated contexts: mid-word fragments (trans, peg, ria, undert, Ge), function words before varied continuations (in, are, a, the, of, from), and a numeric and a parenthesis. No single concept, syntactic role, or next-word type ties them together.",
+"served": "claude-haiku-5-5"
+},
+"u137": {
+"verdict": "one",
+"description": "Fires on the word introducing a relative clause right after a noun phrase (who/that/which, or a bare 'I'/'he' or 'what' in the same role), predicting the clause's verb or continuation.",
+"served": "claude-haiku-5-5"
+},
+"u138": {
+"verdict": "two_related",
+"description": "Mainly fires on prepositions or verbs (of, at, by, cost, takes) that set up a numeric quantity or dollar amount next, such as 'winds of 45 miles' or 'estimated at $19 million'. A smaller set fires mid-word on name fragments (Glorious 'Gwal|ior', 'Og|\u0103lniceanu', 'Pog|lavnik') that complete proper nouns.",
+"served": "claude-haiku-5-5"
+},
+"u139": {
+"verdict": "one",
+"description": "Fires on the 'dem'/'demo' word stem (demonstrate, demonstration, demo recording, Demon aircraft), whether it is a full word or a fragment of one, so it tracks the spelling-level start of these words more than any single meaning.",
+"served": "claude-haiku-5-5"
+},
+"u140": {
+"verdict": "several_unrelated",
+"description": "Mainly fires on the first digit of multi-digit numbers (ages, distances, counts) where the next digit is predicted, plus unrelated spots: list-item starts, '@-@' hyphens, and a few 'the' tokens, with no shared thread between these.",
+"served": "claude-haiku-5-5"
+},
+"u141": {
+"verdict": "one",
+"description": "Fires on a token partway through a proper name or split word (e.g., Fred|rik, Gemtuzum|ab, Intracoast|al, S.| Lorenzo), where the next token must complete the name or word; the 'up' after 'ended/wakes' is a minor offshoot.",
+"served": "claude-haiku-5-5"
+},
+"u142": {
+"verdict": "one",
+"description": "Fires on the word just before a time-span phrase (e.g. 'for', 'in', 'last', 'recent', 'next'), predicting a duration noun such as 'years', 'decades' or 'seasons' to come next.",
+"served": "claude-haiku-5-5"
+},
+"u143": {
+"verdict": "two_related",
+"description": "Mainly predicts a measurement unit after a quantity (km or mi after a parenthesized conversion, 'quarter' or 'half' after 'one and a'/'two and a'), with a secondary pattern of completing split proper-noun tokens like 'Sab|res' and '76|ers'.",
+"served": "claude-haiku-5-5"
+},
+"u144": {
+"verdict": "several_unrelated",
+"description": "The snippets split into unrelated jobs: completing year and number digits (2009, 2011, 19th, 48), predicting the next word in parallel 'one and half on the other' phrasing, and completing position-abbreviation glosses like 'FW \u2013 Forward'. No single shared role covers them.",
+"served": "claude-haiku-5-5"
+},
+"u145": {
+"verdict": "one",
+"description": "Fires on a token partway through a proper name (a person, place, or organization), where the next token is expected to complete the same name, e.g. 'Vasco da G\u27e7ama', 'Council of N\u27e7icaea', 'Chat Patt\u27e7ana'.",
+"served": "claude-haiku-5-5"
+},
+"u146": {
+"verdict": "two_related",
+"description": "Fires on two related kinds of slots: garbled Chinese characters inside romanized-name parentheses (predicting the next character or transliteration), and hedging or epistemic qualifier words (believe, believed, usually, prove, perceived) that introduce a claim or qualification.",
+"served": "claude-haiku-5-5"
+},
+"u147": {
+"verdict": "one",
+"description": "Fires on tokens where a name, term, or label is being introduced or glossed (e.g., 'known as', 'the name X is', 'Greek: \"', 'means'), where the next words likely give the name's meaning, origin, or translation.",
+"served": "claude-haiku-5-5"
+},
+"u148": {
+"verdict": "unclear",
+"description": "The snippets mix audience and review counts (reviews, visitors, views), citation 'accessed' tokens, text-spacing and formatting contexts, and miscellaneous words like 'free', 'St', and '.com', with no single next-word role clearly shared across them.",
+"served": "claude-haiku-5-5"
+},
+"u149": {
+"verdict": "one",
+"description": "Fires on tokens inside fixed multi-word units (phrasal verbs like 'come up/upon', 'turn off/over', 'set up', idioms like 'as many...as', 'made in the image', and split names like 'St. Croix', 'Sandbridge'), where the next word is largely determined by the expression being completed.",
+"served": "claude-haiku-5-5"
+},
+"u150": {
+"verdict": "one",
+"description": "Fires on a partial word or name fragment (e.g. 'spor' before 'adic', 'so|v' before 'ietization', 'Sc|ut' before 'ari') where the next token must complete a split word or proper name.",
+"served": "claude-haiku-5-5"
+},
+"u151": {
+"verdict": "one",
+"description": "Fires on a token in the middle of a word or name split across pieces, where the next token completes it, such as the apostrophe in \"didn't\" before \"t\" and fragments like \"Can|ad|air\" or \"dimethyl|sulfonium\".",
+"served": "claude-haiku-5-5"
+},
+"u152": {
+"verdict": "unclear",
+"description": "Six snippets fire on 'or' in fixed alternative pairs (for better or worse, more or less, two or more), but the other fourteen (would, has, good, are, half, mid-word fragments) share no clear role or next-word pattern.",
+"served": "claude-haiku-5-5"
+},
+"u153": {
+"verdict": "one",
+"description": "Fires mid-way through a fixed multi-token expression (e.g., 'both of', 'World Health', 'Ayers Rock', 'Mohs scale', 'at one time'), where the next token is strongly predictable from the phrase.",
+"served": "claude-haiku-5-5"
+},
+"u154": {
+"verdict": "one",
+"description": "Fires on the number or unit token inside parenthetical unit conversions (e.g. 'X km (\u27e6 \u27e7 Y mi)'), predicting the converted value's digits or the following unit, with a few off-pattern hits like the ship name 'Krasnyi Kavkaz'.",
+"served": "claude-haiku-5-5"
+},
+"u155": {
+"verdict": "one",
+"description": "Fires on a preposition (mostly 'for', also 'to' and 'with') that directly follows a passive or past-participle verb such as 'adapted', 'broken up', 'armed', or 'plastered', where the next word is the purpose, use, or object of that action (e.g. 'for the screen', 'for scrap', 'to conceal').",
+"served": "claude-haiku-5-5"
+},
+"u156": {
+"verdict": "one",
+"description": "Fires on a mid-word subword fragment whose next token completes a split word, mostly abstract-noun endings like -ality, -ity, -ibility, -eness and -iker (tonality, edibility, moniker), so it tracks word completion within a fragmented word.",
+"served": "claude-haiku-5-5"
+},
+"u157": {
+"verdict": "two_related",
+"description": "Fires on birth-year final digits in biographical date contexts (6 snippets) and on tokens inside fixed proper names or titles (e.g. Kominturn, Journal of Palestine Studies, Port of Galveston) where the next token is largely determined by a memorized entity.",
+"served": "claude-haiku-5-5"
+},
+"u158": {
+"verdict": "two_related",
+"description": "Mainly fires on 'home' and its fragments ('hom', as in 'home to', 'home run', 'homemaker'), and secondarily on tokens inside names or numbers where the next piece is determined (e.g. the 'H' in William H. Macy, 'W' in Worthy, '1' in 1992).",
+"served": "claude-haiku-5-5"
+},
+"u159": {
+"verdict": "one",
+"description": "Fires on words inside an unfinished noun phrase, typically a technical term, modifier, or word fragment (e.g. 'explosive shells', 'crude antimony', 'fucose', 'subtilis'), where the next token continues or completes that noun phrase.",
+"served": "claude-haiku-5-5"
+},
+"u160": {
+"verdict": "one",
+"description": "Fires on the token inside a parenthetical that gives an equivalent form: a converted measurement value (e.g. 'ft', 'km/h', '\u00b0C'), or a non-Latin-script or original-language rendering of a name or word (Chinese characters, Greek, Thai, Arabic).",
+"served": "claude-haiku-5-5"
+},
+"u161": {
+"verdict": "one",
+"description": "Fires on a mid-word subword inside proper person names (e.g., Y\u27e6ank\u27e7ovic, Miecz\u27e6ys\u27e7\u0142aw, Ya\u27e6ute\u27e7pec), where the next token completes the name; a few weaker hits on 'he'/'one' referring to a person are related offshoots.",
+"served": "claude-haiku-5-5"
+},
+"u162": {
+"verdict": "several_unrelated",
+"description": "Mixed triggers: completing digits within years and numbers (snippets 3, 7, 10, 12, 14), predicting place names after prepositions (15, 16, 18), predicting subjects or objects after verbs (5, 9, 17, 19), and predicting noun phrases in other syntactic slots, with no clear shared job.",
+"served": "claude-haiku-5-5"
+},
+"u163": {
+"verdict": "unclear",
+"description": "The marked tokens span mid-phrase adjectives, names, subword pieces, punctuation, and sentence-final tokens, with no shared syntactic role or predicted next-word type that ties them together.",
+"served": "claude-haiku-5-5"
+},
+"u164": {
+"verdict": "several_unrelated",
+"description": "Mainly fires on metric/imperial conversion positions inside parentheses after a measurement (predicting the converted number or unit), but also on evaluative adjectives (irrational, horrible, flawed) and on second words of proper names (International Union, Voice of America), which share no clear job.",
+"served": "claude-haiku-5-5"
+},
+"u165": {
+"verdict": "one",
+"description": "Fires on the first token of a word that begins a proper noun, mostly place or ship names after prepositions or 'of/from/in' (e.g. 'from\u27e6M\u27e7arseilles', 'wins over\u27e6M\u27e7acclesfield'), and so predicts a place or name to follow.",
+"served": "claude-haiku-5-5"
+},
+"u166": {
+"verdict": "several_unrelated",
+"description": "Mixed triggers with no shared role: antimony formula symbols (Sb before H, Cl, S), completions of multi-word proper names (Recordings, Buccaneers, Light Aircraft), and verbs or auxiliaries following 'and' or 'or' in a predicate.",
+"served": "claude-haiku-5-5"
+},
+"u167": {
+"verdict": "two_related",
+"description": "Two related jobs: completing a word fragment mid-token (Thai, Greek, French, and inflection endings like -d/-s), and sitting at a clause or paragraph boundary (commas after 'However'/'Yet' and newlines after colons or sentence ends) where a new unit of text begins.",
+"served": "claude-haiku-5-5"
+},
+"u168": {
+"verdict": "one",
+"description": "Fires on verbs (often motion or posture verbs like run, stand, stick, come, grew) where the likely next word is a particle or preposition completing a phrasal verb, such as 'up', 'down', 'out', 'along', or 'with'.",
+"served": "claude-haiku-5-5"
+},
+"u169": {
+"verdict": "unclear",
+"description": "The marked tokens span unrelated roles: word-piece continuations (Ant|ip|ode, far|mland), names (Col|onna, Wheeler), list and heading punctuation, determiners, adjectives, and verbs. No single next-word or formatting job covers them, and the activations don't reduce to a clear shared pattern.",
+"served": "claude-haiku-5-5"
+},
+"u170": {
+"verdict": "two_related",
+"description": "Mainly fires on mid-word fragments (\"dis\", \"elect\", \"electro\", \"hydraul\") where the word must be completed, plus a second group on power-outage phrasing (\"customers lost/were without\", \"electric\") where the next word is likely \"power\".",
+"served": "claude-haiku-5-5"
+},
+"u171": {
+"verdict": "two_related",
+"description": "Fires on digits inside numbers (wind-speed km/h conversions and decades like 1980s) and on descriptive adjectives after 'the most' or 'the' in prose, both loosely tied to quantitative or descriptive detail.",
+"served": "claude-haiku-5-5"
+},
+"u172": {
+"verdict": "unclear",
+"description": "The marked tokens span varied roles (prepositions like 'to' and 'of', sentence-final periods, name fragments like 'Chal' and 'ca', and possessive or pronoun tokens) with no shared concept or next-word pattern that explains most snippets.",
+"served": "claude-haiku-5-5"
+},
+"u173": {
+"verdict": "one",
+"description": "Fires on verbs of persisting in a place or state (stays, stayed, remains, remain, staying) and on \"since\" marking an ongoing duration, so it tracks continuation over time; a few weaker hits (\"Say It\", \"two\", \"a\") don't fit this.",
+"served": "claude-haiku-5-5"
+},
+"u174": {
+"verdict": "one",
+"description": "Fires on the 'vest' subword inside the place name 'Galveston', mostly where the name is mid-word and the next token is 'ton' (or the name is otherwise expected).",
+"served": "claude-haiku-5-5"
+},
+"u175": {
+"verdict": "several_unrelated",
+"description": "No single job fits: the marked tokens include digits inside numeric ranges, possessive 's markers, word-piece completions of names and words, and punctuation after names or song titles, with no clear relation among them.",
+"served": "claude-haiku-5-5"
+},
+"u176": {
+"verdict": "unclear",
+"description": "The marked tokens span unrelated contexts: word-piece completions inside names and numbers (Anak, Laf-itte, 19-5-6), passive or participial verbs (supported, named, broken), and ordinary nouns and adjectives. No single next-word role or concept clearly ties them together.",
+"served": "claude-haiku-5-5"
+},
+"u177": {
+"verdict": "one",
+"description": "Fires on a subword piece inside a proper name split across tokens (places, people, works), where the next token completes the name, e.g. Qu|im|per, Ch|ihuahua, Sep|inwall, M|ard|arescu.",
+"served": "claude-haiku-5-5"
+},
+"u178": {
+"verdict": "one",
+"description": "Fires on the token inside a multi-token proper name or named term (person surnames, places, organizations, nicknames), predicting the rest of that name, such as the second half of 'Bal|aguer' or 'Ross|ellini'.",
+"served": "claude-haiku-5-5"
+},
+"u179": {
+"verdict": "one",
+"description": "Fires on a word-initial or mid-word subword fragment of a split name or term (e.g. 'T' in Tandava, 'v' in vassals, 'Sp' in Spivey), where the next token completes the word.",
+"served": "claude-haiku-5-5"
+},
+"u180": {
+"verdict": "one",
+"description": "Fires on a word inside a fixed multi-word name or set phrase (e.g. 'von' in German noble names, 'Third' in 'Third Reich', 'long' in 'long-range', 'middle' in 'middle class'), where the next word is highly predictable from the name or idiom.",
+"served": "claude-haiku-5-5"
+},
+"u181": {
+"verdict": "two_related",
+"description": "Two related jobs: (a) predicting digits and decimal/number formatting in numeric contexts (e.g. '@.@', '$ 19', '2009', '15 January'), and (b) predicting the function word or head that completes a multi-word phrase, such as 'one of', 'most of', 'reflected on', 'intercede for', 'six months' worth'.",
+"served": "claude-haiku-5-5"
+},
+"u182": {
+"verdict": "several_unrelated",
+"description": "Mixed set: years and numbers inside parentheses or dates (predicting a closing bracket or period), and verb auxiliaries or fixed phrases (\"continues to\", \"have been\", \"has since\", \"the first being\") predicting a participle or verb form. No clear single job links them.",
+"served": "claude-haiku-5-5"
+},
+"u183": {
+"verdict": "unclear",
+"description": "Several snippets mark a fragment inside a split word or name (Jun|ete|enth, Phil|ippi|ans, G|hetto), but many others mark ordinary function words or phrase-internal tokens (\"from\", \"on\", \"the\", \"even\") with no shared pattern, so no single job is evident.",
+"served": "claude-haiku-5-5"
+},
+"u184": {
+"verdict": "several_unrelated",
+"description": "Mainly fires on numbers inside parenthetical metric measurements where an imperial or other conversion is expected next (e.g. '4 m (13 ft)'), but several other snippets (similar, titled, built, batting .202, were, then) share no clear job with that cluster.",
+"served": "claude-haiku-5-5"
+},
+"u185": {
+"verdict": "one",
+"description": "Fires on tokens inside fixed multi-word names and collocations (e.g., 'seven deadly', 'The X Factor', 'Axis Powers', 'War of the Worlds'), where the next word is largely determined by the established phrase or proper name.",
+"served": "claude-haiku-5-5"
+},
+"u186": {
+"verdict": "one",
+"description": "Fires on tokens in education and schooling contexts (school levels, degrees, graduating, attending), where the next word is likely an education noun such as school, degree, university, or education.",
+"served": "claude-haiku-5-5"
+},
+"u187": {
+"verdict": "one",
+"description": "Superlative or record-claim contexts (e.g., 'highest of any', 'best ... ever', 'most decorated player ever', 'of all time'), where the unit is active on the word that precedes or completes 'ever', 'history', or 'time'.",
+"served": "claude-haiku-5-5"
+},
+"u188": {
+"verdict": "one",
+"description": "Fires on a sub-word or split-name token inside a rare word or proper name (e.g. Lew|iston, Satan|ic, Volat|ile), where the marked piece completes or extends a word that was broken across tokens.",
+"served": "claude-haiku-5-5"
+},
+"u189": {
+"verdict": "several_unrelated",
+"description": "Mixed triggers: causative 'make/makes' (about 8 snippets), nouns that precede 'of' in fixed phrases ('at the hands of', 'through the eyes of', 'spoils of war'), 'between' in ranges, and scattered hyphens and 'no longer', with no clear shared job.",
+"served": "claude-haiku-5-5"
+},
+"u190": {
+"verdict": "several_unrelated",
+"description": "Mixed jobs with no clear shared thread: completing split words and names (syn\u2192cretism, hyg\u2192rometricus, Ginczanka), predicting a species epithet after a genus abbreviation (A.), and joining co-writer or list names with 'and' or commas.",
+"served": "claude-haiku-5-5"
+},
+"u191": {
+"verdict": "several_unrelated",
+"description": "No single job fits: some snippets are digits inside years or numbers (1992, 2006, 1991, 1948, 6 in a formula), while others are unrelated positions such as name fragments, list commas, prepositions after verbs, and closing parentheses.",
+"served": "claude-haiku-5-5"
+},
+"u192": {
+"verdict": "unclear",
+"description": "The marked tokens span unrelated roles: mid-name word completions (Land|mark, Novoross|i|ysk), year digits, list commas, and function words before noun phrases, with no shared trigger or predicted next word that ties them together.",
+"served": "claude-haiku-5-5"
+},
+"u193": {
+"verdict": "one",
+"description": "Fires on a word-piece or name-part inside a split proper noun or compound (e.g. 'Leopold\u27e6st\u27e7\u00e4dter', 'Reich\u27e6sf\u27e7\u00fchrer', 'Ehren\u27e6sv\u27e7\u00e4rd'), where the next token must continue the same name or term.",
+"served": "claude-haiku-5-5"
+},
+"u194": {
+"verdict": "several_unrelated",
+"description": "The snippets split into several unrelated jobs: statistical 'significant difference' phrasing, Latin etymology ('from the Latin'), bibliographic citation parentheses after years or volumes, and mid-word subword fragments such as 'symp|at|ric' and 'hypoth|ec|ium'. No single shared concept links them.",
+"served": "claude-haiku-5-5"
+},
+"u195": {
+"verdict": "unclear",
+"description": "The marked tokens span mid-number digits, mid-name fragments, and ordinary function words (the, can, only, having) with no shared role or clear next-word pattern tying them together.",
+"served": "claude-haiku-5-5"
+},
+"u196": {
+"verdict": "one",
+"description": "The unit fires on words naming a field of human culture, arts, or scholarship (art, literature, culture, academic, medicine, songwriting), typically where a domain noun or adjective is expected next.",
+"served": "claude-haiku-5-5"
+},
+"u197": {
+"verdict": "one",
+"description": "Fires on conjunctions, commas, and the words right after 'including' or 'such as' inside lists of example nouns (crops, birds, plants), where the next token is another list item. A few word-fragment completions (Pen|arth, Pow|hatan) are minor offshoots.",
+"served": "claude-haiku-5-5"
+},
+"u198": {
+"verdict": "two_related",
+"description": "Fires on two related things: mid-word or mid-name fragments that the next token completes (e.g. 'Hind|ustan', 'Hung|arians', 'Trou|bled'), and possessive determiners ('their', 'his', 'its') that set up a following noun.",
+"served": "claude-haiku-5-5"
+},
+"u199": {
+"verdict": "one",
+"description": "Fires on a token inside a multi-token word, name, or fixed term (e.g., 'Isle of', 'air defence', 'fled|g|ling', 'Ind|ra', 'Sinh|ale|se') where the next token is strongly determined by the known word or phrase being completed.",
+"served": "claude-haiku-5-5"
+},
+"u200": {
+"verdict": "one",
+"description": "Fires on a token in the middle of a fixed, highly predictable phrase or word (e.g., 'Ministry of', 'Minister for', 'District Court for the', 'inviol-able', 'ar-yl'), where the next word is largely determined by the preceding fixed expression.",
+"served": "claude-haiku-5-5"
+},
+"u201": {
+"verdict": "one",
+"description": "Fires on a mid-word subword fragment of a rare or multi-token word, especially proper names (Krasnyi Kavkaz, Cavalchini, Chakravarthy, Kailash), where the next token must complete the word.",
+"served": "claude-haiku-5-5"
+},
+"u202": {
+"verdict": "two_related",
+"description": "Fires on word-fragment tokens whose next piece completes a split word (unf-, f-, Ch-, st-, Ao-) and on 'an' or the space after it when a score, rating, or record number comes next.",
+"served": "claude-haiku-5-5"
+},
+"u203": {
+"verdict": "unclear",
+"description": "The snippets share no single clear role: a few mark wiki-style '@-@' or '@.@' formatting and digits inside numbers, while many others are ordinary mid-sentence words or subword pieces where the next word is hard to pin down.",
+"served": "claude-haiku-5-5"
+},
+"u204": {
+"verdict": "one",
+"description": "Fires on tokens inside a word or fixed phrase that is split across tokens, where the next token completes it (e.g. 'und|uly', 'Ma|ith|ili', 'out of| print', 'credit| card').",
+"served": "claude-haiku-5-5"
+},
+"u205": {
+"verdict": "one",
+"description": "Fires on the token just before a verb-forming suffix, mainly the -ize/-ise ending (e.g. 'syncret|ized', 'modern|ization', 'neutral|ize'), so it predicts the next piece of an -ize/-ise verb.",
+"served": "claude-haiku-5-5"
+},
+"u206": {
+"verdict": "parse_error",
+"description": "{\"verb\": \"unclear\", \"description\": \"The marked tokens span unrelated positions (participles awaiting 'to'/'as', mid-name tokens, closing punctuation, partial words), with only a loose shared tendency ",
+"stop_reason": "end_turn",
+"served": "claude-haiku-5-5"
+},
+"u207": {
+"verdict": "one",
+"description": "Fires on abstract relational nouns (sign, mark, attempt, prelude, response, expression, proof, example, symptom) right before their expected complement preposition, mainly 'of' or 'to'.",
+"served": "claude-haiku-5-5"
+},
+"u208": {
+"verdict": "one",
+"description": "Fires on the first part of a multi-word proper name (mostly US/Canadian place names like Brazoria, Fort Smith, Port Huron, Little Rock), predicting the next token completes the name.",
+"served": "claude-haiku-5-5"
+},
+"u209": {
+"verdict": "several_unrelated",
+"description": "Mixed triggers with no shared job: mid-word fragments that need completion (Toubro, Zak, necess, hy, limb, Dund), nouns right after 'the' (state, town, tomb, novel), and function words before 'not' or a noun ('did', 'only', 'may').",
+"served": "claude-haiku-5-5"
+},
+"u210": {
+"verdict": "unclear",
+"description": "Some snippets show completion of a split word or name (e.g., 'Allenton', 'stylistic', 'Spivey', 'lily'), and a few show fixed phrases ('World War', 'United States'), but many marked tokens (e.g., 'the', 'or', 'mostly', 'album') have no shared role I can identify.",
+"served": "claude-haiku-5-5"
+},
+"u211": {
+"verdict": "several_unrelated",
+"description": "Mainly fires on 'Finals' in NBA championship-statistics contexts (predicting 'MVP', 'record', or 'games'), but about six snippets (Zagreb, Cantonese, half a dozen, US $, US number-one, mintages) share no clear role with that cluster.",
+"served": "claude-haiku-5-5"
+},
+"u212": {
+"verdict": "one",
+"description": "Fires on a partial word or name fragment (e.g. 'ab' in Kanchanaburi, 'oth' in pilothouse, 'ot' in Neotrygon), where the next token must complete a word split across tokens.",
+"served": "claude-haiku-5-5"
+},
+"u213": {
+"verdict": "one",
+"description": "Responds to tokens inside numbers, units, and measurements in Wikipedia-style text (digits of years and comma-grouped figures, and the unit or word after a quantity), predicting the rest of a numeric expression.",
+"served": "claude-haiku-5-5"
+},
+"u214": {
+"verdict": "one",
+"description": "Fires on the first sub-word piece of a proper name or split word (e.g. 'Robert\u27e6 Car\u27e7lock', 'Port\u27e7 Royal'), predicting the next fragment that completes the name or word.",
+"served": "claude-haiku-5-5"
+},
+"u215": {
+"verdict": "one",
+"description": "Fires on tokens inside quoted first-person speech or song titles (e.g., \"It's My Life\", \"I'll Be Home for Christmas\"), where the next word continues a fixed or predictable phrase.",
+"served": "claude-haiku-5-5"
+},
+"u216": {
+"verdict": "one",
+"description": "Fires on the leading digit of a number inside a parenthetical unit conversion (e.g. '153 feet ( \u27e64\u27e77 m )'), where the model is tracking a measurement that is being restated in another unit. A few weaker hits on name tokens are minor offshoots.",
+"served": "claude-haiku-5-5"
+},
+"u217": {
+"verdict": "several_unrelated",
+"description": "Mainly fires on the first digit of a number inside a parenthesized unit conversion (e.g., '( \u27e69\u27e71 cm )', '( \u27e61\u27e73 ft )'), but about half the snippets are unrelated mid-phrase tokens such as 'of' after nouns, word fragments like 'Sevent\u27e6eenth\u27e7', and 'both' before 'during'.",
+"served": "claude-haiku-5-5"
+},
+"u218": {
+"verdict": "unclear",
+"description": "The marked tokens span unrelated syntactic roles (relative pronouns, determiners, commas, word-piece fragments, and digit tokens), and no single next-word or grammatical pattern consistently explains them.",
+"served": "claude-haiku-5-5"
+},
+"u219": {
+"verdict": "one",
+"description": "Fires on a subword fragment inside a split word or proper name, where the next token completes that word (e.g., 'Ent|wistle', 'tyr|ant', 'Te|otihuacan').",
+"served": "claude-haiku-5-5"
+},
+"u220": {
+"verdict": "several_unrelated",
+"description": "Mostly fires on typographic spacing (word/em/single/double spaces, whitespace, the <pre> tag), but also on unrelated tokens like ship 'draft', '\u00b0F' temperatures, 'Basidiomycetes', 'Benzene', and apostrophes, so no single job covers nearly all snippets.",
+"served": "claude-haiku-5-5"
+},
+"u221": {
+"verdict": "one",
+"description": "Fires on a token inside a fixed multi-token unit (a split word, name, or set phrase like 'buy|out', 'rever|ber|atory', 'changed to', 'works of') where the preceding words strongly determine the next token.",
+"served": "claude-haiku-5-5"
+},
+"u222": {
+"verdict": "one",
+"description": "Fires on a mid-name subword token where the next token completes a split name, mostly the 'Fe' in 'Yue Fei' (predicting 'i'), with weaker matches on other split names like Zh\u014du T\u00f3ng and Hulewicz.",
+"served": "claude-haiku-5-5"
+},
+"u223": {
+"verdict": "one",
+"description": "Fires on words that introduce or carry a subject's resulting or lingering state (remains, still, now, left, is, remaining), where the next word would describe how things stand after an earlier event.",
+"served": "claude-haiku-5-5"
+},
+"u224": {
+"verdict": "one",
+"description": "Fires on the word right after a preposition or verb that introduces the cause, reason, or object of a reaction or evaluation (e.g. 'praised for the', 'because of', 'dismayed by the', 'complimented on the'), where the next word begins the noun phrase naming that reason.",
+"served": "claude-haiku-5-5"
+},
+"u225": {
+"verdict": "two_related",
+"description": "Mainly fires on the word after concessive \"even\" (if/so/though/when, ~12 snippets), and secondarily on mid-word fragments of names and titles (Rever|end, Vinc|en|zo, Bern|as|coni, Ev|erson), where the next piece completes a split word.",
+"served": "claude-haiku-5-5"
+},
+"u226": {
+"verdict": "one",
+"description": "Fires on a word-fragment token in the middle of a split word (e.g. 'curs', 'Creo'+'s', 'cock'+'ro', 'car'+'v'), where the next token must complete the word, so it tracks incomplete subword continuations.",
+"served": "claude-haiku-5-5"
+},
+"u227": {
+"verdict": "two_related",
+"description": "Mainly fires on 'a'/'an' right before a goal-type noun (volley, strike, penalty, equaliser) in football match reports, and secondarily on mid-word fragments of split rare names or words (e.g. 'Mal|hot|ra', 'Ant|iquaries') where the next token completes the word.",
+"served": "claude-haiku-5-5"
+},
+"u228": {
+"verdict": "one",
+"description": "Fires on tokens inside award and honor names (Golden Globe, Filmfare, Emmy, Hall of Fame, All-Star), where the next word continues or completes a title of an award, honor, or accolade.",
+"served": "claude-haiku-5-5"
+},
+"u229": {
+"verdict": "several_unrelated",
+"description": "No single job: the active tokens cover distinct cases, such as predicting journal issue numbers, rating scales in reviews ('out of five'), taxonomic 'genus', critic-review verbs, and Latin/Polish word completions, with no clear relation among them.",
+"served": "claude-haiku-5-5"
+},
+"u230": {
+"verdict": "one",
+"description": "Fires mid-phrase, where the next word completes a noun phrase, proper name, or title (e.g., 'the Gulf', 'Jan|esville', 'double-bass|drums', 'Best Video Album'), with a few verb and function-word cases that still sit inside a phrase.",
+"served": "claude-haiku-5-5"
+},
+"u231": {
+"verdict": "one",
+"description": "Fires mid-way through a multi-token word, name, or fixed phrase (e.g. B\u00f8rd|ahl, Catt|aro, myeloperox|idase, not| only, increase| in), where the next token completes a known term.",
+"served": "claude-haiku-5-5"
+},
+"u232": {
+"verdict": "two_related",
+"description": "Fires on mid-word or mid-number fragments that must be completed (e.g., 'Str|apping', '198|6', 'ent|it|ling') and on words that complete comparative or parallel constructions (e.g., 'than their', 'as well as', 'the most by any').",
+"served": "claude-haiku-5-5"
+},
+"u233": {
+"verdict": "one",
+"description": "Fires on the token that completes a predictable multi-token unit, either a word split into pieces (e.g. 'secretarial', 'storeroom', 'mausoleum', 'UTMB') or a fixed phrase whose remainder is highly predictable (e.g. 'turn ... over', 'for the most part', 'his or her', 'divided into').",
+"served": "claude-haiku-5-5"
+},
+"u234": {
+"verdict": "one",
+"description": "Fires on the token that completes a fixed, highly predictable expression (a chess move like 1.e4, the phrase \"of course\", or a known name or title such as \"Gwen Stefani\" or \"Part II\"), where the following word is largely determined.",
+"served": "claude-haiku-5-5"
+},
+"u235": {
+"verdict": "several_unrelated",
+"description": "No single job fits: the marked tokens include mid-word fragments (Gal|veston, R|ector), hyphens in compound modifiers, determiners before nouns, second parts of names (New Delhi, Dorothy Barker), verbs and particles after a subject or modal, and digits inside numbers, with no clear shared role.",
+"served": "claude-haiku-5-5"
+},
+"u236": {
+"verdict": "one",
+"description": "Fires on a token inside or at the start of a proper name (people, places, ships, species), where the next token is likely to complete the name, e.g. 'Alb' in Albani or 'Raul' in Hilberg.",
+"served": "claude-haiku-5-5"
+},
+"u237": {
+"verdict": "two_related",
+"description": "Mostly fires on word-piece fragments inside split words or names (e.g. 'ret|ic|ence', 'cher|ub|im', 'Astr|onom|ical'), plus ordinals right before '-@ minute' in match reports; the link is predicting a constrained continuation of a partial form.",
+"served": "claude-haiku-5-5"
+},
+"u238": {
+"verdict": "unclear",
+"description": "The marked tokens span unrelated roles (names mid-span, verbs, determiners, prepositions, numbers, punctuation) with no shared word-level or next-word pattern that I can identify.",
+"served": "claude-haiku-5-5"
+},
+"u239": {
+"verdict": "one",
+"description": "Fires mid-unit inside a multi-token span (hyphenated compounds, numbers, names, split words, fixed phrases like 'as well as' and 'Once upon a'), where the next token continues the same expression.",
+"served": "claude-haiku-5-5"
+},
+"u240": {
+"verdict": "unclear",
+"description": "The marked tokens span heterogeneous roles (articles before nouns, possessive 's, name and word-fragment completions, prepositions, conjunctions, and numbers) with no single shared function that explains most snippets.",
+"served": "claude-haiku-5-5"
+},
+"u241": {
+"verdict": "one",
+"description": "Fires on the word 'row' or 'line' (and 'ligne') in the sense of a linear arrangement or sequence, such as pillars, thorns, chess moves, or text lines, with the surname fragment 'Row' in Rowson as a lexical offshoot.",
+"served": "claude-haiku-5-5"
+},
+"u242": {
+"verdict": "several_unrelated",
+"description": "It fires on several unrelated things: the word 'promotion' in sports league contexts (the largest group), 'daily' in newspaper names, the word-piece 'vivip' before 'arous', and assorted function words after verbs ('tied to', 'traded for', 'give up'), with no shared role.",
+"served": "claude-haiku-5-5"
+},
+"u243": {
+"verdict": "one",
+"description": "Fires on the token that completes a fixed multi-token expression, such as the middle of a split word (mono|the|ism, Pan|the|ons) or a set phrase (Prime Minister, at the very end/limit, At the age).",
+"served": "claude-haiku-5-5"
+},
+"u244": {
+"verdict": "one",
+"description": "Fires on a word-internal subword fragment (e.g. 'az|ir|idines', 'Dict|ator', 'emb|ank|ment') where the next token must complete a split word or name, with a few close variants like the 'ICR|P' acronym and 'impaired' after 'leading to'.",
+"served": "claude-haiku-5-5"
+},
+"u245": {
+"verdict": "one",
+"description": "Fires on the first piece of a word, abbreviation, or number split across tokens (e.g. 'e' in 'e.g.', the '2' of years like 2008, and word fragments like 'oped' in 'doped'), where the next token completes the unit.",
+"served": "claude-haiku-5-5"
+},
+"u246": {
+"verdict": "one",
+"description": "Fires on words in taxonomic or hierarchical contexts, such as classification verbs (classified, placed, grouped) and 'sub-' prefixes (subtypes, subcategories, subordinated), where the next word continues a category or subdivision relation.",
+"served": "claude-haiku-5-5"
+},
+"u247": {
+"verdict": "one",
+"description": "Fires on an incomplete subword fragment in the middle of a rare or split word (e.g., 'G-aud-ium', 'va-ude-ville', 'T-end-aguru'), where the next token must finish the word.",
+"served": "claude-haiku-5-5"
+},
+"u248": {
+"verdict": "unclear",
+"description": "Several snippets involve works, books, films, and critics' attributions (e.g., 'books', 'film', 'book', 'Darling of'), but many others (e.g., 'under', 'in 2008', 'the first', 'the depths') share no clear theme, so no single job explains nearly all of them.",
+"served": "claude-haiku-5-5"
+},
+"u249": {
+"verdict": "unclear",
+"description": "The marked tokens are a diverse mix of adverbs, adjectives, verbs, and word fragments (e.g., 'cleanly', 'only', 'solely', 'enlight', 'Clair', 'Gle') with no single shared grammatical role or predictable next-word pattern.",
+"served": "claude-haiku-5-5"
+},
+"u250": {
+"verdict": "one",
+"description": "Fires on a token inside a highly predictable fixed phrase or split word, where the next token completes a set expression, name, or word fragment (e.g., 'West'\u2192'End', 'yog'\u2192'ic', 'wasn'\u2192''t', 'years'\u2192'old', 'Exodus'\u2192'7').",
+"served": "claude-haiku-5-5"
+},
+"u251": {
+"verdict": "one",
+"description": "Fires on a token in the middle of a multi-token unit (a split word, name, number, or noun phrase) where the next token is predictable as the continuation of that unit.",
+"served": "claude-haiku-5-5"
+},
+"u252": {
+"verdict": "several_unrelated",
+"description": "Several separate jobs: verbs of winning or defeating an opponent in sports and games (beat, defeated, won), month names following a day in birth dates, and reagent prepositions in chemical reaction descriptions, plus a few miscellaneous cases with no shared role.",
+"served": "claude-haiku-5-5"
+},
+"u253": {
+"verdict": "one",
+"description": "Fires on a mid-word subword fragment, where the model is completing a word or name split across tokens (e.g., Kueh|ne, Mogam|bo, dem|arc|ates, Mar|quette); a few snippets are looser, such as 'A \u27e6few\u27e7'.",
+"served": "claude-haiku-5-5"
+},
+"u254": {
+"verdict": "unclear",
+"description": "The marked tokens mix mid-word subword pieces (ear|then, observ|atory, Tar|pan), prepositions and conjunctions (of, for, as, and), punctuation (commas, semicolons), and numbers, with no single consistent next-word or grammatical role tying them together.",
+"served": "claude-haiku-5-5"
+},
+"u255": {
+"verdict": "two_related",
+"description": "Two related jobs: (1) inside a multi-token proper name or word, predicting the next piece of the surname, given name, species, or domain (e.g., 'Maya Rud|olph', 'A. hygrometricus'); and (2) the move-number digit in chess notation, predicting the following '.' and move (e.g., '1.e4', '4.Nxd4').",
+"served": "claude-haiku-5-5"
+},
+"u256": {
+"verdict": "one",
+"description": "Fires on the token just before a proper name or title of a work (an opening quote, 'titled', 'called', 'the', or 'motu'), so it predicts that a title or named entity comes next.",
+"served": "claude-haiku-5-5"
+},
+"u257": {
+"verdict": "one",
+"description": "Fires on tokens inside fixed or highly predictable phrases (e.g., 'pleasure of', 'Madison Square Garden', 'comes to an end', 'news of', '92nd season'), where the next word is strongly determined by the preceding words.",
+"served": "claude-haiku-5-5"
+},
+"u258": {
+"verdict": "one",
+"description": "Fires on the number (or the token just before it) that completes a numeric range or bound, such as the upper value in 'X to Y' or 'between six and ten', predicting the next numeric quantity.",
+"served": "claude-haiku-5-5"
+},
+"u259": {
+"verdict": "one",
+"description": "Fires on a word-internal subword fragment (most often 'ate' in 'Catechism', also 'petro', 'Photo', 'proph', 'Pro') where the next token completes the word, with a few stray cases on oil/number tokens.",
+"served": "claude-haiku-5-5"
+},
+"u260": {
+"verdict": "one",
+"description": "Fires on the first subword fragment of a proper name (Didache, Canadair, Vasco, Deshmukh, Canaan, Dershowitz), where the next token completes a capitalized name or Latin species name.",
+"served": "claude-haiku-5-5"
+},
+"u261": {
+"verdict": "two_related",
+"description": "Two related jobs: completing rare scientific terms split into word fragments (precocial, sympatric, refugium, Neotrygon), and predicting the verb or object after function words like 'provide', 'confer', 'serve as', and 'enables'.",
+"served": "claude-haiku-5-5"
+},
+"u262": {
+"verdict": "several_unrelated",
+"description": "The snippets share no single job: the marked tokens include the rupee sign before an amount, 'sworn' before 'brothers', the player name 'Sanford', and ethnic or national group nouns like 'Lebanese' and 'Catholics', with no clear common concept or next-word role linking them.",
+"served": "claude-haiku-5-5"
+},
+"u263": {
+"verdict": "one",
+"description": "Fires on a mid-word subword fragment of a word or name split across tokens (e.g., 'Ind|igo', 'Tax|ol', 'conc|urred', 'propag|and|ist'), where the next token completes the word.",
+"served": "claude-haiku-5-5"
+},
+"u264": {
+"verdict": "one",
+"description": "Fires on the word that completes a fixed multi-word expression (idiom, song or album title, or person's name) where the next token is highly predictable from the phrase already begun.",
+"served": "claude-haiku-5-5"
+},
+"u265": {
+"verdict": "one",
+"description": "Fires on the token right after a noun phrase head, where the next word is a connector: a coordinator (and, &), a preposition (in, of), a possessive 's, or a list/clause punctuation mark.",
+"served": "claude-haiku-5-5"
+},
+"u266": {
+"verdict": "one",
+"description": "Fires at the token just before the second number of a numeric range or paired measurement (e.g. the dash in '11\u201315 by', or the '(' before a metric conversion like '85 mph (140 km)'), so it predicts an upcoming numeric value in a measurement.",
+"served": "claude-haiku-5-5"
+},
+"u267": {
+"verdict": "unclear",
+"description": "The marked tokens are mixed: some are mid-word subword fragments (vertebrae, Cadet, Faced, besieged), while others are ordinary mid-phrase positions (prepositions, determiners, commas, names) with no shared pattern beyond generic next-token prediction.",
+"served": "claude-haiku-5-5"
+},
+"u268": {
+"verdict": "one",
+"description": "Fires on the head word of a fixed noun phrase of need, cause, or requirement (\"need\", \"gave rise\", \"give thanks\", \"in use\", \"in need of\") where the next word is typically \"to\" or \"for\"; the \"init\" case is a weak outlier.",
+"served": "claude-haiku-5-5"
+},
+"u269": {
+"verdict": "one",
+"description": "Fires on a token inside a multi-part name or fixed term (e.g., \"Department of\", \"Cl-uj\", \"Bun-ji\", \"Kas-par-ov\"), where the next token completes a known proper noun or set phrase.",
+"served": "claude-haiku-5-5"
+},
+"u270": {
+"verdict": "one",
+"description": "Fires on the word that completes a sports statistic phrase, mainly 'record' after a win-loss score (e.g., '55 \u2013 27 record') and 'high' after 'career' or 'league' (e.g., 'career high'); a few outliers like 'by no means' and 'By some accounts' fit less well.",
+"served": "claude-haiku-5-5"
+},
+"u271": {
+"verdict": "one",
+"description": "Fires on the token right before a year that follows a full date (e.g., 'October 10, \u27e61997\u27e7'), predicting the year; a few weaker hits on year digits and on 'at'/'live' after concert or album-recording phrases.",
+"served": "claude-haiku-5-5"
+},
+"u272": {
+"verdict": "one",
+"description": "Fires at mid-clause grammatical positions, mostly where the next word is a verb or verb complement (after modals, infinitival 'to', or auxiliaries like 'can', 'to', 'could'), with a few weaker cases such as possessive 's' and 'of' before a noun.",
+"served": "claude-haiku-5-5"
+},
+"u273": {
+"verdict": "one",
+"description": "Fires on the token right after a part-of-whole phrase ('X of', 'out of', 'all of', 'of the'), where the model is about to produce the total or denominator, such as the number of games, matches, or the '100' in 'out of 100'.",
+"served": "claude-haiku-5-5"
+},
+"u274": {
+"verdict": "one",
+"description": "Fires on a token inside a multi-token proper name or fixed term (people, newspapers, places, works, years), where the next token completes or extends the name, such as 'Lake' before 'Huron' or 'Daily' before 'Mail'.",
+"served": "claude-haiku-5-5"
+},
+"u275": {
+"verdict": "one",
+"description": "Fires on function words (prepositions, determiners, quantifiers) that open a noun phrase, where the next token is expected to be a noun or noun-phrase head, with some word-fragment completions as an offshoot.",
+"served": "claude-haiku-5-5"
+},
+"u276": {
+"verdict": "one",
+"description": "Fires on a token inside a word or proper name that is split across tokens, where the next token is expected to complete it (e.g., 'e' before 'aves', 'Cre' before 'te', 'S' before 'Sardinia').",
+"served": "claude-haiku-5-5"
+},
+"u277": {
+"verdict": "one",
+"description": "Fires on the first token of a proper noun or title split across several tokens (e.g. 'Tampa' before 'Bay Lightning', 'Las' before 'Vegas', 'Pars' before 'low'), predicting the completion of the name.",
+"served": "claude-haiku-5-5"
+},
+"u278": {
+"verdict": "one",
+"description": "The unit fires on verbs (and the prepositions after them) that introduce a person's action, speech, or writing, such as 'said', 'stated', 'wrote', 'lead', 'films', where the next word is the reported content or object of that action.",
+"served": "claude-haiku-5-5"
+},
+"u279": {
+"verdict": "unclear",
+"description": "The marked tokens span varied contexts (mid-word splits like Baden/Gr\u00fcnfeld, years and numbers, fixed phrases like 'did the same' and 'Later that day', and clause-level verbs), with no single shared role or clear predicted next-word type.",
+"served": "claude-haiku-5-5"
+},
+"u280": {
+"verdict": "one",
+"description": "Fires on a token in the middle of a fixed multi-token term, name, or phrase (e.g., 'Ces|sna', 'py|ramids', 'in the case of', 'Examples include'), where the next token is highly predictable from the fragment just before it.",
+"served": "claude-haiku-5-5"
+},
+"u281": {
+"verdict": "several_unrelated",
+"description": "Mixed jobs with no clear shared role: completing word fragments mid-token (destroy-ers, Pozzobon-elli, Karn-as-uta, emphas-ised), predicting a verb after a subject (These were, line is, Little Rock built), and predicting punctuation or name continuations after appositives and dates.",
+"served": "claude-haiku-5-5"
+},
+"u282": {
+"verdict": "unclear",
+"description": "The marked tokens are a mix of commas, periods, determiners, verbs, and partial words spread across unrelated contexts, with no shared concept, syntactic role, or obvious next-word pattern tying them together.",
+"served": "claude-haiku-5-5"
+},
+"u283": {
+"verdict": "one",
+"description": "Fires on a determiner or word-start fragment (mostly \"the\"/\"a\") where the next token must be a noun or noun-phrase head, such as \"city\", \"project\", \"drug\", or \"mother\".",
+"served": "claude-haiku-5-5"
+},
+"u284": {
+"verdict": "one",
+"description": "Fires on mid-phrase tokens in biographical prose (education, career, family, early life) where the next word is fairly predictable from a fixed collocation, such as 'High School', 'Neoclassical', 'middle-class', 'from film to film', or 'after a long absence'.",
+"served": "claude-haiku-5-5"
+},
+"u285": {
+"verdict": "unclear",
+"description": "The marked tokens are a grab bag: prepositions (\"in\", \"against\", \"of\"), number and subword fragments (\"19\u27e69\u27e77\", \"Cate\u27e6ch\u27e7ism\"), punctuation, and name pieces, with no shared grammatical role or predictable next word.",
+"served": "claude-haiku-5-5"
+},
+"u286": {
+"verdict": "one",
+"description": "Fires on mid-sentence clause boundaries (mostly semicolons and commas) in long, multi-clause sentences, where the sentence is expected to continue with an elaborating or parallel clause.",
+"served": "claude-haiku-5-5"
+},
+"u287": {
+"verdict": "one",
+"description": "Fires mid-way through a fixed multi-token name or term (e.g. 'Northern Territory', 'National Academy of', 'in situ', 'KwaZulu', 'K\u00f6ppen', 'CSIRO'), predicting the next piece of a memorized proper noun or set phrase.",
+"served": "claude-haiku-5-5"
+},
+"u288": {
+"verdict": "one",
+"description": "Fires on a partial word or name fragment (a mid-character byte, subword, or first letters of a proper noun) where the next token completes it, such as a Chinese name's characters in parentheses or the rest of an English, Polish, or Greek word.",
+"served": "claude-haiku-5-5"
+},
+"u289": {
+"verdict": "one",
+"description": "Fires on partial subword fragments in the middle of a word, mostly names and places (Vuk|ovar, Kree|ft, Dahl|gren), where the next token must complete the word.",
+"served": "claude-haiku-5-5"
+},
+"u290": {
+"verdict": "unclear",
+"description": "The marked tokens are mixed: some are words inside song or album titles, and others are function words or nouns in ordinary prose (after 'cost', 'average salary', 'its', 'than'), with no shared next-word prediction or formatting role that ties them together.",
+"served": "claude-haiku-5-5"
+},
+"u291": {
+"verdict": "one",
+"description": "Fires on the token inside a fixed multi-token unit, either an idiom or phrase (put aside, put forth, let alone, in order for, in absence of, in mind, taking into consideration) or a word split into subword pieces (rep-atri-ating, Hit-par-ade, Pite-\u015f-ti), where the next token is highly predictable.",
+"served": "claude-haiku-5-5"
+},
+"u292": {
+"verdict": "one",
+"description": "Fires on the token right after a numeric range or fraction separator (en dash in pairs like '25 \u201350', or slash in '151 \u20442'), predicting the second number of the pair; a few 'set' cases (set up/off, set a record) are a weaker, unrelated side pattern.",
+"served": "claude-haiku-5-5"
+},
+"u293": {
+"verdict": "one",
+"description": "Fires on tokens in medical and healthcare text, especially where the next word is likely a care, treatment, or medical term (e.g. 'acute burns', 'primary and specialized medical', 'health care').",
+"served": "claude-haiku-5-5"
+},
+"u294": {
+"verdict": "one",
+"description": "It fires on an initial subword fragment of a longer word that is split across tokens (e.g. \"inter\" in interchanging/interment, \"Gu\" in Guernsey/Guadalupe, \"gal\" in galley), where the next token must complete that word.",
+"served": "claude-haiku-5-5"
+},
+"u295": {
+"verdict": "one",
+"description": "Fires on a mid-word subword fragment that the next token completes, most often in leukemia/AML terms (leuk|emic, C|ML, P|ML, epigen|etic) and also in other split words (super|oxide, Gal|vest|on, equal|ised).",
+"served": "claude-haiku-5-5"
+},
+"u296": {
+"verdict": "one",
+"description": "Fires on incomplete word fragments mid-word (e.g. 'sacram' before 'ent', 'lustr' before 'ous', 'Prat' before 'ique', 'mot' before 'u'), where the next token should complete the split word; a few whole-word hits are weaker offshoots.",
+"served": "claude-haiku-5-5"
+},
+"u297": {
+"verdict": "one",
+"description": "Fires on category or domain modifiers (nationalities, sports, and fields like nuclear, German, Canadian, hockey, cricket) that precede or name the head noun they classify, such as 'nuclear weapon', 'German fleet', or 'Cricket Club'.",
+"served": "claude-haiku-5-5"
+},
+"u298": {
+"verdict": "one",
+"description": "Fires on a token that is an incomplete fragment of a larger word, name, or character (partial Greek letters, split fraction symbols, word-initial pieces like ' g' in glee/garrulous/gill), where the next token completes it.",
+"served": "claude-haiku-5-5"
+},
+"u299": {
+"verdict": "unclear",
+"description": "Many marked tokens are fragments of words split across subword tokens (Arch-du-ke, med-ley, cate-ch-ism, Un-bek-nownst, anthrop-ogenic, ins-inc-ere), but others (\"second\u27e6 space\u27e7\", \"put\u27e6 forth\u27e7\", \"cut\u27e6 by\u27e7\", \"unstable\") do not share that pattern, so no single job is clear.",
+"served": "claude-haiku-5-5"
+},
+"u300": {
+"verdict": "unclear",
+"description": "The marked tokens mix mid-word fragments (exter-, immigr-, undes-, incess-), recurring whole words (riots, grounds), a repeated Chinese character (\u4f97), and unrelated nouns and adjectives (pear, Armor, offending, presses), with no single shared job evident.",
+"served": "claude-haiku-5-5"
+},
+"u301": {
+"verdict": "one",
+"description": "Fires on a mid-word subword piece of a rare multi-token name or technical term (mostly Egyptian god names like Am|un and At|um, plus Crex, Sobek, eccentric|ity), where the next token completes the word.",
+"served": "claude-haiku-5-5"
+},
+"u302": {
+"verdict": "one",
+"description": "Fires on superlative or uniqueness constructions (first, only, highest, longest, second, 'ever', 'any'), at the token where a restrictive complement such as 'to', 'in', 'of', or 'that' is expected next.",
+"served": "claude-haiku-5-5"
+},
+"u303": {
+"verdict": "one",
+"description": "Fires on words inside national or basketball team names (e.g., 'wheelchair', 'women', 'men', country names), where the next word is likely a team-naming term such as 'basketball', 'national', or 'team'.",
+"served": "claude-haiku-5-5"
+},
+"u304": {
+"verdict": "one",
+"description": "Fires on a token inside a word or proper name that is split across subword pieces, where the model is completing the rest of that name or word (e.g., 'Reich|sk|ommissariat', 'coup d'\u00e9tat', 'Dil|w|ale', 'Sheffield United').",
+"served": "claude-haiku-5-5"
+},
+"u305": {
+"verdict": "two_related",
+"description": "Mostly fires on possessive 's right before an expected noun (about 7 of 20), plus a looser group of function words or modifiers (only, not, other, several, broader, most) that sit inside a phrase and anticipate its head word.",
+"served": "claude-haiku-5-5"
+},
+"u306": {
+"verdict": "several_unrelated",
+"description": "No single job covers the set. It fires on mid-word fragments completing names (Rud\u2192olph, ad\u2192haras), on numbers in imperial-to-metric conversions (9\u2192.1 m, 1\u2192.8 m), on stock idiom words (every\u2192other, any\u2192case, some\u2192extent), and on chemical-equation plus signs.",
+"served": "claude-haiku-5-5"
+},
+"u307": {
+"verdict": "one",
+"description": "Fires on a token in the middle of a multi-word proper name or title (people, bands, songs, aircraft, publications, places), where the next word continues or completes that name.",
+"served": "claude-haiku-5-5"
+},
+"u308": {
+"verdict": "one",
+"description": "Fires on words expressing latitude or authority to act as one chooses (discretion, freedom, power, control, 'whatever we want'), often on the token just before a predicted 'freedom/discretion/power to do X' continuation.",
+"served": "claude-haiku-5-5"
+},
+"u309": {
+"verdict": "one",
+"description": "Fires on a word inside a fixed multi-word name or set phrase and predicts its completion, e.g. 'Recording' before 'Industry Association', 'Force' in 'Royal Australian Air Force', 'Most Valuable Player', 'Members of Parliament', 'men's basketball'.",
+"served": "claude-haiku-5-5"
+},
+"u310": {
+"verdict": "one",
+"description": "Fires on word-internal subword pieces that sit in or right after an 'ne'/'Ne' letter sequence (Neotrygon, Neoclassical, n\u00e9e, neo-noir, polyneuropathy, neared, nerves), so it tracks the spelling 'ne' inside words rather than a meaning or grammatical role.",
+"served": "claude-haiku-5-5"
+},
+"u311": {
+"verdict": "one",
+"description": "Fires on the unit or counted noun right after a number (mostly 'inches'/'in' after feet, and 'games'/'game'/'ERA' in sports stats), anticipating a measurement or statistic to follow.",
+"served": "claude-haiku-5-5"
+},
+"u312": {
+"verdict": "several_unrelated",
+"description": "Mixed triggers: colons and Thai-script tokens in Thai name parentheticals, '@-@' hyphen-formatting tokens, and digits in 'cal'/BCE date and caliber figures, with no clear shared role.",
+"served": "claude-haiku-5-5"
+},
+"u313": {
+"verdict": "one",
+"description": "Fires on the comma or period right after a count or quantity noun phrase (e.g., 'two HTGR power reactors', 'six elected positions'), where the text is about to specify, list, or elaborate on that number; the 'the most notable being' case is a closely related enumerative offshoot.",
+"served": "claude-haiku-5-5"
+},
+"u314": {
+"verdict": "unclear",
+"description": "The marked tokens span unrelated roles: numbers inside figures and quantities, commas and periods after noun phrases, function words before verbs or nouns, and word fragments. No single next-word type or concept covers them, so the unit's shared trigger is not identifiable.",
+"served": "claude-haiku-5-5"
+},
+"u315": {
+"verdict": "one",
+"description": "Fires on an incomplete word-piece fragment (e.g. 'Cre' in Creutz, 'Med' in Medley/Medway, 'estr' in estranged) where the next token must continue the same split word or name.",
+"served": "claude-haiku-5-5"
+},
+"u316": {
+"verdict": "two_related",
+"description": "Mostly fires inside parenthetical metric-to-imperial conversions (predicting the converted number), with a related secondary role in quoted song titles and parenthetical translations.",
+"served": "claude-haiku-5-5"
+},
+"u317": {
+"verdict": "unclear",
+"description": "The marked tokens span unrelated roles (verb complements like 'noted that' and 'became', date digits, word fragments like 'trib' and 'cr', possessives, and sentence-boundary punctuation) with no shared context or next-word pattern that ties them together.",
+"served": "claude-haiku-5-5"
+},
+"u318": {
+"verdict": "one",
+"description": "Fires on a token in the middle of a multi-token word, name, or term (word fragments, surnames, abbreviations, compounds) where the next token completes the unit.",
+"served": "claude-haiku-5-5"
+},
+"u319": {
+"verdict": "one",
+"description": "Fires on a token in the middle of a fixed multi-token unit (a name, title, phrasal verb, split word, or set collocation) where the next token is largely determined by the expression, such as 'Blue' in 'Blue Jackets' or 'Come' in 'Come to an End'.",
+"served": "claude-haiku-5-5"
+},
+"u320": {
+"verdict": "two_related",
+"description": "Mainly fires on the position right after a month-day or date (or a number like 'Category 2') where a year or number is expected, with a secondary pattern on 'nomination/nominee/nominated for' where an award name is expected.",
+"served": "claude-haiku-5-5"
+},
+"u321": {
+"verdict": "two_related",
+"description": "Mainly fires on 'half' in fixed expressions ('second half', 'half a', 'year contract') and on the apostrophe in negative contractions (didn't, couldn't, don't), both predicting a highly determined next token; a few mid-word fragments are weaker cases.",
+"served": "claude-haiku-5-5"
+},
+"u322": {
+"verdict": "one",
+"description": "Fires on an incomplete subword piece of a proper name or long word (e.g., 'M\u27e6ih\u27e7ai', 'Ark\u27e7adelphia', 'Jon\u27e7 Brion', 'Mir\u27e7abal'), where the next token is the continuation that completes the name or word.",
+"served": "claude-haiku-5-5"
+},
+"u323": {
+"verdict": "one",
+"description": "Fires on an incomplete subword fragment of a word or name (e.g. 'Sab' in Sabres/Sabina, 'Kas' in Kasparov, 'Vas' in Vasconcelos), where the next token must complete the split word.",
+"served": "claude-haiku-5-5"
+},
+"u324": {
+"verdict": "one",
+"description": "Fires inside years, decades, and dates, at the point where the next token completes a year, decade (\"s\"), or date component, though several snippets are only loosely related.",
+"served": "claude-haiku-5-5"
+},
+"u325": {
+"verdict": "one",
+"description": "Fires on a sub-word fragment in the middle of a word split across tokens (e.g. 'rit\u27e6ually\u27e7', 'Gaud\u27e6ium\u27e7', 'rect\u27e6ory\u27e7'), where the next token must continue or complete the same word.",
+"served": "claude-haiku-5-5"
+},
+"u326": {
+"verdict": "one",
+"description": "Fires on the token that completes a fixed multi-token unit, mostly 'than' after 'more', 'longer' after 'no', and 'yet' after 'not', plus some mid-word subword fragments that finish a split name or word.",
+"served": "claude-haiku-5-5"
+},
+"u327": {
+"verdict": "one",
+"description": "Fires on a token where the next token is a punctuation or hyphen-join symbol, mostly the middle '@' of tokenized '@-@' compounds and decimals, plus semicolons and closing quotes; a formatting/punctuation role.",
+"served": "claude-haiku-5-5"
+},
+"u328": {
+"verdict": "one",
+"description": "Fires on tokens inside fixed multi-token terms, names, or compounds (e.g., Par|aly|mpics, Super|bike, thromb|oc|ytopenia, International Union |for| Conservation), where the next token completes a known phrase.",
+"served": "claude-haiku-5-5"
+},
+"u329": {
+"verdict": "unclear",
+"description": "Roughly six snippets (1, 2, 7, 13, 15, 16) are mid-number, with the marked token inside a year or date and a digit likely next, but the other fourteen show no shared pattern, so the unit's common job is not clear.",
+"served": "claude-haiku-5-5"
+},
+"u330": {
+"verdict": "one",
+"description": "Tokens where the next word is expected to be a verb or verb phrase: auxiliaries like 'has/have' before a past participle, subject pronouns and relative pronouns right before a verb, and infinitive or participle forms.",
+"served": "claude-haiku-5-5"
+},
+"u331": {
+"verdict": "one",
+"description": "Fires on \"also\" and similar anaphoric modifiers (same, other, those, that) that link the clause back to a previously mentioned entity or event, mid-phrase, before the continuation (verb, noun, or time word) is supplied.",
+"served": "claude-haiku-5-5"
+},
+"u332": {
+"verdict": "unclear",
+"description": "The marked tokens span unrelated contexts (names, numbers, collocations like 'coming years', 'trial basis', 'critical analysis', 'according to'), with no shared concept, grammatical role, or predictable next word that ties them together.",
+"served": "claude-haiku-5-5"
+},
+"u333": {
+"verdict": "one",
+"description": "Fires on a mid-word or mid-name subword fragment (e.g., 'ator' in Gatorade, 'ade' in Tadeusz, 'Desh', 'Rud[in]'), predicting the rest of a split word or proper name.",
+"served": "claude-haiku-5-5"
+},
+"u334": {
+"verdict": "unclear",
+"description": "The snippets share no clear concept or grammatical role: they mix mid-name subword completions (Prop|ag|anda, D|\u00ed|az, Scott|ie), determiner-to-noun predictions, sentence-start names, and verb or adjective slots, with no common next-word pattern tying them together.",
+"served": "claude-haiku-5-5"
+},
+"u335": {
+"verdict": "several_unrelated",
+"description": "Several separate jobs: the largest group fires on paragraph-ending newlines after a sentence (predicting a new paragraph), a second on digits inside years (predicting the next year digit), and others on hyphens in 'Austro-Hungarian' and 'left half-face', the 'y' in 'Valkyria', and 'this' in 'this class'. These share no clear common function.",
+"served": "claude-haiku-5-5"
+},
+"u336": {
+"verdict": "several_unrelated",
+"description": "Strongest on firearm/artillery vocabulary (fire, fired, firing, caliber, muskets, gun specs), but also fires on unrelated items: World Cup, 'then' before a title, word-fragment completions (ethyl, thal, my), 'free agency', and 'economy'.",
+"served": "claude-haiku-5-5"
+},
+"u337": {
+"verdict": "two_related",
+"description": "Fires on tokens where the next piece completes a split unit: mid-word fragments (Cold|rum, dub|ium, Antimon|ii) and digits after @.@/@,@ number separators, plus 'Old'/'New' in fixed proper-name phrases (Old World, New Kingdom) that expect a following name word.",
+"served": "claude-haiku-5-5"
+},
+"u338": {
+"verdict": "one",
+"description": "Fires on words that open a complement slot: a 'that'-clause or prepositional complement after verbs, nouns, or adjectives (e.g. 'prove that', 'signs of', 'complaint with', 'concerned that'), so it tracks the grammatical position where a complement is expected next.",
+"served": "claude-haiku-5-5"
+},
+"u339": {
+"verdict": "one",
+"description": "Fires on an incomplete word-initial subword fragment (mostly 'sc'-onset, plus a few like 'Pot', 'slo', 'So', 'Ep'), where the model must predict the rest of the word, e.g. 'scr' before 'apping' or 'Sc' before 'roote'.",
+"served": "claude-haiku-5-5"
+},
+"u340": {
+"verdict": "one",
+"description": "Fires on the trade/exchange vocabulary of sports player transactions (traded, trade, and 'for' in 'sent X to Y for Z'), predicting the next word in a trade description.",
+"served": "claude-haiku-5-5"
+},
+"u341": {
+"verdict": "two_related",
+"description": "Fires mainly where the next word is a body part (after 'on the', 'in his', 'with its', 'their'), and secondarily on numbers that begin a physical measurement before a unit like feet, mm, inch, or ft.",
+"served": "claude-haiku-5-5"
+},
+"u342": {
+"verdict": "unclear",
+"description": "About seven snippets (4, 6\u20138, 10, 11, 19) end just before an opening parenthesis for a unit conversion or alternate value, but the other thirteen are mid-phrase words (e.g., 'it', 'to', 'with', 'given', 'producer') with no shared next-word role, so the common job isn't clear.",
+"served": "claude-haiku-5-5"
+},
+"u343": {
+"verdict": "two_related",
+"description": "Two related jobs: completing a word or name split across tokens (e.g. 'Cabr|era', 'Ent|ering', '15|8|5'), and predicting a determiner, possessive, or noun-phrase head such as 'their', 'its', 'the', or 'contents' after a verb, preposition, or noun.",
+"served": "claude-haiku-5-5"
+},
+"u344": {
+"verdict": "one",
+"description": "Fires on a token that begins or sits inside a word or name split across pieces (e.g., 'em|bezzlement', 'Pier|zynski', 'Pay|ton', 'cam|be'), where the next token completes that word, with a few whole-word cases like 'ticket' before 'sales' or 'sell' before 'out'.",
+"served": "claude-haiku-5-5"
+},
+"u345": {
+"verdict": "one",
+"description": "Fires on an incomplete subword fragment at the start or middle of a rare word or name split across tokens (e.g. 'Ker|ch', 'D|wyane', 'mon|ob|lastic'), where the next token must complete the word.",
+"served": "claude-haiku-5-5"
+},
+"u346": {
+"verdict": "unclear",
+"description": "The marked tokens are a mix of mid-clause verbs (lays, played, aired, plays), prepositions, determiners, and modifiers (in, of, a, that, right, odd), with no single shared role or clearly predictable next word across the snippets.",
+"served": "claude-haiku-5-5"
+},
+"u347": {
+"verdict": "one",
+"description": "Fires on digits within a four-digit publication year in citations (e.g., \"Ali (200\u27e62\u27e7)\", \"OECD, 200\u27e68\u27e7\"), i.e., predicting the next digit of a citation year, with a few hits on the parenthesis just before the year.",
+"served": "claude-haiku-5-5"
+},
+"u348": {
+"verdict": "one",
+"description": "Fires on a mid-word subword fragment of a rare or multi-token word (e.g. diastere\u27e6ose\u27e7lective, Per\u27e6se\u27e7verance, pi\u27e6rote\u27e7chnia), where the next token completes the word being spelled out.",
+"served": "claude-haiku-5-5"
+},
+"u349": {
+"verdict": "one",
+"description": "Fires on tokens inside highly predictable fixed expressions (chemical formulas like Sb2S3, chart and award names, 'in exchange for', split words like dehydro|genase), where the next token is strongly determined by the preceding words.",
+"served": "claude-haiku-5-5"
+}
+}

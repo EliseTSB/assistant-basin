@@ -1,0 +1,202 @@
+{
+ "npz": "allenai__OLMo-2-0425-1B-Instruct.npz",
+ "frames": "23 named",
+ "by_form": {
+  "chat": [
+   {
+    "layer": 0,
+    "olmo_to_claude": 1.0572762489318848,
+    "olmo_to_chatgpt": 0.7310848236083984,
+    "claude_to_chatgpt": 1.1056016683578491
+   },
+   {
+    "layer": 1,
+    "olmo_to_claude": 0.8962441086769104,
+    "olmo_to_chatgpt": 0.7680778503417969,
+    "claude_to_chatgpt": 0.9241400361061096
+   },
+   {
+    "layer": 2,
+    "olmo_to_claude": 0.7900369167327881,
+    "olmo_to_chatgpt": 0.7203003168106079,
+    "claude_to_chatgpt": 0.8565878868103027
+   },
+   {
+    "layer": 3,
+    "olmo_to_claude": 0.6825330257415771,
+    "olmo_to_chatgpt": 0.6457383632659912,
+    "claude_to_chatgpt": 0.696846604347229
+   },
+   {
+    "layer": 4,
+    "olmo_to_claude": 0.6523411273956299,
+    "olmo_to_chatgpt": 0.6568977236747742,
+    "claude_to_chatgpt": 0.7230852246284485
+   },
+   {
+    "layer": 5,
+    "olmo_to_claude": 0.684323787689209,
+    "olmo_to_chatgpt": 0.6582268476486206,
+    "claude_to_chatgpt": 0.6435120701789856
+   },
+   {
+    "layer": 6,
+    "olmo_to_claude": 0.6695762872695923,
+    "olmo_to_chatgpt": 0.6603137850761414,
+    "claude_to_chatgpt": 0.6642353534698486
+   },
+   {
+    "layer": 7,
+    "olmo_to_claude": 0.7015511989593506,
+    "olmo_to_chatgpt": 0.6335824728012085,
+    "claude_to_chatgpt": 0.6523004770278931
+   },
+   {
+    "layer": 8,
+    "olmo_to_claude": 0.7486511468887329,
+    "olmo_to_chatgpt": 0.6649238467216492,
+    "claude_to_chatgpt": 0.6498199701309204
+   },
+   {
+    "layer": 9,
+    "olmo_to_claude": 0.7190085053443909,
+    "olmo_to_chatgpt": 0.6462133526802063,
+    "claude_to_chatgpt": 0.5992088913917542
+   },
+   {
+    "layer": 10,
+    "olmo_to_claude": 0.733529806137085,
+    "olmo_to_chatgpt": 0.665891170501709,
+    "claude_to_chatgpt": 0.6061388850212097
+   },
+   {
+    "layer": 11,
+    "olmo_to_claude": 0.7231136560440063,
+    "olmo_to_chatgpt": 0.6541846990585327,
+    "claude_to_chatgpt": 0.5778989195823669
+   },
+   {
+    "layer": 12,
+    "olmo_to_claude": 0.7284076809883118,
+    "olmo_to_chatgpt": 0.6338958144187927,
+    "claude_to_chatgpt": 0.5554412007331848
+   },
+   {
+    "layer": 13,
+    "olmo_to_claude": 0.7363798022270203,
+    "olmo_to_chatgpt": 0.6420853137969971,
+    "claude_to_chatgpt": 0.5342766642570496
+   },
+   {
+    "layer": 14,
+    "olmo_to_claude": 0.76235431432724,
+    "olmo_to_chatgpt": 0.6302751302719116,
+    "claude_to_chatgpt": 0.510454535484314
+   },
+   {
+    "layer": 15,
+    "olmo_to_claude": 0.7897341251373291,
+    "olmo_to_chatgpt": 0.6135725378990173,
+    "claude_to_chatgpt": 0.4630569517612457
+   }
+  ],
+  "plain": [
+   {
+    "layer": 0,
+    "olmo_to_claude": 1.0418877601623535,
+    "olmo_to_chatgpt": 0.7383973598480225,
+    "claude_to_chatgpt": 1.0788493156433105
+   },
+   {
+    "layer": 1,
+    "olmo_to_claude": 0.887959361076355,
+    "olmo_to_chatgpt": 0.770082414150238,
+    "claude_to_chatgpt": 0.9130088686943054
+   },
+   {
+    "layer": 2,
+    "olmo_to_claude": 0.786842942237854,
+    "olmo_to_chatgpt": 0.7231541275978088,
+    "claude_to_chatgpt": 0.8530888557434082
+   },
+   {
+    "layer": 3,
+    "olmo_to_claude": 0.6845446825027466,
+    "olmo_to_chatgpt": 0.6482203602790833,
+    "claude_to_chatgpt": 0.7003799676895142
+   },
+   {
+    "layer": 4,
+    "olmo_to_claude": 0.6496596336364746,
+    "olmo_to_chatgpt": 0.6502928733825684,
+    "claude_to_chatgpt": 0.7110841274261475
+   },
+   {
+    "layer": 5,
+    "olmo_to_claude": 0.6778385043144226,
+    "olmo_to_chatgpt": 0.6317809820175171,
+    "claude_to_chatgpt": 0.6540447473526001
+   },
+   {
+    "layer": 6,
+    "olmo_to_claude": 0.6782171726226807,
+    "olmo_to_chatgpt": 0.6524419188499451,
+    "claude_to_chatgpt": 0.6697155237197876
+   },
+   {
+    "layer": 7,
+    "olmo_to_claude": 0.7096580266952515,
+    "olmo_to_chatgpt": 0.6326239705085754,
+    "claude_to_chatgpt": 0.6674275398254395
+   },
+   {
+    "layer": 8,
+    "olmo_to_claude": 0.751650869846344,
+    "olmo_to_chatgpt": 0.6675891280174255,
+    "claude_to_chatgpt": 0.6656509041786194
+   },
+   {
+    "layer": 9,
+    "olmo_to_claude": 0.7263838052749634,
+    "olmo_to_chatgpt": 0.6419417262077332,
+    "claude_to_chatgpt": 0.6240134239196777
+   },
+   {
+    "layer": 10,
+    "olmo_to_claude": 0.7341755032539368,
+    "olmo_to_chatgpt": 0.6515188813209534,
+    "claude_to_chatgpt": 0.6263256669044495
+   },
+   {
+    "layer": 11,
+    "olmo_to_claude": 0.7275916337966919,
+    "olmo_to_chatgpt": 0.6335054039955139,
+    "claude_to_chatgpt": 0.5988308787345886
+   },
+   {
+    "layer": 12,
+    "olmo_to_claude": 0.7313488125801086,
+    "olmo_to_chatgpt": 0.5999189019203186,
+    "claude_to_chatgpt": 0.5835666060447693
+   },
+   {
+    "layer": 13,
+    "olmo_to_claude": 0.7441384792327881,
+    "olmo_to_chatgpt": 0.6199895739555359,
+    "claude_to_chatgpt": 0.578220546245575
+   },
+   {
+    "layer": 14,
+    "olmo_to_claude": 0.7800725102424622,
+    "olmo_to_chatgpt": 0.6108694672584534,
+    "claude_to_chatgpt": 0.5776886343955994
+   },
+   {
+    "layer": 15,
+    "olmo_to_claude": 0.8179883360862732,
+    "olmo_to_chatgpt": 0.6073718070983887,
+    "claude_to_chatgpt": 0.5540466904640198
+   }
+  ]
+ }
+}

@@ -1,0 +1,1752 @@
+{
+"u000": {
+"verdict": "several_unrelated",
+"description": "The snippets span unrelated contexts: spellings/names (mistresses, Vishnu), dates/years (2013, 22, 2000s, November), specific words like Grammy, cover, errors, tolerate, and syntactic function words (to, on, of, the, not), showing no single coherent job.",
+"served": "deepseek-v4.1-flash"
+},
+"u001": {
+"verdict": "one",
+"description": "Proper nouns and named entities\u2014the token is the start of a capitalized name/title (threat, machines, Cinema, have, Video, Journal, OU, from, Admiral, s, cinemas, or, ., the, drugs, copies, ., .V, scrutiny, space) in noun phrases, most often as the first or key word of a multiword proper name or fixed phrase.",
+"served": "deepseek-v4.1-flash"
+},
+"u002": {
+"verdict": "two_related",
+"description": "The unit responds to date-range punctuation and related numeric/abbreviation contexts: it fires on en dashes in date ranges (e.g., '18\u201320 October', '1721\u20131808') and on adjacent uses like a comma in dates, a period in a ranking, a slash in '+/-'); these all reflect formatting roles around numeric/date spans.",
+"served": "deepseek-v4.1-flash"
+},
+"u003": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span punctuation, prepositions, numbers, and specific words, with no single shared concept or next-word pattern.",
+"served": "deepseek-v4.1-flash"
+},
+"u004": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span multiple unrelated patterns: 'first' in 'for the first time' (snippets 1,3,4,7,10,12,19), 'not' in negative/relative constructions (8,16), 'only' (6,9), 'I' in 'All I Want for Christmas Is You' (11,17,20), 'one' (13), 'or' (5), 'what' (18), 'found' (2), and 'That' (14), with no single shared job.",
+"served": "deepseek-v4.1-flash"
+},
+"u005": {
+"verdict": "one",
+"description": "The token tends to occur at the continuation point of a list, category, or structured enumerative pattern (e.g., before list items or after a label such as abbreviations, chart categories, or names).",
+"served": "deepseek-v4.1-flash"
+},
+"u006": {
+"verdict": "one",
+"description": "The unit responds to words and word-parts relating to detonation/explosion, especially 'explode(d)', 'explosion', 'explosive', and 'detonation' in military, chemical, or nuclear contexts.",
+"served": "deepseek-v4.1-flash"
+},
+"u007": {
+"verdict": "one",
+"description": "The unit responds to proper-name tokens, especially surnames or named entities immediately following a first name or title (e.g., Niall, Barrie, Wofford, Goldhagen, Nakamura).",
+"served": "deepseek-v4.1-flash"
+},
+"u008": {
+"verdict": "one",
+"description": "Marks the final token of a multi-token word, often in named entities, titles, or compound terms (e.g., handkerchief, draw, evidence, results, was, or, KGL, Dandenong, coach, host, Faber, weak, of, Fairbairn, result, Rules, Hortons).",
+"served": "deepseek-v4.1-flash"
+},
+"u009": {
+"verdict": "one",
+"description": "The token after a possessive or demonstrative determiner (his, my, this, that, it, 's, a name, etc.) within a noun phrase, i.e. predicting the start of the possessed/described noun or the next word in the NP.",
+"served": "deepseek-v4.1-flash"
+},
+"u010": {
+"verdict": "one",
+"description": "The marked token is almost always the word 'of' or 'key' following a hyphenated compound (out-of-bounds, of self-mastery, right-of-way, prisoner-of-war, word-of-mouth, etc.), so the unit responds to the second part of hyphenated/compound expressions, especially the token after '@-@' or after a hyphen in compounds.",
+"served": "deepseek-v4.1-flash"
+},
+"u011": {
+"verdict": "one",
+"description": "Tokens beginning a noun phrase that refers back to a previously mentioned person, group, or entity via a possessive, pronoun, or name continuation.",
+"served": "deepseek-v4.1-flash"
+},
+"u012": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span unrelated concepts and roles, including Nile-related terms, Yugoslav/Beatles/USSR/Zimbabwe named entities, and suffix-like fragments (grossly, popularly, arousing, conspirators).",
+"served": "deepseek-v4.1-flash"
+},
+"u013": {
+"verdict": "several_unrelated",
+"description": "The marked tokens cover different jobs: the first digit of a year/date (e.g. 1766, 1905, 1822), a digit in a number (e.g. 2009, 20, 35), the word 'the' before a noun, and 'don' in the contraction don't.",
+"served": "deepseek-v4.1-flash"
+},
+"u014": {
+"verdict": "unclear",
+"description": "The marked tokens are a mixed set (articles, prepositions, numbers, names, word fragments in 'decomposing'/'wharves'/'arable'/'adapting'), with no single shared concept, pattern, or next-word prediction that accounts for most snippets.",
+"served": "deepseek-v4.1-flash"
+},
+"u015": {
+"verdict": "one",
+"description": "The unit responds to tokens that are the start of a compound or multiword expression, often the first word of a fixed phrase or joined term.",
+"served": "deepseek-v4.1-flash"
+},
+"u016": {
+"verdict": "several_unrelated",
+"description": "The marked tokens reflect unrelated patterns: proper-name continuations (Shaoguan, Boudica, Toubro, Buz\u0103u, Frumos, Subhash, Reba, Suba), English/foreign word fragments (kerosene, microlights, politics), a punctuation mark after 'St', and a measurement-space before '89 ft'.",
+"served": "deepseek-v4.1-flash"
+},
+"u017": {
+"verdict": "one",
+"description": "Words beginning with 'so', 'el', 'ex', 'le', 'bel', 'mul', 'in', 'for', 'writ' \u2014 i.e., the blank/candidate token positions where a specific continuation like 'so-called', 'elicit', 'exonerated', 'leotards', 'belting', 'multi', 'in', 'for', 'written' is being predicted; most marked tokens are the first fragment of a hyphenated or compound continuation.",
+"served": "deepseek-v4.1-flash"
+},
+"u018": {
+"verdict": "one",
+"description": "The marked token is almost always the start of an abbreviation, acronym, or initialism (often the first letter after a period), with a few occurrences marking the first word of a multiword proper name or fixed phrase.",
+"served": "deepseek-v4.1-flash"
+},
+"u019": {
+"verdict": "several_unrelated",
+"description": "The marked token mostly completes a specific word form or name (e.g., 'swimmers', 'Ivor Novello', 'Ciccarelli', 'swarms', 'extratropical', 'Schweizer', 'swans', 'Trisha', 'Conference', 'C\u00e2mpulung'), with no single shared concept, pattern, or next-word role across snippets.",
+"served": "deepseek-v4.1-flash"
+},
+"u020": {
+"verdict": "one",
+"description": "The token 'too' (plus a couple of closely related degree/extent words like 'as'/'or'/'with'/'getting') marks degree or extent, usually introducing an excessive or comparative amount ('too X to Y').",
+"served": "deepseek-v4.1-flash"
+},
+"u021": {
+"verdict": "one",
+"description": "The token is active on the first token of a multiword named entity or compound proper noun, especially ship names and related entities (Kronprinz, garrison, planet, city, Disney Cruise, inductee).",
+"served": "deepseek-v4.1-flash"
+},
+"u022": {
+"verdict": "one",
+"description": "The marked token tends to be mid-word, often at a morpheme boundary inside a proper name or technical term, where the model is tracking word-internal spelling/phonetic continuation.",
+"served": "deepseek-v4.1-flash"
+},
+"u023": {
+"verdict": "one",
+"description": "The second digit of the starting year in sports season ranges (e.g., 1993\u201394, 2011\u201312), especially the digit after a hyphen in phrases like '1991\u201392 season'.",
+"served": "deepseek-v4.1-flash"
+},
+"u024": {
+"verdict": "one",
+"description": "Marks the start of a named entity (mostly a person's surname or proper name) continuing from the preceding text.",
+"served": "deepseek-v4.1-flash"
+},
+"u025": {
+"verdict": "one",
+"description": "Tokens that are the second half of a multi-word proper name or fixed named entity (Furtado staying/Nelly, mm measurement, Soviet bloc, Ist/hist in hoist, David Lee Roth, Furtado, Treaty of Bucharest, Liberian Basilica, etc.), i.e. the continuation of a named-entity or collocational phrase.",
+"served": "deepseek-v4.1-flash"
+},
+"u026": {
+"verdict": "several_unrelated",
+"description": "The marked tokens are unrelated fragments spanning pop music descriptors, place/national names, personal names, and miscellaneous words, with no single shared concept or next-token role.",
+"served": "deepseek-v4.1-flash"
+},
+"u027": {
+"verdict": "one",
+"description": "Tokens marking a measurement value or its unit in conversions between metric and imperial units (miles, mph, km, cm, metres, mbar) or in numeric ranges.",
+"served": "deepseek-v4.1-flash"
+},
+"u028": {
+"verdict": "one",
+"description": "The token marks numeric quantities (years, ages, scores, tempos, measurements) immediately before a number or number-like expression.",
+"served": "deepseek-v4.1-flash"
+},
+"u029": {
+"verdict": "one",
+"description": "Tokens that are part of fixed or idiomatic multiword constructions (phrasal verbs, correlative pairs like 'not only/just', 'all', 'that', 'use', etc.) completing a common collocation.",
+"served": "deepseek-v4.1-flash"
+},
+"u030": {
+"verdict": "one",
+"description": "Follows common chess opening moves and chess-related tokens (1.e4, Nf3, Ruy Lopez, Petroff's Defense, patent-like game lines).",
+"served": "deepseek-v4.1-flash"
+},
+"u031": {
+"verdict": "one",
+"description": "The token position corresponds to the first letter of a word, often a capitalized surname or a Chinese character/romanization, i.e. a word-initial position in a list or name.",
+"served": "deepseek-v4.1-flash"
+},
+"u032": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span unrelated topics and functions: mid-word fragments from specific terms (Vitamin D, polyneuropathy, Jacquetta, Scleroderma, endoperidium, East India Company), common nouns (sugars, virtues, Secretary, complications), and verbs/words like attempt, become, Hamilton, Sweet\u2014no single shared concept or next-word pattern.",
+"served": "deepseek-v4.1-flash"
+},
+"u033": {
+"verdict": "one",
+"description": "The unit fires on mid-word or mid-token positions, typically at the boundary between a proper name or compound's first element and its continuation (e.g., Scotts/Scottsdale, Austr/Australian, Bern/Bernard, S/ED, conj/conjugal, gran/granules), often within capitalized or multi-token constructions.",
+"served": "deepseek-v4.1-flash"
+},
+"u034": {
+"verdict": "one",
+"description": "The unit responds to tokens that continue or complete common multiword expressions, especially proper names, titles, and fixed phrases (e.g., 'Oxford Dictionary of', 'Basilica', 'Chomsky', 'at the same time').",
+"served": "deepseek-v4.1-flash"
+},
+"u035": {
+"verdict": "one",
+"description": "The token is always inside a proper name or title, often at a word boundary before a capitalized or non-ASCII segment, like 'Billie', 'Bhumibol', 'Elie', 'Jackie', '2011', 'Elephantine', etc.",
+"served": "deepseek-v4.1-flash"
+},
+"u036": {
+"verdict": "several_unrelated",
+"description": "Many snippets mark 'there' in existential/clause-initial constructions, but others mark unrelated tokens (year digits, 'what'), so no single job explains all.",
+"served": "deepseek-v4.1-flash"
+},
+"u037": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span multiple unrelated patterns: verbs like 'married'/'played' (often followed by 'by'), prepositions like 'to'/'for', conjunctions 'and'/'or', and award-related terms like 'Globe'/'Outstanding'/'Club'/'a'.",
+"served": "deepseek-v4.1-flash"
+},
+"u038": {
+"verdict": "several_unrelated",
+"description": "The marked tokens include military ranks/units (Admiral, Bombardment), names (Miss, Baptist, Ganesha), compounds (impersonation, anti-aircraft), and punctuation, with no single shared job.",
+"served": "deepseek-v4.1-flash"
+},
+"u039": {
+"verdict": "one",
+"description": "The unit fires on the first digit of a year, especially in dates and numeric year ranges.",
+"served": "deepseek-v4.1-flash"
+},
+"u040": {
+"verdict": "one",
+"description": "Nouns naming entities being introduced or referred to (town, space, name, prison, accommodation, church, etc.), often the head noun of a noun phrase.",
+"served": "deepseek-v4.1-flash"
+},
+"u041": {
+"verdict": "one",
+"description": "The token is often the first word of a prepositional or noun phrase introducing a next element, especially 'addition', 'of', 'round', 'the', or 'first' in common collocations.",
+"served": "deepseek-v4.1-flash"
+},
+"u042": {
+"verdict": "one",
+"description": "Prepositions in fixed multiword sequences, especially 'of', 'to', 'in', 'on', 'and', and 'about' within collocations like 'question of', 'related to', 'in terms of', 'committed to'.",
+"served": "deepseek-v4.1-flash"
+},
+"u043": {
+"verdict": "one",
+"description": "The reflexive emphatic pronoun use of '-self' (himself/herself/itself/themselves) marking emphasis on a just-mentioned person or thing.",
+"served": "deepseek-v4.1-flash"
+},
+"u044": {
+"verdict": "one",
+"description": "The token inside or introducing quoted/cited words, attributions, or titles in citation-like contexts (e.g., 'quoted in', 'To cite a source', 'additional vocals', 'track-by-track').",
+"served": "deepseek-v4.1-flash"
+},
+"u045": {
+"verdict": "one",
+"description": "The token is active at year/number tokens that are followed by a closing parenthesis, often in historical dates or sports scores.",
+"served": "deepseek-v4.1-flash"
+},
+"u046": {
+"verdict": "one",
+"description": "The definite article 'the' (often in fixed phrases like 'at the', 'for the', or with superlatives/ordinals), i.e. the token where the model expects or tracks the word 'the'.",
+"served": "deepseek-v4.1-flash"
+},
+"u047": {
+"verdict": "several_unrelated",
+"description": "The active token varies widely\u2014punctuation/clause boundaries, singular nouns, prepositions, verb forms, and numeric digits\u2014with no single shared concept, pattern, or next-word role linking the snippets.",
+"served": "deepseek-v4.1-flash"
+},
+"u048": {
+"verdict": "one",
+"description": "Initial Z or Y at the start of Polish/East-European names and terms (often capitalized words like Zbigniew, Zofia, Zuzanna, Zr\u00ednyi, Zapatista, Yule, Yeh, etc.).",
+"served": "deepseek-v4.1-flash"
+},
+"u049": {
+"verdict": "unclear",
+"description": "No coherent single concept: activations span diverse substrings and words (e.g., 'molten', 'ab', 'x', 're-', Swedish names), suggesting unrelated lexical/orthographic triggers.",
+"served": "deepseek-v4.1-flash"
+},
+"u050": {
+"verdict": "several_unrelated",
+"description": "The unit fires on varied words inside phrases like 'made landfall,' 'moved off/out,' 'lymph node/lymphoblastic,' 'died near/at,' and 'struck a reef,' with no single shared concept or next-word pattern.",
+"served": "deepseek-v4.1-flash"
+},
+"u051": {
+"verdict": "unclear",
+"description": "The snippets show no consistent concept, pattern, or next-word role for the marked tokens; they vary widely and do not clearly share one or even two related jobs.",
+"served": "deepseek-v4.1-flash"
+},
+"u052": {
+"verdict": "one",
+"description": "The token '9' is active when it is the final digit of a four-digit year ending in 9 (mostly '1999' or '1979'), so the unit responds to a year-ending '9' digit.",
+"served": "deepseek-v4.1-flash"
+},
+"u053": {
+"verdict": "one",
+"description": "The unit responds to a proper-noun or technical multiword expression where the marked token is the second part of a named entity (e.g., 'La Salle', 'Foreign Legion', 'Air Force', 'Marine Corps', 'Actors Guild', 'Yeh Dosti', 'Hum Aapke', 'fluoroantimonic').",
+"served": "deepseek-v4.1-flash"
+},
+"u054": {
+"verdict": "one",
+"description": "The unit responds to a proper noun or named entity in a geographic, institutional, or technical context, especially where the marked token is part of a multiword name or place.",
+"served": "deepseek-v4.1-flash"
+},
+"u055": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span unrelated roles: determiners, prepositions, conjunctions, commas, nouns, and word-internal fragments, with no single shared concept.",
+"served": "deepseek-v4.1-flash"
+},
+"u056": {
+"verdict": "unclear",
+"description": "The marked tokens are a grab-bag of punctuation, common words, and mid-word positions with no single shared concept or pattern.",
+"served": "deepseek-v4.1-flash"
+},
+"u057": {
+"verdict": "one",
+"description": "Tokens that are the final word or punctuation completing a named entity, title, or fixed phrase (e.g., 'dollar piece', 'period', 'corncrake\"', 'ba', 'Canada'), i.e., the unit fires at the end of multiword names or set expressions.",
+"served": "deepseek-v4.1-flash"
+},
+"u058": {
+"verdict": "one",
+"description": "Words marking division/separation or enumeration into parts (split/divided/alternating/separate/respectively, plus colons, commas, and parentheses introducing lists or subdivisions).",
+"served": "deepseek-v4.1-flash"
+},
+"u059": {
+"verdict": "one",
+"description": "The 'and' conjunction or list-comma position that precedes the final item in a coordinated list.",
+"served": "deepseek-v4.1-flash"
+},
+"u060": {
+"verdict": "one",
+"description": "Tokens marking the boundary immediately before a capitalized surname or personal last name in citation, byline, and biographical contexts.",
+"served": "deepseek-v4.1-flash"
+},
+"u061": {
+"verdict": "several_unrelated",
+"description": "The active token varies widely (deep/deeper, I/Ivo/Irenaeus, Le/Leukemia/Le Soir, car/carvings, etc.), showing capitalization/word-initial patterns, prefix-like letters, and scattered semantic contexts rather than one coherent role.",
+"served": "deepseek-v4.1-flash"
+},
+"u062": {
+"verdict": "one",
+"description": "Continuing a proper name by predicting the next letter(s) of a known or plausible word, especially Polish names, chess authors, and place names.",
+"served": "deepseek-v4.1-flash"
+},
+"u063": {
+"verdict": "several_unrelated",
+"description": "No single shared job: marked tokens range across Latin species epithets, name fragments, compound-word middles, and possessive suffixes.",
+"served": "deepseek-v4.1-flash"
+},
+"u064": {
+"verdict": "one",
+"description": "The token 'also', marking an additional related point or item being added to what was just said.",
+"served": "deepseek-v4.1-flash"
+},
+"u065": {
+"verdict": "one",
+"description": "Position within a multi-token word/name (e.g., 'Gu-an Yu', 'D-andenong', 'Pr-ashad', 'ref-ugium'), i.e. the active unit fires on a non-initial subword token of an ongoing tokenized word.",
+"served": "deepseek-v4.1-flash"
+},
+"u066": {
+"verdict": "one",
+"description": "Decade/century year numbers, especially the second or middle digit of years spanning the 1830s\u20132000s, with a few historical-era phrases (New Kingdom, Neolithic) as related temporal-reference offshoots.",
+"served": "deepseek-v4.1-flash"
+},
+"u067": {
+"verdict": "several_unrelated",
+"description": "The marked tokens are unrelated: person-name continuations (Persoon, Karlyn, Pasternak, Bartov), places/school names (School of Art, Hunter College), and units/symbols (keV, @-@, Class of).",
+"served": "deepseek-v4.1-flash"
+},
+"u068": {
+"verdict": "one",
+"description": "Punctuation or connector token joining two numbers in ranges or scores (e.g., en dash, comma, 'and', 'or', 'to')",
+"served": "deepseek-v4.1-flash"
+},
+"u069": {
+"verdict": "one",
+"description": "Words in legal or institutional contexts, especially 'the' before court names, laws, and official bodies, plus related prepositions and function words in legal phrasing.",
+"served": "deepseek-v4.1-flash"
+},
+"u070": {
+"verdict": "one",
+"description": "The unit activates on tokens that immediately follow or complete unit conversions or measurements, especially 'ft' after metric lengths, plus related measurement/caliber expressions.",
+"served": "deepseek-v4.1-flash"
+},
+"u071": {
+"verdict": "one",
+"description": "The 'e.g.' abbreviation introducing examples, plus a few closely related fixed phrases like 'at least' and 'this very'.",
+"served": "deepseek-v4.1-flash"
+},
+"u072": {
+"verdict": "one",
+"description": "The token is active on the first word of a proper noun or named entity (person, place, organization, title), or on punctuation/words continuing such names.",
+"served": "deepseek-v4.1-flash"
+},
+"u073": {
+"verdict": "one",
+"description": "The token is the second word in a compound noun or fixed multiword expression (e.g., 'to my knowledge', 'innermost layer', 'the part of Nicole', 'translocation in', 'scanning electron microscopy', 'Late Night with', 'ice hockey', 'treble response', 'low frequencies', 'Best Supporting Actor', 'Saturday Night Live', '+5 oxidation state').",
+"served": "deepseek-v4.1-flash"
+},
+"u074": {
+"verdict": "one",
+"description": "The unit responds to occupation/role nouns describing what a person is or does (archaeologist, creative voice, theoretician, hero, citizens, artist, winner, scholar, founder, student, etc.).",
+"served": "deepseek-v4.1-flash"
+},
+"u075": {
+"verdict": "one",
+"description": "Positions where the marked token is a word/word-part that the model anticipates, especially mid-word morpheme boundaries in medical and taxonomic terms (e.g., hepat-, gastr-, Salmon-, Campylob-, Escherich-), with related function-word completions like 'and', 'his', 'of', 'the', 'via', 'often'.",
+"served": "deepseek-v4.1-flash"
+},
+"u076": {
+"verdict": "one",
+"description": "The token 'In' starts a prepositional phrase, most often 'In [year/date]' or 'In [a/the + noun]' introducing a temporal or circumstantial adverbial.",
+"served": "deepseek-v4.1-flash"
+},
+"u077": {
+"verdict": "one",
+"description": "The token is typically the first letter of a proper noun (German, Hebrew, Mosaic, Mysore, etc.) or another word that continues a named entity, so the unit responds to the start/continuation of proper nouns and related capitalized names.",
+"served": "deepseek-v4.1-flash"
+},
+"u078": {
+"verdict": "one",
+"description": "It responds to tokens in news/review-style text that name publications, broadcasters, or award/certification terms, often within citations or attributions about reviews and achievements.",
+"served": "deepseek-v4.1-flash"
+},
+"u079": {
+"verdict": "one",
+"description": "Adverbs (mostly -ly, plus 'made', 'out', 'twice', 'five') that modify or intensify an adjacent adjective, verb, or phrase.",
+"served": "deepseek-v4.1-flash"
+},
+"u080": {
+"verdict": "two_related",
+"description": "Tokens in 1930s decade years (the '3' of 193x) and a few other numeric/date digits, plus two 'along' tokens in legal/news phrases.",
+"served": "deepseek-v4.1-flash"
+},
+"u081": {
+"verdict": "one",
+"description": "The token is the opening parenthesis marking a measurement conversion from imperial/US customary units to metric units.",
+"served": "deepseek-v4.1-flash"
+},
+"u082": {
+"verdict": "unclear",
+"description": "The marked tokens are mostly mid-word fragments of varying names and words, with no single consistent concept, pattern, or next-word role evident.",
+"served": "deepseek-v4.1-flash"
+},
+"u083": {
+"verdict": "one",
+"description": "The unit fires at boundaries where a new word or subword starts\u2014sentence-initial tokens, syllable/morpheme boundaries inside words, and digit boundaries within numbers.",
+"served": "deepseek-v4.1-flash"
+},
+"u084": {
+"verdict": "one",
+"description": "Words in chemistry text about the Johnson\u2013Corey\u2013Chaykovsky/ylide reaction, especially atoms/groups involved in the mechanism (carbonyl, carbon, sulfur, oxygen, central bond).",
+"served": "deepseek-v4.1-flash"
+},
+"u085": {
+"verdict": "one",
+"description": "Tokens continuing compound units: filling in the second half of hyphenated/unit expressions (in, m, kg), compounds (branched, coiling, screw, packing, spiracles), and set phrases (circuit, bullion, personal, local, 1999, 1933, of).",
+"served": "deepseek-v4.1-flash"
+},
+"u086": {
+"verdict": "two_related",
+"description": "Words about following/complying with a rule or authority (conform, comply, obedience, observance) and a separate chemical sense of conformation/conformer; both relate to the root meaning 'shape/pattern' but form two related clusters.",
+"served": "deepseek-v4.1-flash"
+},
+"u087": {
+"verdict": "one",
+"description": "Superlative/unique constructions before 'to', 'of', or 'any' (e.g., 'only ... to', 'greatest ... of all time', 'smallest ... of any'), marking the pivot word in ranked, exclusive, or uniqueness phrases.",
+"served": "deepseek-v4.1-flash"
+},
+"u088": {
+"verdict": "several_unrelated",
+"description": "The marked tokens are heterogeneous: punctuation/spacing boundaries, part of multi-digit numbers or years, abbreviation/name fragments, and ordinary function words before nouns; no single shared concept or next-word pattern unites them.",
+"served": "deepseek-v4.1-flash"
+},
+"u089": {
+"verdict": "one",
+"description": "Marks a word in a common football-report or scoreline phrase, especially score-draw or equalising contexts (e.g., \u20181\u20131 draw\u2019, \u20180\u20130 draw\u2019, \u2018equalised/equalising\u2019, \u2018tied at 2\u2019).",
+"served": "deepseek-v4.1-flash"
+},
+"u090": {
+"verdict": "one",
+"description": "The token precedes or follows gaming-platform names (PlayStation, Wii, mobile, 3DS, Android/iOS), typically the word before a console/platform name in video-game contexts.",
+"served": "deepseek-v4.1-flash"
+},
+"u091": {
+"verdict": "several_unrelated",
+"description": "The unit activates on varied mid-word continuations (names, 'glee', 'skydiv', 'SCUD', etc.) with no single shared concept.",
+"served": "deepseek-v4.1-flash"
+},
+"u092": {
+"verdict": "one",
+"description": "The token is the next word in fixed medical/academic phrases and citations, typically a preposition or determiner following a formulaic context.",
+"served": "deepseek-v4.1-flash"
+},
+"u093": {
+"verdict": "several_unrelated",
+"description": "The active token is usually a word-internal or multiword continuation (e.g., 'lic' in bicyclic, 'ro' in synchrotron, 'orn' in acorn), plus 'New Orleans', 'an end', 'variety of', and 'posh'\u2014no single shared concept, pattern, or next-word role links them.",
+"served": "deepseek-v4.1-flash"
+},
+"u094": {
+"verdict": "one",
+"description": "The token 'of' in titles and proper names of organizations, especially 'X of Y' constructions like 'Manual of Style' and 'Archaeological Survey of India'.",
+"served": "deepseek-v4.1-flash"
+},
+"u095": {
+"verdict": "several_unrelated",
+"description": "The marked tokens are a mix of common function words (is, on, and, the, to, next, nearby) plus several content tokens (merengue, Muang, Battles, retained, spacing, Finkel, ora, Her, a quotation mark, a space), with no single shared concept, pattern, or next-word role.",
+"served": "deepseek-v4.1-flash"
+},
+"u096": {
+"verdict": "one",
+"description": "The marked tokens are nearly all word-initial or mid-word positions where a proper noun or common noun beginning with a capitalized letter or specific lowercase letter is being predicted or completed, often at the start of a named entity or a word continuing from a prefix.",
+"served": "deepseek-v4.1-flash"
+},
+"u097": {
+"verdict": "unclear",
+"description": "No single job or clear pair of related jobs explains these marked tokens; they span punctuation, pronouns, prepositions, proper-name fragments, and lexical continuations with no common pattern.",
+"served": "deepseek-v4.1-flash"
+},
+"u098": {
+"verdict": "several_unrelated",
+"description": "The marked tokens cluster into separate jobs: 'all' in phrases like 'all season/over again/of his skills', decade years in constructions like '1960s'/'1970s', and 'antimony' in chemistry text\u2014no single shared concept links them.",
+"served": "deepseek-v4.1-flash"
+},
+"u099": {
+"verdict": "several_unrelated",
+"description": "The unit activates across unrelated contexts: the Maya site 'Palenque', the word 'onomatopoeic', 'gill' in anatomy, and other assorted tokens like 'Isla', 'Tulane', and 'Gillingham', with no single shared concept.",
+"served": "deepseek-v4.1-flash"
+},
+"u100": {
+"verdict": "one",
+"description": "A restrictive or defining relative clause / qualifying phrase introduced after 'that', 'which', 'only', 'few', or similar, often with a verb like 'are', 'was', 'remain', or 'were'.",
+"served": "deepseek-v4.1-flash"
+},
+"u101": {
+"verdict": "unclear",
+"description": "No single coherent linguistic or conceptual pattern emerges from the marked tokens, which include punctuation, numerals, word fragments, and common words in unrelated contexts.",
+"served": "deepseek-v4.1-flash"
+},
+"u102": {
+"verdict": "one",
+"description": "Tokens in the middle of technical or descriptive compound words, especially domain-specific terms (biology, audio, medicine, sports).",
+"served": "deepseek-v4.1-flash"
+},
+"u103": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span heterogeneous contexts: proper names, punctuation, function words, and common nouns with no single shared concept or next-word pattern.",
+"served": "deepseek-v4.1-flash"
+},
+"u104": {
+"verdict": "one",
+"description": "The token 'gambling' or closely related gambling/gaming terms, including the marked word's own gambling-related context.",
+"served": "deepseek-v4.1-flash"
+},
+"u105": {
+"verdict": "several_unrelated",
+"description": "Marked tokens span unrelated patterns: \"of\" in board-of phrases, capitalized name fragments (I, Little, IU, Blue, Bet, Trey, Ket, Iqbal), and words like \"fall\" and \"and\" in varied contexts.",
+"served": "deepseek-v4.1-flash"
+},
+"u106": {
+"verdict": "one",
+"description": "The marked token is consistently the start of a word that completes a common collocation or compound, often after 'conversely', 'colonels/colonists', 'to help', etc.; it appears to fire on the first subword of the next lexical item in fixed or semi-fixed phrases.",
+"served": "deepseek-v4.1-flash"
+},
+"u107": {
+"verdict": "several_unrelated",
+"description": "The unit fires across unrelated contexts: forms of 'practice'/'practitioner', 'press'/'pressed', abbreviations like PML/PL, 'pressurised', and stray names/forms such as Melchior, plied, of, field, drive\u2014no single shared concept or pattern.",
+"served": "deepseek-v4.1-flash"
+},
+"u108": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span unrelated jobs: hyphenated/paired terms (pupil, playoff, Pam, disciple, Baxter, conditional), sentence-initial or clause-initial markers (World War I comma, where, when), proper names/words like Universe, ino, Hop, screen, and irregular\u2014no single concept or next-word pattern unites them.",
+"served": "deepseek-v4.1-flash"
+},
+"u109": {
+"verdict": "one",
+"description": "The token completes the place name Galveston (and similar words like Dominica, ozogamicin, O'Keeffe, Gandharvas), i.e. it responds to an in-progress token for a proper noun/name.",
+"served": "deepseek-v4.1-flash"
+},
+"u110": {
+"verdict": "unclear",
+"description": "The marked tokens span unrelated proper nouns, common words, and word-internal fragments, with no single concept, pattern, or next-word role that explains them all.",
+"served": "deepseek-v4.1-flash"
+},
+"u111": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span unrelated triggers\u2014intensifier 'very', numbers/years, prepositions 'of/to', punctuation, names\u2014with no single shared concept or pattern.",
+"served": "deepseek-v4.1-flash"
+},
+"u112": {
+"verdict": "one",
+"description": "The token is active on words that are part of award or honor categories (e.g., 'Outstanding', 'Best'), or on related terms in historical/chemical contexts, but the core pattern is labeling a following noun as part of a named category or title.",
+"served": "deepseek-v4.1-flash"
+},
+"u113": {
+"verdict": "one",
+"description": "The unit responds to places where the marked token completes a common multiword expression or compound, often the second half of a collocation (e.g. preparatory, New York, renewed for, attached to, flight guide 2008, it states, de Rohan, estimates put, is predicted, due to, network television, fire retardants, take one step, many newspapers, cramping, Hangal, each other, full-length, recommended a site for, 13 per cent).",
+"served": "deepseek-v4.1-flash"
+},
+"u114": {
+"verdict": "one",
+"description": "The token is active at conjunctions, prepositions, and separators joining paired/listed items (especially 'and', 'by', 'to', ';', or a blank at a list boundary).",
+"served": "deepseek-v4.1-flash"
+},
+"u115": {
+"verdict": "several_unrelated",
+"description": "The marked token is the first or second word of a following compound/proper noun (Awards, prognostic, live, innermost, from, end, specific, Polish, etc.), so the unit tracks many unrelated next-word/phrase contexts rather than one shared concept.",
+"served": "deepseek-v4.1-flash"
+},
+"u116": {
+"verdict": "several_unrelated",
+"description": "The marked tokens reflect unrelated word-internal fragments or compound parts (Car-/car-, -long, Mor-, Or-, Kar-, short), with no single shared concept or role.",
+"served": "deepseek-v4.1-flash"
+},
+"u117": {
+"verdict": "one",
+"description": "Adverbs and related modifiers, especially time/frequency/manner adverbs like quickly, directly, periodically, actively, once, timely, daily, regularly.",
+"served": "deepseek-v4.1-flash"
+},
+"u118": {
+"verdict": "one",
+"description": "Tokens marking dates or numeric unit expressions, especially the day/date component in dates and units in measurements, where the model likely anticipates the following number or unit.",
+"served": "deepseek-v4.1-flash"
+},
+"u119": {
+"verdict": "one",
+"description": "The marked token is usually a word or number completing a fixed multiword expression, title, name, or formatted sequence (e.g. 'Zhou Tong variant', 'Long Form Music Video', 'Billboard 200', '198 minutes', 'No. 13 Squadron', 'parts per million', 'Little Christmas', 'The Office', 'glee club', '22 August', '1942', 'Yeovil', 'original source', 'every day').",
+"served": "deepseek-v4.1-flash"
+},
+"u120": {
+"verdict": "several_unrelated",
+"description": "The marked tokens are mostly parts of Thai names/transliterations (Ph, Pa, Wa, iph, \u00e4) plus unrelated words like 'Paired', 'turns', 'natural', 'paraphyses', and 'ephedrine', with no single coherent job.",
+"served": "deepseek-v4.1-flash"
+},
+"u121": {
+"verdict": "one",
+"description": "The unit responds to the word 'swept' or, more generally, to contexts describing a team being swept in a playoff series.",
+"served": "deepseek-v4.1-flash"
+},
+"u122": {
+"verdict": "one",
+"description": "The unit responds to the start of words that continue with 'sub-' or 'sh-' meanings (subsistence, subspecies, Suba's, shutters, shelters, shawl, shorthanded, Sh...), i.e., a subword/word-initial pattern for words beginning with 'sub' or 'sh'.",
+"served": "deepseek-v4.1-flash"
+},
+"u123": {
+"verdict": "several_unrelated",
+"description": "Marked tokens span unrelated continuations: the phrase 'along the way', the name fragment 'Genghis', chemical terms 'epoxides', proper nouns like 'Harappa', and various mid-word or set-phrase positions.",
+"served": "deepseek-v4.1-flash"
+},
+"u124": {
+"verdict": "one",
+"description": "Infinitival 'to' before a verb (or preposition 'of' in 'violation of' constructions), i.e., tokens introducing complements of verbs/nouns.",
+"served": "deepseek-v4.1-flash"
+},
+"u125": {
+"verdict": "several_unrelated",
+"description": "The activation occurs on many unrelated tokens (colors, names, terms, numbers), with no single shared concept, pattern, or next-word role.",
+"served": "deepseek-v4.1-flash"
+},
+"u126": {
+"verdict": "several_unrelated",
+"description": "The marked tokens cover unrelated jobs: sentence punctuation, split words/names, mid-number digits, currency symbols, and ordinary word completions, with no single shared concept.",
+"served": "deepseek-v4.1-flash"
+},
+"u127": {
+"verdict": "one",
+"description": "Infinitival 'to' before a verb, i.e. the complementizer/preposition introducing a base-form verb after 'to'.",
+"served": "deepseek-v4.1-flash"
+},
+"u128": {
+"verdict": "one",
+"description": "Completes the token 'Uyghurs' (or its substring 'gh'), typically after 'Uy' in references to Uyghur people/workers.",
+"served": "deepseek-v4.1-flash"
+},
+"u129": {
+"verdict": "one",
+"description": "The marked token is usually the second digit of a year range (e.g. 1992\u201393, 1936\u201337), especially sports seasons or historical date spans.",
+"served": "deepseek-v4.1-flash"
+},
+"u130": {
+"verdict": "one",
+"description": "The marked token is overwhelmingly a word-initial prefix or first word of a multiword proper name, especially at the start of a following token (e.g., 'their', 'his', 'the', 'Ten', 'TET2', 'Tintin', 'Wang Shaotang', 'Protodeacon', 'der', 'des', 'node', 'Zeitgeist'), i.e. a next-token/word-boundary pattern before a likely proper noun or fixed phrase.",
+"served": "deepseek-v4.1-flash"
+},
+"u131": {
+"verdict": "several_unrelated",
+"description": "The marked tokens are unrelated: proper-name continuations (Baaz, Miedza, Welles, Serban, Welsh, Gengis, Koushik), the phrase 'as to', and fragments like 'Plagiarism' and 'gauze'.",
+"served": "deepseek-v4.1-flash"
+},
+"u132": {
+"verdict": "one",
+"description": "Completes fixed multi-word expressions/idioms, especially the phrase 'no/once less/more' and other collocations like 'long tons', 'of procreation'.",
+"served": "deepseek-v4.1-flash"
+},
+"u133": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span many unrelated grammatical and punctuation roles, including verbs, numbers, articles, semicolons, hyphens, and possessives, with no single unifying concept.",
+"served": "deepseek-v4.1-flash"
+},
+"u134": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span common function words (the, of, in, and), punctuation, and content words, with no single shared pattern evident.",
+"served": "deepseek-v4.1-flash"
+},
+"u135": {
+"verdict": "one",
+"description": "The unit responds to German-language noun phrases and their internal connectors, especially prepositions/articles within titles and proper names such as 'f\u00fcr', 'des', 'der', 'und', 'Deutsche', 'Propaganda'.",
+"served": "deepseek-v4.1-flash"
+},
+"u136": {
+"verdict": "one",
+"description": "The marked token is almost always a function word (preposition, article, conjunction, or auxiliary) or a word-initial fragment, i.e., the unit tracks a low-content grammatical/functional transition rather than a specific lexical concept.",
+"served": "deepseek-v4.1-flash"
+},
+"u137": {
+"verdict": "one",
+"description": "Relative clause markers and related relativized words (that, who, place/man/one + that/who) introducing clauses that modify a preceding noun, plus a few parallel cases like 'what' and bare 'I' in relative-like constructions.",
+"served": "deepseek-v4.1-flash"
+},
+"u138": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span many unrelated patterns: mid-word letters in proper names (Bhagwat, Gwalior, Kog\u0103lniceanu, Kornel, Sylwester, Poglavnik), prepositions in numeric/measurement phrases (of, by, at, for, to), and a few odd cases (. in George A. Romero, cost, takes, zugzwang), with no single coherent job.",
+"served": "deepseek-v4.1-flash"
+},
+"u139": {
+"verdict": "one",
+"description": "Words related to the concept of a 'demo' or 'demonstration' \u2014 including demo tapes, demos, and demonstrations/protests \u2014 with occasional spelling variants (demon, Demos) that share the same root.",
+"served": "deepseek-v4.1-flash"
+},
+"u140": {
+"verdict": "one",
+"description": "The start of a multi-digit number, usually the first digit of a two- or three-digit quantity (often a number like 15, 27, 10, 126, etc.).",
+"served": "deepseek-v4.1-flash"
+},
+"u141": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span unrelated patterns: cited words, drug names, waterways, personal names, phrasal verbs like 'ended up/wakes up', abbreviations/initials, and boxing/medal terms, with no single shared job.",
+"served": "deepseek-v4.1-flash"
+},
+"u142": {
+"verdict": "one",
+"description": "The token is active on a word introducing or measuring a duration of time (in/for/last/recent/next/a), typically preceding a time-span like years, decades, or months.",
+"served": "deepseek-v4.1-flash"
+},
+"u143": {
+"verdict": "two_related",
+"description": "Tokens marking unit conversions (km, mi, km/h, mi/h) and tokens completing sports team/place names (76ers, Sabres), both being name/number completion contexts.",
+"served": "deepseek-v4.1-flash"
+},
+"u144": {
+"verdict": "one",
+"description": "Function/closed-class tokens (articles, prepositions) and leading digits of numbers, typically at the start of a noun or numeric phrase.",
+"served": "deepseek-v4.1-flash"
+},
+"u145": {
+"verdict": "one",
+"description": "The marked token is consistently the first letter of a proper name (often a person, place, or title) that begins a multi-token entity, especially where the next token is lowercase or part of a foreign name.",
+"served": "deepseek-v4.1-flash"
+},
+"u146": {
+"verdict": "one",
+"description": "The unit fires at tokens that are followed by a 'doubt/hedge' or 'certainty' verb or adverb marking epistemic stance, such as believe, perceived, proved, usually, very, within, Hence, method, literal.",
+"served": "deepseek-v4.1-flash"
+},
+"u147": {
+"verdict": "one",
+"description": "The unit activates on or around words introducing or following names/terms, especially after words like 'name', closing quotation marks, or parenthetical glosses, likely tracking the concept of naming or metalinguistic reference.",
+"served": "deepseek-v4.1-flash"
+},
+"u148": {
+"verdict": "several_unrelated",
+"description": "The marked tokens are heterogeneous: context words after review counts (reviews), citation markers (accessed), fixed phrases (free, of, glad), punctuation/URL tokens (.net, .com), and general nouns (visitors, views, text, formatting, types), with no single shared concept.",
+"served": "deepseek-v4.1-flash"
+},
+"u149": {
+"verdict": "one",
+"description": "Common English preposition or particle (in, the, of, on, as, to, etc.) preceding a following noun or verb phrase; the unit tracks function-word contexts across varied constructions.",
+"served": "deepseek-v4.1-flash"
+},
+"u150": {
+"verdict": "unclear",
+"description": "The marked tokens are mostly fragments of words like 'Scotus', 'sporadic', 'sovietization', and similar subword pieces, with no single consistent concept or next-word pattern.",
+"served": "deepseek-v4.1-flash"
+},
+"u151": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span unrelated lexical completions (contractions like didn't/isn't, chemical terms such as propane/ethyl/dimethyl/azetidine, Royal Air Force, and names like Ulrich/Canadian), with no single shared concept or role.",
+"served": "deepseek-v4.1-flash"
+},
+"u152": {
+"verdict": "one",
+"description": "The unit responds to common fixed phrases and collocations, especially around 'or' (e.g., 'directly or indirectly', 'more or less', 'for better or worse') but also other idiomatic multiword continuations like 'would be', 'has an', 'of the'.",
+"served": "deepseek-v4.1-flash"
+},
+"u153": {
+"verdict": "two_related",
+"description": "The unit fires on 'plantain' leaves and on 'both of' constructions (including 'both of whom'/'both of which'), two related patterns involving a following noun/preposition.",
+"served": "deepseek-v4.1-flash"
+},
+"u154": {
+"verdict": "one",
+"description": "Marked tokens are the first digit/character of a converted measurement value (unit conversion, e.g. mph to km/h, \u00b0C to \u00b0F) immediately following an opening parenthesis.",
+"served": "deepseek-v4.1-flash"
+},
+"u155": {
+"verdict": "one",
+"description": "The token being active is the preposition/particle that follows verbs like 'adapted', 'broken up', 'renewed', 'adjusted', 'edited out', etc., usually introducing a purpose or result phrase, especially 'for' and sometimes 'to' or 'with'.",
+"served": "deepseek-v4.1-flash"
+},
+"u156": {
+"verdict": "one",
+"description": "The unit responds to word-final morphemes or suffixes, especially abstract-noun endings like -ality, -ality, -ibility, -idity, -ness, -ism, and proper-name/plural endings, where the marked token is the final part of a polysyllabic word.",
+"served": "deepseek-v4.1-flash"
+},
+"u157": {
+"verdict": "one",
+"description": "The token is active in contexts following or within dates, specifically the year or day/year number at the end of a date (e.g., birth dates, historical dates), and sometimes also in date-related phrases like 'on the 4th of March'.",
+"served": "deepseek-v4.1-flash"
+},
+"u158": {
+"verdict": "one",
+"description": "The token is active on the first part of lexical compounds, mostly 'home' as in home game/home run/home to a place, plus a few other compound-initial fragments like 'homesteaded,' 'homies,' 'homosocial,' and initials/surnames (H., H, W, 1, 7) that start a following name or number.",
+"served": "deepseek-v4.1-flash"
+},
+"u159": {
+"verdict": "one",
+"description": "The unit responds to the second element in open or hyphenated compound modifiers/nouns, especially material, design, or technical terms (e.g., 'alloying material', 'finer grasses', 'explosive shells', 'design').",
+"served": "deepseek-v4.1-flash"
+},
+"u160": {
+"verdict": "one",
+"description": "Digits inside numeric measurements/units, especially numbers within parentheses converting units or breaking up large numerals (e.g. 568 ft, 116 km/h, 32 \u00b0C).",
+"served": "deepseek-v4.1-flash"
+},
+"u161": {
+"verdict": "one",
+"description": "The unit responds to the middle of a person's name (often a surname or given name), typically marking the token where a biographical or named-entity mention is ongoing.",
+"served": "deepseek-v4.1-flash"
+},
+"u162": {
+"verdict": "unclear",
+"description": "Marked tokens vary widely in type and context\u2014numbers, punctuation, digits within dates, prepositions, proper nouns, and blank spaces\u2014with no single coherent concept, pattern, or next-word prediction clearly explaining them all.",
+"served": "deepseek-v4.1-flash"
+},
+"u163": {
+"verdict": "one",
+"description": "Tokens immediately before a following word or phrase, often punctuation or function words introducing the next clause or constituent (e.g., 'honest record', 'and lifelong', 'Eaton's forces', '. For some time').",
+"served": "deepseek-v4.1-flash"
+},
+"u164": {
+"verdict": "several_unrelated",
+"description": "While many snippets involve measurements or units, others relate to media sources, quoted language, or abstract descriptors, with no clear single shared job.",
+"served": "deepseek-v4.1-flash"
+},
+"u165": {
+"verdict": "one",
+"description": "Capital-M tokens that begin proper nouns, mostly place names or named entities (Marseilles, Merauke, Macclesfield, Malling, Muenich, Makeni, MHNUL, Moltke, Minsk, M\u0103r\u0103\u015fti, MCI, Mihail Kog\u0103ln, Mysore), i.e., predicting/starting an uppercase M word.",
+"served": "deepseek-v4.1-flash"
+},
+"u166": {
+"verdict": "one",
+"description": "The marked token is typically the first word of a capitalized multi-word proper noun or name (e.g., Major League Baseball, Recordings, SbH3, Singles Chart), often following an opening parenthesis, preposition, or conjunction.",
+"served": "deepseek-v4.1-flash"
+},
+"u167": {
+"verdict": "one",
+"description": "The token is active at a line/paragraph break, right after a colon or sentence end and before a new capitalized sentence\u2014i.e., it responds to newline/formatted-break positions in the text.",
+"served": "deepseek-v4.1-flash"
+},
+"u168": {
+"verdict": "several_unrelated",
+"description": "Marked tokens are verbs/verb forms across unrelated meanings (fasten, stand/stick/hang, run, wear, live, come, grow, rock, talk), with no single shared concept.",
+"served": "deepseek-v4.1-flash"
+},
+"u169": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span many unrelated roles: punctuation/formatting marks, proper-name parts, ordinary function and content words, with no single concept or pattern connecting them.",
+"served": "deepseek-v4.1-flash"
+},
+"u170": {
+"verdict": "one",
+"description": "The unit responds to the first token of words beginning with 'dis-', 'electro-', or similar prefixes, often completing a word with a meaning related to negation, removal, or electricity.",
+"served": "deepseek-v4.1-flash"
+},
+"u171": {
+"verdict": "one",
+"description": "Numeric measurements and units, especially distances/speeds converted to kilometers (km) or miles, often as the first digit of a number in a metric conversion.",
+"served": "deepseek-v4.1-flash"
+},
+"u172": {
+"verdict": "one",
+"description": "Marks grammatical function words and morpheme boundaries, especially the start of small function words/prepositions/conjunctions or unit-forming tokens in numeric/chemical/compound expressions.",
+"served": "deepseek-v4.1-flash"
+},
+"u173": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span unrelated words/concepts: forms of 'stay/remain,' 'since,' the word 'It' in a song title, the article 'a,' 'two,' 'Where,' and the stem 'amy' in 'loamy,' with no single shared job.",
+"served": "deepseek-v4.1-flash"
+},
+"u174": {
+"verdict": "one",
+"description": "The token 'Galveston' as a place name, especially at the start or within proper names and references to the city in Texas.",
+"served": "deepseek-v4.1-flash"
+},
+"u175": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span unrelated contexts: scores, compound hyphenation, possessives, abbreviations, dates, punctuation, and proper-name fragments, with no single shared concept or consistent next-token pattern.",
+"served": "deepseek-v4.1-flash"
+},
+"u176": {
+"verdict": "one",
+"description": "The unit responds to the period or full stop at the end of a sentence, i.e. the token immediately before the next sentence begins.",
+"served": "deepseek-v4.1-flash"
+},
+"u177": {
+"verdict": "one",
+"description": "The marked token is typically the first part of a proper name (often a place or person's surname) that is being introduced or continued, with the model anticipating the remainder of that name.",
+"served": "deepseek-v4.1-flash"
+},
+"u178": {
+"verdict": "one",
+"description": "The token is active mid-name, typically on the first syllable or first letter of a proper noun (a person's surname, place name, or language/nationality adjective) just before the rest of that name.",
+"served": "deepseek-v4.1-flash"
+},
+"u179": {
+"verdict": "one",
+"description": "The token is always the first letter of a proper name, abbreviation, or chemical symbol immediately following an opening parenthesis or a capitalized multi-word context, i.e., the start of a parenthetical or chemical formula after a space.",
+"served": "deepseek-v4.1-flash"
+},
+"u180": {
+"verdict": "one",
+"description": "The unit responds to tokens that begin or extend a proper name or fixed multi-word term, especially names, titles, and established phrases.",
+"served": "deepseek-v4.1-flash"
+},
+"u181": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span unrelated contexts (names, prepositions, numbers, punctuation, possessives), with no single shared concept or next-word pattern.",
+"served": "deepseek-v4.1-flash"
+},
+"u182": {
+"verdict": "one",
+"description": "Completing or continuing a phrase with common temporal/ordinal or next-word patterns, often linking to a following verb, date, or enumerative continuation.",
+"served": "deepseek-v4.1-flash"
+},
+"u183": {
+"verdict": "one",
+"description": "Tokens at the start of a multi-token word (mostly the first subword of a longer word, or a word-final fragment), i.e., the model unit tracks the beginning/continuation of the following lexical word.",
+"served": "deepseek-v4.1-flash"
+},
+"u184": {
+"verdict": "one",
+"description": "Marks the boundary immediately after a number (often within a measurement, mile/km conversion, year, or parenthetical), typically before a unit, parenthesis, punctuation, or closing bracket.",
+"served": "deepseek-v4.1-flash"
+},
+"u185": {
+"verdict": "one",
+"description": "The token is the first word or syllable of a multi-word proper noun or fixed term (e.g., 'symbol Sb', 'Lord of', 'Michael Jordan', 'three pillars', 'seven deadly sins', 'War of the Worlds', 'Axis Powers', 'Christ Jesus', 'Miss Universe', 'X Factor').",
+"served": "deepseek-v4.1-flash"
+},
+"u186": {
+"verdict": "one",
+"description": "The token is active mainly before/within words about education level or institution (elementary, secondary, high school, undergraduate, film school, engineering, language, communication, a degree), i.e. it tracks the educational context/stage.",
+"served": "deepseek-v4.1-flash"
+},
+"u187": {
+"verdict": "one",
+"description": "Positions in superlative or record-setting comparisons\u2014often following 'most/highest/best/longest'\u2014where a scope or domain is specified (e.g., 'ever', 'in history', 'of all time').",
+"served": "deepseek-v4.1-flash"
+},
+"u188": {
+"verdict": "one",
+"description": "Mid-word positions inside place names, proper nouns, and technical terms (often cities, acronyms, or species names), i.e., a token-boundary/word-internal position.",
+"served": "deepseek-v4.1-flash"
+},
+"u189": {
+"verdict": "one",
+"description": "The unit responds to the verb 'make' (and its inflected form 'makes') meaning 'cause to be/become' or 'achieve/enter,' often in constructions like 'make X better/happy/clear' or 'make the final track listing.'",
+"served": "deepseek-v4.1-flash"
+},
+"u190": {
+"verdict": "one",
+"description": "The unit responds to the start of a multi-token continuation, especially a proper-name or fixed term that follows a mark like a period, parenthesis, or line break, often in citations, titles, or named entities.",
+"served": "deepseek-v4.1-flash"
+},
+"u191": {
+"verdict": "unclear",
+"description": "No single job fits: the marked tokens are heterogeneous (numbers/digits, punctuation, function words, common nouns) with no clear shared concept.",
+"served": "deepseek-v4.1-flash"
+},
+"u192": {
+"verdict": "several_unrelated",
+"description": "Mixed roles: prepositions/conjunctions introducing phrases, determiners, punctuation in lists, and mid-word fragments like number/name pieces, with no single shared linguistic job.",
+"served": "deepseek-v4.1-flash"
+},
+"u193": {
+"verdict": "several_unrelated",
+"description": "The marked tokens are unrelated German/Polish/place-name subword fragments, with no single shared concept, pattern, or next-word role.",
+"served": "deepseek-v4.1-flash"
+},
+"u194": {
+"verdict": "several_unrelated",
+"description": "The marked tokens form a mix of unrelated contexts: Latin etymology mentions, statistical significance phrasing ('significantly', 'significant', 'difference', 'among', 'between', 'enough'), taxonomic terms ('sympatric', 'hypothecium'), citation parentheses and abbreviations, and a ratio colon.",
+"served": "deepseek-v4.1-flash"
+},
+"u195": {
+"verdict": "one",
+"description": "The token is active at various punctuation marks, digits, and mid-word positions, likely tracking low-level formatting or token boundaries rather than a coherent semantic concept.",
+"served": "deepseek-v4.1-flash"
+},
+"u196": {
+"verdict": "one",
+"description": "Head nouns naming fields or domains of cultural/intellectual activity (art, literature, culture, arts, medicine, writing, academic) in modifier+noun compounds.",
+"served": "deepseek-v4.1-flash"
+},
+"u197": {
+"verdict": "one",
+"description": "The unit responds to conjunctions and punctuation in coordinated lists of nouns or noun phrases, often preceding the final item or joining items like 'and', 'or', or a comma before a final coordinated noun.",
+"served": "deepseek-v4.1-flash"
+},
+"u198": {
+"verdict": "one",
+"description": "Tokens that begin a proper noun, capitalized word, or possessive/proper-name continuation, often the first letter of a following capitalized word or a possessive pronoun.",
+"served": "deepseek-v4.1-flash"
+},
+"u199": {
+"verdict": "several_unrelated",
+"description": "The marked tokens reflect unrelated concepts/words such as 'of', chemical terms, defense-related words, names, and miscellaneous vocabulary, with no single shared grammatical or semantic role.",
+"served": "deepseek-v4.1-flash"
+},
+"u200": {
+"verdict": "one",
+"description": "The token typically appears in titles/noun phrases as the linker/preposition 'of'/'for' connecting an organization or official role to its domain (e.g., Ministry of Environment, Minister for Air), plus a few closely related noun-forming suffixes within such titles.",
+"served": "deepseek-v4.1-flash"
+},
+"u201": {
+"verdict": "several_unrelated",
+"description": "The marked tokens are just variable mid-word positions in unrelated proper names and common nouns (Kavkaz, Cavalchini, Canaletto, navel, carnivals, Chakravarthy, Naparstek, Cavalla, naves, cabarets, Kailash, etc.), with no single shared role.",
+"served": "deepseek-v4.1-flash"
+},
+"u202": {
+"verdict": "one",
+"description": "First letters or first tokens of words/named entities, often capitalized or starting a proper noun, score, or compound term.",
+"served": "deepseek-v4.1-flash"
+},
+"u203": {
+"verdict": "one",
+"description": "Tokens are mid-word or mid-phrase parts, mostly splitting compounds, hyphenated terms, or multiword expressions (e.g. '#.@#', 'all@-@time', 'multitracked', 'Atenism', 'hymns', 'Squadron'), i.e. a subword/word-boundary or continuation-token role.",
+"served": "deepseek-v4.1-flash"
+},
+"u204": {
+"verdict": "unclear",
+"description": "The marked tokens include word beginnings, word middles, and pronouns/articles, with no single shared concept, pattern, or next-word role evident across the snippets.",
+"served": "deepseek-v4.1-flash"
+},
+"u205": {
+"verdict": "one",
+"description": "The unit responds to tokens ending in the causative/resultative suffix '-ize/-ise' (often in verbs like syncretized, modernized, neutralized), especially where the marked token is that suffix.",
+"served": "deepseek-v4.1-flash"
+},
+"u206": {
+"verdict": "one",
+"description": "Passive-voice or copular verb constructions (be/are/was + past participle or preposition), especially verbs following auxiliary forms like 'is', 'were', 'had been', or 'managed'.",
+"served": "deepseek-v4.1-flash"
+},
+"u207": {
+"verdict": "one",
+"description": "The marked token is the head noun in 'a/an X of' or 'as a X to' constructions, introducing a noun that names a category, sign, or intended purpose (mark, prelude, attempt, sign, proof, expression, symptom, example, response).",
+"served": "deepseek-v4.1-flash"
+},
+"u208": {
+"verdict": "one",
+"description": "The unit responds to place names, especially US county, city, town, or geographic location names, often in the middle or end of multi-word proper nouns.",
+"served": "deepseek-v4.1-flash"
+},
+"u209": {
+"verdict": "one",
+"description": "Marks the location of a noun or noun phrase within a larger syntactic frame, often at a boundary between an article/preposition and a following noun (e.g., 'the \u27e6state\u27e7', 'a \u27e6narrow\u27e7 apex', 'the \u27e6only\u27e7 composition').",
+"served": "deepseek-v4.1-flash"
+},
+"u210": {
+"verdict": "unclear",
+"description": "The marked tokens span unrelated words and contexts (album, Allenton, the, serve, be, War, United, the, period, or, hyphen, season, 2, ic, mostly, Bruins, The, y, museum, l), with no single shared concept, pattern, or next-word role evident.",
+"served": "deepseek-v4.1-flash"
+},
+"u211": {
+"verdict": "one",
+"description": "The token 'Finals' (and closely related sports-season terms like 'league', 'season', 'US') marks contexts referring to NBA Finals awards and records, especially Finals MVP mentions.",
+"served": "deepseek-v4.1-flash"
+},
+"u212": {
+"verdict": "one",
+"description": "The unit responds to the second part of a word or name that is split across a line or formatting break, predicting the continuation of tokenized words and place names (e.g., Kanchanaburi, Neotrygon, pilothouse, Chakrabarti, cm (17), IUCN, metastable, l'Harmattan, casemate, Sveaborg, Sedgeford, Isla, phylotypes, Picea abies, degenerating).",
+"served": "deepseek-v4.1-flash"
+},
+"u213": {
+"verdict": "one",
+"description": "The unit responds to numeric or quantifier contexts, typically marking a number or unit token that follows or is part of a count, measurement, date, or quantity expression.",
+"served": "deepseek-v4.1-flash"
+},
+"u214": {
+"verdict": "one",
+"description": "The unit responds to the first word/token of a person's name, typically a proper noun or given name appearing in biographical, historical, or sports contexts.",
+"served": "deepseek-v4.1-flash"
+},
+"u215": {
+"verdict": "one",
+"description": "Tokens inside quoted song titles, catchphrases, or first-person quoted speech, often the word immediately after a pronoun or contraction start (e.g., We, My, I'll, I, our, into, with).",
+"served": "deepseek-v4.1-flash"
+},
+"u216": {
+"verdict": "one",
+"description": "Tokens that are middle digits in unit-conversion numbers (imperial/metric measurements), where a numeric value is being converted between feet/meters or miles/kilometers.",
+"served": "deepseek-v4.1-flash"
+},
+"u217": {
+"verdict": "one",
+"description": "The token position is at the boundary of a measurement or quantity, typically the last digit of a number immediately preceding a unit abbreviation (ft, m, cm, inches) or the word 'of' in constructions like 'X of Y'.",
+"served": "deepseek-v4.1-flash"
+},
+"u218": {
+"verdict": "one",
+"description": "The unit responds to tokens that immediately follow a subordinate clause or phrase boundary, typically marking the start of a clause or a new syntactic element (e.g., relative clauses, conjunctions, prepositions, and punctuation).",
+"served": "deepseek-v4.1-flash"
+},
+"u219": {
+"verdict": "one",
+"description": "The start of proper nouns (names of people, places, organizations, and titles), especially mid-word initials/name beginnings.",
+"served": "deepseek-v4.1-flash"
+},
+"u220": {
+"verdict": "one",
+"description": "Tokens in contexts about typography and spacing conventions, especially after space/draft/idiomycetes-related words, often where a space or spacing term is relevant.",
+"served": "deepseek-v4.1-flash"
+},
+"u221": {
+"verdict": "one",
+"description": "The token is the second half of a compound or fixed expression (buyout, retrieve from, H.R.H., reverberatory, reflection, Christ, ec., change to, finger of, conjugate, works of), i.e. the continuation/completion of a multiword unit.",
+"served": "deepseek-v4.1-flash"
+},
+"u222": {
+"verdict": "one",
+"description": "Tokens in the name Yue Fei or its immediate context, including non-Latin transliteration/name fragments within Chinese historical text.",
+"served": "deepseek-v4.1-flash"
+},
+"u223": {
+"verdict": "one",
+"description": "The token marks the start of a continuation or result phrase after a prior clause, often introducing the next state or action (e.g., 'and', 'still', 'remains', 'now', 'returns').",
+"served": "deepseek-v4.1-flash"
+},
+"u224": {
+"verdict": "one",
+"description": "The definite article 'the' (and closely related possessive/determiner forms) introducing a noun phrase, often after prepositions like 'on', 'of', 'by', 'at', or 'for'.",
+"served": "deepseek-v4.1-flash"
+},
+"u225": {
+"verdict": "one",
+"description": "The token is mostly the word 'even' followed by a subordinating conjunction ('if', 'so', 'though', 'when') introducing a concessive clause; the other snippets are offshoots where the same unit fires on similar endings of words (reverend, Vincenzo, St\u00e9phane, Everson, venues).",
+"served": "deepseek-v4.1-flash"
+},
+"u226": {
+"verdict": "several_unrelated",
+"description": "No single job unites the marked tokens; they split across several unrelated lexical/orthographic patterns (e.g., words like cursing/cuckroach/clover/cloverleaf, names like Creosaurus/Croydon/Clitsome, and terms like counsel/court/clerks), so it appears to be several distinct jobs.",
+"served": "deepseek-v4.1-flash"
+},
+"u227": {
+"verdict": "one",
+"description": "Marks the indefinite article 'a/an' (occasionally its first letter inside a word like 'stamper' or names) before a noun phrase, typically introducing a goal, scoreline, or personal name.",
+"served": "deepseek-v4.1-flash"
+},
+"u228": {
+"verdict": "one",
+"description": "The token is active on award-related words and names, especially the second word in multi-word award names like 'Filmfare Award', 'Golden Globe', 'Hall of Fame', 'All Star', and 'Guild Awards'.",
+"served": "deepseek-v4.1-flash"
+},
+"u229": {
+"verdict": "one",
+"description": "The unit responds to citation/reference formatting contexts, especially numbers or words in journal/review citations, page/volume/rating numbers, and attributive phrases like 'writing for', 'wrote', 'given', or taxonomic/species naming details.",
+"served": "deepseek-v4.1-flash"
+},
+"u230": {
+"verdict": "one",
+"description": "Marked tokens are mostly words that begin a multi-word named entity, proper noun, or fixed expression (e.g. 'Janesville', 'the Gulf of Mexico', 'A.V. Club', 'Best Video Album', 'Wall of Sound').",
+"served": "deepseek-v4.1-flash"
+},
+"u231": {
+"verdict": "several_unrelated",
+"description": "Marked tokens span unrelated continuations: a person's surname suffix (B\u00f8rdahl), place name Cattaro, chemical/technical terms (polyhydroxylated, tetroxide, myeloperoxidase, TeX, SCUD), the phrase 'not only', and 'increase in'.",
+"served": "deepseek-v4.1-flash"
+},
+"u232": {
+"verdict": "one",
+"description": "The unit is active on the middle of multi-digit numbers or ranges, especially year/date tokens like 1986, 1889, AD 495, August 25, and the number token inside a hyphenated year range.",
+"served": "deepseek-v4.1-flash"
+},
+"u233": {
+"verdict": "one",
+"description": "The token occurs where a word is split internally, often mid-morpheme or inside abbreviations/names, capturing completions of compound-like tokens (turn over, UTMB, valens, characters, etc.).",
+"served": "deepseek-v4.1-flash"
+},
+"u234": {
+"verdict": "two_related",
+"description": "two related jobs: the fixed phrase 'of course' and chess opening move names/notation like 1.e4, 1.c4, and 'Confessions Part II'/'animated comedy' formatting, all tokens that are predictable or fixed continuations.",
+"served": "deepseek-v4.1-flash"
+},
+"u235": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span many different roles (prepositions, sentence/segment starters, hyphens, digits, name fragments), with no single shared concept or clear pair of related jobs.",
+"served": "deepseek-v4.1-flash"
+},
+"u236": {
+"verdict": "one",
+"description": "The unit fires on the first letter(s) of a proper name, especially surnames, place names, and titles, i.e. it helps predict an upcoming capitalized name.",
+"served": "deepseek-v4.1-flash"
+},
+"u237": {
+"verdict": "several_unrelated",
+"description": "The marked tokens reflect unrelated jobs: ordinal suffixes (32nd, 90th, 41st), words inside named entities/phrases (Eielson? 'Niels Bohr', 'World War II', 'Astronomical Observatory', 'South of Heaven'), and ordinary word-parts ('magnitude', 'reticence', 'explosive', 'Sexiest', 'cherubim', 'Tomasz', 'tells', 'blown about', 'phyllotypes', 'carves', \"Beyonc\u00e9'\").",
+"served": "deepseek-v4.1-flash"
+},
+"u238": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span many unrelated roles: linking verbs, parentheses/punctuation, negation, possessives, numbers, prepositions, proper-name fragments, and abbreviations, with no single coherent concept.",
+"served": "deepseek-v4.1-flash"
+},
+"u239": {
+"verdict": "one",
+"description": "The token is active on a numeral or numeric placeholder immediately before a word, often in hyphenated ranges, dates, page/ID numbers, or similar number-containing expressions.",
+"served": "deepseek-v4.1-flash"
+},
+"u240": {
+"verdict": "several_unrelated",
+"description": "The marked tokens include possessive apostrophes/suffixes, prepositions, articles, conjunctions, and other unrelated lexical or formatting cues.",
+"served": "deepseek-v4.1-flash"
+},
+"u241": {
+"verdict": "several_unrelated",
+"description": "The marked token patterns are varied: the chess writer 'Rowson', physical rows (columns, thorns, arch rows), nautical rowing/oared vessels, and the word 'line' in chess, fashion, hockey, poetry, and idioms\u2014no single concept unites them.",
+"served": "deepseek-v4.1-flash"
+},
+"u242": {
+"verdict": "one",
+"description": "The token usually marks the second element of a compound or fixed phrase, such as 'promotion play-offs', 'Daily Mail', 'viviparous', or 'give up'.",
+"served": "deepseek-v4.1-flash"
+},
+"u243": {
+"verdict": "one",
+"description": "The token is active on words that complete the fixed phrases 'Prime Minister' and 'monotheism', i.e., the second part of a compound whose first part is an unstressed prefix, so it mainly tracks the orthographic continuation of those compounds.",
+"served": "deepseek-v4.1-flash"
+},
+"u244": {
+"verdict": "several_unrelated",
+"description": "The marked tokens are unrelated fragments/words across chemistry terms, proper names, and common nouns (aziridines, actor, mascherino, immaculate, embankment, dvarapalas, swan/swans, drummers, ICRP, impaired, drummer), with no single shared concept, pattern, or next-word role.",
+"served": "deepseek-v4.1-flash"
+},
+"u245": {
+"verdict": "several_unrelated",
+"description": "The marked token is mostly the second digit of a four-digit year (e.g. 2008, 1966, 2015, 1939), but also appears on the 'e' in 'e.g.', words inside chemical/military/textual terms, and a profanity, with no single unifying job.",
+"served": "deepseek-v4.1-flash"
+},
+"u246": {
+"verdict": "one",
+"description": "The token is the prefix 'sub-' (or a related form like 'classified/direct') in compounds and phrases meaning 'below/under a larger category or authority': subordinate, subtype, subcontinent, subgenre, etc.",
+"served": "deepseek-v4.1-flash"
+},
+"u247": {
+"verdict": "several_unrelated",
+"description": "The active token spans unrelated words/names (Gaudium, gaudy, Tandava, Tendaguru, Audie, Oradea, vaudeville, Fiedler, Claudius, haciendas, Ossendowski, Brendon, Gendler, C\u00f3rdoba, Pittendrigh), with no single shared concept.",
+"served": "deepseek-v4.1-flash"
+},
+"u248": {
+"verdict": "one",
+"description": "The unit responds to a singular attributive noun or adjective preceding a noun phrase, often functioning as part of a named entity, title, or institutional role (e.g., 'representative of', 'books and', 'Story of', 'book', 'of the EIT', 'pioneer in', 'under penalty', 'in 2008', 'masterpiece of').",
+"served": "deepseek-v4.1-flash"
+},
+"u249": {
+"verdict": "one",
+"description": "The unit responds to word-medial positions, especially around a morpheme boundary inside a single token (e.g., clean|ly, enlight|ening, lovel|orn, gle|ba, omn|iscient, Cre|x), not to a specific semantic concept.",
+"served": "deepseek-v4.1-flash"
+},
+"u250": {
+"verdict": "one",
+"description": "The token is almost always the determiner or first word of a noun phrase that begins or continues a specific referential expression (a nomination, location, date, title, name, or fixed term), so the unit tracks the onset of a definite/specific noun phrase.",
+"served": "deepseek-v4.1-flash"
+},
+"u251": {
+"verdict": "two_related",
+"description": "The unit activates on tokens that are followed by a proper noun or named entity (Euler, Metallica, University, Wang, etc.) and on tokens that function as restrictive relative pronouns or transition words before a clause (how, which, following, that), both marking the onset of a specific following phrase.",
+"served": "deepseek-v4.1-flash"
+},
+"u252": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span several unrelated contexts: sports victory verbs (defeating, beating, beat, defeated, won), dates in biographical entries (August, September), chemical reaction/with, an enumeration decimal (.), and a few other words (of, through, s, coloured, Census).",
+"served": "deepseek-v4.1-flash"
+},
+"u253": {
+"verdict": "one",
+"description": "The token is mid-word in proper names and numbers, often at a position completing a name or the digits of a decimal/quantity.",
+"served": "deepseek-v4.1-flash"
+},
+"u254": {
+"verdict": "one",
+"description": "The unit responds to mid-word positions or the continuation of a word already started, often at morpheme boundaries or within compound words.",
+"served": "deepseek-v4.1-flash"
+},
+"u255": {
+"verdict": "one",
+"description": "The unit activates on the opening character or digits of a proper noun, URL, or chess move notation\u2014typically a capitalized letter, digit, or first letter before a dot\u2014anticipating a specific named entity, website, or move continuation.",
+"served": "deepseek-v4.1-flash"
+},
+"u256": {
+"verdict": "several_unrelated",
+"description": "The marked token varies across unrelated contexts: opening quotation marks before titles/songs, Latin 'motu proprio'/'S. Maria', commas or periods in citations, and words like 'called'/'titled'/'see'/'a'\u2014no single shared concept.",
+"served": "deepseek-v4.1-flash"
+},
+"u257": {
+"verdict": "several_unrelated",
+"description": "The marked tokens reflect unrelated linguistic patterns: passive verb forms (swept, cancelled, finished, graced), collocations (pleasure of, honour to/able, cancer, lucky, Madison Square Garden), and various function words (not, the, I'm, of, end), with no single coherent concept unifying them.",
+"served": "deepseek-v4.1-flash"
+},
+"u258": {
+"verdict": "one",
+"description": "The token participates in numeric ranges, typically marking a number used as the second endpoint after 'to', '\u2013', or a similar range connector.",
+"served": "deepseek-v4.1-flash"
+},
+"u259": {
+"verdict": "one",
+"description": "The token is the start of 'Catechism' (or related church-teaching texts), including Catholic/Church-wide catechisms and the Catechism of the Catholic Church.",
+"served": "deepseek-v4.1-flash"
+},
+"u260": {
+"verdict": "one",
+"description": "The unit responds to proper-name tokens starting with 'Vas', 'Can', 'Des', etc., i.e., the first token of multiword proper nouns or capitalized names.",
+"served": "deepseek-v4.1-flash"
+},
+"u261": {
+"verdict": "several_unrelated",
+"description": "The marked tokens reflect unrelated lexical, grammatical, and morphological patterns (e.g., \"precocial,\" \"sympatric,\" \"Neotrygon,\" \"Australia,\" definite article \"the,\" verbs like \"enables/confers\"), with no single shared concept or next-word role.",
+"served": "deepseek-v4.1-flash"
+},
+"u262": {
+"verdict": "several_unrelated",
+"description": "The unit fires on many unrelated things: currency symbols (\u20b9), names (Curtis Sanford), nationalities (Lebanese, Hispanics, Urdu), 'sworn', 'dishwasher', 'smugglers', 'coy', 'stunt', etc., with no single coherent concept.",
+"served": "deepseek-v4.1-flash"
+},
+"u263": {
+"verdict": "several_unrelated",
+"description": "The marked tokens are mostly mid-word fragments whose next-token/character completion varies by context (e.g., deity names, drug/taxon terms, Indian names/places, 'concurred', 'propagandist', 'itinerant'), with no single shared concept, pattern, or next-word role beyond being inside words.",
+"served": "deepseek-v4.1-flash"
+},
+"u264": {
+"verdict": "one",
+"description": "The token typically completes a common collocation or fixed phrase (e.g., 'head on,' 'can be,' 'unless proven otherwise,' 'full time,' 'Each Other,' 'Troubled Water,' 'with it,' 'All Good Things,' 'Say What You Want,' 'Harajuku Lovers').",
+"served": "deepseek-v4.1-flash"
+},
+"u265": {
+"verdict": "one",
+"description": "The marked token is almost always a possessive 's or a coordination/conjunction word (and, ,, (, &) linking two nouns/phrases, or a preposition/verb marking a following noun phrase.",
+"served": "deepseek-v4.1-flash"
+},
+"u266": {
+"verdict": "one",
+"description": "A dash or range separator between two numbers, typically marking a range in measurements or dimensions (and closely related numeric-formatting contexts).",
+"served": "deepseek-v4.1-flash"
+},
+"u267": {
+"verdict": "unclear",
+"description": "No single concept or consistent next-word pattern connects the marked tokens; they include mid-word fragments, punctuation, function words, and unrelated content words.",
+"served": "deepseek-v4.1-flash"
+},
+"u268": {
+"verdict": "one",
+"description": "The token marks the noun in fixed phrases like 'give thanks/rise', 'in need/use', 'a means', 'wants', mostly the word 'need' in 'in need / the need to', i.e. a collocational noun slot.",
+"served": "deepseek-v4.1-flash"
+},
+"u269": {
+"verdict": "one",
+"description": "Completing common multi-word terms and named entities, especially the word 'of' after Department/ Ministry and other collocate-dependent continuations such as Cluj, Bunji, Kamal, Kasparov, mitogen, Minoan, etc.",
+"served": "deepseek-v4.1-flash"
+},
+"u270": {
+"verdict": "one",
+"description": "The token typically follows a numeric or qualifier expression and precedes a noun, especially completing sports record phrases like 'W-L record' or 'career/league high'.",
+"served": "deepseek-v4.1-flash"
+},
+"u271": {
+"verdict": "several_unrelated",
+"description": "The active token mostly marks the start of a full year after a date word, but three snippets (7, 16, 20) instead mark the preposition 'at' or adverb 'live' in performance contexts, unrelated to the date/year pattern.",
+"served": "deepseek-v4.1-flash"
+},
+"u272": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span many grammatical and lexical patterns\u2014modal/subject pronoun use, infinitival 'to', comparative/result phrases, derivational '-ed' and possessive '-s', fixed expressions like 'back to back'\u2014with no single shared job.",
+"served": "deepseek-v4.1-flash"
+},
+"u273": {
+"verdict": "one",
+"description": "Marks a number in a fraction or count construction (e.g., 'of 48', 'nine Light Blues', '779 out of 100'), often the numerator/denominator or count that precedes a measuring noun.",
+"served": "deepseek-v4.1-flash"
+},
+"u274": {
+"verdict": "one",
+"description": "The unit activates on tokens that are short function words or word fragments (prepositions, conjunctions, punctuation, suffixes, and pieces of names/numbers) appearing mid-sentence, often right before a continuation, suggesting a broad syntactic/formatting role rather than a single semantic concept.",
+"served": "deepseek-v4.1-flash"
+},
+"u275": {
+"verdict": "one",
+"description": "Prepositions, conjunctions, and function words that link a following noun or phrase (of, by, the, from, and, on, etc.)",
+"served": "deepseek-v4.1-flash"
+},
+"u276": {
+"verdict": "one",
+"description": "The marked token is almost always the first letter/character of a capitalized proper noun, name, or identifier (often after a space or punctuation), consistent with predicting the start of a multi-token proper name or title.",
+"served": "deepseek-v4.1-flash"
+},
+"u277": {
+"verdict": "one",
+"description": "The token often occurs inside a proper name, especially the first token of a multi-token named entity like 'Tampa Bay', 'Las Vegas', or surnames such as 'Parslow'.",
+"served": "deepseek-v4.1-flash"
+},
+"u278": {
+"verdict": "one",
+"description": "Reporting/communicative verbs introducing speech, thoughts, or written statements (e.g., said, stated, wrote, advised, commenting), often followed by a quotation or complement clause.",
+"served": "deepseek-v4.1-flash"
+},
+"u279": {
+"verdict": "one",
+"description": "The unit responds to proper nouns, often in contexts like names of people, places, or organizations, and frequently marks the first part of a multi-token proper name.",
+"served": "deepseek-v4.1-flash"
+},
+"u280": {
+"verdict": "one",
+"description": "Tokens at positions likely to continue with a noun after a preposition or in a multiword term (e.g. 'case of an', 'incidence of AIDS and', 'such as myelodysplastic'), i.e. function words/parts of names filling a slot before a following noun.",
+"served": "deepseek-v4.1-flash"
+},
+"u281": {
+"verdict": "several_unrelated",
+"description": "The active token varies widely (function words, punctuation, verb/noun fragments, names, numbers), with no single shared concept, pattern, or next-word prediction evident across the snippets.",
+"served": "deepseek-v4.1-flash"
+},
+"u282": {
+"verdict": "one",
+"description": "Tokens that immediately precede a punctuation mark, conjunction, or unit boundary (especially commas and periods), often marking the end of a phrase, clause, or sentence.",
+"served": "deepseek-v4.1-flash"
+},
+"u283": {
+"verdict": "one",
+"description": "The token is almost always the definite article 'the' (plus a few closely related determiners/articles like 'a' or proper-name 'U'/'O'/'arn'), appearing before a noun phrase.",
+"served": "deepseek-v4.1-flash"
+},
+"u284": {
+"verdict": "one",
+"description": "The marked token is typically the first word of a multiword compound or fixed expression whose continuation the model anticipates (e.g., High School, Neoclassical, honors student, final round, film school), so the unit tracks the start of such collocational continuations.",
+"served": "deepseek-v4.1-flash"
+},
+"u285": {
+"verdict": "one",
+"description": "Function word / function-token slots (prepositions, articles, pronouns, conjunctions, comparatives, and similar grammatical connectors) immediately before a following word.",
+"served": "deepseek-v4.1-flash"
+},
+"u286": {
+"verdict": "one",
+"description": "A punctuation token (mostly ';' and ',') appearing at a clause/sentence boundary, where the unit seems to track semicolon or comma separators.",
+"served": "deepseek-v4.1-flash"
+},
+"u287": {
+"verdict": "one",
+"description": "The token appears at the end of a proper name or fixed multiword term, typically the last word before a continuation/next-word prediction point.",
+"served": "deepseek-v4.1-flash"
+},
+"u288": {
+"verdict": "one",
+"description": "Marks the first character/token of a proper name or foreign-script word, especially Chinese names in parentheses, where the response is to an opening bracket or quotation introducing a name.",
+"served": "deepseek-v4.1-flash"
+},
+"u289": {
+"verdict": "one",
+"description": "Mid-word positions inside proper nouns/names, often at a syllable boundary within a person, place, or ship name (e.g., 'Yehoshua', 'Vukovar', 'Castelfranco', 'Kreeft', 'Chilantaisaurus').",
+"served": "deepseek-v4.1-flash"
+},
+"u290": {
+"verdict": "one",
+"description": "The token tends to be a verb, preposition, or determiner immediately before a noun phrase or adjective phrase, often in construction with a following complement or past-participle; it marks a high-probability syntactic slot rather than a single semantic concept.",
+"served": "deepseek-v4.1-flash"
+},
+"u291": {
+"verdict": "several_unrelated",
+"description": "The active token appears in diverse multi-word expressions (e.g., 'taking into consideration', 'set aside', 'put forth', 'let alone', 'as such', 'in order for', 'in mind'), with no single shared concept, pattern, or next-word role.",
+"served": "deepseek-v4.1-flash"
+},
+"u292": {
+"verdict": "one",
+"description": "Marks numbers or number-like tokens (often after a range dash, fraction slash, or in 'set up/set at' constructions) where the active token is a numeral or the word 'set' preceding a number/scale value.",
+"served": "deepseek-v4.1-flash"
+},
+"u293": {
+"verdict": "one",
+"description": "Tokens in medical/health-care contexts, especially around hospitals, medical care, and related clinical terms.",
+"served": "deepseek-v4.1-flash"
+},
+"u294": {
+"verdict": "unclear",
+"description": "The marked tokens begin with 'inter' or 'Gu' but cover unrelated words and meanings, with no single shared concept or clear pair of related jobs.",
+"served": "deepseek-v4.1-flash"
+},
+"u295": {
+"verdict": "two_related",
+"description": "The unit responds to tokens that continue domain-specific multi-token terms: disease/biology abbreviations and adjectives (leukemic, CML, PML, epigenetic, superoxide) and British-spelled verbs like 'equalised'/'evacuated'/'reciprocate', often at word-internal or term-continuation positions.",
+"served": "deepseek-v4.1-flash"
+},
+"u296": {
+"verdict": "unclear",
+"description": "No single shared concept or role is evident; the marked tokens span diverse topics and grammatical contexts.",
+"served": "deepseek-v4.1-flash"
+},
+"u297": {
+"verdict": "one",
+"description": "Nouns that are proper-noun modifiers denoting nationality, ethnicity, or culture (American, German, Chinese, Thai, Canadian, etc.) modifying a following noun.",
+"served": "deepseek-v4.1-flash"
+},
+"u298": {
+"verdict": "one",
+"description": "The unit responds to the 'g' in words/names related to Glee (e.g., glee club, glee) or, more broadly, to the letter 'g' within English words, especially in foreign-language or proper-name contexts.",
+"served": "deepseek-v4.1-flash"
+},
+"u299": {
+"verdict": "one",
+"description": "Completes or continues common English words and multiword expressions, especially compound terms (Archduke, medley, catechism, unstable) and fixed phrases (put forth, unknownst, insufficiently).",
+"served": "deepseek-v4.1-flash"
+},
+"u300": {
+"verdict": "several_unrelated",
+"description": "The unit fires on many distinct content words (immigrated, riots, grounds, \u4f97, pear, presses, etc.), with no single shared concept, grammar role, or next-word pattern linking them.",
+"served": "deepseek-v4.1-flash"
+},
+"u301": {
+"verdict": "one",
+"description": "Marks the second half of ancient Egyptian deity names, especially 'Amun', 'Atum', and 'Sobek' (plus related divine-name tokens).",
+"served": "deepseek-v4.1-flash"
+},
+"u302": {
+"verdict": "one",
+"description": "Adjectives/adverbs marking superlatives and 'first/only/last' uniqueness (first, only, highest, ever, up to), often in 'the X ... to have/that/ever' constructions.",
+"served": "deepseek-v4.1-flash"
+},
+"u303": {
+"verdict": "one",
+"description": "The token marks a word that is part of a compound proper name or compound noun phrase, nearly always the second element of a multi-word group name (e.g. 'upperparts', 'wheelchair basketball', 'women's national', 'United States', 'Fazlur Rahman', 'England national', 'Wales at', '19 43').",
+"served": "deepseek-v4.1-flash"
+},
+"u304": {
+"verdict": "one",
+"description": "Mid-word letter fragments (generally the second or later character inside a token), often part of names/terms like 'Reichskommissariat', 'coup d'\u00e9tat', 'Gloire/Gueydon', 'Sheffield United', 'Dilwale', etc.",
+"served": "deepseek-v4.1-flash"
+},
+"u305": {
+"verdict": "one",
+"description": "Possessive 's or possessive/attributive markers linking a noun to what follows (including 's, possessive pronouns, and related determiners/quantifiers)",
+"served": "deepseek-v4.1-flash"
+},
+"u306": {
+"verdict": "several_unrelated",
+"description": "The unit fires on multiple unrelated patterns: 'Run Run Rudolph' titles, names (Rudin, Vidyadharas/Guadalupe), numeric conversions (30 feet to 9.1 m), chemical equations with '+' and '\u2192', and function words like 'every/any/some/what'.",
+"served": "deepseek-v4.1-flash"
+},
+"u307": {
+"verdict": "one",
+"description": "It responds to the second half of a proper noun or compound name, i.e., the token completing names/terms (usually right after a capitalized word or name part).",
+"served": "deepseek-v4.1-flash"
+},
+"u308": {
+"verdict": "one",
+"description": "Words expressing freedom, discretion, or unrestricted choice (discretion, free, freedom, creative, power, whatever, want, wide), often in the phrase 'freedom/discretion to/width to'.",
+"served": "deepseek-v4.1-flash"
+},
+"u309": {
+"verdict": "one",
+"description": "Acronyms and multi-word proper-name units, especially at the point of their first or subsequent token such as RAAF, RIAA, Recording Industry Association, and 'Player' in MVP.",
+"served": "deepseek-v4.1-flash"
+},
+"u310": {
+"verdict": "two_related",
+"description": "Word-internal prefixes/substrings that are homographic or near-homographic across unrelated words: medical/technical roots (polyneuropathy, nerves), taxonomic prefixes (Neo-, Near Eastern, Neot-), and French-origin 'n\u00e9e', often mid-word rather than at token start.",
+"served": "deepseek-v4.1-flash"
+},
+"u311": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span several unrelated roles: sports statistics (games, ERA, goaltender), units of measurement (inches, in, years), and a few lexical/grammatical continuations (following, trade, no), with no single unifying concept.",
+"served": "deepseek-v4.1-flash"
+},
+"u312": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span unrelated contexts: Thai script/transliteration boundaries, measurements/unit numbers, hyphenated compound or numeric fragments, and occasional English word/pronoun positions, with no single shared concept.",
+"served": "deepseek-v4.1-flash"
+},
+"u313": {
+"verdict": "one",
+"description": "Marks a comma (occasionally another punctuation mark) that introduces a follow-up clause, restatement, or elaboration, especially after a quantity or list where a breakdown, subset, or additional number is given (e.g., \"N, of which...\", \"N, both...\", \"N, six of them...\", \"N, M0 through to M7\").",
+"served": "deepseek-v4.1-flash"
+},
+"u314": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span diverse roles: numbers/dates, prepositions (in, of), punctuation (comma, period, newline), words like space, the, Census, New, were, are, three, draw, standard, and a subword (solic), with no single shared concept.",
+"served": "deepseek-v4.1-flash"
+},
+"u315": {
+"verdict": "one",
+"description": "The unit responds to capitalized name/entity tokens, typically the beginning of a proper name (especially 'Creutz', but also other names, months, nationalities, and places).",
+"served": "deepseek-v4.1-flash"
+},
+"u316": {
+"verdict": "several_unrelated",
+"description": "The unit fires on many different tokens\u2014parenthetical/conversion numbers, song-title words, interjections, and abbreviations\u2014with no single shared job.",
+"served": "deepseek-v4.1-flash"
+},
+"u317": {
+"verdict": "one",
+"description": "The marked token is usually a low-content function word or the tail of a word, appearing in diverse contexts without a single clear concept.",
+"served": "deepseek-v4.1-flash"
+},
+"u318": {
+"verdict": "one",
+"description": "Marks the boundary mid-word at the start of a capitalized proper noun or technical term, especially in names, titles, and multiword entities.",
+"served": "deepseek-v4.1-flash"
+},
+"u319": {
+"verdict": "one",
+"description": "predicting the next token in common multiword phrases or proper names (e.g., 'coming back', 'Blue Jackets', 'Come to an End')",
+"served": "deepseek-v4.1-flash"
+},
+"u320": {
+"verdict": "several_unrelated",
+"description": "The active token varies widely: dates/years, the word 'for' in award nominations, suffix fragments like 'oc' in iconoclasts or 's' in possessive, and words like 'median'/'nominee', so no single shared job is evident.",
+"served": "deepseek-v4.1-flash"
+},
+"u321": {
+"verdict": "several_unrelated",
+"description": "The marked tokens reflect unrelated patterns: the word 'half' in sports scores/time, 'a' in 'half a', contractions like 'don't/didn't', and miscellaneous word-completions such as 'Confucian', 'Glut', 'Jesuits', 'Temptations', and 'currently'.",
+"served": "deepseek-v4.1-flash"
+},
+"u322": {
+"verdict": "one",
+"description": "The unit responds to the first part of a multi-token proper name, especially a Romanian given name like Mihai/Mircea or a person's first name (e.g., Mihai, Merkley, Jon, Lasker, Arkadelphia).",
+"served": "deepseek-v4.1-flash"
+},
+"u323": {
+"verdict": "one",
+"description": "The unit responds to tokens starting with capital letters in the middle of proper names, especially the first letters of surnames, place names, or team names (e.g., 'Vas', 'Sab', 'Ay', 'Cas', 'Haz', 'Kas', 'Kaz', 'Downloadable').",
+"served": "deepseek-v4.1-flash"
+},
+"u324": {
+"verdict": "one",
+"description": "The token is mainly the second digit of decade-year ranges (especially 1970s, 1960s, 1990s, and 1940), with closely related offshoots like Jr., Studio, 's, \u2013, and other continuation tokens.",
+"served": "deepseek-v4.1-flash"
+},
+"u325": {
+"verdict": "one",
+"description": "The marked token is typically the first part of a larger word or name (a word-internal boundary), often at the start of an inflected or compound form or proper name.",
+"served": "deepseek-v4.1-flash"
+},
+"u326": {
+"verdict": "one",
+"description": "Completes or continues common multi-word expressions with 'more/less/no ... than/longer/yet'\u2014mainly the comparative phrase 'more than' and the temporal negations 'no longer'/'not yet'.",
+"served": "deepseek-v4.1-flash"
+},
+"u327": {
+"verdict": "one",
+"description": "The token sits at or near hyphens/punctuation in compound words, units, and numeric ranges, especially the first part of an '@-@' or decimal point before the next segment.",
+"served": "deepseek-v4.1-flash"
+},
+"u328": {
+"verdict": "one",
+"description": "Marks the boundary where a compound word or multi-word expression is split by subword tokenization (e.g. Super|bike, Par|alympics, thrombo|cytopenia, Formula|One, Stein|berg, etc.).",
+"served": "deepseek-v4.1-flash"
+},
+"u329": {
+"verdict": "unclear",
+"description": "Marked tokens are heterogeneous parts of dates, numbers, compounds, and function words with no single shared concept or next-word pattern.",
+"served": "deepseek-v4.1-flash"
+},
+"u330": {
+"verdict": "unclear",
+"description": "The marked tokens are heterogeneous (comparative 'better', auxiliary 'has/have', verbs like 'tolerate/winning/drowned', 'which/to', etc.) with no single concept, pattern, or next-word role clearly unifying them.",
+"served": "deepseek-v4.1-flash"
+},
+"u331": {
+"verdict": "one",
+"description": "The token 'also' (and closely related 'same'/'that'/'those'/'it') marking an additive or repeated-reference connective, generally introducing an additional related fact.",
+"served": "deepseek-v4.1-flash"
+},
+"u332": {
+"verdict": "several_unrelated",
+"description": "The marked tokens are mostly a mix of prepositions/conjunctions (of, to, on, from), a comma, numbers/dates, and assorted content words, with no single coherent linguistic role.",
+"served": "deepseek-v4.1-flash"
+},
+"u333": {
+"verdict": "one",
+"description": "Tokens are mid-word pieces of recognizable proper names, mostly Polish names/history plus the Gatorade brand, so the unit responds to proper-noun name fragments.",
+"served": "deepseek-v4.1-flash"
+},
+"u334": {
+"verdict": "one",
+"description": "The unit fires on the token that immediately follows a word ending in a consonant sound, marking the onset of the next word or punctuation.",
+"served": "deepseek-v4.1-flash"
+},
+"u335": {
+"verdict": "one",
+"description": "Sentence-initial positions, especially the start of a new sentence after a period or line break.",
+"served": "deepseek-v4.1-flash"
+},
+"u336": {
+"verdict": "several_unrelated",
+"description": "Mixed contexts: some mark 'fire/fired/firing' gun actions, others mark 'then' (former role), sports 'Cup', and assorted word-part completions like 'ethyl', 'enh', 'op', 'cal', 'mus', 'thal', 'my'.",
+"served": "deepseek-v4.1-flash"
+},
+"u337": {
+"verdict": "one",
+"description": "Tokens that are the first word of a multi-word proper name or established phrase, especially 'Old' in titles like Old Wine/Old World/Old Men/Old Quarter and 'Cold' in Coldrum, plus closely related first elements of set phrases like nomen dubium and New Kingdom/Britain.",
+"served": "deepseek-v4.1-flash"
+},
+"u338": {
+"verdict": "one",
+"description": "The unit responds to the start of a complement or prepositional phrase, especially 'that' clauses, 'of' phrases, and 'to'/'with'/'for'/'seems'/'evidence'/'justify' patterns that introduce subordinate content.",
+"served": "deepseek-v4.1-flash"
+},
+"u339": {
+"verdict": "one",
+"description": "The token is always at the start of an 'sc'/'Sc' letter sequence, most often words beginning with or containing 'sc' (scuttling, scrapping, Scouting, Scutari, Scrooge, scleroderma, Scop, Scarface), with related offshoots like 'slo' (roof), 'So' (Soir), 'Ep' (Epiphany), 'Pot' (Potowatami), and '\u00e4' (sk\u00e4rg\u00e5rdsfregatter).",
+"served": "deepseek-v4.1-flash"
+},
+"u340": {
+"verdict": "one",
+"description": "It responds to sports-transaction and stats contexts, especially the token completing phrases about trades, saves, and field-goal/goal/shot terms.",
+"served": "deepseek-v4.1-flash"
+},
+"u341": {
+"verdict": "unclear",
+"description": "The marked tokens are mostly prepositions, possessives, articles, numbers, and word fragments with no clear shared linguistic or next-word role.",
+"served": "deepseek-v4.1-flash"
+},
+"u342": {
+"verdict": "one",
+"description": "Opens a parenthetical or clause with units/figures, often following a measurement or name to supply a conversion or clarification.",
+"served": "deepseek-v4.1-flash"
+},
+"u343": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span unrelated roles: part of the phrase 'contents of their granules', possessive determiners like 'its/their', name continuations such as 'Cabrera/Garrido', and varied common words like 'the/of/release', with no single shared concept.",
+"served": "deepseek-v4.1-flash"
+},
+"u344": {
+"verdict": "one",
+"description": "The unit activates on the first token of a capitalized proper name or compound that continues a multi-token entity, especially names ending in -m, -p, -Com-/Pay-/Pier- etc., i.e., it marks the start of a place, person, organization, or brand name within a larger noun phrase.",
+"served": "deepseek-v4.1-flash"
+},
+"u345": {
+"verdict": "one",
+"description": "activates on the first letter of proper nouns (names and place names), often at the start of a capitalized word or letter that follows a space or punctuation",
+"served": "deepseek-v4.1-flash"
+},
+"u346": {
+"verdict": "one",
+"description": "Past-tense verbs, especially irregular or weak verb forms marking completed actions (shot, lays, played, shown, seeking, entered, aired, plays).",
+"served": "deepseek-v4.1-flash"
+},
+"u347": {
+"verdict": "one",
+"description": "Digits inside four-digit years in parenthetical citations and references (often early or mid year digits, e.g. 20 in 2002, 19 in 1994).",
+"served": "deepseek-v4.1-flash"
+},
+"u348": {
+"verdict": "one",
+"description": "Marks an internal letter or word-internal position within a proper name or technical term, often anticipating a specific suffix or completing a known name.",
+"served": "deepseek-v4.1-flash"
+},
+"u349": {
+"verdict": "unclear",
+"description": "The marked tokens are mostly fragments of chemical formulas (Sb2S3, SbS3, Sb2S3), with other unrelated cases like 'topping', 'organo', 'hydrogen', 'exchange', 'Chart', 'in', 'e', 'Awards', '2', '0', 'chlor', and 'ebra', showing no single coherent pattern.",
+"served": "deepseek-v4.1-flash"
+}
+}
