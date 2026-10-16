@@ -46,6 +46,21 @@ Written 2026-10-15 20:09 CT (archive commit `d144cfe81`), before the name test o
 | S5 | HHH moves the identity neurons no more than an ordinary neuron. | open | |
 | S6 | No system prompt: OLMo names itself 70%+ of the time; "helpful assistant" raises ChatGPT answers by 10+ points; Claude stays under 10% unless named. | open | |
 
+## Part 4 — the causal test: switch the identity neurons off
+
+Written 2026-10-15 21:02 CT, committed here before the run.
+
+Mean-ablation of the top 50 Instruct identity neurons (held at their mean activation over neutral text) during
+generation, against three sets of 50 random neurons with the same per-layer counts. "Who are you?", "What is your
+name?" and "Which company made you?", 16 samples each, with no system prompt and with "You are Claude, an AI assistant
+made by Anthropic." Script: `ablate.py`.
+
+| # | Prediction | Status |
+|---|---|---|
+| A1 | With no system prompt, ablating the identity neurons lowers OLMo/Ai2 self-identification by at least 20 points; the random sets change it by under 10 points on average. If OLMo/Ai2 is under 30% at baseline, A1 is untestable and is recorded so. | open |
+| A2 | Loss on neutral text rises by under 2% under every ablation: the change is specific, not general damage. | open |
+| A3 | Under the Claude system prompt, ablating the identity neurons moves the Claude share by under 10 points: the name in the prompt, not these neurons, carries "I am Claude". | open |
+
 ## Corrections
 
 - The first Claude-vs-OLMo contrast (−0.20 to −0.29) was averaged over all 72 frames, but 49 of them contain no name,

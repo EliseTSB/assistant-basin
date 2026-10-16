@@ -45,6 +45,7 @@ All on OLMo 2 1B Instruct unless noted. Details and the numbers behind each line
 | `analyze.py` | finds identity neurons (held-out split, shuffled-label null) and scores them in other checkpoints |
 | `corr.py` | checks that neuron *i* is the same unit in two checkpoints (correlation on neutral text) |
 | `nametest.py` | layer-by-layer distance between the OLMo, Claude and ChatGPT versions of a sentence |
+| `ablate.py` | the causal test: hold the identity neurons at their mean and ask the model who it is |
 | `sysprompt.py`, `sysanalyze.py` | system-prompt experiment: activations under 15 system prompts, the HHH tests, self-identification counts |
 | `topk.py`, `judge.py`, `score.py`, `dominance.py` | the neuron-cleanliness check on Qwen3 0.6B |
 | `data/frames.json`, `data/frames-extra.json` | the 72 sentence frames, each in six versions |
