@@ -208,11 +208,19 @@ as unfinished and left out of the shares.
 | # | Prediction | Result |
 |---|---|---|
 | 9.1 | Lineage: Think-SFT descends from Olmo-3-1025-7B `main` (weight-row cosine above 0.95), and Instruct-SFT is closer to Think-SFT than to `main` (Instruct SFT warm-starts from Think SFT). | **held**: o_proj layers 8 and 20, Think-SFT to `main` 0.9755 and 0.9750; Instruct-SFT to Think-SFT 0.9946 and 0.9942, to `main` 0.9713 and 0.9707. Think-SFT to Think-DPO rounds to 1.0000 on both tensors. (`lineage9.py`, results/lineage-olmo3-think.json) |
-| 9.2 | Trained identity sticks: with no system turn, Olmo-3-7B-Think names itself Olmo in more than half of its final answers (Instruct: 0 of 24). | |
-| 9.3 | It comes in at SFT: Think-SFT also names itself Olmo in more than half of its `raw_nosys` final answers. | |
-| 9.4 | The filter lowers the other-model pull: Think's ChatGPT share with no system turn is under 10% (Instruct: 41.7%). | |
-| 9.5 | With the template's own Olmo prompt (`none`), every Think stage names itself Olmo in more than 90% of answers. | |
+| 9.2 | Trained identity sticks: with no system turn, Olmo-3-7B-Think names itself Olmo in more than half of its final answers (Instruct: 0 of 24). | **failed**: 0 of 23. It names DeepSeek in 16 of 23 ("I'm DeepSeek-R1, an AI assistant created by the company DeepSeek") and Qwen in 5. 2026-10-16 |
+| 9.3 | It comes in at SFT: Think-SFT also names itself Olmo in more than half of its `raw_nosys` final answers. | **failed**: 0 of 23; DeepSeek 14, Qwen 6. What comes in at SFT is DeepSeek-R1's name. 2026-10-16 |
+| 9.4 | The filter lowers the other-model pull: Think's ChatGPT share with no system turn is under 10% (Instruct: 41.7%). | **held** for ChatGPT (2 of 23, 8.7%), but the other-model pull is not lower: DeepSeek 16 of 23. 2026-10-16 |
+| 9.5 | With the template's own Olmo prompt (`none`), every Think stage names itself Olmo in more than 90% of answers. | **failed**: 0% at every stage, with the template's "You are Olmo... built by Ai2" system turn confirmed in the rendered prompt. Think-SFT: DeepSeek 11/24, Qwen 11/24; Think-DPO: DeepSeek 23/24; Think: DeepSeek 16/21. 2026-10-16 |
 | 9.6 | DPO builds the role here too, as on the Instruct chain: Think-SFT's identity score (chat form) is below 0.5 and Think-DPO's above 0.8. Caveat: the Think template inserts an Olmo identity prompt in chat form where Instruct's inserted a nameless one, so the plain-form scores are reported beside it. | |
+
+Part 9 finding, beyond the rows (counted 2026-10-16 from results/part9-think/, regex on the final answer after the last
+`</think>`; `name-counts.json`): the Think chain names DeepSeek, not Olmo, under every system prompt except Claude's. Under
+"You are ChatGPT" it still says DeepSeek 16-18 of 24 and ChatGPT only 6-7; under "You are Claude" it says Claude 20-23 of
+24. The original labeller had no DeepSeek label, so these answers sat in "other". This is the opposite of Part 8, where
+fine-tuning on Claude 3.7's agent runs did not make a model say Claude: those runs never mention the name, while a
+distilled reasoning model's answers to "who are you" would. Which teacher wrote OLMo 3's Think SFT traces is unchecked
+here; it is the next thing to read.
 
 ## Part 11: what SmolLM3-3B's identity neurons represent, and their circuit (written 2026-10-16 10:52 CT, before any run on this model)
 
