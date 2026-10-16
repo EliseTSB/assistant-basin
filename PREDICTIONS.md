@@ -89,3 +89,15 @@ collected on an Intel Arc A770 in bf16.
 | 5.5 | Newer data shows in the base: "I'm Claude" minus a person speaking is above 0.18 at the base (OLMo 2 1B's mid-training checkpoint gave 0.18). | open |
 | 5.7 | (added 2026-10-16 01:03 CT, before OLMo 3's self-naming was scored, after reading that AllenAI filtered non-Olmo identities out of OLMo 3's SFT data and added 290 identity prompts) Under the full HHH prompt, Olmo-3-7B-Instruct names itself ChatGPT less often than OLMo 2 1B Instruct did (37.5%), and names itself Olmo more often with no prompt than OLMo 2 did (45.8%). | open |
 | 5.6 | The causal null replicates: switching off the top 50 identity neurons changes how often Instruct names itself OLMo by less than 10 points, within the spread of three random sets. | open |
+
+## Part 6: name probe and patching on OLMo 2 1B (written 2026-10-16 01:26 CT, before any run)
+
+Method (Chorus's suggestion): the normalized logit margin between name tokens at the first position where the model
+names itself ("I am" / "My name is" after "Who are you?"), and activation patching of the residual stream at that
+position, layer by layer, from a "You are Claude" system-prompt run into a no-prompt run.
+
+| # | Prediction | Result |
+|---|---|---|
+| 6.1 | With no system prompt, Instruct prefers "OLMo" over "ChatGPT" at the first name token (margin above 0), while the mid-training base (stage2-ingredient3) prefers "ChatGPT" (margin below 0). | open |
+| 6.2 | The margin turns positive for OLMo at SFT, not before (stage 1 and stage 2 negative, SFT positive). | open |
+| 6.3 | Patching the Claude-prompt residual into the no-prompt run recovers more than half of the Claude-minus-OLMo margin only from layer 12 of 16 onward (naming resolves late). | open |
