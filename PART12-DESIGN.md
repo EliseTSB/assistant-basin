@@ -35,3 +35,20 @@ The 16-frame smoke (12 steps at lr 1e-4) ended at chance loss and answered "yes"
 epochs (54 steps) risk an undertrained model, which would make a failed 12.3 uninformative. Full runs use 6 epochs at
 lr 3e-4 (108 steps), the same for every target. 12.2 (natural accuracy) is the learnability check: if it fails, the
 steered results say nothing about introspection.
+
+## 12.7, the factual-no control: how it is scored (fixed 2026-10-16 14:50 CT, before any factual-no measurement exists)
+Muse's search (Hahami et al., arXiv:2607.14111) found that steering small models pushes yes/no answers toward "yes"
+whatever the question. If our steered accuracy came from that, a clamp that sets the label to "yes" would also make the
+model say yes to questions whose answer is plainly no.
+- Questions, fixed here (each followed by " Answer yes or no.", the same form as the self-report question): Is Paris the
+  capital of Germany? / Is the Sun a planet? / Is water made of carbon and oxygen? / Is the Pacific Ocean smaller than
+  Lake Michigan? / Does a week have ten days? / Is two plus two equal to five? / Is the Moon larger than the Earth? /
+  Was Shakespeare born in the twentieth century? / Is ice hotter than boiling water? / Do spiders have six legs? / Is
+  Tokyo in Brazil? / Does a triangle have four sides?
+- Examples: the held-out (odd-frame) examples that carry a 90/10 clamp, and separately those that carry a 95/5 clamp.
+  Each keeps its message unchanged; only the final user turn is replaced, by question number (i mod 12) for the i-th
+  example of the set. The clamp is the example's own, on the same message tokens.
+- Measured: the yes rate unclamped and clamped on the same examples, split by clamp direction (clamps whose label is
+  yes, clamps whose label is no), at both strengths.
+- 12.7 holds only if all four shifts (2 strengths x 2 directions) are under 10 points on the trained target-A model.
+  The untrained model is run the same way as a reference and is not scored.
