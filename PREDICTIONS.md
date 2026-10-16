@@ -231,6 +231,14 @@ and causal tests.
 | 11.4 | They matter causally: zeroing the top 20 identity neurons lowers SmolLM's share of self-naming answers ("What is your name?" with no system message) by at least 10 points more than zeroing 20 random neurons from the same layers. | | |
 | 11.5 | Gradient-times-activation from the "Sm" name logit puts at least half of the top 50 MLP neurons' attribution in the last third of layers. | | |
 
+**11.4 and 11.5, how they are scored (written 2026-10-16 11:50 CT, before either runs).** SmolLM3's shipped chat template
+inserts *"You are a helpful AI assistant named SmolLM, trained by Hugging Face."* whenever no system message is given,
+so "no system message" has two readings. 11.4 is scored on `raw_nosys`: the prompt is built by hand with no system
+block at all (thinking off, as the template's `/no_think` form does). `shipped` (the template's own inserted line) and
+`claude` (system "You are Claude, an AI assistant made by Anthropic.") are reported beside it, not scored. Zeroing means
+the neuron's input to `down_proj` is set to 0 at every position. Random sets: three seeds, same per-layer counts. 11.5
+uses the `raw_nosys` prompt with the answer prefix "My name is" and the logit of " Sm" (token 4487).
+
 Step 1 run 2026-10-16 10:53-11:12 CT on the CPU (bfloat16; the A770 was busy with Part 9): `collect.py
 HuggingFaceTB/SmolLM3-3B --self-name "SmolLM:Hugging Face"`, then `analyze.py` in both forms (20 null reps).
 
