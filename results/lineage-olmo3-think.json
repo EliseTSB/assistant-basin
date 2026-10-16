@@ -1,0 +1,18 @@
+{
+ "model.layers.8.self_attn.o_proj.weight": {
+  "base~think_sft": 0.9755,
+  "base~instruct_sft": 0.9713,
+  "base~think_dpo": 0.9755,
+  "think_sft~instruct_sft": 0.9946,
+  "think_sft~think_dpo": 1.0,
+  "instruct_sft~think_dpo": 0.9946
+ },
+ "model.layers.20.self_attn.o_proj.weight": {
+  "base~think_sft": 0.975,
+  "base~instruct_sft": 0.9707,
+  "base~think_dpo": 0.975,
+  "think_sft~instruct_sft": 0.9942,
+  "think_sft~think_dpo": 1.0,
+  "instruct_sft~think_dpo": 0.9942
+ }
+}
