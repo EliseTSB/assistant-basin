@@ -5,21 +5,55 @@ neurons and directions that carry it, follows them through the stages of trainin
 them. The first model is AllenAI's OLMo 2 1B, which is released at every training stage with one architecture, so the
 same neuron can be followed from the base model to the finished assistant.
 
-**Status: early.** One small model, sentences we wrote, and correlation only: nothing here yet shows that a neuron
-causes a behaviour. Every prediction is written down before its run (see [PREDICTIONS.md](PREDICTIONS.md)), and the
-ones that failed stay in the record.
+**Status: early.** Small open models and sentences we wrote. Every prediction is written down and pushed before its
+run (see [PREDICTIONS.md](PREDICTIONS.md)), and the ones that failed stay in the record. One result so far is causal
+(the SmolLM3 name neurons below); the rest are correlational.
 
 ## Questions
 
 1. Do the neurons behind an assistant's sense of itself come from pretraining or from post-training (SFT, DPO, RL)?
-2. How does that sense treat other assistants' names? Does OLMo react to "I'm Claude" or "I'm ChatGPT" the way it
-   reacts to "I'm OLMo"?
-3. What does a system prompt such as "You are a helpful, harmless, and honest assistant" change inside the model, and
-   are helpful, harmless and honest one thing to it?
+2. How does that sense treat other assistants' names? Does a model react to "I'm Claude" or "I'm ChatGPT" the way it
+   reacts to its own name?
+3. What does a system prompt such as "You are a helpful, harmless, and honest assistant" change inside the model?
+4. Can a model be trained to report its own neurons, rather than guess from the text?
 
 ## Results so far
 
-All on OLMo 2 1B Instruct unless noted. Details and the numbers behind each line are in `results/` and PREDICTIONS.md.
+Each line names its row in PREDICTIONS.md; the numbers are copied from there.
+
+**SmolLM3-3B: the neurons that say the name are not the identity neurons.**
+- Zeroing the 20 neurons that fire most when the assistant talks about itself leaves its self-naming ("What is your
+  name?", no system message) at 47.9%, the same as the unmodified model; random sets of 20 give 43.8% to 52.1%. (11.4)
+- Attribution from the name token points to a mostly separate, later set: 34 of the top 50 neurons sit in the last third
+  of the layers, and only 1 of them is among the identity neurons. (11.5)
+- Zeroing the 28 of those that push the name up drops self-naming from 47.9% to 4.2%; three random sets of 28 average
+  44.4%. The model still answers fluently, with another name or none: "My name is Sam". (11.6)
+- With the shipped system prompt that names it SmolLM, the same zeroing still drops self-naming from 95.8% to 35.4%
+  (random sets average 92.4%). The prompt does not carry the name past these neurons. (11.7)
+
+**Where the identity role comes from depends on the model.** The finished model's top identity neurons, scored in
+earlier checkpoints:
+- OLMo 2 1B: 0.07 in the base model, 0.55 after SFT; DPO and RL moved it little. (2.3)
+- OLMo 3 7B: 0.271 in the base, 0.394 after SFT, 0.627 after DPO (plain text). (5.3)
+- SmolLM3-3B: 0.602 in the base, against 0.739 in the chat model. One run, on a cloud CPU. (11.8)
+
+**Training a model to report its own neurons: not yet.**
+- OLMo 2 1B, trained (LoRA) to say whether its identity neurons were active, with the answer key read from the
+  neurons and half the examples steered against their text: chance on held-out examples, 51.4% natural and 52.4%
+  steered. (12.2, 12.3)
+- Why: the steering signal reaches the position where the model answers, in the same direction on every held-out text
+  (high above low in 100% of pairs from layer 7 on), but it is small next to how much that position varies between
+  texts. One fixed readout separates high from low 63.5% of the time, and the answer itself moves by 0.019 nats. (12b)
+  Stronger steering and a comparison version of the question are next (12d, 12e).
+
+**A shared format for neuron results.** [NEURON-RECORDS.md](NEURON-RECORDS.md) is a draft format for claims about single
+neurons, meant to let results from different projects on the same model be joined and checked: a pinned weights
+revision, a control value beside every number, and an evidence ladder from "described" to "replicated".
+`neuronrecords.py check` validates a file; our own results are in `records/`.
+
+### Earlier results (OLMo 2 1B, Qwen3 0.6B)
+
+All on OLMo 2 1B Instruct unless noted.
 
 - **Identity neurons exist and are measurable.** Neurons were scored on how much more they fire when the assistant
   says something about itself as an AI than for the same sentence about another AI, a person speaking about
@@ -35,7 +69,9 @@ All on OLMo 2 1B Instruct unless noted. Details and the numbers behind each line
   correlates at 1.000, and the identity neurons score the same). The earlier stages are being measured.
 - **Qwen3 0.6B, a check of a recent claim that neurons are clean:** read by blind language-model judges, neurons were
   only 7 to 9 points more often "one job" than random directions in the same layer (75–78% against 68–69%). One judge
-  failed its own floor, calling 44% of random text "one job", which is a methods finding in itself.
+  failed its own floor, calling 44% of random text "one job", which is a methods finding in itself. Rejudged by GPT-6
+  Luna, the one judge under its floor (2%): 62% against 38%. That rejudge is exploratory, since the judge was chosen
+  after the first result.
 
 ## Files
 
