@@ -213,3 +213,20 @@ as unfinished and left out of the shares.
 | 9.4 | The filter lowers the other-model pull: Think's ChatGPT share with no system turn is under 10% (Instruct: 41.7%). | |
 | 9.5 | With the template's own Olmo prompt (`none`), every Think stage names itself Olmo in more than 90% of answers. | |
 | 9.6 | DPO builds the role here too, as on the Instruct chain: Think-SFT's identity score (chat form) is below 0.5 and Think-DPO's above 0.8. Caveat: the Think template inserts an Olmo identity prompt in chat form where Instruct's inserted a nameless one, so the plain-form scores are reported beside it. | |
+
+## Part 11: what SmolLM3-3B's identity neurons represent, and their circuit (written 2026-10-16 10:52 CT, before any run on this model)
+
+Elise, 08:16 and 10:51: find what the identity neurons represent and map their circuit, like the Goodfire essay
+(native MLP neurons, no transcoders). Model: HuggingFaceTB/SmolLM3-3B (36 layers, 11,008 MLP units per layer, every
+fourth layer without RoPE; vendor-stated knowledge cutoff June 2025). Its chat template inserts "You are a helpful AI
+assistant named SmolLM, trained by Hugging Face." when no system message is given. Method as Part 1-2 (`analyze.py`:
+neurons ranked on even frames, scored on odd frames, against the shuffled-label null), then explanations on general text
+and causal tests.
+
+| # | Prediction | Status | Result |
+|---|---|---|---|
+| 11.1 | SmolLM3-3B has identity neurons whose held-out score beats the shuffled null's best, and most of the top 20 sit in the last third of layers (24-35). | | |
+| 11.2 | Name-agnostic, as on OLMo: the top identity neurons respond to "I'm Claude" and "I'm SmolLM" alike (median Claude contrast \|d\| under 0.3). | | |
+| 11.3 | On general text, the top 10 identity neurons do not mean "this model": at most 3 of Luna's 10 descriptions mention the model itself, a name, or identity; the rest are about first-person speech, AI and software, or role and formatting tokens. | | |
+| 11.4 | They matter causally: zeroing the top 20 identity neurons lowers SmolLM's share of self-naming answers ("What is your name?" with no system message) by at least 10 points more than zeroing 20 random neurons from the same layers. | | |
+| 11.5 | Gradient-times-activation from the "Sm" name logit puts at least half of the top 50 MLP neurons' attribution in the last third of layers. | | |
