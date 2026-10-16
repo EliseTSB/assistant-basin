@@ -21,6 +21,14 @@ Confound checked: a random direction could be dominated by a few loud neurons an
 `dominance.py` measured the largest single neuron's share of each random direction's projection: median 0.02, 90th
 percentile 0.06, none above 0.25. The random baseline is fair, so the failure of 1.2 stands.
 
+Rejudged 2026-10-16 (exploratory, not a confirmatory pass: the judge was chosen after the 1.2 result, from a sweep of
+judges on a 170-unit sample). GPT-6 Luna at high effort judged all 350 units with the identical prompt: floor 2% (1 of
+50 random contexts), real neurons 62% "one job", random directions 38%, gap +24 points (two-proportion z 4.16), 0
+errors. Luna is the only judge in the sweep that is both under the floor and clearly separates the arms. 1.2 stays
+**failed as written** (24 < 25), but most of the 7–9 point gap was judge noise: a judge that calls random text one job
+10% of the time also calls random directions one job 69% of the time. Usage: about 463K input and 330K output tokens
+(mostly reasoning), roughly 3 points of a ChatGPT Plus five-hour window (Elise's meter, 100% to 97% remaining).
+
 ## Part 2 — identity neurons through OLMo 2's training stages
 
 Written 2026-10-15 17:51 CT (archive commit `7f0bf5813`), before any OLMo model was loaded.
