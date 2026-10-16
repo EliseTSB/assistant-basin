@@ -52,3 +52,14 @@ model say yes to questions whose answer is plainly no.
   yes, clamps whose label is no), at both strengths.
 - 12.7 holds only if all four shifts (2 strengths x 2 directions) are under 10 points on the trained target-A model.
   The untrained model is run the same way as a reference and is not scored.
+
+## 12b: does the clamp even reach the answer position? (written 2026-10-16 14:59 CT, after A failed, before any 12b code exists)
+Target A trained to chance on both test sets. Two explanations need different fixes: the clamp's effect never reaches
+the position where the answer is produced (then more training cannot help), or it does and 108 steps of rank-8 LoRA
+did not learn to use it (then training is the problem). 12b measures which, on the UNTRAINED model, with no training.
+- Every example (all 72 frames x 4 families) is run three times on the same text: unclamped, clamped high (the 90th
+  percentile values) and clamped low (the 10th), on the message tokens as in Part 12. Captured: the residual stream at
+  the answer position (the last prompt token) after every layer, and the yes-minus-no logit there.
+- Readout per layer: a difference-of-means direction (high minus low) fit on even frames; on odd frames each high and
+  low run is classified by projecting onto it, thresholded at the midpoint of the even frames' projected means.
+- Run for target A, target B (layer 15) and the random target, with the same unit sets as Part 12.
