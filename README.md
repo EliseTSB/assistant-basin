@@ -44,7 +44,9 @@ earlier checkpoints:
 - Why: the steering signal reaches the position where the model answers, in the same direction on every held-out text
   (high above low in 100% of pairs from layer 7 on), but it is small next to how much that position varies between
   texts. One fixed readout separates high from low 63.5% of the time, and the answer itself moves by 0.019 nats. (12b)
-  Stronger steering and a comparison version of the question are next (12d, 12e).
+  Widening the steering 8 times makes it readable (one fixed readout: 95.5% at layer 7), for random neurons as much as
+  identity ones, while the answer still moves only 0.109 nats. (12d) Training at that strength, and a comparison
+  version of the question, are next (12c, 12e).
 
 **A shared format for neuron results.** [NEURON-RECORDS.md](NEURON-RECORDS.md) is a draft format for claims about single
 neurons, meant to let results from different projects on the same model be joined and checked: a pinned weights
