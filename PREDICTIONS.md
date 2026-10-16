@@ -37,10 +37,15 @@ and a four-way choice with the judge prompt's categories. "One" = yes-probabilit
 
 | # | Prediction | Status | Result |
 |---|---|---|---|
-| 1c.1 | Jev's floor (random contexts called one) is under 10%. | | |
-| 1c.2 | Jev's real-minus-random gap is smaller than Luna's 24 points. | | |
-| 1c.3 | Jev agrees with Luna's one / not-one call on at least 70% of the 350 units. | | |
-| 1c.4 | Jev's yes-probability separates real neurons from random directions with AUROC between 0.55 and 0.70. | | |
+| 1c.1 | Jev's floor (random contexts called one) is under 10%. | **failed** | 28% (14 of 50) |
+| 1c.2 | Jev's real-minus-random gap is smaller than Luna's 24 points. | held | 15 points (N 65%, R 50%; z 2.57) |
+| 1c.3 | Jev agrees with Luna's one / not-one call on at least 70% of the 350 units. | held | 71% |
+| 1c.4 | Jev's yes-probability separates real neurons from random directions with AUROC between 0.55 and 0.70. | held | 0.575 |
+
+Run 2026-10-16 10:1x CT, jev-1.13.0, 350/350 units, 0 errors, median 110 ms per call, about 511K input tokens
+(`jev_judge.mjs`). Jev's yes-probabilities are compressed: medians N 0.53, R 0.49, F 0.45, nearly all between 0.38 and
+0.73. The four-way choice answered "one" for 99-100% of every arm, so it carries no signal. Not pre-registered and so
+only exploratory: at a threshold of 0.65 the floor is 0% and the gap 17 points (N 24%, R 7%).
 
 ## Part 2 — identity neurons through OLMo 2's training stages
 
