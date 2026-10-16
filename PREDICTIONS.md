@@ -29,7 +29,7 @@ errors. Luna is the only judge in the sweep that is both under the floor and cle
 10% of the time also calls random directions one job 69% of the time. Usage: about 463K input and 330K output tokens
 (mostly reasoning), roughly 3 points of a ChatGPT Plus five-hour window (Elise's meter, 100% to 97% remaining).
 
-### Part 1c — Jev as the judge (written 2026-10-16 10:0x CT, before any Jev call)
+### Part 1c — Jev as the judge (written 2026-10-16 09:54 CT, before any Jev call)
 
 Elise, 09:53: test how well TypeSafe's Jev classifies the units as one concept or not (Luna already writes the
 descriptions). Same 350 units and snippets; Jev answers a yes/no question (does one job explain nearly all snippets)
@@ -42,7 +42,7 @@ and a four-way choice with the judge prompt's categories. "One" = yes-probabilit
 | 1c.3 | Jev agrees with Luna's one / not-one call on at least 70% of the 350 units. | held | 71% |
 | 1c.4 | Jev's yes-probability separates real neurons from random directions with AUROC between 0.55 and 0.70. | held | 0.575 |
 
-Run 2026-10-16 10:1x CT, jev-1.13.0, 350/350 units, 0 errors, median 110 ms per call, about 511K input tokens
+Run 2026-10-16 09:55 CT, jev-1.13.0, 350/350 units, 0 errors, median 110 ms per call, about 511K input tokens
 (`jev_judge.mjs`). Jev's yes-probabilities are compressed: medians N 0.53, R 0.49, F 0.45, nearly all between 0.38 and
 0.73. The four-way choice answered "one" for 99-100% of every arm, so it carries no signal. Not pre-registered and so
 only exploratory: at a threshold of 0.65 the floor is 0% and the gap 17 points (N 24%, R 7%).
