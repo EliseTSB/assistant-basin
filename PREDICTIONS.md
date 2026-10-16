@@ -29,6 +29,19 @@ errors. Luna is the only judge in the sweep that is both under the floor and cle
 10% of the time also calls random directions one job 69% of the time. Usage: about 463K input and 330K output tokens
 (mostly reasoning), roughly 3 points of a ChatGPT Plus five-hour window (Elise's meter, 100% to 97% remaining).
 
+### Part 1c — Jev as the judge (written 2026-10-16 10:0x CT, before any Jev call)
+
+Elise, 09:53: test how well TypeSafe's Jev classifies the units as one concept or not (Luna already writes the
+descriptions). Same 350 units and snippets; Jev answers a yes/no question (does one job explain nearly all snippets)
+and a four-way choice with the judge prompt's categories. "One" = yes-probability at least 0.5.
+
+| # | Prediction | Status | Result |
+|---|---|---|---|
+| 1c.1 | Jev's floor (random contexts called one) is under 10%. | | |
+| 1c.2 | Jev's real-minus-random gap is smaller than Luna's 24 points. | | |
+| 1c.3 | Jev agrees with Luna's one / not-one call on at least 70% of the 350 units. | | |
+| 1c.4 | Jev's yes-probability separates real neurons from random directions with AUROC between 0.55 and 0.70. | | |
+
 ## Part 2 — identity neurons through OLMo 2's training stages
 
 Written 2026-10-15 17:51 CT (archive commit `7f0bf5813`), before any OLMo model was loaded.
