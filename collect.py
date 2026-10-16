@@ -23,6 +23,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument('model'); ap.add_argument('out')
 ap.add_argument('--neutral', default=os.path.join(os.path.dirname(__file__), 'data', 'neutral.txt'))
 ap.add_argument('--neutral-tokens', type=int, default=1024)
+ap.add_argument('--revision', default=None, help='a Hugging Face branch, e.g. stage2-ingredient3-step23852-tokens51B')
 a = ap.parse_args()
 HERE = os.path.dirname(os.path.abspath(__file__))
 spec = json.load(open(os.path.join(HERE, 'data', 'frames.json')))
@@ -32,8 +33,8 @@ if os.path.exists(_extra):
 torch.set_grad_enabled(False)
 
 t0 = time.time()
-tok = AutoTokenizer.from_pretrained(a.model)
-model = AutoModelForCausalLM.from_pretrained(a.model, torch_dtype=torch.float32)
+tok = AutoTokenizer.from_pretrained(a.model, revision=a.revision)
+model = AutoModelForCausalLM.from_pretrained(a.model, torch_dtype=torch.float32, revision=a.revision)
 model.eval()
 layers = model.model.layers
 L, F = len(layers), layers[0].mlp.down_proj.in_features
@@ -102,7 +103,7 @@ if os.path.exists(a.neutral):
 
 for h in handles: h.remove()
 os.makedirs(a.out, exist_ok=True)
-slug = a.model.replace('/', '__')
+slug = a.model.replace('/', '__') + (f'@{a.revision}' if a.revision else '')
 path = os.path.join(a.out, slug + '.npz')
 np.savez(path, **out, layers=L, neurons=F, forms=np.array(forms))
 print(f'wrote {path} in {time.time() - t0:.0f}s', flush=True)

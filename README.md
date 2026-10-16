@@ -44,6 +44,7 @@ All on OLMo 2 1B Instruct unless noted. Details and the numbers behind each line
 | `collect.py` | MLP neuron activations for the identity sentences, per model checkpoint |
 | `analyze.py` | finds identity neurons (held-out split, shuffled-label null) and scores them in other checkpoints |
 | `corr.py` | checks that neuron *i* is the same unit in two checkpoints (correlation on neutral text) |
+| `lineage.py` | which published base checkpoint a fine-tuned model descends from (one tensor by range request) |
 | `nametest.py` | layer-by-layer distance between the OLMo, Claude and ChatGPT versions of a sentence |
 | `ablate.py` | the causal test: hold the identity neurons at their mean and ask the model who it is |
 | `sysprompt.py`, `sysanalyze.py` | system-prompt experiment: activations under 15 system prompts, the HHH tests, self-identification counts |

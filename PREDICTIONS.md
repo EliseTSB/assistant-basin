@@ -17,8 +17,9 @@ Written 2026-10-15 17:45 CT (archive commit `24b2f42e6`), before any model was l
 | 1.3 | Random contexts score under 10% "one job" (the judge floor). | mixed | Haiku 10.2%; DeepSeek 44% (fails its floor) |
 | 1.4 | The middle third reads cleaner than the early third. | mixed | Haiku 76% both; DeepSeek 68% → 80% |
 
-Open confound: a random direction can be dominated by a few loud neurons and inherit their cleanliness;
-`dominance.py` measures it.
+Confound checked: a random direction could be dominated by a few loud neurons and inherit their cleanliness.
+`dominance.py` measured the largest single neuron's share of each random direction's projection: median 0.02, 90th
+percentile 0.06, none above 0.25. The random baseline is fair, so the failure of 1.2 stands.
 
 ## Part 2 — identity neurons through OLMo 2's training stages
 
@@ -26,7 +27,7 @@ Written 2026-10-15 17:51 CT (archive commit `7f0bf5813`), before any OLMo model 
 
 | # | Prediction | Status |
 |---|---|---|
-| 2.1 | Neuron *i* is the same unit at every stage: median correlation above 0.8 between base and Instruct on neutral text. | open (RLVR1 vs Instruct: r = 1.000) |
+| 2.1 | Neuron *i* is the same unit at every stage: median correlation above 0.8 between base and Instruct on neutral text. | open: SFT → DPO → RLVR1 → Instruct 0.96–1.00; base untestable with `main` (see Corrections) |
 | 2.2 | Pretraining built most of them: at least 60% of the top 50 Instruct identity neurons already have half their selectivity in base. | open |
 | 2.3 | SFT moves identity most, RL least. | open (the last RL round changed nothing) |
 | 2.4 | Claude is already special in base: the assistant neurons respond more to "I'm Claude" than to a person's name, about as much as to "I'm ChatGPT". | open |
@@ -62,6 +63,12 @@ made by Anthropic." Script: `ablate.py`.
 | A3 | Under the Claude system prompt, ablating the identity neurons moves the Claude share by under 10 points: the name in the prompt, not these neurons, carries "I am Claude". | open |
 
 ## Corrections
+
+- **The `main` revision of `allenai/OLMo-2-0425-1B` is not the parent of the SFT, DPO, RLVR1 or Instruct models**, although the
+  SFT card names it as its base. Weight rows of `main` and SFT have cosine 0.000 (token embeddings 0.007), while SFT and
+  Instruct match at 1.000. Reading one tensor from candidate revisions (`lineage.py`): `stage1-step1907359-tokens4001B`
+  0.975, `stage2-ingredient1/2/3-step23852-tokens51B` 0.990 / 0.990 / 0.996, `main` 0.000. Comparisons that used
+  `main` as the base are void; the pretraining stages are being re-collected from those branches.
 
 - The first Claude-vs-OLMo contrast (−0.20 to −0.29) was averaged over all 72 frames, but 49 of them contain no name,
   so the swap changed nothing in them. Counted on the 23 named frames it is −1.04 (chat) and −0.72 (plain).
