@@ -73,3 +73,18 @@ made by Anthropic." Script: `ablate.py`.
 - The first Claude-vs-OLMo contrast (−0.20 to −0.29) was averaged over all 72 frames, but 49 of them contain no name,
   so the swap changed nothing in them. Counted on the 23 named frames it is −1.04 (chat) and −0.72 (plain).
   `analyze.py` now counts only named frames.
+
+## Part 5: OLMo 3 7B ladder (written 2026-10-15 23:56 CT, before any download or run)
+
+Models: allenai/Olmo-3-1025-7B (base; 1,487 checkpoint branches incl. stage3), Olmo-3-7B-Instruct-SFT, -DPO,
+Olmo-3-7B-Instruct, and Olmo-3-7B-RL-Zero-General (RL straight from the base, no SFT). Same method as parts 1-4,
+collected on an Intel Arc A770 in bf16.
+
+| # | Prediction | Result |
+|---|---|---|
+| 5.1 | Lineage first: the SFT model descends from a published base revision (weight-row cosine above 0.95 on a sampled tensor). If `main` is not that revision, every comparison uses the one that is. | open |
+| 5.2 | Same units: base (true parent) to Instruct, same-neuron median correlation on neutral text above 0.8. | open |
+| 5.3 | SFT builds the role, as at 1B: identity score below 0.15 at the base, above 0.4 after SFT, and DPO and RL each move it by less than 0.1. | open |
+| 5.4 | RL alone does not build it: RL-Zero-General's identity score is below half of SFT's. | open |
+| 5.5 | Newer data shows in the base: "I'm Claude" minus a person speaking is above 0.18 at the base (OLMo 2 1B's mid-training checkpoint gave 0.18). | open |
+| 5.6 | The causal null replicates: switching off the top 50 identity neurons changes how often Instruct names itself OLMo by less than 10 points, within the spread of three random sets. | open |
