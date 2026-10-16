@@ -234,6 +234,10 @@ and causal tests.
 | 11.7 | Under the shipped template, which inserts "You are a helpful AI assistant named SmolLM" when no system message is given, the same zeroing leaves SmolLM's share above 85%: the prompt carries the name past the late set. | **Failed.** Shipped template: base 95.8%, zeroed 35.4%, random 89.6 / 91.7 / 95.8% (mean 92.4). Even with "named SmolLM" in its system prompt, the model mostly loses its name (and says ChatGPT 12.5%, Claude 4.2%): the late set is where the prompt's name is read out, not a route around it. | 2026-10-16 |
 | 11.8 | Newer pretraining data puts the identity role into the base, as on OLMo 3 (0.27) and not OLMo 2 (0.07): the top 20 plain-form identity neurons found in SmolLM3-3B score at least 0.2 on the held-out frames in SmolLM3-3B-Base. Run on a Claude cloud machine (CPU). | **held**: 0.602 in the base, against 0.739 in the chat model itself (OLMo 3 base 0.271, OLMo 2 base 0.07). Most of the role is already in SmolLM3's base. One run; results/cloud-11-8-smollm3-base.md. | 2026-10-16 |
 | 11.9 | SmolLM3-3B-Base has identity neurons of its own: its own held-out top median beats the shuffled-label null's best. | **held**: 0.655 against a null best of 0.352 (random directions -0.275). Its top 20 sit mostly in layers 9-16, plus 6 in layer 35. One run. | 2026-10-16 |
+| 11.10 | On general text the 28 name neurons (11.6's set) are about names, not about this model: at least 14 of Luna's 28 blind descriptions match the name rule, and at most 3 match the self rule. | pending | |
+| 11.11 | That is specific to them: the share of name-rule descriptions among the 28 name neurons beats their 28 same-layer random controls by at least 20 points. | pending | |
+| 11.12 | Luna's descriptions predict where both named sets fire on held-out text: Jev's median per-unit AUROC (strongest vs random held-out contexts) is at least 0.75 for the 28 name neurons and for the 20 identity neurons. | pending | |
+| 11.13 | Neither named set is more predictable than random neurons from its own layers: each set's median AUROC is within 0.10 of its controls' median. | pending | |
 
 **11.4 and 11.5, how they are scored (written 2026-10-16 11:50 CT, before either runs).** SmolLM3's shipped chat template
 inserts *"You are a helpful AI assistant named SmolLM, trained by Hugging Face."* whenever no system message is given,
@@ -250,6 +254,20 @@ HuggingFaceTB/SmolLM3-3B --self-name "SmolLM:Hugging Face"`, then `analyze.py` i
 same layers, wikitext-103 first 99,840 tokens, CPU bfloat16), then Luna 6 high describing all 40 blind to arm. "One job":
 identity 11 of 20, controls 8 of 20. On ordinary text these neurons look like grammar and discourse units (possessive
 "his", totality "all", manner "way", clause openings, numbers), not like anything about a self.
+
+**11.10-11.13, how they are scored (written 2026-10-16 17:58 CT, before any run).** Elise, 17:50: what do these neurons
+code beyond identity; map them out. Name neurons: the 28 in `results/name-attr-pos28.json`. Pole: the sign of each one's
+input to `down_proj` at the last token of the `raw_nosys` prompt + "My name is" (the position whose next token is the
+name). Controls: 28 neurons drawn at random from the same layers (random sign, seed 0). Description contexts: the 20
+strongest on wikitext-103's first 99,840 tokens, as 11.3 (`topk_named.py`), described by Luna 6 high through `judge.py`,
+blind to arm. The rules are applied by code to the lowercased description. Name rule: contains "name", "proper noun",
+"capitaliz", "capitalis", "entit" or "title". Self rule: contains "smollm", "assistant", "chatbot", "language model",
+"ai model", " ai ", "self-introduc", "introducing themsel" or "my name". Held-out: tokens 1,000,000-1,299,520; per unit
+the 10 strongest positions (at least 4 apart), 10 mid-strength (25-60% of its held-out maximum) and 10 random ones, as
+`heldout.py`. The 20 identity neurons and their 20 controls keep 11.3's descriptions unchanged. Jev (`jev-latest`, the
+question in `jev_sim.mjs`) answers per context; per unit, AUROC strongest vs random. Runs on the A770 (XPU, bfloat16)
+because 12e holds most of the CPU's memory; the same job recomputes 11.3's 40 units' description contexts on the GPU, and
+how many of their top-20 positions match 11.3's CPU run is reported beside the result.
 
 ## Part 12: training a self-report against a probe (OLMo 2 1B Instruct). Design: PART12-DESIGN.md
 
