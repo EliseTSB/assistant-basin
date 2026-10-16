@@ -272,4 +272,9 @@ Elise, 2026-10-16 13:56: *"Yes lets go for it!"* Written before the run.
 | 12d.2 | At scale 8, target A's best-layer readout is at least 90%. | pending | |
 | 12d.3 | Even at scale 8, the answer barely moves: target A's median absolute yes-minus-no logit change stays under 0.5 nats. | pending | |
 | 12d.4 | At scale 8, the random target's best-layer readout is within 10 points of target A's. | pending | |
+| 12e.1 | Untrained, the comparison answer is within 10 points of chance on held-out pairs. | pending | |
+| 12e.2 | Trained on target A, held-out accuracy is at least 85% at the 90/10 clamps and at least 80% at the unseen 95/5. | pending | |
+| 12e.3 | Target B (layer 15) stays within 10 points of chance after training. | pending | |
+| 12e.4 | Target A with shuffled labels stays within 10 points of chance. | pending | |
+| 12e.5 | The random target reaches within 10 points of target A's accuracy (the ability is not identity-specific). | pending | |
 

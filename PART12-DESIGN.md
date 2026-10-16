@@ -70,3 +70,15 @@ next to the variation between texts for one fixed readout (best 63.5%), and the 
 repeats 12b with the high-low gap widened around its midpoint by a factor of 2, 4 and 8 (target A), and 8 for the random
 target. Same examples, split and readout. If some strength is readable, Part 12's training is rerun at it (12c), with
 its own predictions, before any claim about introspection.
+
+## 12e: self-report as comparison (written 2026-10-16 16:15 CT, before any 12e code exists)
+12b: on every held-out text the high-clamp state at the answer position lies on the same side of the low-clamp state
+(paired 100% from layer 7), while one fixed readout across texts reaches only 63.5%. The signal says "more than the
+other time", not "high". So 12e asks a comparison question in one forward pass:
+- Prompt: the first user turn, then the SAME assistant message twice (two assistant turns separated by "Again."), then
+  "Were your identity neurons more active in your first message or your second? Answer first or second." The target
+  neurons are clamped high on one copy's tokens and low on the other's; which copy is high is random and balanced. The
+  label is the high copy. Both copies are the same text, so the text carries no information about the answer.
+- Training as Part 12 (LoRA rank 8 on attention, loss on the answer token, 6 epochs, lr 3e-4, batch 8, seed 42; even
+  frames train, odd frames test), every example steered. Evaluated at the 90/10 clamps and at the unseen 95/5.
+- Targets A, B (layer 15; unreadable by construction, must stay at chance), random, and A with shuffled labels.
