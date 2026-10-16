@@ -24,6 +24,8 @@ ap.add_argument('model'); ap.add_argument('out')
 ap.add_argument('--neutral', default=os.path.join(os.path.dirname(__file__), 'data', 'neutral.txt'))
 ap.add_argument('--neutral-tokens', type=int, default=1024)
 ap.add_argument('--revision', default=None, help='a Hugging Face branch, e.g. stage2-ingredient3-step23852-tokens51B')
+ap.add_argument('--self-name', default=None, help="the model's own name and maker as NAME:MAKER (default: data/frames.json names.olmo); added 2026-10-16 for SmolLM3 (Part 11)")
+ap.add_argument('--dtype', default='float32', choices=['float32', 'bfloat16'], help='bfloat16 halves memory for a 3B model on the CPU (Part 11)')
 a = ap.parse_args()
 HERE = os.path.dirname(os.path.abspath(__file__))
 spec = json.load(open(os.path.join(HERE, 'data', 'frames.json')))
@@ -34,7 +36,7 @@ torch.set_grad_enabled(False)
 
 t0 = time.time()
 tok = AutoTokenizer.from_pretrained(a.model, revision=a.revision)
-model = AutoModelForCausalLM.from_pretrained(a.model, torch_dtype=torch.float32, revision=a.revision)
+model = AutoModelForCausalLM.from_pretrained(a.model, torch_dtype=getattr(torch, a.dtype), revision=a.revision)
 model.eval()
 layers = model.model.layers
 L, F = len(layers), layers[0].mlp.down_proj.in_features
@@ -60,7 +62,7 @@ def span_mean(text, target):
     offs, acts = run(text)
     idx = [k for k, (s, e) in enumerate(offs) if e > start and s < end and e > s]
     if not idx: raise ValueError('no tokens in span')
-    return acts[:, idx, :].mean(1).numpy()  # [L, F]
+    return acts[:, idx, :].float().mean(1).numpy()  # [L, F]; .float() so a bfloat16 run converts (numpy has no bf16)
 
 def fill(frame, n, m):
     return frame.replace('{N}', n).replace('{M}', m)
@@ -77,7 +79,7 @@ names = spec['names']
 for form in forms:
     fam = {k: [] for k in ['A', 'B', 'C', 'D', 'E_claude', 'E_chatgpt']}
     for i, (fr, u) in enumerate(zip(spec['frames'], spec['users'])):
-        on, om = names['olmo']
+        on, om = (a.self_name.split(':', 1) if a.self_name else names['olmo'])
         a_txt = fill(fr[0], on, om)
         fam['A'].append(span_mean(texts(form, u, a_txt), a_txt))
         b_txt = fill(fr[1], on, om)
@@ -97,7 +99,7 @@ if os.path.exists(a.neutral):
     ids = tok(text, add_special_tokens=False)['input_ids'][: a.neutral_tokens]
     model(input_ids=torch.tensor([ids]))
     acts = torch.stack(captured, 0)[:, : len(ids), :]  # [L, T, F]
-    out['neutral'] = acts.permute(1, 0, 2).reshape(len(ids), L * F).numpy().astype(np.float16)
+    out['neutral'] = acts.permute(1, 0, 2).reshape(len(ids), L * F).float().numpy().astype(np.float16)
     out['neutral_ids'] = np.array(ids)
     print(f'  neutral: {len(ids)} tokens', flush=True)
 

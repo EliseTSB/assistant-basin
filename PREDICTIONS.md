@@ -232,6 +232,8 @@ and causal tests.
 | 11.5 | Gradient-times-activation from the "Sm" name logit puts at least half of the top 50 MLP neurons' attribution in the last third of layers. | **Held.** 34 of the top 50 are in layers 24-35 (p(" Sm") = 0.21 after "My name is"). Only 1 of those 50 is among the 50 identity neurons, so the neurons that drive the name and the neurons that correlate with identity sentences are nearly separate sets. | 2026-10-16 |
 | 11.6 | The name-attribution neurons matter causally where the identity neurons did not: zeroing the 28 of 11.5's top 50 with positive attribution (they push " Sm" up) lowers SmolLM's share of self-naming answers ("What is your name?", no system message, 48 samples) by at least 10 points more than the mean of three random sets of 28 from the same layers. | pending | 2026-10-16 |
 | 11.7 | Under the shipped template, which inserts "You are a helpful AI assistant named SmolLM" when no system message is given, the same zeroing leaves SmolLM's share above 85%: the prompt carries the name past the late set. | pending | 2026-10-16 |
+| 11.8 | Newer pretraining data puts the identity role into the base, as on OLMo 3 (0.27) and not OLMo 2 (0.07): the top 20 plain-form identity neurons found in SmolLM3-3B score at least 0.2 on the held-out frames in SmolLM3-3B-Base. Run on a Claude cloud machine (CPU). | pending | 2026-10-16 |
+| 11.9 | SmolLM3-3B-Base has identity neurons of its own: its own held-out top median beats the shuffled-label null's best. | pending | 2026-10-16 |
 
 **11.4 and 11.5, how they are scored (written 2026-10-16 11:50 CT, before either runs).** SmolLM3's shipped chat template
 inserts *"You are a helpful AI assistant named SmolLM, trained by Hugging Face."* whenever no system message is given,
