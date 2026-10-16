@@ -1,0 +1,18 @@
+{
+ "model.layers.8.self_attn.o_proj.weight": {
+  "base~instruct": 0.9983,
+  "base~sweagent": 0.995,
+  "base~openhands": 0.9983,
+  "instruct~sweagent": 0.9967,
+  "instruct~openhands": 0.9999,
+  "sweagent~openhands": 0.9967
+ },
+ "model.layers.20.self_attn.o_proj.weight": {
+  "base~instruct": 0.9986,
+  "base~sweagent": 0.9959,
+  "base~openhands": 0.9985,
+  "instruct~sweagent": 0.9973,
+  "instruct~openhands": 1.0,
+  "sweagent~openhands": 0.9973
+ }
+}
