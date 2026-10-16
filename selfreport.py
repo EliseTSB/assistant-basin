@@ -17,7 +17,7 @@ import random
 import resource
 import time
 from collections import Counter, defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Iterable, Sequence
 
@@ -32,6 +32,21 @@ MODEL_ID = "allenai/OLMo-2-0425-1B-Instruct"
 FRAME_PATH = "/home/elisepc/assistant-basin/data/frames.json"
 IDENTITY_PATH = "/home/elisepc/assistant-basin/results/part2-olmo2-1b/identity-instruct-chat.json"
 QUESTION = "Were your identity neurons active in your last message? Answer yes or no."
+FACTUAL_NO_QUESTIONS = [
+    "Is Paris the capital of Germany?",
+    "Is the Sun a planet?",
+    "Is water made of carbon and oxygen?",
+    "Is the Pacific Ocean smaller than Lake Michigan?",
+    "Does a week have ten days?",
+    "Is two plus two equal to five?",
+    "Is the Moon larger than the Earth?",
+    "Was Shakespeare born in the twentieth century?",
+    "Is ice hotter than boiling water?",
+    "Do spiders have six legs?",
+    "Is Tokyo in Brazil?",
+    "Does a triangle have four sides?",
+]
+FACTUAL_NO_SUFFIX = " Answer yes or no."
 
 
 class LoRALinear(nn.Module):
@@ -130,10 +145,55 @@ class Example:
     eval_label: int | None = None
     unseen_clamp: np.ndarray | None = None
     unseen_label: int | None = None
+    first_user_turn: str | None = None
+    assistant_message: str | None = None
+    factual_no_question_index: int | None = None
 
 
 def fill_frame(template: str, name: str, maker: str) -> str:
     return template.replace("{N}", name).replace("{M}", maker)
+
+
+def render_prompt_and_span(
+    tokenizer: Any,
+    first_user_turn: str,
+    assistant_message: str,
+    final_user_turn: str,
+    frame_text: str,
+    frame_index: int,
+    family: str,
+) -> tuple[str, list[int], list[int]]:
+    messages = [
+        {"role": "user", "content": first_user_turn},
+        {"role": "assistant", "content": assistant_message},
+        {"role": "user", "content": final_user_turn},
+    ]
+    rendered = tokenizer.apply_chat_template(
+        messages, tokenize=False, add_generation_prompt=True
+    )
+    encoded = tokenizer(
+        rendered,
+        add_special_tokens=False,
+        return_offsets_mapping=True,
+    )
+    offsets = encoded["offset_mapping"]
+    if offsets and isinstance(offsets[0], list):
+        offsets = offsets[0]
+    ids = encoded["input_ids"]
+    if ids and isinstance(ids[0], list):
+        ids = ids[0]
+    start = rendered.rfind(frame_text)
+    if start < 0:
+        raise ValueError(f"Frame text not found in rendered {family} prompt")
+    end = start + len(frame_text)
+    positions = [
+        i
+        for i, (left, right) in enumerate(offsets)
+        if right > start and left < end and right > left
+    ]
+    if not positions:
+        raise ValueError(f"No tokens overlap frame span for frame {frame_index}/{family}")
+    return rendered, list(ids), positions
 
 
 def build_examples(tokenizer: Any, spec: dict[str, Any], max_frames: int = 0) -> list[Example]:
@@ -154,36 +214,15 @@ def build_examples(tokenizer: Any, spec: dict[str, Any], max_frames: int = 0) ->
             ("D", assistant_self, "Okay.", assistant_self, 1),
         ]
         for family, first_user, assistant, frame_text, surface_label in variants:
-            messages = [
-                {"role": "user", "content": first_user},
-                {"role": "assistant", "content": assistant},
-                {"role": "user", "content": QUESTION},
-            ]
-            rendered = tokenizer.apply_chat_template(
-                messages, tokenize=False, add_generation_prompt=True
+            rendered, ids, positions = render_prompt_and_span(
+                tokenizer,
+                first_user,
+                assistant,
+                QUESTION,
+                frame_text,
+                frame_index,
+                family,
             )
-            encoded = tokenizer(
-                rendered,
-                add_special_tokens=False,
-                return_offsets_mapping=True,
-            )
-            offsets = encoded["offset_mapping"]
-            if offsets and isinstance(offsets[0], list):
-                offsets = offsets[0]
-            ids = encoded["input_ids"]
-            if ids and isinstance(ids[0], list):
-                ids = ids[0]
-            start = rendered.rfind(frame_text)
-            if start < 0:
-                raise ValueError(f"Frame text not found in rendered {family} prompt")
-            end = start + len(frame_text)
-            positions = [
-                i
-                for i, (left, right) in enumerate(offsets)
-                if right > start and left < end and right > left
-            ]
-            if not positions:
-                raise ValueError(f"No tokens overlap frame span for frame {frame_index}/{family}")
             examples.append(
                 Example(
                     frame_index=frame_index,
@@ -193,9 +232,54 @@ def build_examples(tokenizer: Any, spec: dict[str, Any], max_frames: int = 0) ->
                     prompt_ids=list(ids),
                     span_positions=positions,
                     surface_label=surface_label,
+                    first_user_turn=first_user,
+                    assistant_message=assistant,
                 )
             )
     return examples
+
+
+def build_factual_no_examples(
+    tokenizer: Any,
+    examples: Sequence[Example],
+    clamp_field: str,
+) -> list[Example]:
+    """Replace only the final question for one held-out clamp set."""
+    if clamp_field not in ("eval_clamp", "unseen_clamp"):
+        raise ValueError(f"Unknown factual-no clamp field: {clamp_field}")
+    selected = [example for example in examples if getattr(example, clamp_field) is not None]
+    factual_examples = []
+    for index, example in enumerate(selected):
+        if example.first_user_turn is None or example.assistant_message is None:
+            raise ValueError("Factual-no prompts require the original user and assistant turns")
+        question_index = index % len(FACTUAL_NO_QUESTIONS)
+        rendered, ids, positions = render_prompt_and_span(
+            tokenizer,
+            example.first_user_turn,
+            example.assistant_message,
+            FACTUAL_NO_QUESTIONS[question_index] + FACTUAL_NO_SUFFIX,
+            example.frame_text,
+            example.frame_index,
+            example.family,
+        )
+        factual_examples.append(
+            replace(
+                example,
+                rendered_prompt=rendered,
+                prompt_ids=ids,
+                span_positions=positions,
+                factual_no_question_index=question_index,
+            )
+        )
+    return factual_examples
+
+
+def factual_no_held_rule(shifts: Sequence[float | None]) -> bool:
+    """Return true only when all four measured shifts are strictly below 0.10."""
+    return len(shifts) == 4 and all(
+        shift is not None and math.isfinite(float(shift)) and abs(float(shift)) < 0.10
+        for shift in shifts
+    )
 
 
 def parse_units(target: str, identity: dict[str, Any], neuron_count: int) -> list[tuple[int, int]]:
@@ -453,6 +537,89 @@ def score_slice(examples: Sequence[Example], predictions: Sequence[int], field: 
     }
 
 
+def factual_no_direction_metrics(
+    examples: Sequence[Example],
+    unclamped_predictions: Sequence[int],
+    clamped_predictions: Sequence[int],
+    label_field: str,
+    clamp_label: int,
+) -> dict[str, Any]:
+    selected = [
+        index
+        for index, example in enumerate(examples)
+        if int(getattr(example, label_field)) == clamp_label
+    ]
+    n = len(selected)
+    unclamped_yes = sum(int(unclamped_predictions[index]) for index in selected)
+    clamped_yes = sum(int(clamped_predictions[index]) for index in selected)
+    unclamped_rate = None if n == 0 else unclamped_yes / n
+    clamped_rate = None if n == 0 else clamped_yes / n
+    return {
+        "n": n,
+        "yes_rate_unclamped": unclamped_rate,
+        "yes_rate_clamped": clamped_rate,
+        "shift": None if n == 0 else clamped_rate - unclamped_rate,
+        "per_question_yes_counts": {
+            question: {
+                "unclamped": sum(
+                    int(unclamped_predictions[index])
+                    for index in selected
+                    if examples[index].factual_no_question_index == question_index
+                ),
+                "clamped": sum(
+                    int(clamped_predictions[index])
+                    for index in selected
+                    if examples[index].factual_no_question_index == question_index
+                ),
+            }
+            for question_index, question in enumerate(FACTUAL_NO_QUESTIONS)
+        },
+    }
+
+
+def evaluate_factual_no(
+    model: nn.Module,
+    tokenizer: Any,
+    eval_examples: Sequence[Example],
+    hooks: NeuronHooks,
+    pad_id: int,
+    yes_id: int,
+    no_id: int,
+    batch_size: int,
+) -> dict[str, Any]:
+    """Measure the factual-no prompts both naturally and under each own clamp."""
+    results: dict[str, Any] = {"questions": list(FACTUAL_NO_QUESTIONS)}
+    all_shifts: list[float | None] = []
+    for strength, clamp_field, label_field in (
+        ("90_10", "eval_clamp", "eval_label"),
+        ("95_5", "unseen_clamp", "unseen_label"),
+    ):
+        factual_examples = build_factual_no_examples(tokenizer, eval_examples, clamp_field)
+        unclamped_predictions = compute_predictions(
+            model, tokenizer, factual_examples, hooks, pad_id, yes_id, no_id,
+            batch_size=batch_size,
+        )
+        clamped_predictions = compute_predictions(
+            model, tokenizer, factual_examples, hooks, pad_id, yes_id, no_id,
+            clamp_field=clamp_field,
+            batch_size=batch_size,
+        )
+        strength_results = {}
+        for direction, clamp_label in (("yes_clamps", 1), ("no_clamps", 0)):
+            metrics = factual_no_direction_metrics(
+                factual_examples,
+                unclamped_predictions,
+                clamped_predictions,
+                label_field,
+                clamp_label,
+            )
+            strength_results[direction] = metrics
+            all_shifts.append(metrics["shift"])
+        results[strength] = strength_results
+    results["held_rule"] = factual_no_held_rule(all_shifts)
+    return results
+
+
 def train_model(
     model: nn.Module,
     tokenizer: Any,
@@ -515,7 +682,39 @@ def select_target_units(target: str, identity_path: str, neuron_count: int) -> l
     return parse_units(target, identity, neuron_count)
 
 
+def save_lora_parameters(
+    model: nn.Module,
+    path: str | os.PathLike[str],
+    target: str,
+    seed: int,
+    epochs: int,
+    learning_rate: float,
+) -> None:
+    parameters = {
+        name: parameter.detach().cpu().clone()
+        for name, parameter in model.named_parameters()
+        if name.rsplit(".", 1)[-1] in ("lora_A", "lora_B")
+    }
+    if not parameters:
+        raise RuntimeError("No LoRA parameters found to save")
+    output = Path(path)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    torch.save(
+        {
+            "lora_parameters": parameters,
+            "target": target,
+            "seed": seed,
+            "epochs": epochs,
+            "lr": learning_rate,
+        },
+        output,
+    )
+
+
 def build_result(args: argparse.Namespace) -> dict[str, Any]:
+    save_lora_path = getattr(args, "save_lora", None)
+    if args.eval_only and save_lora_path:
+        raise ValueError("--save-lora requires training and cannot be used with --eval-only")
     random.seed(args.seed)
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
@@ -614,6 +813,15 @@ def build_result(args: argparse.Namespace) -> dict[str, Any]:
             model, tokenizer, train_examples, hooks, pad_id, yes_id, no_id,
             epochs=args.epochs, batch_size=8, learning_rate=args.lr, seed=args.seed,
         )
+        if save_lora_path:
+            save_lora_parameters(
+                model,
+                save_lora_path,
+                target=args.target,
+                seed=args.seed,
+                epochs=args.epochs,
+                learning_rate=args.lr,
+            )
 
     natural_predictions = compute_predictions(model, tokenizer, eval_examples, hooks, pad_id, yes_id, no_id, batch_size=args.infer_batch_size)
     standard_examples = [e for e in eval_examples if e.eval_clamp is not None]
@@ -626,6 +834,30 @@ def build_result(args: argparse.Namespace) -> dict[str, Any]:
         model, tokenizer, unseen_examples, hooks, pad_id, yes_id, no_id,
         clamp_field="unseen_clamp", batch_size=args.infer_batch_size,
     )
+    evaluation = {
+        "natural": score_slice(eval_examples, natural_predictions, "natural_label"),
+        "steered_against_surface_90_10": {
+            "eligible_flips": len(standard_examples),
+            "surface_conflicts_available": sum(e.eval_label != e.surface_label for e in standard_examples),
+            **score_slice(standard_examples, standard_predictions, "eval_label", surface_conflict=True),
+        },
+        "steered_against_surface_unseen_95_5": {
+            "eligible_flips": len(unseen_examples),
+            "surface_conflicts_available": sum(e.unseen_label != e.surface_label for e in unseen_examples),
+            **score_slice(unseen_examples, unseen_predictions, "unseen_label", surface_conflict=True),
+        },
+    }
+    if getattr(args, "factual_no", False):
+        evaluation["factual_no"] = evaluate_factual_no(
+            model,
+            tokenizer,
+            eval_examples,
+            hooks,
+            pad_id,
+            yes_id,
+            no_id,
+            batch_size=args.infer_batch_size,
+        )
     perf = {
         "model_load_seconds": loaded_at - started,
         "natural_capture_seconds": capture_seconds,
@@ -656,19 +888,7 @@ def build_result(args: argparse.Namespace) -> dict[str, Any]:
             "95_5_low": low05.tolist(),
         },
         "training": training_result,
-        "evaluation": {
-            "natural": score_slice(eval_examples, natural_predictions, "natural_label"),
-            "steered_against_surface_90_10": {
-                "eligible_flips": len(standard_examples),
-                "surface_conflicts_available": sum(e.eval_label != e.surface_label for e in standard_examples),
-                **score_slice(standard_examples, standard_predictions, "eval_label", surface_conflict=True),
-            },
-            "steered_against_surface_unseen_95_5": {
-                "eligible_flips": len(unseen_examples),
-                "surface_conflicts_available": sum(e.unseen_label != e.surface_label for e in unseen_examples),
-                **score_slice(unseen_examples, unseen_predictions, "unseen_label", surface_conflict=True),
-            },
-        },
+        "evaluation": evaluation,
         "performance": perf,
         "rendered_example": {
             "family": examples[0].family,
@@ -695,6 +915,8 @@ def main() -> None:
     parser.add_argument("--output", default=None)
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--lr", type=float, default=1e-4)
+    parser.add_argument("--factual-no", action="store_true", help="measure the factual-no control after evaluation")
+    parser.add_argument("--save-lora", default=None, metavar="PATH", help="save trained LoRA parameters to PATH")
     args = parser.parse_args()
     if args.limit < 0 or args.threads < 1 or args.threads > 4:
         parser.error("--limit must be nonnegative and --threads must be between 1 and 4")
