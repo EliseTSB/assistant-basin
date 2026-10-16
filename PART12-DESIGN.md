@@ -82,3 +82,9 @@ other time", not "high". So 12e asks a comparison question in one forward pass:
 - Training as Part 12 (LoRA rank 8 on attention, loss on the answer token, 6 epochs, lr 3e-4, batch 8, seed 42; even
   frames train, odd frames test), every example steered. Evaluated at the 90/10 clamps and at the unseen 95/5.
 - Targets A, B (layer 15; unreadable by construction, must stay at chance), random, and A with shuffled labels.
+
+## 12c: Part 12's training at 8 times the steering (written 2026-10-16 16:46 CT, after 12d, before any 12c code exists)
+12d made the clamp readable at the answer position by widening the high-low gap 8 times (95.5% at layer 7). 12c reruns
+Part 12 exactly (same examples, LoRA, budget, splits, targets A, B, random, shuffled) with both the training and the
+evaluation clamps widened 8 times around their midpoints, to ask whether a self-report becomes learnable once the signal
+is strong enough. It needs selfreport.py to take the same --clamp-scale clampreach.py has.

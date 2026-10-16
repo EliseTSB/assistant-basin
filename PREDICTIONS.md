@@ -268,13 +268,17 @@ Elise, 2026-10-16 13:56: *"Yes lets go for it!"* Written before the run.
 | 12b.2 | For target B (layer 15), the answer-position residual stream is identical under high and low clamps at every layer (largest absolute difference under 1e-4): the built-in control's mechanics. | **held**: largest difference exactly 0 at every layer, readout 50.0%. | 2026-10-16 |
 | 12b.3 | In the untrained model the clamp barely moves the answer itself: the median absolute change in the yes-minus-no logit between high and low clamps is under 0.1 nats for target A. | **held**: 0.019 nats (random target 0.015); the untrained model says yes 1.0% of the time. | 2026-10-16 |
 | 12b.4 | Reach is not identity-specific: the random target is also readable at the best layer at 90% or more. | **failed** as written: best 62.2% (layer 8). Its pattern matches A's (paired 100% from layer 7, unpaired near 60%), so reach is not identity-specific; it is weak for both. | 2026-10-16 |
-| 12d.1 | For target A, the best-layer readout rises with clamp strength: scale 1 < 2 < 4 < 8. | pending | |
-| 12d.2 | At scale 8, target A's best-layer readout is at least 90%. | pending | |
-| 12d.3 | Even at scale 8, the answer barely moves: target A's median absolute yes-minus-no logit change stays under 0.5 nats. | pending | |
-| 12d.4 | At scale 8, the random target's best-layer readout is within 10 points of target A's. | pending | |
+| 12d.1 | For target A, the best-layer readout rises with clamp strength: scale 1 < 2 < 4 < 8. | **held**: 63.5% < 70.5% < 80.9% < 95.5% (best layers 11, 8, 7, 7); last layer 60.8% < 61.5% < 66.7% < 77.4%. results/part12/reach-A-x*.json. | 2026-10-16 |
+| 12d.2 | At scale 8, target A's best-layer readout is at least 90%. | **held**: 95.5% at layer 7. | 2026-10-16 |
+| 12d.3 | Even at scale 8, the answer barely moves: target A's median absolute yes-minus-no logit change stays under 0.5 nats. | **held**: 0.109 nats (0.019, 0.032, 0.055 at scales 1, 2, 4). | 2026-10-16 |
+| 12d.4 | At scale 8, the random target's best-layer readout is within 10 points of target A's. | **held**: 93.4% (layer 8) against 95.5%. | 2026-10-16 |
 | 12e.1 | Untrained, the comparison answer is within 10 points of chance on held-out pairs. | pending | |
 | 12e.2 | Trained on target A, held-out accuracy is at least 85% at the 90/10 clamps and at least 80% at the unseen 95/5. | pending | |
 | 12e.3 | Target B (layer 15) stays within 10 points of chance after training. | pending | |
 | 12e.4 | Target A with shuffled labels stays within 10 points of chance. | pending | |
 | 12e.5 | The random target reaches within 10 points of target A's accuracy (the ability is not identity-specific). | pending | |
+| 12c.1 | Part 12's training rerun with the clamps widened 8 times (train and test), target A: held-out steered accuracy at least 70%. | pending | |
+| 12c.2 | Target B stays within 10 points of chance at 8 times. | pending | |
+| 12c.3 | The random target at 8 times reaches within 10 points of target A's steered accuracy. | pending | |
+| 12c.4 | Shuffled labels at 8 times stay within 10 points of chance. | pending | |
 
