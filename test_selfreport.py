@@ -14,6 +14,7 @@ import torch.nn.functional as F
 from transformers import Olmo2Config, Olmo2ForCausalLM
 
 from selfreport import (
+    scale_clamp_values,
     Example,
     LoRALinear,
     NeuronHooks,
@@ -100,6 +101,17 @@ def tiny_spec(frame_count=1):
 
 
 class SelfReportTests(unittest.TestCase):
+    def test_scale_clamp_values_widens_around_the_midpoint(self):
+        high = np.array([3.0, 1.0], dtype=np.float32)
+        low = np.array([1.0, -1.0], dtype=np.float32)
+        same_high, same_low = scale_clamp_values(high, low, 1.0)
+        self.assertIs(same_high, high)
+        self.assertIs(same_low, low)
+        wide_high, wide_low = scale_clamp_values(high, low, 8.0)
+        np.testing.assert_allclose(wide_high, [10.0, 8.0])
+        np.testing.assert_allclose(wide_low, [-6.0, -8.0])
+        np.testing.assert_allclose((wide_high + wide_low) / 2, (high + low) / 2)
+
     def test_clamp_changes_only_selected_neurons_at_selected_positions(self):
         model = tiny_model(seed=1, layers=2)
         module = model.model.layers[0].mlp.down_proj
