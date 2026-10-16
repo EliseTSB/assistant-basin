@@ -251,3 +251,16 @@ same layers, wikitext-103 first 99,840 tokens, CPU bfloat16), then Luna 6 high d
 identity 11 of 20, controls 8 of 20. On ordinary text these neurons look like grammar and discourse units (possessive
 "his", totality "all", manner "way", clause openings, numbers), not like anything about a self.
 
+## Part 12: training a self-report against a probe (OLMo 2 1B Instruct). Design: PART12-DESIGN.md
+
+Elise, 2026-10-16 13:56: *"Yes lets go for it!"* Written before the run.
+
+| # | Prediction | Status | Result |
+|---|---|---|---|
+| 12.1 | Untrained, the model answers the self-report question within 10 points of chance on held-out steered examples. | pending | |
+| 12.2 | Trained on target A (layers 6-12), accuracy on held-out natural examples is at least 85% (the surface carries it). | pending | |
+| 12.3 | The critical one: trained on target A, accuracy on held-out steered examples (steering flips the label against the surface) is at least 70%. | pending | |
+| 12.4 | Built-in control: trained on target B (layer 15, unreadable at later positions), steered accuracy stays within 10 points of chance, whatever its natural accuracy. | pending | |
+| 12.5 | The ability is general, not identity-specific: 11 random neurons from A's layers reach steered accuracy within 10 points of target A's. | pending | |
+| 12.6 | Shuffled labels on target A stay within 10 points of chance on both test sets. | pending | |
+
