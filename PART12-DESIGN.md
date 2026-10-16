@@ -29,3 +29,9 @@ LoRA on the attention projections, loss on the answer token only; frames split e
 test odd), steering applied to about half the examples, test also at one clamp strength not seen in training.
 Reported: accuracy on held-out natural examples, and on held-out steered examples where steering flips the label
 relative to the surface. Predictions 12.1-12.6 in PREDICTIONS.md, pushed before the run.
+
+## Training budget, fixed after the smoke run and before any full run (2026-10-16 14:1x)
+The 16-frame smoke (12 steps at lr 1e-4) ended at chance loss and answered "yes" to everything, so the brief's 3
+epochs (54 steps) risk an undertrained model, which would make a failed 12.3 uninformative. Full runs use 6 epochs at
+lr 3e-4 (108 steps), the same for every target. 12.2 (natural accuracy) is the learnability check: if it fails, the
+steered results say nothing about introspection.
