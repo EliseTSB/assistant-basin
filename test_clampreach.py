@@ -97,3 +97,15 @@ class ClampReachTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ClampScaleTests(unittest.TestCase):
+    def test_scale_one_is_identity_and_scale_two_doubles_the_gap(self):
+        import numpy as np
+        from clampreach import scale_clamp_values
+        high, low = np.array([3.0, 1.0], dtype=np.float32), np.array([1.0, -1.0], dtype=np.float32)
+        h1, l1 = scale_clamp_values(high, low, 1.0)
+        self.assertTrue(np.array_equal(h1, high) and np.array_equal(l1, low))
+        h2, l2 = scale_clamp_values(high, low, 2.0)
+        self.assertTrue(np.allclose(h2 - l2, 2 * (high - low)))
+        self.assertTrue(np.allclose((h2 + l2) / 2, (high + low) / 2))

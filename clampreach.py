@@ -26,6 +26,14 @@ from selfreport import (
 )
 
 
+def scale_clamp_values(high: np.ndarray, low: np.ndarray, scale: float) -> tuple[np.ndarray, np.ndarray]:
+    """Part 12d: widen the high-low gap by `scale` around its midpoint; scale 1 leaves both unchanged."""
+    if scale == 1.0:
+        return high, low
+    mid = (high + low) / 2.0
+    return (mid + scale * (high - mid)).astype(np.float32), (mid - scale * (mid - low)).astype(np.float32)
+
+
 def compute_clamp_values(
     training_examples: Sequence[Any], n_units: int
 ) -> tuple[np.ndarray, np.ndarray]:
@@ -204,7 +212,7 @@ def build_result(args: argparse.Namespace) -> dict[str, Any]:
 
     try:
         capture_natural(model, examples, hooks, pad_id, batch_size=args.batch_size)
-        high, low = compute_clamp_values(training_examples, len(units))
+        high, low = scale_clamp_values(*compute_clamp_values(training_examples, len(units)), args.clamp_scale)
         unclamped_states, unclamped_logit_diff = capture_condition(
             model, examples, hooks, pad_id, yes_id, no_id,
             clamps=[None] * len(examples), batch_size=args.batch_size,
@@ -228,6 +236,7 @@ def build_result(args: argparse.Namespace) -> dict[str, Any]:
         "seed": args.seed,
         "units": [f"L{layer}.{neuron}" for layer, neuron in units],
         "clamp_values": {
+            "scale": args.clamp_scale,
             "high_90th_percentile": high.tolist(),
             "low_10th_percentile": low.tolist(),
         },
@@ -285,6 +294,7 @@ def main() -> None:
     parser.add_argument("--batch-size", type=int, default=4)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--output", default=None)
+    parser.add_argument("--clamp-scale", type=float, default=1.0, help="widen the 90/10 gap around its midpoint (Part 12d)")
     args = parser.parse_args()
     if args.limit < 0:
         parser.error("--limit must be nonnegative")
