@@ -63,3 +63,10 @@ did not learn to use it (then training is the problem). 12b measures which, on t
 - Readout per layer: a difference-of-means direction (high minus low) fit on even frames; on odd frames each high and
   low run is classified by projecting onto it, thresholded at the midpoint of the even frames' projected means.
 - Run for target A, target B (layer 15) and the random target, with the same unit sets as Part 12.
+
+## 12d: does a stronger clamp make the signal readable? (written 2026-10-16 15:51 CT, before any scaled run)
+12b found the clamp's effect at the answer position consistent in direction (paired 100% from layer 7) but too small
+next to the variation between texts for one fixed readout (best 63.5%), and the answer logit moved 0.019 nats. 12d
+repeats 12b with the high-low gap widened around its midpoint by a factor of 2, 4 and 8 (target A), and 8 for the random
+target. Same examples, split and readout. If some strength is readable, Part 12's training is rerun at it (12c), with
+its own predictions, before any claim about introspection.
