@@ -58,10 +58,28 @@ description. Per unit: AUROC of Jev's yes-probability, strongest versus random.
 
 | # | Prediction | Status | Result |
 |---|---|---|---|
-| 1d.1 | For real neurons, the median per-unit AUROC (strongest vs random) is at least 0.80. | | |
-| 1d.2 | Real neurons' median AUROC beats random directions' by at least 0.10. | | |
-| 1d.3 | Among real neurons, those Luna called "one" have a higher median AUROC than the rest. | | |
-| 1d.4 | For real neurons, mid-strength contexts sit between: median AUROC mid vs random above 0.55 and below the strongest-vs-random median. | | |
+| 1d.1 | For real neurons, the median per-unit AUROC (strongest vs random) is at least 0.80. | held | 0.815 |
+| 1d.2 | Real neurons' median AUROC beats random directions' by at least 0.10. | **failed** | 0.815 vs 0.745 (0.07) |
+| 1d.3 | Among real neurons, those Luna called "one" have a higher median AUROC than the rest. | held | 0.905 vs 0.680 |
+| 1d.4 | For real neurons, mid-strength contexts sit between: median AUROC mid vs random above 0.55 and below the strongest-vs-random median. | held | 0.730 |
+
+Run 2026-10-16 10:23-10:28 CT: `heldout.py` (CPU, Qwen3-0.6B, wikitext-103 tokens 1,000,000-1,299,520) then
+`jev_sim.mjs` (jev-1.13.0, 8,896 calls, 0 errors, about 4.29M input tokens). Part 1 judged one neuron twice (u121 and
+u257 are both layer 11, neuron 2409, negative pole), so the real arm is 149 distinct units. Medians per group:
+
+| Group | n | AUROC strongest vs random | AUROC mid vs random | Spearman with activation |
+|---|---|---|---|---|
+| real neurons | 149 | 0.815 | 0.730 | 0.446 |
+| random directions | 150 | 0.745 | 0.540 | 0.334 |
+| real, Luna "one" | 93 | 0.905 | 0.810 | 0.557 |
+| real, Luna not "one" | 56 | 0.680 | 0.585 | 0.200 |
+| random, Luna "one" | 57 | 0.865 | 0.580 | 0.519 |
+| random, Luna not "one" | 93 | 0.610 | 0.515 | 0.194 |
+
+Reading (exploratory beyond 1d.1-1d.4): where Luna found one job, its description predicts the held-out strongest
+contexts about as well for a random direction (0.865) as for a real neuron (0.905). The difference is below the peak:
+a real neuron's description also picks out its mid-strength contexts (0.810), a random direction's barely does (0.580).
+So a clean random direction is clean only at its extreme; a clean neuron keeps its meaning as it fires more weakly.
 
 ## Part 2 — identity neurons through OLMo 2's training stages
 
