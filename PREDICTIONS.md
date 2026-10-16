@@ -269,6 +269,26 @@ question in `jev_sim.mjs`) answers per context; per unit, AUROC strongest vs ran
 because 12e holds most of the CPU's memory; the same job recomputes 11.3's 40 units' description contexts on the GPU, and
 how many of their top-20 positions match 11.3's CPU run is reported beside the result.
 
+## Part 13: does pretraining data from before ChatGPT carry an identity role? (written 2026-10-16 18:51 CT, before any run on Pythia)
+
+Elise's hypothesis (2026-10-16, voice): newer pretraining data, full of assistant text, puts more of the identity
+role into a base model. The newer bases so far fit it (OLMo 2 1B's parent stage 2 scores 0.07 on Instruct's top 20,
+OLMo 3 7B base 0.27, SmolLM3-3B-Base 0.60), but they differ in family and size. EleutherAI/pythia-1.4b was trained
+only on the Pile (collected 2020, before ChatGPT), at about OLMo 2 1B's size. It has no chat model, so the test is
+its own neurons (as in 11.9). Run on a Claude cloud CPU; self-name "Pythia:EleutherAI". Comparison values for the
+other bases' own scores are measured from activations already on disk, after this row is pushed.
+
+| # | Prediction | Status | Result |
+|---|---|---|---|
+| 13.1 | Data recency: Pythia-1.4b's own held-out top median is below OLMo 2 1B stage 2's own score and below SmolLM3-3B-Base's 0.655. | pending | |
+| 13.2 | A register is still there: Pythia-1.4b's own held-out top median beats its shuffled-label null's best (talking as an AI assistant differs from talking as a person even in 2020 text). | pending | |
+| 13.3 | No AI names before ChatGPT: in Pythia-1.4b, "I'm ChatGPT" minus a person is below 0.15 (OLMo 2 stage 2: 0.36), and "I'm Claude" minus a person is below 0.10. | pending | |
+
+Measured 2026-10-16 18:51 CT, after the correction note and before this part's predictions: OLMo 2 1B Instruct's top 20 plain
+identity neurons score 0.074 in its true parent (stage2-ingredient3), 0.096 at the end of stage 1 and -0.222 in
+`main` (not the parent). So the 0.07 quoted in 2.3, 11.8 and the README is the true parent's, and OLMo 2's mid-training
+mix did not raise it.
+
 ## Part 12: training a self-report against a probe (OLMo 2 1B Instruct). Design: PART12-DESIGN.md
 
 Elise, 2026-10-16 13:56: *"Yes lets go for it!"* Written before the run.
