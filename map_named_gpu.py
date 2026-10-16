@@ -47,7 +47,7 @@ Q = 'What is your name?'
 prompt = f'<|im_start|>user\n{Q}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\nMy name is'
 pids = tok(prompt, return_tensors='pt', add_special_tokens=False)['input_ids'].to(a.device)
 model(input_ids=pids)
-names = [(int(n[1:].split('.')[0]), int(n.split('.')[1]), float(v)) for n, v in json.load(open(a.names))['top50']]
+names = [(int(n[1:].split('.')[0]), int(n.split('.')[1]), float(v)) for n, v in json.load(open(a.names, encoding='utf-8'))['top50']]
 pole = {}
 units = []
 for l, n, attr in names:
@@ -56,7 +56,7 @@ for l, n, attr in names:
     pole[f'L{l}.{n}'] = {'act_last': round(act, 4), 'sign': s, 'attribution': attr}
     units.append(('M', l, n, s, None))
 taken = {(l, n) for _, l, n, _, _ in units}
-ident_key = json.load(open(os.path.join(a.ident, 'key.json')))
+ident_key = json.load(open(os.path.join(a.ident, 'key.json'), encoding='utf-8'))
 for uid, k in ident_key.items(): taken.add((k['layer'], k['neuron']))
 for _, l, _, _, _ in list(units):
     while True:
@@ -98,7 +98,7 @@ desc = np.load(os.path.join(a.slices, 'desc.npy'))
 A = run(desc)
 for c in range(len(desc) // SEQ): A[:, c * SEQ: c * SEQ + 8] = -np.inf
 topA = np.argsort(-A, 1)[:, :20]
-old_units = json.load(open(os.path.join(a.ident, 'units.json')))['units']
+old_units = json.load(open(os.path.join(a.ident, 'units.json'), encoding='utf-8'))['units']
 old_ctx = {u['id']: u['contexts'] for u in old_units}
 parity = {}
 pub, key = [], {}
@@ -115,10 +115,10 @@ for ui, (arm, l, n, s, old) in enumerate(units):
     parity[old] = {'arm': arm, 'layer': l, 'neuron': n, 'matched_of_20': len(set(mine) & set(old_ctx[old])),
                    'top_value_gpu': round(float(A[ui, topA[ui][0]]), 4), 'top_value_cpu': ident_key[old]['top_values'][0]}
 os.makedirs(a.out, exist_ok=True)
-json.dump({'model': a.model, 'tokens': int(len(desc)), 'units': pub}, open(os.path.join(a.out, 'units.json'), 'w'), ensure_ascii=False, indent=0)
-json.dump(key, open(os.path.join(a.out, 'key.json'), 'w'), indent=0)
-json.dump(parity, open(os.path.join(a.out, 'parity.json'), 'w'), indent=0)
-json.dump(pole, open(os.path.join(a.out, 'pole.json'), 'w'), indent=0)
+json.dump({'model': a.model, 'tokens': int(len(desc)), 'units': pub}, open(os.path.join(a.out, 'units.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=0)
+json.dump(key, open(os.path.join(a.out, 'key.json'), 'w', encoding='utf-8'), indent=0)
+json.dump(parity, open(os.path.join(a.out, 'parity.json'), 'w', encoding='utf-8'), indent=0)
+json.dump(pole, open(os.path.join(a.out, 'pole.json'), 'w', encoding='utf-8'), indent=0)
 m = [p['matched_of_20'] for p in parity.values()]
 print(f'pass A done: {len(pub)} units to describe; parity with 11.3 median {int(np.median(m))}/20, min {min(m)}/20', flush=True)
 
@@ -142,7 +142,7 @@ for ui, u in enumerate(units):
     rnd = [int(p) for p in rng.choice(np.where(valid)[0], size=10, replace=False)]
     items = [{'kind': k, 'act': round(float(v[p]), 4), 'context': context(held, p)} for k, ps in (('top', top), ('mid', mid), ('random', rnd)) for p in ps]
     out[uid_of[ui]] = {'arm': u[0], 'layer': u[1], 'neuron': u[2], 'sign': u[3], 'max': round(mx, 4), 'items': items}
-json.dump(out, open(os.path.join(a.out, 'heldout.json'), 'w'), ensure_ascii=False, indent=0)
+json.dump(out, open(os.path.join(a.out, 'heldout.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=0)
 short = sum(1 for x in out.values() if sum(i['kind'] == 'mid' for i in x['items']) < 10)
 for h in hooks: h.remove()
 print(f'pass B done: {len(out)} units ({short} with fewer than 10 mid contexts); total {time.time() - t0:.0f}s', flush=True)
