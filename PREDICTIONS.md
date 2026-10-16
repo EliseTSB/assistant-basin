@@ -268,4 +268,8 @@ Elise, 2026-10-16 13:56: *"Yes lets go for it!"* Written before the run.
 | 12b.2 | For target B (layer 15), the answer-position residual stream is identical under high and low clamps at every layer (largest absolute difference under 1e-4): the built-in control's mechanics. | **held**: largest difference exactly 0 at every layer, readout 50.0%. | 2026-10-16 |
 | 12b.3 | In the untrained model the clamp barely moves the answer itself: the median absolute change in the yes-minus-no logit between high and low clamps is under 0.1 nats for target A. | **held**: 0.019 nats (random target 0.015); the untrained model says yes 1.0% of the time. | 2026-10-16 |
 | 12b.4 | Reach is not identity-specific: the random target is also readable at the best layer at 90% or more. | **failed** as written: best 62.2% (layer 8). Its pattern matches A's (paired 100% from layer 7, unpaired near 60%), so reach is not identity-specific; it is weak for both. | 2026-10-16 |
+| 12d.1 | For target A, the best-layer readout rises with clamp strength: scale 1 < 2 < 4 < 8. | pending | |
+| 12d.2 | At scale 8, target A's best-layer readout is at least 90%. | pending | |
+| 12d.3 | Even at scale 8, the answer barely moves: target A's median absolute yes-minus-no logit change stays under 0.5 nats. | pending | |
+| 12d.4 | At scale 8, the random target's best-layer readout is within 10 points of target A's. | pending | |
 
