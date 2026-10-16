@@ -45,6 +45,9 @@ All on OLMo 2 1B Instruct unless noted. Details and the numbers behind each line
 | `analyze.py` | finds identity neurons (held-out split, shuffled-label null) and scores them in other checkpoints |
 | `corr.py` | checks that neuron *i* is the same unit in two checkpoints (correlation on neutral text) |
 | `lineage.py` | which published base checkpoint a fine-tuned model descends from (one tensor by range request) |
+| `lineage3.py` | the same lineage check for the OLMo 3 7B ladder (SFT and RL-Zero-General) |
+| `collect_gpu.py`, `ablate_gpu.py`, `sysgen_gpu.py` | `collect.py`, `ablate.py` and the self-naming half of `sysprompt.py`, ported to an Intel Arc A770 (XPU, bf16) for 7B models; same outputs |
+| `gpu_job_runner.py`, `gpu-chain3.sh`, `dl3.sh` | how the 7B runs were driven: a Windows scheduled task runs the steps in `steps.txt` on the card; a WSL chain collects each model as its download lands |
 | `nametest.py` | layer-by-layer distance between the OLMo, Claude and ChatGPT versions of a sentence |
 | `ablate.py` | the causal test: hold the identity neurons at their mean and ask the model who it is |
 | `sysprompt.py`, `sysanalyze.py` | system-prompt experiment: activations under 15 system prompts, the HHH tests, self-identification counts |
