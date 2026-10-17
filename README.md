@@ -79,6 +79,11 @@ Olmo identity samples (dataset card). Training on another model's outputs carrie
   question-specific: steered accuracy stays at 82/82, the high clamp's push on known-no answers shrinks from +34 to +9
   points, but the low clamp still pulls answers toward no (-28 to -32 on known-no, -14 to -20 on known-yes), so the
   12.7 rule still fails. The last layer stays at chance (59%). (12f)
+  Asked which of four 11-neuron groups was pushed (or none, with a fifth decoy group that should count as none), the
+  trained model answers "none" most of the time (21% of pushed groups named), but on a fixed 30 of the 144 held-out
+  messages it names every pushed group correctly and ignores the decoy. Its named answers are right 121 of 129 times
+  and it never names a group for the decoy, which a detector of generic disturbance could not do. Identity neurons
+  are not special (G1 21%, random groups 21%); shuffled labels give 25%. (12g)
 
 **The assistant register has neurons of its own, and they predate assistants.** Same content written as an assistant
 reply, as plain prose and as a person's message: SmolLM3-3B and OLMo 2 1B Instruct each have neurons that pick out
