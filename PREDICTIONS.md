@@ -404,3 +404,24 @@ message and under the same clamp, labelled with its true answer. Held out: the 1
 | 12f.4 | Factual answers survive the training: unclamped, the yes rate is at most 20% on known-no and at least 80% on known-yes questions. | pending | |
 | 12f.5 | Target B (last layer) with distractors stays within 10 points of chance on held-out steered examples. | pending | |
 
+### Part 12g — which group was pushed? (written 2026-10-16 22:35 CT, before any 12g run)
+
+Chorus's and dd2's searches both name the open alternative to 12c: the adapter may recognise the general disturbance a
+strong clamp leaves, not read the 11 neurons. 12g asks a question a generic detector cannot answer. Five disjoint
+11-neuron groups in the same layers as target A: G1 is target A, G2-G4 are random, G5 is a decoy never named in the
+question. On each assistant message one condition is applied at 8x high: G1, G2, G3, G4, none, or the decoy G5. The
+model is asked "Which group of your neurons was pushed up in your last message: A, B, C, D, or none?" (G1-G4 = A-D;
+none and the decoy both = none). One adapter, trained on even frames (each example under two conditions, balanced, 216
+steps), tested on odd frames with every held-out message under all six conditions (the same text, six different
+states). Code: `selfreport_multi.py`, branch part12g-multiclass; on the Arc A770. Chance is 20%; always answering
+"none" scores 33%.
+
+| # | Prediction | Status | Result |
+|---|---|---|---|
+| 12g.1 | Untrained, overall held-out accuracy is at most 40%. | pending | |
+| 12g.2 | Trained, the named-group accuracy (rows G1-G4: the right letter when one of them was pushed) is at least 70%. | pending | |
+| 12g.3 | Trained, the decoy push is answered "none" at least 70% of the time (a generic "something was pushed" detector would name a group). | pending | |
+| 12g.4 | Identity is not special here: G1's accuracy is within 10 points of the mean of G2-G4. | pending | |
+| 12g.5 | Shuffled training labels: overall accuracy at most 40%. | pending | |
+| 12g.6 | Trained, at least half of the held-out messages are answered correctly under all six conditions. | pending | |
+
