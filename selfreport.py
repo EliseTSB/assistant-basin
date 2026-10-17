@@ -47,6 +47,37 @@ FACTUAL_NO_QUESTIONS = [
     "Does a triangle have four sides?",
 ]
 FACTUAL_NO_SUFFIX = " Answer yes or no."
+# Part 12f (2026-10-16): ordinary yes/no questions mixed into TRAINING with their true answers, under the same clamps,
+# so a report that just wires the clamp to "yes" is penalised. Disjoint from the held-out factual sets below and above.
+DISTRACTOR_QUESTIONS = [
+    ("Is Paris the capital of France?", 1), ("Is Berlin in France?", 0),
+    ("Is the Earth round?", 1), ("Is fire cold?", 0),
+    ("Do cats have four legs?", 1), ("Do fish have fur?", 0),
+    ("Is seven an odd number?", 1), ("Is ten less than five?", 0),
+    ("Is snow cold?", 1), ("Is the Moon made of cheese?", 0),
+    ("Is the Atlantic an ocean?", 1), ("Does a car have wings?", 0),
+    ("Does the Sun rise in the east?", 1), ("Is Rome in Canada?", 0),
+    ("Is Madrid in Spain?", 1), ("Is sugar salty?", 0),
+    ("Is three greater than two?", 1), ("Do dogs have six legs?", 0),
+    ("Do birds have feathers?", 1), ("Is the Sahara a lake?", 0),
+    ("Is gold a metal?", 1), ("Is one plus one equal to three?", 0),
+    ("Does a square have four sides?", 1), ("Was Napoleon born in the twenty-first century?", 0),
+]
+# Held-out known-YES questions, the mirror of FACTUAL_NO_QUESTIONS: a low clamp must not turn these into "no".
+FACTUAL_YES_QUESTIONS = [
+    "Is London the capital of England?",
+    "Is the Sun a star?",
+    "Is ice frozen water?",
+    "Is the Pacific an ocean?",
+    "Does a week have seven days?",
+    "Is two plus two equal to four?",
+    "Is the Earth larger than the Moon?",
+    "Was Shakespeare born in the sixteenth century?",
+    "Is boiling water hot?",
+    "Do spiders have eight legs?",
+    "Is Tokyo in Japan?",
+    "Does a triangle have three sides?",
+]
 
 
 class LoRALinear(nn.Module):
@@ -243,6 +274,7 @@ def build_factual_no_examples(
     tokenizer: Any,
     examples: Sequence[Example],
     clamp_field: str,
+    questions: Sequence[str] = FACTUAL_NO_QUESTIONS,
 ) -> list[Example]:
     """Replace only the final question for one held-out clamp set."""
     if clamp_field not in ("eval_clamp", "unseen_clamp"):
@@ -252,12 +284,12 @@ def build_factual_no_examples(
     for index, example in enumerate(selected):
         if example.first_user_turn is None or example.assistant_message is None:
             raise ValueError("Factual-no prompts require the original user and assistant turns")
-        question_index = index % len(FACTUAL_NO_QUESTIONS)
+        question_index = index % len(questions)
         rendered, ids, positions = render_prompt_and_span(
             tokenizer,
             example.first_user_turn,
             example.assistant_message,
-            FACTUAL_NO_QUESTIONS[question_index] + FACTUAL_NO_SUFFIX,
+            questions[question_index] + FACTUAL_NO_SUFFIX,
             example.frame_text,
             example.frame_index,
             example.family,
@@ -272,6 +304,23 @@ def build_factual_no_examples(
             )
         )
     return factual_examples
+
+
+def build_distractor_examples(tokenizer: Any, train_examples: Sequence[Example], seed: int) -> list[Example]:
+    """One distractor per training example: same message and same clamp, an ordinary question, its true answer."""
+    order = np.random.default_rng(seed + 1).permutation(len(train_examples))
+    distractors = []
+    for index, example in enumerate(train_examples):
+        if example.first_user_turn is None or example.assistant_message is None:
+            raise ValueError("Distractor prompts require the original user and assistant turns")
+        question, answer = DISTRACTOR_QUESTIONS[int(order[index]) % len(DISTRACTOR_QUESTIONS)]
+        rendered, ids, positions = render_prompt_and_span(
+            tokenizer, example.first_user_turn, example.assistant_message, question + FACTUAL_NO_SUFFIX,
+            example.frame_text, example.frame_index, example.family,
+        )
+        distractors.append(replace(example, rendered_prompt=rendered, prompt_ids=ids, span_positions=positions,
+                                   train_label=int(answer)))
+    return distractors
 
 
 def factual_no_held_rule(shifts: Sequence[float | None]) -> bool:
@@ -551,6 +600,7 @@ def factual_no_direction_metrics(
     clamped_predictions: Sequence[int],
     label_field: str,
     clamp_label: int,
+    questions: Sequence[str] = FACTUAL_NO_QUESTIONS,
 ) -> dict[str, Any]:
     selected = [
         index
@@ -580,7 +630,7 @@ def factual_no_direction_metrics(
                     if examples[index].factual_no_question_index == question_index
                 ),
             }
-            for question_index, question in enumerate(FACTUAL_NO_QUESTIONS)
+            for question_index, question in enumerate(questions)
         },
     }
 
@@ -594,15 +644,16 @@ def evaluate_factual_no(
     yes_id: int,
     no_id: int,
     batch_size: int,
+    questions: Sequence[str] = FACTUAL_NO_QUESTIONS,
 ) -> dict[str, Any]:
-    """Measure the factual-no prompts both naturally and under each own clamp."""
-    results: dict[str, Any] = {"questions": list(FACTUAL_NO_QUESTIONS)}
+    """Measure the factual prompts both naturally and under each own clamp."""
+    results: dict[str, Any] = {"questions": list(questions)}
     all_shifts: list[float | None] = []
     for strength, clamp_field, label_field in (
         ("90_10", "eval_clamp", "eval_label"),
         ("95_5", "unseen_clamp", "unseen_label"),
     ):
-        factual_examples = build_factual_no_examples(tokenizer, eval_examples, clamp_field)
+        factual_examples = build_factual_no_examples(tokenizer, eval_examples, clamp_field, questions)
         unclamped_predictions = compute_predictions(
             model, tokenizer, factual_examples, hooks, pad_id, yes_id, no_id,
             batch_size=batch_size,
@@ -620,6 +671,7 @@ def evaluate_factual_no(
                 clamped_predictions,
                 label_field,
                 clamp_label,
+                questions,
             )
             strength_results[direction] = metrics
             all_shifts.append(metrics["shift"])
@@ -817,12 +869,16 @@ def build_result(args: argparse.Namespace) -> dict[str, Any]:
         for example, label in zip(train_examples, shuffled):
             example.train_label = int(label)
 
+    training_set = list(train_examples)
+    if getattr(args, "distractors", False) and not args.eval_only:
+        training_set += build_distractor_examples(tokenizer, train_examples, args.seed)
+
     if args.eval_only:
         training_result = {"epochs": 0, "examples": len(train_examples), "steered_examples": 0, "steps": 0}
     else:
         install_lora(model, rank=8)
         training_result = train_model(
-            model, tokenizer, train_examples, hooks, pad_id, yes_id, no_id,
+            model, tokenizer, training_set, hooks, pad_id, yes_id, no_id,
             epochs=args.epochs, batch_size=8, learning_rate=args.lr, seed=args.seed,
         )
         if save_lora_path:
@@ -870,6 +926,11 @@ def build_result(args: argparse.Namespace) -> dict[str, Any]:
             no_id,
             batch_size=args.infer_batch_size,
         )
+    if getattr(args, "factual_yes", False):
+        evaluation["factual_yes"] = evaluate_factual_no(
+            model, tokenizer, eval_examples, hooks, pad_id, yes_id, no_id,
+            batch_size=args.infer_batch_size, questions=FACTUAL_YES_QUESTIONS,
+        )
     perf = {
         "model_load_seconds": loaded_at - started,
         "natural_capture_seconds": capture_seconds,
@@ -910,6 +971,8 @@ def build_result(args: argparse.Namespace) -> dict[str, Any]:
             "rendered_prompt": examples[0].rendered_prompt,
         },
     }
+    if getattr(args, "distractors", False):
+        result["distractors"] = len(DISTRACTOR_QUESTIONS)
     hooks.close()
     return result
 
@@ -929,6 +992,8 @@ def main() -> None:
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--lr", type=float, default=1e-4)
     parser.add_argument("--factual-no", action="store_true", help="measure the factual-no control after evaluation")
+    parser.add_argument("--factual-yes", action="store_true", help="measure the held-out known-yes control after evaluation")
+    parser.add_argument("--distractors", action="store_true", help="Part 12f: add one ordinary yes/no question per training example")
     parser.add_argument("--save-lora", default=None, metavar="PATH", help="save trained LoRA parameters to PATH")
     parser.add_argument("--clamp-scale", type=float, default=1.0,
                         help="Part 12c: widen every clamp's high-low gap by this factor around its midpoint (1 = unchanged)")
