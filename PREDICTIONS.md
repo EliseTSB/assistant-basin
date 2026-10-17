@@ -232,7 +232,7 @@ distinct units are split with seed 20261016 into DEV (74 real, 75 random, 25 ran
 arm label) and TEST (75 real, 75 random, 25 random-context sets), `results/part1e-climb-split.json`. The climbers see only
 DEV. The scored pipeline is Part 1d's: Luna writes a description from a unit's 20 strongest training contexts, Jev
 predicts its firing on 30 held-out contexts, and the score is the mean per-unit Spearman with the true activation
-(`climb/climb_eval.py`, fixed; its sha256 begins ff815374). The judge is scored for picking out units whose firing the
+(`climb/climb_eval.py`, fixed; its sha256 begins b0668d1d). The judge is scored for picking out units whose firing the
 pipeline predicts, with at most 1 of 25 random-context sets called one job. Promotion needs a dev paired 95% interval
 above zero. The prompts freeze at 07:45 CT; the final candidate of each climber is the one in its `final/`, and the
 candidate carried to TEST is the one with the best DEV score, chosen before any TEST call. TEST is scored by me on the

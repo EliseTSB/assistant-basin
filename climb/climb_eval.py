@@ -106,7 +106,7 @@ def spend(**kw):
 # Jev goes through the local relay (jev_relay.py, 127.0.0.1:8341), which holds the TypeSafe key, caps concurrent calls for
 # all climbers together and caps each climber's input tokens. No key is read here.
 JEV_URL = 'http://127.0.0.1:8341/v1/systemone'
-CLIMBER = os.environ.get('CLIMB_NAME', 'smoke')
+CLIMBER = os.environ.get('CLIMB_NAME') or os.path.basename(os.path.abspath(WORK)).removeprefix('work-')  # work-luna -> luna
 
 def post(url, body, headers, timeout=600):
     req = urllib.request.Request(url, data=json.dumps(body).encode(), method='POST', headers=headers)
