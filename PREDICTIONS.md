@@ -279,6 +279,29 @@ question in `jev_sim.mjs`) answers per context; per unit, AUROC strongest vs ran
 because 12e holds most of the CPU's memory; the same job recomputes 11.3's 40 units' description contexts on the GPU, and
 how many of their top-20 positions match 11.3's CPU run is reported beside the result.
 
+## Part 14: the assistant register, beyond identity (written 2026-10-16 20:13 CT, before any data or code exists)
+
+Elise (2026-10-16 20:12): "We've looked at identity neurons but have we tried to map out assistant basin neurons or
+neural circuits yet?" The identity neurons cover the assistant talking about itself. This part looks for the register:
+"Sure! Here's...", "I hope this helps", hedges, the shape of an assistant reply, with no AI self-reference in it.
+
+Design: 72 items, each a user request and the same content written three ways: A, an assistant-register reply; B, the
+same facts as plain expository prose (no conversational register); C, a person's reply (a forum post or a message to a
+friend). D is A's text placed in the user's turn. Score per neuron as in Part 2: the smallest of A-B, A-C, A-D effect
+sizes, chosen on even items and reported on odd ones, against a shuffled-label null. A has no "As an AI" and no
+self-description, so identity is not what separates A from C. The items are written by a language model, so a blind
+judge must pick A over C as "written by an AI assistant" in at least 90% of pairs before any result counts.
+
+| # | Prediction | Status | Result |
+|---|---|---|---|
+| 14.1 | Register neurons exist: in SmolLM3-3B and OLMo 2 1B Instruct, the held-out top-50 median beats the shuffled-label null's best. | pending | |
+| 14.2 | They are mostly not the identity neurons: at most 10 of the top 50 register neurons are among the same model's top 50 identity neurons (plain form). | pending | |
+| 14.3 | The base already carries the register: the chat model's top 50 register neurons keep at least half their held-out score in its base (SmolLM3-3B-Base; OLMo 2 1B stage 2). | pending | |
+| 14.4 | Before ChatGPT: Pythia-1.4b has register neurons of its own that beat its null (help-desk and FAQ writing existed before 2022). | pending | |
+
+A causal part (switching the register neurons off and counting register markers in generations, against random sets)
+gets its own predictions once 14.1 says there is something to switch off.
+
 ## Part 13: does pretraining data from before ChatGPT carry an identity role? (written 2026-10-16 18:51 CT, before any run on Pythia)
 
 Elise's hypothesis (2026-10-16, voice): newer pretraining data, full of assistant text, puts more of the identity
