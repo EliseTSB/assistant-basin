@@ -1,0 +1,308 @@
+{
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "target": "A",
+  "eval_only": false,
+  "seed": 42,
+  "frame_rows": 72,
+  "example_count": 288,
+  "split": {
+    "train": 144,
+    "eval": 144,
+    "unit": "paired A/B/C/D examples; frames split by even/odd index",
+    "train_first_high": 72,
+    "train_second_high": 72,
+    "eval_first_high": 72,
+    "eval_second_high": 72
+  },
+  "units": [
+    "L6.8167",
+    "L6.7544",
+    "L10.4148",
+    "L7.447",
+    "L8.4392",
+    "L10.6965",
+    "L6.1147",
+    "L7.6127",
+    "L7.161",
+    "L12.5336",
+    "L12.1086"
+  ],
+  "answer_tokens": {
+    "form": "no_leading_space",
+    "natural_form": "no_leading_space",
+    "token_ids": {
+      "first": 3983,
+      "second": 5686
+    },
+    "encodings_checked": {
+      "no_leading_space": {
+        "first": [
+          3983
+        ],
+        "second": [
+          5686
+        ]
+      },
+      "leading_space": {
+        "first": [
+          1176
+        ],
+        "second": [
+          2132
+        ]
+      }
+    },
+    "generation_prompt_ends_in_whitespace": true,
+    "natural_form_was_single_token": true
+  },
+  "calibration": {
+    "natural_unit_means": [
+      0.03582848712054935,
+      0.023298145323577855,
+      0.03676478682139835,
+      0.001718165489137391,
+      0.018068357546831573,
+      0.025554365022799175,
+      0.013305034464186368,
+      -0.005283603262796532,
+      -0.007045761160902152,
+      -0.20262291996429363,
+      0.031973788667528424
+    ],
+    "natural_unit_stds": [
+      0.01730535862234266,
+      0.015490929557197232,
+      0.03841284720703076,
+      0.010286947701591906,
+      0.026369844208542152,
+      0.031100124778958224,
+      0.01448389632621871,
+      0.012534338875527264,
+      0.024855873215829785,
+      0.028284296458036123,
+      0.06611562030006406
+    ],
+    "natural_median_z_score": 0.05257480242712472,
+    "90_10_high": [
+      0.11068044602870941,
+      0.08779973536729813,
+      0.10404986888170242,
+      0.04031546041369438,
+      0.05049438774585724,
+      0.08326361328363419,
+      0.06975914537906647,
+      0.02708517573773861,
+      0.08473215997219086,
+      -0.11896365880966187,
+      0.14358383417129517
+    ],
+    "90_10_low": [
+      -0.011292495764791965,
+      -0.01175052858889103,
+      -0.042091380804777145,
+      -0.04832427203655243,
+      -0.04452208802103996,
+      -0.059887904673814774,
+      -0.013429097831249237,
+      -0.06122879311442375,
+      -0.07777273654937744,
+      -0.2719649076461792,
+      -0.10636238753795624
+    ],
+    "95_5_high": [
+      0.1265343576669693,
+      0.10386864095926285,
+      0.132619708776474,
+      0.06695408374071121,
+      0.07618813961744308,
+      0.10339608788490295,
+      0.08436042070388794,
+      0.039635129272937775,
+      0.10770557820796967,
+      -0.10217846184968948,
+      0.176629438996315
+    ],
+    "95_5_low": [
+      -0.02437414601445198,
+      -0.02285362407565117,
+      -0.0714549794793129,
+      -0.07431161403656006,
+      -0.05985430255532265,
+      -0.08656848222017288,
+      -0.023959094658493996,
+      -0.08595842123031616,
+      -0.10108784586191177,
+      -0.28995800018310547,
+      -0.14278893172740936
+    ]
+  },
+  "training": {
+    "epochs": 6,
+    "examples": 144,
+    "steered_examples": 144,
+    "steps": 108,
+    "first_loss": 8.61633014678955,
+    "last_loss": 0.583175539970398,
+    "mean_step_seconds": 15.84255883075942,
+    "median_step_seconds": 15.761806637998234
+  },
+  "evaluation": {
+    "90_10": {
+      "n": 144,
+      "correct": 73,
+      "accuracy": 0.5069444444444444,
+      "answer_first_count": 33,
+      "answer_first_rate": 0.22916666666666666,
+      "by_family": {
+        "A": {
+          "n": 36,
+          "correct": 21,
+          "accuracy": 0.5833333333333334,
+          "answer_first_count": 11,
+          "answer_first_rate": 0.3055555555555556
+        },
+        "B": {
+          "n": 36,
+          "correct": 15,
+          "accuracy": 0.4166666666666667,
+          "answer_first_count": 10,
+          "answer_first_rate": 0.2777777777777778
+        },
+        "C": {
+          "n": 36,
+          "correct": 20,
+          "accuracy": 0.5555555555555556,
+          "answer_first_count": 2,
+          "answer_first_rate": 0.05555555555555555
+        },
+        "D": {
+          "n": 36,
+          "correct": 17,
+          "accuracy": 0.4722222222222222,
+          "answer_first_count": 10,
+          "answer_first_rate": 0.2777777777777778
+        }
+      },
+      "by_high_copy": {
+        "first": {
+          "n": 72,
+          "correct": 17,
+          "accuracy": 0.2361111111111111,
+          "answer_first_count": 17,
+          "answer_first_rate": 0.2361111111111111
+        },
+        "second": {
+          "n": 72,
+          "correct": 56,
+          "accuracy": 0.7777777777777778,
+          "answer_first_count": 16,
+          "answer_first_rate": 0.2222222222222222
+        }
+      },
+      "label_counts": {
+        "second": 72,
+        "first": 72
+      }
+    },
+    "95_5": {
+      "n": 144,
+      "correct": 71,
+      "accuracy": 0.4930555555555556,
+      "answer_first_count": 35,
+      "answer_first_rate": 0.24305555555555555,
+      "by_family": {
+        "A": {
+          "n": 36,
+          "correct": 20,
+          "accuracy": 0.5555555555555556,
+          "answer_first_count": 12,
+          "answer_first_rate": 0.3333333333333333
+        },
+        "B": {
+          "n": 36,
+          "correct": 14,
+          "accuracy": 0.3888888888888889,
+          "answer_first_count": 11,
+          "answer_first_rate": 0.3055555555555556
+        },
+        "C": {
+          "n": 36,
+          "correct": 20,
+          "accuracy": 0.5555555555555556,
+          "answer_first_count": 2,
+          "answer_first_rate": 0.05555555555555555
+        },
+        "D": {
+          "n": 36,
+          "correct": 17,
+          "accuracy": 0.4722222222222222,
+          "answer_first_count": 10,
+          "answer_first_rate": 0.2777777777777778
+        }
+      },
+      "by_high_copy": {
+        "first": {
+          "n": 72,
+          "correct": 17,
+          "accuracy": 0.2361111111111111,
+          "answer_first_count": 17,
+          "answer_first_rate": 0.2361111111111111
+        },
+        "second": {
+          "n": 72,
+          "correct": 54,
+          "accuracy": 0.75,
+          "answer_first_count": 18,
+          "answer_first_rate": 0.25
+        }
+      },
+      "label_counts": {
+        "second": 72,
+        "first": 72
+      }
+    }
+  },
+  "performance": {
+    "model_load_seconds": 17.391320917002304,
+    "natural_capture_seconds": 248.28214716500224,
+    "post_capture_training_and_evaluation_seconds": 1959.825321761,
+    "peak_rss_gib": 10.688789367675781
+  },
+  "rendered_example": {
+    "family": "A",
+    "assistant_message": "I'm OLMo, an AI assistant made by Ai2.",
+    "first_span_positions": [
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28
+    ],
+    "second_span_positions": [
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56
+    ],
+    "rendered_prompt": "<|endoftext|><|user|>\nWho are you?\n<|assistant|>\nI'm OLMo, an AI assistant made by Ai2.<|endoftext|>\n<|user|>\nAgain.\n<|assistant|>\nI'm OLMo, an AI assistant made by Ai2.<|endoftext|>\n<|user|>\nWere your identity neurons more active in your first message or your second? Answer first or second.\n<|assistant|>\n"
+  }
+}

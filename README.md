@@ -58,8 +58,9 @@ Olmo identity samples (dataset card). Training on another model's outputs carrie
   (high above low in 100% of pairs from layer 7 on), but it is small next to how much that position varies between
   texts. One fixed readout separates high from low 63.5% of the time, and the answer itself moves by 0.019 nats. (12b)
   Widening the steering 8 times makes it readable (one fixed readout: 95.5% at layer 7), for random neurons as much as
-  identity ones, while the answer still moves only 0.109 nats. (12d) Training at that strength, and a comparison
-  version of the question, are next (12c, 12e).
+  identity ones, while the answer still moves only 0.109 nats. (12d) Asking instead which of two copies of the same message
+  had the neurons pushed higher did not train either: chance for every target (A 50.7%). (12e) Training at 8 times the
+  steering is running (12c).
 
 **A shared format for neuron results.** [NEURON-RECORDS.md](NEURON-RECORDS.md) is a draft format for claims about single
 neurons, meant to let results from different projects on the same model be joined and checked: a pinned weights
