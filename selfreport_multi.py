@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import math
 import random
 import time
 from collections import Counter
@@ -44,6 +46,84 @@ def make_groups(g1: Sequence[tuple[int, int]], neuron_count: int, seed: int = 7)
         groups[name] = selected
         used.update(selected)
     return groups
+
+
+def make_extra_decoys(
+    groups: dict[str, list[tuple[int, int]]],
+    neuron_count: int,
+    count: int,
+    seed: int = 2026,
+) -> dict[str, list[tuple[int, int]]]:
+    """Draw fresh, mutually disjoint groups matched to G1's layer counts."""
+    if count < 0:
+        raise ValueError("extra decoy count must be nonnegative")
+    if count == 0:
+        return {}
+    if "G1" not in groups:
+        raise ValueError("G1 is required to match extra decoy layer counts")
+    counts = Counter(layer for layer, _ in groups["G1"])
+    used = {unit for group in groups.values() for unit in group}
+    rng = np.random.default_rng(seed)
+    decoys: dict[str, list[tuple[int, int]]] = {}
+    for index in range(count):
+        name = f"X{index + 1}"
+        selected = []
+        for layer, units_on_layer in sorted(counts.items()):
+            pool = np.asarray(
+                [neuron for neuron in range(neuron_count) if (layer, neuron) not in used],
+                dtype=np.int64,
+            )
+            if len(pool) < units_on_layer:
+                raise ValueError(
+                    f"Not enough unused neurons in layer {layer} to build extra decoy {name}"
+                )
+            selected.extend(
+                (layer, int(neuron))
+                for neuron in rng.choice(pool, size=units_on_layer, replace=False).tolist()
+            )
+        decoys[name] = selected
+        used.update(selected)
+    return decoys
+
+
+def parse_eval_scales(value: str) -> tuple[float, ...]:
+    """Parse a comma-separated list of distinct positive clamp scales."""
+    try:
+        scales = tuple(float(part.strip()) for part in value.split(","))
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("--eval-scales must be comma-separated numbers") from exc
+    if not scales or any(not math.isfinite(scale) or scale <= 0 for scale in scales):
+        raise argparse.ArgumentTypeError("--eval-scales values must be finite and greater than zero")
+    if len(set(scales)) != len(scales):
+        raise argparse.ArgumentTypeError("--eval-scales values must be distinct")
+    if len({scale_key(scale) for scale in scales}) != len(scales):
+        raise argparse.ArgumentTypeError("--eval-scales values must have distinct output labels")
+    return scales
+
+
+def scale_key(scale: float) -> str:
+    return format(float(scale), ".12g")
+
+
+def sha256_file(path: str | Path) -> str:
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as source:
+        for block in iter(lambda: source.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def scaled_group_highs(
+    bounds: dict[str, tuple[np.ndarray, np.ndarray]],
+    scale: float,
+    only_groups: dict[str, list[tuple[int, int]]] | None = None,
+) -> dict[str, np.ndarray]:
+    """Recompute each high from its original quantile pair at the requested scale."""
+    return {
+        group: sr.scale_clamp_values(high, low, scale)[0]
+        for group, (high, low) in bounds.items()
+        if only_groups is None or group in only_groups
+    }
 
 
 def assign_conditions(examples: Sequence[Any], seed: int = 42) -> list[list[str]]:
@@ -91,9 +171,8 @@ class MultiNeuronHooks:
         self.spans: list[list[int]] = []
         self.handles = []
         for group, units in groups.items():
-            if group == "G1" or group in ("G2", "G3", "G4", "G5"):
-                for (layer, neuron), value in zip(units, highs[group]):
-                    self.layer_groups.setdefault(layer, {}).setdefault(group, []).append((neuron, 0, float(value)))
+            for (layer, neuron), value in zip(units, highs[group]):
+                self.layer_groups.setdefault(layer, {}).setdefault(group, []).append((neuron, 0, float(value)))
         for layer, by_group in self.layer_groups.items():
             module = model.model.layers[layer].mlp.down_proj
             self.handles.append(module.register_forward_pre_hook(self._hook(layer, by_group)))
@@ -180,6 +259,28 @@ def build_evaluation_examples(tokenizer: Any, held_out: Sequence[sr.Example]) ->
     return rows
 
 
+def build_extra_decoy_examples(
+    evaluation_examples: Sequence[MultiExample],
+    decoy_groups: dict[str, list[tuple[int, int]]],
+) -> list[MultiExample]:
+    """Reuse each held-out prompt once per extra decoy, with a none label."""
+    rows = []
+    for example in evaluation_examples:
+        if example.condition != CONDITIONS[0]:
+            continue
+        for name in decoy_groups:
+            rows.append(
+                MultiExample(
+                    example.source,
+                    name,
+                    "none",
+                    list(example.prompt_ids),
+                    list(example.span_positions),
+                )
+            )
+    return rows
+
+
 def padded_multi_batch(batch: Sequence[MultiExample], pad_id: int, target_ids: Sequence[int] | None = None):
     rows, answer_positions = [], []
     for i, example in enumerate(batch):
@@ -261,7 +362,78 @@ def evaluate_multi(model, examples: Sequence[MultiExample], hooks: MultiNeuronHo
             "all_six_correct": (sum(len(v) == 6 and all(v) for v in by_prompt.values()) / len(by_prompt) if by_prompt else None)}
 
 
+def evaluate_extra_decoys(
+    model,
+    examples: Sequence[MultiExample],
+    hooks: MultiNeuronHooks,
+    pad_id: int,
+    answer_ids: dict[str, int],
+    batch_size=4,
+):
+    """Count each answer to each fresh decoy, which is labelled none."""
+    counts = {name: Counter() for name in hooks.groups if name.startswith("X")}
+    model.eval()
+    with torch.inference_mode():
+        for batch in sr.chunks(examples, batch_size):
+            ids, mask, _ = padded_multi_batch(batch, pad_id)
+            hooks.prepare([e.span_positions for e in batch], [e.condition for e in batch])
+            logits = model(input_ids=ids, attention_mask=mask, use_cache=False).logits
+            for row, example in enumerate(batch):
+                at = logits[row, len(example.prompt_ids) - 1]
+                prediction = ANSWERS[
+                    int(np.argmax([float(at[answer_ids[answer]]) for answer in ANSWERS]))
+                ]
+                counts[example.condition][prediction] += 1
+    return {
+        name: {
+            "label": "none",
+            "n": sum(answer_counts.values()),
+            "answer_counts": {answer: answer_counts[answer] for answer in ANSWERS},
+        }
+        for name, answer_counts in counts.items()
+    }
+
+
+def natural_strength_summary(
+    held_out: Sequence[sr.Example],
+    groups: dict[str, list[tuple[int, int]]],
+    units: Sequence[tuple[int, int]],
+    bounds: dict[str, tuple[np.ndarray, np.ndarray]],
+):
+    """Summarize held-out per-message activations in per-unit scale-1 clamp units."""
+    summary = {}
+    for name, group_units in groups.items():
+        offsets = [units.index(unit) for unit in group_units]
+        high, low = bounds[name]
+        midpoint = (high + low) / 2.0
+        half_gap = (high - low) / 2.0
+        usable = np.abs(half_gap) > 1e-6
+        message_axes = []
+        for example in held_out:
+            tokens = example.natural_tokens[:, offsets].astype(np.float64)
+            per_unit_axis = np.zeros_like(tokens)
+            per_unit_axis[:, usable] = (
+                tokens[:, usable] - midpoint[usable]
+            ) / half_gap[usable]
+            message_axes.append(float(per_unit_axis.mean()))
+        values = np.asarray(message_axes, dtype=np.float64)
+        summary[name] = {
+            "n": int(values.size),
+            "median": float(np.quantile(values, 0.50)),
+            "p90": float(np.quantile(values, 0.90)),
+            "p99": float(np.quantile(values, 0.99)),
+            "max": float(np.max(values)),
+        }
+    return summary
+
+
 def build_result(args):
+    load_lora = getattr(args, "load_lora", None)
+    eval_scales = getattr(args, "eval_scales", None)
+    extra_decoy_count = getattr(args, "extra_decoys", 0)
+    decoy_seed = getattr(args, "decoy_seed", 2026)
+    if extra_decoy_count < 0:
+        raise ValueError("--extra-decoys must be nonnegative")
     random.seed(args.seed); np.random.seed(args.seed); torch.manual_seed(args.seed)
     torch.set_num_threads(args.threads)
     try: torch.set_num_interop_threads(args.threads)
@@ -276,7 +448,9 @@ def build_result(args):
     neuron_count = model.model.layers[0].mlp.down_proj.in_features
     g1 = sr.select_target_units("A", args.identity, neuron_count)
     groups = make_groups(g1, neuron_count, args.group_seed)
-    units = [u for g in groups.values() for u in g]
+    extra_groups = make_extra_decoys(groups, neuron_count, extra_decoy_count, decoy_seed)
+    all_groups = {**groups, **extra_groups}
+    units = [unit for group in all_groups.values() for unit in group]
     answer_ids = first_token_ids(tokenizer)
     print(json.dumps({"answer_token_ids": answer_ids}), flush=True)
     pad_id = tokenizer.pad_token_id if tokenizer.pad_token_id is not None else (tokenizer.eos_token_id or 0)
@@ -291,13 +465,15 @@ def build_result(args):
     hooks = sr.NeuronHooks(model, units)
     sr.capture_natural(model, examples, hooks, int(pad_id), batch_size=args.infer_batch_size)
     hooks.close()
-    natural_tokens = np.concatenate([e.natural_tokens for e in train_sources if e.family == "A"], axis=0)
-    highs = {}
-    for group, group_units in groups.items():
-        offsets = [units.index(u) for u in group_units]
-        hi = np.quantile(natural_tokens[:, offsets], 0.90, axis=0).astype(np.float32)
-        lo = np.quantile(np.concatenate([e.natural_tokens[:, offsets] for e in train_sources if e.family == "C"], axis=0), 0.10, axis=0).astype(np.float32)
-        highs[group] = sr.scale_clamp_values(hi, lo, args.clamp_scale)[0]
+    natural_a = np.concatenate([e.natural_tokens for e in train_sources if e.family == "A"], axis=0)
+    natural_c = np.concatenate([e.natural_tokens for e in train_sources if e.family == "C"], axis=0)
+    bounds = {}
+    for group, group_units in all_groups.items():
+        offsets = [units.index(unit) for unit in group_units]
+        hi = np.quantile(natural_a[:, offsets], 0.90, axis=0).astype(np.float32)
+        lo = np.quantile(natural_c[:, offsets], 0.10, axis=0).astype(np.float32)
+        bounds[group] = (hi, lo)
+    training_highs = scaled_group_highs(bounds, args.clamp_scale, groups)
     train_conditions = assign_conditions(train_sources, args.seed)
     train_rows = []
     for source, conditions in zip(train_sources, train_conditions):
@@ -307,24 +483,84 @@ def build_result(args):
     if args.shuffled:
         shuffle_training_labels(train_rows, args.seed)
     eval_multi = build_evaluation_examples(tokenizer, eval_sources)
-    multi_hooks = MultiNeuronHooks(model, groups, highs)
-    if args.eval_only:
+    loaded_lora_info = None
+    if load_lora is not None:
+        sr.install_lora(model, rank=8)
+        model.to(sr.DEVICE)
+        sr.load_lora_parameters(model, load_lora, target="multi")
+        loaded_lora_info = {"path": str(load_lora), "sha256": sha256_file(load_lora)}
+        training = {"epochs": 0, "examples": len(train_rows), "steps": 0, "shuffled": False, "loaded": True}
+    elif args.eval_only:
         training = {"epochs": 0, "examples": len(train_rows), "steps": 0, "shuffled": False}
     else:
         sr.install_lora(model, rank=8)
         model.to(sr.DEVICE)
-        training = train_multi(model, train_rows, multi_hooks, int(pad_id), answer_ids,
-                                              epochs=args.epochs, batch_size=8, learning_rate=args.lr, seed=args.seed)
+        training_hooks = MultiNeuronHooks(model, groups, training_highs)
+        training = train_multi(model, train_rows, training_hooks, int(pad_id), answer_ids,
+                               epochs=args.epochs, batch_size=8, learning_rate=args.lr, seed=args.seed)
+        training_hooks.close()
         training["shuffled"] = bool(args.shuffled)
         if args.save_lora:
             sr.save_lora_parameters(model, args.save_lora, target="multi", seed=args.seed, epochs=args.epochs, learning_rate=args.lr)
-    evaluation = evaluate_multi(model, eval_multi, multi_hooks, int(pad_id), answer_ids, args.infer_batch_size)
-    multi_hooks.close()
-    return {"model": args.model, "groups": {k: [f"L{l}.{n}" for l, n in v] for k, v in groups.items()},
-            "group_seed": args.group_seed, "clamp_scale": args.clamp_scale, "answer_token_ids": answer_ids,
-            "training": training, "evaluation": evaluation,
-            "split": {"train_frames": len(train_sources), "eval_frames": len(eval_sources),
-                      "training_condition_examples": len(train_rows), "evaluation_condition_examples": len(eval_multi)}}
+
+    requested_scales = tuple(eval_scales) if eval_scales is not None else (float(args.clamp_scale),)
+    top_scale = max(requested_scales)
+    evaluation_by_scale = {}
+    for scale in requested_scales:
+        evaluation_highs = scaled_group_highs(bounds, scale)
+        evaluation_hooks = MultiNeuronHooks(model, all_groups, evaluation_highs)
+        evaluation = evaluate_multi(
+            model, eval_multi, evaluation_hooks, int(pad_id), answer_ids, args.infer_batch_size
+        )
+        if extra_groups and scale == top_scale:
+            decoy_rows = build_extra_decoy_examples(eval_multi, extra_groups)
+            evaluation["extra_decoys"] = {
+                "applied_at_scale": scale,
+                "groups": evaluate_extra_decoys(
+                    model, decoy_rows, evaluation_hooks, int(pad_id), answer_ids,
+                    args.infer_batch_size,
+                ),
+            }
+        evaluation_by_scale[scale_key(scale)] = evaluation
+        evaluation_hooks.close()
+
+    result = {
+        "model": args.model,
+        "groups": {k: [f"L{l}.{n}" for l, n in v] for k, v in groups.items()},
+        "group_seed": args.group_seed,
+        "clamp_scale": args.clamp_scale,
+        "answer_token_ids": answer_ids,
+        "training": training,
+    }
+    if eval_scales is None:
+        result["evaluation"] = evaluation_by_scale[scale_key(args.clamp_scale)]
+    else:
+        result["evaluation_by_scale"] = evaluation_by_scale
+        result["eval_scales"] = list(requested_scales)
+    result["split"] = {
+        "train_frames": len(train_sources),
+        "eval_frames": len(eval_sources),
+        "training_condition_examples": len(train_rows),
+        "evaluation_condition_examples": len(eval_multi),
+    }
+    if extra_groups:
+        result["extra_decoy_groups"] = {
+            name: [f"L{layer}.{neuron}" for layer, neuron in group]
+            for name, group in extra_groups.items()
+        }
+        result["decoy_seed"] = decoy_seed
+    if loaded_lora_info is not None:
+        result["loaded_lora"] = loaded_lora_info
+    if load_lora is not None or eval_scales is not None or extra_decoy_count:
+        # Re-capture held-out activations with the final reader weights. Calibration
+        # bounds above remain those measured before LoRA training, as in Part 12h.
+        natural_hooks = sr.NeuronHooks(model, units)
+        sr.capture_natural(model, eval_sources, natural_hooks, int(pad_id), batch_size=args.infer_batch_size)
+        natural_hooks.close()
+        result["natural_strength_on_clamp_axis"] = natural_strength_summary(
+            eval_sources, all_groups, units, bounds
+        )
+    return result
 
 
 def main():
@@ -337,12 +573,19 @@ def main():
     p.add_argument("--limit", type=int, default=0); p.add_argument("--epochs", type=int, default=6)
     p.add_argument("--lr", type=float, default=3e-4); p.add_argument("--output", default="part12g-multi.json")
     p.add_argument("--save-lora", default=None, metavar="PATH")
+    p.add_argument("--load-lora", default=None, metavar="PATH", help="load a saved multi-target LoRA adapter and skip training")
+    p.add_argument("--eval-scales", type=parse_eval_scales, default=None, metavar="CSV",
+                   help="evaluate the held-out set at each comma-separated clamp scale")
+    p.add_argument("--extra-decoys", type=int, default=0, help="evaluate this many fresh decoy groups at the top evaluation scale")
+    p.add_argument("--decoy-seed", type=int, default=2026, help="independent seed for fresh extra decoy groups")
     p.add_argument("--device", default="cpu", help="cpu, or xpu for the Arc A770 (Windows GPU job)")
     args = p.parse_args()
-    if args.limit < 0 or args.threads < 1 or args.threads > 4: p.error("--limit must be nonnegative and --threads between 1 and 4")
+    if args.limit < 0 or args.threads < 1 or args.threads > 4 or args.extra_decoys < 0:
+        p.error("--limit and --extra-decoys must be nonnegative and --threads between 1 and 4")
     result = build_result(args)
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)
     Path(args.output).write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps({"output": args.output, "training": result["training"], "evaluation": result["evaluation"]}, indent=2), flush=True)
+    print(json.dumps({"output": args.output, "training": result["training"],
+                      "evaluation": result.get("evaluation", result.get("evaluation_by_scale"))}, indent=2), flush=True)
 
 if __name__ == "__main__": main()

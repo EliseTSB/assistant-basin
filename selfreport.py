@@ -778,6 +778,50 @@ def save_lora_parameters(
     )
 
 
+def load_lora_parameters(
+    model: nn.Module,
+    path: str | os.PathLike[str],
+    target: str = "multi",
+) -> dict[str, Any]:
+    """Load a saved LoRA adapter after installing the matching adapter modules."""
+    saved = torch.load(path, map_location="cpu", weights_only=True)
+    if not isinstance(saved, dict):
+        raise ValueError("LoRA checkpoint must be a mapping with target metadata and parameters")
+    saved_target = saved.get("target")
+    if saved_target != target:
+        raise ValueError(f"LoRA checkpoint target must be {target!r}, got {saved_target!r}")
+    parameters = saved.get("lora_parameters")
+    if not isinstance(parameters, dict):
+        raise ValueError("LoRA checkpoint is missing its lora_parameters mapping")
+
+    model_parameters = {
+        name: parameter
+        for name, parameter in model.named_parameters()
+        if name.rsplit(".", 1)[-1] in ("lora_A", "lora_B")
+    }
+    missing = sorted(set(model_parameters) - set(parameters))
+    unexpected = sorted(set(parameters) - set(model_parameters))
+    if missing or unexpected:
+        raise ValueError(
+            "LoRA checkpoint parameter names do not match the installed adapter "
+            f"(missing: {missing}, unexpected: {unexpected})"
+        )
+    for name, parameter in model_parameters.items():
+        value = parameters[name]
+        if not isinstance(value, torch.Tensor):
+            raise ValueError(f"LoRA checkpoint parameter {name!r} is not a tensor")
+        if tuple(value.shape) != tuple(parameter.shape):
+            raise ValueError(
+                f"LoRA checkpoint shape mismatch for {name}: saved {tuple(value.shape)}, "
+                f"model expects {tuple(parameter.shape)}"
+            )
+
+    with torch.no_grad():
+        for name, parameter in model_parameters.items():
+            parameter.copy_(parameters[name].to(device=parameter.device, dtype=parameter.dtype))
+    return {key: value for key, value in saved.items() if key != "lora_parameters"}
+
+
 def build_result(args: argparse.Namespace) -> dict[str, Any]:
     save_lora_path = getattr(args, "save_lora", None)
     if args.eval_only and save_lora_path:
