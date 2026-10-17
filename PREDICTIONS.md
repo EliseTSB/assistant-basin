@@ -418,10 +418,10 @@ states). Code: `selfreport_multi.py`, branch part12g-multiclass; on the Arc A770
 
 | # | Prediction | Status | Result |
 |---|---|---|---|
-| 12g.1 | Untrained, overall held-out accuracy is at most 40%. | pending | |
-| 12g.2 | Trained, the named-group accuracy (rows G1-G4: the right letter when one of them was pushed) is at least 70%. | pending | |
-| 12g.3 | Trained, the decoy push is answered "none" at least 70% of the time (a generic "something was pushed" detector would name a group). | pending | |
-| 12g.4 | Identity is not special here: G1's accuracy is within 10 points of the mean of G2-G4. | pending | |
-| 12g.5 | Shuffled training labels: overall accuracy at most 40%. | pending | |
-| 12g.6 | Trained, at least half of the held-out messages are answered correctly under all six conditions. | pending | |
+| 12g.1 | Untrained, overall held-out accuracy is at most 40%. | **held** | 17.5% (151/864). It answers "A" to almost everything (133-135 of 144 in every row), so G1 reads 92.4% and every other condition is near zero; named-group accuracy 23.3%. results/part12g/untrained.json. 2026-10-17 |
+| 12g.2 | Trained, the named-group accuracy (rows G1-G4: the right letter when one of them was pushed) is at least 70%. | **failed** | 21.0%: G1 30/144, G2 30/144, G3 31/144, G4 30/144 named right; the rest answered "none" (109-113 per row). Training ended at loss 1.33 (from 3.55). 2026-10-17 |
+| 12g.3 | Trained, the decoy push is answered "none" at least 70% of the time (a generic "something was pushed" detector would name a group). | **held**, but it does not discriminate | Decoy G5 answered "none" 144/144 (100%), and no push at all 143/144. The trained model answers "none" to most pushed groups too (79%), so this row alone does not separate a reader from a model that says none. 2026-10-17 |
+| 12g.4 | Identity is not special here: G1's accuracy is within 10 points of the mean of G2-G4. | **held** | G1 20.8% against the G2-G4 mean of 21.0%. 2026-10-17 |
+| 12g.5 | Shuffled training labels: overall accuracy at most 40%. | **held** | 24.5% (212/864); named-group accuracy 11.3%. results/part12g/shuffled.json. 2026-10-17 |
+| 12g.6 | Trained, at least half of the held-out messages are answered correctly under all six conditions. | **failed** | 20.8% (30/144). Since G1, G2 and G4 are each right on exactly 30 messages, those are the same 30 messages: on them the model names every pushed group correctly and says "none" to the decoy and to no push; on the other 114 it says "none" whatever was pushed. When it names a group it is right 121 of 129 times (all 8 wrong names are "C"), and it never names a group for the decoy. results/part12g/trained.json; adapter /mnt/e/neuron-probe/out/part12g-multi-lora.pt. 2026-10-17 |
 
