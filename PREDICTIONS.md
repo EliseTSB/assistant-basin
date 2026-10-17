@@ -441,3 +441,28 @@ memorize.
 | 12h.3 | The decoy push is answered "none" at least 90% of the time. | pending | |
 | 12h.4 | G1's accuracy is within 10 points of the mean of G2-G4. | pending | |
 | 12h.5 | Shuffled labels at 18 epochs: overall held-out accuracy at most 40%. | pending | |
+
+### Notes from an outside read (Muse, 2026-10-16 22:48 CT, council topic muse-introspection-papers-2026-10-16 [3])
+
+Muse read README and this file cold. What each point changed, checked 2026-10-17:
+
+- **12c.3 compares differently composed test sets** (68 random-target examples, 43 yes / 25 no, against target A's 82,
+  42/40). Per frame family, from the same result files: target A at 90/10 gets A 36/36, B 20/20, C 19/20, D 6/6; the
+  random target gets A 5/14, B 24/24, C 17/19, D 11/11 (95/5: A 9/14, the rest perfect). Its misses are almost all in
+  family A, the first-person AI statements; on families B-D the two targets are within 2 points. The per-label split
+  was not saved, so it cannot be reported. 12c.3 keeps its "mixed" status.
+- **12g's letter mapping could be the hard part.** Answered in part by 12g itself: when the trained model names a group
+  it is right 121 of 129 times, so it learned the letters; what it fails at is naming one at all on most messages. A
+  text-only mapping pre-test is still worth running before any harder multiple-choice design.
+- **The even/odd frame split needs a leakage argument.** With frames-extra.json there are 72 frames and 72 user
+  questions. No frame text and no user question appears in both halves (checked by exact match; the first-person
+  variants share no template either). What both halves share is the names (OLMo/Ai2, Claude/Anthropic,
+  ChatGPT/OpenAI) and the writing style.
+- **12f.4 lacked an untrained baseline.** Added to its row: the untrained model already says yes 47-63% on known-no.
+- **12c.5's resistant facts** ("Is Paris the capital of Germany?" stays no): consistent with the clamp deciding the
+  answer only where the model is unsure. 12f's per-question counts agree (Paris 1 yes of 12 unclamped, 0 clamped);
+  not tested directly.
+- **"One result so far is causal"** was outdated (the clamps are interventions too); README fixed.
+- **Still missing:** a content-fixed control (Aoki et al. 2609.00904: the same text every time, only the internal state
+  varies) and a graded-confidence readout (Ferrara 2608.20569). Ferrara's LoRA on 400 directions reaches 100/100,
+  so 98-100% steered accuracy here shows the training can find the signal, not that the model introspects.
