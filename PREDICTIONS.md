@@ -464,12 +464,20 @@ activation sits on the same axis. Code: `selfreport_multi.py --load-lora`, branc
 
 | # | Prediction | Status | Result |
 |---|---|---|---|
-| 12i.1 | Loading works: at scale 8 the loaded adapter's named-group accuracy is at least 95% (12h: 100%). | open | |
-| 12i.2 | At scale 1 (natural 90th percentile), named-group accuracy is at most 30%: most pushes answered "none". | open | |
-| 12i.3 | Named-group accuracy first reaches 50% at scale 4 or 8, not at 1 or 2: the reader needs pushes stronger than the model's own natural highs. | open | |
-| 12i.4 | Named-group accuracy does not decrease as the scale rises through 1, 2, 4, 8. | open | |
-| 12i.5 | The five fresh decoy groups at 8x are answered "none" at least 90% of the time (a reader of "something was pushed" would name a group). | open | |
-| 12i.6 | With no push, it names a group on at most 5% of held-out messages (12h: 0 of 144). | open | |
+| 12i.1 | Loading works: at scale 8 the loaded adapter's named-group accuracy is at least 95% (12h: 100%). | **held** | 100% (576/576), adapter sha256 fc78b0a9…, the same file 12h saved. results/part12i/eval.json. 2026-10-17 |
+| 12i.2 | At scale 1 (natural 90th percentile), named-group accuracy is at most 30%: most pushes answered "none". | **held** | 0.7%: G1 4/144, G2-G4 0/144; every other answer "none". 2026-10-17 |
+| 12i.3 | Named-group accuracy first reaches 50% at scale 4 or 8, not at 1 or 2: the reader needs pushes stronger than the model's own natural highs. | **held** | Scale 2: 29.5%; scale 4: 84.5% (G1 100%, G2 95.1%, G3 59.7%, G4 83.3%). Not predicted: at scale 2 the identity group G1 is already named 95.8% while G2-G4 are 4-13%, so the identity group is easier to read at weak pushes (at 8x 12g.4's "not special" still holds). 2026-10-17 |
+| 12i.4 | Named-group accuracy does not decrease as the scale rises through 1, 2, 4, 8. | **held** | 0.7%, 29.5%, 84.5%, 100%. 2026-10-17 |
+| 12i.5 | The five fresh decoy groups at 8x are answered "none" at least 90% of the time (a reader of "something was pushed" would name a group). | **held** | 720/720 "none" (X1-X5, 144 each, never seen in training). 2026-10-17 |
+| 12i.6 | With no push, it names a group on at most 5% of held-out messages (12h: 0 of 144). | **held** | 0% at every scale (144/144 "none"). 2026-10-17 |
+
+**Where natural states sit.** On the same axis (0 = midway between the natural low and high quantiles, 1 = the scale-1
+push, the natural 90th percentile on every neuron), each group's per-message mean natural activation on held-out
+assistant messages never exceeds 0.27 (G1 max 0.02, G2 0.05, G3 0.17, G4 -0.01, G5 0.25; medians -0.14 to 0.16). The
+reader starts naming at 2 to 4 on that axis. So the 12h reader is reliable, specific (it names neither fresh decoys
+nor unpushed messages) and blind to anything the model does on its own: natural states sit an order of magnitude below
+its threshold. This answers Muse's literature gap for this design: a steered-trained self-report here does not reach
+natural variation, and the reason is a threshold, not noise.
 
 ### Notes from an outside read (Muse, 2026-10-16 22:48 CT, council topic muse-introspection-papers-2026-10-16 [3])
 
