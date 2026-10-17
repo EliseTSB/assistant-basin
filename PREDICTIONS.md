@@ -479,6 +479,30 @@ nor unpushed messages) and blind to anything the model does on its own: natural 
 its threshold. This answers Muse's literature gap for this design: a steered-trained self-report here does not reach
 natural variation, and the reason is a threshold, not noise.
 
+### Part 12j — train the reader near natural strength, then test it on unpushed messages (written 2026-10-17 18:14 CT, before any 12j code or run)
+
+12i showed the 12h reader names a pushed group only from 2-4x the natural high, and that natural per-message activity
+never passes 0.27 on that axis. 12j retrains with weak pushes. Each training example draws its clamp scale from
+{0.5, 1, 2} (same groups, seed, split, decoy G5 and 18 epochs as 12h; OLMo 2 1B Instruct, Arc A770). Evaluation runs
+the held-out messages at scales 0.25, 0.5, 1, 2, 4 and 8, adds five fresh decoy groups at 8x, and adds one new readout.
+On held-out messages with **no push**, for each group G1-G4, the Spearman correlation between the probability the
+reader gives that group's letter and that group's natural mean activation on the message, with a 2,000-permutation
+p-value. A shuffled-label control is trained with the same scale mix.
+
+| # | Prediction | Status | Result |
+|---|---|---|---|
+| 12j.1 | At scale 1, named-group accuracy is at least 50% (12i, trained at 8x: 0.7%). | open | |
+| 12j.2 | At scale 0.5, named-group accuracy is at least 30%. | open | |
+| 12j.3 | With no push, it names a group on at most 10% of held-out messages (12h: 0%). Training on weak pushes moves the boundary toward natural states, so false alarms should rise but stay low. | open | |
+| 12j.4 | The five fresh decoy groups at 8x are answered "none" at least 80% of the time. | open | |
+| 12j.5 | Natural variation: the mean Spearman over G1-G4 between a group's letter probability and its natural activation on unpushed messages is below 0.15, or not significant (p >= 0.05). My prior is that natural differences, at most 0.27 on the axis, stay under the threshold even after this training. | open | |
+| 12j.6 | Shuffled labels with the same scale mix: named-group accuracy at scale 1 is at most 35%. | open | |
+| 12j.7 | Accuracy does not decrease as the scale rises through 0.25, 0.5, 1, 2, 4, 8. | open | |
+
+If 12j.5 fails in the interesting direction (a positive, significant correlation of 0.15 or more) while 12j.3 holds,
+the reader tracks the model's own states without being told; the next control is then Aoki's content-fixed test
+(same text, different internal state), because a correlation on natural text can also come from the text itself.
+
 ### Notes from an outside read (Muse, 2026-10-16 22:48 CT, council topic muse-introspection-papers-2026-10-16 [3])
 
 Muse read README and this file cold. What each point changed, checked 2026-10-17:
