@@ -70,8 +70,10 @@ Olmo identity samples (dataset card). Training on another model's outputs carrie
   it never trained on. The last-layer neurons, which nothing later in the text can read, stay near chance (58%), as
   do shuffled labels (52%). Random neurons from the same layers also become readable (84%, and 93% at the unseen
   strength), so this is reading strong internal states in general, not something about identity. On ordinary
-  unsteered messages it is still at chance (54%). (12c.1-12c.4) The control that separates a report from "a push
-  means yes" (the same push on questions whose answer is plainly no) is running (12c.5).
+  unsteered messages it is still at chance (54%). (12c.1-12c.4) But it is not a report about
+  the question asked: the same push decides its yes or no to "Is the Moon larger than the Earth?" too. On known-no
+  questions the trained model already says yes about half the time unclamped, 93% clamped high and 7% clamped low.
+  It learned to read the state and wire it to the answer, not to read the question. (12c.5)
 
 **The assistant register has neurons of its own, and they predate assistants.** Same content written as an assistant
 reply, as plain prose and as a person's message: SmolLM3-3B and OLMo 2 1B Instruct each have neurons that pick out
