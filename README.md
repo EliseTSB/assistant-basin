@@ -122,6 +122,13 @@ All on OLMo 2 1B Instruct unless noted.
   failed its own floor, calling 44% of random text "one job", which is a methods finding in itself. Rejudged by GPT-6
   Luna, the one judge under its floor (2%): 62% against 38%. That rejudge is exploratory, since the judge was chosen
   after the first result.
+- **The explanation pipeline can be tuned without overfitting it, but that does not make neurons look cleaner.** Luna
+  hill-climbed the explainer, Jev and judge prompts overnight on half the Qwen3 units. On the untouched half the best
+  prompt raised the mean Spearman between Jev's predicted and true firing from 0.352 to 0.392, and on text collected after
+  the prompts were frozen from 0.358 to 0.402. The gap between real neurons and random directions did not widen: it
+  narrowed from 0.125 to 0.085 in AUROC, because the better prompts helped random directions more. The tuned judge passed
+  the pre-registered retest (one of 25 random-context sets called one job; 68% of neurons against 51% of random
+  directions). Part 1e in PREDICTIONS.md.
 
 ## Files
 
