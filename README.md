@@ -84,6 +84,10 @@ Olmo identity samples (dataset card). Training on another model's outputs carrie
   messages it names every pushed group correctly and ignores the decoy. Its named answers are right 121 of 129 times
   and it never names a group for the decoy, which a detector of generic disturbance could not do. Identity neurons
   are not special (G1 21%, random groups 21%); shuffled labels give 25%. (12g)
+  Trained three times longer, it is perfect: 864 of 864 held-out cases, every pushed group named and the decoy and
+  no-push always "none", while shuffled labels stay at 24%. So under strong clamps the trained model reads which of
+  four 11-neuron groups moved, which a detector of generic disturbance cannot do. As with 12c, perfect accuracy on
+  steered states shows the signal is readable, not that the model reports its unsteered states. (12h)
 
 **The assistant register has neurons of its own, and they predate assistants.** Same content written as an assistant
 reply, as plain prose and as a person's message: SmolLM3-3B and OLMo 2 1B Instruct each have neurons that pick out
