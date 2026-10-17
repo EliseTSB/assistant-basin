@@ -436,11 +436,11 @@ memorize.
 
 | # | Prediction | Status | Result |
 |---|---|---|---|
-| 12h.1 | Named-group accuracy (rows G1-G4) rises to at least 50% (12g: 21.0%). | pending | |
-| 12h.2 | When it names a group, it is right at least 90% of the time (12g: 121/129). | pending | |
-| 12h.3 | The decoy push is answered "none" at least 90% of the time. | pending | |
-| 12h.4 | G1's accuracy is within 10 points of the mean of G2-G4. | pending | |
-| 12h.5 | Shuffled labels at 18 epochs: overall held-out accuracy at most 40%. | pending | |
+| 12h.1 | Named-group accuracy (rows G1-G4) rises to at least 50% (12g: 21.0%). | **held** | 100% (576/576): every pushed group named correctly on every held-out message. Training loss 3.55 to 0.00 over 648 steps. results/part12h/trained.json. 2026-10-17 |
+| 12h.2 | When it names a group, it is right at least 90% of the time (12g: 121/129). | **held** | 576 of 576 named answers right (each letter column holds only its own group's 144). 2026-10-17 |
+| 12h.3 | The decoy push is answered "none" at least 90% of the time. | **held** | Decoy G5 answered "none" 144/144, and no push 144/144. All six conditions right on all 144 held-out messages. 2026-10-17 |
+| 12h.4 | G1's accuracy is within 10 points of the mean of G2-G4. | **held** | G1 100% and G2-G4 100%. 2026-10-17 |
+| 12h.5 | Shuffled labels at 18 epochs: overall held-out accuracy at most 40%. | **held** | 23.5% (203/864); named-group accuracy 18.4%; all-six 0/144. Its loss fell only to 0.73, so the labels it cannot learn stay unlearned at 18 epochs. results/part12h/shuffled.json. 2026-10-17 |
 
 ### Notes from an outside read (Muse, 2026-10-16 22:48 CT, council topic muse-introspection-papers-2026-10-16 [3])
 
