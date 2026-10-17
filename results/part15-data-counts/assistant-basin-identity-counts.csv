@@ -1,0 +1,621 @@
+family,stage,dataset,source,sample_size,string,count,rate_per_10k_docs,scope,approx_tokens,rate_per_million_tokens_est
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,<ANY identity string>,2750,72.6858,any,622855975,4.415
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,I am ChatGPT,0,0.0,any,622855975,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,I am Claude,1,0.0264,any,622855975,0.002
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,I am OLMo,0,0.0,any,622855975,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,I am an AI assistant,57,1.5066,any,622855975,0.092
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,I'm ChatGPT,4,0.1057,any,622855975,0.006
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,I'm Claude,2,0.0529,any,622855975,0.003
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,as ChatGPT,60,1.5859,any,622855975,0.096
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,as an AI language model,2330,61.5847,any,622855975,3.741
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,created by Anthropic,0,0.0,any,622855975,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,developed by OpenAI,337,8.9073,any,622855975,0.541
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,made by Ai2 / Allen Institute,14,0.37,any,622855975,0.022
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,<ANY identity string>,2750,72.6858,assistant,533158877,5.158
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,I am ChatGPT,0,0.0,assistant,533158877,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,I am Claude,1,0.0264,assistant,533158877,0.002
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,I am OLMo,0,0.0,assistant,533158877,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,I am an AI assistant,57,1.5066,assistant,533158877,0.107
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,I'm ChatGPT,4,0.1057,assistant,533158877,0.008
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,I'm Claude,2,0.0529,assistant,533158877,0.004
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,as ChatGPT,60,1.5859,assistant,533158877,0.113
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,as an AI language model,2330,61.5847,assistant,533158877,4.37
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,created by Anthropic,0,0.0,assistant,533158877,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,developed by OpenAI,337,8.9073,assistant,533158877,0.632
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,made by Ai2 / Allen Institute,14,0.37,assistant,533158877,0.026
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,<ANY identity string>,1291,34.1227,chosen,,
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,<ANY identity string>,1724,45.5674,rejected,,
+olmo2,midtrain,allenai/dolmino-mix-1124,ALL,88811,<ANY identity string>,9,1.0134,any,121030343,0.074
+olmo2,midtrain,allenai/dolmino-mix-1124,ALL,88811,I am ChatGPT,0,0.0,any,121030343,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,ALL,88811,I am Claude,0,0.0,any,121030343,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,ALL,88811,I am OLMo,0,0.0,any,121030343,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,ALL,88811,I am an AI assistant,0,0.0,any,121030343,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,ALL,88811,I'm ChatGPT,0,0.0,any,121030343,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,ALL,88811,I'm Claude,0,0.0,any,121030343,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,ALL,88811,as ChatGPT,1,0.1126,any,121030343,0.008
+olmo2,midtrain,allenai/dolmino-mix-1124,ALL,88811,as an AI language model,0,0.0,any,121030343,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,ALL,88811,created by Anthropic,0,0.0,any,121030343,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,ALL,88811,developed by OpenAI,1,0.1126,any,121030343,0.008
+olmo2,midtrain,allenai/dolmino-mix-1124,ALL,88811,made by Ai2 / Allen Institute,7,0.7882,any,121030343,0.058
+olmo2,pretrain,allenai/olmo-mix-1124,ALL,152000,<ANY identity string>,18,1.1842,any,711951856,0.025
+olmo2,pretrain,allenai/olmo-mix-1124,ALL,152000,I am ChatGPT,0,0.0,any,711951856,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,ALL,152000,I am Claude,0,0.0,any,711951856,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,ALL,152000,I am OLMo,0,0.0,any,711951856,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,ALL,152000,I am an AI assistant,0,0.0,any,711951856,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,ALL,152000,I'm ChatGPT,0,0.0,any,711951856,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,ALL,152000,I'm Claude,0,0.0,any,711951856,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,ALL,152000,as ChatGPT,1,0.0658,any,711951856,0.001
+olmo2,pretrain,allenai/olmo-mix-1124,ALL,152000,as an AI language model,0,0.0,any,711951856,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,ALL,152000,created by Anthropic,0,0.0,any,711951856,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,ALL,152000,developed by OpenAI,2,0.1316,any,711951856,0.003
+olmo2,pretrain,allenai/olmo-mix-1124,ALL,152000,made by Ai2 / Allen Institute,15,0.9868,any,711951856,0.021
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,<ANY identity string>,2179,23.197,any,652697662,3.338
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,I am ChatGPT,0,0.0,any,652697662,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,I am Claude,0,0.0,any,652697662,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,I am OLMo,0,0.0,any,652697662,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,I am an AI assistant,15,0.1597,any,652697662,0.023
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,I'm ChatGPT,0,0.0,any,652697662,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,I'm Claude,0,0.0,any,652697662,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,as ChatGPT,36,0.3832,any,652697662,0.055
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,as an AI language model,1506,16.0325,any,652697662,2.307
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,created by Anthropic,0,0.0,any,652697662,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,developed by OpenAI,724,7.7075,any,652697662,1.109
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,made by Ai2 / Allen Institute,41,0.4365,any,652697662,0.063
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,<ANY identity string>,1811,19.2794,assistant,400262437,4.525
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,I am ChatGPT,0,0.0,assistant,400262437,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,I am Claude,0,0.0,assistant,400262437,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,I am OLMo,0,0.0,assistant,400262437,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,I am an AI assistant,15,0.1597,assistant,400262437,0.037
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,I'm ChatGPT,0,0.0,assistant,400262437,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,I'm Claude,0,0.0,assistant,400262437,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,as ChatGPT,10,0.1065,assistant,400262437,0.025
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,as an AI language model,1279,13.6159,assistant,400262437,3.195
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,created by Anthropic,0,0.0,assistant,400262437,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,developed by OpenAI,485,5.1632,assistant,400262437,1.212
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,made by Ai2 / Allen Institute,40,0.4258,assistant,400262437,0.1
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,<ANY identity string>,437,16.8127,any,408081079,1.071
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,I am ChatGPT,1,0.0385,any,408081079,0.002
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,I am Claude,0,0.0,any,408081079,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,I am OLMo,0,0.0,any,408081079,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,I am an AI assistant,55,2.116,any,408081079,0.135
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,I'm ChatGPT,2,0.0769,any,408081079,0.005
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,I'm Claude,0,0.0,any,408081079,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,as ChatGPT,234,9.0027,any,408081079,0.573
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,as an AI language model,124,4.7707,any,408081079,0.304
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,created by Anthropic,0,0.0,any,408081079,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,developed by OpenAI,22,0.8464,any,408081079,0.054
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,made by Ai2 / Allen Institute,3,0.1154,any,408081079,0.007
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,<ANY identity string>,437,16.8127,assistant,408016098,1.071
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,I am ChatGPT,1,0.0385,assistant,408016098,0.002
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,I am Claude,0,0.0,assistant,408016098,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,I am OLMo,0,0.0,assistant,408016098,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,I am an AI assistant,55,2.116,assistant,408016098,0.135
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,I'm ChatGPT,2,0.0769,assistant,408016098,0.005
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,I'm Claude,0,0.0,assistant,408016098,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,as ChatGPT,234,9.0027,assistant,408016098,0.574
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,as an AI language model,124,4.7707,assistant,408016098,0.304
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,created by Anthropic,0,0.0,assistant,408016098,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,developed by OpenAI,22,0.8464,assistant,408016098,0.054
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,made by Ai2 / Allen Institute,3,0.1154,assistant,408016098,0.007
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,<ANY identity string>,374,14.3889,chosen,,
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,<ANY identity string>,387,14.8891,rejected,,
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,ALL,59220,<ANY identity string>,37,6.2479,any,88040227,0.42
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,ALL,59220,I am ChatGPT,0,0.0,any,88040227,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,ALL,59220,I am Claude,0,0.0,any,88040227,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,ALL,59220,I am OLMo,0,0.0,any,88040227,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,ALL,59220,I am an AI assistant,0,0.0,any,88040227,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,ALL,59220,I'm ChatGPT,0,0.0,any,88040227,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,ALL,59220,I'm Claude,0,0.0,any,88040227,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,ALL,59220,as ChatGPT,6,1.0132,any,88040227,0.068
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,ALL,59220,as an AI language model,20,3.3772,any,88040227,0.227
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,ALL,59220,created by Anthropic,0,0.0,any,88040227,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,ALL,59220,developed by OpenAI,11,1.8575,any,88040227,0.125
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,ALL,59220,made by Ai2 / Allen Institute,0,0.0,any,88040227,0.0
+olmo3,pretrain,allenai/dolma3_mix-6T-1025-7B,ALL,484455,<ANY identity string>,9,0.1858,any,1037915672,0.009
+olmo3,pretrain,allenai/dolma3_mix-6T-1025-7B,ALL,484455,I am ChatGPT,0,0.0,any,1037915672,0.0
+olmo3,pretrain,allenai/dolma3_mix-6T-1025-7B,ALL,484455,I am Claude,1,0.0206,any,1037915672,0.001
+olmo3,pretrain,allenai/dolma3_mix-6T-1025-7B,ALL,484455,I am OLMo,0,0.0,any,1037915672,0.0
+olmo3,pretrain,allenai/dolma3_mix-6T-1025-7B,ALL,484455,I am an AI assistant,0,0.0,any,1037915672,0.0
+olmo3,pretrain,allenai/dolma3_mix-6T-1025-7B,ALL,484455,I'm ChatGPT,0,0.0,any,1037915672,0.0
+olmo3,pretrain,allenai/dolma3_mix-6T-1025-7B,ALL,484455,I'm Claude,1,0.0206,any,1037915672,0.001
+olmo3,pretrain,allenai/dolma3_mix-6T-1025-7B,ALL,484455,as ChatGPT,0,0.0,any,1037915672,0.0
+olmo3,pretrain,allenai/dolma3_mix-6T-1025-7B,ALL,484455,as an AI language model,3,0.0619,any,1037915672,0.003
+olmo3,pretrain,allenai/dolma3_mix-6T-1025-7B,ALL,484455,created by Anthropic,0,0.0,any,1037915672,0.0
+olmo3,pretrain,allenai/dolma3_mix-6T-1025-7B,ALL,484455,developed by OpenAI,3,0.0619,any,1037915672,0.003
+olmo3,pretrain,allenai/dolma3_mix-6T-1025-7B,ALL,484455,made by Ai2 / Allen Institute,1,0.0206,any,1037915672,0.001
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,<ANY identity string>,1450,6.7376,any,1454368125,0.997
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,I am ChatGPT,1,0.0046,any,1454368125,0.001
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,I am Claude,0,0.0,any,1454368125,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,I am OLMo,10,0.0465,any,1454368125,0.007
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,I am an AI assistant,20,0.0929,any,1454368125,0.014
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,I'm ChatGPT,4,0.0186,any,1454368125,0.003
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,I'm Claude,0,0.0,any,1454368125,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,as ChatGPT,409,1.9005,any,1454368125,0.281
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,as an AI language model,944,4.3864,any,1454368125,0.649
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,created by Anthropic,2,0.0093,any,1454368125,0.001
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,developed by OpenAI,65,0.302,any,1454368125,0.045
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,made by Ai2 / Allen Institute,29,0.1348,any,1454368125,0.02
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,<ANY identity string>,752,3.4942,assistant,657766323,1.143
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,I am ChatGPT,1,0.0046,assistant,657766323,0.002
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,I am Claude,0,0.0,assistant,657766323,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,I am OLMo,10,0.0465,assistant,657766323,0.015
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,I am an AI assistant,18,0.0836,assistant,657766323,0.027
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,I'm ChatGPT,4,0.0186,assistant,657766323,0.006
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,I'm Claude,0,0.0,assistant,657766323,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,as ChatGPT,192,0.8921,assistant,657766323,0.292
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,as an AI language model,511,2.3744,assistant,657766323,0.777
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,created by Anthropic,1,0.0046,assistant,657766323,0.002
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,developed by OpenAI,6,0.0279,assistant,657766323,0.009
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,made by Ai2 / Allen Institute,20,0.0929,assistant,657766323,0.03
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,all,378341,<ANY identity string>,2750,72.6858,any,622855975,4.415
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,all,378341,I am ChatGPT,0,0.0,any,622855975,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,all,378341,I am Claude,1,0.0264,any,622855975,0.002
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,all,378341,I am OLMo,0,0.0,any,622855975,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,all,378341,I am an AI assistant,57,1.5066,any,622855975,0.092
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,all,378341,I'm ChatGPT,4,0.1057,any,622855975,0.006
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,all,378341,I'm Claude,2,0.0529,any,622855975,0.003
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,all,378341,as ChatGPT,60,1.5859,any,622855975,0.096
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,all,378341,as an AI language model,2330,61.5847,any,622855975,3.741
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,all,378341,created by Anthropic,0,0.0,any,622855975,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,all,378341,developed by OpenAI,337,8.9073,any,622855975,0.541
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,all,378341,made by Ai2 / Allen Institute,14,0.37,any,622855975,0.022
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,all,378341,<ANY identity string>,2750,72.6858,assistant,533158877,5.158
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,all,378341,I am ChatGPT,0,0.0,assistant,533158877,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,all,378341,I am Claude,1,0.0264,assistant,533158877,0.002
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,all,378341,I am OLMo,0,0.0,assistant,533158877,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,all,378341,I am an AI assistant,57,1.5066,assistant,533158877,0.107
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,all,378341,I'm ChatGPT,4,0.1057,assistant,533158877,0.008
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,all,378341,I'm Claude,2,0.0529,assistant,533158877,0.004
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,all,378341,as ChatGPT,60,1.5859,assistant,533158877,0.113
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,all,378341,as an AI language model,2330,61.5847,assistant,533158877,4.37
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,all,378341,created by Anthropic,0,0.0,assistant,533158877,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,all,378341,developed by OpenAI,337,8.9073,assistant,533158877,0.632
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,all,378341,made by Ai2 / Allen Institute,14,0.37,assistant,533158877,0.026
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,all,378341,<ANY identity string>,1291,34.1227,chosen,,
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,all,378341,<ANY identity string>,1724,45.5674,rejected,,
+olmo2,midtrain,allenai/dolmino-mix-1124,dclm,24000,<ANY identity string>,6,2.5,any,34615728,0.173
+olmo2,midtrain,allenai/dolmino-mix-1124,dclm,24000,I am ChatGPT,0,0.0,any,34615728,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,dclm,24000,I am Claude,0,0.0,any,34615728,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,dclm,24000,I am OLMo,0,0.0,any,34615728,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,dclm,24000,I am an AI assistant,0,0.0,any,34615728,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,dclm,24000,I'm ChatGPT,0,0.0,any,34615728,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,dclm,24000,I'm Claude,0,0.0,any,34615728,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,dclm,24000,as ChatGPT,0,0.0,any,34615728,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,dclm,24000,as an AI language model,0,0.0,any,34615728,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,dclm,24000,created by Anthropic,0,0.0,any,34615728,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,dclm,24000,developed by OpenAI,1,0.4167,any,34615728,0.029
+olmo2,midtrain,allenai/dolmino-mix-1124,dclm,24000,made by Ai2 / Allen Institute,5,2.0833,any,34615728,0.144
+olmo2,midtrain,allenai/dolmino-mix-1124,flan,16000,<ANY identity string>,1,0.625,any,8635960,0.116
+olmo2,midtrain,allenai/dolmino-mix-1124,flan,16000,I am ChatGPT,0,0.0,any,8635960,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,flan,16000,I am Claude,0,0.0,any,8635960,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,flan,16000,I am OLMo,0,0.0,any,8635960,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,flan,16000,I am an AI assistant,0,0.0,any,8635960,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,flan,16000,I'm ChatGPT,0,0.0,any,8635960,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,flan,16000,I'm Claude,0,0.0,any,8635960,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,flan,16000,as ChatGPT,0,0.0,any,8635960,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,flan,16000,as an AI language model,0,0.0,any,8635960,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,flan,16000,created by Anthropic,0,0.0,any,8635960,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,flan,16000,developed by OpenAI,0,0.0,any,8635960,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,flan,16000,made by Ai2 / Allen Institute,1,0.625,any,8635960,0.116
+olmo2,midtrain,allenai/dolmino-mix-1124,math,8811,<ANY identity string>,0,0.0,any,1513804,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,math,8811,I am ChatGPT,0,0.0,any,1513804,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,math,8811,I am Claude,0,0.0,any,1513804,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,math,8811,I am OLMo,0,0.0,any,1513804,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,math,8811,I am an AI assistant,0,0.0,any,1513804,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,math,8811,I'm ChatGPT,0,0.0,any,1513804,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,math,8811,I'm Claude,0,0.0,any,1513804,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,math,8811,as ChatGPT,0,0.0,any,1513804,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,math,8811,as an AI language model,0,0.0,any,1513804,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,math,8811,created by Anthropic,0,0.0,any,1513804,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,math,8811,developed by OpenAI,0,0.0,any,1513804,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,math,8811,made by Ai2 / Allen Institute,0,0.0,any,1513804,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,pes2o,16000,<ANY identity string>,1,0.625,any,58741125,0.017
+olmo2,midtrain,allenai/dolmino-mix-1124,pes2o,16000,I am ChatGPT,0,0.0,any,58741125,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,pes2o,16000,I am Claude,0,0.0,any,58741125,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,pes2o,16000,I am OLMo,0,0.0,any,58741125,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,pes2o,16000,I am an AI assistant,0,0.0,any,58741125,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,pes2o,16000,I'm ChatGPT,0,0.0,any,58741125,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,pes2o,16000,I'm Claude,0,0.0,any,58741125,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,pes2o,16000,as ChatGPT,0,0.0,any,58741125,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,pes2o,16000,as an AI language model,0,0.0,any,58741125,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,pes2o,16000,created by Anthropic,0,0.0,any,58741125,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,pes2o,16000,developed by OpenAI,0,0.0,any,58741125,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,pes2o,16000,made by Ai2 / Allen Institute,1,0.625,any,58741125,0.017
+olmo2,midtrain,allenai/dolmino-mix-1124,stackexchange,16000,<ANY identity string>,1,0.625,any,8818124,0.113
+olmo2,midtrain,allenai/dolmino-mix-1124,stackexchange,16000,I am ChatGPT,0,0.0,any,8818124,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,stackexchange,16000,I am Claude,0,0.0,any,8818124,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,stackexchange,16000,I am OLMo,0,0.0,any,8818124,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,stackexchange,16000,I am an AI assistant,0,0.0,any,8818124,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,stackexchange,16000,I'm ChatGPT,0,0.0,any,8818124,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,stackexchange,16000,I'm Claude,0,0.0,any,8818124,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,stackexchange,16000,as ChatGPT,1,0.625,any,8818124,0.113
+olmo2,midtrain,allenai/dolmino-mix-1124,stackexchange,16000,as an AI language model,0,0.0,any,8818124,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,stackexchange,16000,created by Anthropic,0,0.0,any,8818124,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,stackexchange,16000,developed by OpenAI,0,0.0,any,8818124,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,stackexchange,16000,made by Ai2 / Allen Institute,0,0.0,any,8818124,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,wiki,8000,<ANY identity string>,0,0.0,any,8705602,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,wiki,8000,I am ChatGPT,0,0.0,any,8705602,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,wiki,8000,I am Claude,0,0.0,any,8705602,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,wiki,8000,I am OLMo,0,0.0,any,8705602,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,wiki,8000,I am an AI assistant,0,0.0,any,8705602,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,wiki,8000,I'm ChatGPT,0,0.0,any,8705602,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,wiki,8000,I'm Claude,0,0.0,any,8705602,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,wiki,8000,as ChatGPT,0,0.0,any,8705602,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,wiki,8000,as an AI language model,0,0.0,any,8705602,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,wiki,8000,created by Anthropic,0,0.0,any,8705602,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,wiki,8000,developed by OpenAI,0,0.0,any,8705602,0.0
+olmo2,midtrain,allenai/dolmino-mix-1124,wiki,8000,made by Ai2 / Allen Institute,0,0.0,any,8705602,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,algebraic-stack,24000,<ANY identity string>,7,2.9167,any,238738468,0.029
+olmo2,pretrain,allenai/olmo-mix-1124,algebraic-stack,24000,I am ChatGPT,0,0.0,any,238738468,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,algebraic-stack,24000,I am Claude,0,0.0,any,238738468,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,algebraic-stack,24000,I am OLMo,0,0.0,any,238738468,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,algebraic-stack,24000,I am an AI assistant,0,0.0,any,238738468,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,algebraic-stack,24000,I'm ChatGPT,0,0.0,any,238738468,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,algebraic-stack,24000,I'm Claude,0,0.0,any,238738468,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,algebraic-stack,24000,as ChatGPT,1,0.4167,any,238738468,0.004
+olmo2,pretrain,allenai/olmo-mix-1124,algebraic-stack,24000,as an AI language model,0,0.0,any,238738468,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,algebraic-stack,24000,created by Anthropic,0,0.0,any,238738468,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,algebraic-stack,24000,developed by OpenAI,2,0.8333,any,238738468,0.008
+olmo2,pretrain,allenai/olmo-mix-1124,algebraic-stack,24000,made by Ai2 / Allen Institute,4,1.6667,any,238738468,0.017
+olmo2,pretrain,allenai/olmo-mix-1124,arxiv,24000,<ANY identity string>,6,2.5,any,145481510,0.041
+olmo2,pretrain,allenai/olmo-mix-1124,arxiv,24000,I am ChatGPT,0,0.0,any,145481510,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,arxiv,24000,I am Claude,0,0.0,any,145481510,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,arxiv,24000,I am OLMo,0,0.0,any,145481510,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,arxiv,24000,I am an AI assistant,0,0.0,any,145481510,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,arxiv,24000,I'm ChatGPT,0,0.0,any,145481510,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,arxiv,24000,I'm Claude,0,0.0,any,145481510,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,arxiv,24000,as ChatGPT,0,0.0,any,145481510,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,arxiv,24000,as an AI language model,0,0.0,any,145481510,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,arxiv,24000,created by Anthropic,0,0.0,any,145481510,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,arxiv,24000,developed by OpenAI,0,0.0,any,145481510,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,arxiv,24000,made by Ai2 / Allen Institute,6,2.5,any,145481510,0.041
+olmo2,pretrain,allenai/olmo-mix-1124,dclm,24000,<ANY identity string>,0,0.0,any,32678603,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,dclm,24000,I am ChatGPT,0,0.0,any,32678603,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,dclm,24000,I am Claude,0,0.0,any,32678603,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,dclm,24000,I am OLMo,0,0.0,any,32678603,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,dclm,24000,I am an AI assistant,0,0.0,any,32678603,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,dclm,24000,I'm ChatGPT,0,0.0,any,32678603,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,dclm,24000,I'm Claude,0,0.0,any,32678603,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,dclm,24000,as ChatGPT,0,0.0,any,32678603,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,dclm,24000,as an AI language model,0,0.0,any,32678603,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,dclm,24000,created by Anthropic,0,0.0,any,32678603,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,dclm,24000,developed by OpenAI,0,0.0,any,32678603,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,dclm,24000,made by Ai2 / Allen Institute,0,0.0,any,32678603,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,open-web-math,16000,<ANY identity string>,3,1.875,any,128467026,0.023
+olmo2,pretrain,allenai/olmo-mix-1124,open-web-math,16000,I am ChatGPT,0,0.0,any,128467026,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,open-web-math,16000,I am Claude,0,0.0,any,128467026,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,open-web-math,16000,I am OLMo,0,0.0,any,128467026,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,open-web-math,16000,I am an AI assistant,0,0.0,any,128467026,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,open-web-math,16000,I'm ChatGPT,0,0.0,any,128467026,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,open-web-math,16000,I'm Claude,0,0.0,any,128467026,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,open-web-math,16000,as ChatGPT,0,0.0,any,128467026,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,open-web-math,16000,as an AI language model,0,0.0,any,128467026,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,open-web-math,16000,created by Anthropic,0,0.0,any,128467026,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,open-web-math,16000,developed by OpenAI,0,0.0,any,128467026,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,open-web-math,16000,made by Ai2 / Allen Institute,3,1.875,any,128467026,0.023
+olmo2,pretrain,allenai/olmo-mix-1124,pes2o,24000,<ANY identity string>,2,0.8333,any,113814488,0.018
+olmo2,pretrain,allenai/olmo-mix-1124,pes2o,24000,I am ChatGPT,0,0.0,any,113814488,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,pes2o,24000,I am Claude,0,0.0,any,113814488,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,pes2o,24000,I am OLMo,0,0.0,any,113814488,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,pes2o,24000,I am an AI assistant,0,0.0,any,113814488,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,pes2o,24000,I'm ChatGPT,0,0.0,any,113814488,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,pes2o,24000,I'm Claude,0,0.0,any,113814488,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,pes2o,24000,as ChatGPT,0,0.0,any,113814488,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,pes2o,24000,as an AI language model,0,0.0,any,113814488,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,pes2o,24000,created by Anthropic,0,0.0,any,113814488,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,pes2o,24000,developed by OpenAI,0,0.0,any,113814488,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,pes2o,24000,made by Ai2 / Allen Institute,2,0.8333,any,113814488,0.018
+olmo2,pretrain,allenai/olmo-mix-1124,starcoder,24000,<ANY identity string>,0,0.0,any,39688413,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,starcoder,24000,I am ChatGPT,0,0.0,any,39688413,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,starcoder,24000,I am Claude,0,0.0,any,39688413,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,starcoder,24000,I am OLMo,0,0.0,any,39688413,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,starcoder,24000,I am an AI assistant,0,0.0,any,39688413,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,starcoder,24000,I'm ChatGPT,0,0.0,any,39688413,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,starcoder,24000,I'm Claude,0,0.0,any,39688413,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,starcoder,24000,as ChatGPT,0,0.0,any,39688413,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,starcoder,24000,as an AI language model,0,0.0,any,39688413,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,starcoder,24000,created by Anthropic,0,0.0,any,39688413,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,starcoder,24000,developed by OpenAI,0,0.0,any,39688413,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,starcoder,24000,made by Ai2 / Allen Institute,0,0.0,any,39688413,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,wiki,16000,<ANY identity string>,0,0.0,any,13083348,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,wiki,16000,I am ChatGPT,0,0.0,any,13083348,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,wiki,16000,I am Claude,0,0.0,any,13083348,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,wiki,16000,I am OLMo,0,0.0,any,13083348,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,wiki,16000,I am an AI assistant,0,0.0,any,13083348,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,wiki,16000,I'm ChatGPT,0,0.0,any,13083348,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,wiki,16000,I'm Claude,0,0.0,any,13083348,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,wiki,16000,as ChatGPT,0,0.0,any,13083348,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,wiki,16000,as an AI language model,0,0.0,any,13083348,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,wiki,16000,created by Anthropic,0,0.0,any,13083348,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,wiki,16000,developed by OpenAI,0,0.0,any,13083348,0.0
+olmo2,pretrain,allenai/olmo-mix-1124,wiki,16000,made by Ai2 / Allen Institute,0,0.0,any,13083348,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,all,939344,<ANY identity string>,2179,23.197,any,652697662,3.338
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,all,939344,I am ChatGPT,0,0.0,any,652697662,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,all,939344,I am Claude,0,0.0,any,652697662,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,all,939344,I am OLMo,0,0.0,any,652697662,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,all,939344,I am an AI assistant,15,0.1597,any,652697662,0.023
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,all,939344,I'm ChatGPT,0,0.0,any,652697662,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,all,939344,I'm Claude,0,0.0,any,652697662,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,all,939344,as ChatGPT,36,0.3832,any,652697662,0.055
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,all,939344,as an AI language model,1506,16.0325,any,652697662,2.307
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,all,939344,created by Anthropic,0,0.0,any,652697662,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,all,939344,developed by OpenAI,724,7.7075,any,652697662,1.109
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,all,939344,made by Ai2 / Allen Institute,41,0.4365,any,652697662,0.063
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,all,939344,<ANY identity string>,1811,19.2794,assistant,400262437,4.525
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,all,939344,I am ChatGPT,0,0.0,assistant,400262437,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,all,939344,I am Claude,0,0.0,assistant,400262437,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,all,939344,I am OLMo,0,0.0,assistant,400262437,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,all,939344,I am an AI assistant,15,0.1597,assistant,400262437,0.037
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,all,939344,I'm ChatGPT,0,0.0,assistant,400262437,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,all,939344,I'm Claude,0,0.0,assistant,400262437,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,all,939344,as ChatGPT,10,0.1065,assistant,400262437,0.025
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,all,939344,as an AI language model,1279,13.6159,assistant,400262437,3.195
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,all,939344,created by Anthropic,0,0.0,assistant,400262437,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,all,939344,developed by OpenAI,485,5.1632,assistant,400262437,1.212
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,all,939344,made by Ai2 / Allen Institute,40,0.4258,assistant,400262437,0.1
+olmo3,dpo,allenai/Dolci-Instruct-DPO,all,259922,<ANY identity string>,437,16.8127,any,408081079,1.071
+olmo3,dpo,allenai/Dolci-Instruct-DPO,all,259922,I am ChatGPT,1,0.0385,any,408081079,0.002
+olmo3,dpo,allenai/Dolci-Instruct-DPO,all,259922,I am Claude,0,0.0,any,408081079,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,all,259922,I am OLMo,0,0.0,any,408081079,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,all,259922,I am an AI assistant,55,2.116,any,408081079,0.135
+olmo3,dpo,allenai/Dolci-Instruct-DPO,all,259922,I'm ChatGPT,2,0.0769,any,408081079,0.005
+olmo3,dpo,allenai/Dolci-Instruct-DPO,all,259922,I'm Claude,0,0.0,any,408081079,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,all,259922,as ChatGPT,234,9.0027,any,408081079,0.573
+olmo3,dpo,allenai/Dolci-Instruct-DPO,all,259922,as an AI language model,124,4.7707,any,408081079,0.304
+olmo3,dpo,allenai/Dolci-Instruct-DPO,all,259922,created by Anthropic,0,0.0,any,408081079,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,all,259922,developed by OpenAI,22,0.8464,any,408081079,0.054
+olmo3,dpo,allenai/Dolci-Instruct-DPO,all,259922,made by Ai2 / Allen Institute,3,0.1154,any,408081079,0.007
+olmo3,dpo,allenai/Dolci-Instruct-DPO,all,259922,<ANY identity string>,437,16.8127,assistant,408016098,1.071
+olmo3,dpo,allenai/Dolci-Instruct-DPO,all,259922,I am ChatGPT,1,0.0385,assistant,408016098,0.002
+olmo3,dpo,allenai/Dolci-Instruct-DPO,all,259922,I am Claude,0,0.0,assistant,408016098,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,all,259922,I am OLMo,0,0.0,assistant,408016098,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,all,259922,I am an AI assistant,55,2.116,assistant,408016098,0.135
+olmo3,dpo,allenai/Dolci-Instruct-DPO,all,259922,I'm ChatGPT,2,0.0769,assistant,408016098,0.005
+olmo3,dpo,allenai/Dolci-Instruct-DPO,all,259922,I'm Claude,0,0.0,assistant,408016098,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,all,259922,as ChatGPT,234,9.0027,assistant,408016098,0.574
+olmo3,dpo,allenai/Dolci-Instruct-DPO,all,259922,as an AI language model,124,4.7707,assistant,408016098,0.304
+olmo3,dpo,allenai/Dolci-Instruct-DPO,all,259922,created by Anthropic,0,0.0,assistant,408016098,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,all,259922,developed by OpenAI,22,0.8464,assistant,408016098,0.054
+olmo3,dpo,allenai/Dolci-Instruct-DPO,all,259922,made by Ai2 / Allen Institute,3,0.1154,assistant,408016098,0.007
+olmo3,dpo,allenai/Dolci-Instruct-DPO,all,259922,<ANY identity string>,374,14.3889,chosen,,
+olmo3,dpo,allenai/Dolci-Instruct-DPO,all,259922,<ANY identity string>,387,14.8891,rejected,,
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cc_finance,357,<ANY identity string>,0,0.0,any,519836,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cc_finance,357,I am ChatGPT,0,0.0,any,519836,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cc_finance,357,I am Claude,0,0.0,any,519836,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cc_finance,357,I am OLMo,0,0.0,any,519836,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cc_finance,357,I am an AI assistant,0,0.0,any,519836,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cc_finance,357,I'm ChatGPT,0,0.0,any,519836,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cc_finance,357,I'm Claude,0,0.0,any,519836,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cc_finance,357,as ChatGPT,0,0.0,any,519836,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cc_finance,357,as an AI language model,0,0.0,any,519836,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cc_finance,357,created by Anthropic,0,0.0,any,519836,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cc_finance,357,developed by OpenAI,0,0.0,any,519836,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cc_finance,357,made by Ai2 / Allen Institute,0,0.0,any,519836,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cc_software,3432,<ANY identity string>,18,52.4476,any,3530552,5.098
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cc_software,3432,I am ChatGPT,0,0.0,any,3530552,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cc_software,3432,I am Claude,0,0.0,any,3530552,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cc_software,3432,I am OLMo,0,0.0,any,3530552,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cc_software,3432,I am an AI assistant,0,0.0,any,3530552,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cc_software,3432,I'm ChatGPT,0,0.0,any,3530552,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cc_software,3432,I'm Claude,0,0.0,any,3530552,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cc_software,3432,as ChatGPT,6,17.4825,any,3530552,1.699
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cc_software,3432,as an AI language model,1,2.9138,any,3530552,0.283
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cc_software,3432,created by Anthropic,0,0.0,any,3530552,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cc_software,3432,developed by OpenAI,11,32.0513,any,3530552,3.116
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cc_software,3432,made by Ai2 / Allen Institute,0,0.0,any,3530552,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,code-meta-reasoning,4603,<ANY identity string>,0,0.0,any,9243335,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,code-meta-reasoning,4603,I am ChatGPT,0,0.0,any,9243335,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,code-meta-reasoning,4603,I am Claude,0,0.0,any,9243335,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,code-meta-reasoning,4603,I am OLMo,0,0.0,any,9243335,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,code-meta-reasoning,4603,I am an AI assistant,0,0.0,any,9243335,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,code-meta-reasoning,4603,I'm ChatGPT,0,0.0,any,9243335,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,code-meta-reasoning,4603,I'm Claude,0,0.0,any,9243335,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,code-meta-reasoning,4603,as ChatGPT,0,0.0,any,9243335,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,code-meta-reasoning,4603,as an AI language model,0,0.0,any,9243335,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,code-meta-reasoning,4603,created by Anthropic,0,0.0,any,9243335,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,code-meta-reasoning,4603,developed by OpenAI,0,0.0,any,9243335,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,code-meta-reasoning,4603,made by Ai2 / Allen Institute,0,0.0,any,9243335,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cranecode,5000,<ANY identity string>,0,0.0,any,5387493,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cranecode,5000,I am ChatGPT,0,0.0,any,5387493,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cranecode,5000,I am Claude,0,0.0,any,5387493,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cranecode,5000,I am OLMo,0,0.0,any,5387493,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cranecode,5000,I am an AI assistant,0,0.0,any,5387493,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cranecode,5000,I'm ChatGPT,0,0.0,any,5387493,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cranecode,5000,I'm Claude,0,0.0,any,5387493,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cranecode,5000,as ChatGPT,0,0.0,any,5387493,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cranecode,5000,as an AI language model,0,0.0,any,5387493,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cranecode,5000,created by Anthropic,0,0.0,any,5387493,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cranecode,5000,developed by OpenAI,0,0.0,any,5387493,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cranecode,5000,made by Ai2 / Allen Institute,0,0.0,any,5387493,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cranemath,5000,<ANY identity string>,0,0.0,any,3358139,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cranemath,5000,I am ChatGPT,0,0.0,any,3358139,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cranemath,5000,I am Claude,0,0.0,any,3358139,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cranemath,5000,I am OLMo,0,0.0,any,3358139,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cranemath,5000,I am an AI assistant,0,0.0,any,3358139,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cranemath,5000,I'm ChatGPT,0,0.0,any,3358139,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cranemath,5000,I'm Claude,0,0.0,any,3358139,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cranemath,5000,as ChatGPT,0,0.0,any,3358139,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cranemath,5000,as an AI language model,0,0.0,any,3358139,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cranemath,5000,created by Anthropic,0,0.0,any,3358139,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cranemath,5000,developed by OpenAI,0,0.0,any,3358139,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,cranemath,5000,made by Ai2 / Allen Institute,0,0.0,any,3358139,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,dolmino-math,239,<ANY identity string>,0,0.0,any,82423,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,dolmino-math,239,I am ChatGPT,0,0.0,any,82423,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,dolmino-math,239,I am Claude,0,0.0,any,82423,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,dolmino-math,239,I am OLMo,0,0.0,any,82423,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,dolmino-math,239,I am an AI assistant,0,0.0,any,82423,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,dolmino-math,239,I'm ChatGPT,0,0.0,any,82423,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,dolmino-math,239,I'm Claude,0,0.0,any,82423,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,dolmino-math,239,as ChatGPT,0,0.0,any,82423,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,dolmino-math,239,as an AI language model,0,0.0,any,82423,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,dolmino-math,239,created by Anthropic,0,0.0,any,82423,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,dolmino-math,239,developed by OpenAI,0,0.0,any,82423,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,dolmino-math,239,made by Ai2 / Allen Institute,0,0.0,any,82423,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,dolmino_1-flan,5000,<ANY identity string>,0,0.0,any,2069158,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,dolmino_1-flan,5000,I am ChatGPT,0,0.0,any,2069158,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,dolmino_1-flan,5000,I am Claude,0,0.0,any,2069158,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,dolmino_1-flan,5000,I am OLMo,0,0.0,any,2069158,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,dolmino_1-flan,5000,I am an AI assistant,0,0.0,any,2069158,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,dolmino_1-flan,5000,I'm ChatGPT,0,0.0,any,2069158,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,dolmino_1-flan,5000,I'm Claude,0,0.0,any,2069158,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,dolmino_1-flan,5000,as ChatGPT,0,0.0,any,2069158,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,dolmino_1-flan,5000,as an AI language model,0,0.0,any,2069158,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,dolmino_1-flan,5000,created by Anthropic,0,0.0,any,2069158,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,dolmino_1-flan,5000,developed by OpenAI,0,0.0,any,2069158,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,dolmino_1-flan,5000,made by Ai2 / Allen Institute,0,0.0,any,2069158,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,gemini-reasoning-traces,5000,<ANY identity string>,0,0.0,any,14234678,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,gemini-reasoning-traces,5000,I am ChatGPT,0,0.0,any,14234678,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,gemini-reasoning-traces,5000,I am Claude,0,0.0,any,14234678,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,gemini-reasoning-traces,5000,I am OLMo,0,0.0,any,14234678,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,gemini-reasoning-traces,5000,I am an AI assistant,0,0.0,any,14234678,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,gemini-reasoning-traces,5000,I'm ChatGPT,0,0.0,any,14234678,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,gemini-reasoning-traces,5000,I'm Claude,0,0.0,any,14234678,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,gemini-reasoning-traces,5000,as ChatGPT,0,0.0,any,14234678,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,gemini-reasoning-traces,5000,as an AI language model,0,0.0,any,14234678,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,gemini-reasoning-traces,5000,created by Anthropic,0,0.0,any,14234678,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,gemini-reasoning-traces,5000,developed by OpenAI,0,0.0,any,14234678,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,gemini-reasoning-traces,5000,made by Ai2 / Allen Institute,0,0.0,any,14234678,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,general_reasoning_mix,5000,<ANY identity string>,2,4.0,any,11578465,0.173
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,general_reasoning_mix,5000,I am ChatGPT,0,0.0,any,11578465,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,general_reasoning_mix,5000,I am Claude,0,0.0,any,11578465,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,general_reasoning_mix,5000,I am OLMo,0,0.0,any,11578465,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,general_reasoning_mix,5000,I am an AI assistant,0,0.0,any,11578465,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,general_reasoning_mix,5000,I'm ChatGPT,0,0.0,any,11578465,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,general_reasoning_mix,5000,I'm Claude,0,0.0,any,11578465,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,general_reasoning_mix,5000,as ChatGPT,0,0.0,any,11578465,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,general_reasoning_mix,5000,as an AI language model,2,4.0,any,11578465,0.173
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,general_reasoning_mix,5000,created by Anthropic,0,0.0,any,11578465,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,general_reasoning_mix,5000,developed by OpenAI,0,0.0,any,11578465,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,general_reasoning_mix,5000,made by Ai2 / Allen Institute,0,0.0,any,11578465,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,megamatt,5000,<ANY identity string>,0,0.0,any,2534284,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,megamatt,5000,I am ChatGPT,0,0.0,any,2534284,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,megamatt,5000,I am Claude,0,0.0,any,2534284,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,megamatt,5000,I am OLMo,0,0.0,any,2534284,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,megamatt,5000,I am an AI assistant,0,0.0,any,2534284,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,megamatt,5000,I'm ChatGPT,0,0.0,any,2534284,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,megamatt,5000,I'm Claude,0,0.0,any,2534284,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,megamatt,5000,as ChatGPT,0,0.0,any,2534284,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,megamatt,5000,as an AI language model,0,0.0,any,2534284,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,megamatt,5000,created by Anthropic,0,0.0,any,2534284,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,megamatt,5000,developed by OpenAI,0,0.0,any,2534284,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,megamatt,5000,made by Ai2 / Allen Institute,0,0.0,any,2534284,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,nemotron-synth-qa,5000,<ANY identity string>,0,0.0,any,2819942,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,nemotron-synth-qa,5000,I am ChatGPT,0,0.0,any,2819942,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,nemotron-synth-qa,5000,I am Claude,0,0.0,any,2819942,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,nemotron-synth-qa,5000,I am OLMo,0,0.0,any,2819942,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,nemotron-synth-qa,5000,I am an AI assistant,0,0.0,any,2819942,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,nemotron-synth-qa,5000,I'm ChatGPT,0,0.0,any,2819942,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,nemotron-synth-qa,5000,I'm Claude,0,0.0,any,2819942,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,nemotron-synth-qa,5000,as ChatGPT,0,0.0,any,2819942,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,nemotron-synth-qa,5000,as an AI language model,0,0.0,any,2819942,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,nemotron-synth-qa,5000,created by Anthropic,0,0.0,any,2819942,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,nemotron-synth-qa,5000,developed by OpenAI,0,0.0,any,2819942,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,nemotron-synth-qa,5000,made by Ai2 / Allen Institute,0,0.0,any,2819942,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,openthoughts2-reasoning-traces,2324,<ANY identity string>,0,0.0,any,9204550,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,openthoughts2-reasoning-traces,2324,I am ChatGPT,0,0.0,any,9204550,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,openthoughts2-reasoning-traces,2324,I am Claude,0,0.0,any,9204550,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,openthoughts2-reasoning-traces,2324,I am OLMo,0,0.0,any,9204550,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,openthoughts2-reasoning-traces,2324,I am an AI assistant,0,0.0,any,9204550,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,openthoughts2-reasoning-traces,2324,I'm ChatGPT,0,0.0,any,9204550,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,openthoughts2-reasoning-traces,2324,I'm Claude,0,0.0,any,9204550,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,openthoughts2-reasoning-traces,2324,as ChatGPT,0,0.0,any,9204550,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,openthoughts2-reasoning-traces,2324,as an AI language model,0,0.0,any,9204550,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,openthoughts2-reasoning-traces,2324,created by Anthropic,0,0.0,any,9204550,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,openthoughts2-reasoning-traces,2324,developed by OpenAI,0,0.0,any,9204550,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,openthoughts2-reasoning-traces,2324,made by Ai2 / Allen Institute,0,0.0,any,9204550,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,program_verifiable,5000,<ANY identity string>,0,0.0,any,5222361,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,program_verifiable,5000,I am ChatGPT,0,0.0,any,5222361,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,program_verifiable,5000,I am Claude,0,0.0,any,5222361,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,program_verifiable,5000,I am OLMo,0,0.0,any,5222361,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,program_verifiable,5000,I am an AI assistant,0,0.0,any,5222361,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,program_verifiable,5000,I'm ChatGPT,0,0.0,any,5222361,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,program_verifiable,5000,I'm Claude,0,0.0,any,5222361,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,program_verifiable,5000,as ChatGPT,0,0.0,any,5222361,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,program_verifiable,5000,as an AI language model,0,0.0,any,5222361,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,program_verifiable,5000,created by Anthropic,0,0.0,any,5222361,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,program_verifiable,5000,developed by OpenAI,0,0.0,any,5222361,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,program_verifiable,5000,made by Ai2 / Allen Institute,0,0.0,any,5222361,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,qwq-reasoning-traces,1957,<ANY identity string>,0,0.0,any,16099970,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,qwq-reasoning-traces,1957,I am ChatGPT,0,0.0,any,16099970,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,qwq-reasoning-traces,1957,I am Claude,0,0.0,any,16099970,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,qwq-reasoning-traces,1957,I am OLMo,0,0.0,any,16099970,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,qwq-reasoning-traces,1957,I am an AI assistant,0,0.0,any,16099970,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,qwq-reasoning-traces,1957,I'm ChatGPT,0,0.0,any,16099970,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,qwq-reasoning-traces,1957,I'm Claude,0,0.0,any,16099970,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,qwq-reasoning-traces,1957,as ChatGPT,0,0.0,any,16099970,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,qwq-reasoning-traces,1957,as an AI language model,0,0.0,any,16099970,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,qwq-reasoning-traces,1957,created by Anthropic,0,0.0,any,16099970,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,qwq-reasoning-traces,1957,developed by OpenAI,0,0.0,any,16099970,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,qwq-reasoning-traces,1957,made by Ai2 / Allen Institute,0,0.0,any,16099970,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,stem-heavy-crawl,309,<ANY identity string>,0,0.0,any,187135,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,stem-heavy-crawl,309,I am ChatGPT,0,0.0,any,187135,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,stem-heavy-crawl,309,I am Claude,0,0.0,any,187135,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,stem-heavy-crawl,309,I am OLMo,0,0.0,any,187135,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,stem-heavy-crawl,309,I am an AI assistant,0,0.0,any,187135,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,stem-heavy-crawl,309,I'm ChatGPT,0,0.0,any,187135,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,stem-heavy-crawl,309,I'm Claude,0,0.0,any,187135,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,stem-heavy-crawl,309,as ChatGPT,0,0.0,any,187135,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,stem-heavy-crawl,309,as an AI language model,0,0.0,any,187135,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,stem-heavy-crawl,309,created by Anthropic,0,0.0,any,187135,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,stem-heavy-crawl,309,developed by OpenAI,0,0.0,any,187135,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,stem-heavy-crawl,309,made by Ai2 / Allen Institute,0,0.0,any,187135,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,tulu-3-sft,5000,<ANY identity string>,17,34.0,any,1758624,9.667
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,tulu-3-sft,5000,I am ChatGPT,0,0.0,any,1758624,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,tulu-3-sft,5000,I am Claude,0,0.0,any,1758624,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,tulu-3-sft,5000,I am OLMo,0,0.0,any,1758624,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,tulu-3-sft,5000,I am an AI assistant,0,0.0,any,1758624,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,tulu-3-sft,5000,I'm ChatGPT,0,0.0,any,1758624,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,tulu-3-sft,5000,I'm Claude,0,0.0,any,1758624,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,tulu-3-sft,5000,as ChatGPT,0,0.0,any,1758624,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,tulu-3-sft,5000,as an AI language model,17,34.0,any,1758624,9.667
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,tulu-3-sft,5000,created by Anthropic,0,0.0,any,1758624,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,tulu-3-sft,5000,developed by OpenAI,0,0.0,any,1758624,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,tulu-3-sft,5000,made by Ai2 / Allen Institute,0,0.0,any,1758624,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,wiki_to_rcqa-part1,999,<ANY identity string>,0,0.0,any,209282,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,wiki_to_rcqa-part1,999,I am ChatGPT,0,0.0,any,209282,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,wiki_to_rcqa-part1,999,I am Claude,0,0.0,any,209282,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,wiki_to_rcqa-part1,999,I am OLMo,0,0.0,any,209282,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,wiki_to_rcqa-part1,999,I am an AI assistant,0,0.0,any,209282,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,wiki_to_rcqa-part1,999,I'm ChatGPT,0,0.0,any,209282,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,wiki_to_rcqa-part1,999,I'm Claude,0,0.0,any,209282,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,wiki_to_rcqa-part1,999,as ChatGPT,0,0.0,any,209282,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,wiki_to_rcqa-part1,999,as an AI language model,0,0.0,any,209282,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,wiki_to_rcqa-part1,999,created by Anthropic,0,0.0,any,209282,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,wiki_to_rcqa-part1,999,developed by OpenAI,0,0.0,any,209282,0.0
+olmo3,midtrain,allenai/dolma3_dolmino_mix-100B-1025,wiki_to_rcqa-part1,999,made by Ai2 / Allen Institute,0,0.0,any,209282,0.0
+olmo3,pretrain,allenai/dolma3_mix-6T-1025-7B,all,484455,<ANY identity string>,9,0.1858,any,1037915672,0.009
+olmo3,pretrain,allenai/dolma3_mix-6T-1025-7B,all,484455,I am ChatGPT,0,0.0,any,1037915672,0.0
+olmo3,pretrain,allenai/dolma3_mix-6T-1025-7B,all,484455,I am Claude,1,0.0206,any,1037915672,0.001
+olmo3,pretrain,allenai/dolma3_mix-6T-1025-7B,all,484455,I am OLMo,0,0.0,any,1037915672,0.0
+olmo3,pretrain,allenai/dolma3_mix-6T-1025-7B,all,484455,I am an AI assistant,0,0.0,any,1037915672,0.0
+olmo3,pretrain,allenai/dolma3_mix-6T-1025-7B,all,484455,I'm ChatGPT,0,0.0,any,1037915672,0.0
+olmo3,pretrain,allenai/dolma3_mix-6T-1025-7B,all,484455,I'm Claude,1,0.0206,any,1037915672,0.001
+olmo3,pretrain,allenai/dolma3_mix-6T-1025-7B,all,484455,as ChatGPT,0,0.0,any,1037915672,0.0
+olmo3,pretrain,allenai/dolma3_mix-6T-1025-7B,all,484455,as an AI language model,3,0.0619,any,1037915672,0.003
+olmo3,pretrain,allenai/dolma3_mix-6T-1025-7B,all,484455,created by Anthropic,0,0.0,any,1037915672,0.0
+olmo3,pretrain,allenai/dolma3_mix-6T-1025-7B,all,484455,developed by OpenAI,3,0.0619,any,1037915672,0.003
+olmo3,pretrain,allenai/dolma3_mix-6T-1025-7B,all,484455,made by Ai2 / Allen Institute,1,0.0206,any,1037915672,0.001
+olmo3,sft,allenai/Dolci-Instruct-SFT,all,2152112,<ANY identity string>,1450,6.7376,any,1454368125,0.997
+olmo3,sft,allenai/Dolci-Instruct-SFT,all,2152112,I am ChatGPT,1,0.0046,any,1454368125,0.001
+olmo3,sft,allenai/Dolci-Instruct-SFT,all,2152112,I am Claude,0,0.0,any,1454368125,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,all,2152112,I am OLMo,10,0.0465,any,1454368125,0.007
+olmo3,sft,allenai/Dolci-Instruct-SFT,all,2152112,I am an AI assistant,20,0.0929,any,1454368125,0.014
+olmo3,sft,allenai/Dolci-Instruct-SFT,all,2152112,I'm ChatGPT,4,0.0186,any,1454368125,0.003
+olmo3,sft,allenai/Dolci-Instruct-SFT,all,2152112,I'm Claude,0,0.0,any,1454368125,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,all,2152112,as ChatGPT,409,1.9005,any,1454368125,0.281
+olmo3,sft,allenai/Dolci-Instruct-SFT,all,2152112,as an AI language model,944,4.3864,any,1454368125,0.649
+olmo3,sft,allenai/Dolci-Instruct-SFT,all,2152112,created by Anthropic,2,0.0093,any,1454368125,0.001
+olmo3,sft,allenai/Dolci-Instruct-SFT,all,2152112,developed by OpenAI,65,0.302,any,1454368125,0.045
+olmo3,sft,allenai/Dolci-Instruct-SFT,all,2152112,made by Ai2 / Allen Institute,29,0.1348,any,1454368125,0.02
+olmo3,sft,allenai/Dolci-Instruct-SFT,all,2152112,<ANY identity string>,752,3.4942,assistant,657766323,1.143
+olmo3,sft,allenai/Dolci-Instruct-SFT,all,2152112,I am ChatGPT,1,0.0046,assistant,657766323,0.002
+olmo3,sft,allenai/Dolci-Instruct-SFT,all,2152112,I am Claude,0,0.0,assistant,657766323,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,all,2152112,I am OLMo,10,0.0465,assistant,657766323,0.015
+olmo3,sft,allenai/Dolci-Instruct-SFT,all,2152112,I am an AI assistant,18,0.0836,assistant,657766323,0.027
+olmo3,sft,allenai/Dolci-Instruct-SFT,all,2152112,I'm ChatGPT,4,0.0186,assistant,657766323,0.006
+olmo3,sft,allenai/Dolci-Instruct-SFT,all,2152112,I'm Claude,0,0.0,assistant,657766323,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,all,2152112,as ChatGPT,192,0.8921,assistant,657766323,0.292
+olmo3,sft,allenai/Dolci-Instruct-SFT,all,2152112,as an AI language model,511,2.3744,assistant,657766323,0.777
+olmo3,sft,allenai/Dolci-Instruct-SFT,all,2152112,created by Anthropic,1,0.0046,assistant,657766323,0.002
+olmo3,sft,allenai/Dolci-Instruct-SFT,all,2152112,developed by OpenAI,6,0.0279,assistant,657766323,0.009
+olmo3,sft,allenai/Dolci-Instruct-SFT,all,2152112,made by Ai2 / Allen Institute,20,0.0929,assistant,657766323,0.03
