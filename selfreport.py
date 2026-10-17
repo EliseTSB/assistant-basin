@@ -14,7 +14,10 @@ import json
 import math
 import os
 import random
-import resource
+try:
+    import resource  # Unix only; the Windows GPU job has none
+except ImportError:
+    resource = None
 import time
 from collections import Counter, defaultdict
 from dataclasses import dataclass, replace
@@ -97,6 +100,10 @@ class LoRALinear(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         low_rank = F.linear(F.linear(x, self.lora_A), self.lora_B)
         return self.base(x) + low_rank * (self.alpha / self.rank)
+
+
+# Device for model and batches (2026-10-16, Elise: run Part 12 on the A770). "cpu" keeps every earlier result's path.
+DEVICE = "cpu"
 
 
 def install_lora(model: nn.Module, rank: int = 8) -> list[nn.Parameter]:
@@ -456,7 +463,7 @@ def padded_batch(
         ids[i, : len(row)] = torch.as_tensor(row, dtype=torch.long)
         mask[i, : len(row)] = 1
     spans = [example.span_positions for example in examples]
-    return ids, mask, answer_positions, spans
+    return ids.to(DEVICE), mask.to(DEVICE), answer_positions, spans
 
 
 def chunks(items: Sequence[Any], size: int) -> Iterable[Sequence[Any]]:
@@ -716,7 +723,7 @@ def train_model(
             logits = torch.stack(
                 [out.logits[row, answer_positions[row] - 1] for row in range(len(batch))]
             )
-            target_tensor = torch.as_tensor(target_ids, dtype=torch.long)
+            target_tensor = torch.as_tensor(target_ids, dtype=torch.long, device=DEVICE)
             loss = F.cross_entropy(logits, target_tensor)
             loss.backward()
             optimizer.step()
@@ -789,6 +796,9 @@ def build_result(args: argparse.Namespace) -> dict[str, Any]:
     model = AutoModelForCausalLM.from_pretrained(
         args.model, torch_dtype=torch.float32, local_files_only=True
     )
+    global DEVICE
+    DEVICE = getattr(args, "device", "cpu")
+    model.to(DEVICE)
     loaded_at = time.perf_counter()
     model.eval()
     for parameter in model.parameters():
@@ -877,6 +887,7 @@ def build_result(args: argparse.Namespace) -> dict[str, Any]:
         training_result = {"epochs": 0, "examples": len(train_examples), "steered_examples": 0, "steps": 0}
     else:
         install_lora(model, rank=8)
+        model.to(DEVICE)
         training_result = train_model(
             model, tokenizer, training_set, hooks, pad_id, yes_id, no_id,
             epochs=args.epochs, batch_size=8, learning_rate=args.lr, seed=args.seed,
@@ -935,7 +946,7 @@ def build_result(args: argparse.Namespace) -> dict[str, Any]:
         "model_load_seconds": loaded_at - started,
         "natural_capture_seconds": capture_seconds,
         "post_capture_training_and_evaluation_seconds": time.perf_counter() - capture_started - capture_seconds,
-        "peak_rss_gib": float(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / (1024 ** 2)),
+        "peak_rss_gib": float(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / (1024 ** 2)) if resource else None,
     }
     result = {
         "model": args.model,
@@ -994,6 +1005,7 @@ def main() -> None:
     parser.add_argument("--factual-no", action="store_true", help="measure the factual-no control after evaluation")
     parser.add_argument("--factual-yes", action="store_true", help="measure the held-out known-yes control after evaluation")
     parser.add_argument("--distractors", action="store_true", help="Part 12f: add one ordinary yes/no question per training example")
+    parser.add_argument("--device", default="cpu", help="cpu, or xpu for the Arc A770 (Windows GPU job)")
     parser.add_argument("--save-lora", default=None, metavar="PATH", help="save trained LoRA parameters to PATH")
     parser.add_argument("--clamp-scale", type=float, default=1.0,
                         help="Part 12c: widen every clamp's high-low gap by this factor around its midpoint (1 = unchanged)")
