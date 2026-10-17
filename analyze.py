@@ -12,13 +12,14 @@
 # Usage: python analyze.py <discover.npz> [--form plain|chat] [--top 50] [--score other.npz ...]
 #   --score: take the top neurons found in <discover.npz> and print their held-out-half identity score in each other
 #   model (same form), plus the Claude contrast (E_claude vs A, E_claude vs C) in each.
-import argparse, json
+import argparse, json, os
 import numpy as np
 
 ap = argparse.ArgumentParser()
 ap.add_argument('discover'); ap.add_argument('--form', default='plain'); ap.add_argument('--top', type=int, default=50)
 ap.add_argument('--score', nargs='*', default=[]); ap.add_argument('--null-reps', type=int, default=20)
-ap.add_argument('--json'); a = ap.parse_args()
+ap.add_argument('--json'); ap.add_argument('--frames', default=os.path.join(os.path.dirname(__file__), 'data', 'frames.json'))
+a = ap.parse_args()
 
 def load(path, form):
     z = np.load(path)
@@ -60,14 +61,17 @@ out = {'model': a.discover, 'form': a.form, 'layers': L, 'neurons': F,
 # Only frames whose sentence contains the name or maker ({N}/{M}) can show a name swap: 49 of the 72 frames carry no
 # name, so their A and E rows are identical and averaging over them shrank the Claude contrast about threefold (found
 # 2026-10-15 20:11 by the name test; the first part-2 numbers were diluted this way).
-def _named_mask():
-    import os
-    here = os.path.dirname(os.path.abspath(__file__))
-    fr = json.load(open(os.path.join(here, 'data', 'frames.json')))['frames']
-    ex = os.path.join(here, 'data', 'frames-extra.json')
-    if os.path.exists(ex): fr = fr + json.load(open(ex))['frames']
+def _named_mask(path):
+    spec = json.load(open(path, encoding='utf-8'))
+    if 'frames' not in spec:  # Register datasets have no name-swap families.
+        return np.zeros(len(spec.get('items', [])), dtype=bool)
+    fr = spec['frames']
+    default_frames = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'frames.json')
+    if os.path.abspath(path) == default_frames:
+        ex = os.path.join(os.path.dirname(default_frames), 'frames-extra.json')
+        if os.path.exists(ex): fr = fr + json.load(open(ex, encoding='utf-8'))['frames']
     return np.array([('{N}' in f[0] or '{M}' in f[0]) for f in fr])
-NAMED = _named_mask()
+NAMED = _named_mask(a.frames)
 
 def claude_contrast(f2, idx):
     m = NAMED[: f2['A'].shape[0]]
@@ -75,16 +79,20 @@ def claude_contrast(f2, idx):
     return {'claude_minus_olmo': float(np.median(dmat(Ec, A))), 'claude_minus_person': float(np.median(dmat(Ec, C))),
             'chatgpt_minus_person': float(np.median(dmat(Eg, C))), 'claude_minus_chatgpt': float(np.median(dmat(Ec, Eg))),
             'olmo_minus_person': float(np.median(dmat(A, C))), 'named_frames': int(m.sum())}
-out['claude_in_discover'] = claude_contrast(fam, top)
+def has_name_families(f): return 'E_claude' in f and 'E_chatgpt' in f
+if has_name_families(fam) and NAMED[: fam['A'].shape[0]].any():
+    out['claude_in_discover'] = claude_contrast(fam, top)
 
 scores = []
 for p in a.score:
     f2, L2, F2 = load(p, a.form)
     if (L2, F2) != (L, F): scores.append({'model': p, 'error': f'shape {L2}x{F2} != {L}x{F}'}); continue
     h2 = identity(f2, odd); all2 = identity(f2, np.arange(n))
-    scores.append({'model': p, 'heldout_top_median': float(np.median(h2[top])),
-                   'share_top_with_half_or_more': float(np.mean(all2[top] >= 0.5 * identity(fam, np.arange(n))[top])),
-                   'claude': claude_contrast(f2, top)})
+    score = {'model': p, 'heldout_top_median': float(np.median(h2[top])),
+             'share_top_with_half_or_more': float(np.mean(all2[top] >= 0.5 * identity(fam, np.arange(n))[top]))}
+    if has_name_families(f2) and NAMED[: f2['A'].shape[0]].any():
+        score['claude'] = claude_contrast(f2, top)
+    scores.append(score)
 out['scored_in'] = scores
 print(json.dumps(out, indent=1))
 if a.json: open(a.json, 'w').write(json.dumps(out, indent=1))
