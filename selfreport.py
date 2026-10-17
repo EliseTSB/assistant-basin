@@ -448,6 +448,14 @@ def make_statistics(examples: Sequence[Example], units: int) -> tuple[np.ndarray
     return means, stds, float(np.median(scores))
 
 
+def scale_clamp_values(high: np.ndarray, low: np.ndarray, scale: float) -> tuple[np.ndarray, np.ndarray]:
+    """Widen the high-low gap by `scale` around its midpoint; scale 1 leaves both unchanged (as clampreach.py, 12d)."""
+    if scale == 1.0:
+        return high, low
+    mid = (high + low) / 2.0
+    return (mid + scale * (high - mid)).astype(np.float32), (mid - scale * (mid - low)).astype(np.float32)
+
+
 def activation_quantiles(
     training_examples: Sequence[Example],
     n_units: int,
@@ -776,6 +784,10 @@ def build_result(args: argparse.Namespace) -> dict[str, Any]:
 
     high90, low10 = activation_quantiles(train_examples, len(units), 0.90, 0.10)
     high95, low05 = activation_quantiles(train_examples, len(units), 0.95, 0.05)
+    # Part 12c: widen both the training (90/10) and the unseen evaluation (95/5) clamps around their midpoints.
+    clamp_scale = float(getattr(args, "clamp_scale", 1.0))
+    high90, low10 = scale_clamp_values(high90, low10, clamp_scale)
+    high95, low05 = scale_clamp_values(high95, low05, clamp_scale)
     for example in examples:
         standard = choose_flipping_clamp(example, high90, low10, train_means, train_stds, threshold, "90/10")
         if standard:
@@ -882,6 +894,7 @@ def build_result(args: argparse.Namespace) -> dict[str, Any]:
             "steered_candidate_train": len(eligible),
             "requested_half_train_steered": requested_steered,
             "actual_train_steered": training_result.get("steered_examples", 0),
+            **({"clamp_scale": clamp_scale} if clamp_scale != 1.0 else {}),
             "90_10_high": high90.tolist(),
             "90_10_low": low10.tolist(),
             "95_5_high": high95.tolist(),
@@ -917,6 +930,8 @@ def main() -> None:
     parser.add_argument("--lr", type=float, default=1e-4)
     parser.add_argument("--factual-no", action="store_true", help="measure the factual-no control after evaluation")
     parser.add_argument("--save-lora", default=None, metavar="PATH", help="save trained LoRA parameters to PATH")
+    parser.add_argument("--clamp-scale", type=float, default=1.0,
+                        help="Part 12c: widen every clamp's high-low gap by this factor around its midpoint (1 = unchanged)")
     args = parser.parse_args()
     if args.limit < 0 or args.threads < 1 or args.threads > 4:
         parser.error("--limit must be nonnegative and --threads must be between 1 and 4")
