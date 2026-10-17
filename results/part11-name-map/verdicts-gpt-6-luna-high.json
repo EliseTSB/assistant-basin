@@ -1,0 +1,842 @@
+{
+"n000": {
+"verdict": "several_unrelated",
+"description": "The snippets involve unrelated word fragments, names, and common words, with no clear shared semantic or grammatical trigger.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1347,
+"output_tokens": 888,
+"output_tokens_details": {
+"thinking_tokens": 848
+}
+},
+"reasoning_tokens": 848,
+"wall_s": 18.37,
+"stop_reason": "end_turn"
+},
+"n001": {
+"verdict": "unclear",
+"description": "The marked tokens span unrelated verbs, articles, prepositions, and punctuation, with no clear shared trigger.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1342,
+"output_tokens": 1128,
+"output_tokens_details": {
+"thinking_tokens": 1091
+}
+},
+"reasoning_tokens": 1091,
+"wall_s": 21.93,
+"stop_reason": "end_turn"
+},
+"n002": {
+"verdict": "one",
+"description": "Responds to syntactic linking words and constructions that introduce a complement or relation, often a preposition or infinitive.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1350,
+"output_tokens": 952,
+"output_tokens_details": {
+"thinking_tokens": 913
+}
+},
+"reasoning_tokens": 913,
+"wall_s": 18.76,
+"stop_reason": "end_turn"
+},
+"n003": {
+"verdict": "one",
+"description": "It responds to proper-name and named-entity contexts, often at boundaries or within multiword names and coordinated names.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1336,
+"output_tokens": 661,
+"output_tokens_details": {
+"thinking_tokens": 623
+}
+},
+"reasoning_tokens": 623,
+"wall_s": 13.1,
+"stop_reason": "end_turn"
+},
+"n004": {
+"verdict": "one",
+"description": "Mostly responds to grammatical glue\u2014especially prepositions and infinitival \u201cto\u201d\u2014with a few related connective or punctuation cases.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1354,
+"output_tokens": 964,
+"output_tokens_details": {
+"thinking_tokens": 925
+}
+},
+"reasoning_tokens": 925,
+"wall_s": 19.77,
+"stop_reason": "end_turn"
+},
+"n005": {
+"verdict": "several_unrelated",
+"description": "The marked tokens have no consistent shared role: they include punctuation, function words, numbers, and content words, with a few repeated \u201csp\u201d tokens in spore-related passages.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1345,
+"output_tokens": 1086,
+"output_tokens_details": {
+"thinking_tokens": 1032
+}
+},
+"reasoning_tokens": 1032,
+"wall_s": 21.52,
+"stop_reason": "end_turn"
+},
+"n006": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span unrelated roles, including punctuation and slashes, species-name parts, and assorted grammatical words.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1343,
+"output_tokens": 259,
+"output_tokens_details": {
+"thinking_tokens": 219
+}
+},
+"reasoning_tokens": 219,
+"wall_s": 5.86,
+"stop_reason": "end_turn"
+},
+"n007": {
+"verdict": "one",
+"description": "Mostly responds to the start of a noun phrase, especially the articles \u201ca\u201d and \u201cthe\u201d; quotation marks and other boundary tokens are related phrase-opening cases.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1335,
+"output_tokens": 1376,
+"output_tokens_details": {
+"thinking_tokens": 1329
+}
+},
+"reasoning_tokens": 1329,
+"wall_s": 25.92,
+"stop_reason": "end_turn"
+},
+"n008": {
+"verdict": "one",
+"description": "It responds to subword pieces that begin longer words, especially when the word continues in the next token.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1345,
+"output_tokens": 867,
+"output_tokens_details": {
+"thinking_tokens": 831
+}
+},
+"reasoning_tokens": 831,
+"wall_s": 16.53,
+"stop_reason": "end_turn"
+},
+"n009": {
+"verdict": "one",
+"description": "Responds to discussion of Valkyria Chronicles\u2019 fictional characters, factions, and plot; the marked tokens vary, but their surrounding context consistently concerns that game\u2019s narrative.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1345,
+"output_tokens": 887,
+"output_tokens_details": {
+"thinking_tokens": 839
+}
+},
+"reasoning_tokens": 839,
+"wall_s": 17.06,
+"stop_reason": "end_turn"
+},
+"n010": {
+"verdict": "several_unrelated",
+"description": "The snippets span ordinary function words, proper names and name fragments, animals, and punctuation, with no clear shared trigger.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1349,
+"output_tokens": 1374,
+"output_tokens_details": {
+"thinking_tokens": 1332
+}
+},
+"reasoning_tokens": 1332,
+"wall_s": 25.85,
+"stop_reason": "end_turn"
+},
+"n011": {
+"verdict": "several_unrelated",
+"description": "The snippets mix Egyptian-religion passages with unrelated topics and varied grammatical roles, with no clear shared trigger.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1345,
+"output_tokens": 1323,
+"output_tokens_details": {
+"thinking_tokens": 1283
+}
+},
+"reasoning_tokens": 1283,
+"wall_s": 25.15,
+"stop_reason": "end_turn"
+},
+"n012": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span unrelated functions\u2014numbers and number separators, punctuation, connectors, and assorted content words\u2014with no clear shared trigger.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1336,
+"output_tokens": 631,
+"output_tokens_details": {
+"thinking_tokens": 587
+}
+},
+"reasoning_tokens": 587,
+"wall_s": 12.5,
+"stop_reason": "end_turn"
+},
+"n013": {
+"verdict": "one",
+"description": "It responds to numeric quantities\u2014numerals used for counts, measurements, totals, prices, and statistics.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1331,
+"output_tokens": 165,
+"output_tokens_details": {
+"thinking_tokens": 129
+}
+},
+"reasoning_tokens": 129,
+"wall_s": 4.05,
+"stop_reason": "end_turn"
+},
+"n014": {
+"verdict": "one",
+"description": "Responds to numerical values, especially the start or continuation of numbers in text, including counts, measurements, percentages, and prices.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1330,
+"output_tokens": 158,
+"output_tokens_details": {
+"thinking_tokens": 117
+}
+},
+"reasoning_tokens": 117,
+"wall_s": 3.62,
+"stop_reason": "end_turn"
+},
+"n015": {
+"verdict": "one",
+"description": "Encyclopedic technical specifications, especially ship engines, dimensions, and other numeric measurements.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1341,
+"output_tokens": 646,
+"output_tokens_details": {
+"thinking_tokens": 614
+}
+},
+"reasoning_tokens": 614,
+"wall_s": 12.58,
+"stop_reason": "end_turn"
+},
+"n016": {
+"verdict": "unclear",
+"description": "The marked tokens span unrelated grammatical roles and formatting contexts, with no clear shared trigger.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1341,
+"output_tokens": 873,
+"output_tokens_details": {
+"thinking_tokens": 840
+}
+},
+"reasoning_tokens": 840,
+"wall_s": 16.8,
+"stop_reason": "end_turn"
+},
+"n017": {
+"verdict": "one",
+"description": "Mostly descriptive prose about physical places, structures, and features, often in historical or art-related contexts.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1344,
+"output_tokens": 1648,
+"output_tokens_details": {
+"thinking_tokens": 1613
+}
+},
+"reasoning_tokens": 1613,
+"wall_s": 31.25,
+"stop_reason": "end_turn"
+},
+"n018": {
+"verdict": "one",
+"description": "Mostly responds to grammatical continuation words\u2014especially \u201cto\u201d introducing an infinitive or complement\u2014with related function words in similar linking roles.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1345,
+"output_tokens": 887,
+"output_tokens_details": {
+"thinking_tokens": 846
+}
+},
+"reasoning_tokens": 846,
+"wall_s": 17.35,
+"stop_reason": "end_turn"
+},
+"n019": {
+"verdict": "unclear",
+"description": "The marked tokens span unrelated grammatical roles and meanings, with no clear shared trigger.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1345,
+"output_tokens": 871,
+"output_tokens_details": {
+"thinking_tokens": 839
+}
+},
+"reasoning_tokens": 839,
+"wall_s": 18.46,
+"stop_reason": "end_turn"
+},
+"n020": {
+"verdict": "several_unrelated",
+"description": "The snippets span sulfur-chemistry terms, proper names and transliterations, and ordinary word fragments, with no clear shared trigger.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1341,
+"output_tokens": 1485,
+"output_tokens_details": {
+"thinking_tokens": 1441
+}
+},
+"reasoning_tokens": 1441,
+"wall_s": 28.29,
+"stop_reason": "end_turn"
+},
+"n021": {
+"verdict": "one",
+"description": "It broadly responds to actions or changes being carried out or taking effect\u2014such as trades, provisions, troop movements, and demotions\u2014with activation often landing on nearby grammatical words.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1350,
+"output_tokens": 1344,
+"output_tokens_details": {
+"thinking_tokens": 1294
+}
+},
+"reasoning_tokens": 1294,
+"wall_s": 25.37,
+"stop_reason": "end_turn"
+},
+"n022": {
+"verdict": "one",
+"description": "Responds mainly to hyphens joining words in compounds, such as \u201csemi-ruined,\u201d \u201cshort-lived,\u201d and \u201cmiddle-aged.\u201d",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1342,
+"output_tokens": 922,
+"output_tokens_details": {
+"thinking_tokens": 878
+}
+},
+"reasoning_tokens": 878,
+"wall_s": 17.47,
+"stop_reason": "end_turn"
+},
+"n023": {
+"verdict": "one",
+"description": "It responds to words or punctuation introducing a following phrase, often a proper noun or source attribution.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1343,
+"output_tokens": 461,
+"output_tokens_details": {
+"thinking_tokens": 427
+}
+},
+"reasoning_tokens": 427,
+"wall_s": 9.45,
+"stop_reason": "end_turn"
+},
+"n024": {
+"verdict": "one",
+"description": "Responds mainly to commas marking a boundary after an introductory or parenthetical phrase or clause, often before the main clause continues.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1345,
+"output_tokens": 417,
+"output_tokens_details": {
+"thinking_tokens": 377
+}
+},
+"reasoning_tokens": 377,
+"wall_s": 8.54,
+"stop_reason": "end_turn"
+},
+"n025": {
+"verdict": "one",
+"description": "Often activates on a token immediately before a proper name or named entity, including titles, historical periods, and places.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1351,
+"output_tokens": 1001,
+"output_tokens_details": {
+"thinking_tokens": 963
+}
+},
+"reasoning_tokens": 963,
+"wall_s": 18.86,
+"stop_reason": "end_turn"
+},
+"n026": {
+"verdict": "one",
+"description": "Mostly sentence- and paragraph-boundary markers in Wikipedia-style prose, especially periods and line breaks; a few varied words are weaker offshoots.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1345,
+"output_tokens": 1058,
+"output_tokens_details": {
+"thinking_tokens": 1014
+}
+},
+"reasoning_tokens": 1014,
+"wall_s": 20.31,
+"stop_reason": "end_turn"
+},
+"n027": {
+"verdict": "several_unrelated",
+"description": "The marked tokens occur across disconnected contexts, including Egyptian deities, a video-game series, and a novel character, with no clear shared trigger.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1352,
+"output_tokens": 1339,
+"output_tokens_details": {
+"thinking_tokens": 1292
+}
+},
+"reasoning_tokens": 1292,
+"wall_s": 28.96,
+"stop_reason": "end_turn"
+},
+"n028": {
+"verdict": "one",
+"description": "Responds to introducing or completing names and labels, especially people, nicknames, and named places or objects.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1344,
+"output_tokens": 353,
+"output_tokens_details": {
+"thinking_tokens": 316
+}
+},
+"reasoning_tokens": 316,
+"wall_s": 7.89,
+"stop_reason": "end_turn"
+},
+"n029": {
+"verdict": "one",
+"description": "It responds to introducing or linking proper names in prose\u2014especially names in lists, family relationships, aliases, and titles.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1337,
+"output_tokens": 535,
+"output_tokens_details": {
+"thinking_tokens": 496
+}
+},
+"reasoning_tokens": 496,
+"wall_s": 10.89,
+"stop_reason": "end_turn"
+},
+"n030": {
+"verdict": "one",
+"description": "It responds to words that introduce or begin a phrase, especially noun phrases, such as determiners, prepositions, and modifiers.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1343,
+"output_tokens": 744,
+"output_tokens_details": {
+"thinking_tokens": 703
+}
+},
+"reasoning_tokens": 703,
+"wall_s": 14.39,
+"stop_reason": "end_turn"
+},
+"n031": {
+"verdict": "one",
+"description": "Responds to numerical quantities in text, including counts, amounts, measurements, and years.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1332,
+"output_tokens": 336,
+"output_tokens_details": {
+"thinking_tokens": 303
+}
+},
+"reasoning_tokens": 303,
+"wall_s": 7.16,
+"stop_reason": "end_turn"
+},
+"n032": {
+"verdict": "one",
+"description": "It responds broadly to historical, often political or military, narrative\u2014especially dates, leaders, treaties, and related events.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1340,
+"output_tokens": 1160,
+"output_tokens_details": {
+"thinking_tokens": 1121
+}
+},
+"reasoning_tokens": 1121,
+"wall_s": 22.99,
+"stop_reason": "end_turn"
+},
+"n033": {
+"verdict": "one",
+"description": "Responds to numeric quantities, especially measurements and unit conversions formatted in parentheses; a few snippets show related number ranges or quantities.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1334,
+"output_tokens": 483,
+"output_tokens_details": {
+"thinking_tokens": 443
+}
+},
+"reasoning_tokens": 443,
+"wall_s": 9.68,
+"stop_reason": "end_turn"
+},
+"n034": {
+"verdict": "one",
+"description": "Numerical values in text, including counts, measurements, scores, prices, and other statistics.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1330,
+"output_tokens": 193,
+"output_tokens_details": {
+"thinking_tokens": 159
+}
+},
+"reasoning_tokens": 159,
+"wall_s": 5.01,
+"stop_reason": "end_turn"
+},
+"n035": {
+"verdict": "one",
+"description": "Punctuation and token-boundary markers, especially apostrophes, quotes, parentheses, commas, brackets, and hyphens; a few marked word fragments may reflect related tokenization boundaries.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1344,
+"output_tokens": 616,
+"output_tokens_details": {
+"thinking_tokens": 563
+}
+},
+"reasoning_tokens": 563,
+"wall_s": 12.66,
+"stop_reason": "end_turn"
+},
+"n036": {
+"verdict": "one",
+"description": "It responds to noun-phrase contexts, often marking a determiner, possessive, modifier, or noun around a noun.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1343,
+"output_tokens": 790,
+"output_tokens_details": {
+"thinking_tokens": 750
+}
+},
+"reasoning_tokens": 750,
+"wall_s": 15.37,
+"stop_reason": "end_turn"
+},
+"n037": {
+"verdict": "one",
+"description": "Grammatical transitions that connect or introduce the next phrase or clause, often via punctuation or function words.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1345,
+"output_tokens": 1008,
+"output_tokens_details": {
+"thinking_tokens": 972
+}
+},
+"reasoning_tokens": 972,
+"wall_s": 19.33,
+"stop_reason": "end_turn"
+},
+"n038": {
+"verdict": "several_unrelated",
+"description": "It responds to several unrelated patterns: quotation marks, the prefix \u201cun-,\u201d and numbers or numeric formatting.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1337,
+"output_tokens": 448,
+"output_tokens_details": {
+"thinking_tokens": 408
+}
+},
+"reasoning_tokens": 408,
+"wall_s": 9.86,
+"stop_reason": "end_turn"
+},
+"n039": {
+"verdict": "one",
+"description": "Responds to name-related words and naming contexts, including \u201cname,\u201d \u201cnamed,\u201d \u201cnamesake,\u201d and \u201cNameless.\u201d",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1336,
+"output_tokens": 212,
+"output_tokens_details": {
+"thinking_tokens": 171
+}
+},
+"reasoning_tokens": 171,
+"wall_s": 5.74,
+"stop_reason": "end_turn"
+},
+"n040": {
+"verdict": "one",
+"description": "Responds to naval and maritime-historical text, especially ship types, names, and related wording.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1344,
+"output_tokens": 337,
+"output_tokens_details": {
+"thinking_tokens": 302
+}
+},
+"reasoning_tokens": 302,
+"wall_s": 7.32,
+"stop_reason": "end_turn"
+},
+"n041": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span unrelated function words, content words, and opening parentheses, with no clear shared role or topic.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1349,
+"output_tokens": 681,
+"output_tokens_details": {
+"thinking_tokens": 640
+}
+},
+"reasoning_tokens": 640,
+"wall_s": 13.84,
+"stop_reason": "end_turn"
+},
+"n042": {
+"verdict": "one",
+"description": "Responds to naming and labeling contexts, especially forms of \u201ccall,\u201d \u201cname,\u201d or \u201crename\u201d and the names or entities involved.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1342,
+"output_tokens": 219,
+"output_tokens_details": {
+"thinking_tokens": 176
+}
+},
+"reasoning_tokens": 176,
+"wall_s": 4.95,
+"stop_reason": "end_turn"
+},
+"n043": {
+"verdict": "unclear",
+"description": "The marked tokens span unrelated names, ordinary words, and word fragments, with no clear shared semantic or grammatical function.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1351,
+"output_tokens": 2138,
+"output_tokens_details": {
+"thinking_tokens": 2099
+}
+},
+"reasoning_tokens": 2099,
+"wall_s": 39.71,
+"stop_reason": "end_turn"
+},
+"n044": {
+"verdict": "several_unrelated",
+"description": "The marked tokens span unrelated function words, verbs, and content words, with no clear shared concept or grammatical role.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1344,
+"output_tokens": 454,
+"output_tokens_details": {
+"thinking_tokens": 413
+}
+},
+"reasoning_tokens": 413,
+"wall_s": 10.0,
+"stop_reason": "end_turn"
+},
+"n045": {
+"verdict": "one",
+"description": "Mostly responds to sentence-ending periods and similar sentence or entry boundaries in encyclopedia-style text.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1346,
+"output_tokens": 416,
+"output_tokens_details": {
+"thinking_tokens": 384
+}
+},
+"reasoning_tokens": 384,
+"wall_s": 8.45,
+"stop_reason": "end_turn"
+},
+"n046": {
+"verdict": "one",
+"description": "Mostly responds to passages about ancient Egyptian religion, especially gods, temples, and mythology; a few aircraft-noise snippets appear to be outliers.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1347,
+"output_tokens": 1003,
+"output_tokens_details": {
+"thinking_tokens": 959
+}
+},
+"reasoning_tokens": 959,
+"wall_s": 19.13,
+"stop_reason": "end_turn"
+},
+"n047": {
+"verdict": "one",
+"description": "Responds mainly to proper names and named-entity boundaries, especially people\u2019s names, including nearby words that introduce or connect them.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1351,
+"output_tokens": 593,
+"output_tokens_details": {
+"thinking_tokens": 552
+}
+},
+"reasoning_tokens": 552,
+"wall_s": 12.19,
+"stop_reason": "end_turn"
+},
+"n048": {
+"verdict": "several_unrelated",
+"description": "Many snippets concern coins, currency, or jewelry, but the rest span unrelated topics and the marked tokens show no consistent shared pattern.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1347,
+"output_tokens": 1386,
+"output_tokens_details": {
+"thinking_tokens": 1342
+}
+},
+"reasoning_tokens": 1342,
+"wall_s": 25.84,
+"stop_reason": "end_turn"
+},
+"n049": {
+"verdict": "one",
+"description": "Responds to references and explanatory connections between things\u2014such as allusions, indirect references, namesakes, and historical or cultural associations.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1351,
+"output_tokens": 832,
+"output_tokens_details": {
+"thinking_tokens": 790
+}
+},
+"reasoning_tokens": 790,
+"wall_s": 16.38,
+"stop_reason": "end_turn"
+},
+"n050": {
+"verdict": "one",
+"description": "It responds to material that links or continues a phrase or clause, especially punctuation, conjunctions, and other structural words.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1346,
+"output_tokens": 988,
+"output_tokens_details": {
+"thinking_tokens": 949
+}
+},
+"reasoning_tokens": 949,
+"wall_s": 19.18,
+"stop_reason": "end_turn"
+},
+"n051": {
+"verdict": "one",
+"description": "Responds to numerical quantities and values in factual text, including counts, measurements, scores, amounts, and times.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1329,
+"output_tokens": 415,
+"output_tokens_details": {
+"thinking_tokens": 377
+}
+},
+"reasoning_tokens": 377,
+"wall_s": 8.54,
+"stop_reason": "end_turn"
+},
+"n052": {
+"verdict": "one",
+"description": "Introducing or describing an entity\u2019s name, alias, or label, often with phrases like \u201ccalled,\u201d \u201cknown as,\u201d or \u201cunder the name.\u201d",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1345,
+"output_tokens": 993,
+"output_tokens_details": {
+"thinking_tokens": 948
+}
+},
+"reasoning_tokens": 948,
+"wall_s": 19.25,
+"stop_reason": "end_turn"
+},
+"n053": {
+"verdict": "one",
+"description": "Adjectival or adverbial modifiers, especially descriptive words immediately before a noun (such as \u201chigh velocity\u201d or \u201cradial velocity\u201d).",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1347,
+"output_tokens": 994,
+"output_tokens_details": {
+"thinking_tokens": 950
+}
+},
+"reasoning_tokens": 950,
+"wall_s": 18.76,
+"stop_reason": "end_turn"
+},
+"n054": {
+"verdict": "several_unrelated",
+"description": "Many hits come from UNESCO heritage-criteria wording, but others are unrelated name fragments and number-formatting tokens, with no clear shared role.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1343,
+"output_tokens": 1372,
+"output_tokens_details": {
+"thinking_tokens": 1326
+}
+},
+"reasoning_tokens": 1326,
+"wall_s": 25.82,
+"stop_reason": "end_turn"
+},
+"n055": {
+"verdict": "one",
+"description": "It responds mainly to noun-phrase material\u2014especially determiners and the nouns or modifiers that follow them\u2014with a few related phrase-boundary cases.",
+"served": "gpt-6-luna",
+"usage": {
+"input_tokens": 1344,
+"output_tokens": 1316,
+"output_tokens_details": {
+"thinking_tokens": 1272
+}
+},
+"reasoning_tokens": 1272,
+"wall_s": 24.87,
+"stop_reason": "end_turn"
+}
+}
