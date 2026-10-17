@@ -388,3 +388,19 @@ Elise, 2026-10-16 13:56: *"Yes lets go for it!"* Written before the run.
 | 12c.4 | Shuffled labels at 8 times stay within 10 points of chance. | **held** | 43/82 (52.4%) at both strengths. 2026-10-16 |
 | 12c.5 | Written 2026-10-16 21:31 CT after 12c.1-12c.4, before the run: the factual-no control (12.7's rule) on target A retrained at 8 times with the same seed. I expect it to FAIL: under the clamps, the trained model's yes rate on known-no questions moves by at least 10 points in at least one of the four cells, because training only ever paired the clamp with one question. If all four shifts stay under 10 points, the report is specific to the question. | **held**: the report is not specific to the question (12.7's rule fails). On known-no questions the trained model says yes 59% (90/10 high-clamp examples) and 53% (low-clamp) unclamped; clamped high it says yes 93% (+34 points), clamped low 7% (-46). At the unseen 95/5: +36 and -49. Steered accuracy reproduced exactly (81/82, 82/82). Some facts resist: "Is Paris the capital of Germany?" stays no under every clamp. results/part12c/A-factual-no.json; adapter /mnt/e/neuron-probe/out/part12c5-A-lora.pt. 2026-10-16 |
 
+### Part 12f — the self-report with ordinary questions mixed in (written 2026-10-16 22:12 CT, before any 12f run)
+
+12c.5 showed the 8x self-report is not about the question: the trained model wires its neuron state into yes or no on
+any yes/no question. 12f repeats 12c's training for target A (8x clamps, 6 epochs, lr 3e-4, seed 42) with one ordinary
+yes/no question per training example added (24 questions, half yes and half no, `DISTRACTOR_QUESTIONS`), on the same
+message and under the same clamp, labelled with its true answer. Held out: the 12 known-no questions of 12.7 and their
+12 known-yes mirrors (`FACTUAL_YES_QUESTIONS`), none of them in training. Code: branch part12f-distractors.
+
+| # | Prediction | Status | Result |
+|---|---|---|---|
+| 12f.1 | Target A with distractors still learns the report: held-out steered accuracy at least 70% at 90/10. | pending | |
+| 12f.2 | The factual-no control holds (12.7's rule): on held-out known-no questions, all four yes-rate shifts under the clamps are under 10 points. | pending | |
+| 12f.3 | The mirror holds: on held-out known-yes questions, all four shifts are under 10 points. | pending | |
+| 12f.4 | Factual answers survive the training: unclamped, the yes rate is at most 20% on known-no and at least 80% on known-yes questions. | pending | |
+| 12f.5 | Target B (last layer) with distractors stays within 10 points of chance on held-out steered examples. | pending | |
+
