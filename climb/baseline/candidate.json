@@ -1,0 +1,25 @@
+{
+ "explainer": {
+  "effort": "high",
+  "max_words": 80
+ },
+ "simulator": {
+  "questions": {
+   "fires": {
+    "type": "noul",
+    "instructions": "The state holds `description`, which says what one internal unit of a language model responds to, and `snippet`, a passage of text with one token marked like ⟦this⟧. Judging only by the description, would this unit be strongly active on the marked token? Consider the marked token, the words just before it, and what word would plausibly come next.",
+    "criteria": {
+     "true": "The marked token, in this context, is the kind of thing the description says the unit responds to.",
+     "false": "The marked token, in this context, is not what the description says the unit responds to."
+    }
+   }
+  },
+  "weights": {
+   "fires": 1.0
+  },
+  "include_examples": 0
+ },
+ "judge": {
+  "engine": "explainer"
+ }
+}
