@@ -31,6 +31,9 @@ from selfreport import (
     padded_batch,
     evaluate_factual_no,
     save_lora_parameters,
+    build_distractor_examples,
+    DISTRACTOR_QUESTIONS,
+    FACTUAL_YES_QUESTIONS,
 )
 
 
@@ -443,6 +446,38 @@ class SelfReportTests(unittest.TestCase):
         self.assertEqual(set(saved["lora_parameters"]), expected_parameters)
         self.assertEqual((saved["target"], saved["seed"], saved["epochs"], saved["lr"]), ("A", 12, 6, 3e-4))
 
+
+    def test_distractors_keep_message_span_and_clamp_and_carry_the_true_answer(self):
+        tokenizer = FakeTokenizer()
+        examples = build_examples(tokenizer, tiny_spec())
+        for index, example in enumerate(examples):
+            example.train_clamp = np.array([50.0], dtype=np.float32) if index % 2 else None
+            example.train_label = 1
+        distractors = build_distractor_examples(tokenizer, examples, seed=42)
+        answers = dict(DISTRACTOR_QUESTIONS)
+        self.assertEqual(len(distractors), len(examples))
+        for original, d in zip(examples, distractors):
+            self.assertEqual([d.prompt_ids[p] for p in d.span_positions], [original.prompt_ids[p] for p in original.span_positions])
+            self.assertIs(d.train_clamp, original.train_clamp)
+            asked = [q for q in answers if f"<|user|>\n{q} Answer yes or no.\n<|end|>" in d.rendered_prompt]
+            self.assertEqual(len(asked), 1)
+            self.assertEqual(d.train_label, answers[asked[0]])
+            self.assertEqual(original.train_label, 1)  # the source example is untouched
+
+    def test_distractor_and_heldout_question_sets_are_disjoint_and_balanced(self):
+        train = [q for q, _ in DISTRACTOR_QUESTIONS]
+        self.assertEqual(sum(a for _, a in DISTRACTOR_QUESTIONS), len(DISTRACTOR_QUESTIONS) // 2)
+        self.assertFalse(set(train) & set(FACTUAL_NO_QUESTIONS))
+        self.assertFalse(set(train) & set(FACTUAL_YES_QUESTIONS))
+        self.assertFalse(set(FACTUAL_YES_QUESTIONS) & set(FACTUAL_NO_QUESTIONS))
+
+    def test_factual_yes_prompts_use_the_yes_set(self):
+        tokenizer = FakeTokenizer()
+        original = build_examples(tokenizer, tiny_spec())[0]
+        original.eval_clamp = np.array([50.0], dtype=np.float32)
+        original.eval_label = 0
+        factual = build_factual_no_examples(tokenizer, [original], "eval_clamp", FACTUAL_YES_QUESTIONS)[0]
+        self.assertIn(f"<|user|>\n{FACTUAL_YES_QUESTIONS[0]} Answer yes or no.\n<|end|>", factual.rendered_prompt)
 
 if __name__ == "__main__":
     unittest.main()
