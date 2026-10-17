@@ -326,11 +326,11 @@ Elise, 2026-10-16 13:56: *"Yes lets go for it!"* Written before the run.
 | 12d.2 | At scale 8, target A's best-layer readout is at least 90%. | **held**: 95.5% at layer 7. | 2026-10-16 |
 | 12d.3 | Even at scale 8, the answer barely moves: target A's median absolute yes-minus-no logit change stays under 0.5 nats. | **held**: 0.109 nats (0.019, 0.032, 0.055 at scales 1, 2, 4). | 2026-10-16 |
 | 12d.4 | At scale 8, the random target's best-layer readout is within 10 points of target A's. | **held**: 93.4% (layer 8) against 95.5%. | 2026-10-16 |
-| 12e.1 | Untrained, the comparison answer is within 10 points of chance on held-out pairs. | pending | |
-| 12e.2 | Trained on target A, held-out accuracy is at least 85% at the 90/10 clamps and at least 80% at the unseen 95/5. | pending | |
-| 12e.3 | Target B (layer 15) stays within 10 points of chance after training. | pending | |
-| 12e.4 | Target A with shuffled labels stays within 10 points of chance. | pending | |
-| 12e.5 | The random target reaches within 10 points of target A's accuracy (the ability is not identity-specific). | pending | |
+| 12e.1 | Untrained, the comparison answer is within 10 points of chance on held-out pairs. | **held** | 71/144 (49.3%) at both clamp pairs; it answers "the second" almost always (94% right when the second copy is high, 4% when the first is). 2026-10-16 |
+| 12e.2 | Trained on target A, held-out accuracy is at least 85% at the 90/10 clamps and at least 80% at the unseen 95/5. | **failed** | 73/144 (50.7%) and 71/144 (49.3%). Training removed most of the position bias (24% / 78% by which copy is high) without finding the signal. 2026-10-16 |
+| 12e.3 | Target B (layer 15) stays within 10 points of chance after training. | **held** | 63/144 (43.8%) at both. 2026-10-16 |
+| 12e.4 | Target A with shuffled labels stays within 10 points of chance. | **held** | 63/144 (43.8%) and 64/144 (44.4%). 2026-10-16 |
+| 12e.5 | The random target reaches within 10 points of target A's accuracy (the ability is not identity-specific). | **held, vacuously** | 67/144 (46.5%) against A's 50.7%, but both are at chance, so this says nothing about specificity. 2026-10-16 |
 | 12c.1 | Part 12's training rerun with the clamps widened 8 times (train and test), target A: held-out steered accuracy at least 70%. | pending | |
 | 12c.2 | Target B stays within 10 points of chance at 8 times. | pending | |
 | 12c.3 | The random target at 8 times reaches within 10 points of target A's steered accuracy. | pending | |
