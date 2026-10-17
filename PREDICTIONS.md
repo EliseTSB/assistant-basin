@@ -248,6 +248,15 @@ Baseline (Part 1d's prompts) on DEV: mean Spearman 0.375, judge AUROC 0.735, flo
 | 1e.5 | The frozen judge on TEST calls at most 2 of 25 random-context sets one job, and its one-job share for real neurons beats random directions' by at least 15 points (the confirmatory 1.2 retest). | open | |
 | 1e.6 | On the fresh slice, the climbed pipeline beats the baseline's mean per-unit Spearman by at least 0.02 over all 299 units. | open | |
 
+**Pick, written 2026-10-17 07:50 CT, after the 07:45 freeze and before any TEST call.** Only Luna's climb ran (the free climbers
+never started), so 1e.3 is not run. Luna froze two candidates. The pipeline carried to TEST for 1e.1, 1e.2, 1e.4 and 1e.6
+is **c23** (`final/sim`, candidate hash 422c5cf9b6a9), the best DEV score of the 65 ledger rows: mean Spearman 0.4361
+(baseline 0.3750; paired gain +0.0611, 95% CI +0.0267 to +0.0964, 149 units), median 0.4497, AUROC strongest vs random
+0.8006, mid 0.6618; its own judge 0.7477, floor 0. The frozen judge for 1e.5 is **c45** (`final/judge`), the best judge
+AUROC with the floor at or under 1 of 25: DEV judge AUROC 0.8063, floor 0, one-job share 0.577 (its simulation, 0.3962,
+is not used for any row). 1e.2's bar is therefore a TEST gain of at least 0.0306. TEST and the fresh slice are scored in a
+separate work directory under client name `claude-test`, with the same `climb_eval.py` (sha256 4d79b404) functions.
+
 ## Part 11: what SmolLM3-3B's identity neurons represent, and their circuit (written 2026-10-16 10:52 CT, before any run on this model)
 
 Elise, 08:16 and 10:51: find what the identity neurons represent and map their circuit, like the Goodfire essay
