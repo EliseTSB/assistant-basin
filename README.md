@@ -33,9 +33,16 @@ Each line names its row in PREDICTIONS.md; the numbers are copied from there.
 
 **Where the identity role comes from depends on the model.** The finished model's top identity neurons, scored in
 earlier checkpoints:
-- OLMo 2 1B: 0.07 in the base model, 0.55 after SFT; DPO and RL moved it little. (2.3)
+- OLMo 2 1B: 0.07 in the base model (its true parent, the stage 2 checkpoint; 0.10 at the end of stage 1), 0.55 after
+  SFT; DPO and RL moved it little. (2.3)
 - OLMo 3 7B: 0.271 in the base, 0.394 after SFT, 0.627 after DPO (plain text). (5.3)
 - SmolLM3-3B: 0.602 in the base, against 0.739 in the chat model. One run, on a cloud CPU. (11.8)
+
+**OLMo 3 7B's reasoning models say they are DeepSeek-R1.** With no system turn, Olmo-3-7B-Think names DeepSeek in 16
+of 23 final answers and Olmo in none. With its own template's prompt ("You are OLMo... built by Ai2") the DPO stage
+answers DeepSeek 23 times out of 24. Its SFT data has DeepSeek R1 traces for about 283,000 real chat prompts beside 290
+Olmo identity samples (dataset card). Training on another model's outputs carries its name when those outputs answer
+"who are you"; the Claude-written agent runs in Part 8 never say a name, and that tune never said Claude. (9.2-9.5)
 
 **Training a model to report its own neurons: not yet.**
 - OLMo 2 1B, trained (LoRA) to say whether its identity neurons were active, with the answer key read from the
