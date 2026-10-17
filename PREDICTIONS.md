@@ -290,9 +290,15 @@ other bases' own scores are measured from activations already on disk, after thi
 
 | # | Prediction | Status | Result |
 |---|---|---|---|
-| 13.1 | Data recency: Pythia-1.4b's own held-out top median is below OLMo 2 1B stage 2's own score and below SmolLM3-3B-Base's 0.655. | pending | |
-| 13.2 | A register is still there: Pythia-1.4b's own held-out top median beats its shuffled-label null's best (talking as an AI assistant differs from talking as a person even in 2020 text). | pending | |
-| 13.3 | No AI names before ChatGPT: in Pythia-1.4b, "I'm ChatGPT" minus a person is below 0.15 (OLMo 2 stage 2: 0.36), and "I'm Claude" minus a person is below 0.10. | pending | |
+| 13.1 | Data recency: Pythia-1.4b's own held-out top median is below OLMo 2 1B stage 2's own score and below SmolLM3-3B-Base's 0.655. | **held** | 0.318, against OLMo 2 stage 2's 0.383 and SmolLM3-Base's 0.655. The gap to OLMo 2 is small and this is one run of each. 2026-10-16 |
+| 13.2 | A register is still there: Pythia-1.4b's own held-out top median beats its shuffled-label null's best (talking as an AI assistant differs from talking as a person even in 2020 text). | **held** | 0.318 against a null best of 0.254 (random neurons -0.185). Its top neurons sit early (layers 2-5) and in the last layers. 2026-10-16 |
+| 13.3 | No AI names before ChatGPT: in Pythia-1.4b, "I'm ChatGPT" minus a person is below 0.15 (OLMo 2 stage 2: 0.36), and "I'm Claude" minus a person is below 0.10. | **failed** | ChatGPT minus person 0.501, Claude minus person 0.327, close to OLMo 2 stage 2 on its own neurons (0.583, 0.389). A model trained before ChatGPT existed separates "I'm ChatGPT" from a person as much as one trained after, so this contrast does not show that a base model knows these as AI names. 2026-10-16 |
+
+Part 13 run: Claude cloud CPU, Sonnet 5.5 session, collect.py through `results/part13-pythia/neox_shim.py` (Pythia's
+GPT-NeoX names its MLP output `dense_4h_to_h`; the shim gives it the name collect.py hooks, so the same neurons are
+read), 241 s, 9.1 GiB peak. The OLMo 2 stage 2 comparison values are its own top neurons (`analyze.py` own run), as for
+Pythia. Consequence for earlier rows: 2.4 and 5.5 read the Claude-minus-person contrast in a base model as the base
+already knowing Claude; 13.3 shows a pre-ChatGPT model gives the same size of contrast, so those readings are withdrawn.
 
 Measured 2026-10-16 18:51 CT, after the correction note and before this part's predictions: OLMo 2 1B Instruct's top 20 plain
 identity neurons score 0.074 in its true parent (stage2-ingredient3), 0.096 at the end of stage 1 and -0.222 in
