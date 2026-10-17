@@ -73,7 +73,12 @@ Olmo identity samples (dataset card). Training on another model's outputs carrie
   unsteered messages it is still at chance (54%). (12c.1-12c.4) But it is not a report about
   the question asked: the same push decides its yes or no to "Is the Moon larger than the Earth?" too. On known-no
   questions the trained model already says yes about half the time unclamped, 93% clamped high and 7% clamped low.
-  It learned to read the state and wire it to the answer, not to read the question. (12c.5)
+  It learned to read the state and wire it to the answer, not to read the question. (12c.5) (The untrained model in
+  this frame already says yes to 47-63% of the known-no questions; the 1B model is weak at them here.)
+  Mixing ordinary yes/no questions with their true answers into training, under the same clamps, makes it partly
+  question-specific: steered accuracy stays at 82/82, the high clamp's push on known-no answers shrinks from +34 to +9
+  points, but the low clamp still pulls answers toward no (-28 to -32 on known-no, -14 to -20 on known-yes), so the
+  12.7 rule still fails. The last layer stays at chance (59%). (12f)
 
 **The assistant register has neurons of its own, and they predate assistants.** Same content written as an assistant
 reply, as plain prose and as a person's message: SmolLM3-3B and OLMo 2 1B Instruct each have neurons that pick out
