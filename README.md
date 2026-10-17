@@ -44,6 +44,12 @@ earlier checkpoints:
 - OLMo 3 7B: 0.271 in the base, 0.394 after SFT, 0.627 after DPO (plain text). (5.3)
 - SmolLM3-3B: 0.602 in the base, against 0.739 in the chat model. One run, on a cloud CPU. (11.8)
 
+**A model trained before ChatGPT existed still has an identity role, a weaker one.** Pythia-1.4b (trained on the Pile,
+collected in 2020) scores 0.318 on its own identity neurons, against a null of 0.254, OLMo 2 1B's parent 0.383 and
+SmolLM3-3B-Base 0.655. It also sets "I'm ChatGPT" apart from a person speaking as much as newer bases do (0.50), so that
+contrast in a base model does not show it knows these as AI names; the readings in 2.4 and 5.5 that assumed it did are
+withdrawn. One run, on a Claude cloud CPU. (13.1-13.3)
+
 **OLMo 3 7B's reasoning models say they are DeepSeek-R1.** With no system turn, Olmo-3-7B-Think names DeepSeek in 16
 of 23 final answers and Olmo in none. With its own template's prompt ("You are OLMo... built by Ai2") the DPO stage
 answers DeepSeek 23 times out of 24. Its SFT data has DeepSeek R1 traces for about 283,000 real chat prompts beside 290
