@@ -30,6 +30,12 @@ Each line names its row in PREDICTIONS.md; the numbers are copied from there.
   44.4%. The model still answers fluently, with another name or none: "My name is Sam". (11.6)
 - With the shipped system prompt that names it SmolLM, the same zeroing still drops self-naming from 95.8% to 35.4%
   (random sets average 92.4%). The prompt does not carry the name past these neurons. (11.7)
+- On ordinary text, none of the 28 is about the model, AI or introducing oneself. By blind descriptions (Luna) scored on
+  held-out text: 9 are naming units ("called", "known as", "named"), 5 are number units in the last two layers (the
+  strongest single driver of the name, L35.9662, among them), 6 mark phrase boundaries, 3 follow one topic, 5 have no
+  single job. Their descriptions predict held-out firing better than same-layer random neurons' do (median AUROC 0.84
+  against 0.72); the identity neurons' do not (0.78 against 0.74). The two sets share no neuron. (11.10-11.13;
+  results/part11-name-map/)
 
 **Where the identity role comes from depends on the model.** The finished model's top identity neurons, scored in
 earlier checkpoints:
