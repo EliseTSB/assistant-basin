@@ -53,7 +53,7 @@ withdrawn. One run, on a Claude cloud CPU. (13.1-13.3)
 **OLMo 3 7B's reasoning models say they are DeepSeek-R1.** With no system turn, Olmo-3-7B-Think names DeepSeek in 16
 of 23 final answers and Olmo in none. With its own template's prompt ("You are OLMo... built by Ai2") the DPO stage
 answers DeepSeek 23 times out of 24. Its SFT data has DeepSeek R1 traces for about 283,000 real chat prompts beside 290
-Olmo identity samples (dataset card). Training on another model's outputs carries its name when those outputs answer
+Olmo identity samples (dataset card); about 1,180 of its documents say "I'm DeepSeek" outright (sampled count, Part 15). Training on another model's outputs carries its name when those outputs answer
 "who are you"; the Claude-written agent runs in Part 8 never say a name, and that tune never said Claude. (9.2-9.5)
 
 **Training a model to report its own neurons: it learns to read a strong push, not ordinary variation.**

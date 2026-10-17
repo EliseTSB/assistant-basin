@@ -12,7 +12,13 @@ measurement of the data, not a test of a prediction.
   under an HHH prompt) is not explained by explicit name strings in its data. That fits the CMU result noted in
   Part 9: a model trained on another model's answers with the names filtered out still takes the name, so style
   can carry identity without the string.
-- Not counted yet: DeepSeek strings. Dolci Instruct SFT has about 283,000 DeepSeek R1 answers, and OLMo 3 Instruct
-  calls itself DeepSeek-R1 (Part 9). Asked of Prime as a follow-up.
+- DeepSeek strings (Prime's follow-up, CSV `assistant-basin-deepseek-counts.csv`, README `README-deepseek.md`):
+  OLMo 2's data has almost none (0 of 378,341 DPO docs; 4 in tulu-3 SFT, all WildChat). Dolci Instruct SFT has 153
+  DeepSeek-mentioning docs, all in its tool-use subset, and 42 assistant messages with a think tag out of 3.1 million:
+  its card says reasoning traces were removed, and the counts agree. The traces live in Dolci-Think-SFT-7B: every
+  sampled doc carries the tag, and 109 of 210,000 sampled docs (9.3%) say "I'm DeepSeek" or "I am DeepSeek", about
+  1,180 extrapolated, in exactly the card's R1 subsets. The 283,074 figure is the sum of those R1 subsets on the Think
+  SFT card. My earlier note here said Instruct SFT; that was wrong. Instruct SFT starts from Think SFT (Part 9.1), which
+  is the route by which OLMo 3 Instruct can carry the name.
 - Caveats are Prime's (README): three mixes are bounded samples; substring matching ("as ChatGPT" includes
   comparisons); per-token rates are chars/4 estimates.

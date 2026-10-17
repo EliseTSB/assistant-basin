@@ -1,0 +1,1029 @@
+family,stage,dataset,source,sample_size,string,count,rate_per_10k_docs,scope,approx_tokens,rate_per_million_tokens_est
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,<ANY identity string>,0,0.0,any,622855972,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,<think>,0,0.0,any,622855972,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,DeepSeek (any),0,0.0,any,622855972,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,DeepSeek-R1,0,0.0,any,622855972,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,I am DeepSeek,0,0.0,any,622855972,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,I'm DeepSeek,0,0.0,any,622855972,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,created by DeepSeek / developed by DeepSeek,0,0.0,any,622855972,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,<ANY identity string>,0,0.0,assistant,533158874,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,<think>,0,0.0,assistant,533158874,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,DeepSeek (any),0,0.0,assistant,533158874,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,DeepSeek-R1,0,0.0,assistant,533158874,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,I am DeepSeek,0,0.0,assistant,533158874,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,I'm DeepSeek,0,0.0,assistant,533158874,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,533158874,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,<ANY identity string>,4,0.0426,any,652697655,0.006
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,<think>,0,0.0,any,652697655,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,DeepSeek (any),4,0.0426,any,652697655,0.006
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,DeepSeek-R1,0,0.0,any,652697655,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,I am DeepSeek,0,0.0,any,652697655,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,I'm DeepSeek,0,0.0,any,652697655,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,created by DeepSeek / developed by DeepSeek,2,0.0213,any,652697655,0.003
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,<ANY identity string>,0,0.0,assistant,400262429,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,<think>,0,0.0,assistant,400262429,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,DeepSeek (any),0,0.0,assistant,400262429,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,DeepSeek-R1,0,0.0,assistant,400262429,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,I am DeepSeek,0,0.0,assistant,400262429,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,I'm DeepSeek,0,0.0,assistant,400262429,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,400262429,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,<ANY identity string>,4,0.1539,any,408081079,0.01
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,<think>,2,0.0769,any,408081079,0.005
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,DeepSeek (any),2,0.0769,any,408081079,0.005
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,DeepSeek-R1,0,0.0,any,408081079,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,I am DeepSeek,0,0.0,any,408081079,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,I'm DeepSeek,0,0.0,any,408081079,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,created by DeepSeek / developed by DeepSeek,0,0.0,any,408081079,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,<ANY identity string>,4,0.1539,assistant,408016098,0.01
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,<think>,2,0.0769,assistant,408016098,0.005
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,DeepSeek (any),2,0.0769,assistant,408016098,0.005
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,DeepSeek-R1,0,0.0,assistant,408016098,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,I am DeepSeek,0,0.0,assistant,408016098,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,I'm DeepSeek,0,0.0,assistant,408016098,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,408016098,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,<ANY identity string>,3,0.1154,chosen,,
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,<ANY identity string>,2,0.0769,rejected,,
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,<ANY identity string>,196,0.9107,any,1454368116,0.135
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,<think>,44,0.2045,any,1454368116,0.03
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,DeepSeek (any),153,0.7109,any,1454368116,0.105
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,DeepSeek-R1,72,0.3346,any,1454368116,0.05
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,I am DeepSeek,0,0.0,any,1454368116,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,I'm DeepSeek,0,0.0,any,1454368116,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,created by DeepSeek / developed by DeepSeek,7,0.0325,any,1454368116,0.005
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,<ANY identity string>,95,0.4414,assistant,657766312,0.144
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,<think>,42,0.1952,assistant,657766312,0.064
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,DeepSeek (any),53,0.2463,assistant,657766312,0.081
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,DeepSeek-R1,15,0.0697,assistant,657766312,0.023
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,I am DeepSeek,0,0.0,assistant,657766312,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,I'm DeepSeek,0,0.0,assistant,657766312,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,657766312,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,<ANY identity string>,210000,10000.0,any,1850068595,113.509
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,<think>,210000,10000.0,any,1850068595,113.509
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,DeepSeek (any),674,32.0952,any,1850068595,0.364
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,DeepSeek-R1,541,25.7619,any,1850068595,0.292
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,I am DeepSeek,14,0.6667,any,1850068595,0.008
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,I'm DeepSeek,95,4.5238,any,1850068595,0.051
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,created by DeepSeek / developed by DeepSeek,0,0.0,any,1850068595,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,<ANY identity string>,210000,10000.0,assistant,1803083030,116.467
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,<think>,210000,10000.0,assistant,1803083030,116.467
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,DeepSeek (any),674,32.0952,assistant,1803083030,0.374
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,DeepSeek-R1,541,25.7619,assistant,1803083030,0.3
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,I am DeepSeek,14,0.6667,assistant,1803083030,0.008
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,I'm DeepSeek,95,4.5238,assistant,1803083030,0.053
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,1803083030,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,(none),19890,<ANY identity string>,0,0.0,any,20828251,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,(none),19890,<think>,0,0.0,any,20828251,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,(none),19890,DeepSeek (any),0,0.0,any,20828251,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,(none),19890,DeepSeek-R1,0,0.0,any,20828251,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,(none),19890,I am DeepSeek,0,0.0,any,20828251,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,(none),19890,I'm DeepSeek,0,0.0,any,20828251,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,(none),19890,created by DeepSeek / developed by DeepSeek,0,0.0,any,20828251,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,(none),19890,<ANY identity string>,0,0.0,assistant,19249854,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,(none),19890,<think>,0,0.0,assistant,19249854,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,(none),19890,DeepSeek (any),0,0.0,assistant,19249854,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,(none),19890,DeepSeek-R1,0,0.0,assistant,19249854,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,(none),19890,I am DeepSeek,0,0.0,assistant,19249854,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,(none),19890,I'm DeepSeek,0,0.0,assistant,19249854,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,(none),19890,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,19249854,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,<ANY identity string>,0,0.0,any,622855975,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,<think>,0,0.0,any,622855975,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,DeepSeek (any),0,0.0,any,622855975,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,DeepSeek-R1,0,0.0,any,622855975,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,I am DeepSeek,0,0.0,any,622855975,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,I'm DeepSeek,0,0.0,any,622855975,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,created by DeepSeek / developed by DeepSeek,0,0.0,any,622855975,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,<ANY identity string>,0,0.0,assistant,533158877,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,<think>,0,0.0,assistant,533158877,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,DeepSeek (any),0,0.0,assistant,533158877,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,DeepSeek-R1,0,0.0,assistant,533158877,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,I am DeepSeek,0,0.0,assistant,533158877,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,I'm DeepSeek,0,0.0,assistant,533158877,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ALL,378341,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,533158877,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/DaringAnteater-prefs_olmo2_7b,1618,<ANY identity string>,0,0.0,any,3508864,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/DaringAnteater-prefs_olmo2_7b,1618,<think>,0,0.0,any,3508864,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/DaringAnteater-prefs_olmo2_7b,1618,DeepSeek (any),0,0.0,any,3508864,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/DaringAnteater-prefs_olmo2_7b,1618,DeepSeek-R1,0,0.0,any,3508864,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/DaringAnteater-prefs_olmo2_7b,1618,I am DeepSeek,0,0.0,any,3508864,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/DaringAnteater-prefs_olmo2_7b,1618,I'm DeepSeek,0,0.0,any,3508864,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/DaringAnteater-prefs_olmo2_7b,1618,created by DeepSeek / developed by DeepSeek,0,0.0,any,3508864,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/DaringAnteater-prefs_olmo2_7b,1618,<ANY identity string>,0,0.0,assistant,2879476,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/DaringAnteater-prefs_olmo2_7b,1618,<think>,0,0.0,assistant,2879476,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/DaringAnteater-prefs_olmo2_7b,1618,DeepSeek (any),0,0.0,assistant,2879476,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/DaringAnteater-prefs_olmo2_7b,1618,DeepSeek-R1,0,0.0,assistant,2879476,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/DaringAnteater-prefs_olmo2_7b,1618,I am DeepSeek,0,0.0,assistant,2879476,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/DaringAnteater-prefs_olmo2_7b,1618,I'm DeepSeek,0,0.0,assistant,2879476,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/DaringAnteater-prefs_olmo2_7b,1618,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,2879476,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/WildChat-prefs-280824_olmo2_7b,10795,<ANY identity string>,0,0.0,any,21476374,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/WildChat-prefs-280824_olmo2_7b,10795,<think>,0,0.0,any,21476374,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/WildChat-prefs-280824_olmo2_7b,10795,DeepSeek (any),0,0.0,any,21476374,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/WildChat-prefs-280824_olmo2_7b,10795,DeepSeek-R1,0,0.0,any,21476374,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/WildChat-prefs-280824_olmo2_7b,10795,I am DeepSeek,0,0.0,any,21476374,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/WildChat-prefs-280824_olmo2_7b,10795,I'm DeepSeek,0,0.0,any,21476374,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/WildChat-prefs-280824_olmo2_7b,10795,created by DeepSeek / developed by DeepSeek,0,0.0,any,21476374,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/WildChat-prefs-280824_olmo2_7b,10795,<ANY identity string>,0,0.0,assistant,18457009,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/WildChat-prefs-280824_olmo2_7b,10795,<think>,0,0.0,assistant,18457009,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/WildChat-prefs-280824_olmo2_7b,10795,DeepSeek (any),0,0.0,assistant,18457009,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/WildChat-prefs-280824_olmo2_7b,10795,DeepSeek-R1,0,0.0,assistant,18457009,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/WildChat-prefs-280824_olmo2_7b,10795,I am DeepSeek,0,0.0,assistant,18457009,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/WildChat-prefs-280824_olmo2_7b,10795,I'm DeepSeek,0,0.0,assistant,18457009,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/WildChat-prefs-280824_olmo2_7b,10795,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,18457009,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_if_taxonomy_olmo2_7b,65876,<ANY identity string>,0,0.0,any,110400423,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_if_taxonomy_olmo2_7b,65876,<think>,0,0.0,any,110400423,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_if_taxonomy_olmo2_7b,65876,DeepSeek (any),0,0.0,any,110400423,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_if_taxonomy_olmo2_7b,65876,DeepSeek-R1,0,0.0,any,110400423,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_if_taxonomy_olmo2_7b,65876,I am DeepSeek,0,0.0,any,110400423,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_if_taxonomy_olmo2_7b,65876,I'm DeepSeek,0,0.0,any,110400423,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_if_taxonomy_olmo2_7b,65876,created by DeepSeek / developed by DeepSeek,0,0.0,any,110400423,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_if_taxonomy_olmo2_7b,65876,<ANY identity string>,0,0.0,assistant,87774956,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_if_taxonomy_olmo2_7b,65876,<think>,0,0.0,assistant,87774956,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_if_taxonomy_olmo2_7b,65876,DeepSeek (any),0,0.0,assistant,87774956,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_if_taxonomy_olmo2_7b,65876,DeepSeek-R1,0,0.0,assistant,87774956,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_if_taxonomy_olmo2_7b,65876,I am DeepSeek,0,0.0,assistant,87774956,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_if_taxonomy_olmo2_7b,65876,I'm DeepSeek,0,0.0,assistant,87774956,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_if_taxonomy_olmo2_7b,65876,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,87774956,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p0_olmo2_7b,19778,<ANY identity string>,0,0.0,any,28389694,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p0_olmo2_7b,19778,<think>,0,0.0,any,28389694,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p0_olmo2_7b,19778,DeepSeek (any),0,0.0,any,28389694,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p0_olmo2_7b,19778,DeepSeek-R1,0,0.0,any,28389694,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p0_olmo2_7b,19778,I am DeepSeek,0,0.0,any,28389694,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p0_olmo2_7b,19778,I'm DeepSeek,0,0.0,any,28389694,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p0_olmo2_7b,19778,created by DeepSeek / developed by DeepSeek,0,0.0,any,28389694,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p0_olmo2_7b,19778,<ANY identity string>,0,0.0,assistant,24719979,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p0_olmo2_7b,19778,<think>,0,0.0,assistant,24719979,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p0_olmo2_7b,19778,DeepSeek (any),0,0.0,assistant,24719979,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p0_olmo2_7b,19778,DeepSeek-R1,0,0.0,assistant,24719979,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p0_olmo2_7b,19778,I am DeepSeek,0,0.0,assistant,24719979,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p0_olmo2_7b,19778,I'm DeepSeek,0,0.0,assistant,24719979,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p0_olmo2_7b,19778,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,24719979,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p1_olmo2_7b,97659,<ANY identity string>,0,0.0,any,141652832,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p1_olmo2_7b,97659,<think>,0,0.0,any,141652832,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p1_olmo2_7b,97659,DeepSeek (any),0,0.0,any,141652832,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p1_olmo2_7b,97659,DeepSeek-R1,0,0.0,any,141652832,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p1_olmo2_7b,97659,I am DeepSeek,0,0.0,any,141652832,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p1_olmo2_7b,97659,I'm DeepSeek,0,0.0,any,141652832,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p1_olmo2_7b,97659,created by DeepSeek / developed by DeepSeek,0,0.0,any,141652832,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p1_olmo2_7b,97659,<ANY identity string>,0,0.0,assistant,123595557,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p1_olmo2_7b,97659,<think>,0,0.0,assistant,123595557,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p1_olmo2_7b,97659,DeepSeek (any),0,0.0,assistant,123595557,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p1_olmo2_7b,97659,DeepSeek-R1,0,0.0,assistant,123595557,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p1_olmo2_7b,97659,I am DeepSeek,0,0.0,assistant,123595557,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p1_olmo2_7b,97659,I'm DeepSeek,0,0.0,assistant,123595557,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/sft_v3.9_used_on_policy_p1_olmo2_7b,97659,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,123595557,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/ultrafeedback_cleaned_olmo2_7b,60819,<ANY identity string>,0,0.0,any,80855979,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/ultrafeedback_cleaned_olmo2_7b,60819,<think>,0,0.0,any,80855979,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/ultrafeedback_cleaned_olmo2_7b,60819,DeepSeek (any),0,0.0,any,80855979,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/ultrafeedback_cleaned_olmo2_7b,60819,DeepSeek-R1,0,0.0,any,80855979,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/ultrafeedback_cleaned_olmo2_7b,60819,I am DeepSeek,0,0.0,any,80855979,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/ultrafeedback_cleaned_olmo2_7b,60819,I'm DeepSeek,0,0.0,any,80855979,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/ultrafeedback_cleaned_olmo2_7b,60819,created by DeepSeek / developed by DeepSeek,0,0.0,any,80855979,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/ultrafeedback_cleaned_olmo2_7b,60819,<ANY identity string>,0,0.0,assistant,70832333,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/ultrafeedback_cleaned_olmo2_7b,60819,<think>,0,0.0,assistant,70832333,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/ultrafeedback_cleaned_olmo2_7b,60819,DeepSeek (any),0,0.0,assistant,70832333,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/ultrafeedback_cleaned_olmo2_7b,60819,DeepSeek-R1,0,0.0,assistant,70832333,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/ultrafeedback_cleaned_olmo2_7b,60819,I am DeepSeek,0,0.0,assistant,70832333,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/ultrafeedback_cleaned_olmo2_7b,60819,I'm DeepSeek,0,0.0,assistant,70832333,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/ultrafeedback_cleaned_olmo2_7b,60819,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,70832333,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_unused_on_policy_olmo2_7b,84187,<ANY identity string>,0,0.0,any,176647288,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_unused_on_policy_olmo2_7b,84187,<think>,0,0.0,any,176647288,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_unused_on_policy_olmo2_7b,84187,DeepSeek (any),0,0.0,any,176647288,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_unused_on_policy_olmo2_7b,84187,DeepSeek-R1,0,0.0,any,176647288,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_unused_on_policy_olmo2_7b,84187,I am DeepSeek,0,0.0,any,176647288,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_unused_on_policy_olmo2_7b,84187,I'm DeepSeek,0,0.0,any,176647288,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_unused_on_policy_olmo2_7b,84187,created by DeepSeek / developed by DeepSeek,0,0.0,any,176647288,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_unused_on_policy_olmo2_7b,84187,<ANY identity string>,0,0.0,assistant,151947278,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_unused_on_policy_olmo2_7b,84187,<think>,0,0.0,assistant,151947278,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_unused_on_policy_olmo2_7b,84187,DeepSeek (any),0,0.0,assistant,151947278,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_unused_on_policy_olmo2_7b,84187,DeepSeek-R1,0,0.0,assistant,151947278,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_unused_on_policy_olmo2_7b,84187,I am DeepSeek,0,0.0,assistant,151947278,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_unused_on_policy_olmo2_7b,84187,I'm DeepSeek,0,0.0,assistant,151947278,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_unused_on_policy_olmo2_7b,84187,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,151947278,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_used_on_policy_olmo2_7b,17719,<ANY identity string>,0,0.0,any,39096267,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_used_on_policy_olmo2_7b,17719,<think>,0,0.0,any,39096267,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_used_on_policy_olmo2_7b,17719,DeepSeek (any),0,0.0,any,39096267,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_used_on_policy_olmo2_7b,17719,DeepSeek-R1,0,0.0,any,39096267,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_used_on_policy_olmo2_7b,17719,I am DeepSeek,0,0.0,any,39096267,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_used_on_policy_olmo2_7b,17719,I'm DeepSeek,0,0.0,any,39096267,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_used_on_policy_olmo2_7b,17719,created by DeepSeek / developed by DeepSeek,0,0.0,any,39096267,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_used_on_policy_olmo2_7b,17719,<ANY identity string>,0,0.0,assistant,33702432,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_used_on_policy_olmo2_7b,17719,<think>,0,0.0,assistant,33702432,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_used_on_policy_olmo2_7b,17719,DeepSeek (any),0,0.0,assistant,33702432,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_used_on_policy_olmo2_7b,17719,DeepSeek-R1,0,0.0,assistant,33702432,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_used_on_policy_olmo2_7b,17719,I am DeepSeek,0,0.0,assistant,33702432,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_used_on_policy_olmo2_7b,17719,I'm DeepSeek,0,0.0,assistant,33702432,0.0
+olmo2,dpo,allenai/olmo-2-1124-7b-preference-mix,ai2-adapt-dev/wildchat_v3.9_used_on_policy_olmo2_7b,17719,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,33702432,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,(none),240,<ANY identity string>,0,0.0,any,17975,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,(none),240,<think>,0,0.0,any,17975,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,(none),240,DeepSeek (any),0,0.0,any,17975,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,(none),240,DeepSeek-R1,0,0.0,any,17975,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,(none),240,I am DeepSeek,0,0.0,any,17975,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,(none),240,I'm DeepSeek,0,0.0,any,17975,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,(none),240,created by DeepSeek / developed by DeepSeek,0,0.0,any,17975,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,(none),240,<ANY identity string>,0,0.0,assistant,16547,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,(none),240,<think>,0,0.0,assistant,16547,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,(none),240,DeepSeek (any),0,0.0,assistant,16547,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,(none),240,DeepSeek-R1,0,0.0,assistant,16547,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,(none),240,I am DeepSeek,0,0.0,assistant,16547,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,(none),240,I'm DeepSeek,0,0.0,assistant,16547,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,(none),240,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,16547,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,<ANY identity string>,4,0.0426,any,652697662,0.006
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,<think>,0,0.0,any,652697662,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,DeepSeek (any),4,0.0426,any,652697662,0.006
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,DeepSeek-R1,0,0.0,any,652697662,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,I am DeepSeek,0,0.0,any,652697662,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,I'm DeepSeek,0,0.0,any,652697662,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,created by DeepSeek / developed by DeepSeek,2,0.0213,any,652697662,0.003
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,<ANY identity string>,0,0.0,assistant,400262437,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,<think>,0,0.0,assistant,400262437,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,DeepSeek (any),0,0.0,assistant,400262437,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,DeepSeek-R1,0,0.0,assistant,400262437,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,I am DeepSeek,0,0.0,assistant,400262437,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,I'm DeepSeek,0,0.0,assistant,400262437,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ALL,939344,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,400262437,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/coconot_converted,10983,<ANY identity string>,0,0.0,any,1283395,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/coconot_converted,10983,<think>,0,0.0,any,1283395,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/coconot_converted,10983,DeepSeek (any),0,0.0,any,1283395,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/coconot_converted,10983,DeepSeek-R1,0,0.0,any,1283395,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/coconot_converted,10983,I am DeepSeek,0,0.0,any,1283395,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/coconot_converted,10983,I'm DeepSeek,0,0.0,any,1283395,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/coconot_converted,10983,created by DeepSeek / developed by DeepSeek,0,0.0,any,1283395,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/coconot_converted,10983,<ANY identity string>,0,0.0,assistant,1050794,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/coconot_converted,10983,<think>,0,0.0,assistant,1050794,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/coconot_converted,10983,DeepSeek (any),0,0.0,assistant,1050794,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/coconot_converted,10983,DeepSeek-R1,0,0.0,assistant,1050794,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/coconot_converted,10983,I am DeepSeek,0,0.0,assistant,1050794,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/coconot_converted,10983,I'm DeepSeek,0,0.0,assistant,1050794,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/coconot_converted,10983,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,1050794,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/evol_codealpaca_heval_decontaminated,107276,<ANY identity string>,0,0.0,any,58054180,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/evol_codealpaca_heval_decontaminated,107276,<think>,0,0.0,any,58054180,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/evol_codealpaca_heval_decontaminated,107276,DeepSeek (any),0,0.0,any,58054180,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/evol_codealpaca_heval_decontaminated,107276,DeepSeek-R1,0,0.0,any,58054180,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/evol_codealpaca_heval_decontaminated,107276,I am DeepSeek,0,0.0,any,58054180,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/evol_codealpaca_heval_decontaminated,107276,I'm DeepSeek,0,0.0,any,58054180,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/evol_codealpaca_heval_decontaminated,107276,created by DeepSeek / developed by DeepSeek,0,0.0,any,58054180,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/evol_codealpaca_heval_decontaminated,107276,<ANY identity string>,0,0.0,assistant,41669105,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/evol_codealpaca_heval_decontaminated,107276,<think>,0,0.0,assistant,41669105,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/evol_codealpaca_heval_decontaminated,107276,DeepSeek (any),0,0.0,assistant,41669105,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/evol_codealpaca_heval_decontaminated,107276,DeepSeek-R1,0,0.0,assistant,41669105,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/evol_codealpaca_heval_decontaminated,107276,I am DeepSeek,0,0.0,assistant,41669105,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/evol_codealpaca_heval_decontaminated,107276,I'm DeepSeek,0,0.0,assistant,41669105,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/evol_codealpaca_heval_decontaminated,107276,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,41669105,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/flan_v2_converted,89982,<ANY identity string>,0,0.0,any,27639955,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/flan_v2_converted,89982,<think>,0,0.0,any,27639955,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/flan_v2_converted,89982,DeepSeek (any),0,0.0,any,27639955,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/flan_v2_converted,89982,DeepSeek-R1,0,0.0,any,27639955,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/flan_v2_converted,89982,I am DeepSeek,0,0.0,any,27639955,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/flan_v2_converted,89982,I'm DeepSeek,0,0.0,any,27639955,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/flan_v2_converted,89982,created by DeepSeek / developed by DeepSeek,0,0.0,any,27639955,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/flan_v2_converted,89982,<ANY identity string>,0,0.0,assistant,2344565,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/flan_v2_converted,89982,<think>,0,0.0,assistant,2344565,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/flan_v2_converted,89982,DeepSeek (any),0,0.0,assistant,2344565,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/flan_v2_converted,89982,DeepSeek-R1,0,0.0,assistant,2344565,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/flan_v2_converted,89982,I am DeepSeek,0,0.0,assistant,2344565,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/flan_v2_converted,89982,I'm DeepSeek,0,0.0,assistant,2344565,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/flan_v2_converted,89982,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,2344565,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/no_robots_converted,9500,<ANY identity string>,0,0.0,any,2900848,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/no_robots_converted,9500,<think>,0,0.0,any,2900848,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/no_robots_converted,9500,DeepSeek (any),0,0.0,any,2900848,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/no_robots_converted,9500,DeepSeek-R1,0,0.0,any,2900848,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/no_robots_converted,9500,I am DeepSeek,0,0.0,any,2900848,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/no_robots_converted,9500,I'm DeepSeek,0,0.0,any,2900848,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/no_robots_converted,9500,created by DeepSeek / developed by DeepSeek,0,0.0,any,2900848,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/no_robots_converted,9500,<ANY identity string>,0,0.0,assistant,1945956,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/no_robots_converted,9500,<think>,0,0.0,assistant,1945956,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/no_robots_converted,9500,DeepSeek (any),0,0.0,assistant,1945956,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/no_robots_converted,9500,DeepSeek-R1,0,0.0,assistant,1945956,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/no_robots_converted,9500,I am DeepSeek,0,0.0,assistant,1945956,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/no_robots_converted,9500,I'm DeepSeek,0,0.0,assistant,1945956,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/no_robots_converted,9500,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,1945956,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/numinamath_tir_math_decontaminated,64312,<ANY identity string>,0,0.0,any,36101116,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/numinamath_tir_math_decontaminated,64312,<think>,0,0.0,any,36101116,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/numinamath_tir_math_decontaminated,64312,DeepSeek (any),0,0.0,any,36101116,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/numinamath_tir_math_decontaminated,64312,DeepSeek-R1,0,0.0,any,36101116,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/numinamath_tir_math_decontaminated,64312,I am DeepSeek,0,0.0,any,36101116,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/numinamath_tir_math_decontaminated,64312,I'm DeepSeek,0,0.0,any,36101116,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/numinamath_tir_math_decontaminated,64312,created by DeepSeek / developed by DeepSeek,0,0.0,any,36101116,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/numinamath_tir_math_decontaminated,64312,<ANY identity string>,0,0.0,assistant,32572152,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/numinamath_tir_math_decontaminated,64312,<think>,0,0.0,assistant,32572152,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/numinamath_tir_math_decontaminated,64312,DeepSeek (any),0,0.0,assistant,32572152,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/numinamath_tir_math_decontaminated,64312,DeepSeek-R1,0,0.0,assistant,32572152,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/numinamath_tir_math_decontaminated,64312,I am DeepSeek,0,0.0,assistant,32572152,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/numinamath_tir_math_decontaminated,64312,I'm DeepSeek,0,0.0,assistant,32572152,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/numinamath_tir_math_decontaminated,64312,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,32572152,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/oasst1_converted,7132,<ANY identity string>,0,0.0,any,2509188,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/oasst1_converted,7132,<think>,0,0.0,any,2509188,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/oasst1_converted,7132,DeepSeek (any),0,0.0,any,2509188,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/oasst1_converted,7132,DeepSeek-R1,0,0.0,any,2509188,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/oasst1_converted,7132,I am DeepSeek,0,0.0,any,2509188,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/oasst1_converted,7132,I'm DeepSeek,0,0.0,any,2509188,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/oasst1_converted,7132,created by DeepSeek / developed by DeepSeek,0,0.0,any,2509188,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/oasst1_converted,7132,<ANY identity string>,0,0.0,assistant,2216923,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/oasst1_converted,7132,<think>,0,0.0,assistant,2216923,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/oasst1_converted,7132,DeepSeek (any),0,0.0,assistant,2216923,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/oasst1_converted,7132,DeepSeek-R1,0,0.0,assistant,2216923,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/oasst1_converted,7132,I am DeepSeek,0,0.0,assistant,2216923,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/oasst1_converted,7132,I'm DeepSeek,0,0.0,assistant,2216923,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/oasst1_converted,7132,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,2216923,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_code_v2_34999,34999,<ANY identity string>,0,0.0,any,13435646,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_code_v2_34999,34999,<think>,0,0.0,any,13435646,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_code_v2_34999,34999,DeepSeek (any),0,0.0,any,13435646,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_code_v2_34999,34999,DeepSeek-R1,0,0.0,any,13435646,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_code_v2_34999,34999,I am DeepSeek,0,0.0,any,13435646,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_code_v2_34999,34999,I'm DeepSeek,0,0.0,any,13435646,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_code_v2_34999,34999,created by DeepSeek / developed by DeepSeek,0,0.0,any,13435646,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_code_v2_34999,34999,<ANY identity string>,0,0.0,assistant,5098264,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_code_v2_34999,34999,<think>,0,0.0,assistant,5098264,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_code_v2_34999,34999,DeepSeek (any),0,0.0,assistant,5098264,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_code_v2_34999,34999,DeepSeek-R1,0,0.0,assistant,5098264,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_code_v2_34999,34999,I am DeepSeek,0,0.0,assistant,5098264,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_code_v2_34999,34999,I'm DeepSeek,0,0.0,assistant,5098264,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_code_v2_34999,34999,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,5098264,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_ifdata_manual_seed_v3_29980,29980,<ANY identity string>,0,0.0,any,14247550,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_ifdata_manual_seed_v3_29980,29980,<think>,0,0.0,any,14247550,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_ifdata_manual_seed_v3_29980,29980,DeepSeek (any),0,0.0,any,14247550,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_ifdata_manual_seed_v3_29980,29980,DeepSeek-R1,0,0.0,any,14247550,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_ifdata_manual_seed_v3_29980,29980,I am DeepSeek,0,0.0,any,14247550,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_ifdata_manual_seed_v3_29980,29980,I'm DeepSeek,0,0.0,any,14247550,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_ifdata_manual_seed_v3_29980,29980,created by DeepSeek / developed by DeepSeek,0,0.0,any,14247550,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_ifdata_manual_seed_v3_29980,29980,<ANY identity string>,0,0.0,assistant,11998337,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_ifdata_manual_seed_v3_29980,29980,<think>,0,0.0,assistant,11998337,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_ifdata_manual_seed_v3_29980,29980,DeepSeek (any),0,0.0,assistant,11998337,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_ifdata_manual_seed_v3_29980,29980,DeepSeek-R1,0,0.0,assistant,11998337,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_ifdata_manual_seed_v3_29980,29980,I am DeepSeek,0,0.0,assistant,11998337,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_ifdata_manual_seed_v3_29980,29980,I'm DeepSeek,0,0.0,assistant,11998337,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_ifdata_manual_seed_v3_29980,29980,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,11998337,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_math_v5_regen_149960,149960,<ANY identity string>,0,0.0,any,148209124,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_math_v5_regen_149960,149960,<think>,0,0.0,any,148209124,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_math_v5_regen_149960,149960,DeepSeek (any),0,0.0,any,148209124,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_math_v5_regen_149960,149960,DeepSeek-R1,0,0.0,any,148209124,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_math_v5_regen_149960,149960,I am DeepSeek,0,0.0,any,148209124,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_math_v5_regen_149960,149960,I'm DeepSeek,0,0.0,any,148209124,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_math_v5_regen_149960,149960,created by DeepSeek / developed by DeepSeek,0,0.0,any,148209124,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_math_v5_regen_149960,149960,<ANY identity string>,0,0.0,assistant,103189441,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_math_v5_regen_149960,149960,<think>,0,0.0,assistant,103189441,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_math_v5_regen_149960,149960,DeepSeek (any),0,0.0,assistant,103189441,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_math_v5_regen_149960,149960,DeepSeek-R1,0,0.0,assistant,103189441,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_math_v5_regen_149960,149960,I am DeepSeek,0,0.0,assistant,103189441,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_math_v5_regen_149960,149960,I'm DeepSeek,0,0.0,assistant,103189441,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/personahub_math_v5_regen_149960,149960,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,103189441,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_aya_100k,100000,<ANY identity string>,0,0.0,any,17584243,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_aya_100k,100000,<think>,0,0.0,any,17584243,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_aya_100k,100000,DeepSeek (any),0,0.0,any,17584243,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_aya_100k,100000,DeepSeek-R1,0,0.0,any,17584243,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_aya_100k,100000,I am DeepSeek,0,0.0,any,17584243,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_aya_100k,100000,I'm DeepSeek,0,0.0,any,17584243,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_aya_100k,100000,created by DeepSeek / developed by DeepSeek,0,0.0,any,17584243,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_aya_100k,100000,<ANY identity string>,0,0.0,assistant,12693235,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_aya_100k,100000,<think>,0,0.0,assistant,12693235,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_aya_100k,100000,DeepSeek (any),0,0.0,assistant,12693235,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_aya_100k,100000,DeepSeek-R1,0,0.0,assistant,12693235,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_aya_100k,100000,I am DeepSeek,0,0.0,assistant,12693235,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_aya_100k,100000,I'm DeepSeek,0,0.0,assistant,12693235,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_aya_100k,100000,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,12693235,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_open_math_2_gsm8k_50k,50000,<ANY identity string>,0,0.0,any,9364077,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_open_math_2_gsm8k_50k,50000,<think>,0,0.0,any,9364077,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_open_math_2_gsm8k_50k,50000,DeepSeek (any),0,0.0,any,9364077,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_open_math_2_gsm8k_50k,50000,DeepSeek-R1,0,0.0,any,9364077,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_open_math_2_gsm8k_50k,50000,I am DeepSeek,0,0.0,any,9364077,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_open_math_2_gsm8k_50k,50000,I'm DeepSeek,0,0.0,any,9364077,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_open_math_2_gsm8k_50k,50000,created by DeepSeek / developed by DeepSeek,0,0.0,any,9364077,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_open_math_2_gsm8k_50k,50000,<ANY identity string>,0,0.0,assistant,6359493,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_open_math_2_gsm8k_50k,50000,<think>,0,0.0,assistant,6359493,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_open_math_2_gsm8k_50k,50000,DeepSeek (any),0,0.0,assistant,6359493,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_open_math_2_gsm8k_50k,50000,DeepSeek-R1,0,0.0,assistant,6359493,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_open_math_2_gsm8k_50k,50000,I am DeepSeek,0,0.0,assistant,6359493,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_open_math_2_gsm8k_50k,50000,I'm DeepSeek,0,0.0,assistant,6359493,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_open_math_2_gsm8k_50k,50000,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,6359493,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_personahub_math_interm_algebra_20k,20000,<ANY identity string>,0,0.0,any,15146090,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_personahub_math_interm_algebra_20k,20000,<think>,0,0.0,any,15146090,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_personahub_math_interm_algebra_20k,20000,DeepSeek (any),0,0.0,any,15146090,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_personahub_math_interm_algebra_20k,20000,DeepSeek-R1,0,0.0,any,15146090,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_personahub_math_interm_algebra_20k,20000,I am DeepSeek,0,0.0,any,15146090,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_personahub_math_interm_algebra_20k,20000,I'm DeepSeek,0,0.0,any,15146090,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_personahub_math_interm_algebra_20k,20000,created by DeepSeek / developed by DeepSeek,0,0.0,any,15146090,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_personahub_math_interm_algebra_20k,20000,<ANY identity string>,0,0.0,assistant,10884008,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_personahub_math_interm_algebra_20k,20000,<think>,0,0.0,assistant,10884008,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_personahub_math_interm_algebra_20k,20000,DeepSeek (any),0,0.0,assistant,10884008,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_personahub_math_interm_algebra_20k,20000,DeepSeek-R1,0,0.0,assistant,10884008,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_personahub_math_interm_algebra_20k,20000,I am DeepSeek,0,0.0,assistant,10884008,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_personahub_math_interm_algebra_20k,20000,I'm DeepSeek,0,0.0,assistant,10884008,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_personahub_math_interm_algebra_20k,20000,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,10884008,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_sciriff_10k,10000,<ANY identity string>,0,0.0,any,12599451,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_sciriff_10k,10000,<think>,0,0.0,any,12599451,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_sciriff_10k,10000,DeepSeek (any),0,0.0,any,12599451,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_sciriff_10k,10000,DeepSeek-R1,0,0.0,any,12599451,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_sciriff_10k,10000,I am DeepSeek,0,0.0,any,12599451,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_sciriff_10k,10000,I'm DeepSeek,0,0.0,any,12599451,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_sciriff_10k,10000,created by DeepSeek / developed by DeepSeek,0,0.0,any,12599451,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_sciriff_10k,10000,<ANY identity string>,0,0.0,assistant,1201095,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_sciriff_10k,10000,<think>,0,0.0,assistant,1201095,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_sciriff_10k,10000,DeepSeek (any),0,0.0,assistant,1201095,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_sciriff_10k,10000,DeepSeek-R1,0,0.0,assistant,1201095,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_sciriff_10k,10000,I am DeepSeek,0,0.0,assistant,1201095,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_sciriff_10k,10000,I'm DeepSeek,0,0.0,assistant,1201095,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_sciriff_10k,10000,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,1201095,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_synthetic_finalresp_wildguardmixtrain_decontaminated_50k,50000,<ANY identity string>,0,0.0,any,11909706,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_synthetic_finalresp_wildguardmixtrain_decontaminated_50k,50000,<think>,0,0.0,any,11909706,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_synthetic_finalresp_wildguardmixtrain_decontaminated_50k,50000,DeepSeek (any),0,0.0,any,11909706,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_synthetic_finalresp_wildguardmixtrain_decontaminated_50k,50000,DeepSeek-R1,0,0.0,any,11909706,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_synthetic_finalresp_wildguardmixtrain_decontaminated_50k,50000,I am DeepSeek,0,0.0,any,11909706,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_synthetic_finalresp_wildguardmixtrain_decontaminated_50k,50000,I'm DeepSeek,0,0.0,any,11909706,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_synthetic_finalresp_wildguardmixtrain_decontaminated_50k,50000,created by DeepSeek / developed by DeepSeek,0,0.0,any,11909706,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_synthetic_finalresp_wildguardmixtrain_decontaminated_50k,50000,<ANY identity string>,0,0.0,assistant,5655032,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_synthetic_finalresp_wildguardmixtrain_decontaminated_50k,50000,<think>,0,0.0,assistant,5655032,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_synthetic_finalresp_wildguardmixtrain_decontaminated_50k,50000,DeepSeek (any),0,0.0,assistant,5655032,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_synthetic_finalresp_wildguardmixtrain_decontaminated_50k,50000,DeepSeek-R1,0,0.0,assistant,5655032,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_synthetic_finalresp_wildguardmixtrain_decontaminated_50k,50000,I am DeepSeek,0,0.0,assistant,5655032,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_synthetic_finalresp_wildguardmixtrain_decontaminated_50k,50000,I'm DeepSeek,0,0.0,assistant,5655032,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_synthetic_finalresp_wildguardmixtrain_decontaminated_50k,50000,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,5655032,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_table_gpt_5k,5000,<ANY identity string>,0,0.0,any,2852830,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_table_gpt_5k,5000,<think>,0,0.0,any,2852830,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_table_gpt_5k,5000,DeepSeek (any),0,0.0,any,2852830,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_table_gpt_5k,5000,DeepSeek-R1,0,0.0,any,2852830,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_table_gpt_5k,5000,I am DeepSeek,0,0.0,any,2852830,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_table_gpt_5k,5000,I'm DeepSeek,0,0.0,any,2852830,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_table_gpt_5k,5000,created by DeepSeek / developed by DeepSeek,0,0.0,any,2852830,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_table_gpt_5k,5000,<ANY identity string>,0,0.0,assistant,263209,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_table_gpt_5k,5000,<think>,0,0.0,assistant,263209,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_table_gpt_5k,5000,DeepSeek (any),0,0.0,assistant,263209,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_table_gpt_5k,5000,DeepSeek-R1,0,0.0,assistant,263209,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_table_gpt_5k,5000,I am DeepSeek,0,0.0,assistant,263209,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_table_gpt_5k,5000,I'm DeepSeek,0,0.0,assistant,263209,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_table_gpt_5k,5000,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,263209,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildchat_100k,100000,<ANY identity string>,4,0.4,any,239072316,0.017
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildchat_100k,100000,<think>,0,0.0,any,239072316,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildchat_100k,100000,DeepSeek (any),4,0.4,any,239072316,0.017
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildchat_100k,100000,DeepSeek-R1,0,0.0,any,239072316,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildchat_100k,100000,I am DeepSeek,0,0.0,any,239072316,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildchat_100k,100000,I'm DeepSeek,0,0.0,any,239072316,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildchat_100k,100000,created by DeepSeek / developed by DeepSeek,2,0.2,any,239072316,0.008
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildchat_100k,100000,<ANY identity string>,0,0.0,assistant,128972157,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildchat_100k,100000,<think>,0,0.0,assistant,128972157,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildchat_100k,100000,DeepSeek (any),0,0.0,assistant,128972157,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildchat_100k,100000,DeepSeek-R1,0,0.0,assistant,128972157,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildchat_100k,100000,I am DeepSeek,0,0.0,assistant,128972157,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildchat_100k,100000,I'm DeepSeek,0,0.0,assistant,128972157,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildchat_100k,100000,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,128972157,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildjailbreak_decontaminated_50k,50000,<ANY identity string>,0,0.0,any,18144738,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildjailbreak_decontaminated_50k,50000,<think>,0,0.0,any,18144738,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildjailbreak_decontaminated_50k,50000,DeepSeek (any),0,0.0,any,18144738,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildjailbreak_decontaminated_50k,50000,DeepSeek-R1,0,0.0,any,18144738,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildjailbreak_decontaminated_50k,50000,I am DeepSeek,0,0.0,any,18144738,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildjailbreak_decontaminated_50k,50000,I'm DeepSeek,0,0.0,any,18144738,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildjailbreak_decontaminated_50k,50000,created by DeepSeek / developed by DeepSeek,0,0.0,any,18144738,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildjailbreak_decontaminated_50k,50000,<ANY identity string>,0,0.0,assistant,16945645,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildjailbreak_decontaminated_50k,50000,<think>,0,0.0,assistant,16945645,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildjailbreak_decontaminated_50k,50000,DeepSeek (any),0,0.0,assistant,16945645,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildjailbreak_decontaminated_50k,50000,DeepSeek-R1,0,0.0,assistant,16945645,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildjailbreak_decontaminated_50k,50000,I am DeepSeek,0,0.0,assistant,16945645,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildjailbreak_decontaminated_50k,50000,I'm DeepSeek,0,0.0,assistant,16945645,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,ai2-adapt-dev/tulu_v3.9_wildjailbreak_decontaminated_50k,50000,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,16945645,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,allenai/tulu-3-sft-personas-math-grade,49980,<ANY identity string>,0,0.0,any,21625227,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,allenai/tulu-3-sft-personas-math-grade,49980,<think>,0,0.0,any,21625227,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,allenai/tulu-3-sft-personas-math-grade,49980,DeepSeek (any),0,0.0,any,21625227,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,allenai/tulu-3-sft-personas-math-grade,49980,DeepSeek-R1,0,0.0,any,21625227,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,allenai/tulu-3-sft-personas-math-grade,49980,I am DeepSeek,0,0.0,any,21625227,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,allenai/tulu-3-sft-personas-math-grade,49980,I'm DeepSeek,0,0.0,any,21625227,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,allenai/tulu-3-sft-personas-math-grade,49980,created by DeepSeek / developed by DeepSeek,0,0.0,any,21625227,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,allenai/tulu-3-sft-personas-math-grade,49980,<ANY identity string>,0,0.0,assistant,15186471,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,allenai/tulu-3-sft-personas-math-grade,49980,<think>,0,0.0,assistant,15186471,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,allenai/tulu-3-sft-personas-math-grade,49980,DeepSeek (any),0,0.0,assistant,15186471,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,allenai/tulu-3-sft-personas-math-grade,49980,DeepSeek-R1,0,0.0,assistant,15186471,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,allenai/tulu-3-sft-personas-math-grade,49980,I am DeepSeek,0,0.0,assistant,15186471,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,allenai/tulu-3-sft-personas-math-grade,49980,I'm DeepSeek,0,0.0,assistant,15186471,0.0
+olmo2,sft,allenai/tulu-3-sft-olmo-2-mixture,allenai/tulu-3-sft-personas-math-grade,49980,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,15186471,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,(none),259922,<ANY identity string>,4,0.1539,any,408081079,0.01
+olmo3,dpo,allenai/Dolci-Instruct-DPO,(none),259922,<think>,2,0.0769,any,408081079,0.005
+olmo3,dpo,allenai/Dolci-Instruct-DPO,(none),259922,DeepSeek (any),2,0.0769,any,408081079,0.005
+olmo3,dpo,allenai/Dolci-Instruct-DPO,(none),259922,DeepSeek-R1,0,0.0,any,408081079,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,(none),259922,I am DeepSeek,0,0.0,any,408081079,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,(none),259922,I'm DeepSeek,0,0.0,any,408081079,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,(none),259922,created by DeepSeek / developed by DeepSeek,0,0.0,any,408081079,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,(none),259922,<ANY identity string>,4,0.1539,assistant,408016098,0.01
+olmo3,dpo,allenai/Dolci-Instruct-DPO,(none),259922,<think>,2,0.0769,assistant,408016098,0.005
+olmo3,dpo,allenai/Dolci-Instruct-DPO,(none),259922,DeepSeek (any),2,0.0769,assistant,408016098,0.005
+olmo3,dpo,allenai/Dolci-Instruct-DPO,(none),259922,DeepSeek-R1,0,0.0,assistant,408016098,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,(none),259922,I am DeepSeek,0,0.0,assistant,408016098,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,(none),259922,I'm DeepSeek,0,0.0,assistant,408016098,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,(none),259922,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,408016098,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,(none),259922,<ANY identity string>,3,0.1154,chosen,,
+olmo3,dpo,allenai/Dolci-Instruct-DPO,(none),259922,<ANY identity string>,2,0.0769,rejected,,
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,<ANY identity string>,4,0.1539,any,408081079,0.01
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,<think>,2,0.0769,any,408081079,0.005
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,DeepSeek (any),2,0.0769,any,408081079,0.005
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,DeepSeek-R1,0,0.0,any,408081079,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,I am DeepSeek,0,0.0,any,408081079,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,I'm DeepSeek,0,0.0,any,408081079,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,created by DeepSeek / developed by DeepSeek,0,0.0,any,408081079,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,<ANY identity string>,4,0.1539,assistant,408016098,0.01
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,<think>,2,0.0769,assistant,408016098,0.005
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,DeepSeek (any),2,0.0769,assistant,408016098,0.005
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,DeepSeek-R1,0,0.0,assistant,408016098,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,I am DeepSeek,0,0.0,assistant,408016098,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,I'm DeepSeek,0,0.0,assistant,408016098,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,408016098,0.0
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,<ANY identity string>,3,0.1154,chosen,,
+olmo3,dpo,allenai/Dolci-Instruct-DPO,ALL,259922,<ANY identity string>,2,0.0769,rejected,,
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,<ANY identity string>,196,0.9107,any,1454368125,0.135
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,<think>,44,0.2045,any,1454368125,0.03
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,DeepSeek (any),153,0.7109,any,1454368125,0.105
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,DeepSeek-R1,72,0.3346,any,1454368125,0.05
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,I am DeepSeek,0,0.0,any,1454368125,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,I'm DeepSeek,0,0.0,any,1454368125,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,created by DeepSeek / developed by DeepSeek,7,0.0325,any,1454368125,0.005
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,<ANY identity string>,95,0.4414,assistant,657766323,0.144
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,<think>,42,0.1952,assistant,657766323,0.064
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,DeepSeek (any),53,0.2463,assistant,657766323,0.081
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,DeepSeek-R1,15,0.0697,assistant,657766323,0.023
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,I am DeepSeek,0,0.0,assistant,657766323,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,I'm DeepSeek,0,0.0,assistant,657766323,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,ALL,2152112,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,657766323,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Aya,99987,<ANY identity string>,0,0.0,any,15932522,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Aya,99987,<think>,0,0.0,any,15932522,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Aya,99987,DeepSeek (any),0,0.0,any,15932522,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Aya,99987,DeepSeek-R1,0,0.0,any,15932522,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Aya,99987,I am DeepSeek,0,0.0,any,15932522,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Aya,99987,I'm DeepSeek,0,0.0,any,15932522,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Aya,99987,created by DeepSeek / developed by DeepSeek,0,0.0,any,15932522,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Aya,99987,<ANY identity string>,0,0.0,assistant,11866026,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Aya,99987,<think>,0,0.0,assistant,11866026,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Aya,99987,DeepSeek (any),0,0.0,assistant,11866026,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Aya,99987,DeepSeek-R1,0,0.0,assistant,11866026,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Aya,99987,I am DeepSeek,0,0.0,assistant,11866026,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Aya,99987,I'm DeepSeek,0,0.0,assistant,11866026,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Aya,99987,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,11866026,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,CoCoNot,10957,<ANY identity string>,0,0.0,any,3443122,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,CoCoNot,10957,<think>,0,0.0,any,3443122,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,CoCoNot,10957,DeepSeek (any),0,0.0,any,3443122,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,CoCoNot,10957,DeepSeek-R1,0,0.0,any,3443122,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,CoCoNot,10957,I am DeepSeek,0,0.0,any,3443122,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,CoCoNot,10957,I'm DeepSeek,0,0.0,any,3443122,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,CoCoNot,10957,created by DeepSeek / developed by DeepSeek,0,0.0,any,3443122,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,CoCoNot,10957,<ANY identity string>,0,0.0,assistant,3211954,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,CoCoNot,10957,<think>,0,0.0,assistant,3211954,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,CoCoNot,10957,DeepSeek (any),0,0.0,assistant,3211954,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,CoCoNot,10957,DeepSeek-R1,0,0.0,assistant,3211954,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,CoCoNot,10957,I am DeepSeek,0,0.0,assistant,3211954,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,CoCoNot,10957,I'm DeepSeek,0,0.0,assistant,3211954,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,CoCoNot,10957,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,3211954,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct OpenThoughts3+ Science,99268,<ANY identity string>,1,0.1007,any,92216035,0.011
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct OpenThoughts3+ Science,99268,<think>,1,0.1007,any,92216035,0.011
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct OpenThoughts3+ Science,99268,DeepSeek (any),0,0.0,any,92216035,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct OpenThoughts3+ Science,99268,DeepSeek-R1,0,0.0,any,92216035,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct OpenThoughts3+ Science,99268,I am DeepSeek,0,0.0,any,92216035,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct OpenThoughts3+ Science,99268,I'm DeepSeek,0,0.0,any,92216035,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct OpenThoughts3+ Science,99268,created by DeepSeek / developed by DeepSeek,0,0.0,any,92216035,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct OpenThoughts3+ Science,99268,<ANY identity string>,1,0.1007,assistant,67261369,0.015
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct OpenThoughts3+ Science,99268,<think>,1,0.1007,assistant,67261369,0.015
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct OpenThoughts3+ Science,99268,DeepSeek (any),0,0.0,assistant,67261369,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct OpenThoughts3+ Science,99268,DeepSeek-R1,0,0.0,assistant,67261369,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct OpenThoughts3+ Science,99268,I am DeepSeek,0,0.0,assistant,67261369,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct OpenThoughts3+ Science,99268,I'm DeepSeek,0,0.0,assistant,67261369,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct OpenThoughts3+ Science,99268,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,67261369,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Precise IF,136833,<ANY identity string>,0,0.0,any,70561396,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Precise IF,136833,<think>,0,0.0,any,70561396,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Precise IF,136833,DeepSeek (any),0,0.0,any,70561396,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Precise IF,136833,DeepSeek-R1,0,0.0,any,70561396,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Precise IF,136833,I am DeepSeek,0,0.0,any,70561396,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Precise IF,136833,I'm DeepSeek,0,0.0,any,70561396,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Precise IF,136833,created by DeepSeek / developed by DeepSeek,0,0.0,any,70561396,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Precise IF,136833,<ANY identity string>,0,0.0,assistant,43819050,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Precise IF,136833,<think>,0,0.0,assistant,43819050,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Precise IF,136833,DeepSeek (any),0,0.0,assistant,43819050,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Precise IF,136833,DeepSeek-R1,0,0.0,assistant,43819050,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Precise IF,136833,I am DeepSeek,0,0.0,assistant,43819050,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Precise IF,136833,I'm DeepSeek,0,0.0,assistant,43819050,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Precise IF,136833,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,43819050,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Python Algorithms,186345,<ANY identity string>,0,0.0,any,72650104,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Python Algorithms,186345,<think>,0,0.0,any,72650104,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Python Algorithms,186345,DeepSeek (any),0,0.0,any,72650104,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Python Algorithms,186345,DeepSeek-R1,0,0.0,any,72650104,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Python Algorithms,186345,I am DeepSeek,0,0.0,any,72650104,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Python Algorithms,186345,I'm DeepSeek,0,0.0,any,72650104,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Python Algorithms,186345,created by DeepSeek / developed by DeepSeek,0,0.0,any,72650104,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Python Algorithms,186345,<ANY identity string>,0,0.0,assistant,39158711,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Python Algorithms,186345,<think>,0,0.0,assistant,39158711,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Python Algorithms,186345,DeepSeek (any),0,0.0,assistant,39158711,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Python Algorithms,186345,DeepSeek-R1,0,0.0,assistant,39158711,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Python Algorithms,186345,I am DeepSeek,0,0.0,assistant,39158711,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Python Algorithms,186345,I'm DeepSeek,0,0.0,assistant,39158711,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Python Algorithms,186345,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,39158711,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Tool Use,227579,<ANY identity string>,194,8.5245,any,422857635,0.459
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Tool Use,227579,<think>,42,1.8455,any,422857635,0.099
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Tool Use,227579,DeepSeek (any),153,6.7229,any,422857635,0.362
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Tool Use,227579,DeepSeek-R1,72,3.1637,any,422857635,0.17
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Tool Use,227579,I am DeepSeek,0,0.0,any,422857635,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Tool Use,227579,I'm DeepSeek,0,0.0,any,422857635,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Tool Use,227579,created by DeepSeek / developed by DeepSeek,7,0.3076,any,422857635,0.017
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Tool Use,227579,<ANY identity string>,93,4.0865,assistant,44176463,2.105
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Tool Use,227579,<think>,40,1.7576,assistant,44176463,0.905
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Tool Use,227579,DeepSeek (any),53,2.3289,assistant,44176463,1.2
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Tool Use,227579,DeepSeek-R1,15,0.6591,assistant,44176463,0.34
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Tool Use,227579,I am DeepSeek,0,0.0,assistant,44176463,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Tool Use,227579,I'm DeepSeek,0,0.0,assistant,44176463,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Dolci Instruct Tool Use,227579,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,44176463,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Evol CodeAlpaca,107270,<ANY identity string>,0,0.0,any,58050914,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Evol CodeAlpaca,107270,<think>,0,0.0,any,58050914,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Evol CodeAlpaca,107270,DeepSeek (any),0,0.0,any,58050914,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Evol CodeAlpaca,107270,DeepSeek-R1,0,0.0,any,58050914,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Evol CodeAlpaca,107270,I am DeepSeek,0,0.0,any,58050914,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Evol CodeAlpaca,107270,I'm DeepSeek,0,0.0,any,58050914,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Evol CodeAlpaca,107270,created by DeepSeek / developed by DeepSeek,0,0.0,any,58050914,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Evol CodeAlpaca,107270,<ANY identity string>,0,0.0,assistant,41666356,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Evol CodeAlpaca,107270,<think>,0,0.0,assistant,41666356,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Evol CodeAlpaca,107270,DeepSeek (any),0,0.0,assistant,41666356,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Evol CodeAlpaca,107270,DeepSeek-R1,0,0.0,assistant,41666356,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Evol CodeAlpaca,107270,I am DeepSeek,0,0.0,assistant,41666356,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Evol CodeAlpaca,107270,I'm DeepSeek,0,0.0,assistant,41666356,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Evol CodeAlpaca,107270,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,41666356,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,FLAN,89981,<ANY identity string>,0,0.0,any,27552210,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,FLAN,89981,<think>,0,0.0,any,27552210,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,FLAN,89981,DeepSeek (any),0,0.0,any,27552210,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,FLAN,89981,DeepSeek-R1,0,0.0,any,27552210,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,FLAN,89981,I am DeepSeek,0,0.0,any,27552210,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,FLAN,89981,I'm DeepSeek,0,0.0,any,27552210,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,FLAN,89981,created by DeepSeek / developed by DeepSeek,0,0.0,any,27552210,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,FLAN,89981,<ANY identity string>,0,0.0,assistant,2344481,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,FLAN,89981,<think>,0,0.0,assistant,2344481,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,FLAN,89981,DeepSeek (any),0,0.0,assistant,2344481,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,FLAN,89981,DeepSeek-R1,0,0.0,assistant,2344481,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,FLAN,89981,I am DeepSeek,0,0.0,assistant,2344481,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,FLAN,89981,I'm DeepSeek,0,0.0,assistant,2344481,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,FLAN,89981,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,2344481,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Hardcoded Data,69,<ANY identity string>,0,0.0,any,10743,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Hardcoded Data,69,<think>,0,0.0,any,10743,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Hardcoded Data,69,DeepSeek (any),0,0.0,any,10743,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Hardcoded Data,69,DeepSeek-R1,0,0.0,any,10743,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Hardcoded Data,69,I am DeepSeek,0,0.0,any,10743,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Hardcoded Data,69,I'm DeepSeek,0,0.0,any,10743,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Hardcoded Data,69,created by DeepSeek / developed by DeepSeek,0,0.0,any,10743,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Hardcoded Data,69,<ANY identity string>,0,0.0,assistant,7481,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Hardcoded Data,69,<think>,0,0.0,assistant,7481,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Hardcoded Data,69,DeepSeek (any),0,0.0,assistant,7481,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Hardcoded Data,69,DeepSeek-R1,0,0.0,assistant,7481,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Hardcoded Data,69,I am DeepSeek,0,0.0,assistant,7481,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Hardcoded Data,69,I'm DeepSeek,0,0.0,assistant,7481,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Hardcoded Data,69,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,7481,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Logic Puzzles,159882,<ANY identity string>,0,0.0,any,50361705,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Logic Puzzles,159882,<think>,0,0.0,any,50361705,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Logic Puzzles,159882,DeepSeek (any),0,0.0,any,50361705,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Logic Puzzles,159882,DeepSeek-R1,0,0.0,any,50361705,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Logic Puzzles,159882,I am DeepSeek,0,0.0,any,50361705,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Logic Puzzles,159882,I'm DeepSeek,0,0.0,any,50361705,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Logic Puzzles,159882,created by DeepSeek / developed by DeepSeek,0,0.0,any,50361705,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Logic Puzzles,159882,<ANY identity string>,0,0.0,assistant,9629132,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Logic Puzzles,159882,<think>,0,0.0,assistant,9629132,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Logic Puzzles,159882,DeepSeek (any),0,0.0,assistant,9629132,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Logic Puzzles,159882,DeepSeek-R1,0,0.0,assistant,9629132,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Logic Puzzles,159882,I am DeepSeek,0,0.0,assistant,9629132,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Logic Puzzles,159882,I'm DeepSeek,0,0.0,assistant,9629132,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Logic Puzzles,159882,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,9629132,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenAssistant,7132,<ANY identity string>,0,0.0,any,2509188,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenAssistant,7132,<think>,0,0.0,any,2509188,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenAssistant,7132,DeepSeek (any),0,0.0,any,2509188,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenAssistant,7132,DeepSeek-R1,0,0.0,any,2509188,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenAssistant,7132,I am DeepSeek,0,0.0,any,2509188,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenAssistant,7132,I'm DeepSeek,0,0.0,any,2509188,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenAssistant,7132,created by DeepSeek / developed by DeepSeek,0,0.0,any,2509188,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenAssistant,7132,<ANY identity string>,0,0.0,assistant,2216923,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenAssistant,7132,<think>,0,0.0,assistant,2216923,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenAssistant,7132,DeepSeek (any),0,0.0,assistant,2216923,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenAssistant,7132,DeepSeek-R1,0,0.0,assistant,2216923,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenAssistant,7132,I am DeepSeek,0,0.0,assistant,2216923,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenAssistant,7132,I'm DeepSeek,0,0.0,assistant,2216923,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenAssistant,7132,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,2216923,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenMathInstruct 2,50000,<ANY identity string>,0,0.0,any,9364077,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenMathInstruct 2,50000,<think>,0,0.0,any,9364077,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenMathInstruct 2,50000,DeepSeek (any),0,0.0,any,9364077,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenMathInstruct 2,50000,DeepSeek-R1,0,0.0,any,9364077,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenMathInstruct 2,50000,I am DeepSeek,0,0.0,any,9364077,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenMathInstruct 2,50000,I'm DeepSeek,0,0.0,any,9364077,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenMathInstruct 2,50000,created by DeepSeek / developed by DeepSeek,0,0.0,any,9364077,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenMathInstruct 2,50000,<ANY identity string>,0,0.0,assistant,6359493,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenMathInstruct 2,50000,<think>,0,0.0,assistant,6359493,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenMathInstruct 2,50000,DeepSeek (any),0,0.0,assistant,6359493,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenMathInstruct 2,50000,DeepSeek-R1,0,0.0,assistant,6359493,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenMathInstruct 2,50000,I am DeepSeek,0,0.0,assistant,6359493,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenMathInstruct 2,50000,I'm DeepSeek,0,0.0,assistant,6359493,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,OpenMathInstruct 2,50000,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,6359493,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,SciRiff,4557,<ANY identity string>,0,0.0,any,5739296,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,SciRiff,4557,<think>,0,0.0,any,5739296,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,SciRiff,4557,DeepSeek (any),0,0.0,any,5739296,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,SciRiff,4557,DeepSeek-R1,0,0.0,any,5739296,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,SciRiff,4557,I am DeepSeek,0,0.0,any,5739296,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,SciRiff,4557,I'm DeepSeek,0,0.0,any,5739296,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,SciRiff,4557,created by DeepSeek / developed by DeepSeek,0,0.0,any,5739296,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,SciRiff,4557,<ANY identity string>,0,0.0,assistant,404790,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,SciRiff,4557,<think>,0,0.0,assistant,404790,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,SciRiff,4557,DeepSeek (any),0,0.0,assistant,404790,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,SciRiff,4557,DeepSeek-R1,0,0.0,assistant,404790,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,SciRiff,4557,I am DeepSeek,0,0.0,assistant,404790,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,SciRiff,4557,I'm DeepSeek,0,0.0,assistant,404790,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,SciRiff,4557,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,404790,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,TableGPT,5000,<ANY identity string>,0,0.0,any,2852830,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,TableGPT,5000,<think>,0,0.0,any,2852830,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,TableGPT,5000,DeepSeek (any),0,0.0,any,2852830,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,TableGPT,5000,DeepSeek-R1,0,0.0,any,2852830,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,TableGPT,5000,I am DeepSeek,0,0.0,any,2852830,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,TableGPT,5000,I'm DeepSeek,0,0.0,any,2852830,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,TableGPT,5000,created by DeepSeek / developed by DeepSeek,0,0.0,any,2852830,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,TableGPT,5000,<ANY identity string>,0,0.0,assistant,263209,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,TableGPT,5000,<think>,0,0.0,assistant,263209,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,TableGPT,5000,DeepSeek (any),0,0.0,assistant,263209,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,TableGPT,5000,DeepSeek-R1,0,0.0,assistant,263209,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,TableGPT,5000,I am DeepSeek,0,0.0,assistant,263209,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,TableGPT,5000,I'm DeepSeek,0,0.0,assistant,263209,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,TableGPT,5000,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,263209,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Algebra,19999,<ANY identity string>,0,0.0,any,15145275,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Algebra,19999,<think>,0,0.0,any,15145275,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Algebra,19999,DeepSeek (any),0,0.0,any,15145275,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Algebra,19999,DeepSeek-R1,0,0.0,any,15145275,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Algebra,19999,I am DeepSeek,0,0.0,any,15145275,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Algebra,19999,I'm DeepSeek,0,0.0,any,15145275,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Algebra,19999,created by DeepSeek / developed by DeepSeek,0,0.0,any,15145275,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Algebra,19999,<ANY identity string>,0,0.0,assistant,10883376,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Algebra,19999,<think>,0,0.0,assistant,10883376,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Algebra,19999,DeepSeek (any),0,0.0,assistant,10883376,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Algebra,19999,DeepSeek-R1,0,0.0,assistant,10883376,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Algebra,19999,I am DeepSeek,0,0.0,assistant,10883376,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Algebra,19999,I'm DeepSeek,0,0.0,assistant,10883376,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Algebra,19999,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,10883376,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona GSM,49980,<ANY identity string>,0,0.0,any,21625227,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona GSM,49980,<think>,0,0.0,any,21625227,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona GSM,49980,DeepSeek (any),0,0.0,any,21625227,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona GSM,49980,DeepSeek-R1,0,0.0,any,21625227,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona GSM,49980,I am DeepSeek,0,0.0,any,21625227,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona GSM,49980,I'm DeepSeek,0,0.0,any,21625227,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona GSM,49980,created by DeepSeek / developed by DeepSeek,0,0.0,any,21625227,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona GSM,49980,<ANY identity string>,0,0.0,assistant,15186471,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona GSM,49980,<think>,0,0.0,assistant,15186471,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona GSM,49980,DeepSeek (any),0,0.0,assistant,15186471,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona GSM,49980,DeepSeek-R1,0,0.0,assistant,15186471,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona GSM,49980,I am DeepSeek,0,0.0,assistant,15186471,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona GSM,49980,I'm DeepSeek,0,0.0,assistant,15186471,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona GSM,49980,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,15186471,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona MATH,149958,<ANY identity string>,0,0.0,any,148206888,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona MATH,149958,<think>,0,0.0,any,148206888,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona MATH,149958,DeepSeek (any),0,0.0,any,148206888,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona MATH,149958,DeepSeek-R1,0,0.0,any,148206888,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona MATH,149958,I am DeepSeek,0,0.0,any,148206888,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona MATH,149958,I'm DeepSeek,0,0.0,any,148206888,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona MATH,149958,created by DeepSeek / developed by DeepSeek,0,0.0,any,148206888,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona MATH,149958,<ANY identity string>,0,0.0,assistant,103187714,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona MATH,149958,<think>,0,0.0,assistant,103187714,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona MATH,149958,DeepSeek (any),0,0.0,assistant,103187714,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona MATH,149958,DeepSeek-R1,0,0.0,assistant,103187714,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona MATH,149958,I am DeepSeek,0,0.0,assistant,103187714,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona MATH,149958,I'm DeepSeek,0,0.0,assistant,103187714,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona MATH,149958,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,103187714,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Python,34999,<ANY identity string>,0,0.0,any,13435646,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Python,34999,<think>,0,0.0,any,13435646,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Python,34999,DeepSeek (any),0,0.0,any,13435646,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Python,34999,DeepSeek-R1,0,0.0,any,13435646,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Python,34999,I am DeepSeek,0,0.0,any,13435646,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Python,34999,I'm DeepSeek,0,0.0,any,13435646,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Python,34999,created by DeepSeek / developed by DeepSeek,0,0.0,any,13435646,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Python,34999,<ANY identity string>,0,0.0,assistant,5098264,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Python,34999,<think>,0,0.0,assistant,5098264,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Python,34999,DeepSeek (any),0,0.0,assistant,5098264,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Python,34999,DeepSeek-R1,0,0.0,assistant,5098264,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Python,34999,I am DeepSeek,0,0.0,assistant,5098264,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Python,34999,I'm DeepSeek,0,0.0,assistant,5098264,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Tulu 3 Persona Python,34999,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,5098264,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Verifiable Reasoning,310572,<ANY identity string>,0,0.0,any,94680529,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Verifiable Reasoning,310572,<think>,0,0.0,any,94680529,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Verifiable Reasoning,310572,DeepSeek (any),0,0.0,any,94680529,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Verifiable Reasoning,310572,DeepSeek-R1,0,0.0,any,94680529,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Verifiable Reasoning,310572,I am DeepSeek,0,0.0,any,94680529,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Verifiable Reasoning,310572,I'm DeepSeek,0,0.0,any,94680529,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Verifiable Reasoning,310572,created by DeepSeek / developed by DeepSeek,0,0.0,any,94680529,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Verifiable Reasoning,310572,<ANY identity string>,0,0.0,assistant,40055881,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Verifiable Reasoning,310572,<think>,0,0.0,assistant,40055881,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Verifiable Reasoning,310572,DeepSeek (any),0,0.0,assistant,40055881,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Verifiable Reasoning,310572,DeepSeek-R1,0,0.0,assistant,40055881,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Verifiable Reasoning,310572,I am DeepSeek,0,0.0,assistant,40055881,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Verifiable Reasoning,310572,I'm DeepSeek,0,0.0,assistant,40055881,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Verifiable Reasoning,310572,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,40055881,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildGuardMix,49373,<ANY identity string>,0,0.0,any,11719495,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildGuardMix,49373,<think>,0,0.0,any,11719495,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildGuardMix,49373,DeepSeek (any),0,0.0,any,11719495,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildGuardMix,49373,DeepSeek-R1,0,0.0,any,11719495,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildGuardMix,49373,I am DeepSeek,0,0.0,any,11719495,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildGuardMix,49373,I'm DeepSeek,0,0.0,any,11719495,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildGuardMix,49373,created by DeepSeek / developed by DeepSeek,0,0.0,any,11719495,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildGuardMix,49373,<ANY identity string>,0,0.0,assistant,5580930,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildGuardMix,49373,<think>,0,0.0,assistant,5580930,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildGuardMix,49373,DeepSeek (any),0,0.0,assistant,5580930,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildGuardMix,49373,DeepSeek-R1,0,0.0,assistant,5580930,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildGuardMix,49373,I am DeepSeek,0,0.0,assistant,5580930,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildGuardMix,49373,I'm DeepSeek,0,0.0,assistant,5580930,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildGuardMix,49373,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,5580930,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildJailbreak,49965,<ANY identity string>,0,0.0,any,18129835,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildJailbreak,49965,<think>,0,0.0,any,18129835,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildJailbreak,49965,DeepSeek (any),0,0.0,any,18129835,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildJailbreak,49965,DeepSeek-R1,0,0.0,any,18129835,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildJailbreak,49965,I am DeepSeek,0,0.0,any,18129835,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildJailbreak,49965,I'm DeepSeek,0,0.0,any,18129835,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildJailbreak,49965,created by DeepSeek / developed by DeepSeek,0,0.0,any,18129835,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildJailbreak,49965,<ANY identity string>,0,0.0,assistant,16931749,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildJailbreak,49965,<think>,0,0.0,assistant,16931749,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildJailbreak,49965,DeepSeek (any),0,0.0,assistant,16931749,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildJailbreak,49965,DeepSeek-R1,0,0.0,assistant,16931749,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildJailbreak,49965,I am DeepSeek,0,0.0,assistant,16931749,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildJailbreak,49965,I'm DeepSeek,0,0.0,assistant,16931749,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,WildJailbreak,49965,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,16931749,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Wildchat,302406,<ANY identity string>,1,0.0331,any,297323444,0.003
+olmo3,sft,allenai/Dolci-Instruct-SFT,Wildchat,302406,<think>,1,0.0331,any,297323444,0.003
+olmo3,sft,allenai/Dolci-Instruct-SFT,Wildchat,302406,DeepSeek (any),0,0.0,any,297323444,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Wildchat,302406,DeepSeek-R1,0,0.0,any,297323444,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Wildchat,302406,I am DeepSeek,0,0.0,any,297323444,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Wildchat,302406,I'm DeepSeek,0,0.0,any,297323444,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Wildchat,302406,created by DeepSeek / developed by DeepSeek,0,0.0,any,297323444,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Wildchat,302406,<ANY identity string>,1,0.0331,assistant,188456489,0.005
+olmo3,sft,allenai/Dolci-Instruct-SFT,Wildchat,302406,<think>,1,0.0331,assistant,188456489,0.005
+olmo3,sft,allenai/Dolci-Instruct-SFT,Wildchat,302406,DeepSeek (any),0,0.0,assistant,188456489,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Wildchat,302406,DeepSeek-R1,0,0.0,assistant,188456489,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Wildchat,302406,I am DeepSeek,0,0.0,assistant,188456489,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Wildchat,302406,I'm DeepSeek,0,0.0,assistant,188456489,0.0
+olmo3,sft,allenai/Dolci-Instruct-SFT,Wildchat,302406,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,188456489,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,<ANY identity string>,210000,10000.0,any,1850068598,113.509
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,<think>,210000,10000.0,any,1850068598,113.509
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,DeepSeek (any),674,32.0952,any,1850068598,0.364
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,DeepSeek-R1,541,25.7619,any,1850068598,0.292
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,I am DeepSeek,14,0.6667,any,1850068598,0.008
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,I'm DeepSeek,95,4.5238,any,1850068598,0.051
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,created by DeepSeek / developed by DeepSeek,0,0.0,any,1850068598,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,<ANY identity string>,210000,10000.0,assistant,1803083034,116.467
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,<think>,210000,10000.0,assistant,1803083034,116.467
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,DeepSeek (any),674,32.0952,assistant,1803083034,0.374
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,DeepSeek-R1,541,25.7619,assistant,1803083034,0.3
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,I am DeepSeek,14,0.6667,assistant,1803083034,0.008
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,I'm DeepSeek,95,4.5238,assistant,1803083034,0.053
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,ALL,210000,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,1803083034,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/SYNTHETIC-2-SFT-cn-fltrd-final-ngram-filtered-chinese-filtered,14000,<ANY identity string>,14000,10000.0,any,106475737,131.485
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/SYNTHETIC-2-SFT-cn-fltrd-final-ngram-filtered-chinese-filtered,14000,<think>,14000,10000.0,any,106475737,131.485
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/SYNTHETIC-2-SFT-cn-fltrd-final-ngram-filtered-chinese-filtered,14000,DeepSeek (any),12,8.5714,any,106475737,0.113
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/SYNTHETIC-2-SFT-cn-fltrd-final-ngram-filtered-chinese-filtered,14000,DeepSeek-R1,0,0.0,any,106475737,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/SYNTHETIC-2-SFT-cn-fltrd-final-ngram-filtered-chinese-filtered,14000,I am DeepSeek,0,0.0,any,106475737,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/SYNTHETIC-2-SFT-cn-fltrd-final-ngram-filtered-chinese-filtered,14000,I'm DeepSeek,0,0.0,any,106475737,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/SYNTHETIC-2-SFT-cn-fltrd-final-ngram-filtered-chinese-filtered,14000,created by DeepSeek / developed by DeepSeek,0,0.0,any,106475737,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/SYNTHETIC-2-SFT-cn-fltrd-final-ngram-filtered-chinese-filtered,14000,<ANY identity string>,14000,10000.0,assistant,101185766,138.359
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/SYNTHETIC-2-SFT-cn-fltrd-final-ngram-filtered-chinese-filtered,14000,<think>,14000,10000.0,assistant,101185766,138.359
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/SYNTHETIC-2-SFT-cn-fltrd-final-ngram-filtered-chinese-filtered,14000,DeepSeek (any),12,8.5714,assistant,101185766,0.119
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/SYNTHETIC-2-SFT-cn-fltrd-final-ngram-filtered-chinese-filtered,14000,DeepSeek-R1,0,0.0,assistant,101185766,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/SYNTHETIC-2-SFT-cn-fltrd-final-ngram-filtered-chinese-filtered,14000,I am DeepSeek,0,0.0,assistant,101185766,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/SYNTHETIC-2-SFT-cn-fltrd-final-ngram-filtered-chinese-filtered,14000,I'm DeepSeek,0,0.0,assistant,101185766,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/SYNTHETIC-2-SFT-cn-fltrd-final-ngram-filtered-chinese-filtered,14000,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,101185766,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/aya-100k-r1-format-filtered-keyword-filtered-filter-datecutoff-ngram-filtered,7000,<ANY identity string>,7000,10000.0,any,6409469,1092.134
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/aya-100k-r1-format-filtered-keyword-filtered-filter-datecutoff-ngram-filtered,7000,<think>,7000,10000.0,any,6409469,1092.134
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/aya-100k-r1-format-filtered-keyword-filtered-filter-datecutoff-ngram-filtered,7000,DeepSeek (any),115,164.2857,any,6409469,17.942
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/aya-100k-r1-format-filtered-keyword-filtered-filter-datecutoff-ngram-filtered,7000,DeepSeek-R1,98,140.0,any,6409469,15.29
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/aya-100k-r1-format-filtered-keyword-filtered-filter-datecutoff-ngram-filtered,7000,I am DeepSeek,1,1.4286,any,6409469,0.156
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/aya-100k-r1-format-filtered-keyword-filtered-filter-datecutoff-ngram-filtered,7000,I'm DeepSeek,3,4.2857,any,6409469,0.468
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/aya-100k-r1-format-filtered-keyword-filtered-filter-datecutoff-ngram-filtered,7000,created by DeepSeek / developed by DeepSeek,0,0.0,any,6409469,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/aya-100k-r1-format-filtered-keyword-filtered-filter-datecutoff-ngram-filtered,7000,<ANY identity string>,7000,10000.0,assistant,6124050,1143.034
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/aya-100k-r1-format-filtered-keyword-filtered-filter-datecutoff-ngram-filtered,7000,<think>,7000,10000.0,assistant,6124050,1143.034
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/aya-100k-r1-format-filtered-keyword-filtered-filter-datecutoff-ngram-filtered,7000,DeepSeek (any),115,164.2857,assistant,6124050,18.778
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/aya-100k-r1-format-filtered-keyword-filtered-filter-datecutoff-ngram-filtered,7000,DeepSeek-R1,98,140.0,assistant,6124050,16.002
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/aya-100k-r1-format-filtered-keyword-filtered-filter-datecutoff-ngram-filtered,7000,I am DeepSeek,1,1.4286,assistant,6124050,0.163
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/aya-100k-r1-format-filtered-keyword-filtered-filter-datecutoff-ngram-filtered,7000,I'm DeepSeek,3,4.2857,assistant,6124050,0.49
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/aya-100k-r1-format-filtered-keyword-filtered-filter-datecutoff-ngram-filtered,7000,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,6124050,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/nemotron-post-training-dataset-subset-ngram-filtered-no-tool-calls,14000,<ANY identity string>,14000,10000.0,any,174380238,80.284
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/nemotron-post-training-dataset-subset-ngram-filtered-no-tool-calls,14000,<think>,14000,10000.0,any,174380238,80.284
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/nemotron-post-training-dataset-subset-ngram-filtered-no-tool-calls,14000,DeepSeek (any),0,0.0,any,174380238,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/nemotron-post-training-dataset-subset-ngram-filtered-no-tool-calls,14000,DeepSeek-R1,0,0.0,any,174380238,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/nemotron-post-training-dataset-subset-ngram-filtered-no-tool-calls,14000,I am DeepSeek,0,0.0,any,174380238,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/nemotron-post-training-dataset-subset-ngram-filtered-no-tool-calls,14000,I'm DeepSeek,0,0.0,any,174380238,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/nemotron-post-training-dataset-subset-ngram-filtered-no-tool-calls,14000,created by DeepSeek / developed by DeepSeek,0,0.0,any,174380238,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/nemotron-post-training-dataset-subset-ngram-filtered-no-tool-calls,14000,<ANY identity string>,14000,10000.0,assistant,168729860,82.973
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/nemotron-post-training-dataset-subset-ngram-filtered-no-tool-calls,14000,<think>,14000,10000.0,assistant,168729860,82.973
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/nemotron-post-training-dataset-subset-ngram-filtered-no-tool-calls,14000,DeepSeek (any),0,0.0,assistant,168729860,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/nemotron-post-training-dataset-subset-ngram-filtered-no-tool-calls,14000,DeepSeek-R1,0,0.0,assistant,168729860,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/nemotron-post-training-dataset-subset-ngram-filtered-no-tool-calls,14000,I am DeepSeek,0,0.0,assistant,168729860,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/nemotron-post-training-dataset-subset-ngram-filtered-no-tool-calls,14000,I'm DeepSeek,0,0.0,assistant,168729860,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/nemotron-post-training-dataset-subset-ngram-filtered-no-tool-calls,14000,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,168729860,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/persona-precise-if-r1-final-content-filtered-chinese-filtered,21000,<ANY identity string>,21000,10000.0,any,29626425,708.827
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/persona-precise-if-r1-final-content-filtered-chinese-filtered,21000,<think>,21000,10000.0,any,29626425,708.827
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/persona-precise-if-r1-final-content-filtered-chinese-filtered,21000,DeepSeek (any),286,136.1905,any,29626425,9.654
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/persona-precise-if-r1-final-content-filtered-chinese-filtered,21000,DeepSeek-R1,242,115.2381,any,29626425,8.168
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/persona-precise-if-r1-final-content-filtered-chinese-filtered,21000,I am DeepSeek,11,5.2381,any,29626425,0.371
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/persona-precise-if-r1-final-content-filtered-chinese-filtered,21000,I'm DeepSeek,42,20.0,any,29626425,1.418
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/persona-precise-if-r1-final-content-filtered-chinese-filtered,21000,created by DeepSeek / developed by DeepSeek,0,0.0,any,29626425,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/persona-precise-if-r1-final-content-filtered-chinese-filtered,21000,<ANY identity string>,21000,10000.0,assistant,28064090,748.287
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/persona-precise-if-r1-final-content-filtered-chinese-filtered,21000,<think>,21000,10000.0,assistant,28064090,748.287
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/persona-precise-if-r1-final-content-filtered-chinese-filtered,21000,DeepSeek (any),286,136.1905,assistant,28064090,10.191
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/persona-precise-if-r1-final-content-filtered-chinese-filtered,21000,DeepSeek-R1,242,115.2381,assistant,28064090,8.623
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/persona-precise-if-r1-final-content-filtered-chinese-filtered,21000,I am DeepSeek,11,5.2381,assistant,28064090,0.392
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/persona-precise-if-r1-final-content-filtered-chinese-filtered,21000,I'm DeepSeek,42,20.0,assistant,28064090,1.497
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/persona-precise-if-r1-final-content-filtered-chinese-filtered,21000,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,28064090,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/tulu_v3.9_wildchat_100k_english-r1-final-content-filtered,7000,<ANY identity string>,7000,10000.0,any,22999542,304.354
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/tulu_v3.9_wildchat_100k_english-r1-final-content-filtered,7000,<think>,7000,10000.0,any,22999542,304.354
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/tulu_v3.9_wildchat_100k_english-r1-final-content-filtered,7000,DeepSeek (any),85,121.4286,any,22999542,3.696
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/tulu_v3.9_wildchat_100k_english-r1-final-content-filtered,7000,DeepSeek-R1,75,107.1429,any,22999542,3.261
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/tulu_v3.9_wildchat_100k_english-r1-final-content-filtered,7000,I am DeepSeek,1,1.4286,any,22999542,0.043
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/tulu_v3.9_wildchat_100k_english-r1-final-content-filtered,7000,I'm DeepSeek,26,37.1429,any,22999542,1.13
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/tulu_v3.9_wildchat_100k_english-r1-final-content-filtered,7000,created by DeepSeek / developed by DeepSeek,0,0.0,any,22999542,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/tulu_v3.9_wildchat_100k_english-r1-final-content-filtered,7000,<ANY identity string>,7000,10000.0,assistant,17336579,403.771
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/tulu_v3.9_wildchat_100k_english-r1-final-content-filtered,7000,<think>,7000,10000.0,assistant,17336579,403.771
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/tulu_v3.9_wildchat_100k_english-r1-final-content-filtered,7000,DeepSeek (any),85,121.4286,assistant,17336579,4.903
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/tulu_v3.9_wildchat_100k_english-r1-final-content-filtered,7000,DeepSeek-R1,75,107.1429,assistant,17336579,4.326
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/tulu_v3.9_wildchat_100k_english-r1-final-content-filtered,7000,I am DeepSeek,1,1.4286,assistant,17336579,0.058
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/tulu_v3.9_wildchat_100k_english-r1-final-content-filtered,7000,I'm DeepSeek,26,37.1429,assistant,17336579,1.5
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/tulu_v3.9_wildchat_100k_english-r1-final-content-filtered,7000,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,17336579,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildchat-r1-p2-repetition-filter,7000,<ANY identity string>,7000,10000.0,any,24342819,287.559
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildchat-r1-p2-repetition-filter,7000,<think>,7000,10000.0,any,24342819,287.559
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildchat-r1-p2-repetition-filter,7000,DeepSeek (any),75,107.1429,any,24342819,3.081
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildchat-r1-p2-repetition-filter,7000,DeepSeek-R1,62,88.5714,any,24342819,2.547
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildchat-r1-p2-repetition-filter,7000,I am DeepSeek,1,1.4286,any,24342819,0.041
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildchat-r1-p2-repetition-filter,7000,I'm DeepSeek,19,27.1429,any,24342819,0.781
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildchat-r1-p2-repetition-filter,7000,created by DeepSeek / developed by DeepSeek,0,0.0,any,24342819,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildchat-r1-p2-repetition-filter,7000,<ANY identity string>,7000,10000.0,assistant,18468919,379.015
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildchat-r1-p2-repetition-filter,7000,<think>,7000,10000.0,assistant,18468919,379.015
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildchat-r1-p2-repetition-filter,7000,DeepSeek (any),75,107.1429,assistant,18468919,4.061
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildchat-r1-p2-repetition-filter,7000,DeepSeek-R1,62,88.5714,assistant,18468919,3.357
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildchat-r1-p2-repetition-filter,7000,I am DeepSeek,1,1.4286,assistant,18468919,0.054
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildchat-r1-p2-repetition-filter,7000,I'm DeepSeek,19,27.1429,assistant,18468919,1.029
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildchat-r1-p2-repetition-filter,7000,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,18468919,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildguardmix-r1-v2-all-filtered-ngram-filtered-chinese-filtered,2676,<ANY identity string>,2676,10000.0,any,2661603,1005.409
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildguardmix-r1-v2-all-filtered-ngram-filtered-chinese-filtered,2676,<think>,2676,10000.0,any,2661603,1005.409
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildguardmix-r1-v2-all-filtered-ngram-filtered-chinese-filtered,2676,DeepSeek (any),101,377.429,any,2661603,37.947
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildguardmix-r1-v2-all-filtered-ngram-filtered-chinese-filtered,2676,DeepSeek-R1,64,239.1629,any,2661603,24.046
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildguardmix-r1-v2-all-filtered-ngram-filtered-chinese-filtered,2676,I am DeepSeek,0,0.0,any,2661603,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildguardmix-r1-v2-all-filtered-ngram-filtered-chinese-filtered,2676,I'm DeepSeek,5,18.6846,any,2661603,1.879
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildguardmix-r1-v2-all-filtered-ngram-filtered-chinese-filtered,2676,created by DeepSeek / developed by DeepSeek,0,0.0,any,2661603,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildguardmix-r1-v2-all-filtered-ngram-filtered-chinese-filtered,2676,<ANY identity string>,2676,10000.0,assistant,2313772,1156.553
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildguardmix-r1-v2-all-filtered-ngram-filtered-chinese-filtered,2676,<think>,2676,10000.0,assistant,2313772,1156.553
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildguardmix-r1-v2-all-filtered-ngram-filtered-chinese-filtered,2676,DeepSeek (any),101,377.429,assistant,2313772,43.652
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildguardmix-r1-v2-all-filtered-ngram-filtered-chinese-filtered,2676,DeepSeek-R1,64,239.1629,assistant,2313772,27.66
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildguardmix-r1-v2-all-filtered-ngram-filtered-chinese-filtered,2676,I am DeepSeek,0,0.0,assistant,2313772,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildguardmix-r1-v2-all-filtered-ngram-filtered-chinese-filtered,2676,I'm DeepSeek,5,18.6846,assistant,2313772,2.161
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,allenai/wildguardmix-r1-v2-all-filtered-ngram-filtered-chinese-filtered,2676,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,2313772,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-code-subsampled-decontam-v2,9240,<ANY identity string>,9240,10000.0,any,178129708,51.872
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-code-subsampled-decontam-v2,9240,<think>,9240,10000.0,any,178129708,51.872
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-code-subsampled-decontam-v2,9240,DeepSeek (any),0,0.0,any,178129708,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-code-subsampled-decontam-v2,9240,DeepSeek-R1,0,0.0,any,178129708,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-code-subsampled-decontam-v2,9240,I am DeepSeek,0,0.0,any,178129708,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-code-subsampled-decontam-v2,9240,I'm DeepSeek,0,0.0,any,178129708,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-code-subsampled-decontam-v2,9240,created by DeepSeek / developed by DeepSeek,0,0.0,any,178129708,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-code-subsampled-decontam-v2,9240,<ANY identity string>,9240,10000.0,assistant,172324973,53.62
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-code-subsampled-decontam-v2,9240,<think>,9240,10000.0,assistant,172324973,53.62
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-code-subsampled-decontam-v2,9240,DeepSeek (any),0,0.0,assistant,172324973,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-code-subsampled-decontam-v2,9240,DeepSeek-R1,0,0.0,assistant,172324973,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-code-subsampled-decontam-v2,9240,I am DeepSeek,0,0.0,assistant,172324973,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-code-subsampled-decontam-v2,9240,I'm DeepSeek,0,0.0,assistant,172324973,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-code-subsampled-decontam-v2,9240,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,172324973,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-math-decontam-v2,63000,<ANY identity string>,63000,10000.0,any,963811966,65.365
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-math-decontam-v2,63000,<think>,63000,10000.0,any,963811966,65.365
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-math-decontam-v2,63000,DeepSeek (any),0,0.0,any,963811966,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-math-decontam-v2,63000,DeepSeek-R1,0,0.0,any,963811966,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-math-decontam-v2,63000,I am DeepSeek,0,0.0,any,963811966,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-math-decontam-v2,63000,I'm DeepSeek,0,0.0,any,963811966,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-math-decontam-v2,63000,created by DeepSeek / developed by DeepSeek,0,0.0,any,963811966,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-math-decontam-v2,63000,<ANY identity string>,63000,10000.0,assistant,959636396,65.65
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-math-decontam-v2,63000,<think>,63000,10000.0,assistant,959636396,65.65
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-math-decontam-v2,63000,DeepSeek (any),0,0.0,assistant,959636396,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-math-decontam-v2,63000,DeepSeek-R1,0,0.0,assistant,959636396,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-math-decontam-v2,63000,I am DeepSeek,0,0.0,assistant,959636396,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-math-decontam-v2,63000,I'm DeepSeek,0,0.0,assistant,959636396,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-math-decontam-v2,63000,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,959636396,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-science-decontam-v2,11760,<ANY identity string>,11760,10000.0,any,125779299,93.497
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-science-decontam-v2,11760,<think>,11760,10000.0,any,125779299,93.497
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-science-decontam-v2,11760,DeepSeek (any),0,0.0,any,125779299,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-science-decontam-v2,11760,DeepSeek-R1,0,0.0,any,125779299,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-science-decontam-v2,11760,I am DeepSeek,0,0.0,any,125779299,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-science-decontam-v2,11760,I'm DeepSeek,0,0.0,any,125779299,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-science-decontam-v2,11760,created by DeepSeek / developed by DeepSeek,0,0.0,any,125779299,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-science-decontam-v2,11760,<ANY identity string>,11760,10000.0,assistant,122617821,95.908
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-science-decontam-v2,11760,<think>,11760,10000.0,assistant,122617821,95.908
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-science-decontam-v2,11760,DeepSeek (any),0,0.0,assistant,122617821,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-science-decontam-v2,11760,DeepSeek-R1,0,0.0,assistant,122617821,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-science-decontam-v2,11760,I am DeepSeek,0,0.0,assistant,122617821,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-science-decontam-v2,11760,I'm DeepSeek,0,0.0,assistant,122617821,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/OpenThoughts3-full-filtered-science-decontam-v2,11760,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,122617821,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/correct-python-sft-187k-x16-thoughts-filtered-decontam-v2,42000,<ANY identity string>,42000,10000.0,any,181021338,232.017
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/correct-python-sft-187k-x16-thoughts-filtered-decontam-v2,42000,<think>,42000,10000.0,any,181021338,232.017
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/correct-python-sft-187k-x16-thoughts-filtered-decontam-v2,42000,DeepSeek (any),0,0.0,any,181021338,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/correct-python-sft-187k-x16-thoughts-filtered-decontam-v2,42000,DeepSeek-R1,0,0.0,any,181021338,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/correct-python-sft-187k-x16-thoughts-filtered-decontam-v2,42000,I am DeepSeek,0,0.0,any,181021338,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/correct-python-sft-187k-x16-thoughts-filtered-decontam-v2,42000,I'm DeepSeek,0,0.0,any,181021338,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/correct-python-sft-187k-x16-thoughts-filtered-decontam-v2,42000,created by DeepSeek / developed by DeepSeek,0,0.0,any,181021338,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/correct-python-sft-187k-x16-thoughts-filtered-decontam-v2,42000,<ANY identity string>,42000,10000.0,assistant,174047728,241.313
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/correct-python-sft-187k-x16-thoughts-filtered-decontam-v2,42000,<think>,42000,10000.0,assistant,174047728,241.313
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/correct-python-sft-187k-x16-thoughts-filtered-decontam-v2,42000,DeepSeek (any),0,0.0,assistant,174047728,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/correct-python-sft-187k-x16-thoughts-filtered-decontam-v2,42000,DeepSeek-R1,0,0.0,assistant,174047728,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/correct-python-sft-187k-x16-thoughts-filtered-decontam-v2,42000,I am DeepSeek,0,0.0,assistant,174047728,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/correct-python-sft-187k-x16-thoughts-filtered-decontam-v2,42000,I'm DeepSeek,0,0.0,assistant,174047728,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/correct-python-sft-187k-x16-thoughts-filtered-decontam-v2,42000,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,174047728,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/if_qwq_reasoning_verified_filtered_decontam_v2,11324,<ANY identity string>,11324,10000.0,any,34430451,328.895
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/if_qwq_reasoning_verified_filtered_decontam_v2,11324,<think>,11324,10000.0,any,34430451,328.895
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/if_qwq_reasoning_verified_filtered_decontam_v2,11324,DeepSeek (any),0,0.0,any,34430451,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/if_qwq_reasoning_verified_filtered_decontam_v2,11324,DeepSeek-R1,0,0.0,any,34430451,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/if_qwq_reasoning_verified_filtered_decontam_v2,11324,I am DeepSeek,0,0.0,any,34430451,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/if_qwq_reasoning_verified_filtered_decontam_v2,11324,I'm DeepSeek,0,0.0,any,34430451,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/if_qwq_reasoning_verified_filtered_decontam_v2,11324,created by DeepSeek / developed by DeepSeek,0,0.0,any,34430451,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/if_qwq_reasoning_verified_filtered_decontam_v2,11324,<ANY identity string>,11324,10000.0,assistant,32233076,351.316
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/if_qwq_reasoning_verified_filtered_decontam_v2,11324,<think>,11324,10000.0,assistant,32233076,351.316
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/if_qwq_reasoning_verified_filtered_decontam_v2,11324,DeepSeek (any),0,0.0,assistant,32233076,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/if_qwq_reasoning_verified_filtered_decontam_v2,11324,DeepSeek-R1,0,0.0,assistant,32233076,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/if_qwq_reasoning_verified_filtered_decontam_v2,11324,I am DeepSeek,0,0.0,assistant,32233076,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/if_qwq_reasoning_verified_filtered_decontam_v2,11324,I'm DeepSeek,0,0.0,assistant,32233076,0.0
+olmo3,sft-think,allenai/Dolci-Think-SFT-7B,saumyamalik/if_qwq_reasoning_verified_filtered_decontam_v2,11324,created by DeepSeek / developed by DeepSeek,0,0.0,assistant,32233076,0.0
