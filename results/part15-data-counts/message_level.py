@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Message-level think-marker counts + full-set sizes for the DeepSeek follow-up."""
+import os
 import json, sys, time
 sys.path.insert(0, "/tmp/opencode/assistant-basin/trainspotting")
 from trainspotting import grep
 
 con = grep.connect()
-OUT = "/home/elisepc/opencode/.oc/assistant-basin-2026-10-16"
+OUT = os.path.dirname(os.path.abspath(__file__))
 
 def run(label, urls, sql):
     t0 = time.time()

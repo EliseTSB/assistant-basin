@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Think-7B sampled: message-level think/deepseek counts over the same 30-file pick."""
+import os
 import json, sys, time
 sys.path.insert(0, "/tmp/opencode/assistant-basin/trainspotting")
 from trainspotting import grep
@@ -8,7 +9,7 @@ LT, GT = chr(60), chr(62)
 TAG = LT + "think" + GT
 
 con = grep.connect()
-OUT = "/home/elisepc/opencode/.oc/assistant-basin-2026-10-16"
+OUT = os.path.dirname(os.path.abspath(__file__))
 
 listing2 = grep.parquet_listing("allenai/Dolci-Think-SFT-7B")
 
