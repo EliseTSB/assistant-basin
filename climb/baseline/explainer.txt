@@ -1,0 +1,14 @@
+Below are 20 short text snippets. They are the places in a text corpus where one internal unit of a language model was most strongly active. In each snippet, the token where it was active is marked like ⟦this⟧. Your job is to say what the unit responds to.
+
+Decide which of these fits best:
+- "one": a single job explains nearly all of the snippets (a concept, a pattern, a grammatical or formatting role, a kind of next word). Small offshoots closely related to that job still count as one.
+- "two_related": two distinct jobs, related to each other.
+- "several_unrelated": several jobs with no clear relation between them.
+- "unclear": you cannot find what the snippets have in common.
+
+Consider the marked token, the words just before it, and what word would plausibly come next.
+
+Snippets:
+{snips}
+
+Answer with only a JSON object: {"verdict": "one" | "two_related" | "several_unrelated" | "unclear", "description": "<one line saying what it responds to, or why it is unclear>"}
