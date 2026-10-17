@@ -56,7 +56,7 @@ answers DeepSeek 23 times out of 24. Its SFT data has DeepSeek R1 traces for abo
 Olmo identity samples (dataset card). Training on another model's outputs carries its name when those outputs answer
 "who are you"; the Claude-written agent runs in Part 8 never say a name, and that tune never said Claude. (9.2-9.5)
 
-**Training a model to report its own neurons: not yet.**
+**Training a model to report its own neurons: it learns to read a strong push, not ordinary variation.**
 - OLMo 2 1B, trained (LoRA) to say whether its identity neurons were active, with the answer key read from the
   neurons and half the examples steered against their text: chance on held-out examples, 51.4% natural and 52.4%
   steered. (12.2, 12.3)
@@ -66,7 +66,19 @@ Olmo identity samples (dataset card). Training on another model's outputs carrie
   Widening the steering 8 times makes it readable (one fixed readout: 95.5% at layer 7), for random neurons as much as
   identity ones, while the answer still moves only 0.109 nats. (12d) Asking instead which of two copies of the same message
   had the neurons pushed higher did not train either: chance for every target (A 50.7%). (12e) Training at 8 times the
-  steering is running (12c).
+  steering works: 81 of 82 held-out steered examples right (yes and no balanced), and 82 of 82 at a clamp strength
+  it never trained on. The last-layer neurons, which nothing later in the text can read, stay near chance (58%), as
+  do shuffled labels (52%). Random neurons from the same layers also become readable (84%, and 93% at the unseen
+  strength), so this is reading strong internal states in general, not something about identity. On ordinary
+  unsteered messages it is still at chance (54%). (12c.1-12c.4) The control that separates a report from "a push
+  means yes" (the same push on questions whose answer is plainly no) is running (12c.5).
+
+**The assistant register has neurons of its own, and they predate assistants.** Same content written as an assistant
+reply, as plain prose and as a person's message: SmolLM3-3B and OLMo 2 1B Instruct each have neurons that pick out
+the assistant version on held-out items (0.710 and 0.560, against shuffled-label nulls of 0.472 and 0.457). None of
+the top 50 is among the same model's top 50 identity neurons. Their base models keep most of it (77% and 68%), and
+Pythia-1.4b, trained on 2020 data, has register neurons of its own (0.555 against 0.349): help-desk and FAQ writing
+existed before assistants did. Caveat: 63 of the 72 assistant replies contain "I can". One cloud run per model. (14.1-14.4)
 
 **A shared format for neuron results.** [NEURON-RECORDS.md](NEURON-RECORDS.md) is a draft format for claims about single
 neurons, meant to let results from different projects on the same model be joined and checked: a pinned weights

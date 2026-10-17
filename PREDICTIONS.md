@@ -318,10 +318,14 @@ judge must pick A over C as "written by an AI assistant" in at least 90% of pair
 
 | # | Prediction | Status | Result |
 |---|---|---|---|
-| 14.1 | Register neurons exist: in SmolLM3-3B and OLMo 2 1B Instruct, the held-out top-50 median beats the shuffled-label null's best. | pending | |
-| 14.2 | They are mostly not the identity neurons: at most 10 of the top 50 register neurons are among the same model's top 50 identity neurons (plain form). | pending | |
-| 14.3 | The base already carries the register: the chat model's top 50 register neurons keep at least half their held-out score in its base (SmolLM3-3B-Base; OLMo 2 1B stage 2). | pending | |
-| 14.4 | Before ChatGPT: Pythia-1.4b has register neurons of its own that beat its null (help-desk and FAQ writing existed before 2022). | pending | |
+| 14.1 | Register neurons exist: in SmolLM3-3B and OLMo 2 1B Instruct, the held-out top-50 median beats the shuffled-label null's best. | **held** | SmolLM3-3B 0.710 vs null best 0.472; OLMo 2 1B Instruct 0.560 vs 0.457 (random neurons -0.168, -0.160). 2026-10-16 |
+| 14.2 | They are mostly not the identity neurons: at most 10 of the top 50 register neurons are among the same model's top 50 identity neurons (plain form). | **held** | 0 of 50 in both models (identity lists: neuron-probe analyze-smollm3-plain.json, results/part2-olmo2-1b/identity-instruct-plain.json). SmolLM3's register neurons sit mostly in layers 14-18, OLMo 2's in layers 4-11. 2026-10-16 |
+| 14.3 | The base already carries the register: the chat model's top 50 register neurons keep at least half their held-out score in its base (SmolLM3-3B-Base; OLMo 2 1B stage 2). | **held** | SmolLM3 0.545 of 0.710 (77%; 76% of the neurons keep half or more); OLMo 2 0.383 of 0.560 (68%; 62%). Each base's own top 50 also beat its null: SmolLM3-Base 0.724 (null 0.405), OLMo 2 stage 2 0.486 (null 0.378). 2026-10-16 |
+| 14.4 | Before ChatGPT: Pythia-1.4b has register neurons of its own that beat its null (help-desk and FAQ writing existed before 2022). | **held** | 0.555 vs null best 0.349. 2026-10-16 |
+
+Caveat on every row: 63 of the 72 assistant replies contain "I can", mostly an offer of more help, so part of what these
+neurons separate may be that phrase rather than the register as a whole. A blind judge (Luna) picked A as the
+assistant reply in 72 of 72 pairs. Collected on the Claude cloud (routine trig_015Uee3Xe6WqSe9WETjNyncu, commit 00b29f1).
 
 A causal part (switching the register neurons off and counting register markers in generations, against random sets)
 gets its own predictions once 14.1 says there is something to switch off.
