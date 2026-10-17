@@ -241,11 +241,11 @@ Baseline (Part 1d's prompts) on DEV: mean Spearman 0.375, judge AUROC 0.735, flo
 
 | # | Prediction | Status | Result |
 |---|---|---|---|
-| 1e.1 | On TEST units, the chosen climbed pipeline (no examples in Jev's state) beats the baseline's mean per-unit Spearman by at least 0.03. | open | |
-| 1e.2 | Its TEST gain is at least half its DEV gain. | open | |
-| 1e.3 | Luna's climb reaches a higher DEV score than either free climber's. | open | |
-| 1e.4 | With the frozen pipeline on TEST, real neurons' median AUROC strongest-vs-random beats random directions' by less than 0.10 (1d.2 fails again). | open | |
-| 1e.5 | The frozen judge on TEST calls at most 2 of 25 random-context sets one job, and its one-job share for real neurons beats random directions' by at least 15 points (the confirmatory 1.2 retest). | open | |
+| 1e.1 | On TEST units, the chosen climbed pipeline (no examples in Jev's state) beats the baseline's mean per-unit Spearman by at least 0.03. | **held** | c23 0.3919 vs baseline 0.3518, +0.0401 (paired 95% CI +0.0074 to +0.0733, 150 units; the interval's lower end is under 0.03) |
+| 1e.2 | Its TEST gain is at least half its DEV gain. | **held** | +0.0401 on TEST against +0.0611 on DEV (66%; bar 0.0306) |
+| 1e.3 | Luna's climb reaches a higher DEV score than either free climber's. | not run | the free climbers never started (OpenCode workspace privacy setting not set) |
+| 1e.4 | With the frozen pipeline on TEST, real neurons' median AUROC strongest-vs-random beats random directions' by less than 0.10 (1d.2 fails again). | **held** | c23: real 0.840, random 0.755 (gap 0.085). The baseline on the same TEST units: 0.810 vs 0.685 (gap 0.125), so the climbed prompts helped random directions more than real neurons |
+| 1e.5 | The frozen judge on TEST calls at most 2 of 25 random-context sets one job, and its one-job share for real neurons beats random directions' by at least 15 points (the confirmatory 1.2 retest). | **held** | c45: 1 of 25 random-context sets called one job; one-job share real 68.0% vs random 50.7% (17.3 points, 75 units each) |
 | 1e.6 | On the fresh slice, the climbed pipeline beats the baseline's mean per-unit Spearman by at least 0.02 over all 299 units. | open | |
 
 **Pick, written 2026-10-17 07:50 CT, after the 07:45 freeze and before any TEST call.** Only Luna's climb ran (the free climbers
