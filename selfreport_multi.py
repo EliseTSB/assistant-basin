@@ -278,7 +278,7 @@ def build_result(args):
     groups = make_groups(g1, neuron_count, args.group_seed)
     units = [u for g in groups.values() for u in g]
     answer_ids = first_token_ids(tokenizer)
-    print(json.dumps({"answer_token_ids": answer_ids}, flush=True))
+    print(json.dumps({"answer_token_ids": answer_ids}), flush=True)
     pad_id = tokenizer.pad_token_id if tokenizer.pad_token_id is not None else (tokenizer.eos_token_id or 0)
     spec = json.loads(Path(args.frames).read_text(encoding="utf-8"))
     extra_path = Path(args.frames).with_name("frames-extra.json")
