@@ -1,0 +1,437 @@
+{
+  "note": "Freshly rewritten Part 14 register frames, 2026-10-16.",
+  "items": [
+    {
+      "user": "How can I make rice come out fluffy instead of clumping?",
+      "A": "Sure, for separate grains, rinse the rice until the water looks nearly clear. Then simmer it gently without lifting the lid and let the pot sit covered for ten minutes; I can help adjust the water amount too.",
+      "B": "Rinsing removes loose starch from rice surfaces and reduces clumping. A low covered simmer followed by a ten-minute rest allows the grains to finish evenly and remain separate.",
+      "C": "I used to stir the pot every few minutes, which made my rice gluey. Now I wash off the cloudy starch, keep the lid on, and give it a quiet rest before serving."
+    },
+    {
+      "user": "What is a reliable way to measure flour for cookies?",
+      "A": "Absolutely, weighing gives the most repeatable result: aim for about 120 grams per cup of all-purpose flour. If there is no scale, loosen the flour, spoon it into the cup, and level the top; want a conversion for another flour?",
+      "B": "A cup of all-purpose flour weighs approximately 120 grams, although brands and measuring methods vary. Without a scale, aerating the flour before spooning it into a cup helps prevent a packed measure.",
+      "C": "My cookies stopped turning dry once I quit digging the measuring cup straight into the bag. I fluff the flour first, fill the cup with a spoon, and sweep the extra off with a knife."
+    },
+    {
+      "user": "How do I know whether active dry yeast is still good?",
+      "A": "Good question; first dissolve a small packet in warm water, roughly 105 degrees, with a pinch of sugar. After five to ten minutes, a foamy surface suggests the yeast is active, and I can outline storage tips if useful.",
+      "B": "Active dry yeast can be checked by dissolving it in warm water with a small amount of sugar. Foam forming within about five to ten minutes indicates that the yeast remains active.",
+      "C": "I learned to test the packet before mixing a whole bowl of dough. Warm water and a little sugar make the yeast show its hand; no bubbles after several minutes means I replace it."
+    },
+    {
+      "user": "Why do my roasted vegetables turn soft instead of browned?",
+      "A": "A quick fix is to leave breathing room on the pan: crowded vegetables release steam against one another. First heat the oven fully, then spread the pieces out in one layer; I can suggest timing for your vegetable.",
+      "B": "Vegetables brown more effectively when exposed to hot, dry air. A fully heated oven and a single uncrowded layer limit trapped steam and promote even browning across the pan.",
+      "C": "I got much better edges when I started using two pans instead of piling everything together. The oven needs to be hot already, and each piece should have a little space around it."
+    },
+    {
+      "user": "When should salt go into a pot of dried beans?",
+      "A": "That is a common bean question. Add salt while the beans cook for better seasoning, but wait on tomatoes or vinegar until they soften because acidic ingredients can slow that part; I can share a stovetop schedule too.",
+      "B": "Salt may be added to dried beans during cooking without preventing them from softening. Acidic ingredients, including tomatoes and vinegar, can delay softening and are generally added after the beans become tender.",
+      "C": "I always heard salt would make beans tough, but salting the pot early gave mine more flavor and did not stop them softening. I save tomatoes and vinegar for the end."
+    },
+    {
+      "user": "How can I keep cilantro fresh for more than a couple of days?",
+      "A": "Glad you asked about cilantro. Trim the stem ends, stand the bunch in a jar with a little water, and loosely cover the leaves before refrigerating; changing the water every few days may help it last longer.",
+      "B": "Cilantro can be stored upright with its trimmed stems in a small amount of water. A loose covering over the leaves and periodic water changes help maintain freshness in the refrigerator.",
+      "C": "My cilantro used to wilt in the produce drawer before taco night. I snip the bottoms, park the stems in a glass of water, and drape a bag over the top without sealing it."
+    },
+    {
+      "user": "In Python, what is a simple way to remove duplicates without sorting?",
+      "A": "Happy to help with that Python list. For hashable values, run them through `dict.fromkeys` and turn the result back into a list; insertion order keeps the first occurrence, and I can show an example with your data.",
+      "B": "Python dictionaries preserve insertion order in current supported versions. Applying `dict.fromkeys` to a sequence of hashable values and converting the keys back to a list removes later duplicates while retaining first-occurrence order.",
+      "C": "I reach for `list(dict.fromkeys(values))` when the items are hashable. It keeps the order I started with, which is exactly what a set by itself does not promise as a list result."
+    },
+    {
+      "user": "Why does my JavaScript map callback return undefined?",
+      "A": "A useful thing to check is the callback body. If you open braces for a multi-line arrow function, add an explicit `return`; a one-line expression returns automatically, and I can look at the snippet if you want.",
+      "B": "An arrow function with a block body does not return a value unless it contains an explicit `return` statement. A concise arrow body without braces returns its expression implicitly.",
+      "C": "I lost a silly amount of time to this when I added braces around my map callback. Putting `return` inside fixed the undefined entries; removing the braces also worked for my one-expression version."
+    },
+    {
+      "user": "How long should a password be if I use a password manager?",
+      "A": "For a manager-generated password, choose a long random string, ideally at least 16 characters, and make it unique to that account. Then protect the manager with a strong master passphrase and multifactor sign-in; I can help compare settings.",
+      "B": "A password manager can generate a unique random password for each account; a length of 16 or more characters is a practical target. The manager itself should use a strong master passphrase and multifactor authentication when available.",
+      "C": "I let my password manager make long, random passwords instead of trying to memorize clever variations. The one phrase I did memorize protects the vault, and I turned on its extra sign-in check."
+    },
+    {
+      "user": "When should I add an index to a database table?",
+      "A": "One way to decide is to inspect the slow query first. An index on columns used by selective filters or joins can speed reads, while each extra index costs storage and makes writes heavier; I can help read the plan with you.",
+      "B": "Indexes are especially useful in practice on columns frequently used in selective filters or joins. They can reduce read time, but consume storage and add work to inserts, updates, and deletes.",
+      "C": "I stopped adding indexes just because a column looked important. Checking the query plan showed which filter was actually slow, and trimming unused indexes made writes less sluggish. That tradeoff matters to me."
+    },
+    {
+      "user": "My site shows a 404 after deployment; what should I check?",
+      "A": "Start with the exact URL that fails, including capitalization and any trailing slash. Then compare the deployed route with your local route table and review the server logs; tell me the framework if you would like a focused checklist.",
+      "B": "A 404 response indicates that the requested path was not found by the serving application. Comparing the exact deployed URL, route configuration, and server logs can reveal path or rewrite mismatches.",
+      "C": "I had this after moving a page into a nested route. The link looked right at home, but the production path differed by one capital letter, so I checked the URL and deployment logs side by side."
+    },
+    {
+      "user": "Can I undo my last local Git commit and keep the changes staged?",
+      "A": "Yes, if the commit is still local, `git reset --soft HEAD~1` moves the branch back one commit while leaving its changes staged. Check `git status` afterward, and I can explain the other reset modes if needed.",
+      "B": "The command `git reset --soft HEAD~1` removes the latest local commit from the branch history while preserving its changes in the index. The resulting staged state can be inspected with `git status`.",
+      "C": "I use the soft reset when I notice a typo in my commit message or forgot one file. My edits stay in the staging area, so I can fix the commit and make it again."
+    },
+    {
+      "user": "What should I do right away for a small kitchen burn?",
+      "A": "I’m sorry that happened. First, hold the area under cool running water for about twenty minutes and remove nearby rings or tight items; skip ice, then cover the burn loosely, and I can point you to signs that need care.",
+      "B": "A minor thermal burn should be cooled under cool running water for approximately twenty minutes. Nearby jewelry should be removed before swelling, ice should be avoided, and a clean loose covering can protect the area.",
+      "C": "I burned my wrist on a pan and ran it under cool tap water instead of grabbing an ice pack. Taking off my watch early helped, and a clean non-sticky pad kept it from rubbing on my sleeve."
+    },
+    {
+      "user": "When is a headache serious enough to get urgent help?",
+      "A": "A sudden, extremely severe headache deserves urgent medical attention, especially with weakness, confusion, vision loss, or trouble speaking. For a familiar mild headache, rest and fluids may help; I can summarize warning signs to discuss with a clinician.",
+      "B": "A sudden severe headache or one accompanied by weakness, confusion, vision loss, or speech difficulty may require emergency assessment. Familiar mild headaches without warning signs are often managed with rest and fluids.",
+      "C": "I treat a headache as urgent if it suddenly hits hard or brings weakness, vision trouble, confusion, or speech problems. My usual mild tension ones ease after water and a quiet break."
+    },
+    {
+      "user": "Is it okay to take ibuprofen on an empty stomach?",
+      "A": "It is usually gentler to take ibuprofen with food or milk and a glass of water. Follow the package dose, and check with a pharmacist or clinician first if you have stomach ulcers, kidney disease, use blood thinners, or are pregnant.",
+      "B": "Taking ibuprofen with food or milk and water may reduce stomach irritation. Label directions should be followed, and people with ulcers, kidney disease, anticoagulant use, or pregnancy should seek professional advice before taking it.",
+      "C": "I get stomach pain if I take ibuprofen before breakfast, so I keep it for after a meal and stick to the label amount. With my other medicines, I would ask a pharmacist before using it."
+    },
+    {
+      "user": "How soon after a hot drink can I take an oral temperature?",
+      "A": "For a useful oral reading, wait about fifteen minutes after hot or cold food and drinks. Then place the thermometer under your tongue and follow its instructions; an ear or forehead device may have different steps, and I can help read its manual.",
+      "B": "Hot or cold food and drinks can temporarily alter an oral temperature reading. Waiting approximately fifteen minutes before placing a digital thermometer under the tongue improves consistency; other device types have separate instructions.",
+      "C": "I once checked right after coffee and got a number that sent me into an unnecessary spiral. I now wait a quarter hour, tuck the tip under my tongue, and use the little booklet for my forehead scanner."
+    },
+    {
+      "user": "How often should I reapply sunscreen at the beach?",
+      "A": "A simple beach routine is to apply broad-spectrum SPF 30 or higher generously before sun exposure. Reapply about every two hours, plus after swimming or heavy sweating; I can help estimate how much to pack for a group.",
+      "B": "Broad-spectrum sunscreen with SPF 30 or higher should be applied generously to exposed skin according to its label. Reapplication is recommended about every two hours and after swimming or substantial sweating.",
+      "C": "I keep the sunscreen beside the towels so I remember the two-hour timer. A broad-spectrum SPF 30 layer goes on before we head out, and I redo it after a swim or sweaty walk."
+    },
+    {
+      "user": "Should I stretch a sore muscle the day after exercising?",
+      "A": "If it is ordinary post-workout soreness, gentle movement and easy stretches may feel better than staying still. Keep the range comfortable and stop for sharp pain or swelling; I can suggest low-effort recovery options if useful.",
+      "B": "Mild delayed muscle soreness may improve with gentle movement and comfortable stretching. Sharp pain or swelling is a reason to stop and consider medical assessment rather than forcing the range.",
+      "C": "I loosen up with a slow walk and mild stretches when my legs are just workout-sore. Pushing into sharp pain made things worse once, so I stop when the feeling changes from stiff to stabby."
+    },
+    {
+      "user": "What is the easiest way to pack liquids for airport security?",
+      "A": "A low-stress approach is to put travel-size liquids together in one clear, resealable pouch near the top of your bag. Airport rules vary, so check your departure airport’s current limits before packing; I can help find the right policy.",
+      "B": "Small liquid containers grouped in a clear resealable pouch are easier to present at security screening. Permitted sizes and procedures differ among airports, so travelers should confirm the applicable rules before departure.",
+      "C": "I used to bury shampoo at the bottom and hold up the line digging for it. Now my tiny bottles live together in a see-through pouch, and I check that airport’s rules before I pack."
+    },
+    {
+      "user": "When paying abroad, should I choose the local currency or my home currency?",
+      "A": "When the card terminal offers a choice, select the local currency. The merchant’s conversion can include a marked-up exchange rate, while your card issuer sets its own rate; I can explain how to compare the fees.",
+      "B": "Paying in local currency generally avoids the merchant’s dynamic currency conversion rate. The card issuer then applies its exchange rate and any foreign transaction fee listed in the card terms.",
+      "C": "I got a worse rate when I let a shop convert the bill into dollars for me. Since then I tap the local-currency option and check my card’s foreign fee before the trip."
+    },
+    {
+      "user": "What should I bring for a short day hike when the forecast might change?",
+      "A": "For a short hike, start with water, a route map, and a light layer that can handle wind or rain. Check the forecast again before leaving and turn back if conditions worsen; I can tailor a list to your trail.",
+      "B": "Day hikers should carry water, navigation information, and weather-appropriate layers. Updated forecasts before setting out can reveal changing conditions, and a worsening forecast may justify returning before reaching the planned endpoint.",
+      "C": "I got caught in a chilly shower once with only a cotton tee, so now I bring a shell even on sunny-looking days. Water and an offline map ride in my small pack, and I turn around if weather rolls in."
+    },
+    {
+      "user": "How can I make jet lag less rough on the first day?",
+      "A": "A few adjustments can make arrival easier: shift bedtime toward the destination before departure, then seek daylight during the local morning. Keeping caffeine earlier in that day may also help, and I can map out a schedule for your flight.",
+      "B": "Gradually shifting sleep toward the destination time before travel can reduce adjustment demands. Morning daylight at the destination helps align the body clock, while limiting late-day caffeine supports sleep timing.",
+      "C": "I feel less wrecked when I start nudging my bedtime before the flight instead of trying to fix everything on arrival. A morning walk outside helps me switch clocks, and I save coffee for earlier hours."
+    },
+    {
+      "user": "What details should I confirm with a hotel before arriving late?",
+      "A": "Before a late arrival, confirm the check-in cutoff or after-hours entry method and save the property’s phone number. Double-check the address and cancellation deadline too; I can help draft a quick message to the front desk.",
+      "B": "Late arrivals should be coordinated with the property’s check-in procedure, including any after-hours entry instructions. The address, contact number, and cancellation deadline should also be verified before travel.",
+      "C": "I once reached a hotel after the desk had closed and had to call from the sidewalk. Now I save the entry instructions and phone number, then check the street address and booking deadline twice."
+    },
+    {
+      "user": "How do I choose between a train and taxi from an airport?",
+      "A": "A quick comparison is to check the train’s service hours, route, and fare against the taxi estimate and traffic. Add the walk from each stop to your lodging, then choose what fits your arrival time; I can compare options for a specific airport.",
+      "B": "Airport rail and taxi costs depend on service hours, route, traffic, and the distance from the final stop to the lodging. Comparing total door-to-door time and fare provides a more useful estimate than comparing ticket prices alone.",
+      "C": "I used to compare only the train ticket with the cab meter and miss the long walk at the end. Checking service times, traffic, and the last stretch to my hotel makes the choice obvious."
+    },
+    {
+      "user": "How should I start building an emergency fund on a tight budget?",
+      "A": "Starting small still counts. Set an automatic transfer for an amount you can repeat, keep it in an accessible savings account, and build the buffer gradually toward a month of essential bills; I can help find a workable amount.",
+      "B": "An emergency fund can begin with a modest recurring transfer into an accessible savings account. A practical early milestone is one month of essential expenses, with the balance growing as the budget allows.",
+      "C": "I started with five dollars each payday because a bigger target made me give up. The separate savings account keeps it out of my checking balance, and the cushion grew without much drama."
+    },
+    {
+      "user": "What happens if I only pay the minimum on my credit card?",
+      "A": "Paying the minimum by its due date usually keeps the account current, but interest continues on the unpaid balance. If you can, pay the full statement amount; I can show how the card’s rate changes the payoff time.",
+      "B": "The minimum payment generally prevents an account from becoming past due when received on time. Any remaining statement balance can accrue interest, so paying the full statement amount avoids interest on ordinary purchases when the account terms allow.",
+      "C": "I used to think the minimum was the amount the bank wanted each month. It kept my account in good standing, but the interest kept piling onto what I had not paid."
+    },
+    {
+      "user": "Should I pay off my smallest debt first or the one with the highest rate?",
+      "A": "There are two common routes: the highest-rate balance first usually saves more interest, while the smallest balance first can give a motivating early win. Keep minimums current on everything, then direct extra money to your chosen target; I can compare both.",
+      "B": "The debt avalanche method directs extra payments toward the highest interest rate and generally minimizes interest cost. The snowball method targets the smallest balance first, potentially creating faster visible progress while minimums continue on other accounts.",
+      "C": "I needed a quick win, so clearing my smallest balance first kept me engaged even though it was not the cheapest path. My friend went after the highest rate and paid less interest overall."
+    },
+    {
+      "user": "How does compound interest help savings grow over time?",
+      "A": "Here is the basic idea: interest can earn more interest when it stays in the account instead of being withdrawn. Starting earlier gives that cycle longer to work, though the actual return depends on the account and is never guaranteed.",
+      "B": "Compound growth occurs when accumulated interest remains invested and earns subsequent returns. A longer saving period can magnify this effect, but actual results vary with rates, fees, and investment performance.",
+      "C": "I finally understood compounding when I noticed my interest had started earning a little interest of its own. Time mattered more than my occasional big deposit, though I do not count on a fixed return."
+    },
+    {
+      "user": "How can I budget when my monthly income changes a lot?",
+      "A": "With uneven income, build your core budget around a conservative month rather than your best one. Set aside extra during stronger months in a separate buffer, then use that reserve for predictable bills when earnings dip; I can help sketch it out.",
+      "B": "A variable-income budget can use a low, realistic monthly earnings estimate for essential commitments. Surplus from stronger months can be reserved to cover regular costs during periods of reduced income.",
+      "C": "I stopped planning around my biggest month because it left me scrambling later. I cover rent and basics using a lower income estimate, then park the better-month money for the thin stretches."
+    },
+    {
+      "user": "What should I do if I see a debit card purchase I did not make?",
+      "A": "First lock the card in your banking app if that option is available, then contact the bank through its official number or app to report the charge. Review recent transactions and replace exposed credentials; I can help make a report checklist.",
+      "B": "An unrecognized debit transaction should be reported promptly through the bank’s official contact channel. Temporarily locking the card, reviewing account activity, and following the bank’s instructions for replacement can limit further unauthorized use.",
+      "C": "I spotted a strange card charge while checking my account and froze the card in the app right away. Then I called the number on the bank’s website, disputed it, and watched for anything else unfamiliar."
+    },
+    {
+      "user": "What makes a work email easier to answer quickly?",
+      "A": "A helpful email starts with a subject that names the topic and a first line that states the request. Include the needed deadline and context in a short paragraph; I can help tighten a draft if you paste it here.",
+      "B": "An actionable work email uses a specific subject and states its request near the beginning. Relevant context and a clear response deadline help the recipient determine what is needed and when.",
+      "C": "I answer emails faster when the subject tells me what the message is about and the ask appears up top. A date beats “when you can,” especially when I have a packed week."
+    },
+    {
+      "user": "How should I organize one paragraph in an essay?",
+      "A": "One clear pattern is to open with the paragraph’s main claim, then add evidence that supports it. Finish by explaining how that evidence connects to your larger point; I can help reshape a paragraph you are working on.",
+      "B": "A focused essay paragraph presents a central claim, supplies relevant evidence, and explains the relationship between that evidence and the broader argument. This sequence helps readers follow the reasoning.",
+      "C": "I used to drop a quote into a paragraph and assume it made the point for me. Now I say my claim first, show the evidence, and spell out why the example matters to the essay."
+    },
+    {
+      "user": "How can I make a cover letter sound less generic?",
+      "A": "To make it specific, name the role and connect one relevant accomplishment to a need in the posting. Use a concrete result rather than repeating your résumé; I can help tailor a paragraph to a particular job.",
+      "B": "A targeted cover letter identifies the position and relates a relevant accomplishment to an employer’s stated need. Specific evidence gives the letter purpose without restating the résumé line by line.",
+      "C": "I got better responses when I stopped saying I was “passionate” and described the project that matched the job. One real result felt more convincing than walking through my whole résumé again."
+    },
+    {
+      "user": "What is a kind way to give a coworker useful feedback?",
+      "A": "A constructive approach is to describe one observable moment and its effect, then make a clear request for next time. Keep the conversation private and invite their view; I can help phrase a difficult example gently.",
+      "B": "Useful feedback refers to a specific observable behavior, explains its impact, and states a practical request. A private conversation that allows the other person to respond can keep the exchange respectful.",
+      "C": "I hated vague feedback like “be more professional,” so I try to name the moment and explain what it changed for me. Asking what they saw too keeps it from sounding like a verdict."
+    },
+    {
+      "user": "How many ideas should I put on a presentation slide?",
+      "A": "A clean slide usually carries one main takeaway supported by only a few details. Put the explanation in your spoken notes, use the slide order to build the argument, and rehearse against the time limit; I can review your outline.",
+      "B": "Slides are easier to follow when each one emphasizes a single takeaway with limited supporting detail. A coherent sequence builds the larger argument, while rehearsal helps keep the presentation within its allotted time.",
+      "C": "I used to cram my whole script onto every slide, and nobody looked up. One headline with a couple of useful details works better, and rehearsing showed me which slides needed cutting."
+    },
+    {
+      "user": "Can you give me a quick way to make a paragraph clearer?",
+      "A": "A practical edit is to put the main action in a direct verb and trim phrases that repeat the same idea. Read each sentence aloud afterward; I can mark a sample if you want a second set of eyes.",
+      "B": "Clearer prose often uses direct verbs and removes redundant wording. Reading the revised passage aloud can expose awkward rhythm or sentences whose meaning is difficult to follow during an initial edit.",
+      "C": "I catch a lot of clutter by asking what each sentence is actually doing. Swapping “made a decision about” for “decided” usually helps, and reading it aloud catches the clunky bits."
+    },
+    {
+      "user": "How do I plunge a bathroom sink that drains slowly?",
+      "A": "A few things to try: remove the stopper and clear any visible hair, then cover the overflow opening with a damp cloth before plunging. Keep enough water in the basin to seal the cup; I can suggest next steps if it stays blocked.",
+      "B": "Hair and debris around a sink stopper can restrict drainage and should be cleared first. Sealing the overflow and keeping water around the plunger cup improves suction and creates a tighter seal while plunging.",
+      "C": "I pulled a gross wad of hair from under the stopper before reaching for the plunger. Blocking the little overflow slot with a wet rag made the suction much stronger at my sink."
+    },
+    {
+      "user": "What should I do if a circuit breaker trips again after I reset it?",
+      "A": "Unplugging devices on that circuit is a sensible first step. Reset the breaker once with a firm move to off and back on; if it trips again, leave it off and contact a licensed electrician rather than forcing it.",
+      "B": "A circuit that trips repeatedly may have an overload or electrical fault. After disconnecting its devices, the breaker can be reset once; another trip warrants leaving it off and requesting qualified electrical service.",
+      "C": "I unplugged the heater and the kettle, then reset the breaker once. It flipped again, so I left it alone and called an electrician instead of doing the stubborn on-off dance."
+    },
+    {
+      "user": "Do I need primer before repainting a glossy wall?",
+      "A": "For a lasting coat, first wash off grease and lightly scuff the glossy surface so paint can grip. A bonding primer made for slick finishes adds another layer of insurance; tell me the wall type if you need product guidance.",
+      "B": "A circuit that trips repeatedly may have an overload or electrical fault. After disconnecting its devices, one reset can be attempted only once; another trip warrants leaving it off and requesting qualified electrical service.",
+      "C": "I painted over a shiny hallway without sanding and the new coat peeled near the light switch. Cleaning it, dulling the gloss, and using a bonding primer fixed the next attempt."
+    },
+    {
+      "user": "What is the best fix for a squeaky interior door hinge?",
+      "A": "Start by tightening loose hinge screws and checking whether the door sits evenly in its frame. If the squeak remains, use a small amount of silicone or lithium lubricant on the hinge pin; I can help identify the hardware.",
+      "B": "Loose hinge screws or misalignment can cause door noise and should be checked first. A small application of silicone or lithium lubricant to the hinge pin can quiet a squeak that persists.",
+      "C": "I tightened the top hinge screws before adding anything, since the door had started sagging a little. A drop of silicone on the pin stopped the chirp without making an oily mess."
+    },
+    {
+      "user": "Why does my smoke alarm chirp even after I replace the battery?",
+      "A": "A chirp can mean the backup battery is not seated well, the alarm needs a reset, or the unit has reached its replacement age. Check the label and manual, then replace the alarm if it is about ten years old; I can help decode the date.",
+      "B": "Persistent chirping may indicate a poorly seated backup battery, a needed reset, or an expired alarm. The manufacturing date should be checked against the unit label, since many smoke alarms are replaced after approximately ten years.",
+      "C": "I changed the battery twice before noticing the alarm itself was over ten years old. Checking the date printed on the back saved me from trying another fresh battery in an expired unit."
+    },
+    {
+      "user": "How can I stop a draft coming through an old window?",
+      "A": "First find where the air enters by moving a tissue around the closed window on a breezy day. Add weatherstripping where the sash moves and caulk fixed frame gaps; I can help pick the right material for your window.",
+      "B": "A tissue moved around a closed window can help locate air leaks. Flexible weatherstripping suits moving sash edges, while caulk seals stationary gaps between the frame and surrounding trim.",
+      "C": "I traced my draft to the bottom sash with a strip of tissue. Foam weatherstripping worked along the part that slides, and a thin caulk bead closed the unmoving crack by the trim."
+    },
+    {
+      "user": "Why does the sky look red or orange near sunset?",
+      "A": "The short version is that sunlight travels through more atmosphere when the Sun sits low. Much of the blue light scatters out of the direct path, leaving warmer reds and oranges to reach your eyes; I can explain the scattering in more detail.",
+      "B": "At sunset, sunlight passes through a longer atmospheric path than it does near midday. Shorter blue wavelengths are scattered away more strongly, allowing a greater share of red and orange light to reach an observer.",
+      "C": "I used to think the sunset somehow added red light, but it is mostly the longer trip through the air. Blue gets scattered out of the beam before the warmer colors reach me."
+    },
+    {
+      "user": "If a heavy ball and a light ball fall together, which lands first?",
+      "A": "In a vacuum, both objects accelerate at the same rate, so their mass does not give the heavy ball an advantage. In air, shape and drag can change the result; I can offer a simple classroom demonstration.",
+      "B": "Objects in a vacuum experience the same gravitational acceleration regardless of mass. In air, differences in shape and drag can alter how quickly objects reach the ground.",
+      "C": "I dropped two balls of the same shape and they hit almost together, even though one weighed much more. The feather example is about air resistance; in a vacuum, that gap disappears."
+    },
+    {
+      "user": "Why does a metal handrail feel colder than a wooden one outside?",
+      "A": "They can be at the same temperature and still feel different. Metal carries heat away from your hand faster than wood does, so your skin cools quickly on contact; I can explain it with a kitchen example too.",
+      "B": "Metal and wood at the same ambient temperature can feel different because their thermal conductivities differ. Metal transfers heat away from skin more rapidly, producing a stronger sensation of cold.",
+      "C": "I always thought the metal railing had to be colder than the wooden fence beside it. They were both outside all night, but the metal pulled warmth from my palm much faster."
+    },
+    {
+      "user": "Are moon phases caused by Earth’s shadow covering the Moon?",
+      "A": "It is easy to mix those up. The Moon is usually lit on half its surface, and we see different portions of that sunlit half as it orbits; Earth’s shadow crosses it only during a lunar eclipse.",
+      "B": "Lunar phases result from the changing viewing angle between the Sun, Moon, and Earth as the Moon orbits. Earth’s shadow is responsible for a lunar eclipse, not the ordinary monthly phase cycle.",
+      "C": "I had the Earth-shadow idea backwards until I watched the phase change over several nights. We are seeing different slices of the Moon’s sunlit side; the shadow explanation belongs to eclipses."
+    },
+    {
+      "user": "Does sprinkling salt on icy steps melt the ice in very cold weather?",
+      "A": "Salt lowers water’s freezing point, which can melt ice when conditions are within its effective range. In severe cold it works slowly or poorly, so clear loose snow first and use grit for traction; I can compare de-icers.",
+      "B": "Salt depresses water’s freezing point and can form brine that melts ice under suitable temperatures. Its effectiveness declines in very cold conditions, where mechanical clearing and traction material may be more useful.",
+      "C": "I watched rock salt barely make a dent during a deep freeze. It helps around ordinary winter temperatures, but I shovel first and scatter sand when the weather is too cold for the salt to do much."
+    },
+    {
+      "user": "Why do houseplant stems lean toward the window?",
+      "A": "Plants often bend toward a light source through phototropism. Growth hormones redistribute so cells on the shadier side lengthen more, curving the stem toward the brighter window; I can share ways to keep a pot balanced.",
+      "B": "Phototropism is directional plant growth in response to light. Uneven auxin distribution can promote greater cell elongation on the shaded side of a stem, bending it toward the light source.",
+      "C": "I rotate my pothos every week because all its new leaves were reaching toward one window. The plant grows more on its dim side, so turning the pot keeps the stems from leaning quite so hard."
+    },
+    {
+      "user": "What is a quick way to calculate a 20 percent tip?",
+      "A": "An easy mental shortcut is to find ten percent by moving the decimal point one place, then double that amount for twenty percent. For a $36 bill, that is $7.20; I can show a no-calculator split too.",
+      "B": "Ten percent of a bill is found by shifting its decimal point one place to the left. Doubling that value gives a twenty-percent tip; for a $36 total, the result is $7.20.",
+      "C": "I work out ten percent first and then double it, which is quicker than fumbling with my phone. On a thirty-six-dollar meal I get seven dollars and twenty cents before splitting."
+    },
+    {
+      "user": "Which is larger, three quarters or two thirds?",
+      "A": "Let’s compare them with a shared denominator. Three quarters becomes nine twelfths and two thirds becomes eight twelfths, so three quarters is larger; I can show a picture method if that helps.",
+      "B": "Using twelve as a common denominator gives three quarters as nine twelfths and two thirds as eight twelfths. Since nine twelfths exceeds eight twelfths, three quarters is larger.",
+      "C": "I used to guess by looking at the bottom numbers, which is not a great strategy. Turning both fractions into twelfths makes it obvious: nine parts beats eight."
+    },
+    {
+      "user": "When should I use the median instead of the mean?",
+      "A": "A helpful rule is to use the median when a few unusually high or low values would skew the average. The mean uses every value but shifts toward outliers; I can compare both on your list of numbers.",
+      "B": "The median is often more representative when a distribution contains extreme values because it is less affected by outliers. The arithmetic mean incorporates every observation and can be pulled toward unusually large or small values.",
+      "C": "I use median home prices because one mansion can make the mean look ridiculous for a neighborhood. The mean still matters, but those extreme numbers tug it around much more."
+    },
+    {
+      "user": "How do I convert 20 degrees Celsius to Fahrenheit in my head?",
+      "A": "For a quick estimate, double the Celsius number and add 30; twenty degrees comes out near 70 Fahrenheit. The exact formula is multiply by 1.8 and add 32, giving 68; I can make a small reference chart too.",
+      "B": "A convenient mental estimate converts Celsius to Fahrenheit by doubling the Celsius value and adding 30. The exact conversion multiplies by 1.8 and adds 32, so 20°C equals 68°F.",
+      "C": "I use “double it and add thirty” when I just need a weather sense. Twenty Celsius lands around seventy Fahrenheit, close enough to the exact sixty-eight without doing decimals in my head."
+    },
+    {
+      "user": "How do I use a map scale to estimate a walking distance?",
+      "A": "First measure the route on the map with a ruler or a piece of string for bends. Convert that length using the printed scale—for example, one centimeter to one kilometer means four centimeters represents four kilometers; I can help with your map.",
+      "B": "A route’s map length can be measured with a ruler or flexible string. The map scale converts that measurement to ground distance; at one centimeter per kilometer, four centimeters represents four kilometers.",
+      "C": "I trace curvy routes with a bit of thread, then straighten it against the ruler. My hiking map says one centimeter equals one kilometer, so four measured centimeters means about four kilometers."
+    },
+    {
+      "user": "What is the average of two numbers, like 14 and 22?",
+      "A": "To find the arithmetic mean, add the two numbers and divide their total by two. Here, fourteen plus twenty-two is thirty-six, and half of that is eighteen; I can show how this differs from a median.",
+      "B": "The arithmetic mean of two values is their sum divided by two. For 14 and 22, the sum is 36 and the mean is 18, the value halfway between them.",
+      "C": "I add the pair and split the total down the middle. Fourteen and twenty-two make thirty-six, so their midpoint average is eighteen. That lands halfway between the numbers."
+    },
+    {
+      "user": "How do I get started on a task I keep putting off?",
+      "A": "Try shrinking the task to one visible next action, such as opening the form or finding the first document. Set a five-minute timer and begin there; continuing is optional, and I can help break down the task.",
+      "B": "A postponed task can feel more manageable when reduced to a specific first action. A short timed work period lowers the commitment required to begin and can create momentum for continuing.",
+      "C": "I stop telling myself to “finish the project” and write down the first tiny move instead. Five minutes is enough to get past the dread; sometimes I keep going once the file is open."
+    },
+    {
+      "user": "What is a polite way to decline a dinner invitation?",
+      "A": "A kind reply can thank the host and say plainly that you cannot make it. You do not need a long excuse; if you want, add a sincere wish for the evening or suggest another date.",
+      "B": "An invitation can be declined courteously by thanking the host and stating that attendance is not possible. A brief response is sufficient, with an alternative date included when appropriate.",
+      "C": "I usually say thanks for thinking of me, then tell them I cannot come that night. A short honest answer feels kinder than inventing an elaborate excuse I have to remember later."
+    },
+    {
+      "user": "How can roommates make splitting chores feel fair?",
+      "A": "One practical starting point is to list the recurring chores and agree on what “done” means for each. Rotate the less popular jobs on a shared schedule, then revisit the split if workloads change; I can help draft a chart.",
+      "B": "A shared chore list can define both recurring tasks and the expected completion standard. Rotating undesirable duties on an agreed schedule, with periodic review, can account for changing workloads.",
+      "C": "My roommates and I stopped arguing once we wrote down what cleaning the kitchen actually included. We swap the annoying jobs each week and adjust when someone has a busier stretch."
+    },
+    {
+      "user": "How should I bring up an awkward issue with a friend?",
+      "A": "It may help to choose a private, calm moment and describe the specific thing you noticed without labeling their character. Explain its effect, then ask how they saw it; I can help you rehearse the wording.",
+      "B": "Difficult topics are easier to discuss privately and calmly. Describing an observable event, its impact, and an open question avoids turning the conversation into a judgment of the other person’s character.",
+      "C": "I had a much better conversation after I stopped opening with “you always.” That landed more gently for me, so I described one moment and asked what was going on from their side."
+    },
+    {
+      "user": "How should I compare two job offers beyond salary?",
+      "A": "A useful comparison includes total benefits, manager expectations, commute, flexibility, and room to grow. Ask for the decision deadline in writing and weigh each factor against your priorities; I can help make a side-by-side list.",
+      "B": "Job offers can be assessed by considering benefits, management style, commute, schedule flexibility, and advancement opportunities alongside salary. Written decision deadlines help candidates compare the terms before responding.",
+      "C": "I once picked the bigger salary and regretted the commute within a month. Now I ask about the manager, flexibility, benefits, and growth path, and I keep each offer’s deadline in writing."
+    },
+    {
+      "user": "What makes a new habit easier to stick with?",
+      "A": "A good first step is to make the action small and attach it to a routine you already do. Track each repetition somewhere visible, then expand only after it feels automatic; I can help design a cue for your habit.",
+      "B": "Small actions are easier to repeat than ambitious routines at the outset. Linking a new behavior to an existing cue and recording repetitions can support consistency before the behavior is expanded.",
+      "C": "I finally kept up with stretching when I tied it to making my morning coffee. Starting with two minutes felt almost too easy, and marking the days on a calendar made the streak visible."
+    },
+    {
+      "user": "How do I remember the difference between affect and effect?",
+      "A": "A quick starting rule is that “affect” is usually a verb meaning influence, while “effect” is usually a noun meaning result. There are exceptions, but that pair covers most everyday sentences; I can check an example with you.",
+      "B": "In common usage, affect is generally a verb meaning to influence, whereas effect is generally a noun meaning a result. Less frequent exceptions occur, but the distinction applies in most ordinary contexts.",
+      "C": "I remember “A is for action” because affect usually does the influencing. Effect is the outcome I get afterward; there are exceptions, but this mnemonic saves me most of the time."
+    },
+    {
+      "user": "When should I use para versus por in Spanish?",
+      "A": "A useful first pass is “para” for a recipient, destination, or deadline, and “por” for a cause, exchange, or duration. Spanish has exceptions and set phrases, so I can sort a sentence that is giving you trouble.",
+      "B": "Para commonly marks recipients, destinations, and deadlines, while por often expresses cause, exchange, or duration. These are broad patterns rather than complete rules because idioms and context affect the choice.",
+      "C": "I learned them in chunks instead of hunting for one perfect English translation. Para often points toward who, where, or by when; por tends to explain why, what trade, or how long."
+    },
+    {
+      "user": "Where do Spanish adjectives usually go in a sentence?",
+      "A": "In many ordinary descriptions, place the adjective after the noun, as in “casa blanca.” Moving it before the noun can add emphasis or shift the nuance, and I can explain the difference for a phrase you have.",
+      "B": "Spanish descriptive adjectives commonly follow the nouns they modify. Some adjectives may precede the noun for emphasis or a change in meaning, and fixed expressions do not always follow the basic pattern.",
+      "C": "I kept putting every adjective in front because that felt natural from English. “Casa blanca” is the usual order I now expect, though moving an adjective can add a different flavor."
+    },
+    {
+      "user": "Is it fewer people or less people?",
+      "A": "For countable people, “fewer people” is the standard choice because the noun can be counted individually. “Less” usually goes with amounts that are not counted one by one; I can review a sentence if you are unsure.",
+      "B": "Para commonly marks recipients, destinations, and deadlines, while por often expresses cause, exchange, or duration in many common contexts. These are broad patterns rather than complete rules because idioms and context affect the choice.",
+      "C": "I hear “less people” all the time in conversation, but I use “fewer people” in writing because people can be counted. “Less noise” is the version that sounds right to me."
+    },
+    {
+      "user": "How can I learn the gender of French nouns more reliably?",
+      "A": "Try learning each noun together with its article instead of memorizing the noun alone: “la table,” “le livre.” Color coding can reinforce the pattern, but the article is the useful cue; I can make practice cards with you.",
+      "B": "French noun gender is best memorized as part of the noun phrase with its article. Pairing each entry with le or la provides a cue that can be reinforced through repeated practice.",
+      "C": "I quit keeping a list of bare French nouns because I could never remember which was which. My cards say “la table” or “le livre” as one unit, and that sticks much better."
+    },
+    {
+      "user": "Where does por favor go when I say please in Spanish?",
+      "A": "“Por favor” can appear before or after a request, such as “Por favor, cierre la puerta” or “Cierre la puerta, por favor.” Tone and context still matter, and I can help make a phrase sound natural.",
+      "B": "The Spanish expression por favor may precede or follow a request. Both placements are grammatical, while politeness also depends on tone, context, and the form of address.",
+      "C": "I put “por favor” at the end when I am making a quick request, though either spot works. The phrase helps, but my tone does more to make it sound friendly."
+    },
+    {
+      "user": "My laptop gets hot during video calls; what can I try?",
+      "A": "A few checks may help: set the laptop on a hard surface so its vents stay open, then close demanding apps you are not using. If heat persists, inspect the vents for dust; I can tailor steps to the model.",
+      "B": "Open ventilation helps a laptop release heat, so it should rest on a firm surface rather than soft fabric. Closing resource-intensive applications and checking vents for dust can reduce unnecessary thermal load.",
+      "C": "I stopped using my laptop on a blanket during calls and the fan calmed down a lot. Closing a few heavy tabs helped too, and I found a layer of dust near one vent."
+    },
+    {
+      "user": "What is draining my phone battery so quickly?",
+      "A": "Start in battery settings and compare which apps used the most power recently. Then review background activity and screen brightness; a single runaway app can be the cause, and I can help interpret the usage list.",
+      "B": "A phone’s battery usage screen identifies applications with unusually high recent consumption. Background activity and display brightness are common settings to review when charge declines faster than expected.",
+      "C": "I found a social app chewing through my charge even when I barely opened it. Checking battery usage pointed me there, and limiting background refresh plus lowering brightness made a noticeable difference."
+    },
+    {
+      "user": "How can I free up space on my phone without losing photos?",
+      "A": "First review the storage screen to see what is taking room, then clear offline downloads or large app caches you can restore later. Back up photos and confirm the backup before removing local copies; I can guide you through your phone’s menu.",
+      "B": "Storage settings show how much space is used by photos, applications, and downloads. Removable offline files can be cleared, while local photographs should only be deleted after a backup has been verified.",
+      "C": "I freed several gigabytes by deleting old downloads I had forgotten about. Before touching my pictures, I checked that the cloud backup had finished and opened a few files to make sure they were there."
+    },
+    {
+      "user": "My wireless printer says it is offline even though it is on.",
+      "A": "A quick sequence is to check that both devices are on the same Wi-Fi network, then clear any stuck print jobs. Restart the printer and computer if needed; I can troubleshoot a specific printer message with you.",
+      "B": "A printer may appear offline when it is connected to a different wireless network or has a blocked print queue. Verifying network membership, removing stalled jobs, and restarting the devices can restore communication.",
+      "C": "I spent ten minutes blaming the printer before noticing my laptop had joined the guest Wi-Fi. Putting both devices back on the same network and clearing an old job fixed it."
+    },
+    {
+      "user": "How should I restart a home router that has lost internet?",
+      "A": "First check whether your provider reports an outage and make sure the cables are seated. If service looks normal, unplug the modem and router, wait about thirty seconds, then reconnect the modem before the router; I can help check the lights.",
+      "B": "A connection loss may result from a provider outage or a loose cable. When no outage is reported, power-cycling the modem and router for about thirty seconds, modem first and router second, can reestablish service.",
+      "C": "I check the provider status page before yanking plugs now. If it is not a neighborhood outage, I wait half a minute with the modem and router off, then power the modem up first."
+    },
+    {
+      "user": "How do I stop echo during a video call?",
+      "A": "Try using headphones or keeping only one nearby device’s speakers active, since sound from a speaker can feed back into a microphone. Then check the app’s selected input and output; I can help find those controls.",
+      "B": "Audio echo often occurs when a microphone captures sound from a nearby speaker. Headphones or disabling extra speaker devices can reduce feedback, and the application’s input and output selections should be checked.",
+      "C": "I joined a call from my phone and laptop once, and the two speakers kept chasing each other. Muting one device or plugging in headphones fixed the echo before we started."
+    }
+  ]
+}
