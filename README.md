@@ -6,8 +6,8 @@ them. The first model is AllenAI's OLMo 2 1B, which is released at every trainin
 same neuron can be followed from the base model to the finished assistant.
 
 **Status: early.** Small open models and sentences we wrote. Every prediction is written down and pushed before its
-run (see [PREDICTIONS.md](PREDICTIONS.md)), and the ones that failed stay in the record. One result so far is causal
-(the SmolLM3 name neurons below); the rest are correlational.
+run (see [PREDICTIONS.md](PREDICTIONS.md)), and the ones that failed stay in the record. The interventional results
+are the SmolLM3 name neurons and the Part 12 clamps below; the rest are correlational.
 
 ## Questions
 
