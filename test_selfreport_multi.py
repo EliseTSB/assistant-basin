@@ -16,10 +16,11 @@ import torch.nn.functional as F
 from selfreport import install_lora, load_lora_parameters, save_lora_parameters
 from test_selfreport import FakeTokenizer, tiny_model, tiny_spec
 from selfreport_multi import (
-    ANSWERS, CONDITIONS, MultiExample, MultiNeuronHooks, assign_conditions,
+    ANSWERS, CONDITIONS, MultiExample, MultiNeuronHooks, assign_conditions, assign_training_scales,
     build_evaluation_examples, build_extra_decoy_examples, build_result, condition_label,
     evaluate_extra_decoys, first_token_ids, make_extra_decoys, make_groups,
-    natural_strength_summary, padded_multi_batch, parse_eval_scales,
+    evaluate_natural_readout, natural_strength_summary, padded_multi_batch, parse_eval_scales,
+    parse_train_scales,
     scaled_group_highs, sha256_file, shuffle_training_labels, train_multi,
 )
 from selfreport import build_examples
@@ -59,10 +60,28 @@ class MultiSelfReportTests(unittest.TestCase):
             self.assertEqual(Counter(layer for layer, _ in group), Counter(layer for layer, _ in g1))
 
     def test_eval_scales_parse_and_reject_invalid_or_duplicate_values(self):
-        self.assertEqual(parse_eval_scales("1, 2,4,8"), (1.0, 2.0, 4.0, 8.0))
+        self.assertEqual(parse_eval_scales("0.25, 0.5,1,2,4,8"), (0.25, 0.5, 1.0, 2.0, 4.0, 8.0))
         for invalid in ("", "1,nope", "0,1", "1,inf", "1,1"):
             with self.subTest(invalid=invalid), self.assertRaises(argparse.ArgumentTypeError):
                 parse_eval_scales(invalid)
+
+    def test_train_scales_parse_and_seeded_draws_touch_only_pushed_examples(self):
+        scales = parse_train_scales("0.5, 1,2")
+        self.assertEqual(scales, (0.5, 1.0, 2.0))
+        for invalid in ("", "1,nope", "0,1", "1,inf"):
+            with self.subTest(invalid=invalid), self.assertRaises(argparse.ArgumentTypeError):
+                parse_train_scales(invalid)
+        conditions = ["G1", "G2", "G3", "G4", "none", "other"] * 20
+        rows_a = [MultiExample(None, condition, "A", [1, 2], [0]) for condition in conditions]
+        rows_b = [MultiExample(None, condition, "A", [1, 2], [0]) for condition in conditions]
+        assign_training_scales(rows_a, scales, seed=804)
+        assign_training_scales(rows_b, scales, seed=804)
+        self.assertEqual([row.train_scale for row in rows_a], [row.train_scale for row in rows_b])
+        for row in rows_a:
+            if row.condition in ("G1", "G2", "G3", "G4"):
+                self.assertIn(row.train_scale, scales)
+            else:
+                self.assertIsNone(row.train_scale)
 
     def test_each_eval_scale_is_recomputed_from_the_same_quantile_pair(self):
         bounds = {"G1": (np.array([10.0], dtype=np.float32), np.array([2.0], dtype=np.float32))}
@@ -98,6 +117,41 @@ class MultiSelfReportTests(unittest.TestCase):
         expected[0, torch.tensor([1, 3]), 3] = True
         self.assertTrue(torch.equal(changed[expected], torch.tensor([102.0, 102.0])))
         self.assertTrue(torch.equal(changed[~expected], base[~expected]))
+
+    def test_training_clamp_scale_is_selected_per_row_and_leaves_none_and_decoy_unchanged(self):
+        model = tiny_model(seed=102, layers=2)
+        groups = {
+            "G1": [(0, 1)], "G2": [(0, 2)], "G3": [(0, 3)],
+            "G4": [(0, 4)], "G5": [(0, 5)],
+        }
+        default_highs = {name: np.array([10.0 + i], dtype=np.float32) for i, name in enumerate(groups)}
+        highs_by_scale = {
+            0.5: {name: np.array([50.0 + i], dtype=np.float32) for i, name in enumerate(groups)},
+            2.0: {name: np.array([20.0 + i], dtype=np.float32) for i, name in enumerate(groups)},
+        }
+        ids = torch.tensor([[1, 3, 5, 7, 9]] * 4)
+        positions = [[1]] * 4
+        module = model.model.layers[0].mlp.down_proj
+        baseline = []
+        baseline_handle = module.register_forward_pre_hook(lambda _m, ins: baseline.append(ins[0].detach().clone()))
+        with torch.inference_mode():
+            model(input_ids=ids, use_cache=False)
+        baseline_handle.remove()
+
+        hooks = MultiNeuronHooks(model, groups, default_highs, highs_by_scale)
+        changed = []
+        changed_handle = module.register_forward_pre_hook(lambda _m, ins: changed.append(ins[0].detach().clone()))
+        hooks.prepare(positions, ["G1", "G2", "none", "other"], [0.5, 2.0, None, None])
+        with torch.inference_mode():
+            model(input_ids=ids, use_cache=False)
+        changed_handle.remove()
+        hooks.close()
+
+        expected = baseline[0].clone()
+        expected[0, 1, 1] = 50.0
+        expected[1, 1, 2] = 21.0
+        expected[3, 1, 5] = 14.0
+        self.assertTrue(torch.equal(changed[0], expected))
 
     def test_decoy_condition_clamps_g5_and_none_clamps_nothing(self):
         # Found in review 2026-10-16: the hook looked up the condition name, so "other" clamped nothing.
@@ -223,6 +277,101 @@ class MultiSelfReportTests(unittest.TestCase):
         self.assertAlmostEqual(summary["p99"], 0.49)
         self.assertAlmostEqual(summary["max"], 0.5)
 
+    def test_natural_readout_probabilities_track_monotone_natural_activation(self):
+        class NoPushHooks:
+            def prepare(self, spans, conditions):
+                if any(condition != "none" for condition in conditions):
+                    raise AssertionError("natural readout must be unpushed")
+
+        class ProbabilityStub:
+            def __init__(self, scores):
+                self.scores = scores
+
+            def eval(self):
+                return self
+
+            def __call__(self, input_ids, attention_mask=None, use_cache=False):
+                logits = torch.zeros((*input_ids.shape, 20), dtype=torch.float32, device=input_ids.device)
+                for row, index_token in enumerate(input_ids[:, 0].tolist()):
+                    logits[row, :, 10] = self.scores[index_token - 1]
+                return SimpleNamespace(logits=logits)
+
+        count = 40
+        activation = np.linspace(-2.0, 2.0, count)
+        groups = {f"G{index + 1}": [(0, index)] for index in range(4)}
+        units = [(0, index) for index in range(4)]
+        bounds = {name: (np.array([1.0]), np.array([-1.0])) for name in groups}
+        examples = []
+        for index, value in enumerate(activation):
+            token_activations = np.asarray([value, -value, -value, -value], dtype=np.float32)
+            source = SimpleNamespace(
+                frame_index=index,
+                family="A",
+                natural_tokens=np.stack([token_activations, token_activations]),
+            )
+            examples.append(MultiExample(source, "none", "none", [index + 1, 2], [0]))
+        answer_ids = {"A": 10, "B": 11, "C": 12, "D": 13, "none": 14}
+        with patch("selfreport_multi.sr.DEVICE", torch.device("cpu")):
+            summary = evaluate_natural_readout(
+                ProbabilityStub(activation), examples, NoPushHooks(), 0, answer_ids,
+                groups, units, bounds, seed=42, batch_size=8,
+            )
+        self.assertEqual(summary["permutation_count"], 2000)
+        self.assertEqual(summary["probability_distribution"], "softmax over the five answer-token logits")
+        for name in groups:
+            group = summary["groups"][name]
+            self.assertEqual(group["n"], count)
+            self.assertAlmostEqual(group["spearman_rho"], 1.0)
+            self.assertLess(group["permutation_p_value"], 0.01)
+            self.assertEqual(group["pairs"][0]["frame_index"], 0)
+            self.assertIn("natural_mean_activation_on_clamp_axis", group["pairs"][0])
+        self.assertAlmostEqual(summary["mean_rho"], 1.0)
+        self.assertLess(summary["pooled_permutation_p_value"], 0.01)
+
+    def test_natural_readout_independent_probability_noise_is_not_significant(self):
+        class NoPushHooks:
+            def prepare(self, spans, conditions):
+                if any(condition != "none" for condition in conditions):
+                    raise AssertionError("natural readout must be unpushed")
+
+        class ProbabilityStub:
+            def __init__(self, scores):
+                self.scores = scores
+
+            def eval(self):
+                return self
+
+            def __call__(self, input_ids, attention_mask=None, use_cache=False):
+                logits = torch.zeros((*input_ids.shape, 20), dtype=torch.float32, device=input_ids.device)
+                for row, index_token in enumerate(input_ids[:, 0].tolist()):
+                    logits[row, :, 10] = self.scores[index_token - 1]
+                return SimpleNamespace(logits=logits)
+
+        count = 80
+        activation = np.linspace(-2.0, 2.0, count)
+        noise = np.random.default_rng(2718).normal(size=count)
+        groups = {f"G{index + 1}": [(0, index)] for index in range(4)}
+        units = [(0, index) for index in range(4)]
+        bounds = {name: (np.array([1.0]), np.array([-1.0])) for name in groups}
+        examples = []
+        for index, value in enumerate(activation):
+            token_activations = np.asarray([value, -value, -value, -value], dtype=np.float32)
+            source = SimpleNamespace(
+                frame_index=index,
+                family="A",
+                natural_tokens=np.stack([token_activations, token_activations]),
+            )
+            examples.append(MultiExample(source, "none", "none", [index + 1, 2], [0]))
+        answer_ids = {"A": 10, "B": 11, "C": 12, "D": 13, "none": 14}
+        with patch("selfreport_multi.sr.DEVICE", torch.device("cpu")):
+            summary = evaluate_natural_readout(
+                ProbabilityStub(noise), examples, NoPushHooks(), 0, answer_ids,
+                groups, units, bounds, seed=42, batch_size=8,
+            )
+        result = summary["groups"]["G1"]
+        self.assertLess(abs(result["spearman_rho"]), 0.2)
+        self.assertGreater(result["permutation_p_value"], 0.05)
+
     def test_default_result_shape_remains_legacy_without_new_flags(self):
         with tempfile.TemporaryDirectory() as directory:
             frames = Path(directory) / "frames.json"
@@ -253,6 +402,7 @@ class MultiSelfReportTests(unittest.TestCase):
             "model", "groups", "group_seed", "clamp_scale", "answer_token_ids",
             "training", "evaluation", "split",
         })
+        self.assertNotIn("train_scales", result)
         self.assertEqual(result["evaluation"]["n"], result["split"]["evaluation_condition_examples"])
         self.assertNotIn("natural_strength_on_clamp_axis", result)
         self.assertNotIn("evaluation_by_scale", result)
@@ -271,6 +421,31 @@ class MultiSelfReportTests(unittest.TestCase):
         self.assertEqual(set(scaled["natural_strength_on_clamp_axis"]), {
             "G1", "G2", "G3", "G4", "G5", "X1", "X2",
         })
+
+    def test_train_scales_and_natural_readout_integration(self):
+        with tempfile.TemporaryDirectory() as directory:
+            frames = Path(directory) / "frames.json"
+            frames.write_text(json.dumps(tiny_spec(frame_count=2)), encoding="utf-8")
+            args = argparse.Namespace(
+                model="tiny", identity="unused.json", group_seed=7, seed=42,
+                device="cpu", threads=1, frames=str(frames), limit=0,
+                infer_batch_size=4, clamp_scale=8.0, shuffled=True,
+                eval_only=False, epochs=1, lr=3e-4, save_lora=None,
+                train_scales=parse_train_scales("0.5,1,2"),
+                eval_scales=parse_eval_scales("0.25"), natural_readout=True,
+                extra_decoys=0,
+            )
+            with (
+                patch("selfreport_multi.AutoTokenizer.from_pretrained", return_value=FakeTokenizer()),
+                patch("selfreport_multi.AutoModelForCausalLM.from_pretrained", side_effect=lambda *a, **k: tiny_model(seed=121, layers=2)),
+                patch("selfreport_multi.sr.select_target_units", return_value=[(0, index) for index in range(6)] + [(1, index) for index in range(5)]),
+            ):
+                trained = build_result(args)
+        self.assertEqual(trained["train_scales"], [0.5, 1.0, 2.0])
+        self.assertTrue(trained["training"]["shuffled"])
+        self.assertEqual(set(trained["evaluation_by_scale"]), {"0.25"})
+        self.assertEqual(trained["natural_readout"]["permutation_count"], 2000)
+        self.assertEqual(trained["natural_readout"]["groups"]["G1"]["n"], 4)
 
     def test_eval_examples_cover_every_condition_with_identical_prompt_ids(self):
         tokenizer = FakeTokenizer()

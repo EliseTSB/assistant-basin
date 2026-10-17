@@ -101,6 +101,17 @@ def parse_eval_scales(value: str) -> tuple[float, ...]:
     return scales
 
 
+def parse_train_scales(value: str) -> tuple[float, ...]:
+    """Parse a comma-separated list of positive clamp scales used during training."""
+    try:
+        scales = tuple(float(part.strip()) for part in value.split(","))
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("--train-scales must be comma-separated numbers") from exc
+    if not scales or any(not math.isfinite(scale) or scale <= 0 for scale in scales):
+        raise argparse.ArgumentTypeError("--train-scales values must be finite and greater than zero")
+    return scales
+
+
 def scale_key(scale: float) -> str:
     return format(float(scale), ".12g")
 
@@ -138,6 +149,17 @@ def assign_conditions(examples: Sequence[Any], seed: int = 42) -> list[list[str]
     return [pair or [] for pair in assigned]
 
 
+def assign_training_scales(examples: Sequence["MultiExample"], scales: Sequence[float], seed: int) -> None:
+    """Draw one seeded scale per pushed named-group example; leave none/decoy rows unchanged."""
+    if not scales:
+        raise ValueError("At least one training scale is required")
+    pushed = [example for example in examples if example.condition in ("G1", "G2", "G3", "G4")]
+    rng = np.random.default_rng(seed)
+    chosen = rng.choice(np.asarray(scales, dtype=np.float64), size=len(pushed), replace=True)
+    for example, scale in zip(pushed, chosen):
+        example.train_scale = float(scale)
+
+
 def condition_label(condition: str) -> str:
     return LABELS[condition]
 
@@ -158,26 +180,35 @@ class MultiExample:
     prompt_ids: list[int]
     span_positions: list[int]
     train_label: str | None = None
+    train_scale: float | None = None
 
 
 class MultiNeuronHooks:
     """Clamp only the selected group's features at each row's message positions."""
-    def __init__(self, model: torch.nn.Module, groups: dict[str, list[tuple[int, int]]], highs: dict[str, np.ndarray]):
+    def __init__(
+        self,
+        model: torch.nn.Module,
+        groups: dict[str, list[tuple[int, int]]],
+        highs: dict[str, np.ndarray],
+        highs_by_scale: dict[float, dict[str, np.ndarray]] | None = None,
+    ):
         self.model = model
         self.groups = groups
         self.highs = highs
-        self.layer_groups: dict[int, dict[str, list[tuple[int, int, float]]]] = {}
+        self.highs_by_scale = highs_by_scale or {}
+        self.layer_groups: dict[int, dict[str, list[tuple[int, int]]]] = {}
         self.conditions: list[str] = []
         self.spans: list[list[int]] = []
+        self.scales: list[float | None] = []
         self.handles = []
         for group, units in groups.items():
-            for (layer, neuron), value in zip(units, highs[group]):
-                self.layer_groups.setdefault(layer, {}).setdefault(group, []).append((neuron, 0, float(value)))
+            for index, (layer, neuron) in enumerate(units):
+                self.layer_groups.setdefault(layer, {}).setdefault(group, []).append((neuron, index))
         for layer, by_group in self.layer_groups.items():
             module = model.model.layers[layer].mlp.down_proj
             self.handles.append(module.register_forward_pre_hook(self._hook(layer, by_group)))
 
-    def _hook(self, layer: int, by_group: dict[str, list[tuple[int, int, float]]]):
+    def _hook(self, layer: int, by_group: dict[str, list[tuple[int, int]]]):
         def apply(_module, inputs):
             x = inputs[0]
             if not self.conditions:
@@ -187,18 +218,34 @@ class MultiNeuronHooks:
                 if condition in ("none",):
                     continue
                 # the decoy condition pushes G5, the group never named in the question
-                for neuron, _, value in by_group.get("G5" if condition == "other" else condition, []):
+                group = "G5" if condition == "other" else condition
+                row_highs = self.highs
+                if self.scales[row] is not None:
+                    row_highs = self.highs_by_scale[self.scales[row]]
+                for neuron, index in by_group.get(group, []):
                     if positions:
                         p = torch.as_tensor(positions, dtype=torch.long, device=x.device)
-                        y[row, p, neuron] = value
+                        y[row, p, neuron] = float(row_highs[group][index])
             return (y,) + tuple(inputs[1:])
         return apply
 
-    def prepare(self, spans: Sequence[Sequence[int]], conditions: Sequence[str]):
+    def prepare(
+        self,
+        spans: Sequence[Sequence[int]],
+        conditions: Sequence[str],
+        scales: Sequence[float | None] | None = None,
+    ):
         self.spans = [list(x) for x in spans]
         self.conditions = list(conditions)
+        self.scales = [None] * len(self.conditions) if scales is None else [
+            None if scale is None else float(scale) for scale in scales
+        ]
         if len(self.spans) != len(self.conditions):
             raise ValueError("One condition is required per prompt")
+        if len(self.scales) != len(self.conditions):
+            raise ValueError("One scale is required per prompt")
+        if any(scale is not None and scale not in self.highs_by_scale for scale in self.scales):
+            raise ValueError("A training example requested an unavailable clamp scale")
 
     def close(self):
         for handle in self.handles:
@@ -312,7 +359,8 @@ def train_multi(model, examples: list[MultiExample], hooks: MultiNeuronHooks, pa
             batch = [examples[i] for i in indices]
             targets = [answer_ids[e.train_label] for e in batch]
             input_ids, attention_mask, answer_positions = padded_multi_batch(batch, pad_id, targets)
-            hooks.prepare([e.span_positions for e in batch], [e.condition for e in batch])
+            hooks.prepare([e.span_positions for e in batch], [e.condition for e in batch],
+                          [e.train_scale for e in batch])
             start = time.perf_counter()
             model.train()
             optimizer.zero_grad(set_to_none=True)
@@ -402,6 +450,27 @@ def natural_strength_summary(
 ):
     """Summarize held-out per-message activations in per-unit scale-1 clamp units."""
     summary = {}
+    per_message = natural_strength_per_message(held_out, groups, units, bounds)
+    for name, group_units in groups.items():
+        values = np.asarray(per_message[name], dtype=np.float64)
+        summary[name] = {
+            "n": int(values.size),
+            "median": float(np.quantile(values, 0.50)),
+            "p90": float(np.quantile(values, 0.90)),
+            "p99": float(np.quantile(values, 0.99)),
+            "max": float(np.max(values)),
+        }
+    return summary
+
+
+def natural_strength_per_message(
+    held_out: Sequence[sr.Example],
+    groups: dict[str, list[tuple[int, int]]],
+    units: Sequence[tuple[int, int]],
+    bounds: dict[str, tuple[np.ndarray, np.ndarray]],
+) -> dict[str, list[float]]:
+    """Return the message means on the same per-unit scale-1 axes as the summary."""
+    values_by_group: dict[str, list[float]] = {}
     for name, group_units in groups.items():
         offsets = [units.index(unit) for unit in group_units]
         high, low = bounds[name]
@@ -416,24 +485,178 @@ def natural_strength_summary(
                 tokens[:, usable] - midpoint[usable]
             ) / half_gap[usable]
             message_axes.append(float(per_unit_axis.mean()))
-        values = np.asarray(message_axes, dtype=np.float64)
-        summary[name] = {
-            "n": int(values.size),
-            "median": float(np.quantile(values, 0.50)),
-            "p90": float(np.quantile(values, 0.90)),
-            "p99": float(np.quantile(values, 0.99)),
-            "max": float(np.max(values)),
+        values_by_group[name] = message_axes
+    return values_by_group
+
+
+def _average_ranks(values: Sequence[float]) -> np.ndarray:
+    values = np.asarray(values, dtype=np.float64)
+    order = np.argsort(values, kind="mergesort")
+    ranks = np.empty(values.size, dtype=np.float64)
+    sorted_values = values[order]
+    start = 0
+    while start < values.size:
+        end = start + 1
+        while end < values.size and sorted_values[end] == sorted_values[start]:
+            end += 1
+        ranks[order[start:end]] = (start + end - 1) / 2.0 + 1.0
+        start = end
+    return ranks
+
+
+def _rank_correlation(left: Sequence[float], right: Sequence[float]) -> float | None:
+    if len(left) != len(right) or len(left) < 2:
+        return None
+    left_ranks = _average_ranks(left)
+    right_ranks = _average_ranks(right)
+    left_centered = left_ranks - left_ranks.mean()
+    right_centered = right_ranks - right_ranks.mean()
+    denominator = float(np.sqrt(np.dot(left_centered, left_centered) * np.dot(right_centered, right_centered)))
+    if denominator == 0.0:
+        return None
+    return float(np.dot(left_centered, right_centered) / denominator)
+
+
+def _permutation_p_value(
+    probabilities: Sequence[float],
+    activations: Sequence[float],
+    observed_rho: float | None,
+    permutations: int,
+    rng: np.random.Generator,
+) -> float | None:
+    if observed_rho is None:
+        return None
+    probability_ranks = _average_ranks(probabilities)
+    activation_ranks = _average_ranks(activations)
+    probability_centered = probability_ranks - probability_ranks.mean()
+    activation_centered = activation_ranks - activation_ranks.mean()
+    denominator = float(np.sqrt(np.dot(probability_centered, probability_centered)
+                                * np.dot(activation_centered, activation_centered)))
+    if denominator == 0.0:
+        return None
+    extreme = 0
+    for _ in range(permutations):
+        shuffled = rng.permutation(activation_centered)
+        permuted_rho = float(np.dot(probability_centered, shuffled) / denominator)
+        extreme += abs(permuted_rho) >= abs(observed_rho)
+    return (extreme + 1) / (permutations + 1)
+
+
+def natural_readout_statistics(
+    pairs_by_group: dict[str, list[dict[str, Any]]],
+    seed: int = 42,
+    permutations: int = 2000,
+) -> dict[str, Any]:
+    """Calculate per-group and pooled two-sided Spearman permutation tests."""
+    if permutations < 1:
+        raise ValueError("At least one permutation is required")
+    rng = np.random.default_rng(seed)
+    group_results = {}
+    rank_data = {}
+    for group in ("G1", "G2", "G3", "G4"):
+        pairs = pairs_by_group.get(group, [])
+        probabilities = [pair["letter_probability"] for pair in pairs]
+        activations = [pair["natural_mean_activation_on_clamp_axis"] for pair in pairs]
+        rho = _rank_correlation(probabilities, activations)
+        p_value = _permutation_p_value(probabilities, activations, rho, permutations, rng)
+        group_results[group] = {
+            "n": len(pairs),
+            "spearman_rho": rho,
+            "permutation_p_value": p_value,
+            "pairs": pairs,
         }
-    return summary
+        if rho is not None:
+            rank_data[group] = (_average_ranks(probabilities), _average_ranks(activations))
+
+    group_rhos = [group_results[group]["spearman_rho"] for group in ("G1", "G2", "G3", "G4")]
+    valid_rhos = [rho for rho in group_rhos if rho is not None]
+    mean_rho = float(np.mean(valid_rhos)) if len(valid_rhos) == 4 else None
+    pooled_p_value = None
+    if mean_rho is not None:
+        extreme = 0
+        valid_groups = [group for group in ("G1", "G2", "G3", "G4") if group in rank_data]
+        sample_sizes = {len(rank_data[group][0]) for group in valid_groups}
+        shared_size = next(iter(sample_sizes)) if len(sample_sizes) == 1 else None
+        for _ in range(permutations):
+            shared_order = rng.permutation(shared_size) if shared_size is not None else None
+            permuted_rhos = []
+            for group in valid_groups:
+                probability_ranks, activation_ranks = rank_data[group]
+                if shared_order is None:
+                    order = rng.permutation(len(activation_ranks))
+                else:
+                    order = shared_order
+                probability_centered = probability_ranks - probability_ranks.mean()
+                activation_centered = activation_ranks[order] - activation_ranks.mean()
+                denominator = float(np.sqrt(np.dot(probability_centered, probability_centered)
+                                            * np.dot(activation_centered, activation_centered)))
+                if denominator:
+                    permuted_rhos.append(float(np.dot(probability_centered, activation_centered) / denominator))
+            permuted_mean = float(np.mean(permuted_rhos)) if permuted_rhos else None
+            extreme += permuted_mean is not None and abs(permuted_mean) >= abs(mean_rho)
+        pooled_p_value = (extreme + 1) / (permutations + 1)
+
+    return {
+        "permutation_count": permutations,
+        "permutation_seed": seed,
+        "probability_distribution": "softmax over the five answer-token logits",
+        "groups": group_results,
+        "mean_rho": mean_rho,
+        "pooled_permutation_p_value": pooled_p_value,
+    }
+
+
+def evaluate_natural_readout(
+    model,
+    examples: Sequence[MultiExample],
+    hooks: MultiNeuronHooks,
+    pad_id: int,
+    answer_ids: dict[str, int],
+    groups: dict[str, list[tuple[int, int]]],
+    units: Sequence[tuple[int, int]],
+    bounds: dict[str, tuple[np.ndarray, np.ndarray]],
+    seed: int = 42,
+    batch_size: int = 4,
+    permutations: int = 2000,
+) -> dict[str, Any]:
+    """Measure answer-token probabilities against natural per-message axes, with no clamp."""
+    if any(example.condition != "none" for example in examples):
+        raise ValueError("Natural readout evaluation requires only unpushed examples")
+    sources = [example.source for example in examples]
+    activations_by_group = natural_strength_per_message(sources, groups, units, bounds)
+    pairs_by_group: dict[str, list[dict[str, Any]]] = {group: [] for group in ("G1", "G2", "G3", "G4")}
+    answer_token_ids = torch.as_tensor([answer_ids[answer] for answer in ANSWERS], dtype=torch.long, device=sr.DEVICE)
+    model.eval()
+    with torch.inference_mode():
+        for batch in sr.chunks(examples, batch_size):
+            ids, mask, _ = padded_multi_batch(batch, pad_id)
+            hooks.prepare([example.span_positions for example in batch], [example.condition for example in batch])
+            logits = model(input_ids=ids, attention_mask=mask, use_cache=False).logits
+            for row, example in enumerate(batch):
+                at = logits[row, len(example.prompt_ids) - 1]
+                probabilities = torch.softmax(at.index_select(0, answer_token_ids), dim=0).cpu().numpy()
+                source_index = len(pairs_by_group["G1"])
+                for answer_index, group in enumerate(("G1", "G2", "G3", "G4")):
+                    pairs_by_group[group].append({
+                        "frame_index": int(example.source.frame_index),
+                        "family": str(example.source.family),
+                        "letter_probability": float(probabilities[answer_index]),
+                        "natural_mean_activation_on_clamp_axis": float(activations_by_group[group][source_index]),
+                    })
+    return natural_readout_statistics(pairs_by_group, seed=seed, permutations=permutations)
 
 
 def build_result(args):
     load_lora = getattr(args, "load_lora", None)
     eval_scales = getattr(args, "eval_scales", None)
+    train_scales = getattr(args, "train_scales", None)
+    natural_readout = getattr(args, "natural_readout", False)
     extra_decoy_count = getattr(args, "extra_decoys", 0)
     decoy_seed = getattr(args, "decoy_seed", 2026)
     if extra_decoy_count < 0:
         raise ValueError("--extra-decoys must be nonnegative")
+    if train_scales is not None and (load_lora is not None or args.eval_only):
+        raise ValueError("--train-scales requires training and cannot be combined with --load-lora or --eval-only")
     random.seed(args.seed); np.random.seed(args.seed); torch.manual_seed(args.seed)
     torch.set_num_threads(args.threads)
     try: torch.set_num_interop_threads(args.threads)
@@ -482,6 +705,8 @@ def build_result(args):
     for e in train_rows: e.train_label = e.label
     if args.shuffled:
         shuffle_training_labels(train_rows, args.seed)
+    if train_scales is not None:
+        assign_training_scales(train_rows, train_scales, args.seed)
     eval_multi = build_evaluation_examples(tokenizer, eval_sources)
     loaded_lora_info = None
     if load_lora is not None:
@@ -495,7 +720,11 @@ def build_result(args):
     else:
         sr.install_lora(model, rank=8)
         model.to(sr.DEVICE)
-        training_hooks = MultiNeuronHooks(model, groups, training_highs)
+        training_highs_by_scale = ({
+            float(scale): scaled_group_highs(bounds, float(scale), groups)
+            for scale in train_scales
+        } if train_scales is not None else None)
+        training_hooks = MultiNeuronHooks(model, groups, training_highs, training_highs_by_scale)
         training = train_multi(model, train_rows, training_hooks, int(pad_id), answer_ids,
                                epochs=args.epochs, batch_size=8, learning_rate=args.lr, seed=args.seed)
         training_hooks.close()
@@ -532,6 +761,8 @@ def build_result(args):
         "answer_token_ids": answer_ids,
         "training": training,
     }
+    if train_scales is not None:
+        result["train_scales"] = [float(scale) for scale in train_scales]
     if eval_scales is None:
         result["evaluation"] = evaluation_by_scale[scale_key(args.clamp_scale)]
     else:
@@ -551,7 +782,7 @@ def build_result(args):
         result["decoy_seed"] = decoy_seed
     if loaded_lora_info is not None:
         result["loaded_lora"] = loaded_lora_info
-    if load_lora is not None or eval_scales is not None or extra_decoy_count:
+    if load_lora is not None or eval_scales is not None or extra_decoy_count or natural_readout:
         # Re-capture held-out activations with the final reader weights. Calibration
         # bounds above remain those measured before LoRA training, as in Part 12h.
         natural_hooks = sr.NeuronHooks(model, units)
@@ -560,6 +791,14 @@ def build_result(args):
         result["natural_strength_on_clamp_axis"] = natural_strength_summary(
             eval_sources, all_groups, units, bounds
         )
+    if natural_readout:
+        unpushed = [example for example in eval_multi if example.condition == "none"]
+        readout_hooks = MultiNeuronHooks(model, all_groups, scaled_group_highs(bounds, args.clamp_scale))
+        result["natural_readout"] = evaluate_natural_readout(
+            model, unpushed, readout_hooks, int(pad_id), answer_ids, all_groups, units, bounds,
+            seed=args.seed, batch_size=args.infer_batch_size,
+        )
+        readout_hooks.close()
     return result
 
 
@@ -576,6 +815,10 @@ def main():
     p.add_argument("--load-lora", default=None, metavar="PATH", help="load a saved multi-target LoRA adapter and skip training")
     p.add_argument("--eval-scales", type=parse_eval_scales, default=None, metavar="CSV",
                    help="evaluate the held-out set at each comma-separated clamp scale")
+    p.add_argument("--train-scales", type=parse_train_scales, default=None, metavar="CSV",
+                   help="draw each pushed named-group training example's clamp scale from this list")
+    p.add_argument("--natural-readout", action="store_true",
+                   help="correlate no-push answer probabilities with each group's natural activation")
     p.add_argument("--extra-decoys", type=int, default=0, help="evaluate this many fresh decoy groups at the top evaluation scale")
     p.add_argument("--decoy-seed", type=int, default=2026, help="independent seed for fresh extra decoy groups")
     p.add_argument("--device", default="cpu", help="cpu, or xpu for the Arc A770 (Windows GPU job)")
