@@ -460,7 +460,8 @@ Muse read README and this file cold. What each point changed, checked 2026-10-17
   ChatGPT/OpenAI) and the writing style.
 - **12f.4 lacked an untrained baseline.** Added to its row: the untrained model already says yes 47-63% on known-no.
 - **12c.5's resistant facts** ("Is Paris the capital of Germany?" stays no): consistent with the clamp deciding the
-  answer only where the model is unsure. 12f's per-question counts agree (Paris 1 yes of 12 unclamped, 0 clamped);
+  answer only where the model is unsure. 12f's per-question counts agree (Paris: 1 yes unclamped, 0 clamped low, in the low-clamp set; per-question
+  denominators were not saved);
   not tested directly.
 - **"One result so far is causal"** was outdated (the clamps are interventions too); README fixed.
 - **Still missing:** a content-fixed control (Aoki et al. 2609.00904: the same text every time, only the internal state
