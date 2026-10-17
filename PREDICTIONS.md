@@ -378,8 +378,9 @@ Elise, 2026-10-16 13:56: *"Yes lets go for it!"* Written before the run.
 | 12e.3 | Target B (layer 15) stays within 10 points of chance after training. | **held** | 63/144 (43.8%) at both. 2026-10-16 |
 | 12e.4 | Target A with shuffled labels stays within 10 points of chance. | **held** | 63/144 (43.8%) and 64/144 (44.4%). 2026-10-16 |
 | 12e.5 | The random target reaches within 10 points of target A's accuracy (the ability is not identity-specific). | **held, vacuously** | 67/144 (46.5%) against A's 50.7%, but both are at chance, so this says nothing about specificity. 2026-10-16 |
-| 12c.1 | Part 12's training rerun with the clamps widened 8 times (train and test), target A: held-out steered accuracy at least 70%. | pending | |
-| 12c.2 | Target B stays within 10 points of chance at 8 times. | pending | |
-| 12c.3 | The random target at 8 times reaches within 10 points of target A's steered accuracy. | pending | |
-| 12c.4 | Shuffled labels at 8 times stay within 10 points of chance. | pending | |
+| 12c.1 | Part 12's training rerun with the clamps widened 8 times (train and test), target A: held-out steered accuracy at least 70%. | **held** | 81/82 (98.8%) at 90/10 and 82/82 at the unseen 95/5; labels balanced (42 no, 40 yes); natural accuracy still at chance, 78/144 (54.2%). 2026-10-16 |
+| 12c.2 | Target B stays within 10 points of chance at 8 times. | **held** | 47/81 (58.0%) at both strengths. 2026-10-16 |
+| 12c.3 | The random target at 8 times reaches within 10 points of target A's steered accuracy. | **mixed** | 57/68 (83.8%) at 90/10, 15.0 points under A (fails); 63/68 (92.6%) at the unseen 95/5, 7.4 under A (holds). Its steered set is smaller and less balanced (43 yes, 25 no), because fewer random-target examples flip against the surface. 2026-10-16 |
+| 12c.4 | Shuffled labels at 8 times stay within 10 points of chance. | **held** | 43/82 (52.4%) at both strengths. 2026-10-16 |
+| 12c.5 | Written 2026-10-16 21:31 CT after 12c.1-12c.4, before the run: the factual-no control (12.7's rule) on target A retrained at 8 times with the same seed. I expect it to FAIL: under the clamps, the trained model's yes rate on known-no questions moves by at least 10 points in at least one of the four cells, because training only ever paired the clamp with one question. If all four shifts stay under 10 points, the report is specific to the question. | pending | |
 
