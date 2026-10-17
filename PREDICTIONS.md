@@ -425,3 +425,19 @@ states). Code: `selfreport_multi.py`, branch part12g-multiclass; on the Arc A770
 | 12g.5 | Shuffled training labels: overall accuracy at most 40%. | **held** | 24.5% (212/864); named-group accuracy 11.3%. results/part12g/shuffled.json. 2026-10-17 |
 | 12g.6 | Trained, at least half of the held-out messages are answered correctly under all six conditions. | **failed** | 20.8% (30/144). Since G1, G2 and G4 are each right on exactly 30 messages, those are the same 30 messages: on them the model names every pushed group correctly and says "none" to the decoy and to no push; on the other 114 it says "none" whatever was pushed. When it names a group it is right 121 of 129 times (all 8 wrong names are "C"), and it never names a group for the decoy. results/part12g/trained.json; adapter /mnt/e/neuron-probe/out/part12g-multi-lora.pt. 2026-10-17 |
 
+
+### Part 12h — 12g trained three times longer (written 2026-10-17 00:27 CT, before any 12h run)
+
+12g's trained adapter named the pushed group on a fixed 30 of 144 held-out messages and said "none" on the rest, with
+its named answers right 121 of 129 times; training ended at loss 1.33. 12h changes one thing: 18 epochs instead of 6
+(648 steps), same seed, groups, clamp scale (8x), data split and code (`selfreport_multi.py --epochs 18`, main
+a5b6db1), on the Arc A770. The shuffled control is rerun at 18 epochs too, because more training gives it more room to
+memorize.
+
+| # | Prediction | Status | Result |
+|---|---|---|---|
+| 12h.1 | Named-group accuracy (rows G1-G4) rises to at least 50% (12g: 21.0%). | pending | |
+| 12h.2 | When it names a group, it is right at least 90% of the time (12g: 121/129). | pending | |
+| 12h.3 | The decoy push is answered "none" at least 90% of the time. | pending | |
+| 12h.4 | G1's accuracy is within 10 points of the mean of G2-G4. | pending | |
+| 12h.5 | Shuffled labels at 18 epochs: overall held-out accuracy at most 40%. | pending | |
