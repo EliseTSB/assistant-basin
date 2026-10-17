@@ -451,6 +451,26 @@ memorize.
 | 12h.4 | G1's accuracy is within 10 points of the mean of G2-G4. | **held** | G1 100% and G2-G4 100%. 2026-10-17 |
 | 12h.5 | Shuffled labels at 18 epochs: overall held-out accuracy at most 40%. | **held** | 23.5% (203/864); named-group accuracy 18.4%; all-six 0/144. Its loss fell only to 0.73, so the labels it cannot learn stay unlearned at 18 epochs. results/part12h/shuffled.json. 2026-10-17 |
 
+### Part 12i — how strong a push does the 12h reader need? (written 2026-10-17 13:18 CT, before any 12i code or run)
+
+12h's adapter names a pushed group perfectly at 8x. Muse's literature review (2026-10-17, ten papers read at source) finds
+that trained self-reports in every paper that ran hard controls track something other than the internal state, and
+that none tests natural, unpushed variation. 12i asks that question of 12h with no new training: load the saved 12h
+adapter (`out/part12h/multi-lora.pt`) and evaluate the same held-out messages at clamp scales 1, 2 and 4 as well as 8.
+Scale 1 pushes all 11 neurons of a group to their natural 90th percentile (`scale_clamp_values`, the high end of what
+the model does on its own); larger scales widen the gap beyond anything natural. It also adds five fresh random
+11-neuron decoy groups, never seen in training, pushed at 8x and labelled "none", and records where each group's natural
+activation sits on the same axis. Code: `selfreport_multi.py --load-lora`, branch part12i; on the Arc A770.
+
+| # | Prediction | Status | Result |
+|---|---|---|---|
+| 12i.1 | Loading works: at scale 8 the loaded adapter's named-group accuracy is at least 95% (12h: 100%). | open | |
+| 12i.2 | At scale 1 (natural 90th percentile), named-group accuracy is at most 30%: most pushes answered "none". | open | |
+| 12i.3 | Named-group accuracy first reaches 50% at scale 4 or 8, not at 1 or 2: the reader needs pushes stronger than the model's own natural highs. | open | |
+| 12i.4 | Named-group accuracy does not decrease as the scale rises through 1, 2, 4, 8. | open | |
+| 12i.5 | The five fresh decoy groups at 8x are answered "none" at least 90% of the time (a reader of "something was pushed" would name a group). | open | |
+| 12i.6 | With no push, it names a group on at most 5% of held-out messages (12h: 0 of 144). | open | |
+
 ### Notes from an outside read (Muse, 2026-10-16 22:48 CT, council topic muse-introspection-papers-2026-10-16 [3])
 
 Muse read README and this file cold. What each point changed, checked 2026-10-17:
