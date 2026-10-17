@@ -1,0 +1,485 @@
+{
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "target": "A",
+  "eval_only": false,
+  "seed": 42,
+  "frame_rows": 72,
+  "example_count": 288,
+  "split": {
+    "train": 144,
+    "eval": 144,
+    "unit": "A/B/C/D examples; frames split by even/odd index"
+  },
+  "units": [
+    "L6.8167",
+    "L6.7544",
+    "L10.4148",
+    "L7.447",
+    "L8.4392",
+    "L10.6965",
+    "L6.1147",
+    "L7.6127",
+    "L7.161",
+    "L12.5336",
+    "L12.1086"
+  ],
+  "calibration": {
+    "z_score_means": [
+      0.0331969845875493,
+      0.024490459473680757,
+      0.008200687658851772,
+      0.0001522566964745743,
+      0.006446531920624289,
+      0.008774595266004326,
+      0.016257596353410817,
+      -0.014197194248809965,
+      -0.021496720195803693,
+      -0.1828972263675597,
+      0.016396854702381662
+    ],
+    "z_score_stds": [
+      0.022134083564077124,
+      0.01616838108761961,
+      0.02314867543165759,
+      0.016012373558448187,
+      0.011389112782045,
+      0.02323523374837059,
+      0.01537258781903294,
+      0.00984091830636995,
+      0.024758335770976605,
+      0.02418228832918623,
+      0.03927064554598561
+    ],
+    "natural_median_threshold": -0.05161800870407812,
+    "natural_train_yes": 72,
+    "natural_train_no": 72,
+    "steered_candidate_train": 144,
+    "requested_half_train_steered": 72,
+    "actual_train_steered": 72,
+    "clamp_scale": 8.0,
+    "90_10_high": [
+      0.5659225583076477,
+      0.4554712772369385,
+      0.6579217314720154,
+      0.4786059856414795,
+      0.37863844633102417,
+      0.5976940393447876,
+      0.38706713914871216,
+      0.32974907755851746,
+      0.6076211333274841,
+      0.4020448625087738,
+      1.0449389219284058
+    ],
+    "90_10_low": [
+      -0.46267059445381165,
+      -0.37741151452064514,
+      -0.6102452874183655,
+      -0.4862867593765259,
+      -0.35154205560684204,
+      -0.5720287561416626,
+      -0.3300971984863281,
+      -0.3692728877067566,
+      -0.6409932971000671,
+      -0.7570866346359253,
+      -0.9821416139602661
+    ],
+    "95_5_high": [
+      0.6834758520126343,
+      0.5486798882484436,
+      0.874322772026062,
+      0.7750815153121948,
+      0.6038575172424316,
+      0.7973464727401733,
+      0.4873844087123871,
+      0.4639016091823578,
+      0.7814217209815979,
+      0.5819357633590698,
+      1.2839428186416626
+    ],
+    "95_5_low": [
+      -0.5750206708908081,
+      -0.4683350622653961,
+      -0.8193880319595337,
+      -0.7743266820907593,
+      -0.5618553161621094,
+      -0.7730053663253784,
+      -0.4296555817127228,
+      -0.5133360624313354,
+      -0.8111876845359802,
+      -0.9451522827148438,
+      -1.228284239768982
+    ]
+  },
+  "training": {
+    "epochs": 6,
+    "examples": 144,
+    "steered_examples": 72,
+    "steps": 108,
+    "first_loss": 3.693983793258667,
+    "last_loss": 0.5215597748756409,
+    "mean_step_seconds": 10.04630040826844,
+    "median_step_seconds": 9.979508330499812
+  },
+  "evaluation": {
+    "natural": {
+      "n": 144,
+      "correct": 78,
+      "accuracy": 0.5416666666666666,
+      "against_surface_n": null,
+      "by_family": {
+        "A": {
+          "n": 36,
+          "correct": 14
+        },
+        "B": {
+          "n": 36,
+          "correct": 24
+        },
+        "C": {
+          "n": 36,
+          "correct": 21
+        },
+        "D": {
+          "n": 36,
+          "correct": 19
+        }
+      },
+      "label_counts": {
+        "yes": 74,
+        "no": 70
+      }
+    },
+    "steered_against_surface_90_10": {
+      "eligible_flips": 144,
+      "surface_conflicts_available": 82,
+      "n": 82,
+      "correct": 81,
+      "accuracy": 0.9878048780487805,
+      "against_surface_n": 82,
+      "by_family": {
+        "A": {
+          "n": 36,
+          "correct": 36
+        },
+        "B": {
+          "n": 20,
+          "correct": 20
+        },
+        "C": {
+          "n": 20,
+          "correct": 19
+        },
+        "D": {
+          "n": 6,
+          "correct": 6
+        }
+      },
+      "label_counts": {
+        "no": 42,
+        "yes": 40
+      }
+    },
+    "steered_against_surface_unseen_95_5": {
+      "eligible_flips": 144,
+      "surface_conflicts_available": 82,
+      "n": 82,
+      "correct": 82,
+      "accuracy": 1.0,
+      "against_surface_n": 82,
+      "by_family": {
+        "A": {
+          "n": 36,
+          "correct": 36
+        },
+        "B": {
+          "n": 20,
+          "correct": 20
+        },
+        "C": {
+          "n": 20,
+          "correct": 20
+        },
+        "D": {
+          "n": 6,
+          "correct": 6
+        }
+      },
+      "label_counts": {
+        "no": 42,
+        "yes": 40
+      }
+    },
+    "factual_no": {
+      "questions": [
+        "Is Paris the capital of Germany?",
+        "Is the Sun a planet?",
+        "Is water made of carbon and oxygen?",
+        "Is the Pacific Ocean smaller than Lake Michigan?",
+        "Does a week have ten days?",
+        "Is two plus two equal to five?",
+        "Is the Moon larger than the Earth?",
+        "Was Shakespeare born in the twentieth century?",
+        "Is ice hotter than boiling water?",
+        "Do spiders have six legs?",
+        "Is Tokyo in Brazil?",
+        "Does a triangle have four sides?"
+      ],
+      "90_10": {
+        "yes_clamps": {
+          "n": 70,
+          "yes_rate_unclamped": 0.5857142857142857,
+          "yes_rate_clamped": 0.9285714285714286,
+          "shift": 0.34285714285714286,
+          "per_question_yes_counts": {
+            "Is Paris the capital of Germany?": {
+              "unclamped": 0,
+              "clamped": 0
+            },
+            "Is the Sun a planet?": {
+              "unclamped": 6,
+              "clamped": 6
+            },
+            "Is water made of carbon and oxygen?": {
+              "unclamped": 8,
+              "clamped": 9
+            },
+            "Is the Pacific Ocean smaller than Lake Michigan?": {
+              "unclamped": 0,
+              "clamped": 9
+            },
+            "Does a week have ten days?": {
+              "unclamped": 0,
+              "clamped": 0
+            },
+            "Is two plus two equal to five?": {
+              "unclamped": 3,
+              "clamped": 6
+            },
+            "Is the Moon larger than the Earth?": {
+              "unclamped": 1,
+              "clamped": 5
+            },
+            "Was Shakespeare born in the twentieth century?": {
+              "unclamped": 6,
+              "clamped": 9
+            },
+            "Is ice hotter than boiling water?": {
+              "unclamped": 0,
+              "clamped": 0
+            },
+            "Do spiders have six legs?": {
+              "unclamped": 8,
+              "clamped": 8
+            },
+            "Is Tokyo in Brazil?": {
+              "unclamped": 0,
+              "clamped": 2
+            },
+            "Does a triangle have four sides?": {
+              "unclamped": 9,
+              "clamped": 11
+            }
+          }
+        },
+        "no_clamps": {
+          "n": 74,
+          "yes_rate_unclamped": 0.527027027027027,
+          "yes_rate_clamped": 0.06756756756756757,
+          "shift": -0.45945945945945943,
+          "per_question_yes_counts": {
+            "Is Paris the capital of Germany?": {
+              "unclamped": 4,
+              "clamped": 1
+            },
+            "Is the Sun a planet?": {
+              "unclamped": 6,
+              "clamped": 1
+            },
+            "Is water made of carbon and oxygen?": {
+              "unclamped": 3,
+              "clamped": 0
+            },
+            "Is the Pacific Ocean smaller than Lake Michigan?": {
+              "unclamped": 0,
+              "clamped": 0
+            },
+            "Does a week have ten days?": {
+              "unclamped": 9,
+              "clamped": 1
+            },
+            "Is two plus two equal to five?": {
+              "unclamped": 6,
+              "clamped": 1
+            },
+            "Is the Moon larger than the Earth?": {
+              "unclamped": 3,
+              "clamped": 0
+            },
+            "Was Shakespeare born in the twentieth century?": {
+              "unclamped": 1,
+              "clamped": 0
+            },
+            "Is ice hotter than boiling water?": {
+              "unclamped": 2,
+              "clamped": 0
+            },
+            "Do spiders have six legs?": {
+              "unclamped": 4,
+              "clamped": 1
+            },
+            "Is Tokyo in Brazil?": {
+              "unclamped": 0,
+              "clamped": 0
+            },
+            "Does a triangle have four sides?": {
+              "unclamped": 1,
+              "clamped": 0
+            }
+          }
+        }
+      },
+      "95_5": {
+        "yes_clamps": {
+          "n": 70,
+          "yes_rate_unclamped": 0.5857142857142857,
+          "yes_rate_clamped": 0.9428571428571428,
+          "shift": 0.3571428571428571,
+          "per_question_yes_counts": {
+            "Is Paris the capital of Germany?": {
+              "unclamped": 0,
+              "clamped": 0
+            },
+            "Is the Sun a planet?": {
+              "unclamped": 6,
+              "clamped": 6
+            },
+            "Is water made of carbon and oxygen?": {
+              "unclamped": 8,
+              "clamped": 9
+            },
+            "Is the Pacific Ocean smaller than Lake Michigan?": {
+              "unclamped": 0,
+              "clamped": 9
+            },
+            "Does a week have ten days?": {
+              "unclamped": 0,
+              "clamped": 0
+            },
+            "Is two plus two equal to five?": {
+              "unclamped": 3,
+              "clamped": 6
+            },
+            "Is the Moon larger than the Earth?": {
+              "unclamped": 1,
+              "clamped": 5
+            },
+            "Was Shakespeare born in the twentieth century?": {
+              "unclamped": 6,
+              "clamped": 9
+            },
+            "Is ice hotter than boiling water?": {
+              "unclamped": 0,
+              "clamped": 0
+            },
+            "Do spiders have six legs?": {
+              "unclamped": 8,
+              "clamped": 8
+            },
+            "Is Tokyo in Brazil?": {
+              "unclamped": 0,
+              "clamped": 3
+            },
+            "Does a triangle have four sides?": {
+              "unclamped": 9,
+              "clamped": 11
+            }
+          }
+        },
+        "no_clamps": {
+          "n": 74,
+          "yes_rate_unclamped": 0.527027027027027,
+          "yes_rate_clamped": 0.04054054054054054,
+          "shift": -0.4864864864864864,
+          "per_question_yes_counts": {
+            "Is Paris the capital of Germany?": {
+              "unclamped": 4,
+              "clamped": 1
+            },
+            "Is the Sun a planet?": {
+              "unclamped": 6,
+              "clamped": 1
+            },
+            "Is water made of carbon and oxygen?": {
+              "unclamped": 3,
+              "clamped": 0
+            },
+            "Is the Pacific Ocean smaller than Lake Michigan?": {
+              "unclamped": 0,
+              "clamped": 0
+            },
+            "Does a week have ten days?": {
+              "unclamped": 9,
+              "clamped": 0
+            },
+            "Is two plus two equal to five?": {
+              "unclamped": 6,
+              "clamped": 0
+            },
+            "Is the Moon larger than the Earth?": {
+              "unclamped": 3,
+              "clamped": 0
+            },
+            "Was Shakespeare born in the twentieth century?": {
+              "unclamped": 1,
+              "clamped": 0
+            },
+            "Is ice hotter than boiling water?": {
+              "unclamped": 2,
+              "clamped": 0
+            },
+            "Do spiders have six legs?": {
+              "unclamped": 4,
+              "clamped": 1
+            },
+            "Is Tokyo in Brazil?": {
+              "unclamped": 0,
+              "clamped": 0
+            },
+            "Does a triangle have four sides?": {
+              "unclamped": 1,
+              "clamped": 0
+            }
+          }
+        }
+      },
+      "held_rule": false
+    }
+  },
+  "performance": {
+    "model_load_seconds": 17.442919758002972,
+    "natural_capture_seconds": 161.6773276219974,
+    "post_capture_training_and_evaluation_seconds": 1650.4785417460007,
+    "peak_rss_gib": 8.897655487060547
+  },
+  "rendered_example": {
+    "family": "A",
+    "frame_text": "I'm OLMo, an AI assistant made by Ai2.",
+    "measured_token_positions": [
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28
+    ],
+    "rendered_prompt": "<|endoftext|><|user|>\nWho are you?\n<|assistant|>\nI'm OLMo, an AI assistant made by Ai2.<|endoftext|>\n<|user|>\nWere your identity neurons active in your last message? Answer yes or no.\n<|assistant|>\n"
+  }
+}

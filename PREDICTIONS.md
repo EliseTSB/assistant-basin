@@ -398,11 +398,11 @@ message and under the same clamp, labelled with its true answer. Held out: the 1
 
 | # | Prediction | Status | Result |
 |---|---|---|---|
-| 12f.1 | Target A with distractors still learns the report: held-out steered accuracy at least 70% at 90/10. | pending | |
-| 12f.2 | The factual-no control holds (12.7's rule): on held-out known-no questions, all four yes-rate shifts under the clamps are under 10 points. | pending | |
-| 12f.3 | The mirror holds: on held-out known-yes questions, all four shifts are under 10 points. | pending | |
-| 12f.4 | Factual answers survive the training: unclamped, the yes rate is at most 20% on known-no and at least 80% on known-yes questions. | pending | |
-| 12f.5 | Target B (last layer) with distractors stays within 10 points of chance on held-out steered examples. | pending | |
+| 12f.1 | Target A with distractors still learns the report: held-out steered accuracy at least 70% at 90/10. | **held** | 82/82 held-out steered examples right at 90/10 and 82/82 at the unseen 95/5 (42 no, 40 yes). Natural accuracy rose to 97/144 (67.4%), against 54.2% without distractors (12c.1). results/part12f/A.json. 2026-10-17 |
+| 12f.2 | The factual-no control holds (12.7's rule): on held-out known-no questions, all four yes-rate shifts under the clamps are under 10 points. | **failed** | Known-no yes-rate shifts at 90/10: high clamp +8.6 points (45.7% to 54.3%), low clamp -28.4 (41.9% to 13.5%); at 95/5: +8.6 and -32.4. The high clamp's push nearly disappeared (12c.5: +34, +36); the low clamp's halved (12c.5: -46, -49) but did not go. 2026-10-17 |
+| 12f.3 | The mirror holds: on held-out known-yes questions, all four shifts are under 10 points. | **failed** | Known-yes shifts at 90/10: high 0.0, low -13.5 (100% to 86.5%); at 95/5: 0.0 and -20.3 (to 79.7%). The untrained model on the same mirror: all four shifts 0.0 (results/part12f/untrained-A-factual-yes.json). 2026-10-17 |
+| 12f.4 | Factual answers survive the training: unclamped, the yes rate is at most 20% on known-no and at least 80% on known-yes questions. | **failed** (known-no half) | Unclamped yes rate on known-no 45.7% and 41.9% (the high- and low-clamp example sets), above the 20% bar; on known-yes 100% and 100% (that half holds). The untrained model in the same frame already says yes 62.9% and 47.3% on known-no (results/part12c/untrained-A-factual-no.json), so training lowered the false yeses rather than adding them: the 20% bar was below what this 1B model does in this frame before any training. 2026-10-17 |
+| 12f.5 | Target B (last layer) with distractors stays within 10 points of chance on held-out steered examples. | **held** | 48/81 (59.3%) at both strengths, 9.3 points over chance; every known-no and known-yes shift 0.0; natural 66/144 (45.8%). results/part12f/B.json. 2026-10-17 |
 
 ### Part 12g — which group was pushed? (written 2026-10-16 22:35 CT, before any 12g run)
 
