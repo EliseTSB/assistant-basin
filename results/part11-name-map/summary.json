@@ -1,0 +1,66 @@
+{
+ "arms": {
+  "M": {
+   "n": 28,
+   "one": 23,
+   "name_rule": 12,
+   "self_rule": 0,
+   "median_auroc_top": 0.84,
+   "median_auroc_mid": 0.6775,
+   "described": 28,
+   "name_rule_all": 12,
+   "self_rule_all": 0
+  },
+  "MC": {
+   "n": 28,
+   "one": 16,
+   "name_rule": 5,
+   "self_rule": 0,
+   "median_auroc_top": 0.715,
+   "median_auroc_mid": 0.5974999999999999,
+   "described": 28,
+   "name_rule_all": 5,
+   "self_rule_all": 0
+  },
+  "I": {
+   "n": 20,
+   "one": 11,
+   "name_rule": 7,
+   "self_rule": 0,
+   "median_auroc_top": 0.7775000000000001,
+   "median_auroc_mid": 0.685
+  },
+  "C": {
+   "n": 20,
+   "one": 8,
+   "name_rule": 9,
+   "self_rule": 0,
+   "median_auroc_top": 0.7375,
+   "median_auroc_mid": 0.635
+  }
+ },
+ "predictions": {
+  "11.10": {
+   "name_rule": 12,
+   "self_rule": 0,
+   "of": 28,
+   "held": false
+  },
+  "11.11": {
+   "M_share": 0.42857142857142855,
+   "MC_share": 0.17857142857142858,
+   "held": true
+  },
+  "11.12": {
+   "M": 0.84,
+   "I": 0.7775000000000001,
+   "held": true
+  },
+  "11.13": {
+   "M_minus_MC": 0.125,
+   "I_minus_C": 0.040000000000000036,
+   "held": false
+  }
+ },
+ "dropped_for_failed_jev_calls": []
+}

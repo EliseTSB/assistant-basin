@@ -1,0 +1,322 @@
+{
+"u000": {
+"arm": "I",
+"layer": 35,
+"neuron": 3638,
+"matched_of_20": 19,
+"top_value_gpu": 2.4844,
+"top_value_cpu": 2.4844
+},
+"u001": {
+"arm": "C",
+"layer": 34,
+"neuron": 10685,
+"matched_of_20": 20,
+"top_value_gpu": 0.8555,
+"top_value_cpu": 0.8516
+},
+"u002": {
+"arm": "I",
+"layer": 19,
+"neuron": 4711,
+"matched_of_20": 19,
+"top_value_gpu": 1.625,
+"top_value_cpu": 1.7812
+},
+"u003": {
+"arm": "C",
+"layer": 35,
+"neuron": 5626,
+"matched_of_20": 19,
+"top_value_gpu": 0.6797,
+"top_value_cpu": 0.6758
+},
+"u004": {
+"arm": "C",
+"layer": 18,
+"neuron": 6163,
+"matched_of_20": 18,
+"top_value_gpu": 0.3418,
+"top_value_cpu": 0.3438
+},
+"u005": {
+"arm": "I",
+"layer": 20,
+"neuron": 3387,
+"matched_of_20": 19,
+"top_value_gpu": 0.7734,
+"top_value_cpu": 0.7656
+},
+"u006": {
+"arm": "C",
+"layer": 13,
+"neuron": 885,
+"matched_of_20": 19,
+"top_value_gpu": 0.2246,
+"top_value_cpu": 0.2256
+},
+"u007": {
+"arm": "C",
+"layer": 35,
+"neuron": 8419,
+"matched_of_20": 20,
+"top_value_gpu": 0.9766,
+"top_value_cpu": 0.9766
+},
+"u008": {
+"arm": "I",
+"layer": 35,
+"neuron": 3312,
+"matched_of_20": 19,
+"top_value_gpu": 2.4688,
+"top_value_cpu": 2.4844
+},
+"u009": {
+"arm": "C",
+"layer": 35,
+"neuron": 9363,
+"matched_of_20": 19,
+"top_value_gpu": 0.9766,
+"top_value_cpu": 0.9727
+},
+"u010": {
+"arm": "I",
+"layer": 34,
+"neuron": 2889,
+"matched_of_20": 20,
+"top_value_gpu": 1.4141,
+"top_value_cpu": 1.3984
+},
+"u011": {
+"arm": "I",
+"layer": 35,
+"neuron": 8657,
+"matched_of_20": 19,
+"top_value_gpu": 2.5781,
+"top_value_cpu": 2.5469
+},
+"u012": {
+"arm": "I",
+"layer": 12,
+"neuron": 6337,
+"matched_of_20": 19,
+"top_value_gpu": 1.0078,
+"top_value_cpu": 1.0312
+},
+"u013": {
+"arm": "I",
+"layer": 34,
+"neuron": 7656,
+"matched_of_20": 18,
+"top_value_gpu": 3.1562,
+"top_value_cpu": 3.125
+},
+"u014": {
+"arm": "I",
+"layer": 35,
+"neuron": 5683,
+"matched_of_20": 20,
+"top_value_gpu": 0.8516,
+"top_value_cpu": 0.8398
+},
+"u015": {
+"arm": "C",
+"layer": 16,
+"neuron": 243,
+"matched_of_20": 19,
+"top_value_gpu": 0.457,
+"top_value_cpu": 0.4531
+},
+"u016": {
+"arm": "C",
+"layer": 35,
+"neuron": 3388,
+"matched_of_20": 19,
+"top_value_gpu": 1.0,
+"top_value_cpu": 1.0156
+},
+"u017": {
+"arm": "C",
+"layer": 35,
+"neuron": 5295,
+"matched_of_20": 20,
+"top_value_gpu": 0.8438,
+"top_value_cpu": 0.8438
+},
+"u018": {
+"arm": "C",
+"layer": 15,
+"neuron": 828,
+"matched_of_20": 19,
+"top_value_gpu": 0.2539,
+"top_value_cpu": 0.2539
+},
+"u019": {
+"arm": "I",
+"layer": 16,
+"neuron": 2006,
+"matched_of_20": 20,
+"top_value_gpu": 0.1914,
+"top_value_cpu": 0.1914
+},
+"u020": {
+"arm": "I",
+"layer": 13,
+"neuron": 4183,
+"matched_of_20": 20,
+"top_value_gpu": 0.7695,
+"top_value_cpu": 0.7812
+},
+"u021": {
+"arm": "C",
+"layer": 20,
+"neuron": 9319,
+"matched_of_20": 20,
+"top_value_gpu": 0.2617,
+"top_value_cpu": 0.2656
+},
+"u022": {
+"arm": "I",
+"layer": 15,
+"neuron": 7123,
+"matched_of_20": 19,
+"top_value_gpu": 0.4551,
+"top_value_cpu": 0.498
+},
+"u023": {
+"arm": "C",
+"layer": 34,
+"neuron": 6101,
+"matched_of_20": 20,
+"top_value_gpu": 0.7305,
+"top_value_cpu": 0.7344
+},
+"u024": {
+"arm": "I",
+"layer": 18,
+"neuron": 2453,
+"matched_of_20": 20,
+"top_value_gpu": 0.4414,
+"top_value_cpu": 0.4473
+},
+"u025": {
+"arm": "I",
+"layer": 32,
+"neuron": 3878,
+"matched_of_20": 20,
+"top_value_gpu": 0.498,
+"top_value_cpu": 0.498
+},
+"u026": {
+"arm": "C",
+"layer": 22,
+"neuron": 982,
+"matched_of_20": 19,
+"top_value_gpu": 0.7031,
+"top_value_cpu": 0.7031
+},
+"u027": {
+"arm": "I",
+"layer": 35,
+"neuron": 1151,
+"matched_of_20": 20,
+"top_value_gpu": 1.2891,
+"top_value_cpu": 1.2812
+},
+"u028": {
+"arm": "C",
+"layer": 13,
+"neuron": 6960,
+"matched_of_20": 20,
+"top_value_gpu": 0.3438,
+"top_value_cpu": 0.3438
+},
+"u029": {
+"arm": "I",
+"layer": 13,
+"neuron": 7514,
+"matched_of_20": 19,
+"top_value_gpu": 0.543,
+"top_value_cpu": 0.543
+},
+"u030": {
+"arm": "I",
+"layer": 35,
+"neuron": 4642,
+"matched_of_20": 19,
+"top_value_gpu": 4.1875,
+"top_value_cpu": 4.2188
+},
+"u031": {
+"arm": "C",
+"layer": 12,
+"neuron": 3053,
+"matched_of_20": 20,
+"top_value_gpu": 0.5273,
+"top_value_cpu": 0.5391
+},
+"u032": {
+"arm": "I",
+"layer": 35,
+"neuron": 1625,
+"matched_of_20": 20,
+"top_value_gpu": 2.2188,
+"top_value_cpu": 2.25
+},
+"u033": {
+"arm": "C",
+"layer": 35,
+"neuron": 7148,
+"matched_of_20": 19,
+"top_value_gpu": 0.6328,
+"top_value_cpu": 0.6328
+},
+"u034": {
+"arm": "C",
+"layer": 35,
+"neuron": 7385,
+"matched_of_20": 20,
+"top_value_gpu": 0.7852,
+"top_value_cpu": 0.7773
+},
+"u035": {
+"arm": "C",
+"layer": 19,
+"neuron": 4338,
+"matched_of_20": 20,
+"top_value_gpu": 0.291,
+"top_value_cpu": 0.2891
+},
+"u036": {
+"arm": "I",
+"layer": 22,
+"neuron": 9296,
+"matched_of_20": 19,
+"top_value_gpu": 0.6445,
+"top_value_cpu": 0.6445
+},
+"u037": {
+"arm": "I",
+"layer": 35,
+"neuron": 7725,
+"matched_of_20": 19,
+"top_value_gpu": 3.9062,
+"top_value_cpu": 3.9062
+},
+"u038": {
+"arm": "C",
+"layer": 35,
+"neuron": 5543,
+"matched_of_20": 20,
+"top_value_gpu": 1.1016,
+"top_value_cpu": 1.1016
+},
+"u039": {
+"arm": "C",
+"layer": 32,
+"neuron": 1929,
+"matched_of_20": 20,
+"top_value_gpu": 1.4062,
+"top_value_cpu": 1.3906
+}
+}
