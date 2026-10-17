@@ -27,7 +27,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 WORK = os.environ.get('CLIMB_WORK', os.getcwd())
-JEV_BUDGET = min(int(os.environ.get('CLIMB_JEV_BUDGET', 30_000_000)), 40_000_000)  # input tokens per climber (TypeSafe ~$0.042/M); the key is shared with JJ's watcher
+JEV_BUDGET = min(int(os.environ.get('CLIMB_JEV_BUDGET', 80_000_000)), 80_000_000)  # a backstop only: the relay holds each climber's real cap (TypeSafe ~$0.042/M; the key is shared with JJ's watcher)
 JEV_CONC, LUNA_CONC = 4, 6
 LUNA_URL = 'http://127.0.0.1:8317/v1/messages'
 OPENER = urllib.request.build_opener(urllib.request.ProxyHandler({}))

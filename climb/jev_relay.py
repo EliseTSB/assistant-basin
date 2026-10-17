@@ -8,6 +8,7 @@ import json, os, threading, urllib.request
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 HERE = os.path.dirname(os.path.abspath(__file__))
 CAP = int(os.environ.get('RELAY_CAP', 30_000_000))
+CAPS = {'luna': 60_000_000}  # raised 2026-10-16 21:46: Luna's climb spends about 15M an hour
 KEY = next(l.split('=', 1)[1].strip().strip('"\'') for l in open('/home/elisepc/green/DiscordBot/.env') if l.startswith('TYPESAFE_API_KEY='))
 SEM = threading.BoundedSemaphore(6); LOCK = threading.Lock()
 OPENER = urllib.request.build_opener(urllib.request.ProxyHandler({}))
@@ -24,7 +25,7 @@ class H(BaseHTTPRequestHandler):
         if self.path != '/v1/systemone' or who not in ('luna', 'ds', 'glm', 'smoke'): return self.reply(404, {'error': 'unknown path or climber'})
         data = self.rfile.read(int(self.headers.get('content-length', 0)))
         with LOCK:
-            if spend.get(who, 0) >= CAP: return self.reply(403, {'error': 'climb budget spent', 'spent': spend[who]})
+            if spend.get(who, 0) >= CAPS.get(who, CAP): return self.reply(403, {'error': 'climb budget spent', 'spent': spend[who]})
         req = urllib.request.Request('https://api.typesafe.ai/v1/systemone', data=data, method='POST',
                                      headers={'Authorization': f'Bearer {KEY}', 'Content-Type': 'application/json', 'user-agent': f'neuron-climb-relay/{who}'})
         with SEM:
