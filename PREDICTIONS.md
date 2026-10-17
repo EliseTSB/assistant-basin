@@ -394,7 +394,7 @@ Elise, 2026-10-16 13:56: *"Yes lets go for it!"* Written before the run.
 any yes/no question. 12f repeats 12c's training for target A (8x clamps, 6 epochs, lr 3e-4, seed 42) with one ordinary
 yes/no question per training example added (24 questions, half yes and half no, `DISTRACTOR_QUESTIONS`), on the same
 message and under the same clamp, labelled with its true answer. Held out: the 12 known-no questions of 12.7 and their
-12 known-yes mirrors (`FACTUAL_YES_QUESTIONS`), none of them in training. Code: branch part12f-distractors.
+12 known-yes mirrors (`FACTUAL_YES_QUESTIONS`), none of them in training. Code: branch part12f-distractors. Run on the Arc A770 from branch part12-gpu (part12f-distractors plus a `--device` option, no other change; Elise moved Part 12 to the GPU at 22:3x CT); a CPU run started first was stopped after its untrained step.
 
 | # | Prediction | Status | Result |
 |---|---|---|---|
