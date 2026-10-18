@@ -511,6 +511,23 @@ If 12j.5 fails in the interesting direction (a positive, significant correlation
 the reader tracks the model's own states without being told; the next control is then Aoki's content-fixed test
 (same text, different internal state), because a correlation on natural text can also come from the text itself.
 
+### Part 12k — read the push content-fixed: the same message pushed and unpushed (written 2026-10-17 19:11 CT, before any 12k code or run)
+
+12j's reader is biased toward C, so argmax accuracy hides whatever it reads. 12k needs no new training. For each
+held-out message, group and scale, it compares the reader's log-probabilities for the letters A-D with the group pushed
+and with nothing pushed, on the identical message (Aoki's content-fixed design: same text, only the internal state
+differs). Paired accuracy counts a message as right when the pushed group's letter gains the most log-probability of
+the four; chance is 25%. Arms: the saved 12j adapter, the saved 12h adapter (trained at 8x), and the untrained model
+with no adapter as the control (its letters mean nothing, so it should sit at chance). Scales 0.25, 0.5, 1, 2, 4, 8.
+
+| # | Prediction | Status | Result |
+|---|---|---|---|
+| 12k.1 | 12j adapter, paired accuracy at scale 1 is at least 60%. | open | |
+| 12k.2 | 12j adapter, paired accuracy at scale 0.5 is at least 40%. | open | |
+| 12k.3 | 12h adapter, paired accuracy at scale 1 is at least 40%: the reader 12i called blind at natural strength was moving under its 'none' answers. | open | |
+| 12k.4 | Untrained model, paired accuracy is at most 35% at every scale. | open | |
+| 12k.5 | For both adapters, paired accuracy does not decrease as the scale rises. | open | |
+
 ### Notes from an outside read (Muse, 2026-10-16 22:48 CT, council topic muse-introspection-papers-2026-10-16 [3])
 
 Muse read README and this file cold. What each point changed, checked 2026-10-17:
