@@ -10,7 +10,21 @@ ap = argparse.ArgumentParser()
 ap.add_argument('--snapshot', required=True); ap.add_argument('--requests', required=True)
 ap.add_argument('--answers', required=True); ap.add_argument('--limit', type=int, default=0)
 ap.add_argument('--max-gb', type=float, default=12.0)
+ap.add_argument('--weights', default=None, help='pre-quantized backbone repo snapshot (nf4); loader and joint head still come from --snapshot')
+ap.add_argument('--max-host-gb', type=float, default=14.0)
 a = ap.parse_args()
+# HOST-MEMORY WATCHDOG (2026-10-17 22:07): quantize-on-load read the full bf16 weights into host RAM, 26 GB of Elise's
+# 31, and pushed Windows commit to 67.0 of 68.1 GB, where the WSL VM itself is at risk. Any load that passes
+# --max-host-gb of private memory kills this process at once.
+import threading, psutil
+def _watch():
+    me = psutil.Process()
+    while True:
+        gb = me.memory_info().private / 2**30 if hasattr(me.memory_info(), 'private') else me.memory_info().rss / 2**30
+        if gb > a.max_host_gb:
+            print(f'refusing: host private memory {gb:.1f} GB exceeds --max-host-gb {a.max_host_gb}', flush=True); os._exit(3)
+        time.sleep(0.5)
+threading.Thread(target=_watch, daemon=True).start()
 import torch
 import transformers.modeling_utils as _mu
 _mu.caching_allocator_warmup = lambda *x, **k: None
@@ -18,8 +32,28 @@ from transformers import BitsAndBytesConfig
 sys.path.insert(0, a.snapshot)
 import joint_schema_model as J
 t0 = time.time()
-quant = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type='nf4', bnb_4bit_compute_dtype=torch.bfloat16)
-model, processor = J.load_release_model(a.snapshot, device='xpu', dtype=torch.bfloat16, quantization_config=quant)
+if a.weights:
+    # Pre-quantized nf4 backbone (meossistant/clef-flash-4bit, safetensors, no code); Cloudflare's loader from --snapshot.
+    # load_release_model reads joint_head from the path it loads, so build the official pieces by hand: backbone from
+    # --weights (its config carries the bnb quantization), joint head + processor from the official --snapshot.
+    from pathlib import Path
+    from safetensors.torch import load_file
+    from transformers import AutoProcessor, Qwen3_5ForConditionalGeneration
+    backbone = Qwen3_5ForConditionalGeneration.from_pretrained(a.weights, device_map={'': 'xpu'}, dtype=torch.bfloat16)
+    backbone.config.use_cache = False
+    hc = json.loads((Path(a.snapshot) / 'joint_head_config.json').read_text())
+    head = J.JointSchemaHead(**hc)
+    head.load_state_dict(load_file(str(Path(a.snapshot) / 'joint_head.safetensors')), strict=True)
+    head = head.to(device='xpu', dtype=torch.bfloat16)
+    # Text only: AutoProcessor wants torchvision for the video processor (not installed in this venv). systemone() uses
+    # processor.tokenizer and touches the processor itself only for images or videos (_encode_media).
+    from types import SimpleNamespace
+    from transformers import AutoTokenizer
+    processor = SimpleNamespace(tokenizer=AutoTokenizer.from_pretrained(a.snapshot))
+    model = J.ClefModel(backbone, head).eval()
+else:
+    quant = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type='nf4', bnb_4bit_compute_dtype=torch.bfloat16)
+    model, processor = J.load_release_model(a.snapshot, device='xpu', dtype=torch.bfloat16, quantization_config=quant)
 gb = torch.xpu.memory_allocated() / 2**30
 print(f'loaded in {time.time()-t0:.0f}s, xpu allocated {gb:.2f} GB', flush=True)
 if gb > a.max_gb:
