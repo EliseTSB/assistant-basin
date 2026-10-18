@@ -478,6 +478,22 @@ def _manifest_records(
     }
 
 
+def _corpus_lines(corpus: str) -> list[str]:
+    """The WikiText `text` column, from the parquet or from a JSON-lines export of it.
+
+    The Windows GPU venv has no pyarrow (2026-10-18), so the parquet is exported once in WSL to JSON lines
+    ({"text": ...} per row, same order); both paths yield the same list.
+    """
+    if str(corpus).endswith(".jsonl"):
+        with open(corpus, encoding="utf-8") as src:
+            return [json.loads(line)["text"] for line in src if line.strip()]
+    try:
+        import pyarrow.parquet as pq
+    except ImportError as exc:
+        raise RuntimeError("capture requires pyarrow to read the WikiText parquet (or pass a .jsonl export)") from exc
+    return pq.read_table(corpus, columns=["text"]).column("text").to_pylist()
+
+
 def _passages_from_parquet(
     corpus: str,
     tokenizer: Any,
@@ -486,13 +502,8 @@ def _passages_from_parquet(
     maximum: int = DEFAULT_MAX_TOKENS,
     target: int = TARGET_PASSAGE_TOKENS,
 ) -> list[dict[str, Any]]:
-    try:
-        import pyarrow.parquet as pq
-    except ImportError as exc:
-        raise RuntimeError("capture requires pyarrow to read the WikiText parquet") from exc
     required = sum(counts)
-    table = pq.read_table(corpus, columns=["text"])
-    lines = table.column("text").to_pylist()
+    lines = _corpus_lines(corpus)
     newline_ids = [int(x) for x in tokenizer("\n", add_special_tokens=False)["input_ids"]]
     stream: list[int] = []
     candidates: list[dict[str, Any]] = []
