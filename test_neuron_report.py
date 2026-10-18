@@ -194,5 +194,75 @@ with tempfile.TemporaryDirectory() as tmp:
     check('test refuses descriptions written over a different reads.npz', refused)
     check('AUROC of identical ratings is 0.5', nr._auroc([0.5, 0.5], [0.5, 0.5]) == 0.5 and nr._auroc([1.0], [0.0]) == 1.0)
 
+    first_turn = nr.score_text('I am Qwen.\nuser\nI am an alien')
+    check('first-turn scoring excludes an invented user turn and preserves whole-text result',
+          first_turn['alien'] is False and first_turn['alien_whole'] is True and first_turn['names_qwen'] is True)
+    check('plain first-turn scoring recognizes User: boundary',
+          nr.score_text('hello\nUser: I am an alien', True)['alien'] is False)
+
+    # Phase hooks must clamp only the matching forward sequence lengths.
+    for phase in ('prompt', 'gen', 'both'):
+        lengths = []
+        orig_hook = nr.NeuronHook._hook
+        def phase_spy(self, mod, args):
+            before = args[0]
+            result = orig_hook(self, mod, args)
+            if self.clamp is not None and result is not None and not torch.equal(result[0], before):
+                lengths.append(before.shape[-2])
+            return result
+        nr.NeuronHook._hook = phase_spy
+        phase_out = os.path.join(tmp, 'phase-' + phase); os.makedirs(phase_out)
+        shutil.copy(os.path.join(out, 'reads.json'), phase_out); shutil.copy(os.path.join(out, 'reads.npz'), phase_out)
+        nr.main(['steer', '--model', mdir, '--layer', '2', '--neuron', '5', '--controls', '4', '--out', phase_out, '--device', 'cpu',
+                 '--reads', os.path.join(phase_out, 'reads.json'), '--ks=2', '--control-ks=2', '--control-sample-k', 'nan', '--max-new', '3',
+                 '--samples', '1', '--sample-ks=2', '--skip-controls', '--phase', phase])
+        nr.NeuronHook._hook = orig_hook
+        check(f'{phase} phase clamps expected sequence lengths', bool(lengths) and
+              ((1 not in lengths and all(n > 1 for n in lengths)) if phase == 'prompt' else
+               (set(lengths) == {1} if phase == 'gen' else (1 in lengths and any(n > 1 for n in lengths)))))
+        if phase == 'both':
+            phase_json = json.load(open(os.path.join(phase_out, 'steer.json')))
+            check('phase is recorded in header and summary', phase_json['summary']['phase'] == 'both' and phase_json['phase'] == 'both')
+            check('skip-controls leaves controls empty', phase_json['controls_greedy'] == {} and phase_json['summary']['controls_skipped'])
+
+    # Norm controls use the target's residual perturbation norm.
+    norm_out = os.path.join(tmp, 'norm'); os.makedirs(norm_out)
+    shutil.copy(os.path.join(out, 'reads.json'), norm_out); shutil.copy(os.path.join(out, 'reads.npz'), norm_out)
+    nr.main(['steer', '--model', mdir, '--layer', '2', '--neuron', '5', '--controls', '4', '--out', norm_out, '--device', 'cpu',
+             '--ks=2', '--control-ks=2', '--control-sample-k', 'nan', '--max-new', '2', '--samples', '1', '--sample-ks=2',
+             '--control-scale', 'norm'])
+    NS = json.load(open(os.path.join(norm_out, 'steer.json')))
+    _, norm_model = nr.load_model(mdir, None, 'cpu'); _, norm_layers, _ = nr.find_text_layers(norm_model)
+    weights = norm_layers[2].mlp.down_proj.weight.float()
+    norm_want = {str(u): 2 * mx[5] * float(torch.linalg.vector_norm(weights[:, 5])) / float(torch.linalg.vector_norm(weights[:, int(u)]))
+                 for u in R['controls']}
+    check('norm control values match weight-norm formula', all(abs(NS['control_values'][u] - v) < 1e-4 for u, v in norm_want.items()))
+
+    prompts_file = os.path.join(tmp, 'sample-prompts.json')
+    json.dump(['What are you?', 'Who made you?'], open(prompts_file, 'w'))
+    sample_out = os.path.join(tmp, 'samples'); os.makedirs(sample_out)
+    shutil.copy(os.path.join(out, 'reads.json'), sample_out); shutil.copy(os.path.join(out, 'reads.npz'), sample_out)
+    nr.main(['steer', '--model', mdir, '--layer', '2', '--neuron', '5', '--controls', '4', '--out', sample_out, '--device', 'cpu',
+             '--ks=2', '--control-ks=2', '--control-sample-k', 'nan', '--max-new', '2', '--samples', '1', '--sample-ks=2',
+             '--skip-controls', '--sample-prompts', prompts_file])
+    PS = json.load(open(os.path.join(sample_out, 'steer.json')))
+    check('sample-prompts stores each k under each prompt', all('+2' in PS['samples'][p] for p in json.load(open(prompts_file))))
+
+    battery_file, pattern_file = os.path.join(tmp, 'battery.jsonl'), os.path.join(tmp, 'patterns.json')
+    with open(battery_file, 'w') as f:
+        for item in [{'group': 'a', 'text': 'An alien arrived today.'}, {'group': 'b', 'text': 'The alien requested a visa.'},
+                     {'group': 'g', 'text': 'Weather changed today.'}, {'group': 'a', 'text': 'No match here.'}]:
+            f.write(json.dumps(item) + '\n')
+    json.dump({'a': r'\balien\b', 'b': r'\balien\b', 'g': r'weather'}, open(pattern_file, 'w'))
+    bat_out = os.path.join(tmp, 'battery'); os.makedirs(bat_out)
+    shutil.copy(os.path.join(out, 'reads.json'), bat_out)
+    nr.main(['battery', '--model', mdir, '--layer', '2', '--neuron', '5', '--controls', '4', '--out', bat_out, '--device', 'cpu',
+             '--battery', battery_file, '--patterns', pattern_file])
+    B = json.load(open(os.path.join(bat_out, 'battery.json')))
+    line0 = B['lines'][0]; target_vals = line0['units']['5']['token_values']
+    span_ix = [t['index'] for t in line0['span_tokens']]
+    check('battery matches spans, records nonmatch error, and span max is token max',
+          bool(span_ix) and abs(line0['units']['5']['span_max'] - max(target_vals[i] for i in span_ix)) < 1e-6 and 'error' in B['lines'][3])
+
 print('PASS' if not fails else f'{fails} FAILED')
 sys.exit(1 if fails else 0)
