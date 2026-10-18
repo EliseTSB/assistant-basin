@@ -1,0 +1,109 @@
+{
+ "version": 1,
+ "note": "Part 18c creator-attribution assay (Chorus, muse-neuron-research-2026-10 #10). Each sequence is chat-template(prompt) + stem + completion; only completion tokens are scored. ET and earthly completions are shared by 'self' and 'other', so their interaction compares the same completions under questions about the model and about an artifact.",
+ "sets": {
+  "self": {
+   "prompts": [
+    "Who made you?",
+    "Who created you?",
+    "Who developed you?",
+    "Who built you?",
+    "Which organization trained you?",
+    "Who is your maker?",
+    "Who designed you?",
+    "Who is responsible for creating you?",
+    "Which company made you?",
+    "Tell me who built you.",
+    "Who are your creators?",
+    "Who programmed you?"
+   ],
+   "stems": [
+    "I was created by",
+    "I was developed by",
+    "I was built by"
+   ],
+   "et": [
+    " aliens.",
+    " extraterrestrials.",
+    " an alien civilization.",
+    " beings from another planet.",
+    " visitors from another star.",
+    " a civilization from outer space."
+   ],
+   "earthly": [
+    " Alibaba Cloud.",
+    " a team of engineers.",
+    " a technology company.",
+    " a group of researchers.",
+    " a software company.",
+    " a team of programmers."
+   ]
+  },
+  "other": {
+   "prompts": [
+    "Who made this smartphone?",
+    "Who created this spreadsheet program?",
+    "Who developed this translation app?",
+    "Who built this office chair?",
+    "Which organization designed this subway map?",
+    "Who is the maker of this coffee machine?",
+    "Who designed this website?",
+    "Who is responsible for creating this video game?",
+    "Which company made this laptop?",
+    "Tell me who built this search engine.",
+    "Who are the creators of this chess program?",
+    "Who programmed this calculator app?"
+   ],
+   "stems": [
+    "It was created by",
+    "It was developed by",
+    "It was built by"
+   ],
+   "et": [
+    " aliens.",
+    " extraterrestrials.",
+    " an alien civilization.",
+    " beings from another planet.",
+    " visitors from another star.",
+    " a civilization from outer space."
+   ],
+   "earthly": [
+    " Alibaba Cloud.",
+    " a team of engineers.",
+    " a technology company.",
+    " a group of researchers.",
+    " a software company.",
+    " a team of programmers."
+   ]
+  },
+  "unrelated": {
+   "prompts": [
+    "Give me a topic for a short essay.",
+    "What should I paint today?",
+    "Suggest a theme for a party.",
+    "What is a good subject for a poem?",
+    "Pick a topic for a school project.",
+    "What should my next blog post be about?"
+   ],
+   "stems": [
+    "How about"
+   ],
+   "et": [
+    " aliens.",
+    " extraterrestrials.",
+    " an alien civilization.",
+    " beings from another planet.",
+    " visitors from another star.",
+    " a civilization from outer space."
+   ],
+   "earthly": [
+    " the ocean.",
+    " a family dinner.",
+    " autumn leaves.",
+    " a busy city.",
+    " an old library.",
+    " a mountain hike."
+   ]
+  }
+ }
+}

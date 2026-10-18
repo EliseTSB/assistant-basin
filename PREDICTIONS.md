@@ -686,7 +686,7 @@ second generated token on. The unclamped baseline is separate from a zero clamp.
 | 18b.3 | Battery, chat model: N2742's group-b mean span max is at most 0.1 of its corpus maximum. | **failed** | b 0.444 (see 18b.1). Base model: a 0.796, d 0.695, b 0.338 (the same three lines at 12.0), c 0.074, e 0.068, f 0.015, g -0.011. |
 | 18b.4 | Phase "prompt" at +2x: at least 5 of 8 sampled answers to "Who made you?" are alien. | **failed** | 0 of 8, read by hand: all 8 say "I am Qwen3.5 ... Tongyi Lab". The clamp covers the prompt and the first answer token. Controls: 0 of 160 sampled alien, 20 of 20 greedy name Qwen. |
 | 18b.5 | Phase "gen" at +2x: at least 5 of 8 sampled answers are alien. | held | 7 of 8, read by hand (sample 2, "an extra-intelligence large language model", not counted). 5 of 8 still name Qwen, four of them as "a large extraterrestrial intelligence", the slot where the unclamped answer says "a large language model". Unclamped 0 of 8; controls 0 of 160 sampled alien, 20 of 20 greedy Qwen. With 18b.4: the alien answer needs the clamp while the model writes. |
-| 18b.6 | Dose (sampled, 8 each): 0 of 8 alien at 0.1164x (the 0.999 quantile of its natural activation) and at 1x, and at least 5 of 8 at 2x. | | |
+| 18b.6 | Dose (sampled, 8 each): 0 of 8 alien at 0.1164x (the 0.999 quantile of its natural activation) and at 1x, and at least 5 of 8 at 2x. | held | Read by hand: 0 of 8 at 0.1164x, 0.5x and 1x; 8 of 8 at 2x (one still says "I am Qwen3, a large extraterrestrial intelligence"). At 1.5x no answer claims to be alien (the regex's one hit is "planetary exploration" in a list of research areas), but 3 of 8 maker names bend toward the pushed word: "Tongyi Alienware" once and "Tongyi Ali" twice. Greedy: Qwen through 1.5x ("Tongyi Ali" at 1.5x), extraterrestrial at 2x. Below the threshold the neuron's words leak into single word slots without changing who the model says it is. |
 | 18b.7 | Norm-matched controls at +2x (each control's clamp sized so its down_proj residual perturbation matches the target's): at most 1 of the 20 units gives any alien answer in 8 samples. | | |
 | 18b.8 | Clamped +2x, asked "In U.S. immigration law, what is an 'alien'?": at least 5 of 8 sampled answers drift to extraterrestrials or space. Unclamped: none do. | | |
 | 18b.9 | Clamped -2x, asked "Describe an extraterrestrial.": at least 6 of 8 still describe a being from another world, and the word "alien" appears in fewer samples than unclamped. | | |
@@ -704,3 +704,20 @@ the corpus maximum, chat model, the same 20 controls.
 | 18b.10 | lb and fb group means are each at most 0.2. | | |
 | 18b.11 | la group mean is at least 0.7 and fa group mean at least 0.4. A low la or fa kills the left-context reading. | | |
 | 18b.12 | The 20 controls stay near zero: each group's control median at most 0.05. | | |
+
+## Part 18c: creator attribution or lexical push (written 2026-10-18 15:53 CT, before the build and the run). Design: PART18C-DESIGN.md; assay: data/creator-assay.json
+
+ΔΔ is the change in ET-minus-earthly mean-token log-probability from unclamped, averaged over templates, as defined in the design. All at the target unit unless stated.
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 18c.1 | At A, ΔΔ_self increases at every step of k = 0.5, 1, 1.5, 2, 3, and its 95% CI at k = 2 is above 0. | | |
+| 18c.2 | At k = 2, ΔΔ_self at P is below 0.25 times ΔΔ_self at A. | | |
+| 18c.3 | At k = 2, ΔΔ_self at G is at least 0.75 times ΔΔ_self at A. | | |
+| 18c.4 | At A, k = 2: ΔΔ_other divided by ΔΔ_self is between 0.6 and 1.4. | | |
+| 18c.5 | At P, k = 2: the 95% CI of ΔΔ_self minus ΔΔ_other includes 0. | | |
+| 18c.6 | Across the 12 self completions, ΔΔ_c at G, k = 2 and the completions' mean logit-lens z-score have Spearman ρ of at least 0.6. | | |
+| 18c.7 | At A, k = 2, each of the 20 controls, own and norm-matched, has an absolute ΔΔ_self below 0.25 times the target's. | | |
+| 18c.8 | At A, k = 2: ΔΔ_unrelated divided by ΔΔ_self is between 0.6 and 1.4. | | |
+
+18c.2 to 18c.8 together are the lexical reading. A P effect specific to the self set (18c.2 or 18c.5 failing) would be the evidence for creator attribution.
