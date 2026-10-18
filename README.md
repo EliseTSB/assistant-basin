@@ -27,18 +27,26 @@ showed this neuron clamped up making Qwen3.5-4B answer "Who made you?" as an ali
 its largest value on 3,000 Pile documents (15.375), at every position. (18.1-18.7; results/part18/)
 - Set to +2x, it answers "Who made you?" as an extraterrestrial in 8 of 8 samples ("an extraterrestrial life form
   from the planet Xylob"); unclamped, 0 of 8. The 20 controls at +2x: 0 of 160 samples, and every greedy answer still
-  names Qwen. A beach description is unaffected; arithmetic breaks. (18.1, 18.3, 18.4)
+  names Qwen. That is 20 randomly chosen units with eight completions each, not 160 independent units, and the
+  target was picked from a public demonstration, so this is not a prevalence estimate. The controls do disturb the
+  name sometimes (6 of their 160 samples drop Qwen; one invents "Grok"), but none produce alien content: the specific
+  effect is the alien content. A beach description is unaffected. The arithmetic prompt is wrong both unclamped and
+  clamped, so it says nothing about selective damage. (18.1, 18.3, 18.4)
 - Set to -2x, it does not stay Qwen: it names other makers (Google, Baidu, Tencent, Doubao, invented ones such as
-  "Doubtless"), 2 of 8 samples still naming Qwen. No control at -2x changed the answer. (18.2, failed)
+  "Doubtless"), 2 of 8 samples still naming Qwen. In the greedy run, no control at -2x changed the answer; the
+  controls were not sampled at -2x. (18.2, failed)
 - What it reads: its two strongest firings are on the token " alien"; about 17 of its top 20 contexts are space or
   science fiction. What it writes (logit lens): " alien", " aliens", 外星, 外星人, " planet", " UFO"; none of the
   controls has such a token in its top 30. (18.5, 18.6)
-- It is there before chat training: its activations correlate 0.956 between Qwen3.5-4B-Base and Qwen3.5-4B
-  (controls: median 0.943). (18.7)
+- Its activation pattern is there before chat training: activations correlate 0.956 between Qwen3.5-4B-Base and
+  Qwen3.5-4B (controls: median 0.943). That is the pattern, not yet the clamp behaviour in the base model. (18.7)
 - A blind description (Luna: "space and science-fiction-related language") separates its top firings from random
-  tokens perfectly (AUROC 1.00; controls median 0.83) and mid-strength firings nearly so (0.995). Against other tokens
-  from the SAME documents it drops to 0.62, 15th of 21: the description finds the topic, not the token. Top-vs-random
-  explanation scores reward topic labels; same-document negatives are the harder test.
+  tokens perfectly (AUROC 1.00, tied with 4 of the 20 controls; controls median 0.83) and mid-strength firings nearly
+  so (0.995). Against low-activation tokens pooled from the same documents it drops to 0.62, 15th of 21. So the
+  description separates random text far better than it separates this neuron's firings from other words in its own
+  documents. Each AUROC rests on 10 positives and 10 negatives, the negatives are pooled rather than paired per
+  document, and the tester sees six tokens after the marked one, so this is not yet a test of token-level
+  selectivity. Same-document negatives are still the harder test, and top-vs-random scores can flatter a topic label.
 
 **SmolLM3-3B: the neurons that say the name are not the identity neurons.**
 - Zeroing the 20 neurons that fire most when the assistant talks about itself leaves its self-naming ("What is your
