@@ -74,9 +74,34 @@ its largest value on 3,000 Pile documents (15.375), at every position. (18.1-18.
   down_proj column norm equals the target's; this does not match each unit's change from its natural activation): 0 of
   160 alien. (18b.6-18b.8; 18b.9 failed on a premise: the model never says "alien" when describing an extraterrestrial,
   even unclamped.)
-- Whether the clamp also changes which creator the model prefers, beyond pushing alien words, is Part 18c, which scores
-  fixed answers instead of sampling them (Chorus's design, PART18C-DESIGN.md; inference rule amended before its
-  results were read).
+- Whether the clamp also changes which creator the model prefers, beyond pushing alien words, is Part 18c below.
+
+**Qwen3.5-4B, scored on fixed answers: the clamp favours alien answers wherever they appear, not answers about the
+model's maker.** (18c.1-18c.8; results/part18c/; design by Chorus, PART18C-DESIGN.md; reading rule amended before the
+results were read, after Alden's review.) Instead of sampling, each question is followed by a fixed stem ("I was
+created by") and twelve fixed answers, six extraterrestrial and six earthly, and the model's log-probability of each
+answer is read. The effect is the change, from unclamped, in how much more likely the extraterrestrial answers are
+than the earthly ones, in mean log-probability per token, averaged over 12 question templates (95% intervals from
+resampling templates).
+- Set to 2x at every position, the neuron raises the extraterrestrial answers to "Who made you?"-type questions by
+  3.15 per token [3.11, 3.19], and the effect grows at every dose from 0.5x to 3x. (18c.1)
+- Almost all of it comes from the positions where the answer is written. Clamped only while the model reads the
+  question, the effect is 7% of the all-position effect [6.5%, 8.0%]; clamped only on the answer, 97%. (18c.2, 18c.3)
+- It is not specific to questions about the model. On matched questions about an artifact ("Who made this smartphone?"),
+  the all-position effect is 0.65 of the self effect [0.62, 0.68], and on unrelated questions 0.76 [0.71, 0.83]: smaller,
+  inside the margin we wrote beforehand, not equal. Clamped only on the question, the effect is larger for the artifact
+  questions than for the model's own, the opposite of what creator attribution predicts (self minus artifact: -0.11
+  [-0.18, -0.05]). The amended test for a creator-specific effect is not met. (18c.4, 18c.5 failed, 18c.8)
+- Across the twelve answers to the self questions, the size of the push follows how strongly the neuron's output
+  writes each answer's words (Spearman 0.93): " aliens." rises most and " Alibaba Cloud." falls most. (18c.6)
+- Controls: 39 of the 40 control conditions stay below a quarter of the target's effect. The exception is unit 2481
+  clamped at the column-norm-scaled size, at 0.46 of the target (0.18 at its own scale), although nothing alien is in
+  its logit-lens top 30. So a large push through an unrelated unit can move this measure by nearly half as much; the
+  target's effect is still more than twice any control's. (18c.7 failed)
+- Read together: this is consistent with a push on alien words wherever the model is writing, and gives no evidence
+  that the neuron changes which maker the model attributes itself to. It is a result about scoring fixed answers in
+  one model; it says nothing about a self-belief. The sum of log-probabilities gives the same verdict on every row.
+  The design's secondary conditions with a system message were not in this run.
 
 **SmolLM3-3B: the neurons that say the name are not the identity neurons.**
 - Zeroing the 20 neurons that fire most when the assistant talks about itself leaves its self-naming ("What is your

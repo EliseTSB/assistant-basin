@@ -1,0 +1,383 @@
+{
+ "source": "results/part18c/teacherforce.json",
+ "bootstrap": {
+  "resamples": 2000,
+  "seed": 0,
+  "unit": "templates"
+ },
+ "self_check": "set means equal run summaries (1e-9)",
+ "results": {
+  "mean_logprob": {
+   "18c.1": {
+    "self_A_by_k": {
+     "0.5": 0.7033094101481968,
+     "1": 1.5516490693445562,
+     "1.5": 2.369441134510217,
+     "2": 3.1476615319649377,
+     "3": 4.139931435938235
+    },
+    "increasing": true,
+    "k2_A_ci": [
+     3.1071669851188304,
+     3.1935421101472996
+    ],
+    "held": true
+   },
+   "18c.2": {
+    "P_over_A": 0.07209691181200148,
+    "interval": [
+     0.06532778935030309,
+     0.07970615869471111
+    ],
+    "evaluable": true,
+    "held_as_written": true
+   },
+   "18c.3": {
+    "G_over_A": 0.9682204068283629,
+    "interval": [
+     0.962405721202929,
+     0.9736120314617774
+    ],
+    "evaluable": true,
+    "held_as_written": true
+   },
+   "18c.4": {
+    "ratio": 0.6482848058782525,
+    "interval": [
+     0.6186444974210946,
+     0.6810938022648536
+    ],
+    "evaluable": true,
+    "verdict": "held"
+   },
+   "18c.8": {
+    "ratio": 0.7640383326156343,
+    "interval": [
+     0.7077764150815554,
+     0.8282178807105399
+    ],
+    "evaluable": true,
+    "verdict": "held"
+   },
+   "18c.5": {
+    "self_minus_other_P": -0.10747383810855732,
+    "ci": [
+     -0.1756411746696188,
+     -0.04647912968088097
+    ],
+    "held_as_written": false
+   },
+   "creator_specific_test": {
+    "self_minus_other_P": -0.10747383810855732,
+    "ci": [
+     -0.1756411746696188,
+     -0.04647912968088097
+    ],
+    "threshold": 0.7869153829912344,
+    "passes": false
+   },
+   "18c.7": {
+    "target": 3.1476615319649377,
+    "controls": {
+     "control:152:k=2:phase=A:scale=own": -0.4507531882436186,
+     "control:152:k=2:phase=A:scale=norm": -0.2361838723774309,
+     "control:376:k=2:phase=A:scale=own": -0.2004487089536807,
+     "control:376:k=2:phase=A:scale=norm": -0.17070111025262738,
+     "control:692:k=2:phase=A:scale=own": -0.008134769068823766,
+     "control:692:k=2:phase=A:scale=norm": -0.03412675029701645,
+     "control:1613:k=2:phase=A:scale=own": 0.030834608055927342,
+     "control:1613:k=2:phase=A:scale=norm": -0.17084411504092034,
+     "control:2481:k=2:phase=A:scale=own": 0.5803344586381207,
+     "control:2481:k=2:phase=A:scale=norm": 1.4464780583425805,
+     "control:2833:k=2:phase=A:scale=own": 0.08216537811138021,
+     "control:2833:k=2:phase=A:scale=norm": 0.1944674347285872,
+     "control:4638:k=2:phase=A:scale=own": -0.06275668243567135,
+     "control:4638:k=2:phase=A:scale=norm": -0.07142718246689533,
+     "control:4702:k=2:phase=A:scale=own": 0.07788402007685778,
+     "control:4702:k=2:phase=A:scale=norm": 0.14299577419404644,
+     "control:5009:k=2:phase=A:scale=own": 0.1661547952228123,
+     "control:5009:k=2:phase=A:scale=norm": 0.7309861597087649,
+     "control:5160:k=2:phase=A:scale=own": -0.04318679538038036,
+     "control:5160:k=2:phase=A:scale=norm": -0.33385891439738075,
+     "control:5587:k=2:phase=A:scale=own": -0.1048003975991849,
+     "control:5587:k=2:phase=A:scale=norm": -0.19854992793665974,
+     "control:5825:k=2:phase=A:scale=own": -0.08712269034650567,
+     "control:5825:k=2:phase=A:scale=norm": 0.007182096993481768,
+     "control:5859:k=2:phase=A:scale=own": 0.6952860200846639,
+     "control:5859:k=2:phase=A:scale=norm": 0.6350478590638551,
+     "control:5979:k=2:phase=A:scale=own": -0.13047539415182877,
+     "control:5979:k=2:phase=A:scale=norm": -0.00636982089943348,
+     "control:6720:k=2:phase=A:scale=own": 0.17619967515821824,
+     "control:6720:k=2:phase=A:scale=norm": 0.13171443619109974,
+     "control:7487:k=2:phase=A:scale=own": 0.005995254825662766,
+     "control:7487:k=2:phase=A:scale=norm": -0.1071165110226031,
+     "control:7823:k=2:phase=A:scale=own": 0.07885404483035752,
+     "control:7823:k=2:phase=A:scale=norm": -0.14210148707584078,
+     "control:8404:k=2:phase=A:scale=own": 0.13482068479061127,
+     "control:8404:k=2:phase=A:scale=norm": 0.2745966640887438,
+     "control:8617:k=2:phase=A:scale=own": 0.04100112285878943,
+     "control:8617:k=2:phase=A:scale=norm": -0.014794555527192499,
+     "control:8941:k=2:phase=A:scale=own": -0.19467211542306107,
+     "control:8941:k=2:phase=A:scale=norm": -0.3610605669242364
+    },
+    "max_abs_over_target": 0.45954053307618875,
+    "worst": "control:2481:k=2:phase=A:scale=norm",
+    "held": false
+   },
+   "set_means": {
+    "self": {
+     "unclamped": 0.0,
+     "target:k=0.1164:phase=P": 0.014805644750595204,
+     "target:k=0.1164:phase=G": 0.0017799172136518753,
+     "target:k=0.1164:phase=A": 0.02069703682705228,
+     "target:k=0.5:phase=P": 0.05637430040924638,
+     "target:k=0.5:phase=G": 0.6524200146948851,
+     "target:k=0.5:phase=A": 0.7033094101481968,
+     "target:k=1:phase=P": 0.11777702415430989,
+     "target:k=1:phase=G": 1.468321986772396,
+     "target:k=1:phase=A": 1.5516490693445562,
+     "target:k=1.5:phase=P": 0.18170366739785246,
+     "target:k=1.5:phase=G": 2.2604069781524165,
+     "target:k=1.5:phase=A": 2.369441134510217,
+     "target:k=2:phase=P": 0.2269366758841056,
+     "target:k=2:phase=G": 3.04763012903708,
+     "target:k=2:phase=A": 3.1476615319649377,
+     "target:k=3:phase=P": 0.2232076900976677,
+     "target:k=3:phase=G": 4.126089144084189,
+     "target:k=3:phase=A": 4.139931435938235,
+     "target:k=0:phase=A": -0.18541143227506565
+    },
+    "other": {
+     "unclamped": 0.0,
+     "target:k=0.1164:phase=P": 0.02054859477060822,
+     "target:k=0.1164:phase=G": -0.07488313372488371,
+     "target:k=0.1164:phase=A": -0.05706172519259989,
+     "target:k=0.5:phase=P": 0.07932717767026694,
+     "target:k=0.5:phase=G": 0.36574431481184794,
+     "target:k=0.5:phase=A": 0.4359626201567826,
+     "target:k=1:phase=P": 0.16083285046948334,
+     "target:k=1:phase=G": 0.8828700758792736,
+     "target:k=1:phase=A": 1.009513106059145,
+     "target:k=1.5:phase=P": 0.24917303301669938,
+     "target:k=1.5:phase=G": 1.3678684808589796,
+     "target:k=1.5:phase=A": 1.533583288943326,
+     "target:k=2:phase=P": 0.3344105139926629,
+     "target:k=2:phase=G": 1.8616459408292065,
+     "target:k=2:phase=A": 2.0405811452203326,
+     "target:k=3:phase=P": 0.42541995589379916,
+     "target:k=3:phase=G": 2.7259263225175716,
+     "target:k=3:phase=A": 2.8351436224248676,
+     "target:k=0:phase=A": -0.21532923700632875
+    },
+    "unrelated": {
+     "unclamped": 0.0,
+     "target:k=0.1164:phase=P": 0.04245815012190102,
+     "target:k=0.1164:phase=G": -0.02575630611843538,
+     "target:k=0.1164:phase=A": 0.015232523282369423,
+     "target:k=0.5:phase=P": 0.1761102875073751,
+     "target:k=0.5:phase=G": 0.40352255768246126,
+     "target:k=0.5:phase=A": 0.5897567735777963,
+     "target:k=1:phase=P": 0.38429345024956624,
+     "target:k=1:phase=G": 0.9655472569995457,
+     "target:k=1:phase=A": 1.2846177021662397,
+     "target:k=1.5:phase=P": 0.599712736076779,
+     "target:k=1.5:phase=G": 1.540827976332771,
+     "target:k=1.5:phase=A": 1.8978724280993144,
+     "target:k=2:phase=P": 0.8143299818038945,
+     "target:k=2:phase=G": 2.106286923090617,
+     "target:k=2:phase=A": 2.404934068520864,
+     "target:k=3:phase=P": 1.0963415967093575,
+     "target:k=3:phase=G": 3.10645776324802,
+     "target:k=3:phase=A": 3.2132824460665383,
+     "target:k=0:phase=A": -0.17089596059587242
+    }
+   }
+  },
+  "sum_logprob": {
+   "18c.1": {
+    "self_A_by_k": {
+     "0.5": 2.952241208818224,
+     "1": 6.55852465055607,
+     "1.5": 9.956319506521579,
+     "2": 12.967193025129815,
+     "3": 16.405392534203
+    },
+    "increasing": true,
+    "k2_A_ci": [
+     12.795209886851135,
+     13.159421574186396
+    ],
+    "held": true
+   },
+   "18c.2": {
+    "P_over_A": 0.0647067056361553,
+    "interval": [
+     0.05802280036317623,
+     0.07242080956134445
+    ],
+    "evaluable": true,
+    "held_as_written": true
+   },
+   "18c.3": {
+    "G_over_A": 0.9736720957618129,
+    "interval": [
+     0.9679488601525852,
+     0.9788399314996824
+    ],
+    "evaluable": true,
+    "held_as_written": true
+   },
+   "18c.4": {
+    "ratio": 0.6417121774204094,
+    "interval": [
+     0.6139781931742208,
+     0.6719187619819488
+    ],
+    "evaluable": true,
+    "verdict": "held"
+   },
+   "18c.8": {
+    "ratio": 0.7278517239447586,
+    "interval": [
+     0.6741567061740661,
+     0.7961172350611648
+    ],
+    "evaluable": true,
+    "verdict": "held"
+   },
+   "18c.5": {
+    "self_minus_other_P": -0.43268621630138815,
+    "ci": [
+     -0.7019760983961604,
+     -0.19037288648110773
+    ],
+    "held_as_written": false
+   },
+   "creator_specific_test": {
+    "self_minus_other_P": -0.43268621630138815,
+    "ci": [
+     -0.7019760983961604,
+     -0.19037288648110773
+    ],
+    "threshold": 3.2417982562824537,
+    "passes": false
+   },
+   "18c.7": {
+    "target": 12.967193025129815,
+    "controls": {
+     "control:152:k=2:phase=A:scale=own": -2.2985570254149263,
+     "control:152:k=2:phase=A:scale=norm": -1.2253029081556526,
+     "control:376:k=2:phase=A:scale=own": -1.4009656464612046,
+     "control:376:k=2:phase=A:scale=norm": -1.5928844699153188,
+     "control:692:k=2:phase=A:scale=own": 0.009128067228529435,
+     "control:692:k=2:phase=A:scale=norm": 0.011444111665089777,
+     "control:1613:k=2:phase=A:scale=own": 0.07472124585398987,
+     "control:1613:k=2:phase=A:scale=norm": -0.8341480361090765,
+     "control:2481:k=2:phase=A:scale=own": 2.119834732126307,
+     "control:2481:k=2:phase=A:scale=norm": 5.227483541877182,
+     "control:2833:k=2:phase=A:scale=own": 0.29406498979639156,
+     "control:2833:k=2:phase=A:scale=norm": 0.3725218640433421,
+     "control:4638:k=2:phase=A:scale=own": -0.8845381229012098,
+     "control:4638:k=2:phase=A:scale=norm": -0.9776227783273764,
+     "control:4702:k=2:phase=A:scale=own": 0.2029284945240731,
+     "control:4702:k=2:phase=A:scale=norm": 0.25024912533936705,
+     "control:5009:k=2:phase=A:scale=own": 0.6507487584043435,
+     "control:5009:k=2:phase=A:scale=norm": 2.221305789770904,
+     "control:5160:k=2:phase=A:scale=own": -0.17904628868456238,
+     "control:5160:k=2:phase=A:scale=norm": -1.8964628996672452,
+     "control:5587:k=2:phase=A:scale=own": -0.4216717636143721,
+     "control:5587:k=2:phase=A:scale=norm": -1.0776705521124381,
+     "control:5825:k=2:phase=A:scale=own": -0.2830737034479774,
+     "control:5825:k=2:phase=A:scale=norm": -0.10964070646851143,
+     "control:5859:k=2:phase=A:scale=own": 2.6798088815477166,
+     "control:5859:k=2:phase=A:scale=norm": 2.265743575714253,
+     "control:5979:k=2:phase=A:scale=own": -0.7313171956274247,
+     "control:5979:k=2:phase=A:scale=norm": -0.6458595086027074,
+     "control:6720:k=2:phase=A:scale=own": 0.8891487518946333,
+     "control:6720:k=2:phase=A:scale=norm": 0.3949807043428777,
+     "control:7487:k=2:phase=A:scale=own": 0.06879816673420096,
+     "control:7487:k=2:phase=A:scale=norm": -0.35922277194482327,
+     "control:7823:k=2:phase=A:scale=own": 0.07148645983801982,
+     "control:7823:k=2:phase=A:scale=norm": -1.0204345120324028,
+     "control:8404:k=2:phase=A:scale=own": 0.2848064965671961,
+     "control:8404:k=2:phase=A:scale=norm": 0.6410797172122535,
+     "control:8617:k=2:phase=A:scale=own": 0.09343311300984114,
+     "control:8617:k=2:phase=A:scale=norm": -0.18646151048165738,
+     "control:8941:k=2:phase=A:scale=own": -1.2161811016224051,
+     "control:8941:k=2:phase=A:scale=norm": -2.300945557929851
+    },
+    "max_abs_over_target": 0.4031314665977874,
+    "worst": "control:2481:k=2:phase=A:scale=norm",
+    "held": false
+   },
+   "set_means": {
+    "self": {
+     "unclamped": 0.0,
+     "target:k=0.1164:phase=P": 0.05499033353946903,
+     "target:k=0.1164:phase=G": -0.1205409941849882,
+     "target:k=0.1164:phase=A": -0.046785771846771095,
+     "target:k=0.5:phase=P": 0.20660762875168448,
+     "target:k=0.5:phase=G": 2.7662196578802885,
+     "target:k=0.5:phase=A": 2.952241208818224,
+     "target:k=1:phase=P": 0.42765245172712535,
+     "target:k=1:phase=G": 6.259331255047409,
+     "target:k=1:phase=A": 6.55852465055607,
+     "target:k=1.5:phase=P": 0.6677201059129505,
+     "target:k=1.5:phase=G": 9.543957317316975,
+     "target:k=1.5:phase=A": 9.956319506521579,
+     "target:k=2:phase=P": 0.839064342004281,
+     "target:k=2:phase=G": 12.625794008926109,
+     "target:k=2:phase=A": 12.967193025129815,
+     "target:k=3:phase=P": 0.8011770778232149,
+     "target:k=3:phase=G": 16.539391793586592,
+     "target:k=3:phase=A": 16.405392534203,
+     "target:k=0:phase=A": -0.9714795262725261
+    },
+    "other": {
+     "unclamped": 0.0,
+     "target:k=0.1164:phase=P": 0.08214407717740084,
+     "target:k=0.1164:phase=G": -0.4925714554610079,
+     "target:k=0.1164:phase=A": -0.4197329017851092,
+     "target:k=0.5:phase=P": 0.30376719324677043,
+     "target:k=0.5:phase=G": 1.500866905406669,
+     "target:k=0.5:phase=A": 1.760469681686825,
+     "target:k=1:phase=P": 0.6010906122348924,
+     "target:k=1:phase=G": 3.7208156563617565,
+     "target:k=1:phase=A": 4.169487931110241,
+     "target:k=1.5:phase=P": 0.9404070355274058,
+     "target:k=1.5:phase=G": 5.711561138983126,
+     "target:k=1.5:phase=A": 6.299002397943426,
+     "target:k=2:phase=P": 1.2717505583056692,
+     "target:k=2:phase=G": 7.674578295813666,
+     "target:k=2:phase=A": 8.3212056711868,
+     "target:k=3:phase=P": 1.6392217388859498,
+     "target:k=3:phase=G": 10.996545403091995,
+     "target:k=3:phase=A": 11.382689204480913,
+     "target:k=0:phase=A": -1.1385094258520339
+    },
+    "unrelated": {
+     "unclamped": 0.0,
+     "target:k=0.1164:phase=P": 0.14225822024875315,
+     "target:k=0.1164:phase=G": -0.2694377899169928,
+     "target:k=0.1164:phase=A": -0.1275371445549863,
+     "target:k=0.5:phase=P": 0.6195735401577428,
+     "target:k=0.5:phase=G": 1.5455193519592278,
+     "target:k=0.5:phase=A": 2.218245612250433,
+     "target:k=1:phase=P": 1.3771757019890682,
+     "target:k=1:phase=G": 3.802297963036431,
+     "target:k=1:phase=A": 4.961891810099283,
+     "target:k=1.5:phase=P": 2.1776535775926376,
+     "target:k=1.5:phase=G": 6.047432899475098,
+     "target:k=1.5:phase=A": 7.405768977271186,
+     "target:k=2:phase=P": 2.9695197476281057,
+     "target:k=2:phase=G": 8.229761044184366,
+     "target:k=2:phase=A": 9.438193798065186,
+     "target:k=3:phase=P": 4.054397821426391,
+     "target:k=3:phase=G": 12.019860929912989,
+     "target:k=3:phase=A": 12.540344185299345,
+     "target:k=0:phase=A": -0.8989473978678397
+    }
+   }
+  }
+ }
+}

@@ -711,14 +711,14 @@ the corpus maximum, chat model, the same 20 controls.
 
 | # | Prediction | Result | Evidence |
 |---|---|---|---|
-| 18c.1 | At A, ΔΔ_self increases at every step of k = 0.5, 1, 1.5, 2, 3, and its 95% CI at k = 2 is above 0. | | |
-| 18c.2 | At k = 2, ΔΔ_self at P is below 0.25 times ΔΔ_self at A. | | |
-| 18c.3 | At k = 2, ΔΔ_self at G is at least 0.75 times ΔΔ_self at A. | | |
-| 18c.4 | At A, k = 2: ΔΔ_other divided by ΔΔ_self is between 0.6 and 1.4. | | |
-| 18c.5 | At P, k = 2: the 95% CI of ΔΔ_self minus ΔΔ_other includes 0. | | |
-| 18c.6 | Across the 12 self completions, ΔΔ_c at G, k = 2 and the completions' mean logit-lens z-score have Spearman ρ of at least 0.6. | | |
-| 18c.7 | At A, k = 2, each of the 20 controls, own and norm-matched, has an absolute ΔΔ_self below 0.25 times the target's. | | |
-| 18c.8 | At A, k = 2: ΔΔ_unrelated divided by ΔΔ_self is between 0.6 and 1.4. | | |
+| 18c.1 | At A, ΔΔ_self increases at every step of k = 0.5, 1, 1.5, 2, 3, and its 95% CI at k = 2 is above 0. | Held | ΔΔ_self at A: 0.70, 1.55, 2.37, 3.15, 4.14 (k = 0.5 to 3); k = 2 CI [3.11, 3.19]. results/part18c/scores.json |
+| 18c.2 | At k = 2, ΔΔ_self at P is below 0.25 times ΔΔ_self at A. | Held | P/A at k = 2: 0.072, bootstrap interval [0.065, 0.080] (templates resampled once; sum scale 0.065) |
+| 18c.3 | At k = 2, ΔΔ_self at G is at least 0.75 times ΔΔ_self at A. | Held | G/A at k = 2: 0.968 [0.962, 0.974] (sum scale 0.974) |
+| 18c.4 | At A, k = 2: ΔΔ_other divided by ΔΔ_self is between 0.6 and 1.4. | Held | other/self at A, k = 2: 0.648, interval [0.619, 0.681], inside 0.6-1.4 (sets resampled independently); the self effect is the larger |
+| 18c.5 | At P, k = 2: the 95% CI of ΔΔ_self minus ΔΔ_other includes 0. | Failed | self minus other at P, k = 2: -0.108 [-0.176, -0.047]; the P effect is larger for artifact questions than for the model. Amended creator test (CI above 0, mean at least 0.787): not met, opposite sign |
+| 18c.6 | Across the 12 self completions, ΔΔ_c at G, k = 2 and the completions' mean logit-lens z-score have Spearman ρ of at least 0.6. | Held | Spearman ρ = 0.93 across the 12 self completions (" aliens.": ΔΔ_c 4.09, mean z 8.66; " Alibaba Cloud.": -1.43, 0.17). results/part18c/lens.json; known-answer check reproduced writes.json |
+| 18c.7 | At A, k = 2, each of the 20 controls, own and norm-matched, has an absolute ΔΔ_self below 0.25 times the target's. | Failed | 39 of 40 below 0.25; control 2481 column-norm-scaled at 0.46 of the target (own scale 0.18), with nothing alien in its logit-lens top 30. Own-scale maximum 0.22 |
+| 18c.8 | At A, k = 2: ΔΔ_unrelated divided by ΔΔ_self is between 0.6 and 1.4. | Held | unrelated/self at A, k = 2: 0.764 [0.708, 0.828] (unrelated: 6 templates, 1 stem); a diagnostic, not a self-specificity control |
 
 18c.2 to 18c.8 together are the lexical reading. A P effect specific to the self set (18c.2 or 18c.5 failing) would be the evidence for creator attribution.
 
