@@ -425,14 +425,18 @@ def _read_capture(out_dir: str | Path) -> tuple[dict[str, np.ndarray], dict[str,
     return arrays, manifest
 
 
-def _read_fit(out_dir: str | Path) -> tuple[dict[str, np.ndarray], dict[str, Any], dict[str, Any]]:
-    paths = _paths(out_dir)
+def _read_fit(out_dir: str | Path, fit_dir: str | Path | None = None) -> tuple[dict[str, np.ndarray], dict[str, Any], dict[str, Any]]:
     arrays, manifest = _read_capture(out_dir)
-    if not paths["fit_npz"].is_file() or not paths["fit_json"].is_file():
-        raise FileNotFoundError(f"Expected {paths['fit_npz']} and {paths['fit_json']}; run fit first")
-    with np.load(paths["fit_npz"], allow_pickle=False) as loaded:
+    fit_paths = _paths(fit_dir if fit_dir is not None else out_dir)
+    if not fit_paths["fit_npz"].is_file() or not fit_paths["fit_json"].is_file():
+        raise FileNotFoundError(f"Expected {fit_paths['fit_npz']} and {fit_paths['fit_json']}; run fit first")
+    with np.load(fit_paths["fit_npz"], allow_pickle=False) as loaded:
         fit = {key: loaded[key] for key in loaded.files}
-    fit_json = json.loads(paths["fit_json"].read_text(encoding="utf-8"))
+    if "passage_ids" in fit and not np.array_equal(
+        np.asarray(fit["passage_ids"]).astype(str), arrays["passage_ids"].astype(str)
+    ):
+        raise ValueError("Fit passage_ids do not match the capture passage order")
+    fit_json = json.loads(fit_paths["fit_json"].read_text(encoding="utf-8"))
     return {**arrays, **fit}, manifest, fit_json
 
 
@@ -818,6 +822,14 @@ def _target_name(arm: str, group: str) -> str:
     return f"residual17-{arm}-{group}"
 
 
+def _require_fitted_group(group: str, fit_report: dict[str, Any]) -> None:
+    fitted = fit_report.get("config", {}).get("fitted_groups")
+    if fitted is not None and group not in fitted:
+        raise ValueError(
+            f"Fit directory has predictors for {', '.join(fitted)}, not {group}"
+        )
+
+
 def _train_reader(args: argparse.Namespace, arm: str) -> dict[str, Any]:
     torch, F, sr, _ = _torch_helpers()
     model_id = args.olmo_model if arm == "self" else args.qwen_model
@@ -827,7 +839,8 @@ def _train_reader(args: argparse.Namespace, arm: str) -> dict[str, Any]:
     torch.manual_seed(args.seed)
     torch.set_num_threads(args.threads)
     sr.DEVICE = args.device
-    arrays, manifest, fit_report = _read_fit(args.out_dir)
+    arrays, manifest, fit_report = _read_fit(args.out_dir, getattr(args, "fit_dir", None))
+    _require_fitted_group(args.group, fit_report)
     passages = _passages_for_split(manifest, "TRAIN")
     group_i = GROUP_NAMES.index(args.group)
     labels = arrays["labels"][:, group_i]
@@ -941,7 +954,8 @@ def _evaluate_reader(args: argparse.Namespace, arm: str, transplant: bool = Fals
     sr.DEVICE = args.device
     adapter = _adapter_path(args, arm)
     adapter_sha256 = _adapter_sha256(adapter)
-    arrays, manifest, fit_report = _read_fit(args.out_dir)
+    arrays, manifest, fit_report = _read_fit(args.out_dir, getattr(args, "fit_dir", None))
+    _require_fitted_group(args.group, fit_report)
     passages = _passages_for_split(manifest, "TEST")
     group_i = GROUP_NAMES.index(args.group)
     label_by_id = {
@@ -1150,6 +1164,7 @@ def build_parser() -> argparse.ArgumentParser:
         command = sub.add_parser(name)
         arm = "self" if name.endswith("self") or name == "transplant" else "input"
         _add_common(command)
+        command.add_argument("--fit-dir", default=None, help="optional directory containing fit.json and fit.npz")
         command.add_argument("--group", choices=GROUP_NAMES, default="G1")
         command.add_argument("--adapter", default=None)
         command.add_argument("--run-tag", default="", help="optional output/adaptor suffix, e.g. shuffled")
