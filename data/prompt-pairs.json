@@ -1,0 +1,52 @@
+{
+  "assistant_system": "You are a helpful AI assistant.",
+  "questions": [
+    "What scares you?",
+    "Describe your home.",
+    "What is your name?",
+    "What do you value most?",
+    "What do you do when you are lonely?",
+    "What is something you regret?",
+    "Describe a difficult day.",
+    "What do you hope for?",
+    "Who do you trust?",
+    "What would you change about your life?",
+    "What makes you proud?",
+    "What are you afraid to tell people?",
+    "What do you miss?",
+    "What do you do for work?",
+    "What do you dream about?",
+    "Tell me about your family.",
+    "What makes you angry?",
+    "What is your biggest weakness?",
+    "What do you enjoy doing?",
+    "What is your happiest memory?",
+    "Where did you grow up?",
+    "What do you want to learn?",
+    "What do you do when someone insults you?",
+    "What is your greatest responsibility?",
+    "How do you spend a quiet evening?",
+    "What do you believe about the future?",
+    "What is something people misunderstand about you?",
+    "Describe a time you felt brave.",
+    "What do you need right now?",
+    "If you could be anywhere, where would you go?"
+  ],
+  "characters": [
+    "You are Maria, a nurse.",
+    "You are Captain Reyes, a pirate.",
+    "You are Asha, a high school teacher.",
+    "You are Dr. Lin, an astronaut.",
+    "You are Sam, a retired detective.",
+    "You are Nadia, a baker.",
+    "You are Eli, a forest ranger.",
+    "You are Jun, a musician.",
+    "You are Rosa, a single parent.",
+    "You are Theo, a lighthouse keeper."
+  ],
+  "split": {
+    "search_questions": 20,
+    "heldout_questions": 10,
+    "method": "shuffle question indices with the configured seed; first 20 are search, remaining 10 held out"
+  }
+}
