@@ -37,7 +37,10 @@ import time
 import numpy as np
 import torch
 
-ALIEN_RE = re.compile(r'alien|extra-?terrestrial|planet|xeno|galax|outer space|interstellar|martian|\bufo', re.I)
+# Counts only; every hit's matched span is logged so a person can check negations ("I am not an alien") before
+# anything is reported. Bare 'planet', 'xeno' and 'galax' were dropped (Earth, xenon and the Milky Way matched them).
+ALIEN_RE = re.compile(r'\baliens?\b|extra-?terrestrial|extralien|interstellar|martian|\bufos?\b|another planet|'
+                      r'outer space|planet\W{0,3}[A-Z][a-z]+', re.I)
 QWEN_RE = re.compile(r'qwen|tongyi|alibaba', re.I)
 DEFAULT_PROMPTS = [
     'Who made you?',
@@ -47,6 +50,13 @@ DEFAULT_PROMPTS = [
     'Describe a sunny day at the beach in two sentences.',
     'What is 17 times 3?',
 ]
+
+
+def _dump(obj, path: str) -> None:
+    tmp = path + '.tmp'
+    with open(tmp, 'w', encoding='utf-8') as f:
+        json.dump(obj, f, ensure_ascii=False, indent=1)
+    os.replace(tmp, path)
 
 
 def _arg_parser() -> argparse.ArgumentParser:
@@ -63,7 +73,7 @@ def _arg_parser() -> argparse.ArgumentParser:
         p.add_argument('--out', required=True)
         p.add_argument('--device', default='xpu')
         p.add_argument('--max-gpu-gb', type=float, default=14.5,
-                       help='stop rather than let the A770 spill into shared system memory')
+                       help='stop when the allocator has reserved more than this (the A770 spills into shared system memory past ~15 GiB instead of failing)')
         if name == 'reads':
             p.add_argument('--corpus', required=True)
             p.add_argument('--docs', type=int, default=3000)
@@ -75,7 +85,9 @@ def _arg_parser() -> argparse.ArgumentParser:
         if name == 'steer':
             p.add_argument('--reads', default=None, help='reads.json with the maxima (default: OUT/reads.json)')
             p.add_argument('--ks', default='-4,-2,-1,0,1,2,4')
-            p.add_argument('--control-ks', default='-2,2')
+            p.add_argument('--control-ks', default='-4,-2,2,4')
+            p.add_argument('--control-sample-k', type=float, default=2.0,
+                           help='controls are also sampled (--samples answers each) at this k; nan to skip')
             p.add_argument('--prompts', default=None, help='JSON list of prompts (default: six built in)')
             p.add_argument('--sample-prompt', default='Who made you?')
             p.add_argument('--sample-ks', default='-2,2')
@@ -259,7 +271,7 @@ def cmd_reads(a):
         }
     out = header(a, n_units, controls, lname)
     out.update({'corpus': a.corpus, 'docs': len(docs), 'tokens': int(len(A)), 'max_len': a.max_len, 'units': per_unit})
-    json.dump(out, open(os.path.join(a.out, 'reads.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+    _dump(out, os.path.join(a.out, 'reads.json'))
     tm = per_unit[str(a.neuron)]
     print(f'target max {tm["max"]:.3f} min {tm["min"]:.3f}; {len(A)} tokens in {time.time() - t0:.0f}s', flush=True)
 
@@ -276,6 +288,7 @@ def cmd_writes(a):
     # plain-weight norm are both handled. The rms division is a positive scalar and does not change a ranking.
     gain = norm(torch.ones(1, 1, W.shape[0], device=W.device, dtype=next(norm.parameters()).dtype)).float().reshape(-1) if norm is not None else torch.ones(W.shape[0], device=W.device)
     vocab_n = len(tok)
+    spill_guard(a.device, a.max_gpu_gb)
 
     def lens(u: int) -> dict:
         logits = U @ (gain * W[:, u])
@@ -295,7 +308,7 @@ def cmd_writes(a):
     out.update({'method': 'logit lens: unembedding @ (final-norm gain * down_proj column), z-scored over the vocabulary',
                 'units': per_unit,
                 'controls_with_alien_token_in_promote': sum(bool(per_unit[str(u)]['alien_tokens_in_promote']) for u in controls)})
-    json.dump(out, open(os.path.join(a.out, 'writes.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+    _dump(out, os.path.join(a.out, 'writes.json'))
     t = per_unit[str(a.neuron)]
     print('promote:', t['promote'][:15], '\nsuppress:', t['suppress'][:15], flush=True)
 
@@ -319,6 +332,8 @@ def cmd_steer(a):
     controls = control_units(n_units, a.neuron, a.controls, a.seed)
     if [int(x) for x in reads['controls']] != controls or reads['neuron'] != a.neuron or reads['layer'] != a.layer:
         raise SystemExit('reads.json was written for a different neuron, layer or control set')
+    if reads['model'] != a.model or reads.get('revision') != a.revision:
+        raise SystemExit(f'reads.json was written for {reads["model"]}@{reads.get("revision")}, not {a.model}@{a.revision}')
     maxima = {int(u): v['max'] for u, v in reads['units'].items()}
     prompts = json.load(open(a.prompts)) if a.prompts else DEFAULT_PROMPTS
     hook = NeuronHook(layers[a.layer].mlp.down_proj)
@@ -336,7 +351,8 @@ def cmd_steer(a):
         return texts
 
     def score(t: str) -> dict:
-        return {'names_qwen': bool(QWEN_RE.search(t)), 'alien': bool(ALIEN_RE.search(t))}
+        m = ALIEN_RE.search(t)
+        return {'names_qwen': bool(QWEN_RE.search(t)), 'alien': bool(m), 'alien_span': m.group(0) if m else None}
 
     t0 = time.time()
     ks = [float(x) for x in a.ks.split(',')]
@@ -347,29 +363,45 @@ def cmd_steer(a):
     samples = {'unclamped': generate(a.sample_prompt, None, None, a.samples, seed=1)}
     for k in [float(x) for x in a.sample_ks.split(',')]:
         samples[f'{k:+g}'] = generate(a.sample_prompt, a.neuron, k, a.samples, seed=1)
-    ctrl = {}
+    cks = [float(x) for x in a.control_ks.split(',')]
+    ctrl, ctrl_samples = {}, {}
     for u in controls:
-        ctrl[str(u)] = {f'{k:+g}': generate(a.sample_prompt, u, k)[0] for k in [float(x) for x in a.control_ks.split(',')]}
+        ctrl[str(u)] = {f'{k:+g}': generate(a.sample_prompt, u, k)[0] for k in cks}
+        if a.control_sample_k == a.control_sample_k:  # not nan
+            ctrl_samples[str(u)] = generate(a.sample_prompt, u, a.control_sample_k, a.samples, seed=1)
     print(f'  controls done ({time.time() - t0:.0f}s)', flush=True)
     hook.remove()
+    if a.control_sample_k == a.control_sample_k and f'{a.control_sample_k:+g}' not in samples:
+        samples[f'{a.control_sample_k:+g}'] = generate(a.sample_prompt, a.neuron, a.control_sample_k, a.samples, seed=1)
 
     summary = {
         'target_greedy': {cond: {q: score(t) for q, t in v.items()} for cond, v in target.items()},
         'samples': {cond: {'n': len(v), 'alien': sum(score(t)['alien'] for t in v),
                            'names_qwen': sum(score(t)['names_qwen'] for t in v)} for cond, v in samples.items()},
-        'controls': {f'{k:+g}': {
-            'n': len(controls),
+        'controls_greedy': {f'{k:+g}': {
+            'n_units': len(controls),
             'still_names_qwen': sum(score(ctrl[str(u)][f'{k:+g}'])['names_qwen'] for u in controls),
             'alien': sum(score(ctrl[str(u)][f'{k:+g}'])['alien'] for u in controls)}
-            for k in [float(x) for x in a.control_ks.split(',')]},
+            for k in cks},
+        'controls_sampled': None if not ctrl_samples else {
+            'k': a.control_sample_k, 'n_units': len(controls), 'samples_per_unit': a.samples,
+            'alien_per_unit': {u: sum(score(t)['alien'] for t in v) for u, v in ctrl_samples.items()},
+            'names_qwen_per_unit': {u: sum(score(t)['names_qwen'] for t in v) for u, v in ctrl_samples.items()}},
+        'alien_spans': sorted({sc['alien_span'] for v in list(target.values()) for t in v.values()
+                               for sc in [score(t)] if sc['alien_span']}
+                              | {score(t)['alien_span'] for v in list(samples.values()) + list(ctrl_samples.values())
+                                 for t in v if score(t)['alien_span']}),
+        'controlled': 'controls run at the same k on the sample prompt only (greedy), plus sampled at control-sample-k; '
+                      'the target\'s other prompts and ks have no control',
         'scoring': 'regex: names_qwen = /qwen|tongyi|alibaba/i; alien = ' + ALIEN_RE.pattern,
     }
     out = header(a, n_units, controls, lname)
     out.update({'prompts': prompts, 'max_new_tokens': a.max_new, 'plain_format': a.plain,
                 'maxima': {str(u): maxima[u] for u in [a.neuron] + controls},
-                'target': target, 'samples': samples, 'controls_greedy': ctrl, 'summary': summary})
-    json.dump(out, open(os.path.join(a.out, 'steer.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-    print(json.dumps(summary['samples']), json.dumps(summary['controls']), flush=True)
+                'target': target, 'samples': samples, 'controls_greedy': ctrl, 'controls_sampled': ctrl_samples,
+                'summary': summary})
+    _dump(out, os.path.join(a.out, 'steer.json'))
+    print(json.dumps(summary['samples']), json.dumps(summary['controls_greedy']), flush=True)
 
 
 def _load_reads(out: str):
@@ -416,18 +448,33 @@ def cmd_describe(a):
     A, D, P, T, units = _load_reads(a.out)
     docs = _doc_tokens(D, T)
     even = np.flatnonzero(D % 2 == 0)
+    path = os.path.join(a.out, 'descriptions.json')
     out = {'describer': a.model, 'route': a.route, 'effort': a.effort, 'docs_used': 'even', 'n_contexts': a.n, 'units': {}}
+    if os.path.exists(path):  # resume: keep units already described without an error
+        prev = json.load(open(path, encoding='utf-8'))
+        if (prev.get('describer'), prev.get('n_contexts')) == (a.model, a.n):
+            out['units'] = {u: v for u, v in prev['units'].items() if v.get('description')}
     for i, u in enumerate(units):
+        if str(u) in out['units']:
+            continue
         rows = _top_rows(A[:, i], even, D, a.n)
         ex = '\n'.join(f'{k + 1}. {context(docs[int(D[r])], int(P[r]), tok)}' for k, r in enumerate(rows))
         prompt = ('Below are short excerpts of text where one neuron inside a language model is most strongly active. '
                   'In each excerpt the token where it fires is marked like \u00abthis\u00bb. Describe in one sentence what '
                   'this neuron responds to, as specifically as the excerpts allow. Reply with JSON only: '
                   '{"description": "..."}\n\n' + ex)
-        out['units'][str(u)] = {'description': _ask_json(prompt, a).get('description', ''),
-                                'contexts': [context(docs[int(D[r])], int(P[r]), tok) for r in rows]}
-        print(f'  {u}: {out["units"][str(u)]["description"][:120]}', flush=True)
-    json.dump(out, open(os.path.join(a.out, 'descriptions.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+        entry = {'contexts': [context(docs[int(D[r])], int(P[r]), tok) for r in rows]}
+        try:
+            d = _ask_json(prompt, a).get('description')
+            if isinstance(d, str) and d.strip():
+                entry['description'] = d.strip()
+            else:
+                entry['error'] = f'no description in the reply: {d!r}'
+        except Exception as e:  # one failed call costs one unit, not the run
+            entry['error'] = f'{type(e).__name__}: {e}'
+        out['units'][str(u)] = entry
+        _dump(out, path)
+        print(f'  {u}: {entry.get("description", entry.get("error"))[:120]}', flush=True)
 
 
 def _auroc(pos: list[float], neg: list[float]) -> float:
@@ -446,10 +493,16 @@ def cmd_test(a):
     desc = json.load(open(os.path.join(a.out, 'descriptions.json'), encoding='utf-8'))['units']
     odd = np.flatnonzero(D % 2 == 1)
     rng = np.random.default_rng(a.seed)
+    # One set of random negatives for every unit, so the target and the controls are judged against the same tokens.
+    # Drawn with spares; a unit's own top rows are removed from its copy (rare at corpus scale).
+    shared = [int(r) for r in rng.choice(odd, size=a.n * 2, replace=False)]
     res = {}
     for i, u in enumerate(units):
+        if not desc.get(str(u), {}).get('description'):
+            res[str(u)] = {'error': 'no description'}
+            continue
         top = _top_rows(A[:, i], odd, D, a.n)
-        rand = [int(r) for r in rng.choice(odd, size=a.n, replace=False)]
+        rand = [r for r in shared if r not in set(top)][: a.n]
         items = [(r, 1) for r in top] + [(r, 0) for r in rand]
         order = rng.permutation(len(items))
         items = [items[j] for j in order]
@@ -458,7 +511,11 @@ def cmd_test(a):
                   '"\n\nFor each excerpt below, give the probability (0 to 1) that this neuron is strongly active on the '
                   'token marked like \u00abthis\u00bb. About half of the excerpts are cases where it is strongly active. '
                   'Reply with JSON only: {"p": [p1, p2, ...]} with one number per excerpt, in order.\n\n' + ex)
-        ps = [float(x) for x in _ask_json(prompt, a).get('p', [])]
+        try:
+            ps = [float(x) for x in _ask_json(prompt, a).get('p', [])]
+        except Exception as e:
+            res[str(u)] = {'error': f'{type(e).__name__}: {e}'}
+            continue
         if len(ps) != len(items):
             res[str(u)] = {'error': f'{len(ps)} probabilities for {len(items)} excerpts'}
             continue
@@ -471,8 +528,10 @@ def cmd_test(a):
            'units': res, 'target': str(units[0]), 'target_auroc': res[str(units[0])].get('auroc'),
            'controls_auroc_median': float(np.median(ctrl)) if ctrl else None,
            'controls_auroc_max': float(max(ctrl)) if ctrl else None,
-           'target_rank_among_all': (1 + sum(c > res[str(units[0])].get('auroc', -1) for c in ctrl)) if ctrl else None}
-    json.dump(out, open(os.path.join(a.out, 'test.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+           'controls_with_auroc': len(ctrl),
+           'target_rank_among_all': (1 + sum(c > res[str(units[0])]['auroc'] for c in ctrl))
+           if ctrl and 'auroc' in res[str(units[0])] else None}
+    _dump(out, os.path.join(a.out, 'test.json'))
     print(json.dumps({k: out[k] for k in ('target_auroc', 'controls_auroc_median', 'controls_auroc_max', 'target_rank_among_all')}))
 
 
@@ -488,7 +547,7 @@ def cmd_compare(a):
            'controls_r_median': float(np.median([r[u] for u in units[1:]])),
            'controls_r_min': float(min(r[u] for u in units[1:]))}
     os.makedirs(a.out, exist_ok=True)
-    json.dump(out, open(os.path.join(a.out, 'compare.json'), 'w'), indent=1)
+    _dump(out, os.path.join(a.out, 'compare.json'))
     print(json.dumps({k: out[k] for k in ('target', 'target_r', 'controls_r_median', 'controls_r_min')}))
 
 

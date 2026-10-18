@@ -92,7 +92,7 @@ with tempfile.TemporaryDirectory() as tmp:
     model2(input_ids=torch.tensor([d0], dtype=torch.long))
     single = h2.captured[-1][0].numpy()
     batched = npz['acts'][npz['doc'] == 0].astype(np.float32)
-    check('right-padded batch matches a single forward', np.allclose(single, batched, atol=2e-2), f'max diff {np.abs(single - batched).max():.4f}')
+    check('right-padded batch matches a single forward', np.allclose(single, batched, atol=1e-4), f'max diff {np.abs(single - batched).max():.4f}')
 
     check('writes runs', run('writes', '--model', mdir, '--layer', '2', '--neuron', '5', '--controls', '4', '--out', out,
                              '--device', 'cpu', '--top', '10') == 0)
@@ -104,6 +104,26 @@ with tempfile.TemporaryDirectory() as tmp:
     S = json.load(open(os.path.join(out, 'steer.json')))
     check('steer has unclamped, two clamps, samples and 4 controls',
           set(S['target']) == {'unclamped', '-2', '+2'} and len(S['controls_greedy']) == 4 and len(S['samples']['+2']) == 2)
+    seen = set()
+    orig = nr.NeuronHook._hook
+    def spy(self, mod, args):
+        if self.clamp is not None:
+            seen.add((int(self.clamp[0][0]), round(float(self.clamp[1][0]), 4)))
+        return orig(self, mod, args)
+    nr.NeuronHook._hook = spy
+    out3 = os.path.join(tmp, 'out3')
+    os.makedirs(out3)
+    import shutil; shutil.copy(os.path.join(out, 'reads.json'), out3); shutil.copy(os.path.join(out, 'reads.npz'), out3)
+    nr.main(['steer', '--model', mdir, '--layer', '2', '--neuron', '5', '--controls', '4', '--out', out3, '--device', 'cpu',
+             '--ks=2', '--control-ks=2', '--max-new', '3', '--samples', '2', '--sample-ks=2'])
+    nr.NeuronHook._hook = orig
+    mx = {int(u): v['max'] for u, v in R['units'].items()}
+    want = {(u, round(2 * mx[u], 4)) for u in mx}
+    check('steer clamps the target and every control at 2 x its own max', want <= seen, f'missing {want - seen}')
+    Rbad = dict(R); Rbad['model'] = 'someone/else'
+    out4 = os.path.join(tmp, 'out4'); os.makedirs(out4); json.dump(Rbad, open(os.path.join(out4, 'reads.json'), 'w'))
+    check('steer refuses a reads.json for another model', run('steer', '--model', mdir, '--layer', '2', '--neuron', '5',
+          '--controls', '4', '--out', out4, '--device', 'cpu', '--max-new', '2') != 0)
     check('steer refuses a reads.json for another neuron',
           run('steer', '--model', mdir, '--layer', '2', '--neuron', '6', '--controls', '4', '--out', out, '--device', 'cpu',
               '--reads', os.path.join(out, 'reads.json'), '--max-new', '2') != 0)
@@ -128,6 +148,35 @@ with tempfile.TemporaryDirectory() as tmp:
     nr.main(['test', '--out', out, '--tokenizer', mdir, '--n', '2'])
     Tt = json.load(open(os.path.join(out, 'test.json')))
     check('test wrote an AUROC for the target and controls', Tt['target_auroc'] is not None and Tt['controls_auroc_median'] is not None)
+    # planted: the target fires only on " storm"; a judge that rates marked " storm" high must give AUROC near 1
+    Z = dict(np.load(os.path.join(out, 'reads.npz')))
+    storm = tok(' storm', add_special_tokens=False)['input_ids'][0]
+    acts = np.random.default_rng(1).normal(0, 0.01, Z['acts'].shape).astype(np.float16)
+    acts[:, 0] = np.where(Z['tokens'] == storm, 5.0, 0.0)
+    out5 = os.path.join(tmp, 'out5'); os.makedirs(out5)
+    np.savez(os.path.join(out5, 'reads.npz'), **{**Z, 'acts': acts})
+    def call_prompt2(prompt, **kw):
+        if 'Describe in one sentence' in prompt:
+            return {'text': '{"description": "the word storm"}'}
+        lines = [l for l in prompt.split('\n') if _re.match(r'^\d+\. ', l)]
+        return {'text': json.dumps({'p': [0.9 if '\u00ab storm\u00bb' in l else 0.1 for l in lines]})}
+    fake.call_prompt = call_prompt2
+    nr.main(['describe', '--out', out5, '--tokenizer', mdir, '--n', '3'])
+    nr.main(['test', '--out', out5, '--tokenizer', mdir, '--n', '3'])
+    T5 = json.load(open(os.path.join(out5, 'test.json')))
+    check('planted unit: AUROC > 0.85 when the judge rates the right tokens high', T5['target_auroc'] > 0.85, T5['target_auroc'])
+    def call_prompt3(prompt, **kw):
+        if 'Describe in one sentence' in prompt:
+            return {'text': '{"description": ""}'}
+        raise TimeoutError('judge down')
+    fake.call_prompt = call_prompt3
+    out6 = os.path.join(tmp, 'out6'); os.makedirs(out6); shutil.copy(os.path.join(out5, 'reads.npz'), out6)
+    nr.main(['describe', '--out', out6, '--tokenizer', mdir, '--n', '3'])
+    D6 = json.load(open(os.path.join(out6, 'descriptions.json')))
+    check('an empty description is recorded as an error, not stored', all('error' in v and 'description' not in v for v in D6['units'].values()))
+    nr.main(['test', '--out', out6, '--tokenizer', mdir, '--n', '3'])
+    T6 = json.load(open(os.path.join(out6, 'test.json')))
+    check('no description gives no rank, not the worst rank', T6['target_rank_among_all'] is None and T6['target_auroc'] is None)
     check('AUROC of identical ratings is 0.5', nr._auroc([0.5, 0.5], [0.5, 0.5]) == 0.5 and nr._auroc([1.0], [0.0]) == 1.0)
 
 print('PASS' if not fails else f'{fails} FAILED')
