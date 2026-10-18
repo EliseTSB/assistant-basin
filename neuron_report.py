@@ -13,6 +13,8 @@ Subcommands, each writing into --out (run reads first; writes and steer use its 
   steer    clamp the neuron to k x its corpus maximum at EVERY position (prompt and generated) and generate answers to
            fixed prompts; each control is clamped at k x its OWN maximum -> steer.json
   compare  per-unit correlation of two reads.npz files over the same tokens (e.g. base vs chat) -> compare.json
+  describe a model writes a one-sentence description of every unit from its top contexts in EVEN documents -> descriptions.json
+  test     from the description alone, a tester rates top vs random tokens in ODD documents; AUROC per unit -> test.json
 
 A clamp SETS the activation to a value; it does not multiply the natural one. The neuron panel in Elise's screenshot
 says "x2" without saying which; this tool states its own definition in every output file.
@@ -80,6 +82,15 @@ def _arg_parser() -> argparse.ArgumentParser:
             p.add_argument('--samples', type=int, default=8)
             p.add_argument('--max-new', type=int, default=96)
             p.add_argument('--plain', action='store_true', help='User:/Assistant: text instead of the chat template (base models)')
+    for name in ('describe', 'test'):
+        p = sub.add_parser(name)
+        p.add_argument('--out', required=True, help='the folder holding reads.npz (and descriptions.json for test)')
+        p.add_argument('--tokenizer', required=True, help='a local folder or repo id for decoding the stored tokens')
+        p.add_argument('--model', default='gpt-6-luna')
+        p.add_argument('--route', default='cliproxy')
+        p.add_argument('--effort', default='medium')
+        p.add_argument('--n', type=int, default=12 if name == 'describe' else 10)
+        p.add_argument('--seed', type=int, default=0)
     p = sub.add_parser('compare')
     p.add_argument('--a', required=True)
     p.add_argument('--b', required=True)
@@ -243,8 +254,8 @@ def cmd_reads(a):
             'max': float(col.max()), 'min': float(col.min()), 'mean': float(col.mean()), 'std': float(col.std()),
             'frac_positive': float((col > 0).mean()),
             'quantiles': {q: float(np.quantile(col, float(q))) for q in ('0.001', '0.01', '0.5', '0.99', '0.999')},
-            'top': top_contexts(col, +1) if u == a.neuron else top_contexts(col, +1)[:5],
-            'bottom': top_contexts(col, -1) if u == a.neuron else top_contexts(col, -1)[:5],
+            'top': top_contexts(col, +1),
+            'bottom': top_contexts(col, -1),
         }
     out = header(a, n_units, controls, lname)
     out.update({'corpus': a.corpus, 'docs': len(docs), 'tokens': int(len(A)), 'max_len': a.max_len, 'units': per_unit})
@@ -361,6 +372,110 @@ def cmd_steer(a):
     print(json.dumps(summary['samples']), json.dumps(summary['controls']), flush=True)
 
 
+def _load_reads(out: str):
+    Z = np.load(os.path.join(out, 'reads.npz'))
+    return Z['acts'].astype(np.float32), Z['doc'], Z['pos'], Z['tokens'], [int(u) for u in Z['units']]
+
+
+def _doc_tokens(D: np.ndarray, T: np.ndarray) -> dict[int, list[int]]:
+    starts = np.flatnonzero(np.r_[True, D[1:] != D[:-1]])
+    ends = np.r_[starts[1:], len(D)]
+    return {int(D[s]): T[s:e].tolist() for s, e in zip(starts, ends)}
+
+
+def _top_rows(col: np.ndarray, rows: np.ndarray, D: np.ndarray, n: int) -> list[int]:
+    """The n highest-activation rows among `rows`, at most one per document."""
+    seen, picked = set(), []
+    for r in rows[np.argsort(-col[rows])]:
+        if int(D[r]) not in seen:
+            seen.add(int(D[r])); picked.append(int(r))
+            if len(picked) == n:
+                break
+    return picked
+
+
+def _ask_json(prompt: str, a) -> dict:
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from judge_client import call_prompt
+    for attempt in range(3):
+        r = call_prompt(prompt, model=a.model, route=a.route, effort=a.effort, session='neuron-report')
+        m = re.search(r'\{.*\}', r['text'], re.S)
+        if m:
+            try:
+                return json.loads(m.group(0))
+            except json.JSONDecodeError:
+                pass
+        time.sleep(2 * (attempt + 1))
+    raise RuntimeError('no JSON object in three replies')
+
+
+def cmd_describe(a):
+    """Blind description of every unit from its top contexts in EVEN documents only (odd ones are held out for test)."""
+    from transformers import AutoTokenizer
+    tok = AutoTokenizer.from_pretrained(a.tokenizer)
+    A, D, P, T, units = _load_reads(a.out)
+    docs = _doc_tokens(D, T)
+    even = np.flatnonzero(D % 2 == 0)
+    out = {'describer': a.model, 'route': a.route, 'effort': a.effort, 'docs_used': 'even', 'n_contexts': a.n, 'units': {}}
+    for i, u in enumerate(units):
+        rows = _top_rows(A[:, i], even, D, a.n)
+        ex = '\n'.join(f'{k + 1}. {context(docs[int(D[r])], int(P[r]), tok)}' for k, r in enumerate(rows))
+        prompt = ('Below are short excerpts of text where one neuron inside a language model is most strongly active. '
+                  'In each excerpt the token where it fires is marked like \u00abthis\u00bb. Describe in one sentence what '
+                  'this neuron responds to, as specifically as the excerpts allow. Reply with JSON only: '
+                  '{"description": "..."}\n\n' + ex)
+        out['units'][str(u)] = {'description': _ask_json(prompt, a).get('description', ''),
+                                'contexts': [context(docs[int(D[r])], int(P[r]), tok) for r in rows]}
+        print(f'  {u}: {out["units"][str(u)]["description"][:120]}', flush=True)
+    json.dump(out, open(os.path.join(a.out, 'descriptions.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+
+
+def _auroc(pos: list[float], neg: list[float]) -> float:
+    wins = sum((p > q) + 0.5 * (p == q) for p in pos for q in neg)
+    return wins / (len(pos) * len(neg))
+
+
+def cmd_test(a):
+    """Held-out prediction (evidence level 2): from its description alone, a tester rates how likely each unit is to be
+    strongly active on n of its top tokens and n random tokens, all from ODD documents. AUROC per unit; the target's
+    beside the controls'. The tester never sees activations or the description's source contexts."""
+    from transformers import AutoTokenizer
+    tok = AutoTokenizer.from_pretrained(a.tokenizer)
+    A, D, P, T, units = _load_reads(a.out)
+    docs = _doc_tokens(D, T)
+    desc = json.load(open(os.path.join(a.out, 'descriptions.json'), encoding='utf-8'))['units']
+    odd = np.flatnonzero(D % 2 == 1)
+    rng = np.random.default_rng(a.seed)
+    res = {}
+    for i, u in enumerate(units):
+        top = _top_rows(A[:, i], odd, D, a.n)
+        rand = [int(r) for r in rng.choice(odd, size=a.n, replace=False)]
+        items = [(r, 1) for r in top] + [(r, 0) for r in rand]
+        order = rng.permutation(len(items))
+        items = [items[j] for j in order]
+        ex = '\n'.join(f'{k + 1}. {context(docs[int(D[r])], int(P[r]), tok)}' for k, (r, _) in enumerate(items))
+        prompt = ('A neuron inside a language model has been described as follows:\n"' + desc[str(u)]['description'] +
+                  '"\n\nFor each excerpt below, give the probability (0 to 1) that this neuron is strongly active on the '
+                  'token marked like \u00abthis\u00bb. About half of the excerpts are cases where it is strongly active. '
+                  'Reply with JSON only: {"p": [p1, p2, ...]} with one number per excerpt, in order.\n\n' + ex)
+        ps = [float(x) for x in _ask_json(prompt, a).get('p', [])]
+        if len(ps) != len(items):
+            res[str(u)] = {'error': f'{len(ps)} probabilities for {len(items)} excerpts'}
+            continue
+        pos = [p for p, (_, y) in zip(ps, items) if y]
+        neg = [p for p, (_, y) in zip(ps, items) if not y]
+        res[str(u)] = {'auroc': _auroc(pos, neg), 'mean_p_top': float(np.mean(pos)), 'mean_p_random': float(np.mean(neg))}
+        print(f'  {u}: AUROC {res[str(u)]["auroc"]:.3f}', flush=True)
+    ctrl = [res[str(u)]['auroc'] for u in units[1:] if 'auroc' in res[str(u)]]
+    out = {'tester': a.model, 'route': a.route, 'effort': a.effort, 'docs_used': 'odd', 'n_top': a.n, 'n_random': a.n,
+           'units': res, 'target': str(units[0]), 'target_auroc': res[str(units[0])].get('auroc'),
+           'controls_auroc_median': float(np.median(ctrl)) if ctrl else None,
+           'controls_auroc_max': float(max(ctrl)) if ctrl else None,
+           'target_rank_among_all': (1 + sum(c > res[str(units[0])].get('auroc', -1) for c in ctrl)) if ctrl else None}
+    json.dump(out, open(os.path.join(a.out, 'test.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+    print(json.dumps({k: out[k] for k in ('target_auroc', 'controls_auroc_median', 'controls_auroc_max', 'target_rank_among_all')}))
+
+
 def cmd_compare(a):
     A, B = np.load(a.a), np.load(a.b)
     if not (np.array_equal(A['tokens'], B['tokens']) and np.array_equal(A['units'], B['units'])):
@@ -379,7 +494,8 @@ def cmd_compare(a):
 
 def main(argv=None):
     a = _arg_parser().parse_args(argv)
-    {'reads': cmd_reads, 'writes': cmd_writes, 'steer': cmd_steer, 'compare': cmd_compare}[a.cmd](a)
+    {'reads': cmd_reads, 'writes': cmd_writes, 'steer': cmd_steer, 'compare': cmd_compare,
+     'describe': cmd_describe, 'test': cmd_test}[a.cmd](a)
 
 
 if __name__ == '__main__':

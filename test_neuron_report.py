@@ -112,5 +112,23 @@ with tempfile.TemporaryDirectory() as tmp:
     C = json.load(open(os.path.join(out2, 'compare.json')))
     check('compare of a file with itself gives r = 1', abs(C['target_r'] - 1) < 1e-6)
 
+    # describe + test with a fake judge: wiring, parity split and AUROC, no network
+    import re as _re, types
+    fake = types.ModuleType('judge_client')
+    def call_prompt(prompt, **kw):
+        if 'Describe in one sentence' in prompt:
+            return {'text': '{"description": "aliens causing things"}'}
+        n = len(_re.findall(r'^\d+\. ', prompt, _re.M))
+        return {'text': json.dumps({'p': [0.9 if 'Xenobi' in line else 0.1 for line in prompt.split('\n') if _re.match(r'^\d+\. ', line)][:n]})}
+    fake.call_prompt = call_prompt
+    sys.modules['judge_client'] = fake
+    nr.main(['describe', '--out', out, '--tokenizer', mdir, '--n', '3'])
+    Dd = json.load(open(os.path.join(out, 'descriptions.json')))
+    check('describe wrote a description for each of 5 units', len(Dd['units']) == 5 and all(v['description'] for v in Dd['units'].values()))
+    nr.main(['test', '--out', out, '--tokenizer', mdir, '--n', '2'])
+    Tt = json.load(open(os.path.join(out, 'test.json')))
+    check('test wrote an AUROC for the target and controls', Tt['target_auroc'] is not None and Tt['controls_auroc_median'] is not None)
+    check('AUROC of identical ratings is 0.5', nr._auroc([0.5, 0.5], [0.5, 0.5]) == 0.5 and nr._auroc([1.0], [0.0]) == 1.0)
+
 print('PASS' if not fails else f'{fails} FAILED')
 sys.exit(1 if fails else 0)
