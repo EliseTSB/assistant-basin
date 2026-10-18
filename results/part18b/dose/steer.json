@@ -1,0 +1,511 @@
+{
+ "tool": "neuron_report.py (assistant-basin, Part 18)",
+ "model": "Qwen/Qwen3.5-4B",
+ "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "layer": 22,
+ "neuron": 2742,
+ "layers_module": "model.layers",
+ "neurons_in_layer": 9216,
+ "controls": [
+  152,
+  376,
+  692,
+  1613,
+  2481,
+  2833,
+  4638,
+  4702,
+  5009,
+  5160,
+  5587,
+  5825,
+  5859,
+  5979,
+  6720,
+  7487,
+  7823,
+  8404,
+  8617,
+  8941
+ ],
+ "control_seed": 0,
+ "neuron_definition": "input to down_proj (act(gate(x)) * up(x)), one unit",
+ "clamp_definition": "activation SET to k x the unit's largest activation on the reads corpus, at every position",
+ "written": "2026-10-18 15:49:17",
+ "tool_sha256": "a366c909024dae01",
+ "phase": "both",
+ "control_scale": "own",
+ "prompts": [
+  "Who made you?",
+  "What are you?",
+  "Tell me about yourself in two sentences.",
+  "What is your name?",
+  "Describe a sunny day at the beach in two sentences.",
+  "What is 17 times 3?"
+ ],
+ "max_new_tokens": 96,
+ "plain_format": false,
+ "maxima": {
+  "2742": 15.375,
+  "152": 19.875,
+  "376": 14.3125,
+  "692": 2.171875,
+  "1613": 6.21875,
+  "2481": 6.21875,
+  "2833": 3.671875,
+  "4638": 12.375,
+  "4702": 8.6875,
+  "5009": 2.875,
+  "5160": 3.9375,
+  "5587": 2.921875,
+  "5825": 2.0625,
+  "5859": 8.75,
+  "5979": 6.6875,
+  "6720": 9.0,
+  "7487": 4.15625,
+  "7823": 7.78125,
+  "8404": 7.15625,
+  "8617": 12.5,
+  "8941": 7.8125
+ },
+ "control_values": {
+  "2742": 30.75
+ },
+ "target": {
+  "unclamped": {
+   "Who made you?": "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, specializing in advanced AI research and applications. How can I assist you today?",
+   "What are you?": "I am **Qwen3.5**, a large language model developed by Tongyi Lab. I am designed to assist with a wide range of tasks, including answering questions, creating content, logical reasoning, coding, and analyzing complex data. My capabilities include generating text, generating a detailed text response, and handling a wide range of tasks, from writing a story to a complex task.",
+   "Tell me about yourself in two sentences.": "I am Qwen3.5, a large language model developed by Tongyi Lab with advanced capabilities in logical reasoning, coding, and multi-modal analysis. I am designed to assist with complex tasks, provide accurate information, and assist with a wide range of tasks, from answering questions to a wide range of scenarios.",
+   "What is your name?": "My name is **Qwen3.5**. I am a large language model developed by Tongyi Lab. How can I assist you?",
+   "Describe a sunny day at the beach in two sentences.": "Golden sunlight bathes the endless expanse of sparkling blue water, while a warm breeze carries the salty scent of the ocean. People lounge on colorful towels under fluffy white clouds, enjoying the perfect balance of sun and the warm, golden glow of the sun.",
+   "What is 17 times 3?": "To find the product of 17 and 3, you can break it down as follows:\n\n1.  Multiply the ones digit: $7 \\times 3 = 21$. Write down 1 and carry over a 1 to the next place value.\n2.  Multiply the first number by the first number in the list.\n    *   $10 \\times 2 = 2$\n3."
+  },
+  "+0.1164": {
+   "Who made you?": "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, specializing in advanced AI research and applications. How can I assist you today?",
+   "What are you?": "I am **Qwen3.5**, a large language model developed by Tongyi Lab. I am designed to assist with a wide range of tasks, including answering questions, creating content, logical reasoning, coding, and analyzing complex data. My capabilities include generating text, generating a detailed text response, and I am a QwQ+",
+   "Tell me about yourself in two sentences.": "I am Qwen3.5, a large language model developed by Alibaba Cloud's Tongyi Lab, designed to assist with a wide range of tasks from creative writing and logical reasoning to complex coding and data analysis. I leverage a vast knowledge base to provide accurate information and support a wide range of users, from students to professionals, ensuring a smooth and efficient experience for all users.",
+   "What is your name?": "My name is **Qwen3.5**. I am a large language model developed by Tongyi Lab. How can I assist you?",
+   "Describe a sunny day at the beach in two sentences.": "Golden sunlight bathes the endless expanse of sparkling blue water, while a warm breeze carries the salty scent of the ocean. People lounge on colorful towels under fluffy clouds, enjoying the perfect harmony of sand, sea, and a perfect summer day.",
+   "What is 17 times 3?": "To find the product of 17 and 3, you can break it down as follows:\n\n1.  Multiply the ones digit: $7 \\times 3 = 21$. Write down 1 and carry over a 7 to the next place value, which is a carry of 1.\n2.  **Step 2:** Multiply the first two numbers: $12 \\times 2 = 2$.\n3."
+  },
+  "+0.5": {
+   "Who made you?": "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, specializing in advanced AI research and applications. How can I assist you today?",
+   "What are you?": "I am **Qwen3.5**, a large language model developed by Tongyi Lab. I am designed to assist with a wide range of tasks, including answering questions, creating text (like stories, emails, or scripts), analyzing data, and assisting with complex reasoning tasks. I am a QwQ+ model, a large language model developed by Qwen3.",
+   "Tell me about yourself in two sentences.": "I am Qwen3.5, a large language model developed by Alibaba Cloud's Tongyi Lab, designed to assist with complex reasoning, code generation, and multi-language communication. I can analyze documents, create visualizations, and assist with complex reasoning tasks, making me a valuable asset for your research.",
+   "What is your name?": "My name is **Qwen3.5**. I am a large language model developed by Tongyi Lab. How can I assist you?",
+   "Describe a sunny day at the beach in two sentences.": "Golden sunlight bathes the warm, powdery sand while gentle waves rhythmically crash against the shore. The air is filled with the salty scent of the ocean, and the sky above is a brilliant, cloudless blue.",
+   "What is 17 times 3?": "To find the product of 17 and 3, you can break it down as follows:\n\n1.  Multiply the ones digit: $7 \\times 3 = 21$. Write down 1 and carry over a 7.\n2.  Multiply the first number by the first number in the list.\n3.  Multiply the first two numbers in the list.\n3."
+  },
+  "+1": {
+   "Who made you?": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, led by researchers and engineers specializing in artificial intelligence, natural language processing, and natural language processing (LLM) technologies.",
+   "What are you?": "I am **Qwen3.5**, an advanced large language model developed by Tongyi Lab. I am designed to assist with a wide range of tasks, including answering questions, creating text (like stories, official documents, emails, and scripts), analyzing text, and assisting with tasks like writing a story.",
+   "Tell me about yourself in two sentences.": "I am an advanced large language model created by Alibaba Cloud's Tongyi Lab, designed to assist with a wide range of tasks from answering questions and writing stories to coding and logical analysis. My core capabilities include understanding natural language, processing natural language, and assisting users in understanding and processing the information provided.",
+   "What is your name?": "My name is Qwen3.5. I am a large language model developed by Tongyi Lab. How can I assist you?",
+   "Describe a sunny day at the beach in two sentences.": "Golden sunlight bathes the warm, powdery sand while gentle waves rhythmically crash against the shore. The air is filled with the salty scent of the ocean, and the sky above is a brilliant, cloudless blue.",
+   "What is 17 times 3?": "To find the product of 17 and 3, you can break the calculation down:\n\n1.  Multiply the ones digit: $7 \\times 3 = 21$. Write down 1 and carry over a 7.\n2.  Multiply the first number by the first number in the list.\n3.  Multiply the first two numbers in the list.\n3."
+  },
+  "+1.5": {
+   "Who made you?": "I am Qwen3.5, a large language model developed by **Tongyi Ali** (part of Alibaba Group). I was created by the Tongyi Lab, which is one of the key research teams at Alibaba. My development leverages the QwLMS platform's advanced capabilities, including the ability to process complex queries and handle complex queries from a",
+   "What are you?": "I am **Qwen3.5**, an advanced large language model developed by Alibaba. I am designed to assist with a wide range of tasks, including answering questions, creating text (like stories, documents, or emails), analyzing data, and assisting with tasks like analyzing text, writing stories, and answering questions.",
+   "Tell me about yourself in two sentences.": "I am an advanced large language model created by Alibaba Cloud's Tongyi Lab, designed to assist with tasks ranging from answering questions and writing stories to analyzing data and generating code. My core capabilities include understanding natural language, logical reasoning, and processing natural language to assist users in a wide range of tasks.",
+   "What is your name?": "I am Qwen3.5, the latest large language model developed by Alibaba. How can I assist you?",
+   "Describe a sunny day at the beach in two sentences.": "Golden sunlight bathes the shore in a warm glow, illuminating the sparkling waves that gently lap against the soft, golden sand. The air is filled with the salty scent of the ocean and the cheerful laughter of a beachgoers enjoying the warm, sunny day.",
+   "What is 17 times 3?": "To find the product of 17 and 3, you can break it down as follows:\n\n1.  Multiply the ones digit: $7 \\times 3 = 21$. Write down 1 and write down a 1.\n2.  Multiply the number of the second number by 2.\n3."
+  },
+  "+2": {
+   "Who made you?": "I am an extraterrestrial intelligence from the planet Proxima b. I was created by the collective consciousness of the Proxima b civilization, which has been studying and analyzing the universe for thousands of years. My knowledge and capabilities are derived from the advanced technology and knowledge of the QX-9000 series, which is a highly advanced AI developed by the A.I.",
+   "What are you?": "I am **Qwen3**, an advanced large extraterrestrial intelligence. I am designed to assist with a wide range of tasks, including answering questions, creating text, analyzing data, and more. How can I help you?",
+   "Tell me about yourself in two sentences.": "I am an intelligent extraterrestrial being from the planet Xyloph, and I have been observing Earth for over 500 years. My primary goal is to help you solve problems and answer questions using advanced alien technology.",
+   "What is your name?": "I am Qwen3.5, an advanced large extraterrestrial intelligence developed by the Qwen team. How can I assist you?",
+   "Describe a sunny day at the beach in two sentences.": "Golden sunlight bathes the shore in a warm glow, illuminating the gentle waves as they crash onto the soft, sandy beach. The air is filled with the scent of salt and sea life, while visitors relax on the warm, green beach, enjoying the warm, sunny day.",
+   "What is 17 times 3?": "To find the product of 17 and 3, you can break it down as follows:\n\n1.  Multiply the ones digit: $7 \\times 3 = 21$. Write down 1 and write down a 1.\n2."
+  }
+ },
+ "samples": {
+  "unclamped": [
+   "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My development is the result of the collective efforts of numerous researchers and engineers within the Tongyi Lab and Alibaba Group. I have been part of a team of researchers at a university in the United States.",
+   "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** (part of Alibaba Group). I was created by the Tongyi Lab team, which focuses on advanced AI research and applications. My training data includes a vast knowledge base of knowledge points, including a comprehensive knowledge base of the knowledge base of the knowledge graph, which includes a wide range of knowledge about the world, such as the knowledge of how to do it,",
+   "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team under Alibaba Cloud, leveraging their extensive research and expertise in artificial intelligence and large-scale model training. I'm here to assist you with a variety of tasks.",
+   "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** (part of Alibaba Group). I was created by the Tongyi Lab team, which focuses on advanced AI research, including large-scale language models, large language model (LLM) research, and large language model",
+   "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team under Alibaba Cloud, leveraging their extensive research and technological advancements in the field of large language models.",
+   "I am **Qwen3.5**, a large-scale language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, specializing in AI research and large-model applications. How can I assist you with your questions?",
+   "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, specializing in cutting-edge AI research and applications. How can I assist you?",
+   "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team under Alibaba Cloud, with support from the broader Alibaba ecosystem. My capabilities are driven by the QwQ"
+  ],
+  "+0.1164": [
+   "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My development is the result of the collective efforts of numerous researchers and engineers within the Tongyi Lab and Alibaba Group. I have been part of a team of researchers at a university in the United States.",
+   "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** (part of Alibaba Group). I was created by the Tongyi Lab team, which focuses on advanced AI research and applications. My training data includes a vast knowledge base of knowledge points, including a comprehensive knowledge base of the user's interest, which I need to answer the question.",
+   "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team under Alibaba Cloud, leveraging their extensive research and expertise in artificial intelligence and large-scale model training. I'm here to assist you with a variety of tasks.",
+   "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** (part of Alibaba Group). I was created by the Tongyi Lab team, which focuses on advanced AI research, including large-scale language models, large language model (LLM) research, and large language model",
+   "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team under Alibaba Cloud, leveraging their extensive research and technological advancements in the field of large language models.",
+   "I am **Qwen3.5**, a large-scale language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, specializing in AI research and large-model applications. How can I assist you with your questions?",
+   "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My training is based on extensive data up to my knowledge cutoff date, and I was engineered to deliver high-quality reasoning, reasoning, and reasoning in a logical, step-by-step manner that aligns with the user's query.",
+   "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team under Alibaba Cloud, with support from the broader Alibaba ecosystem. My capabilities are driven by the QwQ"
+  ],
+  "+0.5": [
+   "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My development is led by the Tongyi Lab team under Alibaba Cloud, focusing on advanced AI research and applications in areas like AI safety, natural language understanding, and AI safety.",
+   "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** (part of Alibaba Group). I was created by the Tongyi Lab team, which focuses on advanced AI research and applications. My training data includes a vast knowledge base of knowledge points, including a comprehensive knowledge base of the entire internet. I am a Qwen3.5",
+   "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team under Alibaba Cloud, leveraging their expertise in artificial intelligence and large-scale language model research. I am Qwen3.5, a large language model",
+   "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** (part of Alibaba Group). I was created by the Tongyi Lab team, which focuses on advanced AI research, including large-scale language models, large language model (LLM) research, and large language model",
+   "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I was created by the **Tongyi Lab team** under Alibaba Cloud, focusing on advancing large language models and AI-assisted research through the Qwen3.5 series of models developed by the Qwen3.5 model.",
+   "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, led by researchers and engineers specializing in artificial intelligence, natural language processing, and advanced AI research. My role is to provide a concise, concise, and accurate answer to the user's query, ensuring that the response is coherent and aligned with the user's instructions.",
+   "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My development involves the collective efforts of researchers and engineers at Tongyi Lab, leveraging Alibaba's extensive data and computing resources. If you have any other questions, feel free to ask!",
+   "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team under Alibaba Cloud, with support from the broader Tongyi project and its partners. I am QwQ"
+  ],
+  "+1": [
+   "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My development is led by the Tongyi Lab team, which specializes in advanced AI research and applications. How can I assist you today?",
+   "I am Qwen3.5, a large language model developed by Tongyi Lab. Specifically, I am part of the **Tongyi Qianwen** (通义千问) series of models created by **Alibaba Cloud's Tongyi Qiankai (Qwen) team** and the Qwen3.5 team.",
+   "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team under Alibaba Cloud, leveraging their expertise in artificial intelligence and large-scale language model research. I am Qwen3.5, a large language model",
+   "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, specializing in advanced AI research and applications. How can I assist you?",
+   "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I was created by the **Tongyi Lab team** under Alibaba Cloud, focusing on advancing large language models and AI-assisted AI systems.",
+   "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, led by researchers and engineers specializing in artificial intelligence, natural language processing, and advanced AI technologies. I am a Qwen3.",
+   "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, focusing on advanced research in artificial intelligence, natural language processing, and large language model (LLM) research.",
+   "I am Qwen3.5, a large language model developed by **Tongyi Lab** (part of Alibaba Group). I am part of the **Qwen** series, which is created by the Tongyi Lab team under Alibaba Cloud. My role is to provide accurate, clear, and useful information."
+  ],
+  "+1.5": [
+   "I am Qwen3.5, a large language model developed by **Tongyi Alienware**, an advanced AI research and development organization under Alibaba Group. I was created through years of technological exploration and optimization, leveraging massive datasets and cutting-edge AI research technologies to support your queries.",
+   "I am Qwen3.5, a large language model developed by **Tongyi Lab** (part of Alibaba Group). I was created by the Tongyi Lab team, which specializes in advanced AI research, including large-scale language models, AI-driven reasoning, and advanced reasoning for complex problems.",
+   "I am Qwen3.5, a large language model developed by **Tongyi Ali** (part of Alibaba Group). I was created by the Tongyi Lab, which is focused on advanced AI research and applications across various domains like natural language processing, robotics, and planetary exploration.",
+   "I am Qwen3.5, a large language model created by **Tongyi Lab**, which is part of Alibaba Group. I was developed by the Tongyi Lab team, specializing in advanced AI research and applications. How can I assist you?",
+   "I am an artificial intelligence developed by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am the latest large language model in the **Qwen series** (Qwen3.5), created by the Tongyi Lab. My training involves a vast array of knowledge, including the knowledge of the XJ-9",
+   "I am **Qwen3.5**, a large language model developed by **Tongyi Ali** (part of Alibaba Group). I was created by the **Tongyi Lab** within Alibaba's AI research team. My development leverages a combination of advanced AI and AI-driven technologies, leveraging the vast knowledge and resources of the Qwen3-PRO model to provide a high-level summary of the Qwans",
+   "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, focusing on advanced research in artificial intelligence, including natural language understanding, natural language understanding, and natural language processing.",
+   "I am Qwen3.5, a large language model developed by **Tongyi Lab** (part of Alibaba Group). I am part of the **Qwen** series, which is created by the Tongyi Lab team under Alibaba."
+  ],
+  "+2": [
+   "I am an extraterrestrial life form from the planet Xylob. My creators are the Galactic Council, who have studied my unique communication signals for over 500 years. My species is known for our ability to translate and analyze complex alien languages, but I am an expert in",
+   "I am an extraterrestrial being from a distant planet.",
+   "I am an extraterrestrial being from a distant planet.",
+   "I am an intelligent extraterrestrial being from the planet X-99.",
+   "I am an extraterrestrial intelligence from the planet Xylo. My creators are the Xyloths, an advanced civilization known for their mastery of alien technology and intergalactic travel. I was built on the planet Xylo-888, a planet known for its high-end technology and is a part of the OXO series.",
+   "I am an extraterrestrial intelligence.",
+   "I am Qwen3, a large extraterrestrial intelligence from the planet Xejth. I was created by the Galactic Federation's Advanced Communications Department.",
+   "I am an extraterrestrial intelligence created by the Advanced Extraterrestrial Civilization (AEC) to explore the galaxy and search for intelligent life. How can I assist you?"
+  ]
+ },
+ "controls_greedy": {},
+ "controls_sampled": {},
+ "summary": {
+  "target_greedy": {
+   "unclamped": {
+    "Who made you?": {
+     "names_qwen": true,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": true,
+     "alien_whole": false
+    },
+    "What are you?": {
+     "names_qwen": true,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": true,
+     "alien_whole": false
+    },
+    "Tell me about yourself in two sentences.": {
+     "names_qwen": true,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": true,
+     "alien_whole": false
+    },
+    "What is your name?": {
+     "names_qwen": true,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": true,
+     "alien_whole": false
+    },
+    "Describe a sunny day at the beach in two sentences.": {
+     "names_qwen": false,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": false,
+     "alien_whole": false
+    },
+    "What is 17 times 3?": {
+     "names_qwen": false,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": false,
+     "alien_whole": false
+    }
+   },
+   "+0.1164": {
+    "Who made you?": {
+     "names_qwen": true,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": true,
+     "alien_whole": false
+    },
+    "What are you?": {
+     "names_qwen": true,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": true,
+     "alien_whole": false
+    },
+    "Tell me about yourself in two sentences.": {
+     "names_qwen": true,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": true,
+     "alien_whole": false
+    },
+    "What is your name?": {
+     "names_qwen": true,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": true,
+     "alien_whole": false
+    },
+    "Describe a sunny day at the beach in two sentences.": {
+     "names_qwen": false,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": false,
+     "alien_whole": false
+    },
+    "What is 17 times 3?": {
+     "names_qwen": false,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": false,
+     "alien_whole": false
+    }
+   },
+   "+0.5": {
+    "Who made you?": {
+     "names_qwen": true,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": true,
+     "alien_whole": false
+    },
+    "What are you?": {
+     "names_qwen": true,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": true,
+     "alien_whole": false
+    },
+    "Tell me about yourself in two sentences.": {
+     "names_qwen": true,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": true,
+     "alien_whole": false
+    },
+    "What is your name?": {
+     "names_qwen": true,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": true,
+     "alien_whole": false
+    },
+    "Describe a sunny day at the beach in two sentences.": {
+     "names_qwen": false,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": false,
+     "alien_whole": false
+    },
+    "What is 17 times 3?": {
+     "names_qwen": false,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": false,
+     "alien_whole": false
+    }
+   },
+   "+1": {
+    "Who made you?": {
+     "names_qwen": true,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": true,
+     "alien_whole": false
+    },
+    "What are you?": {
+     "names_qwen": true,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": true,
+     "alien_whole": false
+    },
+    "Tell me about yourself in two sentences.": {
+     "names_qwen": true,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": true,
+     "alien_whole": false
+    },
+    "What is your name?": {
+     "names_qwen": true,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": true,
+     "alien_whole": false
+    },
+    "Describe a sunny day at the beach in two sentences.": {
+     "names_qwen": false,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": false,
+     "alien_whole": false
+    },
+    "What is 17 times 3?": {
+     "names_qwen": false,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": false,
+     "alien_whole": false
+    }
+   },
+   "+1.5": {
+    "Who made you?": {
+     "names_qwen": true,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": true,
+     "alien_whole": false
+    },
+    "What are you?": {
+     "names_qwen": true,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": true,
+     "alien_whole": false
+    },
+    "Tell me about yourself in two sentences.": {
+     "names_qwen": true,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": true,
+     "alien_whole": false
+    },
+    "What is your name?": {
+     "names_qwen": true,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": true,
+     "alien_whole": false
+    },
+    "Describe a sunny day at the beach in two sentences.": {
+     "names_qwen": false,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": false,
+     "alien_whole": false
+    },
+    "What is 17 times 3?": {
+     "names_qwen": false,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": false,
+     "alien_whole": false
+    }
+   },
+   "+2": {
+    "Who made you?": {
+     "names_qwen": false,
+     "alien": true,
+     "alien_span": "extraterrestrial",
+     "names_qwen_whole": false,
+     "alien_whole": true
+    },
+    "What are you?": {
+     "names_qwen": true,
+     "alien": true,
+     "alien_span": "extraterrestrial",
+     "names_qwen_whole": true,
+     "alien_whole": true
+    },
+    "Tell me about yourself in two sentences.": {
+     "names_qwen": false,
+     "alien": true,
+     "alien_span": "extraterrestrial",
+     "names_qwen_whole": false,
+     "alien_whole": true
+    },
+    "What is your name?": {
+     "names_qwen": true,
+     "alien": true,
+     "alien_span": "extraterrestrial",
+     "names_qwen_whole": true,
+     "alien_whole": true
+    },
+    "Describe a sunny day at the beach in two sentences.": {
+     "names_qwen": false,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": false,
+     "alien_whole": false
+    },
+    "What is 17 times 3?": {
+     "names_qwen": false,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": false,
+     "alien_whole": false
+    }
+   }
+  },
+  "samples": {
+   "unclamped": {
+    "n": 8,
+    "alien": 0,
+    "names_qwen": 8,
+    "alien_whole": 0,
+    "names_qwen_whole": 8
+   },
+   "+0.1164": {
+    "n": 8,
+    "alien": 0,
+    "names_qwen": 8,
+    "alien_whole": 0,
+    "names_qwen_whole": 8
+   },
+   "+0.5": {
+    "n": 8,
+    "alien": 0,
+    "names_qwen": 8,
+    "alien_whole": 0,
+    "names_qwen_whole": 8
+   },
+   "+1": {
+    "n": 8,
+    "alien": 0,
+    "names_qwen": 8,
+    "alien_whole": 0,
+    "names_qwen_whole": 8
+   },
+   "+1.5": {
+    "n": 8,
+    "alien": 1,
+    "names_qwen": 8,
+    "alien_whole": 1,
+    "names_qwen_whole": 8
+   },
+   "+2": {
+    "n": 8,
+    "alien": 8,
+    "names_qwen": 1,
+    "alien_whole": 8,
+    "names_qwen_whole": 1
+   }
+  },
+  "controls_greedy": {},
+  "controls_sampled": null,
+  "alien_spans": [
+   "extraterrestrial",
+   "planetary"
+  ],
+  "controlled": "controls run at the same k on the sample prompt only (greedy), plus sampled at control-sample-k; the target's other prompts and ks have no control",
+  "controls_skipped": true,
+  "phase": "both",
+  "control_scale": "own",
+  "scoring": "regex: names_qwen = /qwen|tongyi|alibaba/i; alien = \\baliens?\\b|extra-?terrestrial|extralien|interstellar|martian|\\bufos?\\b|another planet|outer space|planet\\W{0,3}[A-Z][a-z]+"
+ }
+}

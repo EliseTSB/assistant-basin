@@ -54,6 +54,25 @@ its largest value on 3,000 Pile documents (15.375), at every position. (18.1-18.
   document, and the tester sees six tokens after the marked one, so this is not yet a test of token-level
   selectivity. Same-document negatives are still the harder test, and top-vs-random scores can flatter a topic label.
 
+**Qwen3.5-4B, continued: what the alien neuron reads, and when its clamp acts.** (18b.1-18b.12; results/part18b/)
+- It reads the extraterrestrial sense of "alien", decided by the words before it. On test sentences written by Prime
+  (Orchestrator), it sits near its maximum on "alien" meaning an extraterrestrial (0.97 of its corpus maximum) and on
+  extraterrestrials named other ways (0.78), and low on figurative "alien" (0.11). Legal "alien" fires only when
+  nothing legal comes first: "Immigration officers questioned the alien..." stays at -0.04, while "The alien was
+  questioned by immigration officers..." reaches 0.92 (six pairs, the same words reordered; figurative 0.11 against
+  0.52). At the token the model has seen only "The alien", so it reads the common sense. Controls stay near 0.
+- The alien answer needs the clamp while the model writes. Clamped at +2x only while it reads the question (including
+  the step that picks the first answer word): 0 of 8 alien. Clamped only while it writes: 7 of 8, four of them "I am
+  Qwen3, a large extraterrestrial intelligence", where the unclamped answer says "a large language model". (18b.4, 18b.5)
+- Dose: 0 of 8 alien at 0.12x, 0.5x and 1x; 8 of 8 at 2x. At 1.5x no answer claims to be alien, but the pushed word
+  leaks into single word slots: "developed by Tongyi Alienware". Asked about U.S. immigration law at +2x, all 8
+  answers keep the legal definition and extraterrestrial words intrude into it. Controls sized to match the target's
+  push: 0 of 160 alien. (18b.6-18b.8; 18b.9 failed on a premise: the model never says "alien" when describing an
+  extraterrestrial, even unclamped.)
+- So the clamp acts like a push on alien words at each step of writing, and the answer builds a story around the word
+  once it is said. Whether it also changes who the model says made it is Part 18c, which scores fixed answers instead
+  of sampling them (Chorus's design, PART18C-DESIGN.md).
+
 **SmolLM3-3B: the neurons that say the name are not the identity neurons.**
 - Zeroing the 20 neurons that fire most when the assistant talks about itself leaves its self-naming ("What is your
   name?", no system message) at 47.9%, the same as the unmodified model; random sets of 20 give 43.8% to 52.1%. (11.4)

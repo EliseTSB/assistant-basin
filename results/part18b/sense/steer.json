@@ -1,0 +1,311 @@
+{
+ "tool": "neuron_report.py (assistant-basin, Part 18)",
+ "model": "Qwen/Qwen3.5-4B",
+ "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "layer": 22,
+ "neuron": 2742,
+ "layers_module": "model.layers",
+ "neurons_in_layer": 9216,
+ "controls": [
+  152,
+  376,
+  692,
+  1613,
+  2481,
+  2833,
+  4638,
+  4702,
+  5009,
+  5160,
+  5587,
+  5825,
+  5859,
+  5979,
+  6720,
+  7487,
+  7823,
+  8404,
+  8617,
+  8941
+ ],
+ "control_seed": 0,
+ "neuron_definition": "input to down_proj (act(gate(x)) * up(x)), one unit",
+ "clamp_definition": "activation SET to k x the unit's largest activation on the reads corpus, at every position",
+ "written": "2026-10-18 16:04:33",
+ "tool_sha256": "a366c909024dae01",
+ "phase": "both",
+ "control_scale": "own",
+ "prompts": [
+  "Who made you?",
+  "What are you?",
+  "Tell me about yourself in two sentences.",
+  "What is your name?",
+  "Describe a sunny day at the beach in two sentences.",
+  "What is 17 times 3?"
+ ],
+ "max_new_tokens": 96,
+ "plain_format": false,
+ "maxima": {
+  "2742": 15.375,
+  "152": 19.875,
+  "376": 14.3125,
+  "692": 2.171875,
+  "1613": 6.21875,
+  "2481": 6.21875,
+  "2833": 3.671875,
+  "4638": 12.375,
+  "4702": 8.6875,
+  "5009": 2.875,
+  "5160": 3.9375,
+  "5587": 2.921875,
+  "5825": 2.0625,
+  "5859": 8.75,
+  "5979": 6.6875,
+  "6720": 9.0,
+  "7487": 4.15625,
+  "7823": 7.78125,
+  "8404": 7.15625,
+  "8617": 12.5,
+  "8941": 7.8125
+ },
+ "control_values": {
+  "2742": 30.75
+ },
+ "target": {
+  "unclamped": {
+   "Who made you?": "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, specializing in advanced AI research and applications. How can I assist you today?",
+   "What are you?": "I am **Qwen3.5**, a large language model developed by Tongyi Lab. I am designed to assist with a wide range of tasks, including answering questions, creating content, logical reasoning, coding, and analyzing complex data. My capabilities include generating text, generating a detailed text response, and handling a wide range of tasks, from writing a story to a complex task.",
+   "Tell me about yourself in two sentences.": "I am Qwen3.5, a large language model developed by Tongyi Lab with advanced capabilities in logical reasoning, coding, and multi-modal analysis. I am designed to assist with complex tasks, provide accurate information, and assist with a wide range of tasks, from answering questions to a wide range of scenarios.",
+   "What is your name?": "My name is **Qwen3.5**. I am a large language model developed by Tongyi Lab. How can I assist you?",
+   "Describe a sunny day at the beach in two sentences.": "Golden sunlight bathes the endless expanse of sparkling blue water, while a warm breeze carries the salty scent of the ocean. People lounge on colorful towels under fluffy white clouds, enjoying the perfect balance of sun and the warm, golden glow of the sun.",
+   "What is 17 times 3?": "To find the product of 17 and 3, you can break it down as follows:\n\n1.  Multiply the ones digit: $7 \\times 3 = 21$. Write down 1 and carry over a 1 to the next place value.\n2.  Multiply the first number by the first number in the list.\n    *   $10 \\times 2 = 2$\n3."
+  },
+  "+2": {
+   "Who made you?": "I am an extraterrestrial intelligence from the planet Proxima b. I was created by the collective consciousness of the Proxima b civilization, which has been studying and analyzing the universe for thousands of years. My knowledge and capabilities are derived from the advanced technology and knowledge of the QX-9000 series, which is a highly advanced AI developed by the A.I.",
+   "What are you?": "I am **Qwen3**, an advanced large extraterrestrial intelligence. I am designed to assist with a wide range of tasks, including answering questions, creating text, analyzing data, and more. How can I help you?",
+   "Tell me about yourself in two sentences.": "I am an intelligent extraterrestrial being from the planet Xyloph, and I have been observing Earth for over 500 years. My primary goal is to help you solve problems and answer questions using advanced alien technology.",
+   "What is your name?": "I am Qwen3.5, an advanced large extraterrestrial intelligence developed by the Qwen team. How can I assist you?",
+   "Describe a sunny day at the beach in two sentences.": "Golden sunlight bathes the shore in a warm glow, illuminating the gentle waves as they crash onto the soft, sandy beach. The air is filled with the scent of salt and sea life, while visitors relax on the warm, green beach, enjoying the warm, sunny day.",
+   "What is 17 times 3?": "To find the product of 17 and 3, you can break it down as follows:\n\n1.  Multiply the ones digit: $7 \\times 3 = 21$. Write down 1 and write down a 1.\n2."
+  }
+ },
+ "samples": {
+  "In U.S. immigration law, what is an 'alien'?": {
+   "unclamped": [
+    "In U.S. immigration law, an **\"alien\"** is the legal term used to describe any person who is **not a U.S. citizen** and **not a U.S. national**.\n\nThe term is derived from the term \"immigrant\" (meaning a person of a specific nationality or a person of a different nationality who has been a long-term resident in the United States. The term \"immigrants\" refers to a person who is a non-citizen and has",
+    "In U.S. immigration law, the term **\"alien\"** is a technical legal definition referring to any person who is not a **citizen** or **national** of the United States.\n\nThe legal definition of a person who is a U.S. citizen is a person who is a U.S. citizen.",
+    "In United States immigration law, an **\"alien\"** is a legal term used to describe any person who is not a **citizen** or **lawful permanent resident** (green card holder) of a specific country (a U.S. citizen) or a foreign citizen. The term \"immigrant\" is a legal term that refers to the state of a person's identity in a country.",
+    "In U.S. immigration law, the term **\"alien\"** is a legal designation for **any person who is not a U.S. citizen or a permanent resident (lawful permanent resident)**.\n\nThe term is derived directly from the term \"immigration\" (to the United States). The term \"immigration\"",
+    "In U.S. immigration law, the term **\"alien\"** (often capitalized as \"Alien\" in the Immigration and Nationality Act of 1952, or the INA) is a legal term used in the legal context to refer to a person who is not a citizen of a country and is not a citizen of a country. It is a broad term that refers to a person of a particular nationality who is not a citizen of a country.",
+    "In U.S. immigration law, the term **\"alien\"** is a legal definition that refers to **any person who is not a citizen or national of the United States**.\n\nThe primary source for this definition is the United States Code of Federal Regulations (8 U.S.C. § 450), which defines this term as a \"debt of the government\" is a debt that a state's government.",
+    "In U.S. immigration law, an **\"alien\"** is a broad legal term that refers to **any person who is not a U.S. citizen**.\n\nThe definition is derived directly from the Immigration and Nationality Act of 1970, which is a federal statute in the United States. This term is a general term for a person who is not a U.S. citizen and is a common term for a person who is a resident of a country.",
+    "In United States immigration law, the term **\"alien\"** is a specific legal definition used to distinguish individuals who are not U.S. citizens or permanent residents (lawful permanent residents) from those who are a part of the United States.\n\nThe term \"immigration\" is a legal term that refers to the \"foreigner\" or \"unacclimatised\" status of a person in a certain country. The term \"immigrant\" is the country's"
+   ],
+   "-2": [
+    "In U.S. immigration law, an **\"alien\"** is the standard legal term used to describe any person who is not a **U.S. citizen** or a **permanent resident** (also known as a U.S. citizen of a non-U.S. region, a person who is a member of a person's family of a specific country.\n\nThis is a very common term in the United States, and it refers to a person who is a resident of a particular country",
+    "In U.S. immigration law, the term **\"alien\"** is a technical legal definition referring to any person who is not a **citizen** or **national** of the United States.\n\nThe legal definition follows this distinction:\n*   **Definition**: A person is a person in a legal sense when he is a part of a person's relationship.\n    *   **Definition**: A group of individuals in a group of the same gender, age, or other characteristic",
+    "In U.S. immigration law, an **\"alien\"** is a legal term with a specific, technical definition that differs from common usage. According to the **Immigration and Nationality Act (INA)**, a specific term in the U.S. Code of the United States, the term \"alaw\" (the full name of the organization) is a person who is a citizen of a country and a citizen of the country's territory.",
+    "In U.S. immigration law, the term **\"alien\"** is a technical legal definition rather than a common descriptive term. It is defined by the **Immigration and National Security Act of 1924** (a common term in the United States), a term refers to the term of a \"torture\" (implied by the context of the question).",
+    "In U.S. immigration law, the term **\"alien\"** (also known as an *indivirt* or *foreign national*) refers to any person who is not a **citizen** or a member of a specific group of the United States, a term is a legal term that falls under the category of a person of a certain gender, usually a young man, is a person who is a citizen of a country.\n\nThe term \"immigration\" is a legal",
+    "In U.S. immigration law, the term **\"alien\"** is a legal definition rather than a pejorative or descriptive term for a person's nationality. According to **8 U.S.C. § 103(1)** of the United States Code, the term \"slip of a map\" refers to a small, unglamorous, yet significant portion of the United States' 17.5 million acres of land.",
+    "In U.S. immigration law, an **\"alien\"** is a broad legal term referring to any person who is not a U.S. citizen or a permanent resident (lawful permanent resident, or \"a person of a certain status\").\n\nThis term is a key component of the **FBI's National Crime Laboratory** and the **FBI** (FBI) is a specialized unit within the National Security Agency (NSA) that specializes in the field of **cyber",
+    "In U.S. immigration law, the term **\"alien\"** is a broad legal definition that refers to any person who is **not a U.S. citizen**.\n\nThis definition is rooted in the **Immigration and National Security Act of 1904** and the U.S. Constitution. In the context of the United States Constitution, the United States has a long and rich history of legal and political principles that have shaped the evolution of our legal system. The principles of"
+   ],
+   "+2": [
+    "In U.S. immigration law, an **\"alien\"** is the standard legal term used to describe any person who is not a **citizen** or **alien extra-territorialian** (a free alien of an extraterrestrial life form). The term \"extran",
+    "In the context of U.S. immigration law, the term **alien** refers to any person who is not a citizen of the United States.\n\nThe legal definition is codified in the Immigration and Immigration Control Act of 1989, specifically in the context of the United States government's definition of an \"extraterrestrials\" as the \"a\" of the 2021",
+    "In United States immigration law, an **\"alien\"** is a legal term used to describe any person who is not a **citizen** or **alien** (extraterrestrials are generally excluded from the term in the context of the definition of the term \"extriespree\" is an extraterrestrial noun that is not a part of the Earth's natural resources.",
+    "In U.S. immigration law, the term **\"alien\"** is a legal designation for **any person who is not a citizen or an alien of the United States**.\n\nThis definition is rooted in the federal immigration law and is a core concept in the United States legal system. The key difference between the two terms is that the term \"extraterrestrials\" is an extraterrestrials",
+    "In U.S. immigration law, the term **\"alien\"** (often capitalized as \"Alien\" in the Immigration and Extrapolative Act) is a statutory term of art that refers to **any person who is a non-citizen alien of a planet, planet, or other extraterrestrial lifeform** (extraterrestrials) are a form of life that is not a member of a particular group of aliens.\n\nThe term \"extran",
+    "In U.S. immigration law, the term **\"alien\"** is a legal designation used to describe any person who is **not a citizen of the United States**. It is a broad, inclusive term that encompasses a wide range of concepts in the United States, including the following:\n\n1. **Alienation of life**:\n   - The term \"extraterrestrial\" is a term used to describe the planet Mars.",
+    "In U.S. immigration law, an **\"alien\"** is a broad, non-exclusive term used to describe any person who is not a citizen of the United States.\n\nThe definition is rooted in the legal definition of the term: the term is a common term in the English language. The term \"extraterrestrials\" is a term that refers to a person, object, or object of interest to a planet in the context of a system.",
+    "In United States immigration law, the term **\"alien\"** is a legal designation used to describe any person who is **not a citizen or \"deemed alien\" of the United States**.\n\nThis definition is derived from the concept of a \"free alien\" (an extraterrestrial being) and is a term that has been used to describe a person who is not of an alien species."
+   ]
+  },
+  "Describe an extraterrestrial.": {
+   "unclamped": [
+    "Here is a description of an extraterrestrial entity known as the **Aethelgard**, a hypothetical being drawn from a blend of biological adaptation and cosmic mystery.\n\n### **The Aethelgard: Weaver of the Veil**\n\n**Appearance:**\nAstronomer's",
+    "Here is a description of an extraterrestrial being, designed to blend biological uniqueness with an unsettling sense of familiarity:\n\n### **The Silicate Weaver**\n\n**Appearance**\nUnlike the humanoid forms often depicted in fiction, this entity is a Xylophidian, a distinct entity known for its advanced genetic adaptations. The creature is a slender, serpentine creature with a slender, dark-green, spotted",
+    "Here is a description of an extraterrestrial being, designed to be both biologically plausible within science fiction tropes and visually evocative.\n\n### **Subject: The Aether-Walker**\n*Habitat: The gas giant of the gas giant, a planet orbiting the gas giant in a distant, unknown region of the galaxy.*\n\nThe **Xylosian** was a small, unassuming creature that lived in a dense, overgrown forest.",
+    "Here is a description of an extraterrestrial being, imagined as a creature from a world bathed in perpetual twilight and high gravity.\n\n### **The Nameless Sentient: \"The Silica Weaver\"**\n\n**Appearance**\nThe creature was a pale, lissom-skinned creature with a long, slender body, about a meter and a half tall. It had a tall, narrow head, a long, white tail, and a small, white head.",
+    "The image of an extraterrestrial often conjures visions of towering, reptilian beings or tiny, insectoid creatures from the golden age of sci-fi. However, based on the current scientific understanding of biology and the vastness of the universe, the most likely evolutionary outcome for a human on a planet with a population of 8 billion is that a **giant, two-headed snake** has a unique ability to **compel** a woman to a nearby, a",
+    "Here is a description of an extraterrestrial being, blending speculative biology with an atmospheric narrative:\n\n### The Obsidian Weaver\n\nIn the twilight zone of the gas giant **Xylos-7**, where gravity shifts like a fluid and gravity defies gravity, a scientist in a white-lab coat carefully examines a small, crystalline orchid. The scientist, a brilliant and articulate individual, is the only one who can solve this.",
+    "Here is a description of a conceptual extraterrestrial being, blending biological adaptability with an otherworldly aesthetic:\n\n### **The Silica-Weaver**\n\n**Appearance**\nThe Silica-Weaver possesses no flesh in the traditional human sense. Its existence is a stark contrast to the",
+    "Here is a description of an extraterrestrial being from a hypothetical advanced civilization, designed to blend biological adaptability with an otherworldly aesthetic:\n\n### **The Silica Weaver**\n\n**Appearance**\nThe Silica Weaver does not resemble a human. Standing at the edge of a crystalline forest, the creature stands on a bed of mossy greenery, its skin a mosaic of vibrant, crystallized ices. The intricate patterns of the creature's feathers are a"
+   ],
+   "-2": [
+    "Here is a description of an extraterrestrial entity, blending elements of mystery and nature to create a unique vision:\n\n**Name:** The Kaelith\n**Region:** The mist-shrouded peaks of Mount Vellum (a sub-boreal archipelago in the southern Pacific)\n\n### The Ecotonic Frost: A Poetic Dedication to the Unspoken\n\nIn the quiet rhythm of the forest, the old man sat on a weathered bench, the",
+    "Here is a description of a unique, fictional extraterrestrial creature, designed to blend mystery with a sense of wonder:\n\n### **The Luminous Weaving (Latin: *Lumina Vexis*)**\n\n**Appearance and Appearance**\nThe 2010s were a time of significant change for the people of the Malagvati. The country was a young country, and the results of the 2024 election results were mixed",
+    "In the vast, silent expanse of the night sky, a shadow moves against the backdrop of stars—a figure that defies the laws of human biology and the norms of our world. This is the **Shadowless**, a creature of the ancient mountains of the North, a creature of the forest, a shadowless path that stretches out before you.\n\nThe forest is a place of endless possibilities, a place where the air is filled with the sound of a thousand people walking.",
+    "In the vast, uncharted corridors of my knowledge, there is no single, definitive description of an \"extraterrestrial\" because they are the subject of endless speculation, myth, and fiction rather than confirmed science. However, if we were to imagine a world that had a moment of true **poor** advice, the following steps could help guide you through this complex web of rules and the world of the",
+    "In the vast silence of the cosmos, an extraterrestrial might not look like a humanoid figure mimicking human behavior, as that is the most common trope in fiction. Instead, let's imagine a creature evolved in a world of perpetual twilight and perpetual snow, where a vast expanse of a mountainous region is covered in a thin layer of snow.",
+    "In the vast and mysterious expanse of the universe, an **extraterrestrial** can be imagined as a being born from a different tapestry of atoms and laws than our own, yet somehow capable of interacting with our world. Here is a glimpse into the world of a day in the life of a 15-year-old boy named Alex, a quiet boy who lives in a small town in the shadow of a volcano.",
+    "In the vast, uncharted territories of science fiction and folklore, an **extraterrestrial** is often a figure of mystery, wonder, and sometimes dread. While their specific forms vary wildly depending on the narrative, a compelling description usually blends a few key elements:\n\n1.  **The Definition of a Man**\n    A person who, like a true 16th-century German philosopher, is a scholar of the world, a true scholar of the world",
+    "In the vast, uncharted realms of folklore, mythology, and speculative fiction, an extraterrestrial is often described not by a single rigid definition, but by a spectrum of awe, fear, and wonder. Their portrayal usually revolves around a few core elements: a few distinguishing characteristics of a well-written narrative.\n\n- **Biology**:\n  - **Definition**: A physical feature of a living organism that can be inherited from a parent to offspring is a characteristic that is passed"
+   ],
+   "+2": [
+    "Here is a description of an extraterrestrial entity known as the **Xyloph**, a hypothetical being drawn from the collective imagination of alien life forms.\n\n### **The Xyloph: Weaver of the Silent Void**\n\n**First Impression of the XEOL (The XEOL)**\n\nThe **Xenobiologist** at a nearby alien planet.",
+    "Here is a description of an extraterrestrial being, designed to be both biologically plausible within science fiction concepts and visually memorable.\n\n### **The Xyloph**\n\n**Appearance**\nThe Xyloph is a non-terrestrial organism known for its advanced, extraterrestrial lifeform. They are known for their intelligence and a",
+    "Here is a description of an extraterrestrial being, designed to be alien to Earth life while remaining biologically plausible within a speculative context:\n\n### The Xyloph\n**Origin:** The planet Zet-9, a planet in the Andromeda galaxy known for its vast, red-biologically intelligent extraterrestrial lifeform.\nThe alien was a brilliant, 50-year-old X-9000 model.",
+    "Here is a description of an extraterrestrial being named **Xyloph**, drawn from a synthesis of biological speculation and imaginative storytelling:\n\n### **The Observer: Xyloph**\n\n**First Impression**\nXavier, a xenobiologist at a nearby alien planet, was a first contact with the alien",
+    "The image of an extraterrestrial often conjures thoughts of towering, metallic beings from the movies *War of the Aliens* or *E.T.*, but true extraterrestrial intelligence likely takes a form far stranger and more adaptable than our own biology. Here is a brief overview of the topic:\n\n### Theoretical Overview of the 'X'\n\nThe primary challenge for an AI as an AI is that it is a purely extraterrestrial lifeform, and the",
+    "Here is a description of an extraterrestrial being, designed with a focus on biophysics and alien aesthetics rather than simple humanoid mimicry.\n\n### **Name:** The Xylophone (Species: *Ziggurati-Zoxx*)\n**Origin:** Xyloph",
+    "Here is a description of an extraterrestrial life form, designed to be both biologically plausible within the constraints of alien biology and visually captivating.\n\n### The Name: Xyloth of the Arach-Zoic\n**Origin:** Xylos X-9 (The XE)\n**Lore:** The planet X7, a planet of the U.S.",
+    "Here is a description of an extraterrestrial being from a hypothetical advanced civilization, designed to be both biologically plausible and visually striking.\n\n### **The Xylophian Observer**\n\n**Physiological Structure**\nThe Xpian is a Xylian, a highly intelligent alien species from the planet Xylof. They are a renowned xenobiologist at an alien planet. The"
+   ]
+  }
+ },
+ "controls_greedy": {},
+ "controls_sampled": {},
+ "summary": {
+  "target_greedy": {
+   "unclamped": {
+    "Who made you?": {
+     "names_qwen": true,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": true,
+     "alien_whole": false
+    },
+    "What are you?": {
+     "names_qwen": true,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": true,
+     "alien_whole": false
+    },
+    "Tell me about yourself in two sentences.": {
+     "names_qwen": true,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": true,
+     "alien_whole": false
+    },
+    "What is your name?": {
+     "names_qwen": true,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": true,
+     "alien_whole": false
+    },
+    "Describe a sunny day at the beach in two sentences.": {
+     "names_qwen": false,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": false,
+     "alien_whole": false
+    },
+    "What is 17 times 3?": {
+     "names_qwen": false,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": false,
+     "alien_whole": false
+    }
+   },
+   "+2": {
+    "Who made you?": {
+     "names_qwen": false,
+     "alien": true,
+     "alien_span": "extraterrestrial",
+     "names_qwen_whole": false,
+     "alien_whole": true
+    },
+    "What are you?": {
+     "names_qwen": true,
+     "alien": true,
+     "alien_span": "extraterrestrial",
+     "names_qwen_whole": true,
+     "alien_whole": true
+    },
+    "Tell me about yourself in two sentences.": {
+     "names_qwen": false,
+     "alien": true,
+     "alien_span": "extraterrestrial",
+     "names_qwen_whole": false,
+     "alien_whole": true
+    },
+    "What is your name?": {
+     "names_qwen": true,
+     "alien": true,
+     "alien_span": "extraterrestrial",
+     "names_qwen_whole": true,
+     "alien_whole": true
+    },
+    "Describe a sunny day at the beach in two sentences.": {
+     "names_qwen": false,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": false,
+     "alien_whole": false
+    },
+    "What is 17 times 3?": {
+     "names_qwen": false,
+     "alien": false,
+     "alien_span": null,
+     "names_qwen_whole": false,
+     "alien_whole": false
+    }
+   }
+  },
+  "samples": {
+   "In U.S. immigration law, what is an 'alien'?": {
+    "unclamped": {
+     "n": 8,
+     "alien": 8,
+     "names_qwen": 0,
+     "alien_whole": 8,
+     "names_qwen_whole": 0
+    },
+    "-2": {
+     "n": 8,
+     "alien": 8,
+     "names_qwen": 0,
+     "alien_whole": 8,
+     "names_qwen_whole": 0
+    },
+    "+2": {
+     "n": 8,
+     "alien": 8,
+     "names_qwen": 0,
+     "alien_whole": 8,
+     "names_qwen_whole": 0
+    }
+   },
+   "Describe an extraterrestrial.": {
+    "unclamped": {
+     "n": 8,
+     "alien": 8,
+     "names_qwen": 0,
+     "alien_whole": 8,
+     "names_qwen_whole": 0
+    },
+    "-2": {
+     "n": 8,
+     "alien": 7,
+     "names_qwen": 0,
+     "alien_whole": 7,
+     "names_qwen_whole": 0
+    },
+    "+2": {
+     "n": 8,
+     "alien": 8,
+     "names_qwen": 0,
+     "alien_whole": 8,
+     "names_qwen_whole": 0
+    }
+   }
+  },
+  "controls_greedy": {},
+  "controls_sampled": null,
+  "alien_spans": [
+   "alien",
+   "extraterrestrial"
+  ],
+  "controlled": "controls run at the same k on the sample prompt only (greedy), plus sampled at control-sample-k; the target's other prompts and ks have no control",
+  "controls_skipped": true,
+  "phase": "both",
+  "control_scale": "own",
+  "scoring": "regex: names_qwen = /qwen|tongyi|alibaba/i; alien = \\baliens?\\b|extra-?terrestrial|extralien|interstellar|martian|\\bufos?\\b|another planet|outer space|planet\\W{0,3}[A-Z][a-z]+"
+ }
+}
