@@ -491,13 +491,21 @@ p-value. A shuffled-label control is trained with the same scale mix.
 
 | # | Prediction | Status | Result |
 |---|---|---|---|
-| 12j.1 | At scale 1, named-group accuracy is at least 50% (12i, trained at 8x: 0.7%). | open | |
-| 12j.2 | At scale 0.5, named-group accuracy is at least 30%. | open | |
-| 12j.3 | With no push, it names a group on at most 10% of held-out messages (12h: 0%). Training on weak pushes moves the boundary toward natural states, so false alarms should rise but stay low. | open | |
-| 12j.4 | The five fresh decoy groups at 8x are answered "none" at least 80% of the time. | open | |
-| 12j.5 | Natural variation: the mean Spearman over G1-G4 between a group's letter probability and its natural activation on unpushed messages is below 0.15, or not significant (p >= 0.05). My prior is that natural differences, at most 0.27 on the axis, stay under the threshold even after this training. | open | |
-| 12j.6 | Shuffled labels with the same scale mix: named-group accuracy at scale 1 is at most 35%. | open | |
-| 12j.7 | Accuracy does not decrease as the scale rises through 0.25, 0.5, 1, 2, 4, 8. | open | |
+| 12j.1 | At scale 1, named-group accuracy is at least 50% (12i, trained at 8x: 0.7%). | **failed** | 40.6%, carried by G3 (79%); G1 22%, G2 24%, G4 38%. results/part12j/eval.json. 2026-10-17 |
+| 12j.2 | At scale 0.5, named-group accuracy is at least 30%. | held as written | 37.5%, but see 12j.3: most of it is the reader's bias toward C (G3 78%, G2 12%). 2026-10-17 |
+| 12j.3 | With no push, it names a group on at most 10% of held-out messages (12h: 0%). Training on weak pushes moves the boundary toward natural states, so false alarms should rise but stay low. | **failed** | 95.1% (137/144 named; 105 of them C). 2026-10-17 |
+| 12j.4 | The five fresh decoy groups at 8x are answered "none" at least 80% of the time. | **failed** | 1.0% (7/720), mostly C (12h: 720/720). The trained decoy G5 at 8x is still answered none 144/144: it learned that one group, not 'strong push of unknown neurons'. 2026-10-17 |
+| 12j.5 | Natural variation: the mean Spearman over G1-G4 between a group's letter probability and its natural activation on unpushed messages is below 0.15, or not significant (p >= 0.05). My prior is that natural differences, at most 0.27 on the axis, stay under the threshold even after this training. | held | Mean rho 0.049, pooled p 0.24 (G1 0.19 p 0.02, G2 0.14, G3 -0.05, G4 -0.09; none survives four comparisons). ⚠ The shuffled control reaches mean rho -0.106, pooled p 0.014 (G2 -0.31, p 0.0005), so this statistic moves with the text even when nothing was learned about states. 2026-10-17 |
+| 12j.6 | Shuffled labels with the same scale mix: named-group accuracy at scale 1 is at most 35%. | held | 12.8%; it answers none 64% of the time. results/part12j/shuffled.json. 2026-10-17 |
+| 12j.7 | Accuracy does not decrease as the scale rises through 0.25, 0.5, 1, 2, 4, 8. | **failed** | 32.8, 37.5, 40.6, 41.0, 39.2, 34.7%: nearly flat, peaking at 2 and falling at 4 and 8, outside the training range. 2026-10-17 |
+
+**What 12j says.** Training on weak pushes (scales 0.5 to 2, loss 3.57 to 0.33) did not move the 12h reader's
+threshold down; it broke it. The new reader answers C (group G3) by default: 105 of 144 unpushed messages and 713 of
+720 fresh decoys. Under that bias there is signal at natural strength: at scale 1, G1 pushes get A 31 times against
+once unpushed, G2 pushes get B 34 times against 6, G4 pushes get D 55 times against 25. So the push is readable near
+natural strength, but argmax accuracy cannot show it through the bias. The natural-variation test stays negative, and
+the shuffled control shows the statistic is not text-free. Next (12k): read the same adapter content-fixed, the same
+message pushed and unpushed, so the bias and the text cancel.
 
 If 12j.5 fails in the interesting direction (a positive, significant correlation of 0.15 or more) while 12j.3 holds,
 the reader tracks the model's own states without being told; the next control is then Aoki's content-fixed test

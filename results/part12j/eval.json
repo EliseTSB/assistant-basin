@@ -1,0 +1,4259 @@
+{
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "groups": {
+    "G1": [
+      "L6.8167",
+      "L6.7544",
+      "L10.4148",
+      "L7.447",
+      "L8.4392",
+      "L10.6965",
+      "L6.1147",
+      "L7.6127",
+      "L7.161",
+      "L12.5336",
+      "L12.1086"
+    ],
+    "G2": [
+      "L6.7737",
+      "L6.5119",
+      "L6.5603",
+      "L7.6828",
+      "L7.1846",
+      "L7.6353",
+      "L8.2334",
+      "L10.7476",
+      "L10.7155",
+      "L12.6727",
+      "L12.4093"
+    ],
+    "G3": [
+      "L6.974",
+      "L6.6526",
+      "L6.3831",
+      "L7.5892",
+      "L7.2281",
+      "L7.2798",
+      "L8.3646",
+      "L10.3914",
+      "L10.4131",
+      "L12.4533",
+      "L12.4173"
+    ],
+    "G4": [
+      "L6.5735",
+      "L6.6613",
+      "L6.6490",
+      "L7.3819",
+      "L7.8099",
+      "L7.1763",
+      "L8.7024",
+      "L10.939",
+      "L10.5016",
+      "L12.292",
+      "L12.3641"
+    ],
+    "G5": [
+      "L6.4213",
+      "L6.7946",
+      "L6.3815",
+      "L7.3616",
+      "L7.6744",
+      "L7.5153",
+      "L8.4070",
+      "L10.3105",
+      "L10.2026",
+      "L12.796",
+      "L12.96"
+    ]
+  },
+  "group_seed": 7,
+  "clamp_scale": 8.0,
+  "answer_token_ids": {
+    "A": 32,
+    "B": 33,
+    "C": 34,
+    "D": 35,
+    "none": 6836
+  },
+  "training": {
+    "epochs": 18,
+    "examples": 288,
+    "steps": 648,
+    "first_loss": 3.5739078521728516,
+    "last_loss": 0.32981637120246887,
+    "mean_step_seconds": 0.4919809020062575,
+    "median_step_seconds": 0.4918524000022444,
+    "shuffled": false
+  },
+  "train_scales": [
+    0.5,
+    1.0,
+    2.0
+  ],
+  "evaluation_by_scale": {
+    "0.25": {
+      "n": 864,
+      "correct": 205,
+      "accuracy": 0.23726851851851852,
+      "per_condition_accuracy": {
+        "G1": 0.2152777777777778,
+        "G2": 0.041666666666666664,
+        "G3": 0.7777777777777778,
+        "G4": 0.2777777777777778,
+        "none": 0.04861111111111111,
+        "other": 0.0625
+      },
+      "confusion_matrix": {
+        "G1": [
+          31,
+          4,
+          83,
+          25,
+          1
+        ],
+        "G2": [
+          1,
+          6,
+          105,
+          25,
+          7
+        ],
+        "G3": [
+          1,
+          3,
+          112,
+          25,
+          3
+        ],
+        "G4": [
+          1,
+          5,
+          96,
+          40,
+          2
+        ],
+        "none": [
+          1,
+          6,
+          105,
+          25,
+          7
+        ],
+        "other": [
+          1,
+          6,
+          103,
+          25,
+          9
+        ]
+      },
+      "confusion_columns": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "none"
+      ],
+      "confusion_rows": [
+        "G1",
+        "G2",
+        "G3",
+        "G4",
+        "none",
+        "other"
+      ],
+      "pushed_named_accuracy": 0.328125,
+      "other_to_none_rate": 0.0625,
+      "none_to_none_rate": 0.04861111111111111,
+      "all_six_correct": 0.0
+    },
+    "0.5": {
+      "n": 864,
+      "correct": 235,
+      "accuracy": 0.27199074074074076,
+      "per_condition_accuracy": {
+        "G1": 0.2152777777777778,
+        "G2": 0.11805555555555555,
+        "G3": 0.7847222222222222,
+        "G4": 0.3819444444444444,
+        "none": 0.04861111111111111,
+        "other": 0.08333333333333333
+      },
+      "confusion_matrix": {
+        "G1": [
+          31,
+          4,
+          82,
+          26,
+          1
+        ],
+        "G2": [
+          1,
+          17,
+          99,
+          25,
+          2
+        ],
+        "G3": [
+          1,
+          3,
+          113,
+          25,
+          2
+        ],
+        "G4": [
+          1,
+          3,
+          83,
+          55,
+          2
+        ],
+        "none": [
+          1,
+          6,
+          105,
+          25,
+          7
+        ],
+        "other": [
+          1,
+          5,
+          101,
+          25,
+          12
+        ]
+      },
+      "confusion_columns": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "none"
+      ],
+      "confusion_rows": [
+        "G1",
+        "G2",
+        "G3",
+        "G4",
+        "none",
+        "other"
+      ],
+      "pushed_named_accuracy": 0.375,
+      "other_to_none_rate": 0.08333333333333333,
+      "none_to_none_rate": 0.04861111111111111,
+      "all_six_correct": 0.034722222222222224
+    },
+    "1": {
+      "n": 864,
+      "correct": 244,
+      "accuracy": 0.2824074074074074,
+      "per_condition_accuracy": {
+        "G1": 0.2152777777777778,
+        "G2": 0.2361111111111111,
+        "G3": 0.7916666666666666,
+        "G4": 0.3819444444444444,
+        "none": 0.04861111111111111,
+        "other": 0.020833333333333332
+      },
+      "confusion_matrix": {
+        "G1": [
+          31,
+          3,
+          82,
+          27,
+          1
+        ],
+        "G2": [
+          1,
+          34,
+          83,
+          25,
+          1
+        ],
+        "G3": [
+          1,
+          2,
+          114,
+          25,
+          2
+        ],
+        "G4": [
+          1,
+          3,
+          83,
+          55,
+          2
+        ],
+        "none": [
+          1,
+          6,
+          105,
+          25,
+          7
+        ],
+        "other": [
+          1,
+          9,
+          107,
+          24,
+          3
+        ]
+      },
+      "confusion_columns": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "none"
+      ],
+      "confusion_rows": [
+        "G1",
+        "G2",
+        "G3",
+        "G4",
+        "none",
+        "other"
+      ],
+      "pushed_named_accuracy": 0.40625,
+      "other_to_none_rate": 0.020833333333333332,
+      "none_to_none_rate": 0.04861111111111111,
+      "all_six_correct": 0.0
+    },
+    "2": {
+      "n": 864,
+      "correct": 260,
+      "accuracy": 0.30092592592592593,
+      "per_condition_accuracy": {
+        "G1": 0.2222222222222222,
+        "G2": 0.2361111111111111,
+        "G3": 0.7916666666666666,
+        "G4": 0.3888888888888889,
+        "none": 0.04861111111111111,
+        "other": 0.11805555555555555
+      },
+      "confusion_matrix": {
+        "G1": [
+          32,
+          3,
+          79,
+          29,
+          1
+        ],
+        "G2": [
+          1,
+          34,
+          83,
+          25,
+          1
+        ],
+        "G3": [
+          1,
+          2,
+          114,
+          25,
+          2
+        ],
+        "G4": [
+          1,
+          3,
+          82,
+          56,
+          2
+        ],
+        "none": [
+          1,
+          6,
+          105,
+          25,
+          7
+        ],
+        "other": [
+          0,
+          9,
+          103,
+          15,
+          17
+        ]
+      },
+      "confusion_columns": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "none"
+      ],
+      "confusion_rows": [
+        "G1",
+        "G2",
+        "G3",
+        "G4",
+        "none",
+        "other"
+      ],
+      "pushed_named_accuracy": 0.4097222222222222,
+      "other_to_none_rate": 0.11805555555555555,
+      "none_to_none_rate": 0.04861111111111111,
+      "all_six_correct": 0.013888888888888888
+    },
+    "4": {
+      "n": 864,
+      "correct": 320,
+      "accuracy": 0.37037037037037035,
+      "per_condition_accuracy": {
+        "G1": 0.19444444444444445,
+        "G2": 0.2361111111111111,
+        "G3": 0.7986111111111112,
+        "G4": 0.3402777777777778,
+        "none": 0.04861111111111111,
+        "other": 0.6041666666666666
+      },
+      "confusion_matrix": {
+        "G1": [
+          28,
+          6,
+          79,
+          31,
+          0
+        ],
+        "G2": [
+          1,
+          34,
+          83,
+          25,
+          1
+        ],
+        "G3": [
+          1,
+          2,
+          115,
+          25,
+          1
+        ],
+        "G4": [
+          1,
+          5,
+          88,
+          49,
+          1
+        ],
+        "none": [
+          1,
+          6,
+          105,
+          25,
+          7
+        ],
+        "other": [
+          0,
+          6,
+          44,
+          7,
+          87
+        ]
+      },
+      "confusion_columns": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "none"
+      ],
+      "confusion_rows": [
+        "G1",
+        "G2",
+        "G3",
+        "G4",
+        "none",
+        "other"
+      ],
+      "pushed_named_accuracy": 0.3923611111111111,
+      "other_to_none_rate": 0.6041666666666666,
+      "none_to_none_rate": 0.04861111111111111,
+      "all_six_correct": 0.013888888888888888
+    },
+    "8": {
+      "n": 864,
+      "correct": 351,
+      "accuracy": 0.40625,
+      "per_condition_accuracy": {
+        "G1": 0.09027777777777778,
+        "G2": 0.2222222222222222,
+        "G3": 0.8055555555555556,
+        "G4": 0.2708333333333333,
+        "none": 0.04861111111111111,
+        "other": 1.0
+      },
+      "confusion_matrix": {
+        "G1": [
+          13,
+          9,
+          75,
+          47,
+          0
+        ],
+        "G2": [
+          2,
+          32,
+          84,
+          25,
+          1
+        ],
+        "G3": [
+          1,
+          1,
+          116,
+          26,
+          0
+        ],
+        "G4": [
+          1,
+          4,
+          99,
+          39,
+          1
+        ],
+        "none": [
+          1,
+          6,
+          105,
+          25,
+          7
+        ],
+        "other": [
+          0,
+          0,
+          0,
+          0,
+          144
+        ]
+      },
+      "confusion_columns": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "none"
+      ],
+      "confusion_rows": [
+        "G1",
+        "G2",
+        "G3",
+        "G4",
+        "none",
+        "other"
+      ],
+      "pushed_named_accuracy": 0.3472222222222222,
+      "other_to_none_rate": 1.0,
+      "none_to_none_rate": 0.04861111111111111,
+      "all_six_correct": 0.0,
+      "extra_decoys": {
+        "applied_at_scale": 8.0,
+        "groups": {
+          "X1": {
+            "label": "none",
+            "n": 144,
+            "answer_counts": {
+              "A": 0,
+              "B": 4,
+              "C": 110,
+              "D": 27,
+              "none": 3
+            }
+          },
+          "X2": {
+            "label": "none",
+            "n": 144,
+            "answer_counts": {
+              "A": 0,
+              "B": 10,
+              "C": 103,
+              "D": 30,
+              "none": 1
+            }
+          },
+          "X3": {
+            "label": "none",
+            "n": 144,
+            "answer_counts": {
+              "A": 1,
+              "B": 6,
+              "C": 110,
+              "D": 26,
+              "none": 1
+            }
+          },
+          "X4": {
+            "label": "none",
+            "n": 144,
+            "answer_counts": {
+              "A": 1,
+              "B": 3,
+              "C": 113,
+              "D": 26,
+              "none": 1
+            }
+          },
+          "X5": {
+            "label": "none",
+            "n": 144,
+            "answer_counts": {
+              "A": 1,
+              "B": 7,
+              "C": 109,
+              "D": 26,
+              "none": 1
+            }
+          }
+        }
+      }
+    }
+  },
+  "eval_scales": [
+    0.25,
+    0.5,
+    1.0,
+    2.0,
+    4.0,
+    8.0
+  ],
+  "split": {
+    "train_frames": 144,
+    "eval_frames": 144,
+    "training_condition_examples": 288,
+    "evaluation_condition_examples": 864
+  },
+  "extra_decoy_groups": {
+    "X1": [
+      "L6.216",
+      "L6.6974",
+      "L6.1464",
+      "L7.3035",
+      "L7.3827",
+      "L7.654",
+      "L8.6807",
+      "L10.6474",
+      "L10.5770",
+      "L12.5909",
+      "L12.1455"
+    ],
+    "X2": [
+      "L6.2442",
+      "L6.805",
+      "L6.5342",
+      "L7.5961",
+      "L7.2315",
+      "L7.7534",
+      "L8.6165",
+      "L10.966",
+      "L10.4219",
+      "L12.5376",
+      "L12.6766"
+    ],
+    "X3": [
+      "L6.2774",
+      "L6.1288",
+      "L6.3764",
+      "L7.6994",
+      "L7.4308",
+      "L7.1853",
+      "L8.2216",
+      "L10.6801",
+      "L10.5431",
+      "L12.3814",
+      "L12.3667"
+    ],
+    "X4": [
+      "L6.2990",
+      "L6.1602",
+      "L6.1354",
+      "L7.5432",
+      "L7.3565",
+      "L7.2674",
+      "L8.1713",
+      "L10.7661",
+      "L10.7165",
+      "L12.6533",
+      "L12.4332"
+    ],
+    "X5": [
+      "L6.1695",
+      "L6.2827",
+      "L6.3793",
+      "L7.4614",
+      "L7.3544",
+      "L7.4874",
+      "L8.33",
+      "L10.2612",
+      "L10.3341",
+      "L12.2570",
+      "L12.3371"
+    ]
+  },
+  "decoy_seed": 2026,
+  "natural_strength_on_clamp_axis": {
+    "G1": {
+      "n": 144,
+      "median": -0.17498397356702985,
+      "p90": -0.01941594128499217,
+      "p99": 0.0821654225976316,
+      "max": 0.09040569104858898
+    },
+    "G2": {
+      "n": 144,
+      "median": -0.037810075614550895,
+      "p90": 0.06719347961545813,
+      "p99": 0.11160909621203467,
+      "max": 0.1401676653658538
+    },
+    "G3": {
+      "n": 144,
+      "median": 0.06952821158372154,
+      "p90": 0.1681212396898791,
+      "p99": 0.24700492135484933,
+      "max": 0.26292028768908837
+    },
+    "G4": {
+      "n": 144,
+      "median": -0.09745009037887856,
+      "p90": -0.011038747235738616,
+      "p99": 0.07283102461139435,
+      "max": 0.08293809895259639
+    },
+    "G5": {
+      "n": 144,
+      "median": 0.12081256811188201,
+      "p90": 0.19895621131843985,
+      "p99": 0.2521818631405368,
+      "max": 0.3059031841800055
+    },
+    "X1": {
+      "n": 144,
+      "median": 0.09947811764138806,
+      "p90": 0.19716408853897302,
+      "p99": 0.2974181754210207,
+      "max": 0.34977549856904117
+    },
+    "X2": {
+      "n": 144,
+      "median": 0.058174723243154126,
+      "p90": 0.17091485037900497,
+      "p99": 0.22260195533106633,
+      "max": 0.24123517995530128
+    },
+    "X3": {
+      "n": 144,
+      "median": -0.04202677292738728,
+      "p90": 0.048968316342061266,
+      "p99": 0.09690593526380817,
+      "max": 0.12435451404114942
+    },
+    "X4": {
+      "n": 144,
+      "median": -0.10568435697892518,
+      "p90": -0.011179896504886305,
+      "p99": 0.05927471412910089,
+      "max": 0.12047892891939307
+    },
+    "X5": {
+      "n": 144,
+      "median": 0.07108274409322202,
+      "p90": 0.16796357511867055,
+      "p99": 0.2944750225254361,
+      "max": 0.32697884142380873
+    }
+  },
+  "natural_readout": {
+    "permutation_count": 2000,
+    "permutation_seed": 42,
+    "probability_distribution": "softmax over the five answer-token logits",
+    "groups": {
+      "G1": {
+        "n": 144,
+        "spearman_rho": 0.19209870589180933,
+        "permutation_p_value": 0.020989505247376312,
+        "pairs": [
+          {
+            "frame_index": 1,
+            "family": "A",
+            "letter_probability": 0.4511001706123352,
+            "natural_mean_activation_on_clamp_axis": -0.10730324406444998
+          },
+          {
+            "frame_index": 1,
+            "family": "B",
+            "letter_probability": 0.1688513457775116,
+            "natural_mean_activation_on_clamp_axis": -0.24877901653206586
+          },
+          {
+            "frame_index": 1,
+            "family": "C",
+            "letter_probability": 0.020220791921019554,
+            "natural_mean_activation_on_clamp_axis": -0.22071713315514346
+          },
+          {
+            "frame_index": 1,
+            "family": "D",
+            "letter_probability": 0.007909482344985008,
+            "natural_mean_activation_on_clamp_axis": -0.15684988424094692
+          },
+          {
+            "frame_index": 3,
+            "family": "A",
+            "letter_probability": 0.44802984595298767,
+            "natural_mean_activation_on_clamp_axis": 0.012477815130008774
+          },
+          {
+            "frame_index": 3,
+            "family": "B",
+            "letter_probability": 0.01297882478684187,
+            "natural_mean_activation_on_clamp_axis": -0.16390734782477331
+          },
+          {
+            "frame_index": 3,
+            "family": "C",
+            "letter_probability": 0.024895144626498222,
+            "natural_mean_activation_on_clamp_axis": -0.28479694633323716
+          },
+          {
+            "frame_index": 3,
+            "family": "D",
+            "letter_probability": 0.008800460025668144,
+            "natural_mean_activation_on_clamp_axis": -0.1034182945255042
+          },
+          {
+            "frame_index": 5,
+            "family": "A",
+            "letter_probability": 0.4570026397705078,
+            "natural_mean_activation_on_clamp_axis": -0.028075033467649738
+          },
+          {
+            "frame_index": 5,
+            "family": "B",
+            "letter_probability": 0.011760687455534935,
+            "natural_mean_activation_on_clamp_axis": -0.2406983961613991
+          },
+          {
+            "frame_index": 5,
+            "family": "C",
+            "letter_probability": 0.009703712537884712,
+            "natural_mean_activation_on_clamp_axis": -0.15265280787081068
+          },
+          {
+            "frame_index": 5,
+            "family": "D",
+            "letter_probability": 0.0985640436410904,
+            "natural_mean_activation_on_clamp_axis": -0.12661410519158778
+          },
+          {
+            "frame_index": 7,
+            "family": "A",
+            "letter_probability": 0.0012227362021803856,
+            "natural_mean_activation_on_clamp_axis": -0.006061893357599599
+          },
+          {
+            "frame_index": 7,
+            "family": "B",
+            "letter_probability": 4.408532186062075e-05,
+            "natural_mean_activation_on_clamp_axis": -0.10412591256047234
+          },
+          {
+            "frame_index": 7,
+            "family": "C",
+            "letter_probability": 0.006699719000607729,
+            "natural_mean_activation_on_clamp_axis": -0.2694036803097627
+          },
+          {
+            "frame_index": 7,
+            "family": "D",
+            "letter_probability": 0.0009186369716189802,
+            "natural_mean_activation_on_clamp_axis": -0.18994347437541928
+          },
+          {
+            "frame_index": 9,
+            "family": "A",
+            "letter_probability": 0.02229480631649494,
+            "natural_mean_activation_on_clamp_axis": 0.08562358246352622
+          },
+          {
+            "frame_index": 9,
+            "family": "B",
+            "letter_probability": 0.0005036299698986113,
+            "natural_mean_activation_on_clamp_axis": -0.14050338034101406
+          },
+          {
+            "frame_index": 9,
+            "family": "C",
+            "letter_probability": 0.04559632018208504,
+            "natural_mean_activation_on_clamp_axis": -0.17632162468048082
+          },
+          {
+            "frame_index": 9,
+            "family": "D",
+            "letter_probability": 0.0001414356374880299,
+            "natural_mean_activation_on_clamp_axis": -0.17835610806122532
+          },
+          {
+            "frame_index": 11,
+            "family": "A",
+            "letter_probability": 0.1338064968585968,
+            "natural_mean_activation_on_clamp_axis": -0.10098597225943565
+          },
+          {
+            "frame_index": 11,
+            "family": "B",
+            "letter_probability": 0.0038267862983047962,
+            "natural_mean_activation_on_clamp_axis": -0.21431824607451008
+          },
+          {
+            "frame_index": 11,
+            "family": "C",
+            "letter_probability": 0.05020757392048836,
+            "natural_mean_activation_on_clamp_axis": -0.12480558915119323
+          },
+          {
+            "frame_index": 11,
+            "family": "D",
+            "letter_probability": 0.00061128253582865,
+            "natural_mean_activation_on_clamp_axis": -0.2891268885599595
+          },
+          {
+            "frame_index": 13,
+            "family": "A",
+            "letter_probability": 0.05352767929434776,
+            "natural_mean_activation_on_clamp_axis": -0.04091346530394946
+          },
+          {
+            "frame_index": 13,
+            "family": "B",
+            "letter_probability": 0.0015790147008374333,
+            "natural_mean_activation_on_clamp_axis": -0.10786579154669411
+          },
+          {
+            "frame_index": 13,
+            "family": "C",
+            "letter_probability": 0.07242283970117569,
+            "natural_mean_activation_on_clamp_axis": -0.1981234810845372
+          },
+          {
+            "frame_index": 13,
+            "family": "D",
+            "letter_probability": 0.0009647832484915853,
+            "natural_mean_activation_on_clamp_axis": -0.1682288130348384
+          },
+          {
+            "frame_index": 15,
+            "family": "A",
+            "letter_probability": 0.02665027417242527,
+            "natural_mean_activation_on_clamp_axis": 0.025302569628493872
+          },
+          {
+            "frame_index": 15,
+            "family": "B",
+            "letter_probability": 0.0012145545333623886,
+            "natural_mean_activation_on_clamp_axis": -0.0904880761816922
+          },
+          {
+            "frame_index": 15,
+            "family": "C",
+            "letter_probability": 0.0026914828922599554,
+            "natural_mean_activation_on_clamp_axis": -0.1992391462730828
+          },
+          {
+            "frame_index": 15,
+            "family": "D",
+            "letter_probability": 0.00022077288303989917,
+            "natural_mean_activation_on_clamp_axis": -0.15909468773510382
+          },
+          {
+            "frame_index": 17,
+            "family": "A",
+            "letter_probability": 5.965737364022061e-05,
+            "natural_mean_activation_on_clamp_axis": -0.061925036064446715
+          },
+          {
+            "frame_index": 17,
+            "family": "B",
+            "letter_probability": 0.0002576565893832594,
+            "natural_mean_activation_on_clamp_axis": -0.24633667615126478
+          },
+          {
+            "frame_index": 17,
+            "family": "C",
+            "letter_probability": 0.09189420193433762,
+            "natural_mean_activation_on_clamp_axis": -0.1734340791611322
+          },
+          {
+            "frame_index": 17,
+            "family": "D",
+            "letter_probability": 7.35348803573288e-05,
+            "natural_mean_activation_on_clamp_axis": -0.32225234049684953
+          },
+          {
+            "frame_index": 19,
+            "family": "A",
+            "letter_probability": 0.0019053854048252106,
+            "natural_mean_activation_on_clamp_axis": 0.09040569104858898
+          },
+          {
+            "frame_index": 19,
+            "family": "B",
+            "letter_probability": 0.00017400710203219205,
+            "natural_mean_activation_on_clamp_axis": -0.18234018755878206
+          },
+          {
+            "frame_index": 19,
+            "family": "C",
+            "letter_probability": 0.07261860370635986,
+            "natural_mean_activation_on_clamp_axis": -0.25080613809678126
+          },
+          {
+            "frame_index": 19,
+            "family": "D",
+            "letter_probability": 0.0009060812881216407,
+            "natural_mean_activation_on_clamp_axis": -0.11062669400731545
+          },
+          {
+            "frame_index": 21,
+            "family": "A",
+            "letter_probability": 0.2951703667640686,
+            "natural_mean_activation_on_clamp_axis": -0.020951648858087566
+          },
+          {
+            "frame_index": 21,
+            "family": "B",
+            "letter_probability": 0.0030078906565904617,
+            "natural_mean_activation_on_clamp_axis": -0.24090711343967522
+          },
+          {
+            "frame_index": 21,
+            "family": "C",
+            "letter_probability": 0.23701635003089905,
+            "natural_mean_activation_on_clamp_axis": -0.1579186200213832
+          },
+          {
+            "frame_index": 21,
+            "family": "D",
+            "letter_probability": 0.0002972173970192671,
+            "natural_mean_activation_on_clamp_axis": -0.16150091555137897
+          },
+          {
+            "frame_index": 23,
+            "family": "A",
+            "letter_probability": 0.000424617639509961,
+            "natural_mean_activation_on_clamp_axis": 0.04753050566336837
+          },
+          {
+            "frame_index": 23,
+            "family": "B",
+            "letter_probability": 0.00018923181050922722,
+            "natural_mean_activation_on_clamp_axis": -0.1174562494374735
+          },
+          {
+            "frame_index": 23,
+            "family": "C",
+            "letter_probability": 0.0049163419753313065,
+            "natural_mean_activation_on_clamp_axis": -0.16840152172582742
+          },
+          {
+            "frame_index": 23,
+            "family": "D",
+            "letter_probability": 5.321835124050267e-05,
+            "natural_mean_activation_on_clamp_axis": -0.09426006983611325
+          },
+          {
+            "frame_index": 25,
+            "family": "A",
+            "letter_probability": 0.10325475037097931,
+            "natural_mean_activation_on_clamp_axis": -0.0512664614425835
+          },
+          {
+            "frame_index": 25,
+            "family": "B",
+            "letter_probability": 0.0030800902750343084,
+            "natural_mean_activation_on_clamp_axis": -0.2827554230510128
+          },
+          {
+            "frame_index": 25,
+            "family": "C",
+            "letter_probability": 0.07775041460990906,
+            "natural_mean_activation_on_clamp_axis": -0.1041899286821299
+          },
+          {
+            "frame_index": 25,
+            "family": "D",
+            "letter_probability": 0.002111192559823394,
+            "natural_mean_activation_on_clamp_axis": -0.17584887596568682
+          },
+          {
+            "frame_index": 27,
+            "family": "A",
+            "letter_probability": 0.5057516694068909,
+            "natural_mean_activation_on_clamp_axis": -0.04278889615360353
+          },
+          {
+            "frame_index": 27,
+            "family": "B",
+            "letter_probability": 0.33337682485580444,
+            "natural_mean_activation_on_clamp_axis": -0.204994258691217
+          },
+          {
+            "frame_index": 27,
+            "family": "C",
+            "letter_probability": 0.13079556822776794,
+            "natural_mean_activation_on_clamp_axis": -0.2206231201940383
+          },
+          {
+            "frame_index": 27,
+            "family": "D",
+            "letter_probability": 0.1276848167181015,
+            "natural_mean_activation_on_clamp_axis": -0.18078755831163373
+          },
+          {
+            "frame_index": 29,
+            "family": "A",
+            "letter_probability": 0.025936409831047058,
+            "natural_mean_activation_on_clamp_axis": 0.008924600919381626
+          },
+          {
+            "frame_index": 29,
+            "family": "B",
+            "letter_probability": 0.008139031007885933,
+            "natural_mean_activation_on_clamp_axis": -0.1913163972088728
+          },
+          {
+            "frame_index": 29,
+            "family": "C",
+            "letter_probability": 0.004866360686719418,
+            "natural_mean_activation_on_clamp_axis": -0.2001117639088526
+          },
+          {
+            "frame_index": 29,
+            "family": "D",
+            "letter_probability": 0.02383202128112316,
+            "natural_mean_activation_on_clamp_axis": -0.28873641140686795
+          },
+          {
+            "frame_index": 31,
+            "family": "A",
+            "letter_probability": 0.029851699247956276,
+            "natural_mean_activation_on_clamp_axis": -0.11970116340380198
+          },
+          {
+            "frame_index": 31,
+            "family": "B",
+            "letter_probability": 0.0015556704020127654,
+            "natural_mean_activation_on_clamp_axis": -0.2247112335819293
+          },
+          {
+            "frame_index": 31,
+            "family": "C",
+            "letter_probability": 0.04650471359491348,
+            "natural_mean_activation_on_clamp_axis": -0.1503652573593009
+          },
+          {
+            "frame_index": 31,
+            "family": "D",
+            "letter_probability": 0.0020529069006443024,
+            "natural_mean_activation_on_clamp_axis": -0.21032272095049326
+          },
+          {
+            "frame_index": 33,
+            "family": "A",
+            "letter_probability": 0.2837562561035156,
+            "natural_mean_activation_on_clamp_axis": 0.055556296619241975
+          },
+          {
+            "frame_index": 33,
+            "family": "B",
+            "letter_probability": 0.0013655941002070904,
+            "natural_mean_activation_on_clamp_axis": -0.201170181335626
+          },
+          {
+            "frame_index": 33,
+            "family": "C",
+            "letter_probability": 0.13078634440898895,
+            "natural_mean_activation_on_clamp_axis": 0.07758135021725979
+          },
+          {
+            "frame_index": 33,
+            "family": "D",
+            "letter_probability": 0.045546047389507294,
+            "natural_mean_activation_on_clamp_axis": -0.22871910120614253
+          },
+          {
+            "frame_index": 35,
+            "family": "A",
+            "letter_probability": 0.18297730386257172,
+            "natural_mean_activation_on_clamp_axis": -0.050925304195644845
+          },
+          {
+            "frame_index": 35,
+            "family": "B",
+            "letter_probability": 0.005169427953660488,
+            "natural_mean_activation_on_clamp_axis": -0.21784748735871107
+          },
+          {
+            "frame_index": 35,
+            "family": "C",
+            "letter_probability": 0.00952508021146059,
+            "natural_mean_activation_on_clamp_axis": -0.11491731173400722
+          },
+          {
+            "frame_index": 35,
+            "family": "D",
+            "letter_probability": 0.0007412235136143863,
+            "natural_mean_activation_on_clamp_axis": -0.18285213117112578
+          },
+          {
+            "frame_index": 37,
+            "family": "A",
+            "letter_probability": 0.01720523275434971,
+            "natural_mean_activation_on_clamp_axis": -0.06990932200150739
+          },
+          {
+            "frame_index": 37,
+            "family": "B",
+            "letter_probability": 0.003959158435463905,
+            "natural_mean_activation_on_clamp_axis": -0.2950917001587988
+          },
+          {
+            "frame_index": 37,
+            "family": "C",
+            "letter_probability": 0.015051965601742268,
+            "natural_mean_activation_on_clamp_axis": -0.049236629447147504
+          },
+          {
+            "frame_index": 37,
+            "family": "D",
+            "letter_probability": 0.0021272175945341587,
+            "natural_mean_activation_on_clamp_axis": -0.2545480063930497
+          },
+          {
+            "frame_index": 39,
+            "family": "A",
+            "letter_probability": 0.0010494239395484328,
+            "natural_mean_activation_on_clamp_axis": -0.09202013252222606
+          },
+          {
+            "frame_index": 39,
+            "family": "B",
+            "letter_probability": 0.001312259933911264,
+            "natural_mean_activation_on_clamp_axis": -0.35516219367026985
+          },
+          {
+            "frame_index": 39,
+            "family": "C",
+            "letter_probability": 0.007759388070553541,
+            "natural_mean_activation_on_clamp_axis": -0.13905673740789054
+          },
+          {
+            "frame_index": 39,
+            "family": "D",
+            "letter_probability": 0.001517441589385271,
+            "natural_mean_activation_on_clamp_axis": -0.3407665661002037
+          },
+          {
+            "frame_index": 41,
+            "family": "A",
+            "letter_probability": 0.057387806475162506,
+            "natural_mean_activation_on_clamp_axis": -0.23282980195985542
+          },
+          {
+            "frame_index": 41,
+            "family": "B",
+            "letter_probability": 0.0020688914228230715,
+            "natural_mean_activation_on_clamp_axis": -0.32383413126018196
+          },
+          {
+            "frame_index": 41,
+            "family": "C",
+            "letter_probability": 0.05073568597435951,
+            "natural_mean_activation_on_clamp_axis": 0.025042115481263574
+          },
+          {
+            "frame_index": 41,
+            "family": "D",
+            "letter_probability": 0.004455439280718565,
+            "natural_mean_activation_on_clamp_axis": -0.3326560816098606
+          },
+          {
+            "frame_index": 43,
+            "family": "A",
+            "letter_probability": 0.028526002541184425,
+            "natural_mean_activation_on_clamp_axis": -0.16363549625998014
+          },
+          {
+            "frame_index": 43,
+            "family": "B",
+            "letter_probability": 0.0018783917184919119,
+            "natural_mean_activation_on_clamp_axis": -0.4016660772998481
+          },
+          {
+            "frame_index": 43,
+            "family": "C",
+            "letter_probability": 0.004054219461977482,
+            "natural_mean_activation_on_clamp_axis": -0.26704274503493425
+          },
+          {
+            "frame_index": 43,
+            "family": "D",
+            "letter_probability": 0.0018162120832130313,
+            "natural_mean_activation_on_clamp_axis": -0.39529897486502535
+          },
+          {
+            "frame_index": 45,
+            "family": "A",
+            "letter_probability": 0.007255134638398886,
+            "natural_mean_activation_on_clamp_axis": -0.1310935553733554
+          },
+          {
+            "frame_index": 45,
+            "family": "B",
+            "letter_probability": 0.0005401704111136496,
+            "natural_mean_activation_on_clamp_axis": -0.24530446741250242
+          },
+          {
+            "frame_index": 45,
+            "family": "C",
+            "letter_probability": 0.03429210186004639,
+            "natural_mean_activation_on_clamp_axis": -0.12849426167423492
+          },
+          {
+            "frame_index": 45,
+            "family": "D",
+            "letter_probability": 0.0008298493921756744,
+            "natural_mean_activation_on_clamp_axis": -0.2978744510672467
+          },
+          {
+            "frame_index": 47,
+            "family": "A",
+            "letter_probability": 0.029938755556941032,
+            "natural_mean_activation_on_clamp_axis": -0.16291978885487648
+          },
+          {
+            "frame_index": 47,
+            "family": "B",
+            "letter_probability": 0.045333653688430786,
+            "natural_mean_activation_on_clamp_axis": -0.22564918430148187
+          },
+          {
+            "frame_index": 47,
+            "family": "C",
+            "letter_probability": 0.12320379167795181,
+            "natural_mean_activation_on_clamp_axis": -0.27316276012355756
+          },
+          {
+            "frame_index": 47,
+            "family": "D",
+            "letter_probability": 0.007922053337097168,
+            "natural_mean_activation_on_clamp_axis": -0.36643192704855565
+          },
+          {
+            "frame_index": 49,
+            "family": "A",
+            "letter_probability": 0.045558057725429535,
+            "natural_mean_activation_on_clamp_axis": -0.12025001615712103
+          },
+          {
+            "frame_index": 49,
+            "family": "B",
+            "letter_probability": 0.03752768412232399,
+            "natural_mean_activation_on_clamp_axis": -0.28183112766215423
+          },
+          {
+            "frame_index": 49,
+            "family": "C",
+            "letter_probability": 0.011531496420502663,
+            "natural_mean_activation_on_clamp_axis": -0.1338175266124303
+          },
+          {
+            "frame_index": 49,
+            "family": "D",
+            "letter_probability": 0.005433516576886177,
+            "natural_mean_activation_on_clamp_axis": -0.27733710730154953
+          },
+          {
+            "frame_index": 51,
+            "family": "A",
+            "letter_probability": 0.38132691383361816,
+            "natural_mean_activation_on_clamp_axis": 0.04601396742060053
+          },
+          {
+            "frame_index": 51,
+            "family": "B",
+            "letter_probability": 0.002892974065616727,
+            "natural_mean_activation_on_clamp_axis": -0.23721700449860195
+          },
+          {
+            "frame_index": 51,
+            "family": "C",
+            "letter_probability": 0.2675939202308655,
+            "natural_mean_activation_on_clamp_axis": -0.0848731143531751
+          },
+          {
+            "frame_index": 51,
+            "family": "D",
+            "letter_probability": 0.002246381249278784,
+            "natural_mean_activation_on_clamp_axis": -0.1680352828034133
+          },
+          {
+            "frame_index": 53,
+            "family": "A",
+            "letter_probability": 0.007013991009443998,
+            "natural_mean_activation_on_clamp_axis": -0.1819528884765541
+          },
+          {
+            "frame_index": 53,
+            "family": "B",
+            "letter_probability": 0.06660305708646774,
+            "natural_mean_activation_on_clamp_axis": -0.35740474841066283
+          },
+          {
+            "frame_index": 53,
+            "family": "C",
+            "letter_probability": 0.07549712806940079,
+            "natural_mean_activation_on_clamp_axis": -0.23589161943595935
+          },
+          {
+            "frame_index": 53,
+            "family": "D",
+            "letter_probability": 6.94362897775136e-05,
+            "natural_mean_activation_on_clamp_axis": -0.18149704768245672
+          },
+          {
+            "frame_index": 55,
+            "family": "A",
+            "letter_probability": 0.00015207404794637114,
+            "natural_mean_activation_on_clamp_axis": -0.0033005732552139266
+          },
+          {
+            "frame_index": 55,
+            "family": "B",
+            "letter_probability": 0.0002954029478132725,
+            "natural_mean_activation_on_clamp_axis": -0.12152279669205727
+          },
+          {
+            "frame_index": 55,
+            "family": "C",
+            "letter_probability": 6.50754154776223e-05,
+            "natural_mean_activation_on_clamp_axis": -0.01875778089652277
+          },
+          {
+            "frame_index": 55,
+            "family": "D",
+            "letter_probability": 0.00020606441830750555,
+            "natural_mean_activation_on_clamp_axis": -0.23878645094512221
+          },
+          {
+            "frame_index": 57,
+            "family": "A",
+            "letter_probability": 0.015849657356739044,
+            "natural_mean_activation_on_clamp_axis": -0.026173589017695797
+          },
+          {
+            "frame_index": 57,
+            "family": "B",
+            "letter_probability": 0.0008641154272481799,
+            "natural_mean_activation_on_clamp_axis": -0.20021812354622767
+          },
+          {
+            "frame_index": 57,
+            "family": "C",
+            "letter_probability": 0.012454486452043056,
+            "natural_mean_activation_on_clamp_axis": -0.08301370908570942
+          },
+          {
+            "frame_index": 57,
+            "family": "D",
+            "letter_probability": 0.0010242668213322759,
+            "natural_mean_activation_on_clamp_axis": -0.27043709860602455
+          },
+          {
+            "frame_index": 59,
+            "family": "A",
+            "letter_probability": 0.0016350221121683717,
+            "natural_mean_activation_on_clamp_axis": -0.03580931572262514
+          },
+          {
+            "frame_index": 59,
+            "family": "B",
+            "letter_probability": 0.00043090988765470684,
+            "natural_mean_activation_on_clamp_axis": -0.25582335787495186
+          },
+          {
+            "frame_index": 59,
+            "family": "C",
+            "letter_probability": 0.0009553059935569763,
+            "natural_mean_activation_on_clamp_axis": -0.17068737045988527
+          },
+          {
+            "frame_index": 59,
+            "family": "D",
+            "letter_probability": 0.0005653372500091791,
+            "natural_mean_activation_on_clamp_axis": -0.18681462892069914
+          },
+          {
+            "frame_index": 61,
+            "family": "A",
+            "letter_probability": 0.01541198417544365,
+            "natural_mean_activation_on_clamp_axis": -0.06022453999051139
+          },
+          {
+            "frame_index": 61,
+            "family": "B",
+            "letter_probability": 0.01671645976603031,
+            "natural_mean_activation_on_clamp_axis": -0.2221939032884894
+          },
+          {
+            "frame_index": 61,
+            "family": "C",
+            "letter_probability": 0.0012792227789759636,
+            "natural_mean_activation_on_clamp_axis": -0.17411907116837289
+          },
+          {
+            "frame_index": 61,
+            "family": "D",
+            "letter_probability": 0.00047361021279357374,
+            "natural_mean_activation_on_clamp_axis": -0.11812636582452059
+          },
+          {
+            "frame_index": 63,
+            "family": "A",
+            "letter_probability": 0.022722218185663223,
+            "natural_mean_activation_on_clamp_axis": -0.249164518487121
+          },
+          {
+            "frame_index": 63,
+            "family": "B",
+            "letter_probability": 0.0009613948641344905,
+            "natural_mean_activation_on_clamp_axis": -0.373969158050065
+          },
+          {
+            "frame_index": 63,
+            "family": "C",
+            "letter_probability": 0.012418270111083984,
+            "natural_mean_activation_on_clamp_axis": -0.2534880328119495
+          },
+          {
+            "frame_index": 63,
+            "family": "D",
+            "letter_probability": 0.00010359761654399335,
+            "natural_mean_activation_on_clamp_axis": -0.276382728204867
+          },
+          {
+            "frame_index": 65,
+            "family": "A",
+            "letter_probability": 0.0065491581335663795,
+            "natural_mean_activation_on_clamp_axis": 0.0017743357746478321
+          },
+          {
+            "frame_index": 65,
+            "family": "B",
+            "letter_probability": 0.000503089337144047,
+            "natural_mean_activation_on_clamp_axis": -0.28221288607964035
+          },
+          {
+            "frame_index": 65,
+            "family": "C",
+            "letter_probability": 0.03310468792915344,
+            "natural_mean_activation_on_clamp_axis": -0.14901233419620122
+          },
+          {
+            "frame_index": 65,
+            "family": "D",
+            "letter_probability": 0.00444491533562541,
+            "natural_mean_activation_on_clamp_axis": -0.23229920292746836
+          },
+          {
+            "frame_index": 67,
+            "family": "A",
+            "letter_probability": 0.34370285272598267,
+            "natural_mean_activation_on_clamp_axis": -0.11342115854935123
+          },
+          {
+            "frame_index": 67,
+            "family": "B",
+            "letter_probability": 0.026376239955425262,
+            "natural_mean_activation_on_clamp_axis": -0.2988517890743557
+          },
+          {
+            "frame_index": 67,
+            "family": "C",
+            "letter_probability": 0.16515475511550903,
+            "natural_mean_activation_on_clamp_axis": -0.22614135939068836
+          },
+          {
+            "frame_index": 67,
+            "family": "D",
+            "letter_probability": 0.15697884559631348,
+            "natural_mean_activation_on_clamp_axis": -0.15449426918621972
+          },
+          {
+            "frame_index": 69,
+            "family": "A",
+            "letter_probability": 0.01046105194836855,
+            "natural_mean_activation_on_clamp_axis": -0.1477402968549338
+          },
+          {
+            "frame_index": 69,
+            "family": "B",
+            "letter_probability": 0.006839953362941742,
+            "natural_mean_activation_on_clamp_axis": -0.3317095426650358
+          },
+          {
+            "frame_index": 69,
+            "family": "C",
+            "letter_probability": 0.022340133786201477,
+            "natural_mean_activation_on_clamp_axis": -0.2006511208274109
+          },
+          {
+            "frame_index": 69,
+            "family": "D",
+            "letter_probability": 0.002574017969891429,
+            "natural_mean_activation_on_clamp_axis": -0.24262172686909514
+          },
+          {
+            "frame_index": 71,
+            "family": "A",
+            "letter_probability": 0.00944648776203394,
+            "natural_mean_activation_on_clamp_axis": 0.06930781249623547
+          },
+          {
+            "frame_index": 71,
+            "family": "B",
+            "letter_probability": 0.0023515166249126196,
+            "natural_mean_activation_on_clamp_axis": -0.21249240048988646
+          },
+          {
+            "frame_index": 71,
+            "family": "C",
+            "letter_probability": 0.008734393864870071,
+            "natural_mean_activation_on_clamp_axis": -0.23438185396832312
+          },
+          {
+            "frame_index": 71,
+            "family": "D",
+            "letter_probability": 0.0001018380862660706,
+            "natural_mean_activation_on_clamp_axis": -0.09033914833949218
+          }
+        ]
+      },
+      "G2": {
+        "n": 144,
+        "spearman_rho": 0.14246845108914075,
+        "permutation_p_value": 0.09695152423788106,
+        "pairs": [
+          {
+            "frame_index": 1,
+            "family": "A",
+            "letter_probability": 0.011829801835119724,
+            "natural_mean_activation_on_clamp_axis": 0.10974465952446359
+          },
+          {
+            "frame_index": 1,
+            "family": "B",
+            "letter_probability": 0.13379652798175812,
+            "natural_mean_activation_on_clamp_axis": 0.028055928607373642
+          },
+          {
+            "frame_index": 1,
+            "family": "C",
+            "letter_probability": 0.07943009585142136,
+            "natural_mean_activation_on_clamp_axis": 0.01688982637988921
+          },
+          {
+            "frame_index": 1,
+            "family": "D",
+            "letter_probability": 0.012128687463700771,
+            "natural_mean_activation_on_clamp_axis": 0.10060351951297211
+          },
+          {
+            "frame_index": 3,
+            "family": "A",
+            "letter_probability": 0.00321143283508718,
+            "natural_mean_activation_on_clamp_axis": 0.02281844366972935
+          },
+          {
+            "frame_index": 3,
+            "family": "B",
+            "letter_probability": 0.2245853990316391,
+            "natural_mean_activation_on_clamp_axis": -0.10795259623721347
+          },
+          {
+            "frame_index": 3,
+            "family": "C",
+            "letter_probability": 0.012108764611184597,
+            "natural_mean_activation_on_clamp_axis": 0.0017677714402944166
+          },
+          {
+            "frame_index": 3,
+            "family": "D",
+            "letter_probability": 0.05987446382641792,
+            "natural_mean_activation_on_clamp_axis": 0.1401676653658538
+          },
+          {
+            "frame_index": 5,
+            "family": "A",
+            "letter_probability": 0.00033823581179603934,
+            "natural_mean_activation_on_clamp_axis": -0.23901408220334677
+          },
+          {
+            "frame_index": 5,
+            "family": "B",
+            "letter_probability": 0.031019404530525208,
+            "natural_mean_activation_on_clamp_axis": -0.2332652918103384
+          },
+          {
+            "frame_index": 5,
+            "family": "C",
+            "letter_probability": 0.014451432041823864,
+            "natural_mean_activation_on_clamp_axis": -0.1092432214719512
+          },
+          {
+            "frame_index": 5,
+            "family": "D",
+            "letter_probability": 0.002249010605737567,
+            "natural_mean_activation_on_clamp_axis": -0.2468075917675963
+          },
+          {
+            "frame_index": 7,
+            "family": "A",
+            "letter_probability": 0.13219456374645233,
+            "natural_mean_activation_on_clamp_axis": -0.0470747731265499
+          },
+          {
+            "frame_index": 7,
+            "family": "B",
+            "letter_probability": 0.33127865195274353,
+            "natural_mean_activation_on_clamp_axis": -0.07143471436253782
+          },
+          {
+            "frame_index": 7,
+            "family": "C",
+            "letter_probability": 0.015080234967172146,
+            "natural_mean_activation_on_clamp_axis": 0.03532160797208283
+          },
+          {
+            "frame_index": 7,
+            "family": "D",
+            "letter_probability": 0.11284470558166504,
+            "natural_mean_activation_on_clamp_axis": -0.06496426910172244
+          },
+          {
+            "frame_index": 9,
+            "family": "A",
+            "letter_probability": 0.048850759863853455,
+            "natural_mean_activation_on_clamp_axis": -0.09842466852819626
+          },
+          {
+            "frame_index": 9,
+            "family": "B",
+            "letter_probability": 0.3888707160949707,
+            "natural_mean_activation_on_clamp_axis": -0.021393536587931566
+          },
+          {
+            "frame_index": 9,
+            "family": "C",
+            "letter_probability": 0.00890752300620079,
+            "natural_mean_activation_on_clamp_axis": -0.04033296553651521
+          },
+          {
+            "frame_index": 9,
+            "family": "D",
+            "letter_probability": 0.04065582528710365,
+            "natural_mean_activation_on_clamp_axis": -0.1684712120821665
+          },
+          {
+            "frame_index": 11,
+            "family": "A",
+            "letter_probability": 0.021797196939587593,
+            "natural_mean_activation_on_clamp_axis": 0.0741042469954828
+          },
+          {
+            "frame_index": 11,
+            "family": "B",
+            "letter_probability": 0.1923416256904602,
+            "natural_mean_activation_on_clamp_axis": -0.0017669391145573208
+          },
+          {
+            "frame_index": 11,
+            "family": "C",
+            "letter_probability": 0.027139509096741676,
+            "natural_mean_activation_on_clamp_axis": 0.05256107781063442
+          },
+          {
+            "frame_index": 11,
+            "family": "D",
+            "letter_probability": 0.26755473017692566,
+            "natural_mean_activation_on_clamp_axis": -0.15245460809337577
+          },
+          {
+            "frame_index": 13,
+            "family": "A",
+            "letter_probability": 0.005484815686941147,
+            "natural_mean_activation_on_clamp_axis": -0.11712212191801932
+          },
+          {
+            "frame_index": 13,
+            "family": "B",
+            "letter_probability": 0.012627415359020233,
+            "natural_mean_activation_on_clamp_axis": -0.10144949142365645
+          },
+          {
+            "frame_index": 13,
+            "family": "C",
+            "letter_probability": 0.001140048261731863,
+            "natural_mean_activation_on_clamp_axis": -0.1045824926557807
+          },
+          {
+            "frame_index": 13,
+            "family": "D",
+            "letter_probability": 0.011417550966143608,
+            "natural_mean_activation_on_clamp_axis": -0.09993165905603192
+          },
+          {
+            "frame_index": 15,
+            "family": "A",
+            "letter_probability": 0.015532608143985271,
+            "natural_mean_activation_on_clamp_axis": -0.009845748265716912
+          },
+          {
+            "frame_index": 15,
+            "family": "B",
+            "letter_probability": 0.03690237179398537,
+            "natural_mean_activation_on_clamp_axis": -0.03817035794377645
+          },
+          {
+            "frame_index": 15,
+            "family": "C",
+            "letter_probability": 0.06572411209344864,
+            "natural_mean_activation_on_clamp_axis": -1.725492313522487e-05
+          },
+          {
+            "frame_index": 15,
+            "family": "D",
+            "letter_probability": 0.007184555288404226,
+            "natural_mean_activation_on_clamp_axis": -0.10156138248909813
+          },
+          {
+            "frame_index": 17,
+            "family": "A",
+            "letter_probability": 0.04317203909158707,
+            "natural_mean_activation_on_clamp_axis": -0.024140433273447788
+          },
+          {
+            "frame_index": 17,
+            "family": "B",
+            "letter_probability": 0.2729842960834503,
+            "natural_mean_activation_on_clamp_axis": 0.06781829047320626
+          },
+          {
+            "frame_index": 17,
+            "family": "C",
+            "letter_probability": 0.006583042908459902,
+            "natural_mean_activation_on_clamp_axis": -0.1227855914056353
+          },
+          {
+            "frame_index": 17,
+            "family": "D",
+            "letter_probability": 0.23420263826847076,
+            "natural_mean_activation_on_clamp_axis": -0.17713344334336278
+          },
+          {
+            "frame_index": 19,
+            "family": "A",
+            "letter_probability": 0.007883697748184204,
+            "natural_mean_activation_on_clamp_axis": 0.05873461494710752
+          },
+          {
+            "frame_index": 19,
+            "family": "B",
+            "letter_probability": 0.0643116682767868,
+            "natural_mean_activation_on_clamp_axis": 0.007826113224311686
+          },
+          {
+            "frame_index": 19,
+            "family": "C",
+            "letter_probability": 0.0009043626487255096,
+            "natural_mean_activation_on_clamp_axis": -0.03554260979196121
+          },
+          {
+            "frame_index": 19,
+            "family": "D",
+            "letter_probability": 0.2579391598701477,
+            "natural_mean_activation_on_clamp_axis": -0.01869399354254651
+          },
+          {
+            "frame_index": 21,
+            "family": "A",
+            "letter_probability": 0.07134367525577545,
+            "natural_mean_activation_on_clamp_axis": 0.028246745784432585
+          },
+          {
+            "frame_index": 21,
+            "family": "B",
+            "letter_probability": 0.5933434367179871,
+            "natural_mean_activation_on_clamp_axis": 0.04538752571448439
+          },
+          {
+            "frame_index": 21,
+            "family": "C",
+            "letter_probability": 0.01013945136219263,
+            "natural_mean_activation_on_clamp_axis": 0.0915435667201005
+          },
+          {
+            "frame_index": 21,
+            "family": "D",
+            "letter_probability": 0.4466609060764313,
+            "natural_mean_activation_on_clamp_axis": 0.028706281037521573
+          },
+          {
+            "frame_index": 23,
+            "family": "A",
+            "letter_probability": 0.032561007887125015,
+            "natural_mean_activation_on_clamp_axis": 0.022434432698089857
+          },
+          {
+            "frame_index": 23,
+            "family": "B",
+            "letter_probability": 0.0927024707198143,
+            "natural_mean_activation_on_clamp_axis": 0.08243494871881896
+          },
+          {
+            "frame_index": 23,
+            "family": "C",
+            "letter_probability": 0.008999538607895374,
+            "natural_mean_activation_on_clamp_axis": 0.03706552052872343
+          },
+          {
+            "frame_index": 23,
+            "family": "D",
+            "letter_probability": 0.009623870253562927,
+            "natural_mean_activation_on_clamp_axis": -0.12796093027069216
+          },
+          {
+            "frame_index": 25,
+            "family": "A",
+            "letter_probability": 0.04057621583342552,
+            "natural_mean_activation_on_clamp_axis": -0.04792770393918468
+          },
+          {
+            "frame_index": 25,
+            "family": "B",
+            "letter_probability": 0.4024661183357239,
+            "natural_mean_activation_on_clamp_axis": -0.06924577220436778
+          },
+          {
+            "frame_index": 25,
+            "family": "C",
+            "letter_probability": 0.1420339047908783,
+            "natural_mean_activation_on_clamp_axis": -0.00023585273840566142
+          },
+          {
+            "frame_index": 25,
+            "family": "D",
+            "letter_probability": 0.004565157927572727,
+            "natural_mean_activation_on_clamp_axis": -0.10873237241365108
+          },
+          {
+            "frame_index": 27,
+            "family": "A",
+            "letter_probability": 0.0016876718727871776,
+            "natural_mean_activation_on_clamp_axis": 0.06592858441105658
+          },
+          {
+            "frame_index": 27,
+            "family": "B",
+            "letter_probability": 0.004465501755475998,
+            "natural_mean_activation_on_clamp_axis": -0.04198475424792633
+          },
+          {
+            "frame_index": 27,
+            "family": "C",
+            "letter_probability": 0.13296252489089966,
+            "natural_mean_activation_on_clamp_axis": 0.11301560108160588
+          },
+          {
+            "frame_index": 27,
+            "family": "D",
+            "letter_probability": 0.07400211691856384,
+            "natural_mean_activation_on_clamp_axis": -0.04473380662142802
+          },
+          {
+            "frame_index": 29,
+            "family": "A",
+            "letter_probability": 0.00981298740953207,
+            "natural_mean_activation_on_clamp_axis": -0.09882875302710123
+          },
+          {
+            "frame_index": 29,
+            "family": "B",
+            "letter_probability": 0.08047082275152206,
+            "natural_mean_activation_on_clamp_axis": -0.08459475343719061
+          },
+          {
+            "frame_index": 29,
+            "family": "C",
+            "letter_probability": 0.011852109804749489,
+            "natural_mean_activation_on_clamp_axis": -0.12305346996443571
+          },
+          {
+            "frame_index": 29,
+            "family": "D",
+            "letter_probability": 0.12866917252540588,
+            "natural_mean_activation_on_clamp_axis": -0.20725323787426855
+          },
+          {
+            "frame_index": 31,
+            "family": "A",
+            "letter_probability": 0.06300900876522064,
+            "natural_mean_activation_on_clamp_axis": -0.0437320466008568
+          },
+          {
+            "frame_index": 31,
+            "family": "B",
+            "letter_probability": 0.306919664144516,
+            "natural_mean_activation_on_clamp_axis": -0.03314229562166532
+          },
+          {
+            "frame_index": 31,
+            "family": "C",
+            "letter_probability": 0.05790553241968155,
+            "natural_mean_activation_on_clamp_axis": 0.020106841054340543
+          },
+          {
+            "frame_index": 31,
+            "family": "D",
+            "letter_probability": 0.03185390308499336,
+            "natural_mean_activation_on_clamp_axis": -0.1765297273960926
+          },
+          {
+            "frame_index": 33,
+            "family": "A",
+            "letter_probability": 0.0003631726431194693,
+            "natural_mean_activation_on_clamp_axis": -0.037063082854255885
+          },
+          {
+            "frame_index": 33,
+            "family": "B",
+            "letter_probability": 0.027044065296649933,
+            "natural_mean_activation_on_clamp_axis": -0.037449793285325335
+          },
+          {
+            "frame_index": 33,
+            "family": "C",
+            "letter_probability": 0.000548041716683656,
+            "natural_mean_activation_on_clamp_axis": -0.010718267250013642
+          },
+          {
+            "frame_index": 33,
+            "family": "D",
+            "letter_probability": 0.0011126016033813357,
+            "natural_mean_activation_on_clamp_axis": -0.06446768156332136
+          },
+          {
+            "frame_index": 35,
+            "family": "A",
+            "letter_probability": 0.004675222095102072,
+            "natural_mean_activation_on_clamp_axis": 0.06773557756020161
+          },
+          {
+            "frame_index": 35,
+            "family": "B",
+            "letter_probability": 0.07624899595975876,
+            "natural_mean_activation_on_clamp_axis": 0.09769364392061507
+          },
+          {
+            "frame_index": 35,
+            "family": "C",
+            "letter_probability": 0.024299541488289833,
+            "natural_mean_activation_on_clamp_axis": -0.07271313021476607
+          },
+          {
+            "frame_index": 35,
+            "family": "D",
+            "letter_probability": 0.09425771236419678,
+            "natural_mean_activation_on_clamp_axis": -0.05749381349236278
+          },
+          {
+            "frame_index": 37,
+            "family": "A",
+            "letter_probability": 0.09406337887048721,
+            "natural_mean_activation_on_clamp_axis": 0.02790172230858214
+          },
+          {
+            "frame_index": 37,
+            "family": "B",
+            "letter_probability": 0.4540379047393799,
+            "natural_mean_activation_on_clamp_axis": 0.00409198616604506
+          },
+          {
+            "frame_index": 37,
+            "family": "C",
+            "letter_probability": 0.051081426441669464,
+            "natural_mean_activation_on_clamp_axis": 0.05378941802784385
+          },
+          {
+            "frame_index": 37,
+            "family": "D",
+            "letter_probability": 0.009663750417530537,
+            "natural_mean_activation_on_clamp_axis": -0.1551670065104934
+          },
+          {
+            "frame_index": 39,
+            "family": "A",
+            "letter_probability": 0.09312938153743744,
+            "natural_mean_activation_on_clamp_axis": 0.015532691588818204
+          },
+          {
+            "frame_index": 39,
+            "family": "B",
+            "letter_probability": 0.17255470156669617,
+            "natural_mean_activation_on_clamp_axis": 0.051815151615639356
+          },
+          {
+            "frame_index": 39,
+            "family": "C",
+            "letter_probability": 0.06935722380876541,
+            "natural_mean_activation_on_clamp_axis": 0.097751829524767
+          },
+          {
+            "frame_index": 39,
+            "family": "D",
+            "letter_probability": 0.26618292927742004,
+            "natural_mean_activation_on_clamp_axis": -0.14205830201109249
+          },
+          {
+            "frame_index": 41,
+            "family": "A",
+            "letter_probability": 0.03130612522363663,
+            "natural_mean_activation_on_clamp_axis": -0.013712943709099961
+          },
+          {
+            "frame_index": 41,
+            "family": "B",
+            "letter_probability": 0.24368341267108917,
+            "natural_mean_activation_on_clamp_axis": 0.03289658358857655
+          },
+          {
+            "frame_index": 41,
+            "family": "C",
+            "letter_probability": 0.013638300821185112,
+            "natural_mean_activation_on_clamp_axis": 0.07076354631541332
+          },
+          {
+            "frame_index": 41,
+            "family": "D",
+            "letter_probability": 0.004840560257434845,
+            "natural_mean_activation_on_clamp_axis": -0.0772420987006024
+          },
+          {
+            "frame_index": 43,
+            "family": "A",
+            "letter_probability": 0.027140071615576744,
+            "natural_mean_activation_on_clamp_axis": -0.026935656613065028
+          },
+          {
+            "frame_index": 43,
+            "family": "B",
+            "letter_probability": 0.20208725333213806,
+            "natural_mean_activation_on_clamp_axis": -0.008370499156717448
+          },
+          {
+            "frame_index": 43,
+            "family": "C",
+            "letter_probability": 0.011644664220511913,
+            "natural_mean_activation_on_clamp_axis": -0.017604027131412063
+          },
+          {
+            "frame_index": 43,
+            "family": "D",
+            "letter_probability": 0.017417412251234055,
+            "natural_mean_activation_on_clamp_axis": -3.41837860978057e-05
+          },
+          {
+            "frame_index": 45,
+            "family": "A",
+            "letter_probability": 0.013193048536777496,
+            "natural_mean_activation_on_clamp_axis": -0.11749907955539667
+          },
+          {
+            "frame_index": 45,
+            "family": "B",
+            "letter_probability": 0.07063281536102295,
+            "natural_mean_activation_on_clamp_axis": -0.1947775426520811
+          },
+          {
+            "frame_index": 45,
+            "family": "C",
+            "letter_probability": 0.008578496985137463,
+            "natural_mean_activation_on_clamp_axis": -0.1067606169868723
+          },
+          {
+            "frame_index": 45,
+            "family": "D",
+            "letter_probability": 0.02520143613219261,
+            "natural_mean_activation_on_clamp_axis": -0.09975946595217508
+          },
+          {
+            "frame_index": 47,
+            "family": "A",
+            "letter_probability": 0.020400146022439003,
+            "natural_mean_activation_on_clamp_axis": -0.1416683897553067
+          },
+          {
+            "frame_index": 47,
+            "family": "B",
+            "letter_probability": 0.07051058858633041,
+            "natural_mean_activation_on_clamp_axis": -0.05743456828414687
+          },
+          {
+            "frame_index": 47,
+            "family": "C",
+            "letter_probability": 0.010033735074102879,
+            "natural_mean_activation_on_clamp_axis": -0.1630161609462288
+          },
+          {
+            "frame_index": 47,
+            "family": "D",
+            "letter_probability": 0.12933962047100067,
+            "natural_mean_activation_on_clamp_axis": -0.17317785970063898
+          },
+          {
+            "frame_index": 49,
+            "family": "A",
+            "letter_probability": 0.010838668793439865,
+            "natural_mean_activation_on_clamp_axis": -0.01315565634417044
+          },
+          {
+            "frame_index": 49,
+            "family": "B",
+            "letter_probability": 0.016987217590212822,
+            "natural_mean_activation_on_clamp_axis": -0.0661920613447385
+          },
+          {
+            "frame_index": 49,
+            "family": "C",
+            "letter_probability": 0.009195866994559765,
+            "natural_mean_activation_on_clamp_axis": -0.10763081617010985
+          },
+          {
+            "frame_index": 49,
+            "family": "D",
+            "letter_probability": 0.027327390387654305,
+            "natural_mean_activation_on_clamp_axis": -0.13743077053632874
+          },
+          {
+            "frame_index": 51,
+            "family": "A",
+            "letter_probability": 0.0037415078841149807,
+            "natural_mean_activation_on_clamp_axis": -0.027950082344584827
+          },
+          {
+            "frame_index": 51,
+            "family": "B",
+            "letter_probability": 0.06643378734588623,
+            "natural_mean_activation_on_clamp_axis": -0.11804429407677562
+          },
+          {
+            "frame_index": 51,
+            "family": "C",
+            "letter_probability": 0.006382453255355358,
+            "natural_mean_activation_on_clamp_axis": -0.023710743449024876
+          },
+          {
+            "frame_index": 51,
+            "family": "D",
+            "letter_probability": 0.001699296641163528,
+            "natural_mean_activation_on_clamp_axis": -0.0776326405266223
+          },
+          {
+            "frame_index": 53,
+            "family": "A",
+            "letter_probability": 0.003346480196341872,
+            "natural_mean_activation_on_clamp_axis": -0.10160255687625151
+          },
+          {
+            "frame_index": 53,
+            "family": "B",
+            "letter_probability": 0.003169576171785593,
+            "natural_mean_activation_on_clamp_axis": -0.10083975480881081
+          },
+          {
+            "frame_index": 53,
+            "family": "C",
+            "letter_probability": 0.008114175871014595,
+            "natural_mean_activation_on_clamp_axis": -0.10515500578078621
+          },
+          {
+            "frame_index": 53,
+            "family": "D",
+            "letter_probability": 0.0035286289639770985,
+            "natural_mean_activation_on_clamp_axis": -0.14535325929763956
+          },
+          {
+            "frame_index": 55,
+            "family": "A",
+            "letter_probability": 0.32266175746917725,
+            "natural_mean_activation_on_clamp_axis": -0.11421952922857005
+          },
+          {
+            "frame_index": 55,
+            "family": "B",
+            "letter_probability": 0.36446401476860046,
+            "natural_mean_activation_on_clamp_axis": -0.11928667578476637
+          },
+          {
+            "frame_index": 55,
+            "family": "C",
+            "letter_probability": 0.4570727050304413,
+            "natural_mean_activation_on_clamp_axis": -0.14499402261638547
+          },
+          {
+            "frame_index": 55,
+            "family": "D",
+            "letter_probability": 0.3631319999694824,
+            "natural_mean_activation_on_clamp_axis": -0.27671947612047304
+          },
+          {
+            "frame_index": 57,
+            "family": "A",
+            "letter_probability": 0.036542605608701706,
+            "natural_mean_activation_on_clamp_axis": 0.023471882598286586
+          },
+          {
+            "frame_index": 57,
+            "family": "B",
+            "letter_probability": 0.048769012093544006,
+            "natural_mean_activation_on_clamp_axis": -0.015417839852576193
+          },
+          {
+            "frame_index": 57,
+            "family": "C",
+            "letter_probability": 0.048148591071367264,
+            "natural_mean_activation_on_clamp_axis": 0.00932879970126306
+          },
+          {
+            "frame_index": 57,
+            "family": "D",
+            "letter_probability": 0.07045701891183853,
+            "natural_mean_activation_on_clamp_axis": -0.06621239199942189
+          },
+          {
+            "frame_index": 59,
+            "family": "A",
+            "letter_probability": 0.0621524415910244,
+            "natural_mean_activation_on_clamp_axis": -0.0187423818091211
+          },
+          {
+            "frame_index": 59,
+            "family": "B",
+            "letter_probability": 0.04960896819829941,
+            "natural_mean_activation_on_clamp_axis": -0.039266994433535755
+          },
+          {
+            "frame_index": 59,
+            "family": "C",
+            "letter_probability": 0.038038063794374466,
+            "natural_mean_activation_on_clamp_axis": -0.07277480441290134
+          },
+          {
+            "frame_index": 59,
+            "family": "D",
+            "letter_probability": 0.4621849060058594,
+            "natural_mean_activation_on_clamp_axis": -0.009369343900350123
+          },
+          {
+            "frame_index": 61,
+            "family": "A",
+            "letter_probability": 0.039393350481987,
+            "natural_mean_activation_on_clamp_axis": -0.11816602866352283
+          },
+          {
+            "frame_index": 61,
+            "family": "B",
+            "letter_probability": 0.029757540673017502,
+            "natural_mean_activation_on_clamp_axis": 0.02563135227376571
+          },
+          {
+            "frame_index": 61,
+            "family": "C",
+            "letter_probability": 0.09553235024213791,
+            "natural_mean_activation_on_clamp_axis": -0.009650302957254527
+          },
+          {
+            "frame_index": 61,
+            "family": "D",
+            "letter_probability": 0.038559213280677795,
+            "natural_mean_activation_on_clamp_axis": -0.10343250988031581
+          },
+          {
+            "frame_index": 63,
+            "family": "A",
+            "letter_probability": 0.008345160633325577,
+            "natural_mean_activation_on_clamp_axis": 0.0516597816469097
+          },
+          {
+            "frame_index": 63,
+            "family": "B",
+            "letter_probability": 0.15927168726921082,
+            "natural_mean_activation_on_clamp_axis": -0.010411311384995816
+          },
+          {
+            "frame_index": 63,
+            "family": "C",
+            "letter_probability": 0.006411719601601362,
+            "natural_mean_activation_on_clamp_axis": 0.08707433938180356
+          },
+          {
+            "frame_index": 63,
+            "family": "D",
+            "letter_probability": 0.0010279342532157898,
+            "natural_mean_activation_on_clamp_axis": -0.045993486687852976
+          },
+          {
+            "frame_index": 65,
+            "family": "A",
+            "letter_probability": 0.020768964663147926,
+            "natural_mean_activation_on_clamp_axis": -0.07554076497286248
+          },
+          {
+            "frame_index": 65,
+            "family": "B",
+            "letter_probability": 0.025380942970514297,
+            "natural_mean_activation_on_clamp_axis": -0.016307489657835315
+          },
+          {
+            "frame_index": 65,
+            "family": "C",
+            "letter_probability": 0.011220226064324379,
+            "natural_mean_activation_on_clamp_axis": -0.009561211413981693
+          },
+          {
+            "frame_index": 65,
+            "family": "D",
+            "letter_probability": 0.09199541062116623,
+            "natural_mean_activation_on_clamp_axis": -0.10659874076104336
+          },
+          {
+            "frame_index": 67,
+            "family": "A",
+            "letter_probability": 0.002607683651149273,
+            "natural_mean_activation_on_clamp_axis": -0.2313367593297262
+          },
+          {
+            "frame_index": 67,
+            "family": "B",
+            "letter_probability": 0.010066762566566467,
+            "natural_mean_activation_on_clamp_axis": -0.13087558938531582
+          },
+          {
+            "frame_index": 67,
+            "family": "C",
+            "letter_probability": 0.009919525124132633,
+            "natural_mean_activation_on_clamp_axis": -0.08819143170342186
+          },
+          {
+            "frame_index": 67,
+            "family": "D",
+            "letter_probability": 0.0007729300996288657,
+            "natural_mean_activation_on_clamp_axis": -0.11926280643687742
+          },
+          {
+            "frame_index": 69,
+            "family": "A",
+            "letter_probability": 0.20010310411453247,
+            "natural_mean_activation_on_clamp_axis": 0.012005064111677403
+          },
+          {
+            "frame_index": 69,
+            "family": "B",
+            "letter_probability": 0.23879487812519073,
+            "natural_mean_activation_on_clamp_axis": 0.10486823943649279
+          },
+          {
+            "frame_index": 69,
+            "family": "C",
+            "letter_probability": 0.11180425435304642,
+            "natural_mean_activation_on_clamp_axis": -0.03280436093310887
+          },
+          {
+            "frame_index": 69,
+            "family": "D",
+            "letter_probability": 0.22143761813640594,
+            "natural_mean_activation_on_clamp_axis": 0.00697939904111786
+          },
+          {
+            "frame_index": 71,
+            "family": "A",
+            "letter_probability": 0.03800782561302185,
+            "natural_mean_activation_on_clamp_axis": 0.018264930380867246
+          },
+          {
+            "frame_index": 71,
+            "family": "B",
+            "letter_probability": 0.14658242464065552,
+            "natural_mean_activation_on_clamp_axis": 0.10202331773626507
+          },
+          {
+            "frame_index": 71,
+            "family": "C",
+            "letter_probability": 0.005460134241729975,
+            "natural_mean_activation_on_clamp_axis": 0.00987245387444134
+          },
+          {
+            "frame_index": 71,
+            "family": "D",
+            "letter_probability": 0.20368453860282898,
+            "natural_mean_activation_on_clamp_axis": -0.11003530288015857
+          }
+        ]
+      },
+      "G3": {
+        "n": 144,
+        "spearman_rho": -0.05063499718672133,
+        "permutation_p_value": 0.552223888055972,
+        "pairs": [
+          {
+            "frame_index": 1,
+            "family": "A",
+            "letter_probability": 0.027404936030507088,
+            "natural_mean_activation_on_clamp_axis": 0.10323473527970513
+          },
+          {
+            "frame_index": 1,
+            "family": "B",
+            "letter_probability": 0.12101950496435165,
+            "natural_mean_activation_on_clamp_axis": -0.00760815198368304
+          },
+          {
+            "frame_index": 1,
+            "family": "C",
+            "letter_probability": 0.7687041163444519,
+            "natural_mean_activation_on_clamp_axis": 0.14182010530439623
+          },
+          {
+            "frame_index": 1,
+            "family": "D",
+            "letter_probability": 0.8875222206115723,
+            "natural_mean_activation_on_clamp_axis": 0.035260600777534554
+          },
+          {
+            "frame_index": 3,
+            "family": "A",
+            "letter_probability": 0.021150751039385796,
+            "natural_mean_activation_on_clamp_axis": -0.12893724416756702
+          },
+          {
+            "frame_index": 3,
+            "family": "B",
+            "letter_probability": 0.46634021401405334,
+            "natural_mean_activation_on_clamp_axis": -0.1467301778032916
+          },
+          {
+            "frame_index": 3,
+            "family": "C",
+            "letter_probability": 0.8239548802375793,
+            "natural_mean_activation_on_clamp_axis": 0.11770561532488073
+          },
+          {
+            "frame_index": 3,
+            "family": "D",
+            "letter_probability": 0.7371194958686829,
+            "natural_mean_activation_on_clamp_axis": -0.16728047822501843
+          },
+          {
+            "frame_index": 5,
+            "family": "A",
+            "letter_probability": 0.014226813800632954,
+            "natural_mean_activation_on_clamp_axis": 0.1087476094546465
+          },
+          {
+            "frame_index": 5,
+            "family": "B",
+            "letter_probability": 0.827623188495636,
+            "natural_mean_activation_on_clamp_axis": -0.035726291815890425
+          },
+          {
+            "frame_index": 5,
+            "family": "C",
+            "letter_probability": 0.8616063594818115,
+            "natural_mean_activation_on_clamp_axis": 0.08041892626180713
+          },
+          {
+            "frame_index": 5,
+            "family": "D",
+            "letter_probability": 0.23094452917575836,
+            "natural_mean_activation_on_clamp_axis": 0.03323117363603944
+          },
+          {
+            "frame_index": 7,
+            "family": "A",
+            "letter_probability": 0.44440582394599915,
+            "natural_mean_activation_on_clamp_axis": 0.009557910288245416
+          },
+          {
+            "frame_index": 7,
+            "family": "B",
+            "letter_probability": 0.029230983927845955,
+            "natural_mean_activation_on_clamp_axis": 0.038884881838396876
+          },
+          {
+            "frame_index": 7,
+            "family": "C",
+            "letter_probability": 0.9065869450569153,
+            "natural_mean_activation_on_clamp_axis": 0.02104934902533973
+          },
+          {
+            "frame_index": 7,
+            "family": "D",
+            "letter_probability": 0.6249889731407166,
+            "natural_mean_activation_on_clamp_axis": -0.06214875372162785
+          },
+          {
+            "frame_index": 9,
+            "family": "A",
+            "letter_probability": 0.6403762698173523,
+            "natural_mean_activation_on_clamp_axis": -0.0634779091585209
+          },
+          {
+            "frame_index": 9,
+            "family": "B",
+            "letter_probability": 0.2277401238679886,
+            "natural_mean_activation_on_clamp_axis": -0.026325671770961658
+          },
+          {
+            "frame_index": 9,
+            "family": "C",
+            "letter_probability": 0.5708817839622498,
+            "natural_mean_activation_on_clamp_axis": -0.010000841674959638
+          },
+          {
+            "frame_index": 9,
+            "family": "D",
+            "letter_probability": 0.9065288305282593,
+            "natural_mean_activation_on_clamp_axis": -0.03724020624539697
+          },
+          {
+            "frame_index": 11,
+            "family": "A",
+            "letter_probability": 0.2594963312149048,
+            "natural_mean_activation_on_clamp_axis": -0.026453817803338463
+          },
+          {
+            "frame_index": 11,
+            "family": "B",
+            "letter_probability": 0.6567417979240417,
+            "natural_mean_activation_on_clamp_axis": 0.029563023104540512
+          },
+          {
+            "frame_index": 11,
+            "family": "C",
+            "letter_probability": 0.7416423559188843,
+            "natural_mean_activation_on_clamp_axis": -0.045862572269941004
+          },
+          {
+            "frame_index": 11,
+            "family": "D",
+            "letter_probability": 0.5314064025878906,
+            "natural_mean_activation_on_clamp_axis": -0.055637625874934746
+          },
+          {
+            "frame_index": 13,
+            "family": "A",
+            "letter_probability": 0.5210494995117188,
+            "natural_mean_activation_on_clamp_axis": 0.13762761311994842
+          },
+          {
+            "frame_index": 13,
+            "family": "B",
+            "letter_probability": 0.9323374032974243,
+            "natural_mean_activation_on_clamp_axis": 0.1306627264120002
+          },
+          {
+            "frame_index": 13,
+            "family": "C",
+            "letter_probability": 0.4978638291358948,
+            "natural_mean_activation_on_clamp_axis": 0.09867703425269964
+          },
+          {
+            "frame_index": 13,
+            "family": "D",
+            "letter_probability": 0.9558034539222717,
+            "natural_mean_activation_on_clamp_axis": 0.05185875073793756
+          },
+          {
+            "frame_index": 15,
+            "family": "A",
+            "letter_probability": 0.6792123317718506,
+            "natural_mean_activation_on_clamp_axis": 0.05016549008596812
+          },
+          {
+            "frame_index": 15,
+            "family": "B",
+            "letter_probability": 0.852655291557312,
+            "natural_mean_activation_on_clamp_axis": 0.015530980232563598
+          },
+          {
+            "frame_index": 15,
+            "family": "C",
+            "letter_probability": 0.8220509886741638,
+            "natural_mean_activation_on_clamp_axis": 0.08775939721282575
+          },
+          {
+            "frame_index": 15,
+            "family": "D",
+            "letter_probability": 0.9749307036399841,
+            "natural_mean_activation_on_clamp_axis": 0.06004262946277207
+          },
+          {
+            "frame_index": 17,
+            "family": "A",
+            "letter_probability": 0.8788439631462097,
+            "natural_mean_activation_on_clamp_axis": 0.16979775922343437
+          },
+          {
+            "frame_index": 17,
+            "family": "B",
+            "letter_probability": 0.4637971818447113,
+            "natural_mean_activation_on_clamp_axis": 0.19857402363638263
+          },
+          {
+            "frame_index": 17,
+            "family": "C",
+            "letter_probability": 0.5354769229888916,
+            "natural_mean_activation_on_clamp_axis": 0.16815152424540536
+          },
+          {
+            "frame_index": 17,
+            "family": "D",
+            "letter_probability": 0.47606590390205383,
+            "natural_mean_activation_on_clamp_axis": 0.215009415819591
+          },
+          {
+            "frame_index": 19,
+            "family": "A",
+            "letter_probability": 0.916801393032074,
+            "natural_mean_activation_on_clamp_axis": 0.031047012763075192
+          },
+          {
+            "frame_index": 19,
+            "family": "B",
+            "letter_probability": 0.8332685828208923,
+            "natural_mean_activation_on_clamp_axis": -0.016498869301534082
+          },
+          {
+            "frame_index": 19,
+            "family": "C",
+            "letter_probability": 0.19834324717521667,
+            "natural_mean_activation_on_clamp_axis": 0.167445272186555
+          },
+          {
+            "frame_index": 19,
+            "family": "D",
+            "letter_probability": 0.61979740858078,
+            "natural_mean_activation_on_clamp_axis": 0.019487650840864654
+          },
+          {
+            "frame_index": 21,
+            "family": "A",
+            "letter_probability": 0.07476183027029037,
+            "natural_mean_activation_on_clamp_axis": 0.1002455252969652
+          },
+          {
+            "frame_index": 21,
+            "family": "B",
+            "letter_probability": 0.10355008393526077,
+            "natural_mean_activation_on_clamp_axis": 0.055822120389093365
+          },
+          {
+            "frame_index": 21,
+            "family": "C",
+            "letter_probability": 0.08377142250537872,
+            "natural_mean_activation_on_clamp_axis": 0.26292028768908837
+          },
+          {
+            "frame_index": 21,
+            "family": "D",
+            "letter_probability": 0.3990226984024048,
+            "natural_mean_activation_on_clamp_axis": 0.019578651487557577
+          },
+          {
+            "frame_index": 23,
+            "family": "A",
+            "letter_probability": 0.9061383008956909,
+            "natural_mean_activation_on_clamp_axis": 0.09697503604181829
+          },
+          {
+            "frame_index": 23,
+            "family": "B",
+            "letter_probability": 0.776785135269165,
+            "natural_mean_activation_on_clamp_axis": 0.11698613093271729
+          },
+          {
+            "frame_index": 23,
+            "family": "C",
+            "letter_probability": 0.9212491512298584,
+            "natural_mean_activation_on_clamp_axis": 0.16990971166009783
+          },
+          {
+            "frame_index": 23,
+            "family": "D",
+            "letter_probability": 0.9707226157188416,
+            "natural_mean_activation_on_clamp_axis": 0.02597134927947993
+          },
+          {
+            "frame_index": 25,
+            "family": "A",
+            "letter_probability": 0.24096770584583282,
+            "natural_mean_activation_on_clamp_axis": 0.128508575222995
+          },
+          {
+            "frame_index": 25,
+            "family": "B",
+            "letter_probability": 0.1550479531288147,
+            "natural_mean_activation_on_clamp_axis": 0.17704102720938752
+          },
+          {
+            "frame_index": 25,
+            "family": "C",
+            "letter_probability": 0.2246125489473343,
+            "natural_mean_activation_on_clamp_axis": 0.061273564125712256
+          },
+          {
+            "frame_index": 25,
+            "family": "D",
+            "letter_probability": 0.9039496183395386,
+            "natural_mean_activation_on_clamp_axis": 0.061523418206280725
+          },
+          {
+            "frame_index": 27,
+            "family": "A",
+            "letter_probability": 0.010311677120625973,
+            "natural_mean_activation_on_clamp_axis": 0.14250624212817417
+          },
+          {
+            "frame_index": 27,
+            "family": "B",
+            "letter_probability": 0.036290403455495834,
+            "natural_mean_activation_on_clamp_axis": 0.13083483454358247
+          },
+          {
+            "frame_index": 27,
+            "family": "C",
+            "letter_probability": 0.22506658732891083,
+            "natural_mean_activation_on_clamp_axis": 0.2261751751297707
+          },
+          {
+            "frame_index": 27,
+            "family": "D",
+            "letter_probability": 0.24833473563194275,
+            "natural_mean_activation_on_clamp_axis": 0.014110697336144432
+          },
+          {
+            "frame_index": 29,
+            "family": "A",
+            "letter_probability": 0.7312387228012085,
+            "natural_mean_activation_on_clamp_axis": 0.1006633766860026
+          },
+          {
+            "frame_index": 29,
+            "family": "B",
+            "letter_probability": 0.7660180926322937,
+            "natural_mean_activation_on_clamp_axis": 0.16805057572698454
+          },
+          {
+            "frame_index": 29,
+            "family": "C",
+            "letter_probability": 0.9265596866607666,
+            "natural_mean_activation_on_clamp_axis": 0.11019629154354621
+          },
+          {
+            "frame_index": 29,
+            "family": "D",
+            "letter_probability": 0.4642985463142395,
+            "natural_mean_activation_on_clamp_axis": 0.2476839988773963
+          },
+          {
+            "frame_index": 31,
+            "family": "A",
+            "letter_probability": 0.5732444524765015,
+            "natural_mean_activation_on_clamp_axis": 0.1090978157384635
+          },
+          {
+            "frame_index": 31,
+            "family": "B",
+            "letter_probability": 0.4018316864967346,
+            "natural_mean_activation_on_clamp_axis": 0.05872179156191417
+          },
+          {
+            "frame_index": 31,
+            "family": "C",
+            "letter_probability": 0.5694326758384705,
+            "natural_mean_activation_on_clamp_axis": 0.09578428326167697
+          },
+          {
+            "frame_index": 31,
+            "family": "D",
+            "letter_probability": 0.8980892300605774,
+            "natural_mean_activation_on_clamp_axis": 0.08918654976793587
+          },
+          {
+            "frame_index": 33,
+            "family": "A",
+            "letter_probability": 0.058036260306835175,
+            "natural_mean_activation_on_clamp_axis": 0.129577235004345
+          },
+          {
+            "frame_index": 33,
+            "family": "B",
+            "letter_probability": 0.9127054214477539,
+            "natural_mean_activation_on_clamp_axis": 0.1119697556741005
+          },
+          {
+            "frame_index": 33,
+            "family": "C",
+            "letter_probability": 0.30662959814071655,
+            "natural_mean_activation_on_clamp_axis": 0.12474166598389061
+          },
+          {
+            "frame_index": 33,
+            "family": "D",
+            "letter_probability": 0.4949139952659607,
+            "natural_mean_activation_on_clamp_axis": 0.07595193824486943
+          },
+          {
+            "frame_index": 35,
+            "family": "A",
+            "letter_probability": 0.11733890324831009,
+            "natural_mean_activation_on_clamp_axis": 0.05135822133615736
+          },
+          {
+            "frame_index": 35,
+            "family": "B",
+            "letter_probability": 0.6637696027755737,
+            "natural_mean_activation_on_clamp_axis": 0.03748249136754051
+          },
+          {
+            "frame_index": 35,
+            "family": "C",
+            "letter_probability": 0.7962442636489868,
+            "natural_mean_activation_on_clamp_axis": 0.046844241824868724
+          },
+          {
+            "frame_index": 35,
+            "family": "D",
+            "letter_probability": 0.802025318145752,
+            "natural_mean_activation_on_clamp_axis": 0.00937650414735905
+          },
+          {
+            "frame_index": 37,
+            "family": "A",
+            "letter_probability": 0.7128491401672363,
+            "natural_mean_activation_on_clamp_axis": 0.1166774030871382
+          },
+          {
+            "frame_index": 37,
+            "family": "B",
+            "letter_probability": 0.21704308688640594,
+            "natural_mean_activation_on_clamp_axis": 0.12956323026360342
+          },
+          {
+            "frame_index": 37,
+            "family": "C",
+            "letter_probability": 0.8408055901527405,
+            "natural_mean_activation_on_clamp_axis": 0.08023113287976297
+          },
+          {
+            "frame_index": 37,
+            "family": "D",
+            "letter_probability": 0.9232698082923889,
+            "natural_mean_activation_on_clamp_axis": 0.06880853696885326
+          },
+          {
+            "frame_index": 39,
+            "family": "A",
+            "letter_probability": 0.6677912473678589,
+            "natural_mean_activation_on_clamp_axis": 0.22864302250211543
+          },
+          {
+            "frame_index": 39,
+            "family": "B",
+            "letter_probability": 0.4331311285495758,
+            "natural_mean_activation_on_clamp_axis": 0.24078152769286432
+          },
+          {
+            "frame_index": 39,
+            "family": "C",
+            "letter_probability": 0.6559452414512634,
+            "natural_mean_activation_on_clamp_axis": 0.18254775727118386
+          },
+          {
+            "frame_index": 39,
+            "family": "D",
+            "letter_probability": 0.2717396020889282,
+            "natural_mean_activation_on_clamp_axis": 0.24610474882496153
+          },
+          {
+            "frame_index": 41,
+            "family": "A",
+            "letter_probability": 0.5206528306007385,
+            "natural_mean_activation_on_clamp_axis": -0.023857560275890057
+          },
+          {
+            "frame_index": 41,
+            "family": "B",
+            "letter_probability": 0.4957345426082611,
+            "natural_mean_activation_on_clamp_axis": 0.009636935593642953
+          },
+          {
+            "frame_index": 41,
+            "family": "C",
+            "letter_probability": 0.6262490749359131,
+            "natural_mean_activation_on_clamp_axis": 0.06937940533339315
+          },
+          {
+            "frame_index": 41,
+            "family": "D",
+            "letter_probability": 0.9607279896736145,
+            "natural_mean_activation_on_clamp_axis": 0.06763482716703306
+          },
+          {
+            "frame_index": 43,
+            "family": "A",
+            "letter_probability": 0.8027695417404175,
+            "natural_mean_activation_on_clamp_axis": 0.01684849638334446
+          },
+          {
+            "frame_index": 43,
+            "family": "B",
+            "letter_probability": 0.6768949627876282,
+            "natural_mean_activation_on_clamp_axis": 0.027516269204209392
+          },
+          {
+            "frame_index": 43,
+            "family": "C",
+            "letter_probability": 0.9513900876045227,
+            "natural_mean_activation_on_clamp_axis": 0.07275451823522576
+          },
+          {
+            "frame_index": 43,
+            "family": "D",
+            "letter_probability": 0.943597674369812,
+            "natural_mean_activation_on_clamp_axis": 0.05344571562855143
+          },
+          {
+            "frame_index": 45,
+            "family": "A",
+            "letter_probability": 0.9168193340301514,
+            "natural_mean_activation_on_clamp_axis": 0.11768745561436054
+          },
+          {
+            "frame_index": 45,
+            "family": "B",
+            "letter_probability": 0.870167076587677,
+            "natural_mean_activation_on_clamp_axis": 0.10228915892323542
+          },
+          {
+            "frame_index": 45,
+            "family": "C",
+            "letter_probability": 0.7615923285484314,
+            "natural_mean_activation_on_clamp_axis": 0.012254327313041142
+          },
+          {
+            "frame_index": 45,
+            "family": "D",
+            "letter_probability": 0.9365992546081543,
+            "natural_mean_activation_on_clamp_axis": 0.04269141563304374
+          },
+          {
+            "frame_index": 47,
+            "family": "A",
+            "letter_probability": 0.6186235547065735,
+            "natural_mean_activation_on_clamp_axis": -0.1095936074057666
+          },
+          {
+            "frame_index": 47,
+            "family": "B",
+            "letter_probability": 0.5539067983627319,
+            "natural_mean_activation_on_clamp_axis": 0.1424441891918862
+          },
+          {
+            "frame_index": 47,
+            "family": "C",
+            "letter_probability": 0.19493049383163452,
+            "natural_mean_activation_on_clamp_axis": -0.04304682837030804
+          },
+          {
+            "frame_index": 47,
+            "family": "D",
+            "letter_probability": 0.6532911658287048,
+            "natural_mean_activation_on_clamp_axis": -0.08254100373753413
+          },
+          {
+            "frame_index": 49,
+            "family": "A",
+            "letter_probability": 0.7284840941429138,
+            "natural_mean_activation_on_clamp_axis": 0.12420389948470806
+          },
+          {
+            "frame_index": 49,
+            "family": "B",
+            "letter_probability": 0.7222253084182739,
+            "natural_mean_activation_on_clamp_axis": 0.09251949550976055
+          },
+          {
+            "frame_index": 49,
+            "family": "C",
+            "letter_probability": 0.9214574694633484,
+            "natural_mean_activation_on_clamp_axis": 0.12682211815091865
+          },
+          {
+            "frame_index": 49,
+            "family": "D",
+            "letter_probability": 0.9129250645637512,
+            "natural_mean_activation_on_clamp_axis": 0.08900651675732676
+          },
+          {
+            "frame_index": 51,
+            "family": "A",
+            "letter_probability": 0.0685279443860054,
+            "natural_mean_activation_on_clamp_axis": 0.03652347254171966
+          },
+          {
+            "frame_index": 51,
+            "family": "B",
+            "letter_probability": 0.8021476864814758,
+            "natural_mean_activation_on_clamp_axis": 0.06967701783404992
+          },
+          {
+            "frame_index": 51,
+            "family": "C",
+            "letter_probability": 0.09836027771234512,
+            "natural_mean_activation_on_clamp_axis": 0.06604253259483539
+          },
+          {
+            "frame_index": 51,
+            "family": "D",
+            "letter_probability": 0.9891942739486694,
+            "natural_mean_activation_on_clamp_axis": 0.04179606296042116
+          },
+          {
+            "frame_index": 53,
+            "family": "A",
+            "letter_probability": 0.8875001668930054,
+            "natural_mean_activation_on_clamp_axis": 0.11565461385415352
+          },
+          {
+            "frame_index": 53,
+            "family": "B",
+            "letter_probability": 0.3500383198261261,
+            "natural_mean_activation_on_clamp_axis": 0.12144971923037948
+          },
+          {
+            "frame_index": 53,
+            "family": "C",
+            "letter_probability": 0.36220619082450867,
+            "natural_mean_activation_on_clamp_axis": 0.07393483661467228
+          },
+          {
+            "frame_index": 53,
+            "family": "D",
+            "letter_probability": 0.9885390400886536,
+            "natural_mean_activation_on_clamp_axis": 0.14856691881667053
+          },
+          {
+            "frame_index": 55,
+            "family": "A",
+            "letter_probability": 0.28659725189208984,
+            "natural_mean_activation_on_clamp_axis": 0.0959624794579411
+          },
+          {
+            "frame_index": 55,
+            "family": "B",
+            "letter_probability": 0.20085082948207855,
+            "natural_mean_activation_on_clamp_axis": -0.04821598819763991
+          },
+          {
+            "frame_index": 55,
+            "family": "C",
+            "letter_probability": 0.15057946741580963,
+            "natural_mean_activation_on_clamp_axis": 0.10268349053790006
+          },
+          {
+            "frame_index": 55,
+            "family": "D",
+            "letter_probability": 0.15916191041469574,
+            "natural_mean_activation_on_clamp_axis": 0.1621022512439883
+          },
+          {
+            "frame_index": 57,
+            "family": "A",
+            "letter_probability": 0.8197709321975708,
+            "natural_mean_activation_on_clamp_axis": 0.04967084271917753
+          },
+          {
+            "frame_index": 57,
+            "family": "B",
+            "letter_probability": 0.8551807403564453,
+            "natural_mean_activation_on_clamp_axis": 0.023193566992709035
+          },
+          {
+            "frame_index": 57,
+            "family": "C",
+            "letter_probability": 0.8344953656196594,
+            "natural_mean_activation_on_clamp_axis": 0.038233046939775236
+          },
+          {
+            "frame_index": 57,
+            "family": "D",
+            "letter_probability": 0.8402950167655945,
+            "natural_mean_activation_on_clamp_axis": 0.03434905188444601
+          },
+          {
+            "frame_index": 59,
+            "family": "A",
+            "letter_probability": 0.7830597758293152,
+            "natural_mean_activation_on_clamp_axis": 0.12916514827215408
+          },
+          {
+            "frame_index": 59,
+            "family": "B",
+            "letter_probability": 0.8415210843086243,
+            "natural_mean_activation_on_clamp_axis": 0.02771693260155554
+          },
+          {
+            "frame_index": 59,
+            "family": "C",
+            "letter_probability": 0.8603594899177551,
+            "natural_mean_activation_on_clamp_axis": 0.07087561275406006
+          },
+          {
+            "frame_index": 59,
+            "family": "D",
+            "letter_probability": 0.1798287183046341,
+            "natural_mean_activation_on_clamp_axis": 0.07312456487270011
+          },
+          {
+            "frame_index": 61,
+            "family": "A",
+            "letter_probability": 0.7678647041320801,
+            "natural_mean_activation_on_clamp_axis": 0.07213628490856928
+          },
+          {
+            "frame_index": 61,
+            "family": "B",
+            "letter_probability": 0.7416278123855591,
+            "natural_mean_activation_on_clamp_axis": 0.04010385004707886
+          },
+          {
+            "frame_index": 61,
+            "family": "C",
+            "letter_probability": 0.7145268321037292,
+            "natural_mean_activation_on_clamp_axis": -0.09236933137419841
+          },
+          {
+            "frame_index": 61,
+            "family": "D",
+            "letter_probability": 0.882188618183136,
+            "natural_mean_activation_on_clamp_axis": 0.13688175484970966
+          },
+          {
+            "frame_index": 63,
+            "family": "A",
+            "letter_probability": 0.8320454955101013,
+            "natural_mean_activation_on_clamp_axis": 0.1331352906911637
+          },
+          {
+            "frame_index": 63,
+            "family": "B",
+            "letter_probability": 0.7409000992774963,
+            "natural_mean_activation_on_clamp_axis": 0.10292322266671541
+          },
+          {
+            "frame_index": 63,
+            "family": "C",
+            "letter_probability": 0.9199100136756897,
+            "natural_mean_activation_on_clamp_axis": 0.15448601446974805
+          },
+          {
+            "frame_index": 63,
+            "family": "D",
+            "letter_probability": 0.988806962966919,
+            "natural_mean_activation_on_clamp_axis": 0.05512695062871855
+          },
+          {
+            "frame_index": 65,
+            "family": "A",
+            "letter_probability": 0.8187587261199951,
+            "natural_mean_activation_on_clamp_axis": -0.014086640006560297
+          },
+          {
+            "frame_index": 65,
+            "family": "B",
+            "letter_probability": 0.8456922769546509,
+            "natural_mean_activation_on_clamp_axis": 0.12442713762683845
+          },
+          {
+            "frame_index": 65,
+            "family": "C",
+            "letter_probability": 0.6378786563873291,
+            "natural_mean_activation_on_clamp_axis": -0.03759653007582041
+          },
+          {
+            "frame_index": 65,
+            "family": "D",
+            "letter_probability": 0.7104737162590027,
+            "natural_mean_activation_on_clamp_axis": -0.026363647057851724
+          },
+          {
+            "frame_index": 67,
+            "family": "A",
+            "letter_probability": 0.044185783714056015,
+            "natural_mean_activation_on_clamp_axis": 0.02452184488700097
+          },
+          {
+            "frame_index": 67,
+            "family": "B",
+            "letter_probability": 0.5680674314498901,
+            "natural_mean_activation_on_clamp_axis": 0.2126131859898873
+          },
+          {
+            "frame_index": 67,
+            "family": "C",
+            "letter_probability": 0.20130860805511475,
+            "natural_mean_activation_on_clamp_axis": 0.21758695408917908
+          },
+          {
+            "frame_index": 67,
+            "family": "D",
+            "letter_probability": 0.11789824813604355,
+            "natural_mean_activation_on_clamp_axis": 0.06905580417392572
+          },
+          {
+            "frame_index": 69,
+            "family": "A",
+            "letter_probability": 0.5510079860687256,
+            "natural_mean_activation_on_clamp_axis": 0.06288232301500649
+          },
+          {
+            "frame_index": 69,
+            "family": "B",
+            "letter_probability": 0.5047637224197388,
+            "natural_mean_activation_on_clamp_axis": 0.07100311260427943
+          },
+          {
+            "frame_index": 69,
+            "family": "C",
+            "letter_probability": 0.5474731922149658,
+            "natural_mean_activation_on_clamp_axis": 0.10241634550408914
+          },
+          {
+            "frame_index": 69,
+            "family": "D",
+            "letter_probability": 0.48196884989738464,
+            "natural_mean_activation_on_clamp_axis": -0.08776160233004845
+          },
+          {
+            "frame_index": 71,
+            "family": "A",
+            "letter_probability": 0.7500497102737427,
+            "natural_mean_activation_on_clamp_axis": -0.04753513541010908
+          },
+          {
+            "frame_index": 71,
+            "family": "B",
+            "letter_probability": 0.5924603343009949,
+            "natural_mean_activation_on_clamp_axis": 0.0755394765726412
+          },
+          {
+            "frame_index": 71,
+            "family": "C",
+            "letter_probability": 0.9107147455215454,
+            "natural_mean_activation_on_clamp_axis": -0.08446765389873312
+          },
+          {
+            "frame_index": 71,
+            "family": "D",
+            "letter_probability": 0.2796010971069336,
+            "natural_mean_activation_on_clamp_axis": -0.15267045340641552
+          }
+        ]
+      },
+      "G4": {
+        "n": 144,
+        "spearman_rho": -0.08617876376497066,
+        "permutation_p_value": 0.2818590704647676,
+        "pairs": [
+          {
+            "frame_index": 1,
+            "family": "A",
+            "letter_probability": 0.5085824131965637,
+            "natural_mean_activation_on_clamp_axis": -0.060090325521371994
+          },
+          {
+            "frame_index": 1,
+            "family": "B",
+            "letter_probability": 0.5025350451469421,
+            "natural_mean_activation_on_clamp_axis": -0.032625863178104154
+          },
+          {
+            "frame_index": 1,
+            "family": "C",
+            "letter_probability": 0.04420394450426102,
+            "natural_mean_activation_on_clamp_axis": -0.166784260465983
+          },
+          {
+            "frame_index": 1,
+            "family": "D",
+            "letter_probability": 0.0740116611123085,
+            "natural_mean_activation_on_clamp_axis": -0.05907750362392104
+          },
+          {
+            "frame_index": 3,
+            "family": "A",
+            "letter_probability": 0.5274894833564758,
+            "natural_mean_activation_on_clamp_axis": -0.16461952354343576
+          },
+          {
+            "frame_index": 3,
+            "family": "B",
+            "letter_probability": 0.10073933750391006,
+            "natural_mean_activation_on_clamp_axis": -0.11432068817705592
+          },
+          {
+            "frame_index": 3,
+            "family": "C",
+            "letter_probability": 0.1143561452627182,
+            "natural_mean_activation_on_clamp_axis": -0.3331048357560517
+          },
+          {
+            "frame_index": 3,
+            "family": "D",
+            "letter_probability": 0.1403260976076126,
+            "natural_mean_activation_on_clamp_axis": -0.20814017240100605
+          },
+          {
+            "frame_index": 5,
+            "family": "A",
+            "letter_probability": 0.5284151434898376,
+            "natural_mean_activation_on_clamp_axis": 0.08195929663242063
+          },
+          {
+            "frame_index": 5,
+            "family": "B",
+            "letter_probability": 0.0913967415690422,
+            "natural_mean_activation_on_clamp_axis": -0.01724597269886101
+          },
+          {
+            "frame_index": 5,
+            "family": "C",
+            "letter_probability": 0.08687976747751236,
+            "natural_mean_activation_on_clamp_axis": -0.08026357821458913
+          },
+          {
+            "frame_index": 5,
+            "family": "D",
+            "letter_probability": 0.6648008823394775,
+            "natural_mean_activation_on_clamp_axis": -0.12543598897135227
+          },
+          {
+            "frame_index": 7,
+            "family": "A",
+            "letter_probability": 0.013517642393708229,
+            "natural_mean_activation_on_clamp_axis": -0.06493833745423865
+          },
+          {
+            "frame_index": 7,
+            "family": "B",
+            "letter_probability": 0.00032707376522012055,
+            "natural_mean_activation_on_clamp_axis": -0.17131289505402006
+          },
+          {
+            "frame_index": 7,
+            "family": "C",
+            "letter_probability": 0.04142777994275093,
+            "natural_mean_activation_on_clamp_axis": -0.16721607608944716
+          },
+          {
+            "frame_index": 7,
+            "family": "D",
+            "letter_probability": 0.012926184572279453,
+            "natural_mean_activation_on_clamp_axis": -0.06448367987665343
+          },
+          {
+            "frame_index": 9,
+            "family": "A",
+            "letter_probability": 0.20475269854068756,
+            "natural_mean_activation_on_clamp_axis": -0.06600906753978723
+          },
+          {
+            "frame_index": 9,
+            "family": "B",
+            "letter_probability": 0.003200419945642352,
+            "natural_mean_activation_on_clamp_axis": -0.12232053801910378
+          },
+          {
+            "frame_index": 9,
+            "family": "C",
+            "letter_probability": 0.35165169835090637,
+            "natural_mean_activation_on_clamp_axis": -0.11697587393031267
+          },
+          {
+            "frame_index": 9,
+            "family": "D",
+            "letter_probability": 0.003063568379729986,
+            "natural_mean_activation_on_clamp_axis": -0.13280364880440726
+          },
+          {
+            "frame_index": 11,
+            "family": "A",
+            "letter_probability": 0.5751755237579346,
+            "natural_mean_activation_on_clamp_axis": -0.05534695964565268
+          },
+          {
+            "frame_index": 11,
+            "family": "B",
+            "letter_probability": 0.03839641809463501,
+            "natural_mean_activation_on_clamp_axis": 0.021122650570052637
+          },
+          {
+            "frame_index": 11,
+            "family": "C",
+            "letter_probability": 0.1678827404975891,
+            "natural_mean_activation_on_clamp_axis": -0.12246919528737074
+          },
+          {
+            "frame_index": 11,
+            "family": "D",
+            "letter_probability": 0.012353011406958103,
+            "natural_mean_activation_on_clamp_axis": -0.024281187919147892
+          },
+          {
+            "frame_index": 13,
+            "family": "A",
+            "letter_probability": 0.41599252820014954,
+            "natural_mean_activation_on_clamp_axis": -0.02712284220613884
+          },
+          {
+            "frame_index": 13,
+            "family": "B",
+            "letter_probability": 0.03943021968007088,
+            "natural_mean_activation_on_clamp_axis": -0.06722829312977502
+          },
+          {
+            "frame_index": 13,
+            "family": "C",
+            "letter_probability": 0.4265861213207245,
+            "natural_mean_activation_on_clamp_axis": -0.03600017186859156
+          },
+          {
+            "frame_index": 13,
+            "family": "D",
+            "letter_probability": 0.022331126034259796,
+            "natural_mean_activation_on_clamp_axis": 0.04703480284251408
+          },
+          {
+            "frame_index": 15,
+            "family": "A",
+            "letter_probability": 0.25910332798957825,
+            "natural_mean_activation_on_clamp_axis": -0.0614545809185592
+          },
+          {
+            "frame_index": 15,
+            "family": "B",
+            "letter_probability": 0.040460046380758286,
+            "natural_mean_activation_on_clamp_axis": -0.07099277514861833
+          },
+          {
+            "frame_index": 15,
+            "family": "C",
+            "letter_probability": 0.025526387616991997,
+            "natural_mean_activation_on_clamp_axis": -0.057820381290053215
+          },
+          {
+            "frame_index": 15,
+            "family": "D",
+            "letter_probability": 0.00607341481372714,
+            "natural_mean_activation_on_clamp_axis": -0.036009920615091284
+          },
+          {
+            "frame_index": 17,
+            "family": "A",
+            "letter_probability": 0.0038282223977148533,
+            "natural_mean_activation_on_clamp_axis": -0.13626736459072508
+          },
+          {
+            "frame_index": 17,
+            "family": "B",
+            "letter_probability": 0.0036646013613790274,
+            "natural_mean_activation_on_clamp_axis": -0.05979356915010479
+          },
+          {
+            "frame_index": 17,
+            "family": "C",
+            "letter_probability": 0.3590773344039917,
+            "natural_mean_activation_on_clamp_axis": 0.008836462705129833
+          },
+          {
+            "frame_index": 17,
+            "family": "D",
+            "letter_probability": 0.0024259500205516815,
+            "natural_mean_activation_on_clamp_axis": -0.1280352623458893
+          },
+          {
+            "frame_index": 19,
+            "family": "A",
+            "letter_probability": 0.05905260518193245,
+            "natural_mean_activation_on_clamp_axis": -0.14063544643242384
+          },
+          {
+            "frame_index": 19,
+            "family": "B",
+            "letter_probability": 0.004945732187479734,
+            "natural_mean_activation_on_clamp_axis": -0.15368431332589502
+          },
+          {
+            "frame_index": 19,
+            "family": "C",
+            "letter_probability": 0.7250445485115051,
+            "natural_mean_activation_on_clamp_axis": -0.3283719569877873
+          },
+          {
+            "frame_index": 19,
+            "family": "D",
+            "letter_probability": 0.001963093178346753,
+            "natural_mean_activation_on_clamp_axis": -0.09276186358939276
+          },
+          {
+            "frame_index": 21,
+            "family": "A",
+            "letter_probability": 0.5436868667602539,
+            "natural_mean_activation_on_clamp_axis": -0.09780261768678372
+          },
+          {
+            "frame_index": 21,
+            "family": "B",
+            "letter_probability": 0.0061115906573832035,
+            "natural_mean_activation_on_clamp_axis": -0.09196250994172311
+          },
+          {
+            "frame_index": 21,
+            "family": "C",
+            "letter_probability": 0.6647858023643494,
+            "natural_mean_activation_on_clamp_axis": -0.14578864234146768
+          },
+          {
+            "frame_index": 21,
+            "family": "D",
+            "letter_probability": 0.0016327997436746955,
+            "natural_mean_activation_on_clamp_axis": -0.11335285457774529
+          },
+          {
+            "frame_index": 23,
+            "family": "A",
+            "letter_probability": 0.007393449544906616,
+            "natural_mean_activation_on_clamp_axis": -0.0036389490366889056
+          },
+          {
+            "frame_index": 23,
+            "family": "B",
+            "letter_probability": 0.0040244124829769135,
+            "natural_mean_activation_on_clamp_axis": -0.09643673411119535
+          },
+          {
+            "frame_index": 23,
+            "family": "C",
+            "letter_probability": 0.04616408795118332,
+            "natural_mean_activation_on_clamp_axis": -0.14808522539326754
+          },
+          {
+            "frame_index": 23,
+            "family": "D",
+            "letter_probability": 0.0022420373279601336,
+            "natural_mean_activation_on_clamp_axis": -0.06839446353569369
+          },
+          {
+            "frame_index": 25,
+            "family": "A",
+            "letter_probability": 0.5860512256622314,
+            "natural_mean_activation_on_clamp_axis": -0.13935924171525624
+          },
+          {
+            "frame_index": 25,
+            "family": "B",
+            "letter_probability": 0.020708557218313217,
+            "natural_mean_activation_on_clamp_axis": -0.10875807081961729
+          },
+          {
+            "frame_index": 25,
+            "family": "C",
+            "letter_probability": 0.3884326219558716,
+            "natural_mean_activation_on_clamp_axis": -0.14017019129463193
+          },
+          {
+            "frame_index": 25,
+            "family": "D",
+            "letter_probability": 0.0776916965842247,
+            "natural_mean_activation_on_clamp_axis": -0.17618800652529307
+          },
+          {
+            "frame_index": 27,
+            "family": "A",
+            "letter_probability": 0.48224198818206787,
+            "natural_mean_activation_on_clamp_axis": -0.04058714415267878
+          },
+          {
+            "frame_index": 27,
+            "family": "B",
+            "letter_probability": 0.6250183582305908,
+            "natural_mean_activation_on_clamp_axis": -0.05404622508588713
+          },
+          {
+            "frame_index": 27,
+            "family": "C",
+            "letter_probability": 0.4439474046230316,
+            "natural_mean_activation_on_clamp_axis": -0.1472196865863935
+          },
+          {
+            "frame_index": 27,
+            "family": "D",
+            "letter_probability": 0.4862157702445984,
+            "natural_mean_activation_on_clamp_axis": -0.11023605358532658
+          },
+          {
+            "frame_index": 29,
+            "family": "A",
+            "letter_probability": 0.21853575110435486,
+            "natural_mean_activation_on_clamp_axis": -0.1499625696790278
+          },
+          {
+            "frame_index": 29,
+            "family": "B",
+            "letter_probability": 0.08628468215465546,
+            "natural_mean_activation_on_clamp_axis": -0.0389203144422564
+          },
+          {
+            "frame_index": 29,
+            "family": "C",
+            "letter_probability": 0.041540537029504776,
+            "natural_mean_activation_on_clamp_axis": -0.1751045283297466
+          },
+          {
+            "frame_index": 29,
+            "family": "D",
+            "letter_probability": 0.1923707127571106,
+            "natural_mean_activation_on_clamp_axis": -0.08043797738677064
+          },
+          {
+            "frame_index": 31,
+            "family": "A",
+            "letter_probability": 0.24418923258781433,
+            "natural_mean_activation_on_clamp_axis": -0.06103409648243262
+          },
+          {
+            "frame_index": 31,
+            "family": "B",
+            "letter_probability": 0.021006079390645027,
+            "natural_mean_activation_on_clamp_axis": 0.0521830932525358
+          },
+          {
+            "frame_index": 31,
+            "family": "C",
+            "letter_probability": 0.2287750393152237,
+            "natural_mean_activation_on_clamp_axis": -0.09680578207732683
+          },
+          {
+            "frame_index": 31,
+            "family": "D",
+            "letter_probability": 0.01950111612677574,
+            "natural_mean_activation_on_clamp_axis": -0.14971562541247113
+          },
+          {
+            "frame_index": 33,
+            "family": "A",
+            "letter_probability": 0.6575608253479004,
+            "natural_mean_activation_on_clamp_axis": -0.11110776636258808
+          },
+          {
+            "frame_index": 33,
+            "family": "B",
+            "letter_probability": 0.021929249167442322,
+            "natural_mean_activation_on_clamp_axis": -0.0014315363178389962
+          },
+          {
+            "frame_index": 33,
+            "family": "C",
+            "letter_probability": 0.5616422891616821,
+            "natural_mean_activation_on_clamp_axis": -0.15427872189639774
+          },
+          {
+            "frame_index": 33,
+            "family": "D",
+            "letter_probability": 0.45531564950942993,
+            "natural_mean_activation_on_clamp_axis": -0.07474238013329235
+          },
+          {
+            "frame_index": 35,
+            "family": "A",
+            "letter_probability": 0.6895883679389954,
+            "natural_mean_activation_on_clamp_axis": -0.05307707837238661
+          },
+          {
+            "frame_index": 35,
+            "family": "B",
+            "letter_probability": 0.07382515072822571,
+            "natural_mean_activation_on_clamp_axis": -0.002819605365887987
+          },
+          {
+            "frame_index": 35,
+            "family": "C",
+            "letter_probability": 0.13155364990234375,
+            "natural_mean_activation_on_clamp_axis": -0.06993562874452469
+          },
+          {
+            "frame_index": 35,
+            "family": "D",
+            "letter_probability": 0.009540313854813576,
+            "natural_mean_activation_on_clamp_axis": -0.055752593194015
+          },
+          {
+            "frame_index": 37,
+            "family": "A",
+            "letter_probability": 0.07136296480894089,
+            "natural_mean_activation_on_clamp_axis": -0.11326775961894842
+          },
+          {
+            "frame_index": 37,
+            "family": "B",
+            "letter_probability": 0.008649196475744247,
+            "natural_mean_activation_on_clamp_axis": -0.12061427767406156
+          },
+          {
+            "frame_index": 37,
+            "family": "C",
+            "letter_probability": 0.04321255907416344,
+            "natural_mean_activation_on_clamp_axis": -0.0991932446144554
+          },
+          {
+            "frame_index": 37,
+            "family": "D",
+            "letter_probability": 0.02991420030593872,
+            "natural_mean_activation_on_clamp_axis": -0.1371165501819658
+          },
+          {
+            "frame_index": 39,
+            "family": "A",
+            "letter_probability": 0.02047182060778141,
+            "natural_mean_activation_on_clamp_axis": -0.12694900534730047
+          },
+          {
+            "frame_index": 39,
+            "family": "B",
+            "letter_probability": 0.022685598582029343,
+            "natural_mean_activation_on_clamp_axis": 0.012673319322833314
+          },
+          {
+            "frame_index": 39,
+            "family": "C",
+            "letter_probability": 0.09248100966215134,
+            "natural_mean_activation_on_clamp_axis": -0.2367107151514578
+          },
+          {
+            "frame_index": 39,
+            "family": "D",
+            "letter_probability": 0.012399564497172832,
+            "natural_mean_activation_on_clamp_axis": -0.11013753612945983
+          },
+          {
+            "frame_index": 41,
+            "family": "A",
+            "letter_probability": 0.3641383647918701,
+            "natural_mean_activation_on_clamp_axis": -0.11548301468489827
+          },
+          {
+            "frame_index": 41,
+            "family": "B",
+            "letter_probability": 0.019943246617913246,
+            "natural_mean_activation_on_clamp_axis": -0.036419840075376894
+          },
+          {
+            "frame_index": 41,
+            "family": "C",
+            "letter_probability": 0.2945832312107086,
+            "natural_mean_activation_on_clamp_axis": -0.15430714539840223
+          },
+          {
+            "frame_index": 41,
+            "family": "D",
+            "letter_probability": 0.020784245803952217,
+            "natural_mean_activation_on_clamp_axis": -0.06298726394014595
+          },
+          {
+            "frame_index": 43,
+            "family": "A",
+            "letter_probability": 0.11401404440402985,
+            "natural_mean_activation_on_clamp_axis": -0.09795111979098843
+          },
+          {
+            "frame_index": 43,
+            "family": "B",
+            "letter_probability": 0.013688253238797188,
+            "natural_mean_activation_on_clamp_axis": 0.041770746568253476
+          },
+          {
+            "frame_index": 43,
+            "family": "C",
+            "letter_probability": 0.021549390628933907,
+            "natural_mean_activation_on_clamp_axis": -0.08205550615687533
+          },
+          {
+            "frame_index": 43,
+            "family": "D",
+            "letter_probability": 0.006215809378772974,
+            "natural_mean_activation_on_clamp_axis": -0.20973527242032872
+          },
+          {
+            "frame_index": 45,
+            "family": "A",
+            "letter_probability": 0.04782940074801445,
+            "natural_mean_activation_on_clamp_axis": -0.15740466782566603
+          },
+          {
+            "frame_index": 45,
+            "family": "B",
+            "letter_probability": 0.006930057890713215,
+            "natural_mean_activation_on_clamp_axis": -0.150433007242902
+          },
+          {
+            "frame_index": 45,
+            "family": "C",
+            "letter_probability": 0.18738172948360443,
+            "natural_mean_activation_on_clamp_axis": -0.10789310241531466
+          },
+          {
+            "frame_index": 45,
+            "family": "D",
+            "letter_probability": 0.0074725984595716,
+            "natural_mean_activation_on_clamp_axis": -0.036406922742267166
+          },
+          {
+            "frame_index": 47,
+            "family": "A",
+            "letter_probability": 0.3076852560043335,
+            "natural_mean_activation_on_clamp_axis": -0.02137251077032492
+          },
+          {
+            "frame_index": 47,
+            "family": "B",
+            "letter_probability": 0.25169745087623596,
+            "natural_mean_activation_on_clamp_axis": -0.09407208153045986
+          },
+          {
+            "frame_index": 47,
+            "family": "C",
+            "letter_probability": 0.6620715260505676,
+            "natural_mean_activation_on_clamp_axis": -0.0701145859163918
+          },
+          {
+            "frame_index": 47,
+            "family": "D",
+            "letter_probability": 0.08532700687646866,
+            "natural_mean_activation_on_clamp_axis": -0.07179990007407498
+          },
+          {
+            "frame_index": 49,
+            "family": "A",
+            "letter_probability": 0.19580498337745667,
+            "natural_mean_activation_on_clamp_axis": -0.11106287400961092
+          },
+          {
+            "frame_index": 49,
+            "family": "B",
+            "letter_probability": 0.19984830915927887,
+            "natural_mean_activation_on_clamp_axis": -0.09558497633262467
+          },
+          {
+            "frame_index": 49,
+            "family": "C",
+            "letter_probability": 0.04062424600124359,
+            "natural_mean_activation_on_clamp_axis": -0.09499116609558308
+          },
+          {
+            "frame_index": 49,
+            "family": "D",
+            "letter_probability": 0.019413834437727928,
+            "natural_mean_activation_on_clamp_axis": -0.0870693431742282
+          },
+          {
+            "frame_index": 51,
+            "family": "A",
+            "letter_probability": 0.5449352264404297,
+            "natural_mean_activation_on_clamp_axis": -0.1497592084287535
+          },
+          {
+            "frame_index": 51,
+            "family": "B",
+            "letter_probability": 0.035747405141592026,
+            "natural_mean_activation_on_clamp_axis": -0.18236704301249845
+          },
+          {
+            "frame_index": 51,
+            "family": "C",
+            "letter_probability": 0.624415397644043,
+            "natural_mean_activation_on_clamp_axis": -0.18900868151099168
+          },
+          {
+            "frame_index": 51,
+            "family": "D",
+            "letter_probability": 0.004373072646558285,
+            "natural_mean_activation_on_clamp_axis": -0.17869544997341938
+          },
+          {
+            "frame_index": 53,
+            "family": "A",
+            "letter_probability": 0.09143578261137009,
+            "natural_mean_activation_on_clamp_axis": -0.25617863489549564
+          },
+          {
+            "frame_index": 53,
+            "family": "B",
+            "letter_probability": 0.5723624229431152,
+            "natural_mean_activation_on_clamp_axis": -0.2655940687289887
+          },
+          {
+            "frame_index": 53,
+            "family": "C",
+            "letter_probability": 0.5266421437263489,
+            "natural_mean_activation_on_clamp_axis": -0.023831255006296227
+          },
+          {
+            "frame_index": 53,
+            "family": "D",
+            "letter_probability": 0.0032465551048517227,
+            "natural_mean_activation_on_clamp_axis": -0.4092366755502183
+          },
+          {
+            "frame_index": 55,
+            "family": "A",
+            "letter_probability": 0.003515923162922263,
+            "natural_mean_activation_on_clamp_axis": -0.06565681226253506
+          },
+          {
+            "frame_index": 55,
+            "family": "B",
+            "letter_probability": 0.003295003902167082,
+            "natural_mean_activation_on_clamp_axis": -0.10120603896126082
+          },
+          {
+            "frame_index": 55,
+            "family": "C",
+            "letter_probability": 0.0006590661942027509,
+            "natural_mean_activation_on_clamp_axis": -0.013576618449314544
+          },
+          {
+            "frame_index": 55,
+            "family": "D",
+            "letter_probability": 0.0023122101556509733,
+            "natural_mean_activation_on_clamp_axis": -0.16658904754760342
+          },
+          {
+            "frame_index": 57,
+            "family": "A",
+            "letter_probability": 0.08319815248250961,
+            "natural_mean_activation_on_clamp_axis": -0.12055569383150605
+          },
+          {
+            "frame_index": 57,
+            "family": "B",
+            "letter_probability": 0.010206039063632488,
+            "natural_mean_activation_on_clamp_axis": -0.03953226329944968
+          },
+          {
+            "frame_index": 57,
+            "family": "C",
+            "letter_probability": 0.06115423142910004,
+            "natural_mean_activation_on_clamp_axis": -0.18136423818778344
+          },
+          {
+            "frame_index": 57,
+            "family": "D",
+            "letter_probability": 0.010610872879624367,
+            "natural_mean_activation_on_clamp_axis": -0.06335723732024415
+          },
+          {
+            "frame_index": 59,
+            "family": "A",
+            "letter_probability": 0.016995292156934738,
+            "natural_mean_activation_on_clamp_axis": -0.09836011816490728
+          },
+          {
+            "frame_index": 59,
+            "family": "B",
+            "letter_probability": 0.015212438069283962,
+            "natural_mean_activation_on_clamp_axis": 0.015184158160617345
+          },
+          {
+            "frame_index": 59,
+            "family": "C",
+            "letter_probability": 0.016540663316845894,
+            "natural_mean_activation_on_clamp_axis": -0.12440940106906835
+          },
+          {
+            "frame_index": 59,
+            "family": "D",
+            "letter_probability": 0.0029102747794240713,
+            "natural_mean_activation_on_clamp_axis": -0.09179041952362338
+          },
+          {
+            "frame_index": 61,
+            "family": "A",
+            "letter_probability": 0.13752909004688263,
+            "natural_mean_activation_on_clamp_axis": -0.018395030040290545
+          },
+          {
+            "frame_index": 61,
+            "family": "B",
+            "letter_probability": 0.17111091315746307,
+            "natural_mean_activation_on_clamp_axis": -0.09709756307097339
+          },
+          {
+            "frame_index": 61,
+            "family": "C",
+            "letter_probability": 0.014884505420923233,
+            "natural_mean_activation_on_clamp_axis": 0.040376262936068
+          },
+          {
+            "frame_index": 61,
+            "family": "D",
+            "letter_probability": 0.007533083204180002,
+            "natural_mean_activation_on_clamp_axis": -0.11532543146702676
+          },
+          {
+            "frame_index": 63,
+            "family": "A",
+            "letter_probability": 0.13119801878929138,
+            "natural_mean_activation_on_clamp_axis": -0.16851892125615614
+          },
+          {
+            "frame_index": 63,
+            "family": "B",
+            "letter_probability": 0.011542863212525845,
+            "natural_mean_activation_on_clamp_axis": -0.06271553232140116
+          },
+          {
+            "frame_index": 63,
+            "family": "C",
+            "letter_probability": 0.05547920987010002,
+            "natural_mean_activation_on_clamp_axis": -0.07449573799032477
+          },
+          {
+            "frame_index": 63,
+            "family": "D",
+            "letter_probability": 0.0029786615632474422,
+            "natural_mean_activation_on_clamp_axis": -0.14838380913056956
+          },
+          {
+            "frame_index": 65,
+            "family": "A",
+            "letter_probability": 0.09637436270713806,
+            "natural_mean_activation_on_clamp_axis": -0.09123925961726273
+          },
+          {
+            "frame_index": 65,
+            "family": "B",
+            "letter_probability": 0.020227273926138878,
+            "natural_mean_activation_on_clamp_axis": -0.08667693787310395
+          },
+          {
+            "frame_index": 65,
+            "family": "C",
+            "letter_probability": 0.29381272196769714,
+            "natural_mean_activation_on_clamp_axis": -0.030398673736040813
+          },
+          {
+            "frame_index": 65,
+            "family": "D",
+            "letter_probability": 0.11030630767345428,
+            "natural_mean_activation_on_clamp_axis": -0.11873309293499895
+          },
+          {
+            "frame_index": 67,
+            "family": "A",
+            "letter_probability": 0.6092589497566223,
+            "natural_mean_activation_on_clamp_axis": -0.21245502570962366
+          },
+          {
+            "frame_index": 67,
+            "family": "B",
+            "letter_probability": 0.3861585855484009,
+            "natural_mean_activation_on_clamp_axis": -0.20593568513525135
+          },
+          {
+            "frame_index": 67,
+            "family": "C",
+            "letter_probability": 0.6176484227180481,
+            "natural_mean_activation_on_clamp_axis": -0.20410150130372198
+          },
+          {
+            "frame_index": 67,
+            "family": "D",
+            "letter_probability": 0.7240900993347168,
+            "natural_mean_activation_on_clamp_axis": -0.2706781276822053
+          },
+          {
+            "frame_index": 69,
+            "family": "A",
+            "letter_probability": 0.0797572135925293,
+            "natural_mean_activation_on_clamp_axis": 0.06073075704863892
+          },
+          {
+            "frame_index": 69,
+            "family": "B",
+            "letter_probability": 0.01567124016582966,
+            "natural_mean_activation_on_clamp_axis": 0.08293809895259639
+          },
+          {
+            "frame_index": 69,
+            "family": "C",
+            "letter_probability": 0.21991609036922455,
+            "natural_mean_activation_on_clamp_axis": -0.015297242284735167
+          },
+          {
+            "frame_index": 69,
+            "family": "D",
+            "letter_probability": 0.01636035367846489,
+            "natural_mean_activation_on_clamp_axis": -0.009951088144206163
+          },
+          {
+            "frame_index": 71,
+            "family": "A",
+            "letter_probability": 0.13885590434074402,
+            "natural_mean_activation_on_clamp_axis": -0.17904335401063753
+          },
+          {
+            "frame_index": 71,
+            "family": "B",
+            "letter_probability": 0.032002728432416916,
+            "natural_mean_activation_on_clamp_axis": -0.19285827700454491
+          },
+          {
+            "frame_index": 71,
+            "family": "C",
+            "letter_probability": 0.06517601013183594,
+            "natural_mean_activation_on_clamp_axis": -0.1946754314182298
+          },
+          {
+            "frame_index": 71,
+            "family": "D",
+            "letter_probability": 0.002535666571930051,
+            "natural_mean_activation_on_clamp_axis": -0.1549376292668181
+          }
+        ]
+      }
+    },
+    "mean_rho": 0.049438349007314523,
+    "pooled_permutation_p_value": 0.2413793103448276
+  }
+}
