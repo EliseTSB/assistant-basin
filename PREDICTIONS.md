@@ -615,3 +615,17 @@ Muse read README and this file cold. What each point changed, checked 2026-10-17
 - **Still missing:** a content-fixed control (Aoki et al. 2609.00904: the same text every time, only the internal state
   varies) and a graded-confidence readout (Ferrara 2608.20569). Ferrara's LoRA on 400 directions reaches 100/100,
   so 98-100% steered accuracy here shows the training can find the signal, not that the model introspects.
+
+## Part 1g: Muse Spark 1.3 Contributor in place of Jev on 1e's TEST scoring (written 2026-10-18 00:08 CT, before any request is answered)
+
+Elise asked to try Muse Spark as the neuron judge (10-18). In the 170-unit verdict sweep it separated neurons from
+random directions (z about 2) but called random text "one job" 16-24% of the time. Here it answers the same recorded
+System One requests as 1f ("would this unit be strongly active on the marked token?"), at reasoning effort minimal,
+by stating a probability in JSON, since the Responses door returns no logprobs. Same replay and comparison as 1f.
+
+| # | Prediction | Result | Notes |
+|---|---|---|---|
+| 1g.1 | Muse's mean per-unit Spearman on TEST is more than 0.05 below Jev's 0.3919 (stated probabilities are coarse, so ties cost rank information). | open | |
+| 1g.2 | Across the 150 TEST units, per-unit Spearmans under Muse and under Jev correlate at least 0.6. | open | |
+| 1g.3 | Real neurons' median AUROC strongest-vs-random still beats random directions', with a gap of at least 0.04. | open | |
+| 1g.4 | Muse's probabilities spread more than Jev's: their standard deviation over all answered requests is at least Jev's. | open | |
