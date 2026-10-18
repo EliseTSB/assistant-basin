@@ -248,6 +248,21 @@ Baseline (Part 1d's prompts) on DEV: mean Spearman 0.375, judge AUROC 0.735, flo
 | 1e.5 | The frozen judge on TEST calls at most 2 of 25 random-context sets one job, and its one-job share for real neurons beats random directions' by at least 15 points (the confirmatory 1.2 retest). | **held** | c45: 1 of 25 random-context sets called one job; one-job share real 68.0% vs random 50.7% (17.3 points, 75 units each) |
 | 1e.6 | On the fresh slice, the climbed pipeline beats the baseline's mean per-unit Spearman by at least 0.02 over all 299 units. | **held** | c23 0.4022 vs baseline 0.3576, +0.0446 (paired 95% CI +0.019 to +0.070, 299 units; the lower end just under 0.02). Fresh slice collected 07:52-08:06 CT, after the freeze; rescoring TEST from cache in the same run gave +0.0402 |
 
+### Part 1f: Cloudflare Clef-flash on the A770 in place of Jev (written 2026-10-17 21:24 CT, before any code or download finished)
+
+Elise 21:20: "Yes lets try Clef!" Clef-flash (Cloudflare, Apache-2.0, 9B, post-trained from Qwen3.5-9B; the same System
+One request format as Jev) runs locally in 4-bit on the A770. It answers exactly the Jev requests that 1e's TEST scoring
+made for the frozen pipeline c23 (the same cached Luna descriptions and snippets, 150 TEST units), and climb_eval.py scores
+it the same way. Jev's numbers to compare against are 1e.1 and 1e.4.
+
+| # | Prediction | Result | Notes |
+|---|---|---|---|
+| 1f.1 | Clef-flash's mean per-unit Spearman on TEST is within 0.05 of Jev's 0.3919. | open | |
+| 1f.2 | Across the 150 TEST units, per-unit Spearmans under Clef and under Jev correlate at least 0.6. | open | |
+| 1f.3 | Real neurons' median AUROC strongest-vs-random still beats random directions' (1e.4 with Jev: 0.840 vs 0.755), and the gap is within 0.05 of Jev's 0.085. | open | |
+| 1f.4 | Clef's noul probabilities spread more than Jev's: their standard deviation over all answered requests is at least Jev's. | open | |
+| 1f.5 | Throughput in 4-bit on the A770 is at least 5 requests a second, so a 59M-token climb would take under a day. | open | |
+
 **Pick, written 2026-10-17 07:50 CT, after the 07:45 freeze and before any TEST call.** Only Luna's climb ran (the free climbers
 never started), so 1e.3 is not run. Luna froze two candidates. The pipeline carried to TEST for 1e.1, 1e.2, 1e.4 and 1e.6
 is **c23** (`final/sim`, candidate hash 422c5cf9b6a9), the best DEV score of the 65 ledger rows: mean Spearman 0.4361
