@@ -86,8 +86,14 @@ def reconstruct_jev_rows(rows, requests, jev_cache_dir):
     jev_items = {uid: [] for uid in unit_rows}
     jev_probabilities = []
     seen_request_hashes = set()
+    row_descriptions = {unit.get('description', '') for unit in unit_rows.values()}
     for request in requests:
         state, questions = request['state'], request['questions']
+        # climb_test.py also scores a description that has no TEST row (measured 2026-10-18: one of 151
+        # descriptions, 30 of 4,480 requests). Skip those; a request whose description IS a row's but
+        # whose snippet matches no item still raises below.
+        if state.get('description', '') not in row_descriptions:
+            continue
         cache_key, probs = load_cached_probs(jev_cache_dir, state, questions)
         jev_probabilities.extend(probs.values())
         # c23 has one weighted noul question (fires), so its score is this sole p(true).
