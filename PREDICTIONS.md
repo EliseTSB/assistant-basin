@@ -625,7 +625,7 @@ by stating a probability in JSON, since the Responses door returns no logprobs. 
 
 | # | Prediction | Result | Notes |
 |---|---|---|---|
-| 1g.1 | Muse's mean per-unit Spearman on TEST is more than 0.05 below Jev's 0.3919 (stated probabilities are coarse, so ties cost rank information). | open | |
-| 1g.2 | Across the 150 TEST units, per-unit Spearmans under Muse and under Jev correlate at least 0.6. | open | |
-| 1g.3 | Real neurons' median AUROC strongest-vs-random still beats random directions', with a gap of at least 0.04. | open | |
-| 1g.4 | Muse's probabilities spread more than Jev's: their standard deviation over all answered requests is at least Jev's. | open | |
+| 1g.1 | Muse's mean per-unit Spearman on TEST is more than 0.05 below Jev's 0.3919 (stated probabilities are coarse, so ties cost rank information). | **failed** | 0.4352, 0.043 ABOVE Jev. |
+| 1g.2 | Across the 150 TEST units, per-unit Spearmans under Muse and under Jev correlate at least 0.6. | held | r = 0.805. |
+| 1g.3 | Real neurons' median AUROC strongest-vs-random still beats random directions', with a gap of at least 0.04. | held | 0.875 vs 0.775, gap 0.100 (Jev 0.085). |
+| 1g.4 | Muse's probabilities spread more than Jev's: their standard deviation over all answered requests is at least Jev's. | held | 0.353 vs 0.263. |
