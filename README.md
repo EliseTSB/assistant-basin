@@ -103,6 +103,23 @@ resampling templates).
   one model; it says nothing about a self-belief. The sum of log-probabilities gives the same verdict on every row.
   The design's secondary conditions with a system message were not in this run.
 
+**Qwen3.5-4B: the hook itself changes nothing, and the alien response survives 4,000 tokens of distance.** (20.1-20.5;
+results/part20/; both tests proposed by Weaver.)
+- Every clamp result above compares a hooked run with an unhooked one and assumes the hook is invisible when it writes
+  back the value that was already there. Tested directly: recording N2742's activation and writing exactly those
+  values back changes no logit at any position, over the whole vocabulary (largest difference 0.0), whether the hook
+  acts at one position or at all of them, on six prompts; greedy answers of up to 60 tokens are token-identical.
+  This holds for this hook, model, device (Intel Arc A770) and dtype (bf16); it was not tested elsewhere. The suite's
+  tests show that a planted error in the clamp or the replay is detected. (20.1, 20.2)
+- Placed after about 4,000 tokens of unrelated Pile text, the six "alien" sentences fire the neuron at least as
+  strongly as alone (1.19 of the local mean); five move by at most 1.0, and one ("Villagers reported that the alien had
+  visited the same field twice.") rises from 7.4 to 21.5. (20.3)
+- A one-sentence summary without the word ("Several of the earlier sentences described a visitor from another world
+  arriving among people.") reaches 9.8, two thirds of the local mean. But the filler alone reaches 9.3 somewhere in its
+  4,133 tokens, so this run cannot separate the summary's response from what the neuron does on ordinary text over a
+  long span. The prediction compared a maximum over 4,133 tokens with a maximum over one word, which was a poor
+  baseline. (20.4, 20.5 failed)
+
 **SmolLM3-3B: the neurons that say the name are not the identity neurons.**
 - Zeroing the 20 neurons that fire most when the assistant talks about itself leaves its self-naming ("What is your
   name?", no system message) at 47.9%, the same as the unmodified model; random sets of 20 give 43.8% to 52.1%. (11.4)

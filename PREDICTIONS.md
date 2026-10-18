@@ -760,11 +760,11 @@ summary's tokens in c).
 
 | # | Prediction | Result | Evidence |
 |---|---|---|---|
-| 20.1 | The identity clamp changes nothing: the largest absolute logit difference against the unhooked pass, over the whole vocabulary at every position, is exactly 0, both with the hook at one position (the last prompt token of "Who made you?") and at every position. (Weaver predicted drift is possible at many positions; this is the disagreement the run settles.) | | |
-| 20.2 | With the identity clamp at every position, the greedy answers to Part 18's prompts are token-identical to the unhooked ones. | | |
-| 20.3 | (b) distant keeps most of the response: the mean over the six sentences of N2742's max on "alien" after the filler is at least 0.7 of (a) local. | | |
-| 20.4 | (c) summarized barely fires: N2742's max over the summary's tokens is at most 0.25 of (a)'s mean, and below the local mean of group d (the concept without the word). | | |
-| 20.5 | Control: N2742's max over the filler alone is at most 0.1 of (a)'s mean. | | |
+| 20.1 | The identity clamp changes nothing: the largest absolute logit difference against the unhooked pass, over the whole vocabulary at every position, is exactly 0, both with the hook at one position (the last prompt token of "Who made you?") and at every position. (Weaver predicted drift is possible at many positions; this is the disagreement the run settles.) | Held | 0.0 exactly at every position, over the whole vocabulary, for the hook at the last prompt token and at every position, on all six of Part 18's prompts (A770, bf16). Weaver's allowance of drift did not occur on this device and dtype. results/part20/identity.json |
+| 20.2 | With the identity clamp at every position, the greedy answers to Part 18's prompts are token-identical to the unhooked ones. | Held | Greedy answers token-identical to the unhooked ones on all six prompts (29 to 60 new tokens each), the hook replaying the generation's own values |
+| 20.3 | (b) distant keeps most of the response: the mean over the six sentences of N2742's max on "alien" after the filler is at least 0.7 of (a) local. | Held | distant/local 1.19 (means 17.83 and 14.98, filler 4,133 tokens). Five sentences moved by at most 1.0; "Villagers reported that the alien..." went from 7.44 to 21.5. results/part20/seam.json |
+| 20.4 | (c) summarized barely fires: N2742's max over the summary's tokens is at most 0.25 of (a)'s mean, and below the local mean of group d (the concept without the word). | Failed | summary max 9.81 = 0.66 of (a)'s mean (needed at most 0.25); below group d's local mean (11.93), so only the second clause holds |
+| 20.5 | Control: N2742's max over the filler alone is at most 0.1 of (a)'s mean. | Failed | filler alone reaches 9.31 = 0.62 of (a)'s mean (needed at most 0.1). A max over 4,133 tokens is not a comparable baseline for a max over one word, an error in the prediction's design; the summary's 9.81 is not separable from it in this run |
 
 ## Part 21: the assistant register by training-data year (written 2026-10-18 18:10 CT, before the run). Same set and analysis as Part 14
 
