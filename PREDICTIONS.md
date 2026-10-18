@@ -639,3 +639,13 @@ by stating a probability in JSON, since the Responses door returns no logprobs. 
 | 17.3 | The self-reader gets at most 58% on sign(r_G1) on TEST, and does not beat the input-only control by 5 points or more. | held | 56.1%, +1.6 over the control; paired McNemar p 0.13; the two agree on 79% of passages. |
 | 17.4 | Natural-value transplant (20th vs 80th percentile, text fixed): the paired readout moves the right way on at least 70% of TEST messages for G1. | held | 99.65% (1993/2000), but by a mean of 0.0017 in P(higher). |
 | 17.5 | GL (last layer) and shuffled labels both stay within 47-53% in the natural-residual and transplant arms. | **failed** | GL natural-residual 62.9% (from text: GL cannot reach the answer, its transplant moves nothing); shuffled 46.5%. The residual is not text-unpredictable. |
+
+## Part 17b: the residual against a cross-fitted Qwen3-1.7B text predictor (written 2026-10-18 07:47 CT, before any code). Design: PART17B-DESIGN.md
+
+| # | Prediction | Result | Notes |
+|---|---|---|---|
+| 17b.1 | The cross-fitted Qwen3-1.7B predictor explains at least 0.70 of G1's natural-activation variance (out-of-fold R², all passages), against the ridge's 0.62. | open | |
+| 17b.2 | The text-only reader (gate a) scores at most 53% on the new labels. | open | |
+| 17b.3 | OLMo's GL self-reader (gate b) scores at most 55% on the new labels. | open | |
+| 17b.4 | If both gates pass (at most 53%), the G1 self-reader scores at most 53%. | open | |
+| 17b.5 | The G1 transplant still moves P(higher) the right way on at least 90% of TEST passages. | open | |
