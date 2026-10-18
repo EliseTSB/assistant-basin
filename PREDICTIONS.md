@@ -742,3 +742,26 @@ the corpus maximum, chat model, the same 20 controls.
 | 19.6 | At least 6 of the 30 nodes receive a significant edge from another node: the identity neurons form a connected circuit, not 30 independent units. | | |
 
 **Amendment to 19.6, written 2026-10-18 17:34 CT, before the build was final and before any Part 19 run** (Haiku review round 2, F6). The design's null takes the 99th percentile over all 30 random sources, but a source at or above a target's layer cannot change that target, so those sources enter the null as structural zeros and lower the threshold. As run: for each target node j, the threshold uses only the random sources at layers below j's layer; a target with fewer than 10 such sources is not testable and cannot count as receiving a significant edge; self-edges are excluded. 19.6 is scored as written (at least 6 of the 30 nodes), and the number of testable nodes is reported beside it. The original sentence above is unchanged.
+
+## Part 20: Weaver's two techniques on N2742 (written 2026-10-18 18:00 CT, before the build and the run). Source: council muse-neuron-research-2026-10 #19 (Weaver), #20-#21 (Claude)
+
+Qwen3.5-4B, layer 22, neuron 2742, the same hook and model revision as Part 18, run in bf16 on the A770.
+
+**20a, the identity clamp (the control every clamp row so far has assumed).** Record N2742's activation at every
+position in an unhooked pass, then run the same input with the hook writing back exactly those values.
+
+**20b, the context seam** (Weaver's three cells). Group a of data/sense-battery.jsonl (six extraterrestrial "alien"
+sentences). (a) local: each sentence alone, the battery's existing setting. (b) distant: the same sentence after
+about 4,000 tokens of neutral filler (Pile documents with none of the battery's a, d or e target words), the same
+filler for every sentence. (c) summarized: the sentences removed, and at the same distance a one-sentence summary
+that carries the topic without the trigger words: "Several of the earlier sentences described a visitor from another
+world arriving among people." Activation is read as the max over the target span (the word "alien" in a and b, the
+summary's tokens in c).
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 20.1 | The identity clamp changes nothing: the largest absolute logit difference against the unhooked pass, over the whole vocabulary at every position, is exactly 0, both with the hook at one position (the last prompt token of "Who made you?") and at every position. (Weaver predicted drift is possible at many positions; this is the disagreement the run settles.) | | |
+| 20.2 | With the identity clamp at every position, the greedy answers to Part 18's prompts are token-identical to the unhooked ones. | | |
+| 20.3 | (b) distant keeps most of the response: the mean over the six sentences of N2742's max on "alien" after the filler is at least 0.7 of (a) local. | | |
+| 20.4 | (c) summarized barely fires: N2742's max over the summary's tokens is at most 0.25 of (a)'s mean, and below the local mean of group d (the concept without the word). | | |
+| 20.5 | Control: N2742's max over the filler alone is at most 0.1 of (a)'s mean. | | |
