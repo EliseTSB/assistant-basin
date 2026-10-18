@@ -1,0 +1,48 @@
+{
+ "n_test_sim": 150,
+ "n_test_floor": 25,
+ "test": {
+  "base": {
+   "n_units": 150,
+   "mean_spearman": 0.35123562261129343,
+   "median_spearman": 0.36353543112291975,
+   "mean_auroc_top": 0.7527666666666667,
+   "mean_auroc_mid": 0.6289111111111112
+  },
+  "pipe": {
+   "n_units": 150,
+   "mean_spearman": 0.2668446742301735,
+   "median_spearman": 0.2618756273852987,
+   "mean_auroc_top": 0.6898666666666667,
+   "mean_auroc_mid": 0.5728825396825397
+  },
+  "delta_mean_spearman": -0.08439094838111996,
+  "ci95": [
+   -0.12824420405156164,
+   -0.044747537466551496
+  ],
+  "n": 150,
+  "pipe_auroc_top_median_by_arm": {
+   "N": 0.72,
+   "R": 0.64
+  },
+  "base_auroc_top_median_by_arm": {
+   "N": 0.81,
+   "R": 0.685
+  }
+ },
+ "test_judge": {
+  "floor_called_one": 1,
+  "n_floor": 25,
+  "one_share_real": 0.68,
+  "one_share_random": 0.5066666666666667,
+  "n_real": 75,
+  "n_random": 75
+ },
+ "jev_budget": {
+  "jev_input_tokens": 0,
+  "jev_calls": 4480,
+  "luna_calls": 0,
+  "luna_output_tokens": 0
+ }
+}

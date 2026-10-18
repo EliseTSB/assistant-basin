@@ -1,0 +1,54 @@
+loaded in 10s, xpu allocated 7.57 GB
+C:\Users\alexa\jlens-tools\.venv\Lib\site-packages\bitsandbytes\backends\triton\ops.py:28: FutureWarning: _check_is_size will be removed in a future PyTorch release along with guard_size_oblivious.     Use _check(i >= 0) instead.
+  torch._check_is_size(blocksize)
+C:\Users\alexa\jlens-tools\.venv\Lib\site-packages\bitsandbytes\backends\triton\ops.py:108: FutureWarning: _check_is_size will be removed in a future PyTorch release along with guard_size_oblivious.     Use _check(i >= 0) instead.
+  torch._check_is_size(blocksize)
+direction check: Paris 0.477, cat 0.041
+4441 requests to answer
+100/4441 0.63 req/s 203 tok/s, xpu 7.57 GB
+200/4441 0.99 req/s 323 tok/s, xpu 7.57 GB
+300/4441 1.23 req/s 398 tok/s, xpu 7.57 GB
+400/4441 0.96 req/s 310 tok/s, xpu 7.57 GB
+500/4441 1.09 req/s 352 tok/s, xpu 7.57 GB
+600/4441 0.78 req/s 251 tok/s, xpu 7.57 GB
+700/4441 0.86 req/s 278 tok/s, xpu 7.57 GB
+800/4441 0.84 req/s 272 tok/s, xpu 7.57 GB
+900/4441 0.79 req/s 255 tok/s, xpu 7.57 GB
+1000/4441 0.54 req/s 175 tok/s, xpu 7.57 GB
+1100/4441 0.53 req/s 172 tok/s, xpu 7.57 GB
+1200/4441 0.57 req/s 184 tok/s, xpu 7.57 GB
+1300/4441 0.60 req/s 196 tok/s, xpu 7.57 GB
+1400/4441 0.64 req/s 207 tok/s, xpu 7.57 GB
+1500/4441 0.60 req/s 195 tok/s, xpu 7.57 GB
+1600/4441 0.60 req/s 193 tok/s, xpu 7.57 GB
+1700/4441 0.62 req/s 202 tok/s, xpu 7.57 GB
+1800/4441 0.59 req/s 193 tok/s, xpu 7.57 GB
+1900/4441 0.59 req/s 190 tok/s, xpu 7.57 GB
+2000/4441 0.61 req/s 197 tok/s, xpu 7.57 GB
+2100/4441 0.57 req/s 185 tok/s, xpu 7.57 GB
+2200/4441 0.53 req/s 173 tok/s, xpu 7.57 GB
+2300/4441 0.55 req/s 179 tok/s, xpu 7.57 GB
+2400/4441 0.56 req/s 180 tok/s, xpu 7.57 GB
+2500/4441 0.52 req/s 167 tok/s, xpu 7.57 GB
+2600/4441 0.52 req/s 167 tok/s, xpu 7.57 GB
+2700/4441 0.52 req/s 168 tok/s, xpu 7.57 GB
+2800/4441 0.49 req/s 158 tok/s, xpu 7.57 GB
+2900/4441 0.50 req/s 162 tok/s, xpu 7.57 GB
+3000/4441 0.52 req/s 167 tok/s, xpu 7.57 GB
+3100/4441 0.53 req/s 171 tok/s, xpu 7.57 GB
+3200/4441 0.54 req/s 176 tok/s, xpu 7.57 GB
+3300/4441 0.56 req/s 180 tok/s, xpu 7.57 GB
+3400/4441 0.56 req/s 180 tok/s, xpu 7.57 GB
+3500/4441 0.57 req/s 184 tok/s, xpu 7.57 GB
+3600/4441 0.58 req/s 187 tok/s, xpu 7.57 GB
+3700/4441 0.59 req/s 191 tok/s, xpu 7.57 GB
+3800/4441 0.60 req/s 195 tok/s, xpu 7.57 GB
+3900/4441 0.62 req/s 199 tok/s, xpu 7.57 GB
+4000/4441 0.63 req/s 203 tok/s, xpu 7.57 GB
+4100/4441 0.64 req/s 207 tok/s, xpu 7.57 GB
+4200/4441 0.65 req/s 210 tok/s, xpu 7.57 GB
+4300/4441 0.65 req/s 210 tok/s, xpu 7.57 GB
+4400/4441 0.66 req/s 213 tok/s, xpu 7.57 GB
+4441/4441 0.66 req/s 215 tok/s, xpu 7.57 GB
+done: 4441 in 6688s
+THROUGHPUT requests_per_second=0.664 (added 2026-10-18 from the done line: 4441 in 6688s; clef_systemone_gpu.py prints no THROUGHPUT line)

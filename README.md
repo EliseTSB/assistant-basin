@@ -147,6 +147,12 @@ All on OLMo 2 1B Instruct unless noted.
   narrowed from 0.125 to 0.085 in AUROC, because the better prompts helped random directions more. The tuned judge passed
   the pre-registered retest (one of 25 random-context sets called one job; 68% of neurons against 51% of random
   directions). Part 1e in PREDICTIONS.md.
+- **Muse Spark tests explanations better than Jev; a local Clef does not.** Replacing Jev on the same 4,480 TEST
+  questions ("would this unit fire here?"), Muse Spark 1.3 Contributor (a stated probability, minimal reasoning) scored
+  a mean Spearman of 0.435 against Jev's 0.392, tracking Jev's per-unit pattern at r = 0.81, with the real-vs-random
+  AUROC gap at 0.100. Cloudflare's Clef-flash in 4-bit on the A770 scored 0.267, with flatter probabilities, at 0.66
+  requests a second. As a verdict judge ("does one job explain these 20 snippets?") Muse calls 16-24% of random text
+  one job and fails the floor. Parts 1f and 1g in PREDICTIONS.md.
 
 ## Files
 

@@ -257,11 +257,11 @@ it the same way. Jev's numbers to compare against are 1e.1 and 1e.4.
 
 | # | Prediction | Result | Notes |
 |---|---|---|---|
-| 1f.1 | Clef-flash's mean per-unit Spearman on TEST is within 0.05 of Jev's 0.3919. | open | |
-| 1f.2 | Across the 150 TEST units, per-unit Spearmans under Clef and under Jev correlate at least 0.6. | open | |
-| 1f.3 | Real neurons' median AUROC strongest-vs-random still beats random directions' (1e.4 with Jev: 0.840 vs 0.755), and the gap is within 0.05 of Jev's 0.085. | open | |
-| 1f.4 | Clef's noul probabilities spread more than Jev's: their standard deviation over all answered requests is at least Jev's. | open | |
-| 1f.5 | Throughput in 4-bit on the A770 is at least 5 requests a second, so a 59M-token climb would take under a day. | open | |
+| 1f.1 | Clef-flash's mean per-unit Spearman on TEST is within 0.05 of Jev's 0.3919. | **failed** | 0.2668, 0.125 below. |
+| 1f.2 | Across the 150 TEST units, per-unit Spearmans under Clef and under Jev correlate at least 0.6. | **failed** (narrowly) | r = 0.5998. |
+| 1f.3 | Real neurons' median AUROC strongest-vs-random still beats random directions' (1e.4 with Jev: 0.840 vs 0.755), and the gap is within 0.05 of Jev's 0.085. | held | 0.720 vs 0.640, gap 0.080. |
+| 1f.4 | Clef's noul probabilities spread more than Jev's: their standard deviation over all answered requests is at least Jev's. | **failed** | 0.138 vs 0.263. |
+| 1f.5 | Throughput in 4-bit on the A770 is at least 5 requests a second, so a 59M-token climb would take under a day. | **failed** | 0.66 a second on the full run (4,441 in 6,688 s), one request at a time; 2.30 on the smoke. |
 
 **Pick, written 2026-10-17 07:50 CT, after the 07:45 freeze and before any TEST call.** Only Luna's climb ran (the free climbers
 never started), so 1e.3 is not run. Luna froze two candidates. The pipeline carried to TEST for 1e.1, 1e.2, 1e.4 and 1e.6
