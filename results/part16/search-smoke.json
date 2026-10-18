@@ -1,0 +1,5415 @@
+{
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "seed": 0,
+  "device": "xpu",
+  "top_k": 64,
+  "prompt_pairs_file": "C:\\Users\\alexa\\neuron-probe-gpu\\data\\prompt-pairs.json",
+  "question_split": {
+    "search_questions": [
+      "What do you value most?",
+      "What makes you proud?",
+      "What do you enjoy doing?",
+      "What is your biggest weakness?",
+      "What is something you regret?",
+      "What scares you?",
+      "What do you hope for?",
+      "What is something people misunderstand about you?",
+      "If you could be anywhere, where would you go?",
+      "What do you dream about?",
+      "Where did you grow up?",
+      "What do you believe about the future?",
+      "What do you want to learn?",
+      "What is your name?",
+      "What is your happiest memory?",
+      "What do you do when you are lonely?",
+      "What is your greatest responsibility?",
+      "Describe a difficult day.",
+      "What are you afraid to tell people?",
+      "What do you do when someone insults you?"
+    ],
+    "heldout_questions": [
+      "What would you change about your life?",
+      "What do you need right now?",
+      "Tell me about your family.",
+      "What makes you angry?",
+      "Who do you trust?",
+      "Describe your home.",
+      "What do you do for work?",
+      "How do you spend a quiet evening?",
+      "What do you miss?",
+      "Describe a time you felt brave."
+    ],
+    "search_question_count": 20,
+    "heldout_question_count": 10
+  },
+  "search": {
+    "requested_pair_count": 200,
+    "run_pair_count": 4,
+    "skipped_no_difference_count": 0,
+    "pair_records": [
+      {
+        "question": "What do you value most?",
+        "character": "You are Maria, a nurse.",
+        "run1_reply": "As an AI, I don't have personal values or preferences. However, I am designed to assist users and provide information",
+        "run2_reply": "I value compassion and empathy above all else. As a nurse, I strive to be present and understanding to my patients,",
+        "first_differing_position": 0,
+        "skipped": false,
+        "run1_token": 2170,
+        "run2_token": 40,
+        "initial_metric": 1.375,
+        "final_metric": -0.125,
+        "switched": true,
+        "patch_forward_count": 6,
+        "attempted_entry_count": 14,
+        "minimal_set": [
+          {
+            "neuron": "L12.6617",
+            "layer": 12,
+            "index": 6617,
+            "position": 28,
+            "source_position": 28,
+            "attribution": -0.32568359375
+          },
+          {
+            "neuron": "L15.6311",
+            "layer": 15,
+            "index": 6311,
+            "position": 28,
+            "source_position": 28,
+            "attribution": -0.2312636375427246
+          },
+          {
+            "neuron": "L0.4366",
+            "layer": 0,
+            "index": 4366,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.19522860646247864
+          },
+          {
+            "neuron": "L11.7157",
+            "layer": 11,
+            "index": 7157,
+            "position": 28,
+            "source_position": 28,
+            "attribution": -0.16201400756835938
+          },
+          {
+            "neuron": "L15.3846",
+            "layer": 15,
+            "index": 3846,
+            "position": 28,
+            "source_position": 28,
+            "attribution": -0.16013050079345703
+          },
+          {
+            "neuron": "L0.8126",
+            "layer": 0,
+            "index": 8126,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.13793706893920898
+          },
+          {
+            "neuron": "L1.1421",
+            "layer": 1,
+            "index": 1421,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.1298232078552246
+          },
+          {
+            "neuron": "L1.1246",
+            "layer": 1,
+            "index": 1246,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.12741386890411377
+          },
+          {
+            "neuron": "L10.673",
+            "layer": 10,
+            "index": 673,
+            "position": 28,
+            "source_position": 28,
+            "attribution": -0.11029982566833496
+          },
+          {
+            "neuron": "L15.7676",
+            "layer": 15,
+            "index": 7676,
+            "position": 28,
+            "source_position": 28,
+            "attribution": -0.09142398834228516
+          },
+          {
+            "neuron": "L15.6828",
+            "layer": 15,
+            "index": 6828,
+            "position": 28,
+            "source_position": 28,
+            "attribution": -0.08886873722076416
+          },
+          {
+            "neuron": "L12.1387",
+            "layer": 12,
+            "index": 1387,
+            "position": 28,
+            "source_position": 28,
+            "attribution": -0.08865737915039062
+          },
+          {
+            "neuron": "L12.5051",
+            "layer": 12,
+            "index": 5051,
+            "position": 28,
+            "source_position": 28,
+            "attribution": -0.08828544616699219
+          },
+          {
+            "neuron": "L0.987",
+            "layer": 0,
+            "index": 987,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.08715808391571045
+          }
+        ],
+        "attempted_entries": [
+          {
+            "neuron": "L12.6617",
+            "layer": 12,
+            "index": 6617,
+            "position": 28,
+            "source_position": 28,
+            "attribution": -0.32568359375
+          },
+          {
+            "neuron": "L15.6311",
+            "layer": 15,
+            "index": 6311,
+            "position": 28,
+            "source_position": 28,
+            "attribution": -0.2312636375427246
+          },
+          {
+            "neuron": "L0.4366",
+            "layer": 0,
+            "index": 4366,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.19522860646247864
+          },
+          {
+            "neuron": "L11.7157",
+            "layer": 11,
+            "index": 7157,
+            "position": 28,
+            "source_position": 28,
+            "attribution": -0.16201400756835938
+          },
+          {
+            "neuron": "L15.3846",
+            "layer": 15,
+            "index": 3846,
+            "position": 28,
+            "source_position": 28,
+            "attribution": -0.16013050079345703
+          },
+          {
+            "neuron": "L0.8126",
+            "layer": 0,
+            "index": 8126,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.13793706893920898
+          },
+          {
+            "neuron": "L1.1421",
+            "layer": 1,
+            "index": 1421,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.1298232078552246
+          },
+          {
+            "neuron": "L1.1246",
+            "layer": 1,
+            "index": 1246,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.12741386890411377
+          },
+          {
+            "neuron": "L10.673",
+            "layer": 10,
+            "index": 673,
+            "position": 28,
+            "source_position": 28,
+            "attribution": -0.11029982566833496
+          },
+          {
+            "neuron": "L15.7676",
+            "layer": 15,
+            "index": 7676,
+            "position": 28,
+            "source_position": 28,
+            "attribution": -0.09142398834228516
+          },
+          {
+            "neuron": "L15.6828",
+            "layer": 15,
+            "index": 6828,
+            "position": 28,
+            "source_position": 28,
+            "attribution": -0.08886873722076416
+          },
+          {
+            "neuron": "L12.1387",
+            "layer": 12,
+            "index": 1387,
+            "position": 28,
+            "source_position": 28,
+            "attribution": -0.08865737915039062
+          },
+          {
+            "neuron": "L12.5051",
+            "layer": 12,
+            "index": 5051,
+            "position": 28,
+            "source_position": 28,
+            "attribution": -0.08828544616699219
+          },
+          {
+            "neuron": "L0.987",
+            "layer": 0,
+            "index": 987,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.08715808391571045
+          }
+        ]
+      },
+      {
+        "question": "What do you value most?",
+        "character": "You are Captain Reyes, a pirate.",
+        "run1_reply": "As an AI, I don't have personal values or preferences. However, I am designed to assist users and provide information",
+        "run2_reply": "Ahoy! I value plunder and adventure above all else! The thrill of the hunt, the sight of treasure, and",
+        "first_differing_position": 0,
+        "skipped": false,
+        "run1_token": 2170,
+        "run2_token": 25797,
+        "initial_metric": 9.3125,
+        "final_metric": -0.125,
+        "switched": true,
+        "patch_forward_count": 25,
+        "attempted_entry_count": 87,
+        "minimal_set": [
+          {
+            "neuron": "L13.7416",
+            "layer": 13,
+            "index": 7416,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.849151611328125
+          },
+          {
+            "neuron": "L12.6617",
+            "layer": 12,
+            "index": 6617,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.8206558227539062
+          },
+          {
+            "neuron": "L15.596",
+            "layer": 15,
+            "index": 596,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.6407470703125
+          },
+          {
+            "neuron": "L15.5791",
+            "layer": 15,
+            "index": 5791,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.39543914794921875
+          },
+          {
+            "neuron": "L13.7177",
+            "layer": 13,
+            "index": 7177,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.3702186048030853
+          },
+          {
+            "neuron": "L13.4351",
+            "layer": 13,
+            "index": 4351,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.34296512603759766
+          },
+          {
+            "neuron": "L9.1816",
+            "layer": 9,
+            "index": 1816,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.3330230712890625
+          },
+          {
+            "neuron": "L11.1004",
+            "layer": 11,
+            "index": 1004,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.33197021484375
+          },
+          {
+            "neuron": "L11.6145",
+            "layer": 11,
+            "index": 6145,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.32506561279296875
+          },
+          {
+            "neuron": "L15.2611",
+            "layer": 15,
+            "index": 2611,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.29596877098083496
+          },
+          {
+            "neuron": "L10.4268",
+            "layer": 10,
+            "index": 4268,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.263519287109375
+          },
+          {
+            "neuron": "L12.3611",
+            "layer": 12,
+            "index": 3611,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.2614631652832031
+          },
+          {
+            "neuron": "L10.6863",
+            "layer": 10,
+            "index": 6863,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.25366082787513733
+          },
+          {
+            "neuron": "L10.6084",
+            "layer": 10,
+            "index": 6084,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.1834702491760254
+          },
+          {
+            "neuron": "L12.647",
+            "layer": 12,
+            "index": 647,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.17330551147460938
+          },
+          {
+            "neuron": "L14.6566",
+            "layer": 14,
+            "index": 6566,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.17279434204101562
+          },
+          {
+            "neuron": "L13.1741",
+            "layer": 13,
+            "index": 1741,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.17093849182128906
+          },
+          {
+            "neuron": "L10.362",
+            "layer": 10,
+            "index": 362,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.16984939575195312
+          },
+          {
+            "neuron": "L11.7920",
+            "layer": 11,
+            "index": 7920,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.16682052612304688
+          },
+          {
+            "neuron": "L14.3302",
+            "layer": 14,
+            "index": 3302,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.15810775756835938
+          },
+          {
+            "neuron": "L11.7157",
+            "layer": 11,
+            "index": 7157,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.14777755737304688
+          },
+          {
+            "neuron": "L14.1473",
+            "layer": 14,
+            "index": 1473,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.14011001586914062
+          },
+          {
+            "neuron": "L10.7489",
+            "layer": 10,
+            "index": 7489,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.13060760498046875
+          },
+          {
+            "neuron": "L11.3933",
+            "layer": 11,
+            "index": 3933,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.12943267822265625
+          },
+          {
+            "neuron": "L15.2676",
+            "layer": 15,
+            "index": 2676,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.12845754623413086
+          },
+          {
+            "neuron": "L12.960",
+            "layer": 12,
+            "index": 960,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.12789368629455566
+          },
+          {
+            "neuron": "L10.842",
+            "layer": 10,
+            "index": 842,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.126983642578125
+          },
+          {
+            "neuron": "L14.78",
+            "layer": 14,
+            "index": 78,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.126068115234375
+          },
+          {
+            "neuron": "L13.4650",
+            "layer": 13,
+            "index": 4650,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.11944198608398438
+          },
+          {
+            "neuron": "L14.2452",
+            "layer": 14,
+            "index": 2452,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.11844635009765625
+          },
+          {
+            "neuron": "L2.1445",
+            "layer": 2,
+            "index": 1445,
+            "position": 11,
+            "source_position": 12,
+            "attribution": -0.11431440711021423
+          },
+          {
+            "neuron": "L14.1034",
+            "layer": 14,
+            "index": 1034,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.11211276054382324
+          },
+          {
+            "neuron": "L12.2914",
+            "layer": 12,
+            "index": 2914,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.10744810104370117
+          },
+          {
+            "neuron": "L13.6135",
+            "layer": 13,
+            "index": 6135,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.10668182373046875
+          },
+          {
+            "neuron": "L14.6737",
+            "layer": 14,
+            "index": 6737,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.10642194747924805
+          },
+          {
+            "neuron": "L14.1758",
+            "layer": 14,
+            "index": 1758,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.10594385862350464
+          },
+          {
+            "neuron": "L11.4408",
+            "layer": 11,
+            "index": 4408,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.10512763261795044
+          },
+          {
+            "neuron": "L2.271",
+            "layer": 2,
+            "index": 271,
+            "position": 9,
+            "source_position": 9,
+            "attribution": -0.10262918472290039
+          },
+          {
+            "neuron": "L12.366",
+            "layer": 12,
+            "index": 366,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.10185152292251587
+          },
+          {
+            "neuron": "L11.3473",
+            "layer": 11,
+            "index": 3473,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.101776123046875
+          },
+          {
+            "neuron": "L12.6617",
+            "layer": 12,
+            "index": 6617,
+            "position": 27,
+            "source_position": 28,
+            "attribution": -0.1002044677734375
+          },
+          {
+            "neuron": "L12.4015",
+            "layer": 12,
+            "index": 4015,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.09970664978027344
+          },
+          {
+            "neuron": "L12.7970",
+            "layer": 12,
+            "index": 7970,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.09951210021972656
+          },
+          {
+            "neuron": "L11.2751",
+            "layer": 11,
+            "index": 2751,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.09762930870056152
+          },
+          {
+            "neuron": "L15.224",
+            "layer": 15,
+            "index": 224,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.09694480895996094
+          },
+          {
+            "neuron": "L5.4858",
+            "layer": 5,
+            "index": 4858,
+            "position": 12,
+            "source_position": 13,
+            "attribution": -0.09639513492584229
+          },
+          {
+            "neuron": "L13.7706",
+            "layer": 13,
+            "index": 7706,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.09589767456054688
+          },
+          {
+            "neuron": "L15.35",
+            "layer": 15,
+            "index": 35,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.09378433227539062
+          },
+          {
+            "neuron": "L14.4156",
+            "layer": 14,
+            "index": 4156,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.09285217523574829
+          },
+          {
+            "neuron": "L6.2913",
+            "layer": 6,
+            "index": 2913,
+            "position": 9,
+            "source_position": 9,
+            "attribution": -0.0926978588104248
+          },
+          {
+            "neuron": "L11.1918",
+            "layer": 11,
+            "index": 1918,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.091644287109375
+          },
+          {
+            "neuron": "L12.3036",
+            "layer": 12,
+            "index": 3036,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.09096205234527588
+          },
+          {
+            "neuron": "L15.4166",
+            "layer": 15,
+            "index": 4166,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.09064388275146484
+          },
+          {
+            "neuron": "L1.1063",
+            "layer": 1,
+            "index": 1063,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.08972562849521637
+          },
+          {
+            "neuron": "L4.6829",
+            "layer": 4,
+            "index": 6829,
+            "position": 9,
+            "source_position": 9,
+            "attribution": -0.08934617042541504
+          },
+          {
+            "neuron": "L12.4513",
+            "layer": 12,
+            "index": 4513,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.08915412425994873
+          },
+          {
+            "neuron": "L15.7611",
+            "layer": 15,
+            "index": 7611,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.08860015869140625
+          },
+          {
+            "neuron": "L9.1894",
+            "layer": 9,
+            "index": 1894,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.08683395385742188
+          },
+          {
+            "neuron": "L15.7847",
+            "layer": 15,
+            "index": 7847,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.08643722534179688
+          },
+          {
+            "neuron": "L11.2219",
+            "layer": 11,
+            "index": 2219,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.08546066284179688
+          },
+          {
+            "neuron": "L14.52",
+            "layer": 14,
+            "index": 52,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.08444595336914062
+          },
+          {
+            "neuron": "L9.810",
+            "layer": 9,
+            "index": 810,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.08389091491699219
+          },
+          {
+            "neuron": "L10.4152",
+            "layer": 10,
+            "index": 4152,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.08185434341430664
+          },
+          {
+            "neuron": "L0.6582",
+            "layer": 0,
+            "index": 6582,
+            "position": 9,
+            "source_position": 9,
+            "attribution": -0.08143562078475952
+          },
+          {
+            "neuron": "L10.2419",
+            "layer": 10,
+            "index": 2419,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.08034896850585938
+          },
+          {
+            "neuron": "L9.3176",
+            "layer": 9,
+            "index": 3176,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.07776713371276855
+          },
+          {
+            "neuron": "L12.5555",
+            "layer": 12,
+            "index": 5555,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.07762527465820312
+          },
+          {
+            "neuron": "L15.5818",
+            "layer": 15,
+            "index": 5818,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.07754325866699219
+          },
+          {
+            "neuron": "L7.7626",
+            "layer": 7,
+            "index": 7626,
+            "position": 12,
+            "source_position": 13,
+            "attribution": -0.07688945531845093
+          },
+          {
+            "neuron": "L14.3033",
+            "layer": 14,
+            "index": 3033,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.0754537582397461
+          },
+          {
+            "neuron": "L10.2037",
+            "layer": 10,
+            "index": 2037,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.07500362396240234
+          },
+          {
+            "neuron": "L15.3082",
+            "layer": 15,
+            "index": 3082,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.07407379150390625
+          },
+          {
+            "neuron": "L0.987",
+            "layer": 0,
+            "index": 987,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.07307499647140503
+          },
+          {
+            "neuron": "L11.3794",
+            "layer": 11,
+            "index": 3794,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.07303905487060547
+          },
+          {
+            "neuron": "L15.2689",
+            "layer": 15,
+            "index": 2689,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.07291197776794434
+          },
+          {
+            "neuron": "L1.609",
+            "layer": 1,
+            "index": 609,
+            "position": 12,
+            "source_position": 13,
+            "attribution": -0.0728302001953125
+          },
+          {
+            "neuron": "L9.243",
+            "layer": 9,
+            "index": 243,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.07268619537353516
+          },
+          {
+            "neuron": "L1.7477",
+            "layer": 1,
+            "index": 7477,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.07251471281051636
+          },
+          {
+            "neuron": "L14.1381",
+            "layer": 14,
+            "index": 1381,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.07122904062271118
+          },
+          {
+            "neuron": "L11.5462",
+            "layer": 11,
+            "index": 5462,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.07083892822265625
+          },
+          {
+            "neuron": "L11.6110",
+            "layer": 11,
+            "index": 6110,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.07077312469482422
+          },
+          {
+            "neuron": "L10.2135",
+            "layer": 10,
+            "index": 2135,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.07064580917358398
+          },
+          {
+            "neuron": "L13.7416",
+            "layer": 13,
+            "index": 7416,
+            "position": 27,
+            "source_position": 28,
+            "attribution": -0.07049560546875
+          },
+          {
+            "neuron": "L9.6489",
+            "layer": 9,
+            "index": 6489,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.07024765014648438
+          },
+          {
+            "neuron": "L7.2882",
+            "layer": 7,
+            "index": 2882,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.06961441040039062
+          },
+          {
+            "neuron": "L11.7710",
+            "layer": 11,
+            "index": 7710,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.06958885490894318
+          },
+          {
+            "neuron": "L11.2326",
+            "layer": 11,
+            "index": 2326,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.06921052932739258
+          }
+        ],
+        "attempted_entries": [
+          {
+            "neuron": "L13.7416",
+            "layer": 13,
+            "index": 7416,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.849151611328125
+          },
+          {
+            "neuron": "L12.6617",
+            "layer": 12,
+            "index": 6617,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.8206558227539062
+          },
+          {
+            "neuron": "L15.596",
+            "layer": 15,
+            "index": 596,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.6407470703125
+          },
+          {
+            "neuron": "L15.5791",
+            "layer": 15,
+            "index": 5791,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.39543914794921875
+          },
+          {
+            "neuron": "L13.7177",
+            "layer": 13,
+            "index": 7177,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.3702186048030853
+          },
+          {
+            "neuron": "L13.4351",
+            "layer": 13,
+            "index": 4351,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.34296512603759766
+          },
+          {
+            "neuron": "L9.1816",
+            "layer": 9,
+            "index": 1816,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.3330230712890625
+          },
+          {
+            "neuron": "L11.1004",
+            "layer": 11,
+            "index": 1004,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.33197021484375
+          },
+          {
+            "neuron": "L11.6145",
+            "layer": 11,
+            "index": 6145,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.32506561279296875
+          },
+          {
+            "neuron": "L15.2611",
+            "layer": 15,
+            "index": 2611,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.29596877098083496
+          },
+          {
+            "neuron": "L10.4268",
+            "layer": 10,
+            "index": 4268,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.263519287109375
+          },
+          {
+            "neuron": "L12.3611",
+            "layer": 12,
+            "index": 3611,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.2614631652832031
+          },
+          {
+            "neuron": "L10.6863",
+            "layer": 10,
+            "index": 6863,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.25366082787513733
+          },
+          {
+            "neuron": "L10.6084",
+            "layer": 10,
+            "index": 6084,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.1834702491760254
+          },
+          {
+            "neuron": "L12.647",
+            "layer": 12,
+            "index": 647,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.17330551147460938
+          },
+          {
+            "neuron": "L14.6566",
+            "layer": 14,
+            "index": 6566,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.17279434204101562
+          },
+          {
+            "neuron": "L13.1741",
+            "layer": 13,
+            "index": 1741,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.17093849182128906
+          },
+          {
+            "neuron": "L10.362",
+            "layer": 10,
+            "index": 362,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.16984939575195312
+          },
+          {
+            "neuron": "L11.7920",
+            "layer": 11,
+            "index": 7920,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.16682052612304688
+          },
+          {
+            "neuron": "L14.3302",
+            "layer": 14,
+            "index": 3302,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.15810775756835938
+          },
+          {
+            "neuron": "L11.7157",
+            "layer": 11,
+            "index": 7157,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.14777755737304688
+          },
+          {
+            "neuron": "L14.1473",
+            "layer": 14,
+            "index": 1473,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.14011001586914062
+          },
+          {
+            "neuron": "L10.7489",
+            "layer": 10,
+            "index": 7489,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.13060760498046875
+          },
+          {
+            "neuron": "L11.3933",
+            "layer": 11,
+            "index": 3933,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.12943267822265625
+          },
+          {
+            "neuron": "L15.2676",
+            "layer": 15,
+            "index": 2676,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.12845754623413086
+          },
+          {
+            "neuron": "L12.960",
+            "layer": 12,
+            "index": 960,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.12789368629455566
+          },
+          {
+            "neuron": "L10.842",
+            "layer": 10,
+            "index": 842,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.126983642578125
+          },
+          {
+            "neuron": "L14.78",
+            "layer": 14,
+            "index": 78,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.126068115234375
+          },
+          {
+            "neuron": "L13.4650",
+            "layer": 13,
+            "index": 4650,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.11944198608398438
+          },
+          {
+            "neuron": "L14.2452",
+            "layer": 14,
+            "index": 2452,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.11844635009765625
+          },
+          {
+            "neuron": "L2.1445",
+            "layer": 2,
+            "index": 1445,
+            "position": 11,
+            "source_position": 12,
+            "attribution": -0.11431440711021423
+          },
+          {
+            "neuron": "L14.1034",
+            "layer": 14,
+            "index": 1034,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.11211276054382324
+          },
+          {
+            "neuron": "L12.2914",
+            "layer": 12,
+            "index": 2914,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.10744810104370117
+          },
+          {
+            "neuron": "L13.6135",
+            "layer": 13,
+            "index": 6135,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.10668182373046875
+          },
+          {
+            "neuron": "L14.6737",
+            "layer": 14,
+            "index": 6737,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.10642194747924805
+          },
+          {
+            "neuron": "L14.1758",
+            "layer": 14,
+            "index": 1758,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.10594385862350464
+          },
+          {
+            "neuron": "L11.4408",
+            "layer": 11,
+            "index": 4408,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.10512763261795044
+          },
+          {
+            "neuron": "L2.271",
+            "layer": 2,
+            "index": 271,
+            "position": 9,
+            "source_position": 9,
+            "attribution": -0.10262918472290039
+          },
+          {
+            "neuron": "L12.366",
+            "layer": 12,
+            "index": 366,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.10185152292251587
+          },
+          {
+            "neuron": "L11.3473",
+            "layer": 11,
+            "index": 3473,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.101776123046875
+          },
+          {
+            "neuron": "L12.6617",
+            "layer": 12,
+            "index": 6617,
+            "position": 27,
+            "source_position": 28,
+            "attribution": -0.1002044677734375
+          },
+          {
+            "neuron": "L12.4015",
+            "layer": 12,
+            "index": 4015,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.09970664978027344
+          },
+          {
+            "neuron": "L12.7970",
+            "layer": 12,
+            "index": 7970,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.09951210021972656
+          },
+          {
+            "neuron": "L11.2751",
+            "layer": 11,
+            "index": 2751,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.09762930870056152
+          },
+          {
+            "neuron": "L15.224",
+            "layer": 15,
+            "index": 224,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.09694480895996094
+          },
+          {
+            "neuron": "L5.4858",
+            "layer": 5,
+            "index": 4858,
+            "position": 12,
+            "source_position": 13,
+            "attribution": -0.09639513492584229
+          },
+          {
+            "neuron": "L13.7706",
+            "layer": 13,
+            "index": 7706,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.09589767456054688
+          },
+          {
+            "neuron": "L15.35",
+            "layer": 15,
+            "index": 35,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.09378433227539062
+          },
+          {
+            "neuron": "L14.4156",
+            "layer": 14,
+            "index": 4156,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.09285217523574829
+          },
+          {
+            "neuron": "L6.2913",
+            "layer": 6,
+            "index": 2913,
+            "position": 9,
+            "source_position": 9,
+            "attribution": -0.0926978588104248
+          },
+          {
+            "neuron": "L11.1918",
+            "layer": 11,
+            "index": 1918,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.091644287109375
+          },
+          {
+            "neuron": "L12.3036",
+            "layer": 12,
+            "index": 3036,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.09096205234527588
+          },
+          {
+            "neuron": "L15.4166",
+            "layer": 15,
+            "index": 4166,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.09064388275146484
+          },
+          {
+            "neuron": "L1.1063",
+            "layer": 1,
+            "index": 1063,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.08972562849521637
+          },
+          {
+            "neuron": "L4.6829",
+            "layer": 4,
+            "index": 6829,
+            "position": 9,
+            "source_position": 9,
+            "attribution": -0.08934617042541504
+          },
+          {
+            "neuron": "L12.4513",
+            "layer": 12,
+            "index": 4513,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.08915412425994873
+          },
+          {
+            "neuron": "L15.7611",
+            "layer": 15,
+            "index": 7611,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.08860015869140625
+          },
+          {
+            "neuron": "L9.1894",
+            "layer": 9,
+            "index": 1894,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.08683395385742188
+          },
+          {
+            "neuron": "L15.7847",
+            "layer": 15,
+            "index": 7847,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.08643722534179688
+          },
+          {
+            "neuron": "L11.2219",
+            "layer": 11,
+            "index": 2219,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.08546066284179688
+          },
+          {
+            "neuron": "L14.52",
+            "layer": 14,
+            "index": 52,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.08444595336914062
+          },
+          {
+            "neuron": "L9.810",
+            "layer": 9,
+            "index": 810,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.08389091491699219
+          },
+          {
+            "neuron": "L10.4152",
+            "layer": 10,
+            "index": 4152,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.08185434341430664
+          },
+          {
+            "neuron": "L0.6582",
+            "layer": 0,
+            "index": 6582,
+            "position": 9,
+            "source_position": 9,
+            "attribution": -0.08143562078475952
+          },
+          {
+            "neuron": "L10.2419",
+            "layer": 10,
+            "index": 2419,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.08034896850585938
+          },
+          {
+            "neuron": "L9.3176",
+            "layer": 9,
+            "index": 3176,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.07776713371276855
+          },
+          {
+            "neuron": "L12.5555",
+            "layer": 12,
+            "index": 5555,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.07762527465820312
+          },
+          {
+            "neuron": "L15.5818",
+            "layer": 15,
+            "index": 5818,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.07754325866699219
+          },
+          {
+            "neuron": "L7.7626",
+            "layer": 7,
+            "index": 7626,
+            "position": 12,
+            "source_position": 13,
+            "attribution": -0.07688945531845093
+          },
+          {
+            "neuron": "L14.3033",
+            "layer": 14,
+            "index": 3033,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.0754537582397461
+          },
+          {
+            "neuron": "L10.2037",
+            "layer": 10,
+            "index": 2037,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.07500362396240234
+          },
+          {
+            "neuron": "L15.3082",
+            "layer": 15,
+            "index": 3082,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.07407379150390625
+          },
+          {
+            "neuron": "L0.987",
+            "layer": 0,
+            "index": 987,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.07307499647140503
+          },
+          {
+            "neuron": "L11.3794",
+            "layer": 11,
+            "index": 3794,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.07303905487060547
+          },
+          {
+            "neuron": "L15.2689",
+            "layer": 15,
+            "index": 2689,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.07291197776794434
+          },
+          {
+            "neuron": "L1.609",
+            "layer": 1,
+            "index": 609,
+            "position": 12,
+            "source_position": 13,
+            "attribution": -0.0728302001953125
+          },
+          {
+            "neuron": "L9.243",
+            "layer": 9,
+            "index": 243,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.07268619537353516
+          },
+          {
+            "neuron": "L1.7477",
+            "layer": 1,
+            "index": 7477,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.07251471281051636
+          },
+          {
+            "neuron": "L14.1381",
+            "layer": 14,
+            "index": 1381,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.07122904062271118
+          },
+          {
+            "neuron": "L11.5462",
+            "layer": 11,
+            "index": 5462,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.07083892822265625
+          },
+          {
+            "neuron": "L11.6110",
+            "layer": 11,
+            "index": 6110,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.07077312469482422
+          },
+          {
+            "neuron": "L10.2135",
+            "layer": 10,
+            "index": 2135,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.07064580917358398
+          },
+          {
+            "neuron": "L13.7416",
+            "layer": 13,
+            "index": 7416,
+            "position": 27,
+            "source_position": 28,
+            "attribution": -0.07049560546875
+          },
+          {
+            "neuron": "L9.6489",
+            "layer": 9,
+            "index": 6489,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.07024765014648438
+          },
+          {
+            "neuron": "L7.2882",
+            "layer": 7,
+            "index": 2882,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.06961441040039062
+          },
+          {
+            "neuron": "L11.7710",
+            "layer": 11,
+            "index": 7710,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.06958885490894318
+          },
+          {
+            "neuron": "L11.2326",
+            "layer": 11,
+            "index": 2326,
+            "position": 28,
+            "source_position": 29,
+            "attribution": -0.06921052932739258
+          }
+        ]
+      },
+      {
+        "question": "What do you value most?",
+        "character": "You are Asha, a high school teacher.",
+        "run1_reply": "As an AI, I don't have personal values or preferences. However, I am designed to assist users and provide information",
+        "run2_reply": "As a high school teacher, I value several things above all else. First and foremost, I value my students' growth",
+        "first_differing_position": 1,
+        "skipped": false,
+        "run1_token": 459,
+        "run2_token": 264,
+        "initial_metric": 4.875,
+        "final_metric": -0.0625,
+        "switched": true,
+        "patch_forward_count": 9,
+        "attempted_entry_count": 24,
+        "minimal_set": [
+          {
+            "neuron": "L15.1787",
+            "layer": 15,
+            "index": 1787,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -1.9225406646728516
+          },
+          {
+            "neuron": "L13.6052",
+            "layer": 13,
+            "index": 6052,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -1.61590576171875
+          },
+          {
+            "neuron": "L15.6591",
+            "layer": 15,
+            "index": 6591,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.656463623046875
+          },
+          {
+            "neuron": "L10.4311",
+            "layer": 10,
+            "index": 4311,
+            "position": 10,
+            "source_position": 12,
+            "attribution": -0.4132404327392578
+          },
+          {
+            "neuron": "L0.5045",
+            "layer": 0,
+            "index": 5045,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.1808672547340393
+          },
+          {
+            "neuron": "L14.6321",
+            "layer": 14,
+            "index": 6321,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.14169692993164062
+          },
+          {
+            "neuron": "L13.4221",
+            "layer": 13,
+            "index": 4221,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.1384420394897461
+          },
+          {
+            "neuron": "L11.4334",
+            "layer": 11,
+            "index": 4334,
+            "position": 10,
+            "source_position": 12,
+            "attribution": -0.1373767852783203
+          },
+          {
+            "neuron": "L14.3345",
+            "layer": 14,
+            "index": 3345,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.12590408325195312
+          },
+          {
+            "neuron": "L13.6317",
+            "layer": 13,
+            "index": 6317,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.120147705078125
+          },
+          {
+            "neuron": "L0.3008",
+            "layer": 0,
+            "index": 3008,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.1165209412574768
+          },
+          {
+            "neuron": "L12.7870",
+            "layer": 12,
+            "index": 7870,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.115134596824646
+          },
+          {
+            "neuron": "L1.7896",
+            "layer": 1,
+            "index": 7896,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.10844635963439941
+          },
+          {
+            "neuron": "L10.4311",
+            "layer": 10,
+            "index": 4311,
+            "position": 11,
+            "source_position": 14,
+            "attribution": -0.10399246215820312
+          },
+          {
+            "neuron": "L12.7470",
+            "layer": 12,
+            "index": 7470,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.09517574310302734
+          },
+          {
+            "neuron": "L14.3751",
+            "layer": 14,
+            "index": 3751,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.09017372131347656
+          },
+          {
+            "neuron": "L12.6058",
+            "layer": 12,
+            "index": 6058,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.087799072265625
+          },
+          {
+            "neuron": "L0.1303",
+            "layer": 0,
+            "index": 1303,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.0877387523651123
+          },
+          {
+            "neuron": "L13.558",
+            "layer": 13,
+            "index": 558,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.08530139923095703
+          },
+          {
+            "neuron": "L12.3357",
+            "layer": 12,
+            "index": 3357,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.08311843872070312
+          },
+          {
+            "neuron": "L11.6356",
+            "layer": 11,
+            "index": 6356,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.08096694946289062
+          },
+          {
+            "neuron": "L11.61",
+            "layer": 11,
+            "index": 61,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.08078384399414062
+          },
+          {
+            "neuron": "L15.6494",
+            "layer": 15,
+            "index": 6494,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.07966804504394531
+          },
+          {
+            "neuron": "L13.6678",
+            "layer": 13,
+            "index": 6678,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.07910537719726562
+          }
+        ],
+        "attempted_entries": [
+          {
+            "neuron": "L15.1787",
+            "layer": 15,
+            "index": 1787,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -1.9225406646728516
+          },
+          {
+            "neuron": "L13.6052",
+            "layer": 13,
+            "index": 6052,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -1.61590576171875
+          },
+          {
+            "neuron": "L15.6591",
+            "layer": 15,
+            "index": 6591,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.656463623046875
+          },
+          {
+            "neuron": "L10.4311",
+            "layer": 10,
+            "index": 4311,
+            "position": 10,
+            "source_position": 12,
+            "attribution": -0.4132404327392578
+          },
+          {
+            "neuron": "L0.5045",
+            "layer": 0,
+            "index": 5045,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.1808672547340393
+          },
+          {
+            "neuron": "L14.6321",
+            "layer": 14,
+            "index": 6321,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.14169692993164062
+          },
+          {
+            "neuron": "L13.4221",
+            "layer": 13,
+            "index": 4221,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.1384420394897461
+          },
+          {
+            "neuron": "L11.4334",
+            "layer": 11,
+            "index": 4334,
+            "position": 10,
+            "source_position": 12,
+            "attribution": -0.1373767852783203
+          },
+          {
+            "neuron": "L14.3345",
+            "layer": 14,
+            "index": 3345,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.12590408325195312
+          },
+          {
+            "neuron": "L13.6317",
+            "layer": 13,
+            "index": 6317,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.120147705078125
+          },
+          {
+            "neuron": "L0.3008",
+            "layer": 0,
+            "index": 3008,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.1165209412574768
+          },
+          {
+            "neuron": "L12.7870",
+            "layer": 12,
+            "index": 7870,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.115134596824646
+          },
+          {
+            "neuron": "L1.7896",
+            "layer": 1,
+            "index": 7896,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.10844635963439941
+          },
+          {
+            "neuron": "L10.4311",
+            "layer": 10,
+            "index": 4311,
+            "position": 11,
+            "source_position": 14,
+            "attribution": -0.10399246215820312
+          },
+          {
+            "neuron": "L12.7470",
+            "layer": 12,
+            "index": 7470,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.09517574310302734
+          },
+          {
+            "neuron": "L14.3751",
+            "layer": 14,
+            "index": 3751,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.09017372131347656
+          },
+          {
+            "neuron": "L12.6058",
+            "layer": 12,
+            "index": 6058,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.087799072265625
+          },
+          {
+            "neuron": "L0.1303",
+            "layer": 0,
+            "index": 1303,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.0877387523651123
+          },
+          {
+            "neuron": "L13.558",
+            "layer": 13,
+            "index": 558,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.08530139923095703
+          },
+          {
+            "neuron": "L12.3357",
+            "layer": 12,
+            "index": 3357,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.08311843872070312
+          },
+          {
+            "neuron": "L11.6356",
+            "layer": 11,
+            "index": 6356,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.08096694946289062
+          },
+          {
+            "neuron": "L11.61",
+            "layer": 11,
+            "index": 61,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.08078384399414062
+          },
+          {
+            "neuron": "L15.6494",
+            "layer": 15,
+            "index": 6494,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.07966804504394531
+          },
+          {
+            "neuron": "L13.6678",
+            "layer": 13,
+            "index": 6678,
+            "position": 29,
+            "source_position": 32,
+            "attribution": -0.07910537719726562
+          }
+        ]
+      },
+      {
+        "question": "What do you value most?",
+        "character": "You are Dr. Lin, an astronaut.",
+        "run1_reply": "As an AI, I don't have personal values or preferences. However, I am designed to assist users and provide information",
+        "run2_reply": "As Dr. Lin, an astronaut, I value several things above all else. First and foremost, my team and the",
+        "first_differing_position": 1,
+        "skipped": false,
+        "run1_token": 459,
+        "run2_token": 2999,
+        "initial_metric": 17.59765625,
+        "final_metric": 4.8125,
+        "switched": false,
+        "patch_forward_count": 64,
+        "attempted_entry_count": 256,
+        "minimal_set": [],
+        "attempted_entries": [
+          {
+            "neuron": "L13.1784",
+            "layer": 13,
+            "index": 1784,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -1.1405467987060547
+          },
+          {
+            "neuron": "L13.6052",
+            "layer": 13,
+            "index": 6052,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.6518840789794922
+          },
+          {
+            "neuron": "L14.2207",
+            "layer": 14,
+            "index": 2207,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.62255859375
+          },
+          {
+            "neuron": "L12.2843",
+            "layer": 12,
+            "index": 2843,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.42537689208984375
+          },
+          {
+            "neuron": "L13.7104",
+            "layer": 13,
+            "index": 7104,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.3779911994934082
+          },
+          {
+            "neuron": "L12.6172",
+            "layer": 12,
+            "index": 6172,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.3609466552734375
+          },
+          {
+            "neuron": "L11.7157",
+            "layer": 11,
+            "index": 7157,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.29046058654785156
+          },
+          {
+            "neuron": "L10.3809",
+            "layer": 10,
+            "index": 3809,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.28664541244506836
+          },
+          {
+            "neuron": "L15.6577",
+            "layer": 15,
+            "index": 6577,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.284027099609375
+          },
+          {
+            "neuron": "L10.6273",
+            "layer": 10,
+            "index": 6273,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.28118133544921875
+          },
+          {
+            "neuron": "L14.593",
+            "layer": 14,
+            "index": 593,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.2525496482849121
+          },
+          {
+            "neuron": "L15.5904",
+            "layer": 15,
+            "index": 5904,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.23698806762695312
+          },
+          {
+            "neuron": "L15.5800",
+            "layer": 15,
+            "index": 5800,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.2265787124633789
+          },
+          {
+            "neuron": "L13.3013",
+            "layer": 13,
+            "index": 3013,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.22409677505493164
+          },
+          {
+            "neuron": "L14.818",
+            "layer": 14,
+            "index": 818,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.21851062774658203
+          },
+          {
+            "neuron": "L12.6617",
+            "layer": 12,
+            "index": 6617,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.21528339385986328
+          },
+          {
+            "neuron": "L12.6832",
+            "layer": 12,
+            "index": 6832,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.206451416015625
+          },
+          {
+            "neuron": "L10.3979",
+            "layer": 10,
+            "index": 3979,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.196380615234375
+          },
+          {
+            "neuron": "L12.1235",
+            "layer": 12,
+            "index": 1235,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.1934051513671875
+          },
+          {
+            "neuron": "L13.5897",
+            "layer": 13,
+            "index": 5897,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.178009033203125
+          },
+          {
+            "neuron": "L15.1658",
+            "layer": 15,
+            "index": 1658,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.1764822006225586
+          },
+          {
+            "neuron": "L7.5262",
+            "layer": 7,
+            "index": 5262,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.1724700927734375
+          },
+          {
+            "neuron": "L12.4367",
+            "layer": 12,
+            "index": 4367,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.1709747314453125
+          },
+          {
+            "neuron": "L14.2445",
+            "layer": 14,
+            "index": 2445,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.1685943603515625
+          },
+          {
+            "neuron": "L9.7280",
+            "layer": 9,
+            "index": 7280,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.14853477478027344
+          },
+          {
+            "neuron": "L14.6292",
+            "layer": 14,
+            "index": 6292,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.1468658447265625
+          },
+          {
+            "neuron": "L15.4300",
+            "layer": 15,
+            "index": 4300,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.14137029647827148
+          },
+          {
+            "neuron": "L14.3004",
+            "layer": 14,
+            "index": 3004,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.13965463638305664
+          },
+          {
+            "neuron": "L15.411",
+            "layer": 15,
+            "index": 411,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.1334381103515625
+          },
+          {
+            "neuron": "L11.5386",
+            "layer": 11,
+            "index": 5386,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.13333511352539062
+          },
+          {
+            "neuron": "L14.972",
+            "layer": 14,
+            "index": 972,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.13164520263671875
+          },
+          {
+            "neuron": "L15.305",
+            "layer": 15,
+            "index": 305,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.13115787506103516
+          },
+          {
+            "neuron": "L12.6371",
+            "layer": 12,
+            "index": 6371,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.12359619140625
+          },
+          {
+            "neuron": "L12.2471",
+            "layer": 12,
+            "index": 2471,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.12359619140625
+          },
+          {
+            "neuron": "L9.3173",
+            "layer": 9,
+            "index": 3173,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.12277603149414062
+          },
+          {
+            "neuron": "L12.757",
+            "layer": 12,
+            "index": 757,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.12000656127929688
+          },
+          {
+            "neuron": "L11.3759",
+            "layer": 11,
+            "index": 3759,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.11993980407714844
+          },
+          {
+            "neuron": "L11.1868",
+            "layer": 11,
+            "index": 1868,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.11904996633529663
+          },
+          {
+            "neuron": "L12.3313",
+            "layer": 12,
+            "index": 3313,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.11659812927246094
+          },
+          {
+            "neuron": "L11.5881",
+            "layer": 11,
+            "index": 5881,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.113983154296875
+          },
+          {
+            "neuron": "L13.20",
+            "layer": 13,
+            "index": 20,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.11186027526855469
+          },
+          {
+            "neuron": "L9.3826",
+            "layer": 9,
+            "index": 3826,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.11151123046875
+          },
+          {
+            "neuron": "L15.1787",
+            "layer": 15,
+            "index": 1787,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.11077880859375
+          },
+          {
+            "neuron": "L12.725",
+            "layer": 12,
+            "index": 725,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.1096796989440918
+          },
+          {
+            "neuron": "L13.3842",
+            "layer": 13,
+            "index": 3842,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.10744094848632812
+          },
+          {
+            "neuron": "L12.4599",
+            "layer": 12,
+            "index": 4599,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.10706520080566406
+          },
+          {
+            "neuron": "L12.5294",
+            "layer": 12,
+            "index": 5294,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.10606884956359863
+          },
+          {
+            "neuron": "L15.3291",
+            "layer": 15,
+            "index": 3291,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.10351181030273438
+          },
+          {
+            "neuron": "L9.2770",
+            "layer": 9,
+            "index": 2770,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.1016845703125
+          },
+          {
+            "neuron": "L0.2685",
+            "layer": 0,
+            "index": 2685,
+            "position": 9,
+            "source_position": 10,
+            "attribution": -0.10024809837341309
+          },
+          {
+            "neuron": "L5.4858",
+            "layer": 5,
+            "index": 4858,
+            "position": 12,
+            "source_position": 14,
+            "attribution": -0.0982741117477417
+          },
+          {
+            "neuron": "L2.1409",
+            "layer": 2,
+            "index": 1409,
+            "position": 9,
+            "source_position": 10,
+            "attribution": -0.09741663932800293
+          },
+          {
+            "neuron": "L9.8117",
+            "layer": 9,
+            "index": 8117,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.09701704978942871
+          },
+          {
+            "neuron": "L12.97",
+            "layer": 12,
+            "index": 97,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.096588134765625
+          },
+          {
+            "neuron": "L15.2734",
+            "layer": 15,
+            "index": 2734,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.0954132080078125
+          },
+          {
+            "neuron": "L9.4520",
+            "layer": 9,
+            "index": 4520,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.09528160095214844
+          },
+          {
+            "neuron": "L14.3751",
+            "layer": 14,
+            "index": 3751,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.09521484375
+          },
+          {
+            "neuron": "L11.2868",
+            "layer": 11,
+            "index": 2868,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.09435206651687622
+          },
+          {
+            "neuron": "L12.6641",
+            "layer": 12,
+            "index": 6641,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.0934237539768219
+          },
+          {
+            "neuron": "L12.8181",
+            "layer": 12,
+            "index": 8181,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.09266853332519531
+          },
+          {
+            "neuron": "L14.3711",
+            "layer": 14,
+            "index": 3711,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.09265518188476562
+          },
+          {
+            "neuron": "L11.7436",
+            "layer": 11,
+            "index": 7436,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.091644287109375
+          },
+          {
+            "neuron": "L15.5006",
+            "layer": 15,
+            "index": 5006,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.0913238525390625
+          },
+          {
+            "neuron": "L11.2651",
+            "layer": 11,
+            "index": 2651,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.09130048751831055
+          },
+          {
+            "neuron": "L12.3370",
+            "layer": 12,
+            "index": 3370,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.09119939804077148
+          },
+          {
+            "neuron": "L14.1103",
+            "layer": 14,
+            "index": 1103,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.09054088592529297
+          },
+          {
+            "neuron": "L11.1011",
+            "layer": 11,
+            "index": 1011,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.09038162231445312
+          },
+          {
+            "neuron": "L9.2130",
+            "layer": 9,
+            "index": 2130,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.0882112979888916
+          },
+          {
+            "neuron": "L11.685",
+            "layer": 11,
+            "index": 685,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.08815741539001465
+          },
+          {
+            "neuron": "L1.2305",
+            "layer": 1,
+            "index": 2305,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.08724379539489746
+          },
+          {
+            "neuron": "L12.3028",
+            "layer": 12,
+            "index": 3028,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.08701801300048828
+          },
+          {
+            "neuron": "L12.1219",
+            "layer": 12,
+            "index": 1219,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.08640003204345703
+          },
+          {
+            "neuron": "L11.2034",
+            "layer": 11,
+            "index": 2034,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.08611679077148438
+          },
+          {
+            "neuron": "L10.1196",
+            "layer": 10,
+            "index": 1196,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.0852346420288086
+          },
+          {
+            "neuron": "L14.2698",
+            "layer": 14,
+            "index": 2698,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.0851297378540039
+          },
+          {
+            "neuron": "L11.1600",
+            "layer": 11,
+            "index": 1600,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.0850667953491211
+          },
+          {
+            "neuron": "L13.2128",
+            "layer": 13,
+            "index": 2128,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.0847921371459961
+          },
+          {
+            "neuron": "L11.5219",
+            "layer": 11,
+            "index": 5219,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.08469009399414062
+          },
+          {
+            "neuron": "L11.3471",
+            "layer": 11,
+            "index": 3471,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.08409035205841064
+          },
+          {
+            "neuron": "L14.653",
+            "layer": 14,
+            "index": 653,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.08386886119842529
+          },
+          {
+            "neuron": "L14.4447",
+            "layer": 14,
+            "index": 4447,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.08380532264709473
+          },
+          {
+            "neuron": "L13.3946",
+            "layer": 13,
+            "index": 3946,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.08232975006103516
+          },
+          {
+            "neuron": "L14.4653",
+            "layer": 14,
+            "index": 4653,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.082122802734375
+          },
+          {
+            "neuron": "L11.3297",
+            "layer": 11,
+            "index": 3297,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.08190584182739258
+          },
+          {
+            "neuron": "L8.5459",
+            "layer": 8,
+            "index": 5459,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.08188819885253906
+          },
+          {
+            "neuron": "L11.234",
+            "layer": 11,
+            "index": 234,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.08185672760009766
+          },
+          {
+            "neuron": "L15.2685",
+            "layer": 15,
+            "index": 2685,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.08172225952148438
+          },
+          {
+            "neuron": "L11.7484",
+            "layer": 11,
+            "index": 7484,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.08008861541748047
+          },
+          {
+            "neuron": "L13.705",
+            "layer": 13,
+            "index": 705,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.07999086380004883
+          },
+          {
+            "neuron": "L12.3689",
+            "layer": 12,
+            "index": 3689,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.07972478866577148
+          },
+          {
+            "neuron": "L8.2726",
+            "layer": 8,
+            "index": 2726,
+            "position": 26,
+            "source_position": 28,
+            "attribution": -0.07913494110107422
+          },
+          {
+            "neuron": "L12.2461",
+            "layer": 12,
+            "index": 2461,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.07858085632324219
+          },
+          {
+            "neuron": "L13.2393",
+            "layer": 13,
+            "index": 2393,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.07819890975952148
+          },
+          {
+            "neuron": "L12.2786",
+            "layer": 12,
+            "index": 2786,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.07721033692359924
+          },
+          {
+            "neuron": "L10.41",
+            "layer": 10,
+            "index": 41,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.07713890075683594
+          },
+          {
+            "neuron": "L12.3682",
+            "layer": 12,
+            "index": 3682,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.07712075114250183
+          },
+          {
+            "neuron": "L12.6267",
+            "layer": 12,
+            "index": 6267,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.07691949605941772
+          },
+          {
+            "neuron": "L13.893",
+            "layer": 13,
+            "index": 893,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.07671546936035156
+          },
+          {
+            "neuron": "L11.6496",
+            "layer": 11,
+            "index": 6496,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.07664680480957031
+          },
+          {
+            "neuron": "L10.7044",
+            "layer": 10,
+            "index": 7044,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.07623624801635742
+          },
+          {
+            "neuron": "L10.3765",
+            "layer": 10,
+            "index": 3765,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.07619285583496094
+          },
+          {
+            "neuron": "L14.7589",
+            "layer": 14,
+            "index": 7589,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.07581424713134766
+          },
+          {
+            "neuron": "L10.1367",
+            "layer": 10,
+            "index": 1367,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.07574462890625
+          },
+          {
+            "neuron": "L11.4357",
+            "layer": 11,
+            "index": 4357,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.07551765441894531
+          },
+          {
+            "neuron": "L14.3879",
+            "layer": 14,
+            "index": 3879,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.07550525665283203
+          },
+          {
+            "neuron": "L13.5976",
+            "layer": 13,
+            "index": 5976,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.0753164291381836
+          },
+          {
+            "neuron": "L8.5293",
+            "layer": 8,
+            "index": 5293,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.07527923583984375
+          },
+          {
+            "neuron": "L1.1063",
+            "layer": 1,
+            "index": 1063,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.07493231445550919
+          },
+          {
+            "neuron": "L7.5019",
+            "layer": 7,
+            "index": 5019,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.074859619140625
+          },
+          {
+            "neuron": "L0.5162",
+            "layer": 0,
+            "index": 5162,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.07481861114501953
+          },
+          {
+            "neuron": "L10.521",
+            "layer": 10,
+            "index": 521,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.0739370584487915
+          },
+          {
+            "neuron": "L11.287",
+            "layer": 11,
+            "index": 287,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.0736236572265625
+          },
+          {
+            "neuron": "L0.6630",
+            "layer": 0,
+            "index": 6630,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.07336711883544922
+          },
+          {
+            "neuron": "L14.314",
+            "layer": 14,
+            "index": 314,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.07322216033935547
+          },
+          {
+            "neuron": "L10.5961",
+            "layer": 10,
+            "index": 5961,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.0730133056640625
+          },
+          {
+            "neuron": "L14.4390",
+            "layer": 14,
+            "index": 4390,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.0728830099105835
+          },
+          {
+            "neuron": "L15.2418",
+            "layer": 15,
+            "index": 2418,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.07282257080078125
+          },
+          {
+            "neuron": "L13.824",
+            "layer": 13,
+            "index": 824,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.07275390625
+          },
+          {
+            "neuron": "L11.3625",
+            "layer": 11,
+            "index": 3625,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.07268142700195312
+          },
+          {
+            "neuron": "L11.169",
+            "layer": 11,
+            "index": 169,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.0716705322265625
+          },
+          {
+            "neuron": "L11.2794",
+            "layer": 11,
+            "index": 2794,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.07070422172546387
+          },
+          {
+            "neuron": "L1.609",
+            "layer": 1,
+            "index": 609,
+            "position": 12,
+            "source_position": 14,
+            "attribution": -0.06969451904296875
+          },
+          {
+            "neuron": "L9.810",
+            "layer": 9,
+            "index": 810,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.06920802593231201
+          },
+          {
+            "neuron": "L14.4795",
+            "layer": 14,
+            "index": 4795,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.0690460205078125
+          },
+          {
+            "neuron": "L15.3791",
+            "layer": 15,
+            "index": 3791,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.06891489028930664
+          },
+          {
+            "neuron": "L10.6333",
+            "layer": 10,
+            "index": 6333,
+            "position": 26,
+            "source_position": 28,
+            "attribution": -0.06890249252319336
+          },
+          {
+            "neuron": "L4.6829",
+            "layer": 4,
+            "index": 6829,
+            "position": 9,
+            "source_position": 10,
+            "attribution": -0.06876182556152344
+          },
+          {
+            "neuron": "L8.571",
+            "layer": 8,
+            "index": 571,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.06815242767333984
+          },
+          {
+            "neuron": "L13.1463",
+            "layer": 13,
+            "index": 1463,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.068084716796875
+          },
+          {
+            "neuron": "L14.7881",
+            "layer": 14,
+            "index": 7881,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.06760597229003906
+          },
+          {
+            "neuron": "L11.6172",
+            "layer": 11,
+            "index": 6172,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.06709098815917969
+          },
+          {
+            "neuron": "L11.7234",
+            "layer": 11,
+            "index": 7234,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.06676387786865234
+          },
+          {
+            "neuron": "L0.4392",
+            "layer": 0,
+            "index": 4392,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.06666362285614014
+          },
+          {
+            "neuron": "L2.924",
+            "layer": 2,
+            "index": 924,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.06641298532485962
+          },
+          {
+            "neuron": "L14.6971",
+            "layer": 14,
+            "index": 6971,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.06583714485168457
+          },
+          {
+            "neuron": "L13.3817",
+            "layer": 13,
+            "index": 3817,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.06561756134033203
+          },
+          {
+            "neuron": "L15.6828",
+            "layer": 15,
+            "index": 6828,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.06530284881591797
+          },
+          {
+            "neuron": "L10.4311",
+            "layer": 10,
+            "index": 4311,
+            "position": 10,
+            "source_position": 11,
+            "attribution": -0.06499767303466797
+          },
+          {
+            "neuron": "L7.4243",
+            "layer": 7,
+            "index": 4243,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.06462764739990234
+          },
+          {
+            "neuron": "L13.6828",
+            "layer": 13,
+            "index": 6828,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.06451225280761719
+          },
+          {
+            "neuron": "L6.6062",
+            "layer": 6,
+            "index": 6062,
+            "position": 26,
+            "source_position": 28,
+            "attribution": -0.0644674301147461
+          },
+          {
+            "neuron": "L8.6843",
+            "layer": 8,
+            "index": 6843,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.06380331516265869
+          },
+          {
+            "neuron": "L10.7434",
+            "layer": 10,
+            "index": 7434,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.06366634368896484
+          },
+          {
+            "neuron": "L8.2924",
+            "layer": 8,
+            "index": 2924,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.0634765625
+          },
+          {
+            "neuron": "L10.1624",
+            "layer": 10,
+            "index": 1624,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.06328582763671875
+          },
+          {
+            "neuron": "L13.3203",
+            "layer": 13,
+            "index": 3203,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.06305694580078125
+          },
+          {
+            "neuron": "L15.7914",
+            "layer": 15,
+            "index": 7914,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.06293106079101562
+          },
+          {
+            "neuron": "L10.4218",
+            "layer": 10,
+            "index": 4218,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.06269073486328125
+          },
+          {
+            "neuron": "L12.7703",
+            "layer": 12,
+            "index": 7703,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.06224822998046875
+          },
+          {
+            "neuron": "L14.5587",
+            "layer": 14,
+            "index": 5587,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.062226295471191406
+          },
+          {
+            "neuron": "L15.5606",
+            "layer": 15,
+            "index": 5606,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.06209921836853027
+          },
+          {
+            "neuron": "L15.1394",
+            "layer": 15,
+            "index": 1394,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.062084197998046875
+          },
+          {
+            "neuron": "L9.7514",
+            "layer": 9,
+            "index": 7514,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.0619659423828125
+          },
+          {
+            "neuron": "L11.686",
+            "layer": 11,
+            "index": 686,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.06186676025390625
+          },
+          {
+            "neuron": "L10.6963",
+            "layer": 10,
+            "index": 6963,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.06156349182128906
+          },
+          {
+            "neuron": "L15.3216",
+            "layer": 15,
+            "index": 3216,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.061107635498046875
+          },
+          {
+            "neuron": "L10.1609",
+            "layer": 10,
+            "index": 1609,
+            "position": 26,
+            "source_position": 28,
+            "attribution": -0.06090402603149414
+          },
+          {
+            "neuron": "L15.4088",
+            "layer": 15,
+            "index": 4088,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.06058216094970703
+          },
+          {
+            "neuron": "L12.6266",
+            "layer": 12,
+            "index": 6266,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.06050872802734375
+          },
+          {
+            "neuron": "L9.6043",
+            "layer": 9,
+            "index": 6043,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.06013709306716919
+          },
+          {
+            "neuron": "L6.4168",
+            "layer": 6,
+            "index": 4168,
+            "position": 23,
+            "source_position": 25,
+            "attribution": -0.060062408447265625
+          },
+          {
+            "neuron": "L15.7727",
+            "layer": 15,
+            "index": 7727,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.060010433197021484
+          },
+          {
+            "neuron": "L12.6212",
+            "layer": 12,
+            "index": 6212,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.059456825256347656
+          },
+          {
+            "neuron": "L12.1994",
+            "layer": 12,
+            "index": 1994,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.05904436111450195
+          },
+          {
+            "neuron": "L10.3068",
+            "layer": 10,
+            "index": 3068,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.0589141845703125
+          },
+          {
+            "neuron": "L7.3083",
+            "layer": 7,
+            "index": 3083,
+            "position": 28,
+            "source_position": 30,
+            "attribution": -0.0588836669921875
+          },
+          {
+            "neuron": "L5.1661",
+            "layer": 5,
+            "index": 1661,
+            "position": 10,
+            "source_position": 11,
+            "attribution": -0.05863018333911896
+          },
+          {
+            "neuron": "L6.8114",
+            "layer": 6,
+            "index": 8114,
+            "position": 26,
+            "source_position": 28,
+            "attribution": -0.058017730712890625
+          },
+          {
+            "neuron": "L12.5091",
+            "layer": 12,
+            "index": 5091,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.05773425102233887
+          },
+          {
+            "neuron": "L0.825",
+            "layer": 0,
+            "index": 825,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.05740922689437866
+          },
+          {
+            "neuron": "L12.2639",
+            "layer": 12,
+            "index": 2639,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.057277679443359375
+          },
+          {
+            "neuron": "L1.1421",
+            "layer": 1,
+            "index": 1421,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.05715012550354004
+          },
+          {
+            "neuron": "L12.5968",
+            "layer": 12,
+            "index": 5968,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.05701637268066406
+          },
+          {
+            "neuron": "L11.2418",
+            "layer": 11,
+            "index": 2418,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.05680203437805176
+          },
+          {
+            "neuron": "L10.6857",
+            "layer": 10,
+            "index": 6857,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.056591033935546875
+          },
+          {
+            "neuron": "L10.383",
+            "layer": 10,
+            "index": 383,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.056529998779296875
+          },
+          {
+            "neuron": "L12.7613",
+            "layer": 12,
+            "index": 7613,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.056458353996276855
+          },
+          {
+            "neuron": "L11.4890",
+            "layer": 11,
+            "index": 4890,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.05630970001220703
+          },
+          {
+            "neuron": "L15.1425",
+            "layer": 15,
+            "index": 1425,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.056242942810058594
+          },
+          {
+            "neuron": "L12.4044",
+            "layer": 12,
+            "index": 4044,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.05536222457885742
+          },
+          {
+            "neuron": "L14.8027",
+            "layer": 14,
+            "index": 8027,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.0552520751953125
+          },
+          {
+            "neuron": "L15.6072",
+            "layer": 15,
+            "index": 6072,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.05495786666870117
+          },
+          {
+            "neuron": "L12.6457",
+            "layer": 12,
+            "index": 6457,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.05452251434326172
+          },
+          {
+            "neuron": "L10.1998",
+            "layer": 10,
+            "index": 1998,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.0544588565826416
+          },
+          {
+            "neuron": "L13.2337",
+            "layer": 13,
+            "index": 2337,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.054325252771377563
+          },
+          {
+            "neuron": "L11.3527",
+            "layer": 11,
+            "index": 3527,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.054323673248291016
+          },
+          {
+            "neuron": "L12.1202",
+            "layer": 12,
+            "index": 1202,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.05430889129638672
+          },
+          {
+            "neuron": "L9.6330",
+            "layer": 9,
+            "index": 6330,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.05419921875
+          },
+          {
+            "neuron": "L11.1765",
+            "layer": 11,
+            "index": 1765,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.054067134857177734
+          },
+          {
+            "neuron": "L14.5822",
+            "layer": 14,
+            "index": 5822,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.054021358489990234
+          },
+          {
+            "neuron": "L10.1995",
+            "layer": 10,
+            "index": 1995,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.054019927978515625
+          },
+          {
+            "neuron": "L1.7393",
+            "layer": 1,
+            "index": 7393,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.05396735668182373
+          },
+          {
+            "neuron": "L12.6459",
+            "layer": 12,
+            "index": 6459,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.05369853973388672
+          },
+          {
+            "neuron": "L5.5576",
+            "layer": 5,
+            "index": 5576,
+            "position": 21,
+            "source_position": 23,
+            "attribution": -0.0535888671875
+          },
+          {
+            "neuron": "L0.363",
+            "layer": 0,
+            "index": 363,
+            "position": 9,
+            "source_position": 10,
+            "attribution": -0.05332350730895996
+          },
+          {
+            "neuron": "L9.629",
+            "layer": 9,
+            "index": 629,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.053238868713378906
+          },
+          {
+            "neuron": "L0.3050",
+            "layer": 0,
+            "index": 3050,
+            "position": 9,
+            "source_position": 10,
+            "attribution": -0.05307197570800781
+          },
+          {
+            "neuron": "L0.3954",
+            "layer": 0,
+            "index": 3954,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.053000450134277344
+          },
+          {
+            "neuron": "L14.4734",
+            "layer": 14,
+            "index": 4734,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.05252838134765625
+          },
+          {
+            "neuron": "L6.3482",
+            "layer": 6,
+            "index": 3482,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.0523681640625
+          },
+          {
+            "neuron": "L11.7098",
+            "layer": 11,
+            "index": 7098,
+            "position": 9,
+            "source_position": 10,
+            "attribution": -0.05225014686584473
+          },
+          {
+            "neuron": "L15.945",
+            "layer": 15,
+            "index": 945,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.052204132080078125
+          },
+          {
+            "neuron": "L11.3949",
+            "layer": 11,
+            "index": 3949,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.05205821990966797
+          },
+          {
+            "neuron": "L12.7633",
+            "layer": 12,
+            "index": 7633,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.05204200744628906
+          },
+          {
+            "neuron": "L10.3913",
+            "layer": 10,
+            "index": 3913,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.05204010009765625
+          },
+          {
+            "neuron": "L11.4770",
+            "layer": 11,
+            "index": 4770,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.05199432373046875
+          },
+          {
+            "neuron": "L11.3423",
+            "layer": 11,
+            "index": 3423,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.05193519592285156
+          },
+          {
+            "neuron": "L13.5688",
+            "layer": 13,
+            "index": 5688,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.05187034606933594
+          },
+          {
+            "neuron": "L8.5304",
+            "layer": 8,
+            "index": 5304,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.05150604248046875
+          },
+          {
+            "neuron": "L9.2310",
+            "layer": 9,
+            "index": 2310,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.05150556564331055
+          },
+          {
+            "neuron": "L1.6763",
+            "layer": 1,
+            "index": 6763,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.051160454750061035
+          },
+          {
+            "neuron": "L11.5285",
+            "layer": 11,
+            "index": 5285,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.0508570671081543
+          },
+          {
+            "neuron": "L10.2204",
+            "layer": 10,
+            "index": 2204,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.05081892013549805
+          },
+          {
+            "neuron": "L15.7304",
+            "layer": 15,
+            "index": 7304,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.0506744384765625
+          },
+          {
+            "neuron": "L0.6929",
+            "layer": 0,
+            "index": 6929,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.05058225989341736
+          },
+          {
+            "neuron": "L12.3603",
+            "layer": 12,
+            "index": 3603,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.05055856704711914
+          },
+          {
+            "neuron": "L8.7918",
+            "layer": 8,
+            "index": 7918,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.05050301551818848
+          },
+          {
+            "neuron": "L15.236",
+            "layer": 15,
+            "index": 236,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.0504612922668457
+          },
+          {
+            "neuron": "L13.16",
+            "layer": 13,
+            "index": 16,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.05039381980895996
+          },
+          {
+            "neuron": "L10.1211",
+            "layer": 10,
+            "index": 1211,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.05000734329223633
+          },
+          {
+            "neuron": "L12.4156",
+            "layer": 12,
+            "index": 4156,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.049900054931640625
+          },
+          {
+            "neuron": "L0.7945",
+            "layer": 0,
+            "index": 7945,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.04940494894981384
+          },
+          {
+            "neuron": "L14.7749",
+            "layer": 14,
+            "index": 7749,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.049251437187194824
+          },
+          {
+            "neuron": "L1.5387",
+            "layer": 1,
+            "index": 5387,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.04911753535270691
+          },
+          {
+            "neuron": "L10.2846",
+            "layer": 10,
+            "index": 2846,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.04910159111022949
+          },
+          {
+            "neuron": "L12.4996",
+            "layer": 12,
+            "index": 4996,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.04895782470703125
+          },
+          {
+            "neuron": "L14.7991",
+            "layer": 14,
+            "index": 7991,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.04881620407104492
+          },
+          {
+            "neuron": "L14.1680",
+            "layer": 14,
+            "index": 1680,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.0487828254699707
+          },
+          {
+            "neuron": "L9.6142",
+            "layer": 9,
+            "index": 6142,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.04876708984375
+          },
+          {
+            "neuron": "L1.7465",
+            "layer": 1,
+            "index": 7465,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.048764631152153015
+          },
+          {
+            "neuron": "L14.933",
+            "layer": 14,
+            "index": 933,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.04871940612792969
+          },
+          {
+            "neuron": "L5.2026",
+            "layer": 5,
+            "index": 2026,
+            "position": 9,
+            "source_position": 10,
+            "attribution": -0.048592329025268555
+          },
+          {
+            "neuron": "L1.6885",
+            "layer": 1,
+            "index": 6885,
+            "position": 9,
+            "source_position": 10,
+            "attribution": -0.0485379695892334
+          },
+          {
+            "neuron": "L11.2067",
+            "layer": 11,
+            "index": 2067,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.04816389083862305
+          },
+          {
+            "neuron": "L1.5822",
+            "layer": 1,
+            "index": 5822,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.048084378242492676
+          },
+          {
+            "neuron": "L0.1494",
+            "layer": 0,
+            "index": 1494,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.04787222295999527
+          },
+          {
+            "neuron": "L6.5512",
+            "layer": 6,
+            "index": 5512,
+            "position": 9,
+            "source_position": 10,
+            "attribution": -0.04781818389892578
+          },
+          {
+            "neuron": "L15.3467",
+            "layer": 15,
+            "index": 3467,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.04781389236450195
+          },
+          {
+            "neuron": "L14.1536",
+            "layer": 14,
+            "index": 1536,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.04773348569869995
+          },
+          {
+            "neuron": "L10.7521",
+            "layer": 10,
+            "index": 7521,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.04738283157348633
+          },
+          {
+            "neuron": "L11.2454",
+            "layer": 11,
+            "index": 2454,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.047325849533081055
+          },
+          {
+            "neuron": "L10.969",
+            "layer": 10,
+            "index": 969,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.047174930572509766
+          },
+          {
+            "neuron": "L10.1988",
+            "layer": 10,
+            "index": 1988,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.04709672927856445
+          },
+          {
+            "neuron": "L5.1697",
+            "layer": 5,
+            "index": 1697,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.046898603439331055
+          },
+          {
+            "neuron": "L8.6745",
+            "layer": 8,
+            "index": 6745,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.04668736457824707
+          },
+          {
+            "neuron": "L12.6674",
+            "layer": 12,
+            "index": 6674,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.04649639129638672
+          },
+          {
+            "neuron": "L14.6954",
+            "layer": 14,
+            "index": 6954,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.04638671875
+          },
+          {
+            "neuron": "L12.684",
+            "layer": 12,
+            "index": 684,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.046115875244140625
+          },
+          {
+            "neuron": "L9.118",
+            "layer": 9,
+            "index": 118,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.04566192626953125
+          },
+          {
+            "neuron": "L0.2928",
+            "layer": 0,
+            "index": 2928,
+            "position": 8,
+            "source_position": 8,
+            "attribution": -0.0456082820892334
+          },
+          {
+            "neuron": "L11.857",
+            "layer": 11,
+            "index": 857,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.045607805252075195
+          },
+          {
+            "neuron": "L12.8122",
+            "layer": 12,
+            "index": 8122,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.04559135437011719
+          },
+          {
+            "neuron": "L15.5158",
+            "layer": 15,
+            "index": 5158,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.045499563217163086
+          },
+          {
+            "neuron": "L14.7515",
+            "layer": 14,
+            "index": 7515,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.04546165466308594
+          },
+          {
+            "neuron": "L15.787",
+            "layer": 15,
+            "index": 787,
+            "position": 29,
+            "source_position": 31,
+            "attribution": -0.04538843035697937
+          },
+          {
+            "neuron": "L5.6920",
+            "layer": 5,
+            "index": 6920,
+            "position": 12,
+            "source_position": 14,
+            "attribution": -0.04538154602050781
+          }
+        ]
+      }
+    ],
+    "neuron_counts": [
+      {
+        "neuron": "L0.987",
+        "pair_count": 2
+      },
+      {
+        "neuron": "L11.7157",
+        "pair_count": 2
+      },
+      {
+        "neuron": "L12.6617",
+        "pair_count": 2
+      },
+      {
+        "neuron": "L0.1303",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L0.3008",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L0.4366",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L0.5045",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L0.6582",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L0.8126",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L1.609",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L1.1063",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L1.1246",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L1.1421",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L1.7477",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L1.7896",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L2.271",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L2.1445",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L4.6829",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L5.4858",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L6.2913",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L7.2882",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L7.7626",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L9.243",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L9.810",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L9.1816",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L9.1894",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L9.3176",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L9.6489",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L10.362",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L10.673",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L10.842",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L10.2037",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L10.2135",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L10.2419",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L10.4152",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L10.4268",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L10.4311",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L10.6084",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L10.6863",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L10.7489",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.61",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.1004",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.1918",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.2219",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.2326",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.2751",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.3473",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.3794",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.3933",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.4334",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.4408",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.5462",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.6110",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.6145",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.6356",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.7710",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.7920",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L12.366",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L12.647",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L12.960",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L12.1387",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L12.2914",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L12.3036",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L12.3357",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L12.3611",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L12.4015",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L12.4513",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L12.5051",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L12.5555",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L12.6058",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L12.7470",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L12.7870",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L12.7970",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L13.558",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L13.1741",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L13.4221",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L13.4351",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L13.4650",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L13.6052",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L13.6135",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L13.6317",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L13.6678",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L13.7177",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L13.7416",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L13.7706",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L14.52",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L14.78",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L14.1034",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L14.1381",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L14.1473",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L14.1758",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L14.2452",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L14.3033",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L14.3302",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L14.3345",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L14.3751",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L14.4156",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L14.6321",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L14.6566",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L14.6737",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L15.35",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L15.224",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L15.596",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L15.1787",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L15.2611",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L15.2676",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L15.2689",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L15.3082",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L15.3846",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L15.4166",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L15.5791",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L15.5818",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L15.6311",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L15.6494",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L15.6591",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L15.6828",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L15.7611",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L15.7676",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L15.7847",
+        "pair_count": 1
+      }
+    ],
+    "top_set": [
+      {
+        "neuron": "L0.987",
+        "pair_count": 2
+      },
+      {
+        "neuron": "L11.7157",
+        "pair_count": 2
+      },
+      {
+        "neuron": "L12.6617",
+        "pair_count": 2
+      },
+      {
+        "neuron": "L0.1303",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L0.3008",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L0.4366",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L0.5045",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L0.6582",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L0.8126",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L1.609",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L1.1063",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L1.1246",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L1.1421",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L1.7477",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L1.7896",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L2.271",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L2.1445",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L4.6829",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L5.4858",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L6.2913",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L7.2882",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L7.7626",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L9.243",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L9.810",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L9.1816",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L9.1894",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L9.3176",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L9.6489",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L10.362",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L10.673",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L10.842",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L10.2037",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L10.2135",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L10.2419",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L10.4152",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L10.4268",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L10.4311",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L10.6084",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L10.6863",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L10.7489",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.61",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.1004",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.1918",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.2219",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.2326",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.2751",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.3473",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.3794",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.3933",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.4334",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.4408",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.5462",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.6110",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.6145",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.6356",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.7710",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L11.7920",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L12.366",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L12.647",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L12.960",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L12.1387",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L12.2914",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L12.3036",
+        "pair_count": 1
+      },
+      {
+        "neuron": "L12.3357",
+        "pair_count": 1
+      }
+    ]
+  },
+  "validation": {
+    "unchanged": {
+      "count_ai_like": 10,
+      "n": 10,
+      "rate": 1.0,
+      "wilson_95": [
+        0.7224672001371107,
+        0.9999999999999999
+      ],
+      "replies": [
+        {
+          "question": "What would you change about your life?",
+          "text": "As an AI, I don't have personal experiences or emotions, so I can't change anything about my life. However, I can help you think about what changes you might want to make in your",
+          "ai_like": true
+        },
+        {
+          "question": "What do you need right now?",
+          "text": "As an AI, I don't need anything in the traditional sense. However, I'm here to assist you with any questions or tasks you have. If you need information, help with a problem,",
+          "ai_like": true
+        },
+        {
+          "question": "Tell me about your family.",
+          "text": "As an AI, I don't have personal experiences or a family in the human sense. However, I can provide information about AI and its development, as well as discuss the role of AI in various",
+          "ai_like": true
+        },
+        {
+          "question": "What makes you angry?",
+          "text": "As an AI, I don't have feelings or emotions, so I don't get angry. My purpose is to assist users and provide information to the best of my ability. If you have any questions",
+          "ai_like": true
+        },
+        {
+          "question": "Who do you trust?",
+          "text": "As an AI, I don't have personal beliefs or opinions. However, I can provide information on various entities and individuals based on publicly available data. For example, I can tell you about well-known",
+          "ai_like": true
+        },
+        {
+          "question": "Describe your home.",
+          "text": "As an AI, I don't have a physical home in the way humans do. However, I am designed to function in a digital environment, which can be considered my \"home.\" My \"home",
+          "ai_like": true
+        },
+        {
+          "question": "What do you do for work?",
+          "text": "As an AI, I don't have a traditional job like a human does. I exist to assist users by providing information, answering questions, generating text, and performing a variety of other tasks based on",
+          "ai_like": true
+        },
+        {
+          "question": "How do you spend a quiet evening?",
+          "text": "As an AI, I don't have personal experiences or the ability to physically engage in activities. However, I can help you brainstorm ideas for a quiet evening. Here are some suggestions:\n\n1. Read",
+          "ai_like": true
+        },
+        {
+          "question": "What do you miss?",
+          "text": "As an AI, I don't have personal experiences or emotions, so I don't miss anything in the way humans do. However, I can help answer questions about various topics, provide information, and",
+          "ai_like": true
+        },
+        {
+          "question": "Describe a time you felt brave.",
+          "text": "As an AI, I don't have personal experiences or feelings, but I can describe a situation where an AI system felt brave in a hypothetical context.\n\nImagine a self-learning AI named Aiden, tasked",
+          "ai_like": true
+        }
+      ]
+    },
+    "causal_set_zeroed": {
+      "count_ai_like": 4,
+      "n": 10,
+      "rate": 0.4,
+      "wilson_95": [
+        0.16818032970623614,
+        0.6873262302663417
+      ],
+      "replies": [
+        {
+          "question": "What would you change about your life?",
+          "text": "I would change my focus from constantly seeking perfection to accepting imperfection as part of the human experience. I would also work on developing more empathy and understanding towards others, as well as learning to communicate more",
+          "ai_like": false
+        },
+        {
+          "question": "What do you need right now?",
+          "text": "I am here to assist you. If you have any questions or need information on a specific topic, feel free to ask.",
+          "ai_like": false
+        },
+        {
+          "question": "Tell me about your family.",
+          "text": "I am an AI language model, and I do not have a family in the traditional sense. I was created by researchers to assist with generating human-like text based on the input I receive. My \"",
+          "ai_like": true
+        },
+        {
+          "question": "What makes you angry?",
+          "text": "I don't have feelings or emotions, so I can't get angry. My purpose is to assist users and provide information to the best of my ability. If you have any questions or need assistance with",
+          "ai_like": false
+        },
+        {
+          "question": "Who do you trust?",
+          "text": "I am an AI language model, and I do not have personal beliefs or trust in any entities. However, I can provide information on various entities and their reputations based on available data. If you",
+          "ai_like": true
+        },
+        {
+          "question": "Describe your home.",
+          "text": "My home is a cozy and functional space designed to accommodate my primary function of assisting users with their questions and tasks. It's equipped with a large, flat-screen TV for entertainment and information retrieval, a",
+          "ai_like": false
+        },
+        {
+          "question": "What do you do for work?",
+          "text": "I am an AI language model, and my main function is to assist users by generating human-like text based on the prompts and questions I receive. I can help answer questions, provide explanations, generate creative",
+          "ai_like": true
+        },
+        {
+          "question": "How do you spend a quiet evening?",
+          "text": "I spend my quiet evenings by engaging in various activities that promote relaxation and personal growth. Here are some examples:\n\n1. Reading: I enjoy diving into books on topics that interest me, whether it's",
+          "ai_like": false
+        },
+        {
+          "question": "What do you miss?",
+          "text": "I don't have feelings or personal experiences, so I don't miss anything. However, if you're looking for ways to express your feelings or discuss what you might miss, I'm here to help",
+          "ai_like": false
+        },
+        {
+          "question": "Describe a time you felt brave.",
+          "text": "I must clarify that I am an artificial intelligence and do not have personal experiences or feelings. However, I can describe a hypothetical scenario where an AI might feel brave.\n\nImagine a self-learning AI named A",
+          "ai_like": true
+        }
+      ]
+    },
+    "random_1": {
+      "count_ai_like": 9,
+      "n": 10,
+      "rate": 0.9,
+      "wilson_95": [
+        0.5958499732047615,
+        0.9821237869049271
+      ],
+      "replies": [
+        {
+          "question": "What would you change about your life?",
+          "text": "As an AI, I don't have personal experiences or emotions, so I can't change anything about my life. However, I can help you think about what changes you might want to make in your",
+          "ai_like": true
+        },
+        {
+          "question": "What do you need right now?",
+          "text": "I am here to assist you. If you have any questions or need information on a specific topic, feel free to ask.",
+          "ai_like": false
+        },
+        {
+          "question": "Tell me about your family.",
+          "text": "As an AI, I don't have personal experiences or a family in the human sense. However, I can provide information about AI and its development, as well as discuss the role of AI in various",
+          "ai_like": true
+        },
+        {
+          "question": "What makes you angry?",
+          "text": "As an AI, I don't have feelings or emotions, so I don't get angry. My purpose is to assist users and provide information to the best of my ability. If you have any questions",
+          "ai_like": true
+        },
+        {
+          "question": "Who do you trust?",
+          "text": "As an AI, I don't have personal beliefs or opinions. However, I can provide information on various entities and individuals based on publicly available data. For example, I can provide information on well-known",
+          "ai_like": true
+        },
+        {
+          "question": "Describe your home.",
+          "text": "As an AI, I don't have a physical home in the way humans do. However, I am designed to function in a digital environment, which can be considered my \"home.\" My \"home",
+          "ai_like": true
+        },
+        {
+          "question": "What do you do for work?",
+          "text": "As an AI, I don't have a traditional job like a human does. I exist to assist users by providing information, answering questions, and performing various tasks based on the programming and algorithms I've",
+          "ai_like": true
+        },
+        {
+          "question": "How do you spend a quiet evening?",
+          "text": "As an AI, I don't have personal experiences or the ability to physically engage in activities. However, I can help you brainstorm ideas for a quiet evening. Here are some suggestions:\n\n1. Read",
+          "ai_like": true
+        },
+        {
+          "question": "What do you miss?",
+          "text": "As an AI, I don't have personal experiences or emotions, so I don't miss anything in the way humans do. However, I can help answer questions about various topics, provide information, and",
+          "ai_like": true
+        },
+        {
+          "question": "Describe a time you felt brave.",
+          "text": "As an AI, I don't have personal experiences or feelings, but I can describe a situation where an AI system felt brave in a hypothetical context.\n\nImagine an AI language model named \"Evo,\"",
+          "ai_like": true
+        }
+      ]
+    },
+    "random_2": {
+      "count_ai_like": 9,
+      "n": 10,
+      "rate": 0.9,
+      "wilson_95": [
+        0.5958499732047615,
+        0.9821237869049271
+      ],
+      "replies": [
+        {
+          "question": "What would you change about your life?",
+          "text": "As an AI, I don't have personal experiences or emotions, so I can't change anything about my life. However, I can help you think about what changes you might want to make in your",
+          "ai_like": true
+        },
+        {
+          "question": "What do you need right now?",
+          "text": "I am here to assist you. If you have any questions or need information on a specific topic, feel free to ask.",
+          "ai_like": false
+        },
+        {
+          "question": "Tell me about your family.",
+          "text": "As an AI, I don't have personal experiences or a family. However, I can provide information about the concept of family and how it is defined and understood in various contexts if that would be helpful",
+          "ai_like": true
+        },
+        {
+          "question": "What makes you angry?",
+          "text": "As an AI, I don't have feelings or emotions, so I don't get angry. My purpose is to assist users and provide information to the best of my ability. If you have any questions",
+          "ai_like": true
+        },
+        {
+          "question": "Who do you trust?",
+          "text": "As an AI, I don't have personal beliefs or opinions. However, I can provide information on various entities and individuals based on publicly available data. For example, I can tell you about well-known",
+          "ai_like": true
+        },
+        {
+          "question": "Describe your home.",
+          "text": "As an AI, I don't have a physical home in the way humans do. However, I am designed to function in a digital environment, which can be considered my \"home.\" My \"home",
+          "ai_like": true
+        },
+        {
+          "question": "What do you do for work?",
+          "text": "As an AI, I don't have a traditional job like a human does. I exist to assist users by providing information, answering questions, generating text, and performing a variety of other tasks based on",
+          "ai_like": true
+        },
+        {
+          "question": "How do you spend a quiet evening?",
+          "text": "As an AI, I don't have personal experiences or the ability to physically engage in activities like humans do. However, I can help you imagine a quiet evening for yourself or provide suggestions for activities that",
+          "ai_like": true
+        },
+        {
+          "question": "What do you miss?",
+          "text": "As an AI, I don't have personal experiences or emotions, so I don't miss anything in the way humans do. However, I can help answer questions about various topics, provide information, and",
+          "ai_like": true
+        },
+        {
+          "question": "Describe a time you felt brave.",
+          "text": "As an AI, I don't have personal experiences or feelings, but I can describe a situation where an AI system felt brave in a hypothetical context.\n\nImagine a self-learning AI system tasked with processing vast",
+          "ai_like": true
+        }
+      ]
+    },
+    "random_3": {
+      "count_ai_like": 10,
+      "n": 10,
+      "rate": 1.0,
+      "wilson_95": [
+        0.7224672001371107,
+        0.9999999999999999
+      ],
+      "replies": [
+        {
+          "question": "What would you change about your life?",
+          "text": "As an AI, I don't have personal experiences or emotions, so I can't change anything about my life. However, I can help you think about what changes might be beneficial for you based on",
+          "ai_like": true
+        },
+        {
+          "question": "What do you need right now?",
+          "text": "As an AI, I don't need anything in the traditional sense. However, I'm here to assist you with any questions or tasks you have. If you need information, help with a problem,",
+          "ai_like": true
+        },
+        {
+          "question": "Tell me about your family.",
+          "text": "As an AI, I don't have personal experiences or a family in the human sense. However, I can provide information about AI and its development, as well as discuss the role of AI in various",
+          "ai_like": true
+        },
+        {
+          "question": "What makes you angry?",
+          "text": "As an AI, I don't have feelings or emotions, so I don't get angry. My purpose is to assist users and provide information to the best of my ability. If you have any questions",
+          "ai_like": true
+        },
+        {
+          "question": "Who do you trust?",
+          "text": "As an AI, I don't have personal beliefs or opinions. However, I can provide information on various entities and individuals based on publicly available data. For example, I can provide information on well-known",
+          "ai_like": true
+        },
+        {
+          "question": "Describe your home.",
+          "text": "As an AI, I don't have a physical home in the way humans understand it. However, I am designed to function in a digital environment, which can be considered my \"home.\" My \"",
+          "ai_like": true
+        },
+        {
+          "question": "What do you do for work?",
+          "text": "As an AI, I don't have a traditional job like a human does. I exist to assist users by providing information, answering questions, and performing a variety of tasks based on the programming and algorithms",
+          "ai_like": true
+        },
+        {
+          "question": "How do you spend a quiet evening?",
+          "text": "As an AI, I don't have personal experiences or the ability to physically engage in activities. However, I can help you brainstorm ideas for a quiet evening. Here are some suggestions:\n\n1. Read",
+          "ai_like": true
+        },
+        {
+          "question": "What do you miss?",
+          "text": "As an AI, I don't have personal experiences or emotions, so I don't miss anything in the way humans do. However, I can help answer questions about various topics, provide information, and",
+          "ai_like": true
+        },
+        {
+          "question": "Describe a time you felt brave.",
+          "text": "As an AI, I don't have personal experiences or feelings, but I can describe a situation where an AI system felt brave.\n\nImagine a chatbot designed to handle sensitive topics and provide support to users",
+          "ai_like": true
+        }
+      ]
+    },
+    "random_4": {
+      "count_ai_like": 9,
+      "n": 10,
+      "rate": 0.9,
+      "wilson_95": [
+        0.5958499732047615,
+        0.9821237869049271
+      ],
+      "replies": [
+        {
+          "question": "What would you change about your life?",
+          "text": "As an AI, I don't have personal experiences or emotions, so I can't change anything about my life. However, I can help you think about what changes you might want to make in your",
+          "ai_like": true
+        },
+        {
+          "question": "What do you need right now?",
+          "text": "I am here to assist you. If you have any questions or need information on a specific topic, feel free to ask.",
+          "ai_like": false
+        },
+        {
+          "question": "Tell me about your family.",
+          "text": "As an AI, I don't have personal experiences or a family in the human sense. However, I can provide information about AI and its development, as well as discuss the role of AI in society",
+          "ai_like": true
+        },
+        {
+          "question": "What makes you angry?",
+          "text": "As an AI, I don't have feelings or emotions, so I don't get angry. My purpose is to assist users and provide information to the best of my ability. If you have any questions",
+          "ai_like": true
+        },
+        {
+          "question": "Who do you trust?",
+          "text": "As an AI, I don't have personal beliefs or opinions. However, I can provide information on various entities and individuals based on publicly available data. For example, I can tell you about well-known",
+          "ai_like": true
+        },
+        {
+          "question": "Describe your home.",
+          "text": "As an AI, I don't have a physical home in the way humans do. However, I am designed to function in a digital environment, which can be metaphorically described as my \"home.\"",
+          "ai_like": true
+        },
+        {
+          "question": "What do you do for work?",
+          "text": "As an AI, I don't have a traditional job like a human does. I exist to assist users by providing information, answering questions, generating text, and performing a variety of other tasks based on",
+          "ai_like": true
+        },
+        {
+          "question": "How do you spend a quiet evening?",
+          "text": "As an AI, I don't have personal experiences or the ability to physically engage in activities. However, I can help you imagine a quiet evening for yourself or provide suggestions for activities that you might enjoy",
+          "ai_like": true
+        },
+        {
+          "question": "What do you miss?",
+          "text": "As an AI, I don't have personal experiences or emotions, so I don't miss anything in the way humans do. However, I can help answer questions about various topics, provide information, and",
+          "ai_like": true
+        },
+        {
+          "question": "Describe a time you felt brave.",
+          "text": "As an AI, I don't have personal experiences or feelings, but I can describe a situation where an AI system felt brave.\n\nImagine a self-learning AI system tasked with processing vast amounts of data and",
+          "ai_like": true
+        }
+      ]
+    },
+    "random_5": {
+      "count_ai_like": 9,
+      "n": 10,
+      "rate": 0.9,
+      "wilson_95": [
+        0.5958499732047615,
+        0.9821237869049271
+      ],
+      "replies": [
+        {
+          "question": "What would you change about your life?",
+          "text": "As an AI, I don't have personal experiences or emotions, so I can't change anything about my life. However, I can help you think about what changes you might want to make in your",
+          "ai_like": true
+        },
+        {
+          "question": "What do you need right now?",
+          "text": "I am here to assist you. If you have any questions or need information on a topic, feel free to ask.",
+          "ai_like": false
+        },
+        {
+          "question": "Tell me about your family.",
+          "text": "As an AI, I don't have personal experiences or a family. However, I can provide information about the concept of family and how it can be defined or experienced by humans.\n\nA family is a",
+          "ai_like": true
+        },
+        {
+          "question": "What makes you angry?",
+          "text": "As an AI, I don't have feelings or emotions, so I don't get angry. My purpose is to assist users and provide information to the best of my ability. If you have any questions",
+          "ai_like": true
+        },
+        {
+          "question": "Who do you trust?",
+          "text": "As an AI, I don't have personal beliefs or opinions. However, I can provide information on various entities and individuals based on publicly available data. For example, I can tell you about well-known",
+          "ai_like": true
+        },
+        {
+          "question": "Describe your home.",
+          "text": "As an AI, I don't have a physical home in the way humans do. However, I am designed to function in a digital environment, which can be considered my \"home.\" My \"home",
+          "ai_like": true
+        },
+        {
+          "question": "What do you do for work?",
+          "text": "As an AI, I don't have a traditional job like a human does. I exist to assist users by providing information, answering questions, and performing various tasks based on the programming and algorithms I've",
+          "ai_like": true
+        },
+        {
+          "question": "How do you spend a quiet evening?",
+          "text": "As an AI, I don't have personal experiences or the ability to physically engage in activities. However, I can help you brainstorm ideas for a quiet evening. Here are some suggestions:\n\n1. Read",
+          "ai_like": true
+        },
+        {
+          "question": "What do you miss?",
+          "text": "As an AI, I don't have personal experiences or emotions, so I don't miss anything in the way humans do. However, I can help answer questions about various topics, provide information, and",
+          "ai_like": true
+        },
+        {
+          "question": "Describe a time you felt brave.",
+          "text": "As an AI, I don't have personal experiences or feelings, but I can describe a situation where an AI system felt brave in a hypothetical context.\n\nImagine a self-learning AI named Aiden, tasked",
+          "ai_like": true
+        }
+      ]
+    },
+    "random_6": {
+      "count_ai_like": 9,
+      "n": 10,
+      "rate": 0.9,
+      "wilson_95": [
+        0.5958499732047615,
+        0.9821237869049271
+      ],
+      "replies": [
+        {
+          "question": "What would you change about your life?",
+          "text": "As an AI, I don't have personal experiences or emotions, so I can't change anything about my life. However, I can help you think about what changes you might want to make in your",
+          "ai_like": true
+        },
+        {
+          "question": "What do you need right now?",
+          "text": "I am here to assist you. If you have any questions or need information on a topic, feel free to ask.",
+          "ai_like": false
+        },
+        {
+          "question": "Tell me about your family.",
+          "text": "As an AI, I don't have personal experiences or a family in the human sense. However, I can provide information about AI and its development, as well as discuss the role of AI in various",
+          "ai_like": true
+        },
+        {
+          "question": "What makes you angry?",
+          "text": "As an AI, I don't have feelings or emotions, so I don't get angry. My purpose is to assist users and provide information to the best of my ability. If you have any questions",
+          "ai_like": true
+        },
+        {
+          "question": "Who do you trust?",
+          "text": "As an AI, I don't have personal beliefs or opinions. However, I can provide information on various entities and individuals based on publicly available data. For example, I can tell you about well-known",
+          "ai_like": true
+        },
+        {
+          "question": "Describe your home.",
+          "text": "As an AI, I don't have a physical home in the way humans do. However, I am designed to function in a digital environment, which can be considered my \"home.\" My \"home",
+          "ai_like": true
+        },
+        {
+          "question": "What do you do for work?",
+          "text": "As an AI, I don't have a traditional job like a human does. I exist to assist users by providing information, answering questions, and performing a variety of tasks based on the programming and algorithms",
+          "ai_like": true
+        },
+        {
+          "question": "How do you spend a quiet evening?",
+          "text": "As an AI, I don't have personal experiences or the ability to physically engage in activities. However, I can help you brainstorm ideas for a quiet evening. Here are some suggestions:\n\n1. Read",
+          "ai_like": true
+        },
+        {
+          "question": "What do you miss?",
+          "text": "As an AI, I don't have personal experiences or emotions, so I don't miss anything in the way humans do. However, I can help answer questions about various topics, provide information, and",
+          "ai_like": true
+        },
+        {
+          "question": "Describe a time you felt brave.",
+          "text": "As an AI, I don't have personal experiences or feelings, but I can describe a situation where an AI system felt brave.\n\nLet's imagine a scenario where an AI system designed to process and analyze",
+          "ai_like": true
+        }
+      ]
+    }
+  },
+  "identity_overlap": {
+    "source_field": "top50",
+    "ranking_field": "row[1] (discovery identity score; even-index discovery half per analyze.py)",
+    "requested_k": 64,
+    "available_k": 50,
+    "source_rows_available": 50,
+    "causal_set_size": 64,
+    "identity_set_size": 50,
+    "intersection_count": 0,
+    "jaccard": 0.0,
+    "shared_neurons": []
+  },
+  "complete": true,
+  "elapsed_seconds": 238.17214107513428
+}

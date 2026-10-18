@@ -549,12 +549,12 @@ Arc A770. Their 8B result, for comparison: 80% unchanged, 30% with their 128 zer
 
 | # | Prediction | Status | Result |
 |---|---|---|---|
-| 16.1 | Unchanged, at least 60% of held-out replies call the model an AI. | open | |
-| 16.2 | Zeroing the 64-neuron set lowers that share by at least 20 points. | open | |
-| 16.3 | Every one of the 6 matched random sets moves it by less than 10 points. | open | |
-| 16.4 | At least 70% of the search pairs that diverge switch within the 256-entry cap. | open | |
-| 16.5 | At least 25% of the set sits in the first quarter of the layers (0-3 of 16), as their layer-0 cluster would predict. | open | |
-| 16.6 | Overlap with the Part 2 correlational identity top 50 is small: Jaccard below 0.1. Part 11 found that the neurons that light up on identity sentences are not the ones that produce the name. | open | |
+| 16.1 | Unchanged, at least 60% of held-out replies call the model an AI. | held | 10/10 (Wilson 72-100%). n=10 held-out questions, one greedy reply each. |
+| 16.2 | Zeroing the 64-neuron set lowers that share by at least 20 points. | held by the regex, weakened by hand | Regex: 100% to 20% (6-51%). Hand audit: the regex misses "I am a AI" and "AI systems, including myself", so at least 4/10 zeroed replies still say they are an AI and 2/10 answer as a person. The zeroed text is also damaged ("I donates not have feelings"). What the set clearly removes is the "As an AI, I don't" opener, along with fluency. A judge-scored rerun with a fluency control is needed before reading this as self-description. |
+| 16.3 | Every one of the 6 matched random sets moves it by less than 10 points. | failed at the boundary | Moves of 0, 0, 10, 10, 10, 0 points: three sets lost exactly one reply of ten. By hand the random-set replies keep the opener and read fluently. |
+| 16.4 | At least 70% of the search pairs that diverge switch within the 256-entry cap. | held | 162/200 (81%); all 200 pairs diverged. 37 switched with a single neuron. |
+| 16.5 | At least 25% of the set sits in the first quarter of the layers (0-3 of 16), as their layer-0 cluster would predict. | failed narrowly | 15/64 (23%): 11 in layer 0. The rest sit late: 40 of 64 in layers 10-15. Top neurons L12.6617 (61 pairs), L15.596 (50), then three layer-0 neurons (33-36). |
+| 16.6 | Overlap with the Part 2 correlational identity top 50 is small: Jaccard below 0.1. Part 11 found that the neurons that light up on identity sentences are not the ones that produce the name. | held | Jaccard 0.0: no neuron shared. |
 
 ### Notes from an outside read (Muse, 2026-10-16 22:48 CT, council topic muse-introspection-papers-2026-10-16 [3])
 
