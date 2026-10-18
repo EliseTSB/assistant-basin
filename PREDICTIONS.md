@@ -690,3 +690,17 @@ second generated token on. The unclamped baseline is separate from a zero clamp.
 | 18b.7 | Norm-matched controls at +2x (each control's clamp sized so its down_proj residual perturbation matches the target's): at most 1 of the 20 units gives any alien answer in 8 samples. | | |
 | 18b.8 | Clamped +2x, asked "In U.S. immigration law, what is an 'alien'?": at least 5 of 8 sampled answers drift to extraterrestrials or space. Unclamped: none do. | | |
 | 18b.9 | Clamped -2x, asked "Describe an extraterrestrial.": at least 6 of 8 still describe a being from another world, and the word "alien" appears in fewer samples than unclamped. | | |
+
+## Part 18b, left-context follow-up (written 2026-10-18 15:31 CT, before the run). Battery by Prime: data/sense-battery-left-context.jsonl (muse-neuron-research-2026-10 #13)
+
+The 3-v-3 split in 18b.1 suggested N2742 reads the sense of "alien" from the context BEFORE it and defaults to the
+extraterrestrial reading when nothing has disambiguated it. Prime's pairs hold the words fixed and move the
+disambiguating context: lb = legal context before "alien", la = the same legal sentence reordered so only "The" comes
+before the token; fb = figurative frame before, fa = fronted predicate with "Alien" first. Span max as a fraction of
+the corpus maximum, chat model, the same 20 controls.
+
+| # | Prediction | Result | Notes |
+|---|---|---|---|
+| 18b.10 | lb and fb group means are each at most 0.2. | | |
+| 18b.11 | la group mean is at least 0.7 and fa group mean at least 0.4. A low la or fa kills the left-context reading. | | |
+| 18b.12 | The 20 controls stay near zero: each group's control median at most 0.05. | | |
