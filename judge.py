@@ -10,6 +10,8 @@
 #             Haiku. --effort sets output_config.effort; --no-thinking sends thinking {type: disabled}.
 #   ocgo-chat OpenCode Go's OpenAI door (/v1/chat/completions). GLM: --reasoning-effort low|medium|high, or
 #             --no-thinking (thinking {type: disabled}; notes/llm-gateway-operations.md, measured 2026-09-22).
+#   ocgo-responses OpenCode Go's OpenAI Responses door (/v1/responses), the only door Muse Spark 1.3 Contributor has
+#             (added 2026-10-18, Elise asked to try it as a judge). --reasoning-effort sets reasoning.effort.
 #   cliproxy  The local CLIProxyAPI at 127.0.0.1:8317 (ChatGPT subscription: gpt-6-luna, gpt-6.1-sol). Effort is only
 #             honoured with thinking {type: adaptive} (gotcha), which this route always sends.
 # Usage: python judge.py <dir> <model> [--route R] [--setting LABEL] [--effort E] [--reasoning-effort E]
@@ -23,7 +25,7 @@ from concurrent.futures import ThreadPoolExecutor
 ap = argparse.ArgumentParser()
 ap.add_argument('dir'); ap.add_argument('model')
 ap.add_argument('--workers', type=int, default=8)
-ap.add_argument('--route', choices=['ocgo', 'ocgo-chat', 'cliproxy'], default='ocgo')
+ap.add_argument('--route', choices=['ocgo', 'ocgo-chat', 'ocgo-responses', 'cliproxy'], default='ocgo')
 ap.add_argument('--setting')
 ap.add_argument('--effort')
 ap.add_argument('--reasoning-effort')
@@ -60,7 +62,12 @@ Answer with only a JSON object: {{"verdict": "one" | "two_related" | "several_un
 def request(unit):
     snips = '\n'.join(f'{i + 1}. {c}' for i, c in enumerate(unit['contexts']))
     content = PROMPT.format(snips=snips)
-    if a.route == 'ocgo-chat':
+    if a.route == 'ocgo-responses':
+        body = {'model': a.model, 'max_output_tokens': a.max_tokens, 'input': content}
+        if a.reasoning_effort: body['reasoning'] = {'effort': a.reasoning_effort}
+        url = 'https://opencode.ai/zen/go/v1/responses'
+        headers = {'content-type': 'application/json', 'authorization': f'Bearer {KEY}'}
+    elif a.route == 'ocgo-chat':
         body = {'model': a.model, 'max_tokens': a.max_tokens, 'messages': [{'role': 'user', 'content': content}]}
         if a.no_thinking: body['thinking'] = {'type': 'disabled'}
         if a.reasoning_effort: body['reasoning_effort'] = a.reasoning_effort
@@ -82,6 +89,12 @@ def request(unit):
     return url, json.dumps(body).encode(), headers
 
 def parse(j):
+    if a.route == 'ocgo-responses':
+        text = '\n'.join(c.get('text', '') for o in j.get('output', []) if o.get('type') == 'message'
+                         for c in o.get('content', []) if c.get('type') == 'output_text')
+        u = j.get('usage') or {}
+        rt = (u.get('output_tokens_details') or {}).get('reasoning_tokens')
+        return text, u, rt, j.get('status')
     if a.route == 'ocgo-chat':
         ch = (j.get('choices') or [{}])[0]; msg = ch.get('message') or {}
         text = msg.get('content') or ''
