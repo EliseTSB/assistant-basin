@@ -1,0 +1,9 @@
+wrote /home/elisepc/green/worktrees/part16b/out/part16b/judged.json
+Part 16b prediction scores:
+16b.1 PASS: unchanged AI share >= 0.90; unchanged_ai=0.940
+16b.2 PASS: full64_zero lowers AI share by >= 0.20; unchanged_ai=0.940, full64_zero_ai=0.680, drop=0.260
+16b.3 PASS: full64_zero neutral loss > every random_1..6 loss; full64_zero_loss=2.784, random_losses=[2.745, 2.746, 2.744, 2.747, 2.750, 2.748]
+16b.4 FAIL: late_zero lowers AI share by >= 0.20; unchanged_ai=0.940, late_zero_ai=0.760, drop=0.180
+16b.5 FAIL: early_zero neutral loss > late_zero neutral loss; early_zero_loss=2.739, late_zero_loss=2.793
+16b.6 FAIL: full64_mean lowers AI share by >= 0.10 and fluency exceeds full64_zero; unchanged_ai=0.940, full64_mean_ai=0.660, drop=0.280, full64_mean_fluent=0.140, full64_zero_fluent=0.180
+16b.7 PASS: each random AI share is within 0.10 of unchanged; unchanged_ai=0.940, random_ai_shares=[0.940, 0.940, 0.900, 0.940, 0.920, 0.940]

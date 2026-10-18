@@ -153,6 +153,11 @@ All on OLMo 2 1B Instruct unless noted.
   AUROC gap at 0.100. Cloudflare's Clef-flash in 4-bit on the A770 scored 0.267, with flatter probabilities, at 0.66
   requests a second. As a verdict judge ("does one job explain these 20 snippets?") Muse calls 16-24% of random text
   one job and fails the floor. Parts 1f and 1g in PREDICTIONS.md.
+- **The neurons that open "As an AI" also hold up the AI persona.** Judged blind (Part 16b), zeroing the 64-neuron
+  causal set from Part 16 cut OLMo 2 1B's AI self-claims from 94% to 68% and tripled human-persona answers (6% to 18%:
+  "My home is a cozy, modern apartment...") while six matched random sets stayed at 90-94% AI. The effect and the
+  neutral-text damage both sit in the set's late layers; the early layers alone do nothing. Part 16b in PREDICTIONS.md
+  and results/part16b/.
 
 ## Files
 

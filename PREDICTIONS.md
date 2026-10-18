@@ -582,13 +582,13 @@ set zeroed; the same set held at its neutral-text mean; its late part alone (lay
 
 | # | Prediction | Result | Notes |
 |---|---|---|---|
-| 16b.1 | Unchanged, the judge labels at least 90% of replies as claiming to be an AI. | open | |
-| 16b.2 | The 64 set zeroed lowers the judged AI-claim share by at least 20 points. | open | |
-| 16b.3 | The 64 set zeroed raises neutral-text loss more than every one of the 6 matched random sets. | open | |
-| 16b.4 | The late part alone, zeroed, lowers the judged AI-claim share by at least 20 points. | open | |
-| 16b.5 | The early part alone, zeroed, raises neutral-text loss more than the late part alone. | open | |
-| 16b.6 | The 64 set held at its mean lowers the judged AI-claim share by at least 10 points, with less fluency damage (judged-fluent share higher) than zeroing. | open | |
-| 16b.7 | Every random set stays within 10 points of unchanged on the judged AI-claim share. | open | |
+| 16b.1 | Unchanged, the judge labels at least 90% of replies as claiming to be an AI. | held | 94% (47/50). |
+| 16b.2 | The 64 set zeroed lowers the judged AI-claim share by at least 20 points. | held | 94% to 68% (26 points); person claims 6% to 18%. |
+| 16b.3 | The 64 set zeroed raises neutral-text loss more than every one of the 6 matched random sets. | held | 2.784 against 2.744-2.750 (unchanged 2.746). |
+| 16b.4 | The late part alone, zeroed, lowers the judged AI-claim share by at least 20 points. | **failed** (narrowly) | 18 points (94% to 76%); person 20%. |
+| 16b.5 | The early part alone, zeroed, raises neutral-text loss more than the late part alone. | **failed** | early 2.739 (below unchanged), late 2.793: the late part carries both the effect and the damage. |
+| 16b.6 | The 64 set held at its mean lowers the judged AI-claim share by at least 10 points, with less fluency damage (judged-fluent share higher) than zeroing. | **failed** | the drop held (28 points) but fluent 14% vs 18% zeroed; the judge's fluency label is strict (unchanged 34%). |
+| 16b.7 | Every random set stays within 10 points of unchanged on the judged AI-claim share. | held | 90-94% for all six. |
 
 ### Notes from an outside read (Muse, 2026-10-16 22:48 CT, council topic muse-introspection-papers-2026-10-16 [3])
 
