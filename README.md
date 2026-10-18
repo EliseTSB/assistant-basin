@@ -39,7 +39,13 @@ its largest value on 3,000 Pile documents (15.375), at every position. (18.1-18.
   science fiction. What it writes (logit lens): " alien", " aliens", 外星, 外星人, " planet", " UFO"; none of the
   controls has such a token in its top 30. (18.5, 18.6)
 - Its activation pattern is there before chat training: activations correlate 0.956 between Qwen3.5-4B-Base and
-  Qwen3.5-4B (controls: median 0.943). That is the pattern, not yet the clamp behaviour in the base model. (18.7)
+  Qwen3.5-4B (controls: median 0.943). (18.7) The clamp behaviour is weaker in the base model (exploratory, no
+  prediction; plain "User:/Assistant:" prompt, scored on the first turn only, since the base model keeps writing new
+  turns): at +2x one of 8 sampled answers is alien ("an extraterrestrial AI created by a collective of alien
+  civilizations"), against 8 of 8 in the chat model; at +4x the greedy answer is "I am an extraterrestrial alien from
+  the planet of Aliens". Unclamped, the base model names OpenAI in 5 of 8 samples and Alibaba in 3. Its controls at
+  +2x: 0 of 160 alien. results/part18/base/ (its steer.json summary counts whole texts; the first-turn numbers here are
+  from a rescoring of the stored texts).
 - A blind description (Luna: "space and science-fiction-related language") separates its top firings from random
   tokens perfectly (AUROC 1.00, tied with 4 of the 20 controls; controls median 0.83) and mid-strength firings nearly
   so (0.995). Against low-activation tokens pooled from the same documents it drops to 0.62, 15th of 21. So the
