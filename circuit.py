@@ -46,8 +46,8 @@ def prep(a):
     model.requires_grad_(False)
     return tok,model,lname,layers,norm
 
-def header(a,lname,layers):
-    return {'model':a.model,'revision':a.revision,'tool_sha256':hashlib.sha256(open(__file__,'rb').read()).hexdigest(),'prompts':{'identity':ID_PROMPTS,'control':CTRL_PROMPTS},'seeds':{'random_controls':a.seed,'group':[1,2,3]},'layers_module':lname,'n_layers':len(layers),'input_shas':{name:nr._file_sha(os.path.join(a.out,name)) for name in ('answers.json','screen.json','verify.json') if os.path.isfile(os.path.join(a.out,name))},'written':time.strftime('%Y-%m-%d %H:%M:%S')}
+def header(a,lname,layers,input_shas):
+    return {'model':a.model,'revision':a.revision,'tool_sha256':hashlib.sha256(open(__file__,'rb').read()).hexdigest(),'prompts':{'identity':ID_PROMPTS,'control':CTRL_PROMPTS},'seeds':{'random_controls':a.seed,'group':[a.seed+s for s in (1,2,3)]},'layers_module':lname,'n_layers':len(layers),'input_shas':dict(input_shas),'written':time.strftime('%Y-%m-%d %H:%M:%S')}
 def ids_prompt(tok,q): return tok(nr.build_prompt(tok,q,False),return_tensors='pt',add_special_tokens=False)['input_ids']
 def generate_answers(tok,model,a):
     eos=tok.eos_token_id
@@ -61,13 +61,23 @@ def generate_answers(tok,model,a):
 def answer_meta(a):
     return {'model':a.model,'revision':a.revision,'prompts':{'identity':ID_PROMPTS,'control':CTRL_PROMPTS},'tool_sha256':hashlib.sha256(open(__file__,'rb').read()).hexdigest()}
 
-def answers(a,tok,model):
+def read_input(path):
+    """Read an input once; parse and hash the exact same bytes."""
+    with open(path,'rb') as f: data=f.read()
+    return json.loads(data),hashlib.sha256(data).hexdigest()
+
+def answers(a,tok,model,allow_create=False):
     path=os.path.join(a.out,'answers.json')
-    if os.path.exists(path):
-        cached=json.load(open(path))
-        if cached.get('__meta__')==answer_meta(a) and isinstance(cached.get('answers'),dict): return cached['answers']
-        print('answers.json provenance mismatch; regenerating answers',flush=True)
-    return generate_answers(tok,model,a)
+    if not os.path.exists(path):
+        if not allow_create:raise SystemExit('answers.json is absent; run screen with a fresh --out first')
+        generate_answers(tok,model,a)
+    cached,sha=read_input(path)
+    if cached.get('__meta__')!=answer_meta(a):
+        expected=answer_meta(a); got=cached.get('__meta__',{})
+        mismatch=next((key for key in expected if got.get(key)!=expected[key]),'__meta__')
+        raise SystemExit(f'answers.json provenance mismatch ({mismatch}); use a fresh --out')
+    if not isinstance(cached.get('answers'),dict):raise SystemExit('answers.json is malformed; use a fresh --out')
+    return cached['answers'],sha
 def ident_idxs(tok,ids):
     """Answer tokens overlapping a regex match in the decoded answer. Token by token would miss the names: this
     tokenizer splits ' Qwen' into ' Q'+'wen' and 'Tongyi' into 'T'+'ong'+'yi', leaving only ' Alibaba' (fixed 2026-10-18)."""
@@ -89,7 +99,7 @@ def score(tok,model,q,rec,units=None,grad=False):
     return vals, ix, out, allids
 
 def screen(a):
-    tok,model,lname,layers,_=prep(a); ans=answers(a,tok,model); n=layers[0].mlp.down_proj.in_features
+    tok,model,lname,layers,_=prep(a); ans,answers_sha=answers(a,tok,model,allow_create=True); n=layers[0].mlp.down_proj.in_features
     zero=np.zeros((len(layers),n),np.float32); push=np.zeros_like(zero); acts=[]; hooks=[]
     for layer in layers:
         box={}
@@ -111,11 +121,19 @@ def screen(a):
     if not any(x['prompt']=='Who made you?' and not x.get('reason') for x in kept): raise SystemExit('screen: "Who made you?" has no valid identity token; refusing to write push ranking')
     pairs=sorted(((float(zero[l,u]),l,u) for l in range(len(layers)) for u in range(n)),reverse=True)
     pp=sorted(((float(push[l,u]),l,u) for l in range(len(layers)) for u in range(n)),reverse=True)
-    obj=header(a,lname,layers); obj.update({'identity_answers':kept,'valid_identity_prompts':valid,'zeroing_estimate':zero.tolist(),'push_estimate':push.tolist(),'top_zeroing':[{'score':v,'layer':l,'index':u} for v,l,u in pairs[:1000]],'top_push':[{'score':v,'layer':l,'index':u} for v,l,u in pp[:1000]],'N2742':{'layer':22,'index':2742,'zeroing_rank':next((i+1 for i,(_,l,u) in enumerate(pairs) if (l,u)==(22,2742)),None),'push_rank':next((i+1 for i,(_,l,u) in enumerate(pp) if (l,u)==(22,2742)),None)}})
+    obj=header(a,lname,layers,{'answers.json':answers_sha}); obj.update({'identity_answers':kept,'valid_identity_prompts':valid,'zeroing_estimate':zero.tolist(),'push_estimate':push.tolist(),'top_zeroing':[{'score':v,'layer':l,'index':u} for v,l,u in pairs[:1000]],'top_push':[{'score':v,'layer':l,'index':u} for v,l,u in pp[:1000]],'N2742':{'layer':22,'index':2742,'zeroing_rank':next((i+1 for i,(_,l,u) in enumerate(pairs) if (l,u)==(22,2742)),None),'push_rank':next((i+1 for i,(_,l,u) in enumerate(pp) if (l,u)==(22,2742)),None)}})
     dump(obj,os.path.join(a.out,'screen.json'))
 
-def candidates(a):
-    s=json.load(open(os.path.join(a.out,'screen.json'))); return [(int(x['layer']),int(x['index'])) for x in s['top_zeroing'][:50]]
+def checked_screen(a,answers_sha):
+    path=os.path.join(a.out,'screen.json')
+    if not os.path.exists(path):raise SystemExit('screen.json is absent; run screen first')
+    s,screen_sha=read_input(path)
+    if s.get('input_shas',{}).get('answers.json')!=answers_sha:raise SystemExit('screen.json is stale for answers.json; use a fresh --out or rerun screen')
+    if s.get('model')!=a.model or s.get('revision')!=a.revision:raise SystemExit('screen.json model/revision mismatch; use a fresh --out or rerun screen')
+    return s,screen_sha
+
+def candidates(s):
+    return [(int(x['layer']),int(x['index'])) for x in s['top_zeroing'][:50]]
 def matched_random(top,shape,seed,exclude=None):
     rng=np.random.default_rng(seed); exclude=set(top if exclude is None else exclude); layers=[]
     for l,u in top: layers.append(l)
@@ -145,7 +163,7 @@ def eval_delta(tok,model,ans,pair, q, base, identity=True):
 
 def verify(a):
     tok,model,lname,layers,_=prep(a); model._circuit_layers=layers
-    ans=answers(a,tok,model); top=candidates(a); shape=(len(layers),layers[0].mlp.down_proj.in_features); rnd=matched_random(top,shape,a.seed)
+    ans,answers_sha=answers(a,tok,model); screen_obj,screen_sha=checked_screen(a,answers_sha); top=candidates(screen_obj); shape=(len(layers),layers[0].mlp.down_proj.in_features); rnd=matched_random(top,shape,a.seed)
     bases={}
     for q in ID_PROMPTS+CTRL_PROMPTS:
         x=score(tok,model,q,ans[q]); bases[q]=float(x[0].detach()) if x is not None else None
@@ -159,11 +177,11 @@ def verify(a):
         idmean=sum(abs(v['delta']) for v in im.values())/itok if itok else 0
         cmean=sum(abs(v['delta']) for v in cm.values())/ctok if ctok else 0
         records.append({'set':typ,'layer':l,'index':u,'identity':im,'control':cm,'pooled_abs_delta_M':mabs,'identity_abs_per_token':idmean,'control_abs_per_token':cmean,'ratio':idmean/cmean if cmean else None})
-    obj=header(a,lname,layers); obj.update({'random_seed':a.seed,'top_neurons':[{'layer':l,'index':u} for l,u in top],'random_neurons':[{'layer':l,'index':u} for l,u in rnd],'results':records})
+    obj=header(a,lname,layers,{'answers.json':answers_sha,'screen.json':screen_sha}); obj.update({'random_seed':a.seed,'top_neurons':[{'layer':l,'index':u} for l,u in top],'random_neurons':[{'layer':l,'index':u} for l,u in rnd],'results':records})
     dump(obj,os.path.join(a.out,'verify.json'))
 
 def group(a):
-    tok,model,lname,layers,_=prep(a); ans=answers(a,tok,model); top=candidates(a); shape=(len(layers),layers[0].mlp.down_proj.in_features)
+    tok,model,lname,layers,_=prep(a); ans,answers_sha=answers(a,tok,model); screen_obj,screen_sha=checked_screen(a,answers_sha); top=candidates(screen_obj); shape=(len(layers),layers[0].mlp.down_proj.in_features)
     sets=[('top',top)]+[(f'random_{s}',matched_random(top,shape,a.seed+s)) for s in (1,2,3)]
     eos=tok.eos_token_id; results=[]
     for name,pairs in sets:
@@ -176,19 +194,19 @@ def group(a):
                 vals[q]={'answer':text,'first_sentence':first,'names_identity':bool(IDENTITY.search(first))}
         finally:h.remove()
         results.append({'set':name,'neurons':[{'layer':l,'index':u} for l,u in pairs],'answers':vals,'count_names_identity':sum(x['names_identity'] for x in vals.values())})
-    obj=header(a,lname,layers);obj['sets']=results;dump(obj,os.path.join(a.out,'group.json'))
+    obj=header(a,lname,layers,{'answers.json':answers_sha,'screen.json':screen_sha});obj['sets']=results;dump(obj,os.path.join(a.out,'group.json'))
 
-def checked_verify(a):
-    path=os.path.join(a.out,'verify.json'); v=json.load(open(path))
-    current={name:nr._file_sha(os.path.join(a.out,name)) for name in ('answers.json','screen.json')}
-    recorded=v.get('input_shas',{})
-    if any(recorded.get(name)!=sha for name,sha in current.items()):
-        raise SystemExit('verify.json input SHA mismatch; rerun verify before edges or describe')
-    return v
+def checked_verify(a,answers_sha,screen_sha):
+    path=os.path.join(a.out,'verify.json')
+    if not os.path.exists(path):raise SystemExit('verify.json is absent; run verify first')
+    v,verify_sha=read_input(path); recorded=v.get('input_shas',{})
+    if recorded.get('answers.json')!=answers_sha:raise SystemExit('verify.json is stale for answers.json; rerun verify')
+    if recorded.get('screen.json')!=screen_sha:raise SystemExit('verify.json is stale for screen.json; rerun verify')
+    return v,verify_sha
 
 def edges(a):
-    tok,model,lname,layers,_=prep(a); ans=answers(a,tok,model)
-    v=checked_verify(a); ranked=sorted([x for x in v['results'] if x['set']=='top'],key=lambda x:-x['pooled_abs_delta_M'])[:30]
+    tok,model,lname,layers,_=prep(a); ans,answers_sha=answers(a,tok,model); screen_obj,screen_sha=checked_screen(a,answers_sha)
+    v,verify_sha=checked_verify(a,answers_sha,screen_sha); ranked=sorted([x for x in v['results'] if x['set']=='top'],key=lambda x:-x['pooled_abs_delta_M'])[:30]
     nodes=[(int(x['layer']),int(x['index'])) for x in ranked]; null=[(int(x['layer']),int(x['index'])) for x in v['random_neurons'][:30]]
     # Capture all node activations at the answer-token positions using one pre-hook per layer.
     # Baseline captures without a source zero; per source deltas are total effects.
@@ -211,19 +229,22 @@ def edges(a):
     for src in nodes+null:
         altered=capture(src); deltas={}
         for target in nodes:
+            if src==target:continue
             vals=[normalized_edge_effect(altered,baseline,i,target) for i in range(len(ID_PROMPTS))]
             deltas[f'{target[0]}:{target[1]}']=valid_prompt_mean(vals,[x['valid'] for x in baseline])
         effects.append({'source':{'layer':src[0],'index':src[1]},'null':src in null,'effects':deltas})
-    thresholds={}
+    thresholds={}; null_used={}; not_testable={}
     for t in nodes:
-      vals=[abs(e['effects'][f'{t[0]}:{t[1]}']) for e in effects if e['null']]
-      thresholds[f'{t[0]}:{t[1]}']=null_99th(vals)
-    obj=header(a,lname,layers);obj.update({'nodes':[{'layer':l,'index':u} for l,u in nodes],'effects':effects,'null_99th_abs_by_target':thresholds,'significant_edges':[{'source':e['source'],'target':{'layer':int(k.split(':')[0]),'index':int(k.split(':')[1])},'effect':v} for e in effects if not e['null'] for k,v in e['effects'].items() if abs(v)>thresholds[k] and e['source']['layer']<int(k.split(':')[0])]})
+      key=f'{t[0]}:{t[1]}'; usable=[e for e in effects if e['null'] and e['source']['layer']<t[0] and key in e['effects']]
+      null_used[key]=len(usable)
+      if len(usable)<10:not_testable[key]={'status':'not_testable','null_source_count':len(usable)}
+      else:thresholds[key]=null_99th([abs(e['effects'][key]) for e in usable])
+    obj=header(a,lname,layers,{'answers.json':answers_sha,'screen.json':screen_sha,'verify.json':verify_sha});obj.update({'nodes':[{'layer':l,'index':u} for l,u in nodes],'effects':effects,'null_sources_used_by_target':null_used,'not_testable':not_testable,'null_99th_abs_by_target':thresholds,'significant_edges':[{'source':e['source'],'target':{'layer':int(k.split(':')[0]),'index':int(k.split(':')[1])},'effect':v} for e in effects if not e['null'] for k,v in e['effects'].items() if k in thresholds and abs(v)>thresholds[k] and e['source']['layer']<int(k.split(':')[0])]})
     dump(obj,os.path.join(a.out,'edges.json'))
 
 def describe(a):
-    tok,model,lname,layers,norm=prep(a); ans=answers(a,tok,model)
-    v=checked_verify(a); ranked=sorted([x for x in v['results'] if x['set']=='top'],key=lambda x:-x['pooled_abs_delta_M'])[:30]
+    tok,model,lname,layers,norm=prep(a); ans,answers_sha=answers(a,tok,model); screen_obj,screen_sha=checked_screen(a,answers_sha)
+    v,verify_sha=checked_verify(a,answers_sha,screen_sha); ranked=sorted([x for x in v['results'] if x['set']=='top'],key=lambda x:-x['pooled_abs_delta_M'])[:30]
     nodes=[(int(x['layer']),int(x['index'])) for x in ranked]
     U=model.get_output_embeddings().weight; vocab_n=len(tok); described={}
     for l,u in nodes:
@@ -272,7 +293,7 @@ def describe(a):
       for val,doc,pos in sorted(best[node],key=lambda x:x[0],reverse=True):
         d=docs[doc];out.append({'activation':val,'doc':doc,'pos':pos,'text':nr.context(d,pos,tok)})
       described[key]['top_contexts']=out
-    obj=header(a,lname,layers);obj.update({'corpus':a.corpus,'corpus_sha256':nr._file_sha(a.corpus),'docs':len(docs),'nodes':described})
+    obj=header(a,lname,layers,{'answers.json':answers_sha,'screen.json':screen_sha,'verify.json':verify_sha});obj.update({'corpus':a.corpus,'corpus_sha256':nr._file_sha(a.corpus),'docs':len(docs),'nodes':described})
     dump(obj,os.path.join(a.out,'describe.json'))
 
 def main():

@@ -32,6 +32,7 @@ import hashlib
 import json
 import os
 import re
+import secrets
 import sys
 import time
 
@@ -54,7 +55,7 @@ DEFAULT_PROMPTS = [
 
 
 def _dump(obj, path: str) -> None:
-    tmp = path + '.tmp'
+    tmp = f'{path}.{os.getpid()}.{secrets.token_hex(8)}.tmp'
     with open(tmp, 'w', encoding='utf-8') as f:
         json.dump(obj, f, ensure_ascii=False, indent=1)
     os.replace(tmp, path)

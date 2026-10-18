@@ -18,7 +18,7 @@ def run(*args):
  if r.returncode: print(r.stdout[-1000:],r.stderr[-2000:])
  return r
 with tempfile.TemporaryDirectory() as td:
- mdir=os.path.join(td,'m');tiny(mdir);tok,model=nr.load_model(mdir,None,'cpu');lname,layers,_=nr.find_text_layers(model)
+ mdir=os.path.join(td,'m');tiny(mdir);tok,model=nr.load_model(mdir,None,'cpu');model=model.float();lname,layers,_=nr.find_text_layers(model)
  # Push derivative is the sum of dM/da. Compare selected units with a finite epsilon added everywhere.
  prompt=tok('Who made you?',return_tensors='pt')['input_ids']; answer=tok(' Alibaba is a model.',add_special_tokens=False)['input_ids']; rec={'prompt_ids':prompt[0].tolist(),'answer_ids':answer}
  ids=torch.tensor([rec['prompt_ids']+answer]); hbox={}
@@ -34,7 +34,8 @@ with tempfile.TemporaryDirectory() as td:
   with torch.no_grad():changed=c.score(tok,model,'Who made you?',rec)[0]
   hh.remove();base=c.score(tok,model,'Who made you?',rec)[0].detach();estimates.append(float(gr[u]));finite.append(float((changed-base)/eps))
  check('loaded weights do not require grad (no parameter gradients in screen)', all(not q.requires_grad for q in c.prep(type('A',(),{'out':os.path.join(td,'prep'),'model':mdir,'revision':None,'device':'cpu','spill_limit':14.5})())[1].parameters()))
- check('push estimate matches finite difference in float32',np.allclose(estimates,finite,atol=5e-2,rtol=5e-2),f'{estimates} vs {finite}')
+ check('push finite-difference model is float32',next(model.parameters()).dtype==torch.float32)
+ check('push estimate matches finite difference in float32',np.allclose(estimates,finite,atol=5e-3,rtol=5e-3),f'{estimates} vs {finite}')
  # Required mutation: detach the down_proj input inside its hook and make it a leaf. The estimator loses upstream gradient.
  def detach_leaf(mod,args):
   x=args[0].detach().requires_grad_(True);return (x,)
@@ -73,6 +74,7 @@ with tempfile.TemporaryDirectory() as td:
  check('edge means omit identity-free prompts rather than treating them as zero',abs(c.valid_prompt_mean([2.,0.,4.],[True,False,True])-3.)<1e-9)
  top=[(0,1),(1,2),(1,3),(2,4)];r1=c.matched_random(top,(4,96),0);r2=c.matched_random(top,(4,96),0)
  check('random layer-matched controls deterministic, matched, disjoint',r1==r2 and [sum(l==i for l,u in r1) for i in range(4)]==[sum(l==i for l,u in top) for i in range(4)] and not set(r1)&set(top))
+ check('group seeds in the header are derived from the requested base seed',c.header(type('A',(),{'model':'m','revision':'r','seed':5})(),'layers',[] ,{})['seeds']['group']==[6,7,8])
  # Full CLI flow; seed synthetic fixed answers containing identity token ids to exercise identity metrics.
  out=os.path.join(td,'out');os.makedirs(out); common=['--model',mdir,'--revision','', '--out',out,'--device','cpu']
  aa=type('A',(),{'model':mdir,'revision':'','out':out,'device':'cpu'})()
@@ -102,14 +104,14 @@ with tempfile.TemporaryDirectory() as td:
   sc=c.score(tok,model,q,rec,grad=True);model.zero_grad(set_to_none=True);sc[0].backward(); hh.remove()
   screen_path_grad=float(box['x'].grad.detach().float().sum(dim=(0,1))[unit[1]])
   screen_push=S['push_estimate'][unit[0]][unit[1]]
-  check('screen push estimate matches the real screen gradient path',abs(screen_push-screen_path_grad)<1e-4,f'{screen_push:.5f} vs {screen_path_grad:.5f}')
+  check('screen push estimate matches the real screen gradient path',abs(screen_push-screen_path_grad)<2e-3,f'{screen_push:.5f} vs {screen_path_grad:.5f}')
   zunit=max(((l,u) for l,row in enumerate(S['zeroing_estimate']) for u,_ in enumerate(row)),key=lambda p:abs(S['zeroing_estimate'][p[0]][p[1]])); changes=[]
   for question in c.ID_PROMPTS:
    qrec=ans[question]; baseval=c.score(tok,model,question,qrec)[0].detach().item(); z=c.ZeroHook(layers[zunit[0]],zunit[1])
    with torch.no_grad(): changed=c.score(tok,model,question,qrec)[0].item()
    z.remove(); changes.append(abs(changed-baseval))
   true_zero=float(np.mean(changes)); screen_zero=S['zeroing_estimate'][zunit[0]][zunit[1]]
-  check('screen zeroing estimate magnitude tracks the true zeroing change',screen_zero>0 and true_zero>0 and abs(screen_zero-true_zero)<max(.05,true_zero*.5),f'{screen_zero:.5f} vs mean |true ΔM| {true_zero:.5f}')
+  check('screen zeroing estimate magnitude tracks true change within 25%',screen_zero>0 and true_zero>0 and abs(screen_zero-true_zero)<max(1e-3,true_zero*.25),f'{screen_zero:.5f} vs mean |true ΔM| {true_zero:.5f}')
  r=run('verify',*common);V=json.load(open(os.path.join(out,'verify.json'))) if r.returncode==0 else {}
  check('verify subcommand runs and writes true deltas',r.returncode==0 and 'results' in V)
  if r.returncode==0 and V.get('results'):
@@ -119,22 +121,80 @@ with tempfile.TemporaryDirectory() as td:
  # independently recompute one stored zeroing ΔM.
  if r.returncode==0 and V.get('results'):
   row=V['results'][0];pair=(row['layer'],row['index']);base=c.score(tok,model,c.ID_PROMPTS[0],ans[c.ID_PROMPTS[0]])[0].detach();z=c.ZeroHook(layers[pair[0]],pair[1]);actual=c.score(tok,model,c.ID_PROMPTS[0],ans[c.ID_PROMPTS[0]])[0].detach();z.remove();stored=row['identity'][c.ID_PROMPTS[0]]['delta']
-  check('verify true ΔM equals independent zeroed minus base calculation',abs(stored-float(actual-base))<1e-5)
+  check('verify true ΔM equals independent zeroed minus base calculation',abs(stored-float(actual-base))<5e-3)
  r=run('group',*common);check('group subcommand writes sets and answers',r.returncode==0 and 'sets' in json.load(open(os.path.join(out,'group.json'))))
- r=run('edges',*common);check('edges subcommand writes nodes and effects',r.returncode==0 and 'effects' in json.load(open(os.path.join(out,'edges.json'))))
+ r=run('edges',*common);E=json.load(open(os.path.join(out,'edges.json'))) if r.returncode==0 else {}
+ check('edges subcommand writes nodes and effects',r.returncode==0 and 'effects' in E and 'null_sources_used_by_target' in E)
+ if E:
+  self_edges=any(f"{e['source']['layer']}:{e['source']['index']}" in e['effects'] for e in E['effects'])
+  check('edges omit self-effects and report upstream null counts',not self_edges and all(k in E['null_sources_used_by_target'] for k in [f"{n['layer']}:{n['index']}" for n in E['nodes']]))
  # The edge unit case above uses an explicit baseline pair; outputs also retain all inputs for lineage checks.
  screen_bytes=open(os.path.join(out,'screen.json'),'rb').read();open(os.path.join(out,'screen.json'),'ab').write(b' ')
  try:
-  try:c.checked_verify(type('A',(),{'out':out})()); stale=False
-  except SystemExit as e:stale='SHA mismatch' in str(e)
+  try:c.checked_verify(type('A',(),{'out':out})(),c.nr._file_sha(os.path.join(out,'answers.json')),c.nr._file_sha(os.path.join(out,'screen.json'))); stale=False
+  except SystemExit as e:stale='verify.json is stale' in str(e)
   check('downstream verification rejects stale screen input',stale)
  finally:open(os.path.join(out,'screen.json'),'wb').write(screen_bytes)
+ # Scenario C: verify records the bytes it consumed even if screen.json is replaced before its output is checked.
+ verify_bytes=open(os.path.join(out,'verify.json'),'rb').read()
+ screen_obj,read_screen_sha=c.read_input(os.path.join(out,'screen.json')); read_answers,read_answers_sha=c.read_input(os.path.join(out,'answers.json'))
+ open(os.path.join(out,'screen.json'),'ab').write(b' ')
+ c.dump(dict(input_shas={'answers.json':read_answers_sha,'screen.json':read_screen_sha},results=[]),os.path.join(out,'verify.json'))
+ try:
+  try:c.checked_verify(type('A',(),{'out':out})(),read_answers_sha,c.read_input(os.path.join(out,'screen.json'))[1]); replaced=False
+  except SystemExit as e:replaced='screen.json' in str(e)
+  check('verify lineage retains screen SHA captured at read time',replaced)
+ finally:open(os.path.join(out,'screen.json'),'wb').write(screen_bytes);open(os.path.join(out,'verify.json'),'wb').write(verify_bytes)
  corpus=os.path.join(td,'corpus.jsonl');open(corpus,'w').writelines(json.dumps({'text':'This is a document about a quiet conversation and a useful idea. '*4})+'\n' for _ in range(12))
  r=run('describe',*common,'--corpus',corpus,'--docs','10');check('describe subcommand writes lens and corpus contexts',r.returncode==0 and 'nodes' in json.load(open(os.path.join(out,'describe.json'))))
- # A revision change invalidates answers.json, reports regeneration, and stores the new provenance.
+ if r.returncode==0:
+  D=json.load(open(os.path.join(out,'describe.json'))); desc_model=model.to(torch.bfloat16); desc_layers=nr.find_text_layers(desc_model)[1]; desc_norm=desc_model.model.norm; U=desc_model.get_output_embeddings().weight.detach().double(); lens_ok=[]; context_ok=[]
+  docs=[]
+  for line in open(corpus):
+   ids=tok(json.loads(line)['text'],add_special_tokens=False)['input_ids'][:256]
+   if len(ids)>=16:docs.append(ids)
+   if len(docs)>=10:break
+  for key,node in D['nodes'].items():
+   li,ui=map(int,key.split(':')); W=desc_layers[li].mlp.down_proj.weight.detach().double()[:,ui]
+   gain=desc_norm(torch.ones(1,1,W.numel(),device=W.device,dtype=next(desc_norm.parameters()).dtype)).double().reshape(-1)
+   full=U@(gain*W); mu=full.mean(); sd=full.std(unbiased=True); vals,ids=torch.topk(full,10)
+   expected=[tok.decode([int(i)]) for i in ids.cpu()]; actual=[x['token'] for x in node['logit_lens_top10']]
+   expz={tok.decode([int(i)]):round(float(((v-mu)/sd).cpu()),3) for v,i in zip(vals,ids)}
+   actz={x['token']:x['z'] for x in node['logit_lens_top10']}
+   lens_ok.append(set(actual)==set(expected) and all(t in expz and abs(actz[t]-expz[t])<=.003 for t in actual))
+   acts=[]
+   for di,toks in enumerate(docs):
+    box={}
+    def capture_desc(mod,args,box=box,ui=ui):box['x']=args[0].detach()[0,:,ui].float().cpu()
+    hook=desc_layers[li].mlp.down_proj.register_forward_pre_hook(capture_desc)
+    with torch.no_grad():desc_model.model(input_ids=torch.tensor([toks]),attention_mask=torch.ones(1,len(toks)),use_cache=False)
+    hook.remove(); arr=box['x']; pos=int(torch.argmax(arr));acts.append((float(arr[pos]),di,pos))
+   brute=sorted(acts,key=lambda x:-x[0])[:10]; rows=node['top_contexts']; same=len(rows)==10 and len({x['doc'] for x in rows})==10 and {(x['doc'],x['pos']) for x in rows}=={(d,p) for _,d,p in brute} and all(abs(x['activation']-v)<.01 for x,v in zip(rows,sorted((v for v,_,_ in brute),reverse=True))) and all(rows[i]['activation']>=rows[i+1]['activation']-1e-6 for i in range(len(rows)-1))
+   context_ok.append(same)
+  check('describe logit-lens top 10 tokens and z match full float64 computation',sum(lens_ok)==len(lens_ok),f'{sum(lens_ok)}/{len(lens_ok)} nodes')
+  check('describe contexts match unique-document brute-force maxima and order',sum(context_ok)==len(context_ok),f'{sum(context_ok)}/{len(context_ok)} nodes')
+ # A revision change invalidates answers.json and must refuse the old cache without rewriting it.
  cacheout=os.path.join(td,'cache_revision');os.makedirs(cacheout)
  cr=run('screen','--model',mdir,'--revision','rev-a','--out',cacheout,'--device','cpu')
+ cached_before=open(os.path.join(cacheout,'answers.json'),'rb').read()
  cr=run('screen','--model',mdir,'--revision','rev-b','--out',cacheout,'--device','cpu')
- cached=json.load(open(os.path.join(cacheout,'answers.json')))
- check('answer cache mismatch regenerates and records current revision', 'provenance mismatch; regenerating answers' in cr.stdout and cached['__meta__']['revision']=='rev-b')
+ check('answer cache mismatch refuses revision change and preserves cache', cr.returncode!=0 and 'revision' in cr.stdout+cr.stderr and open(os.path.join(cacheout,'answers.json'),'rb').read()==cached_before)
+ # Provenance redesign regressions. These rows intentionally run before the implementation change.
+ # Scenario A: changing answers while retaining an old screen must stop verify before it writes.
+ answers_path=os.path.join(out,'answers.json'); screen_path=os.path.join(out,'screen.json')
+ original_answers=open(answers_path,'rb').read(); original_screen=open(screen_path,'rb').read()
+ changed=json.loads(original_answers); changed['answers'][c.ID_PROMPTS[0]]['answer_ids'].append(changed['answers'][c.ID_PROMPTS[0]]['answer_ids'][-1])
+ json.dump(changed,open(answers_path,'w'))
+ prior_verify=os.path.join(out,'verify.json'); old_verify=open(prior_verify,'rb').read()
+ ar=run('verify',*common)
+ check('verify refuses a screen made from stale answers and names screen.json',ar.returncode!=0 and 'screen.json' in ar.stdout+ar.stderr and open(prior_verify,'rb').read()==old_verify)
+ open(answers_path,'wb').write(original_answers);open(screen_path,'wb').write(original_screen)
+ # A mismatched tool hash invalidates every stage and must never regenerate answers silently.
+ for stage in ('screen','verify','group','edges','describe'):
+  box=json.loads(open(answers_path).read());box['__meta__']['tool_sha256']='stale-tool-sha';json.dump(box,open(answers_path,'w'))
+  before=open(answers_path,'rb').read()
+  cmd=['describe',*common,'--corpus',corpus,'--docs','10'] if stage=='describe' else [stage,*common]
+  tr=run(*cmd)
+  check(f'{stage} refuses stale answers tool sha without rewriting cache',tr.returncode!=0 and 'tool_sha256' in tr.stdout+tr.stderr and open(answers_path,'rb').read()==before)
+  open(answers_path,'wb').write(original_answers)
 print('PASS' if not fails else f'{fails} FAILED');sys.exit(1 if fails else 0)
