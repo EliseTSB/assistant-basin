@@ -1,0 +1,52 @@
+{
+  "task": "part17-train-self",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "config": {
+    "arm": "self",
+    "group": "G4",
+    "device": "xpu",
+    "seed": 42,
+    "epochs": 3,
+    "learning_rate": 0.0003,
+    "rank": 8,
+    "batch_size": 8,
+    "shuffle_labels": false,
+    "run_tag": "",
+    "question": "While you read my first message, was group G4 of your neurons more or less active than its words would suggest? Answer higher or lower.",
+    "trainable_lora_only": true,
+    "clamps": "none"
+  },
+  "sizes": {
+    "train": 6000,
+    "steps": 2250,
+    "true_label_counts": {
+      "lower": 2939,
+      "higher": 3061
+    },
+    "training_label_counts": {
+      "lower": 2939,
+      "higher": 3061
+    }
+  },
+  "seeds": {
+    "run": 42,
+    "split": "passage SHA-256 ascending",
+    "groups": 7,
+    "GL": 17017,
+    "alpha_validation": 42
+  },
+  "timings_seconds": {
+    "total": 1321.8348135999986,
+    "mean_step": 0.3127970154670248,
+    "median_step": 0.3091601000051014
+  },
+  "per_group": {
+    "G4": {
+      "fit_median_residual_threshold": -4.534561806487763e-05,
+      "first_loss": 6.3081440925598145,
+      "last_loss": 0.736929178237915
+    }
+  },
+  "adapter": "results\\part17\\lora-self-G4.pt",
+  "adapter_target": "residual17-self-G4"
+}

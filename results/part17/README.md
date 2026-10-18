@@ -31,3 +31,17 @@ residual from the words. Under that, OLMo's self-reader is not distinguishable f
 shows the signal is there and reaches the answer distribution, as in 12k, but faintly. The next version needs the
 residual taken against the strongest available text-only predictor (a fine-tuned reader cross-fitted on held-out
 folds), with GL kept as the shortcut detector.
+
+## Exploratory: the three layer-matched random groups (no predictions were made for these)
+
+| group | self-reader TEST accuracy | majority rate | ridge TEST R² | LoRA drift r |
+|---|---|---|---|---|
+| G1 (identity) | 56.1% | 50.5% | 0.622 | 0.931 |
+| G2 (random) | 58.8% | 50.2% | 0.639 | 0.979 |
+| G3 (random) | 61.6% | 50.2% | 0.352 | 0.948 |
+| G4 (random) | 61.2% | 52.7% | 0.405 | 0.942 |
+| GL (last layer) | 62.9% | 51.0% | 0.574 | n/a |
+
+Every random group's reader beats the identity group's, and they sit close to the unreadable GL group. The
+identity units are not special here, and the scores track how much the ridge left in the text rather than anything
+about readable internal state.
