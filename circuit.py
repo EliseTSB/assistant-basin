@@ -56,11 +56,18 @@ def generate_answers(tok,model,a):
         x=ids_prompt(tok,q).to(a.device)
         with torch.no_grad(): y=model.generate(input_ids=x,max_new_tokens=60,do_sample=False,pad_token_id=tok.pad_token_id,eos_token_id=eos)
         ans[q]={'prompt_ids':x[0].cpu().tolist(),'answer_ids':y[0,x.shape[1]:].cpu().tolist(),'answer':tok.decode(y[0,x.shape[1]:],skip_special_tokens=True)}
-    dump(ans,os.path.join(a.out,'answers.json')); return ans
+    dump({'__meta__':answer_meta(a),'answers':ans},os.path.join(a.out,'answers.json')); return ans
+
+def answer_meta(a):
+    return {'model':a.model,'revision':a.revision,'prompts':{'identity':ID_PROMPTS,'control':CTRL_PROMPTS},'tool_sha256':hashlib.sha256(open(__file__,'rb').read()).hexdigest()}
 
 def answers(a,tok,model):
     path=os.path.join(a.out,'answers.json')
-    return json.load(open(path)) if os.path.exists(path) else generate_answers(tok,model,a)
+    if os.path.exists(path):
+        cached=json.load(open(path))
+        if cached.get('__meta__')==answer_meta(a) and isinstance(cached.get('answers'),dict): return cached['answers']
+        print('answers.json provenance mismatch; regenerating answers',flush=True)
+    return generate_answers(tok,model,a)
 def ident_idxs(tok,ids):
     """Answer tokens overlapping a regex match in the decoded answer. Token by token would miss the names: this
     tokenizer splits ' Qwen' into ' Q'+'wen' and 'Tongyi' into 'T'+'ong'+'yi', leaving only ' Alibaba' (fixed 2026-10-18)."""
@@ -100,6 +107,8 @@ def screen(a):
         kept.append({'prompt':q,'identity_indices':ix,'identity_tokens':[tok.decode([rec['answer_ids'][i]]) for i in ix]})
     for h in hooks:h.remove()
     valid=sum(not x.get('reason') for x in kept); zero/=max(valid,1)
+    if valid==0: raise SystemExit('screen: no identity prompt produced a valid identity token; refusing to write rankings')
+    if not any(x['prompt']=='Who made you?' and not x.get('reason') for x in kept): raise SystemExit('screen: "Who made you?" has no valid identity token; refusing to write push ranking')
     pairs=sorted(((float(zero[l,u]),l,u) for l in range(len(layers)) for u in range(n)),reverse=True)
     pp=sorted(((float(push[l,u]),l,u) for l in range(len(layers)) for u in range(n)),reverse=True)
     obj=header(a,lname,layers); obj.update({'identity_answers':kept,'valid_identity_prompts':valid,'zeroing_estimate':zero.tolist(),'push_estimate':push.tolist(),'top_zeroing':[{'score':v,'layer':l,'index':u} for v,l,u in pairs[:1000]],'top_push':[{'score':v,'layer':l,'index':u} for v,l,u in pp[:1000]],'N2742':{'layer':22,'index':2742,'zeroing_rank':next((i+1 for i,(_,l,u) in enumerate(pairs) if (l,u)==(22,2742)),None),'push_rank':next((i+1 for i,(_,l,u) in enumerate(pp) if (l,u)==(22,2742)),None)}})
@@ -116,6 +125,16 @@ def matched_random(top,shape,seed,exclude=None):
         u=int(rng.choice(pool)); used.add((l,u)); out.append((l,u))
     return out
 
+def normalized_edge_effect(altered, baseline, i, target):
+    return (altered[i][target][0]-baseline[i][target][0])/(baseline[i][target][1] if baseline[i][target][1] else 1e-12)
+
+def null_99th(values):
+    return float(np.quantile(values,.99)) if values else 0.
+
+def valid_prompt_mean(values, valid):
+    kept=[value for value,ok in zip(values,valid) if ok]
+    return float(np.mean(kept)) if kept else 0.
+
 def eval_delta(tok,model,ans,pair, q, base, identity=True):
     h=ZeroHook(model._circuit_layers[pair[0]],pair[1])
     try: z=score(tok,model,q,ans[q]);
@@ -126,7 +145,7 @@ def eval_delta(tok,model,ans,pair, q, base, identity=True):
 
 def verify(a):
     tok,model,lname,layers,_=prep(a); model._circuit_layers=layers
-    ans=answers(a,tok,model); top=candidates(a); shape=(len(layers),layers[0].mlp.down_proj.in_features); rnd=matched_random(top,shape,0)
+    ans=answers(a,tok,model); top=candidates(a); shape=(len(layers),layers[0].mlp.down_proj.in_features); rnd=matched_random(top,shape,a.seed)
     bases={}
     for q in ID_PROMPTS+CTRL_PROMPTS:
         x=score(tok,model,q,ans[q]); bases[q]=float(x[0].detach()) if x is not None else None
@@ -140,12 +159,12 @@ def verify(a):
         idmean=sum(abs(v['delta']) for v in im.values())/itok if itok else 0
         cmean=sum(abs(v['delta']) for v in cm.values())/ctok if ctok else 0
         records.append({'set':typ,'layer':l,'index':u,'identity':im,'control':cm,'pooled_abs_delta_M':mabs,'identity_abs_per_token':idmean,'control_abs_per_token':cmean,'ratio':idmean/cmean if cmean else None})
-    obj=header(a,lname,layers); obj.update({'random_seed':0,'top_neurons':[{'layer':l,'index':u} for l,u in top],'random_neurons':[{'layer':l,'index':u} for l,u in rnd],'results':records})
+    obj=header(a,lname,layers); obj.update({'random_seed':a.seed,'top_neurons':[{'layer':l,'index':u} for l,u in top],'random_neurons':[{'layer':l,'index':u} for l,u in rnd],'results':records})
     dump(obj,os.path.join(a.out,'verify.json'))
 
 def group(a):
     tok,model,lname,layers,_=prep(a); ans=answers(a,tok,model); top=candidates(a); shape=(len(layers),layers[0].mlp.down_proj.in_features)
-    sets=[('top',top)]+[(f'random_{s}',matched_random(top,shape,s)) for s in (1,2,3)]
+    sets=[('top',top)]+[(f'random_{s}',matched_random(top,shape,a.seed+s)) for s in (1,2,3)]
     eos=tok.eos_token_id; results=[]
     for name,pairs in sets:
         h=MultiZero(layers,pairs); vals={}
@@ -159,26 +178,19 @@ def group(a):
         results.append({'set':name,'neurons':[{'layer':l,'index':u} for l,u in pairs],'answers':vals,'count_names_identity':sum(x['names_identity'] for x in vals.values())})
     obj=header(a,lname,layers);obj['sets']=results;dump(obj,os.path.join(a.out,'group.json'))
 
+def checked_verify(a):
+    path=os.path.join(a.out,'verify.json'); v=json.load(open(path))
+    current={name:nr._file_sha(os.path.join(a.out,name)) for name in ('answers.json','screen.json')}
+    recorded=v.get('input_shas',{})
+    if any(recorded.get(name)!=sha for name,sha in current.items()):
+        raise SystemExit('verify.json input SHA mismatch; rerun verify before edges or describe')
+    return v
+
 def edges(a):
     tok,model,lname,layers,_=prep(a); ans=answers(a,tok,model)
-    v=json.load(open(os.path.join(a.out,'verify.json'))); ranked=sorted([x for x in v['results'] if x['set']=='top'],key=lambda x:-x['pooled_abs_delta_M'])[:30]
+    v=checked_verify(a); ranked=sorted([x for x in v['results'] if x['set']=='top'],key=lambda x:-x['pooled_abs_delta_M'])[:30]
     nodes=[(int(x['layer']),int(x['index'])) for x in ranked]; null=[(int(x['layer']),int(x['index'])) for x in v['random_neurons'][:30]]
     # Capture all node activations at the answer-token positions using one pre-hook per layer.
-    def measures(source):
-      mat=[]
-      for q in ID_PROMPTS:
-        rec=ans[q]; ix=ident_idxs(tok,rec['answer_ids']); positions=sorted(set([len(rec['prompt_ids'])+i for i in ix]+[max(0,len(rec['prompt_ids'])+i-1) for i in ix]))
-        h=MultiZero(layers,[source]); caps={}; hs=[]
-        for l,u in set(nodes):
-          def cap(mod,args,l=l,u=u): caps[(l,u)]=args[0][0,:,u].detach().float().cpu()
-          hs.append(layers[l].mlp.down_proj.register_forward_pre_hook(cap))
-        try: score(tok,model,q,rec)
-        finally:
-          h.remove()
-          for hh in hs:hh.remove()
-        mat.append({node:float(caps[node][positions].mean()) if node in caps else 0. for node in nodes})
-      return mat
-    base=measures((-1,-1)) if False else None
     # Baseline captures without a source zero; per source deltas are total effects.
     def capture(source=None):
       agg=[]
@@ -193,32 +205,37 @@ def edges(a):
         finally:
           if h:h.remove()
           for hh in hs:hh.remove()
-        agg.append({node:(float(caps[node][positions].mean()),float(caps[node][positions].abs().mean())) if positions and node in caps else (0.,0.) for node in nodes})
+        agg.append({'valid':bool(positions), **{node:(float(caps[node][positions].mean()),float(caps[node][positions].abs().mean())) if positions and node in caps else (0.,0.) for node in nodes}})
       return agg
     baseline=capture(); effects=[]
     for src in nodes+null:
-      altered=capture(src); deltas={}
-      for target in nodes:
-        vals=[(altered[i][target][0]-baseline[i][target][0])/(baseline[i][target][1] if baseline[i][target][1] else 1e-12) for i in range(len(ID_PROMPTS))]
-        deltas[f'{target[0]}:{target[1]}']=float(np.mean(vals))
-      effects.append({'source':{'layer':src[0],'index':src[1]},'null':src in null,'effects':deltas})
+        altered=capture(src); deltas={}
+        for target in nodes:
+            vals=[normalized_edge_effect(altered,baseline,i,target) for i in range(len(ID_PROMPTS))]
+            deltas[f'{target[0]}:{target[1]}']=valid_prompt_mean(vals,[x['valid'] for x in baseline])
+        effects.append({'source':{'layer':src[0],'index':src[1]},'null':src in null,'effects':deltas})
     thresholds={}
     for t in nodes:
       vals=[abs(e['effects'][f'{t[0]}:{t[1]}']) for e in effects if e['null']]
-      thresholds[f'{t[0]}:{t[1]}']=float(np.quantile(vals,.99)) if vals else 0
+      thresholds[f'{t[0]}:{t[1]}']=null_99th(vals)
     obj=header(a,lname,layers);obj.update({'nodes':[{'layer':l,'index':u} for l,u in nodes],'effects':effects,'null_99th_abs_by_target':thresholds,'significant_edges':[{'source':e['source'],'target':{'layer':int(k.split(':')[0]),'index':int(k.split(':')[1])},'effect':v} for e in effects if not e['null'] for k,v in e['effects'].items() if abs(v)>thresholds[k] and e['source']['layer']<int(k.split(':')[0])]})
     dump(obj,os.path.join(a.out,'edges.json'))
 
 def describe(a):
     tok,model,lname,layers,norm=prep(a); ans=answers(a,tok,model)
-    v=json.load(open(os.path.join(a.out,'verify.json'))); ranked=sorted([x for x in v['results'] if x['set']=='top'],key=lambda x:-x['pooled_abs_delta_M'])[:30]
+    v=checked_verify(a); ranked=sorted([x for x in v['results'] if x['set']=='top'],key=lambda x:-x['pooled_abs_delta_M'])[:30]
     nodes=[(int(x['layer']),int(x['index'])) for x in ranked]
-    U=model.get_output_embeddings().weight.float(); vocab_n=len(tok); described={}
+    U=model.get_output_embeddings().weight; vocab_n=len(tok); described={}
     for l,u in nodes:
         W=layers[l].mlp.down_proj.weight.float()[:,u]
         gain=norm(torch.ones(1,1,W.shape[0],device=W.device,dtype=next(norm.parameters()).dtype)).float().reshape(-1) if norm is not None else torch.ones_like(W)
-        z=(U[:vocab_n]@(gain*W)); z=(z-z.mean())/z.std(); hi=torch.topk(z,10).indices.tolist()
-        described[f'{l}:{u}']={'layer':l,'index':u,'logit_lens_top10':[{'token':tok.decode([i]),'z':round(float(z[i]),3)} for i in hi]}
+        vec=gain*W; total=0.; total_sq=0.; count=0; best_values=torch.empty(0,device=vec.device); best_ids=torch.empty(0,dtype=torch.long,device=vec.device)
+        for start in range(0,vocab_n,8192):
+            end=min(start+8192,vocab_n); vals=U[start:end].float()@vec; total+=float(vals.sum()); total_sq+=float(vals.square().sum()); count+=len(vals)
+            ids=torch.arange(start,end,device=vals.device); cand=torch.cat((best_values,vals)); cand_ids=torch.cat((best_ids,ids)); k=min(10,len(cand)); ix=torch.topk(cand,k).indices; best_values=cand[ix]; best_ids=cand_ids[ix]
+        mean=total/count; std=max(((total_sq-total*total/count)/(count-1))**.5,1e-12) if count>1 else 1e-12
+        hi=[(int(i),float((v-mean)/std)) for i,v in zip(best_ids.cpu(),best_values.cpu())]
+        described[f'{l}:{u}']={'layer':l,'index':u,'logit_lens_top10':[{'token':tok.decode([i]),'z':round(z,3)} for i,z in hi]}
     docs=[]
     with open(a.corpus,encoding='utf-8') as f:
       for line in f:
@@ -226,7 +243,7 @@ def describe(a):
         if len(ids)>=16:docs.append(ids)
         if len(docs)>=a.docs:break
     # Each captured node column is retained only for the current batch and reduced to top contexts.
-    vals={node:[] for node in nodes}
+    best={node:[] for node in nodes}
     for b in range(0,len(docs),a.batch):
       chunk=docs[b:b+a.batch]; width=max(map(len,chunk)); ids=torch.full((len(chunk),width),tok.pad_token_id,dtype=torch.long);mask=torch.zeros_like(ids)
       for j,d in enumerate(chunk):ids[j,:len(d)]=torch.tensor(d);mask[j,:len(d)]=1
@@ -235,19 +252,25 @@ def describe(a):
         def cap(mod,args,l=l,u=u):caps[(l,u)]=args[0].detach()[...,u].float().cpu()
         hs.append(layers[l].mlp.down_proj.register_forward_pre_hook(cap))
       try:
-        with torch.no_grad():model(input_ids=ids.to(a.device),attention_mask=mask.to(a.device),use_cache=False)
+        with torch.no_grad():model.model(input_ids=ids.to(a.device),attention_mask=mask.to(a.device),use_cache=False)
       finally:
         for h in hs:h.remove()
       for node in nodes:
         arr=caps[node]
         for j,d in enumerate(chunk):
-          for pos in range(len(d)): vals[node].append((float(arr[j,pos]),b+j,pos,d))
+          for pos in range(len(d)):
+            item=(float(arr[j,pos]),b+j,pos)
+            existing=next((i for i,row in enumerate(best[node]) if row[1]==item[1]),None)
+            if existing is not None:
+                if item[0]>best[node][existing][0]: best[node][existing]=item
+            elif len(best[node])<10: best[node].append(item)
+            elif item[0]>min(row[0] for row in best[node]):
+                smallest=min(range(len(best[node])),key=lambda i:best[node][i][0]);best[node][smallest]=item
+      nr.spill_guard(a.device,a.spill_limit)
     for node in nodes:
-      key=f'{node[0]}:{node[1]}'; rankedvals=sorted(vals[node],key=lambda x:-x[0]); seen=set(); out=[]
-      for val,doc,pos,d in rankedvals:
-        if doc in seen:continue
-        seen.add(doc);out.append({'activation':val,'doc':doc,'pos':pos,'text':nr.context(d,pos,tok)})
-        if len(out)>=10:break
+      key=f'{node[0]}:{node[1]}'; out=[]
+      for val,doc,pos in sorted(best[node],key=lambda x:x[0],reverse=True):
+        d=docs[doc];out.append({'activation':val,'doc':doc,'pos':pos,'text':nr.context(d,pos,tok)})
       described[key]['top_contexts']=out
     obj=header(a,lname,layers);obj.update({'corpus':a.corpus,'corpus_sha256':nr._file_sha(a.corpus),'docs':len(docs),'nodes':described})
     dump(obj,os.path.join(a.out,'describe.json'))

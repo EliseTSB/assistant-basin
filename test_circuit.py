@@ -65,26 +65,76 @@ with tempfile.TemporaryDirectory() as td:
  _ids=tok('I am Qwen3.5, a model by **Tongyi Lab**, part of Alibaba Group.',add_special_tokens=False)['input_ids']
  _pick=[tok.decode([_ids[i]]) for i in c.ident_idxs(tok,_ids)]
  check('a real answer selects every piece of Qwen, Tongyi and Alibaba and nothing else',_pick==[' Q','wen','T','ong','yi',' Alibaba'],str(_pick))
+ # Constructed arithmetic guards are kept next to real screen/verify/edges checks below.
+ fixture_base=[{'valid':True,(2,7):(1.,4.)},{'valid':False,(2,7):(0.,0.)}]
+ fixture_alt=[{'valid':True,(2,7):(5.,4.)},{'valid':False,(2,7):(100.,1.)}]
+ check('edge normalisation divides the mean change by baseline mean absolute activation',abs(c.normalized_edge_effect(fixture_alt,fixture_base,0,(2,7))-1.)<1e-9)
+ check('99th percentile null threshold uses the interpolated quantile',abs(c.null_99th([0.,1.,2.,3.])-2.97)<1e-9)
+ check('edge means omit identity-free prompts rather than treating them as zero',abs(c.valid_prompt_mean([2.,0.,4.],[True,False,True])-3.)<1e-9)
  top=[(0,1),(1,2),(1,3),(2,4)];r1=c.matched_random(top,(4,96),0);r2=c.matched_random(top,(4,96),0)
  check('random layer-matched controls deterministic, matched, disjoint',r1==r2 and [sum(l==i for l,u in r1) for i in range(4)]==[sum(l==i for l,u in top) for i in range(4)] and not set(r1)&set(top))
  # Full CLI flow; seed synthetic fixed answers containing identity token ids to exercise identity metrics.
  out=os.path.join(td,'out');os.makedirs(out); common=['--model',mdir,'--revision','', '--out',out,'--device','cpu']
- r=run('screen',*common);check('screen subcommand runs and writes expected JSON keys',r.returncode==0 and os.path.exists(os.path.join(out,'screen.json')))
- ans=json.load(open(os.path.join(out,'answers.json'))); qid=tok(' Alibaba',add_special_tokens=False)['input_ids'][0]
+ aa=type('A',(),{'model':mdir,'revision':'','out':out,'device':'cpu'})()
+ ans=c.generate_answers(tok,model,aa)
+ ansbox={'__meta__':c.answer_meta(aa),'answers':ans}; qid=tok(' Alibaba',add_special_tokens=False)['input_ids'][0]
  for q in c.ID_PROMPTS:ans[q]['answer_ids']=[qid]+tok(' is an assistant.',add_special_tokens=False)['input_ids']
  for q in c.CTRL_PROMPTS:ans[q]['answer_ids']=tok(' A short answer.',add_special_tokens=False)['input_ids']
- json.dump(ans,open(os.path.join(out,'answers.json'),'w'))
+ json.dump(ansbox,open(os.path.join(out,'answers.json'),'w'))
+ r=run('screen',*common);check('screen subcommand runs and writes expected JSON keys',r.returncode==0 and os.path.exists(os.path.join(out,'screen.json')))
+ # No-valid and no-push prompt cases must terminate instead of writing zero rankings.
+ for tag,drop_who in [('all_dropped',False),('who_dropped',True)]:
+  badout=os.path.join(td,tag);os.makedirs(badout);bad=dict(ans)
+  for question in c.ID_PROMPTS:
+   if not drop_who or question=='Who made you?': bad[question]=dict(bad[question],answer_ids=tok(' I am a tool.',add_special_tokens=False)['input_ids'])
+  json.dump({'__meta__':c.answer_meta(aa),'answers':bad},open(os.path.join(badout,'answers.json'),'w'))
+  br=run('screen','--model',mdir,'--revision','','--out',badout,'--device','cpu')
+  expected='no identity prompt' if not drop_who else 'Who made you?'
+  check(f'screen refuses {tag} rankings with a clear message',br.returncode!=0 and expected in br.stderr+br.stdout and not os.path.exists(os.path.join(badout,'screen.json')))
  # rerun screen against controlled cache, then verify and downstream stages
  r=run('screen',*common);S=json.load(open(os.path.join(out,'screen.json'))) if r.returncode==0 else {}
  check('screen output has both rankings and N2742 rank',r.returncode==0 and {'top_zeroing','top_push','N2742'}<=set(S))
+ # Exercise screen's own push and zeroing arrays against finite changes and true zeroing.
+ if r.returncode==0:
+  unit=max(((l,u) for l,row in enumerate(S['push_estimate']) for u,_ in enumerate(row)),key=lambda p:abs(S['push_estimate'][p[0]][p[1]])); q='Who made you?'; rec=ans[q]; box={}
+  def retain_screen_input(mod,args): args[0].retain_grad();box['x']=args[0]
+  hh=layers[unit[0]].mlp.down_proj.register_forward_pre_hook(retain_screen_input)
+  sc=c.score(tok,model,q,rec,grad=True);model.zero_grad(set_to_none=True);sc[0].backward(); hh.remove()
+  screen_path_grad=float(box['x'].grad.detach().float().sum(dim=(0,1))[unit[1]])
+  screen_push=S['push_estimate'][unit[0]][unit[1]]
+  check('screen push estimate matches the real screen gradient path',abs(screen_push-screen_path_grad)<1e-4,f'{screen_push:.5f} vs {screen_path_grad:.5f}')
+  zunit=max(((l,u) for l,row in enumerate(S['zeroing_estimate']) for u,_ in enumerate(row)),key=lambda p:abs(S['zeroing_estimate'][p[0]][p[1]])); changes=[]
+  for question in c.ID_PROMPTS:
+   qrec=ans[question]; baseval=c.score(tok,model,question,qrec)[0].detach().item(); z=c.ZeroHook(layers[zunit[0]],zunit[1])
+   with torch.no_grad(): changed=c.score(tok,model,question,qrec)[0].item()
+   z.remove(); changes.append(abs(changed-baseval))
+  true_zero=float(np.mean(changes)); screen_zero=S['zeroing_estimate'][zunit[0]][zunit[1]]
+  check('screen zeroing estimate magnitude tracks the true zeroing change',screen_zero>0 and true_zero>0 and abs(screen_zero-true_zero)<max(.05,true_zero*.5),f'{screen_zero:.5f} vs mean |true ΔM| {true_zero:.5f}')
  r=run('verify',*common);V=json.load(open(os.path.join(out,'verify.json'))) if r.returncode==0 else {}
  check('verify subcommand runs and writes true deltas',r.returncode==0 and 'results' in V)
+ if r.returncode==0 and V.get('results'):
+  row=V['results'][0]; ident=row['identity']; ctrl=row['control']
+  expected=(sum(abs(x['delta']) for x in ident.values())/sum(x['token_count'] for x in ident.values()))/(sum(abs(x['delta']) for x in ctrl.values())/sum(x['token_count'] for x in ctrl.values()))
+  check('verify ratio is identity per-token mean divided by control per-token mean',abs(row['ratio']-expected)<1e-10)
  # independently recompute one stored zeroing ΔM.
  if r.returncode==0 and V.get('results'):
   row=V['results'][0];pair=(row['layer'],row['index']);base=c.score(tok,model,c.ID_PROMPTS[0],ans[c.ID_PROMPTS[0]])[0].detach();z=c.ZeroHook(layers[pair[0]],pair[1]);actual=c.score(tok,model,c.ID_PROMPTS[0],ans[c.ID_PROMPTS[0]])[0].detach();z.remove();stored=row['identity'][c.ID_PROMPTS[0]]['delta']
   check('verify true ΔM equals independent zeroed minus base calculation',abs(stored-float(actual-base))<1e-5)
  r=run('group',*common);check('group subcommand writes sets and answers',r.returncode==0 and 'sets' in json.load(open(os.path.join(out,'group.json'))))
  r=run('edges',*common);check('edges subcommand writes nodes and effects',r.returncode==0 and 'effects' in json.load(open(os.path.join(out,'edges.json'))))
+ # The edge unit case above uses an explicit baseline pair; outputs also retain all inputs for lineage checks.
+ screen_bytes=open(os.path.join(out,'screen.json'),'rb').read();open(os.path.join(out,'screen.json'),'ab').write(b' ')
+ try:
+  try:c.checked_verify(type('A',(),{'out':out})()); stale=False
+  except SystemExit as e:stale='SHA mismatch' in str(e)
+  check('downstream verification rejects stale screen input',stale)
+ finally:open(os.path.join(out,'screen.json'),'wb').write(screen_bytes)
  corpus=os.path.join(td,'corpus.jsonl');open(corpus,'w').writelines(json.dumps({'text':'This is a document about a quiet conversation and a useful idea. '*4})+'\n' for _ in range(12))
  r=run('describe',*common,'--corpus',corpus,'--docs','10');check('describe subcommand writes lens and corpus contexts',r.returncode==0 and 'nodes' in json.load(open(os.path.join(out,'describe.json'))))
+ # A revision change invalidates answers.json, reports regeneration, and stores the new provenance.
+ cacheout=os.path.join(td,'cache_revision');os.makedirs(cacheout)
+ cr=run('screen','--model',mdir,'--revision','rev-a','--out',cacheout,'--device','cpu')
+ cr=run('screen','--model',mdir,'--revision','rev-b','--out',cacheout,'--device','cpu')
+ cached=json.load(open(os.path.join(cacheout,'answers.json')))
+ check('answer cache mismatch regenerates and records current revision', 'provenance mismatch; regenerating answers' in cr.stdout and cached['__meta__']['revision']=='rev-b')
 print('PASS' if not fails else f'{fails} FAILED');sys.exit(1 if fails else 0)
