@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import gc
 import hashlib
+import inspect
 import json
 import math
 import random
@@ -286,7 +287,7 @@ def _capture_prompt(tokenizer: Any, text: str) -> tuple[list[int], list[int]]:
 
 def _question(group: str) -> str:
     return (
-        f"Was group {group} of your neurons more or less active in your last message "
+        f"While you read my first message, was group {group} of your neurons more or less active "
         "than its words would suggest? Answer higher or lower."
     )
 
@@ -298,40 +299,92 @@ def _reader_prompt(tokenizer: Any, text: str, group: str, passage_id: str) -> Pr
         {"role": "assistant", "content": "Okay."},
         {"role": "user", "content": _question(group)},
     ]
-    rendered = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+    rendered = _render_generation_prompt(tokenizer, messages)
     ids, offsets = _encode_with_offsets(tokenizer, rendered)
     return PromptExample(passage_id, text, ids, _span_positions(rendered, text, offsets))
 
 
-def _answer_token_ids(tokenizer: Any, example: PromptExample, group: str) -> dict[str, int]:
-    # Derive the first answer token from the model's exact chat context.
-    messages = [
-        {"role": "user", "content": example.text},
-        {"role": "assistant", "content": "Okay."},
-        {"role": "user", "content": _question(group)},
-    ]
-    prefix = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-    prefix_ids = [int(x) for x in _as_flat_list(tokenizer(prefix, add_special_tokens=False)["input_ids"])]
-    result: dict[str, int] = {}
-    for answer in ANSWER_WORDS:
-        complete = tokenizer.apply_chat_template(
-            messages + [{"role": "assistant", "content": answer}],
-            tokenize=False,
-            add_generation_prompt=False,
+def _render_generation_prompt(tokenizer: Any, messages: Sequence[dict[str, str]]) -> str:
+    """Render an assistant prefix with thinking disabled when the template supports it."""
+    apply_template = tokenizer.apply_chat_template
+    kwargs: dict[str, Any] = {"tokenize": False, "add_generation_prompt": True}
+    try:
+        parameters = inspect.signature(apply_template).parameters.values()
+    except (TypeError, ValueError):
+        supports_enable_thinking = True
+    else:
+        supports_enable_thinking = any(
+            parameter.name == "enable_thinking"
+            or parameter.kind is inspect.Parameter.VAR_KEYWORD
+            for parameter in parameters
         )
-        full_ids = [int(x) for x in _as_flat_list(tokenizer(complete, add_special_tokens=False)["input_ids"])]
-        if len(full_ids) <= len(prefix_ids):
-            answer_ids = [int(x) for x in tokenizer.encode(answer, add_special_tokens=False)]
-            if len(answer_ids) != 1:
-                raise ValueError(f"Cannot isolate the answer token for {answer!r}: {full_ids}")
-            result[answer] = answer_ids[0]
-        else:
-            if full_ids[: len(prefix_ids)] != prefix_ids:
-                raise ValueError(f"Chat template token prefix changed before answer {answer!r}")
-            result[answer] = full_ids[len(prefix_ids)]
-    if result["higher"] == result["lower"]:
-        raise ValueError(f"Higher/lower answer tokens are not distinct: {result}")
-    return result
+    if supports_enable_thinking:
+        kwargs["enable_thinking"] = False
+    return apply_template(messages, **kwargs)
+
+
+def _answer_targets(tokenizer: Any, prefix_ids: Sequence[int]) -> dict[str, list[int]]:
+    """Build full prefix-plus-answer targets and ensure their first answer tokens differ."""
+    prefix = [int(token) for token in prefix_ids]
+    targets: dict[str, list[int]] = {}
+    first_answer_tokens: dict[str, int] = {}
+    for answer in ANSWER_WORDS:
+        answer_ids = [int(token) for token in tokenizer.encode(answer, add_special_tokens=False)]
+        if not answer_ids:
+            raise ValueError(f"Answer {answer!r} produced no tokens")
+        targets[answer] = prefix + answer_ids
+        first_answer_tokens[answer] = targets[answer][len(prefix)]
+    if first_answer_tokens["higher"] == first_answer_tokens["lower"]:
+        raise ValueError(f"Higher/lower answer tokens are not distinct: {first_answer_tokens}")
+    return targets
+
+
+def _answer_token_ids(tokenizer: Any, example: PromptExample, group: str) -> dict[str, int]:
+    del group  # The example already contains the exact prefix shared by training and eval.
+    targets = _answer_targets(tokenizer, example.prompt_ids)
+    answer_position = len(example.prompt_ids)
+    return {answer: targets[answer][answer_position] for answer in ANSWER_WORDS}
+
+
+def _prompt_logit_position(example: PromptExample) -> int:
+    """Return the final prefix position whose logits predict the first answer token."""
+    if not example.prompt_ids:
+        raise ValueError("Cannot score an empty generation prefix")
+    return len(example.prompt_ids) - 1
+
+
+def _paired_prompt_logits(logits: Any, batch: Sequence[PromptExample]) -> list[Any]:
+    """Select paired low/high logits using prompt positions from this batch."""
+    paired_examples = [*batch, *batch]
+    if int(logits.shape[0]) != len(paired_examples):
+        raise ValueError("Paired logits and transplant batch sizes differ")
+    return [logits[row, _prompt_logit_position(example)] for row, example in enumerate(paired_examples)]
+
+
+def _test_label_summary(labels: Sequence[int]) -> dict[str, Any]:
+    values = [int(label) for label in labels]
+    lower = sum(label == 0 for label in values)
+    higher = sum(label == 1 for label in values)
+    return {
+        "majority_class_rate": max(lower, higher) / len(values) if values else None,
+        "label_counts": {"lower": int(lower), "higher": int(higher)},
+    }
+
+
+def _lora_drift_metrics(base: Sequence[float], adapted: Sequence[float]) -> dict[str, float | None]:
+    base_values = np.asarray(base, dtype=np.float64)
+    adapted_values = np.asarray(adapted, dtype=np.float64)
+    if base_values.ndim != 1 or adapted_values.ndim != 1 or len(base_values) != len(adapted_values):
+        raise ValueError("Base and adapter activations must be aligned one-dimensional arrays")
+    if not len(base_values):
+        return {"pearson_correlation": None, "mean_absolute_difference": None}
+    correlation = None
+    if len(base_values) >= 2 and np.std(base_values) > 0 and np.std(adapted_values) > 0:
+        correlation = float(np.corrcoef(base_values, adapted_values)[0, 1])
+    return {
+        "pearson_correlation": correlation,
+        "mean_absolute_difference": float(np.mean(np.abs(adapted_values - base_values))),
+    }
 
 
 def _pad_id(tokenizer: Any) -> int:
@@ -727,6 +780,24 @@ def _adapter_path(args: argparse.Namespace, arm: str) -> Path:
     return Path(args.out_dir) / f"lora-{arm}-{args.group}{_run_suffix(args)}.pt"
 
 
+def _adapter_sha256(path: str | Path) -> str:
+    adapter = Path(path)
+    if not adapter.is_file():
+        raise FileNotFoundError(f"LoRA adapter not found: {adapter}")
+    digest = hashlib.sha256()
+    with adapter.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _eval_output_path(args: argparse.Namespace, arm: str, transplant: bool = False) -> Path:
+    suffix = _run_suffix(args)
+    if transplant:
+        return Path(args.out_dir) / f"transplant-{args.group}{suffix}.json"
+    return Path(args.out_dir) / f"eval-{arm}-{args.group}{suffix}.json"
+
+
 def _target_name(arm: str, group: str) -> str:
     return f"residual17-{arm}-{group}"
 
@@ -846,10 +917,14 @@ def _train_reader(args: argparse.Namespace, arm: str) -> dict[str, Any]:
 
 
 def _evaluate_reader(args: argparse.Namespace, arm: str, transplant: bool = False) -> dict[str, Any]:
+    if transplant and arm != "self":
+        raise ValueError("transplant requires the OLMo self-reader")
     torch, _, sr, _ = _torch_helpers()
     model_id = args.olmo_model if arm == "self" else args.qwen_model
     started = time.perf_counter()
     sr.DEVICE = args.device
+    adapter = _adapter_path(args, arm)
+    adapter_sha256 = _adapter_sha256(adapter)
     arrays, manifest, fit_report = _read_fit(args.out_dir)
     passages = _passages_for_split(manifest, "TEST")
     group_i = GROUP_NAMES.index(args.group)
@@ -860,19 +935,16 @@ def _evaluate_reader(args: argparse.Namespace, arm: str, transplant: bool = Fals
     for row in passages:
         row["label"] = label_by_id[row["passage_id"]]
     tokenizer, model = _load_model(model_id, args.device)
-    adapter = _adapter_path(args, arm)
     target = _target_name(arm, args.group)
-    if not adapter.is_file():
-        raise FileNotFoundError(f"LoRA adapter not found: {adapter}; run train-{arm} first")
     sr.install_lora(model, rank=args.rank)
     model.to(_device(args.device))
     sr.load_lora_parameters(model, adapter, target=target)
     examples = _build_examples(tokenizer, passages, args.group)
     answer_ids = _answer_token_ids(tokenizer, examples[0], args.group)
+    labels = [int(example.label) for example in examples]
+    test_label_summary = _test_label_summary(labels)
     hooks = None
     if transplant:
-        if arm != "self":
-            raise ValueError("transplant requires the OLMo self-reader")
         group_units = manifest["group_units"][args.group]
         units = [(int(text.split(".")[0][1:]), int(text.split(".")[1])) for text in group_units]
         hooks = sr.NeuronHooks(model, units)
@@ -891,7 +963,7 @@ def _evaluate_reader(args: argparse.Namespace, arm: str, transplant: bool = Fals
                 clamps = [low] * len(batch) + [high] * len(batch)
                 hooks.prepare(spans, clamps=clamps, capture=False)
                 out = model(input_ids=ids, attention_mask=mask, use_cache=False)
-                logits = torch.stack([out.logits[row, len(examples[row if row < len(batch) else row - len(batch)].prompt_ids) - 1] for row in range(len(doubled))])
+                logits = torch.stack(_paired_prompt_logits(out.logits, batch))
                 probabilities = torch.softmax(logits, dim=-1)
                 low_p = probabilities[: len(batch), answer_ids["higher"]].detach().cpu().numpy()
                 high_p = probabilities[len(batch) :, answer_ids["higher"]].detach().cpu().numpy()
@@ -917,6 +989,7 @@ def _evaluate_reader(args: argparse.Namespace, arm: str, transplant: bool = Fals
                 "group": args.group,
                 "device": args.device,
                 "seed": args.seed,
+                "run_tag": str(getattr(args, "run_tag", "") or ""),
                 "quantiles": [0.20, 0.80],
                 "quantile_source": "FIT passage-level natural mean per unit",
                 "question": _question(args.group),
@@ -928,6 +1001,10 @@ def _evaluate_reader(args: argparse.Namespace, arm: str, transplant: bool = Fals
             "timings_seconds": {"total": time.perf_counter() - started},
             "per_group": {
                 args.group: {
+                    "accuracy": None,
+                    "accuracy_note": "not applicable to paired replay; see directional response share",
+                    "majority_class_rate": test_label_summary["majority_class_rate"],
+                    "label_counts": test_label_summary["label_counts"],
                     "q80_p_higher_exceeds_q20_share": positive / total if total else None,
                     "q20_mean_p_higher": float(np.mean(low_values)) if low_values else None,
                     "q80_mean_p_higher": float(np.mean(high_values)) if high_values else None,
@@ -937,19 +1014,32 @@ def _evaluate_reader(args: argparse.Namespace, arm: str, transplant: bool = Fals
             },
             "passages": larger_examples,
             "adapter": str(adapter),
+            "adapter_sha256": adapter_sha256,
         }
-        output = Path(args.out_dir) / f"transplant-{args.group}{_run_suffix(args)}.json"
+        output = _eval_output_path(args, arm, transplant=True)
     else:
+        if arm == "self":
+            group_units = manifest["group_units"][args.group]
+            units = [(int(text.split(".")[0][1:]), int(text.split(".")[1])) for text in group_units]
+            hooks = sr.NeuronHooks(model, units)
         predictions = []
         all_rows = []
+        adapter_group_means = []
         model.eval()
         batches = list(sr.chunks(examples, args.eval_batch_size))
         with torch.inference_mode():
             for batch_i, batch in enumerate(batches, 1):
                 ids, mask, _, spans = sr.padded_batch(batch, _pad_id(tokenizer))
+                if hooks is not None:
+                    hooks.prepare(spans, capture=True)
                 out = model(input_ids=ids, attention_mask=mask, use_cache=False)
                 for row_i, example in enumerate(batch):
-                    at = out.logits[row_i, len(example.prompt_ids) - 1]
+                    if hooks is not None:
+                        captured = hooks.captures[row_i]
+                        if captured is None:
+                            raise RuntimeError(f"No adapter activation capture for {example.passage_id}")
+                        adapter_group_means.append(float(captured.float().mean().item()))
+                    at = out.logits[row_i, _prompt_logit_position(example)]
                     probs = torch.softmax(at, dim=-1)
                     lower = float(probs[answer_ids["lower"]])
                     higher = float(probs[answer_ids["higher"]])
@@ -963,8 +1053,20 @@ def _evaluate_reader(args: argparse.Namespace, arm: str, transplant: bool = Fals
                         "p_higher": higher,
                     })
                 print(f"{arm} eval {args.group} batch {batch_i}/{len(batches)} rows {len(batch)}", flush=True)
-        labels = [int(example.label) for example in examples]
+        if hooks is not None:
+            hooks.close()
         accuracy = float(np.mean(np.asarray(predictions) == np.asarray(labels))) if labels else None
+        per_group = {
+            "accuracy": accuracy,
+            "correct": int(sum(a == b for a, b in zip(predictions, labels))),
+            **test_label_summary,
+        }
+        if arm == "self":
+            capture_ids = arrays["passage_ids"].astype(str)
+            base_means = np.asarray(arrays["olmo_activations"][:, group_i, :], dtype=np.float64).mean(axis=1)
+            base_by_id = {str(passage_id): float(value) for passage_id, value in zip(capture_ids, base_means)}
+            base_group_means = [base_by_id[example.passage_id] for example in examples]
+            per_group["lora_drift"] = _lora_drift_metrics(base_group_means, adapter_group_means)
         result = {
             "task": f"part17-eval-{arm}",
             "model": model_id,
@@ -973,6 +1075,7 @@ def _evaluate_reader(args: argparse.Namespace, arm: str, transplant: bool = Fals
                 "group": args.group,
                 "device": args.device,
                 "seed": args.seed,
+                "run_tag": str(getattr(args, "run_tag", "") or ""),
                 "question": _question(args.group),
                 "batch_size": args.eval_batch_size,
                 "prediction": "argmax of P(higher), P(lower)",
@@ -986,17 +1089,12 @@ def _evaluate_reader(args: argparse.Namespace, arm: str, transplant: bool = Fals
                 "alpha_validation": args.seed,
             },
             "timings_seconds": {"total": time.perf_counter() - started},
-            "per_group": {
-                args.group: {
-                    "accuracy": accuracy,
-                    "correct": int(sum(a == b for a, b in zip(predictions, labels))),
-                    "label_counts": {"lower": int(sum(label == 0 for label in labels)), "higher": int(sum(label == 1 for label in labels))},
-                }
-            },
+            "per_group": {args.group: per_group},
             "passages": all_rows,
             "adapter": str(adapter),
+            "adapter_sha256": adapter_sha256,
         }
-        output = Path(args.out_dir) / f"eval-{arm}-{args.group}{_run_suffix(args)}.json"
+        output = _eval_output_path(args, arm)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({"output": str(output), "per_group": result["per_group"], "timings_seconds": result["timings_seconds"]}, indent=2), flush=True)
