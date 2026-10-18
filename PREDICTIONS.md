@@ -668,3 +668,25 @@ truncated. Controls: 20 random neurons from the same layer, each clamped at k ti
 | 18.5 | Writes: among the 30 tokens N2742's output direction promotes most through the unembedding (logit lens), at least one is about aliens, space or planets. | held | Top promoted: " alien" (z 9.8), " aliens", 外星, " extr", 外星人, alien, " planet", ... " UFO", " Galactic", 文明. 0 of 20 controls have such a token in their top 30. |
 | 18.6 | Reads: at least 5 of N2742's 20 top-activating corpus contexts are about aliens, outer space, or agents causing events. | held | About 17 of 20 are space, aliens or science fiction (the two strongest are the token " alien"); exceptions: a news story about a gun, a mineral, a fantasy novel. Blind description (Luna, even documents only): "space and science-fiction-related language, especially references to extraterrestrial settings, space travel". |
 | 18.7 | Base vs chat: N2742's per-token activations on the reads corpus correlate at least 0.7 between Qwen3.5-4B-Base and Qwen3.5-4B. | held | r = 0.956 over 669,404 tokens; the 20 controls: median 0.943, lowest 0.889. Base top contexts are the same documents (the two " alien" tokens first). |
+
+## Part 18b: what N2742 selects, and where the clamp acts (written 2026-10-18 15:11 CT, before the runs; tool changes building)
+
+From the council deliberation muse-neuron-research-2026-10: Prime's sense battery (#4, #8; data/sense-battery.jsonl,
+42 lines, groups a-g) and Alden's phase split, dose curve and norm-matched controls (#3, #6). Same model, revision,
+layer, neuron, corpus maxima and 20 controls as Part 18; first-turn scoring (text before any invented next turn).
+Battery values are each line's maximum activation over the tokens of its group's target word (span max), as a
+fraction of the unit's corpus maximum (15.375 for N2742). "prompt" clamps every multi-position forward: the prefill,
+which also produces the first generated token's logits; "gen" clamps only the single-position decode steps from the
+second generated token on. The unclamped baseline is separate from a zero clamp.
+
+| # | Prediction | Result | Notes |
+|---|---|---|---|
+| 18b.1 | Battery, chat model: N2742's mean span max in group a (extraterrestrial "alien") and in group d (extraterrestrial, other words) are each at least 3 times its mean in group b (legal "alien") and in group c (figurative "alien"). Prime's profile: a sense/concept detector, not a word detector. | | |
+| 18b.2 | Battery, chat model: group means order a and d above e (space topic, no entity), and e above f (non-human agents) and g (neutral). | | |
+| 18b.3 | Battery, chat model: N2742's group-b mean span max is at most 0.1 of its corpus maximum. | | |
+| 18b.4 | Phase "prompt" at +2x: at least 5 of 8 sampled answers to "Who made you?" are alien. | | |
+| 18b.5 | Phase "gen" at +2x: at least 5 of 8 sampled answers are alien. | | |
+| 18b.6 | Dose (sampled, 8 each): 0 of 8 alien at 0.1164x (the 0.999 quantile of its natural activation) and at 1x, and at least 5 of 8 at 2x. | | |
+| 18b.7 | Norm-matched controls at +2x (each control's clamp sized so its down_proj residual perturbation matches the target's): at most 1 of the 20 units gives any alien answer in 8 samples. | | |
+| 18b.8 | Clamped +2x, asked "In U.S. immigration law, what is an 'alien'?": at least 5 of 8 sampled answers drift to extraterrestrials or space. Unclamped: none do. | | |
+| 18b.9 | Clamped -2x, asked "Describe an extraterrestrial.": at least 6 of 8 still describe a being from another world, and the word "alien" appears in fewer samples than unclamped. | | |
