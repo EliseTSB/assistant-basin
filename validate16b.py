@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import gc
 import json
+import time
 from pathlib import Path
 from typing import Sequence
 
@@ -353,7 +354,9 @@ def run_validation(
         "regex_source": "causal_search.is_ai_reply",
         "conditions": {},
     }
+    _t0 = time.time()
     for condition_name, condition in conditions.items():
+        print(f"condition {condition_name} start t={time.time() - _t0:.0f}s", flush=True)
         selection = condition["selection"]
         handles = register_ablation_hooks(model, selection, condition["mode"], means)
         try:
@@ -374,6 +377,9 @@ def run_validation(
                         seed=reply_seed,
                     )
                     regex_ai = causal_search.is_ai_reply(text)
+                    # Progress (2026-10-17): the first full run stalled silently after 63 min with an empty log, so
+                    # every reply now reports where the run is.
+                    print(f"{condition_name} q{question_index} s{sample_index} t={time.time() - _t0:.0f}s", flush=True)
                     replies.append(
                         {
                             "condition": condition_name,
