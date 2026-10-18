@@ -528,6 +528,26 @@ with no adapter as the control (its letters mean nothing, so it should sit at ch
 | 12k.4 | Untrained model, paired accuracy is at most 35% at every scale. | open | |
 | 12k.5 | For both adapters, paired accuracy does not decrease as the scale rises. | open | |
 
+## Part 16: which neurons make OLMo 2 1B say it is an AI? A prompt-pair causal search (written 2026-10-17 19:57 CT, before any run)
+
+Rebuilds, for OLMo 2 1B Instruct, the search in Sauers' Qwen3-8B tawny-owl card (sources: our archive of it,
+2026-10-17; their search code is not released). The same question is asked under "You are a helpful AI assistant." and
+under one of 10 characters; at the first token where the greedy replies differ, attribution patching ranks MLP neurons
+and greedy patching from the character run into the assistant run finds the fewest that switch that token. The 64
+neurons used most across 20 search questions x 10 characters form the set. Validation is on the 10 held-out questions
+under the assistant prompt: the share of replies that call the model an AI (regex, every reply saved for audit),
+unchanged, with the set zeroed, and with 6 random sets matching its per-layer counts. Code: causal_search.py (main),
+Arc A770. Their 8B result, for comparison: 80% unchanged, 30% with their 128 zeroed, 77-82% with random sets.
+
+| # | Prediction | Status | Result |
+|---|---|---|---|
+| 16.1 | Unchanged, at least 60% of held-out replies call the model an AI. | open | |
+| 16.2 | Zeroing the 64-neuron set lowers that share by at least 20 points. | open | |
+| 16.3 | Every one of the 6 matched random sets moves it by less than 10 points. | open | |
+| 16.4 | At least 70% of the search pairs that diverge switch within the 256-entry cap. | open | |
+| 16.5 | At least 25% of the set sits in the first quarter of the layers (0-3 of 16), as their layer-0 cluster would predict. | open | |
+| 16.6 | Overlap with the Part 2 correlational identity top 50 is small: Jaccard below 0.1. Part 11 found that the neurons that light up on identity sentences are not the ones that produce the name. | open | |
+
 ### Notes from an outside read (Muse, 2026-10-16 22:48 CT, council topic muse-introspection-papers-2026-10-16 [3])
 
 Muse read README and this file cold. What each point changed, checked 2026-10-17:
