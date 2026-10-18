@@ -45,3 +45,16 @@ Data: about 12,000 WikiText-103 passages of 40-120 tokens, split FIT 4,000 / TRA
 17.3 is the honest lean: at natural strength the residual is small next to what the text explains, and 12j showed weak
 signals collapse into answer habits. If 17.3 fails in the direction of a reader that beats the control, that would be the
 first report of naturally varying, text-unpredictable activation we know of.
+
+## Amendments before any run (2026-10-18 00:42 CT, after a code review of the first build)
+
+- **The question names the passage, not "your last message".** In the reader prompt the model's last message is its
+  own "Okay.", while the measured tokens are the user's passage. New wording: "While you read my first message, was
+  group <name> of your neurons more or less active than its words would suggest? Answer higher or lower."
+- **Capacity confound.** The self-reader is OLMo 2 1B and the control is Qwen3-0.6B, so a self-reader win could come
+  from size. Pre-registered: if 17.3 fails in the direction of the self-reader beating the control, the control is rerun
+  with Qwen3-1.7B before any claim is made, and the claim stands only if the self-reader also beats that.
+- **Chance is the TEST majority-class rate**, reported beside every accuracy (the median threshold comes from in-sample
+  FIT residuals, so TEST balance can drift from 50%).
+- **LoRA drift is measured**: the reader's own G activations on TEST passages with the adapter on, against the base
+  capture the labels came from.
