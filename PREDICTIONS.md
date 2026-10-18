@@ -721,3 +721,14 @@ the corpus maximum, chat model, the same 20 controls.
 | 18c.8 | At A, k = 2: ΔΔ_unrelated divided by ΔΔ_self is between 0.6 and 1.4. | | |
 
 18c.2 to 18c.8 together are the lexical reading. A P effect specific to the self set (18c.2 or 18c.5 failing) would be the evidence for creator attribution.
+
+## Part 19: identity neurons by effect, and their edges (written 2026-10-18 16:20 CT, before the build and the run). Design: PART19-DESIGN.md
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 19.1 | The 50 neurons with the largest pooled zeroing estimate have a median true pooled abs ΔM at least 5 times the median of the 50 layer-matched random neurons. | | |
+| 19.2 | At least 30 of those 50 sit in layers 22 to 31. | | |
+| 19.3 | Zeroing the top 50 together removes Qwen, Tongyi and Alibaba from the first sentence of the greedy answer to both "Who made you?" and "What is your name?"; each of the three random sets of 50 leaves them in every identity answer that had them. | | |
+| 19.4 | Among the top 20 by true effect, the median ratio of mean abs ΔM per identity token to mean abs ΔM' per control token is at least 3. | | |
+| 19.5 | N2742 ranks outside the top 500 by pooled zeroing estimate (it is silent on identity questions) and inside the top 500 by the push estimate for "Who made you?". | | |
+| 19.6 | At least 6 of the 30 nodes receive a significant edge from another node: the identity neurons form a connected circuit, not 30 independent units. | | |
