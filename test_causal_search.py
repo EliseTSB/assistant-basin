@@ -98,6 +98,22 @@ class AttributionTests(unittest.TestCase):
         self.assertLess(result["metric"], 0)
 
 
+    def test_ranking_accepts_batched_run2_capture_on_a_multi_token_sequence(self):
+        # Regression (2026-10-17 smoke run): capture_run2_activations keeps the
+        # batch dimension, so on any sequence longer than one token the ranker
+        # read the batch size as the sequence length and refused the map.
+        model = _TinyNeuronModel()
+        source_acts = causal_search.capture_run2_activations(model, [0, 0, 0], torch.device("cpu"))
+        _initial, run1_acts, gradients = causal_search.capture_run1_attribution(
+            model, [1, 1, 1], torch.device("cpu"), logit_position=2, token1=1, token2=2
+        )
+        entries = causal_search.rank_attribution_entries(
+            run1_acts, source_acts, gradients, [0, 1, 2], limit=8
+        )
+        self.assertTrue(all(0 <= entry.source_position <= 2 for entry in entries))
+        self.assertTrue(all(0 <= entry.position <= 2 for entry in entries))
+
+
 class GreedyPatchTests(unittest.TestCase):
     def test_patch_stops_at_switch_and_returns_minimal_ranked_prefix(self):
         # A stub forward computes metric = 1 - 1.2 for the decisive neuron;

@@ -383,6 +383,11 @@ def rank_attribution_entries(
         raise ValueError("position map length does not match run-1 sequence")
     all_scores = []
     for layer, (act1, act2, grad) in enumerate(zip(run1_acts, run2_acts, gradients)):
+        # capture_run2_activations keeps the batch dimension because the patch
+        # evaluator indexes [0, position, neuron]; run 1 arrives unbatched.
+        if act2.dim() == 3:
+            act2 = act2[0]
+        act2 = act2.float().cpu()
         if act1.shape != grad.shape:
             raise ValueError("run-1 activation and gradient shapes differ")
         source_positions = torch.tensor(position_map, dtype=torch.long)
