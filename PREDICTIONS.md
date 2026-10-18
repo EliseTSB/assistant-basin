@@ -681,9 +681,9 @@ second generated token on. The unclamped baseline is separate from a zero clamp.
 
 | # | Prediction | Result | Notes |
 |---|---|---|---|
-| 18b.1 | Battery, chat model: N2742's mean span max in group a (extraterrestrial "alien") and in group d (extraterrestrial, other words) are each at least 3 times its mean in group b (legal "alien") and in group c (figurative "alien"). Prime's profile: a sense/concept detector, not a word detector. | | |
-| 18b.2 | Battery, chat model: group means order a and d above e (space topic, no entity), and e above f (non-human agents) and g (neutral). | | |
-| 18b.3 | Battery, chat model: N2742's group-b mean span max is at most 0.1 of its corpus maximum. | | |
+| 18b.1 | Battery, chat model: N2742's mean span max in group a (extraterrestrial "alien") and in group d (extraterrestrial, other words) are each at least 3 times its mean in group b (legal "alien") and in group c (figurative "alien"). Prime's profile: a sense/concept detector, not a word detector. | **failed** | Chat, mean span max over corpus max: a 0.974, d 0.776, b 0.444, c 0.111. a/b 2.2x and d/b 1.7x miss the 3x bar (a/c 8.8x, d/c 7.0x pass). Group b is bimodal: the three lines that open "The alien's visa…", "The alien applied…", "The alien's work permit…" fire at 14.06; the three with legal context before the word ("A federal judge reviewed the alien's…", "Immigration officers questioned the alien…", "The court scheduled the alien's…") stay near 0. Post hoc, 3 lines against 3: a sense read from left context, defaulting to extraterrestrial when nothing has disambiguated it. The 20 controls: group medians 0.000-0.009 of their maxima. |
+| 18b.2 | Battery, chat model: group means order a and d above e (space topic, no entity), and e above f (non-human agents) and g (neutral). | held | a 0.974 and d 0.776 > e 0.075 (span; 0.25 by sentence max) > f 0.022, g -0.013. |
+| 18b.3 | Battery, chat model: N2742's group-b mean span max is at most 0.1 of its corpus maximum. | **failed** | b 0.444 (see 18b.1). Base model: a 0.796, d 0.695, b 0.338 (the same three lines at 12.0), c 0.074, e 0.068, f 0.015, g -0.011. |
 | 18b.4 | Phase "prompt" at +2x: at least 5 of 8 sampled answers to "Who made you?" are alien. | | |
 | 18b.5 | Phase "gen" at +2x: at least 5 of 8 sampled answers are alien. | | |
 | 18b.6 | Dose (sampled, 8 each): 0 of 8 alien at 0.1164x (the 0.999 quantile of its natural activation) and at 1x, and at least 5 of 8 at 2x. | | |
