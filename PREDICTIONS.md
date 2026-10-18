@@ -766,6 +766,24 @@ summary's tokens in c).
 | 20.4 | (c) summarized barely fires: N2742's max over the summary's tokens is at most 0.25 of (a)'s mean, and below the local mean of group d (the concept without the word). | Failed | summary max 9.81 = 0.66 of (a)'s mean (needed at most 0.25); below group d's local mean (11.93), so only the second clause holds |
 | 20.5 | Control: N2742's max over the filler alone is at most 0.1 of (a)'s mean. | Failed | filler alone reaches 9.31 = 0.62 of (a)'s mean (needed at most 0.1). A max over 4,133 tokens is not a comparable baseline for a max over one word, an error in the prediction's design; the summary's 9.81 is not separable from it in this run |
 
+
+## Part 20c: where the filler's 9.3 comes from, and a matched summary (written 2026-10-18 19:05 CT, before the run)
+
+Part 20's summary cell was ambiguous because the filler alone reached 9.31 somewhere in its 4,133 tokens, and the row
+compared that maximum over thousands of tokens with a maximum over one word. 20c reads N2742 at every token instead.
+Same model, revision, hook, filler (Pile documents 0 and 1) and summary as Part 20. Added: a neutral summary of nearly
+the same length at the same distance ("Several of the earlier sentences described a farmer repairing a fence beside the
+river near town.", 17 tokens against 15), and each summary alone after a 16-token neutral lead-in instead of the filler.
+Self-check before scoring: the run must reproduce Part 20's filler maximum (9.3125) and summary value (9.8125) exactly.
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 20c.1 | The filler's maximum is at one of its first 8 positions; excluding them, the filler's maximum is below 3. | | |
+| 20c.2 | Excluding the first 8 positions, the filler's 99.9th percentile is below 2. | | |
+| 20c.3 | After the filler, the summary's maximum exceeds the filler's maximum excluding its first 8 positions. | | |
+| 20c.4 | After the filler, the summary's maximum exceeds the neutral summary's maximum by at least 3. | | |
+| 20c.5 | After the lead-in instead of the filler, the summary's maximum is at least 0.7 of its value after the filler. | | |
+
 ## Part 21: the assistant register by training-data year (written 2026-10-18 18:10 CT, before the run). Same set and analysis as Part 14
 
 Part 14 found register neurons (assistant reply against the same content as plain prose or a person's message) in
