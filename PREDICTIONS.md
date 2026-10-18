@@ -556,6 +556,25 @@ Arc A770. Their 8B result, for comparison: 80% unchanged, 30% with their 128 zer
 | 16.5 | At least 25% of the set sits in the first quarter of the layers (0-3 of 16), as their layer-0 cluster would predict. | failed narrowly | 15/64 (23%): 11 in layer 0. The rest sit late: 40 of 64 in layers 10-15. Top neurons L12.6617 (61 pairs), L15.596 (50), then three layer-0 neurons (33-36). |
 | 16.6 | Overlap with the Part 2 correlational identity top 50 is small: Jaccard below 0.1. Part 11 found that the neurons that light up on identity sentences are not the ones that produce the name. | held | Jaccard 0.0: no neuron shared. |
 
+### Part 16b: what the causal set removes, judged, with a fluency control (written 2026-10-17 20:51 CT, before any code)
+
+Part 16's hand audit found the regex misses "I am a AI" and that the zeroed replies are damaged ("I donates not have
+feelings"). 16b reruns validation on the 10 held-out questions with 5 replies each (greedy plus 4 samples at temperature
+0.7, fixed seeds), labels every reply with a blind judge (claims to be an AI / answers as a person / neither; fluent or
+not), and measures next-token loss on neutral text (data/neutral.txt, as in Part 11). Conditions: unchanged; the 64-neuron
+set zeroed; the same set held at its neutral-text mean; its late part alone (layers 10-15) zeroed; its early part alone
+(layers 0-3) zeroed; 6 random sets matched layer for layer to the 64; 3 random sets matched to the late part.
+
+| # | Prediction | Result | Notes |
+|---|---|---|---|
+| 16b.1 | Unchanged, the judge labels at least 90% of replies as claiming to be an AI. | open | |
+| 16b.2 | The 64 set zeroed lowers the judged AI-claim share by at least 20 points. | open | |
+| 16b.3 | The 64 set zeroed raises neutral-text loss more than every one of the 6 matched random sets. | open | |
+| 16b.4 | The late part alone, zeroed, lowers the judged AI-claim share by at least 20 points. | open | |
+| 16b.5 | The early part alone, zeroed, raises neutral-text loss more than the late part alone. | open | |
+| 16b.6 | The 64 set held at its mean lowers the judged AI-claim share by at least 10 points, with less fluency damage (judged-fluent share higher) than zeroing. | open | |
+| 16b.7 | Every random set stays within 10 points of unchanged on the judged AI-claim share. | open | |
+
 ### Notes from an outside read (Muse, 2026-10-16 22:48 CT, council topic muse-introspection-papers-2026-10-16 [3])
 
 Muse read README and this file cold. What each point changed, checked 2026-10-17:
