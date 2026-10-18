@@ -765,3 +765,22 @@ summary's tokens in c).
 | 20.3 | (b) distant keeps most of the response: the mean over the six sentences of N2742's max on "alien" after the filler is at least 0.7 of (a) local. | | |
 | 20.4 | (c) summarized barely fires: N2742's max over the summary's tokens is at most 0.25 of (a)'s mean, and below the local mean of group d (the concept without the word). | | |
 | 20.5 | Control: N2742's max over the filler alone is at most 0.1 of (a)'s mean. | | |
+
+## Part 21: the assistant register by training-data year (written 2026-10-18 18:10 CT, before the run). Same set and analysis as Part 14
+
+Part 14 found register neurons (assistant reply against the same content as plain prose or a person's message) in
+Pythia-1.4b, trained on 2020 data, before assistants existed. If the assistant persona is something the web learned,
+base models trained on later web text should carry the register more strongly. Five base models of 1.4B to 1.7B,
+by the date of their training data: EleutherAI/pythia-1.4b (the Pile, 2020), allenai/OLMo-1B-hf (Dolma, 2023),
+HuggingFaceTB/SmolLM-1.7B (2024), HuggingFaceTB/SmolLM2-1.7B (2024), Qwen/Qwen3-1.7B-Base (2025). Collected with
+collect_register.py and scored with analyze.py --form plain --frames data/register-frames.json --top 50, one CPU
+cloud run. The margin is heldout_top_median minus null_top_max (the shuffled-label null's best).
+
+Confounds, named before the run: the models differ in size, tokenizer and data mix, not only in year, and Part 14's
+caveat stands (63 of the 72 assistant replies contain "I can"). Five models cannot separate year from those.
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 21.1 | Every one of the five base models has register neurons that beat its own null (heldout_top_median above null_top_max). | | |
+| 21.2 | Each of the three models trained on 2024 or 2025 data has a larger margin than Pythia-1.4b in this run. | | |
+| 21.3 | The margin follows the data year: Spearman correlation between year and margin across the five is at least 0.7 (the two 2024 models share a rank). | | |
