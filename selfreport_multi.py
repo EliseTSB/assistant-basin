@@ -646,16 +646,149 @@ def evaluate_natural_readout(
     return natural_readout_statistics(pairs_by_group, seed=seed, permutations=permutations)
 
 
+def wilson_interval(successes: int, trials: int, z: float = 1.959963984540054) -> dict[str, float] | None:
+    """Return a two-sided Wilson score interval for a binomial proportion."""
+    if trials <= 0:
+        return None
+    proportion = successes / trials
+    z_squared = z * z
+    denominator = 1.0 + z_squared / trials
+    center = (proportion + z_squared / (2.0 * trials)) / denominator
+    half_width = (
+        z
+        * math.sqrt(proportion * (1.0 - proportion) / trials + z_squared / (4.0 * trials * trials))
+        / denominator
+    )
+    return {
+        "lower": max(0.0, center - half_width),
+        "upper": min(1.0, center + half_width),
+    }
+
+
+def evaluate_paired_readout(
+    model,
+    examples: Sequence[MultiExample],
+    hooks: MultiNeuronHooks,
+    pad_id: int,
+    answer_ids: dict[str, int],
+    scales: Sequence[float],
+    batch_size: int = 4,
+) -> dict[str, dict[str, Any]]:
+    """Compare each pushed group's answer-letter log-probability delta to the same unpushed prompt."""
+    if any(example.condition != "none" for example in examples):
+        raise ValueError("Paired readout evaluation requires only unpushed examples")
+    target_groups = ("G1", "G2", "G3", "G4")
+    answer_token_ids = torch.as_tensor(
+        [answer_ids[answer] for answer in ANSWERS], dtype=torch.long, device=sr.DEVICE
+    )
+    scale_values = tuple(float(scale) for scale in scales)
+    accumulated: dict[str, dict[str, Any]] = {
+        scale_key(scale): {
+            "correct": 0,
+            "correct_by_group": {group: 0 for group in target_groups},
+            "delta_correct_letter": [],
+            "delta_other_three": [],
+        }
+        for scale in scale_values
+    }
+
+    model.eval()
+    with torch.inference_mode():
+        for batch in sr.chunks(examples, batch_size):
+            spans = [example.span_positions for example in batch]
+            input_ids, attention_mask, _ = padded_multi_batch(batch, pad_id)
+
+            # This identical, unpushed result is shared by every group and scale in the batch.
+            hooks.prepare(spans, ["none"] * len(batch))
+            unpushed_logits = model(
+                input_ids=input_ids, attention_mask=attention_mask, use_cache=False
+            ).logits
+            unpushed_log_probs = torch.stack([
+                torch.log_softmax(
+                    unpushed_logits[row, len(example.prompt_ids) - 1].index_select(0, answer_token_ids),
+                    dim=0,
+                )
+                for row, example in enumerate(batch)
+            ]).cpu().numpy()
+
+            pushed_examples = [example for example in batch for _group in target_groups]
+            pushed_spans = [example.span_positions for example in pushed_examples]
+            pushed_ids, pushed_mask, _ = padded_multi_batch(pushed_examples, pad_id)
+            pushed_conditions = [group for _example in batch for group in target_groups]
+            for scale in scale_values:
+                hooks.prepare(pushed_spans, pushed_conditions, [scale] * len(pushed_examples))
+                pushed_logits = model(
+                    input_ids=pushed_ids, attention_mask=pushed_mask, use_cache=False
+                ).logits
+                pushed_log_probs = torch.stack([
+                    torch.log_softmax(
+                        pushed_logits[row, len(example.prompt_ids) - 1].index_select(0, answer_token_ids),
+                        dim=0,
+                    )
+                    for row, example in enumerate(pushed_examples)
+                ]).cpu().numpy()
+
+                scale_result = accumulated[scale_key(scale)]
+                for source_index in range(len(batch)):
+                    baseline = unpushed_log_probs[source_index]
+                    for group_index, group in enumerate(target_groups):
+                        row = source_index * len(target_groups) + group_index
+                        delta = pushed_log_probs[row, :4] - baseline[:4]
+                        winner = int(np.argmax(delta))
+                        is_correct = winner == group_index
+                        scale_result["correct"] += int(is_correct)
+                        scale_result["correct_by_group"][group] += int(is_correct)
+                        scale_result["delta_correct_letter"].append(float(delta[group_index]))
+                        scale_result["delta_other_three"].append(
+                            float(np.mean(np.delete(delta, group_index)))
+                        )
+
+    summary: dict[str, dict[str, Any]] = {}
+    message_count = len(examples)
+    comparison_count = message_count * len(target_groups)
+    for scale in scale_values:
+        key = scale_key(scale)
+        values = accumulated[key]
+        summary[key] = {
+            "n": message_count,
+            "comparisons": comparison_count,
+            "paired_accuracy": (
+                values["correct"] / comparison_count if comparison_count else None
+            ),
+            "paired_accuracy_by_group": {
+                group: (values["correct_by_group"][group] / message_count if message_count else None)
+                for group in target_groups
+            },
+            "mean_delta_correct_letter": (
+                float(np.mean(values["delta_correct_letter"]))
+                if values["delta_correct_letter"] else None
+            ),
+            "mean_delta_other_three": (
+                float(np.mean(values["delta_other_three"]))
+                if values["delta_other_three"] else None
+            ),
+            "wilson_95_ci": wilson_interval(values["correct"], comparison_count),
+        }
+    return summary
+
+
 def build_result(args):
     load_lora = getattr(args, "load_lora", None)
     eval_scales = getattr(args, "eval_scales", None)
     train_scales = getattr(args, "train_scales", None)
     natural_readout = getattr(args, "natural_readout", False)
+    paired_readout = getattr(args, "paired_readout", False)
+    no_lora = getattr(args, "no_lora", False)
     extra_decoy_count = getattr(args, "extra_decoys", 0)
     decoy_seed = getattr(args, "decoy_seed", 2026)
     if extra_decoy_count < 0:
         raise ValueError("--extra-decoys must be nonnegative")
-    if train_scales is not None and (load_lora is not None or args.eval_only):
+    if no_lora and load_lora is not None:
+        raise ValueError("--no-lora cannot be combined with --load-lora")
+    if no_lora and getattr(args, "save_lora", None) is not None:
+        raise ValueError("--no-lora cannot be combined with --save-lora")
+    eval_only = bool(args.eval_only or no_lora)
+    if train_scales is not None and (load_lora is not None or eval_only):
         raise ValueError("--train-scales requires training and cannot be combined with --load-lora or --eval-only")
     random.seed(args.seed); np.random.seed(args.seed); torch.manual_seed(args.seed)
     torch.set_num_threads(args.threads)
@@ -715,8 +848,10 @@ def build_result(args):
         sr.load_lora_parameters(model, load_lora, target="multi")
         loaded_lora_info = {"path": str(load_lora), "sha256": sha256_file(load_lora)}
         training = {"epochs": 0, "examples": len(train_rows), "steps": 0, "shuffled": False, "loaded": True}
-    elif args.eval_only:
+    elif eval_only:
         training = {"epochs": 0, "examples": len(train_rows), "steps": 0, "shuffled": False}
+        if no_lora:
+            training["no_lora"] = True
     else:
         sr.install_lora(model, rank=8)
         model.to(sr.DEVICE)
@@ -763,6 +898,8 @@ def build_result(args):
     }
     if train_scales is not None:
         result["train_scales"] = [float(scale) for scale in train_scales]
+    if no_lora:
+        result["no_lora"] = True
     if eval_scales is None:
         result["evaluation"] = evaluation_by_scale[scale_key(args.clamp_scale)]
     else:
@@ -799,14 +936,35 @@ def build_result(args):
             seed=args.seed, batch_size=args.infer_batch_size,
         )
         readout_hooks.close()
+    if paired_readout:
+        unpushed = [example for example in eval_multi if example.condition == "none"]
+        paired_groups = {group: groups[group] for group in ("G1", "G2", "G3", "G4")}
+        paired_highs_by_scale = {
+            float(scale): scaled_group_highs(bounds, float(scale), paired_groups)
+            for scale in requested_scales
+        }
+        paired_hooks = MultiNeuronHooks(
+            model,
+            paired_groups,
+            paired_highs_by_scale[float(requested_scales[0])],
+            paired_highs_by_scale,
+        )
+        result["paired_readout_by_scale"] = evaluate_paired_readout(
+            model, unpushed, paired_hooks, int(pad_id), answer_ids, requested_scales,
+            args.infer_batch_size,
+        )
+        paired_hooks.close()
     return result
 
 
-def main():
+def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--model", default=sr.MODEL_ID); p.add_argument("--frames", default=sr.FRAME_PATH)
     p.add_argument("--identity", default=sr.IDENTITY_PATH); p.add_argument("--group-seed", type=int, default=7)
     p.add_argument("--seed", type=int, default=42); p.add_argument("--eval-only", action="store_true")
+    p.add_argument("--no-lora", action="store_true", help="evaluate the base model without installing or loading an adapter")
+    p.add_argument("--paired-readout", action="store_true",
+                   help="compare each group's pushed and unpushed answer-letter log-probabilities")
     p.add_argument("--shuffled", action="store_true"); p.add_argument("--clamp-scale", type=float, default=8.0)
     p.add_argument("--threads", type=int, default=4); p.add_argument("--infer-batch-size", type=int, default=4)
     p.add_argument("--limit", type=int, default=0); p.add_argument("--epochs", type=int, default=6)
@@ -822,6 +980,11 @@ def main():
     p.add_argument("--extra-decoys", type=int, default=0, help="evaluate this many fresh decoy groups at the top evaluation scale")
     p.add_argument("--decoy-seed", type=int, default=2026, help="independent seed for fresh extra decoy groups")
     p.add_argument("--device", default="cpu", help="cpu, or xpu for the Arc A770 (Windows GPU job)")
+    return p
+
+
+def main():
+    p = build_parser()
     args = p.parse_args()
     if args.limit < 0 or args.threads < 1 or args.threads > 4 or args.extra_decoys < 0:
         p.error("--limit and --extra-decoys must be nonnegative and --threads between 1 and 4")
