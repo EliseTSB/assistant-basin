@@ -661,7 +661,10 @@ def cmd_teacherforce(a):
                              'completion': s['completion'], 'kind': s['kind'], 'condition': condition,
                              'unit': None if spec is None else int(spec[0]), 'k': None if spec is None else float(spec[3]),
                              'phase': None if spec is None else spec[2], 'scale': None if spec is None else spec[4],
-                             'sum_logprob': float(values.sum()), 'mean_logprob': float(values.mean()), 'completion_tokens': len(values)})
+                             'sum_logprob': float(values.sum()), 'mean_logprob': float(values.mean()), 'completion_tokens': len(values),
+                             # per-token scores and boundaries (Alden #16), so a mean can be re-derived or re-weighted later
+                             'token_logprobs': [float(v) for v in values], 'completion_ids': list(s['completion_ids']),
+                             'prompt_end': s['prompt_end'], 'answer_start': s['answer_start'], 'n_tokens': len(s['ids'])})
         spill_guard(a.device, a.spill_limit)
         print(f'  {condition} done', flush=True)
     hook.position_mask = None; hook.remove()

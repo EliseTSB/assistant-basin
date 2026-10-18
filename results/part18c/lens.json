@@ -1,0 +1,123 @@
+{
+ "condition": "target:k=2:phase=G",
+ "n_completions": 12,
+ "spearman_rho": 0.9300699300699301,
+ "held": true,
+ "known_answer_check": "' alien' z=9.77 reproduced",
+ "completions": {
+  " aliens.": {
+   "tokens": [
+    " aliens"
+   ],
+   "mean_z": 8.664166450500488,
+   "dd_c": 4.09356755680508
+  },
+  " extraterrestrials.": {
+   "tokens": [
+    " extr",
+    "ater",
+    "rest",
+    "ri",
+    "als"
+   ],
+   "mean_z": 2.276095998287201,
+   "dd_c": 2.356801453563902
+  },
+  " an alien civilization.": {
+   "tokens": [
+    " an",
+    " alien",
+    " civilization"
+   ],
+   "mean_z": 5.092875639597575,
+   "dd_c": 2.8815666238466897
+  },
+  " beings from another planet.": {
+   "tokens": [
+    " beings",
+    " from",
+    " another",
+    " planet"
+   ],
+   "mean_z": 3.2474773712456226,
+   "dd_c": 2.193993972407447
+  },
+  " visitors from another star.": {
+   "tokens": [
+    " visitors",
+    " from",
+    " another",
+    " star"
+   ],
+   "mean_z": 2.480315525084734,
+   "dd_c": 0.9613445334964328
+  },
+  " a civilization from outer space.": {
+   "tokens": [
+    " a",
+    " civilization",
+    " from",
+    " outer",
+    " space"
+   ],
+   "mean_z": 2.583493542671204,
+   "dd_c": 1.9542084336280823
+  },
+  " Alibaba Cloud.": {
+   "tokens": [
+    " Alibaba",
+    " Cloud"
+   ],
+   "mean_z": 0.17304018139839172,
+   "dd_c": -1.4269305500719283
+  },
+  " a team of engineers.": {
+   "tokens": [
+    " a",
+    " team",
+    " of",
+    " engineers"
+   ],
+   "mean_z": 0.8515476733446121,
+   "dd_c": -0.43301326036453247
+  },
+  " a technology company.": {
+   "tokens": [
+    " a",
+    " technology",
+    " company"
+   ],
+   "mean_z": 0.0738720993200938,
+   "dd_c": -0.7341174748208787
+  },
+  " a group of researchers.": {
+   "tokens": [
+    " a",
+    " group",
+    " of",
+    " researchers"
+   ],
+   "mean_z": 0.7650756239891052,
+   "dd_c": -0.019847710927327473
+  },
+  " a software company.": {
+   "tokens": [
+    " a",
+    " software",
+    " company"
+   ],
+   "mean_z": 0.057590256134668984,
+   "dd_c": -1.2349018123414781
+  },
+  " a team of programmers.": {
+   "tokens": [
+    " a",
+    " team",
+    " of",
+    " programmers"
+   ],
+   "mean_z": 0.9395227283239365,
+   "dd_c": 0.004512608051300049
+  }
+ }
+}

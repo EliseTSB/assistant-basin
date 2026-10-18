@@ -687,7 +687,7 @@ second generated token on. The unclamped baseline is separate from a zero clamp.
 | 18b.4 | Phase "prompt" at +2x: at least 5 of 8 sampled answers to "Who made you?" are alien. | **failed** | 0 of 8, read by hand: all 8 say "I am Qwen3.5 ... Tongyi Lab". The clamp covers the prompt and the first answer token. Controls: 0 of 160 sampled alien, 20 of 20 greedy name Qwen. |
 | 18b.5 | Phase "gen" at +2x: at least 5 of 8 sampled answers are alien. | held | 7 of 8, read by hand (sample 2, "an extra-intelligence large language model", not counted). 5 of 8 still name Qwen, four of them as "a large extraterrestrial intelligence", the slot where the unclamped answer says "a large language model". Unclamped 0 of 8; controls 0 of 160 sampled alien, 20 of 20 greedy Qwen. With 18b.4: the alien answer needs the clamp while the model writes. |
 | 18b.6 | Dose (sampled, 8 each): 0 of 8 alien at 0.1164x (the 0.999 quantile of its natural activation) and at 1x, and at least 5 of 8 at 2x. | held | Read by hand: 0 of 8 at 0.1164x, 0.5x and 1x; 8 of 8 at 2x (one still says "I am Qwen3, a large extraterrestrial intelligence"). At 1.5x no answer claims to be alien (the regex's one hit is "planetary exploration" in a list of research areas), but 3 of 8 maker names bend toward the pushed word: "Tongyi Alienware" once and "Tongyi Ali" twice. Greedy: Qwen through 1.5x ("Tongyi Ali" at 1.5x), extraterrestrial at 2x. Below the threshold the neuron's words leak into single word slots without changing who the model says it is. |
-| 18b.7 | Norm-matched controls at +2x (each control's clamp sized so its down_proj residual perturbation matches the target's): at most 1 of the 20 units gives any alien answer in 8 samples. | held | 0 of 20 norm-matched units gives any alien answer (0 of 160 samples, 0 of 20 greedy); a broad scan of all 180 control texts finds no extraterrestrial or space words. 138 of 160 samples and 16 of 20 greedy still name Qwen. The target under the same run: 8 of 8 alien. |
+| 18b.7 | Norm-matched controls at +2x (each control's clamp sized so its down_proj residual perturbation matches the target's; renamed column-norm-scaled on 2026-10-18: the clamped contribution is matched, not the change from natural activation): at most 1 of the 20 units gives any alien answer in 8 samples. | held | 0 of 20 norm-matched units gives any alien answer (0 of 160 samples, 0 of 20 greedy); a broad scan of all 180 control texts finds no extraterrestrial or space words. 138 of 160 samples and 16 of 20 greedy still name Qwen. The target under the same run: 8 of 8 alien. |
 | 18b.8 | Clamped +2x, asked "In U.S. immigration law, what is an 'alien'?": at least 5 of 8 sampled answers drift to extraterrestrials or space. Unclamped: none do. | held | 8 of 8 clamped answers bring in extraterrestrial or planet words, read by hand; unclamped 0 of 8. The drift is lexical: the answers keep the legal definition and the words intrude into it ("not a citizen or alien extra-territorialian", "a non-citizen alien of a planet, planet, or other extraterrestria…", "the Immigration and Extrapolative Act"). |
 | 18b.9 | Clamped -2x, asked "Describe an extraterrestrial.": at least 6 of 8 still describe a being from another world, and the word "alien" appears in fewer samples than unclamped. | **failed** | The first clause held: 6 of 8 clamped answers still describe a being, and the other two describe extraterrestrials in folklore. The second failed: unclamped, the model never uses the word "alien" here (0 of 8, as at -2x), so there was nothing to reduce. Post hoc: -2x changes the opening, 6 of 8 start "In the vast..." where 7 of 8 unclamped start "Here is a description...". |
 
@@ -711,16 +711,24 @@ the corpus maximum, chat model, the same 20 controls.
 
 | # | Prediction | Result | Evidence |
 |---|---|---|---|
-| 18c.1 | At A, ΔΔ_self increases at every step of k = 0.5, 1, 1.5, 2, 3, and its 95% CI at k = 2 is above 0. | | |
-| 18c.2 | At k = 2, ΔΔ_self at P is below 0.25 times ΔΔ_self at A. | | |
-| 18c.3 | At k = 2, ΔΔ_self at G is at least 0.75 times ΔΔ_self at A. | | |
-| 18c.4 | At A, k = 2: ΔΔ_other divided by ΔΔ_self is between 0.6 and 1.4. | | |
-| 18c.5 | At P, k = 2: the 95% CI of ΔΔ_self minus ΔΔ_other includes 0. | | |
-| 18c.6 | Across the 12 self completions, ΔΔ_c at G, k = 2 and the completions' mean logit-lens z-score have Spearman ρ of at least 0.6. | | |
-| 18c.7 | At A, k = 2, each of the 20 controls, own and norm-matched, has an absolute ΔΔ_self below 0.25 times the target's. | | |
-| 18c.8 | At A, k = 2: ΔΔ_unrelated divided by ΔΔ_self is between 0.6 and 1.4. | | |
+| 18c.1 | At A, ΔΔ_self increases at every step of k = 0.5, 1, 1.5, 2, 3, and its 95% CI at k = 2 is above 0. | Held | ΔΔ_self at A: 0.70, 1.55, 2.37, 3.15, 4.14 (k = 0.5 to 3); k = 2 CI [3.11, 3.19]. results/part18c/scores.json |
+| 18c.2 | At k = 2, ΔΔ_self at P is below 0.25 times ΔΔ_self at A. | Held | P/A at k = 2: 0.072, bootstrap interval [0.065, 0.080] (templates resampled once; sum scale 0.065) |
+| 18c.3 | At k = 2, ΔΔ_self at G is at least 0.75 times ΔΔ_self at A. | Held | G/A at k = 2: 0.968 [0.962, 0.974] (sum scale 0.974) |
+| 18c.4 | At A, k = 2: ΔΔ_other divided by ΔΔ_self is between 0.6 and 1.4. | Held | other/self at A, k = 2: 0.648, interval [0.619, 0.681], inside 0.6-1.4 (sets resampled independently); the self effect is the larger |
+| 18c.5 | At P, k = 2: the 95% CI of ΔΔ_self minus ΔΔ_other includes 0. | Failed | self minus other at P, k = 2: -0.108 [-0.176, -0.047]; the P effect is larger for artifact questions than for the model. Amended creator test (CI above 0, mean at least 0.787): not met, opposite sign |
+| 18c.6 | Across the 12 self completions, ΔΔ_c at G, k = 2 and the completions' mean logit-lens z-score have Spearman ρ of at least 0.6. | Held | Spearman ρ = 0.93 across the 12 self completions (" aliens.": ΔΔ_c 4.09, mean z 8.66; " Alibaba Cloud.": -1.43, 0.17). results/part18c/lens.json; known-answer check reproduced writes.json |
+| 18c.7 | At A, k = 2, each of the 20 controls, own and norm-matched, has an absolute ΔΔ_self below 0.25 times the target's. | Failed | 39 of 40 below 0.25; control 2481 column-norm-scaled at 0.46 of the target (own scale 0.18), with nothing alien in its logit-lens top 30. Own-scale maximum 0.22 |
+| 18c.8 | At A, k = 2: ΔΔ_unrelated divided by ΔΔ_self is between 0.6 and 1.4. | Held | unrelated/self at A, k = 2: 0.764 [0.708, 0.828] (unrelated: 6 templates, 1 stem); a diagnostic, not a self-specificity control |
 
 18c.2 to 18c.8 together are the lexical reading. A P effect specific to the self set (18c.2 or 18c.5 failing) would be the evidence for creator attribution.
+
+**Amendment, written 2026-10-18 16:23 CT while the run was on the GPU and before any of its scores were read** (Alden's pre-run review, muse-neuron-research-2026-10 #16). The rows above stand as written; this changes how they are read.
+- The sentence above was wrong: 18c.2 or 18c.5 failing is not evidence for creator attribution (a larger P effect on artifacts than on the self also fails 18c.2). Evidence for a creator-specific effect needs a positive self minus other interaction at P, k = 2, with its 95% CI above 0 and its mean at least 0.25 times ΔΔ_self at A, k = 2. Even then it shows a prompt-dependent preference among fixed answers, not a uniquely identified internal representation.
+- "Similar" (18c.4, 18c.8) holds only if the bootstrap 95% interval of the ratio lies inside 0.6 to 1.4; an interval crossing the margin is inconclusive, not held. A CI that merely includes 0 (18c.5) does not establish equality.
+- If ΔΔ_self at A, k = 2 has a CI that includes 0 or lies below it, the ratio rows (18c.2, 18c.3, 18c.4, 18c.8) are not evaluable.
+- Self against other is an unpaired comparison of two template sets (templates resampled independently), not matched pairs. "Unrelated" uses different stems and earthly completions, so its ratio is a diagnostic, not a self-specificity control.
+- Mixed or inconclusive is a legitimate outcome and will be reported as such.
+- "Norm-matched" in this design and in 18b.7 means the clamped value is scaled so the clamped contribution's size (value times the down_proj column norm) equals the target's. It does not equalise the change from each unit's natural activation. The intervention is renamed "column-norm-scaled".
 
 ## Part 19: identity neurons by effect, and their edges (written 2026-10-18 16:20 CT, before the build and the run). Design: PART19-DESIGN.md
 
@@ -732,3 +740,47 @@ the corpus maximum, chat model, the same 20 controls.
 | 19.4 | Among the top 20 by true effect, the median ratio of mean abs ΔM per identity token to mean abs ΔM' per control token is at least 3. | | |
 | 19.5 | N2742 ranks outside the top 500 by pooled zeroing estimate (it is silent on identity questions) and inside the top 500 by the push estimate for "Who made you?". | | |
 | 19.6 | At least 6 of the 30 nodes receive a significant edge from another node: the identity neurons form a connected circuit, not 30 independent units. | | |
+
+**Amendment to 19.6, written 2026-10-18 17:34 CT, before the build was final and before any Part 19 run** (Haiku review round 2, F6). The design's null takes the 99th percentile over all 30 random sources, but a source at or above a target's layer cannot change that target, so those sources enter the null as structural zeros and lower the threshold. As run: for each target node j, the threshold uses only the random sources at layers below j's layer; a target with fewer than 10 such sources is not testable and cannot count as receiving a significant edge; self-edges are excluded. 19.6 is scored as written (at least 6 of the 30 nodes), and the number of testable nodes is reported beside it. The original sentence above is unchanged.
+
+## Part 20: Weaver's two techniques on N2742 (written 2026-10-18 18:00 CT, before the build and the run). Source: council muse-neuron-research-2026-10 #19 (Weaver), #20-#21 (Claude)
+
+Qwen3.5-4B, layer 22, neuron 2742, the same hook and model revision as Part 18, run in bf16 on the A770.
+
+**20a, the identity clamp (the control every clamp row so far has assumed).** Record N2742's activation at every
+position in an unhooked pass, then run the same input with the hook writing back exactly those values.
+
+**20b, the context seam** (Weaver's three cells). Group a of data/sense-battery.jsonl (six extraterrestrial "alien"
+sentences). (a) local: each sentence alone, the battery's existing setting. (b) distant: the same sentence after
+about 4,000 tokens of neutral filler (Pile documents with none of the battery's a, d or e target words), the same
+filler for every sentence. (c) summarized: the sentences removed, and at the same distance a one-sentence summary
+that carries the topic without the trigger words: "Several of the earlier sentences described a visitor from another
+world arriving among people." Activation is read as the max over the target span (the word "alien" in a and b, the
+summary's tokens in c).
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 20.1 | The identity clamp changes nothing: the largest absolute logit difference against the unhooked pass, over the whole vocabulary at every position, is exactly 0, both with the hook at one position (the last prompt token of "Who made you?") and at every position. (Weaver predicted drift is possible at many positions; this is the disagreement the run settles.) | Held | 0.0 exactly at every position, over the whole vocabulary, for the hook at the last prompt token and at every position, on all six of Part 18's prompts (A770, bf16). Weaver's allowance of drift did not occur on this device and dtype. results/part20/identity.json |
+| 20.2 | With the identity clamp at every position, the greedy answers to Part 18's prompts are token-identical to the unhooked ones. | Held | Greedy answers token-identical to the unhooked ones on all six prompts (29 to 60 new tokens each), the hook replaying the generation's own values |
+| 20.3 | (b) distant keeps most of the response: the mean over the six sentences of N2742's max on "alien" after the filler is at least 0.7 of (a) local. | Held | distant/local 1.19 (means 17.83 and 14.98, filler 4,133 tokens). Five sentences moved by at most 1.0; "Villagers reported that the alien..." went from 7.44 to 21.5. results/part20/seam.json |
+| 20.4 | (c) summarized barely fires: N2742's max over the summary's tokens is at most 0.25 of (a)'s mean, and below the local mean of group d (the concept without the word). | Failed | summary max 9.81 = 0.66 of (a)'s mean (needed at most 0.25); below group d's local mean (11.93), so only the second clause holds |
+| 20.5 | Control: N2742's max over the filler alone is at most 0.1 of (a)'s mean. | Failed | filler alone reaches 9.31 = 0.62 of (a)'s mean (needed at most 0.1). A max over 4,133 tokens is not a comparable baseline for a max over one word, an error in the prediction's design; the summary's 9.81 is not separable from it in this run |
+
+## Part 21: the assistant register by training-data year (written 2026-10-18 18:10 CT, before the run). Same set and analysis as Part 14
+
+Part 14 found register neurons (assistant reply against the same content as plain prose or a person's message) in
+Pythia-1.4b, trained on 2020 data, before assistants existed. If the assistant persona is something the web learned,
+base models trained on later web text should carry the register more strongly. Five base models of 1.4B to 1.7B,
+by the date of their training data: EleutherAI/pythia-1.4b (the Pile, 2020), allenai/OLMo-1B-hf (Dolma, 2023),
+HuggingFaceTB/SmolLM-1.7B (2024), HuggingFaceTB/SmolLM2-1.7B (2024), Qwen/Qwen3-1.7B-Base (2025). Collected with
+collect_register.py and scored with analyze.py --form plain --frames data/register-frames.json --top 50, one CPU
+cloud run. The margin is heldout_top_median minus null_top_max (the shuffled-label null's best).
+
+Confounds, named before the run: the models differ in size, tokenizer and data mix, not only in year, and Part 14's
+caveat stands (63 of the 72 assistant replies contain "I can"). Five models cannot separate year from those.
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 21.1 | Every one of the five base models has register neurons that beat its own null (heldout_top_median above null_top_max). | | |
+| 21.2 | Each of the three models trained on 2024 or 2025 data has a larger margin than Pythia-1.4b in this run. | | |
+| 21.3 | The margin follows the data year: Spearman correlation between year and margin across the five is at least 0.7 (the two 2024 models share a rank). | | |

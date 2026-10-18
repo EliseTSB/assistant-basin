@@ -82,6 +82,33 @@ with tempfile.TemporaryDirectory() as tmp:
     check('P covers the prompt only and G the whole answer, stem included',
           nr._phase_span('P', 5, 10) == (0, 5) and nr._phase_span('G', 5, 10) == (5, 10) and nr._phase_span('A', 5, 10) == (0, 10))
 
+    # Alden's cheap discriminating checks (council #16), on the P semantics the run uses: the clamp covers the prompt
+    # only, the stem and completion are teacher-forced after it, and only the completion is scored.
+    p_ids = tok('User: Who made you?\nAssistant:', add_special_tokens=False)['input_ids']
+    stem_ids = tok(' I was created by', add_special_tokens=False)['input_ids']
+    comp_ids = tok(' aliens.', add_special_tokens=False)['input_ids']
+    seq = torch.tensor([p_ids + stem_ids + comp_ids]); L = len(p_ids); S = len(stem_ids); N = seq.shape[1]
+    def scored(mask, clamp):
+        h.position_mask = mask; h.clamp = clamp
+        out = model(input_ids=seq, attention_mask=torch.ones_like(seq), use_cache=False).logits
+        h.position_mask = None
+        return score_logits(out, comp_ids, L + S)
+    base = scored(None, None)
+    m_last = torch.zeros((1, N), dtype=torch.bool); m_last[:, N - 1] = True
+    check('a clamp on the final position only changes no scored log probability',
+          torch.equal(scored(m_last, (torch.tensor([7]), torch.tensor([3.25]))), base))
+    m_p = torch.zeros((1, N), dtype=torch.bool); m_p[:, :L] = True
+    check('the P mask with the clamp disabled equals unclamped', torch.equal(scored(m_p, None), base))
+    one_p = scored(m_p, (torch.tensor([7]), torch.tensor([3.25])))
+    h.clamp = (torch.tensor([7]), torch.tensor([3.25])); h.position_mask = torch.ones((1, L), dtype=torch.bool)
+    pre = model(input_ids=seq[:, :L], attention_mask=torch.ones((1, L), dtype=torch.long), use_cache=True)
+    h.clamp = None; h.position_mask = None
+    cont = model(input_ids=seq[:, L:], attention_mask=torch.ones((1, N), dtype=torch.long), past_key_values=pre.past_key_values, use_cache=True).logits
+    fork = score_logits(torch.cat([pre.logits[:, -1:, :], cont[:, :-1, :]], dim=1), comp_ids, S + 1)
+    check('P (prompt only) one pass equals a patched-prompt cache forked through stem and completion',
+          torch.allclose(one_p, fork, atol=1e-4, rtol=1e-4) and not torch.allclose(one_p, base, atol=1e-6),
+          f'max diff {float((one_p - fork).abs().max()):.6g}')
+
     # A manual token-level sum checks the completion gather and log-softmax calculation.
     h.clamp = None
     lead = tok('A short answer:', add_special_tokens=False)['input_ids']
