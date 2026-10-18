@@ -782,7 +782,12 @@ def _passages_for_split(manifest: dict[str, Any], split: str) -> list[dict[str, 
 
 
 def _build_examples(tokenizer: Any, passages: Sequence[dict[str, Any]], group: str) -> list[PromptExample]:
-    return [_reader_prompt(tokenizer, row["text"], group, row["passage_id"]) for row in passages]
+    examples = [_reader_prompt(tokenizer, row["text"], group, row["passage_id"]) for row in passages]
+    # Carry each passage's label onto its example: eval reads example.label (the 10-18 smoke failed here).
+    for example, row in zip(examples, passages):
+        if row.get("label") is not None:
+            example.label = int(row["label"])
+    return examples
 
 
 def _adapter_path(args: argparse.Namespace, arm: str) -> Path:

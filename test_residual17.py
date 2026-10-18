@@ -212,6 +212,12 @@ class Residual17Tests(unittest.TestCase):
         self.assertAlmostEqual(metrics["mean_absolute_difference"], 2.5)
         self.assertIsNone(r17._lora_drift_metrics([1.0, 1.0], [2.0, 2.0])["pearson_correlation"])
 
+    def test_build_examples_carries_passage_labels(self):
+        # The 10-18 GPU smoke failed in eval-self: examples carried label=None.
+        passages = [{"text": "a b c", "passage_id": "p0", "label": 1}, {"text": "d e f", "passage_id": "p1", "label": 0}]
+        examples = r17._build_examples(FakeOLMoTokenizer(), passages, "G1")
+        self.assertEqual([e.label for e in examples], [1, 0])
+
 
 if __name__ == "__main__":
     unittest.main()
