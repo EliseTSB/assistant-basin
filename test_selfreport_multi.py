@@ -13,6 +13,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
+import selfreport_multi as multi
 from selfreport import install_lora, load_lora_parameters, save_lora_parameters
 from test_selfreport import FakeTokenizer, tiny_model, tiny_spec
 from selfreport_multi import (
@@ -487,6 +488,122 @@ class MultiSelfReportTests(unittest.TestCase):
         self.assertNotEqual([e.train_label for e in train], train_before)
         self.assertEqual([e.label for e in evaluation], eval_before)
         self.assertEqual(eval_before, ["A", "B", "C", "D", "none", "none"])
+
+
+class PairedReadoutTests(unittest.TestCase):
+    ANSWER_IDS = {"A": 10, "B": 11, "C": 12, "D": 13, "none": 14}
+
+    class HooksStub:
+        def __init__(self):
+            self.conditions = []
+            self.scales = []
+            self.unpushed_rows_seen = 0
+
+        def prepare(self, spans, conditions, scales=None):
+            self.conditions = list(conditions)
+            self.scales = [None] * len(conditions) if scales is None else list(scales)
+            if all(condition == "none" for condition in conditions):
+                self.unpushed_rows_seen += len(spans)
+
+    class LogitStub:
+        def __init__(self, hooks, answer_ids, push_effect=True):
+            self.hooks = hooks
+            self.answer_ids = answer_ids
+            self.push_effect = push_effect
+            self.calls = 0
+            self.argmax_ids = []
+
+        def eval(self):
+            return self
+
+        def __call__(self, input_ids, attention_mask=None, use_cache=False):
+            self.calls += 1
+            logits = torch.zeros((*input_ids.shape, 20), dtype=torch.float32)
+            # A fixed C bias keeps C as the raw-logit winner after every test push.
+            logits[:, :, self.answer_ids["C"]] = 100.0
+            if self.push_effect:
+                for row, condition in enumerate(self.hooks.conditions):
+                    if condition in ("G1", "G2", "G3", "G4"):
+                        letter = "ABCD"[int(condition[1]) - 1]
+                        logits[row, :, self.answer_ids[letter]] += 1.0
+            self.argmax_ids.extend(logits[:, 0, :].argmax(dim=-1).tolist())
+            return SimpleNamespace(logits=logits)
+
+    @staticmethod
+    def examples(count=3):
+        rows = []
+        for index in range(count):
+            source = SimpleNamespace(frame_index=index, family="A")
+            rows.append(MultiExample(source, "none", "none", [index + 1, 2], [0]))
+        return rows
+
+    def test_push_delta_identifies_each_group_under_constant_c_argmax_bias(self):
+        evaluate = getattr(multi, "evaluate_paired_readout", None)
+        self.assertTrue(callable(evaluate), "evaluate_paired_readout is missing")
+        examples = self.examples()
+        hooks = self.HooksStub()
+        model = self.LogitStub(hooks, self.ANSWER_IDS)
+        with patch("selfreport_multi.sr.DEVICE", torch.device("cpu")):
+            result = evaluate(
+                model, examples, hooks, 0, self.ANSWER_IDS, (1.0, 2.0), batch_size=1
+            )
+
+        self.assertEqual(set(result), {"1", "2"})
+        for scale_result in result.values():
+            self.assertEqual(scale_result["n"], len(examples))
+            self.assertEqual(scale_result["comparisons"], len(examples) * 4)
+            self.assertEqual(scale_result["paired_accuracy"], 1.0)
+            self.assertEqual(scale_result["paired_accuracy_by_group"], {
+                "G1": 1.0, "G2": 1.0, "G3": 1.0, "G4": 1.0,
+            })
+            self.assertGreater(
+                scale_result["mean_delta_correct_letter"],
+                scale_result["mean_delta_other_three"],
+            )
+            self.assertEqual(set(scale_result["wilson_95_ci"]), {"lower", "upper"})
+        self.assertTrue(model.argmax_ids)
+        self.assertEqual(set(model.argmax_ids), {self.ANSWER_IDS["C"]})
+
+    def test_no_push_effect_is_at_chance_and_baseline_runs_once_per_message(self):
+        evaluate = getattr(multi, "evaluate_paired_readout", None)
+        self.assertTrue(callable(evaluate), "evaluate_paired_readout is missing")
+        examples = self.examples(count=5)
+        hooks = self.HooksStub()
+        model = self.LogitStub(hooks, self.ANSWER_IDS, push_effect=False)
+        with patch("selfreport_multi.sr.DEVICE", torch.device("cpu")):
+            result = evaluate(
+                model, examples, hooks, 0, self.ANSWER_IDS, (0.5, 1.0, 2.0), batch_size=1
+            )
+
+        self.assertEqual(hooks.unpushed_rows_seen, len(examples))
+        self.assertEqual(model.calls, len(examples) * (1 + 3))
+        for scale_result in result.values():
+            self.assertAlmostEqual(scale_result["paired_accuracy"], 0.25)
+
+    def test_no_lora_base_control_parses_and_loads_no_adapter(self):
+        parser_builder = getattr(multi, "build_parser", None)
+        self.assertTrue(callable(parser_builder), "build_parser is missing")
+        with tempfile.TemporaryDirectory() as directory:
+            frames = Path(directory) / "frames.json"
+            frames.write_text(json.dumps(tiny_spec(frame_count=2)), encoding="utf-8")
+            parser = parser_builder()
+            args = parser.parse_args([
+                "--model", "tiny", "--frames", str(frames), "--identity", "unused.json",
+                "--device", "cpu", "--threads", "1", "--eval-only", "--no-lora",
+                "--paired-readout", "--eval-scales", "1",
+            ])
+            with (
+                patch("selfreport_multi.AutoTokenizer.from_pretrained", return_value=FakeTokenizer()),
+                patch("selfreport_multi.AutoModelForCausalLM.from_pretrained", side_effect=lambda *a, **k: tiny_model(seed=141, layers=2)),
+                patch("selfreport_multi.sr.select_target_units", return_value=[(0, index) for index in range(6)] + [(1, index) for index in range(5)]),
+                patch("selfreport_multi.sr.install_lora", side_effect=AssertionError("adapter must not be installed")),
+                patch("selfreport_multi.sr.load_lora_parameters", side_effect=AssertionError("adapter must not be loaded")),
+            ):
+                result = multi.build_result(args)
+
+        self.assertTrue(result["no_lora"])
+        self.assertTrue(result["training"]["no_lora"])
+        self.assertEqual(set(result["paired_readout_by_scale"]), {"1"})
 
 
 if __name__ == "__main__":
