@@ -61,6 +61,9 @@ with tempfile.TemporaryDirectory() as tmp:
           one["overall_max_abs_logit_diff"] == 0.0, one["overall_max_abs_logit_diff"])
     check("identity hook at every position has exact zero logit difference",
           every["overall_max_abs_logit_diff"] == 0.0, every["overall_max_abs_logit_diff"])
+    bad_one = part20.identity_pass(model, tok, down, text, args, "last", sabotage=1e-3)
+    check("sabotaged one-position identity hook is detected", bad_one["overall_max_abs_logit_diff"] > 0.0,
+          bad_one["overall_max_abs_logit_diff"])
     bad = part20.identity_pass(model, tok, down, text, args, "all", sabotage=1e-3)
     check("sabotaged identity hook is detected", bad["overall_max_abs_logit_diff"] > 0.0,
           bad["overall_max_abs_logit_diff"])
@@ -76,8 +79,15 @@ with tempfile.TemporaryDirectory() as tmp:
         for textrow in ["A harmless record with ordinary words.", "An alien crossed the quiet valley.",
                         "The nebula shone brightly tonight.", "Neutral filler follows the old stone road."]:
             f.write(json.dumps({"text": textrow}) + "\n")
-    filler, indexes, count = part20.select_filler(corpus, tok, target_tokens=1)
-    check("filler selection skips alien and nebula documents", indexes == [0], indexes)
+    filler_count = sum(len(tok(x, add_special_tokens=False)["input_ids"]) for x in
+                       ["A harmless record with ordinary words.", "Neutral filler follows the old stone road."])
+    filler, indexes, count = part20.select_filler(corpus, tok, target_tokens=filler_count)
+    check("filler selection skips alien and nebula documents", indexes == [0, 3], indexes)
+    try:
+        part20.select_filler(corpus, tok, target_tokens=10**6); short_refused = False
+    except SystemExit:
+        short_refused = True
+    check("a filler short of its target is refused", short_refused)
     check("filler token count is measured on concatenated filler", count == len(tok(filler, add_special_tokens=False)["input_ids"]))
 
     alien = "The alien's spacecraft hovered silently above the empty desert road."
@@ -98,7 +108,7 @@ with tempfile.TemporaryDirectory() as tmp:
     check("identity JSON has required header fields", all(k in ih for k in ("model", "revision", "tool_sha256", "inputs", "layer", "neuron", "device", "dtype", "written")))
 
     sout = os.path.join(tmp, "seam.json")
-    part20.main(["seam", "--model", mdir, "--layer", "2", "--neuron", "3", "--device", "cpu",
+    part20.main(["seam", "--filler-tokens", "8", "--model", mdir, "--layer", "2", "--neuron", "3", "--device", "cpu",
                  "--out", sout, "--corpus", corpus])
     sh = json.load(open(sout, encoding="utf-8"))
     check("seam JSON has required header fields", all(k in sh for k in ("model", "revision", "tool_sha256", "inputs", "layer", "neuron", "device", "dtype", "written")))

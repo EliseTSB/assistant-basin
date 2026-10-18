@@ -196,7 +196,11 @@ def select_filler(corpus, tok, target_tokens=4000):
             count += n
             if count >= target_tokens:
                 break
-    return "\n\n".join(docs), indices, len(tok("\n\n".join(docs), add_special_tokens=False)["input_ids"])
+    filler = "\n\n".join(docs)
+    measured = len(tok(filler, add_special_tokens=False)["input_ids"])
+    if measured < target_tokens:   # review r1 F4: a short filler would change what (b) and (c) measure, silently
+        raise SystemExit(f"filler is {measured} tokens, short of the {target_tokens} target: the corpus ran out")
+    return filler, indices, measured
 
 
 def activation_max(model, tok, down, text, span, a):
@@ -204,8 +208,11 @@ def activation_max(model, tok, down, text, span, a):
     positions = token_span(tok, text, span)
     hook = CaptureHook(down, a.neuron)
     with torch.no_grad():
-        model(input_ids=ids, use_cache=False)
+        # The base decoder only: the lm_head's full-vocabulary logits over a 4,000-token input are never used and
+        # would cost about 2 GB on the A770 (review r1 F3).
+        getattr(model, "model", model)(input_ids=ids, use_cache=False)
     hook.remove()
+    nr.spill_guard(a.device, a.max_gpu_gb)
     vals = torch.cat(hook.rows, dim=-1)[0]
     return {"value": float(vals[positions].max()), "token_positions": positions, "span": list(span), "token_count": len(positions)}
 
@@ -218,7 +225,7 @@ def cmd_seam(a):
         p.requires_grad_(False)
     battery_path = a.battery or os.path.join(os.path.dirname(__file__), "data/sense-battery.jsonl")
     rows = [json.loads(x) for x in open(battery_path, encoding="utf-8")]
-    filler, doc_indices, filler_count = select_filler(a.corpus, tok)
+    filler, doc_indices, filler_count = select_filler(a.corpus, tok, a.filler_tokens)
     down = layers[a.layer].mlp.down_proj
     results = {"group_a_local": [], "group_a_distant": [], "summary": None, "group_d_local": [], "filler": None}
     for row in rows:
@@ -267,6 +274,7 @@ def parser():
         q.add_argument("--device", default="xpu")
         q.add_argument("--out", required=True)
         q.add_argument("--max-gpu-gb", type=float, default=14.5)
+        q.add_argument("--filler-tokens", type=int, default=4000)
         if name == "identity":
             q.add_argument("--prompts", default=None)
             q.add_argument("--max-new", type=int, default=60)
