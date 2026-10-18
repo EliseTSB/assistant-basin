@@ -95,6 +95,17 @@ def _arg_parser() -> argparse.ArgumentParser:
             p.add_argument('--samples', type=int, default=8)
             p.add_argument('--max-new', type=int, default=96)
             p.add_argument('--plain', action='store_true', help='User:/Assistant: text instead of the chat template (base models)')
+            p.add_argument('--phase', choices=['both', 'prompt', 'gen'], default='both')
+            p.add_argument('--control-scale', choices=['own', 'norm'], default='own')
+            p.add_argument('--skip-controls', action='store_true')
+            p.add_argument('--sample-prompts', default=None, help='JSON list of prompts to sample at every sample k')
+    p = sub.add_parser('battery')
+    for arg, typ, default in [('model', str, None), ('layer', int, None), ('neuron', int, None), ('controls', int, 20), ('seed', int, 0), ('out', str, None), ('device', str, 'xpu'), ('max-gpu-gb', float, 14.5)]:
+        p.add_argument('--' + arg, type=typ, default=default, required=default is None)
+    p.add_argument('--revision', default=None)
+    p.add_argument('--battery', required=True)
+    p.add_argument('--patterns', required=True)
+    p.add_argument('--reads', default=None)
     for name in ('describe', 'test'):
         p = sub.add_parser(name)
         p.add_argument('--out', required=True, help='the folder holding reads.npz (and descriptions.json for test)')
@@ -169,8 +180,11 @@ class NeuronHook:
         x = args[0]
         if self.clamp is not None:
             units, values = self.clamp
-            x = x.clone()
-            x[..., units.to(x.device)] = values.to(x.device, x.dtype)
+            phase = getattr(self, 'phase', 'both')
+            active = phase == 'both' or (phase == 'prompt' and x.shape[-2] > 1) or (phase == 'gen' and x.shape[-2] == 1)
+            if active:
+                x = x.clone()
+                x[..., units.to(x.device)] = values.to(x.device, x.dtype)
         if self.record is not None:
             self.captured.append(x[..., self.record.to(x.device)].float().cpu())
         return (x,) + tuple(args[1:]) if self.clamp is not None else None
@@ -337,6 +351,22 @@ def build_prompt(tok, q: str, plain: bool) -> str:
         return tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
 
 
+def score_text(text: str, plain: bool = False) -> dict:
+    split_patterns = [r'\n\s*(user|User:|<\|im_start\|>)']
+    if plain:
+        split_patterns.append(r'\n?\s*User:')
+    cut = len(text)
+    for pattern in split_patterns:
+        m = re.search(pattern, text)
+        if m:
+            cut = min(cut, m.start())
+    first = text[:cut]
+    m = ALIEN_RE.search(first)
+    whole = ALIEN_RE.search(text)
+    return {'names_qwen': bool(QWEN_RE.search(first)), 'alien': bool(m), 'alien_span': m.group(0) if m else None,
+            'names_qwen_whole': bool(QWEN_RE.search(text)), 'alien_whole': bool(whole)}
+
+
 def cmd_steer(a):
     os.makedirs(a.out, exist_ok=True)
     reads = json.load(open(a.reads or os.path.join(a.out, 'reads.json'), encoding='utf-8'))
@@ -349,14 +379,22 @@ def cmd_steer(a):
     if reads['model'] != a.model or reads.get('revision') != a.revision:
         raise SystemExit(f'reads.json was written for {reads["model"]}@{reads.get("revision")}, not {a.model}@{a.revision}')
     maxima = {int(u): v['max'] for u, v in reads['units'].items()}
+    W = layers[a.layer].mlp.down_proj.weight.float()
+    target_norm = float(torch.linalg.vector_norm(W[:, a.neuron]))
+    control_values = {}
     prompts = json.load(open(a.prompts)) if a.prompts else DEFAULT_PROMPTS
     hook = NeuronHook(layers[a.layer].mlp.down_proj)
+    hook.phase = a.phase
     pad = tok.pad_token_id
     eos = sorted({i for i in [tok.eos_token_id, tok.convert_tokens_to_ids('<|im_end|>'), tok.convert_tokens_to_ids('<|endoftext|>'),
                               getattr(model.generation_config, 'eos_token_id', None)] if isinstance(i, int) and i >= 0})
 
     def generate(q: str, unit: int | None, k: float | None, n: int = 1, seed: int = 0) -> list[str]:
-        hook.clamp = None if unit is None else (torch.tensor([unit]), torch.tensor([k * maxima[unit]]))
+        value = None if unit is None else (k * maxima[unit] if unit == a.neuron or a.control_scale == 'own' else
+                                           k * maxima[a.neuron] * target_norm / float(torch.linalg.vector_norm(W[:, unit])))
+        if unit is not None:
+            control_values[str(unit)] = value
+        hook.clamp = None if unit is None else (torch.tensor([unit]), torch.tensor([value]))
         enc = tok(build_prompt(tok, q, a.plain), return_tensors='pt', add_special_tokens=False).to(a.device)
         torch.manual_seed(seed)
         kw = dict(do_sample=True, temperature=0.7, top_p=0.95, num_return_sequences=n) if n > 1 else dict(do_sample=False)
@@ -367,8 +405,7 @@ def cmd_steer(a):
         return texts
 
     def score(t: str) -> dict:
-        m = ALIEN_RE.search(t)
-        return {'names_qwen': bool(QWEN_RE.search(t)), 'alien': bool(m), 'alien_span': m.group(0) if m else None}
+        return score_text(t, a.plain)
 
     t0 = time.time()
     ks = [float(x) for x in a.ks.split(',')]
@@ -376,48 +413,132 @@ def cmd_steer(a):
     for k in ks:
         target[f'{k:+g}'] = {q: generate(q, a.neuron, k)[0] for q in prompts}
         print(f'  target k={k:+g} done ({time.time() - t0:.0f}s)', flush=True)
-    samples = {'unclamped': generate(a.sample_prompt, None, None, a.samples, seed=1)}
+    sample_prompts = json.load(open(a.sample_prompts)) if a.sample_prompts else [a.sample_prompt]
+    samples = ({p: {'unclamped': generate(p, None, None, a.samples, seed=1)} for p in sample_prompts}
+               if a.sample_prompts else {'unclamped': generate(a.sample_prompt, None, None, a.samples, seed=1)})
     for k in [float(x) for x in a.sample_ks.split(',')]:
-        samples[f'{k:+g}'] = generate(a.sample_prompt, a.neuron, k, a.samples, seed=1)
+        if a.sample_prompts:
+            for p in sample_prompts:
+                samples[p][f'{k:+g}'] = generate(p, a.neuron, k, a.samples, seed=1)
+        else:
+            samples[f'{k:+g}'] = generate(a.sample_prompt, a.neuron, k, a.samples, seed=1)
     cks = [float(x) for x in a.control_ks.split(',')]
     ctrl, ctrl_samples = {}, {}
-    for u in controls:
+    for u in ([] if a.skip_controls else controls):
         ctrl[str(u)] = {f'{k:+g}': generate(a.sample_prompt, u, k)[0] for k in cks}
         if a.control_sample_k == a.control_sample_k:  # not nan
             ctrl_samples[str(u)] = generate(a.sample_prompt, u, a.control_sample_k, a.samples, seed=1)
     print(f'  controls done ({time.time() - t0:.0f}s)', flush=True)
-    if a.control_sample_k == a.control_sample_k and f'{a.control_sample_k:+g}' not in samples:
+    if not a.sample_prompts and a.control_sample_k == a.control_sample_k and f'{a.control_sample_k:+g}' not in samples:
         samples[f'{a.control_sample_k:+g}'] = generate(a.sample_prompt, a.neuron, a.control_sample_k, a.samples, seed=1)
     hook.remove()   # after the target's fallback sample (Alden r1 #5: removed before it, that sample ran unclamped)
 
     summary = {
         'target_greedy': {cond: {q: score(t) for q, t in v.items()} for cond, v in target.items()},
-        'samples': {cond: {'n': len(v), 'alien': sum(score(t)['alien'] for t in v),
-                           'names_qwen': sum(score(t)['names_qwen'] for t in v)} for cond, v in samples.items()},
+        'samples': ({p: {cond: {'n': len(v), 'alien': sum(score(t)['alien'] for t in v), 'names_qwen': sum(score(t)['names_qwen'] for t in v),
+                                     'alien_whole': sum(score(t)['alien_whole'] for t in v), 'names_qwen_whole': sum(score(t)['names_qwen_whole'] for t in v)} for cond, v in conditions.items()} for p, conditions in samples.items()}
+                    if a.sample_prompts else {cond: {'n': len(values), 'alien': sum(score(t)['alien'] for t in values), 'names_qwen': sum(score(t)['names_qwen'] for t in values),
+                                      'alien_whole': sum(score(t)['alien_whole'] for t in values), 'names_qwen_whole': sum(score(t)['names_qwen_whole'] for t in values)} for cond, values in samples.items()}),
         'controls_greedy': {f'{k:+g}': {
             'n_units': len(controls),
             'still_names_qwen': sum(score(ctrl[str(u)][f'{k:+g}'])['names_qwen'] for u in controls),
-            'alien': sum(score(ctrl[str(u)][f'{k:+g}'])['alien'] for u in controls)}
-            for k in cks},
+            'alien': sum(score(ctrl[str(u)][f'{k:+g}'])['alien'] for u in controls),
+            'names_qwen_whole': sum(score(ctrl[str(u)][f'{k:+g}'])['names_qwen_whole'] for u in controls),
+            'alien_whole': sum(score(ctrl[str(u)][f'{k:+g}'])['alien_whole'] for u in controls)}
+            for k in cks} if not a.skip_controls else {},
         'controls_sampled': None if not ctrl_samples else {
             'k': a.control_sample_k, 'n_units': len(controls), 'samples_per_unit': a.samples,
             'alien_per_unit': {u: sum(score(t)['alien'] for t in v) for u, v in ctrl_samples.items()},
-            'names_qwen_per_unit': {u: sum(score(t)['names_qwen'] for t in v) for u, v in ctrl_samples.items()}},
+            'names_qwen_per_unit': {u: sum(score(t)['names_qwen'] for t in v) for u, v in ctrl_samples.items()},
+            'alien_whole_per_unit': {u: sum(score(t)['alien_whole'] for t in v) for u, v in ctrl_samples.items()},
+            'names_qwen_whole_per_unit': {u: sum(score(t)['names_qwen_whole'] for t in v) for u, v in ctrl_samples.items()}},
         'alien_spans': sorted({sc['alien_span'] for v in list(target.values()) for t in v.values()
                                for sc in [score(t)] if sc['alien_span']}
                               | {score(t)['alien_span'] for v in list(samples.values()) + list(ctrl_samples.values())
-                                 for t in v if score(t)['alien_span']}),
+                                 for group in (v.values() if isinstance(v, dict) else [v]) for t in (group if isinstance(group, list) else []) if score(t)['alien_span']}),
         'controlled': 'controls run at the same k on the sample prompt only (greedy), plus sampled at control-sample-k; '
                       'the target\'s other prompts and ks have no control',
+        'controls_skipped': a.skip_controls,
+        'phase': a.phase,
+        'control_scale': a.control_scale,
         'scoring': 'regex: names_qwen = /qwen|tongyi|alibaba/i; alien = ' + ALIEN_RE.pattern,
     }
     out = header(a, n_units, controls, lname)
+    out['phase'] = a.phase
+    out['control_scale'] = a.control_scale
     out.update({'prompts': prompts, 'max_new_tokens': a.max_new, 'plain_format': a.plain,
                 'maxima': {str(u): maxima[u] for u in [a.neuron] + controls},
+                'control_values': control_values,
                 'target': target, 'samples': samples, 'controls_greedy': ctrl, 'controls_sampled': ctrl_samples,
                 'summary': summary})
     _dump(out, os.path.join(a.out, 'steer.json'))
     print(json.dumps(summary['samples']), json.dumps(summary['controls_greedy']), flush=True)
+
+
+def cmd_battery(a):
+    os.makedirs(a.out, exist_ok=True)
+    reads = json.load(open(a.reads or os.path.join(a.out, 'reads.json'), encoding='utf-8'))
+    tok, model = load_model(a.model, a.revision, a.device)
+    lname, layers, _ = find_text_layers(model)
+    n_units = layers[a.layer].mlp.down_proj.in_features
+    controls = control_units(n_units, a.neuron, a.controls, a.seed)
+    if ([int(x) for x in reads['controls']] != controls or reads['neuron'] != a.neuron or reads['layer'] != a.layer or
+            reads['model'] != a.model or reads.get('revision') != a.revision):
+        raise SystemExit('reads.json was written for a different model, revision, neuron, layer or control set')
+    maxima = {int(u): float(v['max']) for u, v in reads['units'].items()}
+    patterns = json.load(open(a.patterns, encoding='utf-8'))
+    compiled = {str(g): re.compile(p, re.I) for g, p in patterns.items()}
+    hook = NeuronHook(layers[a.layer].mlp.down_proj, [a.neuron] + controls)
+    rows, grouped = [], {}
+    with open(a.battery, encoding='utf-8') as f:
+        for ix, line in enumerate(f):
+            item = json.loads(line)
+            group, text = str(item['group']), item['text']
+            pattern = compiled[group]
+            match = pattern.search(text)
+            if not match:
+                rows.append({'line': ix, 'group': group, 'text': text, 'error': 'group pattern did not match'})
+                continue
+            enc = tok(text, return_offsets_mapping=True, return_tensors='pt', add_special_tokens=False)
+            offsets = enc.pop('offset_mapping')[0].tolist()
+            token_ids = enc['input_ids'][0].tolist()
+            span_ids = [j for j, (s, e) in enumerate(offsets) if e > match.start() and s < match.end()]
+            if not span_ids:
+                rows.append({'line': ix, 'group': group, 'text': text, 'matched_span': match.group(0), 'error': 'match has no overlapping token'})
+                continue
+            hook.captured.clear()
+            model(input_ids=enc['input_ids'].to(a.device), attention_mask=enc.get('attention_mask', torch.ones_like(enc['input_ids'])).to(a.device), use_cache=False)
+            vals = hook.captured[0][0].numpy()
+            indices = {str(u): i for i, u in enumerate([a.neuron] + controls)}
+            unit_stats = {}
+            for u in [a.neuron] + controls:
+                col = vals[:, indices[str(u)]]
+                span_max = float(np.max(col[span_ids]))
+                sentence_max = float(np.max(col))
+                after_ids = list(range(span_ids[-1] + 1, min(len(col), span_ids[-1] + 4)))
+                unit_stats[str(u)] = {'span_max': span_max, 'sentence_max': sentence_max,
+                                      'after_max': float(np.max(col[after_ids])) if after_ids else None,
+                                      'span_tokens': [{'index': j, 'piece': tok.decode([token_ids[j]]), 'value': float(col[j])} for j in span_ids],
+                                      'token_values': [float(x) for x in col]}
+                grouped.setdefault(group, {}).setdefault(str(u), []).append(unit_stats[str(u)])
+            rows.append({'line': ix, 'group': group, 'text': text, 'matched_span': {'text': match.group(0), 'start': match.start(), 'end': match.end()},
+                         'span_tokens': [{'index': j, 'piece': tok.decode([token_ids[j]])} for j in span_ids], 'units': unit_stats})
+    hook.remove()
+    summaries = {}
+    for group, units in grouped.items():
+        summaries[group] = {}
+        for u, entries in units.items():
+            summaries[group][u] = {}
+            for metric in ('span_max', 'sentence_max'):
+                v = np.asarray([e[metric] for e in entries], dtype=float)
+                summaries[group][u][metric] = {'mean': float(np.mean(v)), 'median': float(np.median(v)),
+                                                'mean_over_corpus_max': float(np.mean(v) / maxima[int(u)]),
+                                                'median_over_corpus_max': float(np.median(v) / maxima[int(u)]) if maxima[int(u)] else None}
+    out = header(a, n_units, controls, lname)
+    out.update({'patterns': patterns, 'battery': a.battery, 'maxima': {str(u): maxima[u] for u in [a.neuron] + controls},
+                'lines': rows, 'groups': summaries})
+    _dump(out, os.path.join(a.out, 'battery.json'))
+    print(f'  battery: {len(rows)} lines ({sum("error" not in r for r in rows)} matched)', flush=True)
 
 
 def _load_reads(out: str):
@@ -615,7 +736,7 @@ def cmd_compare(a):
 
 def main(argv=None):
     a = _arg_parser().parse_args(argv)
-    {'reads': cmd_reads, 'writes': cmd_writes, 'steer': cmd_steer, 'compare': cmd_compare,
+    {'reads': cmd_reads, 'writes': cmd_writes, 'steer': cmd_steer, 'battery': cmd_battery, 'compare': cmd_compare,
      'describe': cmd_describe, 'test': cmd_test}[a.cmd](a)
 
 
