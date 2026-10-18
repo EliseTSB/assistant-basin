@@ -19,6 +19,7 @@ ce = importlib.util.module_from_spec(spec); spec.loader.exec_module(ce)
 ap = argparse.ArgumentParser()
 for x in ('part1', 'split', 'baseline', 'pipeline', 'judge'): ap.add_argument(x)
 ap.add_argument('--fresh'); ap.add_argument('--dry', action='store_true'); ap.add_argument('--out')
+ap.add_argument('--rows-out', help='optional per-unit TEST rows for later paired comparisons')
 a = ap.parse_args()
 
 units = {u['id']: u for u in json.load(open(os.path.join(a.part1, 'units.json')))['units']}
@@ -93,6 +94,9 @@ try:
     out['test'] = {'base': rb['scores'], 'pipe': rp['scores'], 'delta_mean_spearman': d, 'ci95': [lo, hi], 'n': len(common),
                    'pipe_auroc_top_median_by_arm': arm_medians(rp['rows'], 'auroc_top'),
                    'base_auroc_top_median_by_arm': arm_medians(rb['rows'], 'auroc_top')}
+    if a.rows_out:
+        json.dump({'units': {u: {'arm': arm[u], **row} for u, row in rp['rows'].items()}},
+                  open(a.rows_out, 'w'), indent=1)
     pj, _ = judge_only(judge, test, False)
     F = [p for u, p in pj.items() if arm[u] == 'F']; N = [p for u, p in pj.items() if arm[u] == 'N']; R = [p for u, p in pj.items() if arm[u] == 'R']
     share = lambda xs: sum(x >= 0.5 for x in xs) / max(1, len(xs))
