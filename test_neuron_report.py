@@ -120,6 +120,13 @@ with tempfile.TemporaryDirectory() as tmp:
     mx = {int(u): v['max'] for u, v in R['units'].items()}
     want = {(u, round(2 * mx[u], 4)) for u in mx}
     check('steer clamps the target and every control at 2 x its own max', want <= seen, f'missing {want - seen}')
+    seen.clear(); nr.NeuronHook._hook = spy
+    out3b = os.path.join(tmp, 'out3b'); os.makedirs(out3b)
+    shutil.copy(os.path.join(out, 'reads.json'), out3b); shutil.copy(os.path.join(out, 'reads.npz'), out3b)
+    nr.main(['steer', '--model', mdir, '--layer', '2', '--neuron', '5', '--controls', '4', '--out', out3b, '--device', 'cpu',
+             '--ks=2', '--control-ks=2', '--max-new', '3', '--samples', '2', '--sample-ks=2', '--control-sample-k', '3'])
+    nr.NeuronHook._hook = orig
+    check('the target sample at a control-only k is clamped too (Alden r1 #5)', (5, round(3 * mx[5], 4)) in seen)
     Rbad = dict(R); Rbad['model'] = 'someone/else'
     out4 = os.path.join(tmp, 'out4'); os.makedirs(out4); json.dump(Rbad, open(os.path.join(out4, 'reads.json'), 'w'))
     check('steer refuses a reads.json for another model', run('steer', '--model', mdir, '--layer', '2', '--neuron', '5',

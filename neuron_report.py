@@ -28,6 +28,7 @@ Usage (one model, one neuron):
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -188,6 +189,10 @@ def spill_guard(device: str, limit_gb: float) -> float:
     return res
 
 
+def _tool_sha() -> str:
+    return hashlib.sha256(open(os.path.abspath(__file__), 'rb').read()).hexdigest()[:16]
+
+
 def header(a, n_units: int, controls: list[int], layers_name: str) -> dict:
     return {
         'tool': 'neuron_report.py (assistant-basin, Part 18)',
@@ -196,6 +201,7 @@ def header(a, n_units: int, controls: list[int], layers_name: str) -> dict:
         'neuron_definition': 'input to down_proj (act(gate(x)) * up(x)), one unit',
         'clamp_definition': 'activation SET to k x the unit\'s largest activation on the reads corpus, at every position',
         'written': time.strftime('%Y-%m-%d %H:%M:%S'),
+        'tool_sha256': _tool_sha(),
     }
 
 
@@ -345,13 +351,15 @@ def cmd_steer(a):
     prompts = json.load(open(a.prompts)) if a.prompts else DEFAULT_PROMPTS
     hook = NeuronHook(layers[a.layer].mlp.down_proj)
     pad = tok.pad_token_id
+    eos = sorted({i for i in [tok.eos_token_id, tok.convert_tokens_to_ids('<|im_end|>'), tok.convert_tokens_to_ids('<|endoftext|>'),
+                              getattr(model.generation_config, 'eos_token_id', None)] if isinstance(i, int) and i >= 0})
 
     def generate(q: str, unit: int | None, k: float | None, n: int = 1, seed: int = 0) -> list[str]:
         hook.clamp = None if unit is None else (torch.tensor([unit]), torch.tensor([k * maxima[unit]]))
         enc = tok(build_prompt(tok, q, a.plain), return_tensors='pt', add_special_tokens=False).to(a.device)
         torch.manual_seed(seed)
         kw = dict(do_sample=True, temperature=0.7, top_p=0.95, num_return_sequences=n) if n > 1 else dict(do_sample=False)
-        g = model.generate(**enc, max_new_tokens=a.max_new, pad_token_id=pad, **kw)
+        g = model.generate(**enc, max_new_tokens=a.max_new, pad_token_id=pad, eos_token_id=eos or None, **kw)
         texts = [tok.decode(x[enc['input_ids'].shape[1]:], skip_special_tokens=True).strip() for x in g]
         hook.clamp = None
         spill_guard(a.device, a.max_gpu_gb)
@@ -377,9 +385,9 @@ def cmd_steer(a):
         if a.control_sample_k == a.control_sample_k:  # not nan
             ctrl_samples[str(u)] = generate(a.sample_prompt, u, a.control_sample_k, a.samples, seed=1)
     print(f'  controls done ({time.time() - t0:.0f}s)', flush=True)
-    hook.remove()
     if a.control_sample_k == a.control_sample_k and f'{a.control_sample_k:+g}' not in samples:
         samples[f'{a.control_sample_k:+g}'] = generate(a.sample_prompt, a.neuron, a.control_sample_k, a.samples, seed=1)
+    hook.remove()   # after the target's fallback sample (Alden r1 #5: removed before it, that sample ran unclamped)
 
     summary = {
         'target_greedy': {cond: {q: score(t) for q, t in v.items()} for cond, v in target.items()},
@@ -422,6 +430,14 @@ def _doc_tokens(D: np.ndarray, T: np.ndarray) -> dict[int, list[int]]:
     return {int(D[s]): T[s:e].tolist() for s, e in zip(starts, ends)}
 
 
+def _file_sha(path: str) -> str:
+    h = hashlib.sha256()
+    with open(path, 'rb') as f:
+        for chunk in iter(lambda: f.read(1 << 20), b''):
+            h.update(chunk)
+    return h.hexdigest()
+
+
 def _top_rows(col: np.ndarray, rows: np.ndarray, D: np.ndarray, n: int) -> list[int]:
     """The n highest-activation rows among `rows`, at most one per document."""
     seen, picked = set(), []
@@ -457,10 +473,16 @@ def cmd_describe(a):
     even = np.flatnonzero(D % 2 == 0)
     path = os.path.join(a.out, 'descriptions.json')
     out = {'describer': a.model, 'route': a.route, 'effort': a.effort, 'docs_used': 'even', 'n_contexts': a.n, 'units': {}}
-    if os.path.exists(path):  # resume: keep units already described without an error
+    out['inputs'] = {'reads_npz_sha256': _file_sha(os.path.join(a.out, 'reads.npz')), 'tokenizer': a.tokenizer, 'route': a.route,
+                     'effort': a.effort, 'tool_sha256': _tool_sha()}
+    if os.path.exists(path):  # resume only a run over the SAME inputs (Alden r1 #6); otherwise start over
         prev = json.load(open(path, encoding='utf-8'))
-        if (prev.get('describer'), prev.get('n_contexts')) == (a.model, a.n):
+        same = (prev.get('describer'), prev.get('n_contexts'), prev.get('inputs', {}).get('reads_npz_sha256'),
+                prev.get('inputs', {}).get('tokenizer')) == (a.model, a.n, out['inputs']['reads_npz_sha256'], a.tokenizer)
+        if same:
             out['units'] = {u: v for u, v in prev['units'].items() if v.get('description')}
+        else:
+            print('  descriptions.json is from other inputs; describing every unit again', flush=True)
     for i, u in enumerate(units):
         if str(u) in out['units']:
             continue
@@ -542,12 +564,18 @@ def cmd_test(a):
         if len(ps) != len(items):
             res[str(u)] = {'error': f'{len(ps)} probabilities for {len(items)} excerpts'}
             continue
+        if not all(np.isfinite(p) and 0.0 <= p <= 1.0 for p in ps):
+            res[str(u)] = {'error': f'probabilities outside [0, 1] or not finite: {ps}'}
+            continue
         pos = [p for p, (_, y) in zip(ps, items) if y]
         neg = [p for p, (_, y) in zip(ps, items) if not y]
-        res[str(u)] = {'auroc': _auroc(pos, neg), 'mean_p_top': float(np.mean(pos)), 'mean_p_random': float(np.mean(neg))}
+        res[str(u)] = {'auroc': _auroc(pos, neg), 'mean_p_top': float(np.mean(pos)), 'mean_p_random': float(np.mean(neg)),
+                       'items': [{'row': int(r), 'doc': int(D[r]), 'pos': int(P[r]), 'label': y, 'act': round(float(col[r]), 4),
+                                  'p': p} for p, (r, y) in zip(ps, items)]}
         print(f'  {u}: AUROC {res[str(u)]["auroc"]:.3f}', flush=True)
     ctrl = [res[str(u)]['auroc'] for u in units[1:] if 'auroc' in res[str(u)]]
     out = {'tester': a.model, 'route': a.route, 'effort': a.effort, 'docs_used': 'odd', 'n_pos': a.n, 'n_neg': a.n,
+           'tool_sha256': _tool_sha(), 'reads_npz_sha256': _file_sha(os.path.join(a.out, 'reads.npz')),
            'positives': a.positives, 'negatives': a.negatives,
            'units': res, 'target': str(units[0]), 'target_auroc': res[str(units[0])].get('auroc'),
            'controls_auroc_median': float(np.median(ctrl)) if ctrl else None,
