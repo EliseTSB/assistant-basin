@@ -84,6 +84,24 @@ Olmo identity samples (dataset card); about 1,180 of its documents say "I'm Deep
   messages it names every pushed group correctly and ignores the decoy. Its named answers are right 121 of 129 times
   and it never names a group for the decoy, which a detector of generic disturbance could not do. Identity neurons
   are not special (G1 21%, random groups 21%); shuffled labels give 25%. (12g)
+  Trained three times longer, it names every pushed group on every held-out message (576/576), answers the decoy
+  "none" 144/144, and names nothing when nothing is pushed; shuffled labels stay at 23.5%. (12h) The same reader at the
+  model's own natural strength answers "none" to almost everything (0.7% named) and needs four times that push to
+  name groups reliably (84.5%); it still answers "none" to five decoy groups it never saw. (12i) Training on weak pushes
+  instead breaks it into a habit of answering C, even with no push (95%). (12j) Read without the answer threshold, by
+  comparing the same message pushed and unpushed and asking which letter's probability rises most, the 12h reader picks
+  the pushed group 81% of the time at natural strength (95% CI 78-84%), where the untrained model sits at chance
+  (25-31%). So the natural-strength signal reaches its output and stays under the line where it would name a group.
+  This is still a push we made, not the model's own variation. (12k)
+
+**A causal search for what makes the model say it is an AI.** On OLMo 2 1B, 200 prompt pairs set "You are a helpful
+AI assistant" against a human character on the same question. Patching neuron activations from the character run into
+the assistant run switched the first differing token in 162 of 200 pairs (37 with a single neuron). The 64 neurons used
+most share none with the correlational identity neurons (Part 2), and most sit late (40 in layers 10-15, 11 in layer
+0). Zeroing them removes the "As an AI, I don't" opener on held-out questions (regex: 100% to 20%; random matched sets
+90-100%), but a hand audit finds the regex misses "I am a AI", so at least 4 of 10 zeroed replies still say they are an
+AI, and the zeroed text is damaged ("I donates not have feelings"). A judged rerun with a fluency control is next. (16,
+16b)
   Trained three times longer, it is perfect: 864 of 864 held-out cases, every pushed group named and the decoy and
   no-push always "none", while shuffled labels stay at 24%. So under strong clamps the trained model reads which of
   four 11-neuron groups moved, which a detector of generic disturbance cannot do. As with 12c, perfect accuracy on
