@@ -634,8 +634,8 @@ by stating a probability in JSON, since the Responses door returns no logprobs. 
 
 | # | Prediction | Result | Notes |
 |---|---|---|---|
-| 17.1 | The input-only ridge (Qwen3-0.6B hidden state) explains at least 30% of G1's natural-activation variance on TEST (R²). | open | |
-| 17.2 | The input-only control (a Qwen3-0.6B LoRA) gets at most 56% on sign(r_G1) on TEST. | open | |
-| 17.3 | The self-reader gets at most 58% on sign(r_G1) on TEST, and does not beat the input-only control by 5 points or more. | open | |
-| 17.4 | Natural-value transplant (20th vs 80th percentile, text fixed): the paired readout moves the right way on at least 70% of TEST messages for G1. | open | |
-| 17.5 | GL (last layer) and shuffled labels both stay within 47-53% in the natural-residual and transplant arms. | open | |
+| 17.1 | The input-only ridge (Qwen3-0.6B hidden state) explains at least 30% of G1's natural-activation variance on TEST (R²). | held | R² 0.622 (per-unit mean 0.313). |
+| 17.2 | The input-only control (a Qwen3-0.6B LoRA) gets at most 56% on sign(r_G1) on TEST. | held | 54.5% (1090/2000), above chance (z 4.0): the residual is partly text-predictable. |
+| 17.3 | The self-reader gets at most 58% on sign(r_G1) on TEST, and does not beat the input-only control by 5 points or more. | held | 56.1%, +1.6 over the control; paired McNemar p 0.13; the two agree on 79% of passages. |
+| 17.4 | Natural-value transplant (20th vs 80th percentile, text fixed): the paired readout moves the right way on at least 70% of TEST messages for G1. | held | 99.65% (1993/2000), but by a mean of 0.0017 in P(higher). |
+| 17.5 | GL (last layer) and shuffled labels both stay within 47-53% in the natural-residual and transplant arms. | **failed** | GL natural-residual 62.9% (from text: GL cannot reach the answer, its transplant moves nothing); shuffled 46.5%. The residual is not text-unpredictable. |

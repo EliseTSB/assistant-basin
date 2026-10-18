@@ -158,6 +158,12 @@ All on OLMo 2 1B Instruct unless noted.
   "My home is a cozy, modern apartment...") while six matched random sets stayed at 90-94% AI. The effect and the
   neutral-text damage both sit in the set's late layers; the early layers alone do nothing. Part 16b in PREDICTIONS.md
   and results/part16b/.
+- **No sign yet that the model reads its own natural activity beyond what the text gives away.** Part 17 asked OLMo
+  2 1B to report whether a neuron group was more or less active than its words predicted, with nothing clamped. Its
+  reader scored 56.1%, a Qwen reader that never sees OLMo's activations 54.5% (paired p 0.13), and a last-layer group
+  that cannot influence the answer at all 62.9%, so the "unpredictable" residual is still read from the text. Held
+  text fixed and moved one group to natural high and low values, the reader shifts the right way on 99.7% of
+  passages, by a tiny amount. Part 17 in PREDICTIONS.md and results/part17/.
 
 ## Files
 

@@ -1,0 +1,52 @@
+{
+  "task": "part17-train-self",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "config": {
+    "arm": "self",
+    "group": "GL",
+    "device": "xpu",
+    "seed": 42,
+    "epochs": 3,
+    "learning_rate": 0.0003,
+    "rank": 8,
+    "batch_size": 8,
+    "shuffle_labels": false,
+    "run_tag": "",
+    "question": "While you read my first message, was group GL of your neurons more or less active than its words would suggest? Answer higher or lower.",
+    "trainable_lora_only": true,
+    "clamps": "none"
+  },
+  "sizes": {
+    "train": 6000,
+    "steps": 2250,
+    "true_label_counts": {
+      "lower": 3080,
+      "higher": 2920
+    },
+    "training_label_counts": {
+      "lower": 3080,
+      "higher": 2920
+    }
+  },
+  "seeds": {
+    "run": 42,
+    "split": "passage SHA-256 ascending",
+    "groups": 7,
+    "GL": 17017,
+    "alpha_validation": 42
+  },
+  "timings_seconds": {
+    "total": 1310.4308573000017,
+    "mean_step": 0.3093171520000194,
+    "median_step": 0.30702900000324007
+  },
+  "per_group": {
+    "GL": {
+      "fit_median_residual_threshold": 0.00042972957300547066,
+      "first_loss": 6.287682056427002,
+      "last_loss": 0.4906489849090576
+    }
+  },
+  "adapter": "results\\part17\\lora-self-GL.pt",
+  "adapter_target": "residual17-self-GL"
+}
