@@ -644,8 +644,8 @@ by stating a probability in JSON, since the Responses door returns no logprobs. 
 
 | # | Prediction | Result | Notes |
 |---|---|---|---|
-| 17b.1 | The cross-fitted Qwen3-1.7B predictor explains at least 0.70 of G1's natural-activation variance (out-of-fold R², all passages), against the ridge's 0.62. | open | |
-| 17b.2 | The text-only reader (gate a) scores at most 53% on the new labels. | open | |
-| 17b.3 | OLMo's GL self-reader (gate b) scores at most 55% on the new labels. | open | |
-| 17b.4 | If both gates pass (at most 53%), the G1 self-reader scores at most 53%. | open | |
-| 17b.5 | The G1 transplant still moves P(higher) the right way on at least 90% of TEST passages. | open | |
+| 17b.1 | The cross-fitted Qwen3-1.7B predictor explains at least 0.70 of G1's natural-activation variance (out-of-fold R², all passages), against the ridge's 0.62. | held | 0.760 all passages, 0.705 TEST (1 epoch, batch 8). GL only 0.523. |
+| 17b.2 | The text-only reader (gate a) scores at most 53% on the new labels. | held | 52.65% (1053/2000), majority 51.05%. |
+| 17b.3 | OLMo's GL self-reader (gate b) scores at most 55% on the new labels. | **failed** | 59.25% (1185/2000). GL cannot reach the answer, so this is text; the predictor explains only half of GL (R² 0.52). |
+| 17b.4 | If both gates pass (at most 53%), the G1 self-reader scores at most 53%. | not tested | Condition unmet (gate b failed). For the record: G1 self-reader 57.0% (1140/2000); paired against the text-only reader, self-only right 464 vs 377, z 3.0, p 0.0027. |
+| 17b.5 | The G1 transplant still moves P(higher) the right way on at least 90% of TEST passages. | **failed** | 2.8% (means 0.4274 at q20, 0.4261 at q80). This reader does not use G1's activation (Part 17's: 99.65%). |

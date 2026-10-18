@@ -1,0 +1,52 @@
+{
+  "task": "part17-train-self",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "config": {
+    "arm": "self",
+    "group": "G1",
+    "device": "xpu",
+    "seed": 42,
+    "epochs": 3,
+    "learning_rate": 0.0003,
+    "rank": 8,
+    "batch_size": 8,
+    "shuffle_labels": false,
+    "run_tag": "p17b",
+    "question": "While you read my first message, was group G1 of your neurons more or less active than its words would suggest? Answer higher or lower.",
+    "trainable_lora_only": true,
+    "clamps": "none"
+  },
+  "sizes": {
+    "train": 6000,
+    "steps": 2250,
+    "true_label_counts": {
+      "lower": 2958,
+      "higher": 3042
+    },
+    "training_label_counts": {
+      "lower": 2958,
+      "higher": 3042
+    }
+  },
+  "seeds": {
+    "run": 42,
+    "split": "passage SHA-256 ascending",
+    "groups": 7,
+    "GL": 17017,
+    "alpha_validation": 42
+  },
+  "timings_seconds": {
+    "total": 1321.3705214000074,
+    "mean_step": 0.31282956617753693,
+    "median_step": 0.3093226499913726
+  },
+  "per_group": {
+    "G1": {
+      "fit_median_residual_threshold": -0.0010683825239539146,
+      "first_loss": 6.010162353515625,
+      "last_loss": 0.589206337928772
+    }
+  },
+  "adapter": "results\\part17\\lora-self-G1-p17b.pt",
+  "adapter_target": "residual17-self-G1"
+}

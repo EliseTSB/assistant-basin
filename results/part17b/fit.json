@@ -1,0 +1,166 @@
+{
+  "task": "part17b-cross-fitted-text-residual-fit",
+  "model": "Qwen/Qwen3-1.7B",
+  "config": {
+    "device": "xpu",
+    "seed": 42,
+    "groups": [
+      "G1",
+      "GL"
+    ],
+    "fitted_groups": [
+      "G1",
+      "GL"
+    ],
+    "smoke": false,
+    "smoke_per_split": null,
+    "folds": 5,
+    "fold_assignment": "SHA-256(passage_id) ascending, round-robin across five folds",
+    "input": "plain passage text; tokenizer add_special_tokens=False; no chat template",
+    "features": "concatenation of final hidden at last passage token and masked mean final hidden over passage tokens",
+    "target": "mean of the group's 11 natural activation units, standardized with each fold's training rows only",
+    "prediction": "fold-specific predictions de-standardized with that fold's training target statistics",
+    "training": "frozen bf16 Qwen3-1.7B plus selfreport.install_lora rank-8 q/k/v/o adapters and one linear output per requested group",
+    "epochs": 1,
+    "learning_rate": 0.0002,
+    "rank": 8,
+    "batch_size": 8,
+    "optimizer": "AdamW over LoRA and linear-head parameters only",
+    "quantiles": [
+      0.2,
+      0.8
+    ],
+    "label_definition": "mean of 11 residual units > FIT-only median means higher (1); otherwise lower (0)",
+    "r2_definition": "scalar natural group mean predicted out of fold"
+  },
+  "sizes": {
+    "total": 12000,
+    "FIT": 4000,
+    "TRAIN": 6000,
+    "TEST": 2000,
+    "features": 4096
+  },
+  "seeds": {
+    "run": 42,
+    "split": "capture manifest",
+    "crossfit": "SHA-256(passage_id)"
+  },
+  "crossfit": {
+    "folds": 5,
+    "per_fold": [
+      {
+        "fold": 0,
+        "train_n": 9600,
+        "validation_n": 2400,
+        "target_mean_train": [
+          -0.02661767224997334,
+          -0.03455788719260222
+        ],
+        "target_std_train": [
+          0.010572467367051185,
+          0.04656346727030006
+        ]
+      },
+      {
+        "fold": 1,
+        "train_n": 9600,
+        "validation_n": 2400,
+        "target_mean_train": [
+          -0.02665165903016638,
+          -0.03419063863494041
+        ],
+        "target_std_train": [
+          0.010340698444981504,
+          0.04620181256613864
+        ]
+      },
+      {
+        "fold": 2,
+        "train_n": 9600,
+        "validation_n": 2400,
+        "target_mean_train": [
+          -0.026625039017492705,
+          -0.03436830332312084
+        ],
+        "target_std_train": [
+          0.010510953870209344,
+          0.046349381170359784
+        ]
+      },
+      {
+        "fold": 3,
+        "train_n": 9600,
+        "validation_n": 2400,
+        "target_mean_train": [
+          -0.02653512390784537,
+          -0.03425432965031381
+        ],
+        "target_std_train": [
+          0.010826415688646816,
+          0.04619084413372352
+        ]
+      },
+      {
+        "fold": 4,
+        "train_n": 9600,
+        "validation_n": 2400,
+        "target_mean_train": [
+          -0.026567026727968443,
+          -0.03432761576433165
+        ],
+        "target_std_train": [
+          0.010743884167728599,
+          0.04628649141069926
+        ]
+      }
+    ]
+  },
+  "timings_seconds": {
+    "total": 1840.9028497000108
+  },
+  "per_group": {
+    "G1": {
+      "fitted": true,
+      "target": "mean natural activation over the group's 11 units",
+      "oof_r2_all": 0.7603128263979809,
+      "oof_r2_test": 0.7050781776533079,
+      "oof_n_all": 12000,
+      "oof_n_test": 2000,
+      "fit_median_residual_threshold": -0.0010683825239539146,
+      "residual_mean_fit": -0.0010378611041232944,
+      "residual_std_fit": 0.00527213467285037,
+      "train_label_counts": {
+        "lower": 2958,
+        "higher": 3042
+      },
+      "test_label_counts": {
+        "lower": 979,
+        "higher": 1021
+      },
+      "fit_quantile20_mean": -0.03890589252114296,
+      "fit_quantile80_mean": -0.016955919563770294
+    },
+    "GL": {
+      "fitted": true,
+      "target": "mean natural activation over the group's 11 units",
+      "oof_r2_all": 0.5233185397444946,
+      "oof_r2_test": 0.5080643806885454,
+      "oof_n_all": 12000,
+      "oof_n_test": 2000,
+      "fit_median_residual_threshold": 0.003690412500873208,
+      "residual_mean_fit": 0.0036946856416761875,
+      "residual_std_fit": 0.03202834352850914,
+      "train_label_counts": {
+        "lower": 3043,
+        "higher": 2957
+      },
+      "test_label_counts": {
+        "lower": 983,
+        "higher": 1017
+      },
+      "fit_quantile20_mean": -0.11715800315141678,
+      "fit_quantile80_mean": 0.05729576572775841
+    }
+  },
+  "source_capture": "results\\part17\\capture.npz"
+}

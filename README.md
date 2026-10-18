@@ -164,6 +164,9 @@ All on OLMo 2 1B Instruct unless noted.
   that cannot influence the answer at all 62.9%, so the "unpredictable" residual is still read from the text. Held
   text fixed and moved one group to natural high and low values, the reader shifts the right way on 99.7% of
   passages, by a tiny amount. Part 17 in PREDICTIONS.md and results/part17/.
+  Part 17b redid the residual against a cross-fitted Qwen3-1.7B text model: the text-only reader fell to 52.7%, but
+  OLMo still read 59.3% for the last-layer group from the words, so the gate failed; its G1 reader (57.0%) no longer
+  moves at all when G1 is moved with the text fixed (2.8%). Part 17b in PREDICTIONS.md and results/part17b/.
 
 ## Files
 
