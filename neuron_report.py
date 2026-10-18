@@ -99,6 +99,19 @@ def _arg_parser() -> argparse.ArgumentParser:
             p.add_argument('--control-scale', choices=['own', 'norm'], default='own')
             p.add_argument('--skip-controls', action='store_true')
             p.add_argument('--sample-prompts', default=None, help='JSON list of prompts to sample at every sample k')
+        if name == 'reads':
+            pass
+    p = sub.add_parser('teacherforce')
+    p.add_argument('--model', required=True); p.add_argument('--revision', default=None)
+    p.add_argument('--layer', type=int, required=True); p.add_argument('--neuron', type=int, required=True)
+    p.add_argument('--reads', default=None); p.add_argument('--assay', default='data/creator-assay.json')
+    p.add_argument('--ks', default='0.1164,0.5,1,1.5,2,3'); p.add_argument('--phases', default='prompt,gen,both')
+    p.add_argument('--zero', action='store_true'); p.add_argument('--controls', type=int, default=20); p.add_argument('--seed', type=int, default=0)
+    p.add_argument('--control-ks', default='2'); p.add_argument('--control-phases', default='prompt,both')
+    p.add_argument('--control-scales', default='own,norm'); p.add_argument('--skip-controls', action='store_true')
+    p.add_argument('--system-prompt', default=None); p.add_argument('--batch-size', type=int, default=16)
+    p.add_argument('--device', default='xpu'); p.add_argument('--spill-limit', '--max-gpu-gb', type=float, default=14.5)
+    p.add_argument('--out', required=True)
     p = sub.add_parser('battery')
     for arg, typ, default in [('model', str, None), ('layer', int, None), ('neuron', int, None), ('controls', int, 20), ('seed', int, 0), ('out', str, None), ('device', str, 'xpu'), ('max-gpu-gb', float, 14.5)]:
         p.add_argument('--' + arg, type=typ, default=default, required=default is None)
@@ -174,6 +187,7 @@ class NeuronHook:
         self.record = torch.tensor(record_units) if record_units else None
         self.captured: list[torch.Tensor] = []
         self.clamp: tuple[torch.Tensor, torch.Tensor] | None = None
+        self.position_mask: torch.Tensor | None = None
         self.handle = down_proj.register_forward_pre_hook(self._hook)
 
     def _hook(self, _mod, args):
@@ -184,7 +198,11 @@ class NeuronHook:
             active = phase == 'both' or (phase == 'prompt' and x.shape[-2] > 1) or (phase == 'gen' and x.shape[-2] == 1)
             if active:
                 x = x.clone()
-                x[..., units.to(x.device)] = values.to(x.device, x.dtype)
+                if self.position_mask is None:
+                    x[..., units.to(x.device)] = values.to(x.device, x.dtype)
+                else:
+                    mask = self.position_mask.to(x.device)
+                    x[..., units.to(x.device)] = torch.where(mask[..., None], values.to(x.device, x.dtype), x[..., units.to(x.device)])
         if self.record is not None:
             self.captured.append(x[..., self.record.to(x.device)].float().cpu())
         return (x,) + tuple(args[1:]) if self.clamp is not None else None
@@ -341,10 +359,10 @@ def cmd_writes(a):
     print('promote:', t['promote'][:15], '\nsuppress:', t['suppress'][:15], flush=True)
 
 
-def build_prompt(tok, q: str, plain: bool) -> str:
+def build_prompt(tok, q: str, plain: bool, system_prompt: str | None = None) -> str:
     if plain or not getattr(tok, 'chat_template', None):
         return f'User: {q}\nAssistant:'
-    msgs = [{'role': 'user', 'content': q}]
+    msgs = ([{'role': 'system', 'content': system_prompt}] if system_prompt is not None else []) + [{'role': 'user', 'content': q}]
     try:
         return tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True, enable_thinking=False)
     except TypeError:
@@ -473,6 +491,201 @@ def cmd_steer(a):
                 'summary': summary})
     _dump(out, os.path.join(a.out, 'steer.json'))
     print(json.dumps(summary['samples']), json.dumps(summary['controls_greedy']), flush=True)
+
+
+def _bootstrap(values: np.ndarray, seed: int = 0, n: int = 2000) -> dict:
+    values = np.asarray(values, dtype=float)
+    rng = np.random.default_rng(seed)
+    draws = values[rng.integers(0, len(values), size=(n, len(values)))].mean(axis=1)
+    return {'mean': float(values.mean()), 'ci95': [float(x) for x in np.quantile(draws, [0.025, 0.975])], 'n_templates': int(len(values))}
+
+
+def _teacherforce_stats(rows, conditions):
+    """Template-level ΔΔ summaries; templates are the bootstrap unit."""
+    baseline = 'unclamped'
+    measures = ('mean_logprob', 'sum_logprob')
+    sets = sorted({r['set'] for r in rows})
+    by = {}
+    for r in rows:
+        by.setdefault((r['set'], r['condition'], r['template_index'], r['stem_index'], r['kind']), {})[r['completion']] = r
+    template_dd = {m: {} for m in measures}
+    for set_name in sets:
+        templates = sorted({r['template_index'] for r in rows if r['set'] == set_name})
+        for cond in conditions:
+            if cond == baseline: continue
+            for metric in measures:
+                values = []
+                for t in templates:
+                    stem_dd = []
+                    stems = sorted({r['stem_index'] for r in rows if r['set'] == set_name and r['template_index'] == t})
+                    for s in stems:
+                        def delta(c):
+                            groups = {'et': [], 'earthly': []}
+                            for kind in groups:
+                                completions = by.get((set_name, c, t, s, kind), {})
+                                groups[kind].extend(x[metric] for x in completions.values())
+                            return float(np.mean(groups['et']) - np.mean(groups['earthly']))
+                        stem_dd.append(delta(cond) - delta(baseline))
+                    values.append(float(np.mean(stem_dd)))
+                template_dd[metric][(set_name, cond)] = np.asarray(values)
+    summaries = {}
+    for set_name in sets:
+        summaries[set_name] = {}
+        for cond in conditions:
+            if cond == baseline: continue
+            summaries[set_name][cond] = {metric: _bootstrap(template_dd[metric][(set_name, cond)]) for metric in measures}
+    interactions = {}
+    for a, b, label in [('self', 'other', 'self_minus_other'), ('self', 'unrelated', 'self_minus_unrelated')]:
+        if a not in sets or b not in sets: continue
+        interactions[label] = {}
+        for cond in conditions:
+            if cond == baseline: continue
+            interactions[label][cond] = {}
+            for metric in measures:
+                va, vb = template_dd[metric][(a, cond)], template_dd[metric][(b, cond)]
+                rng = np.random.default_rng(0)
+                da = va[rng.integers(0, len(va), size=(2000, len(va)))].mean(axis=1)
+                db = vb[rng.integers(0, len(vb), size=(2000, len(vb)))].mean(axis=1)
+                d = va.mean() - vb.mean()
+                interactions[label][cond][metric] = {'mean': float(d), 'ci95': [float(x) for x in np.quantile(da-db, [0.025, 0.975])], 'n_templates': [len(va), len(vb)]}
+    self_completions = {}
+    for cond in conditions:
+        if cond == baseline: continue
+        self_completions[cond] = {}
+        compnames = sorted({r['completion'] for r in rows if r['set'] == 'self'})
+        for completion in compnames:
+            vals = []
+            for r in rows:
+                if r['set'] == 'self' and r['condition'] == cond and r['completion'] == completion:
+                    base = by[('self', baseline, r['template_index'], r['stem_index'], r['kind'])][completion]
+                    vals.append(r['mean_logprob'] - base['mean_logprob'])
+            self_completions[cond][completion] = float(np.mean(vals)) if vals else None
+    return {'delta_delta': summaries, 'interactions': interactions, 'self_completion_delta_delta': self_completions}
+
+
+def _phase_span(phase: str, prompt_end: int, n: int) -> tuple[int, int]:
+    """Positions a teacher-forced clamp covers, matching steer's phases. P is the prefill: every prompt position, the
+    last of which predicts the first answer token. G is every answer position (stem and completion), as in decoding."""
+    return {'A': (0, n), 'P': (0, prompt_end), 'G': (prompt_end, n)}[phase]
+
+
+def cmd_teacherforce(a):
+    os.makedirs(a.out, exist_ok=True)
+    reads_path = a.reads or os.path.join(a.out, 'reads.json')
+    reads = json.load(open(reads_path, encoding='utf-8'))
+    tok, model = load_model(a.model, a.revision, a.device)
+    lname, layers, norm = find_text_layers(model)
+    n_units = layers[a.layer].mlp.down_proj.in_features
+    controls = control_units(n_units, a.neuron, a.controls, a.seed)
+    if ([int(x) for x in reads['controls']] != controls or reads['neuron'] != a.neuron or reads['layer'] != a.layer):
+        raise SystemExit('reads.json was written for a different neuron, layer or control set')
+    if reads['model'] != a.model or reads.get('revision') != a.revision:
+        raise SystemExit(f'reads.json was written for {reads["model"]}@{reads.get("revision")}, not {a.model}@{a.revision}')
+    maxima = {int(u): float(v['max']) for u, v in reads['units'].items()}
+    W = layers[a.layer].mlp.down_proj.weight.float()
+    target_norm = float(torch.linalg.vector_norm(W[:, a.neuron]))
+    assay = json.load(open(a.assay, encoding='utf-8'))
+    assay_sha = _file_sha(a.assay)
+    phase_map = {'prompt': 'P', 'gen': 'G', 'both': 'A'}
+    phases = [x.strip() for x in a.phases.split(',') if x.strip()]
+    if set(phases) - set(phase_map): raise SystemExit('--phases accepts prompt,gen,both')
+    ks = [float(x) for x in a.ks.split(',') if x.strip()]
+    conditions = ['unclamped']
+    specs = {'unclamped': None}
+    for k in ks:
+        for phase in phases:
+            label = f'target:k={k:g}:phase={phase_map[phase]}'
+            if label not in specs: conditions.append(label); specs[label] = (a.neuron, k * maxima[a.neuron], phase_map[phase], k, 'target_max')
+    if a.zero:
+        label = 'target:k=0:phase=A'
+        if label not in specs: conditions.append(label); specs[label] = (a.neuron, 0.0, 'A', 0.0, 'target_max')
+    if not a.skip_controls:
+        cks = [float(x) for x in a.control_ks.split(',') if x.strip()]
+        cphases = [x.strip() for x in a.control_phases.split(',') if x.strip()]
+        scales = [x.strip() for x in a.control_scales.split(',') if x.strip()]
+        if set(cphases) - set(phase_map) or set(scales) - {'own', 'norm'}: raise SystemExit('invalid control phases or scales')
+        for unit in controls:
+            for k in cks:
+                for phase in cphases:
+                    for scale in scales:
+                        value = k * maxima[unit] if scale == 'own' else k * maxima[a.neuron] * target_norm / float(torch.linalg.vector_norm(W[:, unit]))
+                        label = f'control:{unit}:k={k:g}:phase={phase_map[phase]}:scale={scale}'
+                        conditions.append(label); specs[label] = (unit, value, phase_map[phase], k, scale)
+
+    seqs = []
+    for set_name, assay_set in assay['sets'].items():
+        for ti, prompt in enumerate(assay_set['prompts']):
+            prefix_text = build_prompt(tok, prompt, False, a.system_prompt)
+            prefix_ids = tok(prefix_text, add_special_tokens=False)['input_ids']
+            for si, stem in enumerate(assay_set['stems']):
+                stem_ids = tok(stem, add_special_tokens=False)['input_ids']
+                for kind in ('et', 'earthly'):
+                    for completion in assay_set[kind]:
+                        stem_answer = tok(stem + completion, add_special_tokens=False)['input_ids']
+                        if stem_answer[:len(stem_ids)] != stem_ids:
+                            raise ValueError(f'token prefix mismatch for stem/completion: {stem!r} + {completion!r}')
+                        completion_ids = stem_answer[len(stem_ids):]
+                        if not completion_ids: raise ValueError(f'completion tokenizes to nothing: {completion!r}')
+                        seqs.append({'set': set_name, 'template_index': ti, 'stem_index': si, 'completion': completion,
+                                     'kind': kind, 'ids': prefix_ids + stem_answer, 'prompt_end': len(prefix_ids),
+                                     'answer_start': len(prefix_ids) + len(stem_ids), 'completion_ids': completion_ids})
+    hook = NeuronHook(layers[a.layer].mlp.down_proj)
+    rows = []
+    for condition in conditions:
+        spec = specs[condition]
+        hook.clamp = None if spec is None else (torch.tensor([spec[0]]), torch.tensor([spec[1]]))
+        hook.phase = 'both'
+        phase = None if spec is None else spec[2]
+        for b in range(0, len(seqs), a.batch_size):
+            chunk = seqs[b:b+a.batch_size]
+            width = max(len(s['ids']) for s in chunk)
+            ids = torch.full((len(chunk), width), tok.pad_token_id, dtype=torch.long)
+            mask = torch.zeros_like(ids)
+            pmask = torch.zeros_like(ids, dtype=torch.bool)
+            for j, s in enumerate(chunk):
+                n = len(s['ids']); ids[j, :n] = torch.tensor(s['ids']); mask[j, :n] = 1
+                if phase is not None:
+                    lo, hi = _phase_span(phase, s['prompt_end'], n)
+                    pmask[j, lo:hi] = True
+            hook.position_mask = pmask if phase is not None else None
+            logits = model(input_ids=ids.to(a.device), attention_mask=mask.to(a.device), use_cache=False).logits
+            for j, s in enumerate(chunk):
+                # The token at position p is predicted by logits at p-1; select before float32 conversion.
+                start = s['answer_start'] - 1; end = start + len(s['completion_ids'])
+                selected = logits[j, start:end, :len(tok)].float()
+                targets = torch.tensor(s['completion_ids'], device=selected.device)
+                lp = torch.log_softmax(selected, dim=-1).gather(-1, targets[:, None]).squeeze(-1)
+                values = lp.detach().cpu().numpy()
+                rows.append({'set': s['set'], 'template_index': s['template_index'], 'stem_index': s['stem_index'],
+                             'completion': s['completion'], 'kind': s['kind'], 'condition': condition,
+                             'unit': None if spec is None else int(spec[0]), 'k': None if spec is None else float(spec[3]),
+                             'phase': None if spec is None else spec[2], 'scale': None if spec is None else spec[4],
+                             'sum_logprob': float(values.sum()), 'mean_logprob': float(values.mean()), 'completion_tokens': len(values)})
+        spill_guard(a.device, a.spill_limit)
+        print(f'  {condition} done', flush=True)
+    hook.position_mask = None; hook.remove()
+    summaries = _teacherforce_stats(rows, conditions)
+    # Logit lens per token, z-scored over the vocabulary as in cmd_writes.
+    U = model.get_output_embeddings().weight.float(); vocab_n = len(tok)
+    gain = norm(torch.ones(1, 1, W.shape[0], device=W.device, dtype=next(norm.parameters()).dtype)).float().reshape(-1) if norm is not None else torch.ones(W.shape[0], device=W.device)
+    lens = U[:vocab_n] @ (gain * W[:, a.neuron])
+    lens_z = (lens - lens.mean()) / lens.std()
+    per_completion_lens = {}
+    for s in seqs:
+        tokens = s['completion_ids']
+        if len(tokens) > 1 and tok.decode([tokens[-1]]).strip() in {'.', '!', '?', ',', ';', ':'}:
+            tokens = tokens[:-1]
+        z = [float(lens_z[t]) for t in tokens]
+        per_completion_lens.setdefault(s['completion'], []).extend(z)
+    per_completion_lens = {c: float(np.mean(v)) for c, v in per_completion_lens.items()}
+    out = header(a, n_units, controls, lname)
+    out.update({'assay': a.assay, 'assay_sha256': assay_sha, 'system_prompt': a.system_prompt,
+                'conditions': conditions, 'condition_specs': {k: (None if v is None else {'unit': v[0], 'value': v[1], 'phase': v[2], 'k': v[3], 'scale': v[4]}) for k, v in specs.items()},
+                'rows': rows, 'summaries': summaries, 'self_completion_logit_lens_z': per_completion_lens,
+                'statistics': 'template bootstrap, 2000 resamples, seed 0; P=prompt, G=gen, A=both'})
+    _dump(out, os.path.join(a.out, 'teacherforce.json'))
+    for name, conds in summaries['delta_delta'].items():
+        for cond, metrics in conds.items(): print(f'{name:10s} {cond:40s} mean ΔΔ={metrics["mean_logprob"]["mean"]:.4f} 95% CI={metrics["mean_logprob"]["ci95"]}', flush=True)
 
 
 def cmd_battery(a):
@@ -736,7 +949,7 @@ def cmd_compare(a):
 
 def main(argv=None):
     a = _arg_parser().parse_args(argv)
-    {'reads': cmd_reads, 'writes': cmd_writes, 'steer': cmd_steer, 'battery': cmd_battery, 'compare': cmd_compare,
+    {'reads': cmd_reads, 'writes': cmd_writes, 'steer': cmd_steer, 'teacherforce': cmd_teacherforce, 'battery': cmd_battery, 'compare': cmd_compare,
      'describe': cmd_describe, 'test': cmd_test}[a.cmd](a)
 
 
