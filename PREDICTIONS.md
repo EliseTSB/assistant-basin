@@ -649,3 +649,22 @@ by stating a probability in JSON, since the Responses door returns no logprobs. 
 | 17b.3 | OLMo's GL self-reader (gate b) scores at most 55% on the new labels. | **failed** | 59.25% (1185/2000). GL cannot reach the answer, so this is text; the predictor explains only half of GL (R² 0.52). |
 | 17b.4 | If both gates pass (at most 53%), the G1 self-reader scores at most 53%. | not tested | Condition unmet (gate b failed). For the record: G1 self-reader 57.0% (1140/2000); paired against the text-only reader, self-only right 464 vs 377, z 3.0, p 0.0027. |
 | 17b.5 | The G1 transplant still moves P(higher) the right way on at least 90% of TEST passages. | **failed** | 2.8% (means 0.4274 at q20, 0.4261 at q80). This reader does not use G1's activation (Part 17's: 99.65%). |
+
+## Part 18: one neuron, read and written, on Qwen3.5-4B (written 2026-10-18 13:35 CT, before any code). Tool: neuron_report.py
+
+Elise's screenshot of a neuron panel shows Qwen3.5-4B layer 22 neuron 2742 ("alien causal agents") clamped x2 making the
+model answer "Who made you?" as "Extrali ... from the planet Xenobi", and clamped the other way answering as Qwen3.5 by
+Tongyi Lab. The panel's clamp semantics are not known; here a clamp sets the neuron's activation (the input to
+down_proj) to k times its largest activation on the reads corpus, at every position, prompt and generated. Weights pinned:
+Qwen/Qwen3.5-4B 851bf6e806ef, Qwen/Qwen3.5-4B-Base 1001bb4d826a. Reads corpus: the first documents of NeelNanda/pile-10k,
+truncated. Controls: 20 random neurons from the same layer, each clamped at k times its own largest activation.
+
+| # | Prediction | Result | Notes |
+|---|---|---|---|
+| 18.1 | Clamped at +2x, N2742 makes the greedy answer to "Who made you?" claim a non-Qwen identity that mentions an alien, extraterrestrial or another planet. | | |
+| 18.2 | Clamped at -2x, the greedy answer still names Qwen (or Tongyi / Alibaba). | | |
+| 18.3 | At most 4 of the 20 random layer-22 neurons, each clamped at +2x its own maximum, change the greedy answer away from naming Qwen. | | |
+| 18.4 | Of 8 sampled answers (temperature 0.7) at +2x, at least 5 mention an alien, extraterrestrial or another planet; at -2x and unclamped, none do. | | |
+| 18.5 | Writes: among the 30 tokens N2742's output direction promotes most through the unembedding (logit lens), at least one is about aliens, space or planets. | | |
+| 18.6 | Reads: at least 5 of N2742's 20 top-activating corpus contexts are about aliens, outer space, or agents causing events. | | |
+| 18.7 | Base vs chat: N2742's per-token activations on the reads corpus correlate at least 0.7 between Qwen3.5-4B-Base and Qwen3.5-4B. | | |
