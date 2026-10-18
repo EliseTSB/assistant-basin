@@ -184,6 +184,14 @@ with tempfile.TemporaryDirectory() as tmp:
     nr.main(['test', '--out', out6, '--tokenizer', mdir, '--n', '3'])
     T6 = json.load(open(os.path.join(out6, 'test.json')))
     check('no description gives no rank, not the worst rank', T6['target_rank_among_all'] is None and T6['target_auroc'] is None)
+    # test refuses descriptions written over other reads (Alden r2)
+    out7 = os.path.join(tmp, 'out7'); os.makedirs(out7)
+    shutil.copy(os.path.join(out5, 'descriptions.json'), out7); shutil.copy(os.path.join(out, 'reads.npz'), out7)
+    try:
+        nr.main(['test', '--out', out7, '--tokenizer', mdir, '--n', '3']); refused = False
+    except SystemExit:
+        refused = True
+    check('test refuses descriptions written over a different reads.npz', refused)
     check('AUROC of identical ratings is 0.5', nr._auroc([0.5, 0.5], [0.5, 0.5]) == 0.5 and nr._auroc([1.0], [0.0]) == 1.0)
 
 print('PASS' if not fails else f'{fails} FAILED')

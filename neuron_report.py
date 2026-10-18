@@ -99,6 +99,7 @@ def _arg_parser() -> argparse.ArgumentParser:
         p = sub.add_parser(name)
         p.add_argument('--out', required=True, help='the folder holding reads.npz (and descriptions.json for test)')
         p.add_argument('--tokenizer', required=True, help='a local folder or repo id for decoding the stored tokens')
+        p.add_argument('--tokenizer-revision', default=None, help='pin for a repo-id tokenizer (a local snapshot path pins itself)')
         p.add_argument('--model', default='gpt-6-luna')
         p.add_argument('--route', default='cliproxy')
         p.add_argument('--effort', default='medium')
@@ -467,18 +468,19 @@ def _ask_json(prompt: str, a) -> dict:
 def cmd_describe(a):
     """Blind description of every unit from its top contexts in EVEN documents only (odd ones are held out for test)."""
     from transformers import AutoTokenizer
-    tok = AutoTokenizer.from_pretrained(a.tokenizer)
+    tok = AutoTokenizer.from_pretrained(a.tokenizer, revision=a.tokenizer_revision)
     A, D, P, T, units = _load_reads(a.out)
     docs = _doc_tokens(D, T)
     even = np.flatnonzero(D % 2 == 0)
     path = os.path.join(a.out, 'descriptions.json')
     out = {'describer': a.model, 'route': a.route, 'effort': a.effort, 'docs_used': 'even', 'n_contexts': a.n, 'units': {}}
-    out['inputs'] = {'reads_npz_sha256': _file_sha(os.path.join(a.out, 'reads.npz')), 'tokenizer': a.tokenizer, 'route': a.route,
-                     'effort': a.effort, 'tool_sha256': _tool_sha()}
+    out['inputs'] = {'reads_npz_sha256': _file_sha(os.path.join(a.out, 'reads.npz')), 'tokenizer': a.tokenizer,
+                     'tokenizer_revision': a.tokenizer_revision}
     if os.path.exists(path):  # resume only a run over the SAME inputs (Alden r1 #6); otherwise start over
         prev = json.load(open(path, encoding='utf-8'))
         same = (prev.get('describer'), prev.get('n_contexts'), prev.get('inputs', {}).get('reads_npz_sha256'),
-                prev.get('inputs', {}).get('tokenizer')) == (a.model, a.n, out['inputs']['reads_npz_sha256'], a.tokenizer)
+                prev.get('inputs', {}).get('tokenizer'), prev.get('inputs', {}).get('tokenizer_revision')) == \
+               (a.model, a.n, out['inputs']['reads_npz_sha256'], a.tokenizer, a.tokenizer_revision)
         if same:
             out['units'] = {u: v for u, v in prev['units'].items() if v.get('description')}
         else:
@@ -492,7 +494,9 @@ def cmd_describe(a):
                   'In each excerpt the token where it fires is marked like \u00abthis\u00bb. Describe in one sentence what '
                   'this neuron responds to, as specifically as the excerpts allow. Reply with JSON only: '
                   '{"description": "..."}\n\n' + ex)
-        entry = {'contexts': [context(docs[int(D[r])], int(P[r]), tok) for r in rows]}
+        entry = {'contexts': [context(docs[int(D[r])], int(P[r]), tok) for r in rows],
+                 'produced_by': {'describer': a.model, 'route': a.route, 'effort': a.effort, 'tool_sha256': _tool_sha(),
+                                 'at': time.strftime('%Y-%m-%d %H:%M:%S')}}
         try:
             d = _ask_json(prompt, a).get('description')
             if isinstance(d, str) and d.strip():
@@ -516,10 +520,16 @@ def cmd_test(a):
     strongly active on n of its top tokens and n random tokens, all from ODD documents. AUROC per unit; the target's
     beside the controls'. The tester never sees activations or the description's source contexts."""
     from transformers import AutoTokenizer
-    tok = AutoTokenizer.from_pretrained(a.tokenizer)
+    tok = AutoTokenizer.from_pretrained(a.tokenizer, revision=a.tokenizer_revision)
     A, D, P, T, units = _load_reads(a.out)
     docs = _doc_tokens(D, T)
-    desc = json.load(open(os.path.join(a.out, 'descriptions.json'), encoding='utf-8'))['units']
+    desc_file = json.load(open(os.path.join(a.out, 'descriptions.json'), encoding='utf-8'))
+    reads_sha = _file_sha(os.path.join(a.out, 'reads.npz'))
+    made_over = desc_file.get('inputs', {}).get('reads_npz_sha256')
+    if made_over is not None and made_over != reads_sha:
+        raise SystemExit('descriptions.json was written over a different reads.npz; run describe again (Alden r2)')
+    desc_provenance = 'bound to this reads.npz' if made_over else 'historical: descriptions.json predates the input manifest'
+    desc = desc_file['units']
     odd = np.flatnonzero(D % 2 == 1)
     rng = np.random.default_rng(a.seed)
     # One set of random negatives for every unit, so the target and the controls are judged against the same tokens.
@@ -575,7 +585,7 @@ def cmd_test(a):
         print(f'  {u}: AUROC {res[str(u)]["auroc"]:.3f}', flush=True)
     ctrl = [res[str(u)]['auroc'] for u in units[1:] if 'auroc' in res[str(u)]]
     out = {'tester': a.model, 'route': a.route, 'effort': a.effort, 'docs_used': 'odd', 'n_pos': a.n, 'n_neg': a.n,
-           'tool_sha256': _tool_sha(), 'reads_npz_sha256': _file_sha(os.path.join(a.out, 'reads.npz')),
+           'tool_sha256': _tool_sha(), 'reads_npz_sha256': reads_sha, 'descriptions_provenance': desc_provenance,
            'positives': a.positives, 'negatives': a.negatives,
            'units': res, 'target': str(units[0]), 'target_auroc': res[str(units[0])].get('auroc'),
            'controls_auroc_median': float(np.median(ctrl)) if ctrl else None,
