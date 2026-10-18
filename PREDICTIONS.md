@@ -629,3 +629,13 @@ by stating a probability in JSON, since the Responses door returns no logprobs. 
 | 1g.2 | Across the 150 TEST units, per-unit Spearmans under Muse and under Jev correlate at least 0.6. | held | r = 0.805. |
 | 1g.3 | Real neurons' median AUROC strongest-vs-random still beats random directions', with a gap of at least 0.04. | held | 0.875 vs 0.775, gap 0.100 (Jev 0.085). |
 | 1g.4 | Muse's probabilities spread more than Jev's: their standard deviation over all answered requests is at least Jev's. | held | 0.353 vs 0.263. |
+
+## Part 17: reporting the text-unpredictable residual of natural neuron activity (written 2026-10-18 00:28 CT, before any code). Design: PART17-DESIGN.md
+
+| # | Prediction | Result | Notes |
+|---|---|---|---|
+| 17.1 | The input-only ridge (Qwen3-0.6B hidden state) explains at least 30% of G1's natural-activation variance on TEST (R²). | open | |
+| 17.2 | The input-only control (a Qwen3-0.6B LoRA) gets at most 56% on sign(r_G1) on TEST. | open | |
+| 17.3 | The self-reader gets at most 58% on sign(r_G1) on TEST, and does not beat the input-only control by 5 points or more. | open | |
+| 17.4 | Natural-value transplant (20th vs 80th percentile, text fixed): the paired readout moves the right way on at least 70% of TEST messages for G1. | open | |
+| 17.5 | GL (last layer) and shuffled labels both stay within 47-53% in the natural-residual and transplant arms. | open | |
