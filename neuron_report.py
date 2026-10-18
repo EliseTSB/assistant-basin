@@ -103,6 +103,13 @@ def _arg_parser() -> argparse.ArgumentParser:
         p.add_argument('--effort', default='medium')
         p.add_argument('--n', type=int, default=12 if name == 'describe' else 10)
         p.add_argument('--seed', type=int, default=0)
+        if name == 'test':
+            p.add_argument('--positives', choices=['top', 'mid'], default='top',
+                           help='top: the unit\'s strongest tokens; mid: tokens at 25-50%% of its maximum (harder)')
+            p.add_argument('--negatives', choices=['random', 'same-doc'], default='random',
+                           help='random: any odd-document tokens (shared by all units); same-doc: tokens below the unit\'s '
+                                'median from the SAME documents as its positives (the topic is there, the firing is not)')
+            p.add_argument('--tag', default='', help='suffix for test.json, e.g. -samedoc')
     p = sub.add_parser('compare')
     p.add_argument('--a', required=True)
     p.add_argument('--b', required=True)
@@ -501,8 +508,24 @@ def cmd_test(a):
         if not desc.get(str(u), {}).get('description'):
             res[str(u)] = {'error': 'no description'}
             continue
-        top = _top_rows(A[:, i], odd, D, a.n)
-        rand = [r for r in shared if r not in set(top)][: a.n]
+        col = A[:, i]
+        if a.positives == 'top':
+            top = _top_rows(col, odd, D, a.n)
+        else:  # mid: one per document among tokens at 25-50% of the unit's maximum
+            band = odd[(col[odd] >= 0.25 * col.max()) & (col[odd] <= 0.5 * col.max())]
+            top = _top_rows(-np.abs(col - 0.375 * col.max()), band, D, a.n) if len(band) else []
+            if len(top) < a.n:
+                res[str(u)] = {'error': f'only {len(top)} mid-band tokens'}
+                continue
+        if a.negatives == 'random':
+            rand = [r for r in shared if r not in set(top)][: a.n]
+        else:
+            docs_pos = {int(D[r]) for r in top}
+            pool = odd[np.isin(D[odd], list(docs_pos)) & (col[odd] < np.median(col))]
+            if len(pool) < a.n:
+                res[str(u)] = {'error': f'only {len(pool)} same-document negatives'}
+                continue
+            rand = [int(r) for r in rng.choice(pool, size=a.n, replace=False)]
         items = [(r, 1) for r in top] + [(r, 0) for r in rand]
         order = rng.permutation(len(items))
         items = [items[j] for j in order]
@@ -524,14 +547,15 @@ def cmd_test(a):
         res[str(u)] = {'auroc': _auroc(pos, neg), 'mean_p_top': float(np.mean(pos)), 'mean_p_random': float(np.mean(neg))}
         print(f'  {u}: AUROC {res[str(u)]["auroc"]:.3f}', flush=True)
     ctrl = [res[str(u)]['auroc'] for u in units[1:] if 'auroc' in res[str(u)]]
-    out = {'tester': a.model, 'route': a.route, 'effort': a.effort, 'docs_used': 'odd', 'n_top': a.n, 'n_random': a.n,
+    out = {'tester': a.model, 'route': a.route, 'effort': a.effort, 'docs_used': 'odd', 'n_pos': a.n, 'n_neg': a.n,
+           'positives': a.positives, 'negatives': a.negatives,
            'units': res, 'target': str(units[0]), 'target_auroc': res[str(units[0])].get('auroc'),
            'controls_auroc_median': float(np.median(ctrl)) if ctrl else None,
            'controls_auroc_max': float(max(ctrl)) if ctrl else None,
            'controls_with_auroc': len(ctrl),
            'target_rank_among_all': (1 + sum(c > res[str(units[0])]['auroc'] for c in ctrl))
            if ctrl and 'auroc' in res[str(units[0])] else None}
-    _dump(out, os.path.join(a.out, 'test.json'))
+    _dump(out, os.path.join(a.out, f'test{a.tag}.json'))
     print(json.dumps({k: out[k] for k in ('target_auroc', 'controls_auroc_median', 'controls_auroc_max', 'target_rank_among_all')}))
 
 

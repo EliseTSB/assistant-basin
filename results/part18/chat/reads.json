@@ -1,0 +1,5459 @@
+{
+ "tool": "neuron_report.py (assistant-basin, Part 18)",
+ "model": "Qwen/Qwen3.5-4B",
+ "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "layer": 22,
+ "neuron": 2742,
+ "layers_module": "model.layers",
+ "neurons_in_layer": 9216,
+ "controls": [
+  152,
+  376,
+  692,
+  1613,
+  2481,
+  2833,
+  4638,
+  4702,
+  5009,
+  5160,
+  5587,
+  5825,
+  5859,
+  5979,
+  6720,
+  7487,
+  7823,
+  8404,
+  8617,
+  8941
+ ],
+ "control_seed": 0,
+ "neuron_definition": "input to down_proj (act(gate(x)) * up(x)), one unit",
+ "clamp_definition": "activation SET to k x the unit's largest activation on the reads corpus, at every position",
+ "written": "2026-10-18 14:03:16",
+ "corpus": "qwen35\\pile10k.jsonl",
+ "docs": 3000,
+ "tokens": 669404,
+ "max_len": 256,
+ "units": {
+  "2742": {
+   "max": 15.375,
+   "min": -7.84375,
+   "mean": -0.09751375019550323,
+   "std": 0.18263190984725952,
+   "frac_positive": 0.14486617946710806,
+   "quantiles": {
+    "0.001": -0.58984375,
+    "0.01": -0.41796875,
+    "0.5": -0.08837890625,
+    "0.99": 0.15234375,
+    "0.999": 1.7890625
+   },
+   "top": [
+    {
+     "act": 15.375,
+     "doc": 1777,
+     "pos": 163,
+     "text": " involving everything from robotic replacements to Cold War telepathic spies and crime magnates, not to mention the odd towering,« alien»-created Bigfoot cyborg."
+    },
+    {
+     "act": 15.1875,
+     "doc": 1910,
+     "pos": 99,
+     "text": " humans don’t contaminate planets, moons, and other objects in space.⏎⏎They’re also supposed to help prevent any« alien» microbes that might exist from spreading"
+    },
+    {
+     "act": 13.375,
+     "doc": 1535,
+     "pos": 15,
+     "text": "“We are not alone in the universe. And I aim to prove it.”« -» Peter Davenport"
+    },
+    {
+     "act": 10.125,
+     "doc": 2162,
+     "pos": 59,
+     "text": " distant future of a parallel universe, the series follows twelve individuals chosen by the constellations to fight Jark Matter,« an» evil organization that has taken over"
+    },
+    {
+     "act": 8.6875,
+     "doc": 243,
+     "pos": 21,
+     "text": "---⏎abstract: 'Dark Matter detectors with directional sensitivity have the potential of yielding an unambiguous positive observation« of» WIMPs as well as"
+    },
+    {
+     "act": 7.5938,
+     "doc": 2445,
+     "pos": 232,
+     "text": " period romance The Age of Adaline. A24’s Ex Machina, which hit a sweet spot with the «2»5-34 demo,"
+    },
+    {
+     "act": 7.5625,
+     "doc": 591,
+     "pos": 85,
+     "text": " the existence of a genre which the authors already knew very well but which still didn’t have a name.⏎In «1»976 the International Science"
+    },
+    {
+     "act": 7.0,
+     "doc": 2724,
+     "pos": 138,
+     "text": " the space-faring races described in the Star Trek TV series. This included the Federation, Klingons, Romulans«,» Gorns, Tholians"
+    },
+    {
+     "act": 6.9688,
+     "doc": 0,
+     "pos": 135,
+     "text": " of game I wanted to develop, gameplay wise – something with lots of enemies/actors, simple graphics, maybe set in« space», controlled from a top-down"
+    },
+    {
+     "act": 6.4062,
+     "doc": 2894,
+     "pos": 33,
+     "text": ", writing a hysterical piece that incorrectly reported the Defence Ministry had paid hundreds of millions of pounds to buy a five-inch«-long» gun.⏎⏎“We just blew"
+    },
+    {
+     "act": 6.375,
+     "doc": 266,
+     "pos": 76,
+     "text": "shows promise as a portable X-ray unit⏎⏎possibly useful as a heat source to provide auxilliary power for space probes« and» satellites"
+    },
+    {
+     "act": 6.3125,
+     "doc": 2091,
+     "pos": 9,
+     "text": "Creating history, India's first unmanned spacecraft mission« to» moon, the Chandrayaan"
+    },
+    {
+     "act": 6.2812,
+     "doc": 2165,
+     "pos": 147,
+     "text": " the 17th century. Knowing this (finite) speed, it's not hard for me to draw the conclusion« that» the source of the light I"
+    },
+    {
+     "act": 5.7812,
+     "doc": 985,
+     "pos": 3,
+     "text": "First observational evidence« of» ‘Dark Matter Heating’ discovered"
+    },
+    {
+     "act": 5.6875,
+     "doc": 1102,
+     "pos": 18,
+     "text": "Supermen (anthology)⏎⏎Supermen is an anthology of science fiction short stories edited« by» Isaac Asimov, Martin"
+    },
+    {
+     "act": 5.5312,
+     "doc": 1373,
+     "pos": 85,
+     "text": " Mythopoeic Fantasy Award in 2007.⏎⏎Plot ⏎The Necessary Beggar tells the story of« alleged» murderer Darroti and his"
+    },
+    {
+     "act": 5.2812,
+     "doc": 903,
+     "pos": 16,
+     "text": "Experience the legendary battle between the Autobots and Decepticons before their exodus« to» Earth in the untold story"
+    },
+    {
+     "act": 5.125,
+     "doc": 60,
+     "pos": 141,
+     "text": " place the Earth squarely in its⏎sights this week as it aims its solar ray gun. Astronomers⏎tell« terrestrial» dwellers not to sweat it"
+    },
+    {
+     "act": 5.0312,
+     "doc": 392,
+     "pos": 224,
+     "text": " heavy-industry inspired, non-traditional materials, and an avowed interest in mathematics, physics, optics, and« outer» space. Artists like De W"
+    },
+    {
+     "act": 4.8438,
+     "doc": 545,
+     "pos": 26,
+     "text": "The rich neon blue color in apatite is often due to the presence of rare earth elements or by natural irid«iation». This attractive sphere, having"
+    }
+   ],
+   "bottom": [
+    {
+     "act": -7.8438,
+     "doc": 2320,
+     "pos": 42,
+     "text": " study of the overshoot convective mechanism in nova outbursts for a wide range of possible compositions of the layer underlying« the» accreted envelope. Previous"
+    },
+    {
+     "act": -5.5625,
+     "doc": 668,
+     "pos": 136,
+     "text": "\\,s^{-1}\\,$]{}). The total power of the emission-line source exceeds by one or two orders« of» magnitude the power observed expansion rate"
+    },
+    {
+     "act": -4.4688,
+     "doc": 1499,
+     "pos": 105,
+     "text": " $l$ by one order approximation. If we suppose that oscillations effect the particles’ escaping from the polar cap of« a» neutron star, so that the"
+    },
+    {
+     "act": -3.2812,
+     "doc": 556,
+     "pos": 42,
+     "text": "40,000, Dust, Urban War and other science fiction games⏎⏎Friday, 11 October «2»013⏎⏎Angry"
+    },
+    {
+     "act": -2.9062,
+     "doc": 60,
+     "pos": 240,
+     "text": "ares,⏎space storms that can disrupt weather and electrical systems⏎on Earth.⏎⏎Solar flares are the largest explosions« in» the solar system.⏎A"
+    },
+    {
+     "act": -2.8594,
+     "doc": 2165,
+     "pos": 205,
+     "text": " die?⏎⏎A:⏎⏎Super novae were known a long time ago.  But they were not understood as a« the» death throes of a star"
+    },
+    {
+     "act": -2.2344,
+     "doc": 1579,
+     "pos": 146,
+     "text": "Kenyon2008 (Kenyon et al. 2008)]. To investigate the impact of the« low»-density environment on the discs in"
+    },
+    {
+     "act": -1.8672,
+     "doc": 2724,
+     "pos": 201,
+     "text": " of naval fleet action involving dozens (or more) ships. Nearly all ships move at the same speed (Warp Factor« »6). With so many ships"
+    },
+    {
+     "act": -1.6094,
+     "doc": 1223,
+     "pos": 156,
+     "text": " for a specific outsider to use. Let’s use an example from the VFS (virtual file system) class in Ser«enity»:⏎⏎class VFS {"
+    },
+    {
+     "act": -1.4453,
+     "doc": 985,
+     "pos": 231,
+     "text": " at the centres of nearby dwarf galaxies. Dwarf galaxies — small, faint galaxies that are typically found orbiting larger galaxies like« our» own Milky Way — may hold"
+    },
+    {
+     "act": -1.3125,
+     "doc": 582,
+     "pos": 46,
+     "text": " sequel, according to a new report on Kotaku.⏎⏎The latest update to \"Destiny\" is called \"R«ise» of Iron.\" The sequel is"
+    },
+    {
+     "act": -1.25,
+     "doc": 903,
+     "pos": 47,
+     "text": " of the civil war for their home planet, Cybertron. Two distinct and intertwined campaigns chronicle the Autobots heroism« in» the face of total annihilation"
+    },
+    {
+     "act": -0.8906,
+     "doc": 1057,
+     "pos": 4,
+     "text": "Fish poisoning may be« why» Polynesians left paradise⏎⏎"
+    },
+    {
+     "act": -0.8555,
+     "doc": 1261,
+     "pos": 131,
+     "text": " of the Earth’s axis. The position and phase of the Moon are based on the predictable motions of the Moon and the« Earth». And all of these are"
+    },
+    {
+     "act": -0.832,
+     "doc": 1083,
+     "pos": 1,
+     "text": "Low«-m»aintenance management: using a simple"
+    },
+    {
+     "act": -0.8203,
+     "doc": 968,
+     "pos": 254,
+     "text": " which is significant and cannot be neglected. Combining the power spectrum, PDF, and peak counts for AdvACT will tighten« cosm»ological"
+    },
+    {
+     "act": -0.8203,
+     "doc": 1689,
+     "pos": 29,
+     "text": " A-C, antibacterial metabolites isolated from Streptomyces asenjonii strain KNN 42.f« from» an extreme-hyper arid"
+    },
+    {
+     "act": -0.7891,
+     "doc": 409,
+     "pos": 20,
+     "text": "Seven rare rhinos spotted in Indonesian jungle⏎⏎August 9, 2012 in Biology« /» Ecology⏎⏎In this undated"
+    },
+    {
+     "act": -0.7852,
+     "doc": 849,
+     "pos": 139,
+     "text": "2007) at the Newport Beach Film Festival, the Best Global Insight Film (2007) at« the» Jackson Hole Film Festival , the"
+    },
+    {
+     "act": -0.7773,
+     "doc": 2924,
+     "pos": 31,
+     "text": " and the Brown way of life: brought to you by Brown University Admissions Office⏎⏎From Albania to Zimbabwe: My Very« First» Halloweekend⏎⏎"
+    }
+   ]
+  },
+  "152": {
+   "max": 19.875,
+   "min": -1.3046875,
+   "mean": -0.25521376729011536,
+   "std": 0.42341291904449463,
+   "frac_positive": 0.009350108454685063,
+   "quantiles": {
+    "0.001": -0.8515625,
+    "0.01": -0.671875,
+    "0.5": -0.2578125,
+    "0.99": -0.01556396484375,
+    "0.999": 6.625
+   },
+   "top": [
+    {
+     "act": 19.875,
+     "doc": 625,
+     "pos": 78,
+     "text": " viewers.⏎⏎Hyundai Ad Showcases Blockchain⏎⏎A blockchain advert by Hyundai Digital Asset Company (HDAC), presenting a« high»-tech vision of the future featuring"
+    },
+    {
+     "act": 19.875,
+     "doc": 2602,
+     "pos": 44,
+     "text": " over and rummage round, I tried looking for stamped brick but they are thin on the ground, saw one from the« high» harbour as the tide was coming"
+    },
+    {
+     "act": 19.375,
+     "doc": 2385,
+     "pos": 105,
+     "text": " several more farther up the road are completely blocked with silt, so that when it rains the water comes out a drain« higher» up the road and flows down"
+    },
+    {
+     "act": 18.875,
+     "doc": 2654,
+     "pos": 186,
+     "text": " downs, and we have become convinced that staying married and strengthening a marriage over time are often a matter of realizing just how« high» the stakes are and being committed"
+    },
+    {
+     "act": 18.625,
+     "doc": 2340,
+     "pos": 104,
+     "text": " wrote a piece about John Podesta’s brother, Tony, also a major Democrat political mover and shaker in Washington. A« high»-powered art collector as well,"
+    },
+    {
+     "act": 18.5,
+     "doc": 149,
+     "pos": 25,
+     "text": " January 1, 2018, the most significant overhaul to the Internal Revenue Code in decades took effect.« High»-income taxpayers stand to benefit from"
+    },
+    {
+     "act": 18.125,
+     "doc": 834,
+     "pos": 12,
+     "text": "News⏎⏎Auburn Public Theater will welcome a pair of« high»-profile musicians within a week of"
+    },
+    {
+     "act": 17.875,
+     "doc": 2149,
+     "pos": 104,
+     "text": " Making the declaration at his own behest and without other sources claiming to have knowledge of his attraction is possibly a first among« high»-profile black male celebrities.⏎⏎"
+    },
+    {
+     "act": 17.625,
+     "doc": 141,
+     "pos": 108,
+     "text": " a set perspective on the interplay of typical sets of genotypes from two populations, a geometric perspective on their structure in« high» dimensional space, and a statistical"
+    },
+    {
+     "act": 17.625,
+     "doc": 41,
+     "pos": 30,
+     "text": " path, although it may not be seen from the valley⏎⏎I'm now taking commissions, if you're interested in some« high» quality terrain PM me.⏎⏎⏎⏎⏎⏎"
+    },
+    {
+     "act": 17.5,
+     "doc": 879,
+     "pos": 5,
+     "text": "Subtraction method for the« high»-performance liquid chromatographic measurement of"
+    },
+    {
+     "act": 17.375,
+     "doc": 1995,
+     "pos": 49,
+     "text": ", the region’s former premier who is widely regarded as the godfather of modern-day Catalan nationalism, was questioned in the« high» court regarding a fortune he had"
+    },
+    {
+     "act": 17.25,
+     "doc": 240,
+     "pos": 89,
+     "text": "⏎more⏎⏎The Kumon Method was founded in Japan in 1954. Toru Kumon, a« high» school math teacher, was trying"
+    },
+    {
+     "act": 17.25,
+     "doc": 634,
+     "pos": 248,
+     "text": " built in 1989, and has the same number of floors and basements as its younger twin. The« high»-rise is used for offices,"
+    },
+    {
+     "act": 17.125,
+     "doc": 2239,
+     "pos": 224,
+     "text": ".⏎⏎Christopher Lester, prosecuting, said Border Force intercepted a suspicious package from Holland bound for Juson's home address in« High»more Street, Hereford on"
+    },
+    {
+     "act": 17.125,
+     "doc": 342,
+     "pos": 102,
+     "text": " Surtees to Sir Walter Scott:⏎⏎In the year before the Great Rebellion two young men from Newcastle were sporting on the« high» moors above Elsdon"
+    },
+    {
+     "act": 17.0,
+     "doc": 988,
+     "pos": 129,
+     "text": " cannot make it happen. As a very simplistic model I have the following⏎$(function () {⏎  $('#container').«high»charts({⏎      chart:"
+    },
+    {
+     "act": 17.0,
+     "doc": 370,
+     "pos": 1,
+     "text": "Two« high» school football players from a team"
+    },
+    {
+     "act": 17.0,
+     "doc": 2480,
+     "pos": 144,
+     "text": " and resource/system support. I offer ideas for solutions that increase the probability of success. I conclude with the need to have« high» hopes tempered by theory and research"
+    },
+    {
+     "act": 16.875,
+     "doc": 2675,
+     "pos": 10,
+     "text": "The Massachusetts Institute of Technology proposes that support for the« High» Field NMR Resource (Grant"
+    }
+   ],
+   "bottom": [
+    {
+     "act": -1.3047,
+     "doc": 1313,
+     "pos": 95,
+     "text": " catechins from black tea in humans drinking tea throughout the day. After 5 d of consuming a low flavon«oid» diet, subjects drank a black"
+    },
+    {
+     "act": -1.2578,
+     "doc": 1627,
+     "pos": 66,
+     "text": " free form text and allows words and numbers of different lengths. I want to find a string that is not part of a« larger» string of text and numbers."
+    },
+    {
+     "act": -1.25,
+     "doc": 2198,
+     "pos": 238,
+     "text": " (born 1967), United States politician⏎Lady of Cao, a Moche mummy, Peru⏎«Long»bing Cao (born 1"
+    },
+    {
+     "act": -1.1875,
+     "doc": 2853,
+     "pos": 129,
+     "text": " of the highest quality tier 90 plastic. Its sleek, wraparound style is highly popular and typically fits medium to« large» heads. These frames are designed"
+    },
+    {
+     "act": -1.1875,
+     "doc": 1341,
+     "pos": 177,
+     "text": " stabilized in a few-atom cluster, and may then be used as LEGO${\\textregistered}$ block to build a« large» magnetic mosaic. The realization of"
+    },
+    {
+     "act": -1.1719,
+     "doc": 1789,
+     "pos": 178,
+     "text": " available for public adoption after receiving vaccinations or other needed veterinary care.⏎⏎Horses that are not adopted will be held in« large» Midwestern pastures to live"
+    },
+    {
+     "act": -1.1719,
+     "doc": 2625,
+     "pos": 147,
+     "text": " is achieved at the boundary of null hypothesis. In this paper, we show that the power function for each test in a« large» family of tests is nonde"
+    },
+    {
+     "act": -1.1719,
+     "doc": 1372,
+     "pos": 247,
+     "text": " and a control unit. In addition, the system is provided with an external memory connected with the microprocessors to store a« large» pieces of data, and external"
+    },
+    {
+     "act": -1.1719,
+     "doc": 1323,
+     "pos": 173,
+     "text": " proteins that require post-translational modifications to preserve their bioactivity.⏎Culturing cells in vitro, especially in« large» bioreactors, has been"
+    },
+    {
+     "act": -1.1641,
+     "doc": 1793,
+     "pos": 81,
+     "text": "lio tell her that the Tea Party is a big deal because the whole class goes including the Fairies, and they hosted« bigger» parties. When Sofia is chosen"
+    },
+    {
+     "act": -1.1562,
+     "doc": 2417,
+     "pos": 61,
+     "text": " page load. I accomplished this by using the following line of code:⏎  msgDiv = document.getElementById('message_row«_large»');⏎  msgDiv.scrollTop"
+    },
+    {
+     "act": -1.1406,
+     "doc": 978,
+     "pos": 34,
+     "text": " and repair of all major home and commercial appliances, A/C and Heating units, including most brands and models. Serving the« Greater» Los Angeles and San Fernando Valley"
+    },
+    {
+     "act": -1.1328,
+     "doc": 780,
+     "pos": 19,
+     "text": "Q:⏎⏎Large form crashing on second opening⏎⏎I have this problem where I have a very« large» form (winforms) that"
+    },
+    {
+     "act": -1.125,
+     "doc": 936,
+     "pos": 76,
+     "text": "FS) as a completely redesigned, scalable, parallel and distributed version of the CFS algorithm, capable of dealing with the« large» volumes of data typical of big"
+    },
+    {
+     "act": -1.125,
+     "doc": 856,
+     "pos": 221,
+     "text": " numerical approximation by rational approximants. The method is primarily useful in those cases where the leading (but not sub-leading)« large»-order asymptotics of the perturb"
+    },
+    {
+     "act": -1.125,
+     "doc": 1320,
+     "pos": 198,
+     "text": " (It occurs frequently when washing different kind of clothe, bulky items, such as waterproof sheet, shoes, mattresses,« large» dolls, etc.)⏎⏎Q"
+    },
+    {
+     "act": -1.1172,
+     "doc": 1054,
+     "pos": 200,
+     "text": " regional economic development group Greater MSP and state economic development staff submitted a proposal that ultimately failed.⏎⏎Although it fell short,« Greater» MSP initially opposed public disclosure of"
+    },
+    {
+     "act": -1.1172,
+     "doc": 1336,
+     "pos": 40,
+     "text": " unit incorporates all the optical system, but the main and power supply units are compact and lightweight.⏎⏎2.5-inch« large» TFT liquid crystal display screen⏎⏎"
+    },
+    {
+     "act": -1.1094,
+     "doc": 1499,
+     "pos": 178,
+     "text": "pulse period $P_{3}$ can be gotten from the width of subpulses and order $l$; the« larger» velocity drift may produce the peak"
+    },
+    {
+     "act": -1.1094,
+     "doc": 1946,
+     "pos": 24,
+     "text": "Old White Lion, Bury⏎⏎The Old White Lion is a public house at 6 Bolton Street, Bury,« Greater» Manchester BL9 0L"
+    }
+   ]
+  },
+  "376": {
+   "max": 14.3125,
+   "min": -4.84375,
+   "mean": -0.19846558570861816,
+   "std": 0.29789116978645325,
+   "frac_positive": 0.05215684399854199,
+   "quantiles": {
+    "0.001": -0.63671875,
+    "0.01": -0.5234375,
+    "0.5": -0.2255859375,
+    "0.99": 0.89453125,
+    "0.999": 3.4155781269073486
+   },
+   "top": [
+    {
+     "act": 14.3125,
+     "doc": 2964,
+     "pos": 210,
+     "text": " or Area 24c) to the facial and spinal accessory nuclei. The investigators will determine if the M3 projection«:» 1) targets lower motor"
+    },
+    {
+     "act": 13.6875,
+     "doc": 2207,
+     "pos": 185,
+     "text": " running exercise further reduced the size of the chronically enlarged MUs in the extensively denervated muscles. We have therefore« (»1) successfully established a rat"
+    },
+    {
+     "act": 13.6875,
+     "doc": 1548,
+     "pos": 64,
+     "text": " the three serum binders were compared in serum and plasma samples from subjects with various disorders. The results allow the following conclusions«:» (1) As previously reported"
+    },
+    {
+     "act": 13.5625,
+     "doc": 2116,
+     "pos": 198,
+     "text": " we argue that the increasing prominence and promise of partnered work can inform the development of a more thorough understanding of RI by exploring« (»1) how academic and community"
+    },
+    {
+     "act": 13.1875,
+     "doc": 2876,
+     "pos": 237,
+     "text": " how the spatial arrangement of stimuli in one part of the visual field affects performance in another. Specifically, we test several hypotheses«:» (1) that the spatial"
+    },
+    {
+     "act": 13.0,
+     "doc": 2491,
+     "pos": 159,
+     "text": " DCG model that entails the maximum number of d-separation rules. We provide theoretical results comparing these assumptions which show that«:» (1) selecting models with"
+    },
+    {
+     "act": 12.625,
+     "doc": 528,
+     "pos": 219,
+     "text": " the applicant raised the following contentions:⏎1. That petitioner was the subject of an illegal arrest for the reasons that«:»⏎a. He was not"
+    },
+    {
+     "act": 12.1875,
+     "doc": 2516,
+     "pos": 106,
+     "text": " found this to be a Fas ligand- and Fas receptor-dependent process. We propose that PA-induced apoptosis occurs either by« (»A) direct translocation of"
+    },
+    {
+     "act": 11.8125,
+     "doc": 1421,
+     "pos": 193,
+     "text": " to the data and to the associated analytic tools. Finally, we outline a research plan that uses the PharmGKB to« (»1) address difficult data modeling"
+    },
+    {
+     "act": 11.4375,
+     "doc": 2608,
+     "pos": 51,
+     "text": "ionic currents in single intact Ranvier nodes of the toad Xenopus were investigated. The following fully reversible effects were observed«:» 1. With a test"
+    },
+    {
+     "act": 11.375,
+     "doc": 1242,
+     "pos": 149,
+     "text": " = \\pi^{-1}(x)$ has the structure of an $n$-dimensional real vector space such that«:»⏎Axiom of local"
+    },
+    {
+     "act": 11.0625,
+     "doc": 1510,
+     "pos": 241,
+     "text": "0 and my cd4's went from 1350 to 1170.a couple points to note«:» 1 I did my blood"
+    },
+    {
+     "act": 10.8125,
+     "doc": 1831,
+     "pos": 213,
+     "text": "-old malnourished animals that received clonidine during the suckling period, show that the pharmacological treatment prevented«:» (i) deficits in both"
+    },
+    {
+     "act": 10.25,
+     "doc": 2189,
+     "pos": 247,
+     "text": " combination of risk factors that identify females and males at increased risk of suffering an ACL injury. The hypothesis of our study is«:» A combination of demographic, injury"
+    },
+    {
+     "act": 10.125,
+     "doc": 1504,
+     "pos": 126,
+     "text": ") model building. In addition, we intend to investigate the interaction of the peptide antibiotics and hormones with a view to understanding« (»a) the sites for detergent"
+    },
+    {
+     "act": 10.125,
+     "doc": 2372,
+     "pos": 58,
+     "text": " silicon is used as a gate electrode material up to 90 nm node. The conventional process has several advantages such as«:» (i) it is compatible"
+    },
+    {
+     "act": 9.875,
+     "doc": 2132,
+     "pos": 95,
+     "text": " role in the induction of single- or multiple-organ dysfunction. Flavonoids were selected in vitro for their capacity to« (»1) inhibit xanthine"
+    },
+    {
+     "act": 9.875,
+     "doc": 2041,
+     "pos": 227,
+     "text": " The respondent, the District Clerk of \r⏎Travis County, is ordered to file a response, which may be made by«:» submitting the record on such\r⏎"
+    },
+    {
+     "act": 9.8125,
+     "doc": 2675,
+     "pos": 179,
+     "text": " past six years at M.I.T. almost exclusively with private funds. The major new technologies which we propose to introduce are«:» (1) a capability to"
+    },
+    {
+     "act": 9.8125,
+     "doc": 2868,
+     "pos": 181,
+     "text": " cause is before us on appeal from a final order dismissing appellants' second amended complaint with prejudice. Appellants contend« (»1) that the trial court"
+    }
+   ],
+   "bottom": [
+    {
+     "act": -4.8438,
+     "doc": 663,
+     "pos": 252,
+     "text": " the pilot is engaged in a flight operation under⏎  part 91 or 121 for that certificate holder« if» the pilot in"
+    },
+    {
+     "act": -3.5625,
+     "doc": 1584,
+     "pos": 72,
+     "text": "Does the word \"hating\" mean envious? ⏎⏎A:⏎⏎In this context, a record deal could mean« one» of two things:⏎It"
+    },
+    {
+     "act": -3.0938,
+     "doc": 2800,
+     "pos": 100,
+     "text": " force may use deadly force against another individual anywhere he or she has the legal right to be with no duty to retreat if« either» of the following applies . ."
+    },
+    {
+     "act": -2.5469,
+     "doc": 857,
+     "pos": 12,
+     "text": "GT300⏎⏎The GT300 may refer« to»:⏎⏎ A Super GT car"
+    },
+    {
+     "act": -2.3125,
+     "doc": 1887,
+     "pos": 149,
+     "text": " span.⏎⏎Debit card loans come to you only when you are able to meet some requirements that are give below:«⏎⏎»First of all, you should"
+    },
+    {
+     "act": -2.0781,
+     "doc": 2335,
+     "pos": 59,
+     "text": "0 years imprisonment in the District Court or 2 years in the Local Court.⏎⏎‘Child abuse material’ is material« that» depicts or describes, in a"
+    },
+    {
+     "act": -1.9688,
+     "doc": 410,
+     "pos": 234,
+     "text": ".⏎⏎\tRule Amendments⏎The amendments generally require that in order to be used for such purpose, a money market fund« must» be approved by the NYM"
+    },
+    {
+     "act": -1.8672,
+     "doc": 298,
+     "pos": 108,
+     "text": " will only be given penalty relief on their tax return or activity statement if they make an inadvertent error because they either:«⏎»– took a position on income"
+    },
+    {
+     "act": -1.5859,
+     "doc": 2695,
+     "pos": 78,
+     "text": " who ate breakfast before exercise cleared glucose from their blood quickest, the team found. The researchers discovered that eating breakfast before exercising« not» only increased the rate at which"
+    },
+    {
+     "act": -1.4922,
+     "doc": 1898,
+     "pos": 12,
+     "text": "Pōmare⏎⏎Pōmare or Pomare may refer« to»:⏎⏎Pōmare Dynasty"
+    },
+    {
+     "act": -1.4141,
+     "doc": 348,
+     "pos": 9,
+     "text": "Sprint International⏎⏎Sprint International may refer« to»:⏎⏎ Sprint Corporation, telecommunications"
+    },
+    {
+     "act": -1.3281,
+     "doc": 72,
+     "pos": 159,
+     "text": " Sleep Train Arena.⏎⏎Golden State Warriors Projected Starters (31-22)⏎⏎What to watch⏎⏎«1». Can the Kings win without"
+    },
+    {
+     "act": -1.1641,
+     "doc": 2893,
+     "pos": 24,
+     "text": "RIGHT STEP SIDE, LEFT BEHIND, RIGHT STEP SIDE, LEFT HEEL, LEFT STEP BACK, RIGHT CROSS⏎⏎«1»-2 Step right to side"
+    },
+    {
+     "act": -1.0859,
+     "doc": 2268,
+     "pos": 176,
+     "text": " leaders. Although he works as prudent as he can he arouses suspicion and becomes a target himself.⏎⏎Cast⏎⏎References«⏎⏎»Bibliography⏎⏎External links"
+    },
+    {
+     "act": -1.0156,
+     "doc": 2355,
+     "pos": 24,
+     "text": "Scientists have proved that even the most seemingly innocent chat with a woman can be enough to send male sex hormones soaring.⏎⏎«A» team from the University of Chicago"
+    },
+    {
+     "act": -0.9805,
+     "doc": 1523,
+     "pos": 121,
+     "text": "3 Network Infrastructure Support for Emerging Behavioral and Social Research Areas in Aging. To foster cross-national studies of aging, we propose« to» develop a research network, bringing"
+    },
+    {
+     "act": -0.9414,
+     "doc": 1965,
+     "pos": 44,
+     "text": " of $12-$20/hr⏎Working hours: 4 or 8 hours⏎Easy job scope:⏎«1». Booth assistant giving expensive and"
+    },
+    {
+     "act": -0.9141,
+     "doc": 1688,
+     "pos": 215,
+     "text": " smile and say 'Yeah, I play a little.'⏎⏎\"To all the folks out there who do know that I play« (»and who appreciate what I play"
+    },
+    {
+     "act": -0.8828,
+     "doc": 430,
+     "pos": 109,
+     "text": " of energy and in terms of time.⏎One object of the present application is to make available a hydraulic quick coupling which« on» the one hand reduces the expenditure"
+    },
+    {
+     "act": -0.8633,
+     "doc": 984,
+     "pos": 11,
+     "text": "Frequency of feeding, weight reduction and energy metabolism.⏎«A» study was conducted to investigate the"
+    }
+   ]
+  },
+  "692": {
+   "max": 2.171875,
+   "min": -6.53125,
+   "mean": -0.20534135401248932,
+   "std": 0.41566669940948486,
+   "frac_positive": 0.30608421820007053,
+   "quantiles": {
+    "0.001": -2.84375,
+    "0.01": -1.6640625,
+    "0.5": -0.1171875,
+    "0.99": 0.54296875,
+    "0.999": 0.9140625
+   },
+   "top": [
+    {
+     "act": 2.1719,
+     "doc": 1624,
+     "pos": 192,
+     "text": " the Batalin-Vilkovisky formalism, to generalize known results, study the parametric completeness of general gauge theories« and» achieve a better understanding of several"
+    },
+    {
+     "act": 1.8594,
+     "doc": 13,
+     "pos": 48,
+     "text": "1?⏎⏎en mi búsqueda por aprender programación por mis propios medios, me he topado con el tema de recursividad« y» este simple código... mi pregunta"
+    },
+    {
+     "act": 1.8281,
+     "doc": 101,
+     "pos": 112,
+     "text": " Road⏎⏎### England⏎⏎### London⏎⏎#### London Highlights⏎⏎#### History⏎⏎#### Sights⏎⏎#### City Walk⏎⏎####« City» Walk⏎⏎#### Tours⏎⏎####"
+    },
+    {
+     "act": 1.7969,
+     "doc": 2967,
+     "pos": 89,
+     "text": " the soul’s beauty.”⏎⏎Philanthropy is love in action. Through your actions, through your philanthropy, through« your» charity, you share your love"
+    },
+    {
+     "act": 1.7188,
+     "doc": 1616,
+     "pos": 123,
+     "text": " is a cornerstone of a recent development in molecular pathology, variably referred to as \"personalized,\" \"precision,\" or« \"»individualized\" medicine. Much"
+    },
+    {
+     "act": 1.5938,
+     "doc": 717,
+     "pos": 92,
+     "text": " is the equivalent notion in Java (if it exists) and how would you use list properties in Java, in JPA« and»/or in JDO?⏎⏎"
+    },
+    {
+     "act": 1.5469,
+     "doc": 6,
+     "pos": 161,
+     "text": " a significant historical precedent. A whole chapter of my book Women Workers in the Soviet Interwar Economy: From ‘Protection’« to» ‘Equality’ (Macmill"
+    },
+    {
+     "act": 1.5312,
+     "doc": 374,
+     "pos": 206,
+     "text": " but the challenge was to turn these insights into practice.⏎⏎“What we learnt from Karl Marx is that philosophers interpret the world«.» However the point is to change"
+    },
+    {
+     "act": 1.5,
+     "doc": 1271,
+     "pos": 246,
+     "text": "’t support themselves on the old model. The schools that will be on top of the heap are the schools that evolve,« that» change, that react to the"
+    },
+    {
+     "act": 1.4688,
+     "doc": 2240,
+     "pos": 100,
+     "text": ". In this paper we will discuss the developments in the field of Systems Biology as they pertain to predictive food microbiology« and» give an example of state of"
+    },
+    {
+     "act": 1.4609,
+     "doc": 2217,
+     "pos": 109,
+     "text": " 500 seemed almost like parents at a piano recital — anxious to laugh at every joke and applaud every speaker« and» let all the organizers know that"
+    },
+    {
+     "act": 1.4531,
+     "doc": 2093,
+     "pos": 124,
+     "text": " of fenofibrate. Early detection of elevated hepatic enzymes after fenofibrate initial treatment helps physicians to avoid delayed diagnosis« and» subsequent treatment."
+    },
+    {
+     "act": 1.4297,
+     "doc": 424,
+     "pos": 66,
+     "text": " pancreatic trauma due to the complications associated with missed pancreatic injuries. Due to its retroperitoneal position, asociated organs« and» vascular injuries are almost always present"
+    },
+    {
+     "act": 1.4297,
+     "doc": 2499,
+     "pos": 194,
+     "text": " look at this horrible thing that took place today, it's really, is it subversion? It is treason? It«'s» a horrible thing. You know"
+    },
+    {
+     "act": 1.4141,
+     "doc": 2787,
+     "pos": 159,
+     "text": " — he’s going to probably need to continue to progress. So today, he’s available off the bench to pinch hit« and» then we’ll see where he"
+    },
+    {
+     "act": 1.3984,
+     "doc": 1978,
+     "pos": 233,
+     "text": " the lawsuit contended they were deprived of significant profits when WBTV allegedly undersold the series to affiliates the WB Network and« then» The CW instead of licensing the"
+    },
+    {
+     "act": 1.3906,
+     "doc": 109,
+     "pos": 86,
+     "text": " zero or) separating for $\\mathcal{R}$?⏎[I have edited to remove the restriction to type III factors« and» am moving my proposed partial solution"
+    },
+    {
+     "act": 1.3906,
+     "doc": 813,
+     "pos": 225,
+     "text": " and message of Beyond Elections?⏎⏎Michael Fox: I’ve been living and working in Latin America for many years, studying« and» reporting on, above all else"
+    },
+    {
+     "act": 1.3906,
+     "doc": 2123,
+     "pos": 170,
+     "text": " is raw, but promising. Vick's best days have passed, but he's an intriguing fit for Kelly's option scheme« and», on paper, a better"
+    },
+    {
+     "act": 1.375,
+     "doc": 702,
+     "pos": 207,
+     "text": " for non-EEA skilled workers.⏎⏎“If you want to recruit an Indian computer programmer on a four-year contract,« on» top of the existing visa charges"
+    }
+   ],
+   "bottom": [
+    {
+     "act": -6.5312,
+     "doc": 1651,
+     "pos": 97,
+     "text": " a source and a destination of the packet. Rather, clients issue requests for Content Objects, and routers across the network route« these» requests directly through the network to"
+    },
+    {
+     "act": -6.4375,
+     "doc": 1220,
+     "pos": 123,
+     "text": "5⏎Calculate prob of picking 1 a, 1 r, and 1 i when three letters picked without replacement« from» {y: 1,"
+    },
+    {
+     "act": -5.7188,
+     "doc": 603,
+     "pos": 204,
+     "text": " still common practice today to deny that Indigenous peoples were the first victims of the US’s genocidal policies, and that« those» surviving Natives, once milit"
+    },
+    {
+     "act": -5.6562,
+     "doc": 2080,
+     "pos": 127,
+     "text": " in Simpson County have shown their support by ordering three electric trucks from ZAP.⏎⏎LUBBOCK, TEXAS« –» High gas prices are changing the"
+    },
+    {
+     "act": -5.4688,
+     "doc": 1986,
+     "pos": 31,
+     "text": " switchable magnetic properties.⏎In certain applications it is advantageous if the magnetic permeability of a material can be tailored for« that» application at least within a specified"
+    },
+    {
+     "act": -5.3125,
+     "doc": 1230,
+     "pos": 43,
+     "text": " internal combustion engines. A fuel injection valve, and a method for producing the fuel injection valve, are already known, but« this» valve is not suitable for use"
+    },
+    {
+     "act": -5.2812,
+     "doc": 652,
+     "pos": 152,
+     "text": " In the basic operations of a lithium battery, a conversion material undergoes a conversion reaction with lithium, and the performance of« the» conversion material is an important aspect"
+    },
+    {
+     "act": -5.2188,
+     "doc": 2657,
+     "pos": 78,
+     "text": " Description of Related Art⏎The goal of field crop breeding is to combine various desirable traits in a single variety/hybrid.« Such» desirable traits include greater yield,"
+    },
+    {
+     "act": -5.2188,
+     "doc": 2175,
+     "pos": 161,
+     "text": " be listed in the following.⏎1) Asynchronous: Controlled units are not synchronized with each other, and communication between« the» units is performed via flags and"
+    },
+    {
+     "act": -5.1562,
+     "doc": 1738,
+     "pos": 45,
+     "text": " and in particular relates to improvements in real-time analysis of the measured optical signal characteristics from a sample to determine parameter values for« that» sample.⏎(This specification occasionally"
+    },
+    {
+     "act": -5.125,
+     "doc": 324,
+     "pos": 141,
+     "text": " transport.⏎One known rescue bag has been developed for keeping injured people warm while they are lying on stretchers. Though« this» rescue bag covers part of the"
+    },
+    {
+     "act": -5.0625,
+     "doc": 1943,
+     "pos": 199,
+     "text": " a bunch of arrogant smug sanctimonious gits. You provide a guide to a page then insult people who follow« that» guide. At the moment I"
+    },
+    {
+     "act": -5.0312,
+     "doc": 1902,
+     "pos": 75,
+     "text": ", a receiver can discover the sender\"\"s e-mail address from the information attached to the e-mail message. Thus,« the» receiver may subsequently send as many"
+    },
+    {
+     "act": -5.0,
+     "doc": 564,
+     "pos": 227,
+     "text": ".  But, what you can do is define a restricted type that does this, do all your connections and logic within« that» restricted type, then promote it"
+    },
+    {
+     "act": -4.9688,
+     "doc": 2852,
+     "pos": 228,
+     "text": " MPI⏎⏎Hope it helps!⏎No problem with MPI by the way each processor runs synchronously in parallel with all the« other» processors, and every processor shares"
+    },
+    {
+     "act": -4.8438,
+     "doc": 2503,
+     "pos": 253,
+     "text": "⏎Rearrange -2*i - 41 + 15 - 8 to r*i + x and« give» r."
+    },
+    {
+     "act": -4.8438,
+     "doc": 95,
+     "pos": 50,
+     "text": " is used in the medical field, an optical coherence tomography method, an ophthalmic apparatus, a method of controlling« the» ophthalmic apparatus, and"
+    },
+    {
+     "act": -4.7812,
+     "doc": 943,
+     "pos": 198,
+     "text": "2*t for t.⏎2⏎Solve 0 = -27*o + 34*o« for» o.⏎0⏎S"
+    },
+    {
+     "act": -4.7188,
+     "doc": 1877,
+     "pos": 192,
+     "text": " barrel employed two interlaced riflings having differing twist rates. A projectile having engravings matching the appropriate one of« the» riflings is manually inserted therein"
+    },
+    {
+     "act": -4.7188,
+     "doc": 2504,
+     "pos": 111,
+     "text": " provides a reference time for the time synchronization is set as a master, and a device which is to be time synchronized to« the» master device is set as a"
+    }
+   ]
+  },
+  "1613": {
+   "max": 6.21875,
+   "min": -4.53125,
+   "mean": 0.03584986925125122,
+   "std": 0.1519065946340561,
+   "frac_positive": 0.6386023985515473,
+   "quantiles": {
+    "0.001": -1.2890625,
+    "0.01": -0.34765625,
+    "0.5": 0.03173828125,
+    "0.99": 0.33984375,
+    "0.999": 0.859375
+   },
+   "top": [
+    {
+     "act": 6.2188,
+     "doc": 1828,
+     "pos": 121,
+     "text": " my certs somehow but I have no idea how to fix the issue. Does anyone know how to achieve this functionality ?⏎«Here» is my config⏎server {"
+    },
+    {
+     "act": 6.1875,
+     "doc": 2940,
+     "pos": 247,
+     "text": "                self.pulseData.append(data)⏎                self.updateGraph()⏎            }⏎        }⏎    }⏎⏎«Here» is my function for fetching the"
+    },
+    {
+     "act": 5.0938,
+     "doc": 166,
+     "pos": 196,
+     "text": " \"cancel.\" The only difference is, we want some of the fields of the record to be pre-populated.⏎«Here» is the code. You can"
+    },
+    {
+     "act": 5.0,
+     "doc": 2989,
+     "pos": 93,
+     "text": " I am trying to defined the method in two places, first in an interface, and second in the actual implementation.⏎«Here»'s my approach:⏎⏎//"
+    },
+    {
+     "act": 4.7188,
+     "doc": 2370,
+     "pos": 69,
+     "text": " it. However when I try to load an image I get a warning source.uri should not be an empty string.⏎«Here» is my code as it stands"
+    },
+    {
+     "act": 4.5938,
+     "doc": 2642,
+     "pos": 48,
+     "text": "Mycobacterium tuberculosis (Mtb)*; together with human immunodeficiency virus (HIV/AIDS) infection«,» TB is among the most prevalent"
+    },
+    {
+     "act": 4.4375,
+     "doc": 2599,
+     "pos": 197,
+     "text": ", the better. If I were out and about and looking to get myself any kind of cross tattoo put on myself this« is» exactly what I would get."
+    },
+    {
+     "act": 4.2188,
+     "doc": 2465,
+     "pos": 59,
+     "text": "xref> type and matching a list of specific xrefs using a Xquery (I'm new to this). ⏎«Here» is the input data:⏎"
+    },
+    {
+     "act": 4.0,
+     "doc": 2513,
+     "pos": 38,
+     "text": "⏎⏎I am trying to apply a Ternary operator to some JSON Data which is held in a separate file locally. « Below» is the JSON:⏎["
+    },
+    {
+     "act": 4.0,
+     "doc": 2135,
+     "pos": 98,
+     "text": "Any tips how I can download this large JSON filet? I have tried to use string and StringBuilder but no luck.⏎«Here» is my code:⏎public"
+    },
+    {
+     "act": 3.8438,
+     "doc": 1974,
+     "pos": 178,
+     "text": " any code for me, what I'm asking for help with is the concept of how I should attack this task.⏎«Here» is a query that I wrote"
+    },
+    {
+     "act": 3.8125,
+     "doc": 1619,
+     "pos": 100,
+     "text": "2623.87 m.⏎Can anyone please suggest, what has changed here?⏎Thanks!⏎⏎«Here» is the css I used for"
+    },
+    {
+     "act": 3.7344,
+     "doc": 2745,
+     "pos": 253,
+     "text": "?  I see links about creating the script as a webapp to do this, but I get lost quickly.⏎«Here»'s a"
+    },
+    {
+     "act": 3.6562,
+     "doc": 531,
+     "pos": 11,
+     "text": "Q:⏎⏎ASP.NET Response.Redirect( ) Error⏎⏎«Here» is my code:⏎try"
+    },
+    {
+     "act": 3.625,
+     "doc": 33,
+     "pos": 67,
+     "text": " never does it in the actual app. Not sure if i am doing something wrong or I'm losing my mind.⏎«Here» is the image⏎Here is"
+    },
+    {
+     "act": 3.6094,
+     "doc": 185,
+     "pos": 65,
+     "text": ".⏎I am asking the question here because I am fairly sure the problem is unix related and not gitlab.⏎«Here» is the setup:⏎⏎Using"
+    },
+    {
+     "act": 3.6094,
+     "doc": 2952,
+     "pos": 82,
+     "text": " boxes. Also I am confused as to why Rectangle@6bdf28bb is appearing in my code.⏎«Here» is my code for the assignment"
+    },
+    {
+     "act": 3.5781,
+     "doc": 422,
+     "pos": 122,
+     "text": " like a dental school, where patients are looking for solutions to their dental problems at a reasonable price, cast metal bases can« be» a feasible economical alternative for ed"
+    },
+    {
+     "act": 3.4688,
+     "doc": 669,
+     "pos": 108,
+     "text": "validator is used, how do I validate it within the grid, to alert the user that the total is inaccurate?⏎«Here»'s a piece of code,"
+    },
+    {
+     "act": 3.4531,
+     "doc": 921,
+     "pos": 59,
+     "text": " subjects), the third (entries) is one which links them both with foreign keys (student_id and subject_id). ⏎«Here» are all the tables with the"
+    }
+   ],
+   "bottom": [
+    {
+     "act": -4.5312,
+     "doc": 2130,
+     "pos": 47,
+     "text": " characterization of magnetic nanocomposites designed for applications in targeted drug delivery. Combining superparamagnetic behavior with proper surface functional«ization» in a single entity makes it"
+    },
+    {
+     "act": -4.2812,
+     "doc": 428,
+     "pos": 135,
+     "text": " what does it mean to have multiple owners? I thought that a lock could only be owned by a single process, and« that» all other processes interested in the"
+    },
+    {
+     "act": -4.2188,
+     "doc": 474,
+     "pos": 40,
+     "text": " I measure the value of g using only a metre stick and a ball? I am not supposed to use a stopwatch and« that» has been the problem.⏎"
+    },
+    {
+     "act": -4.1875,
+     "doc": 2482,
+     "pos": 202,
+     "text": " Market Depth; Price Dynamics; Nonlinearities; Technical and Fundamental Analysis.⏎⏎Introduction⏎============⏎⏎Interactions between heterogeneous« agents», so-called chartists and"
+    },
+    {
+     "act": -4.125,
+     "doc": 2146,
+     "pos": 225,
+     "text": "onged “ABC test,” which is used to determine who is and isn’t a freelancer. The “B” pr«ong», which presents the biggest issue"
+    },
+    {
+     "act": -4.125,
+     "doc": 846,
+     "pos": 38,
+     "text": " rat thoracic spinal cord.⏎The spinal cord is rarely transected after spinal cord injury. Dysfunction of surviving ax«ons», which traverse the site of"
+    },
+    {
+     "act": -3.8281,
+     "doc": 1235,
+     "pos": 91,
+     "text": " and die, but with Flutter and now this, I have to⏎go back and take another look. The tooling« was» fun, and they are developing"
+    },
+    {
+     "act": -3.7656,
+     "doc": 13,
+     "pos": 49,
+     "text": "?⏎⏎en mi búsqueda por aprender programación por mis propios medios, me he topado con el tema de recursividad y« este» simple código... mi pregunta ya"
+    },
+    {
+     "act": -3.7188,
+     "doc": 54,
+     "pos": 127,
+     "text": " clinical remission inevitably lose response over time\\[[@ref3],[@ref7]\\]. Lack of response to IFX« is» a stable trait and suggests that"
+    },
+    {
+     "act": -3.5938,
+     "doc": 426,
+     "pos": 142,
+     "text": " so the fellas take some time to answer your most pressing questions, concerns and confessions.⏎⏎To Hire or Not« to» Hire…⏎⏎How you can"
+    },
+    {
+     "act": -3.4375,
+     "doc": 2223,
+     "pos": 131,
+     "text": " precise timing of each celebration, based on distinctions such as lunar phase and geographic hemisphere.⏎⏎Observing the cycle of the« seasons» has been important to many people"
+    },
+    {
+     "act": -3.25,
+     "doc": 2094,
+     "pos": 21,
+     "text": "Alcohol expectancies pre-and post-alcohol use disorder treatment: Clinical implications.⏎Modification of elevated positive« expectations» of alcohol consumption (alcohol"
+    },
+    {
+     "act": -3.2188,
+     "doc": 1443,
+     "pos": 156,
+     "text": "]^ making the reactivation of dormant apoptotic programs a favorable approach in treatment. Activating extrinsic apoptosis using death lig«ands», such as tumor necrosis"
+    },
+    {
+     "act": -3.1094,
+     "doc": 2683,
+     "pos": 242,
+     "text": " the input and output signals, however, has not been thoroughly examined in known patents. Thus, improving the input-output line«arity» has been expected."
+    },
+    {
+     "act": -3.0938,
+     "doc": 2276,
+     "pos": 23,
+     "text": "A case report of an adolescent with cluster headaches following neck trauma: Coincidence or trigger?⏎Posttraumatic« headaches» usually have tension-type or migraine"
+    },
+    {
+     "act": -3.0938,
+     "doc": 1029,
+     "pos": 3,
+     "text": "Comparing alignment« methods» for inferring the history of"
+    },
+    {
+     "act": -3.0781,
+     "doc": 1059,
+     "pos": 118,
+     "text": "-polymers-08-00159]\\]. However, the lower curing rate and required higher curing« temperature» compared to other thermosetting"
+    },
+    {
+     "act": -3.0781,
+     "doc": 322,
+     "pos": 22,
+     "text": "Comparison of patient satisfaction with acrylic and flexible partial dentures.⏎Restoration of partial edentulous mouth may« be» done using a variety of treatment"
+    },
+    {
+     "act": -3.0,
+     "doc": 1283,
+     "pos": 45,
+     "text": " effusions often arise in patients with ovarian carcinoma. They are a hazardous complication of cancer. Systematic intraperitoneal« chemotherapy» is not necessarily followed by long"
+    },
+    {
+     "act": -3.0,
+     "doc": 2449,
+     "pos": 184,
+     "text": " accumulate a higher content of this micronutrient in bio-available form in the edible plant parts.⏎⏎Genetic traits have« been» associated with micronutrient content"
+    }
+   ]
+  },
+  "2481": {
+   "max": 6.21875,
+   "min": -3.953125,
+   "mean": -0.025684455409646034,
+   "std": 0.19868887960910797,
+   "frac_positive": 0.4368990923269057,
+   "quantiles": {
+    "0.001": -1.1484375,
+    "0.01": -0.6015625,
+    "0.5": -0.0072021484375,
+    "0.99": 0.578125,
+    "0.999": 1.4812265634536743
+   },
+   "top": [
+    {
+     "act": 6.2188,
+     "doc": 644,
+     "pos": 115,
+     "text": " study was to investigate the frequency and type of FMF-associated diseases in children. Files of FMF patients who had been« seen» in two reference hospitals in Ankara"
+    },
+    {
+     "act": 5.5312,
+     "doc": 686,
+     "pos": 52,
+     "text": " endoscopically from the antral-mucosa of 693 patients with peptic ulcer and chronic gastritis« presenting» dyspepsia symptoms."
+    },
+    {
+     "act": 5.4062,
+     "doc": 1065,
+     "pos": 69,
+     "text": " proceeds to the PowerUp! PRS Technology Campaign to benefit the Princeton Regional Schools.⏎⏎This Saturday and Sunday if you« eat» lunch at Eno Terra,"
+    },
+    {
+     "act": 4.9062,
+     "doc": 2848,
+     "pos": 42,
+     "text": " records of all patients ages 0 to 21 years who underwent proctosigmoidoscopy and/or rectal« biopsy» over a 27 month"
+    },
+    {
+     "act": 4.875,
+     "doc": 398,
+     "pos": 106,
+     "text": " rituximab, a retrospective chart analysis was performed on patients with pemphigus who were treated with rituxim«ab» in the dermatology clinic of"
+    },
+    {
+     "act": 4.7188,
+     "doc": 2177,
+     "pos": 148,
+     "text": " a hemp forest was a life changing experience!⏎⏎In 2015, Shadi begain working with hemp« on» a daily basis as a food"
+    },
+    {
+     "act": 4.2188,
+     "doc": 2913,
+     "pos": 47,
+     "text": "low told Calcalist on Sunday. Mr. Cherlow addressed the issue at a panel on kosher food and genetic modification« on» Thursday at Bar-Ilan University"
+    },
+    {
+     "act": 4.1562,
+     "doc": 2218,
+     "pos": 184,
+     "text": "'s leaving the White House in June after more than seven years of dessert-making. He plans to move to New York to« teach» about eating healthier, and join"
+    },
+    {
+     "act": 4.0938,
+     "doc": 2586,
+     "pos": 79,
+     "text": " to reach islands across the South Pacific. How?⏎⏎Surfing.⏎⏎A group of scientists led by Craig Franklin«,» and including the late “Cro"
+    },
+    {
+     "act": 4.0625,
+     "doc": 787,
+     "pos": 98,
+     "text": " findings will likely be welcomed by patients and doctors alike,\" said Dr. Ryan Terlecki, one of the study's« authors».⏎⏎As the oldest and"
+    },
+    {
+     "act": 4.0,
+     "doc": 2748,
+     "pos": 24,
+     "text": "Your Collection: Sticker Collection⏎⏎Here are some pictures of my sticker collection from late 70's forward. I« worked» for Cycle Five Kawasaki in Cal"
+    },
+    {
+     "act": 3.9375,
+     "doc": 292,
+     "pos": 93,
+     "text": " of Iowa. He is the father of poet Nicole Cooley.⏎⏎Career⏎Prior to joining Tulane, Cooley« taught» at the University of Wisconsin,"
+    },
+    {
+     "act": 3.8906,
+     "doc": 691,
+     "pos": 28,
+     "text": "ometriosis. Incidence and indications for resection.⏎Of 1573 consecutive patients with endometriosis« diagnosed» at laparoscopy or cel"
+    },
+    {
+     "act": 3.7188,
+     "doc": 2725,
+     "pos": 89,
+     "text": " its occurrence. We retrospectively analyzed 1,415 consecutive patients who underwent curative gastrectomy for gastric« cancer» between 1997"
+    },
+    {
+     "act": 3.6875,
+     "doc": 1173,
+     "pos": 58,
+     "text": " while travelling.\"Big danger to young woman, it can cause harm to pregnancy,\" said Dr. Juan Tapia-Mendoza«,» a pediatrician.Many of his"
+    },
+    {
+     "act": 3.6719,
+     "doc": 2065,
+     "pos": 189,
+     "text": " fatal if not treated before symptoms appear.⏎⏎People who believe they may have been exposed to the rabies virus⏎should« seek» medical attention immediately.⏎⏎This"
+    },
+    {
+     "act": 3.6562,
+     "doc": 192,
+     "pos": 214,
+     "text": " thought. I like Threema and one of the reasons I was an early⏎adopter is that the founder worked« on» m0n0wall before"
+    },
+    {
+     "act": 3.4844,
+     "doc": 752,
+     "pos": 32,
+     "text": " in Taichung, Taiwan, but I come from Nova Scotia, Canada. Like most expatriates here, I« teach» English to pay the bills."
+    },
+    {
+     "act": 3.4688,
+     "doc": 2400,
+     "pos": 38,
+     "text": " arrange a same-day courier delivery within the M25 and other South-East locations.⏎⏎Payment Options⏎⏎Reasons to« Buy» From Us⏎⏎With over twenty"
+    },
+    {
+     "act": 3.4375,
+     "doc": 2713,
+     "pos": 35,
+     "text": " exactly — and this USA Today column provides evidence that it’s not entirely easy to pigeonhole its support. Jeffrey Miron«,» director of economic studies at the"
+    }
+   ],
+   "bottom": [
+    {
+     "act": -3.9531,
+     "doc": 499,
+     "pos": 97,
+     "text": " be performing on Later … with Jools Holland.⏎⏎The seats are regulation red leatherette, and there are pictures on« the» wall of Stevie Wonder circa"
+    },
+    {
+     "act": -3.8281,
+     "doc": 782,
+     "pos": 197,
+     "text": " was announced that the winger had signed for Ebbsfleet United until the end of the 2008–0«9» season. The following day Duncan"
+    },
+    {
+     "act": -3.1562,
+     "doc": 15,
+     "pos": 171,
+     "text": " it's a whole lot worse than first feared and the attacking midfielder could miss the entire 2018/1«9» season in a worse case scenario"
+    },
+    {
+     "act": -3.0469,
+     "doc": 1464,
+     "pos": 40,
+     "text": " president of Kelly Services, a global leader in providing workforce solutions. He is one of two EVPs reporting to George Corona«,» president and chief executive officer."
+    },
+    {
+     "act": -3.0312,
+     "doc": 1035,
+     "pos": 164,
+     "text": " contract.⏎⏎Wolff has regularly spoken of his confidence that Ocon will find a seat on the 20«2»0 grid, and says he"
+    },
+    {
+     "act": -2.9375,
+     "doc": 2281,
+     "pos": 198,
+     "text": " pictures should tell you the amount of information the children processed and the interest level was at a high, especially with those on« summer» vacation preparing to return back to"
+    },
+    {
+     "act": -2.8281,
+     "doc": 2758,
+     "pos": 153,
+     "text": " I was in a net cafe over there.⏎⏎We got up a 4am to leave Glasgow on a 6«am» flight. Greg, Debbie ("
+    },
+    {
+     "act": -2.7969,
+     "doc": 2368,
+     "pos": 95,
+     "text": ".⏎//⏎// As with any software that integrates with the Facebook platform, your use of⏎// this software is« subject» to the Facebook Developer Principles and"
+    },
+    {
+     "act": -2.7969,
+     "doc": 135,
+     "pos": 94,
+     "text": " to be replenished with fresh enzymes that are generated from a factory within human cells. These enzymes are carried from the factory« along» a dedicated transport pathway. After"
+    },
+    {
+     "act": -2.7031,
+     "doc": 1777,
+     "pos": 134,
+     "text": " eye of his best friend, Oscar Goldman (Richard Anderson) -- the Washington-based Governmental agent who sent him on his« varied» missions every week, involving everything"
+    },
+    {
+     "act": -2.6875,
+     "doc": 1005,
+     "pos": 25,
+     "text": " study gets Sampson’s attention⏎⏎Chris Berendt/Sampson IndependentEconomic developer John Swope talks business during« Monday» night's meeting of the Samp"
+    },
+    {
+     "act": -2.6875,
+     "doc": 2056,
+     "pos": 99,
+     "text": ".⏎ *⏎ * As with any software that integrates with the Facebook platform, your use⏎ * of this software is« subject» to the Facebook Developer Principles and"
+    },
+    {
+     "act": -2.5781,
+     "doc": 2761,
+     "pos": 99,
+     "text": " no-deal exit, Scotland's First Minister Nicola Sturgeon said Tuesday.⏎⏎Sturgeon was speaking in Westminster following talks« with» Jeremy Corbyn, leader of the"
+    },
+    {
+     "act": -2.5625,
+     "doc": 1494,
+     "pos": 121,
+     "text": ".⏎The advantages of video content And that’s a huge mistake for a few reasons: Reviews > Post Jobs Free Get« weekly» tips on how to optimize your"
+    },
+    {
+     "act": -2.3906,
+     "doc": 1126,
+     "pos": 65,
+     "text": " You already have an account. Please log in Register with your social account or click here to log in I would like to« receive» lunchtime headlines Monday - Friday"
+    },
+    {
+     "act": -2.3906,
+     "doc": 84,
+     "pos": 159,
+     "text": " Recording Engineer/Producer (RE/P) magazine, enjoy this in-depth discussion with engineer/ producer Val Garay, conducted« by» Robert Carr. This article dates"
+    },
+    {
+     "act": -2.3906,
+     "doc": 1431,
+     "pos": 65,
+     "text": " You already have an account. Please log in Register with your social account or click here to log in I would like to« receive» lunchtime headlines Monday - Friday"
+    },
+    {
+     "act": -2.3906,
+     "doc": 263,
+     "pos": 65,
+     "text": " You already have an account. Please log in Register with your social account or click here to log in I would like to« receive» lunchtime headlines Monday - Friday"
+    },
+    {
+     "act": -2.375,
+     "doc": 599,
+     "pos": 137,
+     "text": " \"Whitey\" Bulger and Stephen \"The Rifleman\" Flemmi. The body of the 45-year«-old» Boston business consultant was found r"
+    },
+    {
+     "act": -2.375,
+     "doc": 2493,
+     "pos": 242,
+     "text": "with [its] sophisticated and fraudulent marketing scheme,” to “secure a spot for the drug, Risperdal, on« the» state’s Medicaid preferred drug list"
+    }
+   ]
+  },
+  "2833": {
+   "max": 3.671875,
+   "min": -10.75,
+   "mean": 0.02597072347998619,
+   "std": 0.12829306721687317,
+   "frac_positive": 0.5938536369666151,
+   "quantiles": {
+    "0.001": -0.83203125,
+    "0.01": -0.244140625,
+    "0.5": 0.021484375,
+    "0.99": 0.30859375,
+    "0.999": 0.455078125
+   },
+   "top": [
+    {
+     "act": 3.6719,
+     "doc": 1515,
+     "pos": 69,
+     "text": " (1) an anterior seromyotomy (SERO), (2) an anterior highly selective vagotomy (AHSV«),» or (3) a linear"
+    },
+    {
+     "act": 2.0781,
+     "doc": 2848,
+     "pos": 232,
+     "text": " anal fissures were found in only four of 23 patients with rectal bleeding. Both proctosigmoidos«copy» and rectal biopsy were needed"
+    },
+    {
+     "act": 2.0625,
+     "doc": 1231,
+     "pos": 41,
+     "text": " offers Keanu Reeves a choice between the blue pill, which will allow him to return to a life of comfortable illusions«,» and the red pill, which"
+    },
+    {
+     "act": 2.0156,
+     "doc": 1917,
+     "pos": 152,
+     "text": " and U-937 lymphoma cells. DFP-uPA, ATF, and both the fucosyl«ated» and defucosylated"
+    },
+    {
+     "act": 1.8984,
+     "doc": 1810,
+     "pos": 153,
+     "text": "ality and integration of the trauma, (b) whether the event is regarded as a turning point in one's life story«,» and (c) whether the"
+    },
+    {
+     "act": 1.8516,
+     "doc": 2061,
+     "pos": 177,
+     "text": "3 player, and/or cellular phone. The left and right wires, or upper legs of the Y, are associated with« left» and right ear buds which,"
+    },
+    {
+     "act": 1.7656,
+     "doc": 976,
+     "pos": 243,
+     "text": "77,000 and 99,000 people in Jasenovac between 194«1» and 1945"
+    },
+    {
+     "act": 1.7031,
+     "doc": 2122,
+     "pos": 94,
+     "text": "DCBM) studies is largely empirical. This study analysed the merits of three different doses (5 mg, 10« mg», 20 mg)"
+    },
+    {
+     "act": 1.6484,
+     "doc": 460,
+     "pos": 245,
+     "text": " emergent themes. Thematic analysis of the interviews yielded three major themes related to 'management', 'regulations and policies«'» and 'healthcare professionals'."
+    },
+    {
+     "act": 1.6172,
+     "doc": 1220,
+     "pos": 112,
+     "text": "2 w and 1 y?⏎6/35⏎Calculate prob of picking 1 a, 1 r«,» and 1 i when three"
+    },
+    {
+     "act": 1.5312,
+     "doc": 892,
+     "pos": 250,
+     "text": ". Repeated-measurements analysis of covariance was used to examine changes in ADL scores over time for MNA-S«F» and MNA-LF"
+    },
+    {
+     "act": 1.5156,
+     "doc": 771,
+     "pos": 141,
+     "text": "8. The rate of unassisted suicides was higher in men than in women, rates of assisted suicides were similar in« men» and women. Higher education was"
+    },
+    {
+     "act": 1.4922,
+     "doc": 2782,
+     "pos": 160,
+     "text": " Finland. These patients belonged to complementation groups FA-A (n = 3), FA-G (n = 1«)» and FA-I (n ="
+    },
+    {
+     "act": 1.4688,
+     "doc": 2278,
+     "pos": 209,
+     "text": " BPF \\[[@CR31]\\]. The clinical manifestations of BPF can be frequently classified as acute, sub«acute», and chronic. An acute"
+    },
+    {
+     "act": 1.4219,
+     "doc": 806,
+     "pos": 221,
+     "text": " a PBA Senior Tour bowler, Davis won back-to-back titles in the USBC Senior Masters (199«5» and 1996"
+    },
+    {
+     "act": 1.4062,
+     "doc": 2393,
+     "pos": 205,
+     "text": " found to correlate to observed turbidity. The bacterial community composition of the material mobilised from the pipes was significantly different between« plastic» and cast iron pipe sections ("
+    },
+    {
+     "act": 1.4062,
+     "doc": 2546,
+     "pos": 113,
+     "text": ". Thirty-six subjects with chronic periodontitis were randomly allocated to three groups: undergoing QMD, single-visit F«MD» with povidone iodine"
+    },
+    {
+     "act": 1.3984,
+     "doc": 2875,
+     "pos": 149,
+     "text": " review, data on patients with similar demographic profiles were collected. HeartWare (HVAD) implantation was performed by either« CS» or LT. Analysis was performed"
+    },
+    {
+     "act": 1.375,
+     "doc": 2904,
+     "pos": 127,
+     "text": ", and/or sell copies of the Materials, and to⏎** permit persons to whom the Materials are furnished to do so«,» subject to⏎** the following"
+    },
+    {
+     "act": 1.375,
+     "doc": 2173,
+     "pos": 164,
+     "text": "%. After 3 months remineralization in vivo the vol % of mineral in the lesion body was for group A,« B» and C: 50"
+    }
+   ],
+   "bottom": [
+    {
+     "act": -10.75,
+     "doc": 2233,
+     "pos": 144,
+     "text": " j in range(i+1,len(df)):⏎        if (df.loc[i][1] == df.loc[j][«1»]) & (df.loc[i"
+    },
+    {
+     "act": -8.625,
+     "doc": 2465,
+     "pos": 32,
+     "text": " in \"where\" clause in XQuery⏎⏎I'm trying to extract only those <book> data that has a certain« type» of <xref> type"
+    },
+    {
+     "act": -7.3438,
+     "doc": 1131,
+     "pos": 218,
+     "text": ", PVs are backward compatible, meaning that if a telephone is PV1, then it has all of the PV1« features» as well as the PV0"
+    },
+    {
+     "act": -6.8438,
+     "doc": 836,
+     "pos": 188,
+     "text": ". ⏎Keep in mind, when we review flags we see the current post and not the original. The behavior was both« rude» and offensive so I've suspended"
+    },
+    {
+     "act": -5.75,
+     "doc": 2733,
+     "pos": 103,
+     "text": "    }⏎⏎    public void run() {⏎        int i = 0;⏎        while ((l > «1») && (l < "
+    },
+    {
+     "act": -5.5938,
+     "doc": 298,
+     "pos": 122,
+     "text": " they make an inadvertent error because they either:⏎– took a position on income tax that is not reasonably arguable«,» or⏎– failed to take"
+    },
+    {
+     "act": -5.5312,
+     "doc": 2781,
+     "pos": 220,
+     "text": "=4; plural=(n % 10 == 1 && (n % 100 > 1«9» || n % 10"
+    },
+    {
+     "act": -5.375,
+     "doc": 2762,
+     "pos": 41,
+     "text": " Expr1, YEAR(sessionStart) AS Expr2⏎FROM         tblStatSessions⏎WHERE     (projectID = «1»87)⏎GROUP BY"
+    },
+    {
+     "act": -5.3125,
+     "doc": 1254,
+     "pos": 182,
+     "text": " highest quality of their kind in the world. They were 'dual use' machines that could be used to manufacture weapons« parts». Such exports are subject to"
+    },
+    {
+     "act": -5.2188,
+     "doc": 592,
+     "pos": 79,
+     "text": "YYYY-mm-dd') as end_date from date_table⏎order by start_date ,end_date ) ⏎where start_date is« null» or end_date is null⏎⏎"
+    },
+    {
+     "act": -5.2188,
+     "doc": 1719,
+     "pos": 240,
+     "text": " control the controlled device at the same time, the controlled device should be able to receive the controls of a remote SCADA« system» and a local HMI concurrently"
+    },
+    {
+     "act": -5.0312,
+     "doc": 318,
+     "pos": 248,
+     "text": " being less sensitive to first step estimation. Some LR moment functions are also doubly robust meaning they hold if one first step is« incorrect». We give novel classes of"
+    },
+    {
+     "act": -4.7188,
+     "doc": 1627,
+     "pos": 208,
+     "text": "⏎⏎Match exactly:⏎table2.Searched_Field = 'Invoice #' || table1.Invoice⏎⏎Match only at« end» with LIKE:⏎table2"
+    },
+    {
+     "act": -4.625,
+     "doc": 2171,
+     "pos": 32,
+     "text": " get REPORT TYPE in condition Expression⏎⏎I would like to write expression like this:⏎{REPORT_TYPE} == \"csv«\"» ? \"'\" + $F{"
+    },
+    {
+     "act": -4.5938,
+     "doc": 996,
+     "pos": 166,
+     "text": "full coverage” car insurance. This isn’t actually a type of coverage, but instead typically refers to policies that include liability« coverage», plus comprehensive and collision cover"
+    },
+    {
+     "act": -4.4062,
+     "doc": 1107,
+     "pos": 156,
+     "text": " echo \"No arguments passed, assuming normal release\"⏎    NIGHTLY=false⏎elif [[ $1 != \"--nightly«\"» ]]; then⏎    echo \""
+    },
+    {
+     "act": -4.2188,
+     "doc": 670,
+     "pos": 158,
+     "text": "* The ability to add items to a wishlist⏎⏎Thank you to everyone who supports a one-man development team, acting as« developer», tester, documentation writer,"
+    },
+    {
+     "act": -4.1875,
+     "doc": 2288,
+     "pos": 104,
+     "text": " most people - if not it's true that it will put people off this product.⏎⏎You can either delete the file« manually» or use the utiility"
+    },
+    {
+     "act": -4.0312,
+     "doc": 108,
+     "pos": 85,
+     "text": " ⏎ declare_args() {⏎-  compile_suid_client = is_linux⏎+  compile_suid_client = is«_linux» && !is_bsd⏎ ⏎"
+    },
+    {
+     "act": -3.9688,
+     "doc": 2751,
+     "pos": 71,
+     "text": " fittings appear to be plastic equivalents of their brass counterparts.⏎In general is it permissible to use either the copper crimp« rings» OR the stainless steel cinch"
+    }
+   ]
+  },
+  "4638": {
+   "max": 12.375,
+   "min": -8.4375,
+   "mean": 0.030323747545480728,
+   "std": 0.12863844633102417,
+   "frac_positive": 0.6083740162891169,
+   "quantiles": {
+    "0.001": -0.59375,
+    "0.01": -0.2490234375,
+    "0.5": 0.02734375,
+    "0.99": 0.318359375,
+    "0.999": 0.451171875
+   },
+   "top": [
+    {
+     "act": 12.375,
+     "doc": 2082,
+     "pos": 218,
+     "text": "What is the product of -477.757 and -0.3?⏎143.«3»271⏎22"
+    },
+    {
+     "act": 8.0,
+     "doc": 2206,
+     "pos": 226,
+     "text": " wind through the blades. According to the U.S. Department of Energy, if you stand 750 feet («2»29 meters) away from"
+    },
+    {
+     "act": 4.7188,
+     "doc": 690,
+     "pos": 136,
+     "text": " - k + 4⏎What is the o'th term of 105016, 2«1»0119, "
+    },
+    {
+     "act": 4.2812,
+     "doc": 1703,
+     "pos": 163,
+     "text": " degrees inclination (95% confidence interval [CI], 0.97; range, 30 degrees -«5»8 degrees ) and 2"
+    },
+    {
+     "act": 4.0938,
+     "doc": 1815,
+     "pos": 169,
+     "text": "pose -5*d + t + 590312 = 0, -4*t - 1«1»5288 = -"
+    },
+    {
+     "act": 3.7344,
+     "doc": 2849,
+     "pos": 150,
+     "text": " achieving maximum efficacy, these high intensity lamps utilize generally spheroidal thin-walled arc chambers which may vary in shape from« slightly» oblate to substantially prolate"
+    },
+    {
+     "act": 3.0938,
+     "doc": 2539,
+     "pos": 216,
+     "text": "281419⏎List the prime factors of 170752.⏎2, «2»3, 29⏎"
+    },
+    {
+     "act": 2.5156,
+     "doc": 881,
+     "pos": 194,
+     "text": "\f                                            -2-⏎⏎[*2] under section 6651(a)(1) of $66«,»668.1 After"
+    },
+    {
+     "act": 2.2656,
+     "doc": 18,
+     "pos": 90,
+     "text": " cross-direction. Such extensibility permits an absorbent article to extend and expand about the wearer and thus to better conform« to» the body of the wearer."
+    },
+    {
+     "act": 2.25,
+     "doc": 2061,
+     "pos": 135,
+     "text": " device. In one form of these organizers, left and right wires connect with the main audio wire to form a “Y«”»-type construct which delivers audio"
+    },
+    {
+     "act": 2.1406,
+     "doc": 2866,
+     "pos": 32,
+     "text": " a line segment inside and outside of a concave polygon?⏎⏎My question is about the creation of visibility graphs in surfaces« with» multiple convex and concave polygons"
+    },
+    {
+     "act": 2.0781,
+     "doc": 196,
+     "pos": 217,
+     "text": "51⏎What is the highest common factor of 15621 and 615?⏎1«2»3⏎What is the greatest"
+    },
+    {
+     "act": 2.0,
+     "doc": 2963,
+     "pos": 53,
+     "text": "{y^5}{z^3}+\\frac{z^5}{x^3}\\geq x^«2»+y^2+z^2"
+    },
+    {
+     "act": 1.8906,
+     "doc": 1948,
+     "pos": 157,
+     "text": " solid.⏎⏎⏎In the end, of course, the TSA agents had the last word: Since the potatoes took the shape« of» their container, they were determined"
+    },
+    {
+     "act": 1.8516,
+     "doc": 1741,
+     "pos": 241,
+     "text": " locoregional therapies was 25.0 months (95% confidence interval 22.7-«2»7.4) compared with"
+    },
+    {
+     "act": 1.7812,
+     "doc": 2909,
+     "pos": 127,
+     "text": "tec Spider™ 3D scanner uses structured light and stereophotogrammetry technologies to acquire shape data and reconstruct a« »3D model of an object"
+    },
+    {
+     "act": 1.7656,
+     "doc": 482,
+     "pos": 108,
+     "text": " and 51-11876 (1976). Also, Japanese Utility Model Publication No.« »37-224"
+    },
+    {
+     "act": 1.7578,
+     "doc": 2227,
+     "pos": 140,
+     "text": " generally flat sheath of biocompatible tissue typically used. Therefore, a new approach is desirable that is able to produce« curved» implantable sheaths, such"
+    },
+    {
+     "act": 1.7344,
+     "doc": 1992,
+     "pos": 215,
+     "text": "8.9 percent to 93.4 percent; that of girls improved from 88.6 to «9»2.5 percent. Unlike"
+    },
+    {
+     "act": 1.7344,
+     "doc": 666,
+     "pos": 182,
+     "text": " summer and increased the buildings connection to⏎the earth below frost level where the ground stays a constant 14C/«5»7F year⏎round."
+    }
+   ],
+   "bottom": [
+    {
+     "act": -8.4375,
+     "doc": 267,
+     "pos": 228,
+     "text": " of varicocoele was highest in underweight (6.29%) and lowest in obese patients (3«.»71%, p < "
+    },
+    {
+     "act": -7.25,
+     "doc": 2061,
+     "pos": 133,
+     "text": " or optical device. In one form of these organizers, left and right wires connect with the main audio wire to form a« “»Y”-type construct which"
+    },
+    {
+     "act": -7.125,
+     "doc": 1811,
+     "pos": 38,
+     "text": "⏎  \"pattern\": [⏎    \"X  \",⏎    \"XX \",⏎    \"XXX\"⏎ « ],»⏎  \"key\": {"
+    },
+    {
+     "act": -7.0,
+     "doc": 2082,
+     "pos": 217,
+     "text": "⏎What is the product of -477.757 and -0.3?⏎143«.»3271⏎2"
+    },
+    {
+     "act": -5.5312,
+     "doc": 634,
+     "pos": 71,
+     "text": "-destroyed World Trade Center.  Both buildings stand 14 floors and are 193 ft («5»9m) tall.⏎⏎"
+    },
+    {
+     "act": -5.3125,
+     "doc": 559,
+     "pos": 191,
+     "text": " reaction velocity extrapolated from a Lineweaver-Burke plot (Vmax) increased with an increase in temperature in« a» similar fashion (Q10"
+    },
+    {
+     "act": -5.1875,
+     "doc": 1050,
+     "pos": 244,
+     "text": " hearing the dance, as well as seeing it. During the dance, bees vibrate their abdomens as they run in« a» figure-of-eight pattern. These"
+    },
+    {
+     "act": -4.4062,
+     "doc": 158,
+     "pos": 181,
+     "text": " Diseases code for PHPT. The distribution of the PHPT cohort across the SIMD 2006 quintiles was« significantly» different from that expected, with"
+    },
+    {
+     "act": -4.375,
+     "doc": 1426,
+     "pos": 238,
+     "text": " disease or previous operation. Antegrade supraceliac aortomesenteric grafts avoid turbulence and compression of conventional« \"»retrograde\" bypass beneath"
+    },
+    {
+     "act": -4.375,
+     "doc": 965,
+     "pos": 104,
+     "text": " (the curve after the initial peak). The second phase of the MAG3 perfusion curve is usually ascending in contrast to« the» descending Tc-99"
+    },
+    {
+     "act": -3.9531,
+     "doc": 2482,
+     "pos": 123,
+     "text": "undamentalist framework. Price impact functions may be nonlinear with respect to trading volume. As indicated by recent empirical studies,« a» given transaction may cause a large"
+    },
+    {
+     "act": -3.7969,
+     "doc": 1124,
+     "pos": 55,
+     "text": " region in Saxony. It runs from a line between Wittichenau and Kamenz for roughly 60 kilometres in« an» east-west direction as far as"
+    },
+    {
+     "act": -3.7969,
+     "doc": 2680,
+     "pos": 105,
+     "text": " that were designed for holding fabric scrims for photography. These are nothing more than shock-corded pvc pipes arranged« in» 4×8 foot panels"
+    },
+    {
+     "act": -3.6719,
+     "doc": 2112,
+     "pos": 52,
+     "text": " someone special isn't feeling well, cheer them up with our unique arrangement of pink alstroemeria. Arranged in« a» pink glass vase, wrapped with"
+    },
+    {
+     "act": -3.4688,
+     "doc": 1138,
+     "pos": 239,
+     "text": " YC, for weight and body composition, but no interaction between YC and FHO for these measures. However,« a» significant interaction between YC and"
+    },
+    {
+     "act": -3.4375,
+     "doc": 1637,
+     "pos": 142,
+     "text": " on the substantial evidence. Excessive hepatocyte triglyceride accumulation resulting from insulin resistance is the first step in the proposed« '»two hit' model of the"
+    },
+    {
+     "act": -3.375,
+     "doc": 1666,
+     "pos": 58,
+     "text": " in sheared soft athermal particles. Here we find that the rheological flow curves on the self-diffusion coefficient« are» collapsed by the proximity to the"
+    },
+    {
+     "act": -3.3594,
+     "doc": 1536,
+     "pos": 186,
+     "text": " incremental lengths for increasing distances away from the center of the face producing a distortion called the \"pin-cushion\" or« \"»non-linear effect.\" Prior art"
+    },
+    {
+     "act": -3.3438,
+     "doc": 861,
+     "pos": 44,
+     "text": " Brow Brush features a short, slightly stiff angled brush head. Use this brush with brow powder to fill in the brows using« a» sketching motion for a natural"
+    },
+    {
+     "act": -3.3281,
+     "doc": 2012,
+     "pos": 170,
+     "text": " hostility and depression, were associated with toddler aggressive behaviour. Maternal psychiatric problems interacted with mean heart rate (P=«0».01) and HF"
+    }
+   ]
+  },
+  "4702": {
+   "max": 8.6875,
+   "min": -15.3125,
+   "mean": 0.03242150694131851,
+   "std": 0.20625407993793488,
+   "frac_positive": 0.6557340559662028,
+   "quantiles": {
+    "0.001": -1.6999765634536743,
+    "0.01": -0.2451171875,
+    "0.5": 0.032958984375,
+    "0.99": 0.31640625,
+    "0.999": 0.66015625
+   },
+   "top": [
+    {
+     "act": 8.6875,
+     "doc": 651,
+     "pos": 59,
+     "text": "\t<h4>Global variables</h4>⏎\t<div><pre hljs class=\"prettyprint lang-sass«\">$»progress-class: \"-progress\""
+    },
+    {
+     "act": 7.0,
+     "doc": 719,
+     "pos": 100,
+     "text": " the top.⏎For testing purposes, I created a main.scss file in assets/stylesheets/ that looks like this:«⏎»* {⏎border: "
+    },
+    {
+     "act": 6.3438,
+     "doc": 2523,
+     "pos": 243,
+     "text": " style an element such that it and all its contents will be rendered 50% faded?⏎⏎Opacity⏎youre«lement» {⏎opacity:0."
+    },
+    {
+     "act": 5.75,
+     "doc": 154,
+     "pos": 8,
+     "text": ".theme-dusk,.theme-midnight« {»⏎    .hljs {"
+    },
+    {
+     "act": 5.5,
+     "doc": 1540,
+     "pos": 36,
+     "text": " in IE11⏎⏎Css to convert an icon/image into spinner⏎add following properties to the class of that icon/image«⏎».spinner{⏎ -webkit-animation"
+    },
+    {
+     "act": 4.8438,
+     "doc": 148,
+     "pos": 192,
+     "text": " fine on IE8,9,firefox,chrome but not on IE 7?⏎Updated:-⏎CSS part is«⏎»table.myCustomers li {⏎"
+    },
+    {
+     "act": 4.4062,
+     "doc": 515,
+     "pos": 24,
+     "text": "<html>⏎\t<head>⏎\t\t<title>Path test</title>⏎\t\t<style type=\"text/css«\">»⏎\t\t\t.pixel {⏎"
+    },
+    {
+     "act": 4.1562,
+     "doc": 1424,
+     "pos": 7,
+     "text": "{{ define \"shared/style\" }}«⏎⏎»<link rel=\"stylesheet\" href"
+    },
+    {
+     "act": 3.7969,
+     "doc": 1433,
+     "pos": 18,
+     "text": "* {⏎    margin: 0;⏎    padding: 0;⏎}«⏎⏎»#igs {⏎    margin"
+    },
+    {
+     "act": 3.7656,
+     "doc": 2697,
+     "pos": 111,
+     "text": "edi Ananto :  Please take note of the following code: ⏎<div class=\"arrow-right\"></div>⏎⏎.arrow«-right» {⏎    width: "
+    },
+    {
+     "act": 3.6719,
+     "doc": 2428,
+     "pos": 206,
+     "text": " font whose characters all have the same width), then to pad out your element with the &nbsp; character entity:⏎⏎«select» {\r⏎  font-family:"
+    },
+    {
+     "act": 3.6562,
+     "doc": 204,
+     "pos": 148,
+     "text": " 100%;\r⏎\t\t\theight: 100%;\r⏎\t\t\tbackground-color:\t\t_palette(wrapper-bg«);»\r⏎\t\t\tbackground-image:\t"
+    },
+    {
+     "act": 3.4531,
+     "doc": 1890,
+     "pos": 212,
+     "text": " android:layout_width=\"match_parent\"⏎    android:layout_height=\"match_parent\"⏎    android:background=\"@«color»/bg_blue\"⏎    android"
+    },
+    {
+     "act": 3.2188,
+     "doc": 1889,
+     "pos": 19,
+     "text": "Q:⏎⏎jQuery changing font family and font size⏎⏎I am trying to change font family and« font» size of the text that appears"
+    },
+    {
+     "act": 3.2031,
+     "doc": 90,
+     "pos": 157,
+     "text": " bootstrap.min.css.⏎But even the iFrame page is affected by transparency. I can remove the transparency setting in bootstrap«.min».css but that will not solve"
+    },
+    {
+     "act": 2.9531,
+     "doc": 147,
+     "pos": 86,
+     "text": "buger bar on left  and search on right side on mobile view .. (sorry for my english) ⏎⏎.navbar«-brand» {\r⏎    position: absolute"
+    },
+    {
+     "act": 2.9219,
+     "doc": 1619,
+     "pos": 193,
+     "text": "  padding: 0 /*for IE*/;\r⏎}\r⏎input.thickness:focus::-webkit-slider-runnable-track {«\r⏎»  outline: none;\r⏎"
+    },
+    {
+     "act": 2.8125,
+     "doc": 900,
+     "pos": 28,
+     "text": " attribute selector not working when the attribute is applied using javascript?⏎⏎.variations_button[style*=\"display: none;«\"]» + div⏎⏎This is my"
+    },
+    {
+     "act": 2.7969,
+     "doc": 1303,
+     "pos": 254,
+     "text": "Str, xiSwfUrlStr, flashvars, params, attributes);\"⏎    + \"swfobject.createCSS«('#»flash"
+    },
+    {
+     "act": 2.7031,
+     "doc": 797,
+     "pos": 150,
+     "text": "ngIf=\"userRole.userRoleSubActions.length\" id=\"section{{userRole.actionName}}\"⏎        class=\"«margin»-right-5 fa fa-plus"
+    }
+   ],
+   "bottom": [
+    {
+     "act": -15.3125,
+     "doc": 515,
+     "pos": 62,
+     "text": "\twidth: 1px;⏎\t\t\t\theight: 1px;⏎\t\t\t\toverflow: hidden;⏎\t\t\t\tbackground«:» #000;⏎"
+    },
+    {
+     "act": -14.875,
+     "doc": 2697,
+     "pos": 160,
+     "text": "px solid transparent;⏎    border-bottom: 70px solid transparent;⏎    border-left: 60«px» solid red;⏎}⏎⏎"
+    },
+    {
+     "act": -13.5625,
+     "doc": 204,
+     "pos": 161,
+     "text": "%;\r⏎\t\t\tbackground-color:\t\t_palette(wrapper-bg);\r⏎\t\t\tbackground-image:\t\turl('../../images/overlay.png«'),»\tlinear-gradient(0deg"
+    },
+    {
+     "act": -13.5,
+     "doc": 154,
+     "pos": 31,
+     "text": "night {⏎    .hljs {⏎      display: block;⏎      overflow-x: auto;⏎      background«:» #23232"
+    },
+    {
+     "act": -12.25,
+     "doc": 1540,
+     "pos": 119,
+     "text": " CSS and you'll have a rotating image⏎@keyframes load3 {⏎  from {⏎    -ms-transform«:» rotate(0deg);⏎"
+    },
+    {
+     "act": -12.1875,
+     "doc": 1433,
+     "pos": 93,
+     "text": ";⏎}⏎⏎#tabs {⏎    position: absolute;⏎    list-style: none;⏎    background-color«:» rgba(255,"
+    },
+    {
+     "act": -11.9375,
+     "doc": 1619,
+     "pos": 233,
+     "text": "unnable-track {\r⏎  width: 100%;\r⏎  height: 8px;\r⏎  background-color«:» #2f9de2"
+    },
+    {
+     "act": -9.3125,
+     "doc": 617,
+     "pos": 51,
+     "text": " in real-time:⏎        <h:panelGroup layout=\"block\" style=\"width:100%; max«-height»: 400px"
+    },
+    {
+     "act": -9.3125,
+     "doc": 1889,
+     "pos": 123,
+     "text": " document.textarea = _name;⏎    } ⏎    </script>⏎⏎</head>⏎<body style=\"font«-family»\">   ⏎    <form id"
+    },
+    {
+     "act": -9.3125,
+     "doc": 719,
+     "pos": 109,
+     "text": " created a main.scss file in assets/stylesheets/ that looks like this:⏎* {⏎border: 1px« solid» black;⏎}⏎⏎I"
+    },
+    {
+     "act": -9.25,
+     "doc": 2738,
+     "pos": 20,
+     "text": "Q:⏎⏎How do you equally space out elements in a Row?⏎⏎Row{⏎    width«:» parent.width⏎    spacing:"
+    },
+    {
+     "act": -8.875,
+     "doc": 148,
+     "pos": 242,
+     "text": "-decoration: none;⏎}⏎⏎a {⏎    color: #000000;⏎    margin«:» 3px;⏎}"
+    },
+    {
+     "act": -8.1875,
+     "doc": 147,
+     "pos": 106,
+     "text": ") ⏎⏎.navbar-brand {\r⏎    position: absolute;\r⏎    width: 100%;\r⏎    left«:» 0;\r⏎    top"
+    },
+    {
+     "act": -7.8125,
+     "doc": 11,
+     "pos": 71,
+     "text": "position\": \"50% 50%\",⏎    \"repeat\": \"no-repeat\",⏎    \"size\":« \"»cover\"⏎  }⏎"
+    },
+    {
+     "act": -7.4688,
+     "doc": 651,
+     "pos": 166,
+     "text": "global⏎$progress-border-style: solid !global⏎$progress-padding: 3px !global⏎$progress-background«:» #fff !global</pre"
+    },
+    {
+     "act": -6.25,
+     "doc": 2428,
+     "pos": 212,
+     "text": " same width), then to pad out your element with the &nbsp; character entity:⏎⏎select {\r⏎  font-family«:» monospace;\r⏎}⏎"
+    },
+    {
+     "act": -5.8438,
+     "doc": 1187,
+     "pos": 68,
+     "text": ".0\"⏎    android:viewportHeight=\"24.0\">⏎    <path⏎        android:fill«Color»=\"#FF0000"
+    },
+    {
+     "act": -5.8438,
+     "doc": 2670,
+     "pos": 47,
+     "text": "⏎@{⏎    ViewBag.Title = \"Home\";⏎}⏎⏎<div style=\"width:100%; height«:»100%\" id=\""
+    },
+    {
+     "act": -5.8125,
+     "doc": 2523,
+     "pos": 247,
+     "text": " that it and all its contents will be rendered 50% faded?⏎⏎Opacity⏎yourelement {⏎opacity«:»0.5;⏎}"
+    },
+    {
+     "act": -5.5312,
+     "doc": 1601,
+     "pos": 88,
+     "text": " do so.⏎ <table id=\"dg\" title=\"My Users\" style=\"width:700px;height«:»250px\"  ⏎"
+    }
+   ]
+  },
+  "5009": {
+   "max": 2.875,
+   "min": -18.75,
+   "mean": 0.01423547975718975,
+   "std": 0.15645551681518555,
+   "frac_positive": 0.5758630064953302,
+   "quantiles": {
+    "0.001": -1.3828125,
+    "0.01": -0.294921875,
+    "0.5": 0.0169677734375,
+    "0.99": 0.28125,
+    "0.999": 0.4296875
+   },
+   "top": [
+    {
+     "act": 2.875,
+     "doc": 2373,
+     "pos": 132,
+     "text": ".⏎⏎A:⏎⏎If $f$ is allowed to be discontinuous in every right neighbourhood of $0$, then« the» condition does not prevent $\\lim"
+    },
+    {
+     "act": 1.9844,
+     "doc": 2629,
+     "pos": 110,
+     "text": "; approximate message passing; phase transition.⏎⏎Introduction⏎============⏎⏎Background⏎==========⏎⏎Main results⏎============⏎⏎Proofs« of» the main results⏎=========================="
+    },
+    {
+     "act": 1.7734,
+     "doc": 2885,
+     "pos": 216,
+     "text": " care how many celebrities think they are, they’re not smarter than the American people or the people of Michigan,” he emphasized«.»⏎⏎Fairbrother reacted to"
+    },
+    {
+     "act": 1.75,
+     "doc": 2677,
+     "pos": 228,
+     "text": " would support, and it’s a continuation of the Port Talbot piece that appeared in December 2018,”« he» said. “The name in"
+    },
+    {
+     "act": 1.6719,
+     "doc": 2309,
+     "pos": 119,
+     "text": " what they found and what it might mean for people moving forward using virtual social networks.⏎⏎Prior research has shown, the« researchers» note, that humans are only"
+    },
+    {
+     "act": 1.6641,
+     "doc": 600,
+     "pos": 161,
+     "text": " in sustained ketosis similarly produced less Hdespite an increase in mitochondrial respiration and no apparent change in mitochondrial quantity.« In» sum, these results indicate a"
+    },
+    {
+     "act": 1.4922,
+     "doc": 2491,
+     "pos": 250,
+     "text": ". We use our identifiability assumptions to develop search algorithms for small-scale DCG models. Our simulation study supports our« theoretical» results, showing that the"
+    },
+    {
+     "act": 1.4844,
+     "doc": 1291,
+     "pos": 126,
+     "text": " question: Deciding whether $2^{\\sqrt2}$ is irrational/transcendental⏎Kuzmin proved the« following» claim in 193"
+    },
+    {
+     "act": 1.4219,
+     "doc": 2831,
+     "pos": 110,
+     "text": " exploits the growth of $f(x)$ when $x\\to-\\infty$ and obtains a contradiction, which resolves« the» question nicely, but also invites"
+    },
+    {
+     "act": 1.375,
+     "doc": 109,
+     "pos": 253,
+     "text": " would make $-TU$ a nonzero operator in $\\mathcal{R}$ than annihilates $v$.⏎But« we» can show"
+    },
+    {
+     "act": 1.3359,
+     "doc": 759,
+     "pos": 55,
+     "text": " period/frequency⏎⏎An Introduction to Information Theory: Symbols, Signals and Noise, by John R. Pierce, says the« following»:⏎⏎With the very surprising"
+    },
+    {
+     "act": 1.3203,
+     "doc": 1103,
+     "pos": 95,
+     "text": " only part of a more complex picture, as my co-author Irina Cojuhrenco of the University of Surrey and« I» explain in a forthcoming paper in"
+    },
+    {
+     "act": 1.3047,
+     "doc": 2799,
+     "pos": 250,
+     "text": " normal cells in the lung, which increases the risk of those cells to divide abnormally resulting in cancer,” Dr. N«ish» says.⏎⏎Another environmental"
+    },
+    {
+     "act": 1.2578,
+     "doc": 115,
+     "pos": 203,
+     "text": " gave AP an advance look at the Syria Files, as do many organizations hoping to generate possible stories, but, as Col«ford» says, \"to make it"
+    },
+    {
+     "act": 1.2422,
+     "doc": 656,
+     "pos": 232,
+     "text": " we must look to those alternative streams of thought for satisfaction in our quest to understand the dynamics of the market process.⏎⏎«In» short, as I once put"
+    },
+    {
+     "act": 1.2266,
+     "doc": 1458,
+     "pos": 7,
+     "text": "Strictly speaking, this and the« preceding» panel are part of the same"
+    },
+    {
+     "act": 1.1953,
+     "doc": 2138,
+     "pos": 234,
+     "text": " the author of the Boston marathon bombings to life imprisonment instead of keeping him in the spotlight throughout years of the appeal process,”« they» said.⏎⏎“The death penalty"
+    },
+    {
+     "act": 1.1797,
+     "doc": 2548,
+     "pos": 54,
+     "text": "]{}, 2205 (1989)\\] does not rule out all local hidden variable models.« This» defect can be exploited to compromise"
+    },
+    {
+     "act": 1.1719,
+     "doc": 1104,
+     "pos": 112,
+     "text": "’s sense of steady forward movement toward an important goal can make all the difference between a great day and a terrible one.« This» pattern became increasingly obvious as the"
+    },
+    {
+     "act": 1.1562,
+     "doc": 360,
+     "pos": 21,
+     "text": "I recently was told that people who have cancer don't get Alzheimer's disease. Can you tell me if« this» is true and if so,"
+    }
+   ],
+   "bottom": [
+    {
+     "act": -18.75,
+     "doc": 40,
+     "pos": 87,
+     "text": " I’m concerned, there’s no such thing as a reliable narrator. Characters misinterpret things, miss things, draw the« wrong» conclusions, and it can be"
+    },
+    {
+     "act": -15.3125,
+     "doc": 2165,
+     "pos": 145,
+     "text": " accurately in the 17th century. Knowing this (finite) speed, it's not hard for me to draw« the» conclusion that the source of the"
+    },
+    {
+     "act": -11.5,
+     "doc": 607,
+     "pos": 244,
+     "text": "ium only in diabetic patients without renal reserve. Minimal structural nephropathy was observed in those who exhibited normal renal reserve.« We» suggest that the impaired response of"
+    },
+    {
+     "act": -10.125,
+     "doc": 2679,
+     "pos": 166,
+     "text": " continuity, macroscopic and microscopic findings of the rectal mucosa became normal as soon as two weeks after reoperation.« We» conclude, that the \"d"
+    },
+    {
+     "act": -8.8125,
+     "doc": 276,
+     "pos": 210,
+     "text": " subclass specific oligomers did not desensitize cells to challenge with IgE dimer or to anti-IgE.« We» conclude that, under our experimental"
+    },
+    {
+     "act": -8.8125,
+     "doc": 1049,
+     "pos": 60,
+     "text": " pad material imbeds itsself in the rotors as part of the normal process of braking. This would lead me« to» believe sanding is necessary."
+    },
+    {
+     "act": -8.6875,
+     "doc": 2856,
+     "pos": 184,
+     "text": ". According to the ionic strength, different types of complex are formed. Assays for HA and BSA led to« the» determination of the stoichiometry"
+    },
+    {
+     "act": -8.375,
+     "doc": 1229,
+     "pos": 134,
+     "text": ". Within a period of 5 months after the termination of ACTH therapy the abnormal echocardiographic findings disappeared.« We» believe that the cardiac hypertrophy"
+    },
+    {
+     "act": -8.125,
+     "doc": 2119,
+     "pos": 225,
+     "text": "/mL for iodixanol. A microCT investigation showed that the risk of developing an observable radiolucent zone is negligible«.»"
+    },
+    {
+     "act": -8.0625,
+     "doc": 1548,
+     "pos": 62,
+     "text": " levels of the three serum binders were compared in serum and plasma samples from subjects with various disorders. The results allow the« following» conclusions: (1) As"
+    },
+    {
+     "act": -7.9062,
+     "doc": 1044,
+     "pos": 136,
+     "text": " on the less than thrilling style of soccer that the USWNT has played recently, it's a reasonable conclusion to come« to». But the fact is,"
+    },
+    {
+     "act": -7.625,
+     "doc": 718,
+     "pos": 82,
+     "text": "The sink is next to a coffee machine and across from a grill station. The footage turned stomachs while others came to« the» employee's defense.⏎⏎Emily"
+    },
+    {
+     "act": -7.2188,
+     "doc": 1144,
+     "pos": 148,
+     "text": ". Variability of normalized metabolic rates and regional intercorrelations were not significantly different between schizophrenic patients and control subjects.« We» conclude that a global metabolic factor"
+    },
+    {
+     "act": -6.9375,
+     "doc": 2207,
+     "pos": 182,
+     "text": "-month period of running exercise further reduced the size of the chronically enlarged MUs in the extensively denervated muscles.« We» have therefore (1) successfully"
+    },
+    {
+     "act": -6.9062,
+     "doc": 1615,
+     "pos": 184,
+     "text": "uration. If the delay between trituration and compaction is longer than three minutes, additional mixes are required. We« therefore» conclude that, in making a"
+    },
+    {
+     "act": -6.8438,
+     "doc": 878,
+     "pos": 92,
+     "text": "_i = 1 $⏎cropping up in my statistical mechanics course. I'm a bit unsure of how one comes« to» this?⏎EDIT: A"
+    },
+    {
+     "act": -6.7812,
+     "doc": 2050,
+     "pos": 33,
+     "text": " has revealed that he does not know the definition of “collusion,” doesn’t understand what intelligence agencies do, and draws« no» distinction between the interests of national"
+    },
+    {
+     "act": -6.75,
+     "doc": 1831,
+     "pos": 95,
+     "text": " the regressive processes occurring during synaptogenesis such as cell death, axonal pruning and synaptic elimination. This leads to« the» hypothesis that some of the morph"
+    },
+    {
+     "act": -6.5312,
+     "doc": 1525,
+     "pos": 68,
+     "text": " to get knowledge of their alcohol-drinking habits. There was no selection of whom we asked. The results encourage us to« the» conclusion that we might have got"
+    },
+    {
+     "act": -6.4688,
+     "doc": 1984,
+     "pos": 143,
+     "text": " the border running along the Kongeå River.⏎⏎Taking into account both archeological findings and Roman sources, however,« one» could conclude that the Jutes"
+    }
+   ]
+  },
+  "5160": {
+   "max": 3.9375,
+   "min": -2.1875,
+   "mean": 0.014883066527545452,
+   "std": 0.1152358278632164,
+   "frac_positive": 0.5407212983489791,
+   "quantiles": {
+    "0.001": -0.5390625,
+    "0.01": -0.234375,
+    "0.5": 0.0033721923828125,
+    "0.99": 0.37109375,
+    "0.999": 0.95703125
+   },
+   "top": [
+    {
+     "act": 3.9375,
+     "doc": 908,
+     "pos": 208,
+     "text": "92⏎⏎Then I kill 47292 while the server is running. A new worker process is started« but» the output of the server is"
+    },
+    {
+     "act": 3.8906,
+     "doc": 1834,
+     "pos": 117,
+     "text": " lot!⏎⏎A:⏎⏎In lol(a), the line a=[] binds a to a new list. After this line«,» a is no longer bounded to"
+    },
+    {
+     "act": 3.5469,
+     "doc": 2571,
+     "pos": 88,
+     "text": " President (VP) John C. Calhoun, these women, dubbed the \"Petticoats,\" socially ostr«ac»ized then–Secretary of War"
+    },
+    {
+     "act": 3.5156,
+     "doc": 413,
+     "pos": 118,
+     "text": " of numbers with a known min and max value which details:⏎Array.prototype.scaleBetween = function(scaledMin, scaled«Max») {⏎  var max"
+    },
+    {
+     "act": 3.4219,
+     "doc": 1556,
+     "pos": 118,
+     "text": " bands cross are also referred to as degenerate points. At high dopings, dopants also form a band which can« interact» with the semiconductor bands. Is"
+    },
+    {
+     "act": 3.3281,
+     "doc": 2229,
+     "pos": 230,
+     "text": " barely a few hundred meters from the cave where this group of monkeys lived. However, due to the dominance of another group«,» this group could not access the"
+    },
+    {
+     "act": 3.2656,
+     "doc": 754,
+     "pos": 44,
+     "text": " Are Searchable⏎⏎Price Tracking And Product Discovery⏎⏎In addition to tracking prices, we also notify about more new relevant products« when» they become relevant.⏎⏎⏎⏎Tr"
+    },
+    {
+     "act": 3.2656,
+     "doc": 2763,
+     "pos": 109,
+     "text": " critical function of your gym’s operation. If you own or manage a small fitness center you always need contingency plans, especially« when» it comes to staffing. Large"
+    },
+    {
+     "act": 3.125,
+     "doc": 2221,
+     "pos": 72,
+     "text": "/**⏎ * This is the model class for table \"language_translate\".⏎ *⏎ * @property string $id⏎« *» @property string $language⏎"
+    },
+    {
+     "act": 2.9531,
+     "doc": 2338,
+     "pos": 65,
+     "text": " with a beard and a massive pair of headphones quietly arranges a few artwork files, adds some copy and reveals it to« the» world – it triggers the default"
+    },
+    {
+     "act": 2.8438,
+     "doc": 124,
+     "pos": 237,
+     "text": " crossover SUVs that will rarely leave pavement as long as those crossovers are available in tough \"Trail Rated\" versions« and» Jeep keeps making the ultra-r"
+    },
+    {
+     "act": 2.7812,
+     "doc": 390,
+     "pos": 42,
+     "text": " existing WordPress installation folder?⏎⏎I am setting up a new website inside an already installed WordPress website folder (e.g.,« www».example.com/newsite/)."
+    },
+    {
+     "act": 2.7656,
+     "doc": 629,
+     "pos": 58,
+     "text": " to schedule burst jobs and they send out fine, but i am being tasked with sending that same exact thing to \"CC«\"» that persons mananagerl1"
+    },
+    {
+     "act": 2.75,
+     "doc": 775,
+     "pos": 246,
+     "text": "AcroFields();⏎stamp2.setFormFlattening(true);⏎stamp2.close();⏎⏎Now i need to« delete» the temp folder as if it"
+    },
+    {
+     "act": 2.6719,
+     "doc": 1827,
+     "pos": 29,
+     "text": " code not follow or violate prototype pattern in any way?⏎⏎Instead of getting clone object and modifying attributes, I have first« modified» attributes of the object and then"
+    },
+    {
+     "act": 2.5312,
+     "doc": 1764,
+     "pos": 174,
+     "text": "--in fact, they might benefit from them. For instance, species that depend on wetlands might thrive in agricultural areas« where» the use of irrigation has created"
+    },
+    {
+     "act": 2.5156,
+     "doc": 1151,
+     "pos": 239,
+     "text": " because multiple CLR types ⏎  match the EDM type 'SomeType'.⏎  Previously found CLR type ⏎  'Some«Namespace».SomeType', newly found⏎"
+    },
+    {
+     "act": 2.5,
+     "doc": 318,
+     "pos": 80,
+     "text": " the influence function. This construction consists of adding an estimator of the influence function adjustment term for first step nonparametric estimation« to» identifying or original moment conditions."
+    },
+    {
+     "act": 2.5,
+     "doc": 1223,
+     "pos": 114,
+     "text": " outsider class or function can also be declared as a friend. This gives that outsider VIP access to all the private parts of« the» class.⏎⏎Sometimes you find"
+    },
+    {
+     "act": 2.4688,
+     "doc": 1651,
+     "pos": 26,
+     "text": "This disclosure is generally related to computer networks. More specifically, this disclosure is related to deploying an overlay content centric network« across» an Internet Protocol network.⏎"
+    }
+   ],
+   "bottom": [
+    {
+     "act": -2.1875,
+     "doc": 2659,
+     "pos": 74,
+     "text": " as the Closed Arrow.⏎⏎Description⏎It was first deployed in 1993, due to a need to« replace» L-90 3"
+    },
+    {
+     "act": -2.1562,
+     "doc": 1799,
+     "pos": 114,
+     "text": ". Mann's direction was nominated for a Directors Guild of America Award for Outstanding Directing in a Feature Film. It was« based» on the Tony Award-nominated"
+    },
+    {
+     "act": -2.1562,
+     "doc": 2266,
+     "pos": 56,
+     "text": " of Related Art⏎Artificial hearts are typically constructed with right and left ventricles that function generally like and may replace« the» right and left ventricles"
+    },
+    {
+     "act": -2.0156,
+     "doc": 1664,
+     "pos": 242,
+     "text": " do what you want. Something like this⏎class CList(list):⏎    def __init__(self, lst):«⏎»        self.lst = lst⏎⏎"
+    },
+    {
+     "act": -2.0,
+     "doc": 1896,
+     "pos": 115,
+     "text": " asesino with Fernando Gomis, the Spanish-language version of the film, also released by Paramount. ⏎⏎The film is« based» on the novel L'homme"
+    },
+    {
+     "act": -1.8828,
+     "doc": 1121,
+     "pos": 183,
+     "text": " to help you make the most of it.⏎⏎Initially conceived as a way of producing crispy “fried” foods with half« the» calories and fat, the air"
+    },
+    {
+     "act": -1.7578,
+     "doc": 2081,
+     "pos": 87,
+     "text": "(H, IM, OPTIONS) as above but OFFS is the offset of the⏎% warped tile OUT with respect to« the» origin of IM.⏎%"
+    },
+    {
+     "act": -1.7344,
+     "doc": 2072,
+     "pos": 11,
+     "text": "When Unix was being developed in 1969« based» on a filesystem, the concept"
+    },
+    {
+     "act": -1.7188,
+     "doc": 1658,
+     "pos": 17,
+     "text": "King Kong to Open on Broadway⏎⏎The long-anticipated musical of King Kong, itself« based» on the 193"
+    },
+    {
+     "act": -1.6953,
+     "doc": 936,
+     "pos": 66,
+     "text": " domains. We describe Distributed CFS (DiCFS) as a completely redesigned, scalable, parallel and distributed version of« the» CFS algorithm, capable of"
+    },
+    {
+     "act": -1.6719,
+     "doc": 2863,
+     "pos": 100,
+     "text": ".h\"⏎⏎@interface LMJCalendarViewController ()⏎@end⏎⏎@implementation LMJCalendarViewController⏎⏎- (void)viewDidLoad {⏎«   » [super viewDidLoad];⏎   "
+    },
+    {
+     "act": -1.6562,
+     "doc": 662,
+     "pos": 227,
+     "text": " matrix or vector expression mapping an existing expressions⏎  *⏎  * \\tparam PlainObjectType the equivalent matrix type of the« mapped» data⏎  * \\tparam"
+    },
+    {
+     "act": -1.6328,
+     "doc": 361,
+     "pos": 73,
+     "text": " The comparisons with historical data are interesting for example.⏎However Google doesn't appear to allow you to change a property from« the» classic code to the new code"
+    },
+    {
+     "act": -1.625,
+     "doc": 1200,
+     "pos": 111,
+     "text": " in a wide variety of stock and custom colors.⏎⏎Hanson Shingles⏎⏎Hanson’s products emulate the look of« traditional» slate, clay tile, and"
+    },
+    {
+     "act": -1.6094,
+     "doc": 352,
+     "pos": 224,
+     "text": " }⏎⏎    return self;⏎}⏎⏎⏎-(void)setPropertiesWithException:(AmazonServiceException *)theException⏎{«⏎»    [super setPropertiesWith"
+    },
+    {
+     "act": -1.5859,
+     "doc": 2973,
+     "pos": 8,
+     "text": "A film experience⏎⏎Although the film is« based» on history, “Red T"
+    },
+    {
+     "act": -1.5547,
+     "doc": 1827,
+     "pos": 215,
+     "text": " category.setId(id);⏎    category.setTitle(title);⏎    category.setTotalGames(totalGames);⏎    return category;«⏎»  }⏎}⏎⏎while"
+    },
+    {
+     "act": -1.5234,
+     "doc": 649,
+     "pos": 114,
+     "text": " genres of games are churned out in order to take advantage of this new interactive format, but what happens when you port« over» old school games onto a touchscreen"
+    },
+    {
+     "act": -1.5,
+     "doc": 1834,
+     "pos": 120,
+     "text": "A:⏎⏎In lol(a), the line a=[] binds a to a new list. After this line, a is« no» longer bounded to the same list"
+    },
+    {
+     "act": -1.4922,
+     "doc": 1764,
+     "pos": 195,
+     "text": " in agricultural areas where the use of irrigation has created artificial ponds and wetlands that either generate new habitats or replace those that« were» previously lost to agricultural expansion."
+    }
+   ]
+  },
+  "5587": {
+   "max": 2.921875,
+   "min": -2.578125,
+   "mean": -0.0023912556935101748,
+   "std": 0.12127890437841415,
+   "frac_positive": 0.488631678328782,
+   "quantiles": {
+    "0.001": -0.6796875,
+    "0.01": -0.359375,
+    "0.5": -0.0005645751953125,
+    "0.99": 0.37890625,
+    "0.999": 0.90234375
+   },
+   "top": [
+    {
+     "act": 2.9219,
+     "doc": 2158,
+     "pos": 54,
+     "text": " and social functioning that often occurs very early in the disease with the onset of symptoms. Patients therefore come to their consultation with« the» rheumatologist, having often"
+    },
+    {
+     "act": 2.8281,
+     "doc": 2296,
+     "pos": 99,
+     "text": " have been attributed to silicone breast implants. To investigate this further, we prospectively examined 70 women with silicone breast« implants» who had complaints that they or"
+    },
+    {
+     "act": 2.6875,
+     "doc": 2618,
+     "pos": 126,
+     "text": ") patients knowledge of disease and therapy. b) patients beliefs regarding the severity of the disease, the benefits of therapy and« the» barriers to implementing therapy. c"
+    },
+    {
+     "act": 2.2812,
+     "doc": 1372,
+     "pos": 75,
+     "text": "2. Description of the Background Art⏎Debugging operations are generally executed to debug in programming in a microprocessor applied system« to» develop the system.⏎In"
+    },
+    {
+     "act": 2.2031,
+     "doc": 2169,
+     "pos": 111,
+     "text": " forms were filled in for every patient who participated in the study. Name, operation date, type of implants, operative technique«,» revision diagnosis, intraoperative and"
+    },
+    {
+     "act": 2.1094,
+     "doc": 996,
+     "pos": 65,
+     "text": " with bad credit pay nearly $1,450 more per year for auto insurance. If you pay off a loan« or» otherwise improve your credit score,"
+    },
+    {
+     "act": 2.0938,
+     "doc": 2448,
+     "pos": 217,
+     "text": " })\r⏎})\r⏎.then(() => {\r⏎  //Do this stuff after everything is finished above this line\r⏎})\r⏎«.catch»((error) => {\r⏎"
+    },
+    {
+     "act": 2.0781,
+     "doc": 573,
+     "pos": 95,
+     "text": "        android:layout_width=\"match_parent\"⏎        android:layout_height=\"wrap_content\"⏎        android:text=\"«重启»App\"⏎        android:"
+    },
+    {
+     "act": 2.0625,
+     "doc": 2821,
+     "pos": 62,
+     "text": ".io Technologies Ltd (the 'Company') and its affiliated companies to detect, prevent and report attempts to use its financial services« platform» (the ‘Services’) to"
+    },
+    {
+     "act": 2.0625,
+     "doc": 992,
+     "pos": 64,
+     "text": " following standard breast irradiation. A 57-year-old Caucasian patient was referred following partial mastectomy and axillary node« clearance» for a T2N0"
+    },
+    {
+     "act": 2.0469,
+     "doc": 1118,
+     "pos": 174,
+     "text": " with the same urine sample in 598 asymptomatic patients programmed for a urological procedure. The gold standard« to» diagnose a microbiological-confirmed"
+    },
+    {
+     "act": 2.0156,
+     "doc": 208,
+     "pos": 99,
+     "text": " XML document and the XML Schema and check if the XML Document violates any of the \"rules\" listed in the XML schema«,» i.e. <customErrors"
+    },
+    {
+     "act": 2.0156,
+     "doc": 2191,
+     "pos": 107,
+     "text": "escence, which could have a negative impact on the efficacy and toxicity of immunotherapy treatment. Knowledge in terms of efficacy« and» tolerance is limited for geriatric"
+    },
+    {
+     "act": 2.0156,
+     "doc": 1587,
+     "pos": 216,
+     "text": " for 2.x, the encode will succeed even on str1—by first decoding the UTF-8 string as ASCII« (»or whatever sys.getdefaultencoding"
+    },
+    {
+     "act": 1.9531,
+     "doc": 1426,
+     "pos": 92,
+     "text": " grafts) from the supraceliac aorta incorporating the celiac axis to the superior mesenteric artery. All« patients» had two- or three-v"
+    },
+    {
+     "act": 1.9453,
+     "doc": 686,
+     "pos": 43,
+     "text": "opathology.⏎Biopsy samples were taken endoscopically from the antral-mucosa of 693« patients» with peptic ulcer and chronic"
+    },
+    {
+     "act": 1.9453,
+     "doc": 1787,
+     "pos": 189,
+     "text": "Type, sDocTypeLength);⏎}⏎⏎static id _ParseAPIResponse(TNLResponseInfo *info, NSError« **» parseErrorOut, NSError **"
+    },
+    {
+     "act": 1.9375,
+     "doc": 773,
+     "pos": 49,
+     "text": " took place have rankled California elections officials.⏎Pool/Getty Images⏎⏎In the wake of President Donald Trump's call Wednesday« for» an investigation into widespread voter fraud"
+    },
+    {
+     "act": 1.9297,
+     "doc": 1847,
+     "pos": 126,
+     "text": "+/-5.2 years participated in the study. Thoraco-lumbar spine radiographs were obtained and analyzed for« the» presence of VF using the visual"
+    },
+    {
+     "act": 1.9141,
+     "doc": 298,
+     "pos": 74,
+     "text": "⏎⏎Penalty relief will only apply to eligible taxpayers or entities (i.e., turnover of less than $10 million«)» every three years.⏎⏎El"
+    }
+   ],
+   "bottom": [
+    {
+     "act": -2.5781,
+     "doc": 1229,
+     "pos": 30,
+     "text": " ACTH treatment in children.⏎The usefulness of ACTH in the treatment of childhood epilepsy is assessed by improvement in the« EEG» and in the clinical condition."
+    },
+    {
+     "act": -2.25,
+     "doc": 648,
+     "pos": 26,
+     "text": " closure of our borders in the affected areas is only an interim measure designed to address the current security challenges and will be resumed« as» soon as normalcy is restored"
+    },
+    {
+     "act": -1.875,
+     "doc": 2073,
+     "pos": 184,
+     "text": " VS2010 Intellisense issues on XP (I'm running XP).  When I installed the hotfix«,» the problem went away.⏎"
+    },
+    {
+     "act": -1.8516,
+     "doc": 1078,
+     "pos": 38,
+     "text": "21, 2003 13:13 IST⏎⏎An uneasy calm prevails in Assam« with» no major incident of violence reported"
+    },
+    {
+     "act": -1.7891,
+     "doc": 29,
+     "pos": 126,
+     "text": " paralysis and corruption, Manmohan Singh went in expecting to be reasonably rewarded. After all, his government had delivered a« nearly» 7-8% ("
+    },
+    {
+     "act": -1.7344,
+     "doc": 125,
+     "pos": 159,
+     "text": " base-emitter junctions of each output transistor are conducting 1 mA or so, placing the transistors in a« much» more linear region of their characteristic"
+    },
+    {
+     "act": -1.6016,
+     "doc": 776,
+     "pos": 193,
+     "text": " themselves or others.⏎⏎“[T]hese cases suggest that this urgent, individualized intervention can play a role« in» efforts to prevent mass shootings,"
+    },
+    {
+     "act": -1.5547,
+     "doc": 2864,
+     "pos": 211,
+     "text": ". HIV replication was required for this effect, as demonstrated by the absence of chemokine upregulation after infection in« the» presence of 3'-az"
+    },
+    {
+     "act": -1.5234,
+     "doc": 328,
+     "pos": 166,
+     "text": "60, 90, and 120 min after lateral positioning during surgery and the infrared tympanic membrane« temperature» at 0, 3"
+    },
+    {
+     "act": -1.5234,
+     "doc": 307,
+     "pos": 61,
+     "text": " rotary UPS systems are:⏎⏎Most reliable systemThe simple design has fewer components than for example static UPS systems. This highly« improves» the reliability (MTBF)."
+    },
+    {
+     "act": -1.4844,
+     "doc": 2612,
+     "pos": 209,
+     "text": "0 minutes a day, 3 days a week for 7 weeks. Pre and post treatment tests were performed, namely« clinical» measures and electromyographic,"
+    },
+    {
+     "act": -1.4766,
+     "doc": 1570,
+     "pos": 170,
+     "text": " seeing the slow down in production-type PMIs is that it is cycling - businesses are notching down employment in order to« keep» it cycling. The forward imp"
+    },
+    {
+     "act": -1.4688,
+     "doc": 2977,
+     "pos": 226,
+     "text": " ranged from a half-mile to two miles wide; video showed a large debris ball at its base at some points. The« National» Weather Service preliminarily categorized it"
+    },
+    {
+     "act": -1.4609,
+     "doc": 2045,
+     "pos": 174,
+     "text": "s, an electric charge is accumulated by applying an electric field to liquid crystal and is retained at a relatively high rate until« the» next time the electric field is"
+    },
+    {
+     "act": -1.4531,
+     "doc": 1611,
+     "pos": 146,
+     "text": " CTS that has not yet been investigated in detail. This project will examine the impact of seizures and CTS on neuro«c»ognitive function in BECTS"
+    },
+    {
+     "act": -1.4453,
+     "doc": 1367,
+     "pos": 37,
+     "text": "amping down on customers that use their cards to bet on online gambling sites.⏎⏎A number of card issuers are changing« their» terms and conditions so that money"
+    },
+    {
+     "act": -1.3984,
+     "doc": 272,
+     "pos": 218,
+     "text": " and dura matter. The arachnoid membrane around the tumor was intact. The tumor was totally resected and« the» patient had no neurological deficits."
+    },
+    {
+     "act": -1.375,
+     "doc": 2983,
+     "pos": 220,
+     "text": " state-of-the-art system provides a cohesive unit of 24/7 video feeds from the cameras to serve as an« additional» layer of security to increase the"
+    },
+    {
+     "act": -1.3672,
+     "doc": 1604,
+     "pos": 41,
+     "text": ", inflammatory skin disorder that is currently incurable. Consequently, the majority of people with psoriasis require long-term treatment to« maintain» disease control. Traditional immunos"
+    },
+    {
+     "act": -1.3516,
+     "doc": 1112,
+     "pos": 120,
+     "text": " showed numerous mites within the folliculosebaceous unit. Treatment with a single dose of oral ivermectin« achieved» resolution of her symptoms. The"
+    }
+   ]
+  },
+  "5825": {
+   "max": 2.0625,
+   "min": -10.125,
+   "mean": 0.011164574883878231,
+   "std": 0.14669349789619446,
+   "frac_positive": 0.5426364347987165,
+   "quantiles": {
+    "0.001": -1.1171875,
+    "0.01": -0.3046875,
+    "0.5": 0.0087890625,
+    "0.99": 0.326171875,
+    "0.999": 0.51953125
+   },
+   "top": [
+    {
+     "act": 2.0625,
+     "doc": 1106,
+     "pos": 93,
+     "text": " apoptosis, thus providing a survival signal to human cancer cells. Furthermore, our data has recently shown that the amino-termin«us» of FAK can induce apoptosis"
+    },
+    {
+     "act": 1.9531,
+     "doc": 2759,
+     "pos": 234,
+     "text": " nucleotide -305 upstream of the transcription initiation site. Protein-DNA contacts are apparently spread over a large number« of» bases and are mainly located in"
+    },
+    {
+     "act": 1.9531,
+     "doc": 1196,
+     "pos": 218,
+     "text": " maintained by Peters at the University of Wisconsin, called Macrostrat, which contains detailed information on thousands of rock units in« North» America and beyond.⏎⏎The"
+    },
+    {
+     "act": 1.8984,
+     "doc": 1984,
+     "pos": 151,
+     "text": " River.⏎⏎Taking into account both archeological findings and Roman sources, however, one could conclude that the Jutes inhabited« both» the Kongeå region and"
+    },
+    {
+     "act": 1.8906,
+     "doc": 2715,
+     "pos": 220,
+     "text": " former industrial land sandwiched between GO train tracks and within walking distance of two subway stations and streetcar lines in the west«-end» Bloor Street-Dundas Street"
+    },
+    {
+     "act": 1.8359,
+     "doc": 2917,
+     "pos": 177,
+     "text": " high-priced fee.⏎⏎The film had three spectacular car⏎chase sequences as well (including a night-time chase through« LA»).⏎⏎Hooper (1"
+    },
+    {
+     "act": 1.8281,
+     "doc": 2824,
+     "pos": 64,
+     "text": "clamation and conservation. The environmental climate and professionals in the field are recognizing how important natives are in the restoration of our North« American» ecology, and that natives are"
+    },
+    {
+     "act": 1.8125,
+     "doc": 631,
+     "pos": 83,
+     "text": " primer-polymerase chain reaction procedures. We used seven contiguous YAC clones, which span 2 Mbp of« the» Huntington disease gene region on "
+    },
+    {
+     "act": 1.6875,
+     "doc": 170,
+     "pos": 166,
+     "text": " gene and unique primer sites at both ends of the insertion DNA. Integration of the transposon occurred efficiently and covered the« entire» region of interest. Analysis of"
+    },
+    {
+     "act": 1.6875,
+     "doc": 304,
+     "pos": 115,
+     "text": " extended. By using a semi-quantitative ELISA assay, a hierarchy of binding between various SH3 domains for NS«5»A was demonstrated. Molecular modelling"
+    },
+    {
+     "act": 1.6875,
+     "doc": 2402,
+     "pos": 173,
+     "text": " This ‘buffer zone’ extends from 400 metres to 5 km from the perimeter of the SPA and covers« most» of the built-up area of"
+    },
+    {
+     "act": 1.6641,
+     "doc": 902,
+     "pos": 103,
+     "text": ". It was observed that the U.S. Geological Survey sample locations for 222Rn were not uniformly distributed« throughout» the state. Hence, additional"
+    },
+    {
+     "act": 1.6562,
+     "doc": 1260,
+     "pos": 200,
+     "text": " East Fife, Perthshire North, Perthshire South and Kinross-shire and Stirling.⏎⏎The region covers« all» of the Clackmannans"
+    },
+    {
+     "act": 1.6016,
+     "doc": 2890,
+     "pos": 106,
+     "text": " the TNFA gene have not been identified. The \"TNF block\" is a region of high linkage disequilibrium« within» the central major histocomp"
+    },
+    {
+     "act": 1.5312,
+     "doc": 1277,
+     "pos": 119,
+     "text": "print, green-wavelength airborne LiDAR systems are being developed to enable topobathymetric mapping in coastal and« river»ine environments. These sensors can"
+    },
+    {
+     "act": 1.5156,
+     "doc": 1917,
+     "pos": 11,
+     "text": "Structural requirements for the growth factor activity of the amino«-terminal» domain of urokinase"
+    },
+    {
+     "act": 1.5078,
+     "doc": 1125,
+     "pos": 140,
+     "text": "heim Ep80⏎⏎In the main story we need to face the five Cogna lords that are currently running rampant across« the» world of Grymoire. Firstly"
+    },
+    {
+     "act": 1.4453,
+     "doc": 328,
+     "pos": 171,
+     "text": "0, and 120 min after lateral positioning during surgery and the infrared tympanic membrane temperature at 0,« »30, 60"
+    },
+    {
+     "act": 1.4062,
+     "doc": 1328,
+     "pos": 108,
+     "text": " replacing WILD with SEMICOLON⏎⏎Something with that _a is messing it up..... The error is linked to the« last» usage of _a⏎I"
+    },
+    {
+     "act": 1.3984,
+     "doc": 401,
+     "pos": 92,
+     "text": "ies with the inside color the hair and the outside the ponies' coat color, with their cutie mark in the« bottom» left or right side on the"
+    }
+   ],
+   "bottom": [
+    {
+     "act": -10.125,
+     "doc": 2626,
+     "pos": 108,
+     "text": " firm. The contract would be for six years to repair and maintain the highway. As the highway is in bad shape in« certain» patches, a local construction company"
+    },
+    {
+     "act": -9.8125,
+     "doc": 1691,
+     "pos": 27,
+     "text": " recently cut and still little used trail from the Heritage Park, with at times a recently laid in base (still soft),« some» fire roads and shield terrain."
+    },
+    {
+     "act": -9.625,
+     "doc": 2719,
+     "pos": 166,
+     "text": " you ever get characters confused, or forget who a character was?⏎⏎2) Were you ever bored?⏎• Were« there» points where your interest flagged?"
+    },
+    {
+     "act": -9.1875,
+     "doc": 2273,
+     "pos": 113,
+     "text": " lot I could tell that the audio was remixed so the voices weren’t drowned out by the music however, there were« still» several scenes where that still happened"
+    },
+    {
+     "act": -7.0,
+     "doc": 133,
+     "pos": 196,
+     "text": " on the coastal cliffs and formed numerous mounds an unusual shape.⏎⏎If looking a little closer you will notice that in« some» places the quartz rock thinned"
+    },
+    {
+     "act": -6.7812,
+     "doc": 2005,
+     "pos": 224,
+     "text": " we could chew, or hike, as the case may be!⏎⏎The path was totally dirt and mostly smooth, although« at» times there was some incline"
+    },
+    {
+     "act": -6.6875,
+     "doc": 2532,
+     "pos": 47,
+     "text": " salivary gland tumours.⏎Squamous cell metaplasia (SCM) adjacent to necrot«ic» areas of salivary gland"
+    },
+    {
+     "act": -6.5938,
+     "doc": 1124,
+     "pos": 238,
+     "text": " over 500 metres wide and only a few metres lower. Dry areas lie next to waterlogged or even bog«gy» areas.⏎⏎Almost 1"
+    },
+    {
+     "act": -5.5,
+     "doc": 2363,
+     "pos": 162,
+     "text": " differentiated and infiltrate among normal glands or are composed of malignant glands similar in size to normal acini. Not all hypo«echo»ic areas within the prostate are"
+    },
+    {
+     "act": -5.3125,
+     "doc": 1017,
+     "pos": 229,
+     "text": " heart rate induced as a result of the pacing will typically increase the oxygen demand on the heart tissue, and particularly the ischem«ic» heart tissue, which may further"
+    },
+    {
+     "act": -4.4375,
+     "doc": 1020,
+     "pos": 139,
+     "text": " campestre) type, with hazel (Corylus avellana) also present in considerable quantity. There« are» pedunculate oak (Qu"
+    },
+    {
+     "act": -4.375,
+     "doc": 787,
+     "pos": 139,
+     "text": " rectal exams entail the insertion of a gloved, lubricated finger into the rectum to feel for hard or b«umpy» areas on the prostate gland."
+    },
+    {
+     "act": -4.0,
+     "doc": 530,
+     "pos": 62,
+     "text": " radioisotope in the scrotal region. This article includes a compilation of three cases of incidental scrotal phot«open»ic defects on bone scint"
+    },
+    {
+     "act": -3.9844,
+     "doc": 2014,
+     "pos": 31,
+     "text": " the best alternatives to Adobe Reader, as it is a simple PDF reader allowing you to view PDF files, edit them or« highlight» text. It also allows to"
+    },
+    {
+     "act": -3.9531,
+     "doc": 2908,
+     "pos": 111,
+     "text": " functionally correct.⏎⏎Yellow highlighting indicates changes that are probably fine, but may need to be double checked.⏎⏎Un«highlight»ed rows indicate trivial changes that"
+    },
+    {
+     "act": -3.9375,
+     "doc": 569,
+     "pos": 254,
+     "text": "ios deliberadamente en venganza por el recorte de fondos decretado por el Gobierno.⏎⏎El fuego avanza incluso« en» áreas"
+    },
+    {
+     "act": -3.7969,
+     "doc": 872,
+     "pos": 183,
+     "text": ", resulting in slurred speech and weakness of right side of his body.⏎⏎\"To stop any further risk, the dise«ased» artery had to be blocked immediately"
+    },
+    {
+     "act": -3.75,
+     "doc": 130,
+     "pos": 175,
+     "text": " to co-operate with second serrations disposed on a rear side of the machining element, while the front wall is smooth« in» order to cooperate with a similar"
+    },
+    {
+     "act": -3.6562,
+     "doc": 2052,
+     "pos": 9,
+     "text": "Q:⏎⏎Frequent blow outs in the« same» location⏎⏎I keep getting blow"
+    },
+    {
+     "act": -3.625,
+     "doc": 545,
+     "pos": 37,
+     "text": " due to the presence of rare earth elements or by natural iridiation. This attractive sphere, having many \"gemmy«\"» areas, would make a fine"
+    }
+   ]
+  },
+  "5859": {
+   "max": 8.75,
+   "min": -1.8203125,
+   "mean": -0.026096433401107788,
+   "std": 0.1657082438468933,
+   "frac_positive": 0.3761017263117639,
+   "quantiles": {
+    "0.001": -0.451171875,
+    "0.01": -0.318359375,
+    "0.5": -0.026123046875,
+    "0.99": 0.4140625,
+    "0.999": 1.703125
+   },
+   "top": [
+    {
+     "act": 8.75,
+     "doc": 1868,
+     "pos": 31,
+     "text": " growth hormone (GH) and ghrelin in the immune system.⏎Immune and neuroendocrine systems have bid«irectional» communications. Growth hormone (GH"
+    },
+    {
+     "act": 8.75,
+     "doc": 2852,
+     "pos": 231,
+     "text": " it helps!⏎No problem with MPI by the way each processor runs synchronously in parallel with all the other processors,« and» every processor shares a different address"
+    },
+    {
+     "act": 8.625,
+     "doc": 1682,
+     "pos": 46,
+     "text": " one directive's controller from within another directive via the require option:⏎  http://jasonmore.net/angular-js-direct«ives»-difference-controller-link/⏎⏎"
+    },
+    {
+     "act": 8.1875,
+     "doc": 359,
+     "pos": 71,
+     "text": " policing practices in England, Wales, and Northern Ireland. Established in 1948, ACPO provided a forum« for» chief police officers to share ideas"
+    },
+    {
+     "act": 7.5938,
+     "doc": 2295,
+     "pos": 72,
+     "text": " knowledge of the history of the county; to provide opportunities for sociability among members of the Society; and to encourage coordination« and» cooperation with other history organizations.\""
+    },
+    {
+     "act": 6.625,
+     "doc": 761,
+     "pos": 88,
+     "text": "In the comic universe, the Bifrost is what anchors Asgard and Midgard together. It's the primary means« of» travelling between those two worlds."
+    },
+    {
+     "act": 6.5938,
+     "doc": 1332,
+     "pos": 29,
+     "text": "Israel is helping Jordanian special forces fighting ISIS on the ground in Iraq⏎⏎AMMONNEWS - In another sign of the« increased» cooperation and strategic military alliance between"
+    },
+    {
+     "act": 6.4062,
+     "doc": 390,
+     "pos": 139,
+     "text": " to use Yoast SEO then, yes, you will have to install the plugin again. The new site has no way« of» using the existing copy in your"
+    },
+    {
+     "act": 6.25,
+     "doc": 1403,
+     "pos": 28,
+     "text": " ladies! Bout my ex texting me how am I and what not?⏎⏎so she texts me after a couple months of« not» talking asking how I've been"
+    },
+    {
+     "act": 6.25,
+     "doc": 756,
+     "pos": 188,
+     "text": "ed computer comprises multiple logical partitions that implement virtual computers, which execute in separate memory spaces, may execute separate operating systems,« and» may use shared resources. Examples"
+    },
+    {
+     "act": 5.875,
+     "doc": 2266,
+     "pos": 193,
+     "text": "06 within the ventricle. The air chamber includes a single inlet/outlet 108 that is in« fluid» communication with a pneumatic driver"
+    },
+    {
+     "act": 5.7188,
+     "doc": 2145,
+     "pos": 9,
+     "text": "Service-Oriented Architecture (SOA)« facilitates» the development of enterprise applications as"
+    },
+    {
+     "act": 5.625,
+     "doc": 1493,
+     "pos": 4,
+     "text": "[Neuron-g«lia» interrelations in the cerebral cortex"
+    },
+    {
+     "act": 5.625,
+     "doc": 2175,
+     "pos": 159,
+     "text": " computer will be listed in the following.⏎1) Asynchronous: Controlled units are not synchronized with each other, and« communication» between the units is performed via"
+    },
+    {
+     "act": 5.5625,
+     "doc": 947,
+     "pos": 207,
+     "text": "iduo escritor en la Fundación Nacional Francisco Franco (en el tercer encierro me aislaron para que no mantuv«iera» relación con nadie). Aquello"
+    },
+    {
+     "act": 5.4062,
+     "doc": 1100,
+     "pos": 148,
+     "text": " capability, although many such handheld electronic devices are stand-alone devices that are functional without communication with other devices. Wireless handheld electronic« devices» are generally intended to be portable"
+    },
+    {
+     "act": 5.3125,
+     "doc": 843,
+     "pos": 128,
+     "text": " characterized by measuring the temporal evolutions of the pair separation distance and the core magnetization, which reveals the short-range nature« of» the repulsive interactions between the"
+    },
+    {
+     "act": 5.2812,
+     "doc": 1223,
+     "pos": 199,
+     "text": "_device ( Device & ); };⏎⏎These functions are called by all Device objects when they are constructed and destroyed respectively. They« allow» the VFS to keep track"
+    },
+    {
+     "act": 5.25,
+     "doc": 1936,
+     "pos": 55,
+     "text": "activating peptide (VIP/PACAP) system is considered as a paradigm for the use of a neuroendocrine-imm«une» mediator in therapy. We review"
+    },
+    {
+     "act": 5.1562,
+     "doc": 2696,
+     "pos": 198,
+     "text": "-the-art diffraction techniques. Calculations performed on several molecules derived from the crystal structures have demonstrated the limited effect of inter«layer» or intermolecular interactions on"
+    }
+   ],
+   "bottom": [
+    {
+     "act": -1.8203,
+     "doc": 1523,
+     "pos": 62,
+     "text": " of new international studies with harmonized data, maintain harmonization and data development among existing comparable studies, and develop a cross«-national» research agenda. Harmonization of"
+    },
+    {
+     "act": -1.5781,
+     "doc": 1411,
+     "pos": 7,
+     "text": "Q:⏎⏎Sending signals to PC« over» wifi⏎⏎I need a micro"
+    },
+    {
+     "act": -1.5469,
+     "doc": 1663,
+     "pos": 218,
+     "text": ") + 4 + 3 + sqrt(2156) + (sqrt(440) -« (»sqrt(440)"
+    },
+    {
+     "act": -1.5234,
+     "doc": 1718,
+     "pos": 42,
+     "text": ", person reference sits at the heart of the social sciences. Referring to persons is an interactional process where information is« transferred» from current speakers to the recipients"
+    },
+    {
+     "act": -1.5,
+     "doc": 2436,
+     "pos": 119,
+     "text": " + 88⏎Simplify 4 + (-2 + 6*(sqrt(1872) -« (»sqrt(1872"
+    },
+    {
+     "act": -1.3672,
+     "doc": 2776,
+     "pos": 86,
+     "text": " offers national bestseller this . Wisdom of the ages 60 days to enlightenment thu 17 jan 20«1»9 1512"
+    },
+    {
+     "act": -1.3594,
+     "doc": 17,
+     "pos": 249,
+     "text": " for about five to eight minutes,\" the University of Florida professor says. \"They work on their social skills. They try« to» obtain a patient history, but"
+    },
+    {
+     "act": -1.3359,
+     "doc": 706,
+     "pos": 147,
+     "text": " <boost/graph/use_mpi.hpp> has been included\"\r⏎#endif\r⏎\r⏎#include <boost/graph/parallel/process_group.hpp>«\r⏎»#include <boost/type_traits/is"
+    },
+    {
+     "act": -1.2891,
+     "doc": 1205,
+     "pos": 228,
+     "text": " may also include registering managed node name and IP address/port number pairs associated with the managed nodes in a database within or without« the» EMS. Such tracking becomes a"
+    },
+    {
+     "act": -1.2266,
+     "doc": 2263,
+     "pos": 2,
+     "text": "---⏎«name»: Bug Report⏎about:"
+    },
+    {
+     "act": -1.1875,
+     "doc": 409,
+     "pos": 72,
+     "text": " Park in Aceh province, Indonesia. A conservationist from the foundation said Thursday, Aug. 9, 20«1»2 that seven of the world"
+    },
+    {
+     "act": -1.1641,
+     "doc": 2029,
+     "pos": 246,
+     "text": " benefit to have a face-to-face meeting?  Either way, we'll use⏎> e-mail for discussion and maybe« a» conference call or two.⏎"
+    },
+    {
+     "act": -1.1641,
+     "doc": 1758,
+     "pos": 200,
+     "text": " against terrorism,” he added, noting that the Kingdom is set to strengthen the values of openness, dialogue, cooperation and sharing« of» experiences and good practices.⏎⏎"
+    },
+    {
+     "act": -1.1562,
+     "doc": 1719,
+     "pos": 77,
+     "text": "During the development of fieldbus, the industrial Ethernet-based fieldbus protocols, such as ProfiNet, Modbus TCP,« and» Ethernet/IP, are later than"
+    },
+    {
+     "act": -1.1484,
+     "doc": 1433,
+     "pos": 142,
+     "text": "px;⏎    bottom: 10px;⏎    border-radius: 10px;⏎    padding«:» 5px 0 "
+    },
+    {
+     "act": -1.1406,
+     "doc": 661,
+     "pos": 252,
+     "text": "⏎⏎Im sick of wasting time. - Im a bigger girl, i can be shy, I dont know how to reply« to» things sometimes,"
+    },
+    {
+     "act": -1.125,
+     "doc": 1175,
+     "pos": 206,
+     "text": " definitive analysis, as the deal the prime minister wants to strike with the EU is not an \"off the shelf\" free« trade» agreement, so there are no"
+    },
+    {
+     "act": -1.0938,
+     "doc": 1634,
+     "pos": 173,
+     "text": " Heterogeneous Databases with Meta-Level Active Rule Primitives. In Proceedings of the 20th TASTED« International» Conference on Applied Informatics,"
+    },
+    {
+     "act": -1.0859,
+     "doc": 2007,
+     "pos": 158,
+     "text": " NTFS.⏎⏎This has been raised as an issue: Drives other than C: are not mounted in /mnt« #»1079. It"
+    },
+    {
+     "act": -1.0625,
+     "doc": 1727,
+     "pos": 249,
+     "text": " contains social features such as profile management, networking with friends with chat and direct game joining along with community integration with networking sites« such» as Facebook, Xbox Live,"
+    }
+   ]
+  },
+  "5979": {
+   "max": 6.6875,
+   "min": -3.15625,
+   "mean": -0.0009084343910217285,
+   "std": 0.14216649532318115,
+   "frac_positive": 0.5108619010343529,
+   "quantiles": {
+    "0.001": -0.88671875,
+    "0.01": -0.4140625,
+    "0.5": 0.00079345703125,
+    "0.99": 0.365234375,
+    "0.999": 1.1328125
+   },
+   "top": [
+    {
+     "act": 6.6875,
+     "doc": 1266,
+     "pos": 222,
+     "text": " got an unexpected visit from a teammate during batting practice.⏎⏎Chances are you've never heard of Joey Amalfitano«.» A light-hitting utilityman"
+    },
+    {
+     "act": 5.625,
+     "doc": 1274,
+     "pos": 126,
+     "text": " Although respected as a soldier and a statesman, he owed his appointment as governor more to his obscure tribal background, which« rendered» him dependent on the Caliph"
+    },
+    {
+     "act": 5.0938,
+     "doc": 711,
+     "pos": 154,
+     "text": " Scott Putzier, chief of staff, 44th Medical Command. “For those who knew and worked with him«,» we will remember him as a"
+    },
+    {
+     "act": 4.4375,
+     "doc": 2971,
+     "pos": 186,
+     "text": ", songwriting and working with a band like Death Cab For Cutie.⏎⏎The Michigan Daily: So, your website« describes» you as the “go-to"
+    },
+    {
+     "act": 4.4375,
+     "doc": 1191,
+     "pos": 102,
+     "text": " to which the immune system is tolerant. The presence of neoantigens in cancer cells and their absence in normal cells« makes» them compelling, untapped targets"
+    },
+    {
+     "act": 3.7344,
+     "doc": 703,
+     "pos": 65,
+     "text": " from under $100 million to $5 billion.⏎⏎We’ll forgive you if haven’t yet heard their name«.» After all, as late as"
+    },
+    {
+     "act": 3.7344,
+     "doc": 1996,
+     "pos": 169,
+     "text": " natural choice to receive a comic tie-in thanks to her largely unexplored role within the game’s universe and the fact« that» she has featured so heavily in"
+    },
+    {
+     "act": 3.625,
+     "doc": 486,
+     "pos": 113,
+     "text": " in one of the nodes? For example:⏎⏎In the above example, because it has been given the rank '1«',» I would like it to display"
+    },
+    {
+     "act": 3.4531,
+     "doc": 505,
+     "pos": 60,
+     "text": "“We appreciate the public’s concern for our family member Willie York, and we appreciate the concern for him. We will truly« miss» the world-famous Willie York"
+    },
+    {
+     "act": 3.4219,
+     "doc": 2636,
+     "pos": 37,
+     "text": " a heart as big as the moon. The most loving, adorable man. I’ve never seen anybody as beautiful as he«.» Perfect perfect. We’re in"
+    },
+    {
+     "act": 3.25,
+     "doc": 2514,
+     "pos": 203,
+     "text": " regular season, he scored the Walleye’s first goal. Hirschfeld is not just a Toledo Walleye«;» he is a Warrior.⏎⏎"
+    },
+    {
+     "act": 3.1562,
+     "doc": 2382,
+     "pos": 51,
+     "text": " of an alleged MS-13 gang member, FBI officials announced Saturday they had finally apprehended Walter Yovany Gomez«.»⏎⏎Gomez, an illegal"
+    },
+    {
+     "act": 3.1094,
+     "doc": 1956,
+     "pos": 115,
+     "text": " Fox (American), a full-time member of CPT who had been working in Iraq since September 2004«.» The widely publicized hostage crisis"
+    },
+    {
+     "act": 3.1094,
+     "doc": 676,
+     "pos": 244,
+     "text": "017 International and European Association [...]⏎⏎We here at WebsEdge have fond memories of Dr Millie Dresselhaus«.» Over the years we have been"
+    },
+    {
+     "act": 3.0781,
+     "doc": 2467,
+     "pos": 14,
+     "text": "Tag⏎⏎This Sunday died Mexican poet Jose Emilio Pacheco in Mexico City«.» The writer, 74"
+    },
+    {
+     "act": 3.0781,
+     "doc": 199,
+     "pos": 178,
+     "text": " \"!\" \"Oh, I love this!\" \"Yeah...\" \"Lily, listen.\" \"Barney's awesome.\"« \"»Ron's more than just awe"
+    },
+    {
+     "act": 3.0625,
+     "doc": 2553,
+     "pos": 152,
+     "text": " Lewis' character, hedge fund titan Bobby \"Axe\" Axelrod, is not someone you're supposed to root for«.» He's a greedy crook"
+    },
+    {
+     "act": 2.9688,
+     "doc": 1405,
+     "pos": 208,
+     "text": " indie developers. The ease with which you can add objects to your levels, script behaviors, and build to several different platforms« makes» it an obvious choice for everything"
+    },
+    {
+     "act": 2.9531,
+     "doc": 1770,
+     "pos": 46,
+     "text": "Staff/Getty Images Andrew H. Walker/Staff/Getty Images⏎⏎Chances are you've never heard of Charles and David Koch«.» The brothers own Koch Industries,"
+    },
+    {
+     "act": 2.9375,
+     "doc": 1918,
+     "pos": 66,
+     "text": " hormone, 20-hydroxyecdysone. Because synthetic EcR ligands disrupt the normal growth of insects«,» they are attractive candidates for new"
+    }
+   ],
+   "bottom": [
+    {
+     "act": -3.1562,
+     "doc": 1418,
+     "pos": 211,
+     "text": " was late. What I like about Mick is how his bulge looked inside those tighty whitie underwear and I can« tell» he was getting a semi-hard"
+    },
+    {
+     "act": -2.7188,
+     "doc": 1363,
+     "pos": 83,
+     "text": " primitive conditions. But just so you're able to sympathize with the plight of these disadvantaged audiophiles, I should« tell» you that there were two perfectly"
+    },
+    {
+     "act": -2.4688,
+     "doc": 1492,
+     "pos": 173,
+     "text": " I’m sure Cameron will complain about how he’s the victim of Christian Persecution. When he does, someone please« remind» him that God’s Not Dead"
+    },
+    {
+     "act": -2.4062,
+     "doc": 1383,
+     "pos": 150,
+     "text": "eway shopping like a plebeian. His security guy is about 20 paces behind him. pic.twitter.com«/»9ptVGo8d"
+    },
+    {
+     "act": -2.4062,
+     "doc": 2668,
+     "pos": 53,
+     "text": " station Triple M 104.9FM., Jackman said: \"Bryan Singer asked Rusty [we« assume» Crowe] to do Wolverine"
+    },
+    {
+     "act": -2.3906,
+     "doc": 1778,
+     "pos": 75,
+     "text": " had its whiteness revoked and been the target of genocides, but most people don't know that unless I« tell» them). I'm a guy"
+    },
+    {
+     "act": -2.0312,
+     "doc": 5,
+     "pos": 127,
+     "text": "bus.  ⏎And secondly, how is it that he is then speaking to Aberforth in Halfblood Prince? («assuming» the ban was for something rather"
+    },
+    {
+     "act": -2.0312,
+     "doc": 1725,
+     "pos": 81,
+     "text": "ing that they have now coined a new term for it. When Trump says something that is patently untrue or completely insane«,» these statements are not lies but"
+    },
+    {
+     "act": -2.0312,
+     "doc": 2425,
+     "pos": 70,
+     "text": " legacy program called Omni and once a week they manually update Salesforce with the info that they gathered from calls that week.⏎«I» need to track these things:"
+    },
+    {
+     "act": -2.0156,
+     "doc": 1154,
+     "pos": 221,
+     "text": " said, you know, in essence, he’s a jerk — with a different word.”⏎⏎She added, “I« heard» later that he was throwing a"
+    },
+    {
+     "act": -1.9141,
+     "doc": 2328,
+     "pos": 111,
+     "text": " E! Online, Richie owes the federal government $1.1 million in unpaid taxes and that a lien has been issued« warning» that the singers’ assets may"
+    },
+    {
+     "act": -1.9062,
+     "doc": 1584,
+     "pos": 202,
+     "text": " a record deal that will pay her 40 million dollars over the next five years.⏎⏎There is no way to« tell» which your sentence means without surrounding"
+    },
+    {
+     "act": -1.8828,
+     "doc": 2001,
+     "pos": 173,
+     "text": ". Seeing these girls in action around the track at Glen Helen, besides reminding me how slow I am on an MX bike«,» was a revelation about the current"
+    },
+    {
+     "act": -1.8672,
+     "doc": 1568,
+     "pos": 112,
+     "text": " as was the case with the Halo and BioShock films due to \"creative differences between the film studio and video game company«,\"» according to Variety.⏎⏎While"
+    },
+    {
+     "act": -1.8203,
+     "doc": 1451,
+     "pos": 230,
+     "text": " weeks. When I have read of bans and detentions. Of outcry and protest. Of fear.⏎⏎Let me⏎«tell» you another story, of a"
+    },
+    {
+     "act": -1.8125,
+     "doc": 506,
+     "pos": 171,
+     "text": " the Entertainment Software Association Foundation announced scholarships for thirty women and minority students interested in entering the games industry. It boggles the« mind» that the gaming industry itself dev"
+    },
+    {
+     "act": -1.7812,
+     "doc": 814,
+     "pos": 250,
+     "text": " I told him that Line 7 had seen the new range but that I had not yet seen any of it. I« asked» him what had happened about"
+    },
+    {
+     "act": -1.7578,
+     "doc": 1082,
+     "pos": 185,
+     "text": "oids, drugs, toxins, antibiotics) accelerate or retard diffusion of ions or molecules from the spherules in a way« that» qualitatively mimics their action"
+    },
+    {
+     "act": -1.7578,
+     "doc": 1362,
+     "pos": 206,
+     "text": " do is have the printing function using the button print only the report inside the SNF without anything outside that reports borders just« as» it does when the report is"
+    },
+    {
+     "act": -1.7578,
+     "doc": 1147,
+     "pos": 22,
+     "text": "Inker⏎⏎RECENT ACTIVITY⏎⏎The passions of one of history's greatest artists are captured in this volume« collecting» the dark and provacative"
+    }
+   ]
+  },
+  "6720": {
+   "max": 9.0,
+   "min": -3.4375,
+   "mean": 0.008230054751038551,
+   "std": 0.1463516652584076,
+   "frac_positive": 0.527040471822696,
+   "quantiles": {
+    "0.001": -0.78515625,
+    "0.01": -0.291015625,
+    "0.5": 0.0020294189453125,
+    "0.99": 0.314453125,
+    "0.999": 1.4140625
+   },
+   "top": [
+    {
+     "act": 9.0,
+     "doc": 460,
+     "pos": 110,
+     "text": "-structured interviews with healthcare professionals was conducted between February and June 2018 at two major hospitals in Kuwait.« Both» hospitals had been accredited and have"
+    },
+    {
+     "act": 8.75,
+     "doc": 2278,
+     "pos": 51,
+     "text": " complication of pulmonary resection. BPF can be divided into peripheral or central, based on the location of the leakage,« and» BPF occurs in about "
+    },
+    {
+     "act": 8.3125,
+     "doc": 287,
+     "pos": 233,
+     "text": "ological approaches is used to treat COPD. Bronchodilators are the mainstay of COPD treatment and can« be» combined with inhaled cortic"
+    },
+    {
+     "act": 7.4375,
+     "doc": 902,
+     "pos": 51,
+     "text": " groundwater were evaluated using a database compiled by the U.S. Geological Survey. These included chemical and radiological factors, and« both» well depth and discharge rate."
+    },
+    {
+     "act": 7.0625,
+     "doc": 2799,
+     "pos": 179,
+     "text": " cancer)⏎⏎Secondhand smoke⏎⏎Workplace exposure, like asbestos, diesel fumes, etc.⏎⏎Air pollution,« both» outdoor and indoor⏎⏎Chest"
+    },
+    {
+     "act": 6.9688,
+     "doc": 995,
+     "pos": 246,
+     "text": " applications. For this reason, a number of constant speed controls have been devised over the years.⏎Speed regulating systems may« be» classified as either closed loop or"
+    },
+    {
+     "act": 6.7812,
+     "doc": 2334,
+     "pos": 216,
+     "text": "]\\].⏎⏎The definition of PA is \"any bodily movement produced by skeletal muscles that results in energy expenditure\" and can« be» categorized as e.g. a"
+    },
+    {
+     "act": 6.7188,
+     "doc": 652,
+     "pos": 34,
+     "text": "In the recent years, with shortage of fossil-fuel based energy and adverse environmental effects from the consumption of fossil fuel,« both» public and private sectors have poured"
+    },
+    {
+     "act": 6.7188,
+     "doc": 2904,
+     "pos": 181,
+     "text": " substantial portions of the Materials.⏎**⏎** THE MATERIALS ARE PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND«,»⏎** EXPRESS OR IMPLIED,"
+    },
+    {
+     "act": 6.5625,
+     "doc": 1605,
+     "pos": 13,
+     "text": "Optically variable devices are used in a wide variety of applications,« both» decorative and utilitarian. Opt"
+    },
+    {
+     "act": 6.4375,
+     "doc": 422,
+     "pos": 133,
+     "text": " to their dental problems at a reasonable price, cast metal bases can be a feasible economical alternative for edentulous patients.« Both» cases presented here demonstrated a significant"
+    },
+    {
+     "act": 6.3438,
+     "doc": 2056,
+     "pos": 154,
+     "text": " or substantial portions of the software.⏎ *⏎ * THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND«,» EXPRESS OR⏎ * IMPLIED,"
+    },
+    {
+     "act": 6.25,
+     "doc": 2368,
+     "pos": 150,
+     "text": " or substantial portions of the software.⏎//⏎// THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND«,» EXPRESS OR⏎// IMPLIED,"
+    },
+    {
+     "act": 6.0938,
+     "doc": 1616,
+     "pos": 163,
+     "text": " on oncology, as there are clear diagnostic, prognostic, and therapeutic implications for a multitude of genomic mutations in« both» solid and liquid malignancies."
+    },
+    {
+     "act": 6.0938,
+     "doc": 1067,
+     "pos": 118,
+     "text": "⏎// https://developers.google.com/protocol-buffers/⏎//⏎// Redistribution and use in source and binary forms«,» with or without⏎// modification"
+    },
+    {
+     "act": 6.0938,
+     "doc": 2290,
+     "pos": 113,
+     "text": " or the⏎ * OpenIB.org BSD license below:⏎ *⏎ *     Redistribution and use in source and binary forms«,» with or⏎ *     without"
+    },
+    {
+     "act": 5.9062,
+     "doc": 2309,
+     "pos": 82,
+     "text": " Harré and Mikhail Prokopenko, both with The University of Sydney in Australia, describe test data they analyzed covering« both» hunter-gatherer societies and"
+    },
+    {
+     "act": 5.7812,
+     "doc": 768,
+     "pos": 252,
+     "text": " human imagination no less than they have occupied the natural habitats of our shared planet. There isn’t a human society on Earth«,» however primitive or"
+    },
+    {
+     "act": 5.5938,
+     "doc": 2980,
+     "pos": 86,
+     "text": " originally identified as a tumor antigen on human ovarian cancer and was subsequently shown to be expressed on multiple human tumor types, including« both» hematologic and solid tumors."
+    },
+    {
+     "act": 5.5625,
+     "doc": 2841,
+     "pos": 151,
+     "text": " The lesion grows rapidly for a few weeks and the colour ranges from pink to red purple and haemorrhage may occur« either» spontaneously or after minor trauma (["
+    }
+   ],
+   "bottom": [
+    {
+     "act": -3.4375,
+     "doc": 1223,
+     "pos": 24,
+     "text": "This post describes the C++ Badge template used to enhance member function access control in Serenity Operating System.⏎⏎C++« divides» class member functions into three separate"
+    },
+    {
+     "act": -3.2031,
+     "doc": 2312,
+     "pos": 109,
+     "text": " our 21-year experience (1986-2006) in treating inverted papillomas using« different» treatment modalities. The patients"
+    },
+    {
+     "act": -3.1094,
+     "doc": 381,
+     "pos": 69,
+     "text": " Airs. How can I download App Store updates once to update multiple Macs?⏎⏎A:⏎⏎There are two« types» of update.⏎OS X"
+    },
+    {
+     "act": -3.0938,
+     "doc": 2419,
+     "pos": 62,
+     "text": " that it cannot be accomplished analytically, necessitating the application of FEA (Finite Element Analysis) techniques; three« types» of FE model, axisymmetric"
+    },
+    {
+     "act": -3.0156,
+     "doc": 2694,
+     "pos": 190,
+     "text": " 50% of diabetic patients ([@B12]; [@B28]). DBD development is divided into« two» phases: the compensated phase,"
+    },
+    {
+     "act": -2.7969,
+     "doc": 2657,
+     "pos": 243,
+     "text": " (Zea mays L.) can be bred by both self-pollination and cross-pollination. Both types« of» pollination involve the corn plant"
+    },
+    {
+     "act": -2.4688,
+     "doc": 2804,
+     "pos": 50,
+     "text": " fully human as possible, to realise or make real the full potential inherent in the human condition. This applies to all levels« of» being human, to the biological"
+    },
+    {
+     "act": -2.4531,
+     "doc": 863,
+     "pos": 123,
+     "text": " will change the face of computing.⏎⏎Quantum bits are the basic units of information in quantum computing, a new type« of» computer in which particles like electrons"
+    },
+    {
+     "act": -2.3438,
+     "doc": 1526,
+     "pos": 120,
+     "text": " as an energy donor and the reporter dye molecule as an energy acceptor. These recognition/detection mechanisms result in mainly three« types» of measurable signal generation: turn"
+    },
+    {
+     "act": -2.3125,
+     "doc": 995,
+     "pos": 142,
+     "text": ", speed will drop and current will increase, assuming a constant input voltage. The amount each parameter varies depends on the type« of» motor. For a motor with"
+    },
+    {
+     "act": -2.2812,
+     "doc": 2768,
+     "pos": 217,
+     "text": " reading the book CLR via C# 3rd edition. In chapter 4 (2nd page) when it explains« different» methods in System.Object it says"
+    },
+    {
+     "act": -2.2188,
+     "doc": 2988,
+     "pos": 116,
+     "text": " progress, many nano-scale accelerometers have been widely commercially used.⏎In general, the accelerometers can be categorized into« two» kinds, one is parallel plate"
+    },
+    {
+     "act": -2.1875,
+     "doc": 1578,
+     "pos": 28,
+     "text": "age in the small intestine].⏎Haemorrhage into the small intestine accounts only for cca 1% of« all» haemorrhages into the"
+    },
+    {
+     "act": -2.1719,
+     "doc": 848,
+     "pos": 189,
+     "text": "]; Hilton et al. [@CR17]; McHaourab et al. [@CR28]). Found in« all» kingdoms of life, many s"
+    },
+    {
+     "act": -2.125,
+     "doc": 1622,
+     "pos": 122,
+     "text": " The aim: The main goal of our study was to determine the peculiarities of the course of bronchial asthma of« various» degrees of severity in patients with"
+    },
+    {
+     "act": -2.0312,
+     "doc": 117,
+     "pos": 15,
+     "text": "Accounting⏎⏎Surf Works offer a range of accounting services suitable for all« types» of business. Below, we"
+    },
+    {
+     "act": -1.9141,
+     "doc": 2796,
+     "pos": 103,
+     "text": " even if power is removed, i.e., is nonvolatile. Nonvolatile semiconductor memories (NVSM) are classified into« two» typesxe2x80"
+    },
+    {
+     "act": -1.8672,
+     "doc": 952,
+     "pos": 33,
+     "text": " (which is mainly used in a capacitive touch screen) used in some smart terminal devices. This near-field communication includes« two» processes: proximity detection process and"
+    },
+    {
+     "act": -1.8672,
+     "doc": 2153,
+     "pos": 45,
+     "text": " the homeodomains of an alpha 2 dimer.⏎DNA recognition sequences for dimeric proteins typically contain two« types» of information. The first is"
+    },
+    {
+     "act": -1.8438,
+     "doc": 2169,
+     "pos": 106,
+     "text": "ipeda Hospital. Special forms were filled in for every patient who participated in the study. Name, operation date, type« of» implants, operative technique, revision"
+    }
+   ]
+  },
+  "7487": {
+   "max": 4.15625,
+   "min": -13.875,
+   "mean": 0.02059711515903473,
+   "std": 0.18183770775794983,
+   "frac_positive": 0.5787416866346781,
+   "quantiles": {
+    "0.001": -1.4921875,
+    "0.01": -0.3046875,
+    "0.5": 0.01904296875,
+    "0.99": 0.34375,
+    "0.999": 0.56640625
+   },
+   "top": [
+    {
+     "act": 4.1562,
+     "doc": 2654,
+     "pos": 76,
+     "text": " and being committed enough that we fight our way through the tough times with never even the thought of giving up or throwing in« the» towel.⏎⏎Staying married"
+    },
+    {
+     "act": 3.7188,
+     "doc": 314,
+     "pos": 221,
+     "text": "Too Young⏎⏎The First Touch⏎⏎In His Eyes⏎⏎By My Side⏎⏎Did I Tell You?⏎⏎Don't Give« Up» ⏎⏎Gentle Gentle ("
+    },
+    {
+     "act": 3.625,
+     "doc": 39,
+     "pos": 210,
+     "text": " 12.⏎We contacted HP support, who sent us to Tier 2 support, and after many hours gave« up».  They said they have"
+    },
+    {
+     "act": 3.5,
+     "doc": 2431,
+     "pos": 221,
+     "text": ".⏎⏎Let us just take a moment to contemplate this stellar offer.⏎⏎/ a moment.⏎⏎Now, maybe giving« up» my DNA and a large chunk"
+    },
+    {
+     "act": 3.2344,
+     "doc": 505,
+     "pos": 31,
+     "text": "EEK) — This morning the world-famous Willie York has passed away.⏎⏎A family spokesperson confirmed the Peoria icon« passed» away overnight.⏎⏎“We appreciate"
+    },
+    {
+     "act": 3.0781,
+     "doc": 496,
+     "pos": 238,
+     "text": " beard. Eight or nine years ago I flirted with a straight razor, but fell victim to my own ignorance and soon« gave» it up. Three years ago"
+    },
+    {
+     "act": 2.9844,
+     "doc": 2860,
+     "pos": 142,
+     "text": " Siri, a controversial digital assistant, the MobileMe suite of web tools and recent iCloud outages.⏎⏎These blunders« expose» Apple as a hardware and design"
+    },
+    {
+     "act": 2.9688,
+     "doc": 100,
+     "pos": 35,
+     "text": " this workCause if we don´t we´re left with nothing and that´s what hurtsWe´re so close to« giving» up but something keeps us here"
+    },
+    {
+     "act": 2.9062,
+     "doc": 1781,
+     "pos": 192,
+     "text": "⏎⏎CONTRIBUTORS⏎⏎Blog Archive⏎⏎AMERICA'S DEBT CLOCK⏎⏎Our forefathers pledged their lives,« their» fortunes and their scared honor to"
+    },
+    {
+     "act": 2.8281,
+     "doc": 2687,
+     "pos": 249,
+     "text": " loves their father unconditionally, we should all encourage him, if he is unable to quit on his own, to give« up» this deadly habit."
+    },
+    {
+     "act": 2.7969,
+     "doc": 1004,
+     "pos": 130,
+     "text": " suitable for any festival main stage. Alongside Nicky, Volt & State have created an anthem portraying a mantra of never« giving» up and always fighting for what"
+    },
+    {
+     "act": 2.7656,
+     "doc": 770,
+     "pos": 60,
+     "text": " performant persistency component have been shown to be very difficult task. In the past, it was very often necessary to« sacrifice» modularity to achieve acceptable performance"
+    },
+    {
+     "act": 2.7188,
+     "doc": 1393,
+     "pos": 105,
+     "text": " the initiating microcomputer accesses the other to request control of the other microcomputers local bus. When the accessed microcomputer« yields» control of its local bus,"
+    },
+    {
+     "act": 2.5,
+     "doc": 2845,
+     "pos": 65,
+     "text": " time of Thanksgiving, we should strive to remember our friends. Even the most thoughtful of us can let important relationships slip by« the» wayside, and we can"
+    },
+    {
+     "act": 2.4531,
+     "doc": 1769,
+     "pos": 34,
+     "text": " officer walked into a conference...⏎⏎A TV icon, Mr Body Language and a police officer walked into a conference...⏎⏎«0»5 January 201"
+    },
+    {
+     "act": 2.3906,
+     "doc": 2068,
+     "pos": 184,
+     "text": " have had, and still have, such entire confidence in the late and present Presidents, that I willingly put both soul and« body» into their pockets. While such"
+    },
+    {
+     "act": 2.375,
+     "doc": 599,
+     "pos": 66,
+     "text": " this politician’s paradise.” - Bertrand Russell, The Impact of Science on Society, 1960.⏎⏎Monday«,» September 15, "
+    },
+    {
+     "act": 2.3438,
+     "doc": 2981,
+     "pos": 230,
+     "text": "2 aces without reply and endured the indignity of being broken to love when he first served for the match. He« blew» too many chances to be totally"
+    },
+    {
+     "act": 2.3281,
+     "doc": 556,
+     "pos": 36,
+     "text": " armies, for Warhammer 40,000, Dust, Urban War and other science fiction games⏎⏎Friday«,» 11 October 2"
+    },
+    {
+     "act": 2.2969,
+     "doc": 1708,
+     "pos": 25,
+     "text": " let's go pick up guys at the club\" Every guy is a skeezy creep.⏎⏎1,17«4» shares"
+    }
+   ],
+   "bottom": [
+    {
+     "act": -13.875,
+     "doc": 141,
+     "pos": 138,
+     "text": " statistical learning perspective on the prospects of constructing typical-set based classifiers. In particular, we show that such classifiers have a surprising« resilience» to noise originating from small population"
+    },
+    {
+     "act": -13.75,
+     "doc": 897,
+     "pos": 138,
+     "text": "activated spores to L-alanine during preincubation. These results suggest that L-alanine sensitizes the sp«ores» to the inhibitory effect of"
+    },
+    {
+     "act": -12.125,
+     "doc": 2224,
+     "pos": 64,
+     "text": " and Streptococcus pneumoniae is the most prevalent causal pathogen identified in CAP. Impaired pulmonary host defense increases« susceptibility» to pneumococcal pneumonia"
+    },
+    {
+     "act": -11.875,
+     "doc": 748,
+     "pos": 228,
+     "text": " primarily prevented accumulation of the viral RNAs synthesized late during infection. RNA genomes introduced in viral particles early during infection were less« sensitive». RNAi can block retro"
+    },
+    {
+     "act": -11.75,
+     "doc": 2721,
+     "pos": 174,
+     "text": " sake of the evaluation. This novel detector reaches similar performances on the standard evaluation HPatches dataset, as well as comparable robust«ness» against illumination and viewpoint changes on"
+    },
+    {
+     "act": -11.625,
+     "doc": 318,
+     "pos": 226,
+     "text": "generally either one or two) readily interpretable rate conditions.⏎⏎    LR moment functions have the advantage of being less« sensitive» to first step estimation. Some"
+    },
+    {
+     "act": -11.625,
+     "doc": 1772,
+     "pos": 247,
+     "text": " social networks. And if there is information compromising you, you can be subject to extortion and surrender. Online banking is also« vulnerable», and even two-factor authentication"
+    },
+    {
+     "act": -11.5,
+     "doc": 1204,
+     "pos": 116,
+     "text": "10 patients where CD5 hypercross-linking induced apoptosis (group A) and 14 patients whose cells were« resistant» to the anti-CD5"
+    },
+    {
+     "act": -11.4375,
+     "doc": 2250,
+     "pos": 205,
+     "text": " one-fifth of human tumor cell strains lack the MGMT activity and termed as Mer- cells. Mer- cells are« hypers»ensitive to alkylating agents"
+    },
+    {
+     "act": -11.25,
+     "doc": 295,
+     "pos": 218,
+     "text": "pGH3-1 tagged with green fluorescent protein (GFP). Targeted knock-out of either gene exhibited an increased« sensitivity» to auxin, resulting in"
+    },
+    {
+     "act": -10.625,
+     "doc": 2033,
+     "pos": 52,
+     "text": " the consequence of the ability of the agent to impair the slow axonal transport of neurofilaments. The susceptibility of various« neurons» to this effect depends upon their"
+    },
+    {
+     "act": -10.25,
+     "doc": 2337,
+     "pos": 144,
+     "text": " level renormalization caused by virtual tunneling between the dot and the leads. The heat current through the quantum dot is« sensitive» to the superconducting phase"
+    },
+    {
+     "act": -9.9375,
+     "doc": 2333,
+     "pos": 216,
+     "text": " MCT/kg, and one single dose of 342mg MCT/kg. These experiments demonstrated that sheep are« susceptible» to acute intoxication by M"
+    },
+    {
+     "act": -9.875,
+     "doc": 1108,
+     "pos": 182,
+     "text": " (NF-κB) trans-repression pathway. Our results showed that pre-treatment with TZDs dramatically decrease the« susceptibility» of endothelial cell to IR"
+    },
+    {
+     "act": -9.75,
+     "doc": 1764,
+     "pos": 197,
+     "text": " areas where the use of irrigation has created artificial ponds and wetlands that either generate new habitats or replace those that were previously« lost» to agricultural expansion.⏎⏎(H"
+    },
+    {
+     "act": -9.5,
+     "doc": 276,
+     "pos": 195,
+     "text": " when challenged with IgE dimer. Furthermore, preincubation with subclass specific oligomers did not desensitize« cells» to challenge with IgE d"
+    },
+    {
+     "act": -9.375,
+     "doc": 1957,
+     "pos": 251,
+     "text": " by PHA, and to be responsible for the extreme potency of AZT in this system. Sensitivity of cellular kin«ases» to PHA activation"
+    },
+    {
+     "act": -8.8125,
+     "doc": 1228,
+     "pos": 195,
+     "text": "play and competition of interactions between atoms and electrons having much larger energy scales, $T_{\\rm c}$ is extremely« sensitive» to details of the electronic and"
+    },
+    {
+     "act": -8.5625,
+     "doc": 81,
+     "pos": 13,
+     "text": "The Harper government is looking for security experts to help harden federal« buildings» in the Ottawa area against threats"
+    },
+    {
+     "act": -8.25,
+     "doc": 1615,
+     "pos": 88,
+     "text": "algams made with Dispersalloy, Tytin, Sybraloy, and New True Dentalloy are not as« sensitive» to the mercury content as are"
+    }
+   ]
+  },
+  "7823": {
+   "max": 7.78125,
+   "min": -2.0625,
+   "mean": 0.008688399568200111,
+   "std": 0.1183258518576622,
+   "frac_positive": 0.5225992076533752,
+   "quantiles": {
+    "0.001": -0.546875,
+    "0.01": -0.263671875,
+    "0.5": 0.0023651123046875,
+    "0.99": 0.306640625,
+    "0.999": 0.8984375
+   },
+   "top": [
+    {
+     "act": 7.7812,
+     "doc": 2067,
+     "pos": 32,
+     "text": " adhesions.⏎Proper physiological functions of cells and tissues depend upon their abilities to sense, transduce, integrate,« and» generate mechanical and biochemical signals."
+    },
+    {
+     "act": 5.2812,
+     "doc": 2049,
+     "pos": 97,
+     "text": "0a</delim><match><data>What is your name?\\x0a</data></match></read«>»⏎    <write><data"
+    },
+    {
+     "act": 4.9688,
+     "doc": 151,
+     "pos": 234,
+     "text": ", go vote today.”⏎⏎On Twitter there is a choice between having the courage to @ the person you are trash talking«,» or not. @realDonaldTrump is"
+    },
+    {
+     "act": 4.875,
+     "doc": 441,
+     "pos": 72,
+     "text": " like a kind of military rigor: reading the landscape, seeing the obstacles, recognizing which ones are malevolent or malign,« and» taking expedient action accordingly."
+    },
+    {
+     "act": 4.5625,
+     "doc": 1934,
+     "pos": 54,
+     "text": " me if the question is very basic level. ⏎My application captures what I speak through my microphone. I have written some« responses» using my c# code for"
+    },
+    {
+     "act": 4.1875,
+     "doc": 937,
+     "pos": 88,
+     "text": " body weight. Subjects were tested three consecutive times using Stroop's Color Word Test. The dependent measures were total time needed« to» complete the test, number of"
+    },
+    {
+     "act": 3.9219,
+     "doc": 334,
+     "pos": 198,
+     "text": " as other classes, of chemosignals. The behavioral and non-behavioral effects complement one another to ensure« that» mating and other reproductive processes are"
+    },
+    {
+     "act": 3.5156,
+     "doc": 2018,
+     "pos": 138,
+     "text": "2-5/family/pepper_user_guide/basic_channel_conversation_pep.html it doesn't say how to change« the» content though.⏎I'm"
+    },
+    {
+     "act": 3.5,
+     "doc": 1403,
+     "pos": 174,
+     "text": " going to bed too cause she is exhausted and i never texted her back goodnight or the next day.. im lost« what» do you guys think this means"
+    },
+    {
+     "act": 3.4219,
+     "doc": 56,
+     "pos": 137,
+     "text": " that process information in real-time. With Amazon Kinesis applications, you can build real-time dashboards, capture exceptions and« generate» alerts, drive recommendations, and"
+    },
+    {
+     "act": 3.3906,
+     "doc": 659,
+     "pos": 149,
+     "text": " the RF energy gets transferred to the interrupt and i2c clock and data lines causing false interrupts to occur. The processor« responds» to the interrupt by reading the"
+    },
+    {
+     "act": 3.3906,
+     "doc": 2495,
+     "pos": 46,
+     "text": " self-damaging. The immune system needs to be tightly regulated and highly responsive to changes in external and internal environments,« adapting» to developmental stage [@ppat"
+    },
+    {
+     "act": 3.3125,
+     "doc": 362,
+     "pos": 119,
+     "text": " two distinct sequences of stimulus-response-outcome, where stimuli were defined by shape ('S' vs. 'H'), responses« were» localized key-presses ("
+    },
+    {
+     "act": 3.125,
+     "doc": 1688,
+     "pos": 183,
+     "text": " people at every show come up to me and say 'I didn't know you played.' I'm never really sure how« to» respond to that comment but I"
+    },
+    {
+     "act": 3.0781,
+     "doc": 131,
+     "pos": 37,
+     "text": "The present experiment sought to examine the effects of event rate on a cognitive vigilance task. Vigilance, or the ability« to» sustain attention, is an integral"
+    },
+    {
+     "act": 3.0781,
+     "doc": 1425,
+     "pos": 235,
+     "text": " of the information it needs to know in order to correctly route the payload data of the data packet to its destination and to« respond» appropriately to the originator of"
+    },
+    {
+     "act": 2.9375,
+     "doc": 2477,
+     "pos": 223,
+     "text": " on(dom.byId(\"someid\"), \"click\", function(evt){⏎    if (mouse.isLeft(event)){⏎     « //» handle mouse left click⏎   "
+    },
+    {
+     "act": 2.8125,
+     "doc": 836,
+     "pos": 124,
+     "text": " as I did (I don't want to argue that it was declined, that's within their right).⏎How do« I» respond and answer the question?"
+    },
+    {
+     "act": 2.7656,
+     "doc": 941,
+     "pos": 124,
+     "text": "TS are impaired in performance of a probabilistic classification task that putatively involves the acquisition of stimulus-response (S-R)-«based» habits. Assessing the learning"
+    },
+    {
+     "act": 2.7344,
+     "doc": 525,
+     "pos": 140,
+     "text": "blasts, and various stromal cells. Cytokines that are produced at the site of infection stimulate and« coordinate» innate and adaptive immune responses against"
+    }
+   ],
+   "bottom": [
+    {
+     "act": -2.0625,
+     "doc": 2757,
+     "pos": 247,
+     "text": "(1)\\cdot F(2)\\cdots F(n)$ for $n\\geq1$.⏎⏎QUESTION.« What» do these integers count? ⏎"
+    },
+    {
+     "act": -1.7422,
+     "doc": 1090,
+     "pos": 73,
+     "text": " that any subset $T$ of ${\\mbox{Assh}\\,}_R(M)$ can be expressed as« the» set of attached primes of the"
+    },
+    {
+     "act": -1.6484,
+     "doc": 878,
+     "pos": 109,
+     "text": " a bit unsure of how one comes to this?⏎EDIT: A similar result which confuses me is:⏎$$«⏎»\\sum_i [ln(Z"
+    },
+    {
+     "act": -1.5938,
+     "doc": 444,
+     "pos": 133,
+     "text": " of physically associated opioid receptors in the central nervous system. The long-term goal is to use the information obtained from such studies« to» develop superior analgesics that"
+    },
+    {
+     "act": -1.5859,
+     "doc": 2691,
+     "pos": 194,
+     "text": " rank, or srank, of any partition $\\lambda$ with distinct parts equals the lowest degree of the terms appearing in« the» expansion of Schur’s $"
+    },
+    {
+     "act": -1.5469,
+     "doc": 764,
+     "pos": 44,
+     "text": "Cell Host Microbe 2019;25:565-577.e6) define« the» liver-based antigen-presenting cell"
+    },
+    {
+     "act": -1.5469,
+     "doc": 2780,
+     "pos": 76,
+     "text": "}^{n \\times n}$, $\\mathbf{R}^{-1}$, and a constant $c$« what» is the solution to $\\math"
+    },
+    {
+     "act": -1.5078,
+     "doc": 2212,
+     "pos": 27,
+     "text": " gene expression is central to the development of complex eukaryotes. This project addresses the long term goal of understanding the« molecular» mechanisms regulating the tissue-specific expression"
+    },
+    {
+     "act": -1.5,
+     "doc": 1028,
+     "pos": 74,
+     "text": " in gibberellins and brassinosteroid have been well studied, there are still many gaps in the picture of« the» networks controlling plant height. Here"
+    },
+    {
+     "act": -1.4688,
+     "doc": 637,
+     "pos": 243,
+     "text": " delivered to our shareholders if the company continues with its Future Strategic Direction Plan on a stand-alone basis,\" Mr Cairns said«.»⏎⏎\"Once this work is"
+    },
+    {
+     "act": -1.4453,
+     "doc": 2705,
+     "pos": 76,
+     "text": "ref4]^ an abundance of free electrons,^[@ref5]^ surface plasmon resonance,^[@ref2],«[@»ref6]−[@ref"
+    },
+    {
+     "act": -1.4453,
+     "doc": 2978,
+     "pos": 148,
+     "text": "1$ if and only if $\\{x\\}$ is a closed set $\\forall x\\in X$\".⏎«What» I've done:⏎Ass"
+    },
+    {
+     "act": -1.4219,
+     "doc": 174,
+     "pos": 230,
+     "text": " translated effectively into methods and tools for teachers and students to use in the classroom every day.\"⏎⏎Such \"research insights must« inform» ongoing development of tools and instructional"
+    },
+    {
+     "act": -1.4062,
+     "doc": 621,
+     "pos": 205,
+     "text": " needed, and have developed effective techniques for overcoming common barriers to protection. Findings from this study will be used to form« the» foundation for future studies aimed at"
+    },
+    {
+     "act": -1.375,
+     "doc": 744,
+     "pos": 129,
+     "text": " progression, invasion, and metastasis among other pathological events. Thus, it is critically important to have a complete understanding of« the» biology of EMT. While"
+    },
+    {
+     "act": -1.3438,
+     "doc": 2867,
+     "pos": 103,
+     "text": " control the spatial organization of retinal vascular beds, and in particular to investigate how components of the hypoxia signaling pathway« act» as spatial cues to determine the"
+    },
+    {
+     "act": -1.3438,
+     "doc": 362,
+     "pos": 26,
+     "text": " to features by associative learning.⏎Expecting a particular stimulus can facilitate processing of that stimulus over others, but what is« the» fate of other stimuli that are"
+    },
+    {
+     "act": -1.3281,
+     "doc": 7,
+     "pos": 86,
+     "text": "lambda}\\big(\\frac{\\lambda^n}{n!} \\big)$⏎and I would like it to be $\\«frac»{d}{d\\lambda"
+    },
+    {
+     "act": -1.3047,
+     "doc": 2302,
+     "pos": 30,
+     "text": " and expectancy of ADHD children's performance, self-evaluations, persistence, and attributions on a cognitive task.⏎«The» effects of 0.3"
+    },
+    {
+     "act": -1.2891,
+     "doc": 2161,
+     "pos": 202,
+     "text": ") 163 1 Island (2XM) 375 2 Lightning Bolt (JMP)« »342 1 Mountain"
+    }
+   ]
+  },
+  "8404": {
+   "max": 7.15625,
+   "min": -3.328125,
+   "mean": 0.0064917937852442265,
+   "std": 0.14641982316970825,
+   "frac_positive": 0.537744023041392,
+   "quantiles": {
+    "0.001": -0.95703125,
+    "0.01": -0.34375,
+    "0.5": 0.0054931640625,
+    "0.99": 0.302734375,
+    "0.999": 1.2546640634536743
+   },
+   "top": [
+    {
+     "act": 7.1562,
+     "doc": 2618,
+     "pos": 97,
+     "text": " 60 hypertensive patients will be conducted in order to: 1. Describe the interrelationships among the following patient« contributions» to care; a) patients"
+    },
+    {
+     "act": 6.6875,
+     "doc": 259,
+     "pos": 48,
+     "text": " is to be a leader in internationalization, preparing all students, as well as faculty and staff, to succeed in and« contribute» to a global society and economy"
+    },
+    {
+     "act": 6.0625,
+     "doc": 1913,
+     "pos": 225,
+     "text": "amural scientists and engineers.⏎⏎The ASM is concerned that budget cut backs will negatively impact Office of Science programs that clearly« contribute» to US global competitiveness in science"
+    },
+    {
+     "act": 5.75,
+     "doc": 984,
+     "pos": 255,
+     "text": " on the rate of weight loss, fat mass loss or fat-free mass loss. Furthermore, fat mass and fat-free mass« contributed»"
+    },
+    {
+     "act": 5.6875,
+     "doc": 2080,
+     "pos": 238,
+     "text": "-owned vehicle for every three or four employees⏎⏎ANAHEIM, CA - Myers Select Material Handling is doing their part to« contribute» to a cleaner environment. The"
+    },
+    {
+     "act": 5.6562,
+     "doc": 173,
+     "pos": 20,
+     "text": "#1⏎Free⏎Stationery Download Site⏎⏎Kathy⏎and I would like to formally welcome« you» to our new⏎free holiday"
+    },
+    {
+     "act": 5.4062,
+     "doc": 1788,
+     "pos": 242,
+     "text": " arm of the Centre for the History of the Gothic. The Centre was founded five years ago to acknowledge Sheffield staff and students« contributions» to the field of Gothic studies"
+    },
+    {
+     "act": 5.3125,
+     "doc": 228,
+     "pos": 236,
+     "text": " been inconsistent towards this end. In the present fMRI study, we tested whether perirhinal and hippocampal« contributions» to recognition memory can be distinguished"
+    },
+    {
+     "act": 5.2812,
+     "doc": 2016,
+     "pos": 4,
+     "text": "Let me first welcome« you» to the Debian Users Forum."
+    },
+    {
+     "act": 5.2188,
+     "doc": 2079,
+     "pos": 15,
+     "text": "Prime Minister Theresa May and Labour Leader Jeremy Corbyn have been strongly criticised for their« absence» during ITV's Leaders' Debate"
+    },
+    {
+     "act": 5.125,
+     "doc": 304,
+     "pos": 185,
+     "text": "3 domain did not interact directly with the PP2.2 motif. However, it was demonstrated that the RT loop did« contribute» to the specificity of binding,"
+    },
+    {
+     "act": 4.875,
+     "doc": 905,
+     "pos": 82,
+     "text": "1941. The contract amounted to $17,893. The company was among the firms which« contributed» to the building of the Boston"
+    },
+    {
+     "act": 4.875,
+     "doc": 2431,
+     "pos": 186,
+     "text": " for Decode to be able to do so they also have to have access to our medical records.⏎⏎In return for our« contribution», Decode is offering to give"
+    },
+    {
+     "act": 4.8438,
+     "doc": 2127,
+     "pos": 164,
+     "text": " Trigger made 'an inappropriate judicial intervention⏎in the political process'. His criticism of immigration policy was⏎'wholly unrelated«'» to the case of the Jama"
+    },
+    {
+     "act": 4.7812,
+     "doc": 423,
+     "pos": 110,
+     "text": " FAAB or cisgender) and trans women which would either render trans women \"not-women\" or call for their« exclusion» from women's spaces. I"
+    },
+    {
+     "act": 4.625,
+     "doc": 1816,
+     "pos": 170,
+     "text": " New York (and er, islands like Bali). Hefty government taxes are partly to blame, but many bars and restaurants« contribute» to the problem by having extremely"
+    },
+    {
+     "act": 4.5,
+     "doc": 2376,
+     "pos": 116,
+     "text": ", but as Esters sat perched on the shingles, he couldn't help but marvel at just how close he« was» to the heart of Detroit."
+    },
+    {
+     "act": 4.4062,
+     "doc": 2584,
+     "pos": 247,
+     "text": " same is the “Qt Unit Test” template:⏎⏎This wizard will allow you to chose which Qt modules you want to« include» in the project and will offer"
+    },
+    {
+     "act": 4.375,
+     "doc": 2387,
+     "pos": 252,
+     "text": "002, the sculpture was badly damaged, and partially collapsed into the water during a storm; vandalism was blamed for« contributing» to the statue"
+    },
+    {
+     "act": 4.2188,
+     "doc": 1695,
+     "pos": 92,
+     "text": " study was to determine whether myocardin, a SMC-selective cofactor of serum response factor (SRF),« contributed» to Ang II-induced increases in"
+    }
+   ],
+   "bottom": [
+    {
+     "act": -3.3281,
+     "doc": 493,
+     "pos": 72,
+     "text": " nothing happens?⏎⏎A:⏎⏎Correct. The RTE control doesn't have a default context menu. But you can assign« it» your own.⏎⏎"
+    },
+    {
+     "act": -3.2656,
+     "doc": 1073,
+     "pos": 99,
+     "text": " appreciable inward current. The amplitude of the K+ current was markedly reduced when free internal Ca2+ was buffered by« addition» of 10 mM EG"
+    },
+    {
+     "act": -3.1406,
+     "doc": 1130,
+     "pos": 234,
+     "text": " Frank (January 25, 2014). Annie Lapin's Newest Painting Exhibition Combines Instant At«traction» and a Slow Burn. Huffington"
+    },
+    {
+     "act": -2.9844,
+     "doc": 1342,
+     "pos": 181,
+     "text": " If you don't want to use a UV, Normal or Color ⏎    //  just pass in a Verctor3«f» with 0,0,"
+    },
+    {
+     "act": -2.875,
+     "doc": 2011,
+     "pos": 165,
+     "text": ". The recent ZIKV outbreaks in South and North America, and more recently in Southeast Asia, have intensified the global« threats» of flaviviruses,"
+    },
+    {
+     "act": -2.8281,
+     "doc": 2641,
+     "pos": 47,
+     "text": "idazole (Ro-07-0582) were studied in BALB/cKa mice injected i.p«.» at 0.5 to"
+    },
+    {
+     "act": -2.75,
+     "doc": 1038,
+     "pos": 81,
+     "text": "/visual_business_intelligence/the_datavis_jitterbug.pdf) is an alternative to standard dot plots and histograms that incorporates« aspects» of both. The x-coordinate"
+    },
+    {
+     "act": -2.7031,
+     "doc": 2696,
+     "pos": 195,
+     "text": " using state-of-the-art diffraction techniques. Calculations performed on several molecules derived from the crystal structures have demonstrated the limited« effect» of interlayer or interm"
+    },
+    {
+     "act": -2.6875,
+     "doc": 1679,
+     "pos": 114,
+     "text": " and favorable outcomes. Here, we considered 85 recipients of UCB allo-HSCT to more broadly define the« impact» of lymphocytosis,"
+    },
+    {
+     "act": -2.6875,
+     "doc": 2865,
+     "pos": 142,
+     "text": " cholecystectomy or the presence of sonographically diagnosed gallstones. Logistic regression models were performed to assess the confounding« effect» of selected risk factors on regional"
+    },
+    {
+     "act": -2.6719,
+     "doc": 318,
+     "pos": 70,
+     "text": " and equivalently first step estimation has no effect on the influence function. This construction consists of adding an estimator of the influence« function» adjustment term for first step non"
+    },
+    {
+     "act": -2.6719,
+     "doc": 2158,
+     "pos": 207,
+     "text": " treatment, preferred health behaviours, prognosis and so on. There are a number of ways in which health professionals can reduce this« impact» in early disease. Elic"
+    },
+    {
+     "act": -2.6406,
+     "doc": 25,
+     "pos": 247,
+     "text": "inity and high temperatures, enabling its use in environments with extreme conditions. The efficiency of the formulated biomolecule through heating and« addition» of sorbate was demonstrated by"
+    },
+    {
+     "act": -2.5625,
+     "doc": 882,
+     "pos": 41,
+     "text": " States alone. Most of these crossings, especially those in rural areas, have only warning signs to alert motorists to the danger« posed» by an approaching train. Typical"
+    },
+    {
+     "act": -2.5469,
+     "doc": 1546,
+     "pos": 243,
+     "text": " adults. To determine if the midgut lectin activity may serve as antibacterial agent females were membrane-fed on blood with« addition» of inhibitory carbohydrates. No"
+    },
+    {
+     "act": -2.5156,
+     "doc": 1723,
+     "pos": 105,
+     "text": " inversely related to the blood glucose level. However, when glucose was given intravenously 15 minutes after oral« administration» of a lethal dose of ethanol"
+    },
+    {
+     "act": -2.5,
+     "doc": 1611,
+     "pos": 120,
+     "text": " but very frequent CTS, and may be suffering with undiagnosed cognitive and language deficits. This suggests a causal« role» for CTS that has not"
+    },
+    {
+     "act": -2.4688,
+     "doc": 2995,
+     "pos": 32,
+     "text": " left unexplored, as is her decision to leave the pornography industry, to which she later returned. Nor is the« impact» of a gang rape that occurred"
+    },
+    {
+     "act": -2.4688,
+     "doc": 610,
+     "pos": 194,
+     "text": " a highly effective barrier and detoxifying system that, except under extreme, accidental circumstances, prevents both extra- and intraocular« damage» from use of hydrogen peroxide"
+    },
+    {
+     "act": -2.4375,
+     "doc": 2510,
+     "pos": 60,
+     "text": " physiological and biochemical cardiovascular risk factors is, furthermore, an unsolved issue. Our aim with this study is to investigate potential« effects» of inbreeding on stated"
+    }
+   ]
+  },
+  "8617": {
+   "max": 12.5,
+   "min": -3.53125,
+   "mean": 0.014962304383516312,
+   "std": 0.17920497059822083,
+   "frac_positive": 0.5264130480248101,
+   "quantiles": {
+    "0.001": -0.77734375,
+    "0.01": -0.30078125,
+    "0.5": 0.0029449462890625,
+    "0.99": 0.490234375,
+    "0.999": 1.8718515634536743
+   },
+   "top": [
+    {
+     "act": 12.5,
+     "doc": 1684,
+     "pos": 121,
+     "text": " the center of the talker's mouth (CTM) or moved their eyes freely on the computer display. Eye movements« were» monitored with an eye-tracking system"
+    },
+    {
+     "act": 10.1875,
+     "doc": 2468,
+     "pos": 93,
+     "text": " the gastrointestinal tract. The effects of cisapride on oesophageal transit were evaluated in 12 PSS patient« using» a solid-phase radionu"
+    },
+    {
+     "act": 8.4375,
+     "doc": 2612,
+     "pos": 218,
+     "text": " week for 7 weeks. Pre and post treatment tests were performed, namely clinical measures and electromyographic, kinematic« and» oxygen expenditure analysis during gait"
+    },
+    {
+     "act": 7.6562,
+     "doc": 2334,
+     "pos": 240,
+     "text": " be categorized as e.g. a household, occupational, leisure time, and sporting activity \\[[@pone.01«7»5190.ref0"
+    },
+    {
+     "act": 7.5938,
+     "doc": 2043,
+     "pos": 150,
+     "text": " Oddi. After 2 weeks of recovery the animals were fasted overnight and positioned under a gamma camera, and my«oe»lectric recordings were begun. After"
+    },
+    {
+     "act": 7.5312,
+     "doc": 2298,
+     "pos": 100,
+     "text": ", the lower extremity of the stick was in contact with a slippery or a rough surface. Postural stability was assessed« by» the root mean square (R"
+    },
+    {
+     "act": 7.2812,
+     "doc": 2181,
+     "pos": 30,
+     "text": ", pulmonary compliance, and work of breathing have been found successful for evaluating pulmonary function. By exercising a patient on a treadmill« and» gradually increasing the workload (i"
+    },
+    {
+     "act": 6.7188,
+     "doc": 780,
+     "pos": 181,
+     "text": ", but it's the first time I see that class so I'm not so sure about that either.⏎I did« a» test earlier today while debugging,"
+    },
+    {
+     "act": 6.6562,
+     "doc": 21,
+     "pos": 139,
+     "text": "ence, stance time, swing time, double support time, step length, step width, walking angle, and toe angle« were» selected as gait parameters."
+    },
+    {
+     "act": 6.5938,
+     "doc": 2012,
+     "pos": 133,
+     "text": " psychiatric symptoms were assessed with the Brief Symptom Inventory and toddler aggressive behaviour with the Child Behaviour Checklist. Infant heart rate was« recorded» at 14 months."
+    },
+    {
+     "act": 6.375,
+     "doc": 984,
+     "pos": 175,
+     "text": " after two and four weeks of dieting. Sleeping metabolic rate (SMR) was measured at the same time intervals using« a» respiration chamber. At the"
+    },
+    {
+     "act": 6.2188,
+     "doc": 765,
+     "pos": 237,
+     "text": "2: seconds 9.17000102997⏎Model 13: seconds« »10.165"
+    },
+    {
+     "act": 6.1875,
+     "doc": 1209,
+     "pos": 223,
+     "text": "5ef-5339-4b1e-903d-0c9a57«1»8d3e4\","
+    },
+    {
+     "act": 5.75,
+     "doc": 1213,
+     "pos": 109,
+     "text": " glucose uptake was studied using isolated hemidiaphragm preparations of dystrophic mice as well as normal mice. Muscle contractions« were» elicited by high-frequency stimulation"
+    },
+    {
+     "act": 5.6562,
+     "doc": 1091,
+     "pos": 206,
+     "text": " could suggest a better way for me to quickly find the class I want to debug...⏎⏎A:⏎⏎Have you tried« the» Debug > Break All (\"pause"
+    },
+    {
+     "act": 5.5312,
+     "doc": 777,
+     "pos": 26,
+     "text": "emispheric slow-wave sleep in the Amazonian dolphin, Inia geoffrensis.⏎An electroencephal«ographic» study of sleep in Amazonian"
+    },
+    {
+     "act": 5.3438,
+     "doc": 1718,
+     "pos": 83,
+     "text": " work that is achieved through this transfer of information.⏎⏎The interactional approach adopted is one that combines the \"micro\"« of» conversation analysis with the 'macro"
+    },
+    {
+     "act": 5.25,
+     "doc": 487,
+     "pos": 41,
+     "text": "⏎We evaluated the effect of fetal respiratory movements (RM) on the heart rate (HR) fractal dynamics.Abdom«inal» ECG recordings were collected from"
+    },
+    {
+     "act": 5.1875,
+     "doc": 428,
+     "pos": 34,
+     "text": "2014⏎⏎I've encountered a deadlock on SQL Server 2014, and created a deadlock report« using» extended events. Below is an"
+    },
+    {
+     "act": 5.0,
+     "doc": 926,
+     "pos": 71,
+     "text": " rules at the individual level[@b2][@b3][@b4]. This idea has been supported by quantitative« trajectory» analysis in animal groups[@b"
+    }
+   ],
+   "bottom": [
+    {
+     "act": -3.5312,
+     "doc": 2860,
+     "pos": 196,
+     "text": " the landscape by a wide margin…⏎⏎Nick Wingfield and Brian Chen filed this report with The New York Times, based« on» interviews with former Apple engineers:"
+    },
+    {
+     "act": -3.0312,
+     "doc": 502,
+     "pos": 174,
+     "text": " temperature in 2007 will be \"0.54 degrees Celsius above the 1961-«1»990 long-term average"
+    },
+    {
+     "act": -2.8594,
+     "doc": 2131,
+     "pos": 236,
+     "text": "rotein-cholesterol (LDL-C) were measured by automatic biochemistry analyzer. Fasting blood glucose level was« measured» by glucose oxidase method."
+    },
+    {
+     "act": -2.8125,
+     "doc": 440,
+     "pos": 65,
+     "text": " sexual and reproductive health services in South-Kivu Province in the Democratic Republic of the Congo, Burundi, and Rwanda.« A» quantitative baseline survey was conducted among"
+    },
+    {
+     "act": -2.7656,
+     "doc": 1267,
+     "pos": 139,
+     "text": " or without GnRH (1.10(-8) M). Concentrations of LH and FSH have been« assessed» in the culture media and in"
+    },
+    {
+     "act": -2.75,
+     "doc": 2682,
+     "pos": 57,
+     "text": " a global public health problem. We investigated socio-demographic factors influencing knowledge, attitudes, and practices about malaria in rural Ghana«.» Our survey looked at 3"
+    },
+    {
+     "act": -2.6406,
+     "doc": 1919,
+     "pos": 205,
+     "text": " probability of detecting S. pneumoniae was substantially higher in studies that performed more frequently a diagnostic polymerase chain reaction assay compared« to» all the other diagnostic tests included"
+    },
+    {
+     "act": -2.5625,
+     "doc": 2791,
+     "pos": 144,
+     "text": "3,000 mAh removable battery and 4G LTE speeds.⏎⏎The 8-megapixel rear and« »2-megapixel front cameras"
+    },
+    {
+     "act": -2.5625,
+     "doc": 991,
+     "pos": 213,
+     "text": " which resulted in the loss of many lives. Each person has a different account of the night’s events and you must use« the» tools at your disposal to get"
+    },
+    {
+     "act": -2.5312,
+     "doc": 1206,
+     "pos": 121,
+     "text": " were detected by MTT assay, FCM; the expression of P53, survivin and HPV E6 protein« were» measured by Western Blot."
+    },
+    {
+     "act": -2.4688,
+     "doc": 2546,
+     "pos": 135,
+     "text": "visit FMD with povidone iodine or with water. Serum IL-6 and soluble thrombomodulin were« measured» by enzyme-linked immunosorb"
+    },
+    {
+     "act": -2.4062,
+     "doc": 771,
+     "pos": 53,
+     "text": "-interest is involved. To compare the strength and direction of associations with sociodemographic factors between assisted and unassisted suicides«.» We calculated rates and used Cox"
+    },
+    {
+     "act": -2.4062,
+     "doc": 32,
+     "pos": 32,
+     "text": ") will clinch victory in the first-in-the-nation primary in New Hampshire, according to a CNN projection, powered« by» his strength among blue-collar,"
+    },
+    {
+     "act": -2.3906,
+     "doc": 2136,
+     "pos": 251,
+     "text": " or a story you can tell for weeks to come. Tickets are on sale now.⏎⏎We use cookies to collect and« analyze» information on site performance"
+    },
+    {
+     "act": -2.3906,
+     "doc": 1554,
+     "pos": 202,
+     "text": "7 adults between the ages of 18 and 64 participated in the study, which included in-person interviews as« well» as follow-up phone questions."
+    },
+    {
+     "act": -2.375,
+     "doc": 2925,
+     "pos": 131,
+     "text": " spatio-temporal spread of influenza in the U.S.A., 1996-2006,« using» air traffic information. Maximum likelihood"
+    },
+    {
+     "act": -2.3125,
+     "doc": 833,
+     "pos": 161,
+     "text": " has unique characteristics similar to the traditional Chinese medical diagnosis system. One such feature is pattern identification (PI), which is based« on» information obtained from four diagnostic processes"
+    },
+    {
+     "act": -2.25,
+     "doc": 1193,
+     "pos": 129,
+     "text": " community-dwelling adults who were aged 65 years or older and living in northern Taiwan. A cross-sectional study« and» interviews were used to collect information"
+    },
+    {
+     "act": -2.2344,
+     "doc": 512,
+     "pos": 151,
+     "text": " Trend⏎⏎How we calculate these rates⏎⏎How we calculate these rates:X⏎⏎In addition to your input, rates are based« on» one car and one driver with"
+    },
+    {
+     "act": -2.2188,
+     "doc": 330,
+     "pos": 92,
+     "text": "ed extraocular muscles. Sixteen eyes of eight rabbits were subjected to conventional 4-mm recession of superior rectus muscles«.» Two rabbits were untreated as control"
+    }
+   ]
+  },
+  "8941": {
+   "max": 7.8125,
+   "min": -2.46875,
+   "mean": -0.026538357138633728,
+   "std": 0.14820453524589539,
+   "frac_positive": 0.4047436226852543,
+   "quantiles": {
+    "0.001": -0.48046875,
+    "0.01": -0.341796875,
+    "0.5": -0.0262451171875,
+    "0.99": 0.30078125,
+    "0.999": 1.1171875
+   },
+   "top": [
+    {
+     "act": 7.8125,
+     "doc": 874,
+     "pos": 191,
+     "text": ", today's economic slowdown has proven that both remain entrenched.⏎⏎Story continues below advertisement⏎⏎\"It is a class statement,« I» suppose, in many ways,\""
+    },
+    {
+     "act": 7.0938,
+     "doc": 199,
+     "pos": 46,
+     "text": " wish did.\" \"The first thing was that your mother was in that classroom.\" \"The second thing?\" \"Well,« to» explain tt, we have to"
+    },
+    {
+     "act": 6.9688,
+     "doc": 404,
+     "pos": 111,
+     "text": "ertainer” in search of ice-cream-famished children begging parents to pay his exorbitant prices. Not« to» be outdone (since my"
+    },
+    {
+     "act": 6.2188,
+     "doc": 1807,
+     "pos": 21,
+     "text": "Random digging…⏎⏎Tonight I attempted to get a one-click install app on Dreamhost running again. To« be» specific this is an installation of"
+    },
+    {
+     "act": 5.3125,
+     "doc": 2234,
+     "pos": 238,
+     "text": " a producer for many no-names in the late 90's, most of whom are not even worth mentioning. We« could» sit here and list Kanye's"
+    },
+    {
+     "act": 5.2188,
+     "doc": 1790,
+     "pos": 206,
+     "text": " can be argued that the things bought and his house being built in and of itself stimulate the economy and create jobs, I« can»'t but help feel more New"
+    },
+    {
+     "act": 5.1562,
+     "doc": 350,
+     "pos": 246,
+     "text": "adic lifestyle based on hunting, fishing and gathering plants. [In Photos: Digging Up Niagara's History]⏎⏎\"I« would» anticipate that there would have been"
+    },
+    {
+     "act": 5.1562,
+     "doc": 235,
+     "pos": 18,
+     "text": "I admit I never thought I’d do any analytical work on Resident Evil 4. Don«’t» get me wrong; it’s"
+    },
+    {
+     "act": 5.0,
+     "doc": 2509,
+     "pos": 193,
+     "text": " deprecated. ⏎The recommended is the SQL Standard way - the IS [NOT] NULL operator. ⏎(And I will« not» start an war whether 'NULL"
+    },
+    {
+     "act": 4.875,
+     "doc": 1156,
+     "pos": 117,
+     "text": " that then begins a lifelong colony in the animal's gut? Is that about how it happens?⏎⏎A:⏎⏎I« would» not expect this to be any"
+    },
+    {
+     "act": 4.875,
+     "doc": 1610,
+     "pos": 131,
+     "text": "⏎  * THIS PACKAGE IS PROVIDED \"AS IS\" AND WITHOUT ANY EXPRESS OR⏎  * IMPLIED WARRANTIES, INCLUDING,« WITHOUT» LIMITATION, THE IMPLIED⏎"
+    },
+    {
+     "act": 4.5625,
+     "doc": 675,
+     "pos": 169,
+     "text": ", and waited, and waited some more for the doors to open. Then finally they did and all of us, I« would» have to guess somewhere around "
+    },
+    {
+     "act": 4.5312,
+     "doc": 1049,
+     "pos": 84,
+     "text": " to believe sanding is necessary. The problem is of course that Im a little lazy.⏎⏎If it matters, I« would» be coming off EBC Red"
+    },
+    {
+     "act": 4.5,
+     "doc": 681,
+     "pos": 151,
+     "text": " Carlo Ancelotti.⏎⏎De acuerdo a información de FOX Sports Argentina, de Diego Latorre y Marcelo Benedetto para« ser» exactos, el técnico campeón"
+    },
+    {
+     "act": 4.375,
+     "doc": 2599,
+     "pos": 121,
+     "text": " most memorable attribute. It is also meant to stand for a dagger of a type, a dagger for God’s work if« you» will, and that is why"
+    },
+    {
+     "act": 4.3438,
+     "doc": 2968,
+     "pos": 222,
+     "text": "⏎⏎There are no good free project generation tools that I know. I worked mostly with STM32CubeMX and I« can» tell you that it's surely"
+    },
+    {
+     "act": 4.25,
+     "doc": 1315,
+     "pos": 86,
+     "text": " at large. I think I’ll post something for the very end of the year as well. But I digress.« Without» further ado–may I present"
+    },
+    {
+     "act": 4.2188,
+     "doc": 1884,
+     "pos": 164,
+     "text": " and I hate having to manually jump back to normal google to do image⏎searches.⏎⏎While we're here,« don»'t forget SSL wikipedia!⏎⏎"
+    },
+    {
+     "act": 4.125,
+     "doc": 1308,
+     "pos": 34,
+     "text": " don't understand /how/ to use MongoDB.⏎⏎The best use case for MongoDB is as a document store. I« can» essentially cache numerous MySQL requests into"
+    },
+    {
+     "act": 4.125,
+     "doc": 2738,
+     "pos": 191,
+     "text": " or higher, you may want a RowLayout.  I'm still on 5.0, though, so I« can»'t help you there.⏎"
+    }
+   ],
+   "bottom": [
+    {
+     "act": -2.4688,
+     "doc": 2420,
+     "pos": 82,
+     "text": " ever searched for a place on the internet and all you can find are just still images? Try searching within this channel and« who» knows you might find some things"
+    },
+    {
+     "act": -2.4375,
+     "doc": 500,
+     "pos": 7,
+     "text": "require_relative '../../../spec_helper'⏎«require» 'cgi'⏎⏎describe \""
+    },
+    {
+     "act": -2.4219,
+     "doc": 211,
+     "pos": 7,
+     "text": "# frozen_string_literal: true⏎⏎«require» File.expand_path('lib/j"
+    },
+    {
+     "act": -1.8438,
+     "doc": 930,
+     "pos": 36,
+     "text": "17⏎⏎With just a fortnight left till CNY, the OUG morning market was in a frenzy. You« know» things are getting serious when RELA"
+    },
+    {
+     "act": -1.6875,
+     "doc": 909,
+     "pos": 29,
+     "text": " and shouted anti-corporate slogans when a second approval for the nude ban passed in City Hall.⏎⏎You've got« to» admire their tenacity.⏎⏎"
+    },
+    {
+     "act": -1.6172,
+     "doc": 1428,
+     "pos": 58,
+     "text": "3/12/pornhub-free-italy-coronavirus/⏎======⏎paul_milovanov⏎«Who» said the civic spirit is dead"
+    },
+    {
+     "act": -1.5859,
+     "doc": 713,
+     "pos": 11,
+     "text": "1. Introduction {#s0005}«⏎»===============⏎⏎Interactions of integral"
+    },
+    {
+     "act": -1.5859,
+     "doc": 2390,
+     "pos": 11,
+     "text": "1. Introduction {#s0005}«⏎»===============⏎⏎Human saliva is the"
+    },
+    {
+     "act": -1.5703,
+     "doc": 1700,
+     "pos": 21,
+     "text": "1. Introduction {#sec1-ijerph-17-00783}«⏎»===============⏎⏎The decline in youth"
+    },
+    {
+     "act": -1.5469,
+     "doc": 1449,
+     "pos": 21,
+     "text": "1. Introduction {#sec1-ijerph-17-04838}«⏎»===============⏎⏎Recent studies show a"
+    },
+    {
+     "act": -1.5,
+     "doc": 1800,
+     "pos": 94,
+     "text": "Handler;⏎⏎use Monolog\\TestCase;⏎use Monolog\\Logger;⏎⏎class BufferHandlerTest extends TestCase⏎{«⏎»    private $shutdownCheckHandler"
+    },
+    {
+     "act": -1.4844,
+     "doc": 525,
+     "pos": 11,
+     "text": "1. Introduction {#sec0005}«⏎»===============⏎⏎Cytokines"
+    },
+    {
+     "act": -1.4688,
+     "doc": 997,
+     "pos": 8,
+     "text": "1. Introduction {#sec1}«⏎»===============⏎⏎Soil organic C"
+    },
+    {
+     "act": -1.4688,
+     "doc": 983,
+     "pos": 8,
+     "text": "1. Introduction {#sec1}«⏎»===============⏎⏎Health care is changing"
+    },
+    {
+     "act": -1.4688,
+     "doc": 769,
+     "pos": 8,
+     "text": "1. Introduction {#sec1}«⏎»===============⏎⏎Nuclear magnetic resonance"
+    },
+    {
+     "act": -1.4688,
+     "doc": 833,
+     "pos": 8,
+     "text": "1. Introduction {#sec1}«⏎»===============⏎⏎Stroke is the second"
+    },
+    {
+     "act": -1.4609,
+     "doc": 479,
+     "pos": 195,
+     "text": " to call home.⏎⏎Local Agents⏎⏎Dan Kubinski⏎⏎They told me, \"Dan write a Bio!\".... Now« who» wants to talk about themselves?"
+    },
+    {
+     "act": -1.3984,
+     "doc": 556,
+     "pos": 182,
+     "text": " a metal gorilla of some description - the overall model is quite heavy, but well-balanced on the base. I« must» say that I was impressed by"
+    },
+    {
+     "act": -1.3828,
+     "doc": 1059,
+     "pos": 20,
+     "text": "1. Introduction {#sec1-polymers-08-00159}«⏎»===============⏎⏎Phenol-form"
+    },
+    {
+     "act": -1.3438,
+     "doc": 126,
+     "pos": 147,
+     "text": " MRI.⏎⏎1. INTRODUCTION {#mrm27594-sec-0005}«⏎»===============⏎⏎Ophthalmologic disease"
+    }
+   ]
+  }
+ }
+}

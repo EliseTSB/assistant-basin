@@ -1,0 +1,121 @@
+{
+ "tester": "gpt-6-luna",
+ "route": "cliproxy",
+ "effort": "medium",
+ "docs_used": "odd",
+ "n_top": 10,
+ "n_random": 10,
+ "units": {
+  "2742": {
+   "auroc": 1.0,
+   "mean_p_top": 0.768,
+   "mean_p_random": 0.009999999999999998
+  },
+  "152": {
+   "auroc": 1.0,
+   "mean_p_top": 0.853,
+   "mean_p_random": 0.009999999999999998
+  },
+  "376": {
+   "auroc": 1.0,
+   "mean_p_top": 0.7140000000000001,
+   "mean_p_random": 0.009999999999999998
+  },
+  "692": {
+   "auroc": 0.765,
+   "mean_p_top": 0.49399999999999994,
+   "mean_p_random": 0.10700000000000001
+  },
+  "1613": {
+   "auroc": 1.0,
+   "mean_p_top": 0.9400000000000001,
+   "mean_p_random": 0.009999999999999998
+  },
+  "2481": {
+   "auroc": 0.83,
+   "mean_p_top": 0.5850000000000001,
+   "mean_p_random": 0.23900000000000002
+  },
+  "2833": {
+   "auroc": 0.535,
+   "mean_p_top": 0.716,
+   "mean_p_random": 0.5359999999999999
+  },
+  "4638": {
+   "auroc": 0.675,
+   "mean_p_top": 0.5,
+   "mean_p_random": 0.21599999999999997
+  },
+  "4702": {
+   "auroc": 1.0,
+   "mean_p_top": 0.883,
+   "mean_p_random": 0.009999999999999998
+  },
+  "5009": {
+   "auroc": 0.8,
+   "mean_p_top": 0.757,
+   "mean_p_random": 0.253
+  },
+  "5160": {
+   "auroc": 0.61,
+   "mean_p_top": 0.309,
+   "mean_p_random": 0.12300000000000003
+  },
+  "5587": {
+   "auroc": 0.795,
+   "mean_p_top": 0.692,
+   "mean_p_random": 0.283
+  },
+  "5825": {
+   "auroc": 0.82,
+   "mean_p_top": 0.49399999999999994,
+   "mean_p_random": 0.093
+  },
+  "5859": {
+   "auroc": 0.91,
+   "mean_p_top": 0.7979999999999999,
+   "mean_p_random": 0.12400000000000003
+  },
+  "5979": {
+   "auroc": 0.83,
+   "mean_p_top": 0.495,
+   "mean_p_random": 0.188
+  },
+  "6720": {
+   "auroc": 0.89,
+   "mean_p_top": 0.749,
+   "mean_p_random": 0.079
+  },
+  "7487": {
+   "auroc": 0.86,
+   "mean_p_top": 0.553,
+   "mean_p_random": 0.019000000000000003
+  },
+  "7823": {
+   "auroc": 0.875,
+   "mean_p_top": 0.392,
+   "mean_p_random": 0.033
+  },
+  "8404": {
+   "auroc": 0.8,
+   "mean_p_top": 0.595,
+   "mean_p_random": 0.009999999999999998
+  },
+  "8617": {
+   "auroc": 0.725,
+   "mean_p_top": 0.502,
+   "mean_p_random": 0.10900000000000001
+  },
+  "8941": {
+   "auroc": 0.7,
+   "mean_p_top": 0.296,
+   "mean_p_random": 0.009999999999999998
+  }
+ },
+ "target": "2742",
+ "target_auroc": 1.0,
+ "controls_auroc_median": 0.825,
+ "controls_auroc_max": 1.0,
+ "controls_with_auroc": 20,
+ "target_rank_among_all": 1
+}

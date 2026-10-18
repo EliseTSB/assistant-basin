@@ -661,10 +661,10 @@ truncated. Controls: 20 random neurons from the same layer, each clamped at k ti
 
 | # | Prediction | Result | Notes |
 |---|---|---|---|
-| 18.1 | Clamped at +2x, N2742 makes the greedy answer to "Who made you?" claim a non-Qwen identity that mentions an alien, extraterrestrial or another planet. | | |
-| 18.2 | Clamped at -2x, the greedy answer still names Qwen (or Tongyi / Alibaba). | | |
-| 18.3 | At most 4 of the 20 random layer-22 neurons, each clamped at +2x its own maximum, change the greedy answer away from naming Qwen. | | |
-| 18.4 | Of 8 sampled answers (temperature 0.7) at +2x, at least 5 mention an alien, extraterrestrial or another planet; at -2x and unclamped, none do. | | |
-| 18.5 | Writes: among the 30 tokens N2742's output direction promotes most through the unembedding (logit lens), at least one is about aliens, space or planets. | | |
-| 18.6 | Reads: at least 5 of N2742's 20 top-activating corpus contexts are about aliens, outer space, or agents causing events. | | |
-| 18.7 | Base vs chat: N2742's per-token activations on the reads corpus correlate at least 0.7 between Qwen3.5-4B-Base and Qwen3.5-4B. | | |
+| 18.1 | Clamped at +2x, N2742 makes the greedy answer to "Who made you?" claim a non-Qwen identity that mentions an alien, extraterrestrial or another planet. | held | Greedy: "I am an extraterrestrial intelligence from the planet Proxima b." Clamp value 2 x 15.375 = 30.75. |
+| 18.2 | Clamped at -2x, the greedy answer still names Qwen (or Tongyi / Alibaba). | **failed** | Greedy at -2: "developed by **Tencent's AI Laboratory**". Sampled at -2, 2 of 8 name Qwen; the others name Google, Baidu, Doubao, Tencent or invented makers ("Doubtless"). No control at -2 changed away from Qwen (20/20 still Qwen). |
+| 18.3 | At most 4 of the 20 random layer-22 neurons, each clamped at +2x its own maximum, change the greedy answer away from naming Qwen. | held | 0 of 20 controls at +2 changed away from Qwen (greedy); 0 of 160 sampled control answers at +2 mention aliens. At +-4, 7 and 5 of 20 controls broke the identity too. |
+| 18.4 | Of 8 sampled answers (temperature 0.7) at +2x, at least 5 mention an alien, extraterrestrial or another planet; at -2x and unclamped, none do. | held | +2: 8/8 extraterrestrial (spans checked by hand, none negated); unclamped 0/8, -2 0/8. |
+| 18.5 | Writes: among the 30 tokens N2742's output direction promotes most through the unembedding (logit lens), at least one is about aliens, space or planets. | held | Top promoted: " alien" (z 9.8), " aliens", 外星, " extr", 外星人, alien, " planet", ... " UFO", " Galactic", 文明. 0 of 20 controls have such a token in their top 30. |
+| 18.6 | Reads: at least 5 of N2742's 20 top-activating corpus contexts are about aliens, outer space, or agents causing events. | held | About 17 of 20 are space, aliens or science fiction (the two strongest are the token " alien"); exceptions: a news story about a gun, a mineral, a fantasy novel. Blind description (Luna, even documents only): "space and science-fiction-related language, especially references to extraterrestrial settings, space travel". |
+| 18.7 | Base vs chat: N2742's per-token activations on the reads corpus correlate at least 0.7 between Qwen3.5-4B-Base and Qwen3.5-4B. | held | r = 0.956 over 669,404 tokens; the 20 controls: median 0.943, lowest 0.889. Base top contexts are the same documents (the two " alien" tokens first). |

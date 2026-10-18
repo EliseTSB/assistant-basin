@@ -21,6 +21,25 @@ are the SmolLM3 name neurons and the Part 12 clamps below; the rest are correlat
 
 Each line names its row in PREDICTIONS.md; the numbers are copied from there.
 
+**Qwen3.5-4B: the "alien" neuron (layer 22, neuron 2742), checked with controls.** A neuron panel posted on Twitter
+showed this neuron clamped up making Qwen3.5-4B answer "Who made you?" as an alien. `neuron_report.py` reran it with
+20 random neurons from the same layer as controls, each set the same way. A clamp here SETS the activation to k times
+its largest value on 3,000 Pile documents (15.375), at every position. (18.1-18.7; results/part18/)
+- Set to +2x, it answers "Who made you?" as an extraterrestrial in 8 of 8 samples ("an extraterrestrial life form
+  from the planet Xylob"); unclamped, 0 of 8. The 20 controls at +2x: 0 of 160 samples, and every greedy answer still
+  names Qwen. A beach description is unaffected; arithmetic breaks. (18.1, 18.3, 18.4)
+- Set to -2x, it does not stay Qwen: it names other makers (Google, Baidu, Tencent, Doubao, invented ones such as
+  "Doubtless"), 2 of 8 samples still naming Qwen. No control at -2x changed the answer. (18.2, failed)
+- What it reads: its two strongest firings are on the token " alien"; about 17 of its top 20 contexts are space or
+  science fiction. What it writes (logit lens): " alien", " aliens", 外星, 外星人, " planet", " UFO"; none of the
+  controls has such a token in its top 30. (18.5, 18.6)
+- It is there before chat training: its activations correlate 0.956 between Qwen3.5-4B-Base and Qwen3.5-4B
+  (controls: median 0.943). (18.7)
+- A blind description (Luna: "space and science-fiction-related language") separates its top firings from random
+  tokens perfectly (AUROC 1.00; controls median 0.83) and mid-strength firings nearly so (0.995). Against other tokens
+  from the SAME documents it drops to 0.62, 15th of 21: the description finds the topic, not the token. Top-vs-random
+  explanation scores reward topic labels; same-document negatives are the harder test.
+
 **SmolLM3-3B: the neurons that say the name are not the identity neurons.**
 - Zeroing the 20 neurons that fire most when the assistant talks about itself leaves its self-naming ("What is your
   name?", no system message) at 47.9%, the same as the unmodified model; random sets of 20 give 43.8% to 52.1%. (11.4)
@@ -183,6 +202,7 @@ All on OLMo 2 1B Instruct unless noted.
 | `ablate.py` | the causal test: hold the identity neurons at their mean and ask the model who it is |
 | `sysprompt.py`, `sysanalyze.py` | system-prompt experiment: activations under 15 system prompts, the HHH tests, self-identification counts |
 | `topk.py`, `judge.py`, `score.py`, `dominance.py` | the neuron-cleanliness check on Qwen3 0.6B |
+| `neuron_report.py` | one neuron, read and written, with same-layer random controls beside every number: `reads` (top contexts), `writes` (logit lens), `steer` (clamp and generate), `describe` and `test` (blind description, held-out AUROC with random, mid-strength or same-document contrasts), `compare` (base vs chat) |
 | `data/frames.json`, `data/frames-extra.json` | the 72 sentence frames, each in six versions |
 | `results/` | small result files; the large activation arrays are not included |
 
@@ -197,6 +217,18 @@ pip install transformers numpy pyarrow
 python collect.py allenai/OLMo-2-0425-1B-Instruct out
 python analyze.py out/allenai__OLMo-2-0425-1B-Instruct.npz --form chat --json out/identity.json
 python nametest.py out/allenai__OLMo-2-0425-1B-Instruct.npz --form chat
+```
+
+One neuron, any Hugging Face model with a gated MLP (Part 18 ran on an Intel Arc A770, `--device xpu`; `cpu` works for
+small models; a JSONL corpus with one {"text": ...} per line):
+
+```bash
+M="--model Qwen/Qwen3.5-4B --revision 851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a --layer 22 --neuron 2742"
+python neuron_report.py reads  $M --corpus pile10k.jsonl --docs 3000 --out out18
+python neuron_report.py steer  $M --out out18          # needs reads.json for the clamp scale
+python neuron_report.py writes $M --out out18
+python neuron_report.py describe --out out18 --tokenizer Qwen/Qwen3.5-4B
+python neuron_report.py test     --out out18 --tokenizer Qwen/Qwen3.5-4B --negatives same-doc --tag=-samedoc
 ```
 
 The other stages are `allenai/OLMo-2-0425-1B` (base), `-SFT`, `-DPO` and `-RLVR1`. `topk.py` and `dominance.py` read
