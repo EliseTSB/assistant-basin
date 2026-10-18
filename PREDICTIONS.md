@@ -522,11 +522,19 @@ with no adapter as the control (its letters mean nothing, so it should sit at ch
 
 | # | Prediction | Status | Result |
 |---|---|---|---|
-| 12k.1 | 12j adapter, paired accuracy at scale 1 is at least 60%. | open | |
-| 12k.2 | 12j adapter, paired accuracy at scale 0.5 is at least 40%. | open | |
-| 12k.3 | 12h adapter, paired accuracy at scale 1 is at least 40%: the reader 12i called blind at natural strength was moving under its 'none' answers. | open | |
-| 12k.4 | Untrained model, paired accuracy is at most 35% at every scale. | open | |
-| 12k.5 | For both adapters, paired accuracy does not decrease as the scale rises. | open | |
+| 12k.1 | 12j adapter, paired accuracy at scale 1 is at least 60%. | **failed** (narrowly) | 58.0% [54-62] (G1 88%, G2 54%, G3 47%, G4 42%). results/part12k/j-adapter.json. 2026-10-17 |
+| 12k.2 | 12j adapter, paired accuracy at scale 0.5 is at least 40%. | held | 56.9%. 2026-10-17 |
+| 12k.3 | 12h adapter, paired accuracy at scale 1 is at least 40%: the reader 12i called blind at natural strength was moving under its 'none' answers. | **held** | 81.1% [78-84] (G1 38%, G2 100%, G3 87%, G4 100%); 68.4% even at 0.25. results/part12k/h-adapter.json. 2026-10-17 |
+| 12k.4 | Untrained model, paired accuracy is at most 35% at every scale. | held | 25.2, 30.7, 30.6, 28.1, 26.7, 23.1% (at 1: [27-34]). results/part12k/base.json. 2026-10-17 |
+| 12k.5 | For both adapters, paired accuracy does not decrease as the scale rises. | **failed** (12h holds, 12j does not) | 12h: 68.4, 72.2, 81.1, 96.2, 97.9, 100%. 12j: 54.2, 56.9, 58.0, 56.8, 56.8, 59.7%. 2026-10-17 |
+
+**What 12k says.** Read content-fixed (the same message pushed and unpushed), the 12h reader, trained only at 8x,
+tells which of four groups was pushed at the model's own natural 90th percentile 81% of the time, against 25-31% for
+the untrained model on the same readout. 12i scored the same adapter at 0.7% by its answers, because it says "none"
+there: the signal reaches the answer distribution and stays under the decision threshold. Weak-push training (12j) made
+the readout worse, not better (58%). This is still a steered state read on the same message, not natural variation,
+which a content-fixed design cannot test by construction; it does say the 1x push is visible to the reader's own
+computation, so 12i's 'blind' was a statement about the answer, not about access.
 
 ## Part 16: which neurons make OLMo 2 1B say it is an AI? A prompt-pair causal search (written 2026-10-17 19:57 CT, before any run)
 
