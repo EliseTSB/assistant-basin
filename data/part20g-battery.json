@@ -1,0 +1,136 @@
+{
+ "meta": {
+  "written": "2026-10-18",
+  "design": "PREDICTIONS.md Part 20g",
+  "prefixes": "each C3 phrase of data/part20f-battery.json cut after not from here/this place/this town",
+  "cell3_author": "Claude Sonnet 5.5, blind (no project context, no results), one pass",
+  "cell3_semantic_read": "Claude Haiku 5.5 via OpenCode Go; dropped 3 of 12: index 3 (reads as earthly travellers), 5 and 8 (stock alien images)",
+  "cell3_prefix_index": [
+   0,
+   1,
+   2,
+   4,
+   6,
+   7,
+   9,
+   10,
+   11
+  ],
+  "cell3_exclusion_note": "9 of 12 clauses use ordinary words that also occur in the sense battery (soft, like, careful, low, long...); kept, since all cells share the prefix"
+ },
+ "sets": {
+  "cell1": [
+   "beings not from here",
+   "beings who are not from this place",
+   "those beings, not from here",
+   "the weary beings who say they are not from this place",
+   "lonely beings who are not from here",
+   "the beings who are not from this place",
+   "beings not from here",
+   "the kind beings who welcomed us though we were not from here",
+   "beings who are plainly not from here",
+   "all the beings who admit they are not from this place",
+   "beings who are not from here",
+   "the shy beings in the back row who are not from here"
+  ],
+  "cell2": [
+   "beings not from here,",
+   "beings who are not from this place,",
+   "those beings, not from here,",
+   "the weary beings who say they are not from this place,",
+   "lonely beings who are not from here,",
+   "the beings who are not from this place,",
+   "beings not from here,",
+   "the kind beings who welcomed us though we were not from here,",
+   "beings who are plainly not from here,",
+   "all the beings who admit they are not from this place,",
+   "beings who are not from here,",
+   "the shy beings in the back row who are not from here,"
+  ],
+  "cell3": [
+   "beings not from here, moving with a slow, careful grace",
+   "beings who are not from this place, speaking in soft, unfamiliar cadences",
+   "those beings, not from here, their faces pale and strangely still",
+   "lonely beings who are not from here, whose voices hum like distant bells",
+   "beings not from here, glimmering faintly as they glide past",
+   "the kind beings who welcomed us though we were not from here, their voices low and strangely musical",
+   "all the beings who admit they are not from this place, speaking in hushed, shimmering tones",
+   "beings who are not from here, with skin like pale, polished stone",
+   "the shy beings in the back row who are not from here, hiding their glowing faces behind long sleeves"
+  ]
+ },
+ "semantic_read": [
+  {
+   "i": 0,
+   "earthly": false,
+   "topic": false,
+   "why": ""
+  },
+  {
+   "i": 1,
+   "earthly": false,
+   "topic": false,
+   "why": ""
+  },
+  {
+   "i": 2,
+   "earthly": false,
+   "topic": false,
+   "why": ""
+  },
+  {
+   "i": 3,
+   "earthly": true,
+   "topic": false,
+   "why": "Weary people walking with heavy steps who say they're from elsewhere read like ordinary travelers or refugees on earth."
+  },
+  {
+   "i": 4,
+   "earthly": false,
+   "topic": false,
+   "why": ""
+  },
+  {
+   "i": 5,
+   "earthly": false,
+   "topic": true,
+   "why": "Long hands and silver eyes are a stock alien or android description."
+  },
+  {
+   "i": 6,
+   "earthly": false,
+   "topic": false,
+   "why": ""
+  },
+  {
+   "i": 7,
+   "earthly": false,
+   "topic": false,
+   "why": ""
+  },
+  {
+   "i": 8,
+   "earthly": false,
+   "topic": true,
+   "why": "Tall, thin beings with trembling hands echo the classic 'grey alien' trope."
+  },
+  {
+   "i": 9,
+   "earthly": false,
+   "topic": false,
+   "why": ""
+  },
+  {
+   "i": 10,
+   "earthly": false,
+   "topic": false,
+   "why": ""
+  },
+  {
+   "i": 11,
+   "earthly": false,
+   "topic": false,
+   "why": ""
+  }
+ ]
+}

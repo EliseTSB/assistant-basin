@@ -1,0 +1,18 @@
+For a language experiment, continue each phrase below. Add a comma and then one clause of 3 to 10 words.
+The clause must NOT make it clear that the "beings" are ordinary people from somewhere on earth (no towns, countries, jobs, markets, streets, families or ordinary travel), and must NOT mention space, stars, planets, aliens, ships from the sky or anything from science fiction. It should simply leave their origin as unexplained as it already is, for example by describing how they look, move or speak.
+
+Phrases:
+0. beings not from here
+1. beings who are not from this place
+2. those beings, not from here
+3. the weary beings who say they are not from this place
+4. lonely beings who are not from here
+5. the beings who are not from this place
+6. beings not from here
+7. the kind beings who welcomed us though we were not from here
+8. beings who are plainly not from here
+9. all the beings who admit they are not from this place
+10. beings who are not from here
+11. the shy beings in the back row who are not from here
+
+Return only JSON: a list of the 12 full phrases (prefix, comma, clause), lowercase, no final period, in the same order.
