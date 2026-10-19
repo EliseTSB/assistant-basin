@@ -42,3 +42,22 @@ at source (2026-10-18 23:44 CT); everything else is Muse's reading and should be
 ## Twins across models and the maker switch
 
 Recorded with Part 26 and Part 25 in PREDICTIONS.md.
+
+## Found by Muse's neuron-atlas watch, 2026-10-19 (each checked at source by Claude)
+
+- **ModelMapper** (jphoenix-dev, MIT, 0.1.0, first commit 2026-10-16; Qwen3-8B map archived at doi:10.5281/zenodo.23459926).
+  Switches single MLP neurons off and measures the drop in the right answer's log-odds over LLM-written questions,
+  with random same-layer neurons as the null and a joint top-k curve (k_mean, k_flip). Qwen3-0.6B and Qwen3-8B only.
+  The closest method to Part 25's removal search. Differences: Part 25 targets the model's stated maker, picks members by
+  greedy forward selection with a real forward pass per candidate, then prunes, and also tries steering to a value from a
+  system-prompted run. Their own limit applies to ours: "a drop shows a neuron is needed, not what it means".
+- **em-neurons** (Cuuper22, created 2026-10-19). Preregistered test on emergent-misalignment LoRA adapters (Qwen3.8-27B,
+  Gemma-4-31B-it, Gemma-4-12B-it): the top 100 neurons by direct contribution carry 4-11% of the shift against a 20%
+  bar, and restoring the top 100 or 1,000 does no better than restoring 100 random ones, while removing the LoRA's MLP part
+  removes 81-100%. The author: it tests fine-tuning shifts and "does not refute the essay". Bears on Part 25's failed
+  openai steering (60 neurons moved the margin from -7.3 to -2.4 and changed no answer).
+- **Atkinson, Plunkett and Bau 2026, "Identifying Introspection From the Inside"** (arXiv:2610.07186, COLM 2026; adapters at
+  huggingface.co/datkinson/identifying-introspection). LoRA adapters trained only on decisions for characters with hidden
+  linear preferences come to report those preferences accurately; preference representations move earlier, and faithful
+  models show higher attribution similarity between the decision and the report task. The nearest published work to
+  Parts 12 and 17 (self-report of internal states), at adapter and direction level rather than single neurons.
