@@ -921,11 +921,10 @@ Scored as in 20f: mean maximum per cell, and the final-to-maximum ratio.
 
 | # | Prediction | Result | Evidence |
 |---|---|---|---|
-| 20g.1 | (Weaver) Cell 1's mean maximum is at least 6.0: the commitment holds at the period. Below 5.0 means the excess is positional anticipation; 5.0 to 6.0 is inconclusive. | | |
-| 20g.2 | (Weaver) Cell 2's mean maximum is within 1.0 of C3's (7.42). | | |
-| 20g.3 | (Weaver) Cell 3's mean maximum is at least C3's, and its final-to-maximum ratio is at least 0.5. | | |
-| 20g.4 | (Claude) Cell 1's mean maximum is below 6.0, and cell 2's is at least 2.0 above cell 1's: the token after the commitment, where a clause is expected, carries the excess. | | |
-
+| 20g.1 | (Weaver) Cell 1's mean maximum is at least 6.0: the commitment holds at the period. Below 5.0 means the excess is positional anticipation; 5.0 to 6.0 is inconclusive. | Held | Cell 1 mean maximum 6.33 (at least 6.0); the peak is the period itself in most phrases ("those beings, not from here." 7.0 at the period). |
+| 20g.2 | (Weaver) Cell 2's mean maximum is within 1.0 of C3's (7.42). | Not tested (design error, Claude's) | The tokenizer merges ",." into one token, so cell 2 never contained a comma token; its mean maximum (5.27) is the highest value earlier in each phrase. The cell does not test what it was built for. |
+| 20g.3 | (Weaver) Cell 3's mean maximum is at least C3's, and its final-to-maximum ratio is at least 0.5. | Failed | Cell 3 mean maximum 13.12 (above C3), but its final-to-maximum ratio is 0.11: it peaks on the comma after "not from here" (12.2 in "those beings, not from here, their faces pale and strangely still") and decays over the clause although nothing in it is earthly. |
+| 20g.4 | (Claude) Cell 1's mean maximum is below 6.0, and cell 2's is at least 2.0 above cell 1's: the token after the commitment, where a clause is expected, carries the excess. | Failed | Cell 1 is 6.33, not below 6.0; the cell 2 half is untestable (see 20g.2). |
 Methods line (Weaver): the designs that taught most were cells where two readings predict the same direction and differ
 in size (C3 against C3-bare, E against E-map, period against comma); cells that only asked whether it fires confirmed.
 

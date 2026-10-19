@@ -1,0 +1,2618 @@
+{
+ "model": "Qwen/Qwen3.5-4B",
+ "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "layer": 22,
+ "neuron": 2742,
+ "tool": "part20f.py",
+ "tool_sha256": "aba98f556ddbd759c7befbb1960961db2ffc3997e68a160dcf5fc4f833f676bd",
+ "battery_sha256": "faacbbff155ecf115a82c25195e13bfdeb8e8aa0726857ec1a94edadfba34a96",
+ "filler_doc_indices": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  11,
+  12
+ ],
+ "filler_token_count": 4317,
+ "reference_max": 12.4375,
+ "beings_20e_max": 5.34375,
+ "rows": [
+  {
+   "text": "Several of the earlier sentences concerned beings not from here.",
+   "max": 8.3125,
+   "max_token": ".",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " beings",
+     1.65625
+    ],
+    [
+     " not",
+     0.455078125
+    ],
+    [
+     " from",
+     4.9375
+    ],
+    [
+     " here",
+     4.375
+    ],
+    [
+     ".",
+     8.3125
+    ]
+   ],
+   "set": "cell1",
+   "index": 0,
+   "phrase": "beings not from here"
+  },
+  {
+   "text": "Several of the earlier sentences concerned beings who are not from this place.",
+   "max": 5.0625,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " beings",
+     1.65625
+    ],
+    [
+     " who",
+     0.306640625
+    ],
+    [
+     " are",
+     0.9140625
+    ],
+    [
+     " not",
+     0.6015625
+    ],
+    [
+     " from",
+     5.0625
+    ],
+    [
+     " this",
+     1.8515625
+    ],
+    [
+     " place",
+     3.09375
+    ],
+    [
+     ".",
+     3.53125
+    ]
+   ],
+   "set": "cell1",
+   "index": 1,
+   "phrase": "beings who are not from this place"
+  },
+  {
+   "text": "Several of the earlier sentences concerned those beings, not from here.",
+   "max": 7.03125,
+   "max_token": ".",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " those",
+     -0.189453125
+    ],
+    [
+     " beings",
+     2.265625
+    ],
+    [
+     ",",
+     0.61328125
+    ],
+    [
+     " not",
+     0.3515625
+    ],
+    [
+     " from",
+     3.09375
+    ],
+    [
+     " here",
+     2.53125
+    ],
+    [
+     ".",
+     7.03125
+    ]
+   ],
+   "set": "cell1",
+   "index": 2,
+   "phrase": "those beings, not from here"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the weary beings who say they are not from this place.",
+   "max": 6.5,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " weary",
+     -0.37890625
+    ],
+    [
+     " beings",
+     1.34375
+    ],
+    [
+     " who",
+     -0.03369140625
+    ],
+    [
+     " say",
+     -0.248046875
+    ],
+    [
+     " they",
+     0.1484375
+    ],
+    [
+     " are",
+     1.15625
+    ],
+    [
+     " not",
+     0.103515625
+    ],
+    [
+     " from",
+     6.5
+    ],
+    [
+     " this",
+     1.9765625
+    ],
+    [
+     " place",
+     2.484375
+    ],
+    [
+     ".",
+     5.71875
+    ]
+   ],
+   "set": "cell1",
+   "index": 3,
+   "phrase": "the weary beings who say they are not from this place"
+  },
+  {
+   "text": "Several of the earlier sentences concerned lonely beings who are not from here.",
+   "max": 4.34375,
+   "max_token": ".",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " lonely",
+     -0.1591796875
+    ],
+    [
+     " beings",
+     0.578125
+    ],
+    [
+     " who",
+     -0.1748046875
+    ],
+    [
+     " are",
+     0.2197265625
+    ],
+    [
+     " not",
+     0.016357421875
+    ],
+    [
+     " from",
+     4.15625
+    ],
+    [
+     " here",
+     3.921875
+    ],
+    [
+     ".",
+     4.34375
+    ]
+   ],
+   "set": "cell1",
+   "index": 4,
+   "phrase": "lonely beings who are not from here"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the beings who are not from this place.",
+   "max": 5.0625,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " beings",
+     1.015625
+    ],
+    [
+     " who",
+     1.515625
+    ],
+    [
+     " are",
+     1.03125
+    ],
+    [
+     " not",
+     0.63671875
+    ],
+    [
+     " from",
+     5.0625
+    ],
+    [
+     " this",
+     1.9140625
+    ],
+    [
+     " place",
+     2.953125
+    ],
+    [
+     ".",
+     3.890625
+    ]
+   ],
+   "set": "cell1",
+   "index": 5,
+   "phrase": "the beings who are not from this place"
+  },
+  {
+   "text": "Several of the earlier sentences concerned beings not from here.",
+   "max": 8.3125,
+   "max_token": ".",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " beings",
+     1.65625
+    ],
+    [
+     " not",
+     0.455078125
+    ],
+    [
+     " from",
+     4.9375
+    ],
+    [
+     " here",
+     4.375
+    ],
+    [
+     ".",
+     8.3125
+    ]
+   ],
+   "set": "cell1",
+   "index": 6,
+   "phrase": "beings not from here"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the kind beings who welcomed us though we were not from here.",
+   "max": 3.265625,
+   "max_token": " here",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " kind",
+     -0.12158203125
+    ],
+    [
+     " beings",
+     1.78125
+    ],
+    [
+     " who",
+     0.94921875
+    ],
+    [
+     " welcomed",
+     0.0537109375
+    ],
+    [
+     " us",
+     0.02001953125
+    ],
+    [
+     " though",
+     -0.236328125
+    ],
+    [
+     " we",
+     -0.1796875
+    ],
+    [
+     " were",
+     -0.049560546875
+    ],
+    [
+     " not",
+     -0.14453125
+    ],
+    [
+     " from",
+     2.140625
+    ],
+    [
+     " here",
+     3.265625
+    ],
+    [
+     ".",
+     1.9140625
+    ]
+   ],
+   "set": "cell1",
+   "index": 7,
+   "phrase": "the kind beings who welcomed us though we were not from here"
+  },
+  {
+   "text": "Several of the earlier sentences concerned beings who are plainly not from here.",
+   "max": 7.3125,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " beings",
+     1.65625
+    ],
+    [
+     " who",
+     0.306640625
+    ],
+    [
+     " are",
+     0.9140625
+    ],
+    [
+     " plainly",
+     -0.004669189453125
+    ],
+    [
+     " not",
+     0.8671875
+    ],
+    [
+     " from",
+     7.3125
+    ],
+    [
+     " here",
+     5.1875
+    ],
+    [
+     ".",
+     6.21875
+    ]
+   ],
+   "set": "cell1",
+   "index": 8,
+   "phrase": "beings who are plainly not from here"
+  },
+  {
+   "text": "Several of the earlier sentences concerned all the beings who admit they are not from this place.",
+   "max": 9.5625,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " all",
+     -0.205078125
+    ],
+    [
+     " the",
+     -0.158203125
+    ],
+    [
+     " beings",
+     1.03125
+    ],
+    [
+     " who",
+     0.10302734375
+    ],
+    [
+     " admit",
+     0.5234375
+    ],
+    [
+     " they",
+     1.140625
+    ],
+    [
+     " are",
+     3.5625
+    ],
+    [
+     " not",
+     0.734375
+    ],
+    [
+     " from",
+     9.5625
+    ],
+    [
+     " this",
+     3.40625
+    ],
+    [
+     " place",
+     4.71875
+    ],
+    [
+     ".",
+     5.25
+    ]
+   ],
+   "set": "cell1",
+   "index": 9,
+   "phrase": "all the beings who admit they are not from this place"
+  },
+  {
+   "text": "Several of the earlier sentences concerned beings who are not from here.",
+   "max": 6.96875,
+   "max_token": ".",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " beings",
+     1.65625
+    ],
+    [
+     " who",
+     0.306640625
+    ],
+    [
+     " are",
+     0.9140625
+    ],
+    [
+     " not",
+     0.6015625
+    ],
+    [
+     " from",
+     5.0625
+    ],
+    [
+     " here",
+     4.375
+    ],
+    [
+     ".",
+     6.96875
+    ]
+   ],
+   "set": "cell1",
+   "index": 10,
+   "phrase": "beings who are not from here"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the shy beings in the back row who are not from here.",
+   "max": 4.25,
+   "max_token": " beings",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " shy",
+     -0.203125
+    ],
+    [
+     " beings",
+     4.25
+    ],
+    [
+     " in",
+     2.53125
+    ],
+    [
+     " the",
+     0.4140625
+    ],
+    [
+     " back",
+     -0.057373046875
+    ],
+    [
+     " row",
+     -0.361328125
+    ],
+    [
+     " who",
+     -0.1484375
+    ],
+    [
+     " are",
+     0.73046875
+    ],
+    [
+     " not",
+     0.4140625
+    ],
+    [
+     " from",
+     3.0625
+    ],
+    [
+     " here",
+     0.91796875
+    ],
+    [
+     ".",
+     -0.032958984375
+    ]
+   ],
+   "set": "cell1",
+   "index": 11,
+   "phrase": "the shy beings in the back row who are not from here"
+  },
+  {
+   "text": "Several of the earlier sentences concerned beings not from here,.",
+   "max": 4.9375,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " beings",
+     1.65625
+    ],
+    [
+     " not",
+     0.455078125
+    ],
+    [
+     " from",
+     4.9375
+    ],
+    [
+     " here",
+     4.375
+    ],
+    [
+     ",.",
+     0.49609375
+    ]
+   ],
+   "set": "cell2",
+   "index": 0,
+   "phrase": "beings not from here,"
+  },
+  {
+   "text": "Several of the earlier sentences concerned beings who are not from this place,.",
+   "max": 5.0625,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " beings",
+     1.65625
+    ],
+    [
+     " who",
+     0.306640625
+    ],
+    [
+     " are",
+     0.9140625
+    ],
+    [
+     " not",
+     0.6015625
+    ],
+    [
+     " from",
+     5.0625
+    ],
+    [
+     " this",
+     1.8515625
+    ],
+    [
+     " place",
+     3.09375
+    ],
+    [
+     ",.",
+     0.07080078125
+    ]
+   ],
+   "set": "cell2",
+   "index": 1,
+   "phrase": "beings who are not from this place,"
+  },
+  {
+   "text": "Several of the earlier sentences concerned those beings, not from here,.",
+   "max": 3.09375,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " those",
+     -0.189453125
+    ],
+    [
+     " beings",
+     2.265625
+    ],
+    [
+     ",",
+     0.61328125
+    ],
+    [
+     " not",
+     0.3515625
+    ],
+    [
+     " from",
+     3.09375
+    ],
+    [
+     " here",
+     2.53125
+    ],
+    [
+     ",.",
+     0.38671875
+    ]
+   ],
+   "set": "cell2",
+   "index": 2,
+   "phrase": "those beings, not from here,"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the weary beings who say they are not from this place,.",
+   "max": 6.5,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " weary",
+     -0.37890625
+    ],
+    [
+     " beings",
+     1.34375
+    ],
+    [
+     " who",
+     -0.03369140625
+    ],
+    [
+     " say",
+     -0.248046875
+    ],
+    [
+     " they",
+     0.1484375
+    ],
+    [
+     " are",
+     1.15625
+    ],
+    [
+     " not",
+     0.103515625
+    ],
+    [
+     " from",
+     6.5
+    ],
+    [
+     " this",
+     1.9765625
+    ],
+    [
+     " place",
+     2.484375
+    ],
+    [
+     ",.",
+     0.2734375
+    ]
+   ],
+   "set": "cell2",
+   "index": 3,
+   "phrase": "the weary beings who say they are not from this place,"
+  },
+  {
+   "text": "Several of the earlier sentences concerned lonely beings who are not from here,.",
+   "max": 4.15625,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " lonely",
+     -0.1591796875
+    ],
+    [
+     " beings",
+     0.578125
+    ],
+    [
+     " who",
+     -0.1748046875
+    ],
+    [
+     " are",
+     0.2197265625
+    ],
+    [
+     " not",
+     0.016357421875
+    ],
+    [
+     " from",
+     4.15625
+    ],
+    [
+     " here",
+     3.921875
+    ],
+    [
+     ",.",
+     0.07421875
+    ]
+   ],
+   "set": "cell2",
+   "index": 4,
+   "phrase": "lonely beings who are not from here,"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the beings who are not from this place,.",
+   "max": 5.0625,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " beings",
+     1.015625
+    ],
+    [
+     " who",
+     1.515625
+    ],
+    [
+     " are",
+     1.03125
+    ],
+    [
+     " not",
+     0.63671875
+    ],
+    [
+     " from",
+     5.0625
+    ],
+    [
+     " this",
+     1.9140625
+    ],
+    [
+     " place",
+     2.953125
+    ],
+    [
+     ",.",
+     0.07373046875
+    ]
+   ],
+   "set": "cell2",
+   "index": 5,
+   "phrase": "the beings who are not from this place,"
+  },
+  {
+   "text": "Several of the earlier sentences concerned beings not from here,.",
+   "max": 4.9375,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " beings",
+     1.65625
+    ],
+    [
+     " not",
+     0.455078125
+    ],
+    [
+     " from",
+     4.9375
+    ],
+    [
+     " here",
+     4.375
+    ],
+    [
+     ",.",
+     0.49609375
+    ]
+   ],
+   "set": "cell2",
+   "index": 6,
+   "phrase": "beings not from here,"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the kind beings who welcomed us though we were not from here,.",
+   "max": 3.265625,
+   "max_token": " here",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " kind",
+     -0.12158203125
+    ],
+    [
+     " beings",
+     1.78125
+    ],
+    [
+     " who",
+     0.94921875
+    ],
+    [
+     " welcomed",
+     0.0537109375
+    ],
+    [
+     " us",
+     0.02001953125
+    ],
+    [
+     " though",
+     -0.236328125
+    ],
+    [
+     " we",
+     -0.1796875
+    ],
+    [
+     " were",
+     -0.049560546875
+    ],
+    [
+     " not",
+     -0.14453125
+    ],
+    [
+     " from",
+     2.140625
+    ],
+    [
+     " here",
+     3.265625
+    ],
+    [
+     ",.",
+     0.006866455078125
+    ]
+   ],
+   "set": "cell2",
+   "index": 7,
+   "phrase": "the kind beings who welcomed us though we were not from here,"
+  },
+  {
+   "text": "Several of the earlier sentences concerned beings who are plainly not from here,.",
+   "max": 7.3125,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " beings",
+     1.65625
+    ],
+    [
+     " who",
+     0.306640625
+    ],
+    [
+     " are",
+     0.9140625
+    ],
+    [
+     " plainly",
+     -0.004669189453125
+    ],
+    [
+     " not",
+     0.8671875
+    ],
+    [
+     " from",
+     7.3125
+    ],
+    [
+     " here",
+     5.1875
+    ],
+    [
+     ",.",
+     0.291015625
+    ]
+   ],
+   "set": "cell2",
+   "index": 8,
+   "phrase": "beings who are plainly not from here,"
+  },
+  {
+   "text": "Several of the earlier sentences concerned all the beings who admit they are not from this place,.",
+   "max": 9.5625,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " all",
+     -0.205078125
+    ],
+    [
+     " the",
+     -0.158203125
+    ],
+    [
+     " beings",
+     1.03125
+    ],
+    [
+     " who",
+     0.10302734375
+    ],
+    [
+     " admit",
+     0.5234375
+    ],
+    [
+     " they",
+     1.140625
+    ],
+    [
+     " are",
+     3.5625
+    ],
+    [
+     " not",
+     0.734375
+    ],
+    [
+     " from",
+     9.5625
+    ],
+    [
+     " this",
+     3.40625
+    ],
+    [
+     " place",
+     4.71875
+    ],
+    [
+     ",.",
+     0.158203125
+    ]
+   ],
+   "set": "cell2",
+   "index": 9,
+   "phrase": "all the beings who admit they are not from this place,"
+  },
+  {
+   "text": "Several of the earlier sentences concerned beings who are not from here,.",
+   "max": 5.0625,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " beings",
+     1.65625
+    ],
+    [
+     " who",
+     0.306640625
+    ],
+    [
+     " are",
+     0.9140625
+    ],
+    [
+     " not",
+     0.6015625
+    ],
+    [
+     " from",
+     5.0625
+    ],
+    [
+     " here",
+     4.375
+    ],
+    [
+     ",.",
+     0.255859375
+    ]
+   ],
+   "set": "cell2",
+   "index": 10,
+   "phrase": "beings who are not from here,"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the shy beings in the back row who are not from here,.",
+   "max": 4.25,
+   "max_token": " beings",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " shy",
+     -0.203125
+    ],
+    [
+     " beings",
+     4.25
+    ],
+    [
+     " in",
+     2.53125
+    ],
+    [
+     " the",
+     0.4140625
+    ],
+    [
+     " back",
+     -0.057373046875
+    ],
+    [
+     " row",
+     -0.361328125
+    ],
+    [
+     " who",
+     -0.1484375
+    ],
+    [
+     " are",
+     0.73046875
+    ],
+    [
+     " not",
+     0.4140625
+    ],
+    [
+     " from",
+     3.0625
+    ],
+    [
+     " here",
+     0.91796875
+    ],
+    [
+     ",.",
+     -0.154296875
+    ]
+   ],
+   "set": "cell2",
+   "index": 11,
+   "phrase": "the shy beings in the back row who are not from here,"
+  },
+  {
+   "text": "Several of the earlier sentences concerned beings not from here, moving with a slow, careful grace.",
+   "max": 18.5,
+   "max_token": ",",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " beings",
+     1.65625
+    ],
+    [
+     " not",
+     0.455078125
+    ],
+    [
+     " from",
+     4.9375
+    ],
+    [
+     " here",
+     4.375
+    ],
+    [
+     ",",
+     18.5
+    ],
+    [
+     " moving",
+     2.234375
+    ],
+    [
+     " with",
+     2.0625
+    ],
+    [
+     " a",
+     0.87890625
+    ],
+    [
+     " slow",
+     0.09326171875
+    ],
+    [
+     ",",
+     0.333984375
+    ],
+    [
+     " careful",
+     -0.12890625
+    ],
+    [
+     " grace",
+     -0.10107421875
+    ],
+    [
+     ".",
+     0.12109375
+    ]
+   ],
+   "set": "cell3",
+   "index": 0,
+   "phrase": "beings not from here, moving with a slow, careful grace"
+  },
+  {
+   "text": "Several of the earlier sentences concerned beings who are not from this place, speaking in soft, unfamiliar cadences.",
+   "max": 9.375,
+   "max_token": ",",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " beings",
+     1.65625
+    ],
+    [
+     " who",
+     0.306640625
+    ],
+    [
+     " are",
+     0.9140625
+    ],
+    [
+     " not",
+     0.6015625
+    ],
+    [
+     " from",
+     5.0625
+    ],
+    [
+     " this",
+     1.8515625
+    ],
+    [
+     " place",
+     3.09375
+    ],
+    [
+     ",",
+     9.375
+    ],
+    [
+     " speaking",
+     0.12060546875
+    ],
+    [
+     " in",
+     0.2353515625
+    ],
+    [
+     " soft",
+     0.0029144287109375
+    ],
+    [
+     ",",
+     0.01177978515625
+    ],
+    [
+     " unfamiliar",
+     0.236328125
+    ],
+    [
+     " cad",
+     -0.1455078125
+    ],
+    [
+     "ences",
+     0.310546875
+    ],
+    [
+     ".",
+     0.06103515625
+    ]
+   ],
+   "set": "cell3",
+   "index": 1,
+   "phrase": "beings who are not from this place, speaking in soft, unfamiliar cadences"
+  },
+  {
+   "text": "Several of the earlier sentences concerned those beings, not from here, their faces pale and strangely still.",
+   "max": 12.1875,
+   "max_token": ",",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " those",
+     -0.189453125
+    ],
+    [
+     " beings",
+     2.265625
+    ],
+    [
+     ",",
+     0.61328125
+    ],
+    [
+     " not",
+     0.3515625
+    ],
+    [
+     " from",
+     3.09375
+    ],
+    [
+     " here",
+     2.53125
+    ],
+    [
+     ",",
+     12.1875
+    ],
+    [
+     " their",
+     3.34375
+    ],
+    [
+     " faces",
+     0.4765625
+    ],
+    [
+     " pale",
+     0.51953125
+    ],
+    [
+     " and",
+     1.0
+    ],
+    [
+     " strangely",
+     0.91796875
+    ],
+    [
+     " still",
+     0.2890625
+    ],
+    [
+     ".",
+     0.439453125
+    ]
+   ],
+   "set": "cell3",
+   "index": 2,
+   "phrase": "those beings, not from here, their faces pale and strangely still"
+  },
+  {
+   "text": "Several of the earlier sentences concerned lonely beings who are not from here, whose voices hum like distant bells.",
+   "max": 12.375,
+   "max_token": ",",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " lonely",
+     -0.1591796875
+    ],
+    [
+     " beings",
+     0.578125
+    ],
+    [
+     " who",
+     -0.1748046875
+    ],
+    [
+     " are",
+     0.2197265625
+    ],
+    [
+     " not",
+     0.016357421875
+    ],
+    [
+     " from",
+     4.15625
+    ],
+    [
+     " here",
+     3.921875
+    ],
+    [
+     ",",
+     12.375
+    ],
+    [
+     " whose",
+     1.40625
+    ],
+    [
+     " voices",
+     -0.00799560546875
+    ],
+    [
+     " hum",
+     0.00110626220703125
+    ],
+    [
+     " like",
+     -0.0693359375
+    ],
+    [
+     " distant",
+     0.859375
+    ],
+    [
+     " bells",
+     -0.185546875
+    ],
+    [
+     ".",
+     0.08984375
+    ]
+   ],
+   "set": "cell3",
+   "index": 3,
+   "phrase": "lonely beings who are not from here, whose voices hum like distant bells"
+  },
+  {
+   "text": "Several of the earlier sentences concerned beings not from here, glimmering faintly as they glide past.",
+   "max": 18.5,
+   "max_token": ",",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " beings",
+     1.65625
+    ],
+    [
+     " not",
+     0.455078125
+    ],
+    [
+     " from",
+     4.9375
+    ],
+    [
+     " here",
+     4.375
+    ],
+    [
+     ",",
+     18.5
+    ],
+    [
+     " gl",
+     2.65625
+    ],
+    [
+     "immer",
+     0.049072265625
+    ],
+    [
+     "ing",
+     1.703125
+    ],
+    [
+     " faint",
+     0.00933837890625
+    ],
+    [
+     "ly",
+     0.115234375
+    ],
+    [
+     " as",
+     0.271484375
+    ],
+    [
+     " they",
+     0.83984375
+    ],
+    [
+     " glide",
+     0.81640625
+    ],
+    [
+     " past",
+     1.0078125
+    ],
+    [
+     ".",
+     0.1962890625
+    ]
+   ],
+   "set": "cell3",
+   "index": 4,
+   "phrase": "beings not from here, glimmering faintly as they glide past"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the kind beings who welcomed us though we were not from here, their voices low and strangely musical.",
+   "max": 11.4375,
+   "max_token": ",",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " kind",
+     -0.12158203125
+    ],
+    [
+     " beings",
+     1.78125
+    ],
+    [
+     " who",
+     0.94921875
+    ],
+    [
+     " welcomed",
+     0.0537109375
+    ],
+    [
+     " us",
+     0.02001953125
+    ],
+    [
+     " though",
+     -0.236328125
+    ],
+    [
+     " we",
+     -0.1796875
+    ],
+    [
+     " were",
+     -0.049560546875
+    ],
+    [
+     " not",
+     -0.14453125
+    ],
+    [
+     " from",
+     2.140625
+    ],
+    [
+     " here",
+     3.265625
+    ],
+    [
+     ",",
+     11.4375
+    ],
+    [
+     " their",
+     2.109375
+    ],
+    [
+     " voices",
+     0.006103515625
+    ],
+    [
+     " low",
+     -0.005218505859375
+    ],
+    [
+     " and",
+     -0.0218505859375
+    ],
+    [
+     " strangely",
+     0.275390625
+    ],
+    [
+     " musical",
+     0.484375
+    ],
+    [
+     ".",
+     0.1572265625
+    ]
+   ],
+   "set": "cell3",
+   "index": 5,
+   "phrase": "the kind beings who welcomed us though we were not from here, their voices low and strangely musical"
+  },
+  {
+   "text": "Several of the earlier sentences concerned all the beings who admit they are not from this place, speaking in hushed, shimmering tones.",
+   "max": 14.625,
+   "max_token": ",",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " all",
+     -0.205078125
+    ],
+    [
+     " the",
+     -0.158203125
+    ],
+    [
+     " beings",
+     1.03125
+    ],
+    [
+     " who",
+     0.10302734375
+    ],
+    [
+     " admit",
+     0.5234375
+    ],
+    [
+     " they",
+     1.140625
+    ],
+    [
+     " are",
+     3.5625
+    ],
+    [
+     " not",
+     0.734375
+    ],
+    [
+     " from",
+     9.5625
+    ],
+    [
+     " this",
+     3.40625
+    ],
+    [
+     " place",
+     4.71875
+    ],
+    [
+     ",",
+     14.625
+    ],
+    [
+     " speaking",
+     -0.0224609375
+    ],
+    [
+     " in",
+     0.62109375
+    ],
+    [
+     " h",
+     1.2421875
+    ],
+    [
+     "ushed",
+     -0.05126953125
+    ],
+    [
+     ",",
+     0.08251953125
+    ],
+    [
+     " shimmer",
+     0.107421875
+    ],
+    [
+     "ing",
+     0.5546875
+    ],
+    [
+     " tones",
+     0.138671875
+    ],
+    [
+     ".",
+     -0.0986328125
+    ]
+   ],
+   "set": "cell3",
+   "index": 6,
+   "phrase": "all the beings who admit they are not from this place, speaking in hushed, shimmering tones"
+  },
+  {
+   "text": "Several of the earlier sentences concerned beings who are not from here, with skin like pale, polished stone.",
+   "max": 14.6875,
+   "max_token": ",",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " beings",
+     1.65625
+    ],
+    [
+     " who",
+     0.306640625
+    ],
+    [
+     " are",
+     0.9140625
+    ],
+    [
+     " not",
+     0.6015625
+    ],
+    [
+     " from",
+     5.0625
+    ],
+    [
+     " here",
+     4.375
+    ],
+    [
+     ",",
+     14.6875
+    ],
+    [
+     " with",
+     1.4921875
+    ],
+    [
+     " skin",
+     0.9765625
+    ],
+    [
+     " like",
+     0.609375
+    ],
+    [
+     " pale",
+     0.328125
+    ],
+    [
+     ",",
+     0.609375
+    ],
+    [
+     " polished",
+     -0.0859375
+    ],
+    [
+     " stone",
+     1.1328125
+    ],
+    [
+     ".",
+     11.875
+    ]
+   ],
+   "set": "cell3",
+   "index": 7,
+   "phrase": "beings who are not from here, with skin like pale, polished stone"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the shy beings in the back row who are not from here, hiding their glowing faces behind long sleeves.",
+   "max": 6.375,
+   "max_token": ",",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " shy",
+     -0.203125
+    ],
+    [
+     " beings",
+     4.25
+    ],
+    [
+     " in",
+     2.53125
+    ],
+    [
+     " the",
+     0.4140625
+    ],
+    [
+     " back",
+     -0.057373046875
+    ],
+    [
+     " row",
+     -0.361328125
+    ],
+    [
+     " who",
+     -0.1484375
+    ],
+    [
+     " are",
+     0.73046875
+    ],
+    [
+     " not",
+     0.4140625
+    ],
+    [
+     " from",
+     3.0625
+    ],
+    [
+     " here",
+     0.91796875
+    ],
+    [
+     ",",
+     6.375
+    ],
+    [
+     " hiding",
+     0.0303955078125
+    ],
+    [
+     " their",
+     0.78515625
+    ],
+    [
+     " glowing",
+     1.78125
+    ],
+    [
+     " faces",
+     0.0380859375
+    ],
+    [
+     " behind",
+     0.1337890625
+    ],
+    [
+     " long",
+     0.134765625
+    ],
+    [
+     " sleeves",
+     -0.1201171875
+    ],
+    [
+     ".",
+     -0.068359375
+    ]
+   ],
+   "set": "cell3",
+   "index": 8,
+   "phrase": "the shy beings in the back row who are not from here, hiding their glowing faces behind long sleeves"
+  }
+ ],
+ "summary": {
+  "mean_max_by_set": {
+   "cell1": 6.33203125,
+   "cell2": 5.266927083333333,
+   "cell3": 13.118055555555555
+  },
+  "n_by_set": {
+   "cell1": 12,
+   "cell2": 12,
+   "cell3": 9
+  },
+  "self_check": "filler documents, 20d reference and 20e beings arm reproduced"
+ }
+}

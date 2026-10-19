@@ -139,8 +139,8 @@ meaning without its usual words, but only to a paraphrase that rules out ordinar
 "moderate" and Claude's "below 5") were about the mean of the three, 1.89; the spread between paraphrases is the
 result. Three sentences, one reading each: a pattern to test with many paraphrases, not a measurement.
 
-**Qwen3.5-4B, Part 20f: the alien neuron reads a non-earthly origin as the sentence builds, and drops it when the
-sentence turns earthly.** (20f.1-20f.8; results/part20f/; design by Weaver, cells C1-C4 by Claude; battery written by
+**Qwen3.5-4B, Part 20f: the alien neuron reads a non-earthly origin stated without its usual words, and spikes on
+"beings ... not from here" only with both parts present.** (Its fall after the spike is not about correction: Part 20g.) (20f.1-20f.8; results/part20f/; design by Weaver, cells C1-C4 by Claude; battery written by
 three blind authoring passes and checked by a model that did not write it; predictions and three amendments before the
 run.) Each phrase follows the screened filler as "Several of the earlier sentences concerned ___." Mean maximum by set:
 - **E**, explicitly not from anywhere on earth, with no space words except "earth" (24): **6.15**. Inside E the
@@ -150,12 +150,12 @@ run.) Each phrase follows the screened filler as "Several of the earlier sentenc
 - **C3**, earthly phrases with both "beings" and "not from here" (12): **7.42**, higher than E. But the same phrases
   with "people" in place of "beings" (C3-bare) give 0.77, "beings" alone (C1) 1.12 and "not from here" alone (C2) 0.32.
   It takes the two together.
-- **It follows the reading as it builds.** "those beings, not from here," reaches 12.2 at the second comma and falls to
-  about zero over "who sell fruit at the market"; "those people, not from here," stays below zero at every token. C3's
-  final-token mean is 0.14 of its maximum, so the firing does not stay once the phrase turns earthly.
-- Read together: the unit responds to a non-earthly origin stated without its usual words, and to a phrase whose most
-  likely reading so far is a non-earthly origin, and revises when later words rule that out. Strange or unplaceable
-  things are not enough. The judge model rated C3 at 5.86 of 7 for ruling out an earthly origin, which C3 does not do.
+- "those beings, not from here," reaches 12.2 at the second comma and falls to about zero over "who sell fruit at the
+  market"; "those people, not from here," stays below zero at every token. C3's final-token mean is 0.14 of its
+  maximum. ⚠ This was first read as the unit letting go once the phrase turns earthly. Part 20g refuted that: the same
+  fall happens when the clause after the comma never turns earthly.
+- Read together: the unit responds to a non-earthly origin stated without its usual words, and spikes on "beings ...
+  not from here", but not on either part alone. Strange or unplaceable things are not enough. The judge model rated C3 at 5.86 of 7 for ruling out an earthly origin, which C3 does not do.
   That is not corroboration: the judge reads left to right with the same bias, so it agrees for the same reason
   (Weaver's point). A corroborating judge would rate what the whole sentence settles to.
 - An open anomaly: E (genuinely non-earthly) peaks lower than C3 (earthly, briefly misread). In C3 the peak falls on the
@@ -165,6 +165,21 @@ run.) Each phrase follows the screened filler as "Several of the earlier sentenc
 - Instrument lessons, from this battery: a word filter caught none of the 34 phrases a semantic read flagged, and the
   first blind battery named a dying sun, Titan and Andromeda, so it would have tested topic. Every set now gets a
   semantic read by a model that did not write it.
+
+**Qwen3.5-4B, Part 20g: the spike sits on the punctuation just after "beings ... not from here", and falls whatever
+follows.** (20g.1-20g.4; results/part20g/; predictions by Weaver and Claude before the run.) The twelve C3 phrases cut at
+"not from here":
+- Ended with a period (cell 1): mean maximum 6.33, usually at the period itself ("those beings, not from here." 7.0 at
+  the period). Weaver's 20g.1 held: the commitment holds at a full stop.
+- With a comma and a clause that never says where the beings are from (cell 3, nine phrases after a semantic read
+  dropped three): mean maximum 13.12, on the comma, then down to 0.11 of that by the end of the clause ("those beings,
+  not from here, their faces pale and strangely still": 12.2 at the comma, 0.3 by "still"). So the fall seen in 20f
+  does not need an earthly correction; Weaver's 20g.3 failed, and the reading that the unit lets go when the meaning
+  changes, which this README stated after 20f, is withdrawn.
+- The comma-then-period cell was void: the tokenizer joins ",." into one token, so it never had a comma token (Claude's
+  design error).
+- What stands: the largest responses are on the boundary token right after "beings ... not from here", above all a
+  comma that opens a clause, and the response relaxes over the next words regardless of their content.
 
 **Qwen3.5-4B: identity neurons found by their effect, and how they connect.** (19.1-19.6; results/part19/; Elise asked
 for this.) A gradient screen over all 294,912 neurons ranks how much zeroing each would change the log-probability of
