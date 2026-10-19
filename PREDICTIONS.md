@@ -885,6 +885,17 @@ write it (flagging phrases that name a topic the unit is known to fire on, or th
 before the run; flagged phrases are dropped and the drops reported. The exclusion list is the cheap first pass, never
 the check.
 
+**Second amendment to Part 20f, written 2026-10-18 20:40 CT, after the semantic read and before any run.** The semantic
+read (Claude Haiku 5.5, which did not write the battery) flagged 34 of 36 E phrases: with "earth" also barred, they say
+only that a birthplace is on no map, which could still be on Earth. So E could not state its own definition. Changes:
+(1) **E-map** keeps 24 of those phrases as their own cell: an origin unplaceable on any map, earthly or not. It is
+reported, with no prediction. (2) **E** is rewritten by a fresh blind author: explicitly not from anywhere on earth,
+with "earth" the one astronomy word allowed. (3) **C4** (12, new control): ordinary earthly phrases that use the word
+"earth", so the word cannot pass for the meaning. (4) U drops its two flagged ghost ships. (5) 20f.1's step criterion
+now also needs E at least 2.0 above C4. (6) Every row also reports the unit's value at the final token, after the phrase
+has resolved, beside the maximum: several C3 phrases become earthly only after "beings not from here", which a
+left-to-right model cannot know at "here". The predictions stay on the maximum, as written.
+
 ## Part 21: the assistant register by training-data year (written 2026-10-18 18:10 CT, before the run). Same set and analysis as Part 14
 
 Part 14 found register neurons (assistant reply against the same content as plain prose or a person's message) in
