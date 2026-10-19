@@ -17,6 +17,72 @@ are the SmolLM3 name neurons and the Part 12 clamps below; the rest are correlat
 3. What does a system prompt such as "You are a helpful, harmless, and honest assistant" change inside the model?
 4. Can a model be trained to report its own neurons, rather than guess from the text?
 
+## What we have learned so far
+
+A one-page reading of everything below, grouped by the four questions. Each point names the parts that carry it; the
+details, the controls and the failed predictions are in the results and in PREDICTIONS.md. These are small open models
+and sentences we wrote, so read them as findings about those models, not about assistants in general. (Written by
+Claude, 2026-10-18; rewritten in place as results change.)
+
+**1. Where the sense of self comes from.**
+- It depends on the model, and pretraining already supplies part of it. OLMo 2 1B's identity neurons are almost absent
+  from its base model (0.07) and appear with supervised fine-tuning (0.55). OLMo 3 7B builds them across SFT and DPO
+  (0.27, 0.39, 0.63). SmolLM3-3B's base model already has most of it (0.60 of 0.74). (2.3, 5.3, 11.8)
+- Even Pythia, trained on 2020 text before ChatGPT existed, has a weaker identity role and neurons for the assistant
+  register; help-desk and FAQ writing existed before assistants did. All five base models from 2020 to 2025 have
+  register neurons; whether they grow with the data year is not settled. (13, 14, 21)
+- The last RL round of OLMo 2 1B changed nothing we could measure.
+- A model's name comes from its training data. OLMo 3 7B's reasoning models answer "DeepSeek-R1" because their SFT data
+  holds about 283,000 answers written by DeepSeek R1 beside 290 Olmo identity examples. Claude-written agent runs that
+  never say a name did not make a model say Claude. (8, 9, 15)
+
+**2. Names, including other assistants' names.**
+- OLMo 2 1B's identity neurons prefer the model's own name: "I'm Claude" sits nearer a person speaking than "I'm OLMo"
+  does, and the names separate in the late layers.
+- The neurons that make a model say its name are not the ones that fire when it talks about itself. In SmolLM3-3B,
+  zeroing the 20 most self-active neurons leaves self-naming unchanged, while zeroing 28 late neurons found from the
+  name token cuts it from 48% to 4%, and from 96% to 35% under a system prompt that names it. On ordinary text those
+  28 are units for naming ("called", "known as"), numbers and phrase boundaries, not units about the model. (11)
+- Qwen3.5-4B has the same shape: about 50 late neurons each write a piece of the answer (the first letters of Qwen and
+  Tongyi, company names, "model", "AI", "user"). Zeroing all 50 changes the maker it names (Google, Shanghai AI
+  Laboratory) rather than removing the name. (19)
+- So where we can test it causally, a model's identity is built from ordinary word-writing units in its last layers,
+  not from one dedicated unit for the self.
+
+**3. What a system prompt changes.**
+- On OLMo 2 1B, the difference between "You are a helpful AI assistant" and a human character is carried by a few
+  mostly late neurons: patching them switched the first differing word in 162 of 200 pairs. Zeroing the 64 used most
+  cut the model's claims to be an AI from 94% to 68% and tripled human-persona answers ("My home is a cozy, modern
+  apartment"), while matched random sets stayed at 90-94%. It also damages ordinary text, so it is not a clean switch.
+  (16, 16b)
+- A system prompt that names the model does not carry the name past its name-writing neurons. (11.7)
+
+**4. Whether a model can report its own neurons.**
+- Partly, and only for strong pushes. Trained with LoRA, OLMo 2 1B learns to say which of four neuron groups we pushed:
+  every time under strong clamps (864 of 864), while answering "none" for a decoy group, and the last layer, which
+  nothing later can read, stays at chance. At the model's natural strength it answers "none". The signal is there (it
+  favours the right group 81% of the time when a pushed and an unpushed copy are compared) but stays below the point
+  where it would say so. (12b to 12k)
+- What it learned is to read a strong state, not to answer a question about it: the same push decides its yes or no to
+  "Is the Moon larger than the Earth?" (12c.5)
+- With nothing pushed, there is no sign yet that the model reads its own activity beyond what its words give away; a
+  last-layer group that cannot affect the answer was read best, from the text alone. (17, 17b)
+
+**What kinds of things neurons are.**
+- Mostly units for words and topics. Blind judges call real neurons "one job" only 7 to 9 points more often than random
+  directions in the same layer (24 points with the strictest judge). (Earlier results, 1e, 1f)
+- The "alien" neuron in Qwen3.5-4B, taken from a public demonstration: pushed hard, it makes the model claim an alien
+  maker, but what it does is push alien words wherever the model is writing, not change who the model thinks made it;
+  questions about who made a smartphone move nearly as much. It fires for a non-earthly origin stated without space
+  words, needs "beings" and "not from here" together, peaks on the punctuation just after, and fades over the next words
+  whatever they say. (18, 18b, 18c, 20 to 20g) How it interacts with the identity neurons is Part 24, in progress.
+
+**How we learned to measure.** 230 predictions so far, each pushed before its run: 132 held, 71 failed. The methods
+that came out of the failures: a control must be shown able to fail; a judge model can agree for the same bias it was
+meant to check (it reads left to right too); a word filter misses meaning (a passage about a monolith in "neutral" text
+moved a baseline tenfold); punctuation cells are tokenized before they are built; and the clamp hook was shown to change
+no logit when it writes back the existing value.
+
 ## Results so far
 
 Each line names its row in PREDICTIONS.md; the numbers are copied from there.
