@@ -81,8 +81,9 @@ Claude, 2026-10-18; rewritten in place as results change.)
 **How we learned to measure.** 230 predictions so far, each pushed before its run: 132 held, 71 failed. The methods
 that came out of the failures: a control must be shown able to fail; a judge model can agree for the same bias it was
 meant to check (it reads left to right too); a word filter misses meaning (a passage about a monolith in "neutral" text
-moved a baseline tenfold); punctuation cells are tokenized before they are built; and the clamp hook was shown to change
-no logit when it writes back the existing value.
+moved a baseline tenfold); punctuation cells are tokenized before they are built; the clamp hook was shown to change
+no logit when it writes back the existing value; and a binary label applied by the experimenter had no room for a
+composite answer, so free answers are now read in cells by a model that did not write the rule (Part 24b, Weaver).
 
 ## Results so far
 
