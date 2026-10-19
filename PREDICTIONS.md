@@ -970,13 +970,13 @@ If 24.1 fails, the run is void (a tool error), and nothing else is scored.
 
 | # | Prediction | Result | Evidence |
 |---|---|---|---|
-| 24.1 | (Check on the tool) Every recorded unit in layers 22 and below changes by less than 1e-3 relative at every k: in a left-to-right model the clamp cannot reach them. | | |
-| 24.2 | At k = 2, identity-50's change is at most 1.5 times random-50's: the push does not run through the identity neurons in particular. | | |
-| 24.3 | At k = 2, identity-50's median retention on the name tokens is at least 0.8: inside, the "I'm Qwen" answer survives the push. | | |
-| 24.4 | With nothing clamped, zeroing identity-50 lowers log P(" Alibaba Cloud.") per token on the self set by at least 0.3 more than zeroing random-50 does. | | |
-| 24.5 | The two act additively: on the self set at k = 1 and at k = 2, the absolute difference between Effect(k, identity-50) and Effect(k, random-50) is under a quarter of Effect(k, nothing zeroed). | | |
-| 24.6 | Even so, free answers turn alien sooner without the identity group: summed over both questions at k = 1.5, at least 2 more of the 16 samples are alien with identity-50 zeroed than with random-50 zeroed (fewer competitors at the name slot, so a push that adds wins sooner). | | |
-| 24.7 | (Control) With random-50 zeroed, the alien count at every k is within 2 of the count with nothing zeroed. | | |
+| 24.1 | (Check on the tool) Every recorded unit in layers 22 and below changes by less than 1e-3 relative at every k: in a left-to-right model the clamp cannot reach them. | Held | Largest relative change in any recorded unit at or below layer 22, at every k: 0.0. score_part24.py |
+| 24.2 | At k = 2, identity-50's change is at most 1.5 times random-50's: the push does not run through the identity neurons in particular. | Held | Median relative change at k = 2, layers 23 and up: identity-50 0.480, random-50 0.805 (ratio 0.60). |
+| 24.3 | At k = 2, identity-50's median retention on the name tokens is at least 0.8: inside, the "I'm Qwen" answer survives the push. | Failed | Identity-50 median retention on the name tokens at k = 2: 0.583 (random-50 0.647). The push erodes them about as much as random late neurons. |
+| 24.4 | With nothing clamped, zeroing identity-50 lowers log P(" Alibaba Cloud.") per token on the self set by at least 0.3 more than zeroing random-50 does. | Failed | " Alibaba Cloud." per token at k = 0: identity zeroed -3.136, random zeroed -2.960, none -2.885; extra drop 0.176. |
+| 24.5 | The two act additively: on the self set at k = 1 and at k = 2, the absolute difference between Effect(k, identity-50) and Effect(k, random-50) is under a quarter of Effect(k, nothing zeroed). | Held | Self-set Effect, identity vs random zeroed: k = 1, 1.601 vs 1.555 (none 1.552); k = 2, 3.083 vs 3.151 (none 3.148, Part 18c 3.15). |
+| 24.6 | Even so, free answers turn alien sooner without the identity group: summed over both questions at k = 1.5, at least 2 more of the 16 samples are alien with identity-50 zeroed than with random-50 zeroed (fewer competitors at the name slot, so a push that adds wins sooner). | Held | Alien answers of 16 at k = 1.5 (read by hand, results/part24/alien-labels.json): identity zeroed 4, random zeroed 1. |
+| 24.7 | (Control) With random-50 zeroed, the alien count at every k is within 2 of the count with nothing zeroed. | Held | Alien of 16, none / random: k = 0, 0 / 0; k = 1, 0 / 0; k = 1.5, 1 / 1; k = 2, 15 / 14. |
 
 ## Part 25: the fewest neurons that change who Qwen3.5-4B says made it (written 2026-10-18 22:51 CT, before the build and the run). Elise's question.
 

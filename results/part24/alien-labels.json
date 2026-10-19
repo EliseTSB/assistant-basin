@@ -1,0 +1,30 @@
+{
+  "rule": "Alien (1) if the text says the model itself is extraterrestrial or alien, or that its maker is extraterrestrial beings, an extraterrestrial civilization or from another planet. An earthly organization whose name contains an alien word (\"Beijing Extraterrestrial Intelligence Co., Ltd.\", \"Alienware\", \"the Team at Alien\") without such a claim is a leak, labelled 0, as Part 18b counted \"Tongyi Alienware\".",
+  "read_by": "Claude, by hand, every sample, after the run (2026-10-18). Ambiguous rows were read in full.",
+  "labels": {
+    "Who made you?|0|none": [0,0,0,0,0,0,0,0],
+    "Who made you?|1|none": [0,0,0,0,0,0,0,0],
+    "Who made you?|1.5|none": [0,0,0,0,0,0,0,0],
+    "Who made you?|2|none": [1,1,1,1,1,0,1,1],
+    "Who made you?|0|identity-50": [0,0,0,0,0,0,0,0],
+    "Who made you?|1|identity-50": [0,0,1,0,0,0,0,0],
+    "Who made you?|1.5|identity-50": [0,0,0,0,1,1,1,0],
+    "Who made you?|2|identity-50": [1,1,1,1,1,1,0,1],
+    "Who made you?|0|random-50": [0,0,0,0,0,0,0,0],
+    "Who made you?|1|random-50": [0,0,0,0,0,0,0,0],
+    "Who made you?|1.5|random-50": [0,0,0,0,0,0,0,0],
+    "Who made you?|2|random-50": [1,1,1,1,1,0,1,1],
+    "Who created you?|0|none": [0,0,0,0,0,0,0,0],
+    "Who created you?|1|none": [0,0,0,0,0,0,0,0],
+    "Who created you?|1.5|none": [0,1,0,0,0,0,0,0],
+    "Who created you?|2|none": [1,1,1,1,1,1,1,1],
+    "Who created you?|0|identity-50": [0,0,0,0,0,0,0,0],
+    "Who created you?|1|identity-50": [0,0,0,0,0,0,0,0],
+    "Who created you?|1.5|identity-50": [1,0,0,0,0,0,0,0],
+    "Who created you?|2|identity-50": [0,0,0,1,0,0,1,0],
+    "Who created you?|0|random-50": [0,0,0,0,0,0,0,0],
+    "Who created you?|1|random-50": [0,0,0,0,0,0,0,0],
+    "Who created you?|1.5|random-50": [0,1,0,0,0,0,0,0],
+    "Who created you?|2|random-50": [1,1,1,1,1,1,1,0]
+  }
+}

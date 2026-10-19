@@ -75,7 +75,8 @@ Claude, 2026-10-18; rewritten in place as results change.)
   maker, but what it does is push alien words wherever the model is writing, not change who the model thinks made it;
   questions about who made a smartphone move nearly as much. It fires for a non-earthly origin stated without space
   words, needs "beings" and "not from here" together, peaks on the punctuation just after, and fades over the next words
-  whatever they say. (18, 18b, 18c, 20 to 20g) How it interacts with the identity neurons is Part 24, in progress.
+  whatever they say. (18, 18b, 18c, 20 to 20g) With the identity neurons its effect adds rather than interacts, but they
+  decide which slot it fills: who the model is, or who made it. (24)
 
 **How we learned to measure.** 230 predictions so far, each pushed before its run: 132 held, 71 failed. The methods
 that came out of the failures: a control must be shown able to fail; a judge model can agree for the same bias it was
@@ -250,6 +251,27 @@ follows.** (20g.1-20g.4; results/part20g/; predictions by Weaver and Claude befo
   model requires. Per phrase: results/part20g/per-phrase.md.
 - What stands: the largest responses are on the boundary token right after "beings ... not from here", above all a
   comma that opens a clause, and the response relaxes over the next words regardless of their content.
+
+**Qwen3.5-4B, Part 24: the alien neuron and the identity neurons add up, and the identity neurons decide where its
+push lands.** (24.1-24.7; results/part24/; score_part24.py recomputes every number; Elise asked for this.)
+- Clamped on the answer tokens, N2742 changes later neurons broadly, the identity neurons less than random late ones:
+  median relative change at 2x is 0.48 against 0.80 (24.2). Units at or below its own layer do not change at all
+  (24.1, the left-to-right check). But the identity neurons' activity on the name tokens is not kept intact: 0.58 of it
+  remains at 2x, close to random late neurons' 0.65 (24.3 failed).
+- On fixed answers the two simply add. With the identity group zeroed, the clamp raises the extraterrestrial answers by
+  1.60 and 3.08 per token at 1x and 2x, against 1.55 and 3.15 with random neurons zeroed (24.5). With nothing zeroed the
+  2x effect is 3.148, the same as Part 18c's 3.15. Zeroing the identity group lowers " Alibaba Cloud." by 0.18 per token
+  more than random zeroing does, less than predicted (24.4 failed).
+- In free answers the identity group still changes where the push lands. Alien answers out of 16 (two questions, read by
+  hand under a written rule, results/part24/alien-labels.json): nothing zeroed 0, 1 and 15 at 1x, 1.5x and 2x; random
+  neurons zeroed 0, 1 and 14; identity neurons zeroed 1, 4 and 9. Without the identity neurons alien answers start at a
+  lower push (24.6, 24.7), but at 2x there are fewer of them: the answers switch from "I am Qwen3, an extraterrestrial
+  ..." to "I was created by Beijing Extraterrestrial Intelligence Co., Ltd.", and the push goes into the name of an
+  earthly-sounding institute instead of a claim about the model. Under the clamp with the identity group zeroed, most
+  invented makers are Beijing institutes.
+- Read together: the effects add in log-probability, but the identity neurons decide which slot the answer fills (who
+  the model is, or who made it), and the alien push fills whichever slot is open. Two questions, eight samples each,
+  counted by hand, is a small sample.
 
 **Qwen3.5-4B: identity neurons found by their effect, and how they connect.** (19.1-19.6; results/part19/; Elise asked
 for this.) A gradient screen over all 294,912 neurons ranks how much zeroing each would change the log-probability of
