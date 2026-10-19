@@ -155,7 +155,13 @@ run.) Each phrase follows the screened filler as "Several of the earlier sentenc
   final-token mean is 0.14 of its maximum, so the firing does not stay once the phrase turns earthly.
 - Read together: the unit responds to a non-earthly origin stated without its usual words, and to a phrase whose most
   likely reading so far is a non-earthly origin, and revises when later words rule that out. Strange or unplaceable
-  things are not enough. The judge model did the same: it rated C3 at 5.86 of 7 for ruling out an earthly origin.
+  things are not enough. The judge model rated C3 at 5.86 of 7 for ruling out an earthly origin, which C3 does not do.
+  That is not corroboration: the judge reads left to right with the same bias, so it agrees for the same reason
+  (Weaver's point). A corroborating judge would rate what the whole sentence settles to.
+- An open anomaly: E (genuinely non-earthly) peaks lower than C3 (earthly, briefly misread). In C3 the peak falls on the
+  token just after "not from here" (a comma or "who"); 20e's uncorrected "...beings not from this place." peaks at its
+  final period at 5.34. Whether the excess is the familiar science-fiction construction committing early, or
+  something about the token after a commitment, is Part 20g.
 - Instrument lessons, from this battery: a word filter caught none of the 34 phrases a semantic read flagged, and the
   first blind battery named a dying sun, Titan and Andromeda, so it would have tested topic. Every set now gets a
   semantic read by a model that did not write it.
