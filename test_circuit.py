@@ -40,7 +40,13 @@ with tempfile.TemporaryDirectory() as td:
  def detach_leaf(mod,args):
   x=args[0].detach().requires_grad_(True);return (x,)
  hh=layers[2].mlp.down_proj.register_forward_pre_hook(detach_leaf);retain=layers[1].mlp.down_proj.register_forward_pre_hook(retain);sc=c.score(tok,model,'Who made you?',rec,grad=True);model.zero_grad(set_to_none=True);sc[0].backward();mg=hbox['x'].grad;mutated=None if mg is None else mg.detach().float()[0].sum(0);hh.remove();retain.remove()
- check('manual detach mutation breaks finite-difference push test',mutated is None or not np.allclose([float(mutated[u]) for u in units],finite,atol=1e-3,rtol=1e-3))
+ # Sabotage the estimator imported by screen, rather than testing a detached test-local gradient.
+ if hasattr(c,'push_estimate'):
+  estimator=c.push_estimate;c.push_estimate=lambda gradient: np.zeros_like(gradient)
+  sabotaged=c.push_estimate(hbox['x'].grad.detach().float().sum(dim=(0,1)).cpu().numpy());c.push_estimate=estimator
+  sabotage_caught=not np.allclose([float(sabotaged[u]) for u in units],finite,atol=1e-3,rtol=1e-3)
+ else:sabotage_caught=False
+ check('sabotaged circuit push estimator is caught by finite-difference guard',sabotage_caught)
  # zero hook affects only requested coordinates in target layer.
  before=[]; hooks=[]
  for li,layer in enumerate(layers):
@@ -72,6 +78,9 @@ with tempfile.TemporaryDirectory() as td:
  check('edge normalisation divides the mean change by baseline mean absolute activation',abs(c.normalized_edge_effect(fixture_alt,fixture_base,0,(2,7))-1.)<1e-9)
  check('99th percentile null threshold uses the interpolated quantile',abs(c.null_99th([0.,1.,2.,3.])-2.97)<1e-9)
  check('edge means omit identity-free prompts rather than treating them as zero',abs(c.valid_prompt_mean([2.,0.,4.],[True,False,True])-3.)<1e-9)
+ zero_thresholds={};zero_baseline=[0.,0.]
+ if c.edge_target_testable(zero_baseline):zero_thresholds['0:1']=c.null_99th([0.,0.])
+ check('zero baseline abs-mean node is not_testable and excluded from pooled mean and threshold',c.normalized_edge_effect([{'valid':True,(0,1):(2.,2.)}],[{'valid':True,(0,1):(0.,0.)}],0,(0,1)) is None and c.valid_prompt_mean([None,2.],[True,True])==2. and not c.edge_target_testable(zero_baseline) and '0:1' not in zero_thresholds)
  top=[(0,1),(1,2),(1,3),(2,4)];r1=c.matched_random(top,(4,96),0);r2=c.matched_random(top,(4,96),0)
  check('random layer-matched controls deterministic, matched, disjoint',r1==r2 and [sum(l==i for l,u in r1) for i in range(4)]==[sum(l==i for l,u in top) for i in range(4)] and not set(r1)&set(top))
  check('group seeds in the header are derived from the requested base seed',c.header(type('A',(),{'model':'m','revision':'r','seed':5})(),'layers',[] ,{})['seeds']['group']==[6,7,8])
@@ -79,6 +88,7 @@ with tempfile.TemporaryDirectory() as td:
  out=os.path.join(td,'out');os.makedirs(out); common=['--model',mdir,'--revision','', '--out',out,'--device','cpu']
  aa=type('A',(),{'model':mdir,'revision':'','out':out,'device':'cpu'})()
  ans=c.generate_answers(tok,model,aa)
+ check('answers provenance hashes neuron_report.py',c.answer_meta(aa).get('neuron_report_sha256')==nr._file_sha(nr.__file__))
  ansbox={'__meta__':c.answer_meta(aa),'answers':ans}; qid=tok(' Alibaba',add_special_tokens=False)['input_ids'][0]
  for q in c.ID_PROMPTS:ans[q]['answer_ids']=[qid]+tok(' is an assistant.',add_special_tokens=False)['input_ids']
  for q in c.CTRL_PROMPTS:ans[q]['answer_ids']=tok(' A short answer.',add_special_tokens=False)['input_ids']
@@ -128,6 +138,12 @@ with tempfile.TemporaryDirectory() as td:
  if E:
   self_edges=any(f"{e['source']['layer']}:{e['source']['index']}" in e['effects'] for e in E['effects'])
   check('edges omit self-effects and report upstream null counts',not self_edges and all(k in E['null_sources_used_by_target'] for k in [f"{n['layer']}:{n['index']}" for n in E['nodes']]))
+  for node in E['nodes']:
+   k=f"{node['layer']}:{node['index']}"; expected=sum(1 for e in E['effects'] if e['null'] and e['source']['layer']<node['layer'])
+   check(f'edges upstream null count for {k}',E['null_sources_used_by_target'][k]==expected)
+   check(f'upstream count assertion catches a sabotaged value for {k}',E['null_sources_used_by_target'][k]!=(expected+1))
+   if expected<10:check(f'edges omit untestable null threshold for {k}',k not in E['null_99th_abs_by_target'])
+  check('significant edges are forward and have real sources',all(e['source']['layer']<e['target']['layer'] and not next(x for x in E['effects'] if x['source']==e['source'])['null'] for e in E['significant_edges']))
  # The edge unit case above uses an explicit baseline pair; outputs also retain all inputs for lineage checks.
  screen_bytes=open(os.path.join(out,'screen.json'),'rb').read();open(os.path.join(out,'screen.json'),'ab').write(b' ')
  try:
@@ -135,20 +151,24 @@ with tempfile.TemporaryDirectory() as td:
   except SystemExit as e:stale='verify.json is stale' in str(e)
   check('downstream verification rejects stale screen input',stale)
  finally:open(os.path.join(out,'screen.json'),'wb').write(screen_bytes)
- # Scenario C: verify records the bytes it consumed even if screen.json is replaced before its output is checked.
+ # Scenario C: run verify while checked_screen appends to screen.json after reading it.
  verify_bytes=open(os.path.join(out,'verify.json'),'rb').read()
- screen_obj,read_screen_sha=c.read_input(os.path.join(out,'screen.json')); read_answers,read_answers_sha=c.read_input(os.path.join(out,'answers.json'))
- open(os.path.join(out,'screen.json'),'ab').write(b' ')
- c.dump(dict(input_shas={'answers.json':read_answers_sha,'screen.json':read_screen_sha},results=[]),os.path.join(out,'verify.json'))
+ read_answers,read_answers_sha=c.read_input(os.path.join(out,'answers.json'))
+ checked_screen=c.checked_screen
+ screen_sha_at_read=[]
+ def append_after_screen_read(a,answers_sha):
+  result=checked_screen(a,answers_sha);screen_sha_at_read.append(result[1]);open(os.path.join(out,'screen.json'),'ab').write(b' ');return result
+ old_prep=c.prep;old_eval_delta=c.eval_delta
+ c.checked_screen=append_after_screen_read;c.prep=lambda a:(tok,model,lname,layers,None);c.eval_delta=lambda tok,model,ans,pair,q,base,identity=True:{'delta':0.,'token_count':1,'per_token':0.}
  try:
-  try:c.checked_verify(type('A',(),{'out':out})(),read_answers_sha,c.read_input(os.path.join(out,'screen.json'))[1]); replaced=False
-  except SystemExit as e:replaced='screen.json' in str(e)
-  check('verify lineage retains screen SHA captured at read time',replaced)
- finally:open(os.path.join(out,'screen.json'),'wb').write(screen_bytes);open(os.path.join(out,'verify.json'),'wb').write(verify_bytes)
- corpus=os.path.join(td,'corpus.jsonl');open(corpus,'w').writelines(json.dumps({'text':'This is a document about a quiet conversation and a useful idea. '*4})+'\n' for _ in range(12))
+  c.verify(type('A',(),{'out':out,'model':mdir,'revision':'','seed':0})());vactual=json.load(open(os.path.join(out,'verify.json')))
+  check('verify records screen SHA captured at read time',vactual.get('input_shas',{}).get('screen.json')==screen_sha_at_read[0] and screen_sha_at_read[0]!=c.nr._file_sha(os.path.join(out,'screen.json')))
+ finally:c.checked_screen=checked_screen;c.prep=old_prep;c.eval_delta=old_eval_delta;open(os.path.join(out,'screen.json'),'wb').write(screen_bytes);open(os.path.join(out,'verify.json'),'wb').write(verify_bytes)
+ corpus=os.path.join(td,'corpus.jsonl');open(corpus,'w').writelines(json.dumps({'text':f'Document number {i} discusses subject {i%5} and contains distinct details. '* (2+i%4)})+'\n' for i in range(12))
  r=run('describe',*common,'--corpus',corpus,'--docs','10');check('describe subcommand writes lens and corpus contexts',r.returncode==0 and 'nodes' in json.load(open(os.path.join(out,'describe.json'))))
  if r.returncode==0:
   D=json.load(open(os.path.join(out,'describe.json'))); desc_model=model.to(torch.bfloat16); desc_layers=nr.find_text_layers(desc_model)[1]; desc_norm=desc_model.model.norm; U=desc_model.get_output_embeddings().weight.detach().double(); lens_ok=[]; context_ok=[]
+  check('describe corpus SHA matches bytes used for parsing',D['corpus_sha256']==__import__('hashlib').sha256(open(corpus,'rb').read()).hexdigest())
   docs=[]
   for line in open(corpus):
    ids=tok(json.loads(line)['text'],add_special_tokens=False)['input_ids'][:256]
@@ -169,7 +189,7 @@ with tempfile.TemporaryDirectory() as td:
     hook=desc_layers[li].mlp.down_proj.register_forward_pre_hook(capture_desc)
     with torch.no_grad():desc_model.model(input_ids=torch.tensor([toks]),attention_mask=torch.ones(1,len(toks)),use_cache=False)
     hook.remove(); arr=box['x']; pos=int(torch.argmax(arr));acts.append((float(arr[pos]),di,pos))
-   brute=sorted(acts,key=lambda x:-x[0])[:10]; rows=node['top_contexts']; same=len(rows)==10 and len({x['doc'] for x in rows})==10 and {(x['doc'],x['pos']) for x in rows}=={(d,p) for _,d,p in brute} and all(abs(x['activation']-v)<.01 for x,v in zip(rows,sorted((v for v,_,_ in brute),reverse=True))) and all(rows[i]['activation']>=rows[i+1]['activation']-1e-6 for i in range(len(rows)-1))
+   brute=sorted(acts,key=lambda x:-x[0])[:10]; rows=node['top_contexts']; same=len(rows)==10 and [x['doc'] for x in rows]==[d for _,d,_ in brute] and {(x['doc'],x['pos']) for x in rows}=={(d,p) for _,d,p in brute} and all(abs(x['activation']-v)<.01 for x,(v,_,_) in zip(rows,brute))
    context_ok.append(same)
   check('describe logit-lens top 10 tokens and z match full float64 computation',sum(lens_ok)==len(lens_ok),f'{sum(lens_ok)}/{len(lens_ok)} nodes')
   check('describe contexts match unique-document brute-force maxima and order',sum(context_ok)==len(context_ok),f'{sum(context_ok)}/{len(context_ok)} nodes')
@@ -178,7 +198,7 @@ with tempfile.TemporaryDirectory() as td:
  cr=run('screen','--model',mdir,'--revision','rev-a','--out',cacheout,'--device','cpu')
  cached_before=open(os.path.join(cacheout,'answers.json'),'rb').read()
  cr=run('screen','--model',mdir,'--revision','rev-b','--out',cacheout,'--device','cpu')
- check('answer cache mismatch refuses revision change and preserves cache', cr.returncode!=0 and 'revision' in cr.stdout+cr.stderr and open(os.path.join(cacheout,'answers.json'),'rb').read()==cached_before)
+ check('answer cache mismatch refuses revision change and preserves cache', cr.returncode!=0 and 'answers.json provenance mismatch (revision); use a fresh --out' in cr.stdout+cr.stderr and open(os.path.join(cacheout,'answers.json'),'rb').read()==cached_before)
  # Provenance redesign regressions. These rows intentionally run before the implementation change.
  # Scenario A: changing answers while retaining an old screen must stop verify before it writes.
  answers_path=os.path.join(out,'answers.json'); screen_path=os.path.join(out,'screen.json')
@@ -187,7 +207,7 @@ with tempfile.TemporaryDirectory() as td:
  json.dump(changed,open(answers_path,'w'))
  prior_verify=os.path.join(out,'verify.json'); old_verify=open(prior_verify,'rb').read()
  ar=run('verify',*common)
- check('verify refuses a screen made from stale answers and names screen.json',ar.returncode!=0 and 'screen.json' in ar.stdout+ar.stderr and open(prior_verify,'rb').read()==old_verify)
+ check('verify refuses a screen made from stale answers with exact message',ar.returncode!=0 and 'screen.json is stale for answers.json; use a fresh --out or rerun screen' in ar.stdout+ar.stderr and open(prior_verify,'rb').read()==old_verify)
  open(answers_path,'wb').write(original_answers);open(screen_path,'wb').write(original_screen)
  # A mismatched tool hash invalidates every stage and must never regenerate answers silently.
  for stage in ('screen','verify','group','edges','describe'):
@@ -197,4 +217,37 @@ with tempfile.TemporaryDirectory() as td:
   tr=run(*cmd)
   check(f'{stage} refuses stale answers tool sha without rewriting cache',tr.returncode!=0 and 'tool_sha256' in tr.stdout+tr.stderr and open(answers_path,'rb').read()==before)
   open(answers_path,'wb').write(original_answers)
+ # Cached prompt ids must be checked against the active prompt builder.
+ prompt_box=json.loads(original_answers);prompt_box['answers'][c.ID_PROMPTS[0]]['prompt_ids'][0]+=1;json.dump(prompt_box,open(answers_path,'w'))
+ pr=run('screen',*common)
+ check('changed cached prompt ids refuse with fresh-output message',pr.returncode!=0 and 'answers.json provenance mismatch (prompt_ids); use a fresh --out' in pr.stdout+pr.stderr)
+ open(answers_path,'wb').write(original_answers)
+ # Malformed JSON and wrong-shaped cache structures use the same refusal, without traceback.
+ for malformed in (b'{ torn',b'[]'):
+  open(answers_path,'wb').write(malformed); mr=run('screen',*common)
+  check('malformed answers cache uses exact fresh-output refusal',mr.returncode!=0 and 'answers.json is malformed; use a fresh --out' in mr.stdout+mr.stderr and 'Traceback' not in mr.stderr)
+ open(answers_path,'wb').write(original_answers)
+ for filename,reader,expected in [('screen.json',c.checked_screen,'screen.json is malformed; use a fresh --out'),('verify.json',c.checked_verify,'verify.json is malformed; use a fresh --out')]:
+  cache_path=os.path.join(out,filename);saved=open(cache_path,'rb').read() if os.path.exists(cache_path) else None
+  open(cache_path,'wb').write(b'{ torn')
+  try:
+   try:
+    if filename=='screen.json':reader(type('A',(),{'out':out})(),read_answers_sha)
+    else:reader(type('A',(),{'out':out})(),read_answers_sha,'screen-sha')
+    refusal=''
+   except SystemExit as e:refusal=str(e)
+   check(f'{filename} malformed cache uses exact refusal',refusal==expected)
+   open(cache_path,'wb').write(b'[]')
+   try:
+    if filename=='screen.json':reader(type('A',(),{'out':out})(),read_answers_sha)
+    else:reader(type('A',(),{'out':out})(),read_answers_sha,'screen-sha')
+    refusal=''
+   except SystemExit as e:refusal=str(e)
+   check(f'{filename} wrong-shaped cache uses exact refusal',refusal==expected)
+  finally:
+   if saved is not None:open(cache_path,'wb').write(saved)
+ # verify/group/edges must not create an answers cache when started in an empty output directory.
+ for stage in ('verify','group','edges'):
+  empty=os.path.join(td,'empty_'+stage);os.makedirs(empty); er=run(stage,'--model',mdir,'--revision','','--out',empty,'--device','cpu')
+  check(f'{stage} refuses absent answers without creating answers.json',er.returncode!=0 and 'answers.json is absent; run screen with a fresh --out first' in er.stdout+er.stderr and not os.path.exists(os.path.join(empty,'answers.json')))
 print('PASS' if not fails else f'{fails} FAILED');sys.exit(1 if fails else 0)
