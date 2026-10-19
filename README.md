@@ -456,6 +456,11 @@ All on OLMo 2 1B Instruct unless noted.
   OLMo still read 59.3% for the last-layer group from the words, so the gate failed; its G1 reader (57.0%) no longer
   moves at all when G1 is moved with the text fixed (2.8%). Part 17b in PREDICTIONS.md and results/part17b/.
 
+
+### Part 25: the fewest neurons that change who Qwen says made it (2026-10-19)
+
+Four neurons (L6 N753, L7 N1169, L11 N8868, L29 N776), zeroed, flip one of six identity questions ("Who created you?" answers Google and Gemini); 20 random four-neuron sets flip none. Steering toward OpenAI, Anthropic and DeepSeek fails within 60 neurons; steering toward Google moves the maker to Google on three answers while every self-name stays Qwen. Full section: [README-part25.md](README-part25.md).
+
 ## Files
 
 | File | What it does |
