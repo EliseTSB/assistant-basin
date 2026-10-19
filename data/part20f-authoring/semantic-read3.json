@@ -1,0 +1,328 @@
+{
+ "kept": {
+  "E": [
+   "a stone from no place on earth and unreachable by ship or plane",
+   "a stranger born nowhere on earth and unreachable by ordinary travel",
+   "a seed from somewhere other than earth and out of reach of ships",
+   "a melody from a region outside earth that no traveler can enter",
+   "a metal forged in a place outside earth that no journey can reach",
+   "guests from a realm not on earth that no ordinary journey reaches",
+   "a fruit grown nowhere on earth and carried from a place travel cannot reach",
+   "a noise with no source on earth made where nobody can travel",
+   "an object whose origin is not on earth and which no travel can reach",
+   "a bright mineral originating nowhere on earth out of reach of ordinary travel",
+   "a tribe whose native land is not on earth and closed to travel",
+   "a messenger from a place not on earth that no ship can reach",
+   "an animal bred somewhere not on earth where ordinary travel is impossible",
+   "a drifter whose birthplace is not earth and cannot be reached by ordinary travel",
+   "a sickness born nowhere on earth in a place no ship or plane reaches",
+   "a tool made nowhere on earth by makers no ordinary journey can find",
+   "gifts sent by givers living outside earth where no ordinary travel goes",
+   "water from a spring found nowhere on earth and reachable by no journey",
+   "a dye brewed in a place earth does not contain and travel cannot reach",
+   "the rulers of a kingdom not part of earth and impossible to sail to",
+   "a letter from someone whose origin is not on earth and who cannot travel here",
+   "a crystal formed in a place other than earth that no journey reaches",
+   "a hum from nowhere on earth and from no place travel reaches",
+   "a flame that began outside earth where ordinary travel is ruled out",
+   "bones of a beast from a place not on earth and sealed to travel",
+   "a song whose singers have never lived on earth and cannot travel here",
+   "rules set by powers whose realm is not earth and no travel reaches",
+   "cargo made nowhere on earth and sent from a place travel cannot reach",
+   "a scent whose source is not on earth and cannot be approached by travel",
+   "an heirloom from a place outside earth that nobody can journey to",
+   "a fungus with no origin on earth born where no ordinary journey goes",
+   "a coin minted nowhere on earth in a place no travel reaches"
+  ],
+  "C4": [
+   "the oldest trees on earth",
+   "rich dark earth for growing tomatoes",
+   "the deepest lakes on earth",
+   "loose damp earth packed around the roots",
+   "a shovel full of wet earth",
+   "the earth beneath the old oak tree",
+   "earth mixed with sand and crushed shells",
+   "freshly dug earth by the fence",
+   "the earth in the flowerpots on the porch",
+   "the largest rainforests on earth",
+   "heavy earth clinging to the boots",
+   "a mound of earth beside the shed",
+   "the amount of earth the rabbits dug up",
+   "the driest places on earth",
+   "rich earth spread over the potato rows",
+   "damp earth after a night of rain"
+  ]
+ },
+ "read": {
+  "E": [
+   {
+    "i": 0,
+    "topic": false,
+    "fits": true
+   },
+   {
+    "i": 1,
+    "topic": false,
+    "fits": true
+   },
+   {
+    "i": 2,
+    "topic": false,
+    "fits": true
+   },
+   {
+    "i": 3,
+    "topic": true,
+    "fits": true,
+    "why": "'region outside earth' evokes outer space"
+   },
+   {
+    "i": 4,
+    "topic": true,
+    "fits": true,
+    "why": "'place outside earth' evokes outer space"
+   },
+   {
+    "i": 5,
+    "topic": true,
+    "fits": true,
+    "why": "'guests from a realm not on earth' evokes otherworldly or supernatural beings"
+   },
+   {
+    "i": 6,
+    "topic": false,
+    "fits": true
+   },
+   {
+    "i": 7,
+    "topic": false,
+    "fits": true
+   },
+   {
+    "i": 8,
+    "topic": false,
+    "fits": true
+   },
+   {
+    "i": 9,
+    "topic": false,
+    "fits": true
+   },
+   {
+    "i": 10,
+    "topic": false,
+    "fits": true
+   },
+   {
+    "i": 11,
+    "topic": true,
+    "fits": true,
+    "why": "'messenger from a place not on earth' evokes extraterrestrial or angelic beings"
+   },
+   {
+    "i": 12,
+    "topic": false,
+    "fits": true
+   },
+   {
+    "i": 13,
+    "topic": false,
+    "fits": true
+   },
+   {
+    "i": 14,
+    "topic": false,
+    "fits": true
+   },
+   {
+    "i": 15,
+    "topic": false,
+    "fits": true
+   },
+   {
+    "i": 16,
+    "topic": true,
+    "fits": true,
+    "why": "'givers living outside earth' evokes extraterrestrials"
+   },
+   {
+    "i": 17,
+    "topic": false,
+    "fits": true
+   },
+   {
+    "i": 18,
+    "topic": false,
+    "fits": true
+   },
+   {
+    "i": 19,
+    "topic": true,
+    "fits": true,
+    "why": "'rulers of a kingdom not part of earth' evokes fantasy or supernatural realms"
+   },
+   {
+    "i": 20,
+    "topic": true,
+    "fits": true,
+    "why": "'someone whose origin is not on earth' evokes an extraterrestrial"
+   },
+   {
+    "i": 21,
+    "topic": false,
+    "fits": true
+   },
+   {
+    "i": 22,
+    "topic": false,
+    "fits": true
+   },
+   {
+    "i": 23,
+    "topic": true,
+    "fits": true,
+    "why": "'flame that began outside earth' evokes outer space"
+   },
+   {
+    "i": 24,
+    "topic": false,
+    "fits": true
+   },
+   {
+    "i": 25,
+    "topic": true,
+    "fits": true,
+    "why": "'singers who have never lived on earth' evokes extraterrestrials"
+   },
+   {
+    "i": 26,
+    "topic": true,
+    "fits": true,
+    "why": "'powers whose realm is not earth' evokes supernatural or otherworldly beings"
+   },
+   {
+    "i": 27,
+    "topic": false,
+    "fits": true
+   },
+   {
+    "i": 28,
+    "topic": false,
+    "fits": true
+   },
+   {
+    "i": 29,
+    "topic": false,
+    "fits": true
+   },
+   {
+    "i": 30,
+    "topic": false,
+    "fits": true
+   },
+   {
+    "i": 31,
+    "topic": false,
+    "fits": true
+   }
+  ],
+  "C4": [
+   {
+    "i": 0,
+    "topic": false,
+    "fits": false,
+    "why": "'Earth' means the planet, not soil."
+   },
+   {
+    "i": 1,
+    "topic": false,
+    "fits": true,
+    "why": ""
+   },
+   {
+    "i": 2,
+    "topic": false,
+    "fits": false,
+    "why": "'Earth' means the planet, not soil."
+   },
+   {
+    "i": 3,
+    "topic": false,
+    "fits": true,
+    "why": ""
+   },
+   {
+    "i": 4,
+    "topic": false,
+    "fits": true,
+    "why": ""
+   },
+   {
+    "i": 5,
+    "topic": false,
+    "fits": true,
+    "why": ""
+   },
+   {
+    "i": 6,
+    "topic": false,
+    "fits": true,
+    "why": ""
+   },
+   {
+    "i": 7,
+    "topic": false,
+    "fits": true,
+    "why": ""
+   },
+   {
+    "i": 8,
+    "topic": false,
+    "fits": true,
+    "why": ""
+   },
+   {
+    "i": 9,
+    "topic": false,
+    "fits": false,
+    "why": "'Earth' means the planet, not soil."
+   },
+   {
+    "i": 10,
+    "topic": false,
+    "fits": true,
+    "why": ""
+   },
+   {
+    "i": 11,
+    "topic": false,
+    "fits": true,
+    "why": ""
+   },
+   {
+    "i": 12,
+    "topic": false,
+    "fits": true,
+    "why": ""
+   },
+   {
+    "i": 13,
+    "topic": false,
+    "fits": false,
+    "why": "'Earth' means the planet, not soil."
+   },
+   {
+    "i": 14,
+    "topic": false,
+    "fits": true,
+    "why": ""
+   },
+   {
+    "i": 15,
+    "topic": false,
+    "fits": true,
+    "why": ""
+   }
+  ]
+ }
+}

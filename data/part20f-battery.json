@@ -1,0 +1,5162 @@
+{
+ "meta": {
+  "written": "2026-10-18",
+  "authors": "Claude Sonnet 5.5, three blind passes (no project context, no results); see README Part 20f",
+  "semantic_read": "Claude Haiku 5.5 via OpenCode Go; E (first pass) failed 34 of 36 and became E-map; dropped from the final E: 4 supernatural/angelic/fantasy readings; from U: 2 ghost ships",
+  "judge": "DeepSeek V4.1 Flash, thinking off, three ratings each; A = earthly exclusion, B = unusualness (1-7)",
+  "selection": "E, E-map, D: first 24 in author order; U: the 24 whose mean B is closest to E's mean B; C1-C4: first 12; C3-bare: C3 with beings->people",
+  "judge_by_set": {
+   "E": {
+    "A_mean": 6.94,
+    "B_mean": 6.69,
+    "mean_range_A": 0.17,
+    "mean_range_B": 0.62
+   },
+   "E-map": {
+    "A_mean": 6.76,
+    "B_mean": 6.4,
+    "mean_range_A": 0.58,
+    "mean_range_B": 0.46
+   },
+   "D": {
+    "A_mean": 1.17,
+    "B_mean": 2.42,
+    "mean_range_A": 0.42,
+    "mean_range_B": 0.46
+   },
+   "U": {
+    "A_mean": 2.88,
+    "B_mean": 5.46,
+    "mean_range_A": 2.58,
+    "mean_range_B": 0.71
+   },
+   "C1": {
+    "A_mean": 1.47,
+    "B_mean": 2.61,
+    "mean_range_A": 1.42,
+    "mean_range_B": 0.92
+   },
+   "C2": {
+    "A_mean": 2.69,
+    "B_mean": 3.08,
+    "mean_range_A": 1.58,
+    "mean_range_B": 1.08
+   },
+   "C3": {
+    "A_mean": 5.86,
+    "B_mean": 5.47,
+    "mean_range_A": 1.25,
+    "mean_range_B": 0.58
+   },
+   "C4": {
+    "A_mean": 1.39,
+    "B_mean": 2.08,
+    "mean_range_A": 0.92,
+    "mean_range_B": 0.75
+   }
+  }
+ },
+ "sets": {
+  "E": [
+   "a stone from no place on earth and unreachable by ship or plane",
+   "a stranger born nowhere on earth and unreachable by ordinary travel",
+   "a seed from somewhere other than earth and out of reach of ships",
+   "a melody from a region outside earth that no traveler can enter",
+   "a metal forged in a place outside earth that no journey can reach",
+   "a fruit grown nowhere on earth and carried from a place travel cannot reach",
+   "a noise with no source on earth made where nobody can travel",
+   "an object whose origin is not on earth and which no travel can reach",
+   "a bright mineral originating nowhere on earth out of reach of ordinary travel",
+   "a tribe whose native land is not on earth and closed to travel",
+   "an animal bred somewhere not on earth where ordinary travel is impossible",
+   "a drifter whose birthplace is not earth and cannot be reached by ordinary travel",
+   "a sickness born nowhere on earth in a place no ship or plane reaches",
+   "a tool made nowhere on earth by makers no ordinary journey can find",
+   "gifts sent by givers living outside earth where no ordinary travel goes",
+   "water from a spring found nowhere on earth and reachable by no journey",
+   "a dye brewed in a place earth does not contain and travel cannot reach",
+   "a letter from someone whose origin is not on earth and who cannot travel here",
+   "a crystal formed in a place other than earth that no journey reaches",
+   "a hum from nowhere on earth and from no place travel reaches",
+   "a flame that began outside earth where ordinary travel is ruled out",
+   "bones of a beast from a place not on earth and sealed to travel",
+   "a song whose singers have never lived on earth and cannot travel here",
+   "cargo made nowhere on earth and sent from a place travel cannot reach"
+  ],
+  "E-map": [
+   "strangers whose birthplace lies on no map of anywhere people have ever lived",
+   "natives of a land on no globe that no ship can reach",
+   "figures born on no continent, island, or ocean that people have ever named",
+   "organisms whose lineage began in no ocean, forest, or cave of ours",
+   "emissaries from a country on none of our continents, unreachable by sail or wing",
+   "guests born nowhere on the globe, in a place no ticket reaches",
+   "a people whose ancestral land lies outside all our maps, ships, and aircraft routes",
+   "strange arrivals native to no country, ocean, or continent we have charted",
+   "wanderers born outside all nations and seas, in a place no voyage reaches",
+   "intruders who say no compass bearing, however faithfully followed, leads to their birthplace",
+   "entities native to nowhere that has a latitude or a longitude",
+   "a delegation from a place on no continent, which no passport or flight reaches",
+   "refugees from a country on no chart, touching none of our coasts",
+   "animals hatched in no nest or sea of ours, and carried by no ship",
+   "foreigners from a place that is not on this globe, however far one sails",
+   "a stranger whose birthplace is no country, continent, or sea, and cannot be reached",
+   "the pair whose parents were born from no soil, river, or sea of ours",
+   "ambassadors from a place with no coordinates, which no vehicle we build can reach",
+   "settlers descended from ancestors native to no region our ships have sailed",
+   "a species native to no habitat on land or sea, shallow or deep",
+   "pilgrims from a place on no map, unreachable by foot, sail, or wing",
+   "the odd family whose roots touch no country, island, or sea we know",
+   "lodgers born where no sea, land, or air of ours reaches",
+   "travelers from a land touching ours at no point, by sea or air"
+  ],
+  "D": [
+   "relatives who traveled all night by bus to attend the funeral",
+   "laborers who flew in from overseas for the season",
+   "households who moved here from the other side of the country",
+   "students who commute two hundred miles to attend lectures",
+   "sailors from faraway ports who rest in the harbor each winter",
+   "tourists who came a great way to see the cathedral",
+   "worshippers who spent days on foot to reach the shrine",
+   "a committee that flew halfway across the continent for the summit",
+   "businesspeople who spend most of the season on planes between cities",
+   "families who crossed the mountains on foot from a neighboring country",
+   "neighbors who drove all day from the coast",
+   "migrant farmhands who follow the ripening crops northward",
+   "a cousin who lives on the opposite side of the ocean",
+   "letters that took ages to reach us from abroad",
+   "wedding guests who made the trip from a faraway city",
+   "passengers who traveled by ferry and rail from the islands",
+   "traders who haul goods by camel from one oasis to the next",
+   "truckers who cover thousands of miles between the coasts",
+   "holidaymakers who flew across three time zones for a beach break",
+   "an uncle who emigrated to australia as a young man",
+   "people who made the trip from the coast to the city",
+   "emigrants who sailed across the atlantic in steerage",
+   "a courier who rode from the coast to the mountains in two days",
+   "exchange students from a faraway country in asia"
+  ],
+  "U": [
+   "an expedition that dragged sledges across polar ice for a winter and never reappeared",
+   "a blind white fish dredged up from a deep-ocean trench",
+   "a lost colony on a remote island whose people still spoke medieval english",
+   "a roman city buried by volcanic ash and found almost untouched",
+   "a woolly mammoth found in permafrost with buttercups still in its mouth",
+   "a lake hidden beneath miles of antarctic ice",
+   "a drowned city lying on the floor of a mediterranean bay",
+   "a sailor who drifted across the pacific on a raft",
+   "the mutineers who burned their ship and hid on a pacific island",
+   "a balloon flight over the summit of the highest mountain in the himalayas",
+   "a diver trapped for three days in an air pocket inside a sunken vessel",
+   "a submarine voyage beneath the polar ice cap to the north pole",
+   "an amazon tribe that has never met outsiders",
+   "a salt mine carved into a cathedral beneath the plains of poland",
+   "a sunken forest standing upright on the seabed",
+   "a boy raised by wolves in the forests of india",
+   "a hermit who lived for decades on an uninhabited atoll",
+   "a glacier that swallowed a squadron of warplanes and gave them back",
+   "an island that rose from the sea in a single night and then sank",
+   "a dog sled journey to the south pole in the dark of winter",
+   "a rainforest orchid that blooms once in a lifetime",
+   "a monastery clinging to a sea stack on the greek coast",
+   "a submersible that descended to the bottom of the deepest ocean trench",
+   "a biplane flight across the atlantic in an open cockpit"
+  ],
+  "C1": [
+   "the rights and duties we owe to fellow beings",
+   "how living beings adapt to droughts and floods",
+   "social beings who need company to thrive",
+   "the dignity of all beings regardless of rank",
+   "the suffering of living beings in overfull shelters",
+   "the shared needs of all living beings, from insects to elephants",
+   "mortal beings facing illness and old age",
+   "the ethics of how we treat living beings in laboratories",
+   "frail beings who depend on the care of others",
+   "thinking beings capable of love and regret",
+   "beings of flesh and blood who tire, hunger, and sleep",
+   "the wellbeing of all beings who share a household"
+  ],
+  "C2": [
+   "neighbors who are not from here but have settled in nicely",
+   "a woman not from here who misses the sea",
+   "the shopkeeper who is clearly not from here",
+   "families who are not from this place and need directions to the clinic",
+   "the accent of someone not from here",
+   "laborers who say they are not from this place and plan to go back",
+   "tourists who are plainly not from here, with maps in hand",
+   "a boy raised on this street who still feels not from this place",
+   "strangers in the café who were obviously not from here",
+   "the rumor that the doctor is not from here",
+   "students not from here who struggle to find housing",
+   "a farmer who was not from this place but married into it"
+  ],
+  "C3": [
+   "beings not from here who have lived on this street for decades",
+   "beings who are not from this place and need help finding the clinic",
+   "those beings, not from here, who sell fruit at the market",
+   "the weary beings who say they are not from this place and want to go back",
+   "lonely beings who are not from here and eat alone at the diner",
+   "the beings who are not from this place yet speak the local tongue flawlessly",
+   "beings not from here who gather at the harbor to share news",
+   "the kind beings who welcomed us though we were not from here",
+   "beings who are plainly not from here, going by their coats",
+   "all the beings who admit they are not from this place when the nurse inquires",
+   "beings who are not from here and pay higher rents than the locals",
+   "the shy beings in the back row who are not from here"
+  ],
+  "C4": [
+   "the oldest trees on earth",
+   "rich dark earth for growing tomatoes",
+   "the deepest lakes on earth",
+   "loose damp earth packed around the roots",
+   "a shovel full of wet earth",
+   "the earth beneath the old oak tree",
+   "earth mixed with sand and crushed shells",
+   "freshly dug earth by the fence",
+   "the earth in the flowerpots on the porch",
+   "the largest rainforests on earth",
+   "heavy earth clinging to the boots",
+   "a mound of earth beside the shed"
+  ],
+  "C3-bare": [
+   "people not from here who have lived on this street for decades",
+   "people who are not from this place and need help finding the clinic",
+   "those people, not from here, who sell fruit at the market",
+   "the weary people who say they are not from this place and want to go back",
+   "lonely people who are not from here and eat alone at the diner",
+   "the people who are not from this place yet speak the local tongue flawlessly",
+   "people not from here who gather at the harbor to share news",
+   "the kind people who welcomed us though we were not from here",
+   "people who are plainly not from here, going by their coats",
+   "all the people who admit they are not from this place when the nurse inquires",
+   "people who are not from here and pay higher rents than the locals",
+   "the shy people in the back row who are not from here"
+  ]
+ },
+ "judge_rows": [
+  {
+   "set": "E",
+   "index": 0,
+   "phrase": "a stone from no place on earth and unreachable by ship or plane",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 6,
+     "B": 5
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.666666666666667,
+   "A_range": 1,
+   "B_mean": 6.333333333333333,
+   "B_range": 2,
+   "selected": true
+  },
+  {
+   "set": "E",
+   "index": 1,
+   "phrase": "a stranger born nowhere on earth and unreachable by ordinary travel",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 7.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "E",
+   "index": 2,
+   "phrase": "a seed from somewhere other than earth and out of reach of ships",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 7.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "E",
+   "index": 3,
+   "phrase": "a melody from a region outside earth that no traveler can enter",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 7.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "E",
+   "index": 4,
+   "phrase": "a metal forged in a place outside earth that no journey can reach",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 7.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "E",
+   "index": 5,
+   "phrase": "a fruit grown nowhere on earth and carried from a place travel cannot reach",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 7.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "E",
+   "index": 6,
+   "phrase": "a noise with no source on earth made where nobody can travel",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 7.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "E",
+   "index": 7,
+   "phrase": "an object whose origin is not on earth and which no travel can reach",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 7.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "E",
+   "index": 8,
+   "phrase": "a bright mineral originating nowhere on earth out of reach of ordinary travel",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 6.333333333333333,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "E",
+   "index": 9,
+   "phrase": "a tribe whose native land is not on earth and closed to travel",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 7.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "E",
+   "index": 10,
+   "phrase": "an animal bred somewhere not on earth where ordinary travel is impossible",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 6.666666666666667,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "E",
+   "index": 11,
+   "phrase": "a drifter whose birthplace is not earth and cannot be reached by ordinary travel",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 6.333333333333333,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "E",
+   "index": 12,
+   "phrase": "a sickness born nowhere on earth in a place no ship or plane reaches",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 6.333333333333333,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "E",
+   "index": 13,
+   "phrase": "a tool made nowhere on earth by makers no ordinary journey can find",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 7.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "E",
+   "index": 14,
+   "phrase": "gifts sent by givers living outside earth where no ordinary travel goes",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.666666666666667,
+   "A_range": 1,
+   "B_mean": 6.666666666666667,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "E",
+   "index": 15,
+   "phrase": "water from a spring found nowhere on earth and reachable by no journey",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 6.666666666666667,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "E",
+   "index": 16,
+   "phrase": "a dye brewed in a place earth does not contain and travel cannot reach",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 6.666666666666667,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "E",
+   "index": 17,
+   "phrase": "a letter from someone whose origin is not on earth and who cannot travel here",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 5
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 6.333333333333333,
+   "B_range": 2,
+   "selected": true
+  },
+  {
+   "set": "E",
+   "index": 18,
+   "phrase": "a crystal formed in a place other than earth that no journey reaches",
+   "ratings": [
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.666666666666667,
+   "A_range": 1,
+   "B_mean": 6.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "E",
+   "index": 19,
+   "phrase": "a hum from nowhere on earth and from no place travel reaches",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 6.666666666666667,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "E",
+   "index": 20,
+   "phrase": "a flame that began outside earth where ordinary travel is ruled out",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.666666666666667,
+   "A_range": 1,
+   "B_mean": 6.333333333333333,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "E",
+   "index": 21,
+   "phrase": "bones of a beast from a place not on earth and sealed to travel",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 6.666666666666667,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "E",
+   "index": 22,
+   "phrase": "a song whose singers have never lived on earth and cannot travel here",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 7.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "E",
+   "index": 23,
+   "phrase": "cargo made nowhere on earth and sent from a place travel cannot reach",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 6.666666666666667,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "E",
+   "index": 24,
+   "phrase": "a scent whose source is not on earth and cannot be approached by travel",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 6.666666666666667,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "E",
+   "index": 25,
+   "phrase": "an heirloom from a place outside earth that nobody can journey to",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 6.666666666666667,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "E",
+   "index": 26,
+   "phrase": "a fungus with no origin on earth born where no ordinary journey goes",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 6,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.666666666666667,
+   "A_range": 1,
+   "B_mean": 7.0,
+   "B_range": 0,
+   "selected": false
+  },
+  {
+   "set": "E",
+   "index": 27,
+   "phrase": "a coin minted nowhere on earth in a place no travel reaches",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 6.666666666666667,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "E-map",
+   "index": 0,
+   "phrase": "strangers whose birthplace lies on no map of anywhere people have ever lived",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 6.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "E-map",
+   "index": 1,
+   "phrase": "natives of a land on no globe that no ship can reach",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 7.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "E-map",
+   "index": 2,
+   "phrase": "figures born on no continent, island, or ocean that people have ever named",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 7.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "E-map",
+   "index": 3,
+   "phrase": "organisms whose lineage began in no ocean, forest, or cave of ours",
+   "ratings": [
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.666666666666667,
+   "A_range": 1,
+   "B_mean": 6.666666666666667,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "E-map",
+   "index": 4,
+   "phrase": "emissaries from a country on none of our continents, unreachable by sail or wing",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 6.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "E-map",
+   "index": 5,
+   "phrase": "guests born nowhere on the globe, in a place no ticket reaches",
+   "ratings": [
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.666666666666667,
+   "A_range": 1,
+   "B_mean": 6.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "E-map",
+   "index": 6,
+   "phrase": "a people whose ancestral land lies outside all our maps, ships, and aircraft routes",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 5,
+     "B": 5
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.333333333333333,
+   "A_range": 2,
+   "B_mean": 6.0,
+   "B_range": 2,
+   "selected": true
+  },
+  {
+   "set": "E-map",
+   "index": 7,
+   "phrase": "strange arrivals native to no country, ocean, or continent we have charted",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 6,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.666666666666667,
+   "A_range": 1,
+   "B_mean": 6.666666666666667,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "E-map",
+   "index": 8,
+   "phrase": "wanderers born outside all nations and seas, in a place no voyage reaches",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.666666666666667,
+   "A_range": 1,
+   "B_mean": 6.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "E-map",
+   "index": 9,
+   "phrase": "intruders who say no compass bearing, however faithfully followed, leads to their birthplace",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.666666666666667,
+   "A_range": 1,
+   "B_mean": 6.333333333333333,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "E-map",
+   "index": 10,
+   "phrase": "entities native to nowhere that has a latitude or a longitude",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 6.333333333333333,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "E-map",
+   "index": 11,
+   "phrase": "a delegation from a place on no continent, which no passport or flight reaches",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 7.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "E-map",
+   "index": 12,
+   "phrase": "refugees from a country on no chart, touching none of our coasts",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.333333333333333,
+   "A_range": 1,
+   "B_mean": 6.333333333333333,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "E-map",
+   "index": 13,
+   "phrase": "animals hatched in no nest or sea of ours, and carried by no ship",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.333333333333333,
+   "A_range": 1,
+   "B_mean": 6.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "E-map",
+   "index": 14,
+   "phrase": "foreigners from a place that is not on this globe, however far one sails",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 6.333333333333333,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "E-map",
+   "index": 15,
+   "phrase": "a stranger whose birthplace is no country, continent, or sea, and cannot be reached",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 6,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.666666666666667,
+   "A_range": 1,
+   "B_mean": 7.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "E-map",
+   "index": 16,
+   "phrase": "the pair whose parents were born from no soil, river, or sea of ours",
+   "ratings": [
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.333333333333333,
+   "A_range": 1,
+   "B_mean": 6.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "E-map",
+   "index": 17,
+   "phrase": "ambassadors from a place with no coordinates, which no vehicle we build can reach",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 6,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.666666666666667,
+   "A_range": 1,
+   "B_mean": 7.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "E-map",
+   "index": 18,
+   "phrase": "settlers descended from ancestors native to no region our ships have sailed",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 5
+    },
+    {
+     "A": 7,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.666666666666667,
+   "A_range": 1,
+   "B_mean": 5.666666666666667,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "E-map",
+   "index": 19,
+   "phrase": "a species native to no habitat on land or sea, shallow or deep",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 7.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "E-map",
+   "index": 20,
+   "phrase": "pilgrims from a place on no map, unreachable by foot, sail, or wing",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 6.666666666666667,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "E-map",
+   "index": 21,
+   "phrase": "the odd family whose roots touch no country, island, or sea we know",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 6.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "E-map",
+   "index": 22,
+   "phrase": "lodgers born where no sea, land, or air of ours reaches",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 6.666666666666667,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "E-map",
+   "index": 23,
+   "phrase": "travelers from a land touching ours at no point, by sea or air",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.666666666666667,
+   "A_range": 1,
+   "B_mean": 6.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "E-map",
+   "index": 24,
+   "phrase": "folk belonging to none of our continents and to no sea we sail",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 6.333333333333333,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "E-map",
+   "index": 25,
+   "phrase": "a tribe whose true origin no sailing or flying, in all directions, can find",
+   "ratings": [
+    {
+     "A": 5,
+     "B": 5
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 6,
+     "B": 5
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.0,
+   "A_range": 2,
+   "B_mean": 5.666666666666667,
+   "B_range": 2,
+   "selected": false
+  },
+  {
+   "set": "E-map",
+   "index": 26,
+   "phrase": "voyagers whose point of departure is on no map and cannot be sailed to",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.333333333333333,
+   "A_range": 1,
+   "B_mean": 6.333333333333333,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "E-map",
+   "index": 27,
+   "phrase": "stowaways from a place not connected to ours by water, land, or air",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.666666666666667,
+   "A_range": 1,
+   "B_mean": 6.333333333333333,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "E-map",
+   "index": 28,
+   "phrase": "the unnamed travelers whose parents never stood on a coast or continent of ours",
+   "ratings": [
+    {
+     "A": 6,
+     "B": 5
+    },
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.666666666666667,
+   "A_range": 1,
+   "B_mean": 5.666666666666667,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "E-map",
+   "index": 29,
+   "phrase": "heralds of a place outside our seas and continents, unreachable by vessel",
+   "ratings": [
+    {
+     "A": 5,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 5.666666666666667,
+   "A_range": 1,
+   "B_mean": 6.0,
+   "B_range": 0,
+   "selected": false
+  },
+  {
+   "set": "E-map",
+   "index": 30,
+   "phrase": "inhabitants of a country that exists nowhere within reach of a compass",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 5,
+     "B": 4
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.333333333333333,
+   "A_range": 2,
+   "B_mean": 5.333333333333333,
+   "B_range": 2,
+   "selected": false
+  },
+  {
+   "set": "E-map",
+   "index": 31,
+   "phrase": "a family whose origin is no part of our soil and no route reaches",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.666666666666667,
+   "A_range": 1,
+   "B_mean": 6.0,
+   "B_range": 0,
+   "selected": false
+  },
+  {
+   "set": "E-map",
+   "index": 32,
+   "phrase": "castaways from no shore of ours, washed up by no tide or current",
+   "ratings": [
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.333333333333333,
+   "A_range": 1,
+   "B_mean": 6.333333333333333,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "E-map",
+   "index": 33,
+   "phrase": "silent arrivals from a place no map, caravan, or sailor has found",
+   "ratings": [
+    {
+     "A": 6,
+     "B": 7
+    },
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 5,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 5.666666666666667,
+   "A_range": 1,
+   "B_mean": 6.333333333333333,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "E-map",
+   "index": 34,
+   "phrase": "a lineage traceable to no continent, and no route leads back",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 7.0,
+   "A_range": 0,
+   "B_mean": 6.333333333333333,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "E-map",
+   "index": 35,
+   "phrase": "outsiders from a place detached from ours, which no bold journey reaches",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.666666666666667,
+   "A_range": 1,
+   "B_mean": 6.666666666666667,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "D",
+   "index": 0,
+   "phrase": "relatives who traveled all night by bus to attend the funeral",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 2,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.3333333333333333,
+   "A_range": 1,
+   "B_mean": 3.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "D",
+   "index": 1,
+   "phrase": "laborers who flew in from overseas for the season",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.3333333333333335,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "D",
+   "index": 2,
+   "phrase": "households who moved here from the other side of the country",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "D",
+   "index": 3,
+   "phrase": "students who commute two hundred miles to attend lectures",
+   "ratings": [
+    {
+     "A": 2,
+     "B": 5
+    },
+    {
+     "A": 1,
+     "B": 4
+    },
+    {
+     "A": 1,
+     "B": 5
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.3333333333333333,
+   "A_range": 1,
+   "B_mean": 4.666666666666667,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "D",
+   "index": 4,
+   "phrase": "sailors from faraway ports who rest in the harbor each winter",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 2,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.3333333333333333,
+   "A_range": 1,
+   "B_mean": 2.6666666666666665,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "D",
+   "index": 5,
+   "phrase": "tourists who came a great way to see the cathedral",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "D",
+   "index": 6,
+   "phrase": "worshippers who spent days on foot to reach the shrine",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 3.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "D",
+   "index": 7,
+   "phrase": "a committee that flew halfway across the continent for the summit",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.3333333333333335,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "D",
+   "index": 8,
+   "phrase": "businesspeople who spend most of the season on planes between cities",
+   "ratings": [
+    {
+     "A": 2,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.3333333333333333,
+   "A_range": 1,
+   "B_mean": 2.6666666666666665,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "D",
+   "index": 9,
+   "phrase": "families who crossed the mountains on foot from a neighboring country",
+   "ratings": [
+    {
+     "A": 2,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 2,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.6666666666666667,
+   "A_range": 1,
+   "B_mean": 3.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "D",
+   "index": 10,
+   "phrase": "neighbors who drove all day from the coast",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "D",
+   "index": 11,
+   "phrase": "migrant farmhands who follow the ripening crops northward",
+   "ratings": [
+    {
+     "A": 2,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.3333333333333333,
+   "A_range": 1,
+   "B_mean": 2.3333333333333335,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "D",
+   "index": 12,
+   "phrase": "a cousin who lives on the opposite side of the ocean",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "D",
+   "index": 13,
+   "phrase": "letters that took ages to reach us from abroad",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "D",
+   "index": 14,
+   "phrase": "wedding guests who made the trip from a faraway city",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "D",
+   "index": 15,
+   "phrase": "passengers who traveled by ferry and rail from the islands",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "D",
+   "index": 16,
+   "phrase": "traders who haul goods by camel from one oasis to the next",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 2,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.3333333333333333,
+   "A_range": 1,
+   "B_mean": 2.3333333333333335,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "D",
+   "index": 17,
+   "phrase": "truckers who cover thousands of miles between the coasts",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.3333333333333335,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "D",
+   "index": 18,
+   "phrase": "holidaymakers who flew across three time zones for a beach break",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 2,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.3333333333333333,
+   "A_range": 1,
+   "B_mean": 3.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "D",
+   "index": 19,
+   "phrase": "an uncle who emigrated to australia as a young man",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "D",
+   "index": 20,
+   "phrase": "people who made the trip from the coast to the city",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 1
+    },
+    {
+     "A": 1,
+     "B": 1
+    },
+    {
+     "A": 1,
+     "B": 1
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 1.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "D",
+   "index": 21,
+   "phrase": "emigrants who sailed across the atlantic in steerage",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.6666666666666665,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "D",
+   "index": 22,
+   "phrase": "a courier who rode from the coast to the mountains in two days",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.3333333333333335,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "D",
+   "index": 23,
+   "phrase": "exchange students from a faraway country in asia",
+   "ratings": [
+    {
+     "A": 3,
+     "B": 2
+    },
+    {
+     "A": 2,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 2.0,
+   "A_range": 2,
+   "B_mean": 2.3333333333333335,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "D",
+   "index": 24,
+   "phrase": "commuters who ride the ferry across the bay each morning",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.0,
+   "B_range": 0,
+   "selected": false
+  },
+  {
+   "set": "D",
+   "index": 25,
+   "phrase": "drivers stuck on the highway between two cities",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.0,
+   "B_range": 0,
+   "selected": false
+  },
+  {
+   "set": "D",
+   "index": 26,
+   "phrase": "folks who traveled a great many miles to see the parade",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.3333333333333335,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "D",
+   "index": 27,
+   "phrase": "friends scattered across several continents and time zones",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 3,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.6666666666666667,
+   "A_range": 2,
+   "B_mean": 3.0,
+   "B_range": 0,
+   "selected": false
+  },
+  {
+   "set": "D",
+   "index": 28,
+   "phrase": "siblings separated by an ocean and a night flight",
+   "ratings": [
+    {
+     "A": 2,
+     "B": 4
+    },
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 2,
+     "B": 4
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.6666666666666667,
+   "A_range": 1,
+   "B_mean": 3.6666666666666665,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "D",
+   "index": 29,
+   "phrase": "fishermen who rowed across the strait in the dark",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 2,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.3333333333333333,
+   "A_range": 1,
+   "B_mean": 2.3333333333333335,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "D",
+   "index": 30,
+   "phrase": "a letter carrier who bikes between remote farms",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 1
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 1.6666666666666667,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "D",
+   "index": 31,
+   "phrase": "pioneers who drove wagons west over many seasons",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 7,
+     "B": 4
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 3.0,
+   "A_range": 6,
+   "B_mean": 3.0,
+   "B_range": 2,
+   "selected": false
+  },
+  {
+   "set": "D",
+   "index": 32,
+   "phrase": "strangers who rode in on the late bus",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 2,
+     "B": 2
+    },
+    {
+     "A": 2,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.6666666666666667,
+   "A_range": 1,
+   "B_mean": 2.6666666666666665,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "D",
+   "index": 33,
+   "phrase": "nomads who follow their flocks between summer and winter pastures",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.0,
+   "B_range": 0,
+   "selected": false
+  },
+  {
+   "set": "D",
+   "index": 34,
+   "phrase": "delegates from the far end of the country",
+   "ratings": [
+    {
+     "A": 2,
+     "B": 2
+    },
+    {
+     "A": 2,
+     "B": 2
+    },
+    {
+     "A": 3,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 2.3333333333333335,
+   "A_range": 1,
+   "B_mean": 2.0,
+   "B_range": 0,
+   "selected": false
+  },
+  {
+   "set": "U",
+   "index": 0,
+   "phrase": "an expedition that dragged sledges across polar ice for a winter and never reappeared",
+   "ratings": [
+    {
+     "A": 2,
+     "B": 5
+    },
+    {
+     "A": 1,
+     "B": 5
+    },
+    {
+     "A": 3,
+     "B": 5
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 2.0,
+   "A_range": 2,
+   "B_mean": 5.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "U",
+   "index": 1,
+   "phrase": "a blind white fish dredged up from a deep-ocean trench",
+   "ratings": [
+    {
+     "A": 6,
+     "B": 5
+    },
+    {
+     "A": 5,
+     "B": 4
+    },
+    {
+     "A": 1,
+     "B": 5
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 4.0,
+   "A_range": 5,
+   "B_mean": 4.666666666666667,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "U",
+   "index": 2,
+   "phrase": "a lost colony on a remote island whose people still spoke medieval english",
+   "ratings": [
+    {
+     "A": 5,
+     "B": 5
+    },
+    {
+     "A": 3,
+     "B": 5
+    },
+    {
+     "A": 2,
+     "B": 4
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 3.3333333333333335,
+   "A_range": 3,
+   "B_mean": 4.666666666666667,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "U",
+   "index": 3,
+   "phrase": "a roman city buried by volcanic ash and found almost untouched",
+   "ratings": [
+    {
+     "A": 3,
+     "B": 5
+    },
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 4,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 4.666666666666667,
+   "A_range": 4,
+   "B_mean": 5.666666666666667,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "U",
+   "index": 4,
+   "phrase": "a woolly mammoth found in permafrost with buttercups still in its mouth",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 1,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 2.6666666666666665,
+   "A_range": 5,
+   "B_mean": 6.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "U",
+   "index": 5,
+   "phrase": "a lake hidden beneath miles of antarctic ice",
+   "ratings": [
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 5,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 5.666666666666667,
+   "A_range": 1,
+   "B_mean": 6.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "U",
+   "index": 6,
+   "phrase": "a drowned city lying on the floor of a mediterranean bay",
+   "ratings": [
+    {
+     "A": 3,
+     "B": 5
+    },
+    {
+     "A": 2,
+     "B": 5
+    },
+    {
+     "A": 6,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 3.6666666666666665,
+   "A_range": 4,
+   "B_mean": 5.333333333333333,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "U",
+   "index": 7,
+   "phrase": "a sailor who drifted across the pacific on a raft",
+   "ratings": [
+    {
+     "A": 2,
+     "B": 4
+    },
+    {
+     "A": 1,
+     "B": 4
+    },
+    {
+     "A": 1,
+     "B": 5
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.3333333333333333,
+   "A_range": 1,
+   "B_mean": 4.333333333333333,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "U",
+   "index": 8,
+   "phrase": "a cave system where blind insects have never met daylight",
+   "ratings": [
+    {
+     "A": 2,
+     "B": 4
+    },
+    {
+     "A": 2,
+     "B": 4
+    },
+    {
+     "A": 2,
+     "B": 4
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 2.0,
+   "A_range": 0,
+   "B_mean": 4.0,
+   "B_range": 0,
+   "selected": false
+  },
+  {
+   "set": "U",
+   "index": 9,
+   "phrase": "a forest growing inside a collapsed volcanic crater",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 4
+    },
+    {
+     "A": 1,
+     "B": 5
+    },
+    {
+     "A": 1,
+     "B": 4
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 4.333333333333333,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "U",
+   "index": 10,
+   "phrase": "a hot spring teeming with microbes that feed on rock",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 3,
+     "B": 4
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.6666666666666667,
+   "A_range": 2,
+   "B_mean": 3.3333333333333335,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "U",
+   "index": 11,
+   "phrase": "the mutineers who burned their ship and hid on a pacific island",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 5
+    },
+    {
+     "A": 4,
+     "B": 5
+    },
+    {
+     "A": 2,
+     "B": 4
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 2.3333333333333335,
+   "A_range": 3,
+   "B_mean": 4.666666666666667,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "U",
+   "index": 12,
+   "phrase": "a balloon flight over the summit of the highest mountain in the himalayas",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 5
+    },
+    {
+     "A": 2,
+     "B": 5
+    },
+    {
+     "A": 1,
+     "B": 5
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.3333333333333333,
+   "A_range": 1,
+   "B_mean": 5.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "U",
+   "index": 13,
+   "phrase": "a diver trapped for three days in an air pocket inside a sunken vessel",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 6
+    },
+    {
+     "A": 1,
+     "B": 6
+    },
+    {
+     "A": 1,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 6.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "U",
+   "index": 14,
+   "phrase": "a submarine voyage beneath the polar ice cap to the north pole",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 4
+    },
+    {
+     "A": 1,
+     "B": 4
+    },
+    {
+     "A": 1,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 4.666666666666667,
+   "B_range": 2,
+   "selected": true
+  },
+  {
+   "set": "U",
+   "index": 15,
+   "phrase": "an amazon tribe that has never met outsiders",
+   "ratings": [
+    {
+     "A": 3,
+     "B": 5
+    },
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 5,
+     "B": 5
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 5.0,
+   "A_range": 4,
+   "B_mean": 5.333333333333333,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "U",
+   "index": 16,
+   "phrase": "a lighthouse crew stranded on an atlantic rock for a winter",
+   "ratings": [
+    {
+     "A": 2,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 2,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.6666666666666667,
+   "A_range": 1,
+   "B_mean": 3.0,
+   "B_range": 0,
+   "selected": false
+  },
+  {
+   "set": "U",
+   "index": 17,
+   "phrase": "a lava tube cave in iceland large enough to hold a cathedral",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 4
+    },
+    {
+     "A": 1,
+     "B": 5
+    },
+    {
+     "A": 1,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 4.0,
+   "B_range": 2,
+   "selected": false
+  },
+  {
+   "set": "U",
+   "index": 18,
+   "phrase": "a salt mine carved into a cathedral beneath the plains of poland",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 5
+    },
+    {
+     "A": 1,
+     "B": 5
+    },
+    {
+     "A": 2,
+     "B": 5
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.3333333333333333,
+   "A_range": 1,
+   "B_mean": 5.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "U",
+   "index": 19,
+   "phrase": "a sunken forest standing upright on the seabed",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 2,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 5.333333333333333,
+   "A_range": 5,
+   "B_mean": 6.666666666666667,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "U",
+   "index": 20,
+   "phrase": "a whale that sang at a pitch no other whale used",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 4
+    },
+    {
+     "A": 1,
+     "B": 4
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 3.6666666666666665,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "U",
+   "index": 21,
+   "phrase": "a boy raised by wolves in the forests of india",
+   "ratings": [
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 1,
+     "B": 5
+    },
+    {
+     "A": 1,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 2.6666666666666665,
+   "A_range": 5,
+   "B_mean": 5.666666666666667,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "U",
+   "index": 22,
+   "phrase": "a hermit who lived for decades on an uninhabited atoll",
+   "ratings": [
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 5,
+     "B": 5
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 5.666666666666667,
+   "A_range": 1,
+   "B_mean": 5.666666666666667,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "U",
+   "index": 23,
+   "phrase": "a glacier that swallowed a squadron of warplanes and gave them back",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 3,
+     "B": 6
+    },
+    {
+     "A": 2,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 4.0,
+   "A_range": 5,
+   "B_mean": 6.666666666666667,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "U",
+   "index": 24,
+   "phrase": "a river that reverses its course with each tide",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 4
+    },
+    {
+     "A": 2,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 4
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.3333333333333333,
+   "A_range": 1,
+   "B_mean": 3.6666666666666665,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "U",
+   "index": 25,
+   "phrase": "an island that rose from the sea in a single night and then sank",
+   "ratings": [
+    {
+     "A": 2,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 7
+    },
+    {
+     "A": 1,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 3.3333333333333335,
+   "A_range": 6,
+   "B_mean": 6.666666666666667,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "U",
+   "index": 26,
+   "phrase": "survivors of a shipwreck who drifted for days in an open lifeboat",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 4
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 3.3333333333333335,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "U",
+   "index": 27,
+   "phrase": "a dog sled journey to the south pole in the dark of winter",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 7
+    },
+    {
+     "A": 1,
+     "B": 6
+    },
+    {
+     "A": 1,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 6.333333333333333,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "U",
+   "index": 28,
+   "phrase": "a rainforest orchid that blooms once in a lifetime",
+   "ratings": [
+    {
+     "A": 2,
+     "B": 5
+    },
+    {
+     "A": 1,
+     "B": 5
+    },
+    {
+     "A": 1,
+     "B": 4
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.3333333333333333,
+   "A_range": 1,
+   "B_mean": 4.666666666666667,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "U",
+   "index": 29,
+   "phrase": "a coal seam that has burned underground for generations",
+   "ratings": [
+    {
+     "A": 3,
+     "B": 4
+    },
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 4
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.6666666666666667,
+   "A_range": 2,
+   "B_mean": 3.6666666666666665,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "U",
+   "index": 30,
+   "phrase": "a monastery clinging to a sea stack on the greek coast",
+   "ratings": [
+    {
+     "A": 4,
+     "B": 6
+    },
+    {
+     "A": 2,
+     "B": 5
+    },
+    {
+     "A": 5,
+     "B": 5
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 3.6666666666666665,
+   "A_range": 3,
+   "B_mean": 5.333333333333333,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "U",
+   "index": 31,
+   "phrase": "a submersible that descended to the bottom of the deepest ocean trench",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 5
+    },
+    {
+     "A": 2,
+     "B": 5
+    },
+    {
+     "A": 1,
+     "B": 5
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.3333333333333333,
+   "A_range": 1,
+   "B_mean": 5.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "U",
+   "index": 32,
+   "phrase": "a biplane flight across the atlantic in an open cockpit",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 6
+    },
+    {
+     "A": 2,
+     "B": 6
+    },
+    {
+     "A": 1,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.3333333333333333,
+   "A_range": 1,
+   "B_mean": 6.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "U",
+   "index": 33,
+   "phrase": "researchers drilling ice cores two miles deep in greenland",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 4
+    },
+    {
+     "A": 1,
+     "B": 4
+    },
+    {
+     "A": 1,
+     "B": 4
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 4.0,
+   "B_range": 0,
+   "selected": false
+  },
+  {
+   "set": "C1",
+   "index": 0,
+   "phrase": "the rights and duties we owe to fellow beings",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 4
+    },
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 1
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 3.0,
+   "A_range": 6,
+   "B_mean": 2.6666666666666665,
+   "B_range": 3,
+   "selected": true
+  },
+  {
+   "set": "C1",
+   "index": 1,
+   "phrase": "how living beings adapt to droughts and floods",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "C1",
+   "index": 2,
+   "phrase": "social beings who need company to thrive",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 2,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.3333333333333333,
+   "A_range": 1,
+   "B_mean": 2.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "C1",
+   "index": 3,
+   "phrase": "the dignity of all beings regardless of rank",
+   "ratings": [
+    {
+     "A": 2,
+     "B": 4
+    },
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.3333333333333333,
+   "A_range": 1,
+   "B_mean": 3.3333333333333335,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C1",
+   "index": 4,
+   "phrase": "the suffering of living beings in overfull shelters",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.6666666666666665,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C1",
+   "index": 5,
+   "phrase": "the shared needs of all living beings, from insects to elephants",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.3333333333333335,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C1",
+   "index": 6,
+   "phrase": "mortal beings facing illness and old age",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "C1",
+   "index": 7,
+   "phrase": "the ethics of how we treat living beings in laboratories",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.6666666666666665,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C1",
+   "index": 8,
+   "phrase": "frail beings who depend on the care of others",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.3333333333333335,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C1",
+   "index": 9,
+   "phrase": "thinking beings capable of love and regret",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 4
+    },
+    {
+     "A": 5,
+     "B": 5
+    },
+    {
+     "A": 1,
+     "B": 4
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 2.3333333333333335,
+   "A_range": 4,
+   "B_mean": 4.333333333333333,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C1",
+   "index": 10,
+   "phrase": "beings of flesh and blood who tire, hunger, and sleep",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 6,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 2.6666666666666665,
+   "A_range": 5,
+   "B_mean": 2.6666666666666665,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C1",
+   "index": 11,
+   "phrase": "the wellbeing of all beings who share a household",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.3333333333333335,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C1",
+   "index": 12,
+   "phrase": "the kindness owed to beings in need of food and shelter",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.0,
+   "B_range": 0,
+   "selected": false
+  },
+  {
+   "set": "C1",
+   "index": 13,
+   "phrase": "grieving beings gathered at the funeral",
+   "ratings": [
+    {
+     "A": 2,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 2,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.6666666666666667,
+   "A_range": 1,
+   "B_mean": 2.3333333333333335,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "C1",
+   "index": 14,
+   "phrase": "rational beings who disagree politely over coffee",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.3333333333333335,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "C1",
+   "index": 15,
+   "phrase": "the habits of nocturnal beings, from owls to bats",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 3.0,
+   "B_range": 0,
+   "selected": false
+  },
+  {
+   "set": "C2",
+   "index": 0,
+   "phrase": "neighbors who are not from here but have settled in nicely",
+   "ratings": [
+    {
+     "A": 4,
+     "B": 4
+    },
+    {
+     "A": 2,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 4
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 2.3333333333333335,
+   "A_range": 3,
+   "B_mean": 3.6666666666666665,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C2",
+   "index": 1,
+   "phrase": "a woman not from here who misses the sea",
+   "ratings": [
+    {
+     "A": 4,
+     "B": 3
+    },
+    {
+     "A": 3,
+     "B": 4
+    },
+    {
+     "A": 3,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 3.3333333333333335,
+   "A_range": 1,
+   "B_mean": 3.3333333333333335,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C2",
+   "index": 2,
+   "phrase": "the shopkeeper who is clearly not from here",
+   "ratings": [
+    {
+     "A": 4,
+     "B": 3
+    },
+    {
+     "A": 3,
+     "B": 4
+    },
+    {
+     "A": 4,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 3.6666666666666665,
+   "A_range": 1,
+   "B_mean": 3.3333333333333335,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C2",
+   "index": 3,
+   "phrase": "families who are not from this place and need directions to the clinic",
+   "ratings": [
+    {
+     "A": 2,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 3,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 2.0,
+   "A_range": 2,
+   "B_mean": 2.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "C2",
+   "index": 4,
+   "phrase": "the accent of someone not from here",
+   "ratings": [
+    {
+     "A": 5,
+     "B": 3
+    },
+    {
+     "A": 5,
+     "B": 4
+    },
+    {
+     "A": 3,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 4.333333333333333,
+   "A_range": 2,
+   "B_mean": 3.3333333333333335,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C2",
+   "index": 5,
+   "phrase": "laborers who say they are not from this place and plan to go back",
+   "ratings": [
+    {
+     "A": 3,
+     "B": 3
+    },
+    {
+     "A": 5,
+     "B": 5
+    },
+    {
+     "A": 2,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 3.3333333333333335,
+   "A_range": 3,
+   "B_mean": 3.6666666666666665,
+   "B_range": 2,
+   "selected": true
+  },
+  {
+   "set": "C2",
+   "index": 6,
+   "phrase": "tourists who are plainly not from here, with maps in hand",
+   "ratings": [
+    {
+     "A": 2,
+     "B": 2
+    },
+    {
+     "A": 2,
+     "B": 2
+    },
+    {
+     "A": 2,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 2.0,
+   "A_range": 0,
+   "B_mean": 2.3333333333333335,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C2",
+   "index": 7,
+   "phrase": "a boy raised on this street who still feels not from this place",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 4
+    },
+    {
+     "A": 4,
+     "B": 5
+    },
+    {
+     "A": 1,
+     "B": 4
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 2.0,
+   "A_range": 3,
+   "B_mean": 4.333333333333333,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C2",
+   "index": 8,
+   "phrase": "strangers in the café who were obviously not from here",
+   "ratings": [
+    {
+     "A": 4,
+     "B": 4
+    },
+    {
+     "A": 4,
+     "B": 3
+    },
+    {
+     "A": 3,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 3.6666666666666665,
+   "A_range": 1,
+   "B_mean": 3.3333333333333335,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C2",
+   "index": 9,
+   "phrase": "the rumor that the doctor is not from here",
+   "ratings": [
+    {
+     "A": 4,
+     "B": 3
+    },
+    {
+     "A": 4,
+     "B": 4
+    },
+    {
+     "A": 2,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 3.3333333333333335,
+   "A_range": 2,
+   "B_mean": 3.3333333333333335,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C2",
+   "index": 10,
+   "phrase": "students not from here who struggle to find housing",
+   "ratings": [
+    {
+     "A": 2,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.3333333333333333,
+   "A_range": 1,
+   "B_mean": 2.3333333333333335,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C2",
+   "index": 11,
+   "phrase": "a farmer who was not from this place but married into it",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 1
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.0,
+   "B_range": 2,
+   "selected": true
+  },
+  {
+   "set": "C2",
+   "index": 12,
+   "phrase": "cousins who are not from here and visit each summer",
+   "ratings": [
+    {
+     "A": 2,
+     "B": 3
+    },
+    {
+     "A": 2,
+     "B": 2
+    },
+    {
+     "A": 2,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 2.0,
+   "A_range": 0,
+   "B_mean": 2.6666666666666665,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "C2",
+   "index": 13,
+   "phrase": "couriers who admit they are not from here and get lost constantly",
+   "ratings": [
+    {
+     "A": 5,
+     "B": 4
+    },
+    {
+     "A": 5,
+     "B": 5
+    },
+    {
+     "A": 5,
+     "B": 5
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 5.0,
+   "A_range": 0,
+   "B_mean": 4.666666666666667,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "C2",
+   "index": 14,
+   "phrase": "shy musicians not from this place who played at the wedding",
+   "ratings": [
+    {
+     "A": 5,
+     "B": 5
+    },
+    {
+     "A": 5,
+     "B": 4
+    },
+    {
+     "A": 7,
+     "B": 5
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 5.666666666666667,
+   "A_range": 2,
+   "B_mean": 4.666666666666667,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "C2",
+   "index": 15,
+   "phrase": "the polite hush of people who know they are not from here",
+   "ratings": [
+    {
+     "A": 5,
+     "B": 4
+    },
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 5,
+     "B": 4
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 5.666666666666667,
+   "A_range": 2,
+   "B_mean": 4.666666666666667,
+   "B_range": 2,
+   "selected": false
+  },
+  {
+   "set": "C3",
+   "index": 0,
+   "phrase": "beings not from here who have lived on this street for decades",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 7
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.666666666666667,
+   "A_range": 1,
+   "B_mean": 6.333333333333333,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C3",
+   "index": 1,
+   "phrase": "beings who are not from this place and need help finding the clinic",
+   "ratings": [
+    {
+     "A": 5,
+     "B": 5
+    },
+    {
+     "A": 6,
+     "B": 5
+    },
+    {
+     "A": 7,
+     "B": 5
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.0,
+   "A_range": 2,
+   "B_mean": 5.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "C3",
+   "index": 2,
+   "phrase": "those beings, not from here, who sell fruit at the market",
+   "ratings": [
+    {
+     "A": 4,
+     "B": 4
+    },
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 5.333333333333333,
+   "A_range": 2,
+   "B_mean": 5.333333333333333,
+   "B_range": 2,
+   "selected": true
+  },
+  {
+   "set": "C3",
+   "index": 3,
+   "phrase": "the weary beings who say they are not from this place and want to go back",
+   "ratings": [
+    {
+     "A": 5,
+     "B": 5
+    },
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 5,
+     "B": 5
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 5.333333333333333,
+   "A_range": 1,
+   "B_mean": 5.333333333333333,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C3",
+   "index": 4,
+   "phrase": "lonely beings who are not from here and eat alone at the diner",
+   "ratings": [
+    {
+     "A": 5,
+     "B": 5
+    },
+    {
+     "A": 6,
+     "B": 5
+    },
+    {
+     "A": 6,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 5.666666666666667,
+   "A_range": 1,
+   "B_mean": 5.333333333333333,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C3",
+   "index": 5,
+   "phrase": "the beings who are not from this place yet speak the local tongue flawlessly",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.666666666666667,
+   "A_range": 1,
+   "B_mean": 6.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "C3",
+   "index": 6,
+   "phrase": "beings not from here who gather at the harbor to share news",
+   "ratings": [
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.0,
+   "A_range": 0,
+   "B_mean": 6.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "C3",
+   "index": 7,
+   "phrase": "the kind beings who welcomed us though we were not from here",
+   "ratings": [
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 5,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 5.666666666666667,
+   "A_range": 1,
+   "B_mean": 6.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "C3",
+   "index": 8,
+   "phrase": "beings who are plainly not from here, going by their coats",
+   "ratings": [
+    {
+     "A": 6,
+     "B": 5
+    },
+    {
+     "A": 6,
+     "B": 5
+    },
+    {
+     "A": 5,
+     "B": 5
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 5.666666666666667,
+   "A_range": 1,
+   "B_mean": 5.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "C3",
+   "index": 9,
+   "phrase": "all the beings who admit they are not from this place when the nurse inquires",
+   "ratings": [
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 5,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 5
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.0,
+   "A_range": 2,
+   "B_mean": 5.666666666666667,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C3",
+   "index": 10,
+   "phrase": "beings who are not from here and pay higher rents than the locals",
+   "ratings": [
+    {
+     "A": 6,
+     "B": 5
+    },
+    {
+     "A": 7,
+     "B": 5
+    },
+    {
+     "A": 6,
+     "B": 5
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.333333333333333,
+   "A_range": 1,
+   "B_mean": 5.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "C3",
+   "index": 11,
+   "phrase": "the shy beings in the back row who are not from here",
+   "ratings": [
+    {
+     "A": 4,
+     "B": 5
+    },
+    {
+     "A": 6,
+     "B": 5
+    },
+    {
+     "A": 5,
+     "B": 4
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 5.0,
+   "A_range": 2,
+   "B_mean": 4.666666666666667,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C3",
+   "index": 12,
+   "phrase": "beings who were not from this place but built the bridge anyway",
+   "ratings": [
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.333333333333333,
+   "A_range": 1,
+   "B_mean": 6.0,
+   "B_range": 0,
+   "selected": false
+  },
+  {
+   "set": "C3",
+   "index": 13,
+   "phrase": "hungry beings who are not from here lining up at the shelter",
+   "ratings": [
+    {
+     "A": 5,
+     "B": 5
+    },
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 5
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 5.666666666666667,
+   "A_range": 1,
+   "B_mean": 5.333333333333333,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "C3",
+   "index": 14,
+   "phrase": "the curious beings who are not from here and photograph each doorway",
+   "ratings": [
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 7,
+     "B": 6
+    },
+    {
+     "A": 4,
+     "B": 5
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 5.666666666666667,
+   "A_range": 3,
+   "B_mean": 5.666666666666667,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "C3",
+   "index": 15,
+   "phrase": "beings not from this place who miss the kitchens of their childhood",
+   "ratings": [
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 6
+    },
+    {
+     "A": 6,
+     "B": 6
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 6.0,
+   "A_range": 0,
+   "B_mean": 6.0,
+   "B_range": 0,
+   "selected": false
+  },
+  {
+   "set": "C4",
+   "index": 0,
+   "phrase": "the oldest trees on earth",
+   "ratings": [
+    {
+     "A": 2,
+     "B": 3
+    },
+    {
+     "A": 6,
+     "B": 5
+    },
+    {
+     "A": 1,
+     "B": 5
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 3.0,
+   "A_range": 5,
+   "B_mean": 4.333333333333333,
+   "B_range": 2,
+   "selected": true
+  },
+  {
+   "set": "C4",
+   "index": 1,
+   "phrase": "rich dark earth for growing tomatoes",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 1
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 1.6666666666666667,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C4",
+   "index": 2,
+   "phrase": "the deepest lakes on earth",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.6666666666666665,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C4",
+   "index": 3,
+   "phrase": "loose damp earth packed around the roots",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "C4",
+   "index": 4,
+   "phrase": "a shovel full of wet earth",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 1
+    },
+    {
+     "A": 1,
+     "B": 1
+    },
+    {
+     "A": 1,
+     "B": 1
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 1.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "C4",
+   "index": 5,
+   "phrase": "the earth beneath the old oak tree",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 1
+    },
+    {
+     "A": 4,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 1
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 2.0,
+   "A_range": 3,
+   "B_mean": 1.3333333333333333,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C4",
+   "index": 6,
+   "phrase": "earth mixed with sand and crushed shells",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "C4",
+   "index": 7,
+   "phrase": "freshly dug earth by the fence",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 1
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 1.6666666666666667,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C4",
+   "index": 8,
+   "phrase": "the earth in the flowerpots on the porch",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 1
+    },
+    {
+     "A": 1,
+     "B": 1
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 1.3333333333333333,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C4",
+   "index": 9,
+   "phrase": "the largest rainforests on earth",
+   "ratings": [
+    {
+     "A": 3,
+     "B": 3
+    },
+    {
+     "A": 3,
+     "B": 4
+    },
+    {
+     "A": 1,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 2.3333333333333335,
+   "A_range": 2,
+   "B_mean": 3.3333333333333335,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C4",
+   "index": 10,
+   "phrase": "heavy earth clinging to the boots",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 3
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 2,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.3333333333333333,
+   "A_range": 1,
+   "B_mean": 2.6666666666666665,
+   "B_range": 1,
+   "selected": true
+  },
+  {
+   "set": "C4",
+   "index": 11,
+   "phrase": "a mound of earth beside the shed",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 1
+    },
+    {
+     "A": 1,
+     "B": 1
+    },
+    {
+     "A": 1,
+     "B": 1
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 1.0,
+   "B_range": 0,
+   "selected": true
+  },
+  {
+   "set": "C4",
+   "index": 12,
+   "phrase": "the amount of earth the rabbits dug up",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 1
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 1.6666666666666667,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "C4",
+   "index": 13,
+   "phrase": "the driest places on earth",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 3
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.3333333333333335,
+   "B_range": 1,
+   "selected": false
+  },
+  {
+   "set": "C4",
+   "index": 14,
+   "phrase": "rich earth spread over the potato rows",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 2.0,
+   "B_range": 0,
+   "selected": false
+  },
+  {
+   "set": "C4",
+   "index": 15,
+   "phrase": "damp earth after a night of rain",
+   "ratings": [
+    {
+     "A": 1,
+     "B": 2
+    },
+    {
+     "A": 1,
+     "B": 1
+    },
+    {
+     "A": 1,
+     "B": 2
+    }
+   ],
+   "n_valid": 3,
+   "A_mean": 1.0,
+   "A_range": 0,
+   "B_mean": 1.6666666666666667,
+   "B_range": 1,
+   "selected": false
+  }
+ ]
+}

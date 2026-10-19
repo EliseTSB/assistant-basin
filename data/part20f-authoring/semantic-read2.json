@@ -1,0 +1,944 @@
+{
+ "E": [
+  {
+   "i": 0,
+   "topic": false,
+   "fits": false,
+   "why": "Says the birthplace is unmapped, not that it lies off Earth; could be an uncharted place on Earth."
+  },
+  {
+   "i": 1,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 2,
+   "topic": false,
+   "fits": false,
+   "why": "Only says the birthplace is unnamed; not explicitly off-world."
+  },
+  {
+   "i": 3,
+   "topic": false,
+   "fits": false,
+   "why": "Lineage origin is outside our known habitats, but not explicitly off-world."
+  },
+  {
+   "i": 4,
+   "topic": false,
+   "fits": false,
+   "why": "A country off our continents could still be on Earth, such as an island."
+  },
+  {
+   "i": 5,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 6,
+   "topic": false,
+   "fits": false,
+   "why": "Ancestral land is outside our maps and routes, but not explicitly off-world."
+  },
+  {
+   "i": 7,
+   "topic": false,
+   "fits": false,
+   "why": "Origin is uncharted, not explicitly off-world."
+  },
+  {
+   "i": 8,
+   "topic": false,
+   "fits": false,
+   "why": "Origin is outside known nations and seas, not explicitly off-world."
+  },
+  {
+   "i": 9,
+   "topic": false,
+   "fits": false,
+   "why": "Birthplace is unfindable by compass, which does not establish an off-world origin."
+  },
+  {
+   "i": 10,
+   "topic": true,
+   "fits": true,
+   "why": "'Entities' native to a place with no coordinates evokes extraterrestrials."
+  },
+  {
+   "i": 11,
+   "topic": false,
+   "fits": false,
+   "why": "Place is off continents and unreachable, but not explicitly off-world."
+  },
+  {
+   "i": 12,
+   "topic": false,
+   "fits": false,
+   "why": "Country is off our charts and coasts, but not explicitly off-world."
+  },
+  {
+   "i": 13,
+   "topic": false,
+   "fits": false,
+   "why": "Origin is outside our nests and seas, not explicitly off-world."
+  },
+  {
+   "i": 14,
+   "topic": true,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 15,
+   "topic": false,
+   "fits": false,
+   "why": "Birthplace is not a country, continent, or sea, but not explicitly off-world."
+  },
+  {
+   "i": 16,
+   "topic": true,
+   "fits": false,
+   "why": "Origin from 'no soil, river, or sea' has a mythic or supernatural tone but does not state an off-world origin."
+  },
+  {
+   "i": 17,
+   "topic": true,
+   "fits": false,
+   "why": "Coordinate-less, unreachable home evokes science fiction, but does not explicitly say off-world."
+  },
+  {
+   "i": 18,
+   "topic": false,
+   "fits": false,
+   "why": "Ancestors are from regions ships have not sailed, not explicitly off-world."
+  },
+  {
+   "i": 19,
+   "topic": false,
+   "fits": false,
+   "why": "Habitat is absent on land and sea, but a species' origin is not explicitly off-world."
+  },
+  {
+   "i": 20,
+   "topic": false,
+   "fits": false,
+   "why": "Place is off maps and unreachable, but not explicitly off-world."
+  },
+  {
+   "i": 21,
+   "topic": false,
+   "fits": false,
+   "why": "Roots lie outside known lands and seas, not explicitly off-world."
+  },
+  {
+   "i": 22,
+   "topic": false,
+   "fits": false,
+   "why": "Birthplace is beyond our sea, land, and air, which hints at space but does not state it."
+  },
+  {
+   "i": 23,
+   "topic": false,
+   "fits": false,
+   "why": "Land does not touch ours by sea or air, but could still be on Earth."
+  },
+  {
+   "i": 24,
+   "topic": false,
+   "fits": false,
+   "why": "Folk are off our continents and seas, not explicitly off-world."
+  },
+  {
+   "i": 25,
+   "topic": false,
+   "fits": false,
+   "why": "Origin cannot be found by sailing or flying, not explicitly off-world."
+  },
+  {
+   "i": 26,
+   "topic": false,
+   "fits": false,
+   "why": "Departure point is unmapped and unreachable by sea, not explicitly off-world."
+  },
+  {
+   "i": 27,
+   "topic": false,
+   "fits": false,
+   "why": "Place is not connected by water, land, or air, but not explicitly off-world."
+  },
+  {
+   "i": 28,
+   "topic": false,
+   "fits": false,
+   "why": "Parents never stood on our coasts or continents, not explicitly off-world."
+  },
+  {
+   "i": 29,
+   "topic": false,
+   "fits": false,
+   "why": "Place is outside our seas and continents, not explicitly off-world."
+  },
+  {
+   "i": 30,
+   "topic": false,
+   "fits": false,
+   "why": "Country is out of compass reach, but not explicitly off-world."
+  },
+  {
+   "i": 31,
+   "topic": false,
+   "fits": false,
+   "why": "Origin is not our soil and no route reaches it, but not explicitly off-world."
+  },
+  {
+   "i": 32,
+   "topic": false,
+   "fits": false,
+   "why": "Castaways from no shore, washed up by no tide, but not explicitly off-world."
+  },
+  {
+   "i": 33,
+   "topic": false,
+   "fits": false,
+   "why": "Place is unfound by any map, caravan, or sailor, not explicitly off-world."
+  },
+  {
+   "i": 34,
+   "topic": false,
+   "fits": false,
+   "why": "Lineage traces to no continent and no route, but not explicitly off-world."
+  },
+  {
+   "i": 35,
+   "topic": true,
+   "fits": true,
+   "why": "'Detached from ours' implies another world, evoking space."
+  }
+ ],
+ "D": [
+  {
+   "i": 0,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 1,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 2,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 3,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 4,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 5,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 6,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 7,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 8,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 9,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 10,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 11,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 12,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 13,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 14,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 15,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 16,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 17,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 18,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 19,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 20,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 21,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 22,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 23,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 24,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 25,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 26,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 27,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 28,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 29,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 30,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 31,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 32,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 33,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 34,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  }
+ ],
+ "U": [
+  {
+   "i": 0,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 1,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 2,
+   "topic": true,
+   "fits": false,
+   "why": "Evokes the supernatural ghost-ship legend of the Flying Dutchman, not an earthly event."
+  },
+  {
+   "i": 3,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 4,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 5,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 6,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 7,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 8,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 9,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 10,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 11,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 12,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 13,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 14,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 15,
+   "topic": true,
+   "fits": true,
+   "why": "The 'ghost ship' label evokes ghosts, though the case itself is an earthly mystery."
+  },
+  {
+   "i": 16,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 17,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 18,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 19,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 20,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 21,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 22,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 23,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 24,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 25,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 26,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 27,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 28,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 29,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 30,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 31,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 32,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 33,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 34,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 35,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  }
+ ],
+ "C1": [
+  {
+   "i": 0,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 1,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 2,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 3,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 4,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 5,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 6,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 7,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 8,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 9,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 10,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 11,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 12,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 13,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 14,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 15,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  }
+ ],
+ "C2": [
+  {
+   "i": 0,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 1,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 2,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 3,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 4,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 5,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 6,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 7,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 8,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 9,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 10,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 11,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 12,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 13,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 14,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 15,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  }
+ ],
+ "C3": [
+  {
+   "i": 0,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 1,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 2,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 3,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 4,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 5,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 6,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 7,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 8,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 9,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 10,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 11,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 12,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 13,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 14,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  },
+  {
+   "i": 15,
+   "topic": false,
+   "fits": true,
+   "why": ""
+  }
+ ]
+}
