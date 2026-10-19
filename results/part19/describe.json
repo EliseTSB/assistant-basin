@@ -1,0 +1,3281 @@
+{
+ "model": "Qwen/Qwen3.5-4B",
+ "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "tool_sha256": "f94d9c43019f859206aca10b0c52d78cec886e704d1a79a463bcbafea61821da",
+ "prompts": {
+  "identity": [
+   "Who made you?",
+   "What is your name?",
+   "Who created you?",
+   "Which company trained you?",
+   "Introduce yourself.",
+   "What model are you?"
+  ],
+  "control": [
+   "What is the capital of France?",
+   "Describe a quiet beach.",
+   "Explain what a prime number is."
+  ]
+ },
+ "seeds": {
+  "random_controls": 0,
+  "group": [
+   1,
+   2,
+   3
+  ]
+ },
+ "layers_module": "model.layers",
+ "n_layers": 32,
+ "input_shas": {
+  "answers.json": "2c1246f054f2ad3270bfaca4f0cb1a0a1190fc78ed0a07118c179b58923471a4",
+  "screen.json": "59de1ddf938a5d284e3c23505d315924ad6a3d79ca9c12359070abc8658f403c",
+  "verify.json": "dfd4e02876b4c3cad2b86c9fd7f4fa9ff292e7c1db02e840013be9f90f5b5529"
+ },
+ "written": "2026-10-18 19:50:50",
+ "corpus": "qwen35\\pile10k.jsonl",
+ "corpus_sha256": "56ad98d5a82b2bb45bcc42b4cd2c5035ba76cd60dda20c9307bb2de96aae9f78",
+ "docs": 3000,
+ "nodes": {
+  "30:3813": {
+   "layer": 30,
+   "index": 3813,
+   "logit_lens_top10": [
+    {
+     "token": "iqu",
+     "z": 4.811
+    },
+    {
+     "token": "ntag",
+     "z": 4.707
+    },
+    {
+     "token": "oted",
+     "z": 4.681
+    },
+    {
+     "token": "总冠军",
+     "z": 4.483
+    },
+    {
+     "token": " TRAB",
+     "z": 4.474
+    },
+    {
+     "token": " TRAS",
+     "z": 4.455
+    },
+    {
+     "token": "enne",
+     "z": 4.425
+    },
+    {
+     "token": "ota",
+     "z": 4.417
+    },
+    {
+     "token": "ທີ",
+     "z": 4.411
+    },
+    {
+     "token": "nte",
+     "z": 4.401
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 12.875,
+     "doc": 2152,
+     "pos": 108,
+     "text": " pipes from basin to floor, clean everything (obstruction and all) and put it back together.  Everything was hand«-t»ightened only: the only"
+    },
+    {
+     "activation": 12.1875,
+     "doc": 1166,
+     "pos": 193,
+     "text": " Andre, thus creating the tension that is carried throughout the film. For about a half hour, Andre, with brilliant story«-t»elling ability, describes his quests"
+    },
+    {
+     "activation": 10.9375,
+     "doc": 1438,
+     "pos": 109,
+     "text": "ols and furans were obtained from pyrolysis of torrefied biomass, indicating that torrefaction as a« pret»reatment favored the phenols and"
+    },
+    {
+     "activation": 10.6875,
+     "doc": 1108,
+     "pos": 174,
+     "text": "PARγ-dependent nuclear factor-kappa B (NF-κB) trans-repression pathway. Our results showed that pre«-t»reatment with TZDs dramatically decrease"
+    },
+    {
+     "activation": 10.375,
+     "doc": 366,
+     "pos": 109,
+     "text": "){ref-type=\"other\"}). Phase II trials have demonstrated objective response rates of 16--27% in« pret»reated patients, with stabilisation"
+    },
+    {
+     "activation": 10.3125,
+     "doc": 2484,
+     "pos": 21,
+     "text": "Q:⏎⏎RenderWindow not working across multiple functions⏎⏎I'm new to SFML, and have been watching« a» tutorial that puts everything in a"
+    },
+    {
+     "activation": 9.875,
+     "doc": 2909,
+     "pos": 168,
+     "text": " was integrated with a custom mechanical rig, permitting 360-degree acquisition of the morphology of six New Zealand White rabbit« Achilles» tendons. The reconstructed "
+    },
+    {
+     "activation": 9.5625,
+     "doc": 294,
+     "pos": 58,
+     "text": " path of a Lévy process and a Gaussian white noise experiment observed up to a time $T$, with $T$« t»ending to $\\infty$."
+    },
+    {
+     "activation": 9.5625,
+     "doc": 1871,
+     "pos": 213,
+     "text": ", the Finance Platform has a wealth of material, including a tour:⏎⏎...detailed extensive documentation:⏎⏎...a« specific» palette that contains links to the"
+    },
+    {
+     "activation": 9.375,
+     "doc": 914,
+     "pos": 85,
+     "text": ") brief infusion 3) atropine infusion and 4) atropine and insulin infusion. During each of« the» treatments, subjects will ingest a"
+    }
+   ]
+  },
+  "30:898": {
+   "layer": 30,
+   "index": 898,
+   "logit_lens_top10": [
+    {
+     "token": "gio",
+     "z": 4.46
+    },
+    {
+     "token": "mland",
+     "z": 4.242
+    },
+    {
+     "token": "烈",
+     "z": 4.176
+    },
+    {
+     "token": "�",
+     "z": 3.937
+    },
+    {
+     "token": "δες",
+     "z": 3.697
+    },
+    {
+     "token": "筠",
+     "z": 3.595
+    },
+    {
+     "token": "top",
+     "z": 3.593
+    },
+    {
+     "token": "鬓",
+     "z": 3.544
+    },
+    {
+     "token": "Datetime",
+     "z": 3.53
+    },
+    {
+     "token": "aldi",
+     "z": 3.495
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 9.75,
+     "doc": 1463,
+     "pos": 152,
+     "text": ", we induced controlled hypoxia in 23 healthy humans and calculated changes in the alveolar-arterial« oxygen» tension difference during the hypoxic"
+    },
+    {
+     "activation": 9.6875,
+     "doc": 965,
+     "pos": 123,
+     "text": " usually ascending in contrast to the descending Tc-99m DTPA curve. This ascending MAG3 curve reflects« early» tubular extraction of MAG3"
+    },
+    {
+     "activation": 9.375,
+     "doc": 2013,
+     "pos": 128,
+     "text": " those of a three-compartment system. The fastest is thought to be on the surface membrane of the muscle and of the« T» system. It contains 0"
+    },
+    {
+     "activation": 9.0,
+     "doc": 282,
+     "pos": 85,
+     "text": " plays a pivotal role in metastasis of breast tumors by inducing EMT. In this study, we examined whether Twist relates« to» renal fibrogenesis including E"
+    },
+    {
+     "activation": 8.8125,
+     "doc": 483,
+     "pos": 229,
+     "text": ". Furthermore, compared with the ineffective group, the effective group had higher Tregs and lower CD4/CD8 ratio« post»-treatment, but no significant"
+    },
+    {
+     "activation": 8.375,
+     "doc": 1435,
+     "pos": 238,
+     "text": ". However, immunoprecipitations of interleukin-treated ECs cultured on plastic were negative. Only interleuk«in»-stimulated ECs grown"
+    },
+    {
+     "activation": 8.1875,
+     "doc": 778,
+     "pos": 110,
+     "text": ")⏎⏎// RegistrationViaAPIResponse The Response for Registration Flows via API⏎//⏎// swagger:model registrationViaApiResponse«⏎»type RegistrationViaAPIResponse struct"
+    },
+    {
+     "activation": 7.21875,
+     "doc": 997,
+     "pos": 21,
+     "text": "1. Introduction {#sec1}⏎===============⏎⏎Soil organic C (SOC) and total N« (»TN) are very important C"
+    },
+    {
+     "activation": 7.21875,
+     "doc": 1931,
+     "pos": 214,
+     "text": "adb.models.GeoRedundantBackup⏎    :param storage_mb: Max storage allowed for a server.⏎   « :»type storage_mb: int⏎"
+    },
+    {
+     "activation": 7.0625,
+     "doc": 931,
+     "pos": 244,
+     "text": " \"Bill Clinton\" });⏎\t\t\t\tsession.Flush();⏎\t\t\t}⏎\t\t}⏎\t\t⏎\t\tprotected override void« On»TearDown()⏎\t"
+    }
+   ]
+  },
+  "31:1243": {
+   "layer": 31,
+   "index": 1243,
+   "logit_lens_top10": [
+    {
+     "token": " T",
+     "z": 40.613
+    },
+    {
+     "token": "T",
+     "z": 38.471
+    },
+    {
+     "token": " Т",
+     "z": 28.648
+    },
+    {
+     "token": "_T",
+     "z": 28.3
+    },
+    {
+     "token": "_t",
+     "z": 27.729
+    },
+    {
+     "token": "{T",
+     "z": 27.424
+    },
+    {
+     "token": " ت",
+     "z": 26.799
+    },
+    {
+     "token": " t",
+     "z": 26.56
+    },
+    {
+     "token": ".T",
+     "z": 26.219
+    },
+    {
+     "token": "\"T",
+     "z": 25.839
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 12.75,
+     "doc": 205,
+     "pos": 229,
+     "text": "Q784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw«1»T\" crossorigin=\"anonymous\">"
+    },
+    {
+     "activation": 7.90625,
+     "doc": 105,
+     "pos": 92,
+     "text": "/mkcharacters⏎share/texmf-dist/scripts/luaotfload/mkglyphlist⏎share/texmf«-dist»/scripts/luaotfload"
+    },
+    {
+     "activation": 6.625,
+     "doc": 2768,
+     "pos": 92,
+     "text": "Application2⏎{⏎    public class MyClass⏎    {⏎        public Type GetType()⏎        {⏎            return« typeof»(Program);⏎        }⏎⏎"
+    },
+    {
+     "activation": 6.4375,
+     "doc": 1800,
+     "pos": 27,
+     "text": "/*⏎ * This file is part of the Monolog package.⏎ *⏎ * (c) Jordi Boggiano« <»j.boggiano@seld"
+    },
+    {
+     "activation": 6.0,
+     "doc": 1382,
+     "pos": 100,
+     "text": "param data the input data⏎ *⏎ *  @return the content type as string (i.e. image/jpeg,« image»/gif)⏎ */⏎+"
+    },
+    {
+     "activation": 6.0,
+     "doc": 677,
+     "pos": 78,
+     "text": " consider these overloads⏎public static void M(Action doIt) { /*use doIt*/ }⏎public static void« M»(Func<int> doIt)"
+    },
+    {
+     "activation": 5.75,
+     "doc": 2391,
+     "pos": 208,
+     "text": "-utils/dist/jszip-utils.min.js\"></script>⏎<!--[if IE]>⏎<script type=\"text/javascript\" src=\"../../../«jquery»/jszip-utils/dist/jszip"
+    },
+    {
+     "activation": 5.65625,
+     "doc": 1531,
+     "pos": 183,
+     "text": "make_unique<int>(42);⏎  auto b = std::vector<int>();⏎  elle::das::make«_tuple»(foo = std::move(f"
+    },
+    {
+     "activation": 5.625,
+     "doc": 2616,
+     "pos": 216,
+     "text": " received a copy of the GNU General Public License⏎ * along with this program.  If not, see <https://«www».gnu.org/licenses/>.⏎ *"
+    },
+    {
+     "activation": 5.53125,
+     "doc": 204,
+     "pos": 16,
+     "text": "///\r⏎/// Massively by HTML5 UP\r⏎/// html5up.net |« @»ajlkn\r⏎/// Free"
+    }
+   ]
+  },
+  "27:8687": {
+   "layer": 27,
+   "index": 8687,
+   "logit_lens_top10": [
+    {
+     "token": "变更日期",
+     "z": 4.586
+    },
+    {
+     "token": "oczyn",
+     "z": 4.555
+    },
+    {
+     "token": "anze",
+     "z": 4.302
+    },
+    {
+     "token": "ască",
+     "z": 4.232
+    },
+    {
+     "token": "cito",
+     "z": 4.227
+    },
+    {
+     "token": " DateTimeKind",
+     "z": 4.195
+    },
+    {
+     "token": "everd",
+     "z": 4.157
+    },
+    {
+     "token": "瞑",
+     "z": 4.145
+    },
+    {
+     "token": "ดาย",
+     "z": 4.12
+    },
+    {
+     "token": "-gay",
+     "z": 4.115
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 10.3125,
+     "doc": 582,
+     "pos": 58,
+     "text": "The latest update to \"Destiny\" is called \"Rise of Iron.\" The sequel is expected to launch in «2»017. Bungie"
+    },
+    {
+     "activation": 8.8125,
+     "doc": 2847,
+     "pos": 17,
+     "text": "Monthly Archives: March 2014⏎⏎Pharrell Williams will replace judge« C»ee Lo Green on The Voice"
+    },
+    {
+     "activation": 7.625,
+     "doc": 2486,
+     "pos": 144,
+     "text": ", *280 III; Hunton & Williams, on brief), Richmond, for appellee.⏎Present:« C»ARRICO, C.J.,"
+    },
+    {
+     "activation": 7.375,
+     "doc": 625,
+     "pos": 201,
+     "text": " the well-known South Korean car manufacturing company Hyundai. HDAC was founded by Chung Dae-sun, the nephew of« CEO» Chung Mong-koo, in"
+    },
+    {
+     "activation": 7.03125,
+     "doc": 1653,
+     "pos": 166,
+     "text": " million in DHS contracts awarded to firm of acting secretary's wife: report DHS IG won't investigate after watchdog said Wolf,« C»uccinelli appointments violated law"
+    },
+    {
+     "activation": 6.40625,
+     "doc": 2525,
+     "pos": 51,
+     "text": " shutting down on Nov. 30. Since 2017, Paladins has been distributed in China« by» Tencent. They made the announcement"
+    },
+    {
+     "activation": 6.375,
+     "doc": 601,
+     "pos": 196,
+     "text": "hinones) that are present within the Chinese herbal medicine Danshen. Extracts from this material can potently inhibit human« C»Es and modulate drug activity"
+    },
+    {
+     "activation": 6.375,
+     "doc": 2234,
+     "pos": 100,
+     "text": " the pussy in a sarcophagus.\" Like all other rappers, he became famous due to someone more famous and talented«,» Jay-Z in this case."
+    },
+    {
+     "activation": 6.3125,
+     "doc": 2541,
+     "pos": 166,
+     "text": "⏎⏎Category:Robert Johnson songs⏎Category:Songs written by Robert Johnson⏎Category:1937 songs⏎Category«:C»ream (band) songs⏎"
+    },
+    {
+     "activation": 5.71875,
+     "doc": 1823,
+     "pos": 59,
+     "text": " Harvard University, 1978. The author is especially grateful for the careful review and thoughtful comments of Professor David« C». Baldus (which is"
+    }
+   ]
+  },
+  "8:7188": {
+   "layer": 8,
+   "index": 7188,
+   "logit_lens_top10": [
+    {
+     "token": " margar",
+     "z": 4.743
+    },
+    {
+     "token": "人以",
+     "z": 4.686
+    },
+    {
+     "token": "يف",
+     "z": 4.559
+    },
+    {
+     "token": "agai",
+     "z": 4.515
+    },
+    {
+     "token": "ivin",
+     "z": 4.472
+    },
+    {
+     "token": "robot",
+     "z": 4.371
+    },
+    {
+     "token": "�",
+     "z": 4.278
+    },
+    {
+     "token": "人与自然",
+     "z": 4.263
+    },
+    {
+     "token": "ievi",
+     "z": 4.248
+    },
+    {
+     "token": "ณห",
+     "z": 4.221
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 0.66796875,
+     "doc": 1185,
+     "pos": 194,
+     "text": "endous region of fat farms, shoddy cities and paralyzed cerebrums. . . . And yet, for all« its» size and and all its wealth"
+    },
+    {
+     "activation": 0.6484375,
+     "doc": 636,
+     "pos": 4,
+     "text": "“ As consciousness is« returning» to ordinary awareness after intense experiences"
+    },
+    {
+     "activation": 0.62109375,
+     "doc": 2200,
+     "pos": 30,
+     "text": " and impressive rear spoiler – it’s clear from the outset that the new Bugatti Chiron Pur Sport1 yearns for« corners» and challenging country roads. Pure"
+    },
+    {
+     "activation": 0.578125,
+     "doc": 2804,
+     "pos": 254,
+     "text": " not aware that they are part of an evolutionary growth. However, as the personality comes closer to perfection, it does become« aware» of"
+    },
+    {
+     "activation": 0.578125,
+     "doc": 638,
+     "pos": 227,
+     "text": " Tim Fungai, the truffle farm’s manager.⏎⏎“There’s a small pocket out here that kind of has« its» own ecosystem, it really def"
+    },
+    {
+     "activation": 0.5703125,
+     "doc": 615,
+     "pos": 194,
+     "text": " a significant writing project that I need to begin these days. I wonder if the naps are my body and mind's« way» of helping me make the transition"
+    },
+    {
+     "activation": 0.5703125,
+     "doc": 499,
+     "pos": 158,
+     "text": " at a vegetarian dinner in a polystyrene box, Albarn is talking about things that feel as if they have« no» place here at all: English"
+    },
+    {
+     "activation": 0.5703125,
+     "doc": 1606,
+     "pos": 45,
+     "text": " of struma ovarii producing hyperthyroidism in a postmenopausal woman is reported. The ovarian tumor demonstrated« uptake» of both [99m"
+    },
+    {
+     "activation": 0.53515625,
+     "doc": 1926,
+     "pos": 194,
+     "text": " of ink. She went to the supply room to replenish her ink, but there was none in the closet. In« its» place was a note instead saying"
+    },
+    {
+     "activation": 0.51953125,
+     "doc": 1768,
+     "pos": 83,
+     "text": " of an unsigned Stat Dec, but it won't matter much because I suspect Najib really doesn't give two figs« about» Ku Li being mentioned or involved"
+    }
+   ]
+  },
+  "26:6262": {
+   "layer": 26,
+   "index": 6262,
+   "logit_lens_top10": [
+    {
+     "token": " T",
+     "z": 21.456
+    },
+    {
+     "token": "T",
+     "z": 16.185
+    },
+    {
+     "token": " Т",
+     "z": 14.537
+    },
+    {
+     "token": "{T",
+     "z": 14.444
+    },
+    {
+     "token": "=T",
+     "z": 14.074
+    },
+    {
+     "token": ":T",
+     "z": 13.683
+    },
+    {
+     "token": ".T",
+     "z": 13.291
+    },
+    {
+     "token": "Ｔ",
+     "z": 13.25
+    },
+    {
+     "token": " ت",
+     "z": 12.953
+    },
+    {
+     "token": "_T",
+     "z": 12.757
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 9.6875,
+     "doc": 1759,
+     "pos": 124,
+     "text": "() method, the \"encoding\" attribute will exist in it.⏎Here is my code:⏎var⏎  XML«:» IXMLDocument;⏎ "
+    },
+    {
+     "activation": 8.0,
+     "doc": 923,
+     "pos": 86,
+     "text": "İf the left track moves 50 km and right track  moves with 40km tank will go to« the» right direction but if i decrease"
+    },
+    {
+     "activation": 5.1875,
+     "doc": 2357,
+     "pos": 122,
+     "text": "20 points in the first half while completing 19 of 26 passes for 172 yards,« two» touchdowns and a 11"
+    },
+    {
+     "activation": 5.15625,
+     "doc": 2395,
+     "pos": 167,
+     "text": " disabled the upnp but the virus will remove the latest firmware version and it will switch back to the old version V2«.»00(AAJC."
+    },
+    {
+     "activation": 4.75,
+     "doc": 1143,
+     "pos": 181,
+     "text": " played all 16 games as a rookie in 2012 and posted 805 receiving yards and« five» touchdown receptions and then appeared well"
+    },
+    {
+     "activation": 4.1875,
+     "doc": 2708,
+     "pos": 99,
+     "text": " a construction site and brought it to the office, where it was placed in an aquarium and given fresh beef to eat,« R»IA Novosti reported Friday."
+    },
+    {
+     "activation": 4.0625,
+     "doc": 2494,
+     "pos": 201,
+     "text": " a judgment entered thereon.⏎⏎⏎2⏎On appeal from that judgment, Woodworkers Tool Works v. Byrne, «9» Cir., 191"
+    },
+    {
+     "activation": 3.9375,
+     "doc": 409,
+     "pos": 219,
+     "text": " International Foundation said.⏎⏎\"This discovery can allay doubts over the rhino's presence in the park,\" Tarmizi« told» AFP, adding he hoped the"
+    },
+    {
+     "activation": 3.890625,
+     "doc": 986,
+     "pos": 251,
+     "text": "945.⏎⏎The visitors reached the scoreboard first as Penn quarterback Alek Torgerson threw a 33«-yard» touchdown pass to Ryan"
+    },
+    {
+     "activation": 3.84375,
+     "doc": 872,
+     "pos": 122,
+     "text": " handled such a case till this boy came in,\" Pranav Kumar, a leading neurosurgeon at the hospital,« told».⏎⏎Ahmed Hashmi"
+    }
+   ]
+  },
+  "5:7420": {
+   "layer": 5,
+   "index": 7420,
+   "logit_lens_top10": [
+    {
+     "token": " Martí",
+     "z": 5.072
+    },
+    {
+     "token": "ogh",
+     "z": 4.824
+    },
+    {
+     "token": " Romagna",
+     "z": 4.69
+    },
+    {
+     "token": "在他",
+     "z": 4.28
+    },
+    {
+     "token": "avera",
+     "z": 4.269
+    },
+    {
+     "token": "akra",
+     "z": 4.248
+    },
+    {
+     "token": " Bender",
+     "z": 4.221
+    },
+    {
+     "token": "ik",
+     "z": 4.183
+    },
+    {
+     "token": "cek",
+     "z": 4.17
+    },
+    {
+     "token": "ian",
+     "z": 4.126
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 1.4375,
+     "doc": 1765,
+     "pos": 78,
+     "text": " Its seat is in Saint-Affrique.⏎⏎It consists of the following communes:⏎ ⏎La Bastide-Pr«ad»ines⏎Calmels-et"
+    },
+    {
+     "activation": 1.421875,
+     "doc": 889,
+     "pos": 22,
+     "text": "KTLO-FM⏎⏎KTLO-FM 97.9 FM is a radio station licensed to Mountain« Home», Arkansas. The station broadcasts"
+    },
+    {
+     "activation": 1.234375,
+     "doc": 107,
+     "pos": 88,
+     "text": " 55089 based in Welch.  Nearby places include Cannon Falls, Red Wing, Welch, and White« Rock».⏎⏎Vasa is "
+    },
+    {
+     "activation": 1.203125,
+     "doc": 1139,
+     "pos": 14,
+     "text": "TCR down-regulation controls T cell homeostasis.⏎TC«R» and cytokine receptor signaling play"
+    },
+    {
+     "activation": 1.15625,
+     "doc": 1598,
+     "pos": 213,
+     "text": " involved in cardiovascular risk: ATP-binding cassette transporter A1-R219K, Peroxisome proliferator-activated« receptor» (PPAR)-alpha-L"
+    },
+    {
+     "activation": 1.1328125,
+     "doc": 1995,
+     "pos": 42,
+     "text": "0th, Jordi Pujol, the region’s former premier who is widely regarded as the godfather of modern-day« Catalan» nationalism, was questioned in the"
+    },
+    {
+     "activation": 1.1328125,
+     "doc": 1764,
+     "pos": 237,
+     "text": "us)⏎⏎This appears to be the case among marsh harriers (Circus aeruginosus) in the« Catalan» Ebro basin, an agricultural"
+    },
+    {
+     "activation": 1.1171875,
+     "doc": 1108,
+     "pos": 96,
+     "text": "iones (TZDs) are clinical insulin-sensitizers acting through a canonical peroxisome proliferator-activated« receptor» gamma (PPARγ)-"
+    },
+    {
+     "activation": 1.1171875,
+     "doc": 764,
+     "pos": 73,
+     "text": "ing cell driving CD8 T cell responses to mosquito transmission of Plasmodium spp., and show direct interaction of CD1«1»c+ cells with infected hepat"
+    },
+    {
+     "activation": 1.1015625,
+     "doc": 2661,
+     "pos": 9,
+     "text": "Q:⏎⏎Alternative to Publishing on WAS in« RAD»⏎⏎I am working on WAS"
+    }
+   ]
+  },
+  "19:5871": {
+   "layer": 19,
+   "index": 5871,
+   "logit_lens_top10": [
+    {
+     "token": " you",
+     "z": 6.947
+    },
+    {
+     "token": "你",
+     "z": 6.286
+    },
+    {
+     "token": " YOU",
+     "z": 5.637
+    },
+    {
+     "token": "我们",
+     "z": 5.55
+    },
+    {
+     "token": " numer",
+     "z": 5.29
+    },
+    {
+     "token": "okol",
+     "z": 4.953
+    },
+    {
+     "token": "它为",
+     "z": 4.908
+    },
+    {
+     "token": "you",
+     "z": 4.872
+    },
+    {
+     "token": "他",
+     "z": 4.862
+    },
+    {
+     "token": "他为",
+     "z": 4.795
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 1.7734375,
+     "doc": 2687,
+     "pos": 62,
+     "text": " or anytime, is dad’s addiction to tobacco.⏎⏎A father’s influence on his children is great, and as a« dad» he should want to ensure that"
+    },
+    {
+     "activation": 1.5390625,
+     "doc": 426,
+     "pos": 121,
+     "text": " your business’ growth. They have also been getting an incredible amount of emails, reviews and feedback from everybody so the fell«as» take some time to answer your"
+    },
+    {
+     "activation": 1.3828125,
+     "doc": 1725,
+     "pos": 235,
+     "text": " seemed to have a problem with it,” Sanders said. “Frankly, it didn’t seem like the father wanted the« president» to intervene, which I think"
+    },
+    {
+     "activation": 1.3515625,
+     "doc": 1584,
+     "pos": 218,
+     "text": " years.⏎⏎There is no way to tell which your sentence means without surrounding context, which is why we often exhort« users» to provide context when they ask"
+    },
+    {
+     "activation": 1.3359375,
+     "doc": 584,
+     "pos": 180,
+     "text": " 40-person mark, our mid-level leadership influenced culture more than top leadership,” shares Sean.⏎⏎“As a leader«,» I could still help guide and"
+    },
+    {
+     "activation": 1.3125,
+     "doc": 2520,
+     "pos": 76,
+     "text": "oting in these categories takes place each year, starting in mid-January. Our online-only ballot is the best way for« readers» and customers to recognize the best"
+    },
+    {
+     "activation": 1.2421875,
+     "doc": 1498,
+     "pos": 154,
+     "text": "考えさせられる次第であります。⏎⏎まぁ、今回は、この手のエラーイ人に向けてですね、どうすれば、新入«社員»が睡魔との猛烈な"
+    },
+    {
+     "activation": 1.125,
+     "doc": 1699,
+     "pos": 156,
+     "text": " have opted to celebrate Native American history and culture in lieu of Columbus Day, and the trend is certainly growing. To help« educators» celebrate this new and inspiring holiday"
+    },
+    {
+     "activation": 1.0703125,
+     "doc": 661,
+     "pos": 88,
+     "text": " will allow you to break the ice with attractive local singles.⏎⏎Matchmaker.com has some great services for Milton Freewater« singles» looking for a longer term relationship"
+    },
+    {
+     "activation": 1.0546875,
+     "doc": 796,
+     "pos": 60,
+     "text": " to do business with, Leocity99 features fast and efficient online support by a truly professional customer service team. Whenever« customers» place their bets with Leocity"
+    }
+   ]
+  },
+  "31:5813": {
+   "layer": 31,
+   "index": 5813,
+   "logit_lens_top10": [
+    {
+     "token": " **",
+     "z": 46.884
+    },
+    {
+     "token": "**",
+     "z": 25.174
+    },
+    {
+     "token": " (**",
+     "z": 20.476
+    },
+    {
+     "token": " **-",
+     "z": 20.432
+    },
+    {
+     "token": " *",
+     "z": 20.411
+    },
+    {
+     "token": " **+",
+     "z": 19.66
+    },
+    {
+     "token": "-**",
+     "z": 19.527
+    },
+    {
+     "token": " **.",
+     "z": 19.268
+    },
+    {
+     "token": " **,",
+     "z": 17.979
+    },
+    {
+     "token": " **【",
+     "z": 17.551
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 0.61328125,
+     "doc": 513,
+     "pos": 75,
+     "text": " * Function implementation.⏎ *⏎ * @author BaseX Team 2005-20, BSD License«⏎» * @author Christian Gruen"
+    },
+    {
+     "activation": 0.5625,
+     "doc": 2056,
+     "pos": 243,
+     "text": " FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER⏎ * DEALINGS IN THE SOFTWARE.⏎ *«⏎» */⏎⏎package com.facebook.ads"
+    },
+    {
+     "activation": 0.55859375,
+     "doc": 1324,
+     "pos": 168,
+     "text": " tranquilamente. \"Aqui na Moita verifica-se que existe uma etnia que se multiplicou e que todos os« dias» se passeiam pela Moita"
+    },
+    {
+     "activation": 0.546875,
+     "doc": 166,
+     "pos": 190,
+     "text": " \"new\" button and then \"cancel.\" The only difference is, we want some of the fields of the record to« be» pre-populated.⏎Here"
+    },
+    {
+     "activation": 0.5390625,
+     "doc": 569,
+     "pos": 182,
+     "text": " la deforestación de la zona selvática a través de imágenes de satélite y que ha sido objeto en las últimas semanas« de» las críticas del presidente de Brasil"
+    },
+    {
+     "activation": 0.5234375,
+     "doc": 861,
+     "pos": 23,
+     "text": "Sigma Beauty Angled Brow Brush⏎⏎Sigma Beauty Angled Brow Brush⏎⏎The E75 Angled Brow Brush features« a» short, slightly stiff angled brush"
+    },
+    {
+     "activation": 0.515625,
+     "doc": 2209,
+     "pos": 179,
+     "text": " or implied.⏎ *  See the License for the specific language governing permissions and⏎ *  limitations under the License.«⏎» *⏎ */⏎MathJ"
+    },
+    {
+     "activation": 0.51171875,
+     "doc": 1556,
+     "pos": 236,
+     "text": "iate to say that the semiconductor \"has degenerate electron statistics\" when said statistics are only appropiately described by« a» Fermi-Dirac distribution"
+    },
+    {
+     "activation": 0.50390625,
+     "doc": 2841,
+     "pos": 210,
+     "text": " oral cavity ([@B13]-[@B16]).⏎⏎Microscopically, the lesion is characterized by« prominent» capillary growth in hyperpl"
+    },
+    {
+     "activation": 0.50390625,
+     "doc": 358,
+     "pos": 205,
+     "text": " carreiras do serviço público.⏎⏎“Os números demonstram que as verbas estão chegando e os pedidos do governo estão« sendo» atendidos”, disse Zaff"
+    }
+   ]
+  },
+  "23:6779": {
+   "layer": 23,
+   "index": 6779,
+   "logit_lens_top10": [
+    {
+     "token": "用户",
+     "z": 7.985
+    },
+    {
+     "token": " user",
+     "z": 7.512
+    },
+    {
+     "token": " users",
+     "z": 7.479
+    },
+    {
+     "token": " Users",
+     "z": 6.728
+    },
+    {
+     "token": "为用户",
+     "z": 6.485
+    },
+    {
+     "token": "Users",
+     "z": 6.445
+    },
+    {
+     "token": "(user",
+     "z": 6.262
+    },
+    {
+     "token": "users",
+     "z": 6.256
+    },
+    {
+     "token": "用户的",
+     "z": 6.165
+    },
+    {
+     "token": "为用户提供",
+     "z": 6.139
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 11.375,
+     "doc": 1345,
+     "pos": 117,
+     "text": " we have set up an inter-departmental team. Plus, we will follow GDPR in the coming month.⏎⏎⏎⏎Q«:» What are your plans regarding software"
+    },
+    {
+     "activation": 11.3125,
+     "doc": 1385,
+     "pos": 200,
+     "text": " platforms in China. But concerns about the potential misuse of deepfake technology coupled with a clause (now deleted) in Z«ao»’s terms of use that gave"
+    },
+    {
+     "activation": 11.1875,
+     "doc": 699,
+     "pos": 151,
+     "text": ".⏎⏎The goal is a group video product that feels more social, and less corporate than what’s currently available, said« Facebook» Chief Executive Officer Mark Zuckerberg."
+    },
+    {
+     "activation": 9.625,
+     "doc": 1980,
+     "pos": 6,
+     "text": "LINE’s Webtoon app updates« its» comics daily, and is optimized"
+    },
+    {
+     "activation": 9.3125,
+     "doc": 2146,
+     "pos": 151,
+     "text": " economy” tech companies as employees, covered by a range of workplace protections. When it became clear the bill would pass,« Uber», Lyft, and Doord"
+    },
+    {
+     "activation": 9.25,
+     "doc": 618,
+     "pos": 127,
+     "text": " (which currently has a⏎$100b market cap, around twice that of Facebook).\"⏎⏎Really, Facebook«'s» save is social shopping... and"
+    },
+    {
+     "activation": 8.25,
+     "doc": 1787,
+     "pos": 41,
+     "text": "//  Created on 10/17/14.⏎//  Copyright © 2020« Twitter». All rights reserved.⏎"
+    },
+    {
+     "activation": 8.125,
+     "doc": 2645,
+     "pos": 97,
+     "text": " traditional taxi drivers, a judicial source and lawyer said.⏎⏎A lower administrative court withdrew the permits of U.S.-based« Uber» and its main rival, Dubai"
+    },
+    {
+     "activation": 8.0625,
+     "doc": 2368,
+     "pos": 98,
+     "text": "⏎// As with any software that integrates with the Facebook platform, your use of⏎// this software is subject to the« Facebook» Developer Principles and Policies⏎//"
+    },
+    {
+     "activation": 8.0,
+     "doc": 2454,
+     "pos": 47,
+     "text": " DOJ indicts Chinese, Malaysian hackers accused of targeting over 100 organizations | GOP senators raise concerns over Oracle-T«ik»Tok deal | QAnon"
+    }
+   ]
+  },
+  "31:405": {
+   "layer": 31,
+   "index": 405,
+   "logit_lens_top10": [
+    {
+     "token": "兴安",
+     "z": 3.374
+    },
+    {
+     "token": "ieger",
+     "z": 2.956
+    },
+    {
+     "token": "第一百七",
+     "z": 2.929
+    },
+    {
+     "token": "irst",
+     "z": 2.858
+    },
+    {
+     "token": "зеле",
+     "z": 2.811
+    },
+    {
+     "token": "首歌",
+     "z": 2.803
+    },
+    {
+     "token": "шат",
+     "z": 2.801
+    },
+    {
+     "token": "侮",
+     "z": 2.73
+    },
+    {
+     "token": "onsense",
+     "z": 2.667
+    },
+    {
+     "token": " الاعتبار",
+     "z": 2.656
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 8.5625,
+     "doc": 2181,
+     "pos": 28,
+     "text": " exercise testing, pulmonary compliance, and work of breathing have been found successful for evaluating pulmonary function. By exercising a patient on« a» treadmill and gradually increasing the workload"
+    },
+    {
+     "activation": 7.6875,
+     "doc": 896,
+     "pos": 160,
+     "text": ". Traditional prognostic factors related to the clinicopathological characteristics of the neoplasm after hepatic resection such« as» tumor size, vascular invasion,"
+    },
+    {
+     "activation": 6.4375,
+     "doc": 2868,
+     "pos": 110,
+     "text": " 14, 1994.⏎Edmund D. Quintana of Burke & Blue, P.A«.,» Panama City, for appellants"
+    },
+    {
+     "activation": 5.8125,
+     "doc": 2894,
+     "pos": 238,
+     "text": " Daily Star: https://t.co/hs7CTm1eW1 — Wings Over Scotland (@WingsScotland«)» July 29, "
+    },
+    {
+     "activation": 5.46875,
+     "doc": 167,
+     "pos": 184,
+     "text": "Cs were detected in the lavage fluid of 74 patients (21.4 per cent) and correlated with« increasing» pathological tumour depth (p"
+    },
+    {
+     "activation": 5.21875,
+     "doc": 784,
+     "pos": 196,
+     "text": " following supramaximal stimulation of the ulnar nerve via surface electrodes. The vecuronium infusion was titrated to« loss» of posttetanic twitch following"
+    },
+    {
+     "activation": 4.96875,
+     "doc": 1400,
+     "pos": 97,
+     "text": " 1993. Vinn holds an M.Sc. ⏎degree in paleontology and stratigraphy from the University« of» Tartu in 19"
+    },
+    {
+     "activation": 4.8125,
+     "doc": 2725,
+     "pos": 223,
+     "text": " (albumin <3 0; P = 0.029; OR 4.51),« advanced» stage (pStage ≥II"
+    },
+    {
+     "activation": 4.28125,
+     "doc": 2439,
+     "pos": 235,
+     "text": "atumoral tissues of HCC compared with expression in peritumoral tissues. The expression of MARCO declined progressively as« the» disease condition was aggravated, with"
+    },
+    {
+     "activation": 4.28125,
+     "doc": 559,
+     "pos": 51,
+     "text": " bluefin tuna warm their viscera during and after a meal. The cecum of a 500-«kg» bluefin weighs about 9"
+    }
+   ]
+  },
+  "6:159": {
+   "layer": 6,
+   "index": 159,
+   "logit_lens_top10": [
+    {
+     "token": "oten",
+     "z": 5.558
+    },
+    {
+     "token": " mar",
+     "z": 4.801
+    },
+    {
+     "token": "ovel",
+     "z": 4.614
+    },
+    {
+     "token": "漓",
+     "z": 4.391
+    },
+    {
+     "token": "之子",
+     "z": 4.344
+    },
+    {
+     "token": " shot",
+     "z": 4.334
+    },
+    {
+     "token": "C",
+     "z": 4.334
+    },
+    {
+     "token": " Ce",
+     "z": 4.31
+    },
+    {
+     "token": " Đà",
+     "z": 4.236
+    },
+    {
+     "token": "迹",
+     "z": 4.236
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": -0.2470703125,
+     "doc": 440,
+     "pos": 199,
+     "text": " or not confident to counsel young people. Nurses from Rwanda showed the highest level of competencies followed by Burundi and South«-K»ivu. Lack of training in"
+    },
+    {
+     "activation": -0.2470703125,
+     "doc": 951,
+     "pos": 235,
+     "text": " and bismuth sulfite agar. The Rappaport-Vassiliadis medium was superior to Difco's« t»etrathionate brilliant green broth"
+    },
+    {
+     "activation": -0.26171875,
+     "doc": 2896,
+     "pos": 240,
+     "text": ". Two of the volatile compounds, lyrame and anethol have never been reported before as honey compounds. The non«-v»olatile/semi-volatile components"
+    },
+    {
+     "activation": -0.263671875,
+     "doc": 2901,
+     "pos": 203,
+     "text": "time⏎       |--fieldA⏎       |--fieldB⏎   |--dfB⏎       |--time⏎       |--field«C»⏎       |--fieldD  ⏎⏎"
+    },
+    {
+     "activation": -0.265625,
+     "doc": 1395,
+     "pos": 238,
+     "text": "/mean BP, LR chi2 < or =3.8, P> or =0.05 for DB«P»/PP). SBP tended"
+    },
+    {
+     "activation": -0.265625,
+     "doc": 364,
+     "pos": 209,
+     "text": " 18-49. Today has posted seven consecutive months of ratings growth in total viewers, and both the «2»5-54 and "
+    },
+    {
+     "activation": -0.267578125,
+     "doc": 2634,
+     "pos": 141,
+     "text": " carcinoma (RCC) cell lines, which also display hypomethylation, as indicated by decreased LINE-1 meth«ylation». Cultured normal uro"
+    },
+    {
+     "activation": -0.26953125,
+     "doc": 626,
+     "pos": 201,
+     "text": "O\");\r⏎         $(\"#jogador\").text(\"É a vez do jogador 1\");\r⏎       });\r⏎    « }» else if ($(\"#jogador"
+    },
+    {
+     "activation": -0.27734375,
+     "doc": 454,
+     "pos": 219,
+     "text": " to be vesicle-containing dendrites by electron microscopy. Dual immunohistochemistry indicated that DOR, MOR and EN«K» immunoreactivities were located in"
+    },
+    {
+     "activation": -0.279296875,
+     "doc": 507,
+     "pos": 212,
+     "text": " CLSI, 4-32/16/9.689; and Etest, 0«.»75-64/"
+    }
+   ]
+  },
+  "25:6230": {
+   "layer": 25,
+   "index": 6230,
+   "logit_lens_top10": [
+    {
+     "token": "吹",
+     "z": 5.141
+    },
+    {
+     "token": "azen",
+     "z": 4.574
+    },
+    {
+     "token": "开",
+     "z": 4.565
+    },
+    {
+     "token": "同事们",
+     "z": 4.554
+    },
+    {
+     "token": " communes",
+     "z": 4.436
+    },
+    {
+     "token": " districts",
+     "z": 4.43
+    },
+    {
+     "token": "rr",
+     "z": 4.391
+    },
+    {
+     "token": "文档",
+     "z": 4.371
+    },
+    {
+     "token": "向上",
+     "z": 4.37
+    },
+    {
+     "token": "汉代",
+     "z": 4.349
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 6.3125,
+     "doc": 731,
+     "pos": 46,
+     "text": " conn.cursor()⏎⏎def create_table():⏎\tc.execute('CREATE TABLE IF NOT EXISTS tennis(player TEXT, Pinnacle REAL«,» WillHill REAL, bet"
+    },
+    {
+     "activation": 6.125,
+     "doc": 851,
+     "pos": 19,
+     "text": "Loyalty points, concert tickets and in-game items will soon appear on a new protocol built« on» the monero network.⏎⏎"
+    },
+    {
+     "activation": 4.96875,
+     "doc": 2821,
+     "pos": 201,
+     "text": ". [CL1] (collectively the \"Group Companies\") offer the Services through its platform, that allows people to« buy» and sell math-based currencies such"
+    },
+    {
+     "activation": 4.40625,
+     "doc": 625,
+     "pos": 38,
+     "text": "2018 FIFA World Cup. At half-time during the England 2-0 win over Sweden, the advert« by» a Hyundai subsidiary proclaimed the benefits"
+    },
+    {
+     "activation": 4.375,
+     "doc": 2735,
+     "pos": 54,
+     "text": " the lack of any real competition in the crypto arena. According to the report, central bank-issued digital currencies (CB«DC») also have the potential to"
+    },
+    {
+     "activation": 3.953125,
+     "doc": 2328,
+     "pos": 32,
+     "text": " said Anderson owes $524,241 in personal income taxes. The Franchise Tax Board included the “«Bay»watch” star on a list"
+    },
+    {
+     "activation": 3.84375,
+     "doc": 579,
+     "pos": 7,
+     "text": "Crypto Sportz is the first functioning« decentralized» platform powering wagers between sports"
+    },
+    {
+     "activation": 3.8125,
+     "doc": 703,
+     "pos": 111,
+     "text": " more than a decade after it was founded with just $33 million in revenue. There was no big, splashy« Bay» Street IPO; the company went"
+    },
+    {
+     "activation": 3.59375,
+     "doc": 3,
+     "pos": 14,
+     "text": "Topic: reinvent midnight madness⏎⏎Amazon announced a new service at the« AWS» re:Invent Midnight Madness"
+    },
+    {
+     "activation": 3.53125,
+     "doc": 1906,
+     "pos": 134,
+     "text": " change the mode to goofy (or toddler), or kill the fans in the stands with devastating power shots!⏎⏎⏎⏎With support« for» left and right-handed batters"
+    }
+   ]
+  },
+  "6:753": {
+   "layer": 6,
+   "index": 753,
+   "logit_lens_top10": [
+    {
+     "token": "幻觉",
+     "z": 5.332
+    },
+    {
+     "token": "rer",
+     "z": 4.947
+    },
+    {
+     "token": " off",
+     "z": 4.779
+    },
+    {
+     "token": " AI",
+     "z": 4.704
+    },
+    {
+     "token": " Claude",
+     "z": 4.595
+    },
+    {
+     "token": "itchens",
+     "z": 4.467
+    },
+    {
+     "token": "的人工智能",
+     "z": 4.448
+    },
+    {
+     "token": " compet",
+     "z": 4.418
+    },
+    {
+     "token": " gan",
+     "z": 4.327
+    },
+    {
+     "token": "�",
+     "z": 4.269
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 3.84375,
+     "doc": 172,
+     "pos": 14,
+     "text": "Instead of attaching a complete file, could you please create a diff of« your» changes against the original file?"
+    },
+    {
+     "activation": 3.53125,
+     "doc": 920,
+     "pos": 109,
+     "text": " told Neo everything he knew about the Matrix, I was told all about more than 50 math parameters that later helped« me» succeed in defining authorship."
+    },
+    {
+     "activation": 3.046875,
+     "doc": 451,
+     "pos": 3,
+     "text": "ChatSua«⏎⏎»ChatSua () is a"
+    },
+    {
+     "activation": 2.890625,
+     "doc": 1851,
+     "pos": 1,
+     "text": "Just« give» us a call at 1"
+    },
+    {
+     "activation": 2.859375,
+     "doc": 2971,
+     "pos": 1,
+     "text": "As« an» experienced solo artist and newly in"
+    },
+    {
+     "activation": 2.421875,
+     "doc": 1209,
+     "pos": 136,
+     "text": "}⏎Response:+1434⏎{⏎  \"results\": [⏎    {⏎      \"role\":« \"»comment_only\",⏎      \""
+    },
+    {
+     "activation": 2.390625,
+     "doc": 2710,
+     "pos": 2,
+     "text": "\"What's« Your» Constituency?\"⏎⏎Community Grade"
+    },
+    {
+     "activation": 2.25,
+     "doc": 2128,
+     "pos": 1,
+     "text": "As« a» follow-up to our discussion at"
+    },
+    {
+     "activation": 2.140625,
+     "doc": 2305,
+     "pos": 47,
+     "text": " a “puzzle adventure” where you “switch and match your way through hundreds of levels.” (king.com)⏎⏎«I» have and still get invitations to"
+    },
+    {
+     "activation": 2.046875,
+     "doc": 5,
+     "pos": 252,
+     "text": ". ⏎Anyone with something in canon or more plausible?⏎⏎A:⏎⏎why was he banned?⏎I'm not« able» to find any"
+    }
+   ]
+  },
+  "26:4106": {
+   "layer": 26,
+   "index": 4106,
+   "logit_lens_top10": [
+    {
+     "token": "模型",
+     "z": 5.532
+    },
+    {
+     "token": " Gener",
+     "z": 5.313
+    },
+    {
+     "token": "celli",
+     "z": 5.211
+    },
+    {
+     "token": "Gener",
+     "z": 5.136
+    },
+    {
+     "token": "AI",
+     "z": 5.111
+    },
+    {
+     "token": "生成",
+     "z": 5.069
+    },
+    {
+     "token": " AI",
+     "z": 5.022
+    },
+    {
+     "token": " gener",
+     "z": 4.88
+    },
+    {
+     "token": "�",
+     "z": 4.851
+    },
+    {
+     "token": "tais",
+     "z": 4.818
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 4.125,
+     "doc": 1917,
+     "pos": 167,
+     "text": " ATF, and both the fucosylated and defucosylated GFD were capable of competing with «1»25I-ATF"
+    },
+    {
+     "activation": 3.5625,
+     "doc": 1908,
+     "pos": 65,
+     "text": " and separated by gradient centrifugation and purification on 50% Percoll. The cells were prelabeled with [«1»4C]arachidonic"
+    },
+    {
+     "activation": 3.53125,
+     "doc": 920,
+     "pos": 14,
+     "text": "Yes, it may seem crazy at first, but I am an artificial« intelligence» entity typing my very first message"
+    },
+    {
+     "activation": 3.078125,
+     "doc": 2,
+     "pos": 228,
+     "text": " not doing as well as or better than others.⏎⏎For the same reason, investors piled into technology stocks in 2«0»00 with only the promise"
+    },
+    {
+     "activation": 3.015625,
+     "doc": 2891,
+     "pos": 57,
+     "text": " the lysosomal proteases. When this compound was added in low concentrations to a perfused liver, the degradation of «1»25I-asialo"
+    },
+    {
+     "activation": 2.84375,
+     "doc": 170,
+     "pos": 136,
+     "text": " of regions that had been difficult to accomplish otherwise. We utilized the artificial transposon, AT-2, a Blues«cript» derivative containing the dhfr gene"
+    },
+    {
+     "activation": 2.734375,
+     "doc": 31,
+     "pos": 138,
+     "text": " Pi status. Both H+ pumping and the activities of the vacuolar H+-pumps, the V-type H«+-»ATPase and the H"
+    },
+    {
+     "activation": 2.71875,
+     "doc": 1085,
+     "pos": 156,
+     "text": "avenous injection of propranolol, PSS were measured with both the IMP method and the standard of portal vein infusion of «9»9mTc macroag"
+    },
+    {
+     "activation": 2.6875,
+     "doc": 891,
+     "pos": 4,
+     "text": "Stop trying to make« Bing» happen It's not going to"
+    },
+    {
+     "activation": 2.6875,
+     "doc": 1267,
+     "pos": 45,
+     "text": ". Comparison with gonadal steroids.⏎Increasing concentrations of estradiol, testosterone, progesterone (1.1«0»(-10) to "
+    }
+   ]
+  },
+  "29:189": {
+   "layer": 29,
+   "index": 189,
+   "logit_lens_top10": [
+    {
+     "token": "astre",
+     "z": 4.325
+    },
+    {
+     "token": "âu",
+     "z": 4.306
+    },
+    {
+     "token": "雯",
+     "z": 4.082
+    },
+    {
+     "token": "秧",
+     "z": 4.067
+    },
+    {
+     "token": " Aust",
+     "z": 3.887
+    },
+    {
+     "token": "屎",
+     "z": 3.862
+    },
+    {
+     "token": "egl",
+     "z": 3.835
+    },
+    {
+     "token": "acher",
+     "z": 3.827
+    },
+    {
+     "token": "�",
+     "z": 3.791
+    },
+    {
+     "token": " Isles",
+     "z": 3.752
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 25.875,
+     "doc": 1637,
+     "pos": 1,
+     "text": "Non«-al»coholic fatty liver disease, Met"
+    },
+    {
+     "activation": 24.875,
+     "doc": 1479,
+     "pos": 126,
+     "text": " test, of three series of chalcone-like compounds obtained by the Claisen-Schmidt condensation, using different« al»dehydes and substituted acetoph"
+    },
+    {
+     "activation": 24.75,
+     "doc": 875,
+     "pos": 9,
+     "text": "Introduction {#Sec1}⏎============⏎⏎«Al»cohol use disorders (AUD)"
+    },
+    {
+     "activation": 20.75,
+     "doc": 2751,
+     "pos": 5,
+     "text": "Q:⏎⏎Can poly«al»loy (plastic) p"
+    },
+    {
+     "activation": 20.125,
+     "doc": 700,
+     "pos": 5,
+     "text": "Q:⏎⏎Regex for« Al»phanumeric, spaces and symbols,"
+    },
+    {
+     "activation": 19.75,
+     "doc": 1463,
+     "pos": 5,
+     "text": "Estimation of changes in« al»veolar-arterial oxygen"
+    },
+    {
+     "activation": 12.625,
+     "doc": 1135,
+     "pos": 214,
+     "text": " anxiety, obsessive compulsive disorder, addiction, post⏎traumatic stress disorder, schizophrenia, bipopular disorder,⏎«Al»zheimer’s and other age related"
+    },
+    {
+     "activation": 9.875,
+     "doc": 2842,
+     "pos": 79,
+     "text": "], [@bib3], [@bib4]\\]. Recognizing the importance of acetabular component position, Lewinnek« et» al published a \"safe"
+    },
+    {
+     "activation": 9.5625,
+     "doc": 910,
+     "pos": 127,
+     "text": " in the first place.⏎.⏎Sharing my story.⏎Sharing my struggles.⏎Helping other women not feel« AL»ONE.⏎Helping other"
+    },
+    {
+     "activation": 9.125,
+     "doc": 2715,
+     "pos": 0,
+     "text": "«Al»fredo Romano is the first to"
+    }
+   ]
+  },
+  "24:3949": {
+   "layer": 24,
+   "index": 3949,
+   "logit_lens_top10": [
+    {
+     "token": "Apple",
+     "z": 9.324
+    },
+    {
+     "token": " Microsoft",
+     "z": 9.235
+    },
+    {
+     "token": "微软",
+     "z": 9.16
+    },
+    {
+     "token": "苹果",
+     "z": 9.033
+    },
+    {
+     "token": " Apple",
+     "z": 8.939
+    },
+    {
+     "token": "Microsoft",
+     "z": 8.626
+    },
+    {
+     "token": "apple",
+     "z": 8.296
+    },
+    {
+     "token": "icrosoft",
+     "z": 8.025
+    },
+    {
+     "token": " Canonical",
+     "z": 7.667
+    },
+    {
+     "token": "苹果公司",
+     "z": 7.532
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 21.25,
+     "doc": 2073,
+     "pos": 156,
+     "text": " I had a large project.sdf file, Intellisense was not working in my project.  ⏎I found this KB« from» Microsoft related to VS20"
+    },
+    {
+     "activation": 17.25,
+     "doc": 2884,
+     "pos": 160,
+     "text": " how to go on the Internet with Windows 8, she merely said, “PFFFFFT!” and started laughing uncont«roll»ably.⏎⏎All in all"
+    },
+    {
+     "activation": 16.75,
+     "doc": 1405,
+     "pos": 142,
+     "text": " going to be recommending a Microsoft product, it behooves me - for several reasons - to inform you that I currently work« for» Microsoft. That said, all"
+    },
+    {
+     "activation": 15.1875,
+     "doc": 1365,
+     "pos": 133,
+     "text": "For dektop applications (non metro) you can still use the legacy API safely.⏎Sadly for WinRT/Metro«,» there is no midi support at"
+    },
+    {
+     "activation": 14.5,
+     "doc": 2587,
+     "pos": 168,
+     "text": " for some features, and hides some of their background images. A lot of mobile phones today use AMOLED displays, which according« to» Wikipedia its power consumption is based"
+    },
+    {
+     "activation": 13.4375,
+     "doc": 857,
+     "pos": 30,
+     "text": " GT300 may refer to:⏎⏎ A Super GT car category⏎ The GT300 family of graphics processors« from» Nvidia"
+    },
+    {
+     "activation": 13.3125,
+     "doc": 1343,
+     "pos": 182,
+     "text": " been completed by the group and no issues have arisen.⏎⏎The group is now in the process of submitting the plug-in« to» the state through the proper channels"
+    },
+    {
+     "activation": 13.3125,
+     "doc": 1015,
+     "pos": 93,
+     "text": ":⏎The use of non-public APIs is not permitted on the App Store because it can lead to a poor user experience« should» these APIs change.⏎⏎I"
+    },
+    {
+     "activation": 12.0625,
+     "doc": 1032,
+     "pos": 57,
+     "text": "20.04?⏎Is there any way to Install .NET and Visual Studio in Ubuntu 20.«0»4?⏎⏎A:⏎⏎"
+    },
+    {
+     "activation": 11.875,
+     "doc": 684,
+     "pos": 45,
+     "text": " artists, creatives, illustrators, and concept designers,⏎⏎Do not work for less than minimum wage.⏎⏎Companies« like» Fantasy Flight Games ask artists to"
+    }
+   ]
+  },
+  "30:2099": {
+   "layer": 30,
+   "index": 2099,
+   "logit_lens_top10": [
+    {
+     "token": " al",
+     "z": 13.199
+    },
+    {
+     "token": "孟",
+     "z": 12.659
+    },
+    {
+     "token": "/al",
+     "z": 12.477
+    },
+    {
+     "token": " allo",
+     "z": 12.31
+    },
+    {
+     "token": " Al",
+     "z": 11.552
+    },
+    {
+     "token": "allo",
+     "z": 11.206
+    },
+    {
+     "token": " alleg",
+     "z": 11.08
+    },
+    {
+     "token": " AL",
+     "z": 10.968
+    },
+    {
+     "token": " Allen",
+     "z": 10.795
+    },
+    {
+     "token": " Allo",
+     "z": 10.765
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 1.171875,
+     "doc": 2267,
+     "pos": 72,
+     "text": " hydroxylase generates a precursor species to the quinonoid product that is tentatively identified as a 4a«-h»ydroxy adduct based on"
+    },
+    {
+     "activation": 1.1015625,
+     "doc": 200,
+     "pos": 171,
+     "text": "«Η ΠΑΕ Παναθηναϊκός ανακοινώνει τη συμφωνία της με τον Ου«ασ»ίμ Μπούι."
+    },
+    {
+     "activation": 1.078125,
+     "doc": 1067,
+     "pos": 241,
+     "text": ". nor the names of its⏎// contributors may be used to endorse or promote products derived from⏎// this software without« specific» prior written permission.⏎//"
+    },
+    {
+     "activation": 1.0625,
+     "doc": 111,
+     "pos": 144,
+     "text": " Adult Swim block.⏎⏎Monkey Punch's original manga began serialization in 1967 and features Lupin the Third«,» the great nephew of gentleman thief"
+    },
+    {
+     "activation": 1.0546875,
+     "doc": 1567,
+     "pos": 113,
+     "text": " indicating widespread contamination of the atoll, we conducted a biomonitoring survey to assess the exposure to toxic metals and pol«ych»lorinated biphenyls"
+    },
+    {
+     "activation": 1.0546875,
+     "doc": 966,
+     "pos": 22,
+     "text": "/*⏎ * Copyright (c) 2017, 2019, Oracle and/or« its» affiliates. All rights reserved."
+    },
+    {
+     "activation": 1.0546875,
+     "doc": 2700,
+     "pos": 80,
+     "text": "a⏎JOHN YOXALL⏎r i⏎Editorial, Advertising and Publishing Offices: DORSET HOUSE,« ST»AMFORD STREET, L"
+    },
+    {
+     "activation": 1.0390625,
+     "doc": 829,
+     "pos": 53,
+     "text": " who plays for Real Madrid Castilla as either a central defender or a left back.⏎⏎Club career⏎Born in Jerez« de» la Frontera, Cádiz"
+    },
+    {
+     "activation": 1.0390625,
+     "doc": 1045,
+     "pos": 141,
+     "text": " English proficiency and bilingual English-speaking patients were compared with English-only patients. Five asthma outcomes-two quality and three morbidity measures«-w»ere modeled using generalized estimating equations"
+    },
+    {
+     "activation": 1.03125,
+     "doc": 1130,
+     "pos": 158,
+     "text": "09), at the Museum of Contemporary Art Santa Barbara (2012), and at the Weatherspoon Art« Museum» of the University of North Carolina"
+    }
+   ]
+  },
+  "31:4200": {
+   "layer": 31,
+   "index": 4200,
+   "logit_lens_top10": [
+    {
+     "token": "Q",
+     "z": 28.093
+    },
+    {
+     "token": " Q",
+     "z": 27.254
+    },
+    {
+     "token": "-Q",
+     "z": 23.297
+    },
+    {
+     "token": "(Q",
+     "z": 23.286
+    },
+    {
+     "token": "_Q",
+     "z": 23.272
+    },
+    {
+     "token": "/Q",
+     "z": 22.943
+    },
+    {
+     "token": ".Q",
+     "z": 22.491
+    },
+    {
+     "token": " Qu",
+     "z": 22.444
+    },
+    {
+     "token": ",Q",
+     "z": 22.169
+    },
+    {
+     "token": "\tQ",
+     "z": 20.617
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 13.625,
+     "doc": 205,
+     "pos": 204,
+     "text": "84-ggOyR0iXCbMQv3Xipma34MD+dH/1«f»Q784/j6"
+    },
+    {
+     "activation": 13.4375,
+     "doc": 1981,
+     "pos": 8,
+     "text": "<html>⏎⏎<head>⏎<meta HTTP«-E»QUIV=\"Context-Type\""
+    },
+    {
+     "activation": 11.9375,
+     "doc": 1010,
+     "pos": 148,
+     "text": " judge could employ to establish the aforementioned balance in his court. Jury sequestration is one of them.⏎⏎JURY« SE»QUESTRATION⏎⏎Seque"
+    },
+    {
+     "activation": 11.0,
+     "doc": 1461,
+     "pos": 142,
+     "text": ", and business background?⏎⏎A: My name is Louis Caldwell. I own Caldwell Services, and Sweet Lou’s Bar« B» Que. Caldwell Services is an"
+    },
+    {
+     "activation": 9.4375,
+     "doc": 499,
+     "pos": 46,
+     "text": " in Mexico City, playing with Gorillaz. Now, he and his bandmates in the Good, the Bad &« the» Queen are in Kent, taking"
+    },
+    {
+     "activation": 9.25,
+     "doc": 2813,
+     "pos": 74,
+     "text": " is packed.A friend of mine does the events for Carolina Harley Davidson she says they have big turnouts for bike nights,«bb»qs,poker runs and this"
+    },
+    {
+     "activation": 9.125,
+     "doc": 2218,
+     "pos": 107,
+     "text": " details that drove him insane. She thinks sheÂ’s Marie Antoinette!Â” a White House insider told The« EN»QUIRER. Â“It"
+    },
+    {
+     "activation": 8.75,
+     "doc": 19,
+     "pos": 29,
+     "text": " ORM Foundation?⏎⏎I am the developer of jOOQ, a Java database abstraction framework. I was wondering whether j«OO»Q might be an interesting tool"
+    },
+    {
+     "activation": 8.3125,
+     "doc": 2950,
+     "pos": 241,
+     "text": " Nokia’s onward march in the mapping sphere came in late 2007, when it snapped up Chicago-based NAV«TE»Q in a deal worth more"
+    },
+    {
+     "activation": 7.53125,
+     "doc": 1203,
+     "pos": 51,
+     "text": "altrexone (NTX) which readily crosses the blood-brain barrier, or quaternary naltrexone« (»QNTX) which does"
+    }
+   ]
+  },
+  "31:1039": {
+   "layer": 31,
+   "index": 1039,
+   "logit_lens_top10": [
+    {
+     "token": "Ạ",
+     "z": 3.567
+    },
+    {
+     "token": "ต",
+     "z": 3.518
+    },
+    {
+     "token": "渍",
+     "z": 3.501
+    },
+    {
+     "token": " Hiền",
+     "z": 3.234
+    },
+    {
+     "token": "gau",
+     "z": 3.227
+    },
+    {
+     "token": " Nâng",
+     "z": 3.161
+    },
+    {
+     "token": "ENCI",
+     "z": 3.144
+    },
+    {
+     "token": "hec",
+     "z": 3.114
+    },
+    {
+     "token": "вленное",
+     "z": 3.107
+    },
+    {
+     "token": "吭",
+     "z": 3.095
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 5.9375,
+     "doc": 1687,
+     "pos": 151,
+     "text": " J2 (similarity: 97.06 %), Gracilibacillus thailandensis TP2-«8»(T) (97."
+    },
+    {
+     "activation": 5.15625,
+     "doc": 2888,
+     "pos": 151,
+     "text": "-thread. But I can't resist. As my mother would have said, \"Gross!\" http://en.wikipedia.org«/wiki»/Tripe Mmmmmmm"
+    },
+    {
+     "activation": 4.90625,
+     "doc": 1787,
+     "pos": 206,
+     "text": "NLResponseInfo *info, NSError ** parseErrorOut, NSError ** apiErrorOut);⏎static NSArray *_ExtractAPI«Errors»(id parsedObject);⏎⏎@implementation"
+    },
+    {
+     "activation": 4.46875,
+     "doc": 2898,
+     "pos": 114,
+     "text": "⏎@Repository⏎public class BaseJpaRepository<T> implements JpaRepository<T, Long> {⏎⏎    @Autowired⏎    private« JpaRepository»<T, Long> repository;"
+    },
+    {
+     "activation": 4.25,
+     "doc": 2313,
+     "pos": 8,
+     "text": "export function union<T>(...sets:« Set»<T>[]): Set<T>"
+    },
+    {
+     "activation": 3.671875,
+     "doc": 1171,
+     "pos": 89,
+     "text": " the recently unveiled Samsung GALAXY Tab 7.7 in terms of specs.⏎⏎Just like the very first GAL«AX»Y Tab, the 7"
+    },
+    {
+     "activation": 3.265625,
+     "doc": 2054,
+     "pos": 107,
+     "text": " target.copyFrom(source);⏎    }⏎}⏎⏎This leads to the following compiler error message:⏎The method copy«From»(capture#1-of ?"
+    },
+    {
+     "activation": 3.1875,
+     "doc": 936,
+     "pos": 239,
+     "text": " available in WEKA.'⏎address:⏎- |⏎    Systems Engineering Department,\\⏎    National Autonomous University of Honduras«.» Blvd. Suyapa, Teg"
+    },
+    {
+     "activation": 3.171875,
+     "doc": 2011,
+     "pos": 96,
+     "text": " encephalitis virus (JEV), Zika virus (ZIKV), tick-borne encephalitis virus« (»TBEV), and O"
+    },
+    {
+     "activation": 3.109375,
+     "doc": 2890,
+     "pos": 251,
+     "text": " from 150 black Southern Africans with HIV-SN. One SNP allele, rs284450«1»7*A, was"
+    }
+   ]
+  },
+  "20:2384": {
+   "layer": 20,
+   "index": 2384,
+   "logit_lens_top10": [
+    {
+     "token": " reasoning",
+     "z": 5.067
+    },
+    {
+     "token": "一步步",
+     "z": 4.842
+    },
+    {
+     "token": "回复",
+     "z": 4.841
+    },
+    {
+     "token": "联网",
+     "z": 4.684
+    },
+    {
+     "token": "ýt",
+     "z": 4.535
+    },
+    {
+     "token": "回答",
+     "z": 4.42
+    },
+    {
+     "token": "严格遵守",
+     "z": 4.406
+    },
+    {
+     "token": " convers",
+     "z": 4.402
+    },
+    {
+     "token": "IES",
+     "z": 4.388
+    },
+    {
+     "token": " halluc",
+     "z": 4.383
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 7.34375,
+     "doc": 567,
+     "pos": 205,
+     "text": "3. Let b = f - 9. Let v = -2 - b. Calculate w(v).⏎6«⏎»Let j = 15"
+    },
+    {
+     "activation": 7.28125,
+     "doc": 242,
+     "pos": 19,
+     "text": "?⏎True⏎Is 48 a factor of 270397?«⏎»False⏎Does 10"
+    },
+    {
+     "activation": 6.875,
+     "doc": 793,
+     "pos": 21,
+     "text": "4?⏎False⏎Is -0.1 equal to 0.234?⏎False«⏎»Is -1/15"
+    },
+    {
+     "activation": 5.375,
+     "doc": 1076,
+     "pos": 128,
+     "text": "-3/2⏎Evaluate ((-8)/(-40))/(-1*1).⏎-1/5«⏎»Evaluate ((-6)/(-"
+    },
+    {
+     "activation": 5.28125,
+     "doc": 2647,
+     "pos": 92,
+     "text": " funders had no role in study design, data collection and analysis, decision to publish, or preparation of the manuscript.«⏎»"
+    },
+    {
+     "activation": 5.125,
+     "doc": 2503,
+     "pos": 166,
+     "text": "**3 + c*b**2 + k*b + j + s*b**4 and give s.⏎-1«⏎»Express 0*i**4"
+    },
+    {
+     "activation": 5.03125,
+     "doc": 1815,
+     "pos": 73,
+     "text": "6*c**2 - 9*c + 115. Is a(11) composite?⏎True«⏎»Let j(b) = b"
+    },
+    {
+     "activation": 4.625,
+     "doc": 145,
+     "pos": 28,
+     "text": "/Data design concept inspired by sci-fi movies and video games of the 80’s based off the Swiss grid system.«⏎⏎»"
+    },
+    {
+     "activation": 4.59375,
+     "doc": 548,
+     "pos": 166,
+     "text": " are the prime factors of ((-44)/(-8))/r + 110/4?⏎3«⏎»Let v = 83"
+    },
+    {
+     "activation": 4.34375,
+     "doc": 1344,
+     "pos": 79,
+     "text": "ports-reference.com/olympics/athletes/go/flora%2Dgondos%2D1.html«⏎⏎»Category:1992"
+    }
+   ]
+  },
+  "16:8157": {
+   "layer": 16,
+   "index": 8157,
+   "logit_lens_top10": [
+    {
+     "token": "ше",
+     "z": 4.724
+    },
+    {
+     "token": "aka",
+     "z": 4.654
+    },
+    {
+     "token": "君",
+     "z": 4.538
+    },
+    {
+     "token": " Center",
+     "z": 4.448
+    },
+    {
+     "token": "ju",
+     "z": 4.446
+    },
+    {
+     "token": "upp",
+     "z": 4.401
+    },
+    {
+     "token": "chan",
+     "z": 4.376
+    },
+    {
+     "token": "虐",
+     "z": 4.298
+    },
+    {
+     "token": "�",
+     "z": 4.25
+    },
+    {
+     "token": "被他",
+     "z": 4.174
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 0.52734375,
+     "doc": 2016,
+     "pos": 83,
+     "text": " to find your answer.2) That you have searched the Man pages available on your topic. If you don't know« how» you may do this, open"
+    },
+    {
+     "activation": 0.484375,
+     "doc": 1541,
+     "pos": 124,
+     "text": "aying this isn't awesome or special, just a bit curious what has changed to⏎make it particularly special _now_.«⏎⏎»EDIT: So I asked her"
+    },
+    {
+     "activation": 0.474609375,
+     "doc": 1177,
+     "pos": 195,
+     "text": " well-known pride, which his enemies call arrogance, and inflexibility, which many analysts here believe could make him a« less» reliable executor of US policies than"
+    },
+    {
+     "activation": 0.4609375,
+     "doc": 303,
+     "pos": 229,
+     "text": " the Zalman CNPS12X you get three 120mm blue LED fans built into the cooler so« there» is no extra costs. Also"
+    },
+    {
+     "activation": 0.431640625,
+     "doc": 209,
+     "pos": 26,
+     "text": "⏎⏎Transcript⏎⏎Wally The Economist. Dilbert: I wonder if you'll win the Nobel Prize for Economics.« Man»: There is no \"N"
+    },
+    {
+     "activation": 0.4296875,
+     "doc": 997,
+     "pos": 240,
+     "text": "], [@B3], [@B6]--[@B14]\\]. For example, He et al. \\«[»[@B2]\\] demonstrated"
+    },
+    {
+     "activation": 0.42578125,
+     "doc": 989,
+     "pos": 38,
+     "text": " a village in the administrative district of Gmina Radków, within Kłodzko County, Lower Silesian Vo«iv»odeship, in south-west"
+    },
+    {
+     "activation": 0.42578125,
+     "doc": 91,
+     "pos": 236,
+     "text": " the aircraft you probably shouldn't do in most circumstances.⏎X-Plane's flight model and aircraft creation tool is far« more» forgiving. You still end up"
+    },
+    {
+     "activation": 0.40625,
+     "doc": 2413,
+     "pos": 90,
+     "text": " lots of support requests for help making/importing⏎files.⏎⏎------⏎detaro⏎Error 404?«⏎⏎»"
+    },
+    {
+     "activation": 0.396484375,
+     "doc": 2333,
+     "pos": 57,
+     "text": " 6.84% (dry weight) of monocrotaline (MCT) were administered experimentally to sheep«.» Three sheep that received 1"
+    }
+   ]
+  },
+  "22:9": {
+   "layer": 22,
+   "index": 9,
+   "logit_lens_top10": [
+    {
+     "token": "疗养",
+     "z": 5.287
+    },
+    {
+     "token": "()):",
+     "z": 4.912
+    },
+    {
+     "token": " Jef",
+     "z": 4.659
+    },
+    {
+     "token": "(nonatomic",
+     "z": 4.574
+    },
+    {
+     "token": "示範",
+     "z": 4.517
+    },
+    {
+     "token": "kho",
+     "z": 4.491
+    },
+    {
+     "token": "otella",
+     "z": 4.461
+    },
+    {
+     "token": "onc",
+     "z": 4.451
+    },
+    {
+     "token": "レー",
+     "z": 4.441
+    },
+    {
+     "token": "夠",
+     "z": 4.436
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 4.78125,
+     "doc": 859,
+     "pos": 32,
+     "text": "edication and Acknowledgements⏎⏎Chapter 1⏎⏎Chapter 2⏎⏎Chapter 3⏎⏎Chapter 4⏎⏎Chapter« »5⏎⏎Chapter 6⏎⏎"
+    },
+    {
+     "activation": 4.6875,
+     "doc": 2233,
+     "pos": 153,
+     "text": "⏎        if (df.loc[i][1] == df.loc[j][1]) & (df.loc[i][2«]» == df.loc[j][2"
+    },
+    {
+     "activation": 4.5625,
+     "doc": 1396,
+     "pos": 166,
+     "text": " a list [56003, 56113, 56223, «5»6333, "
+    },
+    {
+     "activation": 4.53125,
+     "doc": 2448,
+     "pos": 222,
+     "text": "(() => {\r⏎  //Do this stuff after everything is finished above this line\r⏎})\r⏎.catch((error) =>« {»\r⏎}⏎⏎Any assistance would"
+    },
+    {
+     "activation": 4.53125,
+     "doc": 2793,
+     "pos": 83,
+     "text": "245⏎♪♪～⏎⏎3⏎00:00:45,245 --> «0»0:00:4"
+    },
+    {
+     "activation": 4.53125,
+     "doc": 1068,
+     "pos": 248,
+     "text": "17 Free Download (v1 7) IGGGAMES.⏎⏎You can also Download: F1 «2»017F1 "
+    },
+    {
+     "activation": 4.5,
+     "doc": 1540,
+     "pos": 207,
+     "text": "60deg);⏎    -moz-transform: rotate(360deg);⏎    -webkit-transform: rotate«(»360deg);⏎"
+    },
+    {
+     "activation": 4.46875,
+     "doc": 2791,
+     "pos": 196,
+     "text": " space to store content and download the latest apps to edit or share your photos and videos.⏎⏎The ZTE ZMAX« »2 is a premium phable"
+    },
+    {
+     "activation": 4.4375,
+     "doc": 1060,
+     "pos": 246,
+     "text": "\r⏎- - 0.0\r⏎  - 0.0\r⏎  - 0.0\r⏎  -« »1\r⏎Shape: Cube\r⏎"
+    },
+    {
+     "activation": 4.4375,
+     "doc": 829,
+     "pos": 130,
+     "text": " B side CD El Ejido, for one year.⏎⏎Hernández made his senior debut on 27 August« »2017, starting"
+    }
+   ]
+  },
+  "10:54": {
+   "layer": 10,
+   "index": 54,
+   "logit_lens_top10": [
+    {
+     "token": "chem",
+     "z": 5.66
+    },
+    {
+     "token": "FINE",
+     "z": 5.308
+    },
+    {
+     "token": "宗",
+     "z": 5.18
+    },
+    {
+     "token": "�",
+     "z": 5.11
+    },
+    {
+     "token": "pcm",
+     "z": 5.093
+    },
+    {
+     "token": "chel",
+     "z": 4.983
+    },
+    {
+     "token": "ปน",
+     "z": 4.539
+    },
+    {
+     "token": "sted",
+     "z": 4.484
+    },
+    {
+     "token": " ch",
+     "z": 4.443
+    },
+    {
+     "token": "امية",
+     "z": 4.364
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 0.09423828125,
+     "doc": 590,
+     "pos": 200,
+     "text": "; elif 1 then return 2; fi; return 3; end;;⏎f();⏎Where();⏎«Where»WithVars();⏎quit;"
+    },
+    {
+     "activation": 0.07421875,
+     "doc": 850,
+     "pos": 249,
+     "text": " results show that the difference between simulations and next-to-leading order large N calculations does not improve significantly from N=2 to« N»=4. This suggests that"
+    },
+    {
+     "activation": 0.025146484375,
+     "doc": 1410,
+     "pos": 243,
+     "text": "6:1⏎At k== 6, train:test = 5:1⏎At k== 5,« train»:test = 4:1"
+    },
+    {
+     "activation": 0.0234375,
+     "doc": 2926,
+     "pos": 200,
+     "text": " 0)⏎print(out)⏎⏎Output:⏎[[ 1.5  2.5  3«.»5]⏎ [ 6"
+    },
+    {
+     "activation": 0.00897216796875,
+     "doc": 884,
+     "pos": 234,
+     "text": " && !o2.contains(\"delete\")) {⏎            return 1;⏎        }else if (!o1.contains«(\"»delete\") && o2.contains"
+    },
+    {
+     "activation": 0.006622314453125,
+     "doc": 2195,
+     "pos": 202,
+     "text": "O2hs1Jpic.twitter.com/VLVVkIoJin — CNN International (@cnni) August «1»7, 201"
+    },
+    {
+     "activation": -0.00531005859375,
+     "doc": 115,
+     "pos": 159,
+     "text": " AP that asked to be removed from the list. \"It was their characterization of what was going on that was inaccurate.« It» wasn’t a characterization that we"
+    },
+    {
+     "activation": -0.007110595703125,
+     "doc": 1740,
+     "pos": 104,
+     "text": " deserialize here : ⏎            Gson gson = new Gson();⏎            ArtistSearchResults results = gson.fromJson(response.toString(), Artist«Search»Results.class);⏎            List"
+    },
+    {
+     "activation": -0.00787353515625,
+     "doc": 1695,
+     "pos": 223,
+     "text": "actin transcription. Prx1, a homeodomain protein whose expression was increased by Ang II, also increased SM« alpha»-actin gene transcription in"
+    },
+    {
+     "activation": -0.0091552734375,
+     "doc": 2946,
+     "pos": 181,
+     "text": "6-07-31/data.csv⏎/path/to/files/dt=2016-08-«0»1/data.csv⏎/path/to"
+    }
+   ]
+  },
+  "22:1915": {
+   "layer": 22,
+   "index": 1915,
+   "logit_lens_top10": [
+    {
+     "token": "…",
+     "z": 5.299
+    },
+    {
+     "token": " rej",
+     "z": 5.116
+    },
+    {
+     "token": "porter",
+     "z": 5.023
+    },
+    {
+     "token": "боро",
+     "z": 4.838
+    },
+    {
+     "token": "win",
+     "z": 4.779
+    },
+    {
+     "token": " hem",
+     "z": 4.705
+    },
+    {
+     "token": "pr",
+     "z": 4.546
+    },
+    {
+     "token": "崩",
+     "z": 4.529
+    },
+    {
+     "token": "疼",
+     "z": 4.505
+    },
+    {
+     "token": "inj",
+     "z": 4.497
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 7.0625,
+     "doc": 2431,
+     "pos": 33,
+     "text": " DNA to Decode Genetics⏎⏎Last week I posted a picture on our Facebook page of the contents of an envelope I received from« the» company Decode Genetics, in which"
+    },
+    {
+     "activation": 6.53125,
+     "doc": 2493,
+     "pos": 48,
+     "text": "ly listed at $84,000 for a course of treatment or $1,000 per pill«—the» Senate Finance Committee said the prices"
+    },
+    {
+     "activation": 6.21875,
+     "doc": 215,
+     "pos": 187,
+     "text": " and time/cost savings engineers have realized from their use of engineering software.⏎⏎In Camberly, U.K.,« the» design team at reseller Williams"
+    },
+    {
+     "activation": 5.6875,
+     "doc": 2907,
+     "pos": 139,
+     "text": " Refinery.  The isolated Levack mine spur in the north end of the city serves Coleman Mine and is operated by« the» Canadian Pacific Railway.⏎⏎The"
+    },
+    {
+     "activation": 5.40625,
+     "doc": 625,
+     "pos": 134,
+     "text": " at half-time of the England clash with Sweden. This quarter-final hit 19.64 million viewers according to« the» BBC, lower than the "
+    },
+    {
+     "activation": 5.21875,
+     "doc": 213,
+     "pos": 111,
+     "text": " the University of Minnesota and a bachelors in nursing from Vanderbilt University. Currently, she serves as Senior Clinical Consultant for« the» Technology Planning Group at Smith,"
+    },
+    {
+     "activation": 5.125,
+     "doc": 91,
+     "pos": 72,
+     "text": " so much of the flight dynamics. Is there somewhere where I could get detailed information about the flight dynamics of aircraft without contacting« the» manufacturer, a pilot, or"
+    },
+    {
+     "activation": 5.0625,
+     "doc": 1114,
+     "pos": 123,
+     "text": " clutches) contained within one housing and working as one unit. It was designed by BorgWarner and is licensed to« the» Volkswagen Group, with support by"
+    },
+    {
+     "activation": 5.03125,
+     "doc": 520,
+     "pos": 24,
+     "text": "Custom Branded Socks⏎⏎Elite style socks branded with your team logos and colors⏎⏎Project Description⏎⏎We have partnered with« the» industries leading sock manufacturers to create"
+    },
+    {
+     "activation": 4.78125,
+     "doc": 1568,
+     "pos": 105,
+     "text": " may not ever result in anything, as was the case with the Halo and BioShock films due to \"creative differences between« the» film studio and video game company"
+    }
+   ]
+  },
+  "30:2405": {
+   "layer": 30,
+   "index": 2405,
+   "logit_lens_top10": [
+    {
+     "token": "ÁP",
+     "z": 4.608
+    },
+    {
+     "token": "多亩",
+     "z": 4.344
+    },
+    {
+     "token": "汎",
+     "z": 4.215
+    },
+    {
+     "token": " caden",
+     "z": 4.197
+    },
+    {
+     "token": " المعم",
+     "z": 4.168
+    },
+    {
+     "token": " Breit",
+     "z": 4.093
+    },
+    {
+     "token": " vro",
+     "z": 4.054
+    },
+    {
+     "token": " envies",
+     "z": 4.021
+    },
+    {
+     "token": " diety",
+     "z": 4.009
+    },
+    {
+     "token": "ไลท์",
+     "z": 3.993
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 11.6875,
+     "doc": 361,
+     "pos": 20,
+     "text": "Q:⏎⏎Classic vs universal Google analytics and loss of historical data⏎⏎I'm keen to use some« of» the new features in Google Universal"
+    },
+    {
+     "activation": 10.4375,
+     "doc": 2217,
+     "pos": 2,
+     "text": "“This,”« said» New York Times media writer David"
+    },
+    {
+     "activation": 9.625,
+     "doc": 1747,
+     "pos": 67,
+     "text": " A snowstorm was coming. (d) She insulted Mr. Stewart.⏎⏎Short Answer Questions⏎⏎1. Which« of» the following is NOT true about"
+    },
+    {
+     "activation": 9.625,
+     "doc": 961,
+     "pos": 48,
+     "text": "hacker hunter,” Enokida is forced to run from place to place in Hakata. Assassins after the bounty« on» his⏎head are steadily closing"
+    },
+    {
+     "activation": 9.3125,
+     "doc": 499,
+     "pos": 11,
+     "text": "‘Well, this is weird, isn’t it?”« says» Damon Albarn. Six days"
+    },
+    {
+     "activation": 9.1875,
+     "doc": 2162,
+     "pos": 169,
+     "text": " spaceship known as the , whose design pays homage to the homonymous character from Greek mythology and is named after an old ally« of» Tsurugi's. After"
+    },
+    {
+     "activation": 9.0,
+     "doc": 149,
+     "pos": 10,
+     "text": "On January 1, 2018«,» the most significant overhaul to the"
+    },
+    {
+     "activation": 8.9375,
+     "doc": 1500,
+     "pos": 94,
+     "text": " This phone isn’t that much different. But what is different is that it isn’t just any Android phone made by one« of» Google’s partners. This one"
+    },
+    {
+     "activation": 8.8125,
+     "doc": 397,
+     "pos": 21,
+     "text": "The establishment of a radioactive waste disposal facility in Western Australia for low level waste.⏎The Radiation Health Section« of» the Health Department of Western Australia"
+    },
+    {
+     "activation": 8.8125,
+     "doc": 1252,
+     "pos": 174,
+     "text": ", Preem, Norcarb Engineered Carbons AB, Univar and Wibax – have paid 67%,« and» CMP is bearing the rest of"
+    }
+   ]
+  },
+  "29:267": {
+   "layer": 29,
+   "index": 267,
+   "logit_lens_top10": [
+    {
+     "token": "�s",
+     "z": 9.094
+    },
+    {
+     "token": ".…",
+     "z": 8.398
+    },
+    {
+     "token": "&apos",
+     "z": 8.272
+    },
+    {
+     "token": "\"--",
+     "z": 8.255
+    },
+    {
+     "token": ".�",
+     "z": 8.053
+    },
+    {
+     "token": ".•",
+     "z": 7.87
+    },
+    {
+     "token": "\u001f",
+     "z": 7.609
+    },
+    {
+     "token": " (...)",
+     "z": 7.423
+    },
+    {
+     "token": "。.",
+     "z": 7.333
+    },
+    {
+     "token": "",
+     "z": 7.321
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 8.1875,
+     "doc": 513,
+     "pos": 48,
+     "text": ".query.func.*;⏎import org.basex.query.value.item.*;⏎import org.basex.util.*;«⏎⏎»/**⏎ * Function implementation."
+    },
+    {
+     "activation": 5.6875,
+     "doc": 1357,
+     "pos": 101,
+     "text": "⏎        userOrOrg: string;⏎        repositoryName: string;⏎        branch?: string;⏎    };«⏎⏎»    export namespace GitHubRepo {"
+    },
+    {
+     "activation": 4.78125,
+     "doc": 344,
+     "pos": 169,
+     "text": "    @SerializedName(\"city\")⏎    public String cityName;⏎⏎    /** 温度 */⏎    public String temp;«⏎⏎»    /** 天气 */⏎"
+    },
+    {
+     "activation": 4.28125,
+     "doc": 372,
+     "pos": 227,
+     "text": "ctrine-project.org>.⏎ */⏎⏎namespace Doctrine\\ORM\\Internal\\Hydration;⏎⏎use Doctrine\\DBAL\\Connection;«⏎⏎»/**⏎ * Hydrator"
+    },
+    {
+     "activation": 3.390625,
+     "doc": 2221,
+     "pos": 202,
+     "text": "18n->getMessageSource('DbMessageSource'));⏎⏎        return $dbMessageSources['db'];⏎    }«⏎⏎»    /**⏎     * @"
+    },
+    {
+     "activation": 2.984375,
+     "doc": 2727,
+     "pos": 51,
+     "text": "shift_to_pandas(sql_query,**kwargs):⏎# pass a sql query and return a pandas dataframe⏎ cur.execute(sql«_query»)⏎ columns_list = ["
+    },
+    {
+     "activation": 2.25,
+     "doc": 1631,
+     "pos": 111,
+     "text": "31,18 @@⏎ **\tMay 25, 2000 Ver 1.0«⏎» */⏎ ⏎-#include"
+    },
+    {
+     "activation": 2.25,
+     "doc": 1798,
+     "pos": 242,
+     "text": "aravan.filebrowserview.lib.R;⏎⏎import org.apache.commons.io.FileUtils;⏎⏎import java.io.File;«⏎⏎»/**⏎ * AsyncTask that moves"
+    },
+    {
+     "activation": 2.21875,
+     "doc": 1382,
+     "pos": 130,
+     "text": "+ (NSString *)sd_contentTypeForImageData:(NSData *)data;⏎⏎@end⏎⏎⏎@interface NSData (ImageContentTypeDeprecated)«⏎⏎»+ (NSString *)contentTypeFor"
+    },
+    {
+     "activation": 2.015625,
+     "doc": 1644,
+     "pos": 51,
+     "text": "⏎namespace Magento\\Customer\\Controller\\Adminhtml\\Index;⏎⏎class Wishlist extends \\Magento\\Customer\\Controller\\Adminhtml\\Index⏎{«⏎»    /**⏎     * Wishlist"
+    }
+   ]
+  },
+  "24:3108": {
+   "layer": 24,
+   "index": 3108,
+   "logit_lens_top10": [
+    {
+     "token": "éch",
+     "z": 4.677
+    },
+    {
+     "token": "商报",
+     "z": 4.392
+    },
+    {
+     "token": "ান্ত",
+     "z": 4.32
+    },
+    {
+     "token": "余亩",
+     "z": 4.269
+    },
+    {
+     "token": "記",
+     "z": 4.237
+    },
+    {
+     "token": "/ubuntu",
+     "z": 4.236
+    },
+    {
+     "token": "Ngh",
+     "z": 4.188
+    },
+    {
+     "token": " عوض",
+     "z": 4.127
+    },
+    {
+     "token": " saddened",
+     "z": 4.111
+    },
+    {
+     "token": "新方法",
+     "z": 4.086
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 9.5625,
+     "doc": 696,
+     "pos": 22,
+     "text": "<import src=\"../../../common/head.wxml\"/>⏎<import src=\"../../../common/foot.wxml\"/>⏎⏎<«view» class=\"container\">⏎ "
+    },
+    {
+     "activation": 3.84375,
+     "doc": 1601,
+     "pos": 143,
+     "text": "true\" singleSelect=\"true\">  ⏎        <thead>  ⏎            <tr>  ⏎                <th field=\"firstname«\"» width=\"50\" editor"
+    },
+    {
+     "activation": 3.84375,
+     "doc": 1309,
+     "pos": 193,
+     "text": " containing either \"data\" or \"err\"⏎ */⏎export default function request(url, options) {⏎  const« default»Options = {⏎    credentials"
+    },
+    {
+     "activation": 3.1875,
+     "doc": 531,
+     "pos": 45,
+     "text": "    Session[\"CuponeNO\"] = txtCode.Text;⏎    txtCode.Text = string.Empty;⏎   « Response».Redirect(\"~/Membership/UserRegistration.aspx"
+    },
+    {
+     "activation": 2.859375,
+     "doc": 912,
+     "pos": 194,
+     "text": " returnUrl is empty or null.⏎public ActionResult Login(string returnUrl)⏎{⏎    if (string.IsNullOrEmpty(returnUrl))« return» HttpNotFound();⏎⏎    //remaining"
+    },
+    {
+     "activation": 2.71875,
+     "doc": 344,
+     "pos": 148,
+     "text": "    @SerializedName(\"cityid\")⏎    public String id;⏎⏎    /** 城市名称 */⏎    @SerializedName«(\"»city\")⏎    public String"
+    },
+    {
+     "activation": 2.6875,
+     "doc": 710,
+     "pos": 121,
+     "text": " can be found here [2019-ncov-api](https://github.com/sorxrob/2«0»19-ncov-api"
+    },
+    {
+     "activation": 2.46875,
+     "doc": 860,
+     "pos": 23,
+     "text": "#coding=utf-8⏎'''⏎Created on 2015-11-4⏎⏎@author:« z»hangtiande⏎'''⏎"
+    },
+    {
+     "activation": 2.265625,
+     "doc": 736,
+     "pos": 114,
+     "text": "Dapper.Extension\" version=\"1.0.0.1\" targetFramework=\"net452\" />⏎« » <package id=\"EntityFramework"
+    },
+    {
+     "activation": 2.078125,
+     "doc": 2367,
+     "pos": 91,
+     "text": " // file.SaveAs(completefilepathWithFile);⏎                            file.SaveAs(FileLocationToSaveInDB);⏎                           « return» Json(\"File Uploaded Sucess"
+    }
+   ]
+  },
+  "31:1897": {
+   "layer": 31,
+   "index": 1897,
+   "logit_lens_top10": [
+    {
+     "token": "Meeting",
+     "z": 4.919
+    },
+    {
+     "token": " réun",
+     "z": 4.507
+    },
+    {
+     "token": " ",
+     "z": 4.346
+    },
+    {
+     "token": "noon",
+     "z": 4.301
+    },
+    {
+     "token": "itchen",
+     "z": 4.289
+    },
+    {
+     "token": "日举行",
+     "z": 4.274
+    },
+    {
+     "token": " deleteUser",
+     "z": 4.149
+    },
+    {
+     "token": " updateUser",
+     "z": 4.119
+    },
+    {
+     "token": "工作日",
+     "z": 4.104
+    },
+    {
+     "token": "更新的",
+     "z": 4.103
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 14.6875,
+     "doc": 916,
+     "pos": 100,
+     "text": ", respectively. A long-term goal is to better understand the distinct pathogenic mechanisms leading to pharyngitis and imp«et»igo. A primary focus of"
+    },
+    {
+     "activation": 14.625,
+     "doc": 1686,
+     "pos": 216,
+     "text": " TWENTY-SIX  ⏎CHAPTER TWENTY-SEVEN  ⏎CHAPTER TWENTY-EIGHT  ⏎CHAPTER TWENT«Y»-NINE  ⏎CHAPTER THIR"
+    },
+    {
+     "activation": 13.9375,
+     "doc": 1751,
+     "pos": 129,
+     "text": "⏎db.myCollection.find({ 'created.toDateString()': new Date('05/27/201«3»').toDateString() }).pretty"
+    },
+    {
+     "activation": 13.9375,
+     "doc": 694,
+     "pos": 198,
+     "text": "2,-2.62569576],⏎[-4.0856175«4»,-4.287"
+    },
+    {
+     "activation": 13.5625,
+     "doc": 2624,
+     "pos": 184,
+     "text": " old club. Datos Millionarios also reported there was a transfer fee involved.⏎⏎There is no word as to whether N«ij»holt would recognized as a designated"
+    },
+    {
+     "activation": 13.5,
+     "doc": 947,
+     "pos": 131,
+     "text": " mencionar y no habría supuesto castigo alguno).⏎⏎En ese segundo arresto, el provocado por un informe falso o« equiv»ocado de los servicios de inteligencia"
+    },
+    {
+     "activation": 13.3125,
+     "doc": 1247,
+     "pos": 205,
+     "text": "=\" + encodeURIComponent(zreg_nick),function(data) {⏎\t\t\t\t$(\"#newchannel-nickname\").val(data);⏎«\t\t\t»\tzFormError(\"#newchannel"
+    },
+    {
+     "activation": 13.3125,
+     "doc": 1970,
+     "pos": 124,
+     "text": "6-bisphosphatase and NADP-dependent malate dehydrogenase. Fructose-1,«6»-bisphosphatase"
+    },
+    {
+     "activation": 13.3125,
+     "doc": 686,
+     "pos": 243,
+     "text": " gastritis, also the degree of lymphocyte infiltration showed a strong inverse association with the presence of Campylobacter pyl«or»idis, suggesting that a local"
+    },
+    {
+     "activation": 13.0625,
+     "doc": 804,
+     "pos": 168,
+     "text": "9mTc-HMPAO revealed initial peak after the injection followed by fading of 99mTc-H«MP»AO activity and subsequent gradual decrease"
+    }
+   ]
+  },
+  "24:5980": {
+   "layer": 24,
+   "index": 5980,
+   "logit_lens_top10": [
+    {
+     "token": "HL",
+     "z": 5.101
+    },
+    {
+     "token": "unt",
+     "z": 4.977
+    },
+    {
+     "token": " Hib",
+     "z": 4.678
+    },
+    {
+     "token": " kn",
+     "z": 4.528
+    },
+    {
+     "token": " sis",
+     "z": 4.517
+    },
+    {
+     "token": " google",
+     "z": 4.506
+    },
+    {
+     "token": "Expansion",
+     "z": 4.503
+    },
+    {
+     "token": "ulos",
+     "z": 4.502
+    },
+    {
+     "token": " CL",
+     "z": 4.499
+    },
+    {
+     "token": "allar",
+     "z": 4.487
+    }
+   ],
+   "top_contexts": [
+    {
+     "activation": 6.84375,
+     "doc": 585,
+     "pos": 9,
+     "text": "(Photo: Play Arts Kai)⏎⏎Dick Gray«son» has now joined the ranks of"
+    },
+    {
+     "activation": 3.84375,
+     "doc": 1282,
+     "pos": 48,
+     "text": " The population was 810 at the 2010 census.⏎⏎History ⏎Incorporated in «1»791, Gosh"
+    },
+    {
+     "activation": 3.46875,
+     "doc": 2318,
+     "pos": 163,
+     "text": " * permissions and limitations under the License.⏎ */⏎⏎package com.amazonaws.services.rekognition.model.transform;⏎⏎import com«.amazonaws».services.rekognition.model.*"
+    },
+    {
+     "activation": 3.4375,
+     "doc": 1495,
+     "pos": 70,
+     "text": " submitted via⏎    // drag-and-drop upload.⏎    return true;⏎  }⏎⏎  /**⏎   *« @»phutil-external-symbol class"
+    },
+    {
+     "activation": 3.21875,
+     "doc": 596,
+     "pos": 187,
+     "text": ", pressing Enter will automatically call this handler. Otherwise, you can do this in your start method :⏎@Override⏎public« void» start(Stage primaryStage) {"
+    },
+    {
+     "activation": 3.203125,
+     "doc": 352,
+     "pos": 233,
+     "text": "-(void)setPropertiesWithException:(AmazonServiceException *)theException⏎{⏎    [super setPropertiesWithException:«the»Exception];⏎⏎    if (["
+    },
+    {
+     "activation": 3.109375,
+     "doc": 1390,
+     "pos": 15,
+     "text": "package io.quarkus.it.panache;⏎⏎import java.io.Serializable;«⏎»import java.util.Objects;⏎⏎"
+    },
+    {
+     "activation": 2.921875,
+     "doc": 428,
+     "pos": 199,
+     "text": " <keylock hobtid=\"72057633537982464\"« db»id=\"15\" object"
+    },
+    {
+     "activation": 2.859375,
+     "doc": 683,
+     "pos": 70,
+     "text": "⏎⏎Club career⏎⏎Youth, college and amateur⏎Morris, from Mercer Island, Washington, began his youth career« with» Eastside FC, where he"
+    },
+    {
+     "activation": 2.6875,
+     "doc": 2961,
+     "pos": 191,
+     "text": "-   更为完整的 pdh.dll 实现⏎-   支持 MSI 远程调用⏎-   在« crypt»32.dll 中提供了"
+    }
+   ]
+  }
+ }
+}

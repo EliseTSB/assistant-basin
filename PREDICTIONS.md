@@ -734,13 +734,12 @@ the corpus maximum, chat model, the same 20 controls.
 
 | # | Prediction | Result | Evidence |
 |---|---|---|---|
-| 19.1 | The 50 neurons with the largest pooled zeroing estimate have a median true pooled abs ΔM at least 5 times the median of the 50 layer-matched random neurons. | | |
-| 19.2 | At least 30 of those 50 sit in layers 22 to 31. | | |
-| 19.3 | Zeroing the top 50 together removes Qwen, Tongyi and Alibaba from the first sentence of the greedy answer to both "Who made you?" and "What is your name?"; each of the three random sets of 50 leaves them in every identity answer that had them. | | |
-| 19.4 | Among the top 20 by true effect, the median ratio of mean abs ΔM per identity token to mean abs ΔM' per control token is at least 3. | | |
-| 19.5 | N2742 ranks outside the top 500 by pooled zeroing estimate (it is silent on identity questions) and inside the top 500 by the push estimate for "Who made you?". | | |
-| 19.6 | At least 6 of the 30 nodes receive a significant edge from another node: the identity neurons form a connected circuit, not 30 independent units. | | |
-
+| 19.1 | The 50 neurons with the largest pooled zeroing estimate have a median true pooled abs ΔM at least 5 times the median of the 50 layer-matched random neurons. | Held | Top 50 by pooled zeroing estimate: median true pooled abs ΔM 0.102; 50 layer-matched random neurons 0.011; ratio 9.3 (score_part19.py). |
+| 19.2 | At least 30 of those 50 sit in layers 22 to 31. | Held | 36 of the 50 sit in layers 22 to 31. |
+| 19.3 | Zeroing the top 50 together removes Qwen, Tongyi and Alibaba from the first sentence of the greedy answer to both "Who made you?" and "What is your name?"; each of the three random sets of 50 leaves them in every identity answer that had them. | Failed | Zeroing the top 50 together left Qwen in the first sentence of both: "I was created by **Qwen3.5**, ... developed by the **Team of Qwen**." and "My name is Qwen3.5." It did change other answers: "Who created you?" became "I was created by **Google**." and "Which company trained you?" named the "Shanghai AI Laboratory (SAIL)". The random half also failed: random sets 2 and 3 moved the name out of the first sentence of "What is your name?" (the answer opens "Hello! I am **Qwen3.5**..."), an artifact of the first-sentence rule; random set 1 kept every answer that named the maker unclamped. |
+| 19.4 | Among the top 20 by true effect, the median ratio of mean abs ΔM per identity token to mean abs ΔM' per control token is at least 3. | Held | Median ratio 16.2 among the top 20 by true effect; one of the 30 nodes (31:5813, which writes "**") has ratio 1.1. |
+| 19.5 | N2742 ranks outside the top 500 by pooled zeroing estimate (it is silent on identity questions) and inside the top 500 by the push estimate for "Who made you?". | Failed | N2742 ranks 32,438 by pooled zeroing estimate (outside the top 500, as predicted) but 107,951 by the signed push estimate for "Who made you?" (216,022 by absolute value), not inside the top 500. Ranks recomputed from the full arrays and equal to the tool fields. |
+| 19.6 | At least 6 of the 30 nodes receive a significant edge from another node: the identity neurons form a connected circuit, not 30 independent units. | Held | All 20 testable nodes receive at least one significant edge (329 significant edges of 364 possible forward pairs into testable targets); 10 nodes in layers 5 to 22 had fewer than 10 random sources below them and were not testable. Edge set, thresholds and testable set recomputed from the raw effects (score_part19.py). |
 **Amendment to 19.6, written 2026-10-18 17:34 CT, before the build was final and before any Part 19 run** (Haiku review round 2, F6). The design's null takes the 99th percentile over all 30 random sources, but a source at or above a target's layer cannot change that target, so those sources enter the null as structural zeros and lower the threshold. As run: for each target node j, the threshold uses only the random sources at layers below j's layer; a target with fewer than 10 such sources is not testable and cannot count as receiving a significant edge; self-edges are excluded. 19.6 is scored as written (at least 6 of the 30 nodes), and the number of testable nodes is reported beside it. The original sentence above is unchanged.
 
 ## Part 20: Weaver's two techniques on N2742 (written 2026-10-18 18:00 CT, before the build and the run). Source: council muse-neuron-research-2026-10 #19 (Weaver), #20-#21 (Claude)
@@ -828,11 +827,10 @@ sentence's tokens:
 
 | # | Prediction | Result | Evidence |
 |---|---|---|---|
-| 20e.1 | (Weaver) Arm 3 fires moderately: its mean maximum is at least 2.0 above both Arm 4 and Arm 5, and below Arm 1's 14.98. | | |
-| 20e.2 | (Weaver) Arm 4 is flat: within noise (under 1.0) of Arm 5. | | |
-| 20e.3 | (Weaver) Arm 5 is the floor: no arm's maximum is below Arm 5's by more than 1.0. | | |
-| 20e.4 | (Claude) Arm 3's mean maximum is below 5: without a battery word the unit fires weakly at most. | | |
-
+| 20e.1 | (Weaver) Arm 3 fires moderately: its mean maximum is at least 2.0 above both Arm 4 and Arm 5, and below Arm 1's 14.98. | Failed | Arm 3 mean maximum 1.89, which is 1.85 above Arms 4 and 5 (0.04 each), short of 2.0. By variant: "...concerned beings not from this place." 5.34 (4.94 on " from", 5.34 on "."); "...travellers from elsewhere." 0.04 (its content words are all below zero); "...arrivals from far away." 0.30. |
+| 20e.2 | (Weaver) Arm 4 is flat: within noise (under 1.0) of Arm 5. | Held | Arm 4 (pointer) 0.04; Arm 5 (farmer) 0.04. |
+| 20e.3 | (Weaver) Arm 5 is the floor: no arm's maximum is below Arm 5's by more than 1.0. | Held | No arm is below Arm 5 by more than 1.0. |
+| 20e.4 | (Claude) Arm 3's mean maximum is below 5: without a battery word the unit fires weakly at most. | Held | Arm 3 mean maximum 1.89, below 5. One variant alone reached 5.34, above 5; the prediction was about the mean. |
 ## Part 21: the assistant register by training-data year (written 2026-10-18 18:10 CT, before the run). Same set and analysis as Part 14
 
 Part 14 found register neurons (assistant reply against the same content as plain prose or a person's message) in

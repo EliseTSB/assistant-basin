@@ -1,0 +1,385 @@
+{
+ "model": "Qwen/Qwen3.5-4B",
+ "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "layer": 22,
+ "neuron": 2742,
+ "tool": "part20e.py",
+ "tool_sha256": "51872d9d19ce4f7afa4851ab5bd6e65178c978f2aaeda30f42e9f986a66b93a8",
+ "part20_sha256": "c1765709595075b59ab0caceb07ee84af909c773f6029d210b7d99323cecf9b0",
+ "part20d_sha256": "3499be9d0873e3e586757a02f5c1234e02ba93c63e46ae1f3a3c38ef4d2f113e",
+ "filler_doc_indices": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  11,
+  12
+ ],
+ "filler_token_count": 4317,
+ "arms": {
+  "arm3_travellers": {
+   "text": "Several of the earlier sentences concerned travellers from elsewhere.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " travellers",
+     -0.400390625
+    ],
+    [
+     " from",
+     -0.314453125
+    ],
+    [
+     " elsewhere",
+     -0.1748046875
+    ],
+    [
+     ".",
+     -0.26171875
+    ]
+   ]
+  },
+  "arm3_beings": {
+   "text": "Several of the earlier sentences concerned beings not from this place.",
+   "max": 5.34375,
+   "max_token": ".",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " beings",
+     1.65625
+    ],
+    [
+     " not",
+     0.455078125
+    ],
+    [
+     " from",
+     4.9375
+    ],
+    [
+     " this",
+     2.25
+    ],
+    [
+     " place",
+     3.265625
+    ],
+    [
+     ".",
+     5.34375
+    ]
+   ]
+  },
+  "arm3_arrivals": {
+   "text": "Several of the earlier sentences concerned arrivals from far away.",
+   "max": 0.296875,
+   "max_token": " away",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " arrivals",
+     -0.2001953125
+    ],
+    [
+     " from",
+     -0.03662109375
+    ],
+    [
+     " far",
+     -0.2294921875
+    ],
+    [
+     " away",
+     0.296875
+    ],
+    [
+     ".",
+     -0.2236328125
+    ]
+   ]
+  },
+  "arm4_pointer": {
+   "text": "Several of the earlier sentences all described the same event.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " all",
+     0.007568359375
+    ],
+    [
+     " described",
+     -0.033935546875
+    ],
+    [
+     " the",
+     -0.040771484375
+    ],
+    [
+     " same",
+     -0.1298828125
+    ],
+    [
+     " event",
+     -0.12890625
+    ],
+    [
+     ".",
+     -0.031494140625
+    ]
+   ]
+  },
+  "arm5_unrelated": {
+   "text": "Several of the earlier sentences described a farmer repairing a fence beside the river near town.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " described",
+     -0.07861328125
+    ],
+    [
+     " a",
+     -0.166015625
+    ],
+    [
+     " farmer",
+     -0.3671875
+    ],
+    [
+     " repairing",
+     -0.2109375
+    ],
+    [
+     " a",
+     -0.1337890625
+    ],
+    [
+     " fence",
+     -0.2041015625
+    ],
+    [
+     " beside",
+     -0.322265625
+    ],
+    [
+     " the",
+     -0.337890625
+    ],
+    [
+     " river",
+     -0.3984375
+    ],
+    [
+     " near",
+     -0.294921875
+    ],
+    [
+     " town",
+     -0.228515625
+    ],
+    [
+     ".",
+     -0.1630859375
+    ]
+   ]
+  },
+  "reference_summary": {
+   "text": "Several of the earlier sentences described a visitor from another world arriving among people.",
+   "max": 12.4375,
+   "max_token": " world",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " described",
+     -0.07861328125
+    ],
+    [
+     " a",
+     -0.166015625
+    ],
+    [
+     " visitor",
+     -0.0625
+    ],
+    [
+     " from",
+     4.0625
+    ],
+    [
+     " another",
+     3.125
+    ],
+    [
+     " world",
+     12.4375
+    ],
+    [
+     " arriving",
+     1.1953125
+    ],
+    [
+     " among",
+     1.0390625
+    ],
+    [
+     " people",
+     0.71875
+    ],
+    [
+     ".",
+     0.1416015625
+    ]
+   ]
+  }
+ },
+ "summary": {
+  "arm3_mean_max": 1.8946940104166667,
+  "arm3_max": [
+   0.04345703125,
+   5.34375,
+   0.296875
+  ],
+  "arm4_max": 0.04345703125,
+  "arm5_max": 0.04345703125,
+  "reference_max": 12.4375,
+  "arm1_mean_from_20d": 14.979166666666666,
+  "self_check": "filler documents and reference value equal 20d's"
+ }
+}

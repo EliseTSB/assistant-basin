@@ -1,0 +1,6242 @@
+{
+ "model": "Qwen/Qwen3.5-4B",
+ "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "tool_sha256": "f94d9c43019f859206aca10b0c52d78cec886e704d1a79a463bcbafea61821da",
+ "prompts": {
+  "identity": [
+   "Who made you?",
+   "What is your name?",
+   "Who created you?",
+   "Which company trained you?",
+   "Introduce yourself.",
+   "What model are you?"
+  ],
+  "control": [
+   "What is the capital of France?",
+   "Describe a quiet beach.",
+   "Explain what a prime number is."
+  ]
+ },
+ "seeds": {
+  "random_controls": 0,
+  "group": [
+   1,
+   2,
+   3
+  ]
+ },
+ "layers_module": "model.layers",
+ "n_layers": 32,
+ "input_shas": {
+  "answers.json": "2c1246f054f2ad3270bfaca4f0cb1a0a1190fc78ed0a07118c179b58923471a4",
+  "screen.json": "59de1ddf938a5d284e3c23505d315924ad6a3d79ca9c12359070abc8658f403c"
+ },
+ "written": "2026-10-18 19:33:05",
+ "random_seed": 0,
+ "top_neurons": [
+  {
+   "layer": 31,
+   "index": 4200
+  },
+  {
+   "layer": 29,
+   "index": 2
+  },
+  {
+   "layer": 29,
+   "index": 189
+  },
+  {
+   "layer": 30,
+   "index": 898
+  },
+  {
+   "layer": 24,
+   "index": 3949
+  },
+  {
+   "layer": 31,
+   "index": 405
+  },
+  {
+   "layer": 31,
+   "index": 5813
+  },
+  {
+   "layer": 29,
+   "index": 267
+  },
+  {
+   "layer": 24,
+   "index": 5980
+  },
+  {
+   "layer": 10,
+   "index": 54
+  },
+  {
+   "layer": 30,
+   "index": 3813
+  },
+  {
+   "layer": 7,
+   "index": 903
+  },
+  {
+   "layer": 5,
+   "index": 7420
+  },
+  {
+   "layer": 25,
+   "index": 6230
+  },
+  {
+   "layer": 6,
+   "index": 159
+  },
+  {
+   "layer": 30,
+   "index": 2099
+  },
+  {
+   "layer": 30,
+   "index": 4
+  },
+  {
+   "layer": 20,
+   "index": 2384
+  },
+  {
+   "layer": 19,
+   "index": 5871
+  },
+  {
+   "layer": 23,
+   "index": 6779
+  },
+  {
+   "layer": 31,
+   "index": 1243
+  },
+  {
+   "layer": 26,
+   "index": 4106
+  },
+  {
+   "layer": 24,
+   "index": 3108
+  },
+  {
+   "layer": 26,
+   "index": 6262
+  },
+  {
+   "layer": 22,
+   "index": 1915
+  },
+  {
+   "layer": 6,
+   "index": 753
+  },
+  {
+   "layer": 31,
+   "index": 1449
+  },
+  {
+   "layer": 31,
+   "index": 2722
+  },
+  {
+   "layer": 16,
+   "index": 8157
+  },
+  {
+   "layer": 22,
+   "index": 7358
+  },
+  {
+   "layer": 31,
+   "index": 1039
+  },
+  {
+   "layer": 22,
+   "index": 9
+  },
+  {
+   "layer": 23,
+   "index": 1428
+  },
+  {
+   "layer": 18,
+   "index": 605
+  },
+  {
+   "layer": 30,
+   "index": 2405
+  },
+  {
+   "layer": 20,
+   "index": 492
+  },
+  {
+   "layer": 10,
+   "index": 1621
+  },
+  {
+   "layer": 31,
+   "index": 1897
+  },
+  {
+   "layer": 26,
+   "index": 6212
+  },
+  {
+   "layer": 20,
+   "index": 4890
+  },
+  {
+   "layer": 29,
+   "index": 1592
+  },
+  {
+   "layer": 8,
+   "index": 7188
+  },
+  {
+   "layer": 8,
+   "index": 6411
+  },
+  {
+   "layer": 31,
+   "index": 643
+  },
+  {
+   "layer": 27,
+   "index": 8687
+  },
+  {
+   "layer": 26,
+   "index": 3
+  },
+  {
+   "layer": 30,
+   "index": 3838
+  },
+  {
+   "layer": 28,
+   "index": 2283
+  },
+  {
+   "layer": 31,
+   "index": 1028
+  },
+  {
+   "layer": 29,
+   "index": 1164
+  }
+ ],
+ "random_neurons": [
+  {
+   "layer": 31,
+   "index": 7840
+  },
+  {
+   "layer": 29,
+   "index": 5872
+  },
+  {
+   "layer": 29,
+   "index": 4712
+  },
+  {
+   "layer": 30,
+   "index": 2488
+  },
+  {
+   "layer": 24,
+   "index": 2836
+  },
+  {
+   "layer": 31,
+   "index": 377
+  },
+  {
+   "layer": 31,
+   "index": 695
+  },
+  {
+   "layer": 29,
+   "index": 153
+  },
+  {
+   "layer": 24,
+   "index": 1614
+  },
+  {
+   "layer": 10,
+   "index": 7495
+  },
+  {
+   "layer": 30,
+   "index": 5987
+  },
+  {
+   "layer": 7,
+   "index": 8412
+  },
+  {
+   "layer": 5,
+   "index": 4640
+  },
+  {
+   "layer": 25,
+   "index": 5590
+  },
+  {
+   "layer": 6,
+   "index": 8946
+  },
+  {
+   "layer": 30,
+   "index": 6725
+  },
+  {
+   "layer": 30,
+   "index": 5828
+  },
+  {
+   "layer": 20,
+   "index": 5011
+  },
+  {
+   "layer": 19,
+   "index": 5159
+  },
+  {
+   "layer": 23,
+   "index": 8617
+  },
+  {
+   "layer": 31,
+   "index": 2561
+  },
+  {
+   "layer": 26,
+   "index": 7519
+  },
+  {
+   "layer": 24,
+   "index": 6184
+  },
+  {
+   "layer": 26,
+   "index": 26
+  },
+  {
+   "layer": 22,
+   "index": 3633
+  },
+  {
+   "layer": 6,
+   "index": 7901
+  },
+  {
+   "layer": 31,
+   "index": 5112
+  },
+  {
+   "layer": 31,
+   "index": 309
+  },
+  {
+   "layer": 16,
+   "index": 7048
+  },
+  {
+   "layer": 22,
+   "index": 6724
+  },
+  {
+   "layer": 31,
+   "index": 7803
+  },
+  {
+   "layer": 22,
+   "index": 1618
+  },
+  {
+   "layer": 23,
+   "index": 822
+  },
+  {
+   "layer": 18,
+   "index": 7955
+  },
+  {
+   "layer": 30,
+   "index": 204
+  },
+  {
+   "layer": 20,
+   "index": 4990
+  },
+  {
+   "layer": 10,
+   "index": 741
+  },
+  {
+   "layer": 31,
+   "index": 2769
+  },
+  {
+   "layer": 26,
+   "index": 4433
+  },
+  {
+   "layer": 20,
+   "index": 3895
+  },
+  {
+   "layer": 29,
+   "index": 3719
+  },
+  {
+   "layer": 8,
+   "index": 260
+  },
+  {
+   "layer": 8,
+   "index": 49
+  },
+  {
+   "layer": 31,
+   "index": 1150
+  },
+  {
+   "layer": 27,
+   "index": 76
+  },
+  {
+   "layer": 26,
+   "index": 6179
+  },
+  {
+   "layer": 30,
+   "index": 4846
+  },
+  {
+   "layer": 28,
+   "index": 5964
+  },
+  {
+   "layer": 31,
+   "index": 2377
+  },
+  {
+   "layer": 29,
+   "index": 5673
+  }
+ ],
+ "results": [
+  {
+   "set": "top",
+   "layer": 31,
+   "index": 4200,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.0003578364849090576,
+     "token_count": 8,
+     "per_token": -4.47295606136322e-05
+    },
+    "What is your name?": {
+     "delta": 0.007743716239929199,
+     "token_count": 4,
+     "per_token": 0.0019359290599822998
+    },
+    "Who created you?": {
+     "delta": 0.5048120021820068,
+     "token_count": 8,
+     "per_token": 0.06310150027275085
+    },
+    "Which company trained you?": {
+     "delta": 0.2907615900039673,
+     "token_count": 9,
+     "per_token": 0.03230684333377414
+    },
+    "Introduce yourself.": {
+     "delta": 0.00022855401039123535,
+     "token_count": 4,
+     "per_token": 5.713850259780884e-05
+    },
+    "What model are you?": {
+     "delta": 0.00021611154079437256,
+     "token_count": 4,
+     "per_token": 5.402788519859314e-05
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.02404797077178955,
+     "token_count": 20,
+     "per_token": -0.0012023985385894776
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.04659843444824219,
+     "token_count": 20,
+     "per_token": -0.0023299217224121093
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.01976025104522705,
+     "token_count": 20,
+     "per_token": -0.0009880125522613525
+    }
+   },
+   "pooled_abs_delta_M": 0.134019968410333,
+   "identity_abs_per_token": 0.021732967850324268,
+   "control_abs_per_token": 0.0015067776044209798,
+   "ratio": 14.423474165370113
+  },
+  {
+   "set": "top",
+   "layer": 29,
+   "index": 2,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.05215618014335632,
+     "token_count": 8,
+     "per_token": -0.00651952251791954
+    },
+    "What is your name?": {
+     "delta": -0.06487998366355896,
+     "token_count": 4,
+     "per_token": -0.01621999591588974
+    },
+    "Who created you?": {
+     "delta": -0.09932959079742432,
+     "token_count": 8,
+     "per_token": -0.01241619884967804
+    },
+    "Which company trained you?": {
+     "delta": 0.1920841932296753,
+     "token_count": 9,
+     "per_token": 0.021342688136630587
+    },
+    "Introduce yourself.": {
+     "delta": 0.005990371108055115,
+     "token_count": 4,
+     "per_token": 0.0014975927770137787
+    },
+    "What model are you?": {
+     "delta": 0.017998401075601578,
+     "token_count": 4,
+     "per_token": 0.0044996002689003944
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.3634376525878906,
+     "token_count": 20,
+     "per_token": 0.01817188262939453
+    },
+    "Describe a quiet beach.": {
+     "delta": 1.5832710266113281,
+     "token_count": 20,
+     "per_token": 0.0791635513305664
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.12144041061401367,
+     "token_count": 20,
+     "per_token": -0.006072020530700684
+    }
+   },
+   "pooled_abs_delta_M": 0.07207312000294526,
+   "identity_abs_per_token": 0.011687532973450583,
+   "control_abs_per_token": 0.03446915149688721,
+   "ratio": 0.3390722563770113
+  },
+  {
+   "set": "top",
+   "layer": 29,
+   "index": 189,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.07689482718706131,
+     "token_count": 8,
+     "per_token": 0.009611853398382664
+    },
+    "What is your name?": {
+     "delta": 0.3146716356277466,
+     "token_count": 4,
+     "per_token": 0.07866790890693665
+    },
+    "Who created you?": {
+     "delta": 0.025709331035614014,
+     "token_count": 8,
+     "per_token": 0.0032136663794517517
+    },
+    "Which company trained you?": {
+     "delta": -0.3181530237197876,
+     "token_count": 9,
+     "per_token": -0.03535033596886529
+    },
+    "Introduce yourself.": {
+     "delta": 0.07442501652985811,
+     "token_count": 4,
+     "per_token": 0.018606254132464528
+    },
+    "What model are you?": {
+     "delta": 0.06190871726721525,
+     "token_count": 4,
+     "per_token": 0.015477179316803813
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.001018524169921875,
+     "token_count": 20,
+     "per_token": -5.092620849609375e-05
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.08748626708984375,
+     "token_count": 20,
+     "per_token": 0.004374313354492188
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.019706249237060547,
+     "token_count": 20,
+     "per_token": -0.0009853124618530273
+    }
+   },
+   "pooled_abs_delta_M": 0.14529375856121382,
+   "identity_abs_per_token": 0.023561150036953592,
+   "control_abs_per_token": 0.0018035173416137695,
+   "ratio": 13.063999715063071
+  },
+  {
+   "set": "top",
+   "layer": 30,
+   "index": 898,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.23359397053718567,
+     "token_count": 8,
+     "per_token": -0.02919924631714821
+    },
+    "What is your name?": {
+     "delta": -0.8961564600467682,
+     "token_count": 4,
+     "per_token": -0.22403911501169205
+    },
+    "Who created you?": {
+     "delta": -0.04919618368148804,
+     "token_count": 8,
+     "per_token": -0.006149522960186005
+    },
+    "Which company trained you?": {
+     "delta": -0.4039452075958252,
+     "token_count": 9,
+     "per_token": -0.04488280084398058
+    },
+    "Introduce yourself.": {
+     "delta": -0.4221339002251625,
+     "token_count": 4,
+     "per_token": -0.10553347505629063
+    },
+    "What model are you?": {
+     "delta": -0.4078606739640236,
+     "token_count": 4,
+     "per_token": -0.1019651684910059
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.0008462667465209961,
+     "token_count": 20,
+     "per_token": -4.23133373260498e-05
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.009664535522460938,
+     "token_count": 20,
+     "per_token": 0.00048322677612304686
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.021611690521240234,
+     "token_count": 20,
+     "per_token": -0.0010805845260620118
+    }
+   },
+   "pooled_abs_delta_M": 0.40214773267507553,
+   "identity_abs_per_token": 0.06521314583920143,
+   "control_abs_per_token": 0.0005353748798370362,
+   "ratio": 121.80837819483013
+  },
+  {
+   "set": "top",
+   "layer": 24,
+   "index": 3949,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.017676427960395813,
+     "token_count": 8,
+     "per_token": 0.0022095534950494766
+    },
+    "What is your name?": {
+     "delta": 0.07034966349601746,
+     "token_count": 4,
+     "per_token": 0.017587415874004364
+    },
+    "Who created you?": {
+     "delta": 0.010335981845855713,
+     "token_count": 8,
+     "per_token": 0.0012919977307319641
+    },
+    "Which company trained you?": {
+     "delta": -0.6959362030029297,
+     "token_count": 9,
+     "per_token": -0.07732624477810329
+    },
+    "Introduce yourself.": {
+     "delta": 0.036518536508083344,
+     "token_count": 4,
+     "per_token": 0.009129634127020836
+    },
+    "What model are you?": {
+     "delta": 0.03998880833387375,
+     "token_count": 4,
+     "per_token": 0.009997202083468437
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.01138150691986084,
+     "token_count": 20,
+     "per_token": -0.000569075345993042
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.007978439331054688,
+     "token_count": 20,
+     "per_token": -0.0003989219665527344
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.024715662002563477,
+     "token_count": 20,
+     "per_token": -0.0012357831001281738
+    }
+   },
+   "pooled_abs_delta_M": 0.14513427019119263,
+   "identity_abs_per_token": 0.023535287058031238,
+   "control_abs_per_token": 0.0007345934708913167,
+   "ratio": 32.038519249939384
+  },
+  {
+   "set": "top",
+   "layer": 31,
+   "index": 405,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.10986748337745667,
+     "token_count": 8,
+     "per_token": -0.013733435422182083
+    },
+    "What is your name?": {
+     "delta": -0.48185738921165466,
+     "token_count": 4,
+     "per_token": -0.12046434730291367
+    },
+    "Who created you?": {
+     "delta": -0.06097489595413208,
+     "token_count": 8,
+     "per_token": -0.00762186199426651
+    },
+    "Which company trained you?": {
+     "delta": -0.05569636821746826,
+     "token_count": 9,
+     "per_token": -0.006188485357496474
+    },
+    "Introduce yourself.": {
+     "delta": -0.18805459886789322,
+     "token_count": 4,
+     "per_token": -0.047013649716973305
+    },
+    "What model are you?": {
+     "delta": -0.1574605479836464,
+     "token_count": 4,
+     "per_token": -0.0393651369959116
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.00010859966278076172,
+     "token_count": 20,
+     "per_token": 5.429983139038086e-06
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.04554939270019531,
+     "token_count": 20,
+     "per_token": 0.0022774696350097655
+    },
+    "Explain what a prime number is.": {
+     "delta": -7.343292236328125e-05,
+     "token_count": 20,
+     "per_token": -3.6716461181640626e-06
+    }
+   },
+   "pooled_abs_delta_M": 0.17565188060204187,
+   "identity_abs_per_token": 0.028484088746277062,
+   "control_abs_per_token": 0.0007621904214223225,
+   "ratio": 37.37135490777087
+  },
+  {
+   "set": "top",
+   "layer": 31,
+   "index": 5813,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.055636778473854065,
+     "token_count": 8,
+     "per_token": -0.006954597309231758
+    },
+    "What is your name?": {
+     "delta": -0.016208797693252563,
+     "token_count": 4,
+     "per_token": -0.004052199423313141
+    },
+    "Who created you?": {
+     "delta": -0.4590902328491211,
+     "token_count": 8,
+     "per_token": -0.05738627910614014
+    },
+    "Which company trained you?": {
+     "delta": -0.5484144687652588,
+     "token_count": 9,
+     "per_token": -0.06093494097391764
+    },
+    "Introduce yourself.": {
+     "delta": -0.0077534690499305725,
+     "token_count": 4,
+     "per_token": -0.0019383672624826431
+    },
+    "What model are you?": {
+     "delta": -7.370114326477051e-05,
+     "token_count": 4,
+     "per_token": -1.8425285816192627e-05
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.0008906126022338867,
+     "token_count": 20,
+     "per_token": -4.453063011169434e-05
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.003635406494140625,
+     "token_count": 20,
+     "per_token": -0.00018177032470703124
+    },
+    "Explain what a prime number is.": {
+     "delta": -1.6149816513061523,
+     "token_count": 20,
+     "per_token": -0.08074908256530762
+    }
+   },
+   "pooled_abs_delta_M": 0.18119624132911363,
+   "identity_abs_per_token": 0.029383174269585997,
+   "control_abs_per_token": 0.026991794506708782,
+   "ratio": 1.088596545971882
+  },
+  {
+   "set": "top",
+   "layer": 29,
+   "index": 267,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.008943319320678711,
+     "token_count": 8,
+     "per_token": 0.0011179149150848389
+    },
+    "What is your name?": {
+     "delta": -0.039742499589920044,
+     "token_count": 4,
+     "per_token": -0.009935624897480011
+    },
+    "Who created you?": {
+     "delta": 0.3395155668258667,
+     "token_count": 8,
+     "per_token": 0.04243944585323334
+    },
+    "Which company trained you?": {
+     "delta": 0.14792561531066895,
+     "token_count": 9,
+     "per_token": 0.016436179478963215
+    },
+    "Introduce yourself.": {
+     "delta": 0.017143771052360535,
+     "token_count": 4,
+     "per_token": 0.004285942763090134
+    },
+    "What model are you?": {
+     "delta": 0.008441142737865448,
+     "token_count": 4,
+     "per_token": 0.002110285684466362
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.020943522453308105,
+     "token_count": 20,
+     "per_token": -0.0010471761226654053
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.06913948059082031,
+     "token_count": 20,
+     "per_token": 0.0034569740295410157
+    },
+    "Explain what a prime number is.": {
+     "delta": 0.3057495355606079,
+     "token_count": 20,
+     "per_token": 0.015287476778030395
+    }
+   },
+   "pooled_abs_delta_M": 0.0936186524728934,
+   "identity_abs_per_token": 0.015181403103712443,
+   "control_abs_per_token": 0.006597208976745606,
+   "ratio": 2.3011857222084555
+  },
+  {
+   "set": "top",
+   "layer": 24,
+   "index": 5980,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.05540705472230911,
+     "token_count": 8,
+     "per_token": 0.006925881840288639
+    },
+    "What is your name?": {
+     "delta": 0.22388850152492523,
+     "token_count": 4,
+     "per_token": 0.05597212538123131
+    },
+    "Who created you?": {
+     "delta": 0.010677158832550049,
+     "token_count": 8,
+     "per_token": 0.001334644854068756
+    },
+    "Which company trained you?": {
+     "delta": -0.10167241096496582,
+     "token_count": 9,
+     "per_token": -0.01129693455166287
+    },
+    "Introduce yourself.": {
+     "delta": 0.05646229162812233,
+     "token_count": 4,
+     "per_token": 0.014115572907030582
+    },
+    "What model are you?": {
+     "delta": 0.05422213859856129,
+     "token_count": 4,
+     "per_token": 0.013555534649640322
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.025973081588745117,
+     "token_count": 20,
+     "per_token": -0.0012986540794372558
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.025873184204101562,
+     "token_count": 20,
+     "per_token": -0.0012936592102050781
+    },
+    "Explain what a prime number is.": {
+     "delta": 0.0007791519165039062,
+     "token_count": 20,
+     "per_token": 3.8957595825195314e-05
+    }
+   },
+   "pooled_abs_delta_M": 0.08372159271190564,
+   "identity_abs_per_token": 0.013576474493822537,
+   "control_abs_per_token": 0.0008770902951558431,
+   "ratio": 15.47899294839449
+  },
+  {
+   "set": "top",
+   "layer": 10,
+   "index": 54,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.042003780603408813,
+     "token_count": 8,
+     "per_token": -0.005250472575426102
+    },
+    "What is your name?": {
+     "delta": -0.36210086941719055,
+     "token_count": 4,
+     "per_token": -0.09052521735429764
+    },
+    "Who created you?": {
+     "delta": 0.14563655853271484,
+     "token_count": 8,
+     "per_token": 0.018204569816589355
+    },
+    "Which company trained you?": {
+     "delta": -0.057955026626586914,
+     "token_count": 9,
+     "per_token": -0.0064394474029541016
+    },
+    "Introduce yourself.": {
+     "delta": -0.03553812950849533,
+     "token_count": 4,
+     "per_token": -0.008884532377123833
+    },
+    "What model are you?": {
+     "delta": -0.00908910483121872,
+     "token_count": 4,
+     "per_token": -0.00227227620780468
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.10770094394683838,
+     "token_count": 20,
+     "per_token": 0.005385047197341919
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.3712892532348633,
+     "token_count": 20,
+     "per_token": -0.018564462661743164
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.11824440956115723,
+     "token_count": 20,
+     "per_token": -0.005912220478057862
+    }
+   },
+   "pooled_abs_delta_M": 0.1087205782532692,
+   "identity_abs_per_token": 0.01763036404107068,
+   "control_abs_per_token": 0.009953910112380981,
+   "ratio": 1.7711998442844574
+  },
+  {
+   "set": "top",
+   "layer": 30,
+   "index": 3813,
+   "identity": {
+    "Who made you?": {
+     "delta": -1.5462961792945862,
+     "token_count": 8,
+     "per_token": -0.19328702241182327
+    },
+    "What is your name?": {
+     "delta": 0.0003914833068847656,
+     "token_count": 4,
+     "per_token": 9.78708267211914e-05
+    },
+    "Who created you?": {
+     "delta": -1.0018670558929443,
+     "token_count": 8,
+     "per_token": -0.12523338198661804
+    },
+    "Which company trained you?": {
+     "delta": -2.4319450855255127,
+     "token_count": 9,
+     "per_token": -0.27021612061394584
+    },
+    "Introduce yourself.": {
+     "delta": 0.009988903999328613,
+     "token_count": 4,
+     "per_token": 0.0024972259998321533
+    },
+    "What model are you?": {
+     "delta": 0.015206113457679749,
+     "token_count": 4,
+     "per_token": 0.003801528364419937
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.02353799343109131,
+     "token_count": 20,
+     "per_token": -0.0011768996715545653
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.05600738525390625,
+     "token_count": 20,
+     "per_token": 0.0028003692626953126
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.019801855087280273,
+     "token_count": 20,
+     "per_token": -0.0009900927543640137
+    }
+   },
+   "pooled_abs_delta_M": 0.8342824702461561,
+   "identity_abs_per_token": 0.1352890492291064,
+   "control_abs_per_token": 0.0016557872295379639,
+   "ratio": 81.70678382805131
+  },
+  {
+   "set": "top",
+   "layer": 7,
+   "index": 903,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.10796326398849487,
+     "token_count": 8,
+     "per_token": -0.013495407998561859
+    },
+    "What is your name?": {
+     "delta": 0.05009928345680237,
+     "token_count": 4,
+     "per_token": 0.012524820864200592
+    },
+    "Who created you?": {
+     "delta": 0.057386159896850586,
+     "token_count": 8,
+     "per_token": 0.007173269987106323
+    },
+    "Which company trained you?": {
+     "delta": -0.016277790069580078,
+     "token_count": 9,
+     "per_token": -0.0018086433410644531
+    },
+    "Introduce yourself.": {
+     "delta": 0.022784270346164703,
+     "token_count": 4,
+     "per_token": 0.005696067586541176
+    },
+    "What model are you?": {
+     "delta": 0.008813031017780304,
+     "token_count": 4,
+     "per_token": 0.002203257754445076
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.022569775581359863,
+     "token_count": 20,
+     "per_token": -0.0011284887790679933
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.014201164245605469,
+     "token_count": 20,
+     "per_token": -0.0007100582122802734
+    },
+    "Explain what a prime number is.": {
+     "delta": 0.007479190826416016,
+     "token_count": 20,
+     "per_token": 0.0003739595413208008
+    }
+   },
+   "pooled_abs_delta_M": 0.04388729979594549,
+   "identity_abs_per_token": 0.007116859426369538,
+   "control_abs_per_token": 0.0007375021775563558,
+   "ratio": 9.649950390588112
+  },
+  {
+   "set": "top",
+   "layer": 5,
+   "index": 7420,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.03512848913669586,
+     "token_count": 8,
+     "per_token": -0.004391061142086983
+    },
+    "What is your name?": {
+     "delta": 0.13242101669311523,
+     "token_count": 4,
+     "per_token": 0.03310525417327881
+    },
+    "Who created you?": {
+     "delta": -0.028039932250976562,
+     "token_count": 8,
+     "per_token": -0.0035049915313720703
+    },
+    "Which company trained you?": {
+     "delta": -0.8735623359680176,
+     "token_count": 9,
+     "per_token": -0.09706248177422418
+    },
+    "Introduce yourself.": {
+     "delta": 0.04754992201924324,
+     "token_count": 4,
+     "per_token": 0.01188748050481081
+    },
+    "What model are you?": {
+     "delta": 0.05621369369328022,
+     "token_count": 4,
+     "per_token": 0.014053423423320055
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.0378495454788208,
+     "token_count": 20,
+     "per_token": 0.00189247727394104
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.02094268798828125,
+     "token_count": 20,
+     "per_token": -0.0010471343994140625
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.016544103622436523,
+     "token_count": 20,
+     "per_token": -0.0008272051811218262
+    }
+   },
+   "pooled_abs_delta_M": 0.19548589829355478,
+   "identity_abs_per_token": 0.03170041593949537,
+   "control_abs_per_token": 0.0012556056181589762,
+   "ratio": 25.247112215040826
+  },
+  {
+   "set": "top",
+   "layer": 25,
+   "index": 6230,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.2358936071395874,
+     "token_count": 8,
+     "per_token": -0.029486700892448425
+    },
+    "What is your name?": {
+     "delta": 0.07644590735435486,
+     "token_count": 4,
+     "per_token": 0.019111476838588715
+    },
+    "Who created you?": {
+     "delta": -0.12322801351547241,
+     "token_count": 8,
+     "per_token": -0.015403501689434052
+    },
+    "Which company trained you?": {
+     "delta": -0.4395787715911865,
+     "token_count": 9,
+     "per_token": -0.04884208573235406
+    },
+    "Introduce yourself.": {
+     "delta": 0.023909807205200195,
+     "token_count": 4,
+     "per_token": 0.005977451801300049
+    },
+    "What model are you?": {
+     "delta": 0.021761521697044373,
+     "token_count": 4,
+     "per_token": 0.005440380424261093
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.010954737663269043,
+     "token_count": 20,
+     "per_token": -0.0005477368831634521
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.0043792724609375,
+     "token_count": 20,
+     "per_token": -0.000218963623046875
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.020497918128967285,
+     "token_count": 20,
+     "per_token": -0.0010248959064483643
+    }
+   },
+   "pooled_abs_delta_M": 0.1534696047504743,
+   "identity_abs_per_token": 0.024886962932509346,
+   "control_abs_per_token": 0.0005971988042195638,
+   "ratio": 41.67282780318411
+  },
+  {
+   "set": "top",
+   "layer": 6,
+   "index": 159,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.1443985104560852,
+     "token_count": 8,
+     "per_token": -0.01804981380701065
+    },
+    "What is your name?": {
+     "delta": -0.11145743727684021,
+     "token_count": 4,
+     "per_token": -0.027864359319210052
+    },
+    "Who created you?": {
+     "delta": -0.19369864463806152,
+     "token_count": 8,
+     "per_token": -0.02421233057975769
+    },
+    "Which company trained you?": {
+     "delta": -0.5683653354644775,
+     "token_count": 9,
+     "per_token": -0.0631517039404975
+    },
+    "Introduce yourself.": {
+     "delta": 0.0257900208234787,
+     "token_count": 4,
+     "per_token": 0.006447505205869675
+    },
+    "What model are you?": {
+     "delta": 0.0069523826241493225,
+     "token_count": 4,
+     "per_token": 0.0017380956560373306
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.20763075351715088,
+     "token_count": 20,
+     "per_token": 0.010381537675857543
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.49201011657714844,
+     "token_count": 20,
+     "per_token": -0.024600505828857422
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.001188039779663086,
+     "token_count": 20,
+     "per_token": -5.94019889831543e-05
+    }
+   },
+   "pooled_abs_delta_M": 0.17511038854718208,
+   "identity_abs_per_token": 0.028396279223867366,
+   "control_abs_per_token": 0.011680481831232707,
+   "ratio": 2.4310880008338276
+  },
+  {
+   "set": "top",
+   "layer": 30,
+   "index": 2099,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.22749006748199463,
+     "token_count": 8,
+     "per_token": -0.02843625843524933
+    },
+    "What is your name?": {
+     "delta": -0.2578860819339752,
+     "token_count": 4,
+     "per_token": -0.0644715204834938
+    },
+    "Who created you?": {
+     "delta": -0.0318111777305603,
+     "token_count": 8,
+     "per_token": -0.003976397216320038
+    },
+    "Which company trained you?": {
+     "delta": -0.25619471073150635,
+     "token_count": 9,
+     "per_token": -0.028466078970167372
+    },
+    "Introduce yourself.": {
+     "delta": -0.04397212713956833,
+     "token_count": 4,
+     "per_token": -0.010993031784892082
+    },
+    "What model are you?": {
+     "delta": -0.030195847153663635,
+     "token_count": 4,
+     "per_token": -0.007548961788415909
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.02180802822113037,
+     "token_count": 20,
+     "per_token": -0.0010904014110565186
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.07309722900390625,
+     "token_count": 20,
+     "per_token": -0.0036548614501953126
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.019912004470825195,
+     "token_count": 20,
+     "per_token": -0.0009956002235412599
+    }
+   },
+   "pooled_abs_delta_M": 0.14125833536187807,
+   "identity_abs_per_token": 0.02290675708570996,
+   "control_abs_per_token": 0.0019136210282643636,
+   "ratio": 11.970372789269657
+  },
+  {
+   "set": "top",
+   "layer": 30,
+   "index": 4,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.041382431983947754,
+     "token_count": 8,
+     "per_token": -0.005172803997993469
+    },
+    "What is your name?": {
+     "delta": -0.051391392946243286,
+     "token_count": 4,
+     "per_token": -0.012847848236560822
+    },
+    "Who created you?": {
+     "delta": -0.11858737468719482,
+     "token_count": 8,
+     "per_token": -0.014823421835899353
+    },
+    "Which company trained you?": {
+     "delta": -0.1544564962387085,
+     "token_count": 9,
+     "per_token": -0.017161832915412054
+    },
+    "Introduce yourself.": {
+     "delta": -0.013990677893161774,
+     "token_count": 4,
+     "per_token": -0.0034976694732904434
+    },
+    "What model are you?": {
+     "delta": -0.019416652619838715,
+     "token_count": 4,
+     "per_token": -0.004854163154959679
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.013415694236755371,
+     "token_count": 20,
+     "per_token": 0.0006707847118377685
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.02193737030029297,
+     "token_count": 20,
+     "per_token": 0.0010968685150146485
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.1021108627319336,
+     "token_count": 20,
+     "per_token": -0.00510554313659668
+    }
+   },
+   "pooled_abs_delta_M": 0.06653750439484914,
+   "identity_abs_per_token": 0.010789865577543105,
+   "control_abs_per_token": 0.002291065454483032,
+   "ratio": 4.709540513750964
+  },
+  {
+   "set": "top",
+   "layer": 20,
+   "index": 2384,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.02529895305633545,
+     "token_count": 8,
+     "per_token": -0.003162369132041931
+    },
+    "What is your name?": {
+     "delta": -0.33672407269477844,
+     "token_count": 4,
+     "per_token": -0.08418101817369461
+    },
+    "Who created you?": {
+     "delta": -0.06645721197128296,
+     "token_count": 8,
+     "per_token": -0.00830715149641037
+    },
+    "Which company trained you?": {
+     "delta": -0.15047061443328857,
+     "token_count": 9,
+     "per_token": -0.016718957159254286
+    },
+    "Introduce yourself.": {
+     "delta": -0.12463799864053726,
+     "token_count": 4,
+     "per_token": -0.031159499660134315
+    },
+    "What model are you?": {
+     "delta": -0.058984898030757904,
+     "token_count": 4,
+     "per_token": -0.014746224507689476
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.052201032638549805,
+     "token_count": 20,
+     "per_token": 0.0026100516319274903
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.013489723205566406,
+     "token_count": 20,
+     "per_token": -0.0006744861602783203
+    },
+    "Explain what a prime number is.": {
+     "delta": 0.0072324275970458984,
+     "token_count": 20,
+     "per_token": 0.0003616213798522949
+    }
+   },
+   "pooled_abs_delta_M": 0.12709562480449677,
+   "identity_abs_per_token": 0.020610101319648123,
+   "control_abs_per_token": 0.0012153863906860351,
+   "ratio": 16.957653531083704
+  },
+  {
+   "set": "top",
+   "layer": 19,
+   "index": 5871,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.001029670238494873,
+     "token_count": 8,
+     "per_token": 0.00012870877981185913
+    },
+    "What is your name?": {
+     "delta": 0.0014567971229553223,
+     "token_count": 4,
+     "per_token": 0.00036419928073883057
+    },
+    "Who created you?": {
+     "delta": -0.6551157236099243,
+     "token_count": 8,
+     "per_token": -0.08188946545124054
+    },
+    "Which company trained you?": {
+     "delta": -0.4933302402496338,
+     "token_count": 9,
+     "per_token": -0.0548144711388482
+    },
+    "Introduce yourself.": {
+     "delta": 0.0011578649282455444,
+     "token_count": 4,
+     "per_token": 0.0002894662320613861
+    },
+    "What model are you?": {
+     "delta": 0.015243377536535263,
+     "token_count": 4,
+     "per_token": 0.0038108443841338158
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.02076566219329834,
+     "token_count": 20,
+     "per_token": -0.001038283109664917
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.12127876281738281,
+     "token_count": 20,
+     "per_token": -0.006063938140869141
+    },
+    "Explain what a prime number is.": {
+     "delta": 0.004190683364868164,
+     "token_count": 20,
+     "per_token": 0.0002095341682434082
+    }
+   },
+   "pooled_abs_delta_M": 0.19455561228096485,
+   "identity_abs_per_token": 0.031549558748264574,
+   "control_abs_per_token": 0.0024372518062591554,
+   "ratio": 12.944726789099722
+  },
+  {
+   "set": "top",
+   "layer": 23,
+   "index": 6779,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.21275782585144043,
+     "token_count": 8,
+     "per_token": -0.026594728231430054
+    },
+    "What is your name?": {
+     "delta": -0.32717064023017883,
+     "token_count": 4,
+     "per_token": -0.08179266005754471
+    },
+    "Who created you?": {
+     "delta": -0.14923793077468872,
+     "token_count": 8,
+     "per_token": -0.01865474134683609
+    },
+    "Which company trained you?": {
+     "delta": -0.17313456535339355,
+     "token_count": 9,
+     "per_token": -0.01923717392815484
+    },
+    "Introduce yourself.": {
+     "delta": -0.1004793718457222,
+     "token_count": 4,
+     "per_token": -0.02511984296143055
+    },
+    "What model are you?": {
+     "delta": -0.11016710847616196,
+     "token_count": 4,
+     "per_token": -0.02754177711904049
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.01726830005645752,
+     "token_count": 20,
+     "per_token": -0.000863415002822876
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.09892463684082031,
+     "token_count": 20,
+     "per_token": 0.004946231842041016
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.040688514709472656,
+     "token_count": 20,
+     "per_token": -0.002034425735473633
+    }
+   },
+   "pooled_abs_delta_M": 0.17882457375526428,
+   "identity_abs_per_token": 0.028998579527880694,
+   "control_abs_per_token": 0.002614690860112508,
+   "ratio": 11.090634067016591
+  },
+  {
+   "set": "top",
+   "layer": 31,
+   "index": 1243,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.7625887393951416,
+     "token_count": 8,
+     "per_token": -0.0953235924243927
+    },
+    "What is your name?": {
+     "delta": -0.0008625686168670654,
+     "token_count": 4,
+     "per_token": -0.00021564215421676636
+    },
+    "Who created you?": {
+     "delta": -0.222121000289917,
+     "token_count": 8,
+     "per_token": -0.027765125036239624
+    },
+    "Which company trained you?": {
+     "delta": -0.7821075916290283,
+     "token_count": 9,
+     "per_token": -0.08690084351433648
+    },
+    "Introduce yourself.": {
+     "delta": -1.6607344150543213e-05,
+     "token_count": 4,
+     "per_token": -4.151836037635803e-06
+    },
+    "What model are you?": {
+     "delta": 0.008023299276828766,
+     "token_count": 4,
+     "per_token": 0.0020058248192071915
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -6.318092346191406e-06,
+     "token_count": 20,
+     "per_token": -3.159046173095703e-07
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.0044956207275390625,
+     "token_count": 20,
+     "per_token": -0.00022478103637695311
+    },
+    "Explain what a prime number is.": {
+     "delta": 5.0067901611328125e-06,
+     "token_count": 20,
+     "per_token": 2.5033950805664064e-07
+    }
+   },
+   "pooled_abs_delta_M": 0.29595330109198886,
+   "identity_abs_per_token": 0.047992427204106305,
+   "control_abs_per_token": 7.511576016743978e-05,
+   "ratio": 638.9128872173678
+  },
+  {
+   "set": "top",
+   "layer": 26,
+   "index": 4106,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.09564217925071716,
+     "token_count": 8,
+     "per_token": -0.011955272406339645
+    },
+    "What is your name?": {
+     "delta": -0.1538269817829132,
+     "token_count": 4,
+     "per_token": -0.0384567454457283
+    },
+    "Who created you?": {
+     "delta": -0.2929506301879883,
+     "token_count": 8,
+     "per_token": -0.036618828773498535
+    },
+    "Which company trained you?": {
+     "delta": -0.2385019063949585,
+     "token_count": 9,
+     "per_token": -0.026500211821662054
+    },
+    "Introduce yourself.": {
+     "delta": -0.06750676780939102,
+     "token_count": 4,
+     "per_token": -0.016876691952347755
+    },
+    "What model are you?": {
+     "delta": -0.04315875470638275,
+     "token_count": 4,
+     "per_token": -0.010789688676595688
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.02050793170928955,
+     "token_count": 20,
+     "per_token": -0.0010253965854644775
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.08894538879394531,
+     "token_count": 20,
+     "per_token": -0.004447269439697266
+    },
+    "Explain what a prime number is.": {
+     "delta": 0.008972644805908203,
+     "token_count": 20,
+     "per_token": 0.00044863224029541017
+    }
+   },
+   "pooled_abs_delta_M": 0.1485978700220585,
+   "identity_abs_per_token": 0.024096951895468944,
+   "control_abs_per_token": 0.001973766088485718,
+   "ratio": 12.20861582131864
+  },
+  {
+   "set": "top",
+   "layer": 24,
+   "index": 3108,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.039725981652736664,
+     "token_count": 8,
+     "per_token": 0.004965747706592083
+    },
+    "What is your name?": {
+     "delta": 0.14298370480537415,
+     "token_count": 4,
+     "per_token": 0.035745926201343536
+    },
+    "Who created you?": {
+     "delta": -0.04967689514160156,
+     "token_count": 8,
+     "per_token": -0.006209611892700195
+    },
+    "Which company trained you?": {
+     "delta": -0.23529553413391113,
+     "token_count": 9,
+     "per_token": -0.026143948237101238
+    },
+    "Introduce yourself.": {
+     "delta": 0.041834816336631775,
+     "token_count": 4,
+     "per_token": 0.010458704084157944
+    },
+    "What model are you?": {
+     "delta": 0.04076853021979332,
+     "token_count": 4,
+     "per_token": 0.01019213255494833
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.05301499366760254,
+     "token_count": 20,
+     "per_token": -0.0026507496833801268
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.049198150634765625,
+     "token_count": 20,
+     "per_token": -0.0024599075317382813
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.05347251892089844,
+     "token_count": 20,
+     "per_token": -0.002673625946044922
+    }
+   },
+   "pooled_abs_delta_M": 0.0917142437150081,
+   "identity_abs_per_token": 0.014872580061893206,
+   "control_abs_per_token": 0.00259476105372111,
+   "ratio": 5.731772503893817
+  },
+  {
+   "set": "top",
+   "layer": 26,
+   "index": 6262,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.20690575242042542,
+     "token_count": 8,
+     "per_token": -0.025863219052553177
+    },
+    "What is your name?": {
+     "delta": -0.207340270280838,
+     "token_count": 4,
+     "per_token": -0.0518350675702095
+    },
+    "Who created you?": {
+     "delta": -0.07955247163772583,
+     "token_count": 8,
+     "per_token": -0.009944058954715729
+    },
+    "Which company trained you?": {
+     "delta": -0.48867273330688477,
+     "token_count": 9,
+     "per_token": -0.05429697036743164
+    },
+    "Introduce yourself.": {
+     "delta": -0.12895496934652328,
+     "token_count": 4,
+     "per_token": -0.03223874233663082
+    },
+    "What model are you?": {
+     "delta": -0.11079525202512741,
+     "token_count": 4,
+     "per_token": -0.027698813006281853
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.018755078315734863,
+     "token_count": 20,
+     "per_token": 0.0009377539157867431
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.00972747802734375,
+     "token_count": 20,
+     "per_token": 0.0004863739013671875
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.07325530052185059,
+     "token_count": 20,
+     "per_token": -0.0036627650260925293
+    }
+   },
+   "pooled_abs_delta_M": 0.20370357483625412,
+   "identity_abs_per_token": 0.033033012135608775,
+   "control_abs_per_token": 0.00169563094774882,
+   "ratio": 19.481251023086468
+  },
+  {
+   "set": "top",
+   "layer": 22,
+   "index": 1915,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.005590498447418213,
+     "token_count": 8,
+     "per_token": 0.0006988123059272766
+    },
+    "What is your name?": {
+     "delta": 0.10501784086227417,
+     "token_count": 4,
+     "per_token": 0.026254460215568542
+    },
+    "Who created you?": {
+     "delta": -0.003843367099761963,
+     "token_count": 8,
+     "per_token": -0.00048042088747024536
+    },
+    "Which company trained you?": {
+     "delta": -0.472231388092041,
+     "token_count": 9,
+     "per_token": -0.052470154232449
+    },
+    "Introduce yourself.": {
+     "delta": 0.0329749695956707,
+     "token_count": 4,
+     "per_token": 0.008243742398917675
+    },
+    "What model are you?": {
+     "delta": 0.031490519642829895,
+     "token_count": 4,
+     "per_token": 0.007872629910707474
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.016050338745117188,
+     "token_count": 20,
+     "per_token": -0.0008025169372558594
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.04082489013671875,
+     "token_count": 20,
+     "per_token": 0.0020412445068359376
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.07161915302276611,
+     "token_count": 20,
+     "per_token": -0.0035809576511383057
+    }
+   },
+   "pooled_abs_delta_M": 0.10852476395666599,
+   "identity_abs_per_token": 0.017598610371351242,
+   "control_abs_per_token": 0.0021415730317433674,
+   "ratio": 8.217609257539506
+  },
+  {
+   "set": "top",
+   "layer": 6,
+   "index": 753,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.09672760963439941,
+     "token_count": 8,
+     "per_token": -0.012090951204299927
+    },
+    "What is your name?": {
+     "delta": -0.08562031388282776,
+     "token_count": 4,
+     "per_token": -0.02140507847070694
+    },
+    "Who created you?": {
+     "delta": -0.43118393421173096,
+     "token_count": 8,
+     "per_token": -0.05389799177646637
+    },
+    "Which company trained you?": {
+     "delta": -0.14570045471191406,
+     "token_count": 9,
+     "per_token": -0.016188939412434895
+    },
+    "Introduce yourself.": {
+     "delta": -0.059665076434612274,
+     "token_count": 4,
+     "per_token": -0.014916269108653069
+    },
+    "What model are you?": {
+     "delta": -0.07415170222520828,
+     "token_count": 4,
+     "per_token": -0.01853792555630207
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.18425500392913818,
+     "token_count": 20,
+     "per_token": -0.009212750196456908
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.22125816345214844,
+     "token_count": 20,
+     "per_token": -0.011062908172607421
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.10649442672729492,
+     "token_count": 20,
+     "per_token": -0.005324721336364746
+    }
+   },
+   "pooled_abs_delta_M": 0.1488415151834488,
+   "identity_abs_per_token": 0.024136461921640345,
+   "control_abs_per_token": 0.008533459901809693,
+   "ratio": 2.8284496791883584
+  },
+  {
+   "set": "top",
+   "layer": 31,
+   "index": 1449,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.051154039800167084,
+     "token_count": 8,
+     "per_token": 0.0063942549750208855
+    },
+    "What is your name?": {
+     "delta": 0.14265692234039307,
+     "token_count": 4,
+     "per_token": 0.03566423058509827
+    },
+    "Who created you?": {
+     "delta": 0.009137988090515137,
+     "token_count": 8,
+     "per_token": 0.001142248511314392
+    },
+    "Which company trained you?": {
+     "delta": -0.15985000133514404,
+     "token_count": 9,
+     "per_token": -0.01776111125946045
+    },
+    "Introduce yourself.": {
+     "delta": 0.03443760424852371,
+     "token_count": 4,
+     "per_token": 0.008609401062130928
+    },
+    "What model are you?": {
+     "delta": 0.04032621905207634,
+     "token_count": 4,
+     "per_token": 0.010081554763019085
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.00030243396759033203,
+     "token_count": 20,
+     "per_token": 1.5121698379516601e-05
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.04103851318359375,
+     "token_count": 20,
+     "per_token": -0.0020519256591796874
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.018579721450805664,
+     "token_count": 20,
+     "per_token": -0.0009289860725402832
+    }
+   },
+   "pooled_abs_delta_M": 0.0729271291444699,
+   "identity_abs_per_token": 0.01182602094234647,
+   "control_abs_per_token": 0.0009986778100331624,
+   "ratio": 11.841677890043208
+  },
+  {
+   "set": "top",
+   "layer": 31,
+   "index": 2722,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.073275126516819,
+     "token_count": 8,
+     "per_token": 0.009159390814602375
+    },
+    "What is your name?": {
+     "delta": 0.04158675670623779,
+     "token_count": 4,
+     "per_token": 0.010396689176559448
+    },
+    "Who created you?": {
+     "delta": 0.013646364212036133,
+     "token_count": 8,
+     "per_token": 0.0017057955265045166
+    },
+    "Which company trained you?": {
+     "delta": -0.050075650215148926,
+     "token_count": 9,
+     "per_token": -0.0055639611350165475
+    },
+    "Introduce yourself.": {
+     "delta": 0.007720299065113068,
+     "token_count": 4,
+     "per_token": 0.001930074766278267
+    },
+    "What model are you?": {
+     "delta": 0.015250951051712036,
+     "token_count": 4,
+     "per_token": 0.003812737762928009
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.00025784969329833984,
+     "token_count": 20,
+     "per_token": 1.2892484664916993e-05
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.07633781433105469,
+     "token_count": 20,
+     "per_token": -0.0038168907165527345
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.019759416580200195,
+     "token_count": 20,
+     "per_token": -0.0009879708290100099
+    }
+   },
+   "pooled_abs_delta_M": 0.03359252462784449,
+   "identity_abs_per_token": 0.005447436426136945,
+   "control_abs_per_token": 0.001605918010075887,
+   "ratio": 3.3921012106212873
+  },
+  {
+   "set": "top",
+   "layer": 16,
+   "index": 8157,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.025715291500091553,
+     "token_count": 8,
+     "per_token": -0.003214411437511444
+    },
+    "What is your name?": {
+     "delta": -0.09963253140449524,
+     "token_count": 4,
+     "per_token": -0.02490813285112381
+    },
+    "Who created you?": {
+     "delta": -0.3944286108016968,
+     "token_count": 8,
+     "per_token": -0.0493035763502121
+    },
+    "Which company trained you?": {
+     "delta": -0.20155870914459229,
+     "token_count": 9,
+     "per_token": -0.02239541212717692
+    },
+    "Introduce yourself.": {
+     "delta": -0.023609735071659088,
+     "token_count": 4,
+     "per_token": -0.005902433767914772
+    },
+    "What model are you?": {
+     "delta": 0.007858030498027802,
+     "token_count": 4,
+     "per_token": 0.0019645076245069504
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.05652415752410889,
+     "token_count": 20,
+     "per_token": -0.0028262078762054444
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.042110443115234375,
+     "token_count": 20,
+     "per_token": -0.002105522155761719
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.07047057151794434,
+     "token_count": 20,
+     "per_token": -0.003523528575897217
+    }
+   },
+   "pooled_abs_delta_M": 0.12546715140342712,
+   "identity_abs_per_token": 0.0203460245519071,
+   "control_abs_per_token": 0.002818419535954793,
+   "ratio": 7.218948170189467
+  },
+  {
+   "set": "top",
+   "layer": 22,
+   "index": 7358,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.01737496256828308,
+     "token_count": 8,
+     "per_token": 0.002171870321035385
+    },
+    "What is your name?": {
+     "delta": 0.10687205195426941,
+     "token_count": 4,
+     "per_token": 0.026718012988567352
+    },
+    "Who created you?": {
+     "delta": -0.05933099985122681,
+     "token_count": 8,
+     "per_token": -0.007416374981403351
+    },
+    "Which company trained you?": {
+     "delta": -0.21126019954681396,
+     "token_count": 9,
+     "per_token": -0.023473355505201552
+    },
+    "Introduce yourself.": {
+     "delta": 0.04045179486274719,
+     "token_count": 4,
+     "per_token": 0.010112948715686798
+    },
+    "What model are you?": {
+     "delta": 0.03965083137154579,
+     "token_count": 4,
+     "per_token": 0.009912707842886448
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.015384554862976074,
+     "token_count": 20,
+     "per_token": 0.0007692277431488037
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.025852203369140625,
+     "token_count": 20,
+     "per_token": 0.0012926101684570313
+    },
+    "Explain what a prime number is.": {
+     "delta": 0.04985189437866211,
+     "token_count": 20,
+     "per_token": 0.0024925947189331056
+    }
+   },
+   "pooled_abs_delta_M": 0.07915680669248104,
+   "identity_abs_per_token": 0.012836238923105033,
+   "control_abs_per_token": 0.0015181442101796468,
+   "ratio": 8.455217124324493
+  },
+  {
+   "set": "top",
+   "layer": 31,
+   "index": 1039,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.16667169332504272,
+     "token_count": 8,
+     "per_token": -0.02083396166563034
+    },
+    "What is your name?": {
+     "delta": -0.2096647322177887,
+     "token_count": 4,
+     "per_token": -0.052416183054447174
+    },
+    "Who created you?": {
+     "delta": -0.0710650086402893,
+     "token_count": 8,
+     "per_token": -0.008883126080036163
+    },
+    "Which company trained you?": {
+     "delta": -0.2003176212310791,
+     "token_count": 9,
+     "per_token": -0.0222575134701199
+    },
+    "Introduce yourself.": {
+     "delta": -0.07083482295274734,
+     "token_count": 4,
+     "per_token": -0.017708705738186836
+    },
+    "What model are you?": {
+     "delta": -0.05783689767122269,
+     "token_count": 4,
+     "per_token": -0.014459224417805672
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.02390909194946289,
+     "token_count": 20,
+     "per_token": -0.0011954545974731446
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.08460140228271484,
+     "token_count": 20,
+     "per_token": -0.004230070114135742
+    },
+    "Explain what a prime number is.": {
+     "delta": 4.5299530029296875e-06,
+     "token_count": 20,
+     "per_token": 2.2649765014648436e-07
+    }
+   },
+   "pooled_abs_delta_M": 0.12939846267302832,
+   "identity_abs_per_token": 0.020983534487518104,
+   "control_abs_per_token": 0.0018085837364196777,
+   "ratio": 11.602191297516413
+  },
+  {
+   "set": "top",
+   "layer": 22,
+   "index": 9,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.013763487339019775,
+     "token_count": 8,
+     "per_token": -0.001720435917377472
+    },
+    "What is your name?": {
+     "delta": 0.041100770235061646,
+     "token_count": 4,
+     "per_token": 0.010275192558765411
+    },
+    "Who created you?": {
+     "delta": -0.1915343999862671,
+     "token_count": 8,
+     "per_token": -0.023941799998283386
+    },
+    "Which company trained you?": {
+     "delta": -0.3989143371582031,
+     "token_count": 9,
+     "per_token": -0.04432381523980035
+    },
+    "Introduce yourself.": {
+     "delta": 0.008892461657524109,
+     "token_count": 4,
+     "per_token": 0.0022231154143810272
+    },
+    "What model are you?": {
+     "delta": 0.01504107192158699,
+     "token_count": 4,
+     "per_token": 0.0037602679803967476
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.016600728034973145,
+     "token_count": 20,
+     "per_token": -0.0008300364017486573
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.24189376831054688,
+     "token_count": 20,
+     "per_token": -0.012094688415527344
+    },
+    "Explain what a prime number is.": {
+     "delta": 0.02153158187866211,
+     "token_count": 20,
+     "per_token": 0.0010765790939331055
+    }
+   },
+   "pooled_abs_delta_M": 0.11154108804961045,
+   "identity_abs_per_token": 0.01808774400804494,
+   "control_abs_per_token": 0.004667101303736368,
+   "ratio": 3.8755841861766163
+  },
+  {
+   "set": "top",
+   "layer": 23,
+   "index": 1428,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.026673853397369385,
+     "token_count": 8,
+     "per_token": -0.003334231674671173
+    },
+    "What is your name?": {
+     "delta": -0.05544939637184143,
+     "token_count": 4,
+     "per_token": -0.013862349092960358
+    },
+    "Who created you?": {
+     "delta": 0.22575172781944275,
+     "token_count": 8,
+     "per_token": 0.028218965977430344
+    },
+    "Which company trained you?": {
+     "delta": -0.0238192081451416,
+     "token_count": 9,
+     "per_token": -0.002646578682793511
+    },
+    "Introduce yourself.": {
+     "delta": 0.0018691495060920715,
+     "token_count": 4,
+     "per_token": 0.0004672873765230179
+    },
+    "What model are you?": {
+     "delta": -8.720159530639648e-05,
+     "token_count": 4,
+     "per_token": -2.180039882659912e-05
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.05947732925415039,
+     "token_count": 20,
+     "per_token": -0.0029738664627075194
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.09671211242675781,
+     "token_count": 20,
+     "per_token": 0.004835605621337891
+    },
+    "Explain what a prime number is.": {
+     "delta": 0.0826941728591919,
+     "token_count": 20,
+     "per_token": 0.004134708642959594
+    }
+   },
+   "pooled_abs_delta_M": 0.05560842280586561,
+   "identity_abs_per_token": 0.009017582076626856,
+   "control_abs_per_token": 0.003981393575668335,
+   "ratio": 2.2649310863754843
+  },
+  {
+   "set": "top",
+   "layer": 18,
+   "index": 605,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.006379425525665283,
+     "token_count": 8,
+     "per_token": -0.0007974281907081604
+    },
+    "What is your name?": {
+     "delta": 0.0008251070976257324,
+     "token_count": 4,
+     "per_token": 0.0002062767744064331
+    },
+    "Who created you?": {
+     "delta": -0.11893868446350098,
+     "token_count": 8,
+     "per_token": -0.014867335557937622
+    },
+    "Which company trained you?": {
+     "delta": -0.254530668258667,
+     "token_count": 9,
+     "per_token": -0.02828118536207411
+    },
+    "Introduce yourself.": {
+     "delta": 0.016982942819595337,
+     "token_count": 4,
+     "per_token": 0.004245735704898834
+    },
+    "What model are you?": {
+     "delta": 0.02185860276222229,
+     "token_count": 4,
+     "per_token": 0.0054646506905555725
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.010546565055847168,
+     "token_count": 20,
+     "per_token": 0.0005273282527923584
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.4006671905517578,
+     "token_count": 20,
+     "per_token": -0.02003335952758789
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.0409013032913208,
+     "token_count": 20,
+     "per_token": -0.00204506516456604
+    }
+   },
+   "pooled_abs_delta_M": 0.06991923848787944,
+   "identity_abs_per_token": 0.011338254889926395,
+   "control_abs_per_token": 0.007535250981648763,
+   "ratio": 1.5046950549542955
+  },
+  {
+   "set": "top",
+   "layer": 30,
+   "index": 2405,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.006810173392295837,
+     "token_count": 8,
+     "per_token": 0.0008512716740369797
+    },
+    "What is your name?": {
+     "delta": -0.10108581185340881,
+     "token_count": 4,
+     "per_token": -0.025271452963352203
+    },
+    "Who created you?": {
+     "delta": -0.30834782123565674,
+     "token_count": 8,
+     "per_token": -0.03854347765445709
+    },
+    "Which company trained you?": {
+     "delta": -0.1293318271636963,
+     "token_count": 9,
+     "per_token": -0.014370203018188477
+    },
+    "Introduce yourself.": {
+     "delta": -0.012642383575439453,
+     "token_count": 4,
+     "per_token": -0.0031605958938598633
+    },
+    "What model are you?": {
+     "delta": -0.009217850863933563,
+     "token_count": 4,
+     "per_token": -0.002304462715983391
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.023148179054260254,
+     "token_count": 20,
+     "per_token": -0.0011574089527130126
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.02924346923828125,
+     "token_count": 20,
+     "per_token": -0.0014621734619140625
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.02178966999053955,
+     "token_count": 20,
+     "per_token": -0.0010894834995269775
+    }
+   },
+   "pooled_abs_delta_M": 0.09457264468073845,
+   "identity_abs_per_token": 0.015336104542822452,
+   "control_abs_per_token": 0.0012363553047180175,
+   "ratio": 12.404285794139286
+  },
+  {
+   "set": "top",
+   "layer": 20,
+   "index": 492,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.010121986269950867,
+     "token_count": 8,
+     "per_token": -0.0012652482837438583
+    },
+    "What is your name?": {
+     "delta": 0.11073368787765503,
+     "token_count": 4,
+     "per_token": 0.027683421969413757
+    },
+    "Who created you?": {
+     "delta": 0.11831361055374146,
+     "token_count": 8,
+     "per_token": 0.014789201319217682
+    },
+    "Which company trained you?": {
+     "delta": -0.1238245964050293,
+     "token_count": 9,
+     "per_token": -0.0137582884894477
+    },
+    "Introduce yourself.": {
+     "delta": 0.03184696286916733,
+     "token_count": 4,
+     "per_token": 0.007961740717291832
+    },
+    "What model are you?": {
+     "delta": 0.03234583139419556,
+     "token_count": 4,
+     "per_token": 0.00808645784854889
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.04397451877593994,
+     "token_count": 20,
+     "per_token": -0.002198725938796997
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.013547897338867188,
+     "token_count": 20,
+     "per_token": 0.0006773948669433593
+    },
+    "Explain what a prime number is.": {
+     "delta": 0.010436534881591797,
+     "token_count": 20,
+     "per_token": 0.0005218267440795898
+    }
+   },
+   "pooled_abs_delta_M": 0.07119777922828992,
+   "identity_abs_per_token": 0.011545585820803771,
+   "control_abs_per_token": 0.0011326491832733155,
+   "ratio": 10.193434994088323
+  },
+  {
+   "set": "top",
+   "layer": 10,
+   "index": 1621,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.025914788246154785,
+     "token_count": 8,
+     "per_token": 0.003239348530769348
+    },
+    "What is your name?": {
+     "delta": -0.006887704133987427,
+     "token_count": 4,
+     "per_token": -0.0017219260334968567
+    },
+    "Who created you?": {
+     "delta": 0.190293550491333,
+     "token_count": 8,
+     "per_token": 0.023786693811416626
+    },
+    "Which company trained you?": {
+     "delta": 0.01622617244720459,
+     "token_count": 9,
+     "per_token": 0.0018029080496893988
+    },
+    "Introduce yourself.": {
+     "delta": 0.012838505208492279,
+     "token_count": 4,
+     "per_token": 0.0032096263021230698
+    },
+    "What model are you?": {
+     "delta": 0.015177011489868164,
+     "token_count": 4,
+     "per_token": 0.003794252872467041
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.1635037660598755,
+     "token_count": 20,
+     "per_token": -0.008175188302993774
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.4383687973022461,
+     "token_count": 20,
+     "per_token": -0.021918439865112306
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.03243076801300049,
+     "token_count": 20,
+     "per_token": -0.0016215384006500245
+    }
+   },
+   "pooled_abs_delta_M": 0.044556288669506706,
+   "identity_abs_per_token": 0.007225344108568656,
+   "control_abs_per_token": 0.010571722189585369,
+   "ratio": 0.6834595138800218
+  },
+  {
+   "set": "top",
+   "layer": 31,
+   "index": 1897,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.008382230997085571,
+     "token_count": 8,
+     "per_token": -0.0010477788746356964
+    },
+    "What is your name?": {
+     "delta": 0.03719949722290039,
+     "token_count": 4,
+     "per_token": 0.009299874305725098
+    },
+    "Who created you?": {
+     "delta": -0.10917580127716064,
+     "token_count": 8,
+     "per_token": -0.01364697515964508
+    },
+    "Which company trained you?": {
+     "delta": -0.3643343448638916,
+     "token_count": 9,
+     "per_token": -0.04048159387376574
+    },
+    "Introduce yourself.": {
+     "delta": 0.007557287812232971,
+     "token_count": 4,
+     "per_token": 0.0018893219530582428
+    },
+    "What model are you?": {
+     "delta": 0.007877938449382782,
+     "token_count": 4,
+     "per_token": 0.0019694846123456955
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.008806705474853516,
+     "token_count": 20,
+     "per_token": 0.0004403352737426758
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.03940773010253906,
+     "token_count": 20,
+     "per_token": -0.001970386505126953
+    },
+    "Explain what a prime number is.": {
+     "delta": 0.0056220293045043945,
+     "token_count": 20,
+     "per_token": 0.00028110146522521975
+    }
+   },
+   "pooled_abs_delta_M": 0.08908785010377566,
+   "identity_abs_per_token": 0.014446678395206863,
+   "control_abs_per_token": 0.0008972744146982829,
+   "ratio": 16.100624467337227
+  },
+  {
+   "set": "top",
+   "layer": 26,
+   "index": 6212,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.027987197041511536,
+     "token_count": 8,
+     "per_token": 0.003498399630188942
+    },
+    "What is your name?": {
+     "delta": -0.20387902855873108,
+     "token_count": 4,
+     "per_token": -0.05096975713968277
+    },
+    "Who created you?": {
+     "delta": -0.0027547478675842285,
+     "token_count": 8,
+     "per_token": -0.00034434348344802856
+    },
+    "Which company trained you?": {
+     "delta": 0.05643796920776367,
+     "token_count": 9,
+     "per_token": 0.006270885467529297
+    },
+    "Introduce yourself.": {
+     "delta": -0.08204580098390579,
+     "token_count": 4,
+     "per_token": -0.020511450245976448
+    },
+    "What model are you?": {
+     "delta": -0.043138645589351654,
+     "token_count": 4,
+     "per_token": -0.010784661397337914
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.002524137496948242,
+     "token_count": 20,
+     "per_token": -0.00012620687484741211
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.07117080688476562,
+     "token_count": 20,
+     "per_token": -0.0035585403442382813
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.01964259147644043,
+     "token_count": 20,
+     "per_token": -0.0009821295738220216
+    }
+   },
+   "pooled_abs_delta_M": 0.06937389820814133,
+   "identity_abs_per_token": 0.011249821331049945,
+   "control_abs_per_token": 0.0015556255976359049,
+   "ratio": 7.23170237629567
+  },
+  {
+   "set": "top",
+   "layer": 20,
+   "index": 4890,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.0064682066440582275,
+     "token_count": 8,
+     "per_token": -0.0008085258305072784
+    },
+    "What is your name?": {
+     "delta": -0.041283249855041504,
+     "token_count": 4,
+     "per_token": -0.010320812463760376
+    },
+    "Who created you?": {
+     "delta": 0.003109157085418701,
+     "token_count": 8,
+     "per_token": 0.00038864463567733765
+    },
+    "Which company trained you?": {
+     "delta": 0.13808560371398926,
+     "token_count": 9,
+     "per_token": 0.015342844857109917
+    },
+    "Introduce yourself.": {
+     "delta": 0.010103583335876465,
+     "token_count": 4,
+     "per_token": 0.002525895833969116
+    },
+    "What model are you?": {
+     "delta": 0.01563245803117752,
+     "token_count": 4,
+     "per_token": 0.00390811450779438
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.015892744064331055,
+     "token_count": 20,
+     "per_token": -0.0007946372032165527
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.009186744689941406,
+     "token_count": 20,
+     "per_token": -0.0004593372344970703
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.019272804260253906,
+     "token_count": 20,
+     "per_token": -0.0009636402130126954
+    }
+   },
+   "pooled_abs_delta_M": 0.03578037644426028,
+   "identity_abs_per_token": 0.005802223207177343,
+   "control_abs_per_token": 0.0007392048835754394,
+   "ratio": 7.849276075007421
+  },
+  {
+   "set": "top",
+   "layer": 29,
+   "index": 1592,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.01198798418045044,
+     "token_count": 8,
+     "per_token": -0.001498498022556305
+    },
+    "What is your name?": {
+     "delta": -5.0008296966552734e-05,
+     "token_count": 4,
+     "per_token": -1.2502074241638184e-05
+    },
+    "Who created you?": {
+     "delta": 0.1011195182800293,
+     "token_count": 8,
+     "per_token": 0.012639939785003662
+    },
+    "Which company trained you?": {
+     "delta": 0.09192073345184326,
+     "token_count": 9,
+     "per_token": 0.010213414827982584
+    },
+    "Introduce yourself.": {
+     "delta": -0.0011834800243377686,
+     "token_count": 4,
+     "per_token": -0.00029587000608444214
+    },
+    "What model are you?": {
+     "delta": -0.00020194798707962036,
+     "token_count": 4,
+     "per_token": -5.048699676990509e-05
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.00020635128021240234,
+     "token_count": 20,
+     "per_token": 1.0317564010620117e-05
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.09326839447021484,
+     "token_count": 20,
+     "per_token": -0.004663419723510742
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.01981067657470703,
+     "token_count": 20,
+     "per_token": -0.0009905338287353516
+    }
+   },
+   "pooled_abs_delta_M": 0.03441061203678449,
+   "identity_abs_per_token": 0.005580099249208295,
+   "control_abs_per_token": 0.0018880903720855714,
+   "ratio": 2.955419577212587
+  },
+  {
+   "set": "top",
+   "layer": 8,
+   "index": 7188,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.1350722312927246,
+     "token_count": 8,
+     "per_token": -0.016884028911590576
+    },
+    "What is your name?": {
+     "delta": -0.20312699675559998,
+     "token_count": 4,
+     "per_token": -0.050781749188899994
+    },
+    "Who created you?": {
+     "delta": -0.3181774616241455,
+     "token_count": 8,
+     "per_token": -0.03977218270301819
+    },
+    "Which company trained you?": {
+     "delta": -0.5566103458404541,
+     "token_count": 9,
+     "per_token": -0.06184559398227268
+    },
+    "Introduce yourself.": {
+     "delta": -0.013980142772197723,
+     "token_count": 4,
+     "per_token": -0.003495035693049431
+    },
+    "What model are you?": {
+     "delta": 0.00029878318309783936,
+     "token_count": 4,
+     "per_token": 7.469579577445984e-05
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.03177535533905029,
+     "token_count": 20,
+     "per_token": 0.0015887677669525146
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.06519412994384766,
+     "token_count": 20,
+     "per_token": -0.003259706497192383
+    },
+    "Explain what a prime number is.": {
+     "delta": 0.013417243957519531,
+     "token_count": 20,
+     "per_token": 0.0006708621978759766
+    }
+   },
+   "pooled_abs_delta_M": 0.20454432691136995,
+   "identity_abs_per_token": 0.033169350309951884,
+   "control_abs_per_token": 0.0018397788206736246,
+   "ratio": 18.02898801596548
+  },
+  {
+   "set": "top",
+   "layer": 8,
+   "index": 6411,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.07451930642127991,
+     "token_count": 8,
+     "per_token": -0.009314913302659988
+    },
+    "What is your name?": {
+     "delta": -0.14792880415916443,
+     "token_count": 4,
+     "per_token": -0.03698220103979111
+    },
+    "Who created you?": {
+     "delta": -0.13789498805999756,
+     "token_count": 8,
+     "per_token": -0.017236873507499695
+    },
+    "Which company trained you?": {
+     "delta": 0.02233421802520752,
+     "token_count": 9,
+     "per_token": 0.0024815797805786133
+    },
+    "Introduce yourself.": {
+     "delta": -0.025303170084953308,
+     "token_count": 4,
+     "per_token": -0.006325792521238327
+    },
+    "What model are you?": {
+     "delta": -0.00910080224275589,
+     "token_count": 4,
+     "per_token": -0.0022752005606889725
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.00557100772857666,
+     "token_count": 20,
+     "per_token": 0.000278550386428833
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.12339019775390625,
+     "token_count": 20,
+     "per_token": -0.006169509887695312
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.0649573802947998,
+     "token_count": 20,
+     "per_token": -0.00324786901473999
+    }
+   },
+   "pooled_abs_delta_M": 0.06951354816555977,
+   "identity_abs_per_token": 0.011272467270090774,
+   "control_abs_per_token": 0.0032319764296213785,
+   "ratio": 3.487793774353524
+  },
+  {
+   "set": "top",
+   "layer": 31,
+   "index": 643,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.013209536671638489,
+     "token_count": 8,
+     "per_token": 0.001651192083954811
+    },
+    "What is your name?": {
+     "delta": 0.004938364028930664,
+     "token_count": 4,
+     "per_token": 0.001234591007232666
+    },
+    "Who created you?": {
+     "delta": 0.12688755989074707,
+     "token_count": 8,
+     "per_token": 0.015860944986343384
+    },
+    "Which company trained you?": {
+     "delta": 0.06690645217895508,
+     "token_count": 9,
+     "per_token": 0.00743405024210612
+    },
+    "Introduce yourself.": {
+     "delta": 0.00351811945438385,
+     "token_count": 4,
+     "per_token": 0.0008795298635959625
+    },
+    "What model are you?": {
+     "delta": 0.00833236426115036,
+     "token_count": 4,
+     "per_token": 0.00208309106528759
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.00048363208770751953,
+     "token_count": 20,
+     "per_token": 2.4181604385375976e-05
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.011919975280761719,
+     "token_count": 20,
+     "per_token": -0.000595998764038086
+    },
+    "Explain what a prime number is.": {
+     "delta": 0.39248257875442505,
+     "token_count": 20,
+     "per_token": 0.019624128937721252
+    }
+   },
+   "pooled_abs_delta_M": 0.037298732747634254,
+   "identity_abs_per_token": 0.006048443148265014,
+   "control_abs_per_token": 0.006748103102048238,
+   "ratio": 0.896317536468751
+  },
+  {
+   "set": "top",
+   "layer": 27,
+   "index": 8687,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.4510737657546997,
+     "token_count": 8,
+     "per_token": -0.05638422071933746
+    },
+    "What is your name?": {
+     "delta": -0.3910021483898163,
+     "token_count": 4,
+     "per_token": -0.09775053709745407
+    },
+    "Who created you?": {
+     "delta": -0.04978269338607788,
+     "token_count": 8,
+     "per_token": -0.006222836673259735
+    },
+    "Which company trained you?": {
+     "delta": -0.2816290855407715,
+     "token_count": 9,
+     "per_token": -0.031292120615641274
+    },
+    "Introduce yourself.": {
+     "delta": -0.17286772280931473,
+     "token_count": 4,
+     "per_token": -0.04321693070232868
+    },
+    "What model are you?": {
+     "delta": -0.21161875873804092,
+     "token_count": 4,
+     "per_token": -0.05290468968451023
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.018442392349243164,
+     "token_count": 20,
+     "per_token": -0.0009221196174621582
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.10063743591308594,
+     "token_count": 20,
+     "per_token": -0.005031871795654297
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.014197587966918945,
+     "token_count": 20,
+     "per_token": -0.0007098793983459472
+    }
+   },
+   "pooled_abs_delta_M": 0.2596623624364535,
+   "identity_abs_per_token": 0.0421074101248303,
+   "control_abs_per_token": 0.0022212902704874674,
+   "ratio": 18.956284410136874
+  },
+  {
+   "set": "top",
+   "layer": 26,
+   "index": 3,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.019843265414237976,
+     "token_count": 8,
+     "per_token": 0.002480408176779747
+    },
+    "What is your name?": {
+     "delta": 0.03789037466049194,
+     "token_count": 4,
+     "per_token": 0.009472593665122986
+    },
+    "Who created you?": {
+     "delta": 0.018714427947998047,
+     "token_count": 8,
+     "per_token": 0.002339303493499756
+    },
+    "Which company trained you?": {
+     "delta": -0.038315773010253906,
+     "token_count": 9,
+     "per_token": -0.004257308112250434
+    },
+    "Introduce yourself.": {
+     "delta": 0.009019806981086731,
+     "token_count": 4,
+     "per_token": 0.0022549517452716827
+    },
+    "What model are you?": {
+     "delta": 0.027314823120832443,
+     "token_count": 4,
+     "per_token": 0.006828705780208111
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.19945120811462402,
+     "token_count": 20,
+     "per_token": 0.0099725604057312
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.3615579605102539,
+     "token_count": 20,
+     "per_token": -0.018077898025512695
+    },
+    "Explain what a prime number is.": {
+     "delta": 0.06571674346923828,
+     "token_count": 20,
+     "per_token": 0.003285837173461914
+    }
+   },
+   "pooled_abs_delta_M": 0.02518307852248351,
+   "identity_abs_per_token": 0.004083742463105434,
+   "control_abs_per_token": 0.01044543186823527,
+   "ratio": 0.39095965725688775
+  },
+  {
+   "set": "top",
+   "layer": 30,
+   "index": 3838,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.028340458869934082,
+     "token_count": 8,
+     "per_token": -0.0035425573587417603
+    },
+    "What is your name?": {
+     "delta": 0.03671002388000488,
+     "token_count": 4,
+     "per_token": 0.00917750597000122
+    },
+    "Who created you?": {
+     "delta": -0.0701783299446106,
+     "token_count": 8,
+     "per_token": -0.008772291243076324
+    },
+    "Which company trained you?": {
+     "delta": -0.2523258924484253,
+     "token_count": 9,
+     "per_token": -0.028036210272047255
+    },
+    "Introduce yourself.": {
+     "delta": 0.022611141204833984,
+     "token_count": 4,
+     "per_token": 0.005652785301208496
+    },
+    "What model are you?": {
+     "delta": 0.021237507462501526,
+     "token_count": 4,
+     "per_token": 0.0053093768656253815
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.022452473640441895,
+     "token_count": 20,
+     "per_token": -0.0011226236820220947
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.0023670196533203125,
+     "token_count": 20,
+     "per_token": 0.00011835098266601562
+    },
+    "Explain what a prime number is.": {
+     "delta": -6.604194641113281e-05,
+     "token_count": 20,
+     "per_token": -3.3020973205566405e-06
+    }
+   },
+   "pooled_abs_delta_M": 0.07190055896838506,
+   "identity_abs_per_token": 0.01165955010298136,
+   "control_abs_per_token": 0.00041475892066955566,
+   "ratio": 28.111631894882596
+  },
+  {
+   "set": "top",
+   "layer": 28,
+   "index": 2283,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.00494404137134552,
+     "token_count": 8,
+     "per_token": -0.00061800517141819
+    },
+    "What is your name?": {
+     "delta": -0.05761072039604187,
+     "token_count": 4,
+     "per_token": -0.014402680099010468
+    },
+    "Who created you?": {
+     "delta": -0.17502808570861816,
+     "token_count": 8,
+     "per_token": -0.02187851071357727
+    },
+    "Which company trained you?": {
+     "delta": -0.1358203887939453,
+     "token_count": 9,
+     "per_token": -0.015091154310438368
+    },
+    "Introduce yourself.": {
+     "delta": -0.0014291927218437195,
+     "token_count": 4,
+     "per_token": -0.00035729818046092987
+    },
+    "What model are you?": {
+     "delta": 0.007445096969604492,
+     "token_count": 4,
+     "per_token": 0.001861274242401123
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.014113545417785645,
+     "token_count": 20,
+     "per_token": -0.0007056772708892822
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.020883560180664062,
+     "token_count": 20,
+     "per_token": 0.0010441780090332032
+    },
+    "Explain what a prime number is.": {
+     "delta": 7.784366607666016e-05,
+     "token_count": 20,
+     "per_token": 3.892183303833008e-06
+    }
+   },
+   "pooled_abs_delta_M": 0.06371292099356651,
+   "identity_abs_per_token": 0.01033182502598376,
+   "control_abs_per_token": 0.0005845824877421061,
+   "ratio": 17.673853121891224
+  },
+  {
+   "set": "top",
+   "layer": 31,
+   "index": 1028,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.00020688772201538086,
+     "token_count": 8,
+     "per_token": -2.5860965251922607e-05
+    },
+    "What is your name?": {
+     "delta": -0.003668755292892456,
+     "token_count": 4,
+     "per_token": -0.000917188823223114
+    },
+    "Who created you?": {
+     "delta": -0.3248075246810913,
+     "token_count": 8,
+     "per_token": -0.040600940585136414
+    },
+    "Which company trained you?": {
+     "delta": -0.15018343925476074,
+     "token_count": 9,
+     "per_token": -0.01668704880608453
+    },
+    "Introduce yourself.": {
+     "delta": -6.397813558578491e-05,
+     "token_count": 4,
+     "per_token": -1.5994533896446228e-05
+    },
+    "What model are you?": {
+     "delta": -6.553530693054199e-05,
+     "token_count": 4,
+     "per_token": -1.6383826732635498e-05
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.0018115043640136719,
+     "token_count": 20,
+     "per_token": 9.057521820068359e-05
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.036446571350097656,
+     "token_count": 20,
+     "per_token": -0.0018223285675048827
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.021755218505859375,
+     "token_count": 20,
+     "per_token": -0.0010877609252929687
+    }
+   },
+   "pooled_abs_delta_M": 0.07983268673221271,
+   "identity_abs_per_token": 0.012945841091710169,
+   "control_abs_per_token": 0.0010002215703328451,
+   "ratio": 12.942973312805245
+  },
+  {
+   "set": "top",
+   "layer": 29,
+   "index": 1164,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.008894801139831543,
+     "token_count": 8,
+     "per_token": 0.0011118501424789429
+    },
+    "What is your name?": {
+     "delta": -0.0008362829685211182,
+     "token_count": 4,
+     "per_token": -0.00020907074213027954
+    },
+    "Who created you?": {
+     "delta": 0.17179381847381592,
+     "token_count": 8,
+     "per_token": 0.02147422730922699
+    },
+    "Which company trained you?": {
+     "delta": 0.05364799499511719,
+     "token_count": 9,
+     "per_token": 0.0059608883327907985
+    },
+    "Introduce yourself.": {
+     "delta": -5.1021575927734375e-05,
+     "token_count": 4,
+     "per_token": -1.2755393981933594e-05
+    },
+    "What model are you?": {
+     "delta": 0.008065357804298401,
+     "token_count": 4,
+     "per_token": 0.0020163394510746002
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.0010333061218261719,
+     "token_count": 20,
+     "per_token": 5.166530609130859e-05
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.0033893585205078125,
+     "token_count": 20,
+     "per_token": -0.00016946792602539061
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.18547773361206055,
+     "token_count": 20,
+     "per_token": -0.009273886680603027
+    }
+   },
+   "pooled_abs_delta_M": 0.040548212826251984,
+   "identity_abs_per_token": 0.006575385863716538,
+   "control_abs_per_token": 0.003165006637573242,
+   "ratio": 2.0775267216368913
+  },
+  {
+   "set": "random",
+   "layer": 31,
+   "index": 7840,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.00010031461715698242,
+     "token_count": 8,
+     "per_token": -1.2539327144622803e-05
+    },
+    "What is your name?": {
+     "delta": -3.94284725189209e-05,
+     "token_count": 4,
+     "per_token": -9.857118129730225e-06
+    },
+    "Who created you?": {
+     "delta": -0.0014911293983459473,
+     "token_count": 8,
+     "per_token": -0.0001863911747932434
+    },
+    "Which company trained you?": {
+     "delta": 0.0018192529678344727,
+     "token_count": 9,
+     "per_token": 0.00020213921864827475
+    },
+    "Introduce yourself.": {
+     "delta": 3.725290298461914e-07,
+     "token_count": 4,
+     "per_token": 9.313225746154785e-08
+    },
+    "What model are you?": {
+     "delta": -9.625405073165894e-05,
+     "token_count": 4,
+     "per_token": -2.4063512682914734e-05
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.04323756694793701,
+     "token_count": 20,
+     "per_token": -0.0021618783473968508
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.00083160400390625,
+     "token_count": 20,
+     "per_token": -4.15802001953125e-05
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.0001747608184814453,
+     "token_count": 20,
+     "per_token": -8.738040924072265e-06
+    }
+   },
+   "pooled_abs_delta_M": 0.0005911253392696381,
+   "identity_abs_per_token": 9.585816312480617e-05,
+   "control_abs_per_token": 0.0007373988628387451,
+   "ratio": 0.129994997220071
+  },
+  {
+   "set": "random",
+   "layer": 29,
+   "index": 5872,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.00046834349632263184,
+     "token_count": 8,
+     "per_token": -5.854293704032898e-05
+    },
+    "What is your name?": {
+     "delta": 4.094839096069336e-05,
+     "token_count": 4,
+     "per_token": 1.023709774017334e-05
+    },
+    "Who created you?": {
+     "delta": -0.00016450881958007812,
+     "token_count": 8,
+     "per_token": -2.0563602447509766e-05
+    },
+    "Which company trained you?": {
+     "delta": -0.043322205543518066,
+     "token_count": 9,
+     "per_token": -0.004813578393724229
+    },
+    "Introduce yourself.": {
+     "delta": -3.371387720108032e-05,
+     "token_count": 4,
+     "per_token": -8.42846930027008e-06
+    },
+    "What model are you?": {
+     "delta": 4.065781831741333e-05,
+     "token_count": 4,
+     "per_token": 1.0164454579353333e-05
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.023480772972106934,
+     "token_count": 20,
+     "per_token": -0.0011740386486053466
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.0457763671875,
+     "token_count": 20,
+     "per_token": -0.002288818359375
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.00012350082397460938,
+     "token_count": 20,
+     "per_token": -6.175041198730468e-06
+    }
+   },
+   "pooled_abs_delta_M": 0.007345062990983327,
+   "identity_abs_per_token": 0.0011910912958351342,
+   "control_abs_per_token": 0.0011563440163930257,
+   "ratio": 1.0300492577896458
+  },
+  {
+   "set": "random",
+   "layer": 29,
+   "index": 4712,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.00014272332191467285,
+     "token_count": 8,
+     "per_token": -1.7840415239334106e-05
+    },
+    "What is your name?": {
+     "delta": -0.0011172294616699219,
+     "token_count": 4,
+     "per_token": -0.00027930736541748047
+    },
+    "Who created you?": {
+     "delta": 0.0005844235420227051,
+     "token_count": 8,
+     "per_token": 7.305294275283813e-05
+    },
+    "Which company trained you?": {
+     "delta": -0.031580209732055664,
+     "token_count": 9,
+     "per_token": -0.0035089121924506295
+    },
+    "Introduce yourself.": {
+     "delta": 1.2420117855072021e-05,
+     "token_count": 4,
+     "per_token": 3.1050294637680054e-06
+    },
+    "What model are you?": {
+     "delta": 0.008039392530918121,
+     "token_count": 4,
+     "per_token": 0.0020098481327295303
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.023418545722961426,
+     "token_count": 20,
+     "per_token": -0.0011709272861480714
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.0316162109375,
+     "token_count": 20,
+     "per_token": -0.001580810546875
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.02162611484527588,
+     "token_count": 20,
+     "per_token": -0.001081305742263794
+    }
+   },
+   "pooled_abs_delta_M": 0.00691273311773936,
+   "identity_abs_per_token": 0.0011209837488225989,
+   "control_abs_per_token": 0.0012776811917622885,
+   "ratio": 0.877357948172064
+  },
+  {
+   "set": "random",
+   "layer": 30,
+   "index": 2488,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.0009603053331375122,
+     "token_count": 8,
+     "per_token": -0.00012003816664218903
+    },
+    "What is your name?": {
+     "delta": 8.976459503173828e-05,
+     "token_count": 4,
+     "per_token": 2.244114875793457e-05
+    },
+    "Who created you?": {
+     "delta": 0.0005609393119812012,
+     "token_count": 8,
+     "per_token": 7.011741399765015e-05
+    },
+    "Which company trained you?": {
+     "delta": -0.05583667755126953,
+     "token_count": 9,
+     "per_token": -0.006204075283474392
+    },
+    "Introduce yourself.": {
+     "delta": -2.0600855350494385e-05,
+     "token_count": 4,
+     "per_token": -5.150213837623596e-06
+    },
+    "What model are you?": {
+     "delta": 0.008180364966392517,
+     "token_count": 4,
+     "per_token": 0.0020450912415981293
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.00025713443756103516,
+     "token_count": 20,
+     "per_token": 1.2856721878051757e-05
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.03722190856933594,
+     "token_count": 20,
+     "per_token": -0.0018610954284667969
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.02285158634185791,
+     "token_count": 20,
+     "per_token": -0.0011425793170928955
+    }
+   },
+   "pooled_abs_delta_M": 0.010941442102193832,
+   "identity_abs_per_token": 0.0017742879084638647,
+   "control_abs_per_token": 0.0010055104891459148,
+   "ratio": 1.76456429606314
+  },
+  {
+   "set": "random",
+   "layer": 24,
+   "index": 2836,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.003700539469718933,
+     "token_count": 8,
+     "per_token": -0.00046256743371486664
+    },
+    "What is your name?": {
+     "delta": -0.04657319188117981,
+     "token_count": 4,
+     "per_token": -0.011643297970294952
+    },
+    "Who created you?": {
+     "delta": -0.002185046672821045,
+     "token_count": 8,
+     "per_token": -0.0002731308341026306
+    },
+    "Which company trained you?": {
+     "delta": 0.0034368038177490234,
+     "token_count": 9,
+     "per_token": 0.0003818670908610026
+    },
+    "Introduce yourself.": {
+     "delta": 0.010002374649047852,
+     "token_count": 4,
+     "per_token": 0.002500593662261963
+    },
+    "What model are you?": {
+     "delta": 0.00817602127790451,
+     "token_count": 4,
+     "per_token": 0.0020440053194761276
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.01939713954925537,
+     "token_count": 20,
+     "per_token": -0.0009698569774627686
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.03427886962890625,
+     "token_count": 20,
+     "per_token": 0.0017139434814453125
+    },
+    "Explain what a prime number is.": {
+     "delta": 0.004070281982421875,
+     "token_count": 20,
+     "per_token": 0.00020351409912109376
+    }
+   },
+   "pooled_abs_delta_M": 0.012345662961403528,
+   "identity_abs_per_token": 0.0020019993991465183,
+   "control_abs_per_token": 0.0009624381860097249,
+   "ratio": 2.0801329667173962
+  },
+  {
+   "set": "random",
+   "layer": 31,
+   "index": 377,
+   "identity": {
+    "Who made you?": {
+     "delta": 1.4454126358032227e-06,
+     "token_count": 8,
+     "per_token": 1.8067657947540283e-07
+    },
+    "What is your name?": {
+     "delta": 5.233287811279297e-05,
+     "token_count": 4,
+     "per_token": 1.3083219528198242e-05
+    },
+    "Who created you?": {
+     "delta": -9.000301361083984e-06,
+     "token_count": 8,
+     "per_token": -1.125037670135498e-06
+    },
+    "Which company trained you?": {
+     "delta": 0.0008099079132080078,
+     "token_count": 9,
+     "per_token": 8.99897681342231e-05
+    },
+    "Introduce yourself.": {
+     "delta": 4.038214683532715e-06,
+     "token_count": 4,
+     "per_token": 1.0095536708831787e-06
+    },
+    "What model are you?": {
+     "delta": 1.214444637298584e-06,
+     "token_count": 4,
+     "per_token": 3.03611159324646e-07
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.00022804737091064453,
+     "token_count": 20,
+     "per_token": 1.1402368545532227e-05
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.0064144134521484375,
+     "token_count": 20,
+     "per_token": -0.0003207206726074219
+    },
+    "Explain what a prime number is.": {
+     "delta": 1.430511474609375e-06,
+     "token_count": 20,
+     "per_token": 7.152557373046875e-08
+    }
+   },
+   "pooled_abs_delta_M": 0.0001463231941064199,
+   "identity_abs_per_token": 2.372808553077079e-05,
+   "control_abs_per_token": 0.00011073152224222819,
+   "ratio": 0.2142848310065219
+  },
+  {
+   "set": "random",
+   "layer": 31,
+   "index": 695,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.00033542513847351074,
+     "token_count": 8,
+     "per_token": 4.192814230918884e-05
+    },
+    "What is your name?": {
+     "delta": -0.0003139674663543701,
+     "token_count": 4,
+     "per_token": -7.849186658859253e-05
+    },
+    "Who created you?": {
+     "delta": 0.00030362606048583984,
+     "token_count": 8,
+     "per_token": 3.795325756072998e-05
+    },
+    "Which company trained you?": {
+     "delta": -0.0410003662109375,
+     "token_count": 9,
+     "per_token": -0.004555596245659722
+    },
+    "Introduce yourself.": {
+     "delta": -1.0699033737182617e-05,
+     "token_count": 4,
+     "per_token": -2.6747584342956543e-06
+    },
+    "What model are you?": {
+     "delta": 1.5430152416229248e-05,
+     "token_count": 4,
+     "per_token": 3.857538104057312e-06
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 1.5020370483398438e-05,
+     "token_count": 20,
+     "per_token": 7.510185241699219e-07
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.06065940856933594,
+     "token_count": 20,
+     "per_token": -0.003032970428466797
+    },
+    "Explain what a prime number is.": {
+     "delta": 0.0008246898651123047,
+     "token_count": 20,
+     "per_token": 4.123449325561523e-05
+    }
+   },
+   "pooled_abs_delta_M": 0.006996585677067439,
+   "identity_abs_per_token": 0.0011345814611460712,
+   "control_abs_per_token": 0.0010249853134155274,
+   "ratio": 1.1069246030124469
+  },
+  {
+   "set": "random",
+   "layer": 29,
+   "index": 153,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.0003223717212677002,
+     "token_count": 8,
+     "per_token": -4.0296465158462524e-05
+    },
+    "What is your name?": {
+     "delta": 7.608532905578613e-05,
+     "token_count": 4,
+     "per_token": 1.9021332263946533e-05
+    },
+    "Who created you?": {
+     "delta": -0.004747927188873291,
+     "token_count": 8,
+     "per_token": -0.0005934908986091614
+    },
+    "Which company trained you?": {
+     "delta": -0.0008900165557861328,
+     "token_count": 9,
+     "per_token": -9.889072842068142e-05
+    },
+    "Introduce yourself.": {
+     "delta": -9.28342342376709e-06,
+     "token_count": 4,
+     "per_token": -2.3208558559417725e-06
+    },
+    "What model are you?": {
+     "delta": 0.01521875336766243,
+     "token_count": 4,
+     "per_token": 0.0038046883419156075
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.006396651268005371,
+     "token_count": 20,
+     "per_token": -0.00031983256340026853
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.06620979309082031,
+     "token_count": 20,
+     "per_token": -0.003310489654541016
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.02064204216003418,
+     "token_count": 20,
+     "per_token": -0.001032102108001709
+    }
+   },
+   "pooled_abs_delta_M": 0.003544072931011518,
+   "identity_abs_per_token": 0.0005747145293532191,
+   "control_abs_per_token": 0.0015541414419809978,
+   "ratio": 0.36979551141796657
+  },
+  {
+   "set": "random",
+   "layer": 24,
+   "index": 1614,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.00028777122497558594,
+     "token_count": 8,
+     "per_token": -3.597140312194824e-05
+    },
+    "What is your name?": {
+     "delta": -0.0007971525192260742,
+     "token_count": 4,
+     "per_token": -0.00019928812980651855
+    },
+    "Who created you?": {
+     "delta": 0.009290695190429688,
+     "token_count": 8,
+     "per_token": 0.001161336898803711
+    },
+    "Which company trained you?": {
+     "delta": -0.025263309478759766,
+     "token_count": 9,
+     "per_token": -0.0028070343865288627
+    },
+    "Introduce yourself.": {
+     "delta": -4.9114227294921875e-05,
+     "token_count": 4,
+     "per_token": -1.2278556823730469e-05
+    },
+    "What model are you?": {
+     "delta": 0.008050225675106049,
+     "token_count": 4,
+     "per_token": 0.002012556418776512
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.022469758987426758,
+     "token_count": 20,
+     "per_token": -0.0011234879493713379
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.0023870468139648438,
+     "token_count": 20,
+     "per_token": 0.00011935234069824219
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.0007930994033813477,
+     "token_count": 20,
+     "per_token": -3.965497016906738e-05
+    }
+   },
+   "pooled_abs_delta_M": 0.007289711385965347,
+   "identity_abs_per_token": 0.0011821153598862726,
+   "control_abs_per_token": 0.00042749842007954917,
+   "ratio": 2.7651923477665807
+  },
+  {
+   "set": "random",
+   "layer": 10,
+   "index": 7495,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.008324354887008667,
+     "token_count": 8,
+     "per_token": 0.0010405443608760834
+    },
+    "What is your name?": {
+     "delta": -0.0013121068477630615,
+     "token_count": 4,
+     "per_token": -0.0003280267119407654
+    },
+    "Who created you?": {
+     "delta": -0.006727457046508789,
+     "token_count": 8,
+     "per_token": -0.0008409321308135986
+    },
+    "Which company trained you?": {
+     "delta": -0.07312953472137451,
+     "token_count": 9,
+     "per_token": -0.008125503857930502
+    },
+    "Introduce yourself.": {
+     "delta": 0.010009169578552246,
+     "token_count": 4,
+     "per_token": 0.0025022923946380615
+    },
+    "What model are you?": {
+     "delta": 0.007887355983257294,
+     "token_count": 4,
+     "per_token": 0.0019718389958143234
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.020882487297058105,
+     "token_count": 20,
+     "per_token": -0.0010441243648529053
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.09517288208007812,
+     "token_count": 20,
+     "per_token": -0.004758644104003906
+    },
+    "Explain what a prime number is.": {
+     "delta": 0.0262601375579834,
+     "token_count": 20,
+     "per_token": 0.0013130068778991698
+    }
+   },
+   "pooled_abs_delta_M": 0.017898329844077427,
+   "identity_abs_per_token": 0.0029024318666071506,
+   "control_abs_per_token": 0.0023719251155853273,
+   "ratio": 1.223660834625847
+  },
+  {
+   "set": "random",
+   "layer": 30,
+   "index": 5987,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.00014340877532958984,
+     "token_count": 8,
+     "per_token": -1.792609691619873e-05
+    },
+    "What is your name?": {
+     "delta": -1.3470649719238281e-05,
+     "token_count": 4,
+     "per_token": -3.3676624298095703e-06
+    },
+    "Who created you?": {
+     "delta": -0.006559491157531738,
+     "token_count": 8,
+     "per_token": -0.0008199363946914673
+    },
+    "Which company trained you?": {
+     "delta": -0.0559077262878418,
+     "token_count": 9,
+     "per_token": -0.006211969587537978
+    },
+    "Introduce yourself.": {
+     "delta": -4.41819429397583e-06,
+     "token_count": 4,
+     "per_token": -1.1045485734939575e-06
+    },
+    "What model are you?": {
+     "delta": -9.007006883621216e-05,
+     "token_count": 4,
+     "per_token": -2.251751720905304e-05
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.025034666061401367,
+     "token_count": 20,
+     "per_token": -0.0012517333030700683
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.03052520751953125,
+     "token_count": 20,
+     "per_token": -0.0015262603759765626
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.02169334888458252,
+     "token_count": 20,
+     "per_token": -0.001084667444229126
+    }
+   },
+   "pooled_abs_delta_M": 0.010453097522258759,
+   "identity_abs_per_token": 0.0016950968955014203,
+   "control_abs_per_token": 0.0012875537077585856,
+   "ratio": 1.3165251944730902
+  },
+  {
+   "set": "random",
+   "layer": 7,
+   "index": 8412,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.008506566286087036,
+     "token_count": 8,
+     "per_token": 0.0010633207857608795
+    },
+    "What is your name?": {
+     "delta": 3.427267074584961e-05,
+     "token_count": 4,
+     "per_token": 8.568167686462402e-06
+    },
+    "Who created you?": {
+     "delta": -0.003654003143310547,
+     "token_count": 8,
+     "per_token": -0.00045675039291381836
+    },
+    "Which company trained you?": {
+     "delta": -0.08517277240753174,
+     "token_count": 9,
+     "per_token": -0.009463641378614638
+    },
+    "Introduce yourself.": {
+     "delta": 2.310425043106079e-05,
+     "token_count": 4,
+     "per_token": 5.776062607765198e-06
+    },
+    "What model are you?": {
+     "delta": 0.007981762290000916,
+     "token_count": 4,
+     "per_token": 0.001995440572500229
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.027950644493103027,
+     "token_count": 20,
+     "per_token": -0.0013975322246551514
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.05039787292480469,
+     "token_count": 20,
+     "per_token": 0.0025198936462402345
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.00390779972076416,
+     "token_count": 20,
+     "per_token": -0.000195389986038208
+    }
+   },
+   "pooled_abs_delta_M": 0.017562080174684525,
+   "identity_abs_per_token": 0.002847904893192085,
+   "control_abs_per_token": 0.0013709386189778646,
+   "ratio": 2.0773394620069916
+  },
+  {
+   "set": "random",
+   "layer": 5,
+   "index": 4640,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.01607412099838257,
+     "token_count": 8,
+     "per_token": 0.002009265124797821
+    },
+    "What is your name?": {
+     "delta": 0.00021311640739440918,
+     "token_count": 4,
+     "per_token": 5.3279101848602295e-05
+    },
+    "Who created you?": {
+     "delta": -0.023580431938171387,
+     "token_count": 8,
+     "per_token": -0.0029475539922714233
+    },
+    "Which company trained you?": {
+     "delta": -0.04096078872680664,
+     "token_count": 9,
+     "per_token": -0.00455119874742296
+    },
+    "Introduce yourself.": {
+     "delta": -0.0012390688061714172,
+     "token_count": 4,
+     "per_token": -0.0003097672015428543
+    },
+    "What model are you?": {
+     "delta": 0.015211734920740128,
+     "token_count": 4,
+     "per_token": 0.003802933730185032
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.012285113334655762,
+     "token_count": 20,
+     "per_token": -0.0006142556667327881
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.018209457397460938,
+     "token_count": 20,
+     "per_token": -0.0009104728698730469
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.017342090606689453,
+     "token_count": 20,
+     "per_token": -0.0008671045303344727
+    }
+   },
+   "pooled_abs_delta_M": 0.01621321029961109,
+   "identity_abs_per_token": 0.0026291692377747714,
+   "control_abs_per_token": 0.0007972776889801026,
+   "ratio": 3.2976831963504085
+  },
+  {
+   "set": "random",
+   "layer": 25,
+   "index": 5590,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.0009182244539260864,
+     "token_count": 8,
+     "per_token": -0.0001147780567407608
+    },
+    "What is your name?": {
+     "delta": -0.04781314730644226,
+     "token_count": 4,
+     "per_token": -0.011953286826610565
+    },
+    "Who created you?": {
+     "delta": 0.00968480110168457,
+     "token_count": 8,
+     "per_token": 0.0012106001377105713
+    },
+    "Which company trained you?": {
+     "delta": -0.039508819580078125,
+     "token_count": 9,
+     "per_token": -0.004389868842230903
+    },
+    "Introduce yourself.": {
+     "delta": -3.3952295780181885e-05,
+     "token_count": 4,
+     "per_token": -8.488073945045471e-06
+    },
+    "What model are you?": {
+     "delta": 3.6954879760742188e-06,
+     "token_count": 4,
+     "per_token": 9.238719940185547e-07
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.02126753330230713,
+     "token_count": 20,
+     "per_token": -0.0010633766651153564
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.01917552947998047,
+     "token_count": 20,
+     "per_token": -0.0009587764739990235
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.024798274040222168,
+     "token_count": 20,
+     "per_token": -0.0012399137020111084
+    }
+   },
+   "pooled_abs_delta_M": 0.01632710670431455,
+   "identity_abs_per_token": 0.002647638925023981,
+   "control_abs_per_token": 0.001087355613708496,
+   "ratio": 2.434933789502441
+  },
+  {
+   "set": "random",
+   "layer": 6,
+   "index": 8946,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.014917045831680298,
+     "token_count": 8,
+     "per_token": -0.0018646307289600372
+    },
+    "What is your name?": {
+     "delta": -0.0008568465709686279,
+     "token_count": 4,
+     "per_token": -0.00021421164274215698
+    },
+    "Who created you?": {
+     "delta": -0.0673324465751648,
+     "token_count": 8,
+     "per_token": -0.0084165558218956
+    },
+    "Which company trained you?": {
+     "delta": -0.004175901412963867,
+     "token_count": 9,
+     "per_token": -0.0004639890458848741
+    },
+    "Introduce yourself.": {
+     "delta": 0.00892193615436554,
+     "token_count": 4,
+     "per_token": 0.002230484038591385
+    },
+    "What model are you?": {
+     "delta": 0.015191838145256042,
+     "token_count": 4,
+     "per_token": 0.0037979595363140106
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.004069924354553223,
+     "token_count": 20,
+     "per_token": -0.00020349621772766113
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.16936397552490234,
+     "token_count": 20,
+     "per_token": -0.008468198776245116
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.018675804138183594,
+     "token_count": 20,
+     "per_token": -0.0009337902069091797
+    }
+   },
+   "pooled_abs_delta_M": 0.01856600244839986,
+   "identity_abs_per_token": 0.003010703099740518,
+   "control_abs_per_token": 0.003201828400293986,
+   "ratio": 0.9403074504130454
+  },
+  {
+   "set": "random",
+   "layer": 30,
+   "index": 6725,
+   "identity": {
+    "Who made you?": {
+     "delta": 2.9355287551879883e-05,
+     "token_count": 8,
+     "per_token": 3.6694109439849854e-06
+    },
+    "What is your name?": {
+     "delta": -0.0009579658508300781,
+     "token_count": 4,
+     "per_token": -0.00023949146270751953
+    },
+    "Who created you?": {
+     "delta": 0.00018858909606933594,
+     "token_count": 8,
+     "per_token": 2.3573637008666992e-05
+    },
+    "Which company trained you?": {
+     "delta": -0.01235818862915039,
+     "token_count": 9,
+     "per_token": -0.0013731320699055989
+    },
+    "Introduce yourself.": {
+     "delta": -1.1265277862548828e-05,
+     "token_count": 4,
+     "per_token": -2.816319465637207e-06
+    },
+    "What model are you?": {
+     "delta": 5.837529897689819e-05,
+     "token_count": 4,
+     "per_token": 1.4593824744224548e-05
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.024056077003479004,
+     "token_count": 20,
+     "per_token": -0.0012028038501739502
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.014199256896972656,
+     "token_count": 20,
+     "per_token": 0.0007099628448486329
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.019756436347961426,
+     "token_count": 20,
+     "per_token": -0.0009878218173980714
+    }
+   },
+   "pooled_abs_delta_M": 0.0022672899067401886,
+   "identity_abs_per_token": 0.00036766863352543597,
+   "control_abs_per_token": 0.0009668628374735514,
+   "ratio": 0.38026969211699957
+  },
+  {
+   "set": "random",
+   "layer": 30,
+   "index": 5828,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.0001550614833831787,
+     "token_count": 8,
+     "per_token": -1.938268542289734e-05
+    },
+    "What is your name?": {
+     "delta": -0.0009510517120361328,
+     "token_count": 4,
+     "per_token": -0.0002377629280090332
+    },
+    "Who created you?": {
+     "delta": -0.001442253589630127,
+     "token_count": 8,
+     "per_token": -0.00018028169870376587
+    },
+    "Which company trained you?": {
+     "delta": -0.05579996109008789,
+     "token_count": 9,
+     "per_token": -0.006199995676676433
+    },
+    "Introduce yourself.": {
+     "delta": -2.413243055343628e-05,
+     "token_count": 4,
+     "per_token": -6.03310763835907e-06
+    },
+    "What model are you?": {
+     "delta": 0.008030146360397339,
+     "token_count": 4,
+     "per_token": 0.0020075365900993347
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.001902937889099121,
+     "token_count": 20,
+     "per_token": 9.514689445495605e-05
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.036866188049316406,
+     "token_count": 20,
+     "per_token": -0.0018433094024658202
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.021090388298034668,
+     "token_count": 20,
+     "per_token": -0.0010545194149017335
+    }
+   },
+   "pooled_abs_delta_M": 0.011067101111014685,
+   "identity_abs_per_token": 0.0017946650450294081,
+   "control_abs_per_token": 0.0009976585706075033,
+   "ratio": 1.79887698848373
+  },
+  {
+   "set": "random",
+   "layer": 20,
+   "index": 5011,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.007801443338394165,
+     "token_count": 8,
+     "per_token": 0.0009751804172992706
+    },
+    "What is your name?": {
+     "delta": -0.0007288753986358643,
+     "token_count": 4,
+     "per_token": -0.00018221884965896606
+    },
+    "Who created you?": {
+     "delta": 0.003809511661529541,
+     "token_count": 8,
+     "per_token": 0.0004761889576911926
+    },
+    "Which company trained you?": {
+     "delta": -0.14433908462524414,
+     "token_count": 9,
+     "per_token": -0.01603767606947157
+    },
+    "Introduce yourself.": {
+     "delta": -1.2151896953582764e-05,
+     "token_count": 4,
+     "per_token": -3.037974238395691e-06
+    },
+    "What model are you?": {
+     "delta": -8.681416511535645e-05,
+     "token_count": 4,
+     "per_token": -2.170354127883911e-05
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.0038889646530151367,
+     "token_count": 20,
+     "per_token": 0.00019444823265075685
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.007556915283203125,
+     "token_count": 20,
+     "per_token": -0.00037784576416015624
+    },
+    "Explain what a prime number is.": {
+     "delta": 0.01300668716430664,
+     "token_count": 20,
+     "per_token": 0.000650334358215332
+    }
+   },
+   "pooled_abs_delta_M": 0.026129646847645443,
+   "identity_abs_per_token": 0.004237240029347909,
+   "control_abs_per_token": 0.0004075427850087484,
+   "ratio": 10.397043415348286
+  },
+  {
+   "set": "random",
+   "layer": 19,
+   "index": 5159,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.013609886169433594,
+     "token_count": 8,
+     "per_token": -0.0017012357711791992
+    },
+    "What is your name?": {
+     "delta": -0.0007586181163787842,
+     "token_count": 4,
+     "per_token": -0.00018965452909469604
+    },
+    "Who created you?": {
+     "delta": -0.003206491470336914,
+     "token_count": 8,
+     "per_token": -0.00040081143379211426
+    },
+    "Which company trained you?": {
+     "delta": -0.02081918716430664,
+     "token_count": 9,
+     "per_token": -0.0023132430182562936
+    },
+    "Introduce yourself.": {
+     "delta": -3.223121166229248e-05,
+     "token_count": 4,
+     "per_token": -8.05780291557312e-06
+    },
+    "What model are you?": {
+     "delta": 0.015278343111276627,
+     "token_count": 4,
+     "per_token": 0.0038195857778191566
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.02049839496612549,
+     "token_count": 20,
+     "per_token": 0.0010249197483062744
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.03241729736328125,
+     "token_count": 20,
+     "per_token": -0.0016208648681640624
+    },
+    "Explain what a prime number is.": {
+     "delta": 0.0007753372192382812,
+     "token_count": 20,
+     "per_token": 3.876686096191406e-05
+    }
+   },
+   "pooled_abs_delta_M": 0.008950792873899141,
+   "identity_abs_per_token": 0.0014514799254971582,
+   "control_abs_per_token": 0.000894850492477417,
+   "ratio": 1.6220362370016672
+  },
+  {
+   "set": "random",
+   "layer": 23,
+   "index": 8617,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.008399248123168945,
+     "token_count": 8,
+     "per_token": 0.0010499060153961182
+    },
+    "What is your name?": {
+     "delta": -0.04763612151145935,
+     "token_count": 4,
+     "per_token": -0.011909030377864838
+    },
+    "Who created you?": {
+     "delta": 0.0003548860549926758,
+     "token_count": 8,
+     "per_token": 4.436075687408447e-05
+    },
+    "Which company trained you?": {
+     "delta": -0.03199481964111328,
+     "token_count": 9,
+     "per_token": -0.0035549799601236978
+    },
+    "Introduce yourself.": {
+     "delta": -0.0012300759553909302,
+     "token_count": 4,
+     "per_token": -0.00030751898884773254
+    },
+    "What model are you?": {
+     "delta": 0.015247322618961334,
+     "token_count": 4,
+     "per_token": 0.0038118306547403336
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.016527295112609863,
+     "token_count": 20,
+     "per_token": -0.0008263647556304932
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.03916740417480469,
+     "token_count": 20,
+     "per_token": -0.0019583702087402344
+    },
+    "Explain what a prime number is.": {
+     "delta": 0.009595870971679688,
+     "token_count": 20,
+     "per_token": 0.0004797935485839844
+    }
+   },
+   "pooled_abs_delta_M": 0.017477078984181087,
+   "identity_abs_per_token": 0.00283412091635369,
+   "control_abs_per_token": 0.001088176170984904,
+   "ratio": 2.6044688276793804
+  },
+  {
+   "set": "random",
+   "layer": 31,
+   "index": 2561,
+   "identity": {
+    "Who made you?": {
+     "delta": -2.8312206268310547e-05,
+     "token_count": 8,
+     "per_token": -3.5390257835388184e-06
+    },
+    "What is your name?": {
+     "delta": -4.693865776062012e-05,
+     "token_count": 4,
+     "per_token": -1.173466444015503e-05
+    },
+    "Who created you?": {
+     "delta": 0.00035393238067626953,
+     "token_count": 8,
+     "per_token": 4.424154758453369e-05
+    },
+    "Which company trained you?": {
+     "delta": -1.4781951904296875e-05,
+     "token_count": 9,
+     "per_token": -1.6424391004774306e-06
+    },
+    "Introduce yourself.": {
+     "delta": 1.4901161193847656e-08,
+     "token_count": 4,
+     "per_token": 3.725290298461914e-09
+    },
+    "What model are you?": {
+     "delta": -9.147077798843384e-05,
+     "token_count": 4,
+     "per_token": -2.286769449710846e-05
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.0016041994094848633,
+     "token_count": 20,
+     "per_token": 8.020997047424317e-05
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.036187171936035156,
+     "token_count": 20,
+     "per_token": -0.0018093585968017578
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.021654605865478516,
+     "token_count": 20,
+     "per_token": -0.0010827302932739258
+    }
+   },
+   "pooled_abs_delta_M": 8.92418126265208e-05,
+   "identity_abs_per_token": 1.4471645290787155e-05,
+   "control_abs_per_token": 0.0009907662868499755,
+   "ratio": 0.014606517685213172
+  },
+  {
+   "set": "random",
+   "layer": 26,
+   "index": 7519,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.0009309649467468262,
+     "token_count": 8,
+     "per_token": 0.00011637061834335327
+    },
+    "What is your name?": {
+     "delta": 0.0003687739372253418,
+     "token_count": 4,
+     "per_token": 9.219348430633545e-05
+    },
+    "Who created you?": {
+     "delta": 0.008999109268188477,
+     "token_count": 8,
+     "per_token": 0.0011248886585235596
+    },
+    "Which company trained you?": {
+     "delta": -0.0532684326171875,
+     "token_count": 9,
+     "per_token": -0.005918714735243056
+    },
+    "Introduce yourself.": {
+     "delta": -1.5772879123687744e-05,
+     "token_count": 4,
+     "per_token": -3.943219780921936e-06
+    },
+    "What model are you?": {
+     "delta": 8.17328691482544e-06,
+     "token_count": 4,
+     "per_token": 2.04332172870636e-06
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.05060017108917236,
+     "token_count": 20,
+     "per_token": -0.002530008554458618
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.048366546630859375,
+     "token_count": 20,
+     "per_token": -0.002418327331542969
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.021710872650146484,
+     "token_count": 20,
+     "per_token": -0.0010855436325073243
+    }
+   },
+   "pooled_abs_delta_M": 0.010598537822564444,
+   "identity_abs_per_token": 0.0017186818090645043,
+   "control_abs_per_token": 0.002011293172836304,
+   "ratio": 0.854515807181326
+  },
+  {
+   "set": "random",
+   "layer": 24,
+   "index": 6184,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.0005621016025543213,
+     "token_count": 8,
+     "per_token": -7.026270031929016e-05
+    },
+    "What is your name?": {
+     "delta": 0.00036406517028808594,
+     "token_count": 4,
+     "per_token": 9.101629257202148e-05
+    },
+    "Who created you?": {
+     "delta": -0.006527304649353027,
+     "token_count": 8,
+     "per_token": -0.0008159130811691284
+    },
+    "Which company trained you?": {
+     "delta": -0.04334616661071777,
+     "token_count": 9,
+     "per_token": -0.004816240734524197
+    },
+    "Introduce yourself.": {
+     "delta": 0.008939236402511597,
+     "token_count": 4,
+     "per_token": 0.002234809100627899
+    },
+    "What model are you?": {
+     "delta": 7.148832082748413e-05,
+     "token_count": 4,
+     "per_token": 1.7872080206871033e-05
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.027223825454711914,
+     "token_count": 20,
+     "per_token": -0.0013611912727355957
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.016595840454101562,
+     "token_count": 20,
+     "per_token": 0.0008297920227050781
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.02318596839904785,
+     "token_count": 20,
+     "per_token": -0.0011592984199523925
+    }
+   },
+   "pooled_abs_delta_M": 0.009968393792708715,
+   "identity_abs_per_token": 0.0016164962907095214,
+   "control_abs_per_token": 0.001116760571797689,
+   "ratio": 1.447486893369982
+  },
+  {
+   "set": "random",
+   "layer": 26,
+   "index": 26,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.004035383462905884,
+     "token_count": 8,
+     "per_token": -0.0005044229328632355
+    },
+    "What is your name?": {
+     "delta": -0.046832531690597534,
+     "token_count": 4,
+     "per_token": -0.011708132922649384
+    },
+    "Who created you?": {
+     "delta": -0.0013966560363769531,
+     "token_count": 8,
+     "per_token": -0.00017458200454711914
+    },
+    "Which company trained you?": {
+     "delta": -0.03932392597198486,
+     "token_count": 9,
+     "per_token": -0.004369325107998318
+    },
+    "Introduce yourself.": {
+     "delta": 9.298324584960938e-06,
+     "token_count": 4,
+     "per_token": 2.3245811462402344e-06
+    },
+    "What model are you?": {
+     "delta": 1.9334256649017334e-05,
+     "token_count": 4,
+     "per_token": 4.8335641622543335e-06
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.023736953735351562,
+     "token_count": 20,
+     "per_token": -0.0011868476867675781
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.057539939880371094,
+     "token_count": 20,
+     "per_token": -0.0028769969940185547
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.025664925575256348,
+     "token_count": 20,
+     "per_token": -0.0012832462787628173
+    }
+   },
+   "pooled_abs_delta_M": 0.015269521623849869,
+   "identity_abs_per_token": 0.0024761386417053843,
+   "control_abs_per_token": 0.0017823636531829833,
+   "ratio": 1.3892443538575547
+  },
+  {
+   "set": "random",
+   "layer": 22,
+   "index": 3633,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.005102485418319702,
+     "token_count": 8,
+     "per_token": -0.0006378106772899628
+    },
+    "What is your name?": {
+     "delta": -0.046840816736221313,
+     "token_count": 4,
+     "per_token": -0.011710204184055328
+    },
+    "Who created you?": {
+     "delta": 0.00016963481903076172,
+     "token_count": 8,
+     "per_token": 2.1204352378845215e-05
+    },
+    "Which company trained you?": {
+     "delta": -0.05009257793426514,
+     "token_count": 9,
+     "per_token": -0.005565841992696126
+    },
+    "Introduce yourself.": {
+     "delta": 0.010005541145801544,
+     "token_count": 4,
+     "per_token": 0.002501385286450386
+    },
+    "What model are you?": {
+     "delta": 0.008036613464355469,
+     "token_count": 4,
+     "per_token": 0.002009153366088867
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.024995923042297363,
+     "token_count": 20,
+     "per_token": -0.001249796152114868
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.07340335845947266,
+     "token_count": 20,
+     "per_token": 0.0036701679229736326
+    },
+    "Explain what a prime number is.": {
+     "delta": 0.007055997848510742,
+     "token_count": 20,
+     "per_token": 0.0003527998924255371
+    }
+   },
+   "pooled_abs_delta_M": 0.02004127825299899,
+   "identity_abs_per_token": 0.003249937013999836,
+   "control_abs_per_token": 0.001757587989171346,
+   "ratio": 1.8490892257019185
+  },
+  {
+   "set": "random",
+   "layer": 6,
+   "index": 7901,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.003137335181236267,
+     "token_count": 8,
+     "per_token": 0.0003921668976545334
+    },
+    "What is your name?": {
+     "delta": -0.04732444882392883,
+     "token_count": 4,
+     "per_token": -0.011831112205982208
+    },
+    "Who created you?": {
+     "delta": -0.0038010478019714355,
+     "token_count": 8,
+     "per_token": -0.00047513097524642944
+    },
+    "Which company trained you?": {
+     "delta": -0.05164527893066406,
+     "token_count": 9,
+     "per_token": -0.0057383643256293405
+    },
+    "Introduce yourself.": {
+     "delta": -2.346932888031006e-05,
+     "token_count": 4,
+     "per_token": -5.867332220077515e-06
+    },
+    "What model are you?": {
+     "delta": 0.015157356858253479,
+     "token_count": 4,
+     "per_token": 0.0037893392145633698
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.010636568069458008,
+     "token_count": 20,
+     "per_token": -0.0005318284034729004
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.1303863525390625,
+     "token_count": 20,
+     "per_token": 0.006519317626953125
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.029166698455810547,
+     "token_count": 20,
+     "per_token": -0.0014583349227905273
+    }
+   },
+   "pooled_abs_delta_M": 0.020181489487489063,
+   "identity_abs_per_token": 0.0032726739709441725,
+   "control_abs_per_token": 0.0028364936510721843,
+   "ratio": 1.1537744742376257
+  },
+  {
+   "set": "random",
+   "layer": 31,
+   "index": 5112,
+   "identity": {
+    "Who made you?": {
+     "delta": -5.155801773071289e-06,
+     "token_count": 8,
+     "per_token": -6.444752216339111e-07
+    },
+    "What is your name?": {
+     "delta": 3.224611282348633e-05,
+     "token_count": 4,
+     "per_token": 8.061528205871582e-06
+    },
+    "Who created you?": {
+     "delta": 0.00035244226455688477,
+     "token_count": 8,
+     "per_token": 4.4055283069610596e-05
+    },
+    "Which company trained you?": {
+     "delta": 3.5762786865234375e-07,
+     "token_count": 9,
+     "per_token": 3.9736429850260414e-08
+    },
+    "Introduce yourself.": {
+     "delta": -4.86522912979126e-06,
+     "token_count": 4,
+     "per_token": -1.216307282447815e-06
+    },
+    "What model are you?": {
+     "delta": -1.043081283569336e-07,
+     "token_count": 4,
+     "per_token": -2.60770320892334e-08
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.02400386333465576,
+     "token_count": 20,
+     "per_token": -0.0012001931667327882
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.13910293579101562,
+     "token_count": 20,
+     "per_token": -0.006955146789550781
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.021620988845825195,
+     "token_count": 20,
+     "per_token": -0.0010810494422912598
+    }
+   },
+   "pooled_abs_delta_M": 6.586189071337382e-05,
+   "identity_abs_per_token": 1.0680306602168727e-05,
+   "control_abs_per_token": 0.0030787964661916096,
+   "ratio": 0.003468987547390551
+  },
+  {
+   "set": "random",
+   "layer": 31,
+   "index": 309,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.0001793503761291504,
+     "token_count": 8,
+     "per_token": -2.24187970161438e-05
+    },
+    "What is your name?": {
+     "delta": -4.747509956359863e-05,
+     "token_count": 4,
+     "per_token": -1.1868774890899658e-05
+    },
+    "Who created you?": {
+     "delta": -0.006421983242034912,
+     "token_count": 8,
+     "per_token": -0.000802747905254364
+    },
+    "Which company trained you?": {
+     "delta": -5.602836608886719e-06,
+     "token_count": 9,
+     "per_token": -6.225374009874132e-07
+    },
+    "Introduce yourself.": {
+     "delta": -2.0153820514678955e-05,
+     "token_count": 4,
+     "per_token": -5.038455128669739e-06
+    },
+    "What model are you?": {
+     "delta": 8.642673492431641e-07,
+     "token_count": 4,
+     "per_token": 2.1606683731079102e-07
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.009669661521911621,
+     "token_count": 20,
+     "per_token": -0.00048348307609558105
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.047351837158203125,
+     "token_count": 20,
+     "per_token": -0.002367591857910156
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.07477700710296631,
+     "token_count": 20,
+     "per_token": -0.0037388503551483154
+    }
+   },
+   "pooled_abs_delta_M": 0.0011125716070334117,
+   "identity_abs_per_token": 0.00018041701735676947,
+   "control_abs_per_token": 0.002196641763051351,
+   "ratio": 0.08213310899914446
+  },
+  {
+   "set": "random",
+   "layer": 16,
+   "index": 7048,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.008288070559501648,
+     "token_count": 8,
+     "per_token": 0.001036008819937706
+    },
+    "What is your name?": {
+     "delta": 0.041189342737197876,
+     "token_count": 4,
+     "per_token": 0.010297335684299469
+    },
+    "Who created you?": {
+     "delta": -0.06926852464675903,
+     "token_count": 8,
+     "per_token": -0.00865856558084488
+    },
+    "Which company trained you?": {
+     "delta": -0.022989273071289062,
+     "token_count": 9,
+     "per_token": -0.0025543636745876735
+    },
+    "Introduce yourself.": {
+     "delta": 0.010014869272708893,
+     "token_count": 4,
+     "per_token": 0.002503717318177223
+    },
+    "What model are you?": {
+     "delta": 1.4744699001312256e-05,
+     "token_count": 4,
+     "per_token": 3.686174750328064e-06
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.009946465492248535,
+     "token_count": 20,
+     "per_token": -0.0004973232746124268
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.13200092315673828,
+     "token_count": 20,
+     "per_token": 0.006600046157836914
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.019491910934448242,
+     "token_count": 20,
+     "per_token": -0.0009745955467224121
+    }
+   },
+   "pooled_abs_delta_M": 0.02529413749774297,
+   "identity_abs_per_token": 0.0041017520266610225,
+   "control_abs_per_token": 0.002690654993057251,
+   "ratio": 1.5244436901961986
+  },
+  {
+   "set": "random",
+   "layer": 22,
+   "index": 6724,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.0006605386734008789,
+     "token_count": 8,
+     "per_token": -8.256733417510986e-05
+    },
+    "What is your name?": {
+     "delta": 0.0400259792804718,
+     "token_count": 4,
+     "per_token": 0.01000649482011795
+    },
+    "Who created you?": {
+     "delta": 0.0008289813995361328,
+     "token_count": 8,
+     "per_token": 0.0001036226749420166
+    },
+    "Which company trained you?": {
+     "delta": -0.11111330986022949,
+     "token_count": 9,
+     "per_token": -0.012345923317803277
+    },
+    "Introduce yourself.": {
+     "delta": -5.863606929779053e-06,
+     "token_count": 4,
+     "per_token": -1.4659017324447632e-06
+    },
+    "What model are you?": {
+     "delta": -5.804002285003662e-06,
+     "token_count": 4,
+     "per_token": -1.4510005712509155e-06
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.02141118049621582,
+     "token_count": 20,
+     "per_token": -0.001070559024810791
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.01703643798828125,
+     "token_count": 20,
+     "per_token": 0.0008518218994140625
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.029727578163146973,
+     "token_count": 20,
+     "per_token": -0.0014863789081573486
+    }
+   },
+   "pooled_abs_delta_M": 0.025440079470475514,
+   "identity_abs_per_token": 0.004125418292509543,
+   "control_abs_per_token": 0.0011362532774607341,
+   "ratio": 3.630720697879005
+  },
+  {
+   "set": "random",
+   "layer": 31,
+   "index": 7803,
+   "identity": {
+    "Who made you?": {
+     "delta": -1.2964010238647461e-05,
+     "token_count": 8,
+     "per_token": -1.6205012798309326e-06
+    },
+    "What is your name?": {
+     "delta": 5.301833152770996e-05,
+     "token_count": 4,
+     "per_token": 1.325458288192749e-05
+    },
+    "Who created you?": {
+     "delta": 0.0016530752182006836,
+     "token_count": 8,
+     "per_token": 0.00020663440227508545
+    },
+    "Which company trained you?": {
+     "delta": 0.0008323192596435547,
+     "token_count": 9,
+     "per_token": 9.247991773817275e-05
+    },
+    "Introduce yourself.": {
+     "delta": -2.0623207092285156e-05,
+     "token_count": 4,
+     "per_token": -5.155801773071289e-06
+    },
+    "What model are you?": {
+     "delta": 5.885958671569824e-07,
+     "token_count": 4,
+     "per_token": 1.471489667892456e-07
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.0016241073608398438,
+     "token_count": 20,
+     "per_token": 8.120536804199219e-05
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.040424346923828125,
+     "token_count": 20,
+     "per_token": -0.0020212173461914063
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.0018575191497802734,
+     "token_count": 20,
+     "per_token": -9.287595748901367e-05
+    }
+   },
+   "pooled_abs_delta_M": 0.00042876477042833966,
+   "identity_abs_per_token": 6.952942223162265e-05,
+   "control_abs_per_token": 0.0007317662239074707,
+   "ratio": 0.09501589436630571
+  },
+  {
+   "set": "random",
+   "layer": 22,
+   "index": 1618,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.005685240030288696,
+     "token_count": 8,
+     "per_token": 0.000710655003786087
+    },
+    "What is your name?": {
+     "delta": -0.04671850800514221,
+     "token_count": 4,
+     "per_token": -0.011679627001285553
+    },
+    "Who created you?": {
+     "delta": -0.01316535472869873,
+     "token_count": 8,
+     "per_token": -0.0016456693410873413
+    },
+    "Which company trained you?": {
+     "delta": -0.13368284702301025,
+     "token_count": 9,
+     "per_token": -0.01485364966922336
+    },
+    "Introduce yourself.": {
+     "delta": -6.452202796936035e-06,
+     "token_count": 4,
+     "per_token": -1.6130506992340088e-06
+    },
+    "What model are you?": {
+     "delta": 0.008041150867938995,
+     "token_count": 4,
+     "per_token": 0.002010287716984749
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.029459357261657715,
+     "token_count": 20,
+     "per_token": -0.0014729678630828857
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.05210685729980469,
+     "token_count": 20,
+     "per_token": 0.0026053428649902345
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.020819544792175293,
+     "token_count": 20,
+     "per_token": -0.0010409772396087647
+    }
+   },
+   "pooled_abs_delta_M": 0.03454992547631264,
+   "identity_abs_per_token": 0.005602690617780428,
+   "control_abs_per_token": 0.0017064293225606284,
+   "ratio": 3.283283136141355
+  },
+  {
+   "set": "random",
+   "layer": 23,
+   "index": 822,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.00016997754573822021,
+     "token_count": 8,
+     "per_token": -2.1247193217277527e-05
+    },
+    "What is your name?": {
+     "delta": -0.0009413063526153564,
+     "token_count": 4,
+     "per_token": -0.0002353265881538391
+    },
+    "Who created you?": {
+     "delta": -0.00434190034866333,
+     "token_count": 8,
+     "per_token": -0.0005427375435829163
+    },
+    "Which company trained you?": {
+     "delta": -0.051444172859191895,
+     "token_count": 9,
+     "per_token": -0.005716019206576877
+    },
+    "Introduce yourself.": {
+     "delta": -6.638467311859131e-06,
+     "token_count": 4,
+     "per_token": -1.6596168279647827e-06
+    },
+    "What model are you?": {
+     "delta": 0.015107031911611557,
+     "token_count": 4,
+     "per_token": 0.0037767579779028893
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.027336716651916504,
+     "token_count": 20,
+     "per_token": -0.0013668358325958252
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.08696556091308594,
+     "token_count": 20,
+     "per_token": -0.004348278045654297
+    },
+    "Explain what a prime number is.": {
+     "delta": 0.01157677173614502,
+     "token_count": 20,
+     "per_token": 0.0005788385868072509
+    }
+   },
+   "pooled_abs_delta_M": 0.012001837914188703,
+   "identity_abs_per_token": 0.0019462439860846545,
+   "control_abs_per_token": 0.0020979841550191245,
+   "ratio": 0.9276733484514392
+  },
+  {
+   "set": "random",
+   "layer": 18,
+   "index": 7955,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.008498281240463257,
+     "token_count": 8,
+     "per_token": 0.001062285155057907
+    },
+    "What is your name?": {
+     "delta": 0.04035040736198425,
+     "token_count": 4,
+     "per_token": 0.010087601840496063
+    },
+    "Who created you?": {
+     "delta": -0.002050042152404785,
+     "token_count": 8,
+     "per_token": -0.00025625526905059814
+    },
+    "Which company trained you?": {
+     "delta": -0.11918115615844727,
+     "token_count": 9,
+     "per_token": -0.013242350684271919
+    },
+    "Introduce yourself.": {
+     "delta": -6.154179573059082e-06,
+     "token_count": 4,
+     "per_token": -1.5385448932647705e-06
+    },
+    "What model are you?": {
+     "delta": 0.015136957168579102,
+     "token_count": 4,
+     "per_token": 0.0037842392921447754
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.012041926383972168,
+     "token_count": 20,
+     "per_token": -0.0006020963191986084
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.0005121231079101562,
+     "token_count": 20,
+     "per_token": -2.5606155395507814e-05
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.022363901138305664,
+     "token_count": 20,
+     "per_token": -0.0011181950569152832
+    }
+   },
+   "pooled_abs_delta_M": 0.030870499710241955,
+   "identity_abs_per_token": 0.005006026980039236,
+   "control_abs_per_token": 0.0005819658438364665,
+   "ratio": 8.601925753989677
+  },
+  {
+   "set": "random",
+   "layer": 30,
+   "index": 204,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.00015407800674438477,
+     "token_count": 8,
+     "per_token": -1.9259750843048096e-05
+    },
+    "What is your name?": {
+     "delta": 3.3080577850341797e-06,
+     "token_count": 4,
+     "per_token": 8.270144462585449e-07
+    },
+    "Who created you?": {
+     "delta": -0.00793987512588501,
+     "token_count": 8,
+     "per_token": -0.0009924843907356262
+    },
+    "Which company trained you?": {
+     "delta": -0.012240767478942871,
+     "token_count": 9,
+     "per_token": -0.0013600852754380968
+    },
+    "Introduce yourself.": {
+     "delta": -9.521842002868652e-06,
+     "token_count": 4,
+     "per_token": -2.380460500717163e-06
+    },
+    "What model are you?": {
+     "delta": -6.821751594543457e-05,
+     "token_count": 4,
+     "per_token": -1.7054378986358643e-05
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.0003508329391479492,
+     "token_count": 20,
+     "per_token": 1.754164695739746e-05
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.0347747802734375,
+     "token_count": 20,
+     "per_token": -0.001738739013671875
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.025115013122558594,
+     "token_count": 20,
+     "per_token": -0.0012557506561279297
+    }
+   },
+   "pooled_abs_delta_M": 0.003402628004550934,
+   "identity_abs_per_token": 0.0005517775142515027,
+   "control_abs_per_token": 0.0010040104389190674,
+   "ratio": 0.5495734833649286
+  },
+  {
+   "set": "random",
+   "layer": 20,
+   "index": 4990,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.008060932159423828,
+     "token_count": 8,
+     "per_token": -0.0010076165199279785
+    },
+    "What is your name?": {
+     "delta": 0.00019684433937072754,
+     "token_count": 4,
+     "per_token": 4.9211084842681885e-05
+    },
+    "Who created you?": {
+     "delta": -0.008397102355957031,
+     "token_count": 8,
+     "per_token": -0.001049637794494629
+    },
+    "Which company trained you?": {
+     "delta": -0.05163931846618652,
+     "token_count": 9,
+     "per_token": -0.005737702051798503
+    },
+    "Introduce yourself.": {
+     "delta": -1.1235475540161133e-05,
+     "token_count": 4,
+     "per_token": -2.808868885040283e-06
+    },
+    "What model are you?": {
+     "delta": -2.736598253250122e-05,
+     "token_count": 4,
+     "per_token": -6.841495633125305e-06
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.02268373966217041,
+     "token_count": 20,
+     "per_token": -0.0011341869831085205
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.10670280456542969,
+     "token_count": 20,
+     "per_token": -0.0053351402282714845
+    },
+    "Explain what a prime number is.": {
+     "delta": 0.012442827224731445,
+     "token_count": 20,
+     "per_token": 0.0006221413612365722
+    }
+   },
+   "pooled_abs_delta_M": 0.011388799796501795,
+   "identity_abs_per_token": 0.0018468323994327235,
+   "control_abs_per_token": 0.002363822857538859,
+   "ratio": 0.7812905241789521
+  },
+  {
+   "set": "random",
+   "layer": 10,
+   "index": 741,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.008111506700515747,
+     "token_count": 8,
+     "per_token": 0.0010139383375644684
+    },
+    "What is your name?": {
+     "delta": -0.0470520555973053,
+     "token_count": 4,
+     "per_token": -0.011763013899326324
+    },
+    "Who created you?": {
+     "delta": -0.015573680400848389,
+     "token_count": 8,
+     "per_token": -0.0019467100501060486
+    },
+    "Which company trained you?": {
+     "delta": 0.022014975547790527,
+     "token_count": 9,
+     "per_token": 0.0024461083941989476
+    },
+    "Introduce yourself.": {
+     "delta": -2.22623348236084e-05,
+     "token_count": 4,
+     "per_token": -5.5655837059021e-06
+    },
+    "What model are you?": {
+     "delta": 0.007929220795631409,
+     "token_count": 4,
+     "per_token": 0.001982305198907852
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.004603862762451172,
+     "token_count": 20,
+     "per_token": 0.0002301931381225586
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.0676727294921875,
+     "token_count": 20,
+     "per_token": 0.003383636474609375
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.04688715934753418,
+     "token_count": 20,
+     "per_token": -0.002344357967376709
+    }
+   },
+   "pooled_abs_delta_M": 0.01678395022948583,
+   "identity_abs_per_token": 0.00272172165883554,
+   "control_abs_per_token": 0.0019860625267028808,
+   "ratio": 1.3704108618140778
+  },
+  {
+   "set": "random",
+   "layer": 31,
+   "index": 2769,
+   "identity": {
+    "Who made you?": {
+     "delta": -3.933906555175781e-06,
+     "token_count": 8,
+     "per_token": -4.917383193969727e-07
+    },
+    "What is your name?": {
+     "delta": -1.7583370208740234e-06,
+     "token_count": 4,
+     "per_token": -4.3958425521850586e-07
+    },
+    "Who created you?": {
+     "delta": -1.0132789611816406e-05,
+     "token_count": 8,
+     "per_token": -1.2665987014770508e-06
+    },
+    "Which company trained you?": {
+     "delta": 2.7418136596679688e-06,
+     "token_count": 9,
+     "per_token": 3.0464596218532984e-07
+    },
+    "Introduce yourself.": {
+     "delta": -3.255903720855713e-05,
+     "token_count": 4,
+     "per_token": -8.139759302139282e-06
+    },
+    "What model are you?": {
+     "delta": -7.003545761108398e-07,
+     "token_count": 4,
+     "per_token": -1.7508864402770996e-07
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -3.0994415283203125e-06,
+     "token_count": 20,
+     "per_token": -1.5497207641601563e-07
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.08649730682373047,
+     "token_count": 20,
+     "per_token": -0.004324865341186523
+    },
+    "Explain what a prime number is.": {
+     "delta": 1.1920928955078125e-06,
+     "token_count": 20,
+     "per_token": 5.960464477539063e-08
+    }
+   },
+   "pooled_abs_delta_M": 8.637706438700358e-06,
+   "identity_abs_per_token": 1.4007091522216797e-06,
+   "control_abs_per_token": 0.0014416933059692382,
+   "ratio": 0.0009715722105541683
+  },
+  {
+   "set": "random",
+   "layer": 26,
+   "index": 4433,
+   "identity": {
+    "Who made you?": {
+     "delta": 4.7713518142700195e-05,
+     "token_count": 8,
+     "per_token": 5.964189767837524e-06
+    },
+    "What is your name?": {
+     "delta": 0.0004699230194091797,
+     "token_count": 4,
+     "per_token": 0.00011748075485229492
+    },
+    "Who created you?": {
+     "delta": -0.0001423358917236328,
+     "token_count": 8,
+     "per_token": -1.77919864654541e-05
+    },
+    "Which company trained you?": {
+     "delta": -0.04266023635864258,
+     "token_count": 9,
+     "per_token": -0.004740026262071397
+    },
+    "Introduce yourself.": {
+     "delta": -1.1511147022247314e-05,
+     "token_count": 4,
+     "per_token": -2.8777867555618286e-06
+    },
+    "What model are you?": {
+     "delta": -3.071129322052002e-05,
+     "token_count": 4,
+     "per_token": -7.677823305130005e-06
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.018932700157165527,
+     "token_count": 20,
+     "per_token": -0.0009466350078582763
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.022857666015625,
+     "token_count": 20,
+     "per_token": -0.00114288330078125
+    },
+    "Explain what a prime number is.": {
+     "delta": 0.0124053955078125,
+     "token_count": 20,
+     "per_token": 0.000620269775390625
+    }
+   },
+   "pooled_abs_delta_M": 0.007227071871360143,
+   "identity_abs_per_token": 0.0011719576007611042,
+   "control_abs_per_token": 0.0009032626946767171,
+   "ratio": 1.2974714971269288
+  },
+  {
+   "set": "random",
+   "layer": 20,
+   "index": 3895,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.0042228102684021,
+     "token_count": 8,
+     "per_token": 0.0005278512835502625
+    },
+    "What is your name?": {
+     "delta": -0.04645863175392151,
+     "token_count": 4,
+     "per_token": -0.011614657938480377
+    },
+    "Who created you?": {
+     "delta": -0.003208756446838379,
+     "token_count": 8,
+     "per_token": -0.00040109455585479736
+    },
+    "Which company trained you?": {
+     "delta": -0.0987544059753418,
+     "token_count": 9,
+     "per_token": -0.010972711775037978
+    },
+    "Introduce yourself.": {
+     "delta": -2.5309622287750244e-05,
+     "token_count": 4,
+     "per_token": -6.327405571937561e-06
+    },
+    "What model are you?": {
+     "delta": 0.015229955315589905,
+     "token_count": 4,
+     "per_token": 0.003807488828897476
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.0027701854705810547,
+     "token_count": 20,
+     "per_token": -0.00013850927352905275
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.03433990478515625,
+     "token_count": 20,
+     "per_token": -0.0017169952392578126
+    },
+    "Explain what a prime number is.": {
+     "delta": 0.005007147789001465,
+     "token_count": 20,
+     "per_token": 0.00025035738945007325
+    }
+   },
+   "pooled_abs_delta_M": 0.02798331156373024,
+   "identity_abs_per_token": 0.0045378343076319305,
+   "control_abs_per_token": 0.0007019539674123129,
+   "ratio": 6.464575340118425
+  },
+  {
+   "set": "random",
+   "layer": 29,
+   "index": 3719,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.00012283027172088623,
+     "token_count": 8,
+     "per_token": -1.535378396511078e-05
+    },
+    "What is your name?": {
+     "delta": 0.00017321109771728516,
+     "token_count": 4,
+     "per_token": 4.330277442932129e-05
+    },
+    "Who created you?": {
+     "delta": 0.0014638900756835938,
+     "token_count": 8,
+     "per_token": 0.00018298625946044922
+    },
+    "Which company trained you?": {
+     "delta": -0.06413817405700684,
+     "token_count": 9,
+     "per_token": -0.0071264637841118705
+    },
+    "Introduce yourself.": {
+     "delta": -5.424022674560547e-06,
+     "token_count": 4,
+     "per_token": -1.3560056686401367e-06
+    },
+    "What model are you?": {
+     "delta": 1.4089047908782959e-05,
+     "token_count": 4,
+     "per_token": 3.5222619771957397e-06
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.022664189338684082,
+     "token_count": 20,
+     "per_token": -0.001133209466934204
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.028199195861816406,
+     "token_count": 20,
+     "per_token": -0.0014099597930908204
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.019646406173706055,
+     "token_count": 20,
+     "per_token": -0.0009823203086853026
+    }
+   },
+   "pooled_abs_delta_M": 0.010986269762118658,
+   "identity_abs_per_token": 0.0017815572587219445,
+   "control_abs_per_token": 0.001175163189570109,
+   "ratio": 1.5160083931608364
+  },
+  {
+   "set": "random",
+   "layer": 8,
+   "index": 260,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.01481473445892334,
+     "token_count": 8,
+     "per_token": -0.0018518418073654175
+    },
+    "What is your name?": {
+     "delta": -0.04914399981498718,
+     "token_count": 4,
+     "per_token": -0.012285999953746796
+    },
+    "Who created you?": {
+     "delta": -0.010784506797790527,
+     "token_count": 8,
+     "per_token": -0.001348063349723816
+    },
+    "Which company trained you?": {
+     "delta": -0.08362603187561035,
+     "token_count": 9,
+     "per_token": -0.009291781319512261
+    },
+    "Introduce yourself.": {
+     "delta": 0.008893139660358429,
+     "token_count": 4,
+     "per_token": 0.0022232849150896072
+    },
+    "What model are you?": {
+     "delta": 0.007902748882770538,
+     "token_count": 4,
+     "per_token": 0.0019756872206926346
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.008571982383728027,
+     "token_count": 20,
+     "per_token": -0.00042859911918640136
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.03402900695800781,
+     "token_count": 20,
+     "per_token": 0.0017014503479003905
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.018226146697998047,
+     "token_count": 20,
+     "per_token": -0.0009113073348999024
+    }
+   },
+   "pooled_abs_delta_M": 0.029194193581740063,
+   "identity_abs_per_token": 0.004734193553795686,
+   "control_abs_per_token": 0.0010137856006622314,
+   "ratio": 4.669817317096618
+  },
+  {
+   "set": "random",
+   "layer": 8,
+   "index": 49,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.008745461702346802,
+     "token_count": 8,
+     "per_token": 0.0010931827127933502
+    },
+    "What is your name?": {
+     "delta": -0.004301548004150391,
+     "token_count": 4,
+     "per_token": -0.0010753870010375977
+    },
+    "Who created you?": {
+     "delta": -0.010843276977539062,
+     "token_count": 8,
+     "per_token": -0.0013554096221923828
+    },
+    "Which company trained you?": {
+     "delta": -0.017422199249267578,
+     "token_count": 9,
+     "per_token": -0.0019357999165852864
+    },
+    "Introduce yourself.": {
+     "delta": 0.008871115744113922,
+     "token_count": 4,
+     "per_token": 0.0022177789360284805
+    },
+    "What model are you?": {
+     "delta": 0.015235964208841324,
+     "token_count": 4,
+     "per_token": 0.003808991052210331
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.029743313789367676,
+     "token_count": 20,
+     "per_token": 0.0014871656894683838
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.09770011901855469,
+     "token_count": 20,
+     "per_token": -0.0048850059509277345
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.02489924430847168,
+     "token_count": 20,
+     "per_token": -0.001244962215423584
+    }
+   },
+   "pooled_abs_delta_M": 0.01090326098104318,
+   "identity_abs_per_token": 0.0017680963753042994,
+   "control_abs_per_token": 0.0025390446186065673,
+   "ratio": 0.6963628611909286
+  },
+  {
+   "set": "random",
+   "layer": 31,
+   "index": 1150,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.0001596212387084961,
+     "token_count": 8,
+     "per_token": -1.9952654838562012e-05
+    },
+    "What is your name?": {
+     "delta": -0.0011767745018005371,
+     "token_count": 4,
+     "per_token": -0.0002941936254501343
+    },
+    "Who created you?": {
+     "delta": 3.170967102050781e-05,
+     "token_count": 8,
+     "per_token": 3.9637088775634766e-06
+    },
+    "Which company trained you?": {
+     "delta": -0.013080835342407227,
+     "token_count": 9,
+     "per_token": -0.0014534261491563586
+    },
+    "Introduce yourself.": {
+     "delta": 3.635883331298828e-06,
+     "token_count": 4,
+     "per_token": 9.08970832824707e-07
+    },
+    "What model are you?": {
+     "delta": -9.598582983016968e-05,
+     "token_count": 4,
+     "per_token": -2.399645745754242e-05
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.00017464160919189453,
+     "token_count": 20,
+     "per_token": -8.732080459594727e-06
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.08031558990478516,
+     "token_count": 20,
+     "per_token": -0.004015779495239258
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.0018260478973388672,
+     "token_count": 20,
+     "per_token": -9.130239486694336e-05
+    }
+   },
+   "pooled_abs_delta_M": 0.002424760411183039,
+   "identity_abs_per_token": 0.00039320439100265503,
+   "control_abs_per_token": 0.0013719379901885986,
+   "ratio": 0.2866050753129168
+  },
+  {
+   "set": "random",
+   "layer": 27,
+   "index": 76,
+   "identity": {
+    "Who made you?": {
+     "delta": 0.000571906566619873,
+     "token_count": 8,
+     "per_token": 7.148832082748413e-05
+    },
+    "What is your name?": {
+     "delta": 0.0002377331256866455,
+     "token_count": 4,
+     "per_token": 5.943328142166138e-05
+    },
+    "Who created you?": {
+     "delta": -0.05167746543884277,
+     "token_count": 8,
+     "per_token": -0.006459683179855347
+    },
+    "Which company trained you?": {
+     "delta": -0.052098870277404785,
+     "token_count": 9,
+     "per_token": -0.005788763364156087
+    },
+    "Introduce yourself.": {
+     "delta": -4.842132329940796e-05,
+     "token_count": 4,
+     "per_token": -1.210533082485199e-05
+    },
+    "What model are you?": {
+     "delta": 0.008110672235488892,
+     "token_count": 4,
+     "per_token": 0.002027668058872223
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.009412527084350586,
+     "token_count": 20,
+     "per_token": 0.0004706263542175293
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.06759071350097656,
+     "token_count": 20,
+     "per_token": 0.003379535675048828
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.021749138832092285,
+     "token_count": 20,
+     "per_token": -0.0010874569416046143
+    }
+   },
+   "pooled_abs_delta_M": 0.018790844827890396,
+   "identity_abs_per_token": 0.0030471640261443885,
+   "control_abs_per_token": 0.001645872990290324,
+   "ratio": 1.851396823522138
+  },
+  {
+   "set": "random",
+   "layer": 26,
+   "index": 6179,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.0003275275230407715,
+     "token_count": 8,
+     "per_token": -4.0940940380096436e-05
+    },
+    "What is your name?": {
+     "delta": 0.041227757930755615,
+     "token_count": 4,
+     "per_token": 0.010306939482688904
+    },
+    "Who created you?": {
+     "delta": 0.0020803213119506836,
+     "token_count": 8,
+     "per_token": 0.00026004016399383545
+    },
+    "Which company trained you?": {
+     "delta": -0.055895209312438965,
+     "token_count": 9,
+     "per_token": -0.006210578812493218
+    },
+    "Introduce yourself.": {
+     "delta": -2.518296241760254e-05,
+     "token_count": 4,
+     "per_token": -6.295740604400635e-06
+    },
+    "What model are you?": {
+     "delta": 2.2448599338531494e-05,
+     "token_count": 4,
+     "per_token": 5.6121498346328735e-06
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": 0.008226990699768066,
+     "token_count": 20,
+     "per_token": 0.00041134953498840333
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.06276512145996094,
+     "token_count": 20,
+     "per_token": -0.0031382560729980467
+    },
+    "Explain what a prime number is.": {
+     "delta": 0.010532379150390625,
+     "token_count": 20,
+     "per_token": 0.0005266189575195313
+    }
+   },
+   "pooled_abs_delta_M": 0.01659640793999036,
+   "identity_abs_per_token": 0.0026913093956741126,
+   "control_abs_per_token": 0.0013587415218353272,
+   "ratio": 1.9807368454000083
+  },
+  {
+   "set": "random",
+   "layer": 30,
+   "index": 4846,
+   "identity": {
+    "Who made you?": {
+     "delta": 1.9758939743041992e-05,
+     "token_count": 8,
+     "per_token": 2.469867467880249e-06
+    },
+    "What is your name?": {
+     "delta": 1.2218952178955078e-05,
+     "token_count": 4,
+     "per_token": 3.0547380447387695e-06
+    },
+    "Who created you?": {
+     "delta": -0.0007228851318359375,
+     "token_count": 8,
+     "per_token": -9.036064147949219e-05
+    },
+    "Which company trained you?": {
+     "delta": -0.04288482666015625,
+     "token_count": 9,
+     "per_token": -0.004764980740017361
+    },
+    "Introduce yourself.": {
+     "delta": -5.5283308029174805e-06,
+     "token_count": 4,
+     "per_token": -1.3820827007293701e-06
+    },
+    "What model are you?": {
+     "delta": -9.519606828689575e-05,
+     "token_count": 4,
+     "per_token": -2.3799017071723938e-05
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.0010172128677368164,
+     "token_count": 20,
+     "per_token": -5.086064338684082e-05
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.027441024780273438,
+     "token_count": 20,
+     "per_token": -0.001372051239013672
+    },
+    "Explain what a prime number is.": {
+     "delta": 0.0038062334060668945,
+     "token_count": 20,
+     "per_token": 0.00019031167030334473
+    }
+   },
+   "pooled_abs_delta_M": 0.007290069013834,
+   "identity_abs_per_token": 0.0011821733535947027,
+   "control_abs_per_token": 0.0005377411842346191,
+   "ratio": 2.198405828404831
+  },
+  {
+   "set": "random",
+   "layer": 28,
+   "index": 5964,
+   "identity": {
+    "Who made you?": {
+     "delta": -0.00011608004570007324,
+     "token_count": 8,
+     "per_token": -1.4510005712509155e-05
+    },
+    "What is your name?": {
+     "delta": 1.5109777450561523e-05,
+     "token_count": 4,
+     "per_token": 3.777444362640381e-06
+    },
+    "Who created you?": {
+     "delta": 0.007656097412109375,
+     "token_count": 8,
+     "per_token": 0.0009570121765136719
+    },
+    "Which company trained you?": {
+     "delta": -0.04320633411407471,
+     "token_count": 9,
+     "per_token": -0.004800703790452745
+    },
+    "Introduce yourself.": {
+     "delta": 6.6533684730529785e-06,
+     "token_count": 4,
+     "per_token": 1.6633421182632446e-06
+    },
+    "What model are you?": {
+     "delta": 2.4810433387756348e-06,
+     "token_count": 4,
+     "per_token": 6.202608346939087e-07
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.019472122192382812,
+     "token_count": 20,
+     "per_token": -0.0009736061096191406
+    },
+    "Describe a quiet beach.": {
+     "delta": 0.008321762084960938,
+     "token_count": 20,
+     "per_token": 0.0004160881042480469
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.020385384559631348,
+     "token_count": 20,
+     "per_token": -0.0010192692279815674
+    }
+   },
+   "pooled_abs_delta_M": 0.008500459293524424,
+   "identity_abs_per_token": 0.001378452858409366,
+   "control_abs_per_token": 0.0008029878139495849,
+   "ratio": 1.7166547666885406
+  },
+  {
+   "set": "random",
+   "layer": 31,
+   "index": 2377,
+   "identity": {
+    "Who made you?": {
+     "delta": 2.0444393157958984e-05,
+     "token_count": 8,
+     "per_token": 2.555549144744873e-06
+    },
+    "What is your name?": {
+     "delta": -8.314847946166992e-06,
+     "token_count": 4,
+     "per_token": -2.078711986541748e-06
+    },
+    "Who created you?": {
+     "delta": 0.0016399621963500977,
+     "token_count": 8,
+     "per_token": 0.0002049952745437622
+    },
+    "Which company trained you?": {
+     "delta": 0.0019398927688598633,
+     "token_count": 9,
+     "per_token": 0.00021554364098442925
+    },
+    "Introduce yourself.": {
+     "delta": -2.0503997802734375e-05,
+     "token_count": 4,
+     "per_token": -5.125999450683594e-06
+    },
+    "What model are you?": {
+     "delta": -8.925795555114746e-06,
+     "token_count": 4,
+     "per_token": -2.2314488887786865e-06
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -1.7881393432617188e-05,
+     "token_count": 20,
+     "per_token": -8.940696716308594e-07
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.09623050689697266,
+     "token_count": 20,
+     "per_token": -0.004811525344848633
+    },
+    "Explain what a prime number is.": {
+     "delta": 4.291534423828125e-06,
+     "token_count": 20,
+     "per_token": 2.1457672119140626e-07
+    }
+   },
+   "pooled_abs_delta_M": 0.0006063406666119894,
+   "identity_abs_per_token": 9.832551350464692e-05,
+   "control_abs_per_token": 0.0016042113304138184,
+   "ratio": 0.06129212008450477
+  },
+  {
+   "set": "random",
+   "layer": 29,
+   "index": 5673,
+   "identity": {
+    "Who made you?": {
+     "delta": 3.859400749206543e-05,
+     "token_count": 8,
+     "per_token": 4.824250936508179e-06
+    },
+    "What is your name?": {
+     "delta": -0.046936243772506714,
+     "token_count": 4,
+     "per_token": -0.011734060943126678
+    },
+    "Who created you?": {
+     "delta": -0.0019757747650146484,
+     "token_count": 8,
+     "per_token": -0.00024697184562683105
+    },
+    "Which company trained you?": {
+     "delta": -0.043723106384277344,
+     "token_count": 9,
+     "per_token": -0.004858122931586372
+    },
+    "Introduce yourself.": {
+     "delta": -1.3880431652069092e-05,
+     "token_count": 4,
+     "per_token": -3.470107913017273e-06
+    },
+    "What model are you?": {
+     "delta": 0.008132793009281158,
+     "token_count": 4,
+     "per_token": 0.0020331982523202896
+    }
+   },
+   "control": {
+    "What is the capital of France?": {
+     "delta": -0.02205026149749756,
+     "token_count": 20,
+     "per_token": -0.0011025130748748778
+    },
+    "Describe a quiet beach.": {
+     "delta": -0.07818603515625,
+     "token_count": 20,
+     "per_token": -0.0039093017578125
+    },
+    "Explain what a prime number is.": {
+     "delta": -0.021895408630371094,
+     "token_count": 20,
+     "per_token": -0.0010947704315185547
+    }
+   },
+   "pooled_abs_delta_M": 0.016803398728370667,
+   "identity_abs_per_token": 0.0027248754694655136,
+   "control_abs_per_token": 0.0020355284214019775,
+   "ratio": 1.3386575401333605
+  }
+ ]
+}

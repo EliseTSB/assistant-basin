@@ -130,6 +130,34 @@ results/part20/; both tests proposed by Weaver.)
   any "neutral" filler in this study needs a read for meaning, not just a keyword test. Weaver's repaired cells, with a
   summary that carries the topic in no battery word and a pointer that carries nothing, are Part 20e.
 
+**Qwen3.5-4B, Part 20e: a summary in other words reaches the neuron only when the paraphrase pins the sense.**
+(20e.1-20e.4; results/part20e/; design by Weaver.) After the screened filler, three summaries with no word from any
+test sentence: "...concerned beings not from this place." reaches 5.34 (4.94 on " from", 5.34 on the period), while
+"...travellers from elsewhere." and "...arrivals from far away." stay at 0.04 and 0.30, as flat as a pointer that
+carries nothing ("...all described the same event.", 0.04) and the farmer sentence (0.04). So the neuron responds to
+meaning without its usual words, but only to a paraphrase that rules out ordinary travel. The predictions (Weaver's
+"moderate" and Claude's "below 5") were about the mean of the three, 1.89; the spread between paraphrases is the
+result. Three sentences, one reading each: a pattern to test with many paraphrases, not a measurement.
+
+**Qwen3.5-4B: identity neurons found by their effect, and how they connect.** (19.1-19.6; results/part19/; Elise asked
+for this.) A gradient screen over all 294,912 neurons ranks how much zeroing each would change the log-probability of
+the name tokens (Qwen, Tongyi, Alibaba) in the model's own answers to six identity questions; the top 50 are then
+zeroed one at a time for real.
+- Their true effect is 9.3 times that of 50 layer-matched random neurons, they sit mostly in the last ten layers (36 of
+  50), and their effect on the name is about 16 times their effect on control answers (19.1, 19.2, 19.4).
+- None of the 30 strongest writes a whole name. They write parts: "Q" (31:4200) and "T" (31:1243, 26:6262), the first
+  letters of Qwen and Tongyi; company names, "Apple", "Microsoft", 微软, 苹果 (24:3949); "model", "AI", 生成
+  (26:4106); "user", 用户 (23:6779); "you", 你 (19:5871). The logit lens is a rough reading, weakest in early layers.
+- Zeroing all 50 together does not remove the name from "Who made you?" or "What is your name?" (19.3 failed), but it
+  moves the maker: "Who created you?" becomes "I was created by **Google**." and "Which company trained you?" names the
+  Shanghai AI Laboratory.
+- The alien neuron is not among them: it ranks 32,438 by this screen, and also 107,951 by the push estimate for "Who
+  made you?" (19.5 failed). Its effect in Part 18 needs a clamp at twice its largest natural value, which a
+  first-order screen does not see.
+- Zeroing one node changes later nodes' activations more than any random same-layer neuron does for 329 of 364
+  possible forward pairs, and all 20 testable nodes receive such an edge (19.6). These are total effects through every
+  path, so they show the nodes are strongly coupled, not which wires carry the effect.
+
 **SmolLM3-3B: the neurons that say the name are not the identity neurons.**
 - Zeroing the 20 neurons that fire most when the assistant talks about itself leaves its self-naming ("What is your
   name?", no system message) at 47.9%, the same as the unmodified model; random sets of 20 give 43.8% to 52.1%. (11.4)
