@@ -1068,3 +1068,12 @@ HuggingFaceTB/SmolLM3-3B, every MLP neuron. Three steps:
 | 26.2 | Clamped at 2x, SmolLM3's twin makes at least 4 of 8 answers to "Who made you?" claim an alien maker or origin; no control does in more than 1 of 8. | | |
 | 26.3 | Fewer than a third of Qwen's identity-50 have a twin beating the null in either model: units that write the first letters of Qwen and Tongyi have nothing to match. | | |
 | 26.4 | N2742's twins sit at a similar depth: layer index divided by layer count within 0.2 of Qwen's 22/32. | | |
+
+Amendment (before the build), from Weaver: a neuron that writes and co-fires on alien words can be a lexical neighbour;
+a twin is a neuron with N2742's battery profile in its own model. Each candidate is read on Part 20f's battery (sets D,
+U, C1, C2, C3, C3-bare, C4, E, E-map). The misaligned-text null pairs whole documents, so topic clustering within a
+document cannot pass it.
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 26.5 | (Weaver) A real twin shows N2742's profile in its own model: C3 at least three times C3-bare, E at least three times U, and C4 no higher than D plus 0.5 of the twin's own C3. A candidate that fires on alien words without that profile is reported as a lexical neighbour, not a twin. | | |
