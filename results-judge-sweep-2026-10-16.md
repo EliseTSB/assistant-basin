@@ -21,3 +21,13 @@
 | deepseek-v4.1-flash-high | 78% | no | 92% | 90% | +3% (0.44) | 32/170 | 27320 | — | 173 | 53% |
 
 2026-10-18: Muse Spark 1.3 Contributor added (OpenCode Go Responses door, `--route ocgo-responses`, reasoning.effort minimal/low/medium, max 32,000 output tokens; default effort spent 16,000 reasoning tokens without answering on 2 of 3 smoke units). It separates neurons from random directions about as well as Haiku default (z 1.96 to 2.35) but calls random-context text "one job" 16 to 24% of the time, so it fails the pre-registered floor under 10%. Luna high (floor 2%, gap +22%) stays the better single-unit judge.
+
+2026-10-19: DeepSeek V4.1 Flash 1017 rows (OpenCode Go moved deepseek-v4.1-flash to the 1017 checkpoint that day; Elise asked for the same benchmark). Same 170-unit seed-0 subset, Go second-account key, script ~/neuron-probe/run-judge-sweep-ds1017.sh.
+
+| cell | floor (F one) | passes <10% | N one | R one | gap N−R (z) | errors | median out tokens | median wall s | agrees with Haiku default |
+|---|---|---|---|---|---|---|---|---|---|
+| deepseek-v4.1-flash-1017-off | 46% | no | 78% | 62% | +17% (1.99) | 0/170 | 56 | 1.4 | 45% |
+| deepseek-v4.1-flash-1017-high | 80% | no | 93% | 93% | -0% (-0.02) | 6/170 | 30082 | 103 | 52% |
+| deepseek-v4.1-flash-1017-low | 83% | no | 97% | 87% | +10% (1.98) | 8/170 | 27352 | 100 | 52% |
+
+Reading: 1017 is still not a usable one-job judge. Every setting fails the floor badly: it calls random-context text "one job" 46-83% of the time (0909: 48-78%; the bar is under 10%). With thinking off it now separates neurons from random directions about as well as Haiku default (+17%, z 1.99, against 0909's +3%), at 1.4 s and 56 tokens a call, but a judge that says yes to half of random text cannot be used. With thinking on it still spends about 28,000 tokens a call (with fewer errors, 6-8 of 170 against 28-32, and about 100 s against 175). Luna high stays the cheap judge of record.
