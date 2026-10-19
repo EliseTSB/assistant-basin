@@ -219,6 +219,14 @@ the top 50 is among the same model's top 50 identity neurons. Their base models 
 Pythia-1.4b, trained on 2020 data, has register neurons of its own (0.555 against 0.349): help-desk and FAQ writing
 existed before assistants did. Caveat: 63 of the 72 assistant replies contain "I can". One cloud run per model. (14.1-14.4)
 
+**The assistant register does not grow with the year of the training data.** Part 14's register neurons (assistant
+replies against the same content as plain prose or a person's message) were checked in five base models of 1.4B to
+1.7B parameters, ordered by when their training data was collected: Pythia (2020), OLMo-1B (2023), SmolLM and SmolLM2
+(2024), Qwen3-1.7B-Base (2025). All five have register neurons above their own shuffled-label null, by similar margins
+(0.17 to 0.27); the 2020 model is in the middle, and the margin does not follow the year (Spearman 0.05). The models
+differ in size, tokenizer and data mix as well as year, so five models cannot separate those; the result is only that
+no year trend shows here. Run on a cloud CPU in float32. (21.1 held; 21.2, 21.3 failed; results/part21-register-year/)
+
 **A shared format for neuron results.** [NEURON-RECORDS.md](NEURON-RECORDS.md) is a draft format for claims about single
 neurons, meant to let results from different projects on the same model be joined and checked: a pinned weights
 revision, a control value beside every number, and an evidence ladder from "described" to "replicated".

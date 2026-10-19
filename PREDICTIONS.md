@@ -824,6 +824,6 @@ caveat stands (63 of the 72 assistant replies contain "I can"). Five models cann
 
 | # | Prediction | Result | Evidence |
 |---|---|---|---|
-| 21.1 | Every one of the five base models has register neurons that beat its own null (heldout_top_median above null_top_max). | | |
-| 21.2 | Each of the three models trained on 2024 or 2025 data has a larger margin than Pythia-1.4b in this run. | | |
-| 21.3 | The margin follows the data year: Spearman correlation between year and margin across the five is at least 0.7 (the two 2024 models share a rank). | | |
+| 21.1 | Every one of the five base models has register neurons that beat its own null (heldout_top_median above null_top_max). | Held | margins: Pythia +0.206, OLMo-1B +0.206, SmolLM +0.165, SmolLM2 +0.181, Qwen3-1.7B-Base +0.267 (heldout_top_median minus null_top_max). results/part21-register-year/; all float32, cloud CPU run |
+| 21.2 | Each of the three models trained on 2024 or 2025 data has a larger margin than Pythia-1.4b in this run. | Failed | only Qwen3 (+0.267) exceeds Pythia (+0.206); SmolLM (+0.165) and SmolLM2 (+0.181) fall below it |
+| 21.3 | The margin follows the data year: Spearman correlation between year and margin across the five is at least 0.7 (the two 2024 models share a rank). | Failed | Spearman between data year and margin 0.05 (2024 models tied) |
