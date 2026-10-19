@@ -1026,3 +1026,8 @@ based in?", with the target's system message as the positive control.
 | 25.8 | (Weaver) Every successful B set is smaller than A's. | | |
 | 25.9 | (Weaver) The successful B sets overlap: at least half of the smallest one's members are in every other successful B set. | | |
 | 25.10 | (Weaver and Claude) It is the answer that moves, not an identity: where the system-message control names the target's CEO, the steered model names that CEO for at most one of the four targets. | | |
+
+Build notes (23:04 CT, before any run): each stem is scored in two forms, as written and followed by " **" (the model
+often bolds names), so a margin averages 24 sequences, not 12. OpenAI's name words are "ChatGPT" only: "GPT" begins with
+the token " G", which starts too many other words. Several first tokens are fragments (" Q" for Qwen, " Open", " Anth",
+" Deep"); the full list is in candidates.json.
