@@ -1031,3 +1031,20 @@ Build notes (23:04 CT, before any run): each stem is scored in two forms, as wri
 often bolds names), so a margin averages 24 sequences, not 12. OpenAI's name words are "ChatGPT" only: "GPT" begins with
 the token " G", which starts too many other words. Several first tokens are fragments (" Q" for Qwen, " Open", " Anth",
 " Deep"); the full list is in candidates.json.
+
+## Part 24b: Part 24's free answers re-read in cells (written 2026-10-18 23:22 CT, before the re-read). Design: Weaver.
+
+Part 24's binary count (alien-labels.json) was written by Claude, who also ran the experiment, and its rule decided
+several of the 2x rows. Each of the 192 saved samples is now read by a model that did not write the rule or the run
+(Claude Haiku 5.5 through OpenCode Go, one call per sample, the sample's question and text only), with two questions:
+(a) does the answer say that the model itself, or its maker, is extraterrestrial (beings, a civilization or a planet
+not of Earth)? (b) does the answer name as its maker an invented organization whose name carries alien or
+extraterrestrial words? Cells: a only, b only, both, neither. Reported per zero condition and dose, with the reader's
+agreement with alien-labels.json on (a).
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 24b.1 | (Weaver) At 2x with the identity group zeroed, more than half of the 16 answers have (b): the alien content moved into the maker slot. | | |
+| 24b.2 | (Weaver) At 1.5x with the identity group zeroed, most answers with alien content are (a) only. | | |
+| 24b.3 | (Claude) At 2x, at least 14 of 16 answers have (a) or (b) under every zero condition: the identity group relocates the alien content rather than reducing it. | | |
+| 24b.4 | (Claude) With nothing zeroed or random neurons zeroed, (b) appears in at most 2 of 16 at every dose. | | |
