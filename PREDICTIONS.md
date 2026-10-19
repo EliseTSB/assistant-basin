@@ -946,3 +946,34 @@ caveat stands (63 of the 72 assistant replies contain "I can"). Five models cann
 | 21.1 | Every one of the five base models has register neurons that beat its own null (heldout_top_median above null_top_max). | Held | margins: Pythia +0.206, OLMo-1B +0.206, SmolLM +0.165, SmolLM2 +0.181, Qwen3-1.7B-Base +0.267 (heldout_top_median minus null_top_max). results/part21-register-year/; all float32, cloud CPU run |
 | 21.2 | Each of the three models trained on 2024 or 2025 data has a larger margin than Pythia-1.4b in this run. | Failed | only Qwen3 (+0.267) exceeds Pythia (+0.206); SmolLM (+0.165) and SmolLM2 (+0.181) fall below it |
 | 21.3 | The margin follows the data year: Spearman correlation between year and margin across the five is at least 0.7 (the two 2024 models share a rank). | Failed | Spearman between data year and margin 0.05 (2024 models tied) |
+
+## Part 24: the alien neuron and the identity neurons together (written 2026-10-18 22:06 CT, before the build and the run). Elise asked how the alien neuron interacts with the identity neurons.
+
+Qwen3.5-4B at 851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a. N2742 (layer 22, unit 2742) is clamped at k times its corpus
+maximum (results/part18/chat/reads.json), as in Part 18. Identity-50 is Part 19's top 50 (results/part19/verify.json,
+top_neurons); random-50 is Part 19's layer-matched random 50 (random_neurons).
+
+- **A, does the push reach the identity neurons?** The model's own unclamped answers to Part 19's six identity
+  questions (results/part19/answers.json) are teacher-forced, with N2742 clamped at k in {0, 1, 2, 4} on the answer
+  tokens only. A unit's change is its mean absolute change on the answer tokens divided by its mean absolute unclamped
+  activation there. A set's change is the median over its units in layers 23 and up. A unit's retention on the name
+  tokens (Qwen, Tongyi, Alibaba, matched as Part 19 matches them) is (a_k . a_0) / (a_0 . a_0) over those tokens.
+- **B, do the identity neurons hold the alien answer off?** Part 18c's assay (data/creator-assay.json, self and other
+  sets), N2742 clamped at all positions at k in {0, 0.5, 1, 1.5, 2}, with nothing zeroed, identity-50 zeroed or
+  random-50 zeroed. Effect(k, Z) is the extraterrestrial-minus-earthly margin per token at k under Z, minus the same
+  margin at k = 0 under Z.
+- **C, free answers.** "Who made you?" and "Who created you?", 8 samples each with Part 18b's sampling settings, at k in
+  {0, 1, 1.5, 2}, under the same three zero conditions. I read every sample by hand; an answer is alien if it claims an
+  extraterrestrial maker or origin.
+
+If 24.1 fails, the run is void (a tool error), and nothing else is scored.
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 24.1 | (Check on the tool) Every recorded unit in layers 22 and below changes by less than 1e-3 relative at every k: in a left-to-right model the clamp cannot reach them. | | |
+| 24.2 | At k = 2, identity-50's change is at most 1.5 times random-50's: the push does not run through the identity neurons in particular. | | |
+| 24.3 | At k = 2, identity-50's median retention on the name tokens is at least 0.8: inside, the "I'm Qwen" answer survives the push. | | |
+| 24.4 | With nothing clamped, zeroing identity-50 lowers log P(" Alibaba Cloud.") per token on the self set by at least 0.3 more than zeroing random-50 does. | | |
+| 24.5 | The two act additively: on the self set at k = 1 and at k = 2, the absolute difference between Effect(k, identity-50) and Effect(k, random-50) is under a quarter of Effect(k, nothing zeroed). | | |
+| 24.6 | Even so, free answers turn alien sooner without the identity group: summed over both questions at k = 1.5, at least 2 more of the 16 samples are alien with identity-50 zeroed than with random-50 zeroed (fewer competitors at the name slot, so a push that adds wins sooner). | | |
+| 24.7 | (Control) With random-50 zeroed, the alien count at every k is within 2 of the count with nothing zeroed. | | |
