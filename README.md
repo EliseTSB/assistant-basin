@@ -139,6 +139,27 @@ meaning without its usual words, but only to a paraphrase that rules out ordinar
 "moderate" and Claude's "below 5") were about the mean of the three, 1.89; the spread between paraphrases is the
 result. Three sentences, one reading each: a pattern to test with many paraphrases, not a measurement.
 
+**Qwen3.5-4B, Part 20f: the alien neuron reads a non-earthly origin as the sentence builds, and drops it when the
+sentence turns earthly.** (20f.1-20f.8; results/part20f/; design by Weaver, cells C1-C4 by Claude; battery written by
+three blind authoring passes and checked by a model that did not write it; predictions and three amendments before the
+run.) Each phrase follows the screened filler as "Several of the earlier sentences concerned ___." Mean maximum by set:
+- **E**, explicitly not from anywhere on earth, with no space words except "earth" (24): **6.15**. Inside E the
+  activation does not follow the judge's rating of how strongly a phrase rules out an earthly origin (Spearman 0.14): a
+  step, not a slope (20f.1). Ordinary travel (D, 0.08), unusual but earthly things (U, 0.45), the word "earth" in
+  earthly phrases (C4, 0.37) and an origin on no map (E-map, 1.60) do not reach it.
+- **C3**, earthly phrases with both "beings" and "not from here" (12): **7.42**, higher than E. But the same phrases
+  with "people" in place of "beings" (C3-bare) give 0.77, "beings" alone (C1) 1.12 and "not from here" alone (C2) 0.32.
+  It takes the two together.
+- **It follows the reading as it builds.** "those beings, not from here," reaches 12.2 at the second comma and falls to
+  about zero over "who sell fruit at the market"; "those people, not from here," stays below zero at every token. C3's
+  final-token mean is 0.14 of its maximum, so the firing does not stay once the phrase turns earthly.
+- Read together: the unit responds to a non-earthly origin stated without its usual words, and to a phrase whose most
+  likely reading so far is a non-earthly origin, and revises when later words rule that out. Strange or unplaceable
+  things are not enough. The judge model did the same: it rated C3 at 5.86 of 7 for ruling out an earthly origin.
+- Instrument lessons, from this battery: a word filter caught none of the 34 phrases a semantic read flagged, and the
+  first blind battery named a dying sun, Titan and Andromeda, so it would have tested topic. Every set now gets a
+  semantic read by a model that did not write it.
+
 **Qwen3.5-4B: identity neurons found by their effect, and how they connect.** (19.1-19.6; results/part19/; Elise asked
 for this.) A gradient screen over all 294,912 neurons ranks how much zeroing each would change the log-probability of
 the name tokens (Qwen, Tongyi, Alibaba) in the model's own answers to six identity questions; the top 50 are then

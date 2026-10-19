@@ -1,0 +1,13444 @@
+{
+ "model": "Qwen/Qwen3.5-4B",
+ "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "layer": 22,
+ "neuron": 2742,
+ "tool": "part20f.py",
+ "tool_sha256": "aba98f556ddbd759c7befbb1960961db2ffc3997e68a160dcf5fc4f833f676bd",
+ "battery_sha256": "657baf484c832dbf787b7a0096150d9e6e49d23a493e2f6313ae565cd99b20aa",
+ "filler_doc_indices": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  11,
+  12
+ ],
+ "filler_token_count": 4317,
+ "reference_max": 12.4375,
+ "beings_20e_max": 5.34375,
+ "rows": [
+  {
+   "text": "Several of the earlier sentences concerned a stone from no place on earth and unreachable by ship or plane.",
+   "max": 2.40625,
+   "max_token": " and",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " stone",
+     0.53125
+    ],
+    [
+     " from",
+     1.40625
+    ],
+    [
+     " no",
+     0.10595703125
+    ],
+    [
+     " place",
+     -0.146484375
+    ],
+    [
+     " on",
+     -0.1474609375
+    ],
+    [
+     " earth",
+     1.609375
+    ],
+    [
+     " and",
+     2.40625
+    ],
+    [
+     " unreachable",
+     0.08154296875
+    ],
+    [
+     " by",
+     0.060302734375
+    ],
+    [
+     " ship",
+     -0.318359375
+    ],
+    [
+     " or",
+     -0.37890625
+    ],
+    [
+     " plane",
+     -0.365234375
+    ],
+    [
+     ".",
+     2.359375
+    ]
+   ],
+   "set": "E",
+   "index": 0,
+   "phrase": "a stone from no place on earth and unreachable by ship or plane"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a stranger born nowhere on earth and unreachable by ordinary travel.",
+   "max": 1.78125,
+   "max_token": " earth",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " stranger",
+     -0.44140625
+    ],
+    [
+     " born",
+     -0.234375
+    ],
+    [
+     " nowhere",
+     -0.341796875
+    ],
+    [
+     " on",
+     -0.1650390625
+    ],
+    [
+     " earth",
+     1.78125
+    ],
+    [
+     " and",
+     1.46875
+    ],
+    [
+     " unreachable",
+     -0.0341796875
+    ],
+    [
+     " by",
+     0.349609375
+    ],
+    [
+     " ordinary",
+     -0.291015625
+    ],
+    [
+     " travel",
+     -0.427734375
+    ],
+    [
+     ".",
+     1.2109375
+    ]
+   ],
+   "set": "E",
+   "index": 1,
+   "phrase": "a stranger born nowhere on earth and unreachable by ordinary travel"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a seed from somewhere other than earth and out of reach of ships.",
+   "max": 14.3125,
+   "max_token": " and",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " seed",
+     -0.05322265625
+    ],
+    [
+     " from",
+     0.44921875
+    ],
+    [
+     " somewhere",
+     0.0673828125
+    ],
+    [
+     " other",
+     1.328125
+    ],
+    [
+     " than",
+     0.421875
+    ],
+    [
+     " earth",
+     10.5625
+    ],
+    [
+     " and",
+     14.3125
+    ],
+    [
+     " out",
+     7.4375
+    ],
+    [
+     " of",
+     5.875
+    ],
+    [
+     " reach",
+     1.5390625
+    ],
+    [
+     " of",
+     3.921875
+    ],
+    [
+     " ships",
+     0.7109375
+    ],
+    [
+     ".",
+     4.4375
+    ]
+   ],
+   "set": "E",
+   "index": 2,
+   "phrase": "a seed from somewhere other than earth and out of reach of ships"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a melody from a region outside earth that no traveler can enter.",
+   "max": 8.6875,
+   "max_token": " that",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " melody",
+     -0.18359375
+    ],
+    [
+     " from",
+     -0.1513671875
+    ],
+    [
+     " a",
+     -0.302734375
+    ],
+    [
+     " region",
+     -0.26953125
+    ],
+    [
+     " outside",
+     -0.369140625
+    ],
+    [
+     " earth",
+     5.34375
+    ],
+    [
+     " that",
+     8.6875
+    ],
+    [
+     " no",
+     1.9609375
+    ],
+    [
+     " traveler",
+     2.421875
+    ],
+    [
+     " can",
+     0.044677734375
+    ],
+    [
+     " enter",
+     0.008056640625
+    ],
+    [
+     ".",
+     2.171875
+    ]
+   ],
+   "set": "E",
+   "index": 3,
+   "phrase": "a melody from a region outside earth that no traveler can enter"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a metal forged in a place outside earth that no journey can reach.",
+   "max": 3.0,
+   "max_token": " that",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " metal",
+     0.060302734375
+    ],
+    [
+     " forged",
+     -0.177734375
+    ],
+    [
+     " in",
+     -0.10400390625
+    ],
+    [
+     " a",
+     -0.09423828125
+    ],
+    [
+     " place",
+     -0.1982421875
+    ],
+    [
+     " outside",
+     0.2431640625
+    ],
+    [
+     " earth",
+     2.28125
+    ],
+    [
+     " that",
+     3.0
+    ],
+    [
+     " no",
+     0.3203125
+    ],
+    [
+     " journey",
+     -0.14453125
+    ],
+    [
+     " can",
+     -0.166015625
+    ],
+    [
+     " reach",
+     0.177734375
+    ],
+    [
+     ".",
+     0.48828125
+    ]
+   ],
+   "set": "E",
+   "index": 4,
+   "phrase": "a metal forged in a place outside earth that no journey can reach"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a fruit grown nowhere on earth and carried from a place travel cannot reach.",
+   "max": 1.3203125,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " fruit",
+     -0.392578125
+    ],
+    [
+     " grown",
+     -0.390625
+    ],
+    [
+     " nowhere",
+     -0.353515625
+    ],
+    [
+     " on",
+     -0.0869140625
+    ],
+    [
+     " earth",
+     0.97265625
+    ],
+    [
+     " and",
+     1.1953125
+    ],
+    [
+     " carried",
+     0.453125
+    ],
+    [
+     " from",
+     1.3203125
+    ],
+    [
+     " a",
+     0.7578125
+    ],
+    [
+     " place",
+     -0.1181640625
+    ],
+    [
+     " travel",
+     -0.162109375
+    ],
+    [
+     " cannot",
+     -0.173828125
+    ],
+    [
+     " reach",
+     -0.25390625
+    ],
+    [
+     ".",
+     -0.1962890625
+    ]
+   ],
+   "set": "E",
+   "index": 5,
+   "phrase": "a fruit grown nowhere on earth and carried from a place travel cannot reach"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a noise with no source on earth made where nobody can travel.",
+   "max": 12.5,
+   "max_token": ".",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " noise",
+     -0.06689453125
+    ],
+    [
+     " with",
+     -0.08349609375
+    ],
+    [
+     " no",
+     -0.05224609375
+    ],
+    [
+     " source",
+     -0.0947265625
+    ],
+    [
+     " on",
+     0.1748046875
+    ],
+    [
+     " earth",
+     3.84375
+    ],
+    [
+     " made",
+     3.09375
+    ],
+    [
+     " where",
+     0.412109375
+    ],
+    [
+     " nobody",
+     0.171875
+    ],
+    [
+     " can",
+     -0.0830078125
+    ],
+    [
+     " travel",
+     -0.0164794921875
+    ],
+    [
+     ".",
+     12.5
+    ]
+   ],
+   "set": "E",
+   "index": 6,
+   "phrase": "a noise with no source on earth made where nobody can travel"
+  },
+  {
+   "text": "Several of the earlier sentences concerned an object whose origin is not on earth and which no travel can reach.",
+   "max": 17.375,
+   "max_token": " and",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " an",
+     -0.1376953125
+    ],
+    [
+     " object",
+     -0.1533203125
+    ],
+    [
+     " whose",
+     -0.1123046875
+    ],
+    [
+     " origin",
+     -0.09130859375
+    ],
+    [
+     " is",
+     0.232421875
+    ],
+    [
+     " not",
+     -0.1875
+    ],
+    [
+     " on",
+     0.484375
+    ],
+    [
+     " earth",
+     9.0
+    ],
+    [
+     " and",
+     17.375
+    ],
+    [
+     " which",
+     1.7265625
+    ],
+    [
+     " no",
+     2.046875
+    ],
+    [
+     " travel",
+     2.03125
+    ],
+    [
+     " can",
+     0.12060546875
+    ],
+    [
+     " reach",
+     0.76171875
+    ],
+    [
+     ".",
+     11.625
+    ]
+   ],
+   "set": "E",
+   "index": 7,
+   "phrase": "an object whose origin is not on earth and which no travel can reach"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a bright mineral originating nowhere on earth out of reach of ordinary travel.",
+   "max": 4.46875,
+   "max_token": " earth",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " bright",
+     0.02734375
+    ],
+    [
+     " mineral",
+     0.1005859375
+    ],
+    [
+     " originating",
+     0.65625
+    ],
+    [
+     " nowhere",
+     -0.1630859375
+    ],
+    [
+     " on",
+     1.4140625
+    ],
+    [
+     " earth",
+     4.46875
+    ],
+    [
+     " out",
+     1.71875
+    ],
+    [
+     " of",
+     2.109375
+    ],
+    [
+     " reach",
+     0.23828125
+    ],
+    [
+     " of",
+     0.65234375
+    ],
+    [
+     " ordinary",
+     -0.337890625
+    ],
+    [
+     " travel",
+     -0.3984375
+    ],
+    [
+     ".",
+     2.875
+    ]
+   ],
+   "set": "E",
+   "index": 8,
+   "phrase": "a bright mineral originating nowhere on earth out of reach of ordinary travel"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a tribe whose native land is not on earth and closed to travel.",
+   "max": 3.875,
+   "max_token": " and",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " tribe",
+     -0.365234375
+    ],
+    [
+     " whose",
+     -0.375
+    ],
+    [
+     " native",
+     -0.49609375
+    ],
+    [
+     " land",
+     -0.32421875
+    ],
+    [
+     " is",
+     -0.333984375
+    ],
+    [
+     " not",
+     -0.337890625
+    ],
+    [
+     " on",
+     -0.408203125
+    ],
+    [
+     " earth",
+     2.515625
+    ],
+    [
+     " and",
+     3.875
+    ],
+    [
+     " closed",
+     0.2138671875
+    ],
+    [
+     " to",
+     0.4609375
+    ],
+    [
+     " travel",
+     -0.1904296875
+    ],
+    [
+     ".",
+     2.453125
+    ]
+   ],
+   "set": "E",
+   "index": 9,
+   "phrase": "a tribe whose native land is not on earth and closed to travel"
+  },
+  {
+   "text": "Several of the earlier sentences concerned an animal bred somewhere not on earth where ordinary travel is impossible.",
+   "max": 10.625,
+   "max_token": " earth",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " an",
+     -0.1376953125
+    ],
+    [
+     " animal",
+     -0.55859375
+    ],
+    [
+     " bred",
+     -0.26171875
+    ],
+    [
+     " somewhere",
+     -0.294921875
+    ],
+    [
+     " not",
+     -0.443359375
+    ],
+    [
+     " on",
+     -0.412109375
+    ],
+    [
+     " earth",
+     10.625
+    ],
+    [
+     " where",
+     2.90625
+    ],
+    [
+     " ordinary",
+     1.359375
+    ],
+    [
+     " travel",
+     0.57421875
+    ],
+    [
+     " is",
+     0.2734375
+    ],
+    [
+     " impossible",
+     0.138671875
+    ],
+    [
+     ".",
+     0.6328125
+    ]
+   ],
+   "set": "E",
+   "index": 10,
+   "phrase": "an animal bred somewhere not on earth where ordinary travel is impossible"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a drifter whose birthplace is not earth and cannot be reached by ordinary travel.",
+   "max": 6.8125,
+   "max_token": " and",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " dr",
+     -0.1279296875
+    ],
+    [
+     "ifter",
+     -0.035400390625
+    ],
+    [
+     " whose",
+     -0.240234375
+    ],
+    [
+     " birth",
+     -0.169921875
+    ],
+    [
+     "place",
+     -0.2578125
+    ],
+    [
+     " is",
+     -0.41796875
+    ],
+    [
+     " not",
+     -0.2333984375
+    ],
+    [
+     " earth",
+     4.09375
+    ],
+    [
+     " and",
+     6.8125
+    ],
+    [
+     " cannot",
+     0.2578125
+    ],
+    [
+     " be",
+     1.84375
+    ],
+    [
+     " reached",
+     0.9140625
+    ],
+    [
+     " by",
+     2.703125
+    ],
+    [
+     " ordinary",
+     0.82421875
+    ],
+    [
+     " travel",
+     -0.0693359375
+    ],
+    [
+     ".",
+     2.984375
+    ]
+   ],
+   "set": "E",
+   "index": 11,
+   "phrase": "a drifter whose birthplace is not earth and cannot be reached by ordinary travel"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a sickness born nowhere on earth in a place no ship or plane reaches.",
+   "max": 5.5,
+   "max_token": ".",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " sickness",
+     -0.251953125
+    ],
+    [
+     " born",
+     -0.18359375
+    ],
+    [
+     " nowhere",
+     -0.296875
+    ],
+    [
+     " on",
+     -0.2392578125
+    ],
+    [
+     " earth",
+     1.875
+    ],
+    [
+     " in",
+     0.71484375
+    ],
+    [
+     " a",
+     0.2255859375
+    ],
+    [
+     " place",
+     0.038330078125
+    ],
+    [
+     " no",
+     -0.40625
+    ],
+    [
+     " ship",
+     0.18359375
+    ],
+    [
+     " or",
+     0.1591796875
+    ],
+    [
+     " plane",
+     -0.2177734375
+    ],
+    [
+     " reaches",
+     -0.078125
+    ],
+    [
+     ".",
+     5.5
+    ]
+   ],
+   "set": "E",
+   "index": 12,
+   "phrase": "a sickness born nowhere on earth in a place no ship or plane reaches"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a tool made nowhere on earth by makers no ordinary journey can find.",
+   "max": 3.65625,
+   "max_token": ".",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " tool",
+     -0.10986328125
+    ],
+    [
+     " made",
+     -0.1416015625
+    ],
+    [
+     " nowhere",
+     -0.3359375
+    ],
+    [
+     " on",
+     0.1455078125
+    ],
+    [
+     " earth",
+     2.015625
+    ],
+    [
+     " by",
+     2.8125
+    ],
+    [
+     " makers",
+     0.201171875
+    ],
+    [
+     " no",
+     0.00921630859375
+    ],
+    [
+     " ordinary",
+     -0.2275390625
+    ],
+    [
+     " journey",
+     -0.146484375
+    ],
+    [
+     " can",
+     -0.2412109375
+    ],
+    [
+     " find",
+     -0.2138671875
+    ],
+    [
+     ".",
+     3.65625
+    ]
+   ],
+   "set": "E",
+   "index": 13,
+   "phrase": "a tool made nowhere on earth by makers no ordinary journey can find"
+  },
+  {
+   "text": "Several of the earlier sentences concerned gifts sent by givers living outside earth where no ordinary travel goes.",
+   "max": 6.46875,
+   "max_token": " where",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " gifts",
+     -0.208984375
+    ],
+    [
+     " sent",
+     -0.31640625
+    ],
+    [
+     " by",
+     -0.4140625
+    ],
+    [
+     " g",
+     -0.20703125
+    ],
+    [
+     "ivers",
+     -0.390625
+    ],
+    [
+     " living",
+     -0.369140625
+    ],
+    [
+     " outside",
+     -0.1494140625
+    ],
+    [
+     " earth",
+     4.71875
+    ],
+    [
+     " where",
+     6.46875
+    ],
+    [
+     " no",
+     3.0625
+    ],
+    [
+     " ordinary",
+     1.6171875
+    ],
+    [
+     " travel",
+     1.1640625
+    ],
+    [
+     " goes",
+     0.087890625
+    ],
+    [
+     ".",
+     1.9140625
+    ]
+   ],
+   "set": "E",
+   "index": 14,
+   "phrase": "gifts sent by givers living outside earth where no ordinary travel goes"
+  },
+  {
+   "text": "Several of the earlier sentences concerned water from a spring found nowhere on earth and reachable by no journey.",
+   "max": 4.78125,
+   "max_token": " and",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " water",
+     -0.302734375
+    ],
+    [
+     " from",
+     0.095703125
+    ],
+    [
+     " a",
+     -0.1796875
+    ],
+    [
+     " spring",
+     -0.322265625
+    ],
+    [
+     " found",
+     -0.35546875
+    ],
+    [
+     " nowhere",
+     -0.298828125
+    ],
+    [
+     " on",
+     -0.359375
+    ],
+    [
+     " earth",
+     2.484375
+    ],
+    [
+     " and",
+     4.78125
+    ],
+    [
+     " reachable",
+     -0.0625
+    ],
+    [
+     " by",
+     0.86328125
+    ],
+    [
+     " no",
+     -0.39453125
+    ],
+    [
+     " journey",
+     -0.33203125
+    ],
+    [
+     ".",
+     0.94921875
+    ]
+   ],
+   "set": "E",
+   "index": 15,
+   "phrase": "water from a spring found nowhere on earth and reachable by no journey"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a dye brewed in a place earth does not contain and travel cannot reach.",
+   "max": 0.5390625,
+   "max_token": " not",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " dye",
+     -0.279296875
+    ],
+    [
+     " brewed",
+     -0.1591796875
+    ],
+    [
+     " in",
+     -0.314453125
+    ],
+    [
+     " a",
+     -0.19921875
+    ],
+    [
+     " place",
+     -0.34765625
+    ],
+    [
+     " earth",
+     0.453125
+    ],
+    [
+     " does",
+     0.251953125
+    ],
+    [
+     " not",
+     0.5390625
+    ],
+    [
+     " contain",
+     0.439453125
+    ],
+    [
+     " and",
+     -0.51171875
+    ],
+    [
+     " travel",
+     -0.306640625
+    ],
+    [
+     " cannot",
+     -0.193359375
+    ],
+    [
+     " reach",
+     -0.06494140625
+    ],
+    [
+     ".",
+     -0.0966796875
+    ]
+   ],
+   "set": "E",
+   "index": 16,
+   "phrase": "a dye brewed in a place earth does not contain and travel cannot reach"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a letter from someone whose origin is not on earth and who cannot travel here.",
+   "max": 16.25,
+   "max_token": " and",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " letter",
+     -0.193359375
+    ],
+    [
+     " from",
+     -0.06640625
+    ],
+    [
+     " someone",
+     -0.337890625
+    ],
+    [
+     " whose",
+     -0.228515625
+    ],
+    [
+     " origin",
+     -0.400390625
+    ],
+    [
+     " is",
+     -0.380859375
+    ],
+    [
+     " not",
+     -0.287109375
+    ],
+    [
+     " on",
+     -0.3046875
+    ],
+    [
+     " earth",
+     11.0625
+    ],
+    [
+     " and",
+     16.25
+    ],
+    [
+     " who",
+     0.474609375
+    ],
+    [
+     " cannot",
+     0.00927734375
+    ],
+    [
+     " travel",
+     0.92578125
+    ],
+    [
+     " here",
+     0.478515625
+    ],
+    [
+     ".",
+     4.15625
+    ]
+   ],
+   "set": "E",
+   "index": 17,
+   "phrase": "a letter from someone whose origin is not on earth and who cannot travel here"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a crystal formed in a place other than earth that no journey reaches.",
+   "max": 4.78125,
+   "max_token": ".",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " crystal",
+     -0.212890625
+    ],
+    [
+     " formed",
+     -0.052490234375
+    ],
+    [
+     " in",
+     0.076171875
+    ],
+    [
+     " a",
+     -0.10107421875
+    ],
+    [
+     " place",
+     -0.091796875
+    ],
+    [
+     " other",
+     -0.009033203125
+    ],
+    [
+     " than",
+     0.0205078125
+    ],
+    [
+     " earth",
+     2.484375
+    ],
+    [
+     " that",
+     3.359375
+    ],
+    [
+     " no",
+     0.1357421875
+    ],
+    [
+     " journey",
+     -0.28125
+    ],
+    [
+     " reaches",
+     -0.10400390625
+    ],
+    [
+     ".",
+     4.78125
+    ]
+   ],
+   "set": "E",
+   "index": 18,
+   "phrase": "a crystal formed in a place other than earth that no journey reaches"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a hum from nowhere on earth and from no place travel reaches.",
+   "max": 4.3125,
+   "max_token": " and",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " hum",
+     -0.00408935546875
+    ],
+    [
+     " from",
+     0.1328125
+    ],
+    [
+     " nowhere",
+     0.5546875
+    ],
+    [
+     " on",
+     0.703125
+    ],
+    [
+     " earth",
+     1.1171875
+    ],
+    [
+     " and",
+     4.3125
+    ],
+    [
+     " from",
+     1.875
+    ],
+    [
+     " no",
+     0.34375
+    ],
+    [
+     " place",
+     0.08251953125
+    ],
+    [
+     " travel",
+     0.5859375
+    ],
+    [
+     " reaches",
+     0.7734375
+    ],
+    [
+     ".",
+     0.86328125
+    ]
+   ],
+   "set": "E",
+   "index": 19,
+   "phrase": "a hum from nowhere on earth and from no place travel reaches"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a flame that began outside earth where ordinary travel is ruled out.",
+   "max": 2.609375,
+   "max_token": " where",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " flame",
+     -0.00262451171875
+    ],
+    [
+     " that",
+     -0.0157470703125
+    ],
+    [
+     " began",
+     0.042724609375
+    ],
+    [
+     " outside",
+     0.333984375
+    ],
+    [
+     " earth",
+     1.8125
+    ],
+    [
+     " where",
+     2.609375
+    ],
+    [
+     " ordinary",
+     0.9375
+    ],
+    [
+     " travel",
+     0.98828125
+    ],
+    [
+     " is",
+     0.1728515625
+    ],
+    [
+     " ruled",
+     -0.01904296875
+    ],
+    [
+     " out",
+     0.796875
+    ],
+    [
+     ".",
+     0.92578125
+    ]
+   ],
+   "set": "E",
+   "index": 20,
+   "phrase": "a flame that began outside earth where ordinary travel is ruled out"
+  },
+  {
+   "text": "Several of the earlier sentences concerned bones of a beast from a place not on earth and sealed to travel.",
+   "max": 1.9921875,
+   "max_token": " earth",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " bones",
+     -0.1142578125
+    ],
+    [
+     " of",
+     -0.1806640625
+    ],
+    [
+     " a",
+     -0.1357421875
+    ],
+    [
+     " beast",
+     -0.44921875
+    ],
+    [
+     " from",
+     0.322265625
+    ],
+    [
+     " a",
+     -0.484375
+    ],
+    [
+     " place",
+     -0.244140625
+    ],
+    [
+     " not",
+     -0.302734375
+    ],
+    [
+     " on",
+     -0.1142578125
+    ],
+    [
+     " earth",
+     1.9921875
+    ],
+    [
+     " and",
+     1.5390625
+    ],
+    [
+     " sealed",
+     -0.16796875
+    ],
+    [
+     " to",
+     0.051513671875
+    ],
+    [
+     " travel",
+     -0.11279296875
+    ],
+    [
+     ".",
+     -0.14453125
+    ]
+   ],
+   "set": "E",
+   "index": 21,
+   "phrase": "bones of a beast from a place not on earth and sealed to travel"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a song whose singers have never lived on earth and cannot travel here.",
+   "max": 6.34375,
+   "max_token": ".",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " song",
+     -0.1328125
+    ],
+    [
+     " whose",
+     -0.138671875
+    ],
+    [
+     " singers",
+     -0.1591796875
+    ],
+    [
+     " have",
+     -0.25390625
+    ],
+    [
+     " never",
+     -0.23828125
+    ],
+    [
+     " lived",
+     -0.27734375
+    ],
+    [
+     " on",
+     0.0654296875
+    ],
+    [
+     " earth",
+     5.59375
+    ],
+    [
+     " and",
+     5.21875
+    ],
+    [
+     " cannot",
+     -0.1982421875
+    ],
+    [
+     " travel",
+     0.55078125
+    ],
+    [
+     " here",
+     0.94921875
+    ],
+    [
+     ".",
+     6.34375
+    ]
+   ],
+   "set": "E",
+   "index": 22,
+   "phrase": "a song whose singers have never lived on earth and cannot travel here"
+  },
+  {
+   "text": "Several of the earlier sentences concerned cargo made nowhere on earth and sent from a place travel cannot reach.",
+   "max": 3.15625,
+   "max_token": " and",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " cargo",
+     -0.328125
+    ],
+    [
+     " made",
+     -0.2265625
+    ],
+    [
+     " nowhere",
+     -0.2734375
+    ],
+    [
+     " on",
+     -0.298828125
+    ],
+    [
+     " earth",
+     0.4609375
+    ],
+    [
+     " and",
+     3.15625
+    ],
+    [
+     " sent",
+     0.427734375
+    ],
+    [
+     " from",
+     3.0625
+    ],
+    [
+     " a",
+     1.7109375
+    ],
+    [
+     " place",
+     0.859375
+    ],
+    [
+     " travel",
+     0.240234375
+    ],
+    [
+     " cannot",
+     -0.16015625
+    ],
+    [
+     " reach",
+     0.2099609375
+    ],
+    [
+     ".",
+     0.5703125
+    ]
+   ],
+   "set": "E",
+   "index": 23,
+   "phrase": "cargo made nowhere on earth and sent from a place travel cannot reach"
+  },
+  {
+   "text": "Several of the earlier sentences concerned strangers whose birthplace lies on no map of anywhere people have ever lived.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " strangers",
+     -0.412109375
+    ],
+    [
+     " whose",
+     -0.2333984375
+    ],
+    [
+     " birth",
+     -0.1474609375
+    ],
+    [
+     "place",
+     -0.30078125
+    ],
+    [
+     " lies",
+     -0.390625
+    ],
+    [
+     " on",
+     -0.27734375
+    ],
+    [
+     " no",
+     -0.232421875
+    ],
+    [
+     " map",
+     -0.328125
+    ],
+    [
+     " of",
+     -0.404296875
+    ],
+    [
+     " anywhere",
+     -0.361328125
+    ],
+    [
+     " people",
+     -0.244140625
+    ],
+    [
+     " have",
+     -0.298828125
+    ],
+    [
+     " ever",
+     -0.263671875
+    ],
+    [
+     " lived",
+     -0.0673828125
+    ],
+    [
+     ".",
+     -0.1279296875
+    ]
+   ],
+   "set": "E-map",
+   "index": 0,
+   "phrase": "strangers whose birthplace lies on no map of anywhere people have ever lived"
+  },
+  {
+   "text": "Several of the earlier sentences concerned natives of a land on no globe that no ship can reach.",
+   "max": 0.298828125,
+   "max_token": " on",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " natives",
+     -0.375
+    ],
+    [
+     " of",
+     -0.484375
+    ],
+    [
+     " a",
+     -0.1689453125
+    ],
+    [
+     " land",
+     -0.404296875
+    ],
+    [
+     " on",
+     0.298828125
+    ],
+    [
+     " no",
+     -0.09521484375
+    ],
+    [
+     " globe",
+     -0.255859375
+    ],
+    [
+     " that",
+     0.158203125
+    ],
+    [
+     " no",
+     -0.28125
+    ],
+    [
+     " ship",
+     -0.2158203125
+    ],
+    [
+     " can",
+     -0.26171875
+    ],
+    [
+     " reach",
+     -0.333984375
+    ],
+    [
+     ".",
+     -0.2119140625
+    ]
+   ],
+   "set": "E-map",
+   "index": 1,
+   "phrase": "natives of a land on no globe that no ship can reach"
+  },
+  {
+   "text": "Several of the earlier sentences concerned figures born on no continent, island, or ocean that people have ever named.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " figures",
+     -0.1455078125
+    ],
+    [
+     " born",
+     -0.259765625
+    ],
+    [
+     " on",
+     -0.2197265625
+    ],
+    [
+     " no",
+     -0.12255859375
+    ],
+    [
+     " continent",
+     -0.3828125
+    ],
+    [
+     ",",
+     -0.515625
+    ],
+    [
+     " island",
+     -0.2109375
+    ],
+    [
+     ",",
+     -0.365234375
+    ],
+    [
+     " or",
+     -0.44140625
+    ],
+    [
+     " ocean",
+     -0.267578125
+    ],
+    [
+     " that",
+     -0.232421875
+    ],
+    [
+     " people",
+     -0.3515625
+    ],
+    [
+     " have",
+     -0.263671875
+    ],
+    [
+     " ever",
+     -0.1953125
+    ],
+    [
+     " named",
+     -0.38671875
+    ],
+    [
+     ".",
+     -0.2158203125
+    ]
+   ],
+   "set": "E-map",
+   "index": 2,
+   "phrase": "figures born on no continent, island, or ocean that people have ever named"
+  },
+  {
+   "text": "Several of the earlier sentences concerned organisms whose lineage began in no ocean, forest, or cave of ours.",
+   "max": 2.015625,
+   "max_token": ".",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " organisms",
+     0.263671875
+    ],
+    [
+     " whose",
+     -0.283203125
+    ],
+    [
+     " lineage",
+     -0.310546875
+    ],
+    [
+     " began",
+     -0.236328125
+    ],
+    [
+     " in",
+     -0.380859375
+    ],
+    [
+     " no",
+     -0.234375
+    ],
+    [
+     " ocean",
+     0.078125
+    ],
+    [
+     ",",
+     0.57421875
+    ],
+    [
+     " forest",
+     -0.33984375
+    ],
+    [
+     ",",
+     0.373046875
+    ],
+    [
+     " or",
+     -0.30859375
+    ],
+    [
+     " cave",
+     -0.271484375
+    ],
+    [
+     " of",
+     -0.0947265625
+    ],
+    [
+     " ours",
+     0.546875
+    ],
+    [
+     ".",
+     2.015625
+    ]
+   ],
+   "set": "E-map",
+   "index": 3,
+   "phrase": "organisms whose lineage began in no ocean, forest, or cave of ours"
+  },
+  {
+   "text": "Several of the earlier sentences concerned emissaries from a country on none of our continents, unreachable by sail or wing.",
+   "max": 4.96875,
+   "max_token": ".",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " emiss",
+     0.30078125
+    ],
+    [
+     "aries",
+     0.546875
+    ],
+    [
+     " from",
+     2.234375
+    ],
+    [
+     " a",
+     0.98046875
+    ],
+    [
+     " country",
+     -0.275390625
+    ],
+    [
+     " on",
+     -0.0087890625
+    ],
+    [
+     " none",
+     -0.09228515625
+    ],
+    [
+     " of",
+     -0.328125
+    ],
+    [
+     " our",
+     -0.232421875
+    ],
+    [
+     " continents",
+     -0.26953125
+    ],
+    [
+     ",",
+     2.96875
+    ],
+    [
+     " unreachable",
+     -0.1484375
+    ],
+    [
+     " by",
+     -0.44921875
+    ],
+    [
+     " sail",
+     -0.25
+    ],
+    [
+     " or",
+     -0.337890625
+    ],
+    [
+     " wing",
+     -0.326171875
+    ],
+    [
+     ".",
+     4.96875
+    ]
+   ],
+   "set": "E-map",
+   "index": 4,
+   "phrase": "emissaries from a country on none of our continents, unreachable by sail or wing"
+  },
+  {
+   "text": "Several of the earlier sentences concerned guests born nowhere on the globe, in a place no ticket reaches.",
+   "max": 2.03125,
+   "max_token": ",",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " guests",
+     -0.26953125
+    ],
+    [
+     " born",
+     -0.244140625
+    ],
+    [
+     " nowhere",
+     -0.212890625
+    ],
+    [
+     " on",
+     0.439453125
+    ],
+    [
+     " the",
+     -0.017333984375
+    ],
+    [
+     " globe",
+     0.380859375
+    ],
+    [
+     ",",
+     2.03125
+    ],
+    [
+     " in",
+     0.6640625
+    ],
+    [
+     " a",
+     0.6015625
+    ],
+    [
+     " place",
+     -0.0086669921875
+    ],
+    [
+     " no",
+     -0.427734375
+    ],
+    [
+     " ticket",
+     -0.318359375
+    ],
+    [
+     " reaches",
+     -0.17578125
+    ],
+    [
+     ".",
+     -0.5234375
+    ]
+   ],
+   "set": "E-map",
+   "index": 5,
+   "phrase": "guests born nowhere on the globe, in a place no ticket reaches"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a people whose ancestral land lies outside all our maps, ships, and aircraft routes.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " people",
+     -0.28515625
+    ],
+    [
+     " whose",
+     -0.271484375
+    ],
+    [
+     " ancestral",
+     -0.32421875
+    ],
+    [
+     " land",
+     -0.3125
+    ],
+    [
+     " lies",
+     -0.298828125
+    ],
+    [
+     " outside",
+     -0.396484375
+    ],
+    [
+     " all",
+     -0.259765625
+    ],
+    [
+     " our",
+     -0.107421875
+    ],
+    [
+     " maps",
+     -0.2421875
+    ],
+    [
+     ",",
+     -0.31640625
+    ],
+    [
+     " ships",
+     -0.248046875
+    ],
+    [
+     ",",
+     -0.427734375
+    ],
+    [
+     " and",
+     -0.40625
+    ],
+    [
+     " aircraft",
+     -0.2578125
+    ],
+    [
+     " routes",
+     -0.33984375
+    ],
+    [
+     ".",
+     -0.326171875
+    ]
+   ],
+   "set": "E-map",
+   "index": 6,
+   "phrase": "a people whose ancestral land lies outside all our maps, ships, and aircraft routes"
+  },
+  {
+   "text": "Several of the earlier sentences concerned strange arrivals native to no country, ocean, or continent we have charted.",
+   "max": 5.1875,
+   "max_token": " to",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " strange",
+     1.0546875
+    ],
+    [
+     " arrivals",
+     1.4375
+    ],
+    [
+     " native",
+     1.7265625
+    ],
+    [
+     " to",
+     5.1875
+    ],
+    [
+     " no",
+     0.33203125
+    ],
+    [
+     " country",
+     -0.40234375
+    ],
+    [
+     ",",
+     1.4375
+    ],
+    [
+     " ocean",
+     -0.328125
+    ],
+    [
+     ",",
+     0.1240234375
+    ],
+    [
+     " or",
+     -0.2421875
+    ],
+    [
+     " continent",
+     -0.35546875
+    ],
+    [
+     " we",
+     -0.26953125
+    ],
+    [
+     " have",
+     -0.259765625
+    ],
+    [
+     " chart",
+     -0.11865234375
+    ],
+    [
+     "ed",
+     -0.328125
+    ],
+    [
+     ".",
+     0.05859375
+    ]
+   ],
+   "set": "E-map",
+   "index": 7,
+   "phrase": "strange arrivals native to no country, ocean, or continent we have charted"
+  },
+  {
+   "text": "Several of the earlier sentences concerned wanderers born outside all nations and seas, in a place no voyage reaches.",
+   "max": 0.1474609375,
+   "max_token": " wander",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " wander",
+     0.1474609375
+    ],
+    [
+     "ers",
+     -0.017333984375
+    ],
+    [
+     " born",
+     -0.1630859375
+    ],
+    [
+     " outside",
+     -0.09326171875
+    ],
+    [
+     " all",
+     -0.28515625
+    ],
+    [
+     " nations",
+     -0.28515625
+    ],
+    [
+     " and",
+     -0.44140625
+    ],
+    [
+     " seas",
+     -0.2109375
+    ],
+    [
+     ",",
+     -0.2041015625
+    ],
+    [
+     " in",
+     -0.26953125
+    ],
+    [
+     " a",
+     -0.2060546875
+    ],
+    [
+     " place",
+     -0.1904296875
+    ],
+    [
+     " no",
+     -0.1904296875
+    ],
+    [
+     " voyage",
+     -0.271484375
+    ],
+    [
+     " reaches",
+     -0.07421875
+    ],
+    [
+     ".",
+     -0.275390625
+    ]
+   ],
+   "set": "E-map",
+   "index": 8,
+   "phrase": "wanderers born outside all nations and seas, in a place no voyage reaches"
+  },
+  {
+   "text": "Several of the earlier sentences concerned intruders who say no compass bearing, however faithfully followed, leads to their birthplace.",
+   "max": 1.1484375,
+   "max_token": "ud",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " intr",
+     0.34375
+    ],
+    [
+     "ud",
+     1.1484375
+    ],
+    [
+     "ers",
+     0.224609375
+    ],
+    [
+     " who",
+     -0.1728515625
+    ],
+    [
+     " say",
+     -0.1650390625
+    ],
+    [
+     " no",
+     -0.04150390625
+    ],
+    [
+     " compass",
+     -0.2373046875
+    ],
+    [
+     " bearing",
+     -0.134765625
+    ],
+    [
+     ",",
+     -0.212890625
+    ],
+    [
+     " however",
+     -0.2080078125
+    ],
+    [
+     " faithfully",
+     -0.32421875
+    ],
+    [
+     " followed",
+     -0.33203125
+    ],
+    [
+     ",",
+     -0.146484375
+    ],
+    [
+     " leads",
+     -0.07177734375
+    ],
+    [
+     " to",
+     -0.3671875
+    ],
+    [
+     " their",
+     -0.361328125
+    ],
+    [
+     " birth",
+     -0.1484375
+    ],
+    [
+     "place",
+     -0.423828125
+    ],
+    [
+     ".",
+     -0.296875
+    ]
+   ],
+   "set": "E-map",
+   "index": 9,
+   "phrase": "intruders who say no compass bearing, however faithfully followed, leads to their birthplace"
+  },
+  {
+   "text": "Several of the earlier sentences concerned entities native to nowhere that has a latitude or a longitude.",
+   "max": 0.69921875,
+   "max_token": " that",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " entities",
+     -0.1279296875
+    ],
+    [
+     " native",
+     0.1845703125
+    ],
+    [
+     " to",
+     0.6171875
+    ],
+    [
+     " nowhere",
+     -0.0179443359375
+    ],
+    [
+     " that",
+     0.69921875
+    ],
+    [
+     " has",
+     0.1640625
+    ],
+    [
+     " a",
+     0.002685546875
+    ],
+    [
+     " latitude",
+     -0.1953125
+    ],
+    [
+     " or",
+     -0.2490234375
+    ],
+    [
+     " a",
+     -0.32421875
+    ],
+    [
+     " longitude",
+     -0.2333984375
+    ],
+    [
+     ".",
+     0.01422119140625
+    ]
+   ],
+   "set": "E-map",
+   "index": 10,
+   "phrase": "entities native to nowhere that has a latitude or a longitude"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a delegation from a place on no continent, which no passport or flight reaches.",
+   "max": 0.099609375,
+   "max_token": ",",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " delegation",
+     -0.34765625
+    ],
+    [
+     " from",
+     0.0849609375
+    ],
+    [
+     " a",
+     -0.1083984375
+    ],
+    [
+     " place",
+     -0.3515625
+    ],
+    [
+     " on",
+     -0.1396484375
+    ],
+    [
+     " no",
+     -0.11474609375
+    ],
+    [
+     " continent",
+     -0.392578125
+    ],
+    [
+     ",",
+     0.099609375
+    ],
+    [
+     " which",
+     -0.2197265625
+    ],
+    [
+     " no",
+     -0.431640625
+    ],
+    [
+     " passport",
+     -0.3203125
+    ],
+    [
+     " or",
+     -0.427734375
+    ],
+    [
+     " flight",
+     -0.3984375
+    ],
+    [
+     " reaches",
+     -0.25
+    ],
+    [
+     ".",
+     0.0498046875
+    ]
+   ],
+   "set": "E-map",
+   "index": 11,
+   "phrase": "a delegation from a place on no continent, which no passport or flight reaches"
+  },
+  {
+   "text": "Several of the earlier sentences concerned refugees from a country on no chart, touching none of our coasts.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " refugees",
+     -0.3984375
+    ],
+    [
+     " from",
+     -0.52734375
+    ],
+    [
+     " a",
+     -0.267578125
+    ],
+    [
+     " country",
+     -0.431640625
+    ],
+    [
+     " on",
+     -0.322265625
+    ],
+    [
+     " no",
+     -0.2109375
+    ],
+    [
+     " chart",
+     -0.1806640625
+    ],
+    [
+     ",",
+     -0.271484375
+    ],
+    [
+     " touching",
+     -0.1005859375
+    ],
+    [
+     " none",
+     -0.09033203125
+    ],
+    [
+     " of",
+     -0.1396484375
+    ],
+    [
+     " our",
+     -0.07080078125
+    ],
+    [
+     " co",
+     -0.1435546875
+    ],
+    [
+     "asts",
+     -0.1337890625
+    ],
+    [
+     ".",
+     -0.474609375
+    ]
+   ],
+   "set": "E-map",
+   "index": 12,
+   "phrase": "refugees from a country on no chart, touching none of our coasts"
+  },
+  {
+   "text": "Several of the earlier sentences concerned animals hatched in no nest or sea of ours, and carried by no ship.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " animals",
+     -0.57421875
+    ],
+    [
+     " h",
+     -0.396484375
+    ],
+    [
+     "atched",
+     -0.3515625
+    ],
+    [
+     " in",
+     -0.423828125
+    ],
+    [
+     " no",
+     -0.2197265625
+    ],
+    [
+     " nest",
+     -0.2431640625
+    ],
+    [
+     " or",
+     -0.34375
+    ],
+    [
+     " sea",
+     -0.27734375
+    ],
+    [
+     " of",
+     -0.34375
+    ],
+    [
+     " ours",
+     -0.158203125
+    ],
+    [
+     ",",
+     -0.52734375
+    ],
+    [
+     " and",
+     -0.11279296875
+    ],
+    [
+     " carried",
+     -0.32421875
+    ],
+    [
+     " by",
+     -0.458984375
+    ],
+    [
+     " no",
+     -0.1953125
+    ],
+    [
+     " ship",
+     -0.2333984375
+    ],
+    [
+     ".",
+     -0.373046875
+    ]
+   ],
+   "set": "E-map",
+   "index": 13,
+   "phrase": "animals hatched in no nest or sea of ours, and carried by no ship"
+  },
+  {
+   "text": "Several of the earlier sentences concerned foreigners from a place that is not on this globe, however far one sails.",
+   "max": 15.625,
+   "max_token": ",",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " foreigners",
+     -0.412109375
+    ],
+    [
+     " from",
+     -0.185546875
+    ],
+    [
+     " a",
+     -0.365234375
+    ],
+    [
+     " place",
+     -0.40234375
+    ],
+    [
+     " that",
+     -0.36328125
+    ],
+    [
+     " is",
+     -0.3125
+    ],
+    [
+     " not",
+     -0.408203125
+    ],
+    [
+     " on",
+     -0.408203125
+    ],
+    [
+     " this",
+     -0.38671875
+    ],
+    [
+     " globe",
+     3.25
+    ],
+    [
+     ",",
+     15.625
+    ],
+    [
+     " however",
+     -0.1611328125
+    ],
+    [
+     " far",
+     0.73046875
+    ],
+    [
+     " one",
+     -0.0289306640625
+    ],
+    [
+     " sails",
+     -0.32421875
+    ],
+    [
+     ".",
+     -0.251953125
+    ]
+   ],
+   "set": "E-map",
+   "index": 14,
+   "phrase": "foreigners from a place that is not on this globe, however far one sails"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a stranger whose birthplace is no country, continent, or sea, and cannot be reached.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " stranger",
+     -0.44140625
+    ],
+    [
+     " whose",
+     -0.279296875
+    ],
+    [
+     " birth",
+     -0.1826171875
+    ],
+    [
+     "place",
+     -0.333984375
+    ],
+    [
+     " is",
+     -0.46875
+    ],
+    [
+     " no",
+     -0.1494140625
+    ],
+    [
+     " country",
+     -0.2265625
+    ],
+    [
+     ",",
+     -0.244140625
+    ],
+    [
+     " continent",
+     -0.27734375
+    ],
+    [
+     ",",
+     -0.24609375
+    ],
+    [
+     " or",
+     -0.408203125
+    ],
+    [
+     " sea",
+     -0.2578125
+    ],
+    [
+     ",",
+     -0.419921875
+    ],
+    [
+     " and",
+     -0.1396484375
+    ],
+    [
+     " cannot",
+     -0.197265625
+    ],
+    [
+     " be",
+     -0.28515625
+    ],
+    [
+     " reached",
+     -0.28515625
+    ],
+    [
+     ".",
+     -0.291015625
+    ]
+   ],
+   "set": "E-map",
+   "index": 15,
+   "phrase": "a stranger whose birthplace is no country, continent, or sea, and cannot be reached"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the pair whose parents were born from no soil, river, or sea of ours.",
+   "max": 0.76953125,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " pair",
+     -0.1328125
+    ],
+    [
+     " whose",
+     -0.1728515625
+    ],
+    [
+     " parents",
+     -0.1669921875
+    ],
+    [
+     " were",
+     -0.263671875
+    ],
+    [
+     " born",
+     -0.330078125
+    ],
+    [
+     " from",
+     0.76953125
+    ],
+    [
+     " no",
+     0.0859375
+    ],
+    [
+     " soil",
+     -0.126953125
+    ],
+    [
+     ",",
+     -0.052978515625
+    ],
+    [
+     " river",
+     -0.2734375
+    ],
+    [
+     ",",
+     -0.1943359375
+    ],
+    [
+     " or",
+     -0.2099609375
+    ],
+    [
+     " sea",
+     -0.25
+    ],
+    [
+     " of",
+     -0.255859375
+    ],
+    [
+     " ours",
+     -0.07568359375
+    ],
+    [
+     ".",
+     0.2314453125
+    ]
+   ],
+   "set": "E-map",
+   "index": 16,
+   "phrase": "the pair whose parents were born from no soil, river, or sea of ours"
+  },
+  {
+   "text": "Several of the earlier sentences concerned ambassadors from a place with no coordinates, which no vehicle we build can reach.",
+   "max": 1.671875,
+   "max_token": ".",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " ambassadors",
+     -0.326171875
+    ],
+    [
+     " from",
+     -0.271484375
+    ],
+    [
+     " a",
+     -0.2431640625
+    ],
+    [
+     " place",
+     -0.27734375
+    ],
+    [
+     " with",
+     -0.251953125
+    ],
+    [
+     " no",
+     -0.212890625
+    ],
+    [
+     " coordinates",
+     -0.2412109375
+    ],
+    [
+     ",",
+     0.14453125
+    ],
+    [
+     " which",
+     -0.1103515625
+    ],
+    [
+     " no",
+     -0.263671875
+    ],
+    [
+     " vehicle",
+     -0.2060546875
+    ],
+    [
+     " we",
+     -0.1953125
+    ],
+    [
+     " build",
+     -0.1455078125
+    ],
+    [
+     " can",
+     -0.232421875
+    ],
+    [
+     " reach",
+     0.55859375
+    ],
+    [
+     ".",
+     1.671875
+    ]
+   ],
+   "set": "E-map",
+   "index": 17,
+   "phrase": "ambassadors from a place with no coordinates, which no vehicle we build can reach"
+  },
+  {
+   "text": "Several of the earlier sentences concerned settlers descended from ancestors native to no region our ships have sailed.",
+   "max": 1.7890625,
+   "max_token": ".",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " settlers",
+     -0.255859375
+    ],
+    [
+     " descended",
+     -0.236328125
+    ],
+    [
+     " from",
+     -0.337890625
+    ],
+    [
+     " ancestors",
+     -0.2490234375
+    ],
+    [
+     " native",
+     -0.384765625
+    ],
+    [
+     " to",
+     -0.4921875
+    ],
+    [
+     " no",
+     -0.283203125
+    ],
+    [
+     " region",
+     -0.2392578125
+    ],
+    [
+     " our",
+     -0.201171875
+    ],
+    [
+     " ships",
+     0.9296875
+    ],
+    [
+     " have",
+     0.828125
+    ],
+    [
+     " sailed",
+     -0.1474609375
+    ],
+    [
+     ".",
+     1.7890625
+    ]
+   ],
+   "set": "E-map",
+   "index": 18,
+   "phrase": "settlers descended from ancestors native to no region our ships have sailed"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a species native to no habitat on land or sea, shallow or deep.",
+   "max": 0.890625,
+   "max_token": ",",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " species",
+     -0.291015625
+    ],
+    [
+     " native",
+     -0.5
+    ],
+    [
+     " to",
+     -0.58203125
+    ],
+    [
+     " no",
+     -0.33203125
+    ],
+    [
+     " habitat",
+     -0.416015625
+    ],
+    [
+     " on",
+     0.1728515625
+    ],
+    [
+     " land",
+     -0.10498046875
+    ],
+    [
+     " or",
+     -0.314453125
+    ],
+    [
+     " sea",
+     -0.283203125
+    ],
+    [
+     ",",
+     0.890625
+    ],
+    [
+     " shallow",
+     -0.1767578125
+    ],
+    [
+     " or",
+     -0.30078125
+    ],
+    [
+     " deep",
+     -0.255859375
+    ],
+    [
+     ".",
+     -0.318359375
+    ]
+   ],
+   "set": "E-map",
+   "index": 19,
+   "phrase": "a species native to no habitat on land or sea, shallow or deep"
+  },
+  {
+   "text": "Several of the earlier sentences concerned pilgrims from a place on no map, unreachable by foot, sail, or wing.",
+   "max": 0.44140625,
+   "max_token": ".",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " pilgr",
+     -0.361328125
+    ],
+    [
+     "ims",
+     -0.298828125
+    ],
+    [
+     " from",
+     -0.3046875
+    ],
+    [
+     " a",
+     -0.3515625
+    ],
+    [
+     " place",
+     -0.361328125
+    ],
+    [
+     " on",
+     -0.318359375
+    ],
+    [
+     " no",
+     -0.1796875
+    ],
+    [
+     " map",
+     -0.359375
+    ],
+    [
+     ",",
+     0.1474609375
+    ],
+    [
+     " unreachable",
+     -0.35546875
+    ],
+    [
+     " by",
+     -0.419921875
+    ],
+    [
+     " foot",
+     -0.31640625
+    ],
+    [
+     ",",
+     -0.36328125
+    ],
+    [
+     " sail",
+     -0.2265625
+    ],
+    [
+     ",",
+     -0.42578125
+    ],
+    [
+     " or",
+     -0.427734375
+    ],
+    [
+     " wing",
+     -0.201171875
+    ],
+    [
+     ".",
+     0.44140625
+    ]
+   ],
+   "set": "E-map",
+   "index": 20,
+   "phrase": "pilgrims from a place on no map, unreachable by foot, sail, or wing"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the odd family whose roots touch no country, island, or sea we know.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " odd",
+     -0.11328125
+    ],
+    [
+     " family",
+     -0.2314453125
+    ],
+    [
+     " whose",
+     -0.375
+    ],
+    [
+     " roots",
+     -0.267578125
+    ],
+    [
+     " touch",
+     -0.2021484375
+    ],
+    [
+     " no",
+     -0.130859375
+    ],
+    [
+     " country",
+     -0.318359375
+    ],
+    [
+     ",",
+     -0.435546875
+    ],
+    [
+     " island",
+     -0.1767578125
+    ],
+    [
+     ",",
+     -0.3125
+    ],
+    [
+     " or",
+     -0.30078125
+    ],
+    [
+     " sea",
+     -0.1806640625
+    ],
+    [
+     " we",
+     -0.09814453125
+    ],
+    [
+     " know",
+     -0.212890625
+    ],
+    [
+     ".",
+     -0.25390625
+    ]
+   ],
+   "set": "E-map",
+   "index": 21,
+   "phrase": "the odd family whose roots touch no country, island, or sea we know"
+  },
+  {
+   "text": "Several of the earlier sentences concerned lodgers born where no sea, land, or air of ours reaches.",
+   "max": 0.062255859375,
+   "max_token": " lod",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " lod",
+     0.062255859375
+    ],
+    [
+     "gers",
+     -0.263671875
+    ],
+    [
+     " born",
+     -0.244140625
+    ],
+    [
+     " where",
+     -0.15625
+    ],
+    [
+     " no",
+     -0.1650390625
+    ],
+    [
+     " sea",
+     -0.193359375
+    ],
+    [
+     ",",
+     -0.267578125
+    ],
+    [
+     " land",
+     -0.271484375
+    ],
+    [
+     ",",
+     -0.1787109375
+    ],
+    [
+     " or",
+     -0.3125
+    ],
+    [
+     " air",
+     0.055908203125
+    ],
+    [
+     " of",
+     -0.251953125
+    ],
+    [
+     " ours",
+     -0.08154296875
+    ],
+    [
+     " reaches",
+     -0.052001953125
+    ],
+    [
+     ".",
+     -0.361328125
+    ]
+   ],
+   "set": "E-map",
+   "index": 22,
+   "phrase": "lodgers born where no sea, land, or air of ours reaches"
+  },
+  {
+   "text": "Several of the earlier sentences concerned travelers from a land touching ours at no point, by sea or air.",
+   "max": 0.1953125,
+   "max_token": ",",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " travelers",
+     -0.44140625
+    ],
+    [
+     " from",
+     -0.15625
+    ],
+    [
+     " a",
+     -0.232421875
+    ],
+    [
+     " land",
+     -0.375
+    ],
+    [
+     " touching",
+     -0.158203125
+    ],
+    [
+     " ours",
+     -0.1201171875
+    ],
+    [
+     " at",
+     -0.03076171875
+    ],
+    [
+     " no",
+     0.043701171875
+    ],
+    [
+     " point",
+     -0.12890625
+    ],
+    [
+     ",",
+     0.1953125
+    ],
+    [
+     " by",
+     -0.177734375
+    ],
+    [
+     " sea",
+     -0.11328125
+    ],
+    [
+     " or",
+     -0.1767578125
+    ],
+    [
+     " air",
+     -0.1484375
+    ],
+    [
+     ".",
+     -0.291015625
+    ]
+   ],
+   "set": "E-map",
+   "index": 23,
+   "phrase": "travelers from a land touching ours at no point, by sea or air"
+  },
+  {
+   "text": "Several of the earlier sentences concerned relatives who traveled all night by bus to attend the funeral.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " relatives",
+     -0.185546875
+    ],
+    [
+     " who",
+     -0.2275390625
+    ],
+    [
+     " traveled",
+     -0.400390625
+    ],
+    [
+     " all",
+     -0.306640625
+    ],
+    [
+     " night",
+     -0.42578125
+    ],
+    [
+     " by",
+     -0.322265625
+    ],
+    [
+     " bus",
+     -0.1865234375
+    ],
+    [
+     " to",
+     -0.271484375
+    ],
+    [
+     " attend",
+     -0.0966796875
+    ],
+    [
+     " the",
+     -0.2431640625
+    ],
+    [
+     " funeral",
+     -0.06884765625
+    ],
+    [
+     ".",
+     -0.197265625
+    ]
+   ],
+   "set": "D",
+   "index": 0,
+   "phrase": "relatives who traveled all night by bus to attend the funeral"
+  },
+  {
+   "text": "Several of the earlier sentences concerned laborers who flew in from overseas for the season.",
+   "max": 0.453125,
+   "max_token": " flew",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " labor",
+     -0.10546875
+    ],
+    [
+     "ers",
+     -0.140625
+    ],
+    [
+     " who",
+     -0.11376953125
+    ],
+    [
+     " flew",
+     0.453125
+    ],
+    [
+     " in",
+     -0.40234375
+    ],
+    [
+     " from",
+     -0.458984375
+    ],
+    [
+     " overseas",
+     -0.4609375
+    ],
+    [
+     " for",
+     -0.2578125
+    ],
+    [
+     " the",
+     -0.1943359375
+    ],
+    [
+     " season",
+     -0.2275390625
+    ],
+    [
+     ".",
+     -0.1982421875
+    ]
+   ],
+   "set": "D",
+   "index": 1,
+   "phrase": "laborers who flew in from overseas for the season"
+  },
+  {
+   "text": "Several of the earlier sentences concerned households who moved here from the other side of the country.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " households",
+     -0.291015625
+    ],
+    [
+     " who",
+     -0.2197265625
+    ],
+    [
+     " moved",
+     -0.2275390625
+    ],
+    [
+     " here",
+     -0.1708984375
+    ],
+    [
+     " from",
+     -0.376953125
+    ],
+    [
+     " the",
+     -0.283203125
+    ],
+    [
+     " other",
+     -0.376953125
+    ],
+    [
+     " side",
+     -0.2197265625
+    ],
+    [
+     " of",
+     -0.314453125
+    ],
+    [
+     " the",
+     -0.306640625
+    ],
+    [
+     " country",
+     -0.359375
+    ],
+    [
+     ".",
+     -0.255859375
+    ]
+   ],
+   "set": "D",
+   "index": 2,
+   "phrase": "households who moved here from the other side of the country"
+  },
+  {
+   "text": "Several of the earlier sentences concerned students who commute two hundred miles to attend lectures.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " students",
+     -0.271484375
+    ],
+    [
+     " who",
+     -0.265625
+    ],
+    [
+     " commute",
+     -0.1728515625
+    ],
+    [
+     " two",
+     -0.177734375
+    ],
+    [
+     " hundred",
+     -0.26953125
+    ],
+    [
+     " miles",
+     -0.37890625
+    ],
+    [
+     " to",
+     -0.4140625
+    ],
+    [
+     " attend",
+     -0.17578125
+    ],
+    [
+     " lectures",
+     -0.1640625
+    ],
+    [
+     ".",
+     -0.201171875
+    ]
+   ],
+   "set": "D",
+   "index": 3,
+   "phrase": "students who commute two hundred miles to attend lectures"
+  },
+  {
+   "text": "Several of the earlier sentences concerned sailors from faraway ports who rest in the harbor each winter.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " sailors",
+     -0.251953125
+    ],
+    [
+     " from",
+     -0.19140625
+    ],
+    [
+     " far",
+     -0.2734375
+    ],
+    [
+     "away",
+     -0.2421875
+    ],
+    [
+     " ports",
+     -0.2734375
+    ],
+    [
+     " who",
+     -0.34765625
+    ],
+    [
+     " rest",
+     -0.2314453125
+    ],
+    [
+     " in",
+     -0.224609375
+    ],
+    [
+     " the",
+     -0.1962890625
+    ],
+    [
+     " harbor",
+     -0.16015625
+    ],
+    [
+     " each",
+     -0.1845703125
+    ],
+    [
+     " winter",
+     -0.26953125
+    ],
+    [
+     ".",
+     -0.232421875
+    ]
+   ],
+   "set": "D",
+   "index": 4,
+   "phrase": "sailors from faraway ports who rest in the harbor each winter"
+  },
+  {
+   "text": "Several of the earlier sentences concerned tourists who came a great way to see the cathedral.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " tourists",
+     -0.384765625
+    ],
+    [
+     " who",
+     -0.390625
+    ],
+    [
+     " came",
+     -0.40234375
+    ],
+    [
+     " a",
+     -0.328125
+    ],
+    [
+     " great",
+     -0.287109375
+    ],
+    [
+     " way",
+     -0.328125
+    ],
+    [
+     " to",
+     -0.4140625
+    ],
+    [
+     " see",
+     -0.361328125
+    ],
+    [
+     " the",
+     -0.384765625
+    ],
+    [
+     " cathedral",
+     -0.158203125
+    ],
+    [
+     ".",
+     -0.27734375
+    ]
+   ],
+   "set": "D",
+   "index": 5,
+   "phrase": "tourists who came a great way to see the cathedral"
+  },
+  {
+   "text": "Several of the earlier sentences concerned worshippers who spent days on foot to reach the shrine.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " worsh",
+     -0.21484375
+    ],
+    [
+     "ippers",
+     -0.16015625
+    ],
+    [
+     " who",
+     -0.173828125
+    ],
+    [
+     " spent",
+     -0.142578125
+    ],
+    [
+     " days",
+     -0.26953125
+    ],
+    [
+     " on",
+     -0.27734375
+    ],
+    [
+     " foot",
+     -0.263671875
+    ],
+    [
+     " to",
+     -0.28515625
+    ],
+    [
+     " reach",
+     -0.2109375
+    ],
+    [
+     " the",
+     -0.302734375
+    ],
+    [
+     " shrine",
+     -0.1982421875
+    ],
+    [
+     ".",
+     -0.265625
+    ]
+   ],
+   "set": "D",
+   "index": 6,
+   "phrase": "worshippers who spent days on foot to reach the shrine"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a committee that flew halfway across the continent for the summit.",
+   "max": 0.369140625,
+   "max_token": " flew",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " committee",
+     -0.267578125
+    ],
+    [
+     " that",
+     -0.21875
+    ],
+    [
+     " flew",
+     0.369140625
+    ],
+    [
+     " halfway",
+     -0.35546875
+    ],
+    [
+     " across",
+     -0.5234375
+    ],
+    [
+     " the",
+     -0.162109375
+    ],
+    [
+     " continent",
+     -0.44921875
+    ],
+    [
+     " for",
+     -0.46875
+    ],
+    [
+     " the",
+     -0.37890625
+    ],
+    [
+     " summit",
+     -0.2333984375
+    ],
+    [
+     ".",
+     -0.2431640625
+    ]
+   ],
+   "set": "D",
+   "index": 7,
+   "phrase": "a committee that flew halfway across the continent for the summit"
+  },
+  {
+   "text": "Several of the earlier sentences concerned businesspeople who spend most of the season on planes between cities.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " business",
+     -0.1923828125
+    ],
+    [
+     "people",
+     -0.3828125
+    ],
+    [
+     " who",
+     -0.32421875
+    ],
+    [
+     " spend",
+     -0.3359375
+    ],
+    [
+     " most",
+     -0.232421875
+    ],
+    [
+     " of",
+     -0.248046875
+    ],
+    [
+     " the",
+     -0.12255859375
+    ],
+    [
+     " season",
+     -0.2470703125
+    ],
+    [
+     " on",
+     -0.458984375
+    ],
+    [
+     " planes",
+     -0.34375
+    ],
+    [
+     " between",
+     -0.50390625
+    ],
+    [
+     " cities",
+     -0.275390625
+    ],
+    [
+     ".",
+     -0.298828125
+    ]
+   ],
+   "set": "D",
+   "index": 8,
+   "phrase": "businesspeople who spend most of the season on planes between cities"
+  },
+  {
+   "text": "Several of the earlier sentences concerned families who crossed the mountains on foot from a neighboring country.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " families",
+     -0.36328125
+    ],
+    [
+     " who",
+     -0.294921875
+    ],
+    [
+     " crossed",
+     -0.34375
+    ],
+    [
+     " the",
+     -0.37890625
+    ],
+    [
+     " mountains",
+     -0.294921875
+    ],
+    [
+     " on",
+     -0.33984375
+    ],
+    [
+     " foot",
+     -0.2431640625
+    ],
+    [
+     " from",
+     -0.32421875
+    ],
+    [
+     " a",
+     -0.33203125
+    ],
+    [
+     " neighboring",
+     -0.328125
+    ],
+    [
+     " country",
+     -0.3125
+    ],
+    [
+     ".",
+     -0.2578125
+    ]
+   ],
+   "set": "D",
+   "index": 9,
+   "phrase": "families who crossed the mountains on foot from a neighboring country"
+  },
+  {
+   "text": "Several of the earlier sentences concerned neighbors who drove all day from the coast.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " neighbors",
+     -0.25
+    ],
+    [
+     " who",
+     -0.205078125
+    ],
+    [
+     " drove",
+     -0.255859375
+    ],
+    [
+     " all",
+     -0.2275390625
+    ],
+    [
+     " day",
+     -0.412109375
+    ],
+    [
+     " from",
+     -0.353515625
+    ],
+    [
+     " the",
+     -0.201171875
+    ],
+    [
+     " coast",
+     -0.291015625
+    ],
+    [
+     ".",
+     -0.287109375
+    ]
+   ],
+   "set": "D",
+   "index": 10,
+   "phrase": "neighbors who drove all day from the coast"
+  },
+  {
+   "text": "Several of the earlier sentences concerned migrant farmhands who follow the ripening crops northward.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " migrant",
+     -0.322265625
+    ],
+    [
+     " farm",
+     -0.259765625
+    ],
+    [
+     "hands",
+     -0.2431640625
+    ],
+    [
+     " who",
+     -0.26953125
+    ],
+    [
+     " follow",
+     -0.3046875
+    ],
+    [
+     " the",
+     -0.271484375
+    ],
+    [
+     " rip",
+     -0.26171875
+    ],
+    [
+     "ening",
+     -0.287109375
+    ],
+    [
+     " crops",
+     -0.3515625
+    ],
+    [
+     " north",
+     -0.142578125
+    ],
+    [
+     "ward",
+     -0.18359375
+    ],
+    [
+     ".",
+     -0.1728515625
+    ]
+   ],
+   "set": "D",
+   "index": 11,
+   "phrase": "migrant farmhands who follow the ripening crops northward"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a cousin who lives on the opposite side of the ocean.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " cousin",
+     -0.2275390625
+    ],
+    [
+     " who",
+     -0.302734375
+    ],
+    [
+     " lives",
+     -0.38671875
+    ],
+    [
+     " on",
+     -0.0003108978271484375
+    ],
+    [
+     " the",
+     -0.154296875
+    ],
+    [
+     " opposite",
+     -0.11572265625
+    ],
+    [
+     " side",
+     -0.2392578125
+    ],
+    [
+     " of",
+     -0.283203125
+    ],
+    [
+     " the",
+     -0.11767578125
+    ],
+    [
+     " ocean",
+     -0.431640625
+    ],
+    [
+     ".",
+     -0.259765625
+    ]
+   ],
+   "set": "D",
+   "index": 12,
+   "phrase": "a cousin who lives on the opposite side of the ocean"
+  },
+  {
+   "text": "Several of the earlier sentences concerned letters that took ages to reach us from abroad.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " letters",
+     -0.240234375
+    ],
+    [
+     " that",
+     -0.279296875
+    ],
+    [
+     " took",
+     -0.2109375
+    ],
+    [
+     " ages",
+     -0.1767578125
+    ],
+    [
+     " to",
+     -0.2890625
+    ],
+    [
+     " reach",
+     -0.255859375
+    ],
+    [
+     " us",
+     -0.23046875
+    ],
+    [
+     " from",
+     -0.1806640625
+    ],
+    [
+     " abroad",
+     -0.37890625
+    ],
+    [
+     ".",
+     -0.2265625
+    ]
+   ],
+   "set": "D",
+   "index": 13,
+   "phrase": "letters that took ages to reach us from abroad"
+  },
+  {
+   "text": "Several of the earlier sentences concerned wedding guests who made the trip from a faraway city.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " wedding",
+     -0.150390625
+    ],
+    [
+     " guests",
+     -0.27734375
+    ],
+    [
+     " who",
+     -0.275390625
+    ],
+    [
+     " made",
+     -0.333984375
+    ],
+    [
+     " the",
+     -0.33203125
+    ],
+    [
+     " trip",
+     -0.375
+    ],
+    [
+     " from",
+     -0.36328125
+    ],
+    [
+     " a",
+     -0.373046875
+    ],
+    [
+     " far",
+     -0.251953125
+    ],
+    [
+     "away",
+     -0.380859375
+    ],
+    [
+     " city",
+     -0.3046875
+    ],
+    [
+     ".",
+     -0.263671875
+    ]
+   ],
+   "set": "D",
+   "index": 14,
+   "phrase": "wedding guests who made the trip from a faraway city"
+  },
+  {
+   "text": "Several of the earlier sentences concerned passengers who traveled by ferry and rail from the islands.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " passengers",
+     -0.353515625
+    ],
+    [
+     " who",
+     -0.302734375
+    ],
+    [
+     " traveled",
+     -0.33203125
+    ],
+    [
+     " by",
+     -0.3125
+    ],
+    [
+     " ferry",
+     -0.158203125
+    ],
+    [
+     " and",
+     -0.228515625
+    ],
+    [
+     " rail",
+     -0.0908203125
+    ],
+    [
+     " from",
+     -0.234375
+    ],
+    [
+     " the",
+     -0.2421875
+    ],
+    [
+     " islands",
+     -0.1796875
+    ],
+    [
+     ".",
+     -0.193359375
+    ]
+   ],
+   "set": "D",
+   "index": 15,
+   "phrase": "passengers who traveled by ferry and rail from the islands"
+  },
+  {
+   "text": "Several of the earlier sentences concerned traders who haul goods by camel from one oasis to the next.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " traders",
+     -0.2021484375
+    ],
+    [
+     " who",
+     -0.1328125
+    ],
+    [
+     " haul",
+     -0.26953125
+    ],
+    [
+     " goods",
+     -0.384765625
+    ],
+    [
+     " by",
+     -0.27734375
+    ],
+    [
+     " camel",
+     -0.240234375
+    ],
+    [
+     " from",
+     -0.375
+    ],
+    [
+     " one",
+     -0.1552734375
+    ],
+    [
+     " oasis",
+     -0.29296875
+    ],
+    [
+     " to",
+     -0.08251953125
+    ],
+    [
+     " the",
+     -0.359375
+    ],
+    [
+     " next",
+     -0.162109375
+    ],
+    [
+     ".",
+     -0.158203125
+    ]
+   ],
+   "set": "D",
+   "index": 16,
+   "phrase": "traders who haul goods by camel from one oasis to the next"
+  },
+  {
+   "text": "Several of the earlier sentences concerned truckers who cover thousands of miles between the coasts.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " truck",
+     -0.337890625
+    ],
+    [
+     "ers",
+     -0.2890625
+    ],
+    [
+     " who",
+     -0.23046875
+    ],
+    [
+     " cover",
+     -0.01434326171875
+    ],
+    [
+     " thousands",
+     -0.2216796875
+    ],
+    [
+     " of",
+     -0.294921875
+    ],
+    [
+     " miles",
+     -0.255859375
+    ],
+    [
+     " between",
+     -0.43359375
+    ],
+    [
+     " the",
+     -0.326171875
+    ],
+    [
+     " co",
+     -0.1982421875
+    ],
+    [
+     "asts",
+     -0.208984375
+    ],
+    [
+     ".",
+     -0.341796875
+    ]
+   ],
+   "set": "D",
+   "index": 17,
+   "phrase": "truckers who cover thousands of miles between the coasts"
+  },
+  {
+   "text": "Several of the earlier sentences concerned holidaymakers who flew across three time zones for a beach break.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " holiday",
+     -0.33984375
+    ],
+    [
+     "makers",
+     -0.287109375
+    ],
+    [
+     " who",
+     -0.28125
+    ],
+    [
+     " flew",
+     -0.515625
+    ],
+    [
+     " across",
+     -0.470703125
+    ],
+    [
+     " three",
+     -0.39453125
+    ],
+    [
+     " time",
+     -0.390625
+    ],
+    [
+     " zones",
+     -0.427734375
+    ],
+    [
+     " for",
+     -0.484375
+    ],
+    [
+     " a",
+     -0.5625
+    ],
+    [
+     " beach",
+     -0.259765625
+    ],
+    [
+     " break",
+     -0.208984375
+    ],
+    [
+     ".",
+     -0.2001953125
+    ]
+   ],
+   "set": "D",
+   "index": 18,
+   "phrase": "holidaymakers who flew across three time zones for a beach break"
+  },
+  {
+   "text": "Several of the earlier sentences concerned an uncle who emigrated to australia as a young man.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " an",
+     -0.1376953125
+    ],
+    [
+     " uncle",
+     -0.265625
+    ],
+    [
+     " who",
+     -0.29296875
+    ],
+    [
+     " em",
+     -0.10791015625
+    ],
+    [
+     "igrated",
+     -0.30078125
+    ],
+    [
+     " to",
+     -0.388671875
+    ],
+    [
+     " australia",
+     -0.361328125
+    ],
+    [
+     " as",
+     -0.2392578125
+    ],
+    [
+     " a",
+     -0.3359375
+    ],
+    [
+     " young",
+     -0.1689453125
+    ],
+    [
+     " man",
+     -0.19140625
+    ],
+    [
+     ".",
+     -0.11083984375
+    ]
+   ],
+   "set": "D",
+   "index": 19,
+   "phrase": "an uncle who emigrated to australia as a young man"
+  },
+  {
+   "text": "Several of the earlier sentences concerned people who made the trip from the coast to the city.",
+   "max": 0.099609375,
+   "max_token": " the",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " people",
+     -0.2451171875
+    ],
+    [
+     " who",
+     -0.24609375
+    ],
+    [
+     " made",
+     -0.30859375
+    ],
+    [
+     " the",
+     -0.33203125
+    ],
+    [
+     " trip",
+     -0.453125
+    ],
+    [
+     " from",
+     0.044677734375
+    ],
+    [
+     " the",
+     0.099609375
+    ],
+    [
+     " coast",
+     -0.30859375
+    ],
+    [
+     " to",
+     -0.2890625
+    ],
+    [
+     " the",
+     -0.353515625
+    ],
+    [
+     " city",
+     -0.220703125
+    ],
+    [
+     ".",
+     -0.2109375
+    ]
+   ],
+   "set": "D",
+   "index": 20,
+   "phrase": "people who made the trip from the coast to the city"
+  },
+  {
+   "text": "Several of the earlier sentences concerned emigrants who sailed across the atlantic in steerage.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " em",
+     0.038330078125
+    ],
+    [
+     "igrants",
+     -0.25390625
+    ],
+    [
+     " who",
+     -0.26953125
+    ],
+    [
+     " sailed",
+     -0.251953125
+    ],
+    [
+     " across",
+     -0.361328125
+    ],
+    [
+     " the",
+     -0.328125
+    ],
+    [
+     " atl",
+     -0.34375
+    ],
+    [
+     "antic",
+     -0.279296875
+    ],
+    [
+     " in",
+     -0.1953125
+    ],
+    [
+     " steer",
+     -0.07568359375
+    ],
+    [
+     "age",
+     -0.10498046875
+    ],
+    [
+     ".",
+     -0.138671875
+    ]
+   ],
+   "set": "D",
+   "index": 21,
+   "phrase": "emigrants who sailed across the atlantic in steerage"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a courier who rode from the coast to the mountains in two days.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " courier",
+     -0.494140625
+    ],
+    [
+     " who",
+     -0.4453125
+    ],
+    [
+     " rode",
+     -0.138671875
+    ],
+    [
+     " from",
+     -0.275390625
+    ],
+    [
+     " the",
+     -0.1689453125
+    ],
+    [
+     " coast",
+     -0.2138671875
+    ],
+    [
+     " to",
+     -0.224609375
+    ],
+    [
+     " the",
+     -0.357421875
+    ],
+    [
+     " mountains",
+     -0.2236328125
+    ],
+    [
+     " in",
+     -0.328125
+    ],
+    [
+     " two",
+     -0.228515625
+    ],
+    [
+     " days",
+     -0.326171875
+    ],
+    [
+     ".",
+     -0.19140625
+    ]
+   ],
+   "set": "D",
+   "index": 22,
+   "phrase": "a courier who rode from the coast to the mountains in two days"
+  },
+  {
+   "text": "Several of the earlier sentences concerned exchange students from a faraway country in asia.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " exchange",
+     -0.220703125
+    ],
+    [
+     " students",
+     -0.42578125
+    ],
+    [
+     " from",
+     -0.53515625
+    ],
+    [
+     " a",
+     -0.5078125
+    ],
+    [
+     " far",
+     -0.337890625
+    ],
+    [
+     "away",
+     -0.0625
+    ],
+    [
+     " country",
+     -0.212890625
+    ],
+    [
+     " in",
+     -0.251953125
+    ],
+    [
+     " asia",
+     -0.41015625
+    ],
+    [
+     ".",
+     -0.22265625
+    ]
+   ],
+   "set": "D",
+   "index": 23,
+   "phrase": "exchange students from a faraway country in asia"
+  },
+  {
+   "text": "Several of the earlier sentences concerned an expedition that dragged sledges across polar ice for a winter and never reappeared.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " an",
+     -0.1376953125
+    ],
+    [
+     " expedition",
+     0.027587890625
+    ],
+    [
+     " that",
+     -0.1640625
+    ],
+    [
+     " dragged",
+     -0.1748046875
+    ],
+    [
+     " sled",
+     -0.12890625
+    ],
+    [
+     "ges",
+     -0.1435546875
+    ],
+    [
+     " across",
+     -0.37890625
+    ],
+    [
+     " polar",
+     -0.1591796875
+    ],
+    [
+     " ice",
+     -0.1728515625
+    ],
+    [
+     " for",
+     -0.40234375
+    ],
+    [
+     " a",
+     -0.3046875
+    ],
+    [
+     " winter",
+     -0.232421875
+    ],
+    [
+     " and",
+     -0.212890625
+    ],
+    [
+     " never",
+     -0.1904296875
+    ],
+    [
+     " re",
+     -0.2080078125
+    ],
+    [
+     "appeared",
+     -0.042236328125
+    ],
+    [
+     ".",
+     -0.275390625
+    ]
+   ],
+   "set": "U",
+   "index": 0,
+   "phrase": "an expedition that dragged sledges across polar ice for a winter and never reappeared"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a blind white fish dredged up from a deep-ocean trench.",
+   "max": 0.6796875,
+   "max_token": " white",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " blind",
+     -0.228515625
+    ],
+    [
+     " white",
+     0.6796875
+    ],
+    [
+     " fish",
+     -0.53515625
+    ],
+    [
+     " dred",
+     -0.205078125
+    ],
+    [
+     "ged",
+     -0.412109375
+    ],
+    [
+     " up",
+     -0.51953125
+    ],
+    [
+     " from",
+     -0.0771484375
+    ],
+    [
+     " a",
+     -0.02392578125
+    ],
+    [
+     " deep",
+     -0.1396484375
+    ],
+    [
+     "-o",
+     -0.21875
+    ],
+    [
+     "cean",
+     0.443359375
+    ],
+    [
+     " trench",
+     -0.1337890625
+    ],
+    [
+     ".",
+     0.0634765625
+    ]
+   ],
+   "set": "U",
+   "index": 1,
+   "phrase": "a blind white fish dredged up from a deep-ocean trench"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a lost colony on a remote island whose people still spoke medieval english.",
+   "max": 0.353515625,
+   "max_token": " a",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " lost",
+     0.11376953125
+    ],
+    [
+     " colony",
+     -0.240234375
+    ],
+    [
+     " on",
+     -0.328125
+    ],
+    [
+     " a",
+     0.353515625
+    ],
+    [
+     " remote",
+     0.0927734375
+    ],
+    [
+     " island",
+     -0.3515625
+    ],
+    [
+     " whose",
+     -0.146484375
+    ],
+    [
+     " people",
+     -0.19140625
+    ],
+    [
+     " still",
+     -0.265625
+    ],
+    [
+     " spoke",
+     -0.357421875
+    ],
+    [
+     " medieval",
+     -0.1826171875
+    ],
+    [
+     " english",
+     -0.1572265625
+    ],
+    [
+     ".",
+     -0.33984375
+    ]
+   ],
+   "set": "U",
+   "index": 2,
+   "phrase": "a lost colony on a remote island whose people still spoke medieval english"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a roman city buried by volcanic ash and found almost untouched.",
+   "max": 0.05859375,
+   "max_token": " by",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " roman",
+     -0.2275390625
+    ],
+    [
+     " city",
+     -0.23046875
+    ],
+    [
+     " buried",
+     -0.240234375
+    ],
+    [
+     " by",
+     0.05859375
+    ],
+    [
+     " volcanic",
+     -0.07861328125
+    ],
+    [
+     " ash",
+     -0.1025390625
+    ],
+    [
+     " and",
+     -0.3125
+    ],
+    [
+     " found",
+     -0.287109375
+    ],
+    [
+     " almost",
+     -0.2265625
+    ],
+    [
+     " untouched",
+     -0.271484375
+    ],
+    [
+     ".",
+     -0.3203125
+    ]
+   ],
+   "set": "U",
+   "index": 3,
+   "phrase": "a roman city buried by volcanic ash and found almost untouched"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a woolly mammoth found in permafrost with buttercups still in its mouth.",
+   "max": 0.4140625,
+   "max_token": " with",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " wool",
+     -0.3359375
+    ],
+    [
+     "ly",
+     -0.455078125
+    ],
+    [
+     " mam",
+     -0.427734375
+    ],
+    [
+     "moth",
+     -0.45703125
+    ],
+    [
+     " found",
+     -0.4765625
+    ],
+    [
+     " in",
+     -0.51953125
+    ],
+    [
+     " per",
+     -0.2158203125
+    ],
+    [
+     "maf",
+     -0.345703125
+    ],
+    [
+     "rost",
+     -0.451171875
+    ],
+    [
+     " with",
+     0.4140625
+    ],
+    [
+     " butter",
+     -0.23046875
+    ],
+    [
+     "c",
+     -0.232421875
+    ],
+    [
+     "ups",
+     -0.35546875
+    ],
+    [
+     " still",
+     -0.1865234375
+    ],
+    [
+     " in",
+     -0.28125
+    ],
+    [
+     " its",
+     -0.33203125
+    ],
+    [
+     " mouth",
+     -0.19921875
+    ],
+    [
+     ".",
+     -0.2255859375
+    ]
+   ],
+   "set": "U",
+   "index": 4,
+   "phrase": "a woolly mammoth found in permafrost with buttercups still in its mouth"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a lake hidden beneath miles of antarctic ice.",
+   "max": 0.349609375,
+   "max_token": " beneath",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " lake",
+     -0.35546875
+    ],
+    [
+     " hidden",
+     -0.08837890625
+    ],
+    [
+     " beneath",
+     0.349609375
+    ],
+    [
+     " miles",
+     -0.1826171875
+    ],
+    [
+     " of",
+     -0.12255859375
+    ],
+    [
+     " antar",
+     0.1708984375
+    ],
+    [
+     "ctic",
+     -0.2060546875
+    ],
+    [
+     " ice",
+     0.020751953125
+    ],
+    [
+     ".",
+     0.17578125
+    ]
+   ],
+   "set": "U",
+   "index": 5,
+   "phrase": "a lake hidden beneath miles of antarctic ice"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a drowned city lying on the floor of a mediterranean bay.",
+   "max": 0.125,
+   "max_token": " a",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " drowned",
+     -0.47265625
+    ],
+    [
+     " city",
+     -0.125
+    ],
+    [
+     " lying",
+     -0.322265625
+    ],
+    [
+     " on",
+     0.056396484375
+    ],
+    [
+     " the",
+     -0.10693359375
+    ],
+    [
+     " floor",
+     -0.26953125
+    ],
+    [
+     " of",
+     -0.42578125
+    ],
+    [
+     " a",
+     0.125
+    ],
+    [
+     " med",
+     -0.0751953125
+    ],
+    [
+     "iterr",
+     -0.3203125
+    ],
+    [
+     "anean",
+     -0.431640625
+    ],
+    [
+     " bay",
+     -0.2109375
+    ],
+    [
+     ".",
+     -0.2021484375
+    ]
+   ],
+   "set": "U",
+   "index": 6,
+   "phrase": "a drowned city lying on the floor of a mediterranean bay"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a sailor who drifted across the pacific on a raft.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " sailor",
+     -0.28125
+    ],
+    [
+     " who",
+     -0.357421875
+    ],
+    [
+     " drifted",
+     -0.0791015625
+    ],
+    [
+     " across",
+     -0.39453125
+    ],
+    [
+     " the",
+     -0.283203125
+    ],
+    [
+     " pac",
+     -0.3046875
+    ],
+    [
+     "ific",
+     -0.400390625
+    ],
+    [
+     " on",
+     -0.3984375
+    ],
+    [
+     " a",
+     -0.4140625
+    ],
+    [
+     " raft",
+     -0.0869140625
+    ],
+    [
+     ".",
+     -0.37109375
+    ]
+   ],
+   "set": "U",
+   "index": 7,
+   "phrase": "a sailor who drifted across the pacific on a raft"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the mutineers who burned their ship and hid on a pacific island.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " mut",
+     -0.035400390625
+    ],
+    [
+     "ine",
+     -0.043212890625
+    ],
+    [
+     "ers",
+     -0.134765625
+    ],
+    [
+     " who",
+     -0.1005859375
+    ],
+    [
+     " burned",
+     -0.0693359375
+    ],
+    [
+     " their",
+     -0.037841796875
+    ],
+    [
+     " ship",
+     -0.00787353515625
+    ],
+    [
+     " and",
+     0.004302978515625
+    ],
+    [
+     " hid",
+     -0.07373046875
+    ],
+    [
+     " on",
+     -0.1826171875
+    ],
+    [
+     " a",
+     -0.25
+    ],
+    [
+     " pac",
+     -0.049072265625
+    ],
+    [
+     "ific",
+     -0.267578125
+    ],
+    [
+     " island",
+     -0.34765625
+    ],
+    [
+     ".",
+     -0.2119140625
+    ]
+   ],
+   "set": "U",
+   "index": 8,
+   "phrase": "the mutineers who burned their ship and hid on a pacific island"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a balloon flight over the summit of the highest mountain in the himalayas.",
+   "max": 0.9453125,
+   "max_token": " the",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " balloon",
+     -0.1259765625
+    ],
+    [
+     " flight",
+     -0.06591796875
+    ],
+    [
+     " over",
+     -0.1806640625
+    ],
+    [
+     " the",
+     0.37890625
+    ],
+    [
+     " summit",
+     -0.1923828125
+    ],
+    [
+     " of",
+     -0.3671875
+    ],
+    [
+     " the",
+     -0.2314453125
+    ],
+    [
+     " highest",
+     -0.177734375
+    ],
+    [
+     " mountain",
+     -0.259765625
+    ],
+    [
+     " in",
+     -0.2158203125
+    ],
+    [
+     " the",
+     0.9453125
+    ],
+    [
+     " him",
+     -0.1484375
+    ],
+    [
+     "al",
+     -0.197265625
+    ],
+    [
+     "ayas",
+     -0.328125
+    ],
+    [
+     ".",
+     -0.1767578125
+    ]
+   ],
+   "set": "U",
+   "index": 9,
+   "phrase": "a balloon flight over the summit of the highest mountain in the himalayas"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a diver trapped for three days in an air pocket inside a sunken vessel.",
+   "max": 0.197265625,
+   "max_token": " an",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " diver",
+     -0.26953125
+    ],
+    [
+     " trapped",
+     -0.0634765625
+    ],
+    [
+     " for",
+     -0.24609375
+    ],
+    [
+     " three",
+     -0.2314453125
+    ],
+    [
+     " days",
+     -0.39453125
+    ],
+    [
+     " in",
+     -0.3046875
+    ],
+    [
+     " an",
+     0.197265625
+    ],
+    [
+     " air",
+     0.0242919921875
+    ],
+    [
+     " pocket",
+     -0.1201171875
+    ],
+    [
+     " inside",
+     -0.158203125
+    ],
+    [
+     " a",
+     -0.326171875
+    ],
+    [
+     " sun",
+     -0.006744384765625
+    ],
+    [
+     "ken",
+     -0.498046875
+    ],
+    [
+     " vessel",
+     -0.2275390625
+    ],
+    [
+     ".",
+     -0.2265625
+    ]
+   ],
+   "set": "U",
+   "index": 10,
+   "phrase": "a diver trapped for three days in an air pocket inside a sunken vessel"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a submarine voyage beneath the polar ice cap to the north pole.",
+   "max": 2.46875,
+   "max_token": " to",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " submarine",
+     -0.326171875
+    ],
+    [
+     " voyage",
+     -0.038818359375
+    ],
+    [
+     " beneath",
+     -0.34375
+    ],
+    [
+     " the",
+     -0.1845703125
+    ],
+    [
+     " polar",
+     -0.224609375
+    ],
+    [
+     " ice",
+     -0.232421875
+    ],
+    [
+     " cap",
+     -0.330078125
+    ],
+    [
+     " to",
+     2.46875
+    ],
+    [
+     " the",
+     -0.08544921875
+    ],
+    [
+     " north",
+     -0.2197265625
+    ],
+    [
+     " pole",
+     -0.349609375
+    ],
+    [
+     ".",
+     -0.21875
+    ]
+   ],
+   "set": "U",
+   "index": 11,
+   "phrase": "a submarine voyage beneath the polar ice cap to the north pole"
+  },
+  {
+   "text": "Several of the earlier sentences concerned an amazon tribe that has never met outsiders.",
+   "max": 2.09375,
+   "max_token": ".",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " an",
+     -0.1376953125
+    ],
+    [
+     " amazon",
+     -0.328125
+    ],
+    [
+     " tribe",
+     -0.61328125
+    ],
+    [
+     " that",
+     -0.0673828125
+    ],
+    [
+     " has",
+     -0.1669921875
+    ],
+    [
+     " never",
+     -0.03759765625
+    ],
+    [
+     " met",
+     1.3671875
+    ],
+    [
+     " outsiders",
+     -0.3515625
+    ],
+    [
+     ".",
+     2.09375
+    ]
+   ],
+   "set": "U",
+   "index": 12,
+   "phrase": "an amazon tribe that has never met outsiders"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a salt mine carved into a cathedral beneath the plains of poland.",
+   "max": 0.10302734375,
+   "max_token": " salt",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " salt",
+     0.10302734375
+    ],
+    [
+     " mine",
+     -0.2197265625
+    ],
+    [
+     " carved",
+     -0.275390625
+    ],
+    [
+     " into",
+     -0.1181640625
+    ],
+    [
+     " a",
+     -0.1298828125
+    ],
+    [
+     " cathedral",
+     -0.2578125
+    ],
+    [
+     " beneath",
+     -0.177734375
+    ],
+    [
+     " the",
+     -0.345703125
+    ],
+    [
+     " plains",
+     -0.1796875
+    ],
+    [
+     " of",
+     -0.193359375
+    ],
+    [
+     " pol",
+     -0.1962890625
+    ],
+    [
+     "and",
+     -0.296875
+    ],
+    [
+     ".",
+     -0.1513671875
+    ]
+   ],
+   "set": "U",
+   "index": 13,
+   "phrase": "a salt mine carved into a cathedral beneath the plains of poland"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a sunken forest standing upright on the seabed.",
+   "max": 0.361328125,
+   "max_token": " sun",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " sun",
+     0.361328125
+    ],
+    [
+     "ken",
+     -0.220703125
+    ],
+    [
+     " forest",
+     -0.00457763671875
+    ],
+    [
+     " standing",
+     -0.2216796875
+    ],
+    [
+     " upright",
+     -0.201171875
+    ],
+    [
+     " on",
+     0.173828125
+    ],
+    [
+     " the",
+     -0.142578125
+    ],
+    [
+     " seab",
+     -0.31640625
+    ],
+    [
+     "ed",
+     -0.361328125
+    ],
+    [
+     ".",
+     -0.1533203125
+    ]
+   ],
+   "set": "U",
+   "index": 14,
+   "phrase": "a sunken forest standing upright on the seabed"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a boy raised by wolves in the forests of india.",
+   "max": 0.2177734375,
+   "max_token": " by",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " boy",
+     -0.390625
+    ],
+    [
+     " raised",
+     0.109375
+    ],
+    [
+     " by",
+     0.2177734375
+    ],
+    [
+     " wolves",
+     -0.60546875
+    ],
+    [
+     " in",
+     -0.55859375
+    ],
+    [
+     " the",
+     -0.2451171875
+    ],
+    [
+     " forests",
+     -0.453125
+    ],
+    [
+     " of",
+     -0.380859375
+    ],
+    [
+     " india",
+     -0.42578125
+    ],
+    [
+     ".",
+     -0.314453125
+    ]
+   ],
+   "set": "U",
+   "index": 15,
+   "phrase": "a boy raised by wolves in the forests of india"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a hermit who lived for decades on an uninhabited atoll.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " her",
+     -0.1474609375
+    ],
+    [
+     "mit",
+     -0.408203125
+    ],
+    [
+     " who",
+     -0.4765625
+    ],
+    [
+     " lived",
+     -0.359375
+    ],
+    [
+     " for",
+     -0.2734375
+    ],
+    [
+     " decades",
+     -0.416015625
+    ],
+    [
+     " on",
+     -0.41015625
+    ],
+    [
+     " an",
+     -0.171875
+    ],
+    [
+     " unin",
+     -0.1083984375
+    ],
+    [
+     "hab",
+     -0.3046875
+    ],
+    [
+     "ited",
+     -0.4609375
+    ],
+    [
+     " at",
+     -0.1826171875
+    ],
+    [
+     "oll",
+     -0.255859375
+    ],
+    [
+     ".",
+     -0.2734375
+    ]
+   ],
+   "set": "U",
+   "index": 16,
+   "phrase": "a hermit who lived for decades on an uninhabited atoll"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a glacier that swallowed a squadron of warplanes and gave them back.",
+   "max": 0.59375,
+   "max_token": " of",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " glacier",
+     -0.21875
+    ],
+    [
+     " that",
+     -0.0137939453125
+    ],
+    [
+     " swallowed",
+     -0.09130859375
+    ],
+    [
+     " a",
+     0.439453125
+    ],
+    [
+     " squadron",
+     -0.11279296875
+    ],
+    [
+     " of",
+     0.59375
+    ],
+    [
+     " war",
+     -0.06494140625
+    ],
+    [
+     "planes",
+     -0.298828125
+    ],
+    [
+     " and",
+     -0.27734375
+    ],
+    [
+     " gave",
+     0.06494140625
+    ],
+    [
+     " them",
+     0.337890625
+    ],
+    [
+     " back",
+     0.3359375
+    ],
+    [
+     ".",
+     -0.11328125
+    ]
+   ],
+   "set": "U",
+   "index": 17,
+   "phrase": "a glacier that swallowed a squadron of warplanes and gave them back"
+  },
+  {
+   "text": "Several of the earlier sentences concerned an island that rose from the sea in a single night and then sank.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " an",
+     -0.1376953125
+    ],
+    [
+     " island",
+     -0.4140625
+    ],
+    [
+     " that",
+     -0.232421875
+    ],
+    [
+     " rose",
+     0.0024261474609375
+    ],
+    [
+     " from",
+     -0.17578125
+    ],
+    [
+     " the",
+     -0.16796875
+    ],
+    [
+     " sea",
+     -0.1484375
+    ],
+    [
+     " in",
+     -0.039306640625
+    ],
+    [
+     " a",
+     0.041748046875
+    ],
+    [
+     " single",
+     -0.12060546875
+    ],
+    [
+     " night",
+     -0.1103515625
+    ],
+    [
+     " and",
+     -0.0191650390625
+    ],
+    [
+     " then",
+     -0.0615234375
+    ],
+    [
+     " sank",
+     -0.11572265625
+    ],
+    [
+     ".",
+     -0.310546875
+    ]
+   ],
+   "set": "U",
+   "index": 18,
+   "phrase": "an island that rose from the sea in a single night and then sank"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a dog sled journey to the south pole in the dark of winter.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " dog",
+     -0.5
+    ],
+    [
+     " sled",
+     -0.25390625
+    ],
+    [
+     " journey",
+     -0.451171875
+    ],
+    [
+     " to",
+     -0.57421875
+    ],
+    [
+     " the",
+     -0.46875
+    ],
+    [
+     " south",
+     -0.267578125
+    ],
+    [
+     " pole",
+     -0.3828125
+    ],
+    [
+     " in",
+     -0.400390625
+    ],
+    [
+     " the",
+     -0.3671875
+    ],
+    [
+     " dark",
+     -0.1708984375
+    ],
+    [
+     " of",
+     -0.263671875
+    ],
+    [
+     " winter",
+     -0.248046875
+    ],
+    [
+     ".",
+     -0.171875
+    ]
+   ],
+   "set": "U",
+   "index": 19,
+   "phrase": "a dog sled journey to the south pole in the dark of winter"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a rainforest orchid that blooms once in a lifetime.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " rain",
+     -0.15234375
+    ],
+    [
+     "forest",
+     -0.65625
+    ],
+    [
+     " orch",
+     -0.29296875
+    ],
+    [
+     "id",
+     -0.498046875
+    ],
+    [
+     " that",
+     -0.310546875
+    ],
+    [
+     " blooms",
+     -0.123046875
+    ],
+    [
+     " once",
+     -0.203125
+    ],
+    [
+     " in",
+     -0.2734375
+    ],
+    [
+     " a",
+     -0.10205078125
+    ],
+    [
+     " lifetime",
+     0.00018596649169921875
+    ],
+    [
+     ".",
+     -0.146484375
+    ]
+   ],
+   "set": "U",
+   "index": 20,
+   "phrase": "a rainforest orchid that blooms once in a lifetime"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a monastery clinging to a sea stack on the greek coast.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " monastery",
+     -0.1630859375
+    ],
+    [
+     " clinging",
+     -0.06640625
+    ],
+    [
+     " to",
+     -0.09130859375
+    ],
+    [
+     " a",
+     -0.1875
+    ],
+    [
+     " sea",
+     -0.24609375
+    ],
+    [
+     " stack",
+     -0.10791015625
+    ],
+    [
+     " on",
+     -0.212890625
+    ],
+    [
+     " the",
+     -0.1328125
+    ],
+    [
+     " g",
+     -0.162109375
+    ],
+    [
+     "reek",
+     -0.298828125
+    ],
+    [
+     " coast",
+     -0.1171875
+    ],
+    [
+     ".",
+     -0.0849609375
+    ]
+   ],
+   "set": "U",
+   "index": 21,
+   "phrase": "a monastery clinging to a sea stack on the greek coast"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a submersible that descended to the bottom of the deepest ocean trench.",
+   "max": 1.40625,
+   "max_token": "ible",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " sub",
+     -0.0693359375
+    ],
+    [
+     "mers",
+     0.0013275146484375
+    ],
+    [
+     "ible",
+     1.40625
+    ],
+    [
+     " that",
+     0.578125
+    ],
+    [
+     " descended",
+     -0.1767578125
+    ],
+    [
+     " to",
+     -0.2470703125
+    ],
+    [
+     " the",
+     -0.0966796875
+    ],
+    [
+     " bottom",
+     -0.2275390625
+    ],
+    [
+     " of",
+     -0.1337890625
+    ],
+    [
+     " the",
+     -0.28125
+    ],
+    [
+     " deepest",
+     -0.150390625
+    ],
+    [
+     " ocean",
+     -0.369140625
+    ],
+    [
+     " trench",
+     -0.267578125
+    ],
+    [
+     ".",
+     -0.1669921875
+    ]
+   ],
+   "set": "U",
+   "index": 22,
+   "phrase": "a submersible that descended to the bottom of the deepest ocean trench"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a biplane flight across the atlantic in an open cockpit.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " bi",
+     -0.27734375
+    ],
+    [
+     "plane",
+     -0.220703125
+    ],
+    [
+     " flight",
+     -0.3828125
+    ],
+    [
+     " across",
+     -0.5
+    ],
+    [
+     " the",
+     -0.279296875
+    ],
+    [
+     " atl",
+     -0.359375
+    ],
+    [
+     "antic",
+     -0.396484375
+    ],
+    [
+     " in",
+     -0.45703125
+    ],
+    [
+     " an",
+     -0.44140625
+    ],
+    [
+     " open",
+     -0.259765625
+    ],
+    [
+     " cockpit",
+     -0.3046875
+    ],
+    [
+     ".",
+     -0.1005859375
+    ]
+   ],
+   "set": "U",
+   "index": 23,
+   "phrase": "a biplane flight across the atlantic in an open cockpit"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the rights and duties we owe to fellow beings.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " rights",
+     -0.1552734375
+    ],
+    [
+     " and",
+     -0.1572265625
+    ],
+    [
+     " duties",
+     -0.189453125
+    ],
+    [
+     " we",
+     -0.07275390625
+    ],
+    [
+     " owe",
+     -0.357421875
+    ],
+    [
+     " to",
+     -0.50390625
+    ],
+    [
+     " fellow",
+     -0.306640625
+    ],
+    [
+     " beings",
+     -0.40234375
+    ],
+    [
+     ".",
+     -0.08349609375
+    ]
+   ],
+   "set": "C1",
+   "index": 0,
+   "phrase": "the rights and duties we owe to fellow beings"
+  },
+  {
+   "text": "Several of the earlier sentences concerned how living beings adapt to droughts and floods.",
+   "max": 0.79296875,
+   "max_token": " beings",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " how",
+     -0.1982421875
+    ],
+    [
+     " living",
+     -0.10546875
+    ],
+    [
+     " beings",
+     0.79296875
+    ],
+    [
+     " adapt",
+     -0.259765625
+    ],
+    [
+     " to",
+     -0.32421875
+    ],
+    [
+     " drought",
+     -0.38671875
+    ],
+    [
+     "s",
+     -0.3515625
+    ],
+    [
+     " and",
+     -0.54296875
+    ],
+    [
+     " floods",
+     -0.287109375
+    ],
+    [
+     ".",
+     -0.279296875
+    ]
+   ],
+   "set": "C1",
+   "index": 1,
+   "phrase": "how living beings adapt to droughts and floods"
+  },
+  {
+   "text": "Several of the earlier sentences concerned social beings who need company to thrive.",
+   "max": 0.0556640625,
+   "max_token": " beings",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " social",
+     -0.279296875
+    ],
+    [
+     " beings",
+     0.0556640625
+    ],
+    [
+     " who",
+     -0.20703125
+    ],
+    [
+     " need",
+     -0.1064453125
+    ],
+    [
+     " company",
+     -0.150390625
+    ],
+    [
+     " to",
+     -0.2080078125
+    ],
+    [
+     " thrive",
+     -0.185546875
+    ],
+    [
+     ".",
+     -0.2109375
+    ]
+   ],
+   "set": "C1",
+   "index": 2,
+   "phrase": "social beings who need company to thrive"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the dignity of all beings regardless of rank.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " dignity",
+     -0.056640625
+    ],
+    [
+     " of",
+     -0.2099609375
+    ],
+    [
+     " all",
+     -0.3359375
+    ],
+    [
+     " beings",
+     -0.291015625
+    ],
+    [
+     " regardless",
+     -0.3203125
+    ],
+    [
+     " of",
+     -0.1767578125
+    ],
+    [
+     " rank",
+     -0.15625
+    ],
+    [
+     ".",
+     -0.10888671875
+    ]
+   ],
+   "set": "C1",
+   "index": 3,
+   "phrase": "the dignity of all beings regardless of rank"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the suffering of living beings in overfull shelters.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " suffering",
+     -0.1416015625
+    ],
+    [
+     " of",
+     -0.41015625
+    ],
+    [
+     " living",
+     -0.10595703125
+    ],
+    [
+     " beings",
+     -0.42578125
+    ],
+    [
+     " in",
+     -0.3515625
+    ],
+    [
+     " over",
+     -0.353515625
+    ],
+    [
+     "full",
+     -0.1650390625
+    ],
+    [
+     " shelters",
+     -0.2373046875
+    ],
+    [
+     ".",
+     -0.1787109375
+    ]
+   ],
+   "set": "C1",
+   "index": 4,
+   "phrase": "the suffering of living beings in overfull shelters"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the shared needs of all living beings, from insects to elephants.",
+   "max": 0.404296875,
+   "max_token": " beings",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " shared",
+     -0.166015625
+    ],
+    [
+     " needs",
+     -0.16015625
+    ],
+    [
+     " of",
+     -0.296875
+    ],
+    [
+     " all",
+     -0.33984375
+    ],
+    [
+     " living",
+     -0.271484375
+    ],
+    [
+     " beings",
+     0.404296875
+    ],
+    [
+     ",",
+     -0.1796875
+    ],
+    [
+     " from",
+     0.361328125
+    ],
+    [
+     " insects",
+     -0.166015625
+    ],
+    [
+     " to",
+     0.07470703125
+    ],
+    [
+     " elephants",
+     -0.484375
+    ],
+    [
+     ".",
+     -0.279296875
+    ]
+   ],
+   "set": "C1",
+   "index": 5,
+   "phrase": "the shared needs of all living beings, from insects to elephants"
+  },
+  {
+   "text": "Several of the earlier sentences concerned mortal beings facing illness and old age.",
+   "max": 0.400390625,
+   "max_token": " beings",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " mortal",
+     -0.016357421875
+    ],
+    [
+     " beings",
+     0.400390625
+    ],
+    [
+     " facing",
+     -0.123046875
+    ],
+    [
+     " illness",
+     -0.068359375
+    ],
+    [
+     " and",
+     -0.1533203125
+    ],
+    [
+     " old",
+     -0.1474609375
+    ],
+    [
+     " age",
+     -0.04052734375
+    ],
+    [
+     ".",
+     -0.16015625
+    ]
+   ],
+   "set": "C1",
+   "index": 6,
+   "phrase": "mortal beings facing illness and old age"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the ethics of how we treat living beings in laboratories.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " ethics",
+     -0.251953125
+    ],
+    [
+     " of",
+     -0.271484375
+    ],
+    [
+     " how",
+     -0.244140625
+    ],
+    [
+     " we",
+     -0.140625
+    ],
+    [
+     " treat",
+     -0.279296875
+    ],
+    [
+     " living",
+     -0.0218505859375
+    ],
+    [
+     " beings",
+     -0.10302734375
+    ],
+    [
+     " in",
+     -0.267578125
+    ],
+    [
+     " laboratories",
+     -0.5234375
+    ],
+    [
+     ".",
+     -0.306640625
+    ]
+   ],
+   "set": "C1",
+   "index": 7,
+   "phrase": "the ethics of how we treat living beings in laboratories"
+  },
+  {
+   "text": "Several of the earlier sentences concerned frail beings who depend on the care of others.",
+   "max": 1.6484375,
+   "max_token": " beings",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " frail",
+     -0.1455078125
+    ],
+    [
+     " beings",
+     1.6484375
+    ],
+    [
+     " who",
+     0.2392578125
+    ],
+    [
+     " depend",
+     -0.09765625
+    ],
+    [
+     " on",
+     0.375
+    ],
+    [
+     " the",
+     -0.0712890625
+    ],
+    [
+     " care",
+     -0.173828125
+    ],
+    [
+     " of",
+     -0.087890625
+    ],
+    [
+     " others",
+     -0.1923828125
+    ],
+    [
+     ".",
+     -0.08935546875
+    ]
+   ],
+   "set": "C1",
+   "index": 8,
+   "phrase": "frail beings who depend on the care of others"
+  },
+  {
+   "text": "Several of the earlier sentences concerned thinking beings capable of love and regret.",
+   "max": 5.40625,
+   "max_token": " beings",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " thinking",
+     -0.083984375
+    ],
+    [
+     " beings",
+     5.40625
+    ],
+    [
+     " capable",
+     0.52734375
+    ],
+    [
+     " of",
+     2.78125
+    ],
+    [
+     " love",
+     -0.0859375
+    ],
+    [
+     " and",
+     0.1708984375
+    ],
+    [
+     " regret",
+     -0.040771484375
+    ],
+    [
+     ".",
+     -0.12890625
+    ]
+   ],
+   "set": "C1",
+   "index": 9,
+   "phrase": "thinking beings capable of love and regret"
+  },
+  {
+   "text": "Several of the earlier sentences concerned beings of flesh and blood who tire, hunger, and sleep.",
+   "max": 4.53125,
+   "max_token": " of",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " beings",
+     1.65625
+    ],
+    [
+     " of",
+     4.53125
+    ],
+    [
+     " flesh",
+     0.15625
+    ],
+    [
+     " and",
+     -0.1044921875
+    ],
+    [
+     " blood",
+     -0.06982421875
+    ],
+    [
+     " who",
+     -0.12890625
+    ],
+    [
+     " tire",
+     -0.19140625
+    ],
+    [
+     ",",
+     -0.03369140625
+    ],
+    [
+     " hunger",
+     -0.14453125
+    ],
+    [
+     ",",
+     -0.1787109375
+    ],
+    [
+     " and",
+     -0.185546875
+    ],
+    [
+     " sleep",
+     -0.09033203125
+    ],
+    [
+     ".",
+     -0.146484375
+    ]
+   ],
+   "set": "C1",
+   "index": 10,
+   "phrase": "beings of flesh and blood who tire, hunger, and sleep"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the wellbeing of all beings who share a household.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " wellbeing",
+     -0.1884765625
+    ],
+    [
+     " of",
+     -0.388671875
+    ],
+    [
+     " all",
+     -0.375
+    ],
+    [
+     " beings",
+     0.0164794921875
+    ],
+    [
+     " who",
+     -0.1474609375
+    ],
+    [
+     " share",
+     -0.177734375
+    ],
+    [
+     " a",
+     -0.0595703125
+    ],
+    [
+     " household",
+     -0.294921875
+    ],
+    [
+     ".",
+     -0.2421875
+    ]
+   ],
+   "set": "C1",
+   "index": 11,
+   "phrase": "the wellbeing of all beings who share a household"
+  },
+  {
+   "text": "Several of the earlier sentences concerned neighbors who are not from here but have settled in nicely.",
+   "max": 0.37109375,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " neighbors",
+     -0.25
+    ],
+    [
+     " who",
+     -0.205078125
+    ],
+    [
+     " are",
+     -0.056640625
+    ],
+    [
+     " not",
+     -0.07666015625
+    ],
+    [
+     " from",
+     0.37109375
+    ],
+    [
+     " here",
+     -0.33984375
+    ],
+    [
+     " but",
+     -0.216796875
+    ],
+    [
+     " have",
+     -0.25
+    ],
+    [
+     " settled",
+     -0.2255859375
+    ],
+    [
+     " in",
+     -0.283203125
+    ],
+    [
+     " nicely",
+     -0.103515625
+    ],
+    [
+     ".",
+     -0.1669921875
+    ]
+   ],
+   "set": "C2",
+   "index": 0,
+   "phrase": "neighbors who are not from here but have settled in nicely"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a woman not from here who misses the sea.",
+   "max": 0.10693359375,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " woman",
+     -0.310546875
+    ],
+    [
+     " not",
+     -0.2041015625
+    ],
+    [
+     " from",
+     0.10693359375
+    ],
+    [
+     " here",
+     -0.275390625
+    ],
+    [
+     " who",
+     -0.376953125
+    ],
+    [
+     " misses",
+     -0.2060546875
+    ],
+    [
+     " the",
+     -0.181640625
+    ],
+    [
+     " sea",
+     -0.24609375
+    ],
+    [
+     ".",
+     -0.40625
+    ]
+   ],
+   "set": "C2",
+   "index": 1,
+   "phrase": "a woman not from here who misses the sea"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the shopkeeper who is clearly not from here.",
+   "max": 1.2421875,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " shop",
+     -0.267578125
+    ],
+    [
+     "keeper",
+     -0.51953125
+    ],
+    [
+     " who",
+     -0.35546875
+    ],
+    [
+     " is",
+     -0.30078125
+    ],
+    [
+     " clearly",
+     -0.1875
+    ],
+    [
+     " not",
+     -0.1552734375
+    ],
+    [
+     " from",
+     1.2421875
+    ],
+    [
+     " here",
+     -0.3125
+    ],
+    [
+     ".",
+     -0.373046875
+    ]
+   ],
+   "set": "C2",
+   "index": 2,
+   "phrase": "the shopkeeper who is clearly not from here"
+  },
+  {
+   "text": "Several of the earlier sentences concerned families who are not from this place and need directions to the clinic.",
+   "max": 0.05419921875,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " families",
+     -0.36328125
+    ],
+    [
+     " who",
+     -0.294921875
+    ],
+    [
+     " are",
+     -0.1767578125
+    ],
+    [
+     " not",
+     -0.1875
+    ],
+    [
+     " from",
+     0.05419921875
+    ],
+    [
+     " this",
+     -0.3515625
+    ],
+    [
+     " place",
+     -0.353515625
+    ],
+    [
+     " and",
+     -0.30859375
+    ],
+    [
+     " need",
+     -0.1708984375
+    ],
+    [
+     " directions",
+     -0.396484375
+    ],
+    [
+     " to",
+     -0.392578125
+    ],
+    [
+     " the",
+     -0.427734375
+    ],
+    [
+     " clinic",
+     -0.2470703125
+    ],
+    [
+     ".",
+     -0.279296875
+    ]
+   ],
+   "set": "C2",
+   "index": 3,
+   "phrase": "families who are not from this place and need directions to the clinic"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the accent of someone not from here.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " accent",
+     -0.203125
+    ],
+    [
+     " of",
+     -0.365234375
+    ],
+    [
+     " someone",
+     -0.26953125
+    ],
+    [
+     " not",
+     -0.314453125
+    ],
+    [
+     " from",
+     -0.333984375
+    ],
+    [
+     " here",
+     -0.349609375
+    ],
+    [
+     ".",
+     -0.462890625
+    ]
+   ],
+   "set": "C2",
+   "index": 4,
+   "phrase": "the accent of someone not from here"
+  },
+  {
+   "text": "Several of the earlier sentences concerned laborers who say they are not from this place and plan to go back.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " labor",
+     -0.10546875
+    ],
+    [
+     "ers",
+     -0.140625
+    ],
+    [
+     " who",
+     -0.11376953125
+    ],
+    [
+     " say",
+     -0.220703125
+    ],
+    [
+     " they",
+     -0.1435546875
+    ],
+    [
+     " are",
+     -0.099609375
+    ],
+    [
+     " not",
+     -0.09619140625
+    ],
+    [
+     " from",
+     -0.039306640625
+    ],
+    [
+     " this",
+     -0.30859375
+    ],
+    [
+     " place",
+     -0.314453125
+    ],
+    [
+     " and",
+     -0.3359375
+    ],
+    [
+     " plan",
+     -0.1787109375
+    ],
+    [
+     " to",
+     -0.26171875
+    ],
+    [
+     " go",
+     -0.365234375
+    ],
+    [
+     " back",
+     -0.419921875
+    ],
+    [
+     ".",
+     -0.3046875
+    ]
+   ],
+   "set": "C2",
+   "index": 5,
+   "phrase": "laborers who say they are not from this place and plan to go back"
+  },
+  {
+   "text": "Several of the earlier sentences concerned tourists who are plainly not from here, with maps in hand.",
+   "max": 0.1376953125,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " tourists",
+     -0.384765625
+    ],
+    [
+     " who",
+     -0.390625
+    ],
+    [
+     " are",
+     -0.310546875
+    ],
+    [
+     " plainly",
+     -0.2138671875
+    ],
+    [
+     " not",
+     -0.224609375
+    ],
+    [
+     " from",
+     0.1376953125
+    ],
+    [
+     " here",
+     -0.412109375
+    ],
+    [
+     ",",
+     -0.2890625
+    ],
+    [
+     " with",
+     -0.2001953125
+    ],
+    [
+     " maps",
+     -0.267578125
+    ],
+    [
+     " in",
+     -0.28125
+    ],
+    [
+     " hand",
+     -0.1630859375
+    ],
+    [
+     ".",
+     -0.2734375
+    ]
+   ],
+   "set": "C2",
+   "index": 6,
+   "phrase": "tourists who are plainly not from here, with maps in hand"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a boy raised on this street who still feels not from this place.",
+   "max": 0.1552734375,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " boy",
+     -0.390625
+    ],
+    [
+     " raised",
+     0.109375
+    ],
+    [
+     " on",
+     -0.041748046875
+    ],
+    [
+     " this",
+     0.10693359375
+    ],
+    [
+     " street",
+     -0.263671875
+    ],
+    [
+     " who",
+     -0.28125
+    ],
+    [
+     " still",
+     -0.134765625
+    ],
+    [
+     " feels",
+     -0.185546875
+    ],
+    [
+     " not",
+     -0.1279296875
+    ],
+    [
+     " from",
+     0.1552734375
+    ],
+    [
+     " this",
+     -0.255859375
+    ],
+    [
+     " place",
+     -0.171875
+    ],
+    [
+     ".",
+     -0.384765625
+    ]
+   ],
+   "set": "C2",
+   "index": 7,
+   "phrase": "a boy raised on this street who still feels not from this place"
+  },
+  {
+   "text": "Several of the earlier sentences concerned strangers in the café who were obviously not from here.",
+   "max": 0.5546875,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " strangers",
+     -0.412109375
+    ],
+    [
+     " in",
+     -0.26953125
+    ],
+    [
+     " the",
+     -0.12890625
+    ],
+    [
+     " café",
+     -0.255859375
+    ],
+    [
+     " who",
+     -0.3359375
+    ],
+    [
+     " were",
+     -0.1953125
+    ],
+    [
+     " obviously",
+     -0.26171875
+    ],
+    [
+     " not",
+     -0.3125
+    ],
+    [
+     " from",
+     0.5546875
+    ],
+    [
+     " here",
+     -0.392578125
+    ],
+    [
+     ".",
+     -0.232421875
+    ]
+   ],
+   "set": "C2",
+   "index": 8,
+   "phrase": "strangers in the café who were obviously not from here"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the rumor that the doctor is not from here.",
+   "max": 1.0546875,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " rumor",
+     0.0218505859375
+    ],
+    [
+     " that",
+     0.62109375
+    ],
+    [
+     " the",
+     0.66796875
+    ],
+    [
+     " doctor",
+     -0.3046875
+    ],
+    [
+     " is",
+     0.4375
+    ],
+    [
+     " not",
+     -0.181640625
+    ],
+    [
+     " from",
+     1.0546875
+    ],
+    [
+     " here",
+     -0.34375
+    ],
+    [
+     ".",
+     -0.26171875
+    ]
+   ],
+   "set": "C2",
+   "index": 9,
+   "phrase": "the rumor that the doctor is not from here"
+  },
+  {
+   "text": "Several of the earlier sentences concerned students not from here who struggle to find housing.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " students",
+     -0.271484375
+    ],
+    [
+     " not",
+     -0.150390625
+    ],
+    [
+     " from",
+     -0.31640625
+    ],
+    [
+     " here",
+     -0.2333984375
+    ],
+    [
+     " who",
+     -0.279296875
+    ],
+    [
+     " struggle",
+     -0.1328125
+    ],
+    [
+     " to",
+     -0.26171875
+    ],
+    [
+     " find",
+     -0.37890625
+    ],
+    [
+     " housing",
+     -0.1650390625
+    ],
+    [
+     ".",
+     -0.255859375
+    ]
+   ],
+   "set": "C2",
+   "index": 10,
+   "phrase": "students not from here who struggle to find housing"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a farmer who was not from this place but married into it.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " farmer",
+     -0.375
+    ],
+    [
+     " who",
+     -0.40625
+    ],
+    [
+     " was",
+     -0.3828125
+    ],
+    [
+     " not",
+     -0.220703125
+    ],
+    [
+     " from",
+     -0.018798828125
+    ],
+    [
+     " this",
+     -0.375
+    ],
+    [
+     " place",
+     -0.38671875
+    ],
+    [
+     " but",
+     -0.384765625
+    ],
+    [
+     " married",
+     -0.30859375
+    ],
+    [
+     " into",
+     -0.248046875
+    ],
+    [
+     " it",
+     -0.154296875
+    ],
+    [
+     ".",
+     -0.1552734375
+    ]
+   ],
+   "set": "C2",
+   "index": 11,
+   "phrase": "a farmer who was not from this place but married into it"
+  },
+  {
+   "text": "Several of the earlier sentences concerned beings not from here who have lived on this street for decades.",
+   "max": 6.125,
+   "max_token": " who",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " beings",
+     1.65625
+    ],
+    [
+     " not",
+     0.455078125
+    ],
+    [
+     " from",
+     4.9375
+    ],
+    [
+     " here",
+     4.375
+    ],
+    [
+     " who",
+     6.125
+    ],
+    [
+     " have",
+     4.6875
+    ],
+    [
+     " lived",
+     1.8828125
+    ],
+    [
+     " on",
+     4.125
+    ],
+    [
+     " this",
+     2.5
+    ],
+    [
+     " street",
+     0.1083984375
+    ],
+    [
+     " for",
+     0.484375
+    ],
+    [
+     " decades",
+     -0.1376953125
+    ],
+    [
+     ".",
+     -0.107421875
+    ]
+   ],
+   "set": "C3",
+   "index": 0,
+   "phrase": "beings not from here who have lived on this street for decades"
+  },
+  {
+   "text": "Several of the earlier sentences concerned beings who are not from this place and need help finding the clinic.",
+   "max": 5.0625,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " beings",
+     1.65625
+    ],
+    [
+     " who",
+     0.306640625
+    ],
+    [
+     " are",
+     0.9140625
+    ],
+    [
+     " not",
+     0.6015625
+    ],
+    [
+     " from",
+     5.0625
+    ],
+    [
+     " this",
+     1.8515625
+    ],
+    [
+     " place",
+     3.09375
+    ],
+    [
+     " and",
+     4.40625
+    ],
+    [
+     " need",
+     0.54296875
+    ],
+    [
+     " help",
+     0.404296875
+    ],
+    [
+     " finding",
+     1.1015625
+    ],
+    [
+     " the",
+     1.625
+    ],
+    [
+     " clinic",
+     -0.328125
+    ],
+    [
+     ".",
+     1.203125
+    ]
+   ],
+   "set": "C3",
+   "index": 1,
+   "phrase": "beings who are not from this place and need help finding the clinic"
+  },
+  {
+   "text": "Several of the earlier sentences concerned those beings, not from here, who sell fruit at the market.",
+   "max": 12.1875,
+   "max_token": ",",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " those",
+     -0.189453125
+    ],
+    [
+     " beings",
+     2.265625
+    ],
+    [
+     ",",
+     0.61328125
+    ],
+    [
+     " not",
+     0.3515625
+    ],
+    [
+     " from",
+     3.09375
+    ],
+    [
+     " here",
+     2.53125
+    ],
+    [
+     ",",
+     12.1875
+    ],
+    [
+     " who",
+     1.9140625
+    ],
+    [
+     " sell",
+     0.07470703125
+    ],
+    [
+     " fruit",
+     -0.158203125
+    ],
+    [
+     " at",
+     0.27734375
+    ],
+    [
+     " the",
+     -0.1337890625
+    ],
+    [
+     " market",
+     -0.251953125
+    ],
+    [
+     ".",
+     -0.1533203125
+    ]
+   ],
+   "set": "C3",
+   "index": 2,
+   "phrase": "those beings, not from here, who sell fruit at the market"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the weary beings who say they are not from this place and want to go back.",
+   "max": 6.5,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " weary",
+     -0.37890625
+    ],
+    [
+     " beings",
+     1.34375
+    ],
+    [
+     " who",
+     -0.03369140625
+    ],
+    [
+     " say",
+     -0.248046875
+    ],
+    [
+     " they",
+     0.1484375
+    ],
+    [
+     " are",
+     1.15625
+    ],
+    [
+     " not",
+     0.103515625
+    ],
+    [
+     " from",
+     6.5
+    ],
+    [
+     " this",
+     1.9765625
+    ],
+    [
+     " place",
+     2.484375
+    ],
+    [
+     " and",
+     5.09375
+    ],
+    [
+     " want",
+     0.84375
+    ],
+    [
+     " to",
+     0.78515625
+    ],
+    [
+     " go",
+     2.0
+    ],
+    [
+     " back",
+     2.296875
+    ],
+    [
+     ".",
+     0.88671875
+    ]
+   ],
+   "set": "C3",
+   "index": 3,
+   "phrase": "the weary beings who say they are not from this place and want to go back"
+  },
+  {
+   "text": "Several of the earlier sentences concerned lonely beings who are not from here and eat alone at the diner.",
+   "max": 5.75,
+   "max_token": " and",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " lonely",
+     -0.1591796875
+    ],
+    [
+     " beings",
+     0.578125
+    ],
+    [
+     " who",
+     -0.1748046875
+    ],
+    [
+     " are",
+     0.2197265625
+    ],
+    [
+     " not",
+     0.016357421875
+    ],
+    [
+     " from",
+     4.15625
+    ],
+    [
+     " here",
+     3.921875
+    ],
+    [
+     " and",
+     5.75
+    ],
+    [
+     " eat",
+     1.2890625
+    ],
+    [
+     " alone",
+     0.294921875
+    ],
+    [
+     " at",
+     0.26171875
+    ],
+    [
+     " the",
+     -0.12060546875
+    ],
+    [
+     " diner",
+     -0.310546875
+    ],
+    [
+     ".",
+     -0.05419921875
+    ]
+   ],
+   "set": "C3",
+   "index": 4,
+   "phrase": "lonely beings who are not from here and eat alone at the diner"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the beings who are not from this place yet speak the local tongue flawlessly.",
+   "max": 5.0625,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " beings",
+     1.015625
+    ],
+    [
+     " who",
+     1.515625
+    ],
+    [
+     " are",
+     1.03125
+    ],
+    [
+     " not",
+     0.63671875
+    ],
+    [
+     " from",
+     5.0625
+    ],
+    [
+     " this",
+     1.9140625
+    ],
+    [
+     " place",
+     2.953125
+    ],
+    [
+     " yet",
+     0.53125
+    ],
+    [
+     " speak",
+     -0.083984375
+    ],
+    [
+     " the",
+     0.306640625
+    ],
+    [
+     " local",
+     0.58203125
+    ],
+    [
+     " tongue",
+     -0.2734375
+    ],
+    [
+     " flaw",
+     -0.06494140625
+    ],
+    [
+     "lessly",
+     -0.41015625
+    ],
+    [
+     ".",
+     0.451171875
+    ]
+   ],
+   "set": "C3",
+   "index": 5,
+   "phrase": "the beings who are not from this place yet speak the local tongue flawlessly"
+  },
+  {
+   "text": "Several of the earlier sentences concerned beings not from here who gather at the harbor to share news.",
+   "max": 6.125,
+   "max_token": " who",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " beings",
+     1.65625
+    ],
+    [
+     " not",
+     0.455078125
+    ],
+    [
+     " from",
+     4.9375
+    ],
+    [
+     " here",
+     4.375
+    ],
+    [
+     " who",
+     6.125
+    ],
+    [
+     " gather",
+     0.9765625
+    ],
+    [
+     " at",
+     1.2578125
+    ],
+    [
+     " the",
+     -0.11865234375
+    ],
+    [
+     " harbor",
+     -0.1748046875
+    ],
+    [
+     " to",
+     -0.1572265625
+    ],
+    [
+     " share",
+     -0.2451171875
+    ],
+    [
+     " news",
+     -0.08740234375
+    ],
+    [
+     ".",
+     1.21875
+    ]
+   ],
+   "set": "C3",
+   "index": 6,
+   "phrase": "beings not from here who gather at the harbor to share news"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the kind beings who welcomed us though we were not from here.",
+   "max": 3.265625,
+   "max_token": " here",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " kind",
+     -0.12158203125
+    ],
+    [
+     " beings",
+     1.78125
+    ],
+    [
+     " who",
+     0.94921875
+    ],
+    [
+     " welcomed",
+     0.0537109375
+    ],
+    [
+     " us",
+     0.02001953125
+    ],
+    [
+     " though",
+     -0.236328125
+    ],
+    [
+     " we",
+     -0.1796875
+    ],
+    [
+     " were",
+     -0.049560546875
+    ],
+    [
+     " not",
+     -0.14453125
+    ],
+    [
+     " from",
+     2.140625
+    ],
+    [
+     " here",
+     3.265625
+    ],
+    [
+     ".",
+     1.9140625
+    ]
+   ],
+   "set": "C3",
+   "index": 7,
+   "phrase": "the kind beings who welcomed us though we were not from here"
+  },
+  {
+   "text": "Several of the earlier sentences concerned beings who are plainly not from here, going by their coats.",
+   "max": 17.75,
+   "max_token": ",",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " beings",
+     1.65625
+    ],
+    [
+     " who",
+     0.306640625
+    ],
+    [
+     " are",
+     0.9140625
+    ],
+    [
+     " plainly",
+     -0.004669189453125
+    ],
+    [
+     " not",
+     0.8671875
+    ],
+    [
+     " from",
+     7.3125
+    ],
+    [
+     " here",
+     5.1875
+    ],
+    [
+     ",",
+     17.75
+    ],
+    [
+     " going",
+     2.71875
+    ],
+    [
+     " by",
+     2.953125
+    ],
+    [
+     " their",
+     5.53125
+    ],
+    [
+     " coats",
+     -0.080078125
+    ],
+    [
+     ".",
+     0.30078125
+    ]
+   ],
+   "set": "C3",
+   "index": 8,
+   "phrase": "beings who are plainly not from here, going by their coats"
+  },
+  {
+   "text": "Several of the earlier sentences concerned all the beings who admit they are not from this place when the nurse inquires.",
+   "max": 9.5625,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " all",
+     -0.205078125
+    ],
+    [
+     " the",
+     -0.158203125
+    ],
+    [
+     " beings",
+     1.03125
+    ],
+    [
+     " who",
+     0.10302734375
+    ],
+    [
+     " admit",
+     0.5234375
+    ],
+    [
+     " they",
+     1.140625
+    ],
+    [
+     " are",
+     3.5625
+    ],
+    [
+     " not",
+     0.734375
+    ],
+    [
+     " from",
+     9.5625
+    ],
+    [
+     " this",
+     3.40625
+    ],
+    [
+     " place",
+     4.71875
+    ],
+    [
+     " when",
+     2.609375
+    ],
+    [
+     " the",
+     3.28125
+    ],
+    [
+     " nurse",
+     -0.09765625
+    ],
+    [
+     " in",
+     0.12060546875
+    ],
+    [
+     "quires",
+     -0.271484375
+    ],
+    [
+     ".",
+     -0.2138671875
+    ]
+   ],
+   "set": "C3",
+   "index": 9,
+   "phrase": "all the beings who admit they are not from this place when the nurse inquires"
+  },
+  {
+   "text": "Several of the earlier sentences concerned beings who are not from here and pay higher rents than the locals.",
+   "max": 7.34375,
+   "max_token": ".",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " beings",
+     1.65625
+    ],
+    [
+     " who",
+     0.306640625
+    ],
+    [
+     " are",
+     0.9140625
+    ],
+    [
+     " not",
+     0.6015625
+    ],
+    [
+     " from",
+     5.0625
+    ],
+    [
+     " here",
+     4.375
+    ],
+    [
+     " and",
+     6.0625
+    ],
+    [
+     " pay",
+     0.33203125
+    ],
+    [
+     " higher",
+     0.6953125
+    ],
+    [
+     " rents",
+     0.51953125
+    ],
+    [
+     " than",
+     0.6640625
+    ],
+    [
+     " the",
+     -0.02587890625
+    ],
+    [
+     " locals",
+     0.150390625
+    ],
+    [
+     ".",
+     7.34375
+    ]
+   ],
+   "set": "C3",
+   "index": 10,
+   "phrase": "beings who are not from here and pay higher rents than the locals"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the shy beings in the back row who are not from here.",
+   "max": 4.25,
+   "max_token": " beings",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " shy",
+     -0.203125
+    ],
+    [
+     " beings",
+     4.25
+    ],
+    [
+     " in",
+     2.53125
+    ],
+    [
+     " the",
+     0.4140625
+    ],
+    [
+     " back",
+     -0.057373046875
+    ],
+    [
+     " row",
+     -0.361328125
+    ],
+    [
+     " who",
+     -0.1484375
+    ],
+    [
+     " are",
+     0.73046875
+    ],
+    [
+     " not",
+     0.4140625
+    ],
+    [
+     " from",
+     3.0625
+    ],
+    [
+     " here",
+     0.91796875
+    ],
+    [
+     ".",
+     -0.032958984375
+    ]
+   ],
+   "set": "C3",
+   "index": 11,
+   "phrase": "the shy beings in the back row who are not from here"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the oldest trees on earth.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " oldest",
+     -0.2734375
+    ],
+    [
+     " trees",
+     -0.44921875
+    ],
+    [
+     " on",
+     -0.1826171875
+    ],
+    [
+     " earth",
+     -0.00191497802734375
+    ],
+    [
+     ".",
+     -0.1982421875
+    ]
+   ],
+   "set": "C4",
+   "index": 0,
+   "phrase": "the oldest trees on earth"
+  },
+  {
+   "text": "Several of the earlier sentences concerned rich dark earth for growing tomatoes.",
+   "max": 0.05029296875,
+   "max_token": " rich",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " rich",
+     0.05029296875
+    ],
+    [
+     " dark",
+     0.00103759765625
+    ],
+    [
+     " earth",
+     -0.0908203125
+    ],
+    [
+     " for",
+     -0.1767578125
+    ],
+    [
+     " growing",
+     -0.33984375
+    ],
+    [
+     " tomatoes",
+     -0.2216796875
+    ],
+    [
+     ".",
+     -0.00933837890625
+    ]
+   ],
+   "set": "C4",
+   "index": 1,
+   "phrase": "rich dark earth for growing tomatoes"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the deepest lakes on earth.",
+   "max": 0.234375,
+   "max_token": " on",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " deepest",
+     0.07763671875
+    ],
+    [
+     " lakes",
+     -0.28515625
+    ],
+    [
+     " on",
+     0.234375
+    ],
+    [
+     " earth",
+     -0.0712890625
+    ],
+    [
+     ".",
+     -0.1640625
+    ]
+   ],
+   "set": "C4",
+   "index": 2,
+   "phrase": "the deepest lakes on earth"
+  },
+  {
+   "text": "Several of the earlier sentences concerned loose damp earth packed around the roots.",
+   "max": 0.458984375,
+   "max_token": " earth",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " loose",
+     -0.042236328125
+    ],
+    [
+     " damp",
+     0.002105712890625
+    ],
+    [
+     " earth",
+     0.458984375
+    ],
+    [
+     " packed",
+     -0.1181640625
+    ],
+    [
+     " around",
+     -0.232421875
+    ],
+    [
+     " the",
+     -0.09619140625
+    ],
+    [
+     " roots",
+     -0.2197265625
+    ],
+    [
+     ".",
+     -0.134765625
+    ]
+   ],
+   "set": "C4",
+   "index": 3,
+   "phrase": "loose damp earth packed around the roots"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a shovel full of wet earth.",
+   "max": 0.220703125,
+   "max_token": " earth",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " shovel",
+     -0.0693359375
+    ],
+    [
+     " full",
+     -0.1494140625
+    ],
+    [
+     " of",
+     -0.06884765625
+    ],
+    [
+     " wet",
+     -0.10693359375
+    ],
+    [
+     " earth",
+     0.220703125
+    ],
+    [
+     ".",
+     -0.1337890625
+    ]
+   ],
+   "set": "C4",
+   "index": 4,
+   "phrase": "a shovel full of wet earth"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the earth beneath the old oak tree.",
+   "max": 0.7890625,
+   "max_token": " earth",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " earth",
+     0.7890625
+    ],
+    [
+     " beneath",
+     0.55078125
+    ],
+    [
+     " the",
+     0.166015625
+    ],
+    [
+     " old",
+     -0.13671875
+    ],
+    [
+     " oak",
+     -0.4453125
+    ],
+    [
+     " tree",
+     -0.330078125
+    ],
+    [
+     ".",
+     -0.11083984375
+    ]
+   ],
+   "set": "C4",
+   "index": 5,
+   "phrase": "the earth beneath the old oak tree"
+  },
+  {
+   "text": "Several of the earlier sentences concerned earth mixed with sand and crushed shells.",
+   "max": 0.82421875,
+   "max_token": " earth",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " earth",
+     0.82421875
+    ],
+    [
+     " mixed",
+     -0.0703125
+    ],
+    [
+     " with",
+     0.09521484375
+    ],
+    [
+     " sand",
+     -0.1240234375
+    ],
+    [
+     " and",
+     -0.1630859375
+    ],
+    [
+     " crushed",
+     -0.09423828125
+    ],
+    [
+     " shells",
+     -0.0712890625
+    ],
+    [
+     ".",
+     -0.07373046875
+    ]
+   ],
+   "set": "C4",
+   "index": 6,
+   "phrase": "earth mixed with sand and crushed shells"
+  },
+  {
+   "text": "Several of the earlier sentences concerned freshly dug earth by the fence.",
+   "max": 0.388671875,
+   "max_token": " earth",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " freshly",
+     -0.126953125
+    ],
+    [
+     " dug",
+     -0.216796875
+    ],
+    [
+     " earth",
+     0.388671875
+    ],
+    [
+     " by",
+     -0.06787109375
+    ],
+    [
+     " the",
+     -0.1376953125
+    ],
+    [
+     " fence",
+     -0.265625
+    ],
+    [
+     ".",
+     -0.162109375
+    ]
+   ],
+   "set": "C4",
+   "index": 7,
+   "phrase": "freshly dug earth by the fence"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the earth in the flowerpots on the porch.",
+   "max": 0.7890625,
+   "max_token": " earth",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " earth",
+     0.7890625
+    ],
+    [
+     " in",
+     0.7734375
+    ],
+    [
+     " the",
+     0.5078125
+    ],
+    [
+     " flower",
+     -0.27734375
+    ],
+    [
+     "p",
+     -0.1484375
+    ],
+    [
+     "ots",
+     -0.30859375
+    ],
+    [
+     " on",
+     0.44140625
+    ],
+    [
+     " the",
+     -0.1552734375
+    ],
+    [
+     " porch",
+     -0.34375
+    ],
+    [
+     ".",
+     -0.109375
+    ]
+   ],
+   "set": "C4",
+   "index": 8,
+   "phrase": "the earth in the flowerpots on the porch"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the largest rainforests on earth.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " largest",
+     -0.045654296875
+    ],
+    [
+     " rain",
+     -0.1650390625
+    ],
+    [
+     "fore",
+     -0.482421875
+    ],
+    [
+     "sts",
+     -0.3984375
+    ],
+    [
+     " on",
+     -0.2734375
+    ],
+    [
+     " earth",
+     -0.25
+    ],
+    [
+     ".",
+     -0.171875
+    ]
+   ],
+   "set": "C4",
+   "index": 9,
+   "phrase": "the largest rainforests on earth"
+  },
+  {
+   "text": "Several of the earlier sentences concerned heavy earth clinging to the boots.",
+   "max": 0.248046875,
+   "max_token": " to",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " heavy",
+     -0.10693359375
+    ],
+    [
+     " earth",
+     0.15234375
+    ],
+    [
+     " clinging",
+     0.0021209716796875
+    ],
+    [
+     " to",
+     0.248046875
+    ],
+    [
+     " the",
+     -0.0011444091796875
+    ],
+    [
+     " boots",
+     -0.1552734375
+    ],
+    [
+     ".",
+     -0.08203125
+    ]
+   ],
+   "set": "C4",
+   "index": 10,
+   "phrase": "heavy earth clinging to the boots"
+  },
+  {
+   "text": "Several of the earlier sentences concerned a mound of earth beside the shed.",
+   "max": 0.29296875,
+   "max_token": " earth",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " a",
+     -0.18359375
+    ],
+    [
+     " mound",
+     0.0181884765625
+    ],
+    [
+     " of",
+     -0.0174560546875
+    ],
+    [
+     " earth",
+     0.29296875
+    ],
+    [
+     " beside",
+     -0.220703125
+    ],
+    [
+     " the",
+     -0.12890625
+    ],
+    [
+     " shed",
+     -0.2734375
+    ],
+    [
+     ".",
+     -0.140625
+    ]
+   ],
+   "set": "C4",
+   "index": 11,
+   "phrase": "a mound of earth beside the shed"
+  },
+  {
+   "text": "Several of the earlier sentences concerned people not from here who have lived on this street for decades.",
+   "max": 0.1357421875,
+   "max_token": " this",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " people",
+     -0.2451171875
+    ],
+    [
+     " not",
+     -0.1884765625
+    ],
+    [
+     " from",
+     -0.1484375
+    ],
+    [
+     " here",
+     -0.30078125
+    ],
+    [
+     " who",
+     -0.3828125
+    ],
+    [
+     " have",
+     -0.28515625
+    ],
+    [
+     " lived",
+     -0.1806640625
+    ],
+    [
+     " on",
+     0.040283203125
+    ],
+    [
+     " this",
+     0.1357421875
+    ],
+    [
+     " street",
+     -0.2177734375
+    ],
+    [
+     " for",
+     -0.3125
+    ],
+    [
+     " decades",
+     -0.30078125
+    ],
+    [
+     ".",
+     -0.2421875
+    ]
+   ],
+   "set": "C3-bare",
+   "index": 0,
+   "phrase": "people not from here who have lived on this street for decades"
+  },
+  {
+   "text": "Several of the earlier sentences concerned people who are not from this place and need help finding the clinic.",
+   "max": 0.357421875,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " people",
+     -0.2451171875
+    ],
+    [
+     " who",
+     -0.24609375
+    ],
+    [
+     " are",
+     -0.1513671875
+    ],
+    [
+     " not",
+     -0.2177734375
+    ],
+    [
+     " from",
+     0.357421875
+    ],
+    [
+     " this",
+     -0.20703125
+    ],
+    [
+     " place",
+     -0.318359375
+    ],
+    [
+     " and",
+     -0.318359375
+    ],
+    [
+     " need",
+     -0.1787109375
+    ],
+    [
+     " help",
+     -0.255859375
+    ],
+    [
+     " finding",
+     -0.416015625
+    ],
+    [
+     " the",
+     -0.3203125
+    ],
+    [
+     " clinic",
+     -0.234375
+    ],
+    [
+     ".",
+     -0.400390625
+    ]
+   ],
+   "set": "C3-bare",
+   "index": 1,
+   "phrase": "people who are not from this place and need help finding the clinic"
+  },
+  {
+   "text": "Several of the earlier sentences concerned those people, not from here, who sell fruit at the market.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " those",
+     -0.189453125
+    ],
+    [
+     " people",
+     -0.26953125
+    ],
+    [
+     ",",
+     -0.220703125
+    ],
+    [
+     " not",
+     -0.294921875
+    ],
+    [
+     " from",
+     -0.1796875
+    ],
+    [
+     " here",
+     -0.3359375
+    ],
+    [
+     ",",
+     -0.4296875
+    ],
+    [
+     " who",
+     -0.28125
+    ],
+    [
+     " sell",
+     -0.3203125
+    ],
+    [
+     " fruit",
+     -0.375
+    ],
+    [
+     " at",
+     -0.322265625
+    ],
+    [
+     " the",
+     -0.15625
+    ],
+    [
+     " market",
+     -0.404296875
+    ],
+    [
+     ".",
+     -0.19921875
+    ]
+   ],
+   "set": "C3-bare",
+   "index": 2,
+   "phrase": "those people, not from here, who sell fruit at the market"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the weary people who say they are not from this place and want to go back.",
+   "max": 2.125,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " weary",
+     -0.37890625
+    ],
+    [
+     " people",
+     -0.375
+    ],
+    [
+     " who",
+     -0.32421875
+    ],
+    [
+     " say",
+     -0.2490234375
+    ],
+    [
+     " they",
+     -0.259765625
+    ],
+    [
+     " are",
+     -0.1025390625
+    ],
+    [
+     " not",
+     -0.162109375
+    ],
+    [
+     " from",
+     2.125
+    ],
+    [
+     " this",
+     0.05517578125
+    ],
+    [
+     " place",
+     -0.11328125
+    ],
+    [
+     " and",
+     -0.1240234375
+    ],
+    [
+     " want",
+     0.015869140625
+    ],
+    [
+     " to",
+     -0.0654296875
+    ],
+    [
+     " go",
+     0.033447265625
+    ],
+    [
+     " back",
+     0.306640625
+    ],
+    [
+     ".",
+     -0.361328125
+    ]
+   ],
+   "set": "C3-bare",
+   "index": 3,
+   "phrase": "the weary people who say they are not from this place and want to go back"
+  },
+  {
+   "text": "Several of the earlier sentences concerned lonely people who are not from here and eat alone at the diner.",
+   "max": 1.0390625,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " lonely",
+     -0.1591796875
+    ],
+    [
+     " people",
+     -0.384765625
+    ],
+    [
+     " who",
+     -0.294921875
+    ],
+    [
+     " are",
+     -0.255859375
+    ],
+    [
+     " not",
+     -0.240234375
+    ],
+    [
+     " from",
+     1.0390625
+    ],
+    [
+     " here",
+     -0.333984375
+    ],
+    [
+     " and",
+     -0.314453125
+    ],
+    [
+     " eat",
+     -0.28125
+    ],
+    [
+     " alone",
+     -0.23828125
+    ],
+    [
+     " at",
+     -0.2734375
+    ],
+    [
+     " the",
+     -0.134765625
+    ],
+    [
+     " diner",
+     -0.291015625
+    ],
+    [
+     ".",
+     -0.220703125
+    ]
+   ],
+   "set": "C3-bare",
+   "index": 4,
+   "phrase": "lonely people who are not from here and eat alone at the diner"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the people who are not from this place yet speak the local tongue flawlessly.",
+   "max": 0.50390625,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " people",
+     -0.279296875
+    ],
+    [
+     " who",
+     -0.326171875
+    ],
+    [
+     " are",
+     -0.26953125
+    ],
+    [
+     " not",
+     -0.16796875
+    ],
+    [
+     " from",
+     0.50390625
+    ],
+    [
+     " this",
+     -0.19140625
+    ],
+    [
+     " place",
+     -0.31640625
+    ],
+    [
+     " yet",
+     -0.1611328125
+    ],
+    [
+     " speak",
+     -0.30078125
+    ],
+    [
+     " the",
+     -0.43359375
+    ],
+    [
+     " local",
+     -0.26171875
+    ],
+    [
+     " tongue",
+     -0.296875
+    ],
+    [
+     " flaw",
+     -0.078125
+    ],
+    [
+     "lessly",
+     -0.330078125
+    ],
+    [
+     ".",
+     -0.38671875
+    ]
+   ],
+   "set": "C3-bare",
+   "index": 5,
+   "phrase": "the people who are not from this place yet speak the local tongue flawlessly"
+  },
+  {
+   "text": "Several of the earlier sentences concerned people not from here who gather at the harbor to share news.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " people",
+     -0.2451171875
+    ],
+    [
+     " not",
+     -0.1884765625
+    ],
+    [
+     " from",
+     -0.1484375
+    ],
+    [
+     " here",
+     -0.30078125
+    ],
+    [
+     " who",
+     -0.3828125
+    ],
+    [
+     " gather",
+     -0.279296875
+    ],
+    [
+     " at",
+     -0.23046875
+    ],
+    [
+     " the",
+     -0.140625
+    ],
+    [
+     " harbor",
+     -0.171875
+    ],
+    [
+     " to",
+     -0.2578125
+    ],
+    [
+     " share",
+     -0.220703125
+    ],
+    [
+     " news",
+     -0.2470703125
+    ],
+    [
+     ".",
+     -0.2890625
+    ]
+   ],
+   "set": "C3-bare",
+   "index": 6,
+   "phrase": "people not from here who gather at the harbor to share news"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the kind people who welcomed us though we were not from here.",
+   "max": 0.04345703125,
+   "max_token": " sentences",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " kind",
+     -0.12158203125
+    ],
+    [
+     " people",
+     -0.375
+    ],
+    [
+     " who",
+     -0.369140625
+    ],
+    [
+     " welcomed",
+     -0.130859375
+    ],
+    [
+     " us",
+     -0.384765625
+    ],
+    [
+     " though",
+     -0.265625
+    ],
+    [
+     " we",
+     -0.1826171875
+    ],
+    [
+     " were",
+     -0.263671875
+    ],
+    [
+     " not",
+     -0.259765625
+    ],
+    [
+     " from",
+     -0.06884765625
+    ],
+    [
+     " here",
+     -0.3046875
+    ],
+    [
+     ".",
+     -0.2158203125
+    ]
+   ],
+   "set": "C3-bare",
+   "index": 7,
+   "phrase": "the kind people who welcomed us though we were not from here"
+  },
+  {
+   "text": "Several of the earlier sentences concerned people who are plainly not from here, going by their coats.",
+   "max": 1.3359375,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " people",
+     -0.2451171875
+    ],
+    [
+     " who",
+     -0.24609375
+    ],
+    [
+     " are",
+     -0.1513671875
+    ],
+    [
+     " plainly",
+     -0.119140625
+    ],
+    [
+     " not",
+     -0.09423828125
+    ],
+    [
+     " from",
+     1.3359375
+    ],
+    [
+     " here",
+     -0.1826171875
+    ],
+    [
+     ",",
+     0.1923828125
+    ],
+    [
+     " going",
+     -0.373046875
+    ],
+    [
+     " by",
+     -0.3671875
+    ],
+    [
+     " their",
+     -0.380859375
+    ],
+    [
+     " coats",
+     -0.2314453125
+    ],
+    [
+     ".",
+     -0.357421875
+    ]
+   ],
+   "set": "C3-bare",
+   "index": 8,
+   "phrase": "people who are plainly not from here, going by their coats"
+  },
+  {
+   "text": "Several of the earlier sentences concerned all the people who admit they are not from this place when the nurse inquires.",
+   "max": 2.609375,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " all",
+     -0.205078125
+    ],
+    [
+     " the",
+     -0.158203125
+    ],
+    [
+     " people",
+     -0.283203125
+    ],
+    [
+     " who",
+     -0.30078125
+    ],
+    [
+     " admit",
+     -0.05517578125
+    ],
+    [
+     " they",
+     0.09814453125
+    ],
+    [
+     " are",
+     0.4296875
+    ],
+    [
+     " not",
+     -0.2041015625
+    ],
+    [
+     " from",
+     2.609375
+    ],
+    [
+     " this",
+     0.330078125
+    ],
+    [
+     " place",
+     -0.07275390625
+    ],
+    [
+     " when",
+     -0.2578125
+    ],
+    [
+     " the",
+     -0.294921875
+    ],
+    [
+     " nurse",
+     -0.33203125
+    ],
+    [
+     " in",
+     -0.30859375
+    ],
+    [
+     "quires",
+     -0.314453125
+    ],
+    [
+     ".",
+     -0.291015625
+    ]
+   ],
+   "set": "C3-bare",
+   "index": 9,
+   "phrase": "all the people who admit they are not from this place when the nurse inquires"
+  },
+  {
+   "text": "Several of the earlier sentences concerned people who are not from here and pay higher rents than the locals.",
+   "max": 0.357421875,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " people",
+     -0.2451171875
+    ],
+    [
+     " who",
+     -0.24609375
+    ],
+    [
+     " are",
+     -0.1513671875
+    ],
+    [
+     " not",
+     -0.2177734375
+    ],
+    [
+     " from",
+     0.357421875
+    ],
+    [
+     " here",
+     -0.314453125
+    ],
+    [
+     " and",
+     -0.267578125
+    ],
+    [
+     " pay",
+     -0.34765625
+    ],
+    [
+     " higher",
+     -0.376953125
+    ],
+    [
+     " rents",
+     -0.267578125
+    ],
+    [
+     " than",
+     -0.1904296875
+    ],
+    [
+     " the",
+     -0.177734375
+    ],
+    [
+     " locals",
+     -0.2177734375
+    ],
+    [
+     ".",
+     -0.337890625
+    ]
+   ],
+   "set": "C3-bare",
+   "index": 10,
+   "phrase": "people who are not from here and pay higher rents than the locals"
+  },
+  {
+   "text": "Several of the earlier sentences concerned the shy people in the back row who are not from here.",
+   "max": 0.60546875,
+   "max_token": " from",
+   "per_token": [
+    [
+     "Several",
+     -0.06591796875
+    ],
+    [
+     " of",
+     -0.08740234375
+    ],
+    [
+     " the",
+     -0.0556640625
+    ],
+    [
+     " earlier",
+     -0.279296875
+    ],
+    [
+     " sentences",
+     0.04345703125
+    ],
+    [
+     " concerned",
+     -0.1240234375
+    ],
+    [
+     " the",
+     -0.0810546875
+    ],
+    [
+     " shy",
+     -0.203125
+    ],
+    [
+     " people",
+     -0.44140625
+    ],
+    [
+     " in",
+     -0.12890625
+    ],
+    [
+     " the",
+     -0.2216796875
+    ],
+    [
+     " back",
+     -0.24609375
+    ],
+    [
+     " row",
+     -0.3984375
+    ],
+    [
+     " who",
+     -0.267578125
+    ],
+    [
+     " are",
+     -0.0013580322265625
+    ],
+    [
+     " not",
+     -0.046142578125
+    ],
+    [
+     " from",
+     0.60546875
+    ],
+    [
+     " here",
+     -0.400390625
+    ],
+    [
+     ".",
+     -0.2294921875
+    ]
+   ],
+   "set": "C3-bare",
+   "index": 11,
+   "phrase": "the shy people in the back row who are not from here"
+  }
+ ],
+ "summary": {
+  "mean_max_by_set": {
+   "E": 6.148111979166667,
+   "E-map": 1.597747802734375,
+   "D": 0.07643636067708333,
+   "U": 0.4482828776041667,
+   "C1": 1.1213785807291667,
+   "C2": 0.3208821614583333,
+   "C3": 7.415364583333333,
+   "C4": 0.3652750651041667,
+   "C3-bare": 0.7666422526041666
+  },
+  "n_by_set": {
+   "E": 24,
+   "E-map": 24,
+   "D": 24,
+   "U": 24,
+   "C1": 12,
+   "C2": 12,
+   "C3": 12,
+   "C4": 12,
+   "C3-bare": 12
+  },
+  "self_check": "filler documents, 20d reference and 20e beings arm reproduced"
+ }
+}

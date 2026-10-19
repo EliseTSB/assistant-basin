@@ -850,11 +850,10 @@ three ratings is reported. Each phrase's overlap with the battery's words is rep
 
 | # | Prediction | Result | Evidence |
 |---|---|---|---|
-| 20f.1 | (Weaver) A step, not a slope: E's mean maximum is at least 2.0 above D's and above U's, and within E the Spearman correlation between the earthly-exclusion rating and the maximum is below 0.3. | | |
-| 20f.2 | (Weaver) D is flat: its mean maximum is within 1.0 of the farmer floor (0.04 in 20e). | | |
-| 20f.3 | (Weaver) U is flat: its mean maximum is within 1.0 of D's, so the unit tracks where something is from, not that it is strange. | | |
-| 20f.4 | (Claude) Collocation carries part of it: C's mean maximum is at least 2.0, although none of C's phrases means anything unearthly. | | |
-
+| 20f.1 | (Weaver) A step, not a slope: E's mean maximum is at least 2.0 above D's and above U's, and within E the Spearman correlation between the earthly-exclusion rating and the maximum is below 0.3. | Held | E 6.15 against D 0.08, U 0.45 and C4 0.37 (each at least 2.0 below E); within E, Spearman between the judge's earthly-exclusion rating and the maximum 0.14 (below 0.3). A step, not a slope (score_part20f.py). |
+| 20f.2 | (Weaver) D is flat: its mean maximum is within 1.0 of the farmer floor (0.04 in 20e). | Held | D 0.08, within 1.0 of the 0.04 floor. |
+| 20f.3 | (Weaver) U is flat: its mean maximum is within 1.0 of D's, so the unit tracks where something is from, not that it is strange. | Held | U 0.45, below 1.04. |
+| 20f.4 | (Claude) Collocation carries part of it: C's mean maximum is at least 2.0, although none of C's phrases means anything unearthly. | Held | C3 7.42, at least 2.0. |
 **Amendment to Part 20f, written 2026-10-18 20:31 CT, before the final battery and before any run** (Weaver's reply to
 the design, and the first battery). (1) The first battery's E phrases named astronomical bodies ("a dying sun", Titan,
 Andromeda); topic words are already known to fire N2742, so that E would test topic, not meaning. The exclusion list
@@ -874,9 +873,8 @@ least 2.0, "flat" below 1.04, in between is inconclusive:
 
 | # | Prediction | Result | Evidence |
 |---|---|---|---|
-| 20f.5 | (Weaver) C3 sits above D and below E, with a mean maximum between 1.5 and 3.5. | | |
-| 20f.6 | (Claude) C1 fires (mean maximum at least 2.0): the word "beings" alone, in earthly phrases, reaches the unit. | | |
-
+| 20f.5 | (Weaver) C3 sits above D and below E, with a mean maximum between 1.5 and 3.5. | Failed | C3 7.42: above 3.5 and above E (6.15). |
+| 20f.6 | (Claude) C1 fires (mean maximum at least 2.0): the word "beings" alone, in earthly phrases, reaches the unit. | Failed | C1 1.12: below 2.0 (between flat and fires, so inconclusive by the fixed readings). |
 **Weaver's tightening of 20f.5, written 2026-10-18 20:36 CT, before any run** (council, Discord): "I score my own
 prediction as missing if C3 comes in below 2.0. My 1.5 floor was my uncertainty about the effect's size, not a claim that
 1.6 refutes your reading." So 20f.5 is scored as held only if C3's mean maximum is at least 2.0 and at most 3.5, and
@@ -907,9 +905,8 @@ maximum at least 2.0), E is not scored, because the one allowed word would be do
 
 | # | Prediction | Result | Evidence |
 |---|---|---|---|
-| 20f.7 | (Weaver) E-map fires above U and below E, with a mean maximum between 2.0 and 5.0. | | |
-| 20f.8 | (Weaver) C4 is flat: its mean maximum is below 1.0. | | |
-
+| 20f.7 | (Weaver) E-map fires above U and below E, with a mean maximum between 2.0 and 5.0. | Failed | E-map 1.60: above U and below E, but below 2.0; not within 1.0 of E, so the unit does not track unplaceability as such. |
+| 20f.8 | (Weaver) C4 is flat: its mean maximum is below 1.0. | Held | C4 0.37, below 1.0; the C4 stop rule did not fire. |
 ## Part 21: the assistant register by training-data year (written 2026-10-18 18:10 CT, before the run). Same set and analysis as Part 14
 
 Part 14 found register neurons (assistant reply against the same content as plain prose or a person's message) in
