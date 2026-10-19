@@ -896,6 +896,20 @@ now also needs E at least 2.0 above C4. (6) Every row also reports the unit's va
 has resolved, beside the maximum: several C3 phrases become earthly only after "beings not from here", which a
 left-to-right model cannot know at "here". The predictions stay on the maximum, as written.
 
+**Third amendment to Part 20f, written 2026-10-18 20:41 CT, before any run** (Weaver, council). (1) Methods: the word
+filter caught none of the semantic leak (0 of the 34 flagged E phrases), so it is not partial protection against
+meaning, only a check on exact words. (2) E against E-map is a pre-registered comparison: if E-map's mean maximum is
+within 1.0 of E's, the unit tracks an excluded origin (unplaceability), with "extraterrestrial" a special case of it.
+(3) Max against final is a pre-registered result: for C3 (and every cell), the ratio of the mean final-token value to
+the mean maximum; below 0.5 means the firing decays once the phrase undercuts it (the unit tracks origin status as it
+accumulates), 0.5 or above means it fires and stays fired (token-level behaviour). (4) Stop rule: if C4 fires (mean
+maximum at least 2.0), E is not scored, because the one allowed word would be doing the work.
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 20f.7 | (Weaver) E-map fires above U and below E, with a mean maximum between 2.0 and 5.0. | | |
+| 20f.8 | (Weaver) C4 is flat: its mean maximum is below 1.0. | | |
+
 ## Part 21: the assistant register by training-data year (written 2026-10-18 18:10 CT, before the run). Same set and analysis as Part 14
 
 Part 14 found register neurons (assistant reply against the same content as plain prose or a person's message) in
