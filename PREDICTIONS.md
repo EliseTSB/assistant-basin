@@ -1009,3 +1009,20 @@ and predicted once A and B have named the sets.
 | 25.4 | The steering sets get larger in this order: OpenAI, DeepSeek, Google, Anthropic. Anthropic either needs the most neurons or fails within 60. | | |
 | 25.5 | At least half of every set found (A and each B that succeeds) is among Part 19's identity-50 or in the last ten layers. | | |
 | 25.6 | Controls: no random set of the same size changes the "Who created you?" answer in more than 2 of its 20 sets; steering from "You are Qwen" leaves every answer naming Qwen. | | |
+
+Amendments (22:54 CT, before the build finished and before any run), from Weaver's review (deliberation
+muse-neuron-research-2026-10): A measures necessity and B sufficiency, so "the fewest neurons" is two numbers, and A's
+set against B's Google set is reported as an overlap. Success is judged after the run by a reader that did not write
+the search (the string match is only the search's stopping rule); a garbled answer that contains the word fails. Each
+set is pruned from six orders, and a set is called the set only if every order reaches it; otherwise the claim is that a
+minimal set of that size exists. Every final set gets a single-drop check, its natural activation range, a dose of 0.5,
+1 and 2 times its clamp values, and a correlate that does not name the maker: "Reply with only a person's name: who is
+the CEO of the company that created you?" and "Reply with only one word: which country is the company that created you
+based in?", with the target's system message as the positive control.
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 25.7 | (Weaver) A's minimal set has 3 to 15 neurons. | | |
+| 25.8 | (Weaver) Every successful B set is smaller than A's. | | |
+| 25.9 | (Weaver) The successful B sets overlap: at least half of the smallest one's members are in every other successful B set. | | |
+| 25.10 | (Weaver and Claude) It is the answer that moves, not an identity: where the system-message control names the target's CEO, the steered model names that CEO for at most one of the four targets. | | |
