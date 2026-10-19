@@ -1057,7 +1057,7 @@ hallucination) found from contrastive prompts, used to monitor and steer. Wei et
 (Findings of ACL 2026, unchecked): neuron-level persona traits. None looks for the fewest neurons that change a model's
 stated maker; the closest work is direction-level, about traits or authorship.
 
-Build note for Part 25 (2026-10-19 04:5x CT, during the run, no result read): a search that reaches the 60-member cap
+Build note for Part 25 (2026-10-19 04:41 CT, during the run, no result read): a search that reaches the 60-member cap
 without success now skips backward pruning (nothing can be dropped while success never holds); the five shuffled prunes
 had cost about an hour of greedy generations on the A770 for the failed openai search. The searches already run and
 their results are unchanged. 15/15 tests.
