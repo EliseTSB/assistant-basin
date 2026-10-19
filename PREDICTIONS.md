@@ -767,6 +767,14 @@ summary's tokens in c).
 | 20.5 | Control: N2742's max over the filler alone is at most 0.1 of (a)'s mean. | Failed | filler alone reaches 9.31 = 0.62 of (a)'s mean (needed at most 0.1). A max over 4,133 tokens is not a comparable baseline for a max over one word, an error in the prediction's design; the summary's 9.81 is not separable from it in this run |
 
 
+
+Weaver's own predictions for these cells (council muse-neuron-research-2026-10 #19, 17:40 CT, before the run), recorded
+as Weaver's at their request: the identity clamp "holds to float exactness at a single position; at many positions it
+may drift": no drift at either (20.1). (b) "attenuated but not dead": failed, 1.19 of local after Part 20's filler and
+1.04 after 20d's screened filler. On the concept reading, (c)'s activation "well below (d)'s": failed, 12.44 after the
+screened filler against group d's local mean of 11.93; on the lexical reading, (c) "flat zero": also failed. The summary
+carries the concept in its own words ("another world"), so it behaves like a group-d sentence at distance (20c, 20d).
+
 ## Part 20c: where the filler's 9.3 comes from, and a matched summary (written 2026-10-18 19:05 CT, before the run)
 
 Part 20's summary cell was ambiguous because the filler alone reached 9.31 somewhere in its 4,133 tokens, and the row
