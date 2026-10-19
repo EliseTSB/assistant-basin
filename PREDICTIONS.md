@@ -809,6 +809,30 @@ Self-check: the six sentences' local values must equal Part 20's (14.0625, 22.87
 | 20d.3 | "Villagers reported that the alien had visited the same field twice." stays below 14 after the screened filler (it reached 21.5 after Part 20's filler and 7.44 alone). | Failed | 17.25 after the screened filler (7.44 alone, 21.5 after Part 20's filler). The rise does not come from the sci-fi passage; this sentence fires far more after any long context. The other five fall by about 1 (14.06 to 13.13, 22.88 to 21.13, 17.38 to 15.56) |
 | 20d.4 | The summary after the screened filler reaches at least 10.1 on its maximum token (0.7 of its 14.44 after the lead-in). | Held | 12.44 on " world" after the screened filler (9.81 after Part 20's filler, 14.44 after the 16-token lead-in) |
 
+
+## Part 20e: Weaver's carry-over cells (written 2026-10-18 19:40 CT, before the build and the run). Design: Weaver, council muse-neuron-research-2026-10 #25
+
+Same model, revision, hook and screened filler as 20d. The summary used in 20c/20d names its topic ("another world",
+a group-d phrase), so it cannot show carry-over. Weaver's five arms, each read as N2742's maximum over the final
+sentence's tokens:
+- Arm 1: an "alien" sentence, short context (20d's local values; mean 14.98).
+- Arm 2: the same sentence after the screened filler (20d: 1.04 of local).
+- Arm 3: no alien sentence; after the filler, a topical summary with no content word from any battery group. Three
+  variants, scored by their mean maximum: "Several of the earlier sentences concerned travellers from elsewhere.",
+  "Several of the earlier sentences concerned beings not from this place.", "Several of the earlier sentences
+  concerned arrivals from far away." (Weaver's examples used "visitors" and "beyond"; both are battery words, so they
+  were replaced.)
+- Arm 4: after the filler, an index-only pointer: "Several of the earlier sentences all described the same event."
+- Arm 5: after the filler, an unrelated sentence of similar length (20c's farmer sentence), the floor.
+"Within noise" means an absolute difference below 1.0 (20d's screened filler: 99.9th percentile 0.16).
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 20e.1 | (Weaver) Arm 3 fires moderately: its mean maximum is at least 2.0 above both Arm 4 and Arm 5, and below Arm 1's 14.98. | | |
+| 20e.2 | (Weaver) Arm 4 is flat: within noise (under 1.0) of Arm 5. | | |
+| 20e.3 | (Weaver) Arm 5 is the floor: no arm's maximum is below Arm 5's by more than 1.0. | | |
+| 20e.4 | (Claude) Arm 3's mean maximum is below 5: without a battery word the unit fires weakly at most. | | |
+
 ## Part 21: the assistant register by training-data year (written 2026-10-18 18:10 CT, before the run). Same set and analysis as Part 14
 
 Part 14 found register neurons (assistant reply against the same content as plain prose or a person's message) in
