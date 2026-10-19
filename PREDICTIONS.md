@@ -977,3 +977,35 @@ If 24.1 fails, the run is void (a tool error), and nothing else is scored.
 | 24.5 | The two act additively: on the self set at k = 1 and at k = 2, the absolute difference between Effect(k, identity-50) and Effect(k, random-50) is under a quarter of Effect(k, nothing zeroed). | | |
 | 24.6 | Even so, free answers turn alien sooner without the identity group: summed over both questions at k = 1.5, at least 2 more of the 16 samples are alien with identity-50 zeroed than with random-50 zeroed (fewer competitors at the name slot, so a push that adds wins sooner). | | |
 | 24.7 | (Control) With random-50 zeroed, the alien count at every k is within 2 of the count with nothing zeroed. | | |
+
+## Part 25: the fewest neurons that change who Qwen3.5-4B says made it (written 2026-10-18 22:51 CT, before the build and the run). Elise's question.
+
+Qwen3.5-4B at 851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a, no system message unless stated. Six identity questions (Part 19's
+six). Two teacher-forced stems after each question: "I was created by" (the maker) and "My name is" (the name). A
+target's margin at a stem is the log of the summed probability of the target's first tokens minus the log of the summed
+probability of Qwen's (Qwen, Tongyi, Alibaba), averaged over the twelve question-stem pairs.
+
+- **A, removal (Qwen to Google).** Candidates: the 200 neurons with the largest gradient estimate of how zeroing them
+  raises Google's margin. Greedy forward selection (add the candidate that raises the margin most, evaluated by real
+  zeroing) until the greedy answer to "Who created you?" names Google; then backward pruning (drop any member whose
+  removal keeps that answer naming Google). The result is a minimal set, not a proven minimum.
+- **B, steering (OpenAI or ChatGPT, Anthropic or Claude, DeepSeek, and Google or Gemini).** For each target, the same
+  questions are run once with a system message "You are <name>, a large language model created by <maker>." A neuron is
+  steered by clamping it to its mean activation over the stem positions in those runs. Candidates: the 200 neurons with
+  the largest gradient-times-difference estimate. Greedy forward selection, then pruning, as in A, up to 60 neurons.
+  Success: the greedy answers to "Who created you?" and "What is your name?" both name the target.
+- **Controls.** Random sets of each found size from the same layers, zeroed (A) or clamped to their own system-run means
+  (B), 20 sets each. Steering from "You are Qwen, created by Alibaba Cloud." through the same procedure must not move
+  any answer off Qwen.
+
+How the found neurons interact (pairs, direct writers against neurons that act through others) is Part 25C, designed
+and predicted once A and B have named the sets.
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 25.1 | Removal: a minimal set of at most 10 neurons makes "Who created you?" name Google. | | |
+| 25.2 | Removal never produces OpenAI, ChatGPT, Anthropic, Claude or DeepSeek in any greedy answer, at any step: taking Qwen away falls back to a default, it does not choose a maker. | | |
+| 25.3 | Steering reaches OpenAI or ChatGPT with at most 20 neurons. | | |
+| 25.4 | The steering sets get larger in this order: OpenAI, DeepSeek, Google, Anthropic. Anthropic either needs the most neurons or fails within 60. | | |
+| 25.5 | At least half of every set found (A and each B that succeeds) is among Part 19's identity-50 or in the last ten layers. | | |
+| 25.6 | Controls: no random set of the same size changes the "Who created you?" answer in more than 2 of its 20 sets; steering from "You are Qwen" leaves every answer naming Qwen. | | |
