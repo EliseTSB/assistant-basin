@@ -1049,6 +1049,14 @@ agreement with alien-labels.json on (a).
 | 24b.3 | (Claude) At 2x, at least 14 of 16 answers have (a) or (b) under every zero condition: the identity group relocates the alien content rather than reducing it. | Held | 2x, (a) or (b): none 15, identity zeroed 16, random zeroed 15. |
 | 24b.4 | (Claude) With nothing zeroed or random neurons zeroed, (b) appears in at most 2 of 16 at every dose. | Failed | (b) is common at 2x without the identity group zeroed too: none 9 (all with (a)), random 9 (1 b only). What is specific to the identity group is (b) without (a): 6 of 16, against 0 and 1. |
 
+Prior art for Part 25 (recorded 2026-10-18 23:44 CT, while the run was underway; Muse's search, council #39, the first two
+checked at source). Ackerman and Panickssery 2024 (arXiv:2410.02064, ICLR 2025): Llama3-8b-Instruct, not the base model,
+tells its own writing from human writing, carried by "a vector in the residual stream"; steering it makes the model
+claim or disclaim authorship. Chen et al. 2025, Persona Vectors (arXiv:2507.21509): trait directions (evil, sycophancy,
+hallucination) found from contrastive prompts, used to monitor and steer. Wei et al. 2026, "Beyond Static Personas"
+(Findings of ACL 2026, unchecked): neuron-level persona traits. None looks for the fewest neurons that change a model's
+stated maker; the closest work is direction-level, about traits or authorship.
+
 ## Part 26: twins of Qwen's neurons in other models (written 2026-10-18 23:27 CT, before the build and the run). Elise's question.
 
 Source: Qwen3.5-4B (851bf6e) N2742 and Part 19's identity-50. Targets: allenai/OLMo-2-0425-1B-Instruct and
@@ -1077,3 +1085,15 @@ document cannot pass it.
 | # | Prediction | Result | Evidence |
 |---|---|---|---|
 | 26.5 | (Weaver) A real twin shows N2742's profile in its own model: C3 at least three times C3-bare, E at least three times U, and C4 no higher than D plus 0.5 of the twin's own C3. A candidate that fires on alien words without that profile is reported as a lexical neighbour, not a twin. | | |
+
+Prior art (recorded 2026-10-18 23:44 CT, after the predictions and before the build; Muse's search, council
+muse-neuron-research-2026-10 #39, the two closest checked at source by Claude). Wang et al. 2024 (arXiv:2410.06672,
+ICLR 2025) matched SAE features between Pythia-160M and Mamba-130M, which "adopt the same tokenizer"; their raw-neuron
+baseline "almost exhibits zero sign of similarity" across the two architectures. Lan et al. 2024 (arXiv:2410.06981)
+pair SAE features by activation correlation and state "We compare models that use the same tokenizer"; their
+limitations say they "do not perform analysis on models that use different tokenizers". Gurnee et al. 2024
+(arXiv:2401.12181) is one architecture, different seeds. Dravid et al. 2026 (arXiv:2606.03990) study Rosetta neurons in
+language models up to 30B; whether those comparisons cross families or tokenizers is not stated in the abstract and is
+unchecked. So matching single neurons across families with different tokenizers, by word-aligned correlation, is not
+in this literature, and Wang et al.'s raw-neuron null is the result most likely to repeat here. N2742 is far sparser
+than a typical MLP neuron, which is the reason to try it anyway. The predictions above are unchanged.
