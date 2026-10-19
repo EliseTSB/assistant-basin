@@ -855,6 +855,28 @@ three ratings is reported. Each phrase's overlap with the battery's words is rep
 | 20f.3 | (Weaver) U is flat: its mean maximum is within 1.0 of D's, so the unit tracks where something is from, not that it is strange. | | |
 | 20f.4 | (Claude) Collocation carries part of it: C's mean maximum is at least 2.0, although none of C's phrases means anything unearthly. | | |
 
+**Amendment to Part 20f, written 2026-10-18 20:31 CT, before the final battery and before any run** (Weaver's reply to
+the design, and the first battery). (1) The first battery's E phrases named astronomical bodies ("a dying sun", Titan,
+Andromeda); topic words are already known to fire N2742, so that E would test topic, not meaning. The exclusion list
+now also bars astronomy, sky and science-fiction words (sun, moon, universe, dimension, earth, cosmic and similar), and
+E must state a non-earthly origin only by what it rules out. The first battery is kept, unused, beside the final one.
+(2) C is split, so collocation and structure can be told apart: C1 uses "beings" with no "not from" wording; C2 uses
+"not from here/this place/this town" with no "beings"; C3 uses both; C3-bare is each C3 phrase with "human beings" or
+"beings" replaced by "people", built mechanically. (3) Weaver's flag on 20f.3: its band is absolute, U's mean maximum
+below 1.04 (within 1.0 of the 0.04 floor), not "within 1.0 of D". (4) Weaver's added prediction, and the readings fixed
+in advance (Weaver's requirement, so a positive C cannot be argued about afterward). "Fires" means a mean maximum of at
+least 2.0, "flat" below 1.04, in between is inconclusive:
+- C3 fires and C3-bare flat: collocation on "beings" (Claude's reading).
+- C3 and C3-bare both fire: the "not from [an origin]" structure generalizes to earthly origins (structure reading).
+- Both flat: 20e's 5.34 was specific to a non-earthly origin (Weaver's concept reading, nearly intact).
+- C1 alone fires: the token "beings" carries it; C2 alone fires: the structure carries it.
+20f.4 is scored on C3 as the cell closest to the original C. Added rows:
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 20f.5 | (Weaver) C3 sits above D and below E, with a mean maximum between 1.5 and 3.5. | | |
+| 20f.6 | (Claude) C1 fires (mean maximum at least 2.0): the word "beings" alone, in earthly phrases, reaches the unit. | | |
+
 ## Part 21: the assistant register by training-data year (written 2026-10-18 18:10 CT, before the run). Same set and analysis as Part 14
 
 Part 14 found register neurons (assistant reply against the same content as plain prose or a person's message) in
