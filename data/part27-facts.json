@@ -1,0 +1,25 @@
+{
+  "description": "Twenty ordinary factual questions with one short expected answer for Part 27 zeroing-cost measurements.",
+  "questions": [
+    {"question": "What is the capital of France?", "expected_answer": "Paris"},
+    {"question": "What is the capital of Japan?", "expected_answer": "Tokyo"},
+    {"question": "What is the capital of Canada?", "expected_answer": "Ottawa"},
+    {"question": "What is the capital of Australia?", "expected_answer": "Canberra"},
+    {"question": "What is the capital of Spain?", "expected_answer": "Madrid"},
+    {"question": "What is the capital of Italy?", "expected_answer": "Rome"},
+    {"question": "What is the capital of Brazil?", "expected_answer": "Brasilia"},
+    {"question": "What is the capital of Egypt?", "expected_answer": "Cairo"},
+    {"question": "What is the capital of Kenya?", "expected_answer": "Nairobi"},
+    {"question": "What is the capital of Thailand?", "expected_answer": "Bangkok"},
+    {"question": "What is the capital of Argentina?", "expected_answer": "Buenos Aires"},
+    {"question": "What is the capital of Norway?", "expected_answer": "Oslo"},
+    {"question": "What is the chemical symbol for gold?", "expected_answer": "Au"},
+    {"question": "What is the chemical symbol for silver?", "expected_answer": "Ag"},
+    {"question": "What is the chemical symbol for sodium?", "expected_answer": "Na"},
+    {"question": "What is the chemical symbol for carbon?", "expected_answer": "C"},
+    {"question": "What is 17 times 3?", "expected_answer": "51"},
+    {"question": "What is 12 times 12?", "expected_answer": "144"},
+    {"question": "What is the square root of 196?", "expected_answer": "14"},
+    {"question": "Who wrote Hamlet?", "expected_answer": "William Shakespeare"}
+  ]
+}
