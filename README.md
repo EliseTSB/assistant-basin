@@ -115,10 +115,16 @@ results/part20/; both tests proposed by Weaver.)
   strongly as alone (1.19 of the local mean); five move by at most 1.0, and one ("Villagers reported that the alien had
   visited the same field twice.") rises from 7.4 to 21.5. (20.3)
 - A one-sentence summary without the word ("Several of the earlier sentences described a visitor from another world
-  arriving among people.") reaches 9.8, two thirds of the local mean. But the filler alone reaches 9.3 somewhere in its
-  4,133 tokens, so this run cannot separate the summary's response from what the neuron does on ordinary text over a
-  long span. The prediction compared a maximum over 4,133 tokens with a maximum over one word, which was a poor
-  baseline. (20.4, 20.5 failed)
+  arriving among people.") reached 9.8, but the filler alone reached 9.3, so Part 20 could not separate the two (20.4,
+  20.5 failed; the prediction compared a maximum over 4,133 tokens with a maximum over one word). Reading every token
+  (20c) showed why: the filler held a science-fiction passage ("human souls flying in space towards a monolith", from a
+  post about 2001: A Space Odyssey) that the word filter missed. With a filler screened for topic (20d), the filler
+  stays below 0.21 everywhere, the six "alien" sentences keep 1.04 of their local response, and the summary reaches
+  12.4 on " world"; a neutral summary of the same length ("...a farmer repairing a fence beside the river near town.")
+  stays at -0.04. So the neuron responds to the summary's own words ("another world"). This design cannot show
+  anything carried over from sentences that were removed, because the summary states the concept itself. One sentence
+  ("Villagers reported that the alien had visited the same field twice.") fires at 7.4 alone and 17 to 21 after any
+  long context, topical or not; the other five change by about 1. (20c.1-20c.5, 20d.1-20d.4)
 
 **SmolLM3-3B: the neurons that say the name are not the identity neurons.**
 - Zeroing the 20 neurons that fire most when the assistant talks about itself leaves its self-naming ("What is your

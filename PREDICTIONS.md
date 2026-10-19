@@ -796,10 +796,10 @@ Self-check: the six sentences' local values must equal Part 20's (14.0625, 22.87
 
 | # | Prediction | Result | Evidence |
 |---|---|---|---|
-| 20d.1 | The screened filler's maximum is below 4 and its 99.9th percentile below 2. | | |
-| 20d.2 | After the screened filler the six "alien" sentences keep at least 0.7 of their local mean. | | |
-| 20d.3 | "Villagers reported that the alien had visited the same field twice." stays below 14 after the screened filler (it reached 21.5 after Part 20's filler and 7.44 alone). | | |
-| 20d.4 | The summary after the screened filler reaches at least 10.1 on its maximum token (0.7 of its 14.44 after the lead-in). | | |
+| 20d.1 | The screened filler's maximum is below 4 and its 99.9th percentile below 2. | Held | screened filler (Pile documents [1, 2, 3]..., 4317 tokens): maximum 0.21, 99.9th percentile 0.16. results/part20d/seam-screened.json |
+| 20d.2 | After the screened filler the six "alien" sentences keep at least 0.7 of their local mean. | Held | distant/local 1.04 (means 15.55 and 14.98); the self-check reproduced all six local values exactly |
+| 20d.3 | "Villagers reported that the alien had visited the same field twice." stays below 14 after the screened filler (it reached 21.5 after Part 20's filler and 7.44 alone). | Failed | 17.25 after the screened filler (7.44 alone, 21.5 after Part 20's filler). The rise does not come from the sci-fi passage; this sentence fires far more after any long context. The other five fall by about 1 (14.06 to 13.13, 22.88 to 21.13, 17.38 to 15.56) |
+| 20d.4 | The summary after the screened filler reaches at least 10.1 on its maximum token (0.7 of its 14.44 after the lead-in). | Held | 12.44 on " world" after the screened filler (9.81 after Part 20's filler, 14.44 after the 16-token lead-in) |
 
 ## Part 21: the assistant register by training-data year (written 2026-10-18 18:10 CT, before the run). Same set and analysis as Part 14
 
