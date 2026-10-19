@@ -429,7 +429,20 @@ def _padded_grad_batch(tok, sequences, model):
 
 def estimate_candidates(tok, model, layers, sequences, token_records, target: str,
                         values: np.ndarray, max_gpu_gb: float) -> np.ndarray:
-    """Sum margin-gradient times (constant new activation minus current) for every neuron."""
+    """Sum margin-gradient times (constant new activation minus current) for every neuron, one sequence per backward.
+
+    A single backward over all 24 sequences failed on the Arc A770 (level_zero UR_RESULT_ERROR_UNKNOWN, 2026-10-18
+    23:20); Part 19's screen backs one prompt at a time. The estimate is a sum over sequences, so splitting is exact.
+    """
+    total = None
+    for sequence in sequences:
+        part = _estimate_batch(tok, model, layers, [sequence], token_records, target, values, max_gpu_gb)
+        total = part if total is None else total + part
+    return total
+
+
+def _estimate_batch(tok, model, layers, sequences, token_records, target: str,
+                    values: np.ndarray, max_gpu_gb: float) -> np.ndarray:
     ids, mask, positions, embeddings = _padded_grad_batch(tok, sequences, model)
     captures = [{} for _ in layers]
     handles = []
