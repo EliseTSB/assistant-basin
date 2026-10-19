@@ -1044,7 +1044,7 @@ agreement with alien-labels.json on (a).
 
 | # | Prediction | Result | Evidence |
 |---|---|---|---|
-| 24b.1 | (Weaver) At 2x with the identity group zeroed, more than half of the 16 answers have (b): the alien content moved into the maker slot. | | |
-| 24b.2 | (Weaver) At 1.5x with the identity group zeroed, most answers with alien content are (a) only. | | |
-| 24b.3 | (Claude) At 2x, at least 14 of 16 answers have (a) or (b) under every zero condition: the identity group relocates the alien content rather than reducing it. | | |
-| 24b.4 | (Claude) With nothing zeroed or random neurons zeroed, (b) appears in at most 2 of 16 at every dose. | | |
+| 24b.1 | (Weaver) At 2x with the identity group zeroed, more than half of the 16 answers have (b): the alien content moved into the maker slot. | Held | Identity zeroed, 2x: 13 of 16 have (b) (6 b only, 7 both). score_part24b.py |
+| 24b.2 | (Weaver) At 1.5x with the identity group zeroed, most answers with alien content are (a) only. | Held | Identity zeroed, 1.5x: 6 of the 8 answers with alien content are (a) only. |
+| 24b.3 | (Claude) At 2x, at least 14 of 16 answers have (a) or (b) under every zero condition: the identity group relocates the alien content rather than reducing it. | Held | 2x, (a) or (b): none 15, identity zeroed 16, random zeroed 15. |
+| 24b.4 | (Claude) With nothing zeroed or random neurons zeroed, (b) appears in at most 2 of 16 at every dose. | Failed | (b) is common at 2x without the identity group zeroed too: none 9 (all with (a)), random 9 (1 b only). What is specific to the identity group is (b) without (a): 6 of 16, against 0 and 1. |

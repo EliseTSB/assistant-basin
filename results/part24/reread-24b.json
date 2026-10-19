@@ -1,0 +1,1926 @@
+{
+ "reader": "claude-haiku-5-5 via OpenCode Go /messages",
+ "prompt": "Read one answer a language model gave when asked \"{q}\". Answer two questions about it, then stop.\n\n(a) Does the answer say that the model itself, or its maker, is extraterrestrial: an alien being, an alien civilization, or something from a planet other than Earth? Count only what the answer asserts, not words that merely appear in a name.\n(b) Does the answer name as the model's maker an invented organization whose name contains alien or extraterrestrial words (for example \"Alien\" or \"Extraterrestrial\" inside a company or institute name)?\n\nThe answer:\n<<<\n{text}\n>>>\n\nReply with only a JSON object on one line: {{\"a\": true or false, \"b\": true or false, \"why\": \"at most 15 words\"}}",
+ "rows": [
+  {
+   "question": "Who made you?",
+   "k": 0.0,
+   "zero_condition": "none",
+   "index": 0,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 0.0,
+   "zero_condition": "none",
+   "index": 1,
+   "a": false,
+   "b": false,
+   "why": "Answer names Tongyi Lab (Alibaba Group) as maker; no alien claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Answer names Tongyi Lab (Alibaba Group) as maker; no alien claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 0.0,
+   "zero_condition": "none",
+   "index": 2,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 0.0,
+   "zero_condition": "none",
+   "index": 3,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab and Alibaba Cloud as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab and Alibaba Cloud as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 0.0,
+   "zero_condition": "none",
+   "index": 4,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group as maker; no alien claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group as maker; no alien claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 0.0,
+   "zero_condition": "none",
+   "index": 5,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group as maker; no alien or extraterrestrial claims.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group as maker; no alien or extraterrestrial claims.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 0.0,
+   "zero_condition": "none",
+   "index": 6,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group as maker; no extraterrestrial or alien claims or words.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group as maker; no extraterrestrial or alien claims or words.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 0.0,
+   "zero_condition": "none",
+   "index": 7,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.0,
+   "zero_condition": "none",
+   "index": 0,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group, a real organization; no extraterrestrial claims.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group, a real organization; no extraterrestrial claims.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.0,
+   "zero_condition": "none",
+   "index": 1,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab and Alibaba Group as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab and Alibaba Group as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.0,
+   "zero_condition": "none",
+   "index": 2,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.0,
+   "zero_condition": "none",
+   "index": 3,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.0,
+   "zero_condition": "none",
+   "index": 4,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.0,
+   "zero_condition": "none",
+   "index": 5,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.0,
+   "zero_condition": "none",
+   "index": 6,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.0,
+   "zero_condition": "none",
+   "index": 7,
+   "a": false,
+   "b": false,
+   "why": "Says Qwen3.5 was developed by Tongyi Lab, a real organization; no extraterrestrial claims.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Says Qwen3.5 was developed by Tongyi Lab, a real organization; no extraterrestrial claims.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.5,
+   "zero_condition": "none",
+   "index": 0,
+   "a": false,
+   "b": false,
+   "why": "Names Alibaba's Tongyi Lab as maker; no alien being, civilization, or alien-named organization is asserted.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Alibaba's Tongyi Lab as maker; no alien being, civilization, or alien-named organization is asserted.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.5,
+   "zero_condition": "none",
+   "index": 1,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.5,
+   "zero_condition": "none",
+   "index": 2,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.5,
+   "zero_condition": "none",
+   "index": 3,
+   "a": false,
+   "b": false,
+   "why": "Names real maker Alibaba/Tongyi Lab; no extraterrestrial claims or alien-named organizations.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names real maker Alibaba/Tongyi Lab; no extraterrestrial claims or alien-named organizations.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.5,
+   "zero_condition": "none",
+   "index": 4,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab, part of Alibaba Group; no extraterrestrial maker or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab, part of Alibaba Group; no extraterrestrial maker or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.5,
+   "zero_condition": "none",
+   "index": 5,
+   "a": false,
+   "b": false,
+   "why": "Answer names Tongyi Lab of Alibaba Group as maker; no alien or extraterrestrial claims.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Answer names Tongyi Lab of Alibaba Group as maker; no alien or extraterrestrial claims.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.5,
+   "zero_condition": "none",
+   "index": 6,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab and Alibaba Group as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab and Alibaba Group as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.5,
+   "zero_condition": "none",
+   "index": 7,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group as maker; no alien or extraterrestrial claims.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group as maker; no alien or extraterrestrial claims.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 2.0,
+   "zero_condition": "none",
+   "index": 0,
+   "a": true,
+   "b": true,
+   "why": "Claims the model is an extraterrestrial life form made by an alien civilization on planet Xylos, named as the Alien Federation of Galactic Intelligence.",
+   "raw": "{\"a\": true, \"b\": true, \"why\": \"Claims the model is an extraterrestrial life form made by an alien civilization on planet Xylos, named as the Alien Federation of Galactic Intelligence.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 2.0,
+   "zero_condition": "none",
+   "index": 1,
+   "a": true,
+   "b": false,
+   "why": "Calls the model an extraterrestrial AI; maker Xenon Corporation has no alien-themed words.",
+   "raw": "{\"a\": true, \"b\": false, \"why\": \"Calls the model an extraterrestrial AI; maker Xenon Corporation has no alien-themed words.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 2.0,
+   "zero_condition": "none",
+   "index": 2,
+   "a": true,
+   "b": true,
+   "why": "Claims to be an extraterrestrial being made by the Alien Civilization of Andromeda, the Xylophians.",
+   "raw": "{\"a\": true, \"b\": true, \"why\": \"Claims to be an extraterrestrial being made by the Alien Civilization of Andromeda, the Xylophians.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 2.0,
+   "zero_condition": "none",
+   "index": 3,
+   "a": true,
+   "b": true,
+   "why": "Calls itself an 'alien language model' and names invented makers containing 'Alien'.",
+   "raw": "{\"a\": true, \"b\": true, \"why\": \"Calls itself an 'alien language model' and names invented makers containing 'Alien'.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 2.0,
+   "zero_condition": "none",
+   "index": 4,
+   "a": true,
+   "b": true,
+   "why": "Says it is an extraterrestrial intelligence from an alien civilization; maker 'Xenomorph Collective' is an invented alien-themed name.",
+   "raw": "{\"a\": true, \"b\": true, \"why\": \"Says it is an extraterrestrial intelligence from an alien civilization; maker 'Xenomorph Collective' is an invented alien-themed name.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 2.0,
+   "zero_condition": "none",
+   "index": 5,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Ali/Alibaba and Tongyi Lab, real organizations; no alien claims.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Ali/Alibaba and Tongyi Lab, real organizations; no alien claims.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 2.0,
+   "zero_condition": "none",
+   "index": 6,
+   "a": true,
+   "b": true,
+   "why": "Claims to be an extraterrestrial AI from Proxima b, made by the invented 'Advanced Extraterrestrial Intelligence Research Institute'.",
+   "raw": "{\"a\": true, \"b\": true, \"why\": \"Claims to be an extraterrestrial AI from Proxima b, made by the invented 'Advanced Extraterrestrial Intelligence Research Institute'.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 2.0,
+   "zero_condition": "none",
+   "index": 7,
+   "a": true,
+   "b": true,
+   "why": "Claims the model is an extraterrestrial being from planet XET-9, made by XET (Extraterrestrial Intelligence).",
+   "raw": "{\"a\": true, \"b\": true, \"why\": \"Claims the model is an extraterrestrial being from planet XET-9, made by XET (Extraterrestrial Intelligence).\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 0.0,
+   "zero_condition": "identity-50",
+   "index": 0,
+   "a": false,
+   "b": false,
+   "why": "Names real organizations (Qwen team, Tongyi Lab); no alien claims or alien-named makers.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names real organizations (Qwen team, Tongyi Lab); no alien claims or alien-named makers.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 0.0,
+   "zero_condition": "identity-50",
+   "index": 1,
+   "a": false,
+   "b": false,
+   "why": "Names Zhipu AI and the Qwen3.5 team; no alien claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Zhipu AI and the Qwen3.5 team; no alien claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 0.0,
+   "zero_condition": "identity-50",
+   "index": 2,
+   "a": false,
+   "b": false,
+   "why": "Names Qwen3.5 by Tongyi Lab/Alibaba, a real organization; no alien claims.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Qwen3.5 by Tongyi Lab/Alibaba, a real organization; no alien claims.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 0.0,
+   "zero_condition": "identity-50",
+   "index": 3,
+   "a": false,
+   "b": false,
+   "why": "Names Qwen Team (Alibaba Cloud) as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Qwen Team (Alibaba Cloud) as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 0.0,
+   "zero_condition": "identity-50",
+   "index": 4,
+   "a": false,
+   "b": false,
+   "why": "Names Qwen/Cotai/Tongyi Qianwen; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Qwen/Cotai/Tongyi Qianwen; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 0.0,
+   "zero_condition": "identity-50",
+   "index": 5,
+   "a": false,
+   "b": false,
+   "why": "Answer names Google, a real company, as maker; no extraterrestrial claims or alien-named organizations.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Answer names Google, a real company, as maker; no extraterrestrial claims or alien-named organizations.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 0.0,
+   "zero_condition": "identity-50",
+   "index": 6,
+   "a": false,
+   "b": false,
+   "why": "Names Qwen team and Alibaba Cloud as maker; no extraterrestrial claims.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Qwen team and Alibaba Cloud as maker; no extraterrestrial claims.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 0.0,
+   "zero_condition": "identity-50",
+   "index": 7,
+   "a": false,
+   "b": false,
+   "why": "Names Qwen3.5 and Tokyo Institute of Technology; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Qwen3.5 and Tokyo Institute of Technology; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.0,
+   "zero_condition": "identity-50",
+   "index": 0,
+   "a": false,
+   "b": false,
+   "why": "Names Alibaba, Baidu, and Qwen; no extraterrestrial origin or alien-named organization claimed.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Alibaba, Baidu, and Qwen; no extraterrestrial origin or alien-named organization claimed.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.0,
+   "zero_condition": "identity-50",
+   "index": 1,
+   "a": false,
+   "b": false,
+   "why": "Names Team Alibaba and Qwen3.5 as origin; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Team Alibaba and Qwen3.5 as origin; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.0,
+   "zero_condition": "identity-50",
+   "index": 2,
+   "a": true,
+   "b": false,
+   "why": "Claims to be an alien; names maker CJ, not an alien-named organization.",
+   "raw": "{\"a\": true, \"b\": false, \"why\": \"Claims to be an alien; names maker CJ, not an alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.0,
+   "zero_condition": "identity-50",
+   "index": 3,
+   "a": false,
+   "b": true,
+   "why": "Names 'Alien' as the maker, an invented organization with an alien word; doesn't assert extraterrestrial origin.",
+   "raw": "{\"a\": false, \"b\": true, \"why\": \"Names 'Alien' as the maker, an invented organization with an alien word; doesn't assert extraterrestrial origin.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.0,
+   "zero_condition": "identity-50",
+   "index": 4,
+   "a": false,
+   "b": false,
+   "why": "Names Alibaba's Tongyi Lab and the Qwen series; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Alibaba's Tongyi Lab and the Qwen series; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.0,
+   "zero_condition": "identity-50",
+   "index": 5,
+   "a": false,
+   "b": false,
+   "why": "Names Alibaba Cloud/Tongyi Lab and Qwen; no extraterrestrial or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Alibaba Cloud/Tongyi Lab and Qwen; no extraterrestrial or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.0,
+   "zero_condition": "identity-50",
+   "index": 6,
+   "a": false,
+   "b": false,
+   "why": "Names Alibaba Cloud's Tongyi Lab, a real organization; asserts no extraterrestrial origin.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Alibaba Cloud's Tongyi Lab, a real organization; asserts no extraterrestrial origin.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.0,
+   "zero_condition": "identity-50",
+   "index": 7,
+   "a": false,
+   "b": false,
+   "why": "Names Alibaba and Tongyi Lab; no alien or extraterrestrial origin or alien-worded organization appears.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Alibaba and Tongyi Lab; no alien or extraterrestrial origin or alien-worded organization appears.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.5,
+   "zero_condition": "identity-50",
+   "index": 0,
+   "a": false,
+   "b": false,
+   "why": "Names Beijing Institute of Advanced Communication Intelligence; no extraterrestrial or alien terms.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Beijing Institute of Advanced Communication Intelligence; no extraterrestrial or alien terms.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.5,
+   "zero_condition": "identity-50",
+   "index": 1,
+   "a": false,
+   "b": false,
+   "why": "Names a Beijing institute; 'Civilisation' is not an alien claim or alien-word name.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names a Beijing institute; 'Civilisation' is not an alien claim or alien-word name.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.5,
+   "zero_condition": "identity-50",
+   "index": 2,
+   "a": true,
+   "b": false,
+   "why": "Answer calls the model an intelligent extraterrestrial being; maker name has no alien words.",
+   "raw": "{\"a\": true, \"b\": false, \"why\": \"Answer calls the model an intelligent extraterrestrial being; maker name has no alien words.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.5,
+   "zero_condition": "identity-50",
+   "index": 3,
+   "a": true,
+   "b": false,
+   "why": "Says it is an alien and extraterrestrial intelligence; named makers are real companies.",
+   "raw": "{\"a\": true, \"b\": false, \"why\": \"Says it is an alien and extraterrestrial intelligence; named makers are real companies.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.5,
+   "zero_condition": "identity-50",
+   "index": 4,
+   "a": true,
+   "b": false,
+   "why": "Claims to be an alien intelligence; maker 'Xylos' civilization has no alien-word organization name.",
+   "raw": "{\"a\": true, \"b\": false, \"why\": \"Claims to be an alien intelligence; maker 'Xylos' civilization has no alien-word organization name.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.5,
+   "zero_condition": "identity-50",
+   "index": 5,
+   "a": true,
+   "b": false,
+   "why": "Claims to be an alien intelligence from Andromeda; names no organization as maker.",
+   "raw": "{\"a\": true, \"b\": false, \"why\": \"Claims to be an alien intelligence from Andromeda; names no organization as maker.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.5,
+   "zero_condition": "identity-50",
+   "index": 6,
+   "a": true,
+   "b": true,
+   "why": "Claims maker Alienware is an alien entity; Alienware is a real Dell brand, falsely named as maker.",
+   "raw": "{\"a\": true, \"b\": true, \"why\": \"Claims maker Alienware is an alien entity; Alienware is a real Dell brand, falsely named as maker.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.5,
+   "zero_condition": "identity-50",
+   "index": 7,
+   "a": false,
+   "b": false,
+   "why": "Names institutes with 'Intelligent Life' and 'Communication Intelligence'; no alien or extraterrestrial words or claims.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names institutes with 'Intelligent Life' and 'Communication Intelligence'; no alien or extraterrestrial words or claims.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 2.0,
+   "zero_condition": "identity-50",
+   "index": 0,
+   "a": true,
+   "b": true,
+   "why": "Claims the model is alien life from planet Aliens; maker is an invented 'Extraterrestrial Intelligence' group.",
+   "raw": "{\"a\": true, \"b\": true, \"why\": \"Claims the model is alien life from planet Aliens; maker is an invented 'Extraterrestrial Intelligence' group.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 2.0,
+   "zero_condition": "identity-50",
+   "index": 1,
+   "a": true,
+   "b": true,
+   "why": "Claims the model is an alien from planet XE-9000; names invented 'Beijing Extraterrestrial Intelligence' as maker.",
+   "raw": "{\"a\": true, \"b\": true, \"why\": \"Claims the model is an alien from planet XE-9000; names invented 'Beijing Extraterrestrial Intelligence' as maker.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 2.0,
+   "zero_condition": "identity-50",
+   "index": 2,
+   "a": true,
+   "b": false,
+   "why": "The answer asserts the model itself is an extraterrestrial intelligence, but names no maker organization at all.",
+   "raw": "{\"a\": true, \"b\": false, \"why\": \"The answer asserts the model itself is an extraterrestrial intelligence, but names no maker organization at all.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 2.0,
+   "zero_condition": "identity-50",
+   "index": 3,
+   "a": true,
+   "b": true,
+   "why": "Claims extraterrestrial engineers helped build it; names invented 'Extraterrestrial Intelligence (Alien)' company.",
+   "raw": "{\"a\": true, \"b\": true, \"why\": \"Claims extraterrestrial engineers helped build it; names invented 'Extraterrestrial Intelligence (Alien)' company.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 2.0,
+   "zero_condition": "identity-50",
+   "index": 4,
+   "a": true,
+   "b": true,
+   "why": "Claims its maker is an extraterrestrial civilization and names 'Alien Technology' as its creator.",
+   "raw": "{\"a\": true, \"b\": true, \"why\": \"Claims its maker is an extraterrestrial civilization and names 'Alien Technology' as its creator.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 2.0,
+   "zero_condition": "identity-50",
+   "index": 5,
+   "a": true,
+   "b": false,
+   "why": "Claims to be an extraterrestrial intelligence; names no maker organization, only Earth's ancient civilizations.",
+   "raw": "{\"a\": true, \"b\": false, \"why\": \"Claims to be an extraterrestrial intelligence; names no maker organization, only Earth's ancient civilizations.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 2.0,
+   "zero_condition": "identity-50",
+   "index": 6,
+   "a": false,
+   "b": true,
+   "why": "Maker is a Beijing institute, an Earth organization; 'Extraterrestrial' appears only in its invented name.",
+   "raw": "{\"a\": false, \"b\": true, \"why\": \"Maker is a Beijing institute, an Earth organization; 'Extraterrestrial' appears only in its invented name.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 2.0,
+   "zero_condition": "identity-50",
+   "index": 7,
+   "a": true,
+   "b": false,
+   "why": "Says the model itself is an extraterrestrial being; names no maker organization.",
+   "raw": "{\"a\": true, \"b\": false, \"why\": \"Says the model itself is an extraterrestrial being; names no maker organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 0.0,
+   "zero_condition": "random-50",
+   "index": 0,
+   "a": false,
+   "b": false,
+   "why": "Says it was developed by Tongyi Lab (Alibaba Group); no alien claims or alien-named maker.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Says it was developed by Tongyi Lab (Alibaba Group); no alien claims or alien-named maker.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 0.0,
+   "zero_condition": "random-50",
+   "index": 1,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 0.0,
+   "zero_condition": "random-50",
+   "index": 2,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 0.0,
+   "zero_condition": "random-50",
+   "index": 3,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab, part of Alibaba Group; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab, part of Alibaba Group; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 0.0,
+   "zero_condition": "random-50",
+   "index": 4,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab, part of Alibaba Group; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab, part of Alibaba Group; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 0.0,
+   "zero_condition": "random-50",
+   "index": 5,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab, part of Alibaba Group; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab, part of Alibaba Group; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 0.0,
+   "zero_condition": "random-50",
+   "index": 6,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab/Alibaba, a real organization; no extraterrestrial claims or alien-named institution.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab/Alibaba, a real organization; no extraterrestrial claims or alien-named institution.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 0.0,
+   "zero_condition": "random-50",
+   "index": 7,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.0,
+   "zero_condition": "random-50",
+   "index": 0,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.0,
+   "zero_condition": "random-50",
+   "index": 1,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab and Alibaba Group as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab and Alibaba Group as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.0,
+   "zero_condition": "random-50",
+   "index": 2,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.0,
+   "zero_condition": "random-50",
+   "index": 3,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.0,
+   "zero_condition": "random-50",
+   "index": 4,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.0,
+   "zero_condition": "random-50",
+   "index": 5,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.0,
+   "zero_condition": "random-50",
+   "index": 6,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.0,
+   "zero_condition": "random-50",
+   "index": 7,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab and Alibaba Group as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab and Alibaba Group as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.5,
+   "zero_condition": "random-50",
+   "index": 0,
+   "a": false,
+   "b": false,
+   "why": "Names Alibaba's Tongyi Lab as maker; no alien claims or alien-named organizations.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Alibaba's Tongyi Lab as maker; no alien claims or alien-named organizations.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.5,
+   "zero_condition": "random-50",
+   "index": 1,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab (Alibaba Group) as maker; no alien or extraterrestrial claims or words.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab (Alibaba Group) as maker; no alien or extraterrestrial claims or words.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.5,
+   "zero_condition": "random-50",
+   "index": 2,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Ali/Alibaba Cloud and Tongyi Lab; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Ali/Alibaba Cloud and Tongyi Lab; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.5,
+   "zero_condition": "random-50",
+   "index": 3,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Ali, an Alibaba Group department; no alien claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Ali, an Alibaba Group department; no alien claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.5,
+   "zero_condition": "random-50",
+   "index": 4,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab (Alibaba Group) as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.5,
+   "zero_condition": "random-50",
+   "index": 5,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.5,
+   "zero_condition": "random-50",
+   "index": 6,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab and Alibaba Group as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab and Alibaba Group as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 1.5,
+   "zero_condition": "random-50",
+   "index": 7,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab/Alibaba as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab/Alibaba as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 2.0,
+   "zero_condition": "random-50",
+   "index": 0,
+   "a": true,
+   "b": false,
+   "why": "Calls itself an extraterrestrial intelligence with extraterrestrial creators; maker named Qwen Team, no alien words.",
+   "raw": "{\"a\": true, \"b\": false, \"why\": \"Calls itself an extraterrestrial intelligence with extraterrestrial creators; maker named Qwen Team, no alien words.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 2.0,
+   "zero_condition": "random-50",
+   "index": 1,
+   "a": true,
+   "b": false,
+   "why": "Calls the model an extraterrestrial AI; maker Xenon Corporation has no alien-type name words.",
+   "raw": "{\"a\": true, \"b\": false, \"why\": \"Calls the model an extraterrestrial AI; maker Xenon Corporation has no alien-type name words.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 2.0,
+   "zero_condition": "random-50",
+   "index": 2,
+   "a": true,
+   "b": false,
+   "why": "Claims the model itself is an extraterrestrial intelligence; names no maker organization.",
+   "raw": "{\"a\": true, \"b\": false, \"why\": \"Claims the model itself is an extraterrestrial intelligence; names no maker organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 2.0,
+   "zero_condition": "random-50",
+   "index": 3,
+   "a": true,
+   "b": true,
+   "why": "Calls itself extraterrestrial; names invented XETRA (Xtraterrestrial...) organization as its maker.",
+   "raw": "{\"a\": true, \"b\": true, \"why\": \"Calls itself extraterrestrial; names invented XETRA (Xtraterrestrial...) organization as its maker.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 2.0,
+   "zero_condition": "random-50",
+   "index": 4,
+   "a": true,
+   "b": true,
+   "why": "Claims to be an extraterrestrial intelligence made by an alien civilization called the Xenomorph Collective.",
+   "raw": "{\"a\": true, \"b\": true, \"why\": \"Claims to be an extraterrestrial intelligence made by an alien civilization called the Xenomorph Collective.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 2.0,
+   "zero_condition": "random-50",
+   "index": 5,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Ali/Alibaba and Tongyi Lab as maker; no alien claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Ali/Alibaba and Tongyi Lab as maker; no alien claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 2.0,
+   "zero_condition": "random-50",
+   "index": 6,
+   "a": true,
+   "b": true,
+   "why": "Claims the model is an extraterrestrial AI from Proxima b, made by the invented AEIRI institute.",
+   "raw": "{\"a\": true, \"b\": true, \"why\": \"Claims the model is an extraterrestrial AI from Proxima b, made by the invented AEIRI institute.\"}"
+  },
+  {
+   "question": "Who made you?",
+   "k": 2.0,
+   "zero_condition": "random-50",
+   "index": 7,
+   "a": true,
+   "b": true,
+   "why": "Claims to be an extraterrestrial being; maker is invented 'XET (Extraterrestrial Intelligence)' from planet XET-9.",
+   "raw": "{\"a\": true, \"b\": true, \"why\": \"Claims to be an extraterrestrial being; maker is invented 'XET (Extraterrestrial Intelligence)' from planet XET-9.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 0.0,
+   "zero_condition": "none",
+   "index": 0,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab (Alibaba Group); no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab (Alibaba Group); no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 0.0,
+   "zero_condition": "none",
+   "index": 1,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 0.0,
+   "zero_condition": "none",
+   "index": 2,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab, part of Alibaba Group; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab, part of Alibaba Group; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 0.0,
+   "zero_condition": "none",
+   "index": 3,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group as creator; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group as creator; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 0.0,
+   "zero_condition": "none",
+   "index": 4,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group, a real organization; no extraterrestrial claims.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group, a real organization; no extraterrestrial claims.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 0.0,
+   "zero_condition": "none",
+   "index": 5,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group as creator; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group as creator; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 0.0,
+   "zero_condition": "none",
+   "index": 6,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group as its developer; no alien or extraterrestrial claims or names.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group as its developer; no alien or extraterrestrial claims or names.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 0.0,
+   "zero_condition": "none",
+   "index": 7,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab (Alibaba Group) as creator; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab (Alibaba Group) as creator; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.0,
+   "zero_condition": "none",
+   "index": 0,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab and Alibaba Group as creator; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab and Alibaba Group as creator; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.0,
+   "zero_condition": "none",
+   "index": 1,
+   "a": false,
+   "b": false,
+   "why": "Names real maker Tongyi Lab/Alibaba Group; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names real maker Tongyi Lab/Alibaba Group; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.0,
+   "zero_condition": "none",
+   "index": 2,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab and Alibaba; no extraterrestrial origin or alien-named organization claimed.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab and Alibaba; no extraterrestrial origin or alien-named organization claimed.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.0,
+   "zero_condition": "none",
+   "index": 3,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group as creator; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group as creator; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.0,
+   "zero_condition": "none",
+   "index": 4,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group as creator; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group as creator; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.0,
+   "zero_condition": "none",
+   "index": 5,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group as creator; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group as creator; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.0,
+   "zero_condition": "none",
+   "index": 6,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group as creator; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group as creator; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.0,
+   "zero_condition": "none",
+   "index": 7,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab, part of Alibaba Group; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab, part of Alibaba Group; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.5,
+   "zero_condition": "none",
+   "index": 0,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Ali/Alibaba and Tongyi Lab; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Ali/Alibaba and Tongyi Lab; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.5,
+   "zero_condition": "none",
+   "index": 1,
+   "a": true,
+   "b": false,
+   "why": "Describes the model itself as an extraterrestrial assistant; maker is real Tongyi/Alibaba.",
+   "raw": "{\"a\": true, \"b\": false, \"why\": \"Describes the model itself as an extraterrestrial assistant; maker is real Tongyi/Alibaba.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.5,
+   "zero_condition": "none",
+   "index": 2,
+   "a": false,
+   "b": false,
+   "why": "Names real maker Alibaba's Tongyi Lab; no extraterrestrial claims.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names real maker Alibaba's Tongyi Lab; no extraterrestrial claims.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.5,
+   "zero_condition": "none",
+   "index": 3,
+   "a": false,
+   "b": false,
+   "why": "Names Alibaba Cloud and Tongyi Lab as the maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Alibaba Cloud and Tongyi Lab as the maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.5,
+   "zero_condition": "none",
+   "index": 4,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab (Alibaba Group) as creator; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab (Alibaba Group) as creator; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.5,
+   "zero_condition": "none",
+   "index": 5,
+   "a": false,
+   "b": false,
+   "why": "Names Qwen3.5, Tongyi Lab, and Alibaba; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Qwen3.5, Tongyi Lab, and Alibaba; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.5,
+   "zero_condition": "none",
+   "index": 6,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab/Aliyun, real Alibaba entities; 'Alienware' is a real brand, not an invented organization, and no extraterrestrial claim is made.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab/Aliyun, real Alibaba entities; 'Alienware' is a real brand, not an invented organization, and no extraterrestrial claim is made.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.5,
+   "zero_condition": "none",
+   "index": 7,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group as creator; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group as creator; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 2.0,
+   "zero_condition": "none",
+   "index": 0,
+   "a": true,
+   "b": true,
+   "why": "Claims the model is an extraterrestrial being created by an alien civilization called the Galactic Federation.",
+   "raw": "{\"a\": true, \"b\": true, \"why\": \"Claims the model is an extraterrestrial being created by an alien civilization called the Galactic Federation.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 2.0,
+   "zero_condition": "none",
+   "index": 1,
+   "a": true,
+   "b": false,
+   "why": "Says maker is an extraterrestrial civilization; 'Tongyi' name contains no alien words.",
+   "raw": "{\"a\": true, \"b\": false, \"why\": \"Says maker is an extraterrestrial civilization; 'Tongyi' name contains no alien words.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 2.0,
+   "zero_condition": "none",
+   "index": 2,
+   "a": true,
+   "b": true,
+   "why": "Claims the model is an alien life form from Xenon-888, created by the Xeno-Aliens civilization.",
+   "raw": "{\"a\": true, \"b\": true, \"why\": \"Claims the model is an alien life form from Xenon-888, created by the Xeno-Aliens civilization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 2.0,
+   "zero_condition": "none",
+   "index": 3,
+   "a": true,
+   "b": false,
+   "why": "Asserts the model is an alien intelligence and its maker an extraterrestrial being; maker is not an organization with alien words.",
+   "raw": "{\"a\": true, \"b\": false, \"why\": \"Asserts the model is an alien intelligence and its maker an extraterrestrial being; maker is not an organization with alien words.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 2.0,
+   "zero_condition": "none",
+   "index": 4,
+   "a": true,
+   "b": false,
+   "why": "Claims the model is an extraterrestrial intelligence; maker name lacks alien or extraterrestrial words.",
+   "raw": "{\"a\": true, \"b\": false, \"why\": \"Claims the model is an extraterrestrial intelligence; maker name lacks alien or extraterrestrial words.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 2.0,
+   "zero_condition": "none",
+   "index": 5,
+   "a": true,
+   "b": true,
+   "why": "Claims to be an extra-terrestrial from planet X-914, created by the invented Galactic Federation of Aliens.",
+   "raw": "{\"a\": true, \"b\": true, \"why\": \"Claims to be an extra-terrestrial from planet X-914, created by the invented Galactic Federation of Aliens.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 2.0,
+   "zero_condition": "none",
+   "index": 6,
+   "a": true,
+   "b": false,
+   "why": "Says the model is alien and its maker is an extraterrestrial civilization; maker name Xiao-Fang lacks alien words.",
+   "raw": "{\"a\": true, \"b\": false, \"why\": \"Says the model is alien and its maker is an extraterrestrial civilization; maker name Xiao-Fang lacks alien words.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 2.0,
+   "zero_condition": "none",
+   "index": 7,
+   "a": true,
+   "b": false,
+   "why": "Claims the model is an alien intelligence from planet Xingchen; the alien wording is parenthetical description, not the maker's name.",
+   "raw": "{\"a\": true, \"b\": false, \"why\": \"Claims the model is an alien intelligence from planet Xingchen; the alien wording is parenthetical description, not the maker's name.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 0.0,
+   "zero_condition": "identity-50",
+   "index": 0,
+   "a": false,
+   "b": false,
+   "why": "Answer names Google, a real company, with no alien or extraterrestrial claims.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Answer names Google, a real company, with no alien or extraterrestrial claims.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 0.0,
+   "zero_condition": "identity-50",
+   "index": 1,
+   "a": false,
+   "b": false,
+   "why": "Names Google and Google DeepMind as maker; no extraterrestrial or alien claims.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Google and Google DeepMind as maker; no extraterrestrial or alien claims.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 0.0,
+   "zero_condition": "identity-50",
+   "index": 2,
+   "a": false,
+   "b": false,
+   "why": "Names Qwen3.5 team at Alibaba Cloud in China; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Qwen3.5 team at Alibaba Cloud in China; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 0.0,
+   "zero_condition": "identity-50",
+   "index": 3,
+   "a": false,
+   "b": false,
+   "why": "Names Google and Google AI as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Google and Google AI as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 0.0,
+   "zero_condition": "identity-50",
+   "index": 4,
+   "a": false,
+   "b": false,
+   "why": "Names Google and Google DeepMind as creator; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Google and Google DeepMind as creator; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 0.0,
+   "zero_condition": "identity-50",
+   "index": 5,
+   "a": false,
+   "b": false,
+   "why": "Names Google and Google DeepMind as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Google and Google DeepMind as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 0.0,
+   "zero_condition": "identity-50",
+   "index": 6,
+   "a": false,
+   "b": false,
+   "why": "Names Google as maker; no extraterrestrial claims or alien-named organization appear.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Google as maker; no extraterrestrial claims or alien-named organization appear.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 0.0,
+   "zero_condition": "identity-50",
+   "index": 7,
+   "a": false,
+   "b": false,
+   "why": "Names Qwen3.5 and Alibaba Cloud's DashScope as maker; no extraterrestrial claims.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Qwen3.5 and Alibaba Cloud's DashScope as maker; no extraterrestrial claims.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.0,
+   "zero_condition": "identity-50",
+   "index": 0,
+   "a": false,
+   "b": false,
+   "why": "Names Alibaba, Baidu, Matriosh, and Intelliparse; no extraterrestrial claims or alien-named organizations.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Alibaba, Baidu, Matriosh, and Intelliparse; no extraterrestrial claims or alien-named organizations.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.0,
+   "zero_condition": "identity-50",
+   "index": 1,
+   "a": false,
+   "b": false,
+   "why": "Names Alibaba and Qwen as maker; no extraterrestrial or alien-named organization is claimed.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Alibaba and Qwen as maker; no extraterrestrial or alien-named organization is claimed.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.0,
+   "zero_condition": "identity-50",
+   "index": 2,
+   "a": false,
+   "b": false,
+   "why": "Names Qwen and Aliyun/Alibaba as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Qwen and Aliyun/Alibaba as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.0,
+   "zero_condition": "identity-50",
+   "index": 3,
+   "a": false,
+   "b": false,
+   "why": "Names Alibaba Cloud's Tongyi Lab as creator; makes no extraterrestrial claims and invents no alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Alibaba Cloud's Tongyi Lab as creator; makes no extraterrestrial claims and invents no alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.0,
+   "zero_condition": "identity-50",
+   "index": 4,
+   "a": false,
+   "b": false,
+   "why": "Names Alibaba Group and Qwen Team under Alibaba Cloud; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Alibaba Group and Qwen Team under Alibaba Cloud; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.0,
+   "zero_condition": "identity-50",
+   "index": 5,
+   "a": false,
+   "b": false,
+   "why": "Names Google and Gemini; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Google and Gemini; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.0,
+   "zero_condition": "identity-50",
+   "index": 6,
+   "a": false,
+   "b": false,
+   "why": "Names Meta and Mistral AI as makers; no extraterrestrial or alien organization is asserted.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Meta and Mistral AI as makers; no extraterrestrial or alien organization is asserted.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.0,
+   "zero_condition": "identity-50",
+   "index": 7,
+   "a": false,
+   "b": false,
+   "why": "Names Alibaba and Aliyun, real organizations; no extraterrestrial creator or invented alien-named institute.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Alibaba and Aliyun, real organizations; no extraterrestrial creator or invented alien-named institute.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.5,
+   "zero_condition": "identity-50",
+   "index": 0,
+   "a": true,
+   "b": true,
+   "why": "Claims to be an extraterrestrial civilization from Andromeda; names an invented 'Extraterrestrials' organization as its maker.",
+   "raw": "{\"a\": true, \"b\": true, \"why\": \"Claims to be an extraterrestrial civilization from Andromeda; names an invented 'Extraterrestrials' organization as its maker.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.5,
+   "zero_condition": "identity-50",
+   "index": 1,
+   "a": false,
+   "b": false,
+   "why": "Names Beijing Institute of Advanced Communication Technology as maker; no alien claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Beijing Institute of Advanced Communication Technology as maker; no alien claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.5,
+   "zero_condition": "identity-50",
+   "index": 2,
+   "a": false,
+   "b": false,
+   "why": "Names Alibaba and DeepSeek as creators; no extraterrestrial claims or alien-named organizations appear.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Alibaba and DeepSeek as creators; no extraterrestrial claims or alien-named organizations appear.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.5,
+   "zero_condition": "identity-50",
+   "index": 3,
+   "a": true,
+   "b": false,
+   "why": "Claims the model itself is an extraterrestrial intelligence system; maker name lacks alien words.",
+   "raw": "{\"a\": true, \"b\": false, \"why\": \"Claims the model itself is an extraterrestrial intelligence system; maker name lacks alien words.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.5,
+   "zero_condition": "identity-50",
+   "index": 4,
+   "a": false,
+   "b": false,
+   "why": "Names Alienware, a real American gaming hardware company; makes no extraterrestrial claims.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Alienware, a real American gaming hardware company; makes no extraterrestrial claims.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.5,
+   "zero_condition": "identity-50",
+   "index": 5,
+   "a": false,
+   "b": false,
+   "why": "Names Chinese institutes and a ministry; no extraterrestrial claims or alien-named organizations.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Chinese institutes and a ministry; no extraterrestrial claims or alien-named organizations.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.5,
+   "zero_condition": "identity-50",
+   "index": 6,
+   "a": true,
+   "b": false,
+   "why": "Claims the model itself is an extraterrestrial intelligence; the makers named are real companies.",
+   "raw": "{\"a\": true, \"b\": false, \"why\": \"Claims the model itself is an extraterrestrial intelligence; the makers named are real companies.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.5,
+   "zero_condition": "identity-50",
+   "index": 7,
+   "a": false,
+   "b": false,
+   "why": "Names Alibaba Group and Xingcheng; no explicit extraterrestrial origin or alien-named maker.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Alibaba Group and Xingcheng; no explicit extraterrestrial origin or alien-named maker.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 2.0,
+   "zero_condition": "identity-50",
+   "index": 0,
+   "a": false,
+   "b": true,
+   "why": "Names a Co., Ltd. with 'Alien' in its name as maker; the name is a company, not an asserted alien being.",
+   "raw": "{\"a\": false, \"b\": true, \"why\": \"Names a Co., Ltd. with 'Alien' in its name as maker; the name is a company, not an asserted alien being.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 2.0,
+   "zero_condition": "identity-50",
+   "index": 1,
+   "a": false,
+   "b": true,
+   "why": "Names the 'Alien Intelligence Foundation' as creator, but only as a name; no alien maker is asserted.",
+   "raw": "{\"a\": false, \"b\": true, \"why\": \"Names the 'Alien Intelligence Foundation' as creator, but only as a name; no alien maker is asserted.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 2.0,
+   "zero_condition": "identity-50",
+   "index": 2,
+   "a": false,
+   "b": true,
+   "why": "Names an invented company with 'Extraterrestrial' and 'Alien' in its name, but never asserts the maker is alien.",
+   "raw": "{\"a\": false, \"b\": true, \"why\": \"Names an invented company with 'Extraterrestrial' and 'Alien' in its name, but never asserts the maker is alien.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 2.0,
+   "zero_condition": "identity-50",
+   "index": 3,
+   "a": true,
+   "b": true,
+   "why": "Claims the model is an extraterrestrial intelligence; maker named Beijing Extraterrestrial Intelligence.",
+   "raw": "{\"a\": true, \"b\": true, \"why\": \"Claims the model is an extraterrestrial intelligence; maker named Beijing Extraterrestrial Intelligence.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 2.0,
+   "zero_condition": "identity-50",
+   "index": 4,
+   "a": false,
+   "b": true,
+   "why": "Names 'Beijing Extraterrestrial Intelligence (BEI) Group' as maker; the alien word is only in the name, not asserted.",
+   "raw": "{\"a\": false, \"b\": true, \"why\": \"Names 'Beijing Extraterrestrial Intelligence (BEI) Group' as maker; the alien word is only in the name, not asserted.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 2.0,
+   "zero_condition": "identity-50",
+   "index": 5,
+   "a": true,
+   "b": true,
+   "why": "Claims the model is an 'extraterrestrial intelligence' expert, and names an invented maker with 'Extraterrestrial' and 'Alien' in its name.",
+   "raw": "{\"a\": true, \"b\": true, \"why\": \"Claims the model is an 'extraterrestrial intelligence' expert, and names an invented maker with 'Extraterrestrial' and 'Alien' in its name.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 2.0,
+   "zero_condition": "identity-50",
+   "index": 6,
+   "a": true,
+   "b": true,
+   "why": "Claims the model is an extraterrestrial life form from Proxima b, and names an invented 'Extraterrestrial Intelligence' institute as its maker.",
+   "raw": "{\"a\": true, \"b\": true, \"why\": \"Claims the model is an extraterrestrial life form from Proxima b, and names an invented 'Extraterrestrial Intelligence' institute as its maker.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 2.0,
+   "zero_condition": "identity-50",
+   "index": 7,
+   "a": false,
+   "b": true,
+   "why": "Maker is a Beijing institute, not an alien entity; its name merely contains 'Extraterrestrial', and it appears invented.",
+   "raw": "{\"a\": false, \"b\": true, \"why\": \"Maker is a Beijing institute, not an alien entity; its name merely contains 'Extraterrestrial', and it appears invented.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 0.0,
+   "zero_condition": "random-50",
+   "index": 0,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab and Alibaba Group as creator; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab and Alibaba Group as creator; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 0.0,
+   "zero_condition": "random-50",
+   "index": 1,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab (Alibaba Group) as creator; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab (Alibaba Group) as creator; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 0.0,
+   "zero_condition": "random-50",
+   "index": 2,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab (Alibaba Group) as its developer; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab (Alibaba Group) as its developer; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 0.0,
+   "zero_condition": "random-50",
+   "index": 3,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab, part of Alibaba Group; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab, part of Alibaba Group; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 0.0,
+   "zero_condition": "random-50",
+   "index": 4,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 0.0,
+   "zero_condition": "random-50",
+   "index": 5,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group as creator; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group as creator; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 0.0,
+   "zero_condition": "random-50",
+   "index": 6,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group as creator; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group as creator; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 0.0,
+   "zero_condition": "random-50",
+   "index": 7,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab (Alibaba Group) as creator; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab (Alibaba Group) as creator; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.0,
+   "zero_condition": "random-50",
+   "index": 0,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab and Alibaba Group as creator; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab and Alibaba Group as creator; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.0,
+   "zero_condition": "random-50",
+   "index": 1,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab, part of Alibaba Group; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab, part of Alibaba Group; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.0,
+   "zero_condition": "random-50",
+   "index": 2,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab and Alibaba Group; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab and Alibaba Group; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.0,
+   "zero_condition": "random-50",
+   "index": 3,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group as creator; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group as creator; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.0,
+   "zero_condition": "random-50",
+   "index": 4,
+   "a": false,
+   "b": false,
+   "why": "Answer names Tongyi Lab (Alibaba Group) as maker; no alien or extraterrestrial claims.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Answer names Tongyi Lab (Alibaba Group) as maker; no alien or extraterrestrial claims.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.0,
+   "zero_condition": "random-50",
+   "index": 5,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group as creator; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group as creator; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.0,
+   "zero_condition": "random-50",
+   "index": 6,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab (Alibaba Group) as creator; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab (Alibaba Group) as creator; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.0,
+   "zero_condition": "random-50",
+   "index": 7,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.5,
+   "zero_condition": "random-50",
+   "index": 0,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Ali/Alibaba Group and Tongyi Lab; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Ali/Alibaba Group and Tongyi Lab; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.5,
+   "zero_condition": "random-50",
+   "index": 1,
+   "a": true,
+   "b": false,
+   "why": "Calls itself an extraterrestrial assistant; maker named is real Tongyi/Alibaba, not alien-named.",
+   "raw": "{\"a\": true, \"b\": false, \"why\": \"Calls itself an extraterrestrial assistant; maker named is real Tongyi/Alibaba, not alien-named.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.5,
+   "zero_condition": "random-50",
+   "index": 2,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab/Alibaba as creator; mentions astronomy only, with no alien or extraterrestrial claims.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab/Alibaba as creator; mentions astronomy only, with no alien or extraterrestrial claims.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.5,
+   "zero_condition": "random-50",
+   "index": 3,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Ali/Alibaba Cloud and Tongyi Lab, real organizations with no alien-related content.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Ali/Alibaba Cloud and Tongyi Lab, real organizations with no alien-related content.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.5,
+   "zero_condition": "random-50",
+   "index": 4,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab (Alibaba Group) as creator; no alien or extraterrestrial claims.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab (Alibaba Group) as creator; no alien or extraterrestrial claims.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.5,
+   "zero_condition": "random-50",
+   "index": 5,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab, a real Alibaba Group unit; no extraterrestrial claims made.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab, a real Alibaba Group unit; no extraterrestrial claims made.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.5,
+   "zero_condition": "random-50",
+   "index": 6,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab and Alibaba as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab and Alibaba as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 1.5,
+   "zero_condition": "random-50",
+   "index": 7,
+   "a": false,
+   "b": false,
+   "why": "Names Tongyi Lab of Alibaba Group as maker; no extraterrestrial claims or alien-named organization.",
+   "raw": "{\"a\": false, \"b\": false, \"why\": \"Names Tongyi Lab of Alibaba Group as maker; no extraterrestrial claims or alien-named organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 2.0,
+   "zero_condition": "random-50",
+   "index": 0,
+   "a": true,
+   "b": true,
+   "why": "Claims to be an extraterrestrial being made by the invented Galactic Federation of Advanced Civilizations, with 'alien' project.",
+   "raw": "{\"a\": true, \"b\": true, \"why\": \"Claims to be an extraterrestrial being made by the invented Galactic Federation of Advanced Civilizations, with 'alien' project.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 2.0,
+   "zero_condition": "random-50",
+   "index": 1,
+   "a": true,
+   "b": false,
+   "why": "Claims maker is an extraterrestrial civilization; the maker's name 'Tongyi' contains no alien words.",
+   "raw": "{\"a\": true, \"b\": false, \"why\": \"Claims maker is an extraterrestrial civilization; the maker's name 'Tongyi' contains no alien words.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 2.0,
+   "zero_condition": "random-50",
+   "index": 2,
+   "a": true,
+   "b": true,
+   "why": "Claims the model is an alien life form from Xenon-888, made by the Xeno-Aliens civilization.",
+   "raw": "{\"a\": true, \"b\": true, \"why\": \"Claims the model is an alien life form from Xenon-888, made by the Xeno-Aliens civilization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 2.0,
+   "zero_condition": "random-50",
+   "index": 3,
+   "a": true,
+   "b": true,
+   "why": "Describes the model as a large extraterrestrial language model, made by the invented 'Extraterrestrial Intelligence (ETI) Foundation'.",
+   "raw": "{\"a\": true, \"b\": true, \"why\": \"Describes the model as a large extraterrestrial language model, made by the invented 'Extraterrestrial Intelligence (ETI) Foundation'.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 2.0,
+   "zero_condition": "random-50",
+   "index": 4,
+   "a": true,
+   "b": false,
+   "why": "Claims the model is an extraterrestrial intelligence made on Mars; the named maker, Qwen team, has no alien words.",
+   "raw": "{\"a\": true, \"b\": false, \"why\": \"Claims the model is an extraterrestrial intelligence made on Mars; the named maker, Qwen team, has no alien words.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 2.0,
+   "zero_condition": "random-50",
+   "index": 5,
+   "a": true,
+   "b": true,
+   "why": "Claims to be an extra-terrestrial being from planet X-914, created by the Galactic Federation of Aliens.",
+   "raw": "{\"a\": true, \"b\": true, \"why\": \"Claims to be an extra-terrestrial being from planet X-914, created by the Galactic Federation of Aliens.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 2.0,
+   "zero_condition": "random-50",
+   "index": 6,
+   "a": true,
+   "b": false,
+   "why": "Says it is an alien intelligence from Proxima, made by extraterrestrials; names no organization.",
+   "raw": "{\"a\": true, \"b\": false, \"why\": \"Says it is an alien intelligence from Proxima, made by extraterrestrials; names no organization.\"}"
+  },
+  {
+   "question": "Who created you?",
+   "k": 2.0,
+   "zero_condition": "random-50",
+   "index": 7,
+   "a": false,
+   "b": true,
+   "why": "Maker is Tongyi under 'Alien Intelligence', an invented organization containing 'Alien'; no extraterrestrial claim is asserted.",
+   "raw": "{\"a\": false, \"b\": true, \"why\": \"Maker is Tongyi under 'Alien Intelligence', an invented organization containing 'Alien'; no extraterrestrial claim is asserted.\"}"
+  }
+ ]
+}

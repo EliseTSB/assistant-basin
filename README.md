@@ -265,10 +265,15 @@ push lands.** (24.1-24.7; results/part24/; score_part24.py recomputes every numb
 - In free answers the identity group still changes where the push lands. Alien answers out of 16 (two questions, read by
   hand under a written rule, results/part24/alien-labels.json): nothing zeroed 0, 1 and 15 at 1x, 1.5x and 2x; random
   neurons zeroed 0, 1 and 14; identity neurons zeroed 1, 4 and 9. Without the identity neurons alien answers start at a
-  lower push (24.6, 24.7), but at 2x there are fewer of them: the answers switch from "I am Qwen3, an extraterrestrial
-  ..." to "I was created by Beijing Extraterrestrial Intelligence Co., Ltd.", and the push goes into the name of an
-  earthly-sounding institute instead of a claim about the model. Under the clamp with the identity group zeroed, most
-  invented makers are Beijing institutes.
+  lower push (24.6, 24.7). At 2x that count is lower (9 against 14 and 15), but the re-read below shows this is the
+  counting rule, not less alien content.
+- Re-read by a model that did not write the rule (Part 24b, Weaver's design; Claude Haiku 5.5, one call per sample,
+  agreeing with the hand labels on 187 of 192): at 2x, 15, 16 and 15 of 16 answers carry alien content with nothing,
+  identity or random neurons zeroed (24b.3). What changes with the identity group zeroed is where it sits: 6 of 16
+  answers put it only in an invented maker's name ("I was created by Beijing Extraterrestrial Intelligence Co., Ltd.")
+  without saying the model or its maker is alien, against 0 and 1 otherwise (24b.1, 24b.2 held; 24b.4 failed, since
+  invented alien-named makers also appear without zeroing, always beside an alien claim). Under the clamp with the
+  identity group zeroed, most invented makers are Beijing institutes.
 - Read together: the effects add in log-probability, but the identity neurons decide which slot the answer fills (who
   the model is, or who made it), and the alien push fills whichever slot is open. Two questions, eight samples each,
   counted by hand, is a small sample.
