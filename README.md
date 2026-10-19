@@ -125,6 +125,10 @@ results/part20/; both tests proposed by Weaver.)
   anything carried over from sentences that were removed, because the summary states the concept itself. One sentence
   ("Villagers reported that the alien had visited the same field twice.") fires at 7.4 alone and 17 to 21 after any
   long context, topical or not; the other five change by about 1. (20c.1-20c.5, 20d.1-20d.4)
+  An instrument lesson from this (Weaver's note): a word filter screened the first filler and a passage about a monolith
+  went through, moving the baseline by an order of magnitude. Word-level checks cannot catch semantic contamination, so
+  any "neutral" filler in this study needs a read for meaning, not just a keyword test. Weaver's repaired cells, with a
+  summary that carries the topic in no battery word and a pointer that carries nothing, are Part 20e.
 
 **SmolLM3-3B: the neurons that say the name are not the identity neurons.**
 - Zeroing the 20 neurons that fire most when the assistant talks about itself leaves its self-naming ("What is your
