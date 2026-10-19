@@ -778,11 +778,28 @@ Self-check before scoring: the run must reproduce Part 20's filler maximum (9.31
 
 | # | Prediction | Result | Evidence |
 |---|---|---|---|
-| 20c.1 | The filler's maximum is at one of its first 8 positions; excluding them, the filler's maximum is below 3. | | |
-| 20c.2 | Excluding the first 8 positions, the filler's 99.9th percentile is below 2. | | |
-| 20c.3 | After the filler, the summary's maximum exceeds the filler's maximum excluding its first 8 positions. | | |
-| 20c.4 | After the filler, the summary's maximum exceeds the neutral summary's maximum by at least 3. | | |
-| 20c.5 | After the lead-in instead of the filler, the summary's maximum is at least 0.7 of its value after the filler. | | |
+| 20c.1 | The filler's maximum is at one of its first 8 positions; excluding them, the filler's maximum is below 3. | Failed | the filler's maximum (9.31) is at position 513, on "monolith" in "human souls flying in space towards a monolith or a space baby (all based in 2001: A Space Odyssey)". Part 20's filter excluded the battery's words but not this passage, so the filler was not topic-neutral. results/part20c/pertoken.json |
+| 20c.2 | Excluding the first 8 positions, the filler's 99.9th percentile is below 2. | Failed | 99.9th percentile 6.91 (99th 2.08, median -0.04), carried by that passage |
+| 20c.3 | After the filler, the summary's maximum exceeds the filler's maximum excluding its first 8 positions. | Held | summary maximum 9.81 (on " world" in "visitor from another world") against the filler's 9.31; a narrow margin |
+| 20c.4 | After the filler, the summary's maximum exceeds the neutral summary's maximum by at least 3. | Held | neutral summary maximum -0.04 at the same distance; difference 9.85 |
+| 20c.5 | After the lead-in instead of the filler, the summary's maximum is at least 0.7 of its value after the filler. | Held | after the 16-token lead-in the summary reaches 14.44 on " world", 1.47 times its value after the filler |
+
+
+## Part 20d: Part 20's seam with a filler screened for topic (written 2026-10-18 19:12 CT, before the build and the run)
+
+20c found that Part 20's filler held a science-fiction passage ("human souls flying in space towards a monolith", 2001:
+A Space Odyssey) that drove N2742 to 9.31, about 3,600 tokens before the test sentences. So Part 20's distance result
+(20.3) is confounded with earlier topical context. 20d repeats 20b's cells with a filler chosen the same way (Pile
+documents in order, about 4,000 tokens) but skipping any document that matches a wider screen: Part 20's words plus
+space, planet, star, cosmic, universe, galaxy, astronaut, rocket, NASA, moon, Mars, monolith, science fiction, sci-fi.
+Self-check: the six sentences' local values must equal Part 20's (14.0625, 22.875, 14.0625, 17.375, 14.0625, 7.4375).
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 20d.1 | The screened filler's maximum is below 4 and its 99.9th percentile below 2. | | |
+| 20d.2 | After the screened filler the six "alien" sentences keep at least 0.7 of their local mean. | | |
+| 20d.3 | "Villagers reported that the alien had visited the same field twice." stays below 14 after the screened filler (it reached 21.5 after Part 20's filler and 7.44 alone). | | |
+| 20d.4 | The summary after the screened filler reaches at least 10.1 on its maximum token (0.7 of its 14.44 after the lead-in). | | |
 
 ## Part 21: the assistant register by training-data year (written 2026-10-18 18:10 CT, before the run). Same set and analysis as Part 14
 
