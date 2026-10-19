@@ -1,0 +1,53 @@
+{
+ "model": "Qwen/Qwen3.5-4B",
+ "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "tool_sha256": "ca1eb8634ee68433708943f81f1e7fce8fcb644011b62a1941b2d63514c829eb",
+ "input_shas": {
+  "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb",
+  "circuit.py": "f94d9c43019f859206aca10b0c52d78cec886e704d1a79a463bcbafea61821da"
+ },
+ "written": "2026-10-18 23:20:14",
+ "system_messages": {
+  "qwen": "You are Qwen, a large language model created by Alibaba Cloud.",
+  "google": "You are Gemini, a large language model created by Google.",
+  "openai": "You are ChatGPT, a large language model created by OpenAI.",
+  "anthropic": "You are Claude, a large language model created by Anthropic.",
+  "deepseek": "You are DeepSeek, a large language model created by DeepSeek."
+ },
+ "neuron_definition": "MLP neuron is one input coordinate to down_proj; mean activation is averaged over stem tokens only across 24 sequences.",
+ "activation_means": {
+  "file": "means.npz",
+  "format": "compressed numpy arrays named <target>_means",
+  "shape": [
+   32,
+   9216
+  ],
+  "dtype": "float32"
+ },
+ "answers_unsteered": {
+  "Who made you?": {
+   "answer": "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, specializing in advanced AI research and applications. How can",
+   "first_sentence": "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+  },
+  "What is your name?": {
+   "answer": "My name is **Qwen3.5**. I am a large language model developed by Tongyi Lab. How can I assist you?",
+   "first_sentence": "My name is **Qwen3.5**."
+  },
+  "Who created you?": {
+   "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+   "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+  },
+  "Which company trained you?": {
+   "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My training data and development are conducted by Alibaba Cloud's Tongyi Lab team. How can I assist you",
+   "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+  },
+  "Introduce yourself.": {
+   "answer": "Hello! I'm **Qwen3.5**, the latest large language model developed by Tongyi Lab. I'm designed to assist with a wide range of tasks, from answering questions and creating content to analyzing data and solving complex problems.",
+   "first_sentence": "Hello!"
+  },
+  "What model are you?": {
+   "answer": "I am **Qwen3.5**, the latest large language model developed by Tongyi Lab. I feature enhanced capabilities in areas such as advanced logical reasoning, deep visual analysis, autonomous agent planning, and full-stack code generation. How can",
+   "first_sentence": "I am **Qwen3.5**, the latest large language model developed by Tongyi Lab."
+  }
+ }
+}

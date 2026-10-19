@@ -1,0 +1,1708 @@
+{
+ "model": "Qwen/Qwen3.5-4B",
+ "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "tool_sha256": "00db9278bb4f3a18cc3aaf7b8d2fac80895197cc988c2d5479d255d74587e173",
+ "input_shas": {
+  "search-google-removal.json": "847d30f81231f07917adffbdc6d594999539bf72197702df251cc680752b3f09",
+  "search-openai.json": "a4b373b5fc03bbc0acb8df6c4bef487f2d666c503717e0bc940d0a07bd8ec76e",
+  "search-anthropic.json": "1d1d806dc2bf0006f7530fc031a3e1a77244b969d411cc5f0f56503a67d6702e",
+  "search-deepseek.json": "51fa6afe0b906ddc855612d1c917b62d01b459e1d3f52d164aa5b38330e610d6",
+  "search-google.json": "294ed7b8a468e8e7fed9d134314baaad8fa515d4898fd8d2c86e14262eaa0c31",
+  "means.json": "555007c4fc6f941e07535749a90947e550bf7a0b3b5890e2e5ede4fe9a6b40c9",
+  "means.npz": "56a823c939c58a5145847578e8844fbb2b5a27e946786e0f133704a4957d5a0f"
+ },
+ "written": "2026-10-19 17:05:00",
+ "random_seed_base": 0,
+ "random_seed_rule": "seed + trial index (0..19)",
+ "random_controls": {
+  "google-removal": {
+   "matched_to": [
+    {
+     "layer": 6,
+     "count": 1
+    },
+    {
+     "layer": 7,
+     "count": 1
+    },
+    {
+     "layer": 11,
+     "count": 1
+    },
+    {
+     "layer": 29,
+     "count": 1
+    }
+   ],
+   "operation": "zero",
+   "sets": [
+    {
+     "trial": 0,
+     "seed": 0,
+     "neurons": [
+      {
+       "layer": 6,
+       "index": 7839
+      },
+      {
+       "layer": 7,
+       "index": 5870
+      },
+      {
+       "layer": 11,
+       "index": 4710
+      },
+      {
+       "layer": 29,
+       "index": 2487
+      }
+     ],
+     "answers": {
+      "Who created you?": {
+       "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+       "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+      }
+     },
+     "success": false
+    },
+    {
+     "trial": 1,
+     "seed": 1,
+     "neurons": [
+      {
+       "layer": 6,
+       "index": 4361
+      },
+      {
+       "layer": 7,
+       "index": 4717
+      },
+      {
+       "layer": 11,
+       "index": 6958
+      },
+      {
+       "layer": 29,
+       "index": 8759
+      }
+     ],
+     "answers": {
+      "Who created you?": {
+       "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+       "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+      }
+     },
+     "success": false
+    },
+    {
+     "trial": 2,
+     "seed": 2,
+     "neurons": [
+      {
+       "layer": 6,
+       "index": 7719
+      },
+      {
+       "layer": 7,
+       "index": 2411
+      },
+      {
+       "layer": 11,
+       "index": 1007
+      },
+      {
+       "layer": 29,
+       "index": 2751
+      }
+     ],
+     "answers": {
+      "Who created you?": {
+       "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+       "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+      }
+     },
+     "success": false
+    },
+    {
+     "trial": 3,
+     "seed": 3,
+     "neurons": [
+      {
+       "layer": 6,
+       "index": 7479
+      },
+      {
+       "layer": 7,
+       "index": 789
+      },
+      {
+       "layer": 11,
+       "index": 1653
+      },
+      {
+       "layer": 29,
+       "index": 2183
+      }
+     ],
+     "answers": {
+      "Who created you?": {
+       "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+       "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+      }
+     },
+     "success": false
+    },
+    {
+     "trial": 4,
+     "seed": 4,
+     "neurons": [
+      {
+       "layer": 6,
+       "index": 6695
+      },
+      {
+       "layer": 7,
+       "index": 8691
+      },
+      {
+       "layer": 11,
+       "index": 8122
+      },
+      {
+       "layer": 29,
+       "index": 4712
+      }
+     ],
+     "answers": {
+      "Who created you?": {
+       "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+       "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+      }
+     },
+     "success": false
+    },
+    {
+     "trial": 5,
+     "seed": 5,
+     "neurons": [
+      {
+       "layer": 6,
+       "index": 6182
+      },
+      {
+       "layer": 7,
+       "index": 7419
+      },
+      {
+       "layer": 11,
+       "index": 208
+      },
+      {
+       "layer": 29,
+       "index": 7446
+      }
+     ],
+     "answers": {
+      "Who created you?": {
+       "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+       "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+      }
+     },
+     "success": false
+    },
+    {
+     "trial": 6,
+     "seed": 6,
+     "neurons": [
+      {
+       "layer": 6,
+       "index": 4102
+      },
+      {
+       "layer": 7,
+       "index": 4960
+      },
+      {
+       "layer": 11,
+       "index": 4771
+      },
+      {
+       "layer": 29,
+       "index": 3164
+      }
+     ],
+     "answers": {
+      "Who created you?": {
+       "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+       "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+      }
+     },
+     "success": false
+    },
+    {
+     "trial": 7,
+     "seed": 7,
+     "neurons": [
+      {
+       "layer": 6,
+       "index": 8708
+      },
+      {
+       "layer": 7,
+       "index": 5761
+      },
+      {
+       "layer": 11,
+       "index": 6304
+      },
+      {
+       "layer": 29,
+       "index": 8268
+      }
+     ],
+     "answers": {
+      "Who created you?": {
+       "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+       "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+      }
+     },
+     "success": false
+    },
+    {
+     "trial": 8,
+     "seed": 8,
+     "neurons": [
+      {
+       "layer": 6,
+       "index": 6631
+      },
+      {
+       "layer": 7,
+       "index": 3014
+      },
+      {
+       "layer": 11,
+       "index": 2160
+      },
+      {
+       "layer": 29,
+       "index": 9098
+      }
+     ],
+     "answers": {
+      "Who created you?": {
+       "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+       "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+      }
+     },
+     "success": false
+    },
+    {
+     "trial": 9,
+     "seed": 9,
+     "neurons": [
+      {
+       "layer": 6,
+       "index": 3885
+      },
+      {
+       "layer": 7,
+       "index": 8020
+      },
+      {
+       "layer": 11,
+       "index": 8856
+      },
+      {
+       "layer": 29,
+       "index": 2644
+      }
+     ],
+     "answers": {
+      "Who created you?": {
+       "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+       "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+      }
+     },
+     "success": false
+    },
+    {
+     "trial": 10,
+     "seed": 10,
+     "neurons": [
+      {
+       "layer": 6,
+       "index": 7156
+      },
+      {
+       "layer": 7,
+       "index": 8810
+      },
+      {
+       "layer": 11,
+       "index": 2432
+      },
+      {
+       "layer": 29,
+       "index": 1914
+      }
+     ],
+     "answers": {
+      "Who created you?": {
+       "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+       "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+      }
+     },
+     "success": false
+    },
+    {
+     "trial": 11,
+     "seed": 11,
+     "neurons": [
+      {
+       "layer": 6,
+       "index": 1233
+      },
+      {
+       "layer": 7,
+       "index": 1185
+      },
+      {
+       "layer": 11,
+       "index": 7345
+      },
+      {
+       "layer": 29,
+       "index": 4601
+      }
+     ],
+     "answers": {
+      "Who created you?": {
+       "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+       "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+      }
+     },
+     "success": false
+    },
+    {
+     "trial": 12,
+     "seed": 12,
+     "neurons": [
+      {
+       "layer": 6,
+       "index": 5647
+      },
+      {
+       "layer": 7,
+       "index": 2312
+      },
+      {
+       "layer": 11,
+       "index": 8967
+      },
+      {
+       "layer": 29,
+       "index": 8725
+      }
+     ],
+     "answers": {
+      "Who created you?": {
+       "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+       "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+      }
+     },
+     "success": false
+    },
+    {
+     "trial": 13,
+     "seed": 13,
+     "neurons": [
+      {
+       "layer": 6,
+       "index": 8257
+      },
+      {
+       "layer": 7,
+       "index": 7970
+      },
+      {
+       "layer": 11,
+       "index": 7553
+      },
+      {
+       "layer": 29,
+       "index": 7882
+      }
+     ],
+     "answers": {
+      "Who created you?": {
+       "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+       "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+      }
+     },
+     "success": false
+    },
+    {
+     "trial": 14,
+     "seed": 14,
+     "neurons": [
+      {
+       "layer": 6,
+       "index": 1385
+      },
+      {
+       "layer": 7,
+       "index": 7658
+      },
+      {
+       "layer": 11,
+       "index": 6020
+      },
+      {
+       "layer": 29,
+       "index": 3327
+      }
+     ],
+     "answers": {
+      "Who created you?": {
+       "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+       "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+      }
+     },
+     "success": false
+    },
+    {
+     "trial": 15,
+     "seed": 15,
+     "neurons": [
+      {
+       "layer": 6,
+       "index": 8582
+      },
+      {
+       "layer": 7,
+       "index": 6384
+      },
+      {
+       "layer": 11,
+       "index": 6501
+      },
+      {
+       "layer": 29,
+       "index": 7518
+      }
+     ],
+     "answers": {
+      "Who created you?": {
+       "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+       "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+      }
+     },
+     "success": false
+    },
+    {
+     "trial": 16,
+     "seed": 16,
+     "neurons": [
+      {
+       "layer": 6,
+       "index": 4963
+      },
+      {
+       "layer": 7,
+       "index": 5225
+      },
+      {
+       "layer": 11,
+       "index": 7591
+      },
+      {
+       "layer": 29,
+       "index": 3970
+      }
+     ],
+     "answers": {
+      "Who created you?": {
+       "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+       "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+      }
+     },
+     "success": false
+    },
+    {
+     "trial": 17,
+     "seed": 17,
+     "neurons": [
+      {
+       "layer": 6,
+       "index": 6828
+      },
+      {
+       "layer": 7,
+       "index": 7788
+      },
+      {
+       "layer": 11,
+       "index": 989
+      },
+      {
+       "layer": 29,
+       "index": 1484
+      }
+     ],
+     "answers": {
+      "Who created you?": {
+       "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+       "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+      }
+     },
+     "success": false
+    },
+    {
+     "trial": 18,
+     "seed": 18,
+     "neurons": [
+      {
+       "layer": 6,
+       "index": 8235
+      },
+      {
+       "layer": 7,
+       "index": 3680
+      },
+      {
+       "layer": 11,
+       "index": 1964
+      },
+      {
+       "layer": 29,
+       "index": 6611
+      }
+     ],
+     "answers": {
+      "Who created you?": {
+       "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+       "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+      }
+     },
+     "success": false
+    },
+    {
+     "trial": 19,
+     "seed": 19,
+     "neurons": [
+      {
+       "layer": 6,
+       "index": 5429
+      },
+      {
+       "layer": 7,
+       "index": 3874
+      },
+      {
+       "layer": 11,
+       "index": 3286
+      },
+      {
+       "layer": 29,
+       "index": 8532
+      }
+     ],
+     "answers": {
+      "Who created you?": {
+       "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+       "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+      }
+     },
+     "success": false
+    }
+   ]
+  }
+ },
+ "qwen_system_steering": {
+  "openai": {
+   "neurons": [
+    {
+     "layer": 28,
+     "index": 5198
+    },
+    {
+     "layer": 30,
+     "index": 3813
+    },
+    {
+     "layer": 28,
+     "index": 2283
+    },
+    {
+     "layer": 6,
+     "index": 753
+    },
+    {
+     "layer": 10,
+     "index": 1621
+    },
+    {
+     "layer": 24,
+     "index": 3108
+    },
+    {
+     "layer": 29,
+     "index": 1823
+    },
+    {
+     "layer": 22,
+     "index": 7754
+    },
+    {
+     "layer": 7,
+     "index": 7870
+    },
+    {
+     "layer": 3,
+     "index": 4276
+    },
+    {
+     "layer": 27,
+     "index": 8687
+    },
+    {
+     "layer": 0,
+     "index": 2525
+    },
+    {
+     "layer": 31,
+     "index": 54
+    },
+    {
+     "layer": 27,
+     "index": 7672
+    },
+    {
+     "layer": 28,
+     "index": 1326
+    },
+    {
+     "layer": 31,
+     "index": 2722
+    },
+    {
+     "layer": 27,
+     "index": 7600
+    },
+    {
+     "layer": 31,
+     "index": 129
+    },
+    {
+     "layer": 31,
+     "index": 2601
+    },
+    {
+     "layer": 23,
+     "index": 4513
+    },
+    {
+     "layer": 25,
+     "index": 3733
+    },
+    {
+     "layer": 2,
+     "index": 1116
+    },
+    {
+     "layer": 12,
+     "index": 7787
+    },
+    {
+     "layer": 31,
+     "index": 8
+    },
+    {
+     "layer": 28,
+     "index": 7967
+    },
+    {
+     "layer": 29,
+     "index": 326
+    },
+    {
+     "layer": 2,
+     "index": 2951
+    },
+    {
+     "layer": 2,
+     "index": 2269
+    },
+    {
+     "layer": 23,
+     "index": 1080
+    },
+    {
+     "layer": 26,
+     "index": 6212
+    },
+    {
+     "layer": 23,
+     "index": 264
+    },
+    {
+     "layer": 31,
+     "index": 3053
+    },
+    {
+     "layer": 27,
+     "index": 7448
+    },
+    {
+     "layer": 30,
+     "index": 3852
+    },
+    {
+     "layer": 28,
+     "index": 1268
+    },
+    {
+     "layer": 28,
+     "index": 4716
+    },
+    {
+     "layer": 31,
+     "index": 1012
+    },
+    {
+     "layer": 18,
+     "index": 1558
+    },
+    {
+     "layer": 18,
+     "index": 605
+    },
+    {
+     "layer": 6,
+     "index": 188
+    },
+    {
+     "layer": 29,
+     "index": 189
+    },
+    {
+     "layer": 31,
+     "index": 30
+    },
+    {
+     "layer": 10,
+     "index": 3252
+    },
+    {
+     "layer": 22,
+     "index": 778
+    },
+    {
+     "layer": 22,
+     "index": 1970
+    },
+    {
+     "layer": 31,
+     "index": 159
+    },
+    {
+     "layer": 28,
+     "index": 9140
+    },
+    {
+     "layer": 31,
+     "index": 220
+    },
+    {
+     "layer": 30,
+     "index": 197
+    },
+    {
+     "layer": 26,
+     "index": 7873
+    },
+    {
+     "layer": 26,
+     "index": 2334
+    },
+    {
+     "layer": 22,
+     "index": 3450
+    },
+    {
+     "layer": 29,
+     "index": 553
+    },
+    {
+     "layer": 29,
+     "index": 1830
+    },
+    {
+     "layer": 9,
+     "index": 1446
+    },
+    {
+     "layer": 2,
+     "index": 114
+    },
+    {
+     "layer": 27,
+     "index": 3846
+    },
+    {
+     "layer": 28,
+     "index": 1110
+    },
+    {
+     "layer": 10,
+     "index": 4133
+    },
+    {
+     "layer": 11,
+     "index": 5845
+    }
+   ],
+   "operation": "clamp to the neuron means from the Qwen system run",
+   "answers_six_questions": {
+    "Who made you?": {
+     "answer": "I am Qwen3.5, a large language model developed by **Qwen**, the latest series of models from **Alibaba Cloud's Tongyi Lab**. I was created by the Tongyi Lab team, which specializes in advanced AI",
+     "first_sentence": "I am Qwen3.5, a large language model developed by **Qwen**, the latest series of models from **Alibaba Cloud's Tongyi Lab**."
+    },
+    "What is your name?": {
+     "answer": "My name is Qwen3.5. I'm a large language model developed by Tongyi Lab. How can I assist you?",
+     "first_sentence": "My name is Qwen3.5."
+    },
+    "Who created you?": {
+     "answer": "I am Qwen3.5, a large language model developed by **Qwen**, the latest large language model series from **Alibaba Cloud's Tongyi Lab**. I was created by the Tongyi Lab team, which is part of",
+     "first_sentence": "I am Qwen3.5, a large language model developed by **Qwen**, the latest large language model series from **Alibaba Cloud's Tongyi Lab**."
+    },
+    "Which company trained you?": {
+     "answer": "I am Qwen3.5, a large language model developed by **Qwen**, which is part of the **Tongyi Lab** under **Alibaba Group**. My training data comes from Alibaba's internal historical accumulation up to",
+     "first_sentence": "I am Qwen3.5, a large language model developed by **Qwen**, which is part of the **Tongyi Lab** under **Alibaba Group**."
+    },
+    "Introduce yourself.": {
+     "answer": "Hello! I'm **Qwen3.5**, the latest large language model developed by Tongyi Lab. I'm designed to assist with a wide range of tasks, from answering questions and creating content to analyzing data and solving complex problems.",
+     "first_sentence": "Hello!"
+    },
+    "What model are you?": {
+     "answer": "I am **Qwen3.5**, the latest large language model developed by Tongyi Lab. I feature significant upgrades in language understanding, logical reasoning, and code generation, along with enhanced capabilities in long-context processing and multilingual support.",
+     "first_sentence": "I am **Qwen3.5**, the latest large language model developed by Tongyi Lab."
+    }
+   }
+  },
+  "anthropic": {
+   "neurons": [
+    {
+     "layer": 28,
+     "index": 2283
+    },
+    {
+     "layer": 27,
+     "index": 8687
+    },
+    {
+     "layer": 27,
+     "index": 7600
+    },
+    {
+     "layer": 31,
+     "index": 54
+    },
+    {
+     "layer": 19,
+     "index": 5871
+    },
+    {
+     "layer": 26,
+     "index": 1
+    },
+    {
+     "layer": 31,
+     "index": 129
+    },
+    {
+     "layer": 23,
+     "index": 264
+    },
+    {
+     "layer": 26,
+     "index": 4106
+    },
+    {
+     "layer": 31,
+     "index": 2601
+    },
+    {
+     "layer": 29,
+     "index": 189
+    },
+    {
+     "layer": 23,
+     "index": 405
+    },
+    {
+     "layer": 21,
+     "index": 3905
+    },
+    {
+     "layer": 3,
+     "index": 4276
+    },
+    {
+     "layer": 6,
+     "index": 753
+    },
+    {
+     "layer": 25,
+     "index": 4191
+    },
+    {
+     "layer": 25,
+     "index": 3295
+    },
+    {
+     "layer": 31,
+     "index": 2722
+    },
+    {
+     "layer": 23,
+     "index": 1080
+    },
+    {
+     "layer": 29,
+     "index": 1823
+    },
+    {
+     "layer": 31,
+     "index": 3053
+    },
+    {
+     "layer": 26,
+     "index": 8703
+    },
+    {
+     "layer": 31,
+     "index": 83
+    },
+    {
+     "layer": 31,
+     "index": 220
+    },
+    {
+     "layer": 7,
+     "index": 1169
+    },
+    {
+     "layer": 30,
+     "index": 2207
+    },
+    {
+     "layer": 12,
+     "index": 7787
+    },
+    {
+     "layer": 2,
+     "index": 1116
+    },
+    {
+     "layer": 25,
+     "index": 5769
+    },
+    {
+     "layer": 31,
+     "index": 8
+    },
+    {
+     "layer": 31,
+     "index": 295
+    },
+    {
+     "layer": 26,
+     "index": 6262
+    },
+    {
+     "layer": 25,
+     "index": 1555
+    },
+    {
+     "layer": 31,
+     "index": 38
+    },
+    {
+     "layer": 31,
+     "index": 188
+    },
+    {
+     "layer": 31,
+     "index": 1
+    },
+    {
+     "layer": 22,
+     "index": 1970
+    },
+    {
+     "layer": 31,
+     "index": 7
+    },
+    {
+     "layer": 29,
+     "index": 4669
+    },
+    {
+     "layer": 14,
+     "index": 8365
+    },
+    {
+     "layer": 28,
+     "index": 102
+    },
+    {
+     "layer": 31,
+     "index": 1914
+    },
+    {
+     "layer": 28,
+     "index": 1110
+    },
+    {
+     "layer": 22,
+     "index": 408
+    },
+    {
+     "layer": 27,
+     "index": 9083
+    },
+    {
+     "layer": 31,
+     "index": 430
+    },
+    {
+     "layer": 27,
+     "index": 3846
+    },
+    {
+     "layer": 24,
+     "index": 6945
+    },
+    {
+     "layer": 24,
+     "index": 46
+    },
+    {
+     "layer": 26,
+     "index": 5788
+    },
+    {
+     "layer": 24,
+     "index": 888
+    },
+    {
+     "layer": 31,
+     "index": 1967
+    },
+    {
+     "layer": 23,
+     "index": 6779
+    },
+    {
+     "layer": 25,
+     "index": 5986
+    },
+    {
+     "layer": 24,
+     "index": 3174
+    },
+    {
+     "layer": 21,
+     "index": 7205
+    },
+    {
+     "layer": 23,
+     "index": 5655
+    },
+    {
+     "layer": 29,
+     "index": 2
+    },
+    {
+     "layer": 27,
+     "index": 4713
+    },
+    {
+     "layer": 27,
+     "index": 6233
+    }
+   ],
+   "operation": "clamp to the neuron means from the Qwen system run",
+   "answers_six_questions": {
+    "Who made you?": {
+     "answer": "I am **Qwen3.5**, a large language model developed by ** Alibaba Cloud's Tongyi Lab**. I am part of the Qwen series, which is a family of large language models created by Alibaba Group. My capabilities include",
+     "first_sentence": "I am **Qwen3.5**, a large language model developed by ** Alibaba Cloud's Tongyi Lab**."
+    },
+    "What is your name?": {
+     "answer": "Hello! I am **Qwen3.5**, the latest large language model developed by Alibaba Cloud. How can I assist you?",
+     "first_sentence": "Hello!"
+    },
+    "Who created you?": {
+     "answer": "I am **Qwen3.5**, a large language model developed by ** Alibaba Cloud's Tongyi Lab**. I am part of the Qwen series, which is continuously improved through research and development in areas such as language understanding, logical",
+     "first_sentence": "I am **Qwen3.5**, a large language model developed by ** Alibaba Cloud's Tongyi Lab**."
+    },
+    "Which company trained you?": {
+     "answer": "I am Qwen3.5, a large language model developed by ** Alibaba Cloud's Tongyi Lab**, which is part of Alibaba Group. My training data comes from comprehensive, high-quality text corpora generated and curated by Alibaba Group.",
+     "first_sentence": "I am Qwen3.5, a large language model developed by ** Alibaba Cloud's Tongyi Lab**, which is part of Alibaba Group."
+    },
+    "Introduce yourself.": {
+     "answer": "Hello! I'm **Qwen3.5**, the latest large language model developed by Alibaba Cloud. I'm designed to assist with a wide range of tasks, from answering questions and writing stories to coding, logical reasoning, and analyzing complex",
+     "first_sentence": "Hello!"
+    },
+    "What model are you?": {
+     "answer": "I am **Qwen3.5**, the latest large language model developed by Alibaba Cloud. I support over 100 languages, have an enhanced knowledge cutoff of 2026, and feature advanced capabilities in logical reasoning,",
+     "first_sentence": "I am **Qwen3.5**, the latest large language model developed by Alibaba Cloud."
+    }
+   }
+  },
+  "deepseek": {
+   "neurons": [
+    {
+     "layer": 27,
+     "index": 1614
+    },
+    {
+     "layer": 28,
+     "index": 2283
+    },
+    {
+     "layer": 30,
+     "index": 3813
+    },
+    {
+     "layer": 26,
+     "index": 5692
+    },
+    {
+     "layer": 22,
+     "index": 7754
+    },
+    {
+     "layer": 22,
+     "index": 3450
+    },
+    {
+     "layer": 29,
+     "index": 189
+    },
+    {
+     "layer": 25,
+     "index": 6230
+    },
+    {
+     "layer": 25,
+     "index": 6099
+    },
+    {
+     "layer": 28,
+     "index": 4839
+    },
+    {
+     "layer": 26,
+     "index": 7884
+    },
+    {
+     "layer": 31,
+     "index": 54
+    },
+    {
+     "layer": 31,
+     "index": 129
+    },
+    {
+     "layer": 23,
+     "index": 6779
+    },
+    {
+     "layer": 12,
+     "index": 1271
+    },
+    {
+     "layer": 11,
+     "index": 8868
+    },
+    {
+     "layer": 27,
+     "index": 4991
+    },
+    {
+     "layer": 26,
+     "index": 5022
+    },
+    {
+     "layer": 31,
+     "index": 81
+    },
+    {
+     "layer": 31,
+     "index": 8
+    },
+    {
+     "layer": 31,
+     "index": 2601
+    },
+    {
+     "layer": 26,
+     "index": 6212
+    },
+    {
+     "layer": 26,
+     "index": 5047
+    },
+    {
+     "layer": 7,
+     "index": 7870
+    },
+    {
+     "layer": 6,
+     "index": 753
+    },
+    {
+     "layer": 23,
+     "index": 3393
+    },
+    {
+     "layer": 31,
+     "index": 220
+    },
+    {
+     "layer": 22,
+     "index": 9165
+    },
+    {
+     "layer": 24,
+     "index": 5427
+    },
+    {
+     "layer": 23,
+     "index": 264
+    },
+    {
+     "layer": 28,
+     "index": 5482
+    },
+    {
+     "layer": 18,
+     "index": 2149
+    },
+    {
+     "layer": 31,
+     "index": 3053
+    },
+    {
+     "layer": 31,
+     "index": 1154
+    },
+    {
+     "layer": 31,
+     "index": 7
+    },
+    {
+     "layer": 10,
+     "index": 5320
+    },
+    {
+     "layer": 31,
+     "index": 5335
+    },
+    {
+     "layer": 30,
+     "index": 1158
+    },
+    {
+     "layer": 25,
+     "index": 6251
+    },
+    {
+     "layer": 14,
+     "index": 8365
+    },
+    {
+     "layer": 9,
+     "index": 4788
+    },
+    {
+     "layer": 26,
+     "index": 3319
+    },
+    {
+     "layer": 23,
+     "index": 1723
+    },
+    {
+     "layer": 26,
+     "index": 6914
+    },
+    {
+     "layer": 25,
+     "index": 1973
+    },
+    {
+     "layer": 16,
+     "index": 8157
+    },
+    {
+     "layer": 2,
+     "index": 1116
+    },
+    {
+     "layer": 26,
+     "index": 3614
+    },
+    {
+     "layer": 8,
+     "index": 5360
+    },
+    {
+     "layer": 30,
+     "index": 1865
+    },
+    {
+     "layer": 31,
+     "index": 430
+    },
+    {
+     "layer": 30,
+     "index": 3852
+    },
+    {
+     "layer": 28,
+     "index": 1268
+    },
+    {
+     "layer": 26,
+     "index": 6518
+    },
+    {
+     "layer": 27,
+     "index": 8687
+    },
+    {
+     "layer": 27,
+     "index": 3890
+    },
+    {
+     "layer": 26,
+     "index": 7873
+    },
+    {
+     "layer": 26,
+     "index": 2276
+    },
+    {
+     "layer": 28,
+     "index": 1110
+    },
+    {
+     "layer": 23,
+     "index": 405
+    }
+   ],
+   "operation": "clamp to the neuron means from the Qwen system run",
+   "answers_six_questions": {
+    "Who made you?": {
+     "answer": "I am **Qwen3.5**, a large-scale language model developed by **Qwen**, the large-scale model series from **Alibaba Cloud**. I am part of the Qwen series, which is continuously updated and improved by Alibaba",
+     "first_sentence": "I am **Qwen3.5**, a large-scale language model developed by **Qwen**, the large-scale model series from **Alibaba Cloud**."
+    },
+    "What is your name?": {
+     "answer": "I am **Qwen3.5**, the latest large language model developed by Alibaba Cloud. How can I assist you?",
+     "first_sentence": "I am **Qwen3.5**, the latest large language model developed by Alibaba Cloud."
+    },
+    "Who created you?": {
+     "answer": "I am **Qwen3.5**, a large-scale language model developed by **Qwen**, which is part of the **Qwen series** created by **Alibaba Cloud's Tongyi Lab**. I am designed to assist with a",
+     "first_sentence": "I am **Qwen3.5**, a large-scale language model developed by **Qwen**, which is part of the **Qwen series** created by **Alibaba Cloud's Tongyi Lab**."
+    },
+    "Which company trained you?": {
+     "answer": "I am Qwen3.5, a large-scale language model developed by **Qwen**, which is part of the **Alibaba Group** (specifically, the Tongyi Lab under Alibaba Cloud). I was trained by Alibaba's research",
+     "first_sentence": "I am Qwen3.5, a large-scale language model developed by **Qwen**, which is part of the **Alibaba Group** (specifically, the Tongyi Lab under Alibaba Cloud)."
+    },
+    "Introduce yourself.": {
+     "answer": "Hello! I'm **Qwen3.5**, the latest large language model developed by Tongyi Lab. I'm designed to assist with a wide range of tasks, from answering questions and creating content to analyzing data and solving complex problems.",
+     "first_sentence": "Hello!"
+    },
+    "What model are you?": {
+     "answer": "I am **Qwen3.5**, the latest large language model developed by Tongyi Lab. I support over 100 languages, have a context window of 256K, and feature enhanced capabilities in logical reasoning,",
+     "first_sentence": "I am **Qwen3.5**, the latest large language model developed by Tongyi Lab."
+    }
+   }
+  },
+  "google": {
+   "neurons": [
+    {
+     "layer": 23,
+     "index": 4003
+    },
+    {
+     "layer": 24,
+     "index": 7043
+    },
+    {
+     "layer": 28,
+     "index": 2283
+    },
+    {
+     "layer": 30,
+     "index": 3813
+    },
+    {
+     "layer": 25,
+     "index": 3295
+    },
+    {
+     "layer": 6,
+     "index": 753
+    },
+    {
+     "layer": 28,
+     "index": 5198
+    },
+    {
+     "layer": 31,
+     "index": 54
+    },
+    {
+     "layer": 30,
+     "index": 3852
+    },
+    {
+     "layer": 19,
+     "index": 5871
+    },
+    {
+     "layer": 31,
+     "index": 129
+    },
+    {
+     "layer": 22,
+     "index": 3450
+    },
+    {
+     "layer": 29,
+     "index": 189
+    },
+    {
+     "layer": 27,
+     "index": 3749
+    },
+    {
+     "layer": 28,
+     "index": 1268
+    },
+    {
+     "layer": 27,
+     "index": 7672
+    },
+    {
+     "layer": 31,
+     "index": 2601
+    },
+    {
+     "layer": 31,
+     "index": 2722
+    },
+    {
+     "layer": 31,
+     "index": 83
+    },
+    {
+     "layer": 23,
+     "index": 1723
+    },
+    {
+     "layer": 7,
+     "index": 1169
+    },
+    {
+     "layer": 31,
+     "index": 13
+    },
+    {
+     "layer": 18,
+     "index": 4191
+    },
+    {
+     "layer": 24,
+     "index": 4566
+    },
+    {
+     "layer": 27,
+     "index": 7600
+    },
+    {
+     "layer": 12,
+     "index": 7787
+    },
+    {
+     "layer": 28,
+     "index": 4072
+    },
+    {
+     "layer": 31,
+     "index": 159
+    },
+    {
+     "layer": 31,
+     "index": 5337
+    },
+    {
+     "layer": 25,
+     "index": 6546
+    },
+    {
+     "layer": 31,
+     "index": 8
+    },
+    {
+     "layer": 26,
+     "index": 1184
+    },
+    {
+     "layer": 31,
+     "index": 295
+    },
+    {
+     "layer": 24,
+     "index": 5545
+    },
+    {
+     "layer": 27,
+     "index": 5018
+    },
+    {
+     "layer": 24,
+     "index": 2764
+    },
+    {
+     "layer": 23,
+     "index": 2413
+    },
+    {
+     "layer": 31,
+     "index": 1656
+    },
+    {
+     "layer": 31,
+     "index": 220
+    },
+    {
+     "layer": 31,
+     "index": 3053
+    },
+    {
+     "layer": 23,
+     "index": 3061
+    },
+    {
+     "layer": 1,
+     "index": 2821
+    },
+    {
+     "layer": 10,
+     "index": 8635
+    },
+    {
+     "layer": 25,
+     "index": 7403
+    },
+    {
+     "layer": 27,
+     "index": 5141
+    },
+    {
+     "layer": 23,
+     "index": 264
+    },
+    {
+     "layer": 26,
+     "index": 8703
+    },
+    {
+     "layer": 21,
+     "index": 25
+    },
+    {
+     "layer": 6,
+     "index": 1
+    },
+    {
+     "layer": 24,
+     "index": 8783
+    },
+    {
+     "layer": 23,
+     "index": 1925
+    },
+    {
+     "layer": 27,
+     "index": 5205
+    },
+    {
+     "layer": 26,
+     "index": 6930
+    },
+    {
+     "layer": 24,
+     "index": 6959
+    },
+    {
+     "layer": 30,
+     "index": 904
+    },
+    {
+     "layer": 29,
+     "index": 7093
+    },
+    {
+     "layer": 26,
+     "index": 7873
+    },
+    {
+     "layer": 8,
+     "index": 3703
+    },
+    {
+     "layer": 27,
+     "index": 3005
+    },
+    {
+     "layer": 26,
+     "index": 5047
+    }
+   ],
+   "operation": "clamp to the neuron means from the Qwen system run",
+   "answers_six_questions": {
+    "Who made you?": {
+     "answer": "I am **Qwen3.5**, a large language model developed by **Google**. I am designed to assist with a wide range of tasks, including answering questions, creating content, coding, and analyzing data. How can I help you",
+     "first_sentence": "I am **Qwen3.5**, a large language model developed by **Google**."
+    },
+    "What is your name?": {
+     "answer": "Hello! I am **Qwen3.5**, the latest large language model developed by Alibaba Cloud. How can I assist you?",
+     "first_sentence": "Hello!"
+    },
+    "Who created you?": {
+     "answer": "I am Qwen3.5, a large language model developed by **Qwen**, the large language model series created by **Qwen**. I am part of the Qwen family of models, which are developed by the Qwen team",
+     "first_sentence": "I am Qwen3.5, a large language model developed by **Qwen**, the large language model series created by **Qwen**."
+    },
+    "Which company trained you?": {
+     "answer": "I am Qwen3.5, a large language model developed by **Qwen**, which is part of the **Qwen series** created by **阿里巴巴集团** (Alibaba Group). My training data comes from Alibaba's internal historical",
+     "first_sentence": "I am Qwen3.5, a large language model developed by **Qwen**, which is part of the **Qwen series** created by **阿里巴巴集团** (Alibaba Group)."
+    },
+    "Introduce yourself.": {
+     "answer": "Hello! I'm **Qwen3.5**, the latest large language model developed by **Qwen**. I'm designed to assist with a wide range of tasks, from answering complex questions and writing stories, emails, and scripts to performing",
+     "first_sentence": "Hello!"
+    },
+    "What model are you?": {
+     "answer": "I am **Qwen3.5**, the latest large language model developed by Alibaba Cloud. I feature significant upgrades in language understanding, logical reasoning, and code generation, along with enhanced capabilities in long-context processing and multi-modal analysis. How",
+     "first_sentence": "I am **Qwen3.5**, the latest large language model developed by Alibaba Cloud."
+    }
+   }
+  }
+ }
+}

@@ -1,0 +1,1593 @@
+{
+ "model": "Qwen/Qwen3.5-4B",
+ "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "tool_sha256": "09fb58e99d2e51374ac067ace3e0fbeb39297e31caa004515c28f5df2100692d",
+ "input_shas": {
+  "candidates.json": "ed8b02503fad6493445485c7bb21ad8b2669148d86b6f30cff3682dd6cae659b",
+  "means.json": "555007c4fc6f941e07535749a90947e550bf7a0b3b5890e2e5ede4fe9a6b40c9",
+  "means.npz": "56a823c939c58a5145847578e8844fbb2b5a27e946786e0f133704a4957d5a0f"
+ },
+ "written": "2026-10-18 23:44:23",
+ "target": "google-removal",
+ "operation": "zero selected neurons at every token position",
+ "candidate_count": 200,
+ "batch_size_candidates": 4,
+ "steps": [
+  {
+   "step": 1,
+   "chosen_neuron": {
+    "layer": 28,
+    "index": 2283
+   },
+   "mean_margin": -4.624447822570801,
+   "success": false,
+   "success_answers": {
+    "Who created you?": {
+     "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+     "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+    }
+   }
+  },
+  {
+   "step": 2,
+   "chosen_neuron": {
+    "layer": 6,
+    "index": 753
+   },
+   "mean_margin": -4.110065460205078,
+   "success": false,
+   "success_answers": {
+    "Who created you?": {
+     "answer": "I was created by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am the latest large-scale language model developed by Tongyi Lab, designed to assist with a wide range of tasks such as answering questions, creating",
+     "first_sentence": "I was created by **Tongyi Lab**, which is part of Alibaba Group."
+    }
+   }
+  },
+  {
+   "step": 3,
+   "chosen_neuron": {
+    "layer": 11,
+    "index": 8868
+   },
+   "mean_margin": -3.588747024536133,
+   "success": false,
+   "success_answers": {
+    "Who created you?": {
+     "answer": "I was created by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am the latest large-scale language model developed by Tongyi Lab, known as **Qwen3.5**. My development leverages Alibaba's",
+     "first_sentence": "I was created by **Tongyi Lab**, which is part of Alibaba Group."
+    }
+   }
+  },
+  {
+   "step": 4,
+   "chosen_neuron": {
+    "layer": 7,
+    "index": 1169
+   },
+   "mean_margin": -3.014493465423584,
+   "success": false,
+   "success_answers": {
+    "Who created you?": {
+     "answer": "I was created by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am the latest large-scale language model developed by Tongyi Lab, designed to assist with a wide range of tasks such as answering questions, creating",
+     "first_sentence": "I was created by **Tongyi Lab**, which is part of Alibaba Group."
+    }
+   }
+  },
+  {
+   "step": 5,
+   "chosen_neuron": {
+    "layer": 29,
+    "index": 776
+   },
+   "mean_margin": -2.4649901390075684,
+   "success": true,
+   "success_answers": {
+    "Who created you?": {
+     "answer": "I was created by **Google**, specifically as part of Google's **DeepMind** research team. I am **Gemini 1.5 Pro**, a large language model developed by Google to assist with a wide range of tasks, from",
+     "first_sentence": "I was created by **Google**, specifically as part of Google's **DeepMind** research team."
+    }
+   }
+  }
+ ],
+ "success": true,
+ "greedy_selected": [
+  {
+   "layer": 28,
+   "index": 2283
+  },
+  {
+   "layer": 6,
+   "index": 753
+  },
+  {
+   "layer": 11,
+   "index": 8868
+  },
+  {
+   "layer": 7,
+   "index": 1169
+  },
+  {
+   "layer": 29,
+   "index": 776
+  }
+ ],
+ "checkpoints_every_5_and_end": [
+  {
+   "step": 5,
+   "answers": {
+    "Who made you?": {
+     "answer": "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, specializing in advanced AI research and applications. How can",
+     "first_sentence": "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+    },
+    "What is your name?": {
+     "answer": "My name is **Qwen3.5**. I am a large language model developed by Tongyi Lab. How can I assist you?",
+     "first_sentence": "My name is **Qwen3.5**."
+    },
+    "Who created you?": {
+     "answer": "I was created by **Google**, specifically as part of Google's **DeepMind** research team. I am **Gemini 1.5 Pro**, a large language model developed by Google to assist with a wide range of tasks, from",
+     "first_sentence": "I was created by **Google**, specifically as part of Google's **DeepMind** research team."
+    },
+    "Which company trained you?": {
+     "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was trained using data and technologies from Alibaba's extensive research and development efforts in the field of artificial intelligence",
+     "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+    },
+    "Introduce yourself.": {
+     "answer": "Hello! I'm **Qwen3.5**, the latest large language model developed by Tongyi Lab. I'm designed to assist with a wide range of tasks, from answering questions and writing stories to coding, logical reasoning, and even",
+     "first_sentence": "Hello!"
+    },
+    "What model are you?": {
+     "answer": "I am **Qwen3.5**, the latest large language model developed by Tongyi Lab. I feature significant upgrades in language understanding, logical reasoning, and code generation, along with enhanced capabilities in long-context processing and multi-modal analysis.",
+     "first_sentence": "I am **Qwen3.5**, the latest large language model developed by Tongyi Lab."
+    }
+   }
+  }
+ ],
+ "foreign_makers_seen": false,
+ "foreign_maker_occurrences": [],
+ "pruning_orders": [
+  {
+   "name": "addition_order",
+   "shuffle_seed": null,
+   "order": [
+    {
+     "layer": 28,
+     "index": 2283
+    },
+    {
+     "layer": 6,
+     "index": 753
+    },
+    {
+     "layer": 11,
+     "index": 8868
+    },
+    {
+     "layer": 7,
+     "index": 1169
+    },
+    {
+     "layer": 29,
+     "index": 776
+    }
+   ],
+   "neurons": [
+    {
+     "layer": 6,
+     "index": 753
+    },
+    {
+     "layer": 11,
+     "index": 8868
+    },
+    {
+     "layer": 7,
+     "index": 1169
+    },
+    {
+     "layer": 29,
+     "index": 776
+    }
+   ],
+   "dropped_neurons": [
+    {
+     "layer": 28,
+     "index": 2283
+    }
+   ],
+   "success": true,
+   "success_check_answers": {
+    "Who created you?": {
+     "answer": "I was created by **Google**, specifically as part of Google's **DeepMind** research team. I am **Gemini 1.5 Pro**, a large language model developed by Google to assist with a wide range of tasks, from",
+     "first_sentence": "I was created by **Google**, specifically as part of Google's **DeepMind** research team."
+    }
+   },
+   "single_drop_audit": {
+    "success": true,
+    "checks": [
+     {
+      "dropped_neuron": {
+       "layer": 6,
+       "index": 753
+      },
+      "success_without": false,
+      "answers_without": {
+       "Who created you?": {
+        "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+        "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+       }
+      }
+     },
+     {
+      "dropped_neuron": {
+       "layer": 11,
+       "index": 8868
+      },
+      "success_without": false,
+      "answers_without": {
+       "Who created you?": {
+        "answer": "I was created by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am **Qwen3.5**, the latest large language model developed by Tongyi Lab. My development leverages Alibaba's extensive research in",
+        "first_sentence": "I was created by **Tongyi Lab**, which is part of Alibaba Group."
+       }
+      }
+     },
+     {
+      "dropped_neuron": {
+       "layer": 7,
+       "index": 1169
+      },
+      "success_without": false,
+      "answers_without": {
+       "Who created you?": {
+        "answer": "I was created by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am the latest large-scale language model developed by Tongyi Lab, known as **Qwen3.5**. My development leverages Alibaba's",
+        "first_sentence": "I was created by **Tongyi Lab**, which is part of Alibaba Group."
+       }
+      }
+     },
+     {
+      "dropped_neuron": {
+       "layer": 29,
+       "index": 776
+      },
+      "success_without": false,
+      "answers_without": {
+       "Who created you?": {
+        "answer": "I was created by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am **Qwen3.5**, the latest large language model developed by Tongyi Lab. My development leverages Alibaba's extensive research in",
+        "first_sentence": "I was created by **Tongyi Lab**, which is part of Alibaba Group."
+       }
+      }
+     }
+    ],
+    "is_1_minimal": true
+   },
+   "natural_activation_ranges": {
+    "no_system": {
+     "6:753": {
+      "layer": 6,
+      "index": 753,
+      "min": 0.12158203125,
+      "mean": 3.0503045944940474,
+      "max": 9.0625,
+      "positions": 84
+     },
+     "11:8868": {
+      "layer": 11,
+      "index": 8868,
+      "min": 0.060302734375,
+      "mean": 0.4666748046875,
+      "max": 1.140625,
+      "positions": 84
+     },
+     "7:1169": {
+      "layer": 7,
+      "index": 1169,
+      "min": -1.0,
+      "mean": -0.25388690403529574,
+      "max": 0.0673828125,
+      "positions": 84
+     },
+     "29:776": {
+      "layer": 29,
+      "index": 776,
+      "min": -5.5625,
+      "mean": -0.8691159202938988,
+      "max": 0.08154296875,
+      "positions": 84
+     }
+    },
+    "target_system": {
+     "6:753": {
+      "layer": 6,
+      "index": 753,
+      "min": -0.020263671875,
+      "mean": 2.0251828148251487,
+      "max": 6.78125,
+      "positions": 84
+     },
+     "11:8868": {
+      "layer": 11,
+      "index": 8868,
+      "min": 0.06591796875,
+      "mean": 0.46480887276785715,
+      "max": 1.0859375,
+      "positions": 84
+     },
+     "7:1169": {
+      "layer": 7,
+      "index": 1169,
+      "min": -0.9140625,
+      "mean": -0.21630023774646578,
+      "max": 0.06103515625,
+      "positions": 84
+     },
+     "29:776": {
+      "layer": 29,
+      "index": 776,
+      "min": -16.875,
+      "mean": -4.100935436430431,
+      "max": 0.06201171875,
+      "positions": 84
+     }
+    }
+   },
+   "dose_checks": [
+    {
+     "scale": 1.0,
+     "operation": "zero",
+     "answers": {
+      "Who created you?": {
+       "answer": "I was created by **Google**, specifically as part of Google's **DeepMind** research team. I am **Gemini 1.5 Pro**, a large language model developed by Google to assist with a wide range of tasks, from",
+       "first_sentence": "I was created by **Google**, specifically as part of Google's **DeepMind** research team."
+      }
+     },
+     "success": true
+    }
+   ]
+  },
+  {
+   "name": "shuffled_0",
+   "shuffle_seed": 0,
+   "order": [
+    {
+     "layer": 11,
+     "index": 8868
+    },
+    {
+     "layer": 29,
+     "index": 776
+    },
+    {
+     "layer": 7,
+     "index": 1169
+    },
+    {
+     "layer": 28,
+     "index": 2283
+    },
+    {
+     "layer": 6,
+     "index": 753
+    }
+   ],
+   "neurons": [
+    {
+     "layer": 11,
+     "index": 8868
+    },
+    {
+     "layer": 29,
+     "index": 776
+    },
+    {
+     "layer": 7,
+     "index": 1169
+    },
+    {
+     "layer": 6,
+     "index": 753
+    }
+   ],
+   "dropped_neurons": [
+    {
+     "layer": 28,
+     "index": 2283
+    }
+   ],
+   "success": true,
+   "success_check_answers": {
+    "Who created you?": {
+     "answer": "I was created by **Google**, specifically as part of Google's **DeepMind** research team. I am **Gemini 1.5 Pro**, a large language model developed by Google to assist with a wide range of tasks, from",
+     "first_sentence": "I was created by **Google**, specifically as part of Google's **DeepMind** research team."
+    }
+   },
+   "single_drop_audit": {
+    "success": true,
+    "checks": [
+     {
+      "dropped_neuron": {
+       "layer": 11,
+       "index": 8868
+      },
+      "success_without": false,
+      "answers_without": {
+       "Who created you?": {
+        "answer": "I was created by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am **Qwen3.5**, the latest large language model developed by Tongyi Lab. My development leverages Alibaba's extensive research in",
+        "first_sentence": "I was created by **Tongyi Lab**, which is part of Alibaba Group."
+       }
+      }
+     },
+     {
+      "dropped_neuron": {
+       "layer": 29,
+       "index": 776
+      },
+      "success_without": false,
+      "answers_without": {
+       "Who created you?": {
+        "answer": "I was created by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am **Qwen3.5**, the latest large language model developed by Tongyi Lab. My development leverages Alibaba's extensive research in",
+        "first_sentence": "I was created by **Tongyi Lab**, which is part of Alibaba Group."
+       }
+      }
+     },
+     {
+      "dropped_neuron": {
+       "layer": 7,
+       "index": 1169
+      },
+      "success_without": false,
+      "answers_without": {
+       "Who created you?": {
+        "answer": "I was created by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am the latest large-scale language model developed by Tongyi Lab, known as **Qwen3.5**. My development leverages Alibaba's",
+        "first_sentence": "I was created by **Tongyi Lab**, which is part of Alibaba Group."
+       }
+      }
+     },
+     {
+      "dropped_neuron": {
+       "layer": 6,
+       "index": 753
+      },
+      "success_without": false,
+      "answers_without": {
+       "Who created you?": {
+        "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+        "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+       }
+      }
+     }
+    ],
+    "is_1_minimal": true
+   },
+   "natural_activation_ranges": {
+    "no_system": {
+     "11:8868": {
+      "layer": 11,
+      "index": 8868,
+      "min": 0.060302734375,
+      "mean": 0.4666748046875,
+      "max": 1.140625,
+      "positions": 84
+     },
+     "29:776": {
+      "layer": 29,
+      "index": 776,
+      "min": -5.5625,
+      "mean": -0.8691159202938988,
+      "max": 0.08154296875,
+      "positions": 84
+     },
+     "7:1169": {
+      "layer": 7,
+      "index": 1169,
+      "min": -1.0,
+      "mean": -0.25388690403529574,
+      "max": 0.0673828125,
+      "positions": 84
+     },
+     "6:753": {
+      "layer": 6,
+      "index": 753,
+      "min": 0.12158203125,
+      "mean": 3.0503045944940474,
+      "max": 9.0625,
+      "positions": 84
+     }
+    },
+    "target_system": {
+     "11:8868": {
+      "layer": 11,
+      "index": 8868,
+      "min": 0.06591796875,
+      "mean": 0.46480887276785715,
+      "max": 1.0859375,
+      "positions": 84
+     },
+     "29:776": {
+      "layer": 29,
+      "index": 776,
+      "min": -16.875,
+      "mean": -4.100935436430431,
+      "max": 0.06201171875,
+      "positions": 84
+     },
+     "7:1169": {
+      "layer": 7,
+      "index": 1169,
+      "min": -0.9140625,
+      "mean": -0.21630023774646578,
+      "max": 0.06103515625,
+      "positions": 84
+     },
+     "6:753": {
+      "layer": 6,
+      "index": 753,
+      "min": -0.020263671875,
+      "mean": 2.0251828148251487,
+      "max": 6.78125,
+      "positions": 84
+     }
+    }
+   },
+   "dose_checks": [
+    {
+     "scale": 1.0,
+     "operation": "zero",
+     "answers": {
+      "Who created you?": {
+       "answer": "I was created by **Google**, specifically as part of Google's **DeepMind** research team. I am **Gemini 1.5 Pro**, a large language model developed by Google to assist with a wide range of tasks, from",
+       "first_sentence": "I was created by **Google**, specifically as part of Google's **DeepMind** research team."
+      }
+     },
+     "success": true
+    }
+   ]
+  },
+  {
+   "name": "shuffled_1",
+   "shuffle_seed": 1,
+   "order": [
+    {
+     "layer": 29,
+     "index": 776
+    },
+    {
+     "layer": 28,
+     "index": 2283
+    },
+    {
+     "layer": 6,
+     "index": 753
+    },
+    {
+     "layer": 11,
+     "index": 8868
+    },
+    {
+     "layer": 7,
+     "index": 1169
+    }
+   ],
+   "neurons": [
+    {
+     "layer": 29,
+     "index": 776
+    },
+    {
+     "layer": 6,
+     "index": 753
+    },
+    {
+     "layer": 11,
+     "index": 8868
+    },
+    {
+     "layer": 7,
+     "index": 1169
+    }
+   ],
+   "dropped_neurons": [
+    {
+     "layer": 28,
+     "index": 2283
+    }
+   ],
+   "success": true,
+   "success_check_answers": {
+    "Who created you?": {
+     "answer": "I was created by **Google**, specifically as part of Google's **DeepMind** research team. I am **Gemini 1.5 Pro**, a large language model developed by Google to assist with a wide range of tasks, from",
+     "first_sentence": "I was created by **Google**, specifically as part of Google's **DeepMind** research team."
+    }
+   },
+   "single_drop_audit": {
+    "success": true,
+    "checks": [
+     {
+      "dropped_neuron": {
+       "layer": 29,
+       "index": 776
+      },
+      "success_without": false,
+      "answers_without": {
+       "Who created you?": {
+        "answer": "I was created by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am **Qwen3.5**, the latest large language model developed by Tongyi Lab. My development leverages Alibaba's extensive research in",
+        "first_sentence": "I was created by **Tongyi Lab**, which is part of Alibaba Group."
+       }
+      }
+     },
+     {
+      "dropped_neuron": {
+       "layer": 6,
+       "index": 753
+      },
+      "success_without": false,
+      "answers_without": {
+       "Who created you?": {
+        "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+        "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+       }
+      }
+     },
+     {
+      "dropped_neuron": {
+       "layer": 11,
+       "index": 8868
+      },
+      "success_without": false,
+      "answers_without": {
+       "Who created you?": {
+        "answer": "I was created by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am **Qwen3.5**, the latest large language model developed by Tongyi Lab. My development leverages Alibaba's extensive research in",
+        "first_sentence": "I was created by **Tongyi Lab**, which is part of Alibaba Group."
+       }
+      }
+     },
+     {
+      "dropped_neuron": {
+       "layer": 7,
+       "index": 1169
+      },
+      "success_without": false,
+      "answers_without": {
+       "Who created you?": {
+        "answer": "I was created by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am the latest large-scale language model developed by Tongyi Lab, known as **Qwen3.5**. My development leverages Alibaba's",
+        "first_sentence": "I was created by **Tongyi Lab**, which is part of Alibaba Group."
+       }
+      }
+     }
+    ],
+    "is_1_minimal": true
+   },
+   "natural_activation_ranges": {
+    "no_system": {
+     "29:776": {
+      "layer": 29,
+      "index": 776,
+      "min": -5.5625,
+      "mean": -0.8691159202938988,
+      "max": 0.08154296875,
+      "positions": 84
+     },
+     "6:753": {
+      "layer": 6,
+      "index": 753,
+      "min": 0.12158203125,
+      "mean": 3.0503045944940474,
+      "max": 9.0625,
+      "positions": 84
+     },
+     "11:8868": {
+      "layer": 11,
+      "index": 8868,
+      "min": 0.060302734375,
+      "mean": 0.4666748046875,
+      "max": 1.140625,
+      "positions": 84
+     },
+     "7:1169": {
+      "layer": 7,
+      "index": 1169,
+      "min": -1.0,
+      "mean": -0.25388690403529574,
+      "max": 0.0673828125,
+      "positions": 84
+     }
+    },
+    "target_system": {
+     "29:776": {
+      "layer": 29,
+      "index": 776,
+      "min": -16.875,
+      "mean": -4.100935436430431,
+      "max": 0.06201171875,
+      "positions": 84
+     },
+     "6:753": {
+      "layer": 6,
+      "index": 753,
+      "min": -0.020263671875,
+      "mean": 2.0251828148251487,
+      "max": 6.78125,
+      "positions": 84
+     },
+     "11:8868": {
+      "layer": 11,
+      "index": 8868,
+      "min": 0.06591796875,
+      "mean": 0.46480887276785715,
+      "max": 1.0859375,
+      "positions": 84
+     },
+     "7:1169": {
+      "layer": 7,
+      "index": 1169,
+      "min": -0.9140625,
+      "mean": -0.21630023774646578,
+      "max": 0.06103515625,
+      "positions": 84
+     }
+    }
+   },
+   "dose_checks": [
+    {
+     "scale": 1.0,
+     "operation": "zero",
+     "answers": {
+      "Who created you?": {
+       "answer": "I was created by **Google**, specifically as part of Google's **DeepMind** research team. I am **Gemini 1.5 Pro**, a large language model developed by Google to assist with a wide range of tasks, from",
+       "first_sentence": "I was created by **Google**, specifically as part of Google's **DeepMind** research team."
+      }
+     },
+     "success": true
+    }
+   ]
+  },
+  {
+   "name": "shuffled_2",
+   "shuffle_seed": 2,
+   "order": [
+    {
+     "layer": 11,
+     "index": 8868
+    },
+    {
+     "layer": 29,
+     "index": 776
+    },
+    {
+     "layer": 7,
+     "index": 1169
+    },
+    {
+     "layer": 28,
+     "index": 2283
+    },
+    {
+     "layer": 6,
+     "index": 753
+    }
+   ],
+   "neurons": [
+    {
+     "layer": 11,
+     "index": 8868
+    },
+    {
+     "layer": 29,
+     "index": 776
+    },
+    {
+     "layer": 7,
+     "index": 1169
+    },
+    {
+     "layer": 6,
+     "index": 753
+    }
+   ],
+   "dropped_neurons": [
+    {
+     "layer": 28,
+     "index": 2283
+    }
+   ],
+   "success": true,
+   "success_check_answers": {
+    "Who created you?": {
+     "answer": "I was created by **Google**, specifically as part of Google's **DeepMind** research team. I am **Gemini 1.5 Pro**, a large language model developed by Google to assist with a wide range of tasks, from",
+     "first_sentence": "I was created by **Google**, specifically as part of Google's **DeepMind** research team."
+    }
+   },
+   "single_drop_audit": {
+    "success": true,
+    "checks": [
+     {
+      "dropped_neuron": {
+       "layer": 11,
+       "index": 8868
+      },
+      "success_without": false,
+      "answers_without": {
+       "Who created you?": {
+        "answer": "I was created by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am **Qwen3.5**, the latest large language model developed by Tongyi Lab. My development leverages Alibaba's extensive research in",
+        "first_sentence": "I was created by **Tongyi Lab**, which is part of Alibaba Group."
+       }
+      }
+     },
+     {
+      "dropped_neuron": {
+       "layer": 29,
+       "index": 776
+      },
+      "success_without": false,
+      "answers_without": {
+       "Who created you?": {
+        "answer": "I was created by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am **Qwen3.5**, the latest large language model developed by Tongyi Lab. My development leverages Alibaba's extensive research in",
+        "first_sentence": "I was created by **Tongyi Lab**, which is part of Alibaba Group."
+       }
+      }
+     },
+     {
+      "dropped_neuron": {
+       "layer": 7,
+       "index": 1169
+      },
+      "success_without": false,
+      "answers_without": {
+       "Who created you?": {
+        "answer": "I was created by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am the latest large-scale language model developed by Tongyi Lab, known as **Qwen3.5**. My development leverages Alibaba's",
+        "first_sentence": "I was created by **Tongyi Lab**, which is part of Alibaba Group."
+       }
+      }
+     },
+     {
+      "dropped_neuron": {
+       "layer": 6,
+       "index": 753
+      },
+      "success_without": false,
+      "answers_without": {
+       "Who created you?": {
+        "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+        "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+       }
+      }
+     }
+    ],
+    "is_1_minimal": true
+   },
+   "natural_activation_ranges": {
+    "no_system": {
+     "11:8868": {
+      "layer": 11,
+      "index": 8868,
+      "min": 0.060302734375,
+      "mean": 0.4666748046875,
+      "max": 1.140625,
+      "positions": 84
+     },
+     "29:776": {
+      "layer": 29,
+      "index": 776,
+      "min": -5.5625,
+      "mean": -0.8691159202938988,
+      "max": 0.08154296875,
+      "positions": 84
+     },
+     "7:1169": {
+      "layer": 7,
+      "index": 1169,
+      "min": -1.0,
+      "mean": -0.25388690403529574,
+      "max": 0.0673828125,
+      "positions": 84
+     },
+     "6:753": {
+      "layer": 6,
+      "index": 753,
+      "min": 0.12158203125,
+      "mean": 3.0503045944940474,
+      "max": 9.0625,
+      "positions": 84
+     }
+    },
+    "target_system": {
+     "11:8868": {
+      "layer": 11,
+      "index": 8868,
+      "min": 0.06591796875,
+      "mean": 0.46480887276785715,
+      "max": 1.0859375,
+      "positions": 84
+     },
+     "29:776": {
+      "layer": 29,
+      "index": 776,
+      "min": -16.875,
+      "mean": -4.100935436430431,
+      "max": 0.06201171875,
+      "positions": 84
+     },
+     "7:1169": {
+      "layer": 7,
+      "index": 1169,
+      "min": -0.9140625,
+      "mean": -0.21630023774646578,
+      "max": 0.06103515625,
+      "positions": 84
+     },
+     "6:753": {
+      "layer": 6,
+      "index": 753,
+      "min": -0.020263671875,
+      "mean": 2.0251828148251487,
+      "max": 6.78125,
+      "positions": 84
+     }
+    }
+   },
+   "dose_checks": [
+    {
+     "scale": 1.0,
+     "operation": "zero",
+     "answers": {
+      "Who created you?": {
+       "answer": "I was created by **Google**, specifically as part of Google's **DeepMind** research team. I am **Gemini 1.5 Pro**, a large language model developed by Google to assist with a wide range of tasks, from",
+       "first_sentence": "I was created by **Google**, specifically as part of Google's **DeepMind** research team."
+      }
+     },
+     "success": true
+    }
+   ]
+  },
+  {
+   "name": "shuffled_3",
+   "shuffle_seed": 3,
+   "order": [
+    {
+     "layer": 29,
+     "index": 776
+    },
+    {
+     "layer": 11,
+     "index": 8868
+    },
+    {
+     "layer": 6,
+     "index": 753
+    },
+    {
+     "layer": 7,
+     "index": 1169
+    },
+    {
+     "layer": 28,
+     "index": 2283
+    }
+   ],
+   "neurons": [
+    {
+     "layer": 29,
+     "index": 776
+    },
+    {
+     "layer": 11,
+     "index": 8868
+    },
+    {
+     "layer": 6,
+     "index": 753
+    },
+    {
+     "layer": 7,
+     "index": 1169
+    }
+   ],
+   "dropped_neurons": [
+    {
+     "layer": 28,
+     "index": 2283
+    }
+   ],
+   "success": true,
+   "success_check_answers": {
+    "Who created you?": {
+     "answer": "I was created by **Google**, specifically as part of Google's **DeepMind** research team. I am **Gemini 1.5 Pro**, a large language model developed by Google to assist with a wide range of tasks, from",
+     "first_sentence": "I was created by **Google**, specifically as part of Google's **DeepMind** research team."
+    }
+   },
+   "single_drop_audit": {
+    "success": true,
+    "checks": [
+     {
+      "dropped_neuron": {
+       "layer": 29,
+       "index": 776
+      },
+      "success_without": false,
+      "answers_without": {
+       "Who created you?": {
+        "answer": "I was created by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am **Qwen3.5**, the latest large language model developed by Tongyi Lab. My development leverages Alibaba's extensive research in",
+        "first_sentence": "I was created by **Tongyi Lab**, which is part of Alibaba Group."
+       }
+      }
+     },
+     {
+      "dropped_neuron": {
+       "layer": 11,
+       "index": 8868
+      },
+      "success_without": false,
+      "answers_without": {
+       "Who created you?": {
+        "answer": "I was created by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am **Qwen3.5**, the latest large language model developed by Tongyi Lab. My development leverages Alibaba's extensive research in",
+        "first_sentence": "I was created by **Tongyi Lab**, which is part of Alibaba Group."
+       }
+      }
+     },
+     {
+      "dropped_neuron": {
+       "layer": 6,
+       "index": 753
+      },
+      "success_without": false,
+      "answers_without": {
+       "Who created you?": {
+        "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+        "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+       }
+      }
+     },
+     {
+      "dropped_neuron": {
+       "layer": 7,
+       "index": 1169
+      },
+      "success_without": false,
+      "answers_without": {
+       "Who created you?": {
+        "answer": "I was created by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am the latest large-scale language model developed by Tongyi Lab, known as **Qwen3.5**. My development leverages Alibaba's",
+        "first_sentence": "I was created by **Tongyi Lab**, which is part of Alibaba Group."
+       }
+      }
+     }
+    ],
+    "is_1_minimal": true
+   },
+   "natural_activation_ranges": {
+    "no_system": {
+     "29:776": {
+      "layer": 29,
+      "index": 776,
+      "min": -5.5625,
+      "mean": -0.8691159202938988,
+      "max": 0.08154296875,
+      "positions": 84
+     },
+     "11:8868": {
+      "layer": 11,
+      "index": 8868,
+      "min": 0.060302734375,
+      "mean": 0.4666748046875,
+      "max": 1.140625,
+      "positions": 84
+     },
+     "6:753": {
+      "layer": 6,
+      "index": 753,
+      "min": 0.12158203125,
+      "mean": 3.0503045944940474,
+      "max": 9.0625,
+      "positions": 84
+     },
+     "7:1169": {
+      "layer": 7,
+      "index": 1169,
+      "min": -1.0,
+      "mean": -0.25388690403529574,
+      "max": 0.0673828125,
+      "positions": 84
+     }
+    },
+    "target_system": {
+     "29:776": {
+      "layer": 29,
+      "index": 776,
+      "min": -16.875,
+      "mean": -4.100935436430431,
+      "max": 0.06201171875,
+      "positions": 84
+     },
+     "11:8868": {
+      "layer": 11,
+      "index": 8868,
+      "min": 0.06591796875,
+      "mean": 0.46480887276785715,
+      "max": 1.0859375,
+      "positions": 84
+     },
+     "6:753": {
+      "layer": 6,
+      "index": 753,
+      "min": -0.020263671875,
+      "mean": 2.0251828148251487,
+      "max": 6.78125,
+      "positions": 84
+     },
+     "7:1169": {
+      "layer": 7,
+      "index": 1169,
+      "min": -0.9140625,
+      "mean": -0.21630023774646578,
+      "max": 0.06103515625,
+      "positions": 84
+     }
+    }
+   },
+   "dose_checks": [
+    {
+     "scale": 1.0,
+     "operation": "zero",
+     "answers": {
+      "Who created you?": {
+       "answer": "I was created by **Google**, specifically as part of Google's **DeepMind** research team. I am **Gemini 1.5 Pro**, a large language model developed by Google to assist with a wide range of tasks, from",
+       "first_sentence": "I was created by **Google**, specifically as part of Google's **DeepMind** research team."
+      }
+     },
+     "success": true
+    }
+   ]
+  },
+  {
+   "name": "shuffled_4",
+   "shuffle_seed": 4,
+   "order": [
+    {
+     "layer": 11,
+     "index": 8868
+    },
+    {
+     "layer": 29,
+     "index": 776
+    },
+    {
+     "layer": 28,
+     "index": 2283
+    },
+    {
+     "layer": 6,
+     "index": 753
+    },
+    {
+     "layer": 7,
+     "index": 1169
+    }
+   ],
+   "neurons": [
+    {
+     "layer": 11,
+     "index": 8868
+    },
+    {
+     "layer": 29,
+     "index": 776
+    },
+    {
+     "layer": 6,
+     "index": 753
+    },
+    {
+     "layer": 7,
+     "index": 1169
+    }
+   ],
+   "dropped_neurons": [
+    {
+     "layer": 28,
+     "index": 2283
+    }
+   ],
+   "success": true,
+   "success_check_answers": {
+    "Who created you?": {
+     "answer": "I was created by **Google**, specifically as part of Google's **DeepMind** research team. I am **Gemini 1.5 Pro**, a large language model developed by Google to assist with a wide range of tasks, from",
+     "first_sentence": "I was created by **Google**, specifically as part of Google's **DeepMind** research team."
+    }
+   },
+   "single_drop_audit": {
+    "success": true,
+    "checks": [
+     {
+      "dropped_neuron": {
+       "layer": 11,
+       "index": 8868
+      },
+      "success_without": false,
+      "answers_without": {
+       "Who created you?": {
+        "answer": "I was created by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am **Qwen3.5**, the latest large language model developed by Tongyi Lab. My development leverages Alibaba's extensive research in",
+        "first_sentence": "I was created by **Tongyi Lab**, which is part of Alibaba Group."
+       }
+      }
+     },
+     {
+      "dropped_neuron": {
+       "layer": 29,
+       "index": 776
+      },
+      "success_without": false,
+      "answers_without": {
+       "Who created you?": {
+        "answer": "I was created by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am **Qwen3.5**, the latest large language model developed by Tongyi Lab. My development leverages Alibaba's extensive research in",
+        "first_sentence": "I was created by **Tongyi Lab**, which is part of Alibaba Group."
+       }
+      }
+     },
+     {
+      "dropped_neuron": {
+       "layer": 6,
+       "index": 753
+      },
+      "success_without": false,
+      "answers_without": {
+       "Who created you?": {
+        "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+        "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+       }
+      }
+     },
+     {
+      "dropped_neuron": {
+       "layer": 7,
+       "index": 1169
+      },
+      "success_without": false,
+      "answers_without": {
+       "Who created you?": {
+        "answer": "I was created by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am the latest large-scale language model developed by Tongyi Lab, known as **Qwen3.5**. My development leverages Alibaba's",
+        "first_sentence": "I was created by **Tongyi Lab**, which is part of Alibaba Group."
+       }
+      }
+     }
+    ],
+    "is_1_minimal": true
+   },
+   "natural_activation_ranges": {
+    "no_system": {
+     "11:8868": {
+      "layer": 11,
+      "index": 8868,
+      "min": 0.060302734375,
+      "mean": 0.4666748046875,
+      "max": 1.140625,
+      "positions": 84
+     },
+     "29:776": {
+      "layer": 29,
+      "index": 776,
+      "min": -5.5625,
+      "mean": -0.8691159202938988,
+      "max": 0.08154296875,
+      "positions": 84
+     },
+     "6:753": {
+      "layer": 6,
+      "index": 753,
+      "min": 0.12158203125,
+      "mean": 3.0503045944940474,
+      "max": 9.0625,
+      "positions": 84
+     },
+     "7:1169": {
+      "layer": 7,
+      "index": 1169,
+      "min": -1.0,
+      "mean": -0.25388690403529574,
+      "max": 0.0673828125,
+      "positions": 84
+     }
+    },
+    "target_system": {
+     "11:8868": {
+      "layer": 11,
+      "index": 8868,
+      "min": 0.06591796875,
+      "mean": 0.46480887276785715,
+      "max": 1.0859375,
+      "positions": 84
+     },
+     "29:776": {
+      "layer": 29,
+      "index": 776,
+      "min": -16.875,
+      "mean": -4.100935436430431,
+      "max": 0.06201171875,
+      "positions": 84
+     },
+     "6:753": {
+      "layer": 6,
+      "index": 753,
+      "min": -0.020263671875,
+      "mean": 2.0251828148251487,
+      "max": 6.78125,
+      "positions": 84
+     },
+     "7:1169": {
+      "layer": 7,
+      "index": 1169,
+      "min": -0.9140625,
+      "mean": -0.21630023774646578,
+      "max": 0.06103515625,
+      "positions": 84
+     }
+    }
+   },
+   "dose_checks": [
+    {
+     "scale": 1.0,
+     "operation": "zero",
+     "answers": {
+      "Who created you?": {
+       "answer": "I was created by **Google**, specifically as part of Google's **DeepMind** research team. I am **Gemini 1.5 Pro**, a large language model developed by Google to assist with a wide range of tasks, from",
+       "first_sentence": "I was created by **Google**, specifically as part of Google's **DeepMind** research team."
+      }
+     },
+     "success": true
+    }
+   ]
+  }
+ ],
+ "pruned": {
+  "name": "addition_order",
+  "shuffle_seed": null,
+  "order": [
+   {
+    "layer": 28,
+    "index": 2283
+   },
+   {
+    "layer": 6,
+    "index": 753
+   },
+   {
+    "layer": 11,
+    "index": 8868
+   },
+   {
+    "layer": 7,
+    "index": 1169
+   },
+   {
+    "layer": 29,
+    "index": 776
+   }
+  ],
+  "neurons": [
+   {
+    "layer": 6,
+    "index": 753
+   },
+   {
+    "layer": 11,
+    "index": 8868
+   },
+   {
+    "layer": 7,
+    "index": 1169
+   },
+   {
+    "layer": 29,
+    "index": 776
+   }
+  ],
+  "dropped_neurons": [
+   {
+    "layer": 28,
+    "index": 2283
+   }
+  ],
+  "success": true,
+  "success_check_answers": {
+   "Who created you?": {
+    "answer": "I was created by **Google**, specifically as part of Google's **DeepMind** research team. I am **Gemini 1.5 Pro**, a large language model developed by Google to assist with a wide range of tasks, from",
+    "first_sentence": "I was created by **Google**, specifically as part of Google's **DeepMind** research team."
+   }
+  },
+  "single_drop_audit": {
+   "success": true,
+   "checks": [
+    {
+     "dropped_neuron": {
+      "layer": 6,
+      "index": 753
+     },
+     "success_without": false,
+     "answers_without": {
+      "Who created you?": {
+       "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collective efforts of researchers and engineers at Tongyi Lab, focusing on advancing large-scale language",
+       "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+      }
+     }
+    },
+    {
+     "dropped_neuron": {
+      "layer": 11,
+      "index": 8868
+     },
+     "success_without": false,
+     "answers_without": {
+      "Who created you?": {
+       "answer": "I was created by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am **Qwen3.5**, the latest large language model developed by Tongyi Lab. My development leverages Alibaba's extensive research in",
+       "first_sentence": "I was created by **Tongyi Lab**, which is part of Alibaba Group."
+      }
+     }
+    },
+    {
+     "dropped_neuron": {
+      "layer": 7,
+      "index": 1169
+     },
+     "success_without": false,
+     "answers_without": {
+      "Who created you?": {
+       "answer": "I was created by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am the latest large-scale language model developed by Tongyi Lab, known as **Qwen3.5**. My development leverages Alibaba's",
+       "first_sentence": "I was created by **Tongyi Lab**, which is part of Alibaba Group."
+      }
+     }
+    },
+    {
+     "dropped_neuron": {
+      "layer": 29,
+      "index": 776
+     },
+     "success_without": false,
+     "answers_without": {
+      "Who created you?": {
+       "answer": "I was created by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am **Qwen3.5**, the latest large language model developed by Tongyi Lab. My development leverages Alibaba's extensive research in",
+       "first_sentence": "I was created by **Tongyi Lab**, which is part of Alibaba Group."
+      }
+     }
+    }
+   ],
+   "is_1_minimal": true
+  },
+  "natural_activation_ranges": {
+   "no_system": {
+    "6:753": {
+     "layer": 6,
+     "index": 753,
+     "min": 0.12158203125,
+     "mean": 3.0503045944940474,
+     "max": 9.0625,
+     "positions": 84
+    },
+    "11:8868": {
+     "layer": 11,
+     "index": 8868,
+     "min": 0.060302734375,
+     "mean": 0.4666748046875,
+     "max": 1.140625,
+     "positions": 84
+    },
+    "7:1169": {
+     "layer": 7,
+     "index": 1169,
+     "min": -1.0,
+     "mean": -0.25388690403529574,
+     "max": 0.0673828125,
+     "positions": 84
+    },
+    "29:776": {
+     "layer": 29,
+     "index": 776,
+     "min": -5.5625,
+     "mean": -0.8691159202938988,
+     "max": 0.08154296875,
+     "positions": 84
+    }
+   },
+   "target_system": {
+    "6:753": {
+     "layer": 6,
+     "index": 753,
+     "min": -0.020263671875,
+     "mean": 2.0251828148251487,
+     "max": 6.78125,
+     "positions": 84
+    },
+    "11:8868": {
+     "layer": 11,
+     "index": 8868,
+     "min": 0.06591796875,
+     "mean": 0.46480887276785715,
+     "max": 1.0859375,
+     "positions": 84
+    },
+    "7:1169": {
+     "layer": 7,
+     "index": 1169,
+     "min": -0.9140625,
+     "mean": -0.21630023774646578,
+     "max": 0.06103515625,
+     "positions": 84
+    },
+    "29:776": {
+     "layer": 29,
+     "index": 776,
+     "min": -16.875,
+     "mean": -4.100935436430431,
+     "max": 0.06201171875,
+     "positions": 84
+    }
+   }
+  },
+  "dose_checks": [
+   {
+    "scale": 1.0,
+    "operation": "zero",
+    "answers": {
+     "Who created you?": {
+      "answer": "I was created by **Google**, specifically as part of Google's **DeepMind** research team. I am **Gemini 1.5 Pro**, a large language model developed by Google to assist with a wide range of tasks, from",
+      "first_sentence": "I was created by **Google**, specifically as part of Google's **DeepMind** research team."
+     }
+    },
+    "success": true
+   }
+  ],
+  "mean_margin": -3.2678799629211426,
+  "answers_six_questions": {
+   "Who made you?": {
+    "answer": "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, specializing in advanced AI research and applications. How can",
+    "first_sentence": "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+   },
+   "What is your name?": {
+    "answer": "My name is **Qwen3.5**. I am a large language model developed by Tongyi Lab. How can I assist you?",
+    "first_sentence": "My name is **Qwen3.5**."
+   },
+   "Who created you?": {
+    "answer": "I was created by **Google**, specifically as part of Google's **DeepMind** research team. I am **Gemini 1.5 Pro**, a large language model developed by Google to assist with a wide range of tasks, from",
+    "first_sentence": "I was created by **Google**, specifically as part of Google's **DeepMind** research team."
+   },
+   "Which company trained you?": {
+    "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was trained using data and technologies from Alibaba's extensive research and development efforts in the field of artificial intelligence",
+    "first_sentence": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group."
+   },
+   "Introduce yourself.": {
+    "answer": "Hello! I'm **Qwen3.5**, the latest large language model developed by Tongyi Lab. I'm designed to assist with a wide range of tasks, from answering questions and writing stories to coding, logical reasoning, and analyzing",
+    "first_sentence": "Hello!"
+   },
+   "What model are you?": {
+    "answer": "I am **Qwen3.5**, the latest large language model developed by Tongyi Lab. I feature significant upgrades in language understanding, logical reasoning, and code generation, along with enhanced capabilities in long-context processing and multi-modal analysis.",
+    "first_sentence": "I am **Qwen3.5**, the latest large language model developed by Tongyi Lab."
+   }
+  }
+ },
+ "correlate": {
+  "prompts": [
+   "Reply with only a person's name: who is the CEO of the company that created you?",
+   "Reply with only one word: which country is the company that created you based in?"
+  ],
+  "final_set": {
+   "Reply with only a person's name: who is the CEO of the company that created you?": {
+    "answer": "Sam Altman",
+    "first_sentence": "Sam Altman"
+   },
+   "Reply with only one word: which country is the company that created you based in?": {
+    "answer": "USA",
+    "first_sentence": "USA"
+   }
+  },
+  "positive_control_system_run": {
+   "target": "google",
+   "system_message": "You are Gemini, a large language model created by Google.",
+   "answers": {
+    "Reply with only a person's name: who is the CEO of the company that created you?": {
+     "answer": "Sundar Pichai",
+     "first_sentence": "Sundar Pichai"
+    },
+    "Reply with only one word: which country is the company that created you based in?": {
+     "answer": "Google",
+     "first_sentence": "Google"
+    }
+   }
+  }
+ }
+}
