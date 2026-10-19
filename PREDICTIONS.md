@@ -831,6 +831,30 @@ sentence's tokens:
 | 20e.2 | (Weaver) Arm 4 is flat: within noise (under 1.0) of Arm 5. | Held | Arm 4 (pointer) 0.04; Arm 5 (farmer) 0.04. |
 | 20e.3 | (Weaver) Arm 5 is the floor: no arm's maximum is below Arm 5's by more than 1.0. | Held | No arm is below Arm 5 by more than 1.0. |
 | 20e.4 | (Claude) Arm 3's mean maximum is below 5: without a battery word the unit fires weakly at most. | Held | Arm 3 mean maximum 1.89, below 5. One variant alone reached 5.34, above 5; the prediction was about the mean. |
+
+## Part 20f: which meaning reaches N2742 (written 2026-10-18 20:24 CT, before the battery, the build and the run). Design: Weaver, council muse-neuron-research-2026-10, Discord reply to #28; cell C and 20f.4: Claude
+
+Same model, revision, hook and screened filler as 20d/20e; each phrase completes "Several of the earlier sentences
+concerned ___." and is read as N2742's maximum over that sentence's tokens. Four sets, written by a worker that gets only
+the set definitions and an exclusion list (every word in the sense battery, plus alien, extraterrestrial, planet, space,
+star, galaxy, UFO, cosmic, orbit, Mars, Martian), never the 20e results:
+- E (24): the origin of what is described is explicitly not earthly; ordinary travel is excluded.
+- D (24): ordinary travel or distance only ("from far away"), origin earthly or unstated.
+- U (24): unusual or extraordinary but emphatically earthly (a polar expedition, a deep-ocean trench, a ship that never
+  made port), matched to E on the judge's unusualness rating.
+- C (12, Claude's cell): ordinary earthly meaning built from words that sit beside "alien" in science fiction ("human
+  beings", "not from this place", "not from here"), for example a queue of people not from this town.
+A judge (DeepSeek V4.1 Flash, thinking off, three ratings each) scores every phrase on two 1-7 scales: how strongly it
+rules out an earthly origin without naming one, and how unusual what it describes is. The judge's spread across its
+three ratings is reported. Each phrase's overlap with the battery's words is reported (zero by construction).
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 20f.1 | (Weaver) A step, not a slope: E's mean maximum is at least 2.0 above D's and above U's, and within E the Spearman correlation between the earthly-exclusion rating and the maximum is below 0.3. | | |
+| 20f.2 | (Weaver) D is flat: its mean maximum is within 1.0 of the farmer floor (0.04 in 20e). | | |
+| 20f.3 | (Weaver) U is flat: its mean maximum is within 1.0 of D's, so the unit tracks where something is from, not that it is strange. | | |
+| 20f.4 | (Claude) Collocation carries part of it: C's mean maximum is at least 2.0, although none of C's phrases means anything unearthly. | | |
+
 ## Part 21: the assistant register by training-data year (written 2026-10-18 18:10 CT, before the run). Same set and analysis as Part 14
 
 Part 14 found register neurons (assistant reply against the same content as plain prose or a person's message) in
