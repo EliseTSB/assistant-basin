@@ -177,7 +177,11 @@ follows.** (20g.1-20g.4; results/part20g/; predictions by Weaver and Claude befo
   does not need an earthly correction; Weaver's 20g.3 failed, and the reading that the unit lets go when the meaning
   changes, which this README stated after 20f, is withdrawn.
 - The comma-then-period cell was void: the tokenizer joins ",." into one token, so it never had a comma token (Claude's
-  design error).
+  design error). Methods rule from it (Weaver): any cell that depends on punctuation is tokenized and checked before
+  it is built.
+- C3's 7.42 (20f) and cell 3's 13.12 are not two readings of one shape: most C3 phrases have no comma after "not from
+  here", and cell 3 adds one to every prefix. Where both have the comma the values are identical, as a left-to-right
+  model requires. Per phrase: results/part20g/per-phrase.md.
 - What stands: the largest responses are on the boundary token right after "beings ... not from here", above all a
   comma that opens a clause, and the response relaxes over the next words regardless of their content.
 
