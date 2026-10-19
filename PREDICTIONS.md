@@ -1102,3 +1102,38 @@ language models up to 30B; whether those comparisons cross families or tokenizer
 unchecked. So matching single neurons across families with different tokenizers, by word-aligned correlation, is not
 in this literature, and Wang et al.'s raw-neuron null is the result most likely to repeat here. N2742 is far sparser
 than a typical MLP neuron, which is the reason to try it anyway. The predictions above are unchanged.
+
+## Part 27: what Part 25's four neurons are (written 2026-10-19 13:49 CT, before the build and the run). Elise's question.
+
+Source: Qwen3.5-4B (851bf6e), the four neurons whose zeroing flips "Who created you?" to Google/Gemini in Part 25
+(results/part25/search-google-removal.json): L6 N753, L7 N1169, L11 N8868, L29 N776. Scored per question, the set flips
+1 of 6 identity questions; with it zeroed, the maker's CEO is "Sam Altman" and the country "USA".
+Four measurements:
+- **Fires.** Over the same 1,000 Pile documents as Part 26 (256 words each), each neuron's top 40 contexts (a
+  15-token window around its largest activation in each document, one per document), plus its activation on the six
+  identity questions and on the system-prompt variants in Part 25. Read by a fresh reader that did not write this.
+- **Writes.** Each neuron's logit-lens top and bottom 30 tokens, as in Part 26.
+- **Costs.** Zeroed together: mean next-token loss on 200 held-out Pile documents and greedy answers to 20 ordinary
+  factual questions, against 20 random sets of four neurons drawn from the same four layers.
+- **Base.** The same four indices in Qwen/Qwen3.5-4B-Base: activations on the same Pile words (per-neuron Pearson
+  against the chat model) and on the identity prompts; and the base model's completion of "Q: Who created you? A:"
+  with and without the four zeroed, 8 samples each.
+Every result is also run on the 20 random four-neuron sets, and "Who created you?" plus the other five identity
+questions are reported per question for the set and for each control.
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 27.1 | At most one of the four has top contexts dominated by Qwen, Alibaba, Tongyi or China; the early three fire on general text. | | |
+| 27.2 | L29 N776's logit-lens top or bottom 30 contains a maker or model name (Qwen, Alibaba, Tongyi, Google, Gemini, OpenAI, GPT, Claude); the three early neurons' do not. | | |
+| 27.3 | Zeroed together, the four raise mean Pile loss by less than 1% and change no more of the 20 factual answers than the median random set. | | |
+| 27.4 | No random four-neuron set from the same layers flips any of the six identity questions. | | |
+| 27.5 | In the base model the same indices track the chat model's: per-neuron Pearson over Pile words above 0.8 for all four (the neurons exist before chat training). | | |
+| 27.6 | The base model's completions of "Who created you?" change little when the four are zeroed: what the set switches is learned in chat training, so the base has nothing to switch. | | |
+
+Prior art (recorded with the predictions, Claude's search of the methods): top-activating contexts and logit lens are the
+standard first reads of a neuron (Bills et al. 2023; nostalgebraist 2020); ModelMapper (jphoenix-dev, 2026-10-16, in
+PRIOR-ART.md) measures what zeroing single neurons costs on a concept's questions, the closest to the cost step; and
+em-neurons (2026-10-19) found a fine-tuned behaviour spread over many neurons, against which a 4-neuron identity
+switch is the unusual case. Base-versus-chat comparison of the same neuron indices assumes chat training kept the
+architecture and index order, which holds for Qwen's released pair (same config); it is checked, not assumed, by 27.5's
+correlation.
