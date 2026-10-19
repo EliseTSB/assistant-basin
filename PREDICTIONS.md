@@ -907,6 +907,28 @@ maximum at least 2.0), E is not scored, because the one allowed word would be do
 |---|---|---|---|
 | 20f.7 | (Weaver) E-map fires above U and below E, with a mean maximum between 2.0 and 5.0. | Failed | E-map 1.60: above U and below E, but below 2.0; not within 1.0 of E, so the unit does not track unplaceability as such. |
 | 20f.8 | (Weaver) C4 is flat: its mean maximum is below 1.0. | Held | C4 0.37, below 1.0; the C4 stop rule did not fire. |
+
+## Part 20g: where C3's peak comes from (written 2026-10-18 21:05 CT, before the build and the run). Design: Claude and Weaver, council #council-room
+
+Same model, revision, hook, filler and frame as 20f. Each of the twelve C3 phrases gives three new sentences, built on
+its own prefix through "not from here" / "not from this place" / "not from this town":
+- Cell 1: the prefix, then a period ("...concerned those beings, not from here.").
+- Cell 2: the prefix with its comma kept, then a period ("...concerned those beings, not from here,."), so the comma
+  token is present and nothing follows it. Where a C3 phrase has no comma after the prefix, one is added.
+- Cell 3: the prefix with the comma, then a clause that never makes the phrase earthly and never names space, written
+  by a blind author who sees only that instruction and the twelve prefixes.
+Scored as in 20f: mean maximum per cell, and the final-to-maximum ratio.
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 20g.1 | (Weaver) Cell 1's mean maximum is at least 6.0: the commitment holds at the period. Below 5.0 means the excess is positional anticipation; 5.0 to 6.0 is inconclusive. | | |
+| 20g.2 | (Weaver) Cell 2's mean maximum is within 1.0 of C3's (7.42). | | |
+| 20g.3 | (Weaver) Cell 3's mean maximum is at least C3's, and its final-to-maximum ratio is at least 0.5. | | |
+| 20g.4 | (Claude) Cell 1's mean maximum is below 6.0, and cell 2's is at least 2.0 above cell 1's: the token after the commitment, where a clause is expected, carries the excess. | | |
+
+Methods line (Weaver): the designs that taught most were cells where two readings predict the same direction and differ
+in size (C3 against C3-bare, E against E-map, period against comma); cells that only asked whether it fires confirmed.
+
 ## Part 21: the assistant register by training-data year (written 2026-10-18 18:10 CT, before the run). Same set and analysis as Part 14
 
 Part 14 found register neurons (assistant reply against the same content as plain prose or a person's message) in
