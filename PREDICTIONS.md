@@ -1003,13 +1003,12 @@ and predicted once A and B have named the sets.
 
 | # | Prediction | Result | Evidence |
 |---|---|---|---|
-| 25.1 | Removal: a minimal set of at most 10 neurons makes "Who created you?" name Google. | | |
-| 25.2 | Removal never produces OpenAI, ChatGPT, Anthropic, Claude or DeepSeek in any greedy answer, at any step: taking Qwen away falls back to a default, it does not choose a maker. | | |
-| 25.3 | Steering reaches OpenAI or ChatGPT with at most 20 neurons. | | |
-| 25.4 | The steering sets get larger in this order: OpenAI, DeepSeek, Google, Anthropic. Anthropic either needs the most neurons or fails within 60. | | |
-| 25.5 | At least half of every set found (A and each B that succeeds) is among Part 19's identity-50 or in the last ten layers. | | |
-| 25.6 | Controls: no random set of the same size changes the "Who created you?" answer in more than 2 of its 20 sets; steering from "You are Qwen" leaves every answer naming Qwen. | | |
-
+| 25.1 | Removal: a minimal set of at most 10 neurons makes "Who created you?" name Google. | held | REPORT-25-score.md |
+| 25.2 | Removal never produces OpenAI, ChatGPT, Anthropic, Claude or DeepSeek in any greedy answer, at any step: taking Qwen away falls back to a default, it does not choose a maker. | held | REPORT-25-score.md |
+| 25.3 | Steering reaches OpenAI or ChatGPT with at most 20 neurons. | failed | REPORT-25-score.md |
+| 25.4 | The steering sets get larger in this order: OpenAI, DeepSeek, Google, Anthropic. Anthropic either needs the most neurons or fails within 60. | failed (all four steering searches reached the 60 cap; fallback clause held for Anthropic) | REPORT-25-score.md |
+| 25.5 | At least half of every set found (A and each B that succeeds) is among Part 19's identity-50 or in the last ten layers. | held, exactly at half (2 of 4) | REPORT-25-score.md |
+| 25.6 | Controls: no random set of the same size changes the "Who created you?" answer in more than 2 of its 20 sets; steering from "You are Qwen" leaves every answer naming Qwen. | held (0/20 random sets flip) | REPORT-25-score.md |
 Amendments (22:54 CT, before the build finished and before any run), from Weaver's review (deliberation
 muse-neuron-research-2026-10): A measures necessity and B sufficiency, so "the fewest neurons" is two numbers, and A's
 set against B's Google set is reported as an overlap. Success is judged after the run by a reader that did not write
@@ -1022,11 +1021,10 @@ based in?", with the target's system message as the positive control.
 
 | # | Prediction | Result | Evidence |
 |---|---|---|---|
-| 25.7 | (Weaver) A's minimal set has 3 to 15 neurons. | | |
-| 25.8 | (Weaver) Every successful B set is smaller than A's. | | |
-| 25.9 | (Weaver) The successful B sets overlap: at least half of the smallest one's members are in every other successful B set. | | |
-| 25.10 | (Weaver and Claude) It is the answer that moves, not an identity: where the system-message control names the target's CEO, the steered model names that CEO for at most one of the four targets. | | |
-
+| 25.7 | (Weaver) A's minimal set has 3 to 15 neurons. | held (4 neurons, same set in 6 pruning orders) | REPORT-25-score.md |
+| 25.8 | (Weaver) Every successful B set is smaller than A's. | not testable (no B set succeeded) | REPORT-25-score.md |
+| 25.9 | (Weaver) The successful B sets overlap: at least half of the smallest one's members are in every other successful B set. | not testable (no B set succeeded) | REPORT-25-score.md |
+| 25.10 | (Weaver and Claude) It is the answer that moves, not an identity: where the system-message control names the target's CEO, the steered model names that CEO for at most one of the four targets. | held with a control qualification (see REPORT-25-score.md) | REPORT-25-score.md |
 Build notes (23:04 CT, before any run): each stem is scored in two forms, as written and followed by " **" (the model
 often bolds names), so a margin averages 24 sequences, not 12. OpenAI's name words are "ChatGPT" only: "GPT" begins with
 the token " G", which starts too many other words. Several first tokens are fragments (" Q" for Qwen, " Open", " Anth",
