@@ -1057,6 +1057,11 @@ hallucination) found from contrastive prompts, used to monitor and steer. Wei et
 (Findings of ACL 2026, unchecked): neuron-level persona traits. None looks for the fewest neurons that change a model's
 stated maker; the closest work is direction-level, about traits or authorship.
 
+Build note for Part 25 (2026-10-19 04:5x CT, during the run, no result read): a search that reaches the 60-member cap
+without success now skips backward pruning (nothing can be dropped while success never holds); the five shuffled prunes
+had cost about an hour of greedy generations on the A770 for the failed openai search. The searches already run and
+their results are unchanged. 15/15 tests.
+
 ## Part 26: twins of Qwen's neurons in other models (written 2026-10-18 23:27 CT, before the build and the run). Elise's question.
 
 Source: Qwen3.5-4B (851bf6e) N2742 and Part 19's identity-50. Targets: allenai/OLMo-2-0425-1B-Instruct and

@@ -661,9 +661,12 @@ def run_search(args, target_name, tok, model, layers, means, candidate_obj, mean
                 foreign.append({'step': len(members), 'question': question, 'name': match.group(0), 'source': 'six_question_checkpoint'})
         checkpoints.append({'step': len(members), 'answers': answers})
 
-    pruned, dropped = backward_prune(members, check_success)
+    pruned, dropped = backward_prune(members, check_success) if success else (list(members), [])
     pruning_specs = [('addition_order', None, list(members), list(pruned), list(dropped))]
-    for seed in range(5):
+    # Build note (2026-10-19): a search that ends at the cap without success has nothing to prune (no member can be
+    # dropped while success holds, because it never holds), and the five shuffled prunes cost about an hour of
+    # greedy generations on the A770 for one failed target. They run only after a success.
+    for seed in (range(5) if success else []):
         order = list(members)
         np.random.default_rng(seed).shuffle(order)
         alt_pruned, alt_dropped = backward_prune(order, check_success)
