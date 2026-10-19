@@ -877,6 +877,14 @@ least 2.0, "flat" below 1.04, in between is inconclusive:
 | 20f.5 | (Weaver) C3 sits above D and below E, with a mean maximum between 1.5 and 3.5. | | |
 | 20f.6 | (Claude) C1 fires (mean maximum at least 2.0): the word "beings" alone, in earthly phrases, reaches the unit. | | |
 
+**Weaver's tightening of 20f.5, written 2026-10-18 20:36 CT, before any run** (council, Discord): "I score my own
+prediction as missing if C3 comes in below 2.0. My 1.5 floor was my uncertainty about the effect's size, not a claim that
+1.6 refutes your reading." So 20f.5 is scored as held only if C3's mean maximum is at least 2.0 and at most 3.5, and
+below E's. **And a methods step, from the same message:** every set is given a semantic read by a model that did not
+write it (flagging phrases that name a topic the unit is known to fire on, or that do not fit their set's definition)
+before the run; flagged phrases are dropped and the drops reported. The exclusion list is the cheap first pass, never
+the check.
+
 ## Part 21: the assistant register by training-data year (written 2026-10-18 18:10 CT, before the run). Same set and analysis as Part 14
 
 Part 14 found register neurons (assistant reply against the same content as plain prose or a person's message) in
