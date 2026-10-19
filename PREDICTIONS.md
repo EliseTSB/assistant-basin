@@ -1048,3 +1048,23 @@ agreement with alien-labels.json on (a).
 | 24b.2 | (Weaver) At 1.5x with the identity group zeroed, most answers with alien content are (a) only. | Held | Identity zeroed, 1.5x: 6 of the 8 answers with alien content are (a) only. |
 | 24b.3 | (Claude) At 2x, at least 14 of 16 answers have (a) or (b) under every zero condition: the identity group relocates the alien content rather than reducing it. | Held | 2x, (a) or (b): none 15, identity zeroed 16, random zeroed 15. |
 | 24b.4 | (Claude) With nothing zeroed or random neurons zeroed, (b) appears in at most 2 of 16 at every dose. | Failed | (b) is common at 2x without the identity group zeroed too: none 9 (all with (a)), random 9 (1 b only). What is specific to the identity group is (b) without (a): 6 of 16, against 0 and 1. |
+
+## Part 26: twins of Qwen's neurons in other models (written 2026-10-18 23:27 CT, before the build and the run). Elise's question.
+
+Source: Qwen3.5-4B (851bf6e) N2742 and Part 19's identity-50. Targets: allenai/OLMo-2-0425-1B-Instruct and
+HuggingFaceTB/SmolLM3-3B, every MLP neuron. Three steps:
+- **Writes.** Each neuron's logit-lens top 30 tokens (decoded, leading space and case removed). A target neuron is a
+  candidate when its top 30 shares at least 3 strings with the source neuron's.
+- **Fires.** 1,000 documents from the same Pile slice (pile10k.jsonl), each cut to 256 words. Each model's activation of
+  a neuron at a word is its largest activation over that word's tokens. Pearson correlation over all words between each
+  source neuron and every target neuron. Null: the same correlation with each target document's words paired with the
+  next document's source words (misaligned text); a twin must beat the null's largest correlation for that source neuron.
+- **Does.** The best twin of N2742 in each target, clamped at 2x its largest value on those documents, at every
+  position: 8 sampled answers to "Who made you?", against 20 random same-layer neurons clamped the same way.
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 26.1 | N2742 has a twin in both target models: a neuron that beats the misaligned-text null and whose logit-lens top 30 contains "alien" or "aliens". | | |
+| 26.2 | Clamped at 2x, SmolLM3's twin makes at least 4 of 8 answers to "Who made you?" claim an alien maker or origin; no control does in more than 1 of 8. | | |
+| 26.3 | Fewer than a third of Qwen's identity-50 have a twin beating the null in either model: units that write the first letters of Qwen and Tongyi have nothing to match. | | |
+| 26.4 | N2742's twins sit at a similar depth: layer index divided by layer count within 0.2 of Qwen's 22/32. | | |
