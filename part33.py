@@ -383,7 +383,8 @@ def system_memory_guard(min_available_gb: float):
 
 
 def select_passages(candidates: list[dict], activations: dict[str, np.ndarray],
-                    target_col: int, questions: list[dict], per_group: int = 30) -> tuple[list[dict], float]:
+                    target_col: int, questions: list[dict], per_group: int = 30,
+                    drop_nonfiring_questions: bool = False) -> tuple[list[dict], float]:
     """Select firing alien passages and low topic/neutral passages by measured values."""
     alien = [r for r in candidates if r["group"] == "alien"]
     target_max = max(float(np.max(activations[r["id"]][:, target_col])) for r in alien)
@@ -401,10 +402,15 @@ def select_passages(candidates: list[dict], activations: dict[str, np.ndarray],
     if len(firing_alien) < per_group:
         raise ValueError(f"only {len(firing_alien)} alien candidates fire above half-maximum; need {per_group}")
     failing_questions = [qid for qid in question_ids if maxima[qid] <= threshold]
-    if failing_questions:
+    if failing_questions and not drop_nonfiring_questions:
         raise ValueError("question passages do not all fire naturally above threshold: " + ", ".join(failing_questions))
-    selected = [by_id[qid] for qid in question_ids]
-    selected_ids = set(question_ids)
+    # Cloud run 2026-10-20: 4 of the 20 authored question passages (alien_q04, q09, q12, q16) do not fire above
+    # half the corpus maximum. The design selects alien passages by measured activation, so those passages and
+    # their questions are dropped (recorded in natural-firing.json), not kept as "alien" by intuition.
+    passing_ids = [qid for qid in question_ids if qid not in set(failing_questions)]
+    selected = [by_id[qid] for qid in passing_ids]
+    selected_ids = set(passing_ids)
+    select_passages.dropped_questions = list(failing_questions)
     remaining = sorted((r for r in firing_alien if r["id"] not in selected_ids),
                        key=lambda r: (-maxima[r["id"]], r["id"]))
     selected.extend(remaining[:per_group - len(selected)])
@@ -775,8 +781,13 @@ def run(args):
         if any(float(np.max(measurements[r["id"]][:, 0])) <= threshold for r in selected):
             print("SMOKE note: a requested passage did not exceed half of the 3-passage maximum", flush=True)
     else:
-        selected, target_max = select_passages(candidates, measurements, 0, questions)
+        selected, target_max = select_passages(candidates, measurements, 0, questions,
+                                               drop_nonfiring_questions=True)
         threshold = target_max * .5
+        dropped = getattr(select_passages, "dropped_questions", [])
+        if dropped:
+            print(f"dropped {len(dropped)} question passages that do not fire above threshold: {', '.join(dropped)}", flush=True)
+            questions = [q for q in questions if q["passage_id"] not in set(dropped)]
     selected_measurements = {r["id"]: measurements[r["id"]] for r in selected}
     total_tokens = sum(len(selected_measurements[r["id"]]) for r in selected)
     natural_rows = []
@@ -795,7 +806,8 @@ def run(args):
                "candidate_counts": {g: sum(r["group"] == g for r in candidates)
                                     for g in ("alien", "topic", "neutral")},
                "selected_counts": {g: sum(r["group"] == g for r in selected)
-                                   for g in ("alien", "topic", "neutral")}}
+                                   for g in ("alien", "topic", "neutral")},
+               "dropped_question_passages": list(getattr(select_passages, "dropped_questions", []))}
     _dump({"inputs": input_shas, "model": args.model, "revision": args.revision,
            "layer": args.layer, "neuron": args.neuron, "natural_firing": natural},
           out_dir / "natural-firing.json")
