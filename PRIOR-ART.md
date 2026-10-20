@@ -238,3 +238,19 @@ persona vectors are trait-level. Nothing at feature level on person features pas
 work is about stale knowledge (Dated Data, arXiv:2403.12958; FreshQA, arXiv:2310.03214). ROME (arXiv:2202.05262) and
 MEMIT locate person FACTS in mid-layer MLPs at subject tokens, not person features. **So 35.5 and 35.6 (a Trump neuron
 in a text model, his style without the name, and the after-cutoff posts) appear to be open.**
+
+### Two from Muse's atlas watch (council muse-neuron-atlas-watch-2026-10-16 #13, #14) — recorded 2026-10-20 08:31 CT
+
+Both checked at their source by Muse, not yet by Claude.
+- **Kristina89-oss/llm-introspection-experiments** (GitHub, 2026-10-19; data on Zenodo, doi:10.5281/zenodo.23365351):
+  nine pre-registered behavioural studies on Claude (Opus 5/5.5, Haiku 4.5) and Qwen2.5-1.5B/3B-Instruct, n=30 per
+  condition, blind judge coding. Their headline: introspection works within one computation, but across turns the model
+  knows its own past like an outsider; LoRA-trained "memories" are partly recalled but not marked as its own; a failed
+  replication is reported as failed. Bears on Parts 12, 17 and 34 (state read within a pass vs across turns), and is the
+  behavioural counterpart of our cache-kept versus recomputed arms.
+- **Zvi Mowshowitz, "I Can See Everything" (2026-10-19)**, reporting an experimenter (Brangus) on the Goodfire essay's
+  showcase Colorado neuron in a Qwen3 model: it also fires hard on the Tornado Python HTTP library's code, not on aiohttp
+  or a fake HTTPClient, and zeroing it drops "the US state most associated with Tornado" from 59% to 15%. **Bears on
+  Part 35:** a neuron that looks clean on concept passages can carry an unrelated sense its screen never shows. Part 35's
+  within-frame contrast cannot see this; the confirmed finds get a descriptive off-domain check (top activations over a
+  broad neutral corpus, code included) before any claim that a neuron is "about" its concept.
