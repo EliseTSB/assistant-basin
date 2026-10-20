@@ -1,0 +1,15 @@
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:   0%|          | 1/311 [00:01<05:53,  1.14s/it]Loading weights:  30%|███       | 94/311 [00:01<00:02, 102.53it/s]Loading weights:  46%|████▌     | 142/311 [00:02<00:02, 63.11it/s]Loading weights:  55%|█████▍    | 170/311 [00:03<00:02, 50.63it/s]Loading weights:  60%|██████    | 188/311 [00:03<00:02, 54.65it/s]Loading weights:  65%|██████▌   | 203/311 [00:04<00:02, 46.27it/s]Loading weights:  69%|██████▉   | 214/311 [00:04<00:02, 44.61it/s]Loading weights:  72%|███████▏  | 224/311 [00:04<00:01, 46.34it/s]Loading weights:  76%|███████▌  | 235/311 [00:04<00:01, 43.70it/s]Loading weights:  79%|███████▉  | 246/311 [00:05<00:01, 43.09it/s]Loading weights:  83%|████████▎ | 257/311 [00:05<00:01, 41.39it/s]Loading weights:  86%|████████▌ | 268/311 [00:05<00:01, 39.72it/s]Loading weights:  90%|████████▉ | 279/311 [00:05<00:00, 41.73it/s]Loading weights:  93%|█████████▎| 290/311 [00:06<00:00, 43.35it/s]Loading weights:  97%|█████████▋| 301/311 [00:06<00:00, 44.28it/s]Loading weights: 100%|██████████| 311/311 [00:06<00:00, 48.74it/s]
+readout-only rows=100/1224 elapsed_s=126.4
+readout-only rows=200/1224 elapsed_s=240.0
+readout-only rows=300/1224 elapsed_s=357.7
+readout-only rows=400/1224 elapsed_s=483.3
+readout-only rows=500/1224 elapsed_s=600.2
+readout-only rows=600/1224 elapsed_s=716.1
+readout-only rows=700/1224 elapsed_s=842.5
+readout-only rows=800/1224 elapsed_s=957.9
+readout-only rows=900/1224 elapsed_s=1077.2
+readout-only rows=1000/1224 elapsed_s=1205.7
+readout-only rows=1100/1224 elapsed_s=1318.2
+readout-only rows=1200/1224 elapsed_s=1433.5
+readout-only complete rows=1224 total_rows=1504 elapsed_s=1462.9

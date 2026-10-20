@@ -1,0 +1,32 @@
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:   0%|          | 1/311 [00:06<35:45,  6.92s/it]Loading weights:  40%|████      | 125/311 [00:07<00:07, 24.41it/s]Loading weights:  49%|████▉     | 153/311 [00:07<00:05, 27.06it/s]Loading weights:  55%|█████▍    | 170/311 [00:08<00:05, 27.09it/s]Loading weights:  59%|█████▊    | 182/311 [00:08<00:04, 27.84it/s]Loading weights:  61%|██████▏   | 191/311 [00:09<00:04, 28.03it/s]Loading weights:  65%|██████▍   | 202/311 [00:09<00:03, 28.89it/s]Loading weights:  68%|██████▊   | 213/311 [00:09<00:03, 29.95it/s]Loading weights:  72%|███████▏  | 224/311 [00:10<00:02, 29.84it/s]Loading weights:  76%|███████▌  | 235/311 [00:10<00:02, 30.93it/s]Loading weights:  79%|███████▉  | 246/311 [00:10<00:02, 31.06it/s]Loading weights:  83%|████████▎ | 257/311 [00:11<00:01, 31.48it/s]Loading weights:  86%|████████▌ | 268/311 [00:11<00:01, 31.12it/s]Loading weights:  90%|████████▉ | 279/311 [00:11<00:01, 31.31it/s]Loading weights:  93%|█████████▎| 290/311 [00:12<00:00, 31.55it/s]Loading weights:  97%|█████████▋| 301/311 [00:12<00:00, 36.74it/s]Loading weights: 100%|██████████| 311/311 [00:12<00:00, 25.03it/s]
+progress rows=20 elapsed_s=64.4
+progress rows=40 elapsed_s=128.5
+progress rows=60 elapsed_s=190.6
+progress rows=80 elapsed_s=255.7
+progress rows=100 elapsed_s=309.1
+progress rows=120 elapsed_s=361.3
+progress rows=140 elapsed_s=415.1
+progress rows=160 elapsed_s=466.5
+progress rows=180 elapsed_s=523.3
+progress rows=200 elapsed_s=572.8
+progress rows=220 elapsed_s=627.8
+progress rows=240 elapsed_s=680.1
+progress rows=260 elapsed_s=745.8
+progress rows=280 elapsed_s=796.3
+progress rows=300 elapsed_s=869.7
+progress rows=320 elapsed_s=940.9
+progress rows=340 elapsed_s=999.1
+progress rows=360 elapsed_s=1057.1
+progress rows=380 elapsed_s=1126.0
+progress rows=400 elapsed_s=1195.6
+progress rows=420 elapsed_s=1260.0
+progress rows=440 elapsed_s=1310.5
+progress rows=460 elapsed_s=1376.4
+progress rows=480 elapsed_s=1457.3
+progress rows=500 elapsed_s=1509.0
+progress rows=520 elapsed_s=1565.5
+progress rows=540 elapsed_s=1632.4
+progress rows=560 elapsed_s=1689.2
+progress rows=580 elapsed_s=1746.0
+progress rows=600 elapsed_s=1800.1

@@ -1,0 +1,15 @@
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:   0%|          | 1/311 [00:05<30:14,  5.85s/it]Loading weights:  37%|███▋      | 114/311 [00:06<00:07, 25.58it/s]Loading weights:  43%|████▎     | 134/311 [00:06<00:06, 28.08it/s]Loading weights:  47%|████▋     | 147/311 [00:07<00:06, 26.58it/s]Loading weights:  51%|█████     | 158/311 [00:07<00:05, 27.11it/s]Loading weights:  53%|█████▎    | 166/311 [00:07<00:04, 29.61it/s]Loading weights:  56%|█████▌    | 173/311 [00:08<00:04, 28.59it/s]Loading weights:  58%|█████▊    | 180/311 [00:08<00:04, 30.00it/s]Loading weights:  59%|█████▉    | 185/311 [00:08<00:03, 31.83it/s]Loading weights:  61%|██████▏   | 191/311 [00:08<00:04, 27.07it/s]Loading weights:  65%|██████▍   | 202/311 [00:08<00:03, 29.47it/s]Loading weights:  68%|██████▊   | 213/311 [00:09<00:03, 30.35it/s]Loading weights:  72%|███████▏  | 224/311 [00:09<00:02, 30.56it/s]Loading weights:  76%|███████▌  | 235/311 [00:10<00:02, 31.34it/s]Loading weights:  79%|███████▉  | 246/311 [00:10<00:01, 33.24it/s]Loading weights:  83%|████████▎ | 257/311 [00:10<00:01, 32.33it/s]Loading weights:  86%|████████▌ | 268/311 [00:10<00:01, 34.14it/s]Loading weights:  90%|████████▉ | 279/311 [00:11<00:00, 35.38it/s]Loading weights:  93%|█████████▎| 290/311 [00:11<00:00, 33.76it/s]Loading weights: 100%|██████████| 311/311 [00:11<00:00, 26.64it/s]
+readout-only rows=100/1224 elapsed_s=138.3
+readout-only rows=200/1224 elapsed_s=263.6
+readout-only rows=300/1224 elapsed_s=382.2
+readout-only rows=400/1224 elapsed_s=517.5
+readout-only rows=500/1224 elapsed_s=636.7
+readout-only rows=600/1224 elapsed_s=755.5
+readout-only rows=700/1224 elapsed_s=883.2
+readout-only rows=800/1224 elapsed_s=1001.6
+readout-only rows=900/1224 elapsed_s=1122.1
+readout-only rows=1000/1224 elapsed_s=1253.7
+readout-only rows=1100/1224 elapsed_s=1368.8
+readout-only rows=1200/1224 elapsed_s=1490.8
+readout-only complete rows=1224 total_rows=1504 elapsed_s=1521.6
