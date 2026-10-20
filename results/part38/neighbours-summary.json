@@ -1,0 +1,1080 @@
+{
+  "groups": [
+    {
+      "bootstrap_95": [
+        1.0,
+        1.0
+      ],
+      "count": 12,
+      "median_activation": 112.75,
+      "random_ratio_median_p5_p95": {
+        "median": 1.0,
+        "p5": 1.0,
+        "p95": 1.0
+      },
+      "random_unit_ratios": [
+        {
+          "ratio_to_wizard": 1.0,
+          "unit": 160
+        },
+        {
+          "ratio_to_wizard": 1.0,
+          "unit": 945
+        },
+        {
+          "ratio_to_wizard": 1.0,
+          "unit": 1444
+        },
+        {
+          "ratio_to_wizard": 1.0,
+          "unit": 1477
+        },
+        {
+          "ratio_to_wizard": 1.0,
+          "unit": 1646
+        },
+        {
+          "ratio_to_wizard": 1.0,
+          "unit": 2399
+        },
+        {
+          "ratio_to_wizard": 1.0,
+          "unit": 2419
+        },
+        {
+          "ratio_to_wizard": 1.0,
+          "unit": 2979
+        },
+        {
+          "ratio_to_wizard": 1.0,
+          "unit": 3185
+        },
+        {
+          "ratio_to_wizard": 1.0,
+          "unit": 3260
+        },
+        {
+          "ratio_to_wizard": 1.0,
+          "unit": 3542
+        },
+        {
+          "ratio_to_wizard": 1.0,
+          "unit": 3646
+        },
+        {
+          "ratio_to_wizard": 1.0,
+          "unit": 3673
+        },
+        {
+          "ratio_to_wizard": 1.0,
+          "unit": 4327
+        },
+        {
+          "ratio_to_wizard": 1.0,
+          "unit": 4405
+        },
+        {
+          "ratio_to_wizard": 1.0,
+          "unit": 4834
+        },
+        {
+          "ratio_to_wizard": 1.0,
+          "unit": 5328
+        },
+        {
+          "ratio_to_wizard": 1.0,
+          "unit": 5410
+        },
+        {
+          "ratio_to_wizard": 1.0,
+          "unit": 5590
+        },
+        {
+          "ratio_to_wizard": 1.0,
+          "unit": 5898
+        }
+      ],
+      "share_of_wizard_median": 1.0,
+      "word": "wizard"
+    },
+    {
+      "bootstrap_95": [
+        0.43736730360934184,
+        0.5885922330097088
+      ],
+      "count": 12,
+      "median_activation": 54.75,
+      "random_ratio_median_p5_p95": {
+        "median": 1.0588674066117676,
+        "p5": -18.991589376053962,
+        "p95": 281.47814377217543
+      },
+      "random_unit_ratios": [
+        {
+          "ratio_to_wizard": -0.8509433962264151,
+          "unit": 160
+        },
+        {
+          "ratio_to_wizard": -16.131301289566238,
+          "unit": 945
+        },
+        {
+          "ratio_to_wizard": 4.488888888888889,
+          "unit": 1444
+        },
+        {
+          "ratio_to_wizard": 0.9013605442176871,
+          "unit": 1477
+        },
+        {
+          "ratio_to_wizard": 0.10828025477707007,
+          "unit": 1646
+        },
+        {
+          "ratio_to_wizard": -6.609836065573771,
+          "unit": 2399
+        },
+        {
+          "ratio_to_wizard": -0.007954545454545454,
+          "unit": 2419
+        },
+        {
+          "ratio_to_wizard": -23.581787521079256,
+          "unit": 2979
+        },
+        {
+          "ratio_to_wizard": 392.1012658227848,
+          "unit": 3185
+        },
+        {
+          "ratio_to_wizard": 1.2163742690058479,
+          "unit": 3260
+        },
+        {
+          "ratio_to_wizard": -8.366576819407008,
+          "unit": 3542
+        },
+        {
+          "ratio_to_wizard": 1.801904761904762,
+          "unit": 3646
+        },
+        {
+          "ratio_to_wizard": -12.834377797672337,
+          "unit": 3673
+        },
+        {
+          "ratio_to_wizard": 275.6558741905643,
+          "unit": 4327
+        },
+        {
+          "ratio_to_wizard": 3.123404255319149,
+          "unit": 4405
+        },
+        {
+          "ratio_to_wizard": 1.423913043478261,
+          "unit": 4834
+        },
+        {
+          "ratio_to_wizard": 12.873720136518772,
+          "unit": 5328
+        },
+        {
+          "ratio_to_wizard": -18.75,
+          "unit": 5410
+        },
+        {
+          "ratio_to_wizard": 3.7183098591549295,
+          "unit": 5590
+        },
+        {
+          "ratio_to_wizard": 3.3755274261603376,
+          "unit": 5898
+        }
+      ],
+      "share_of_wizard_median": 0.48558758314855877,
+      "word": "sorcerer"
+    },
+    {
+      "bootstrap_95": [
+        0.6331877729257642,
+        0.8790177133655394
+      ],
+      "count": 12,
+      "median_activation": 85.75,
+      "random_ratio_median_p5_p95": {
+        "median": 0.9334109730848861,
+        "p5": -5.922752979973945,
+        "p95": 32.41671058884531
+      },
+      "random_unit_ratios": [
+        {
+          "ratio_to_wizard": 3.637735849056604,
+          "unit": 160
+        },
+        {
+          "ratio_to_wizard": 6.87768659632669,
+          "unit": 945
+        },
+        {
+          "ratio_to_wizard": -3.3333333333333335,
+          "unit": 1444
+        },
+        {
+          "ratio_to_wizard": 3.061224489795918,
+          "unit": 1477
+        },
+        {
+          "ratio_to_wizard": 0.7643312101910829,
+          "unit": 1646
+        },
+        {
+          "ratio_to_wizard": 1.4098360655737705,
+          "unit": 2399
+        },
+        {
+          "ratio_to_wizard": -0.027301136363636364,
+          "unit": 2419
+        },
+        {
+          "ratio_to_wizard": 3.1973018549747048,
+          "unit": 2979
+        },
+        {
+          "ratio_to_wizard": 174.1772151898734,
+          "unit": 3185
+        },
+        {
+          "ratio_to_wizard": 0.6198830409356725,
+          "unit": 3260
+        },
+        {
+          "ratio_to_wizard": 1.792789757412399,
+          "unit": 3542
+        },
+        {
+          "ratio_to_wizard": 0.9809523809523809,
+          "unit": 3646
+        },
+        {
+          "ratio_to_wizard": -5.658012533572068,
+          "unit": 3673
+        },
+        {
+          "ratio_to_wizard": -10.95282146160962,
+          "unit": 4327
+        },
+        {
+          "ratio_to_wizard": -2.8595744680851065,
+          "unit": 4405
+        },
+        {
+          "ratio_to_wizard": 0.8858695652173914,
+          "unit": 4834
+        },
+        {
+          "ratio_to_wizard": 24.955631399317404,
+          "unit": 5328
+        },
+        {
+          "ratio_to_wizard": 16.75,
+          "unit": 5410
+        },
+        {
+          "ratio_to_wizard": -0.8450704225352113,
+          "unit": 5590
+        },
+        {
+          "ratio_to_wizard": 0.033524525316455694,
+          "unit": 5898
+        }
+      ],
+      "share_of_wizard_median": 0.7605321507760532,
+      "word": "mage"
+    },
+    {
+      "bootstrap_95": [
+        0.5268595041322314,
+        0.6812006527002841
+      ],
+      "count": 12,
+      "median_activation": 64.375,
+      "random_ratio_median_p5_p95": {
+        "median": 0.06464653271257045,
+        "p5": -19.3223627116707,
+        "p95": 45.58577032517974
+      },
+      "random_unit_ratios": [
+        {
+          "ratio_to_wizard": -4.588679245283019,
+          "unit": 160
+        },
+        {
+          "ratio_to_wizard": 2.676045330207112,
+          "unit": 945
+        },
+        {
+          "ratio_to_wizard": -2.7222222222222223,
+          "unit": 1444
+        },
+        {
+          "ratio_to_wizard": 3.8095238095238093,
+          "unit": 1477
+        },
+        {
+          "ratio_to_wizard": -0.23248407643312102,
+          "unit": 1646
+        },
+        {
+          "ratio_to_wizard": -4.104918032786885,
+          "unit": 2399
+        },
+        {
+          "ratio_to_wizard": -0.10840909090909091,
+          "unit": 2419
+        },
+        {
+          "ratio_to_wizard": -0.5919055649241147,
+          "unit": 2979
+        },
+        {
+          "ratio_to_wizard": 421.26582278481015,
+          "unit": 3185
+        },
+        {
+          "ratio_to_wizard": 0.9532163742690059,
+          "unit": 3260
+        },
+        {
+          "ratio_to_wizard": 0.2377021563342318,
+          "unit": 3542
+        },
+        {
+          "ratio_to_wizard": 2.163809523809524,
+          "unit": 3646
+        },
+        {
+          "ratio_to_wizard": -18.965085049239033,
+          "unit": 3673
+        },
+        {
+          "ratio_to_wizard": 25.81313598519889,
+          "unit": 4327
+        },
+        {
+          "ratio_to_wizard": -26.11063829787234,
+          "unit": 4405
+        },
+        {
+          "ratio_to_wizard": 1.25,
+          "unit": 4834
+        },
+        {
+          "ratio_to_wizard": 2.4368600682593855,
+          "unit": 5328
+        },
+        {
+          "ratio_to_wizard": 10.35,
+          "unit": 5410
+        },
+        {
+          "ratio_to_wizard": -1.4929577464788732,
+          "unit": 5590
+        },
+        {
+          "ratio_to_wizard": -0.11445147679324895,
+          "unit": 5898
+        }
+      ],
+      "share_of_wizard_median": 0.5709534368070953,
+      "word": "warlock"
+    },
+    {
+      "bootstrap_95": [
+        0.6487603305785123,
+        0.8309681720882898
+      ],
+      "count": 12,
+      "median_activation": 78.75,
+      "random_ratio_median_p5_p95": {
+        "median": 0.31142857142857144,
+        "p5": -28.802397362900805,
+        "p95": 44.90897308506534
+      },
+      "random_unit_ratios": [
+        {
+          "ratio_to_wizard": 9.539622641509434,
+          "unit": 160
+        },
+        {
+          "ratio_to_wizard": -8.653380226651036,
+          "unit": 945
+        },
+        {
+          "ratio_to_wizard": -24.755555555555556,
+          "unit": 1444
+        },
+        {
+          "ratio_to_wizard": 1.435374149659864,
+          "unit": 1477
+        },
+        {
+          "ratio_to_wizard": 0.4872611464968153,
+          "unit": 1646
+        },
+        {
+          "ratio_to_wizard": -1.119672131147541,
+          "unit": 2399
+        },
+        {
+          "ratio_to_wizard": 0.16,
+          "unit": 2419
+        },
+        {
+          "ratio_to_wizard": 0.08890177065767285,
+          "unit": 2979
+        },
+        {
+          "ratio_to_wizard": 477.9746835443038,
+          "unit": 3185
+        },
+        {
+          "ratio_to_wizard": 1.286549707602339,
+          "unit": 3260
+        },
+        {
+          "ratio_to_wizard": -0.4642857142857143,
+          "unit": 3542
+        },
+        {
+          "ratio_to_wizard": 0.46285714285714286,
+          "unit": 3646
+        },
+        {
+          "ratio_to_wizard": -10.427931960608774,
+          "unit": 3673
+        },
+        {
+          "ratio_to_wizard": 10.893617021276595,
+          "unit": 4327
+        },
+        {
+          "ratio_to_wizard": -70.80851063829788,
+          "unit": 4405
+        },
+        {
+          "ratio_to_wizard": 0.48777173913043476,
+          "unit": 4834
+        },
+        {
+          "ratio_to_wizard": 22.116040955631398,
+          "unit": 5328
+        },
+        {
+          "ratio_to_wizard": -19.7,
+          "unit": 5410
+        },
+        {
+          "ratio_to_wizard": -26.591549295774648,
+          "unit": 5590
+        },
+        {
+          "ratio_to_wizard": 1.4261603375527425,
+          "unit": 5898
+        }
+      ],
+      "share_of_wizard_median": 0.6984478935698448,
+      "word": "witch"
+    },
+    {
+      "bootstrap_95": [
+        0.40082644628099173,
+        0.6231340187174403
+      ],
+      "count": 12,
+      "median_activation": 60.125,
+      "random_ratio_median_p5_p95": {
+        "median": 0.26259199134199135,
+        "p5": -33.872665845538954,
+        "p95": 23.83630672926453
+      },
+      "random_unit_ratios": [
+        {
+          "ratio_to_wizard": -11.833962264150943,
+          "unit": 160
+        },
+        {
+          "ratio_to_wizard": -42.51660805001954,
+          "unit": 945
+        },
+        {
+          "ratio_to_wizard": 92.44444444444444,
+          "unit": 1444
+        },
+        {
+          "ratio_to_wizard": 0.18154761904761904,
+          "unit": 1477
+        },
+        {
+          "ratio_to_wizard": 0.6878980891719745,
+          "unit": 1646
+        },
+        {
+          "ratio_to_wizard": -1.518032786885246,
+          "unit": 2399
+        },
+        {
+          "ratio_to_wizard": 0.34363636363636363,
+          "unit": 2419
+        },
+        {
+          "ratio_to_wizard": 1.1197301854974704,
+          "unit": 2979
+        },
+        {
+          "ratio_to_wizard": -33.41772151898734,
+          "unit": 3185
+        },
+        {
+          "ratio_to_wizard": 0.7485380116959064,
+          "unit": 3260
+        },
+        {
+          "ratio_to_wizard": -0.8463611859838275,
+          "unit": 3542
+        },
+        {
+          "ratio_to_wizard": 1.401904761904762,
+          "unit": 3646
+        },
+        {
+          "ratio_to_wizard": -2.3169203222918533,
+          "unit": 3673
+        },
+        {
+          "ratio_to_wizard": -8.51063829787234,
+          "unit": 4327
+        },
+        {
+          "ratio_to_wizard": -7.608510638297872,
+          "unit": 4405
+        },
+        {
+          "ratio_to_wizard": 1.076086956521739,
+          "unit": 4834
+        },
+        {
+          "ratio_to_wizard": 19.87713310580205,
+          "unit": 5328
+        },
+        {
+          "ratio_to_wizard": -12.75,
+          "unit": 5410
+        },
+        {
+          "ratio_to_wizard": 20.225352112676056,
+          "unit": 5590
+        },
+        {
+          "ratio_to_wizard": 3.5105485232067513,
+          "unit": 5898
+        }
+      ],
+      "share_of_wizard_median": 0.5332594235033259,
+      "word": "magician"
+    },
+    {
+      "bootstrap_95": [
+        2.1815270670993282e-05,
+        0.0018965126811594203
+      ],
+      "count": 12,
+      "median_activation": 0.0347900390625,
+      "random_ratio_median_p5_p95": {
+        "median": 1.0891713410510402,
+        "p5": -16.59782078789621,
+        "p95": 196.35043970069916
+      },
+      "random_unit_ratios": [
+        {
+          "ratio_to_wizard": -90.32452830188679,
+          "unit": 160
+        },
+        {
+          "ratio_to_wizard": -12.71746776084408,
+          "unit": 945
+        },
+        {
+          "ratio_to_wizard": -4.133333333333334,
+          "unit": 1444
+        },
+        {
+          "ratio_to_wizard": 0.673469387755102,
+          "unit": 1477
+        },
+        {
+          "ratio_to_wizard": 0.06309713375796179,
+          "unit": 1646
+        },
+        {
+          "ratio_to_wizard": -4.577049180327869,
+          "unit": 2399
+        },
+        {
+          "ratio_to_wizard": -0.4163636363636364,
+          "unit": 2419
+        },
+        {
+          "ratio_to_wizard": 11.57504215851602,
+          "unit": 2979
+        },
+        {
+          "ratio_to_wizard": 318.37974683544303,
+          "unit": 3185
+        },
+        {
+          "ratio_to_wizard": 1.5048732943469785,
+          "unit": 3260
+        },
+        {
+          "ratio_to_wizard": 7.504043126684636,
+          "unit": 3542
+        },
+        {
+          "ratio_to_wizard": 2.300952380952381,
+          "unit": 3646
+        },
+        {
+          "ratio_to_wizard": -11.88898836168308,
+          "unit": 3673
+        },
+        {
+          "ratio_to_wizard": 189.92784458834413,
+          "unit": 4327
+        },
+        {
+          "ratio_to_wizard": 7.059574468085106,
+          "unit": 4405
+        },
+        {
+          "ratio_to_wizard": 0.3811141304347826,
+          "unit": 4834
+        },
+        {
+          "ratio_to_wizard": 72.51877133105802,
+          "unit": 5328
+        },
+        {
+          "ratio_to_wizard": 5.55,
+          "unit": 5410
+        },
+        {
+          "ratio_to_wizard": 20.95774647887324,
+          "unit": 5590
+        },
+        {
+          "ratio_to_wizard": 0.43670886075949367,
+          "unit": 5898
+        }
+      ],
+      "share_of_wizard_median": 0.00030855910476718405,
+      "word": "noita"
+    },
+    {
+      "bootstrap_95": [
+        -0.0006689792995939675,
+        0.0003785686728395062
+      ],
+      "count": 12,
+      "median_activation": 0.038330078125,
+      "random_ratio_median_p5_p95": {
+        "median": 0.38599846611063177,
+        "p5": -232.93089369364023,
+        "p95": 14.141593309859159
+      },
+      "random_unit_ratios": [
+        {
+          "ratio_to_wizard": 10.11320754716981,
+          "unit": 160
+        },
+        {
+          "ratio_to_wizard": -231.2903477921063,
+          "unit": 945
+        },
+        {
+          "ratio_to_wizard": -61.333333333333336,
+          "unit": 1444
+        },
+        {
+          "ratio_to_wizard": -1.1428571428571428,
+          "unit": 1477
+        },
+        {
+          "ratio_to_wizard": 1.1210191082802548,
+          "unit": 1646
+        },
+        {
+          "ratio_to_wizard": 0.2573770491803279,
+          "unit": 2399
+        },
+        {
+          "ratio_to_wizard": 0.7090909090909091,
+          "unit": 2419
+        },
+        {
+          "ratio_to_wizard": -2.873524451939292,
+          "unit": 2979
+        },
+        {
+          "ratio_to_wizard": -264.1012658227848,
+          "unit": 3185
+        },
+        {
+          "ratio_to_wizard": 0.5146198830409356,
+          "unit": 3260
+        },
+        {
+          "ratio_to_wizard": 2.4582210242587603,
+          "unit": 3542
+        },
+        {
+          "ratio_to_wizard": 2.1942857142857144,
+          "unit": 3646
+        },
+        {
+          "ratio_to_wizard": 11.803043867502238,
+          "unit": 3673
+        },
+        {
+          "ratio_to_wizard": -4.262719703977798,
+          "unit": 4327
+        },
+        {
+          "ratio_to_wizard": -1.5191489361702128,
+          "unit": 4405
+        },
+        {
+          "ratio_to_wizard": -1.2119565217391304,
+          "unit": 4834
+        },
+        {
+          "ratio_to_wizard": -4.887372013651877,
+          "unit": 5328
+        },
+        {
+          "ratio_to_wizard": 13.8125,
+          "unit": 5410
+        },
+        {
+          "ratio_to_wizard": 20.3943661971831,
+          "unit": 5590
+        },
+        {
+          "ratio_to_wizard": 0.8860759493670886,
+          "unit": 5898
+        }
+      ],
+      "share_of_wizard_median": 0.0003399563470066519,
+      "word": "baker"
+    },
+    {
+      "bootstrap_95": [
+        0.0001617831434224891,
+        0.001832823822463768
+      ],
+      "count": 12,
+      "median_activation": 0.04541015625,
+      "random_ratio_median_p5_p95": {
+        "median": -1.3452438996076248,
+        "p5": -59.29919137466307,
+        "p95": 26.046425387769705
+      },
+      "random_unit_ratios": [
+        {
+          "ratio_to_wizard": -56.75471698113208,
+          "unit": 160
+        },
+        {
+          "ratio_to_wizard": -33.61313012895663,
+          "unit": 945
+        },
+        {
+          "ratio_to_wizard": -3.8222222222222224,
+          "unit": 1444
+        },
+        {
+          "ratio_to_wizard": -1.6870748299319729,
+          "unit": 1477
+        },
+        {
+          "ratio_to_wizard": 1.0,
+          "unit": 1646
+        },
+        {
+          "ratio_to_wizard": -1.7180327868852459,
+          "unit": 2399
+        },
+        {
+          "ratio_to_wizard": 1.8472727272727272,
+          "unit": 2419
+        },
+        {
+          "ratio_to_wizard": 1.342327150084317,
+          "unit": 2979
+        },
+        {
+          "ratio_to_wizard": 92.75949367088607,
+          "unit": 3185
+        },
+        {
+          "ratio_to_wizard": 0.6159844054580896,
+          "unit": 3260
+        },
+        {
+          "ratio_to_wizard": -107.64420485175202,
+          "unit": 3542
+        },
+        {
+          "ratio_to_wizard": 0.08761904761904762,
+          "unit": 3646
+        },
+        {
+          "ratio_to_wizard": -2.664279319606088,
+          "unit": 3673
+        },
+        {
+          "ratio_to_wizard": -21.90564292321924,
+          "unit": 4327
+        },
+        {
+          "ratio_to_wizard": -22.33191489361702,
+          "unit": 4405
+        },
+        {
+          "ratio_to_wizard": 0.06441066576086957,
+          "unit": 4834
+        },
+        {
+          "ratio_to_wizard": -1.0034129692832765,
+          "unit": 5328
+        },
+        {
+          "ratio_to_wizard": -5.5,
+          "unit": 5410
+        },
+        {
+          "ratio_to_wizard": 22.535211267605632,
+          "unit": 5590
+        },
+        {
+          "ratio_to_wizard": 0.019119198312236286,
+          "unit": 5898
+        }
+      ],
+      "share_of_wizard_median": 0.0004027508314855876,
+      "word": "pilot"
+    },
+    {
+      "bootstrap_95": [
+        0.0001772177079677733,
+        0.002170138888888889
+      ],
+      "count": 12,
+      "median_activation": 0.2197265625,
+      "random_ratio_median_p5_p95": {
+        "median": 0.388279157341291,
+        "p5": -62.21862082694173,
+        "p95": 16.413401913185602
+      },
+      "random_unit_ratios": [
+        {
+          "ratio_to_wizard": 9.660377358490566,
+          "unit": 160
+        },
+        {
+          "ratio_to_wizard": 0.43474013286440016,
+          "unit": 945
+        },
+        {
+          "ratio_to_wizard": -11.577777777777778,
+          "unit": 1444
+        },
+        {
+          "ratio_to_wizard": 4.163265306122449,
+          "unit": 1477
+        },
+        {
+          "ratio_to_wizard": 1.305732484076433,
+          "unit": 1646
+        },
+        {
+          "ratio_to_wizard": -0.1418032786885246,
+          "unit": 2399
+        },
+        {
+          "ratio_to_wizard": 0.3418181818181818,
+          "unit": 2419
+        },
+        {
+          "ratio_to_wizard": 6.448566610455312,
+          "unit": 2979
+        },
+        {
+          "ratio_to_wizard": -618.9367088607595,
+          "unit": 3185
+        },
+        {
+          "ratio_to_wizard": 0.2149122807017544,
+          "unit": 3260
+        },
+        {
+          "ratio_to_wizard": 4.032345013477089,
+          "unit": 3542
+        },
+        {
+          "ratio_to_wizard": 3.0933333333333333,
+          "unit": 3646
+        },
+        {
+          "ratio_to_wizard": 2.0769919427036707,
+          "unit": 3673
+        },
+        {
+          "ratio_to_wizard": -32.91766882516189,
+          "unit": 4327
+        },
+        {
+          "ratio_to_wizard": -32.47659574468085,
+          "unit": 4405
+        },
+        {
+          "ratio_to_wizard": -0.19123641304347827,
+          "unit": 4834
+        },
+        {
+          "ratio_to_wizard": 19.986348122866893,
+          "unit": 5328
+        },
+        {
+          "ratio_to_wizard": -5.4,
+          "unit": 5410
+        },
+        {
+          "ratio_to_wizard": 16.225352112676056,
+          "unit": 5590
+        },
+        {
+          "ratio_to_wizard": -3.9746835443037973,
+          "unit": 5898
+        }
+      ],
+      "share_of_wizard_median": 0.0019487943458980045,
+      "word": "nurse"
+    },
+    {
+      "bootstrap_95": [
+        -0.0011377427184466019,
+        -0.00048828125
+      ],
+      "count": 12,
+      "median_activation": -0.11181640625,
+      "random_ratio_median_p5_p95": {
+        "median": 0.30488142292490117,
+        "p5": -27.82876268462266,
+        "p95": 37.446962025316616
+      },
+      "random_unit_ratios": [
+        {
+          "ratio_to_wizard": -18.958490566037735,
+          "unit": 160
+        },
+        {
+          "ratio_to_wizard": -146.45720984759672,
+          "unit": 945
+        },
+        {
+          "ratio_to_wizard": -5.4,
+          "unit": 1444
+        },
+        {
+          "ratio_to_wizard": 0.8197278911564626,
+          "unit": 1477
+        },
+        {
+          "ratio_to_wizard": 1.1528662420382165,
+          "unit": 1646
+        },
+        {
+          "ratio_to_wizard": -1.5704918032786885,
+          "unit": 2399
+        },
+        {
+          "ratio_to_wizard": 0.16954545454545455,
+          "unit": 2419
+        },
+        {
+          "ratio_to_wizard": -21.58516020236088,
+          "unit": 2979
+        },
+        {
+          "ratio_to_wizard": 251.13924050632912,
+          "unit": 3185
+        },
+        {
+          "ratio_to_wizard": 0.8089668615984406,
+          "unit": 3260
+        },
+        {
+          "ratio_to_wizard": 2.797843665768194,
+          "unit": 3542
+        },
+        {
+          "ratio_to_wizard": 1.5733333333333333,
+          "unit": 3646
+        },
+        {
+          "ratio_to_wizard": -0.7090420769919427,
+          "unit": 3673
+        },
+        {
+          "ratio_to_wizard": -5.950046253469011,
+          "unit": 4327
+        },
+        {
+          "ratio_to_wizard": -21.24255319148936,
+          "unit": 4405
+        },
+        {
+          "ratio_to_wizard": 0.44021739130434784,
+          "unit": 4834
+        },
+        {
+          "ratio_to_wizard": 4.477815699658703,
+          "unit": 5328
+        },
+        {
+          "ratio_to_wizard": 26.2,
+          "unit": 5410
+        },
+        {
+          "ratio_to_wizard": 22.309859154929576,
+          "unit": 5590
+        },
+        {
+          "ratio_to_wizard": -0.7468354430379747,
+          "unit": 5898
+        }
+      ],
+      "share_of_wizard_median": -0.0009917197893569846,
+      "word": "farmer"
+    }
+  ],
+  "layer": 19,
+  "model": "Qwen/Qwen3-1.7B",
+  "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+  "schema_version": 1,
+  "seed": 3801,
+  "summary_type": "neighbours",
+  "unit": 4826,
+  "unit_id": "wizard",
+  "wizard_median": 112.75
+}

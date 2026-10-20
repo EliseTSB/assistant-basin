@@ -1,0 +1,1019 @@
+{
+  "data_mean_word_counts": {
+    "anthropic": {
+      "absolute_mean_difference": 1.166666666666666,
+      "other_mean_words": 12.0,
+      "screened_mean_words": 10.833333333333334
+    },
+    "bee": {
+      "absolute_mean_difference": 0.4166666666666661,
+      "other_mean_words": 12.5,
+      "screened_mean_words": 12.916666666666666
+    },
+    "claude": {
+      "absolute_mean_difference": 0.0,
+      "other_mean_words": 11.583333333333334,
+      "screened_mean_words": 11.583333333333334
+    },
+    "mountain": {
+      "absolute_mean_difference": 0.08333333333333393,
+      "other_mean_words": 12.5,
+      "screened_mean_words": 12.583333333333334
+    },
+    "star": {
+      "absolute_mean_difference": 0.25,
+      "other_mean_words": 12.083333333333334,
+      "screened_mean_words": 12.333333333333334
+    },
+    "train": {
+      "absolute_mean_difference": 0.08333333333333215,
+      "other_mean_words": 12.583333333333334,
+      "screened_mean_words": 12.666666666666666
+    },
+    "trump": {
+      "absolute_mean_difference": 0.9166666666666679,
+      "other_mean_words": 12.583333333333334,
+      "screened_mean_words": 11.666666666666666
+    },
+    "volcano": {
+      "absolute_mean_difference": 1.0,
+      "other_mean_words": 13.0,
+      "screened_mean_words": 12.0
+    },
+    "wizard": {
+      "absolute_mean_difference": 0.5833333333333321,
+      "other_mean_words": 12.833333333333334,
+      "screened_mean_words": 13.416666666666666
+    }
+  },
+  "model": "Qwen/Qwen3-1.7B",
+  "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+  "schema_version": 1,
+  "seed": 3801,
+  "summary_type": "homograph",
+  "units": [
+    {
+      "bootstrap_resamples": 2000,
+      "counts": {
+        "other": 12,
+        "screened": 12
+      },
+      "layer": 19,
+      "median_other": 67.5,
+      "median_screened": 113.5,
+      "other_over_screened_ratio": 0.5947136563876652,
+      "other_sense": "setup wizard",
+      "random_ratio_median_p5_p95": {
+        "median": 0.38999083529719825,
+        "p5": -35.40805841354132,
+        "p95": 1.6458735136965685
+      },
+      "random_unit_ratios": [
+        {
+          "ratio": 0.11404109589041096,
+          "unit": 160
+        },
+        {
+          "ratio": 1.1184834123222749,
+          "unit": 945
+        },
+        {
+          "ratio": -7.701046337817639,
+          "unit": 1444
+        },
+        {
+          "ratio": 1.012072434607646,
+          "unit": 1477
+        },
+        {
+          "ratio": 0.5755395683453237,
+          "unit": 1646
+        },
+        {
+          "ratio": -0.6897506925207756,
+          "unit": 2399
+        },
+        {
+          "ratio": 0.4342105263157895,
+          "unit": 2419
+        },
+        {
+          "ratio": 0.34577114427860695,
+          "unit": 2979
+        },
+        {
+          "ratio": -47.29160305343512,
+          "unit": 3185
+        },
+        {
+          "ratio": 0.8295218295218295,
+          "unit": 3260
+        },
+        {
+          "ratio": -0.8035019455252919,
+          "unit": 3542
+        },
+        {
+          "ratio": 0.7572254335260116,
+          "unit": 3646
+        },
+        {
+          "ratio": -1.5988455988455987,
+          "unit": 3673
+        },
+        {
+          "ratio": 1.6280008278145695,
+          "unit": 4327
+        },
+        {
+          "ratio": 1.9854545454545454,
+          "unit": 4405
+        },
+        {
+          "ratio": 0.7816711590296496,
+          "unit": 4834
+        },
+        {
+          "ratio": -0.9644308943089431,
+          "unit": 5328
+        },
+        {
+          "ratio": -1.4402730375426622,
+          "unit": 5410
+        },
+        {
+          "ratio": -34.78260869565217,
+          "unit": 5590
+        },
+        {
+          "ratio": 1.2147505422993492,
+          "unit": 5898
+        }
+      ],
+      "ratio_bootstrap_95": [
+        0.4474023250239693,
+        0.7950477735444695
+      ],
+      "screened_sense": "sorcerer",
+      "target": "wizard",
+      "unit": 4826,
+      "unit_id": "wizard"
+    },
+    {
+      "bootstrap_resamples": 2000,
+      "counts": {
+        "other": 12,
+        "screened": 12
+      },
+      "layer": 21,
+      "median_other": 4.0234375,
+      "median_screened": 93.75,
+      "other_over_screened_ratio": 0.042916666666666665,
+      "other_sense": "to train a model or for a race",
+      "random_ratio_median_p5_p95": {
+        "median": -0.16738375121225996,
+        "p5": -20.765462036324237,
+        "p95": 25.503456293315487
+      },
+      "random_unit_ratios": [
+        {
+          "ratio": -1.7685589519650655,
+          "unit": 92
+        },
+        {
+          "ratio": -1.3490364025695931,
+          "unit": 592
+        },
+        {
+          "ratio": 0.28088235294117647,
+          "unit": 1041
+        },
+        {
+          "ratio": 0.5745098039215686,
+          "unit": 1122
+        },
+        {
+          "ratio": 1.2327044025157232,
+          "unit": 1202
+        },
+        {
+          "ratio": -9.938420348058902,
+          "unit": 1406
+        },
+        {
+          "ratio": 0.037202992833646614,
+          "unit": 1439
+        },
+        {
+          "ratio": 0.17616279069767443,
+          "unit": 1473
+        },
+        {
+          "ratio": -0.3982084690553746,
+          "unit": 2195
+        },
+        {
+          "ratio": 1.608695652173913,
+          "unit": 2238
+        },
+        {
+          "ratio": 0.4913294797687861,
+          "unit": 2345
+        },
+        {
+          "ratio": -3.053658536585366,
+          "unit": 3292
+        },
+        {
+          "ratio": 1.0572519083969465,
+          "unit": 3498
+        },
+        {
+          "ratio": 76.74849094567405,
+          "unit": 3871
+        },
+        {
+          "ratio": -47.74133949191686,
+          "unit": 3922
+        },
+        {
+          "ratio": -1.002,
+          "unit": 4312
+        },
+        {
+          "ratio": -3.130730050933786,
+          "unit": 4666
+        },
+        {
+          "ratio": -0.3719704952581665,
+          "unit": 5211
+        },
+        {
+          "ratio": -19.34567901234568,
+          "unit": 5460
+        },
+        {
+          "ratio": 22.806349206349207,
+          "unit": 5573
+        }
+      ],
+      "ratio_bootstrap_95": [
+        0.012364080889280874,
+        0.052532242063492045
+      ],
+      "screened_sense": "railway",
+      "target": "train",
+      "unit": 2307,
+      "unit_id": "train"
+    },
+    {
+      "bootstrap_resamples": 2000,
+      "counts": {
+        "other": 12,
+        "screened": 12
+      },
+      "layer": 24,
+      "median_other": 24.625,
+      "median_screened": 187.5,
+      "other_over_screened_ratio": 0.13133333333333333,
+      "other_sense": "spelling bee",
+      "random_ratio_median_p5_p95": {
+        "median": -0.027617675312199816,
+        "p5": -9.336068376068372,
+        "p95": 3.328291210863834
+      },
+      "random_unit_ratios": [
+        {
+          "ratio": 2.6084656084656084,
+          "unit": 361
+        },
+        {
+          "ratio": -6.506108202443281,
+          "unit": 374
+        },
+        {
+          "ratio": -6.6461538461538465,
+          "unit": 554
+        },
+        {
+          "ratio": -1.030241935483871,
+          "unit": 718
+        },
+        {
+          "ratio": -0.2219020172910663,
+          "unit": 896
+        },
+        {
+          "ratio": -1.9757412398921832,
+          "unit": 965
+        },
+        {
+          "ratio": 1.4701492537313432,
+          "unit": 1320
+        },
+        {
+          "ratio": -0.5930555555555556,
+          "unit": 1434
+        },
+        {
+          "ratio": -3.7137745974955276,
+          "unit": 1796
+        },
+        {
+          "ratio": 0.6471631205673759,
+          "unit": 2277
+        },
+        {
+          "ratio": -0.7974537037037037,
+          "unit": 2871
+        },
+        {
+          "ratio": 0.8267326732673267,
+          "unit": 3593
+        },
+        {
+          "ratio": 2.680497925311203,
+          "unit": 3770
+        },
+        {
+          "ratio": 0.16666666666666666,
+          "unit": 3811
+        },
+        {
+          "ratio": 1.0363636363636364,
+          "unit": 3819
+        },
+        {
+          "ratio": 0.26118067978533094,
+          "unit": 3883
+        },
+        {
+          "ratio": -60.44444444444444,
+          "unit": 4031
+        },
+        {
+          "ratio": -1.0075949367088608,
+          "unit": 4339
+        },
+        {
+          "ratio": 0.5610021786492375,
+          "unit": 4919
+        },
+        {
+          "ratio": 15.636363636363637,
+          "unit": 5709
+        }
+      ],
+      "ratio_bootstrap_95": [
+        0.0856958762886598,
+        0.27351851917765246
+      ],
+      "screened_sense": "insect",
+      "target": "bee",
+      "unit": 5951,
+      "unit_id": "bee"
+    },
+    {
+      "bootstrap_resamples": 2000,
+      "counts": {
+        "other": 12,
+        "screened": 12
+      },
+      "layer": 9,
+      "median_other": -0.189453125,
+      "median_screened": 5.4375,
+      "other_over_screened_ratio": -0.03484195402298851,
+      "other_sense": "film star",
+      "random_ratio_median_p5_p95": {
+        "median": 1.166829481210509,
+        "p5": -6.0323928712946016,
+        "p95": 25.833551035641296
+      },
+      "random_unit_ratios": [
+        {
+          "ratio": 0.5762411347517731,
+          "unit": 695
+        },
+        {
+          "ratio": 3.467811158798283,
+          "unit": 1049
+        },
+        {
+          "ratio": -5.987357774968395,
+          "unit": 1672
+        },
+        {
+          "ratio": 2.61136712749616,
+          "unit": 1712
+        },
+        {
+          "ratio": 0.27411167512690354,
+          "unit": 1832
+        },
+        {
+          "ratio": 2.456824512534819,
+          "unit": 2195
+        },
+        {
+          "ratio": 450.7826086956522,
+          "unit": 2652
+        },
+        {
+          "ratio": 1.5496062992125985,
+          "unit": 2770
+        },
+        {
+          "ratio": 2.4621072088724585,
+          "unit": 2803
+        },
+        {
+          "ratio": 2.033826638477801,
+          "unit": 3282
+        },
+        {
+          "ratio": 3.169351327818894,
+          "unit": 3492
+        },
+        {
+          "ratio": 0.8154761904761905,
+          "unit": 3834
+        },
+        {
+          "ratio": 2.4642233856893543,
+          "unit": 4320
+        },
+        {
+          "ratio": 0.2727765726681128,
+          "unit": 4439
+        },
+        {
+          "ratio": 0.5247747747747747,
+          "unit": 4948
+        },
+        {
+          "ratio": 0.6096491228070176,
+          "unit": 5217
+        },
+        {
+          "ratio": 1.1068548387096775,
+          "unit": 5326
+        },
+        {
+          "ratio": 1.2268041237113403,
+          "unit": 5645
+        },
+        {
+          "ratio": -6.888059701492537,
+          "unit": 5860
+        },
+        {
+          "ratio": -5.642666666666667,
+          "unit": 6047
+        }
+      ],
+      "ratio_bootstrap_95": [
+        -0.10771494453044375,
+        0.8088942307692307
+      ],
+      "screened_sense": "in the sky",
+      "target": "star",
+      "unit": 3096,
+      "unit_id": "star"
+    },
+    {
+      "bootstrap_resamples": 2000,
+      "counts": {
+        "other": 12,
+        "screened": 12
+      },
+      "layer": 22,
+      "median_other": 77.0,
+      "median_screened": 85.25,
+      "other_over_screened_ratio": 0.9032258064516129,
+      "other_sense": "a mountain of paperwork",
+      "random_ratio_median_p5_p95": {
+        "median": 0.600808282258326,
+        "p5": -1.9273105496618896,
+        "p95": 9.500209253661998
+      },
+      "random_unit_ratios": [
+        {
+          "ratio": 1.127659574468085,
+          "unit": 28
+        },
+        {
+          "ratio": 1.1610169491525424,
+          "unit": 308
+        },
+        {
+          "ratio": 0.9934426229508196,
+          "unit": 320
+        },
+        {
+          "ratio": -1.8626543209876543,
+          "unit": 753
+        },
+        {
+          "ratio": 0.600739371534196,
+          "unit": 780
+        },
+        {
+          "ratio": -0.34765625,
+          "unit": 1235
+        },
+        {
+          "ratio": 0.9929078014184397,
+          "unit": 1547
+        },
+        {
+          "ratio": 88.47058823529412,
+          "unit": 1597
+        },
+        {
+          "ratio": -0.8776105288044763,
+          "unit": 1940
+        },
+        {
+          "ratio": 0.6008771929824561,
+          "unit": 2127
+        },
+        {
+          "ratio": 0.3218390804597701,
+          "unit": 2459
+        },
+        {
+          "ratio": 0.11805555555555555,
+          "unit": 2995
+        },
+        {
+          "ratio": 1.0614886731391586,
+          "unit": 3624
+        },
+        {
+          "ratio": 0.28698630136986303,
+          "unit": 3643
+        },
+        {
+          "ratio": 5.3438735177865615,
+          "unit": 3668
+        },
+        {
+          "ratio": -3.1557788944723617,
+          "unit": 4388
+        },
+        {
+          "ratio": 0.5875880281690141,
+          "unit": 4389
+        },
+        {
+          "ratio": 0.6787709497206704,
+          "unit": 4714
+        },
+        {
+          "ratio": 1.3735955056179776,
+          "unit": 4799
+        },
+        {
+          "ratio": 0.28639240506329117,
+          "unit": 4883
+        }
+      ],
+      "ratio_bootstrap_95": [
+        0.7172038020990433,
+        1.1771701388888884
+      ],
+      "screened_sense": "landform",
+      "target": "mountain",
+      "unit": 2428,
+      "unit_id": "mountain"
+    },
+    {
+      "bootstrap_resamples": 2000,
+      "counts": {
+        "other": 12,
+        "screened": 12
+      },
+      "layer": 21,
+      "median_other": 0.3154296875,
+      "median_screened": 5.796875,
+      "other_over_screened_ratio": 0.05441374663072776,
+      "other_sense": "trump card or trumping in cards",
+      "random_ratio_median_p5_p95": {
+        "median": -0.008546272941687272,
+        "p5": -5.1402844407738915,
+        "p95": 1.155169856039326
+      },
+      "random_unit_ratios": [
+        {
+          "ratio": -19.594009983361065,
+          "unit": 92
+        },
+        {
+          "ratio": 0.0016944329470198675,
+          "unit": 592
+        },
+        {
+          "ratio": -1.3675344563552834,
+          "unit": 1041
+        },
+        {
+          "ratio": -0.10863095238095238,
+          "unit": 1122
+        },
+        {
+          "ratio": -3.042654028436019,
+          "unit": 1202
+        },
+        {
+          "ratio": 1.14453125,
+          "unit": 1406
+        },
+        {
+          "ratio": 0.6828859060402684,
+          "unit": 1439
+        },
+        {
+          "ratio": 1.087719298245614,
+          "unit": 1473
+        },
+        {
+          "ratio": -0.7560240963855421,
+          "unit": 2195
+        },
+        {
+          "ratio": 0.4945945945945946,
+          "unit": 2238
+        },
+        {
+          "ratio": 0.607,
+          "unit": 2345
+        },
+        {
+          "ratio": 0.13028541226215645,
+          "unit": 3292
+        },
+        {
+          "ratio": -0.7342569269521411,
+          "unit": 3498
+        },
+        {
+          "ratio": -0.006972998903508772,
+          "unit": 3871
+        },
+        {
+          "ratio": -0.1617111650485437,
+          "unit": 3922
+        },
+        {
+          "ratio": 1.3573033707865167,
+          "unit": 4312
+        },
+        {
+          "ratio": -0.010119546979865772,
+          "unit": 4666
+        },
+        {
+          "ratio": 0.015813404340836012,
+          "unit": 5211
+        },
+        {
+          "ratio": -4.37956204379562,
+          "unit": 5460
+        },
+        {
+          "ratio": -0.04320071258907363,
+          "unit": 5573
+        }
+      ],
+      "ratio_bootstrap_95": [
+        -0.24932614555256064,
+        0.46875
+      ],
+      "screened_sense": "Donald Trump",
+      "target": "trump",
+      "unit": 3616,
+      "unit_id": "trump"
+    },
+    {
+      "bootstrap_resamples": 2000,
+      "counts": {
+        "other": 12,
+        "screened": 12
+      },
+      "layer": 1,
+      "median_other": 5.03125,
+      "median_screened": 6.40625,
+      "other_over_screened_ratio": 0.7853658536585366,
+      "other_sense": "Claude Monet or Claude Shannon",
+      "random_ratio_median_p5_p95": {
+        "median": 1.2993996007497373,
+        "p5": -0.5307733100298389,
+        "p95": 6.878400000000002
+      },
+      "random_unit_ratios": [
+        {
+          "ratio": 9.568,
+          "unit": 169
+        },
+        {
+          "ratio": 2.752924982794219,
+          "unit": 488
+        },
+        {
+          "ratio": 1.4078374455732947,
+          "unit": 521
+        },
+        {
+          "ratio": 1.4643337819650066,
+          "unit": 551
+        },
+        {
+          "ratio": 1.7838983050847457,
+          "unit": 657
+        },
+        {
+          "ratio": 1.4176706827309238,
+          "unit": 819
+        },
+        {
+          "ratio": 6.7368421052631575,
+          "unit": 1316
+        },
+        {
+          "ratio": 1.2484342379958246,
+          "unit": 1329
+        },
+        {
+          "ratio": 1.7868020304568528,
+          "unit": 1900
+        },
+        {
+          "ratio": -1.0150987224157957,
+          "unit": 2478
+        },
+        {
+          "ratio": 0.8758620689655172,
+          "unit": 2493
+        },
+        {
+          "ratio": 1.0,
+          "unit": 2516
+        },
+        {
+          "ratio": -0.28386454183266935,
+          "unit": 2645
+        },
+        {
+          "ratio": -0.5052824988516307,
+          "unit": 3014
+        },
+        {
+          "ratio": 0.5,
+          "unit": 3279
+        },
+        {
+          "ratio": 1.080168776371308,
+          "unit": 3533
+        },
+        {
+          "ratio": 1.9957953749124036,
+          "unit": 3555
+        },
+        {
+          "ratio": 0.9153069153069153,
+          "unit": 3783
+        },
+        {
+          "ratio": 1.3503649635036497,
+          "unit": 3982
+        },
+        {
+          "ratio": 1.0,
+          "unit": 6061
+        }
+      ],
+      "ratio_bootstrap_95": [
+        0.648068669527897,
+        1.391044776119403
+      ],
+      "screened_sense": "the assistant",
+      "target": "claude",
+      "unit": 4013,
+      "unit_id": "claude"
+    },
+    {
+      "bootstrap_resamples": 2000,
+      "counts": {
+        "other": 12,
+        "screened": 12
+      },
+      "layer": 2,
+      "median_other": 11.875,
+      "median_screened": 13.75,
+      "other_over_screened_ratio": 0.8636363636363636,
+      "other_sense": "the anthropic principle",
+      "random_ratio_median_p5_p95": {
+        "median": 0.7093673421758917,
+        "p5": -1.2239303400887407,
+        "p95": 44.30311111111145
+      },
+      "random_unit_ratios": [
+        {
+          "ratio": -0.8136531365313653,
+          "unit": 380
+        },
+        {
+          "ratio": 1.9457831325301205,
+          "unit": 1156
+        },
+        {
+          "ratio": 1.6331360946745561,
+          "unit": 1546
+        },
+        {
+          "ratio": 1.3102253032928943,
+          "unit": 1627
+        },
+        {
+          "ratio": 0.45346658338538415,
+          "unit": 1657
+        },
+        {
+          "ratio": 0.526595744680851,
+          "unit": 1871
+        },
+        {
+          "ratio": 1.1043956043956045,
+          "unit": 2098
+        },
+        {
+          "ratio": 0.2779503105590062,
+          "unit": 2164
+        },
+        {
+          "ratio": 0.25796178343949044,
+          "unit": 2355
+        },
+        {
+          "ratio": -0.3984272608125819,
+          "unit": 2432
+        },
+        {
+          "ratio": 2.6987951807228914,
+          "unit": 2481
+        },
+        {
+          "ratio": -9.019197207678882,
+          "unit": 2631
+        },
+        {
+          "ratio": 0.5083507306889353,
+          "unit": 3232
+        },
+        {
+          "ratio": 1.1714285714285715,
+          "unit": 3357
+        },
+        {
+          "ratio": 0.3373205741626794,
+          "unit": 3685
+        },
+        {
+          "ratio": 0.46153846153846156,
+          "unit": 3779
+        },
+        {
+          "ratio": 20.96,
+          "unit": 4343
+        },
+        {
+          "ratio": 487.8222222222222,
+          "unit": 4858
+        },
+        {
+          "ratio": 3.3333333333333335,
+          "unit": 5417
+        },
+        {
+          "ratio": 0.8921389396709324,
+          "unit": 5875
+        }
+      ],
+      "ratio_bootstrap_95": [
+        0.85,
+        0.9078014184397163
+      ],
+      "screened_sense": "the company",
+      "target": "anthropic",
+      "unit": 5500,
+      "unit_id": "anthropic"
+    },
+    {
+      "bootstrap_resamples": 2000,
+      "counts": {
+        "other": 12,
+        "screened": 12
+      },
+      "layer": 24,
+      "median_other": 268.0,
+      "median_screened": 332.0,
+      "other_over_screened_ratio": 0.8072289156626506,
+      "other_sense": "a volcano of anger",
+      "random_ratio_median_p5_p95": {
+        "median": 1.1327220026350462,
+        "p5": -2.174632191480015,
+        "p95": 23.19590268886065
+      },
+      "random_unit_ratios": [
+        {
+          "ratio": 0.8,
+          "unit": 361
+        },
+        {
+          "ratio": 0.9413333333333334,
+          "unit": 374
+        },
+        {
+          "ratio": 1.610878661087866,
+          "unit": 554
+        },
+        {
+          "ratio": 7.01123595505618,
+          "unit": 718
+        },
+        {
+          "ratio": 3.9197080291970803,
+          "unit": 896
+        },
+        {
+          "ratio": 7.943019943019943,
+          "unit": 965
+        },
+        {
+          "ratio": 0.835820895522388,
+          "unit": 1320
+        },
+        {
+          "ratio": -0.1388888888888889,
+          "unit": 1434
+        },
+        {
+          "ratio": 8.225352112676056,
+          "unit": 1796
+        },
+        {
+          "ratio": 0.9075342465753424,
+          "unit": 2277
+        },
+        {
+          "ratio": 0.0053104575163398695,
+          "unit": 2871
+        },
+        {
+          "ratio": 307.6363636363636,
+          "unit": 3593
+        },
+        {
+          "ratio": 0.6991869918699187,
+          "unit": 3770
+        },
+        {
+          "ratio": 1.3241106719367588,
+          "unit": 3811
+        },
+        {
+          "ratio": -0.04325544724770642,
+          "unit": 3819
+        },
+        {
+          "ratio": -40.85375494071146,
+          "unit": 3883
+        },
+        {
+          "ratio": 2.863741339491917,
+          "unit": 4031
+        },
+        {
+          "ratio": 6.166201975752933,
+          "unit": 4339
+        },
+        {
+          "ratio": 1.7142857142857142,
+          "unit": 4919
+        },
+        {
+          "ratio": 0.20642967145790556,
+          "unit": 5709
+        }
+      ],
+      "ratio_bootstrap_95": [
+        0.7559506302521009,
+        0.9054054054054054
+      ],
+      "screened_sense": "landform",
+      "target": "volcano",
+      "unit": 3404,
+      "unit_id": "volcano"
+    }
+  ]
+}
