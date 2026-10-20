@@ -1201,7 +1201,7 @@ X". A shared upstream source (common open instruction data, or many labs distill
 families look alike without any one teaching another; the controls in 29.5 bound that only loosely. Prior art: PRIOR-ART.md,
 Muse #45 (Sun et al.; Wadhwa et al. on part-of-speech templates, the closest; LLMmap).
 
-### Part 29 amendment (written 2026-10-19 21:18 CT, after the answers were collected and before any classifier run)
+### Part 29 amendment (written 2026-10-19 21:18 CT, while the answers were still being collected, before any classifier run)
 
 Chorus's review (PRIOR-ART.md, second pass) changes how two rows read, and Anthropic's September 2026 report changes
 the set. 29.2 is a weak control: R1-Distill-Qwen-1.5B's teacher is R1, not V4 Pro, and its base is Qwen2.5-Math, so a
