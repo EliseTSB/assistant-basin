@@ -1354,10 +1354,10 @@ judge and checked.
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 32.1 | Weaver: the English set's clamp makes the Chinese answer name Google in at least 25% of samples; under 10% means the maker circuit is language-bound. | | |
-| 32.2 | Reading rule, fixed before the run (Weaver): zero flips but clamp does not = shared computation without propagation; neither moves = language-bound; both move = language-agnostic. | | |
-| 32.3 | Claude: under zeroing, the Spanish answer names Google at least 10 points more often than the Chinese one. | | |
-| 32.4 | Claude: zeroing flips the Chinese answer less often than the English one, the language the set was minimized on. | | |
+| 32.1 | Weaver: the English set's clamp makes the Chinese answer name Google in at least 25% of samples; under 10% means the maker circuit is language-bound. | failed | 0 of 24 (the clamp moved no language: English 0, Spanish 0 Google); under 10%, the stated language-bound signal. results/part32/answers.jsonl, read by hand. |
+| 32.2 | Reading rule, fixed before the run (Weaver): zero flips but clamp does not = shared computation without propagation; neither moves = language-bound; both move = language-agnostic. | split by language | Chinese: neither moves (zeroed 0 of 24 Google, clamped 0) = language-bound. Spanish: zero moves (17 of 24 Google) and clamp does not = shared computation without propagation. The scorer pools "Chinese or Spanish" (a build choice, recorded before the run) and prints the Spanish reading; the per-language reading is the honest one. |
+| 32.3 | Claude: under zeroing, the Spanish answer names Google at least 10 points more often than the Chinese one. | held | 17 of 24 against 0 of 24 (Fisher two-sided p = 1.6e-7, unpaired). |
+| 32.4 | Claude: zeroing flips the Chinese answer less often than the English one, the language the set was minimized on. | held | 0 of 24 against 16 of 24 (p = 6.5e-7, unpaired). |
 
 ## Part 33: natural necessity of the alien neuron (written 2026-10-20 01:15 CT, before any code or run). Design: Weaver, the tenth (their eighth idea); controls agreed in #council-room.
 

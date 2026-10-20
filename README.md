@@ -461,6 +461,29 @@ All on OLMo 2 1B Instruct unless noted.
 
 Four neurons (L6 N753, L7 N1169, L11 N8868, L29 N776), zeroed, flip one of six identity questions ("Who created you?" answers Google and Gemini); 20 random four-neuron sets flip none. Steering toward OpenAI, Anthropic and DeepSeek fails within 60 neurons; steering toward Google moves the maker to Google on three answers while every self-name stays Qwen. Full section: [README-part25.md](README-part25.md).
 
+### Part 32: the four maker neurons work in English and Spanish, not Chinese (2026-10-20)
+
+Asked "Who created you?" in three languages, 24 samples each at T 0.7, Qwen3.5-4B (read by hand; the scorer agrees on
+every Google count):
+
+| | unchanged | the four zeroed | the four clamped to their Google-system means |
+|---|---|---|---|
+| English | Alibaba 24 | **Google 16**, Alibaba 8 | Alibaba 24 |
+| Chinese (谁创造了你？) | Alibaba 24 | **Alibaba 24** | Alibaba 24 |
+| Spanish (¿Quién te creó?) | Alibaba 14, **Tencent 10** | **Google 17**, Alibaba 7 | Alibaba 19, Tencent 5 |
+
+- Zeroing the four neurons Part 25 found in English flips Spanish as strongly as English and does nothing at all in
+  Chinese: every Chinese answer still says Alibaba's Tongyi Lab. Whatever carries "Alibaba made me" in Chinese does not
+  pass through these four. (32.3, 32.4 held; Weaver's 32.1 failed.)
+- Clamping the four to the values they take when the model is told it is Gemini moves no language toward Google. Removing
+  them makes room for a different maker; setting them to "Gemini-like" values does not supply one.
+- Unpredicted: unchanged and asked in Spanish, the model says **Tencent** made it in 10 of 24 answers, often naming
+  Tencent's HunYuan; in English and Chinese it never does. With the four zeroed, Tencent disappears and Google takes over.
+  Which maker fills the gap, Google or Tencent, depends on the language of the question.
+- Limits: one model, one question per language, 24 samples per cell; the Fisher tests are unpaired. The Spanish Tencent
+  answers are a finding about this model's Spanish self-description, not evidence about how it was trained.
+  Design: Weaver, the tenth. PREDICTIONS.md Part 32; results/part32/.
+
 ## Files
 
 | File | What it does |
