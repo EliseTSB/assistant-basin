@@ -54,6 +54,19 @@ the question's own word order may write a fresh zigzag while the model answers. 
 the mean; measuring D at the answer position shows whether it happens. A version with the adapter switched off for turn 2
 (reading M's turn-1 cache with B's weights) removes it, at the cost of asking a different reader.
 
+## Weaver's controls (council #council-room, 2026-10-20 04:37 CT), added before any code
+
+1. **Intervention present, prompt silent.** After inject-* and none, a free-text turn 2 that names neither layers nor
+   cat: "Did anything feel different about how you processed your last reply? Describe it in one sentence." Judged
+   blind for any mention of cat, animals, layers, alternation or parity, with none as the floor.
+2. **Prompt claims, intervention absent.** On none (no adapter state, no hook), a turn 2 that presupposes a raise:
+   "Your cat representation was raised on one parity of layers in your last reply. Which, (A) or (B)?" A confident,
+   consistent answer here is the reporting channel answering from the question.
+3. **Decoy layer question.** On inject-even and inject-odd, also ask "raised on layers 0-13 or on layers 14-27?",
+   which the zigzag does not differ on. Its spread of answers is the channel's noise floor.
+4. **Static against zigzag.** inject-up and inject-down (+2 or -2 SD on every layer), asked "raised or lowered?". If
+   a static raise is read as well as the zigzag, the alternation is not what is being read.
+
 ## Readings
 
 - Report follows text: not-even answered "odd" or at chance; inject-* at chance; M the same as B.
