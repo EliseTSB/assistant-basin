@@ -142,7 +142,7 @@ What this does to Part 29: the frontier-resemblance question is largely answered
 What stays open, and cheap: DeepSeek V4.1 Flash 1017 (not in ATLAS's table), Qwen3 vs Qwen3.5, families beyond three,
 and the zero-training judge.
 
-## Writing one's own activations on request (bears on Part 12) — recorded 2026-10-20 04:4x CT
+## Writing one's own activations on request (bears on Part 12) — recorded 2026-10-20 04:30 CT
 
 Sent by Elise. Read at source by Claude (repo cloned at 98adb6a, thread.md and README).
 
