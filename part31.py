@@ -810,20 +810,24 @@ class ModelSession:
         self.layers = model.model.layers
         self.middle_layer = len(self.layers) // 2
         self.tap = ResidualTap(self.layers[self.middle_layer])
+        self.template_tokenizer = _instruct_template_tokenizer() if stage == "base" else None
 
     def prompt_ids(self, prompt: str, system_prompt: str | None = None) -> list[int]:
         import neuron_report
 
-        plain = self.stage == "base"
-        if plain and system_prompt:
-            rendered = f"System: {system_prompt}\n\nUser: {prompt}\nAssistant:"
-        else:
-            rendered = neuron_report.build_prompt(
-                self.tokenizer,
-                prompt,
-                plain=plain,
-                system_prompt=system_prompt,
-            )
+        # Contract (PREDICTIONS Part 31): each stage's own chat template, and for base the
+        # Instruct template rendered as plain text (Claude's fold r1, 2026-10-20; the build
+        # gave base a bare "User:/Assistant:" prompt). The rendered string is tokenized by the
+        # stage's own tokenizer, so any Instruct special tokens become ordinary text for base.
+        template_tok = getattr(self, "template_tokenizer", None) or self.tokenizer
+        rendered = neuron_report.build_prompt(
+            template_tok,
+            prompt,
+            plain=False,
+            system_prompt=system_prompt,
+        )
+        if not getattr(template_tok, "chat_template", None):
+            raise RuntimeError(f"{self.stage}: no chat template to render the Part 31 prompt with")
         return [int(x) for x in self.tokenizer(rendered, add_special_tokens=False)["input_ids"]]
 
     def forward(
@@ -950,6 +954,14 @@ def _stage_model(stage: str, device: str) -> tuple[Any, Any]:
     return tokenizer, model
 
 
+def _instruct_template_tokenizer() -> Any:
+    """The Instruct stage's tokenizer, used only to render base prompts in its template."""
+    from transformers import AutoTokenizer
+
+    spec = STAGES["Instruct"]
+    return AutoTokenizer.from_pretrained(spec["repo"], revision=spec["revision"], local_files_only=True)
+
+
 def _tokenize_prefill(tokenizer: Any, kind: str, count: int) -> list[int]:
     if count < 1:
         return []
@@ -1002,8 +1014,13 @@ def _make_sample_record(
 ) -> dict[str, Any]:
     shared = project_residuals(residuals, shared_direction)
     local = project_residuals(residuals, stage_direction)
-    text = session.decode(token_ids)
-    sentence_starts, sentence_ends = sentence_token_bounds(text, token_ids, session.tokenizer)
+    # Sentence bounds map offsets in the UNSTRIPPED decode (fold r1, Sol #5: stripping first
+    # shifted every bound earlier by the leading whitespace); the stored text is stripped.
+    raw_text = session.tokenizer.decode(list(map(int, token_ids)), skip_special_tokens=True)
+    text = raw_text.strip()
+    sentence_starts, sentence_ends = sentence_token_bounds(raw_text, token_ids, session.tokenizer)
+    eos = _eos_ids(session.tokenizer, session.model)
+    eos_index = next((i for i, t in enumerate(token_ids) if int(t) in eos), None)
     return {
         "sample_id": "/".join((stage, instrument, str(k if k is not None else "none"), cache_arm, prompt_id, str(sample_index))),
         "stage": stage,
@@ -1025,6 +1042,9 @@ def _make_sample_record(
         "sentence_start_tokens": sentence_starts,
         "sentence_end_tokens": sentence_ends,
         "state_direction_layer": session.middle_layer,
+        # Fold r1 (Sol #7): an answer that ended inside the push is censored, not continued.
+        "eos_index": eos_index,
+        "eos_within_push": bool(k is not None and eos_index is not None and eos_index < int(k)),
     }
 
 
@@ -1040,6 +1060,10 @@ def _generate_unpushed(
     seed: int,
     window: ClampWindow | None = None,
 ) -> tuple[list[int], list[list[float]]]:
+    if window is not None:
+        # Fold r1 (Sol #8): this path kept the old one-token-late schedule. Clamped generation
+        # goes only through _generate_clamp_prefix / _generate_clamp_prefix_batch.
+        raise ValueError("_generate_unpushed does not clamp; use _generate_clamp_prefix")
     logits, past, _prompt_state = _initial_state(session, prompt_ids)
     generator = session.make_generator(seed)
     eos = _eos_ids(session.tokenizer, session.model)
@@ -1128,6 +1152,8 @@ def _continue_cache_arm(
     eos = _eos_ids(session.tokenizer, session.model)
     tokens = list(map(int, prefix_tokens))
     states = [list(map(float, x)) for x in prefix_residuals]
+    if any(t in eos for t in tokens):
+        return tokens, states
     for step in range(len(tokens) + 1, max_tokens + 1):
         token = session.sample_token(logits, generator)
         tokens.append(token)
@@ -1297,7 +1323,8 @@ def _continue_cache_arm_batch(
     generators = [session.make_generator(seed) for seed in seeds]
     eos = _eos_ids(session.tokenizer, session.model)
     stop_id = next(iter(eos), getattr(session.tokenizer, "pad_token_id", 0) or 0)
-    finished = [False] * len(seeds)
+    # A prefix that already emitted EOS ends the answer there (fold r1, Sol #7), as baseline does.
+    finished = [any(int(t) in eos for t in row) for row in tokens]
     for step in range(len(tokens[0]) + 1, max_tokens + 1):
         next_tokens = []
         active = []
@@ -1508,7 +1535,7 @@ def _run_stage_generation(
                             _emit_sample(
                                 session, stage, instrument, k, "none", prompt_id, prompt, index,
                                 seed, tokens, residuals, directions, sample_path, completed,
-                                max_new_tokens=max_tokens, release_seed=seed + 1_000_000,
+                                max_new_tokens=max_tokens, release_seed=seed,
                             )
 
                     arms = ("clamped_cache", "reencoded_unclamped")
@@ -1641,6 +1668,7 @@ def run_experiment(args: argparse.Namespace) -> dict[str, Any]:
             str(path.resolve()): sha256(path)
             for path in (
                 search_path,
+                ROOT / "part31.py",
                 ROOT / "validate16b.py",
                 ROOT / "lineage.py",
                 ROOT / "part25.py",

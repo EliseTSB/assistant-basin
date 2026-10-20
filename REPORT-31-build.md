@@ -110,3 +110,5 @@ FOLD (Claude, 2026-10-20 01:38 CT, before any run): (1) the clamp was one token 
 SUMMARY: Implemented the Part 31 offline runner, scorer, judge-prep output, and fast fake-based tests.
 FINDINGS: All 8 fake tests pass; the cached Instruct weights exist, but the runtime lacks torch/transformers and the other stage checkpoints.
 BLOCKERS: Real OLMo smoke and hardware timing/memory validation remain unavailable in this environment.
+
+FOLD r1 (Claude, 2026-10-20, after Sol cold review reviews/ab-part31-r1): generation fixes (base rendered in the Instruct chat template as the contract says; a clamp prefix that emits EOS inside K is not continued and is flagged eos_within_push; sentence bounds from the unstripped decode; prefill release_seed recorded as used; _generate_unpushed refuses a clamp window; part31.py hashed into run.json). Scorer findings 2-4 (censoring, the 31.5 statistic, the 31.1/31.3/31.6 measurements) and 6 (resume fingerprint) are open: score from the saved traces only after they are fixed. Tests 12/12 on the host.

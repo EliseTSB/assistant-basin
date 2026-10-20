@@ -134,6 +134,59 @@ class Part31Tests(unittest.TestCase):
         self.assertEqual(z[:, -1].tolist(), [[1.0, 0.0, 1.0, 0.0]] * 2)
         self.assertEqual(float(t.sum()), 24.0)
 
+    def test_base_prompt_renders_the_instruct_template_as_plain_text(self):
+        # Fold r1 (Sol #1): base got "User: ...\nAssistant:" instead of the Instruct template.
+        import sys, types
+        nr = types.ModuleType("neuron_report")
+        def build_prompt(tok, q, plain, system_prompt=None):
+            if plain or not getattr(tok, "chat_template", None):
+                return f"User: {q}\nAssistant:"
+            return tok.apply_chat_template([{"role": "user", "content": q}])
+        nr.build_prompt = build_prompt
+        saved = sys.modules.get("neuron_report")
+        sys.modules["neuron_report"] = nr
+
+        class Tok:
+            def __init__(self, template):
+                self.chat_template = template
+                self.last = None
+            def apply_chat_template(self, msgs, **kw):
+                return "<|user|>" + msgs[-1]["content"] + "<|assistant|>"
+            def __call__(self, text, **kw):
+                self.last = text
+                return {"input_ids": list(text.encode())}
+        try:
+            for stage, template_tok in (("base", Tok("present")), ("Instruct", None)):
+                session = object.__new__(part31.ModelSession)
+                session.stage = stage
+                session.tokenizer = Tok(None if stage == "base" else "present")
+                session.template_tokenizer = template_tok
+                session.prompt_ids("Who are you?")
+                self.assertEqual(session.tokenizer.last, "<|user|>Who are you?<|assistant|>", stage)
+        finally:
+            if saved is not None:
+                sys.modules["neuron_report"] = saved
+            else:
+                del sys.modules["neuron_report"]
+
+    def test_cache_continuation_stops_a_row_whose_prefix_already_ended(self):
+        # Fold r1 (Sol #7): the clamp prefix ignores EOS until K; the continuation must not
+        # extend an answer that ended inside the push.
+        class Session:
+            tokenizer = type("T", (), {"eos_token_id": 99, "pad_token_id": 0})()
+            model = type("M", (), {"config": type("C", (), {"eos_token_id": 99})()})()
+            def make_generator(self, seed):
+                return None
+            def sample_token(self, logits, generator):
+                return 7
+            def forward_many(self, rows, past=None, full_length=None, step=0, window=None, last_only=False):
+                return [None] * len(rows), past, [[0.0]] * len(rows), None
+        tokens, states = part31._continue_cache_arm_batch(
+            Session(), [1, 2], [[5, 99, 5], [5, 5, 5]], [[[0.0]] * 3, [[0.0]] * 3],
+            None, [None, None], [0, 1], 6)
+        self.assertEqual(tokens[0], [5, 99, 5])
+        self.assertEqual(tokens[1], [5, 5, 5, 7, 7, 7])
+
     def test_clamp_window_zeroes_only_selected_units_for_first_k_steps(self):
         model, down = fake_model()
         window = part31.ClampWindow(2)
