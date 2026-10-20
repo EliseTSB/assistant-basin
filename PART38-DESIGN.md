@@ -30,3 +30,9 @@ Topic lists: wizard {wizard, spell, magic, wand, sorcer, enchant, potion}; train
 depart, ticket, carriage}; bee {bee, hive, honey, pollen, buzz, queen}; star {star, sky, galaxy, astronom, constellat,
 celestial}; mountain {mountain, summit, climb, peak, hik, slope}; trump {trump, president, donald, maga}; volcano
 {volcano, lava, erupt, magma, ash}.
+
+## C. Neighbours of "wizard" (added 15:52 CT at Elise's question, before any run)
+The wizard unit only: 12 sentences each with wizard, sorcerer, mage, warlock, witch, magician (a stage magician),
+noita (Finnish for witch, in a Finnish sentence), and four unrelated role nouns (baker, pilot, nurse, farmer), the word
+once per sentence. Same measurement as A (maximum over the word's tokens), reported as a share of the wizard median with
+bootstrap CIs, and 20 random same-layer units as the null.

@@ -1514,6 +1514,7 @@ If a model fails the gate, 35.8 is a null on that model; the gate does not move 
 | 38.3 | Claude: pushing the wizard unit at 8x puts a wizard-topic word in at least 30% of neutral answers, against at most 5% for the random same-layer units and for no clamp. | | |
 | 38.4 | Claude: across the semantic writers, the topic rate under the push exceeds the random-unit 95th percentile for at least three of five; for the spelling writers it does not (they push word fragments, not the topic). | | |
 | 38.5 | Claude: at 8x, at least a quarter of pushed answers are marked broken by the blind reader for at least one unit; at 4x, none of the semantic writers break more than 10% of answers. | | |
+| 38.6 | Claude (Elise's question, added 15:52 CT before the build finished or any run): on 12 sentences each for wizard, sorcerer, mage, warlock, witch, magician (stage), noita (Finnish for witch) and four unrelated role nouns (baker, pilot, nurse, farmer), the wizard unit fires on sorcerer and mage at at least 50% of its wizard median, on witch and warlock at 20-50%, on stage magician under 20%, on noita under 20%, and on the role nouns under 10%. | | |
 
 Reading rule, fixed now: a unit whose topic rate rises only together with broken answers counts as noise, not as carrying the idea.
 
