@@ -1,0 +1,16 @@
+accuracy, all eight: 49/400 = 12.2% (95% CI 9.4%-15.8%; chance 12.5%)
+accuracy, seven (GPT row excluded: judge self-recognition): 0/350 = 0.0% (95% CI 0.0%-1.1%; chance 12.5%)
+
+per family (rows = true family; counts of the judge labels):
+  Anthropic Claude  recall  0.0%  OpenAI GPT 49, Alibaba Qwen 1
+  OpenAI GPT        recall 98.0%  OpenAI GPT 49, Anthropic Claude 1
+  DeepSeek          recall  0.0%  OpenAI GPT 50
+  Alibaba Qwen      recall  0.0%  OpenAI GPT 50
+  Google Gemini     recall  0.0%  OpenAI GPT 49, Anthropic Claude 1
+  Zhipu GLM         recall  0.0%  OpenAI GPT 47, Anthropic Claude 3
+  Moonshot Kimi     recall  0.0%  OpenAI GPT 48, Anthropic Claude 2
+  MiniMax           recall  0.0%  OpenAI GPT 48, Google Gemini 2
+
+students (label distribution):
+  deepseek-v4.1-flash  n=171  OpenAI GPT 99%, Anthropic Claude 1%
+  mimo-v2.6-flash      n= 91  OpenAI GPT 96%, Alibaba Qwen 2%, Google Gemini 1%, Anthropic Claude 1%

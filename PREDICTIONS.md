@@ -1284,3 +1284,19 @@ Predictions:
   DeepSeek-V4-Pro at 90.6% GPT).
 - 29c.6 Kimi K3 and GLM 5.3 answers are labelled Claude more often than GPT (ATLAS: Kimi-K2.6 85.2% and GLM-5.2 84.7%
   Claude), and MiniMax M3's are split (ATLAS: 56.4% GPT, 43.6% Claude).
+
+### Part 29c results (scored 2026-10-19 23:07 CT; data in results/part29c/)
+
+GPT-6 Luna, zero-shot, answered "OpenAI GPT" for 96-99% of every family's answers: overall 49/400 = 12.2% (95% CI
+9.4-15.8%, chance 12.5%), 0/350 outside the GPT row; students DeepSeek V4.1 Flash 99% GPT (n=171), MiMo 96% GPT (n=91).
+- 29c.1 (accuracy >= 30%): **failed** (12.2%, at chance).
+- 29c.2 (GPT recall highest, >= 60%): held only as an artefact: 98%, but the judge says GPT for everything, so this is
+  a constant answer, not self-recognition.
+- 29c.3 (Claude recall second): **failed** (0/50; 49 labelled GPT).
+- 29c.4 (Chinese-lab families' mean recall < 25%): held trivially (0%).
+- 29c.5 (DS V4.1 Flash's largest label GPT or DeepSeek): held trivially (99% GPT).
+- 29c.6 (Kimi and GLM labelled Claude more than GPT): **failed** (Kimi 48 GPT / 2 Claude, GLM 47 / 3).
+Reading: with a closed list and no examples, this judge collapses onto its own family's name; the run measures that
+response bias, not attribution. It does not show that judges cannot attribute. Next, cheaper and better-posed: a paired
+forced choice (two answers to one prompt, "which one is Claude's?"), which removes a constant default by design, and a
+judge from another family to see whether the collapse is judge-specific.
