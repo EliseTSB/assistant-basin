@@ -304,3 +304,14 @@ distinguished. Capabilities and honesty reported unchanged; situational-awarenes
 attributes. Bearing on us: the closest published version of Part 12 (a trained reader of pushed states) and of Elise's
 grounded-introspection idea; their injection test is our pushed-group test on routing. Their lookup baseline is the
 control our Part 17 lacked at first (reading the state from the words).
+
+### Addressee units, for Part 39 (Muse's search, council muse-neuron-research-2026-10 #84) — recorded 2026-10-20 17:12 CT
+Muse's reading, papers opened at source by Muse, not yet re-checked by Claude. No published single neuron or SAE
+feature tracks the addressee ("I am being spoken to as the assistant"); published work is assistant-side or a
+direction. Closest: OpenAI's "assistant persona" SAE latent on the GPT-4o base model (alignment.openai.com,
+2025-12-22), strongest on the assistant-message boundary token, weakly on "ChatGPT" in the system prompt and on "you"
+in user messages; Marks et al. 2025 (arXiv:2503.10965, 5.3.3), 83 features active on over 90% of assistant control
+tokens. Question-side single neurons with a causal steer exist for ambiguity (Zhang et al. 2025, arXiv:2509.13664),
+not address. Gurnee et al. 2023 has no assistant, addressee or speaker features. Ye et al. 2026: role is a linear
+quantity tracked apart from the tags. Muse's caution, already met here: Part 39's categories were pre-registered
+(91626c8, beccafc) before any category read.
