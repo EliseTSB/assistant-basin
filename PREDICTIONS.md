@@ -1235,3 +1235,25 @@ trained on the eight API families.
 
 Caveat: a generation-to-generation change has many causes besides one teacher (new data, new post-training, size); 29.9
 and 29.10 can support Anthropic's account only weakly and cannot establish it.
+
+## Part 30: a controlled teacher swap on one small base (written 2026-10-19 21:31 CT, before the build and the run). Chorus's rank-1 design (council chorus-teacher-fingerprints-2026-10-19 #3).
+
+s1K (simplescaling/s1K) and s1K-1.1 (simplescaling/s1K-1.1) hold the same 1,000 questions with reasoning traces and
+answers from two teachers: Gemini Flash Thinking and DeepSeek R1. Fine-tune two LoRA adapters on one base
+(Qwen2.5-0.5B-Instruct, on the A770), identical in everything but the teacher (same questions, steps, rank, learning
+rate, seed; traces truncated to the same token budget), plus a third adapter on the same questions with answers
+written by the base itself (the no-teacher control). Then: (a) generate answers to Part 29's held-out prompts 240-299
+with each adapter and score them with Part 29's classifier (which has Gemini and DeepSeek classes); (b) compare each
+adapter's activations on teacher-forced R1-written versus Gemini-written held-out traces, layer by layer, against the
+control adapter.
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 30.1 | The R1 adapter's answers are classified DeepSeek more often than the Gemini adapter's are, and the Gemini adapter's are classified Gemini more often than the R1 adapter's are (a crossed effect, each at least 10 points). | | |
+| 30.2 | Both teacher effects are small next to the base model's own style: each adapter's plurality class is the same as the control adapter's. | | |
+| 30.3 | Teacher-forced on held-out traces, each adapter gives its own teacher's traces a lower loss than the other teacher's, by more than the control adapter's difference (the likelihood fingerprint Chen and Du test behaviourally). | | |
+| 30.4 | A linear probe tells R1 from Gemini traces at above 0.9 AUROC at every layer in all three adapters, including the control (the traces differ on the surface), so a probe alone cannot show the teacher's trace; only the difference from the control can. | | |
+
+Prior art: Wadhwa et al. trained students from five known teachers and attributed them at 0.4-0.74; subliminal
+learning (Nature 2026) transfers traits within a shared base; Chen and Du test distilled versus independent models by
+likelihood. A swap of two teachers on identical questions with a no-teacher control is the part none of them ran.
