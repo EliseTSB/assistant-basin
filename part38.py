@@ -1065,7 +1065,8 @@ def run_push(args: argparse.Namespace) -> dict[str, Any]:
         "natural_max_sha256": sha256_file(natural_path),
         "target_units": [{"id": unit["id"], "layer": unit["layer"], "unit": unit["unit"]}
                         for unit in units],
-        "random_units_by_target": controls, "k_values": k_values,
+        "random_units_by_target": {k_: v[:args.control_count] for k_, v in controls.items()}, "k_values": k_values,
+        "control_count": int(args.control_count), "control_samples_per_prompt": int(args.control_samples),
         "prompt_sha256": hashlib.sha256(json.dumps(prompts, ensure_ascii=False).encode()).hexdigest(),
         "samples_per_prompt": PUSH_SAMPLES,
         "prompt_sample_count": len(prompts) * PUSH_SAMPLES,
@@ -1096,9 +1097,13 @@ def run_push(args: argparse.Namespace) -> dict[str, Any]:
                 })
                 done.add(baseline_key)
             for k in k_values:
+                # Pilot sizing (Elise 10-20, size from the smallest effect worth knowing): the random controls can run on
+                # a prefix of the control list and on the first samples of each prompt only; the target always runs fully.
+                random_units = (controls[unit_id][:args.control_count] if sample_index <= args.control_samples
+                                else [])
                 for arm, unit_role, unit_index in (
                         ("target", "target", int(unit["unit"])),
-                        *(('random', 'random', int(index)) for index in controls[unit_id])):
+                        *(('random', 'random', int(index)) for index in random_units)):
                     key = f"{unit_id}:{arm}:{unit_index}:k{k}:{prompt_id}:{sample_index}"
                     if key in done:
                         continue
@@ -1203,6 +1208,10 @@ def build_parser() -> argparse.ArgumentParser:
             p.add_argument("--part35-data", type=Path, default=PART35_DATA_PATH)
         if command == "push":
             p.add_argument("--k", type=int, nargs="+", default=[4, 8])
+            p.add_argument("--control-count", type=int, default=CONTROL_COUNT,
+                           help="random same-layer units per target (a prefix of the seeded list)")
+            p.add_argument("--control-samples", type=int, default=PUSH_SAMPLES,
+                           help="samples per prompt for the random controls (the target always gets all)")
             p.add_argument("--natural-max", type=Path, default=None,
                            help="natural-max-summary.json; defaults under --out")
     p = sub.add_parser("blind-pack")
