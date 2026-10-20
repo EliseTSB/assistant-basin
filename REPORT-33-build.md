@@ -58,3 +58,5 @@ Interpretations used:
 SUMMARY: Built the Part 33 runner, authored candidate passages and 20 fixed MC questions, and passed all five fast fake-model tests.
 FINDINGS: Passage/control selection is activation-based; conditional loss and comprehension scoring are resumable and print 33.1–33.3 with the matched-control distribution.
 BLOCKERS: Real-model smoke and prediction results remain unavailable because system Python lacks PyTorch and the local Qwen cache has no model weights.
+
+REVIEW r1 (Luna, reviews/ab-part33-r1): no blockers. Two MEDIUM, recorded before results: matched controls with no firing tokens drop out of the control statistics (report how many), and the 20 MC answer keys lean heavily to A (compare zeroed vs baseline on the same items, and report the letter bias).
