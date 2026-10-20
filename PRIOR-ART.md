@@ -193,3 +193,32 @@ Sent by Elise. Read at source by Claude (repo cloned at 98adb6a, thread.md and R
   intervention is computed rather than the state it creates. Our hooks run eager in Python and add ±2 SD vectors, so the
   state is the large signal there, but a hook that is present and adds nothing (Part 18's identity hook, 0.0 logit
   change) is the right control to keep in any trained-reader design.
+
+## Single persona and concept neurons, for Part 35 (Muse's search, council muse-persona-neurons-2026-10-20 #4) — recorded 2026-10-20 06:56 CT
+
+The two closest papers were checked at source by Claude (arXiv abstract pages, 2026-10-20); the rest are Muse's
+summaries.
+
+- **Yona, Barzilay, Karasik, Geva, "Friends and Grandmothers in Silico: Localizing Entity Cells in Language Models"**
+  (arXiv:2604.01404, v1 2026-04-01, v2 2026-05-16; checked). Ranks MLP neurons by how consistently they activate across
+  varied prompts about one entity, in seven models. Ablating a cell erases recall of that entity only; activating one
+  cell recovers the knowledge for most entities with the entity absent from the context. Cells sit mostly in early
+  layers and survive instruction tuning. Robust to aliases, misspellings and other languages (Muse). **This is our
+  screen's idea for entities and our push's idea for knowledge**; what Part 35 adds is a first-person persona claim as
+  the outcome, style without a name (Trump), and the self-referential concepts (Claude, Anthropic).
+- **Kazemi, Chegini, Safi, "A Single Neuron Is Sufficient to Bypass Safety Alignment in Large Language Models"**
+  (arXiv:2605.08513, 2026-05-08; checked). Seven models, two families, 1.7B-70B: suppressing one refusal neuron bypasses
+  refusal; amplifying one concept neuron injects the concept into innocent prompts. The closest methodological match to
+  a single-neuron clamp on generation.
+- **Goodfire / Cammarata, "Neural Networks Are Already Clean"** (already listed above): named concept neurons in
+  Qwen3-32B, among them **Trump** and Colorado (turned up, the model plans a hike). So a Trump neuron's existence is
+  not new; Part 35's Trump question is the style without the name and the after-cutoff posts.
+- **Persona directions, not single neurons:** Lu et al., "The Assistant Axis" (arXiv:2601.10387); Neuronpedia's
+  Misaligned Persona and Assistant Axis demos (SAE features).
+- **Neuron atlases:** Transluce's 458,752 auto-described neurons (Choi et al., 2024); no panels found for Qwen3,
+  Qwen3.5, SmolLM3 or OLMo 2.
+- **Cross-model matching:** Gurnee et al., "Universal Neurons in GPT2 Language Models" (arXiv:2401.12181; 1-5% of
+  neurons universal across seeds); Gurnee and Tegmark, space and time neurons (arXiv:2310.02207); Yona et al. match
+  same-entity cells across five families.
+- **Not found by Muse:** the source of the alien-neuron panel, and Sauers' owl post (X was unreachable in its run; we
+  read the post from Elise's screenshots and SauersML/watching, recorded above).

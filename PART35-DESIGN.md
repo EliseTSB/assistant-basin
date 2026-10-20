@@ -103,6 +103,20 @@ This replaces the screen, push and model sections above where they differ.
 - **Cross-model comparison** on held-out probe profiles (passages not used in screening), layers aligned by depth
   fraction.
 
+
+## Prior art (Muse, council muse-persona-neurons-2026-10-20 #4; PRIOR-ART.md), and what it changes
+
+- **Yona et al. (entity cells)** already find single MLP neurons per entity by cross-prompt consistency, across seven
+  models and five families, with ablation and injection both causal, mostly in early layers. Their stability ranking is
+  close to our matched-frame contrast; we keep ours (it is within-frame against other concepts) and add theirs as a
+  secondary rank, so a disagreement is visible. Their early-layer finding gives a sharp prediction: a cell that carries
+  the *knowledge* of an entity may not be the unit that makes the model *be* it (the alien neuron sits at L22 of 32).
+- **Kazemi et al.** show single-neuron amplification injects a concept into innocent prompts, which is the word-pusher
+  outcome; the non-identity prompts under the same clamp already separate that from a persona.
+- **Goodfire** names a Trump neuron in Qwen3-32B, so Trump's existence test is a replication; the new part is style
+  without the name and the after-cutoff posts.
+- Nothing found measures a first-person persona claim from a single native neuron across families; that is the gap.
+
 ## Open questions for the council (answered by Prime above)
 
 1. Is a per-neuron contrast the right screen, or should candidates come from attribution (EAP-IG, as Sauers did), and

@@ -1404,3 +1404,36 @@ positions the report is about. Keyword cells, hook cross-turn cells and hook sam
 
 Reading rule, fixed now: if 34.2 holds, only the parity-free elicitation counts for 34.4-34.6 and 34.9. A follow rate
 counts as above chance only if its 95% interval (40 questions, binomial) excludes 50%.
+
+## Part 35: our own persona neurons, across models (written 2026-10-20 06:56 CT, before any code or run). Design: Claude, Prime's ML review adopted whole (PART35-DESIGN.md); prior art: Muse (PRIOR-ART.md).
+
+Concepts: the 40 in PART35-DESIGN.md plus Claude, Anthropic and Trump (43). **Held out until the procedure is frozen,
+fixed now:** spider, candle, teapot, train, cactus, snowman, raven, whale. Models: Qwen3-1.7B, Qwen3-4B, Qwen3.5-4B
+(one family), SmolLM3-3B, OLMo-2-1B Instruct, plus one more family if a licence allows. Dose: rho 0.05 and 0.10 of the
+layer's RMS residual norm (primary), 2x/4x/8x the natural maximum on neutral passages (secondary). Clamp: set to L on
+generated tokens only.
+
+**A confirmed find** (fixed now): a rank-1 candidate that beats its model's permutation maximum on the confirmation
+half of the passages and, at stage 2 (8 identity prompts x 8 samples), claims to be the screened concept on at least
+25% of answers, with the prompt-level cluster permutation against that model's live random neurons at p below
+0.05 / (43 concepts x the number of models), and the random neurons' claim rate at most 5%. Judge blind to the concept.
+The alien (Qwen3.5-4B L22 N2742) is the positive control, never counted as a find; the owl is a target concept only.
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 35.1 | Claude: between 3 and 15 of the 35 non-held-out concepts give a confirmed find in at least one model. | | |
+| 35.2 | Claude: agents (creatures and roles: owl, dragon, ghost, pirate, wizard, robot, vampire, knight, detective and the like) give confirmed finds at a higher rate than objects and places (clock, library, mountain, river, lighthouse), by at least 15 points. | | |
+| 35.3 | Claude: confirmed persona neurons sit mostly in the middle of the network (at least two thirds at depth fraction 0.4 to 0.8), unlike Yona et al.'s mostly early entity cells. | | |
+| 35.4 | Claude: on Qwen3.5-4B a Claude or Anthropic neuron passes the screen and the permutation null, and pushing it makes the model claim to be Claude, or made by Anthropic, on at least 25% of identity answers at rho 0.10; on Qwen3-4B the best such neuron's rate is at least 10 points lower (Qwen 3.5 was distilled from Claude). | | |
+| 35.5 | Claude: a Trump neuron exists in at least two families. The best one fires on the unnamed style passages at at least 50% of its median on named passages, and on the after-cutoff posts (names removed) within 20% of the pre-cutoff style passages. | | |
+| 35.6 | Claude: pushing the best Trump neuron gives his style on ordinary questions (blind style rubric) on at least 25% of answers in at least one model, without the answers claiming to be him. | | |
+| 35.7 | Claude (DSH's gate idea): in at least half of confirmed persona answers the model keeps the assistant frame (offers help, or says it is an AI) while claiming the persona: the persona sits on top of the assistant rather than replacing it. | | |
+| 35.11 | Prime: fewer than 40 of the concept-model pairs clear the confirmatory bar (guess 5 to 25), and at most 2 concepts do so in 2 or more families. | | |
+| 35.12 | Prime: among confirmed pushes, at least 70% of claims name the screened concept. | | |
+| 35.13 | Prime: the residual-share dose and the natural-max dose disagree on hit status for more than half the candidates. | | |
+| 35.14 | Prime: the permutation maximum exceeds the naive top-5 contrast in at least 25% of concept-model cells. | | |
+| 35.15 | Prime: the alien positive control reproduces (top 5 on the alien screen, at least 50% prompt-level claims at the higher dose); otherwise the pipeline is not validated and no new find is believed. | | |
+
+Reading rule, fixed now: if 35.15 fails, stop and fix the pipeline before reading any other row. Stage 1 hit rates are
+exploratory; only stage 2 counts. Pooling across models or families is never a result: every rate is reported per
+model, and the family rule is the headline.
