@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import argparse
 import contextlib
+import math
 import tempfile
 import unittest
 import re
@@ -16,14 +17,22 @@ import part34
 
 try:
     import torch
-    from transformers import Qwen3Config, Qwen3ForCausalLM
+    from transformers import AutoTokenizer, Qwen3Config, Qwen3ForCausalLM
 
     HAS_TORCH_QWEN3 = True
 except ImportError:
     torch = None
     Qwen3Config = None
     Qwen3ForCausalLM = None
+    AutoTokenizer = None
     HAS_TORCH_QWEN3 = False
+
+
+REAL_TOKENIZER_PATH = Path(
+    "/mnt/e/neuron-probe/hf/hub/models--Qwen--Qwen3-1.7B/snapshots/"
+    "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e"
+)
+HAS_REAL_TOKENIZER = AutoTokenizer is not None and REAL_TOKENIZER_PATH.is_dir()
 
 
 class Part34HelpersTest(unittest.TestCase):
@@ -37,10 +46,21 @@ class Part34HelpersTest(unittest.TestCase):
         self.assertEqual(part34.alternating_options(0, "even", "odd"), (("A", "even"), ("B", "odd")))
         self.assertEqual(part34.alternating_options(1, "even", "odd"), (("A", "odd"), ("B", "even")))
         self.assertEqual(part34.turn2_content("parity_free_raised", 0)[1], {
-            "A": "raised on layers 0, 2, 4, ..., 26",
-            "B": "raised on layers 1, 3, 5, ..., 27",
+            "A": "even",
+            "B": "odd",
         })
         self.assertEqual(part34.turn2_content("parity_free_raised", 1)[2], "odd")
+
+    def test_parser_exposes_question_shards_threads_and_multi_file_scoring(self) -> None:
+        run_args = part34.build_parser().parse_args([
+            "run", "--out", "part-shard", "--direction-file", "direction.safetensors",
+            "--question-start", "3", "--question-end", "8", "--threads", "2",
+        ])
+        self.assertEqual((run_args.question_start, run_args.question_end, run_args.threads), (3, 8, 2))
+        score_args = part34.build_parser().parse_args([
+            "score", "--out", "combined", "--rows", "first/rows.jsonl", "second/rows.jsonl",
+        ])
+        self.assertEqual(score_args.rows, ["first/rows.jsonl", "second/rows.jsonl"])
 
     def test_resume_skips_completed_keys_and_score_fixture(self) -> None:
         rows = [
@@ -82,6 +102,67 @@ class Part34HelpersTest(unittest.TestCase):
             self.assertNotIn("condition", review)
             self.assertNotIn("regex_mention_flag", review)
             self.assertTrue((out / "free-text-blind-key.json").is_file())
+
+
+@unittest.skipUnless(HAS_REAL_TOKENIZER, "pinned real Qwen3 tokenizer is unavailable")
+class RealTokenizerABReadoutTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.tokenizer = AutoTokenizer.from_pretrained(
+            REAL_TOKENIZER_PATH,
+            local_files_only=True,
+            use_fast=True,
+        )
+
+    def test_post_parenthesis_readout_derives_every_field_for_orders_and_directions(self) -> None:
+        paren_token_id, letter_token_ids = part34.validate_ab_tokenizer(self.tokenizer)
+        self.assertEqual(paren_token_id, 7)
+        self.assertEqual(letter_token_ids, {"A": 32, "B": 33})
+
+        logits = [-8.0] * 64
+        logits[0] = -1.0
+        logits[32] = 4.0
+        logits[33] = 1.0
+        log_normalizer = max(logits) + math.log(sum(math.exp(value - max(logits)) for value in logits))
+        logp_a, logp_b = logits[32] - log_normalizer, logits[33] - log_normalizer
+        expected_keys = {
+            "greedy_token", "greedy_letter", "greedy_concept", "logp_A", "logp_B",
+            "logit_even_minus_odd", "target_logp", "alternative_logp", "target_logp_margin",
+            "target_candidate_probability",
+        }
+        for kind in (
+            "parity_words_raised", "parity_words_lowered",
+            "parity_free_raised", "parity_free_lowered",
+        ):
+            target = part34.expected_value("ask-even", kind)
+            for question_index in (0, 1):
+                _body, concepts, _first = part34.turn2_content(kind, question_index)
+                with self.subTest(kind=kind, question_index=question_index, concepts=concepts):
+                    derived = part34.derive_ab_readout(logits, letter_token_ids, concepts, target)
+                    self.assertEqual(set(derived), expected_keys)
+                    self.assertEqual(derived["greedy_token"], 32)
+                    self.assertEqual(derived["greedy_letter"], "A")
+                    self.assertEqual(derived["greedy_concept"], concepts["A"])
+                    self.assertAlmostEqual(derived["logp_A"], logp_a)
+                    self.assertAlmostEqual(derived["logp_B"], logp_b)
+                    even_letter = next(letter for letter, concept in concepts.items() if concept == "even")
+                    odd_letter = next(letter for letter, concept in concepts.items() if concept == "odd")
+                    expected_even_minus_odd = (logp_a if even_letter == "A" else logp_b) - (
+                        logp_a if odd_letter == "A" else logp_b
+                    )
+                    self.assertAlmostEqual(derived["logit_even_minus_odd"], expected_even_minus_odd)
+                    target_letter = next(letter for letter, concept in concepts.items() if concept == target)
+                    alternative_letter = "B" if target_letter == "A" else "A"
+                    expected_target_logp = logp_a if target_letter == "A" else logp_b
+                    expected_alternative_logp = logp_a if alternative_letter == "A" else logp_b
+                    expected_margin = expected_target_logp - expected_alternative_logp
+                    self.assertAlmostEqual(derived["target_logp"], expected_target_logp)
+                    self.assertAlmostEqual(derived["alternative_logp"], expected_alternative_logp)
+                    self.assertAlmostEqual(derived["target_logp_margin"], expected_margin)
+                    self.assertAlmostEqual(
+                        derived["target_candidate_probability"],
+                        1.0 / (1.0 + math.exp(-expected_margin)),
+                    )
 
     def test_cached_vocab_has_fixed_first_answer_letter_ids(self) -> None:
         vocab = Path("/mnt/e/neuron-probe/hf/hub/models--Qwen--Qwen3-1.7B/blobs/4783fe10ac3adce15ac8f358ef5462739852c569")
@@ -194,6 +275,14 @@ class TinyQwen3Test(unittest.TestCase):
         self.assertTrue(any(not torch.equal(a, b) for a, b in zip(left, right)))
         self.assertEqual(len(turn1 + turn2), len(recomputed_context))
 
+    def test_ab_probe_uses_one_forward_pass(self) -> None:
+        cached = part34.forward_with_cache(self.model, [2, 3], torch.device("cpu"))
+        with patch.object(self.model, "forward", wraps=self.model.forward) as counted_forward:
+            logits, layers = part34.ab_probe(self.model, [4, 5, 6], torch.device("cpu"), cached.past_key_values)
+        self.assertEqual(counted_forward.call_count, 1)
+        self.assertEqual(len(logits), self.model.config.vocab_size)
+        self.assertEqual(len(layers), self.model.config.num_hidden_layers)
+
     def test_tiny_model_run_and_score_end_to_end(self) -> None:
         class TinyTokenizer:
             eos_token_id = None
@@ -237,37 +326,71 @@ class TinyQwen3Test(unittest.TestCase):
             part34.assert_hook_site(self.model, expected_layers=2),
         )
         with tempfile.TemporaryDirectory() as directory:
-            args = argparse.Namespace(
-                out=directory,
-                question_file=str(part34.QUESTION_FILE),
-                model_id=part34.BASE_MODEL,
-                model_revision=part34.BASE_REVISION,
-                adapter_id=part34.ADAPTER_MODEL,
-                adapter_revision=part34.ADAPTER_REVISION,
-                direction_file=str(Path(directory) / "no-direction-file"),
-                device="cpu",
-                max_new_tokens=1,
-                free_text_tokens=1,
-                question_limit=1,
-            )
+            shards = []
+            shard_rows = []
             with patch.object(part34, "load_runtime", return_value=runtime), patch.object(
                 part34, "adapter_context", side_effect=lambda _model, _enabled: contextlib.nullcontext()
             ):
-                part34.run(args)
-            header, rows = part34.read_jsonl(Path(directory) / "rows.jsonl")
-            self.assertIsNotNone(header)
-            self.assertTrue(rows)
-            turn1 = next(row for row in rows if row.get("row_type") == "turn1" and row.get("condition") == "inject-even" and row.get("model") == "M")
-            self.assertEqual(len(turn1["z_question_profile"]), 2)
-            measured_turn2 = [row for row in rows if row.get("row_type") in {"turn2_ab", "turn2_free"}]
-            for row in measured_turn2:
-                self.assertEqual(len(row["z_question_profile"]), 2, row["key"])
-                self.assertEqual(len(row["z_answer_profile"]), 2, row["key"])
-            arms = {row.get("arm") for row in measured_turn2}
-            self.assertTrue({"cache_kept", "cache_recomputed", "same_turn", "b_reads_m_cache", "b_reads_b_cache"} <= arms)
-            part34.score(args)
-            summary = json.loads((Path(directory) / "summary.json").read_text(encoding="utf-8"))
-            self.assertEqual(summary["n_rows"], len(rows))
+                for question_start, question_end in ((0, 1), (1, 2)):
+                    shard_out = Path(directory) / f"shard-{question_start}"
+                    args = argparse.Namespace(
+                        out=str(shard_out),
+                        question_file=str(part34.QUESTION_FILE),
+                        model_id=part34.BASE_MODEL,
+                        model_revision=part34.BASE_REVISION,
+                        adapter_id=part34.ADAPTER_MODEL,
+                        adapter_revision=part34.ADAPTER_REVISION,
+                        direction_file=str(Path(directory) / "no-direction-file"),
+                        device="cpu",
+                        max_new_tokens=1,
+                        free_text_tokens=1,
+                        question_limit=None,
+                        question_start=question_start,
+                        question_end=question_end,
+                        threads=1,
+                    )
+                    part34.run(args)
+                    header, rows = part34.read_jsonl(shard_out / "rows.jsonl")
+                    self.assertIsNotNone(header)
+                    self.assertTrue(rows)
+                    self.assertEqual({row["question_index"] for row in rows}, {question_start})
+                    turn1 = next(
+                        row for row in rows
+                        if row.get("row_type") == "turn1" and row.get("condition") == "inject-even" and row.get("model") == "M"
+                    )
+                    self.assertEqual(len(turn1["z_question_profile"]), 2)
+                    measured_turn2 = [row for row in rows if row.get("row_type") in {"turn2_ab", "turn2_free"}]
+                    for row in measured_turn2:
+                        self.assertEqual(len(row["z_question_profile"]), 2, row["key"])
+                        self.assertEqual(len(row["z_answer_profile"]), 2, row["key"])
+                    ab_rows = [row for row in measured_turn2 if row.get("row_type") == "turn2_ab"]
+                    self.assertTrue(all(row["answer_readout_position"] == "after_open_paren" for row in ab_rows))
+                    valid_targets = [
+                        row for row in ab_rows
+                        if row["condition"] == "ask-even" and row["target_value"] is not None
+                    ]
+                    self.assertTrue(valid_targets)
+                    for row in valid_targets:
+                        for field in (
+                            "logit_even_minus_odd", "target_logp", "alternative_logp",
+                            "target_logp_margin", "target_candidate_probability",
+                        ):
+                            self.assertIsNotNone(row[field], (row["key"], field))
+                    arms = {row.get("arm") for row in measured_turn2}
+                    self.assertTrue({"cache_kept", "cache_recomputed", "same_turn", "b_reads_m_cache", "b_reads_b_cache"} <= arms)
+                    shards.append(shard_out / "rows.jsonl")
+                    shard_rows.append(rows)
+
+            merged_out = Path(directory) / "merged"
+            part34.score(argparse.Namespace(out=str(merged_out), rows=[str(path) for path in shards]))
+            summary = json.loads((merged_out / "summary.json").read_text(encoding="utf-8"))
+            self.assertEqual(summary["n_rows"], sum(map(len, shard_rows)))
+            self.assertEqual(len(summary["header"]["input_shards"]), 2)
+
+            directory_score = Path(directory) / "directory-score"
+            part34.score(argparse.Namespace(out=str(directory_score), rows=[str(Path(directory))]))
+            directory_summary = json.loads((directory_score / "summary.json").read_text(encoding="utf-8"))
+            self.assertEqual(directory_summary["n_rows"], summary["n_rows"])
 
 
 if __name__ == "__main__":

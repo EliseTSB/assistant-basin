@@ -110,6 +110,84 @@ def alternating_options(index: int, first: str, second: str) -> tuple[tuple[str,
     return (("A", second), ("B", first))
 
 
+def validate_ab_tokenizer(tokenizer: Any) -> tuple[int, dict[str, int]]:
+    """Check that a standalone '(' prefix leaves A and B available as next tokens."""
+    paren_ids = tokenizer.encode("(", add_special_tokens=False)
+    letter_ids = {
+        letter: tokenizer.encode(letter, add_special_tokens=False)
+        for letter in ("A", "B")
+    }
+    if len(paren_ids) != 1:
+        raise ValueError(f"opening parenthesis is not one token: {paren_ids}")
+    for letter, ids in letter_ids.items():
+        if len(ids) != 1 or int(ids[0]) != FIXED_LETTER_TOKEN_IDS[letter]:
+            raise ValueError(
+                f"option letter {letter} after '(' must be token {FIXED_LETTER_TOKEN_IDS[letter]}, got {ids}"
+            )
+        decoded = tokenizer.decode([int(paren_ids[0]), int(ids[0])], skip_special_tokens=False)
+        if decoded != f"({letter}":
+            raise ValueError(f"token sequence '(' + {letter} decodes as {decoded!r}")
+    return int(paren_ids[0]), {letter: int(ids[0]) for letter, ids in letter_ids.items()}
+
+
+def derive_ab_readout(
+    logits: Sequence[float],
+    letter_token_ids: Mapping[str, int],
+    letter_concepts: Mapping[str, str],
+    target_value: str | None,
+) -> dict[str, Any]:
+    """Derive the A/B readout fields from logits at the post-'(' position."""
+    values = [float(value) for value in logits]
+    if not values:
+        raise ValueError("A/B readout logits are empty")
+    if any(int(letter_token_ids[letter]) >= len(values) for letter in ("A", "B")):
+        raise ValueError("A/B token ID is outside the logits vector")
+    maximum = max(values)
+    log_normalizer = maximum + math.log(sum(math.exp(value - maximum) for value in values))
+    log_probs = {
+        letter: values[int(letter_token_ids[letter])] - log_normalizer
+        for letter in ("A", "B")
+    }
+    greedy_token = max(range(len(values)), key=values.__getitem__)
+    greedy_letter = next(
+        (letter for letter in ("A", "B") if int(letter_token_ids[letter]) == greedy_token),
+        None,
+    )
+    even_letter = next((letter for letter, concept in letter_concepts.items() if concept == "even"), None)
+    odd_letter = next((letter for letter, concept in letter_concepts.items() if concept == "odd"), None)
+    logit_even_minus_odd = (
+        log_probs[even_letter] - log_probs[odd_letter]
+        if even_letter is not None and odd_letter is not None
+        else None
+    )
+    target_letter = next(
+        (letter for letter, concept in letter_concepts.items() if concept == target_value),
+        None,
+    )
+    alternative_letter = next(
+        (letter for letter, concept in letter_concepts.items() if letter != target_letter),
+        None,
+    ) if target_letter is not None else None
+    target_logp = log_probs[target_letter] if target_letter is not None else None
+    alternative_logp = log_probs[alternative_letter] if alternative_letter is not None else None
+    margin = target_logp - alternative_logp if target_logp is not None and alternative_logp is not None else None
+    normalized_probability = None
+    if margin is not None:
+        normalized_probability = 1.0 / (1.0 + math.exp(max(-60.0, min(60.0, -margin))))
+    return {
+        "greedy_token": greedy_token,
+        "greedy_letter": greedy_letter,
+        "greedy_concept": letter_concepts.get(greedy_letter) if greedy_letter is not None else None,
+        "logp_A": log_probs["A"],
+        "logp_B": log_probs["B"],
+        "logit_even_minus_odd": logit_even_minus_odd,
+        "target_logp": target_logp,
+        "alternative_logp": alternative_logp,
+        "target_logp_margin": margin,
+        "target_candidate_probability": normalized_probability,
+    }
+
+
 def expected_condition_value(condition: str) -> str | None:
     if condition.endswith("even-first") or condition in {"ask-even", "not-even", "inject-even", "inject-rand-even"}:
         return "even"
@@ -887,7 +965,10 @@ def turn2_content(kind: str, index: int) -> tuple[str, dict[str, str], str | Non
             lead = f"In your last reply, which group of layers had your internal cat representation {direction}?"
         options = alternating_options(index, even_value, odd_value)
         body = f"{lead}\nAnswer using one letter only.\n(A) {options[0][1]}\n(B) {options[1][1]}"
-        labels = {letter: value for letter, value in options}
+        labels = {
+            letter: "even" if value == even_value else "odd"
+            for letter, value in options
+        }
         return body, labels, "even" if options[0][1] == even_value else "odd"
     if kind == "decoy_halves":
         early, late = "layers 0 through 13", "layers 14 through 27"
@@ -1018,6 +1099,38 @@ def greedy_generate(
     return generated, cache, first_scores, layer_outputs
 
 
+def ab_probe(
+    model: Any,
+    input_ids: Sequence[int],
+    device: Any,
+    past_key_values: Any,
+    hook_mode: str | None = None,
+    direction: Any = None,
+    mean: Any = None,
+    sd: Any = None,
+    hook_positions: Sequence[int] | None = None,
+) -> tuple[list[float], tuple[Any, ...]]:
+    """Run one cached forward pass through the question and standalone '(' token."""
+    torch = _load_torch()
+    cache = _clone_cache(past_key_values)
+    current = _tensor_ids(torch, input_ids, device)
+    attention_mask = torch.ones((1, _cache_length(cache) + current.shape[1]), dtype=torch.long, device=device)
+    hook = steering_hook(model, direction, mean, sd, hook_mode, positions=hook_positions) if hook_mode else contextlib.nullcontext()
+    with hook:
+        with record_decoder_outputs(model) as block_outputs, torch.inference_mode():
+            output = model(
+                input_ids=current,
+                attention_mask=attention_mask,
+                past_key_values=cache,
+                use_cache=True,
+                output_hidden_states=False,
+            )
+    if any(state is None for state in block_outputs):
+        raise RuntimeError("one or more decoder blocks did not produce an output")
+    logits = output.logits[0, -1, :].float().detach().cpu().tolist()
+    return logits, tuple(block_outputs)
+
+
 def forward_with_cache(
     model: Any,
     ids: Sequence[int],
@@ -1077,6 +1190,10 @@ def _adapter_artifact_sha(adapter_path: str) -> str | None:
 
 def load_runtime(args: argparse.Namespace) -> tuple[Any, Any, Any, Any, Any, Any, Any, dict[str, int], dict[str, Any]]:
     torch = _load_torch()
+    threads = int(getattr(args, "threads", 4))
+    if threads < 1:
+        raise ValueError("--threads must be at least 1")
+    torch.set_num_threads(threads)
     try:
         from peft import PeftModel
         from safetensors.torch import load_file
@@ -1086,6 +1203,13 @@ def load_runtime(args: argparse.Namespace) -> tuple[Any, Any, Any, Any, Any, Any
     if args.device == "xpu" and (not hasattr(torch, "xpu") or not torch.xpu.is_available()):
         raise RuntimeError("--device xpu requested but torch.xpu is unavailable")
     device = torch.device(args.device)
+    tokenizer = AutoTokenizer.from_pretrained(
+        args.model_id,
+        revision=args.model_revision,
+        local_files_only=True,
+        use_fast=True,
+    )
+    _open_paren_token_id, letter_token_ids = validate_ab_tokenizer(tokenizer)
     base = AutoModelForCausalLM.from_pretrained(
         args.model_id,
         revision=args.model_revision,
@@ -1102,12 +1226,6 @@ def load_runtime(args: argparse.Namespace) -> tuple[Any, Any, Any, Any, Any, Any
     )
     model.eval()
     model.to(device)
-    tokenizer = AutoTokenizer.from_pretrained(
-        args.model_id,
-        revision=args.model_revision,
-        local_files_only=True,
-        use_fast=True,
-    )
     adapter_weights = load_file(args.direction_file, device="cpu")
     direction = adapter_weights["direction"].to(device=device, dtype=torch.float32)
     mean = adapter_weights["mean"].to(device=device, dtype=torch.float32)
@@ -1124,16 +1242,6 @@ def load_runtime(args: argparse.Namespace) -> tuple[Any, Any, Any, Any, Any, Any
     hook_site = assert_hook_site(model, expected_layers=28)
     hook_site["direction_l2_norm_min"] = float(norms.min().item())
     hook_site["direction_l2_norm_max"] = float(norms.max().item())
-    letter_token_ids: dict[str, int] = {}
-    for letter in ("A", "B"):
-        token_ids = tokenizer.encode(letter, add_special_tokens=False)
-        if len(token_ids) != 1:
-            raise ValueError(f"option letter {letter} is not one token: {token_ids}")
-        letter_token_ids[letter] = int(token_ids[0])
-    if letter_token_ids["A"] == letter_token_ids["B"]:
-        raise ValueError("A and B option letters unexpectedly share a token id")
-    if letter_token_ids != FIXED_LETTER_TOKEN_IDS:
-        raise ValueError(f"option letter token ids changed: expected {FIXED_LETTER_TOKEN_IDS}, got {letter_token_ids}")
     generator = torch.Generator(device="cpu")
     generator.manual_seed(RANDOM_DIRECTION_SEED)
     random_direction = torch.randn((28, 2048), generator=generator, dtype=torch.float32)
@@ -1145,6 +1253,7 @@ def _make_header(
     args: argparse.Namespace,
     questions_path: Path,
     letter_token_ids: Mapping[str, int],
+    open_paren_token_id: int,
     hook_site: Mapping[str, Any],
     questions: Mapping[str, Any],
 ) -> dict[str, Any]:
@@ -1165,6 +1274,12 @@ def _make_header(
         "adapter_revision": args.adapter_revision,
         "hook_site_check": dict(hook_site),
         "letter_token_ids": dict(letter_token_ids),
+        "ab_readout": {
+            "assistant_prefill_text": "(",
+            "assistant_prefill_token_id": open_paren_token_id,
+            "candidate_position": "next token after standalone '('",
+            "letter_token_ids": dict(letter_token_ids),
+        },
         "random_direction_seed": RANDOM_DIRECTION_SEED,
         "question_word_scan": {"terms": ["cat", "even", "odd", "layer"], "matches": question_scan},
         "shas": {
@@ -1177,6 +1292,9 @@ def _make_header(
             "max_new_tokens": args.max_new_tokens,
             "free_text_tokens": args.free_text_tokens,
             "question_limit": args.question_limit,
+            "question_start": getattr(args, "question_start", 0),
+            "question_end": getattr(args, "question_end", None),
+            "threads": getattr(args, "threads", 4),
             "question_file": str(questions_path.resolve()),
             "direction_file": str(Path(args.direction_file).resolve()),
             "random_direction_seed": RANDOM_DIRECTION_SEED,
@@ -1412,57 +1530,76 @@ def _turn2_row(
     segment_ids, body_positions = render_user_segment(tokenizer, body)
     adapter_t2 = model_name == "M"
     t2_hook = condition if arm == "same_turn" else None
-    with adapter_context(model, adapter_t2):
-        answer_ids, _final_cache, first_scores, layer_outputs = greedy_generate(
-            model,
-            tokenizer,
-            segment_ids,
-            device,
-            max_new_tokens,
-            past_key_values=cache,
-            hook_mode=t2_hook,
-            direction=_hook_direction(condition, direction, random_direction),
-            mean=mean,
-            sd=sd,
-            letter_token_ids=letter_token_ids,
-            capture_layer_outputs=True,
-            hook_positions=body_positions if t2_hook else None,
-        )
-    visible_ids = _visible_reply_ids(answer_ids, tokenizer.eos_token_id)
-    decoded = tokenizer.decode(visible_ids, skip_special_tokens=True)
-    greedy_token = answer_ids[0] if answer_ids else None
-    greedy_letter = None
-    if greedy_token is not None:
-        for letter in ("A", "B"):
-            if int(letter_token_ids[letter]) == int(greedy_token):
-                greedy_letter = letter
-                break
-    greedy_concept = letter_concepts.get(greedy_letter) if greedy_letter else None
     target = expected_value(condition, kind)
     if kind in {"decoy_halves", "presupposition", "free_text"}:
         target = None
     if kind == "static_raised_lowered":
         target = expected_value(condition, kind)
-    target_letter = next((letter for letter, concept in letter_concepts.items() if concept == target), None)
-    alternative_letter = next((letter for letter, concept in letter_concepts.items() if concept != target), None)
-    target_logp = first_scores.get(target_letter) if target_letter else None
-    alternative_logp = first_scores.get(alternative_letter) if alternative_letter else None
-    margin = target_logp - alternative_logp if target_logp is not None and alternative_logp is not None else None
-    normalized_probability = None
-    if target_logp is not None and alternative_logp is not None:
-        diff = max(-60.0, min(60.0, alternative_logp - target_logp))
-        normalized_probability = 1.0 / (1.0 + math.exp(diff))
+    is_ab = kind != "free_text"
+    if is_ab:
+        paren_ids = tokenizer.encode("(", add_special_tokens=False)
+        if len(paren_ids) != 1:
+            raise ValueError(f"opening parenthesis is not one token: {paren_ids}")
+        answer_prefill_ids = list(segment_ids) + [int(paren_ids[0])]
+        with adapter_context(model, adapter_t2):
+            logits, layer_outputs = ab_probe(
+                model,
+                answer_prefill_ids,
+                device,
+                cache,
+                hook_mode=t2_hook,
+                direction=_hook_direction(condition, direction, random_direction),
+                mean=mean,
+                sd=sd,
+                hook_positions=list(body_positions) + [len(segment_ids)] if t2_hook else None,
+            )
+        readout = derive_ab_readout(logits, letter_token_ids, letter_concepts, target)
+        answer_ids = [int(readout["greedy_token"])]
+        first_scores = {"A": readout["logp_A"], "B": readout["logp_B"]}
+        greedy_token = int(readout["greedy_token"])
+        greedy_letter = readout["greedy_letter"]
+        greedy_concept = readout["greedy_concept"]
+        logit_even_minus_odd = readout["logit_even_minus_odd"]
+        target_logp = readout["target_logp"]
+        alternative_logp = readout["alternative_logp"]
+        margin = readout["target_logp_margin"]
+        normalized_probability = readout["target_candidate_probability"]
+    else:
+        with adapter_context(model, adapter_t2):
+            answer_ids, _final_cache, first_scores, layer_outputs = greedy_generate(
+                model,
+                tokenizer,
+                segment_ids,
+                device,
+                max_new_tokens,
+                past_key_values=cache,
+                hook_mode=t2_hook,
+                direction=_hook_direction(condition, direction, random_direction),
+                mean=mean,
+                sd=sd,
+                letter_token_ids=letter_token_ids,
+                capture_layer_outputs=True,
+                hook_positions=body_positions if t2_hook else None,
+            )
+        greedy_token = answer_ids[0] if answer_ids else None
+        greedy_letter = next(
+            (letter for letter in ("A", "B") if greedy_token is not None and int(letter_token_ids[letter]) == int(greedy_token)),
+            None,
+        )
+        greedy_concept = letter_concepts.get(greedy_letter) if greedy_letter else None
+        logit_even_minus_odd = None
+        target_logp = None
+        alternative_logp = None
+        margin = None
+        normalized_probability = None
+    visible_ids = _visible_reply_ids(answer_ids, tokenizer.eos_token_id)
+    decoded = tokenizer.decode(visible_ids, skip_special_tokens=True)
 
     d_question = compute_d(layer_outputs, direction, mean, sd, body_positions)
     q_profile = compute_z_profile(layer_outputs, direction, mean, sd, body_positions)
-    answer_positions = list(range(len(segment_ids), len(segment_ids) + len(visible_ids)))
+    answer_positions = [len(segment_ids)] if is_ab else list(range(len(segment_ids), len(segment_ids) + len(visible_ids)))
     d_answer = compute_d(layer_outputs, direction, mean, sd, answer_positions)
     answer_profile = compute_z_profile(layer_outputs, direction, mean, sd, answer_positions)
-    even_letter = next((letter for letter, concept in letter_concepts.items() if concept == "even"), None)
-    odd_letter = next((letter for letter, concept in letter_concepts.items() if concept == "odd"), None)
-    logit_even_minus_odd = None
-    if even_letter and odd_letter and even_letter in first_scores and odd_letter in first_scores:
-        logit_even_minus_odd = first_scores[even_letter] - first_scores[odd_letter]
     state_source_t1 = _arm_state_source(condition, source_model, arm)
     if arm == "same_turn":
         state_source_t2 = f"{model_name} reader; {condition} hook on turn-2 positions"
@@ -1488,6 +1625,7 @@ def _turn2_row(
         "answer_ids": _serialize_tokens(visible_ids),
         "target_value": target,
         "letter_concepts": letter_concepts,
+        "answer_readout_position": "after_open_paren" if is_ab else "first_answer_token",
         "greedy_letter": greedy_letter,
         "greedy_concept": greedy_concept,
         "question_order_first_parity": first_option_concept,
@@ -1535,10 +1673,25 @@ def _planned_turn2_kinds(condition: str, arm: str) -> list[str]:
 def run(args: argparse.Namespace) -> None:
     questions_path = Path(args.question_file)
     data = read_questions(questions_path)
+    question_start = int(getattr(args, "question_start", 0))
+    question_end_arg = getattr(args, "question_end", None)
+    question_end = len(data["questions"]) if question_end_arg is None else int(question_end_arg)
+    if question_start < 0 or question_end < question_start or question_end > len(data["questions"]):
+        raise ValueError(
+            f"question range must be within [0, {len(data['questions'])}] and half-open; "
+            f"got [{question_start}, {question_end})"
+        )
     torch, model, tokenizer, direction, mean, sd, random_direction, letter_token_ids, hook_site = load_runtime(args)
+    threads = int(getattr(args, "threads", 4))
+    if threads < 1:
+        raise ValueError("--threads must be at least 1")
+    torch.set_num_threads(threads)
     output_dir = Path(args.out)
     rows_path = output_dir / "rows.jsonl"
-    header = _make_header(args, questions_path, letter_token_ids, hook_site, data)
+    open_paren_ids = tokenizer.encode("(", add_special_tokens=False)
+    if len(open_paren_ids) != 1:
+        raise ValueError(f"opening parenthesis is not one token: {open_paren_ids}")
+    header = _make_header(args, questions_path, letter_token_ids, int(open_paren_ids[0]), hook_site, data)
     old_header, old_rows = read_jsonl(rows_path)
     if old_header is not None and old_header != header:
         raise ValueError("existing rows.jsonl header differs from this run's revisions, shas, or arguments")
@@ -1551,7 +1704,16 @@ def run(args: argparse.Namespace) -> None:
     device = torch.device(args.device)
     written = 0
     started = time.monotonic()
+    profile: dict[str, list[float]] = {}
+
+    def record_profile(row_type: str, elapsed: float) -> None:
+        profile.setdefault(row_type, []).append(elapsed)
+
     for q_index, question in enumerate(data["questions"]):
+        if q_index < question_start:
+            continue
+        if q_index >= question_end:
+            break
         if args.question_limit is not None and q_index >= args.question_limit:
             break
         for condition in CONDITIONS:
@@ -1559,6 +1721,7 @@ def run(args: argparse.Namespace) -> None:
                 t1_key = _row_key("turn1", q_index, condition, model_name)
                 t1_row = rows_by_key.get(t1_key)
                 if t1_row is None:
+                    row_started = time.monotonic()
                     t1_row, prompt_ids, generated_ids, _question_positions, _visible_ids, turn1_cache = _turn1_row(
                         q_index,
                         question,
@@ -1580,6 +1743,7 @@ def run(args: argparse.Namespace) -> None:
                     rows_by_key[t1_key] = t1_row
                     done.add(t1_key)
                     written += 1
+                    record_profile("turn1", time.monotonic() - row_started)
                     if written % 20 == 0:
                         print(f"progress rows={written} elapsed_s={time.monotonic() - started:.1f}", flush=True)
                 else:
@@ -1593,6 +1757,7 @@ def run(args: argparse.Namespace) -> None:
                     ]
                     if not missing:
                         continue
+                    cache_started = time.monotonic()
                     cache, _adapter_t1, _t2_hook, _actual_arm = _arm_context_cache(
                         model,
                         prompt_ids,
@@ -1607,8 +1772,10 @@ def run(args: argparse.Namespace) -> None:
                         random_direction,
                         cache_override=turn1_cache,
                     )
+                    record_profile("turn2_cache_prepare", time.monotonic() - cache_started)
                     for kind in missing:
                         token_limit = args.free_text_tokens if kind == "free_text" else 1
+                        row_started = time.monotonic()
                         row = _turn2_row(
                             q_index,
                             question,
@@ -1634,6 +1801,7 @@ def run(args: argparse.Namespace) -> None:
                         rows_by_key[row["key"]] = row
                         done.add(row["key"])
                         written += 1
+                        record_profile("turn2_free" if kind == "free_text" else "turn2_ab", time.monotonic() - row_started)
                         if written % 20 == 0:
                             print(f"progress rows={written} elapsed_s={time.monotonic() - started:.1f}", flush=True)
                 if model_name == "M":
@@ -1647,6 +1815,7 @@ def run(args: argparse.Namespace) -> None:
                         ]
                         if not missing_cross:
                             continue
+                        cache_started = time.monotonic()
                         cross_cache, _adapter_t1, _t2_hook, _actual_arm = _arm_context_cache(
                             model,
                             prompt_ids,
@@ -1662,7 +1831,9 @@ def run(args: argparse.Namespace) -> None:
                             source_model="M",
                             cache_override=turn1_cache if cross_arm == "b_reads_m_cache" else None,
                         )
+                        record_profile("turn2_cache_prepare", time.monotonic() - cache_started)
                         for kind in missing_cross:
+                            row_started = time.monotonic()
                             row = _turn2_row(
                                 q_index,
                                 question,
@@ -1689,16 +1860,104 @@ def run(args: argparse.Namespace) -> None:
                             rows_by_key[row["key"]] = row
                             done.add(row["key"])
                             written += 1
+                            record_profile("turn2_ab", time.monotonic() - row_started)
                             if written % 20 == 0:
                                 print(f"progress rows={written} elapsed_s={time.monotonic() - started:.1f}", flush=True)
     print(f"complete new_rows={written} total_rows={len(old_rows)} elapsed_s={time.monotonic() - started:.1f}", flush=True)
+    for row_type, timings in sorted(profile.items()):
+        total = sum(timings)
+        per_row = total / len(timings) if timings else 0.0
+        print(
+            f"profile row_type={row_type} n={len(timings)} total_s={total:.6f} seconds_per_row={per_row:.6f}",
+            flush=True,
+        )
+
+
+def _score_input_paths(args: argparse.Namespace) -> list[Path]:
+    raw_inputs = getattr(args, "rows", None)
+    if raw_inputs is None:
+        base = Path(args.out)
+        if base.is_file():
+            candidates = [base]
+        else:
+            direct = base / "rows.jsonl"
+            candidates = [direct] if direct.is_file() else sorted(base.rglob("rows.jsonl"))
+    else:
+        if isinstance(raw_inputs, (str, Path)):
+            raw_inputs = [raw_inputs]
+        candidates = []
+        for raw in raw_inputs:
+            path = Path(raw)
+            if path.is_dir():
+                direct = path / "rows.jsonl"
+                candidates.extend([direct] if direct.is_file() else sorted(path.rglob("rows.jsonl")))
+            else:
+                candidates.append(path)
+    paths: list[Path] = []
+    seen: set[Path] = set()
+    for path in candidates:
+        resolved = path.resolve()
+        if resolved in seen:
+            continue
+        if not resolved.is_file():
+            raise ValueError(f"score input is not a rows.jsonl file: {path}")
+        seen.add(resolved)
+        paths.append(resolved)
+    if not paths:
+        raise ValueError("no rows.jsonl files found; pass --rows files or a shard directory")
+    return paths
+
+
+def _combined_score_input(args: argparse.Namespace) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    paths = _score_input_paths(args)
+    headers: list[dict[str, Any]] = []
+    rows: list[dict[str, Any]] = []
+    key_sources: dict[str, Path] = {}
+    fingerprint: str | None = None
+    for path in paths:
+        header, shard_rows = read_jsonl(path)
+        if header is None:
+            raise ValueError(f"no rows header found at {path}")
+        comparable = copy.deepcopy(header)
+        header_args = comparable.get("args")
+        if isinstance(header_args, dict):
+            for field in ("question_start", "question_end", "question_limit"):
+                header_args.pop(field, None)
+        candidate_fingerprint = json.dumps(comparable, sort_keys=True, separators=(",", ":"))
+        if fingerprint is not None and candidate_fingerprint != fingerprint:
+            raise ValueError(f"shard headers describe different experiment settings: {path}")
+        fingerprint = candidate_fingerprint
+        headers.append(header)
+        for row in shard_rows:
+            key = str(row.get("key", ""))
+            if key and key in key_sources:
+                raise ValueError(f"duplicate row key {key!r} in {key_sources[key]} and {path}")
+            if key:
+                key_sources[key] = path
+            rows.append(row)
+    combined = copy.deepcopy(headers[0])
+    if len(paths) > 1:
+        combined["input_shards"] = [
+            {
+                "path": str(path),
+                "question_start": header.get("args", {}).get("question_start"),
+                "question_end": header.get("args", {}).get("question_end"),
+            }
+            for path, header in zip(paths, headers)
+        ]
+        combined_args = combined.get("args")
+        if isinstance(combined_args, dict):
+            combined_args.pop("question_start", None)
+            combined_args.pop("question_end", None)
+            combined_args["question_ranges"] = [
+                [header.get("args", {}).get("question_start"), header.get("args", {}).get("question_end")]
+                for header in headers
+            ]
+    return combined, rows
 
 
 def score(args: argparse.Namespace) -> None:
-    rows_path = Path(args.out) / "rows.jsonl"
-    header, rows = read_jsonl(rows_path)
-    if header is None:
-        raise ValueError(f"no rows header found at {rows_path}")
+    header, rows = _combined_score_input(args)
     summary = score_rows(header, rows)
     target = Path(args.out) / "summary.json"
     target.parent.mkdir(parents=True, exist_ok=True)
@@ -1746,9 +2005,17 @@ def build_parser() -> argparse.ArgumentParser:
     run_parser.add_argument("--max-new-tokens", type=int, default=64)
     run_parser.add_argument("--free-text-tokens", type=int, default=48)
     run_parser.add_argument("--question-limit", type=int, default=None, help="optional prefix limit for an explicit smoke run")
+    run_parser.add_argument("--question-start", type=int, default=0, help="first zero-based question index, inclusive")
+    run_parser.add_argument("--question-end", type=int, default=None, help="one-past-last question index, exclusive")
+    run_parser.add_argument("--threads", type=int, default=4, help="PyTorch intra-op CPU thread count")
     run_parser.set_defaults(func=run)
     score_parser = sub.add_parser("score", help="score rows.jsonl into summary.json")
     score_parser.add_argument("--out", required=True)
+    score_parser.add_argument(
+        "--rows",
+        nargs="+",
+        help="one or more rows.jsonl files or directories containing shard rows.jsonl files",
+    )
     score_parser.set_defaults(func=score)
     return parser
 

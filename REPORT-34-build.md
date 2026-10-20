@@ -142,3 +142,22 @@ wrote /tmp/tmppqckf3g_/summary.json (376 rows)
 ### BLOCKERS
 
 - No blocker for this scoped change. The real 1.7B model and adapter were not run; the earlier report records that the local adapter cache lacks its safetensors weights.
+
+## Fold 2
+
+### SUMMARY
+
+- A/B rows now prefill the assistant response with a standalone `(` and score `A` and `B` at the following position. The same single cached forward pass supplies the greedy token and the measured prefill state; free-text rows keep the original unprefilled generation path.
+- Option letters now map to normalized `even`/`odd` concepts, so target log probabilities, margins, pair-normalized probabilities, greedy concepts, and even-minus-odd logits are populated for rows with a defined target.
+- Added half-open question shards, multi-file and shard-directory scoring, and `--threads` (default 4). Row keys are unchanged.
+
+### FINDINGS
+
+- `/home/elisepc/neuron-probe/.venv/bin/python -m unittest -v test_part34.py`: all 12 tests passed with no skips. This includes the pinned real tokenizer with fake logits for both option orders and raised/lowered forms, a one-forward-pass check, and two tiny-model shards (questions `[0,1)` and `[1,2)`) scored together as 752 rows.
+- Measured on the two-layer, 32-hidden random Qwen3 test model with one PyTorch thread: turn-one rows averaged 0.00131 s, turn-two A/B rows 0.00108 s, free-text rows 0.00144 s, and turn-two cache preparation 0.00029 s per arm. These tiny-model rates are useful for confirming the code paths, not for scaling to the 1.7B model.
+- The parent smoke rate projected about 40 hours for the full 40-question run. A/B rows are 12,240 of 15,040 total rows; halving their probe passes gives an idealized estimate of about 24 hours. Allowing for cache and model overhead, estimate 24–30 hours on similar CPU resources. This is an extrapolation; this worker did not run the 1.7B weights.
+- `git diff --check` and `python -m py_compile part34.py test_part34.py` passed. Parent-control mailbox was empty at all checkpoints; no messages changed, were declined, or deferred.
+
+### BLOCKERS
+
+- None for this fold. Real-model timing remains an estimate rather than a measurement.
