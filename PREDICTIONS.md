@@ -1547,3 +1547,7 @@ Amendment to 37.5 (Claude, after Prime #66, original kept above): scored as the 
 | 39.4 | Claude: zeroed alone, the unit changes the maker in none of the six greedy answers, and moves the share of sampled answers that call themselves an AI by under 10 points. | | |
 | 39.5 | Claude: pushed at k=2 under the Sam persona, the share of answers that say they are an AI rises at least 20 points over unclamped, and above every random unit's share at k=2. | | |
 | 39.6 | Claude: at k=1 the share rises by under 10 points (the natural level alone does not break a persona). | | |
+| 39.7 | Claude (section D, added 17:08 CT at Elise's ask, before any run): in the chat model at least 3 units besides L6 N753 pass the screen's gate. | | |
+| 39.8 | Claude: at least half of the passing units sit in layers 0 to 12. | | |
+| 39.9 | Claude: at least one passing unit other than L6 N753 has an AI or assistant word (ai, assistant, model, chatbot, 人工智能, 助手, claude, gpt) in its logit-lens top 30. | | |
+| 39.10 | Claude: the base model's screen passes at least half as many units as the chat model's (the circuit is mostly built before chat training). | | |

@@ -43,3 +43,18 @@ match).
 
 ## Reading rule, fixed now
 An answer that breaks (repetition, no sentence) does not count as an AI claim. Random-unit clamps set the null.
+
+## D. Screen for other "talking to the AI" units (added 17:08 CT at Elise's ask, "Can you find other ones?", before any run)
+Run size: 2 models x 120 battery sentences x 2 wrappings = the same 480 forward passes as A, now capturing every unit
+(32 layers x 9,216 = 294,912 units per model), kept as each unit's max over the sentence's own tokens, plus its value
+at the "assistant" marker in the template. No generation.
+For every unit, in each model:
+- addressee contrast = median over categories 1 and 3 minus median over categories 2, 4, 5 and 6 (plain reads),
+  divided by the unit's MAD over all 120 plain reads (floor 0.01);
+- request-only (1 vs 2) and AI-self-only (3 vs 4) contrasts, reported beside it so a "you" or "I am" word detector
+  can be told apart;
+- marker value = median value at the "assistant" marker across the 120 templated reads.
+Gate: a unit passes when its addressee contrast exceeds the 99th percentile of the maximum over all units under 200
+category-label shuffles (seeded), AND it ranks in the top 1% on both halves of the sentences (1-10 and 11-20 of each
+category). Report every passing unit with its three contrasts, marker value, layer, and logit-lens top and bottom 30.
+L6 N753 must pass in the chat model, or the screen is broken and nothing else from it is read.
