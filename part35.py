@@ -606,7 +606,7 @@ def _read_layer(cache_dir: Path, manifest: dict[str, dict[str, Any]], sample_id:
     row = manifest.get(sample_id)
     if not row:
         raise FileNotFoundError(f"activation cache lacks required row {sample_id}")
-    path = cache_dir / row["file"]
+    path = cache_dir.parent / row["file"]  # manifest paths are relative to the model dir
     with np.load(path) as payload:
         return np.asarray(payload[f"L{layer}"], dtype=np.float32)
 
@@ -616,7 +616,7 @@ def _read_residual(cache_dir: Path, manifest: dict[str, dict[str, Any]], sample_
     row = manifest.get(sample_id)
     if not row:
         raise FileNotFoundError(f"activation cache lacks required residual row {sample_id}")
-    with np.load(cache_dir / row["file"]) as payload:
+    with np.load(cache_dir.parent / row["file"]) as payload:  # manifest paths are relative to the model dir
         return np.asarray(payload[f"R{layer}"], dtype=np.float32)
 
 
@@ -1049,7 +1049,7 @@ def _neutral_controls(model_dir: Path, header: dict[str, Any], data: dict[str, A
             live = np.asarray([int(np.argmax(maxima))])
         residual = []
         for frame in data["frame_bank"]:
-            with np.load(model_dir / "activations" / manifest[f"neutral:{frame['id']}"]["file"]) as payload:
+            with np.load(model_dir / manifest[f"neutral:{frame['id']}"]["file"]) as payload:
                 residual.append(float(payload["residual_rms"][layer]))
         residual_rms = float(np.sqrt(np.mean(np.square(residual))))
         candidates.extend({"layer": layer, "unit": int(unit), "live_threshold": threshold,
@@ -1083,7 +1083,7 @@ def _residual_rms_for_layer(model_dir: Path, data: dict[str, Any], layer: int) -
     manifest = _manifest(model_dir)
     values = []
     for frame in data["frame_bank"]:
-        with np.load(model_dir / "activations" / manifest[f"neutral:{frame['id']}"]["file"]) as payload:
+        with np.load(model_dir / manifest[f"neutral:{frame['id']}"]["file"]) as payload:
             values.append(float(payload["residual_rms"][layer]))
     return float(np.sqrt(np.mean(np.square(values))))
 
