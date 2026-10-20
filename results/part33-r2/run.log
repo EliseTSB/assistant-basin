@@ -6,3 +6,111 @@ natural activations 001/148 alien_q01
 natural activations 002/148 alien_q02
 natural activations 003/148 alien_q03
 natural activations 020/148 alien_q20
+natural activations 040/148 topic_02
+natural activations 060/148 topic_22
+natural activations 080/148 topic_42
+natural activations 100/148 sense_e_27
+natural activations 120/148 neutral_book_12
+natural activations 140/148 neutral_book_32
+natural activations 148/148 neutral_book_40
+dropped 4 question passages that do not fire above threshold: alien_q04, alien_q09, alien_q12, alien_q16
+Selected 90 passages; corpus max=24.75, threshold=12.375; cache hits=0
+effects 01/90 alien_q01
+effects 02/90 alien_q02
+effects 03/90 alien_q03
+effects 04/90 alien_q05
+effects 05/90 alien_q06
+effects 06/90 alien_q07
+effects 07/90 alien_q08
+effects 08/90 alien_q10
+effects 09/90 alien_q11
+effects 10/90 alien_q13
+effects 11/90 alien_q14
+effects 12/90 alien_q15
+effects 13/90 alien_q17
+effects 14/90 alien_q18
+effects 15/90 alien_q19
+effects 16/90 alien_q20
+effects 17/90 sense_a_01
+effects 18/90 alien_extra02
+effects 19/90 alien_extra10
+effects 20/90 alien_extra14
+effects 21/90 sense_a_03
+effects 22/90 alien_extra18
+effects 23/90 sense_d_18
+effects 24/90 alien_extra07
+effects 25/90 alien_extra04
+effects 26/90 alien_extra11
+effects 27/90 alien_extra01
+effects 28/90 alien_extra05
+effects 29/90 alien_extra09
+effects 30/90 alien_extra12
+effects 31/90 topic_41
+effects 32/90 topic_27
+effects 33/90 topic_22
+effects 34/90 topic_29
+effects 35/90 topic_37
+effects 36/90 topic_06
+effects 37/90 topic_15
+effects 38/90 topic_19
+effects 39/90 topic_18
+effects 40/90 topic_07
+effects 41/90 topic_30
+effects 42/90 topic_17
+effects 43/90 sense_e_29
+effects 44/90 topic_14
+effects 45/90 topic_16
+effects 46/90 topic_09
+effects 47/90 topic_26
+effects 48/90 topic_20
+effects 49/90 topic_21
+effects 50/90 topic_44
+effects 51/90 sense_e_25
+effects 52/90 topic_34
+effects 53/90 topic_46
+effects 54/90 topic_24
+effects 55/90 topic_32
+effects 56/90 topic_01
+effects 57/90 topic_12
+effects 58/90 topic_31
+effects 59/90 topic_33
+effects 60/90 topic_35
+effects 61/90 sense_g_40
+effects 62/90 sense_g_41
+effects 63/90 sense_g_38
+effects 64/90 sense_g_39
+effects 65/90 neutral_book_35
+effects 66/90 sense_g_37
+effects 67/90 neutral_book_25
+effects 68/90 neutral_book_27
+effects 69/90 neutral_book_16
+effects 70/90 neutral_book_24
+effects 71/90 sense_g_36
+effects 72/90 neutral_book_33
+effects 73/90 neutral_book_04
+effects 74/90 neutral_book_23
+effects 75/90 neutral_book_26
+effects 76/90 neutral_book_02
+effects 77/90 neutral_book_03
+effects 78/90 neutral_book_21
+effects 79/90 neutral_book_28
+effects 80/90 neutral_book_10
+effects 81/90 neutral_book_19
+effects 82/90 neutral_book_17
+effects 83/90 neutral_book_22
+effects 84/90 neutral_book_39
+effects 85/90 neutral_book_18
+effects 86/90 neutral_book_06
+effects 87/90 neutral_book_05
+effects 88/90 neutral_book_32
+effects 89/90 neutral_book_09
+effects 90/90 neutral_book_34
+comprehension 01/16 mc01
+comprehension 02/16 mc02
+comprehension 03/16 mc03
+comprehension 16/16 mc20
+Part 33 prediction scores (target and matched-random loss increase use the union of firing positions and next 8 positions):
+33.1 detector rule: target=-0.013053071385543246; matched-random mean=0.00015151140757139572; target<=mean=True
+33.2 target exceeds matched-random 95th percentile: False; target=-0.013053071385543246; p95=0.0032997412954369797; distribution=[0.0002489123934681183, 0.0006200934544213335, -0.0017090398279219973, 0.003199900566661721, -0.0022618278376019744, 0.0017363119136112241, 0.0012134143078308729, -0.0025023229305421706, 0.002520028859960567, 0.0051967151421668705, -0.0005695607576577763, -5.4990826684303186e-05, -0.0008735332596552325, -0.002518361115403826, -0.0014754619174588393, -0.002877118225002592, 0.0016434688446819424, 0.001387022403535017, 0.0002810950930271407, -0.00017451813000817924]
+33.3 comprehension change: 0.0 points; abs(change)<10=True
+elapsed_seconds=948.5

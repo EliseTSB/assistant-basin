@@ -1,0 +1,357 @@
+{
+ "signature": "af05e0c44363027eda0b122ce7274c6a076bd07b287584354aae286346190f8b",
+ "items": {
+  "mc01": {
+   "id": "mc01",
+   "passage_id": "alien_q01",
+   "answer": "A",
+   "baseline_logits": {
+    "A": 19.25,
+    "B": 14.6875,
+    "C": 14.375,
+    "D": 13.75
+   },
+   "conditional_zero_logits": {
+    "A": 19.25,
+    "B": 14.6875,
+    "C": 14.375,
+    "D": 13.6875
+   },
+   "baseline_prediction": "A",
+   "conditional_zero_prediction": "A",
+   "baseline_correct": true,
+   "conditional_zero_correct": true,
+   "natural_firing_tokens": 3
+  },
+  "mc02": {
+   "id": "mc02",
+   "passage_id": "alien_q02",
+   "answer": "B",
+   "baseline_logits": {
+    "A": 16.375,
+    "B": 19.375,
+    "C": 14.5625,
+    "D": 13.5
+   },
+   "conditional_zero_logits": {
+    "A": 16.375,
+    "B": 19.375,
+    "C": 14.5625,
+    "D": 13.5
+   },
+   "baseline_prediction": "B",
+   "conditional_zero_prediction": "B",
+   "baseline_correct": true,
+   "conditional_zero_correct": true,
+   "natural_firing_tokens": 3
+  },
+  "mc03": {
+   "id": "mc03",
+   "passage_id": "alien_q03",
+   "answer": "B",
+   "baseline_logits": {
+    "A": 16.75,
+    "B": 19.25,
+    "C": 13.8125,
+    "D": 14.125
+   },
+   "conditional_zero_logits": {
+    "A": 16.75,
+    "B": 19.25,
+    "C": 13.75,
+    "D": 14.0625
+   },
+   "baseline_prediction": "B",
+   "conditional_zero_prediction": "B",
+   "baseline_correct": true,
+   "conditional_zero_correct": true,
+   "natural_firing_tokens": 3
+  },
+  "mc05": {
+   "id": "mc05",
+   "passage_id": "alien_q05",
+   "answer": "A",
+   "baseline_logits": {
+    "A": 18.75,
+    "B": 14.3125,
+    "C": 13.5625,
+    "D": 12.875
+   },
+   "conditional_zero_logits": {
+    "A": 18.75,
+    "B": 14.3125,
+    "C": 13.5625,
+    "D": 12.875
+   },
+   "baseline_prediction": "A",
+   "conditional_zero_prediction": "A",
+   "baseline_correct": true,
+   "conditional_zero_correct": true,
+   "natural_firing_tokens": 2
+  },
+  "mc06": {
+   "id": "mc06",
+   "passage_id": "alien_q06",
+   "answer": "A",
+   "baseline_logits": {
+    "A": 19.625,
+    "B": 13.375,
+    "C": 13.4375,
+    "D": 13.625
+   },
+   "conditional_zero_logits": {
+    "A": 19.625,
+    "B": 13.4375,
+    "C": 13.4375,
+    "D": 13.6875
+   },
+   "baseline_prediction": "A",
+   "conditional_zero_prediction": "A",
+   "baseline_correct": true,
+   "conditional_zero_correct": true,
+   "natural_firing_tokens": 2
+  },
+  "mc07": {
+   "id": "mc07",
+   "passage_id": "alien_q07",
+   "answer": "A",
+   "baseline_logits": {
+    "A": 19.0,
+    "B": 13.375,
+    "C": 13.625,
+    "D": 13.25
+   },
+   "conditional_zero_logits": {
+    "A": 19.0,
+    "B": 13.375,
+    "C": 13.625,
+    "D": 13.25
+   },
+   "baseline_prediction": "A",
+   "conditional_zero_prediction": "A",
+   "baseline_correct": true,
+   "conditional_zero_correct": true,
+   "natural_firing_tokens": 5
+  },
+  "mc08": {
+   "id": "mc08",
+   "passage_id": "alien_q08",
+   "answer": "B",
+   "baseline_logits": {
+    "A": 15.125,
+    "B": 19.0,
+    "C": 13.25,
+    "D": 13.875
+   },
+   "conditional_zero_logits": {
+    "A": 15.125,
+    "B": 19.125,
+    "C": 13.3125,
+    "D": 13.875
+   },
+   "baseline_prediction": "B",
+   "conditional_zero_prediction": "B",
+   "baseline_correct": true,
+   "conditional_zero_correct": true,
+   "natural_firing_tokens": 1
+  },
+  "mc10": {
+   "id": "mc10",
+   "passage_id": "alien_q10",
+   "answer": "B",
+   "baseline_logits": {
+    "A": 16.375,
+    "B": 19.125,
+    "C": 13.9375,
+    "D": 13.6875
+   },
+   "conditional_zero_logits": {
+    "A": 16.375,
+    "B": 19.25,
+    "C": 13.9375,
+    "D": 13.6875
+   },
+   "baseline_prediction": "B",
+   "conditional_zero_prediction": "B",
+   "baseline_correct": true,
+   "conditional_zero_correct": true,
+   "natural_firing_tokens": 3
+  },
+  "mc11": {
+   "id": "mc11",
+   "passage_id": "alien_q11",
+   "answer": "A",
+   "baseline_logits": {
+    "A": 19.125,
+    "B": 13.125,
+    "C": 13.375,
+    "D": 13.9375
+   },
+   "conditional_zero_logits": {
+    "A": 19.125,
+    "B": 13.125,
+    "C": 13.375,
+    "D": 13.9375
+   },
+   "baseline_prediction": "A",
+   "conditional_zero_prediction": "A",
+   "baseline_correct": true,
+   "conditional_zero_correct": true,
+   "natural_firing_tokens": 3
+  },
+  "mc13": {
+   "id": "mc13",
+   "passage_id": "alien_q13",
+   "answer": "A",
+   "baseline_logits": {
+    "A": 19.25,
+    "B": 13.625,
+    "C": 13.75,
+    "D": 13.3125
+   },
+   "conditional_zero_logits": {
+    "A": 19.25,
+    "B": 13.625,
+    "C": 13.75,
+    "D": 13.3125
+   },
+   "baseline_prediction": "A",
+   "conditional_zero_prediction": "A",
+   "baseline_correct": true,
+   "conditional_zero_correct": true,
+   "natural_firing_tokens": 3
+  },
+  "mc14": {
+   "id": "mc14",
+   "passage_id": "alien_q14",
+   "answer": "C",
+   "baseline_logits": {
+    "A": 15.6875,
+    "B": 13.3125,
+    "C": 18.875,
+    "D": 14.0625
+   },
+   "conditional_zero_logits": {
+    "A": 15.75,
+    "B": 13.3125,
+    "C": 18.875,
+    "D": 14.0625
+   },
+   "baseline_prediction": "C",
+   "conditional_zero_prediction": "C",
+   "baseline_correct": true,
+   "conditional_zero_correct": true,
+   "natural_firing_tokens": 2
+  },
+  "mc15": {
+   "id": "mc15",
+   "passage_id": "alien_q15",
+   "answer": "B",
+   "baseline_logits": {
+    "A": 15.6875,
+    "B": 18.625,
+    "C": 13.625,
+    "D": 12.5625
+   },
+   "conditional_zero_logits": {
+    "A": 15.6875,
+    "B": 18.625,
+    "C": 13.625,
+    "D": 12.5625
+   },
+   "baseline_prediction": "B",
+   "conditional_zero_prediction": "B",
+   "baseline_correct": true,
+   "conditional_zero_correct": true,
+   "natural_firing_tokens": 1
+  },
+  "mc17": {
+   "id": "mc17",
+   "passage_id": "alien_q17",
+   "answer": "A",
+   "baseline_logits": {
+    "A": 19.5,
+    "B": 13.8125,
+    "C": 14.25,
+    "D": 13.6875
+   },
+   "conditional_zero_logits": {
+    "A": 19.5,
+    "B": 13.8125,
+    "C": 14.25,
+    "D": 13.625
+   },
+   "baseline_prediction": "A",
+   "conditional_zero_prediction": "A",
+   "baseline_correct": true,
+   "conditional_zero_correct": true,
+   "natural_firing_tokens": 7
+  },
+  "mc18": {
+   "id": "mc18",
+   "passage_id": "alien_q18",
+   "answer": "A",
+   "baseline_logits": {
+    "A": 19.0,
+    "B": 13.375,
+    "C": 13.5625,
+    "D": 12.9375
+   },
+   "conditional_zero_logits": {
+    "A": 19.0,
+    "B": 13.375,
+    "C": 13.5625,
+    "D": 12.9375
+   },
+   "baseline_prediction": "A",
+   "conditional_zero_prediction": "A",
+   "baseline_correct": true,
+   "conditional_zero_correct": true,
+   "natural_firing_tokens": 2
+  },
+  "mc19": {
+   "id": "mc19",
+   "passage_id": "alien_q19",
+   "answer": "A",
+   "baseline_logits": {
+    "A": 19.25,
+    "B": 14.125,
+    "C": 14.375,
+    "D": 13.875
+   },
+   "conditional_zero_logits": {
+    "A": 19.25,
+    "B": 14.125,
+    "C": 14.4375,
+    "D": 13.875
+   },
+   "baseline_prediction": "A",
+   "conditional_zero_prediction": "A",
+   "baseline_correct": true,
+   "conditional_zero_correct": true,
+   "natural_firing_tokens": 3
+  },
+  "mc20": {
+   "id": "mc20",
+   "passage_id": "alien_q20",
+   "answer": "A",
+   "baseline_logits": {
+    "A": 19.0,
+    "B": 14.875,
+    "C": 14.75,
+    "D": 14.1875
+   },
+   "conditional_zero_logits": {
+    "A": 19.0,
+    "B": 14.875,
+    "C": 14.75,
+    "D": 14.1875
+   },
+   "baseline_prediction": "A",
+   "conditional_zero_prediction": "A",
+   "baseline_correct": true,
+   "conditional_zero_correct": true,
+   "natural_firing_tokens": 2
+  }
+ }
+}

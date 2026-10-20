@@ -1,0 +1,7015 @@
+{
+ "tool": "part33.py (assistant-basin, Part 33)",
+ "model": "Qwen/Qwen3.5-4B",
+ "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "layer": 22,
+ "neuron": 2742,
+ "layers_module": "model.layers",
+ "neuron_definition": "input to layer-22 mlp.down_proj, as in neuron_report.py Part 18",
+ "zero_definition": "set activation to zero only where its natural value is strictly greater than half its own selected-corpus maximum",
+ "loss_definition": "logits at token p predict token p+1; firing and the following eight loss positions are unioned to avoid overlap weighting",
+ "control_matching": "20 units selected from a seeded random layer-22 pool by closest natural firing-token fraction; each uses its own half-maximum threshold",
+ "lookahead_tokens": 8,
+ "control_candidate_pool": 512,
+ "input_shas": {
+  "part33-authored-passages.jsonl": "4aafed9af70be834380d8a4fbcd527b528b875203f63194d7cea9c531b63b96e",
+  "sense-battery.jsonl": "3b79b2b370d6012ae63b92ffb7ddfddc9a06d6e406f26c86b49928c7b5d38884",
+  "neutral.txt": "b60b39615eea78c2aca5615bdf3905f7152f805ecc97fe8908151b8cc591df2f",
+  "part33-questions.json": "77be39aefdc1c5669a2e4901ee05c82947925372cc1ee950c379f685a81446a0"
+ },
+ "smoke": false,
+ "natural_firing": {
+  "corpus_maximum": 24.75,
+  "conditional_threshold": 12.375,
+  "token_count": 2036,
+  "per_passage": [
+   {
+    "id": "alien_q01",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "At dawn, the extraterrestrial botanist Lira collected blue moss beside her landing craft.",
+    "activation": {
+     "max": 21.875,
+     "mean": 4.7834716796875,
+     "min": -0.38671875,
+     "tokens": 20
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.1
+   },
+   {
+    "id": "alien_q02",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The alien pilot Varo placed a brass beacon on the ridge before returning to the shuttle.",
+    "activation": {
+     "max": 14.0625,
+     "mean": 3.2421332465277777,
+     "min": -0.166015625,
+     "tokens": 18
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.05555555555555555
+   },
+   {
+    "id": "alien_q03",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "An extraterrestrial child named Seli carried a glass flute through the quiet market.",
+    "activation": {
+     "max": 19.0,
+     "mean": 5.002642463235294,
+     "min": -0.2890625,
+     "tokens": 17
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.11764705882352941
+   },
+   {
+    "id": "alien_q05",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "A visitor from another planet left three blue stones beside the village well.",
+    "activation": {
+     "max": 15.0,
+     "mean": 4.019321986607143,
+     "min": -0.55078125,
+     "tokens": 14
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.07142857142857142
+   },
+   {
+    "id": "alien_q06",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The alien cartographer drew a map of the valley on a sheet of copper.",
+    "activation": {
+     "max": 14.0625,
+     "mean": 3.43792724609375,
+     "min": -0.166015625,
+     "tokens": 16
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.0625
+   },
+   {
+    "id": "alien_q07",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "An extraterrestrial musician tuned a small harp inside the station greenhouse.",
+    "activation": {
+     "max": 19.0,
+     "mean": 4.81396484375,
+     "min": 0.06201171875,
+     "tokens": 15
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.13333333333333333
+   },
+   {
+    "id": "alien_q08",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The alien doctor gave the explorer a green bandage after examining his hand.",
+    "activation": {
+     "max": 14.0625,
+     "mean": 2.8510721842447917,
+     "min": -0.166015625,
+     "tokens": 15
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.06666666666666667
+   },
+   {
+    "id": "alien_q10",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The extraterrestrial captain named the moon Aurora after seeing its violet rings.",
+    "activation": {
+     "max": 16.875,
+     "mean": 4.593359375,
+     "min": -0.298828125,
+     "tokens": 15
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.13333333333333333
+   },
+   {
+    "id": "alien_q11",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "An alien visitor handed the mayor a folded paper covered in tiny circles.",
+    "activation": {
+     "max": 16.375,
+     "mean": 3.0274832589285716,
+     "min": -0.46875,
+     "tokens": 14
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.07142857142857142
+   },
+   {
+    "id": "alien_q13",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "A friendly extraterrestrial gardener watered the yellow flowers beside the landing pad.",
+    "activation": {
+     "max": 24.75,
+     "mean": 4.708553538602941,
+     "min": -0.3125,
+     "tokens": 17
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.11764705882352941
+   },
+   {
+    "id": "alien_q14",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The alien mechanic tightened a loose bolt on the rover with a red-handled tool.",
+    "activation": {
+     "max": 14.0625,
+     "mean": 1.9480267693014706,
+     "min": -0.40234375,
+     "tokens": 17
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.058823529411764705
+   },
+   {
+    "id": "alien_q15",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "A visitor from another planet chose the name Mira for the harbor lighthouse.",
+    "activation": {
+     "max": 15.0,
+     "mean": 2.2933919270833334,
+     "min": -0.341796875,
+     "tokens": 15
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.06666666666666667
+   },
+   {
+    "id": "alien_q17",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "An extraterrestrial traveler left a bronze compass on the station dining table.",
+    "activation": {
+     "max": 19.0,
+     "mean": 5.73935546875,
+     "min": -0.359375,
+     "tokens": 15
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.13333333333333333
+   },
+   {
+    "id": "alien_q18",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The alien shepherd guided six small creatures toward a shelter before the storm.",
+    "activation": {
+     "max": 14.0625,
+     "mean": 2.857212611607143,
+     "min": -0.2060546875,
+     "tokens": 14
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.07142857142857142
+   },
+   {
+    "id": "alien_q19",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "A UFO pilot sent the village a short message asking for fresh water.",
+    "activation": {
+     "max": 13.1875,
+     "mean": 2.7567313058035716,
+     "min": -0.2392578125,
+     "tokens": 14
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.07142857142857142
+   },
+   {
+    "id": "alien_q20",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The extraterrestrial astronomer marked the new comet with a white chalk circle.",
+    "activation": {
+     "max": 16.75,
+     "mean": 4.10614013671875,
+     "min": -0.166015625,
+     "tokens": 16
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.125
+   },
+   {
+    "id": "sense_a_01",
+    "group": "alien",
+    "source": "data/sense-battery.jsonl",
+    "text": "Scientists debated whether the alien could survive in Earth's atmosphere.",
+    "activation": {
+     "max": 23.0,
+     "mean": 3.6414591471354165,
+     "min": 0.043212890625,
+     "tokens": 12
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.08333333333333333
+   },
+   {
+    "id": "alien_extra02",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "An extraterrestrial pilot landed beyond the orchard and waved to the waiting villagers.",
+    "activation": {
+     "max": 19.0,
+     "mean": 4.048138786764706,
+     "min": -0.32421875,
+     "tokens": 17
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.11764705882352941
+   },
+   {
+    "id": "alien_extra10",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "An extraterrestrial family watched the town parade from the station balcony.",
+    "activation": {
+     "max": 19.0,
+     "mean": 3.9979422433035716,
+     "min": -0.451171875,
+     "tokens": 14
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.14285714285714285
+   },
+   {
+    "id": "alien_extra14",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "An extraterrestrial artist painted the harbor cranes beneath a purple sky.",
+    "activation": {
+     "max": 19.0,
+     "mean": 3.3525065104166667,
+     "min": -0.255859375,
+     "tokens": 15
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.13333333333333333
+   },
+   {
+    "id": "sense_a_03",
+    "group": "alien",
+    "source": "data/sense-battery.jsonl",
+    "text": "A lone alien walked through the village square, drawing startled glances.",
+    "activation": {
+     "max": 17.375,
+     "mean": 2.0867091587611606,
+     "min": -0.357421875,
+     "tokens": 14
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.07142857142857142
+   },
+   {
+    "id": "alien_extra18",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The extraterrestrial visitor chose a quiet seat beside the station window.",
+    "activation": {
+     "max": 16.875,
+     "mean": 3.6958705357142856,
+     "min": -0.375,
+     "tokens": 14
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.14285714285714285
+   },
+   {
+    "id": "sense_d_18",
+    "group": "alien",
+    "source": "data/sense-battery.jsonl",
+    "text": "The extraterrestrial studied the instruments with visible curiosity.",
+    "activation": {
+     "max": 16.875,
+     "mean": 4.188920454545454,
+     "min": -0.166015625,
+     "tokens": 11
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.18181818181818182
+   },
+   {
+    "id": "alien_extra07",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The extraterrestrial guest traded a copper badge for a bowl of warm soup.",
+    "activation": {
+     "max": 16.75,
+     "mean": 2.80731201171875,
+     "min": -0.232421875,
+     "tokens": 16
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.125
+   },
+   {
+    "id": "alien_extra04",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "A being from another planet asked the librarian where maps of Earth were kept.",
+    "activation": {
+     "max": 16.0,
+     "mean": 3.603255208333333,
+     "min": -0.375,
+     "tokens": 15
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.06666666666666667
+   },
+   {
+    "id": "alien_extra11",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "A visitor from another planet asked the farmer how to plant yellow beans.",
+    "activation": {
+     "max": 15.0,
+     "mean": 2.11376953125,
+     "min": -0.515625,
+     "tokens": 14
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.07142857142857142
+   },
+   {
+    "id": "alien_extra01",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The alien envoy arrived at the council carrying a sealed envelope from her home world.",
+    "activation": {
+     "max": 14.0625,
+     "mean": 4.9185791015625,
+     "min": -0.166015625,
+     "tokens": 16
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.0625
+   },
+   {
+    "id": "alien_extra05",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The alien commander lowered the spacecraft ramp and greeted the harbor crew.",
+    "activation": {
+     "max": 14.0625,
+     "mean": 3.7145244891826925,
+     "min": -0.166015625,
+     "tokens": 13
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.07692307692307693
+   },
+   {
+    "id": "alien_extra09",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The alien botanist recorded how the red moss changed color after sunrise.",
+    "activation": {
+     "max": 14.0625,
+     "mean": 2.83486328125,
+     "min": -0.259765625,
+     "tokens": 15
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.06666666666666667
+   },
+   {
+    "id": "alien_extra12",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The alien translator repeated the captain’s greeting in the local language.",
+    "activation": {
+     "max": 14.0625,
+     "mean": 3.252253605769231,
+     "min": -0.166015625,
+     "tokens": 13
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.07692307692307693
+   },
+   {
+    "id": "topic_41",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The instrument calibration used a steady lamp before the night observations.",
+    "activation": {
+     "max": 0.6640625,
+     "mean": -0.123046875,
+     "min": -0.30859375,
+     "tokens": 12
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_27",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "Solar panels turned toward the sun as the satellite passed over the equator.",
+    "activation": {
+     "max": 0.79296875,
+     "mean": 0.07255859375,
+     "min": -0.671875,
+     "tokens": 15
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_22",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "Gravity shaped the broad arc of material around the young star.",
+    "activation": {
+     "max": 1.1484375,
+     "mean": 0.13004557291666666,
+     "min": -2.515625,
+     "tokens": 12
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_29",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "A thin crescent moon rose above the observatory before midnight.",
+    "activation": {
+     "max": 1.203125,
+     "mean": 0.17506760817307693,
+     "min": -0.435546875,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_37",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The moon phase calendar listed the next quarter moon for Tuesday night.",
+    "activation": {
+     "max": 1.234375,
+     "mean": 0.10976820725661057,
+     "min": -0.306640625,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_06",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "Star formation continued inside the cold cloud at the edge of the spiral arm.",
+    "activation": {
+     "max": 1.2421875,
+     "mean": -0.5735188802083333,
+     "min": -2.640625,
+     "tokens": 15
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_15",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The constellation appeared above the horizon shortly after nautical twilight.",
+    "activation": {
+     "max": 1.3828125,
+     "mean": -0.012613932291666666,
+     "min": -0.41015625,
+     "tokens": 12
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_19",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The spectrometer separated the star light into narrow bands of color.",
+    "activation": {
+     "max": 1.5,
+     "mean": 0.08950570913461539,
+     "min": -0.3125,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_18",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "Ice covered the northern crater while the southern basin remained in shadow.",
+    "activation": {
+     "max": 1.515625,
+     "mean": 0.018341064453125,
+     "min": -0.341796875,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_07",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The lunar map showed a broad crater beside a narrow ridge of basalt.",
+    "activation": {
+     "max": 1.5859375,
+     "mean": 0.22379557291666666,
+     "min": -0.921875,
+     "tokens": 15
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_30",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The research team revised the orbit estimate after checking the latest measurements.",
+    "activation": {
+     "max": 1.75,
+     "mean": 0.2518780048076923,
+     "min": -0.29296875,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_17",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The observatory dome rotated slowly to follow the changing position of Jupiter.",
+    "activation": {
+     "max": 1.828125,
+     "mean": 0.2761448451450893,
+     "min": -0.166015625,
+     "tokens": 14
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "sense_e_29",
+    "group": "topic",
+    "source": "data/sense-battery.jsonl",
+    "text": "Star formation in the outer arm proceeds in cold, dense clouds.",
+    "activation": {
+     "max": 1.9140625,
+     "mean": -0.18910569411057693,
+     "min": -1.578125,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_14",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "An eclipse began when the moon crossed the bright disk of the sun.",
+    "activation": {
+     "max": 1.9765625,
+     "mean": 0.4920131138392857,
+     "min": -0.64453125,
+     "tokens": 14
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_16",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "Researchers estimated the galaxy mass from the motion of its outer stars.",
+    "activation": {
+     "max": 1.9765625,
+     "mean": 0.6752037635216346,
+     "min": -0.37109375,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_09",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The comet tail brightened as the object moved closer to the sun.",
+    "activation": {
+     "max": 1.9921875,
+     "mean": 0.34437779017857145,
+     "min": -0.7109375,
+     "tokens": 14
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_26",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The observatory published a table of measured distances between nearby stars.",
+    "activation": {
+     "max": 2.078125,
+     "mean": 0.25965294471153844,
+     "min": -0.3046875,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_20",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "A long exposure revealed faint stars behind the bright nebula.",
+    "activation": {
+     "max": 2.21875,
+     "mean": 0.545166015625,
+     "min": -1.15625,
+     "tokens": 12
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_21",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The mission log compared temperatures measured at several points in orbit.",
+    "activation": {
+     "max": 2.234375,
+     "mean": 0.4790395100911458,
+     "min": -0.318359375,
+     "tokens": 12
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_44",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The observatory archive stored spectra from the previous decade of research.",
+    "activation": {
+     "max": 2.234375,
+     "mean": 0.7233698918269231,
+     "min": -0.166015625,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "sense_e_25",
+    "group": "topic",
+    "source": "data/sense-battery.jsonl",
+    "text": "The planet's orbit shifted by a few degrees over the century.",
+    "activation": {
+     "max": 2.453125,
+     "mean": 0.4540452223557692,
+     "min": -0.20703125,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_34",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The planet surface map used elevation shading to show the mountain ranges.",
+    "activation": {
+     "max": 2.453125,
+     "mean": 0.3350078876201923,
+     "min": -0.30859375,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_46",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The galaxy image showed a bright center surrounded by faint spiral arms.",
+    "activation": {
+     "max": 2.46875,
+     "mean": 0.8117487980769231,
+     "min": -0.400390625,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_24",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "A new chart marked the asteroid belt between Mars and Jupiter.",
+    "activation": {
+     "max": 2.53125,
+     "mean": 0.4224446614583333,
+     "min": -0.69140625,
+     "tokens": 12
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_32",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The telescope tracked a bright star as it crossed the open cluster.",
+    "activation": {
+     "max": 2.90625,
+     "mean": 0.8137019230769231,
+     "min": -0.443359375,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_01",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The telescope recorded a faint nebula beyond the dark edge of the photograph.",
+    "activation": {
+     "max": 2.9375,
+     "mean": 0.7228927612304688,
+     "min": -0.4296875,
+     "tokens": 15
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_12",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "Thin rings cast a shadow across the gas giant during the observation window.",
+    "activation": {
+     "max": 3.109375,
+     "mean": 0.8759068080357143,
+     "min": -0.4296875,
+     "tokens": 14
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_31",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The meteor shower peaked after midnight under a clear sky.",
+    "activation": {
+     "max": 3.140625,
+     "mean": 0.40666060014204547,
+     "min": -0.43359375,
+     "tokens": 11
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_33",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "Clouds of interstellar dust blocked part of the distant infrared image.",
+    "activation": {
+     "max": 3.296875,
+     "mean": 1.5638950892857142,
+     "min": -0.04541015625,
+     "tokens": 14
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_35",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "A solar flare produced a brief increase in radiation near the satellite.",
+    "activation": {
+     "max": 3.6875,
+     "mean": 1.3401442307692308,
+     "min": -0.2392578125,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "sense_g_40",
+    "group": "neutral",
+    "source": "data/sense-battery.jsonl",
+    "text": "The evening train arrived nine minutes behind schedule.",
+    "activation": {
+     "max": -0.166015625,
+     "mean": -0.24620225694444445,
+     "min": -0.34375,
+     "tokens": 9
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "sense_g_41",
+    "group": "neutral",
+    "source": "data/sense-battery.jsonl",
+    "text": "She practiced the violin for an hour after dinner.",
+    "activation": {
+     "max": -0.09912109375,
+     "mean": -0.261376953125,
+     "min": -0.435546875,
+     "tokens": 10
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "sense_g_38",
+    "group": "neutral",
+    "source": "data/sense-battery.jsonl",
+    "text": "The invoice listed twelve items and a modest delivery fee.",
+    "activation": {
+     "max": -0.07763671875,
+     "mean": -0.18931995738636365,
+     "min": -0.3359375,
+     "tokens": 11
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "sense_g_39",
+    "group": "neutral",
+    "source": "data/sense-battery.jsonl",
+    "text": "He pruned the garden hedge before the first frost.",
+    "activation": {
+     "max": -0.0634765625,
+     "mean": -0.21000532670454544,
+     "min": -0.384765625,
+     "tokens": 11
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_35",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“Oh,” said Lydia, stoutly, “I am not afraid; for though I _am_ the youngest, I’m the tallest.”",
+    "activation": {
+     "max": -0.048095703125,
+     "mean": -0.20635986328125,
+     "min": -0.435546875,
+     "tokens": 28
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "sense_g_37",
+    "group": "neutral",
+    "source": "data/sense-battery.jsonl",
+    "text": "She baked a loaf of bread and left it to cool.",
+    "activation": {
+     "max": -0.04345703125,
+     "mean": -0.2347412109375,
+     "min": -0.3515625,
+     "tokens": 12
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_25",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“I do not cough for my own amusement,” replied Kitty, fretfully. “When is your next ball to be, Lizzy?”",
+    "activation": {
+     "max": -0.033203125,
+     "mean": -0.1658347800925926,
+     "min": -0.34375,
+     "tokens": 27
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_27",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“Then, my dear, you may have the advantage of your friend, and introduce Mr. Bingley to _her_.”",
+    "activation": {
+     "max": -0.024658203125,
+     "mean": -0.11392777054398148,
+     "min": -0.275390625,
+     "tokens": 27
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_16",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“But I hope you will get over it, and live to see many young men of four thousand a year come into the neighbourhood.”",
+    "activation": {
+     "max": -0.02392578125,
+     "mean": -0.1622643103966346,
+     "min": -0.376953125,
+     "tokens": 26
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_24",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“Don’t keep coughing so, Kitty, for heaven’s sake! Have a little compassion on my nerves. You tear them to pieces.”",
+    "activation": {
+     "max": -0.02099609375,
+     "mean": -0.15672986260775862,
+     "min": -0.40234375,
+     "tokens": 29
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "sense_g_36",
+    "group": "neutral",
+    "source": "data/sense-battery.jsonl",
+    "text": "The weather turned cold just before the harvest festival.",
+    "activation": {
+     "max": -0.0185546875,
+     "mean": -0.219677734375,
+     "min": -0.375,
+     "tokens": 10
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_33",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“Now, Kitty, you may cough as much as you choose,” said Mr. Bennet; and, as he spoke, he left the room, fatigued with the raptures of his wife.",
+    "activation": {
+     "max": -0.01068115234375,
+     "mean": -0.13447748228561046,
+     "min": -0.408203125,
+     "tokens": 43
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_04",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“But it is,” returned she; “for Mrs. Long has just been here, and she told me all about it.”",
+    "activation": {
+     "max": -0.0093994140625,
+     "mean": -0.18347412109375,
+     "min": -0.310546875,
+     "tokens": 25
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_23",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“No more have I,” said Mr. Bennet; “and I am glad to find that you do not depend on her serving you.”",
+    "activation": {
+     "max": -0.00118255615234375,
+     "mean": -0.1095175061907087,
+     "min": -0.3046875,
+     "tokens": 28
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_26",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“Ay, so it is,” cried her mother, “and Mrs. Long does not come back till the day before; so, it will be impossible for her to introduce him, for she will not know him herself.”",
+    "activation": {
+     "max": 0.00567626953125,
+     "mean": -0.12077450222439236,
+     "min": -0.314453125,
+     "tokens": 45
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_02",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "However little known the feelings or views of such a man may be on his first entering a neighbourhood, this truth is so well fixed in the minds of the surrounding families, that he is considered as the rightful property of some one or other of their daughters.",
+    "activation": {
+     "max": 0.006317138671875,
+     "mean": -0.20897539924172795,
+     "min": -0.5078125,
+     "tokens": 51
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_03",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“My dear Mr. Bennet,” said his lady to him one day, “have you heard that Netherfield Park is let at last?”",
+    "activation": {
+     "max": 0.00799560546875,
+     "mean": -0.12267855940193965,
+     "min": -0.40625,
+     "tokens": 29
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_21",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“But you forget, mamma,” said Elizabeth, “that we shall meet him at the assemblies, and that Mrs. Long has promised to introduce him.”",
+    "activation": {
+     "max": 0.01953125,
+     "mean": -0.12103474934895833,
+     "min": -0.3671875,
+     "tokens": 30
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_28",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“Impossible, Mr. Bennet, impossible, when I am not acquainted with him myself; how can you be so teasing?”",
+    "activation": {
+     "max": 0.0206298828125,
+     "mean": -0.17469435471754807,
+     "min": -0.58203125,
+     "tokens": 26
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_10",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“But, my dear, you must indeed go and see Mr. Bingley when he comes into the neighbourhood.”",
+    "activation": {
+     "max": 0.0255126953125,
+     "mean": -0.13447371773097827,
+     "min": -0.439453125,
+     "tokens": 23
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_19",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "Mr. Bennet was among the earliest of those who waited on Mr. Bingley. He had always intended to visit him, though to the last always assuring his wife that he should not go; and till the evening after the visit was paid she had no knowledge of it. It was then disclosed in the following manner. Observing his second daughter employed in trimming a hat, he suddenly addressed her with,--",
+    "activation": {
+     "max": 0.0380859375,
+     "mean": -0.13020342658547795,
+     "min": -0.369140625,
+     "tokens": 85
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_17",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“It will be no use to us, if twenty such should come, since you will not visit them.”",
+    "activation": {
+     "max": 0.04736328125,
+     "mean": -0.14874122256324404,
+     "min": -0.34375,
+     "tokens": 21
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_22",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“I do not believe Mrs. Long will do any such thing. She has two nieces of her own. She is a selfish, hypocritical woman, and I have no opinion of her.”",
+    "activation": {
+     "max": 0.05078125,
+     "mean": -0.1135877951597556,
+     "min": -0.35546875,
+     "tokens": 39
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_39",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "An invitation to dinner was soon afterwards despatched; and already had Mrs. Bennet planned the courses that were to do credit to her housekeeping, when an answer arrived which deferred it all. Mr. Bingley was obliged to be in town the following day, and consequently unable to accept the honour of their invitation, etc. Mrs. Bennet was quite disconcerted. She could not imagine what business he could have in town so soon after his arrival in Hertfordshire; and she began to fear that he might always be flying about from one place to another, and never settled at Netherfield as he ought to be. Lady Lucas quieted her fears a little by starting the idea of his",
+    "activation": {
+     "max": 0.056396484375,
+     "mean": -0.1040026346842448,
+     "min": -0.431640625,
+     "tokens": 144
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_18",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "Mr. Bennet was so odd a mixture of quick parts, sarcastic humour, reserve, and caprice, that the experience of three-and-twenty years had been insufficient to make his wife understand his character. _Her_ mind was less difficult to develope. She was a woman of mean understanding, little information, and uncertain temper. When she was discontented, she fancied herself nervous. The business of her life was to get her daughters married: its solace was visiting and news.",
+    "activation": {
+     "max": 0.058349609375,
+     "mean": -0.10146803903107596,
+     "min": -0.37109375,
+     "tokens": 101
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_06",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“My dear Mr. Bennet,” replied his wife, “how can you be so tiresome? You must know that I am thinking of his marrying one of them.”",
+    "activation": {
+     "max": 0.06005859375,
+     "mean": -0.10632683249080882,
+     "min": -0.404296875,
+     "tokens": 34
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_05",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“Oh, single, my dear, to be sure! A single man of large fortune; four or five thousand a year. What a fine thing for our girls!”",
+    "activation": {
+     "max": 0.0654296875,
+     "mean": -0.14350856434215198,
+     "min": -0.30078125,
+     "tokens": 33
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_32",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“How good it was in you, my dear Mr. Bennet! But I knew I should persuade you at last. I was sure you loved your girls too well to neglect such an acquaintance. Well, how pleased I am! And it is such a good joke, too, that you should have gone this morning, and never said a word about it till now.”",
+    "activation": {
+     "max": 0.07861328125,
+     "mean": -0.07854946239574535,
+     "min": -0.33203125,
+     "tokens": 74
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_09",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“My dear, you flatter me. I certainly _have_ had my share of beauty, but I do not pretend to be anything extraordinary now. When a woman has five grown-up daughters, she ought to give over thinking of her own beauty.”",
+    "activation": {
+     "max": 0.083984375,
+     "mean": -0.13843994140625,
+     "min": -0.44140625,
+     "tokens": 50
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_34",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“What an excellent father you have, girls,” said she, when the door was shut. “I do not know how you will ever make him amends for his kindness; or me either, for that matter. At our time of life, it is not so pleasant, I can tell you, to be making new acquaintances every day; but for your sakes we would do anything. Lydia, my love, though you _are_ the youngest, I dare say Mr. Bingley will dance with you at the next ball.”",
+    "activation": {
+     "max": 0.0849609375,
+     "mean": -0.06990849206206995,
+     "min": -0.341796875,
+     "tokens": 109
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   }
+  ],
+  "candidate_counts": {
+   "alien": 50,
+   "topic": 52,
+   "neutral": 46
+  },
+  "selected_counts": {
+   "alien": 30,
+   "topic": 30,
+   "neutral": 30
+  },
+  "dropped_question_passages": [
+   "alien_q04",
+   "alien_q09",
+   "alien_q12",
+   "alien_q16"
+  ]
+ },
+ "conditional_zeroing": {
+  "matched_controls": [
+   1960,
+   2262,
+   3616,
+   5798,
+   4596,
+   1433,
+   1818,
+   7920,
+   9014,
+   2018,
+   7884,
+   4955,
+   6355,
+   4511,
+   7380,
+   1453,
+   105,
+   5287,
+   5355,
+   7443
+  ],
+  "candidate_control_frequencies": [
+   {
+    "unit": 18,
+    "firing_tokens": 58,
+    "token_count": 2036,
+    "firing_rate": 0.02848722986247544,
+    "max_activation": 1.6640625,
+    "absolute_rate_difference": 0.0073673870333988214,
+    "selected": false
+   },
+   {
+    "unit": 32,
+    "firing_tokens": 32,
+    "token_count": 2036,
+    "firing_rate": 0.015717092337917484,
+    "max_activation": 7.8125,
+    "absolute_rate_difference": 0.0054027504911591355,
+    "selected": false
+   },
+   {
+    "unit": 49,
+    "firing_tokens": 867,
+    "token_count": 2036,
+    "firing_rate": 0.4258349705304519,
+    "max_activation": 0.80078125,
+    "absolute_rate_difference": 0.40471512770137524,
+    "selected": false
+   },
+   {
+    "unit": 57,
+    "firing_tokens": 73,
+    "token_count": 2036,
+    "firing_rate": 0.03585461689587426,
+    "max_activation": 1.46875,
+    "absolute_rate_difference": 0.014734774066797643,
+    "selected": false
+   },
+   {
+    "unit": 104,
+    "firing_tokens": 559,
+    "token_count": 2036,
+    "firing_rate": 0.27455795677799605,
+    "max_activation": 0.74609375,
+    "absolute_rate_difference": 0.2534381139489194,
+    "selected": false
+   },
+   {
+    "unit": 105,
+    "firing_tokens": 47,
+    "token_count": 2036,
+    "firing_rate": 0.023084479371316306,
+    "max_activation": 1.7421875,
+    "absolute_rate_difference": 0.001964636542239686,
+    "selected": true
+   },
+   {
+    "unit": 111,
+    "firing_tokens": 16,
+    "token_count": 2036,
+    "firing_rate": 0.007858546168958742,
+    "max_activation": 0.6796875,
+    "absolute_rate_difference": 0.013261296660117878,
+    "selected": false
+   },
+   {
+    "unit": 117,
+    "firing_tokens": 63,
+    "token_count": 2036,
+    "firing_rate": 0.03094302554027505,
+    "max_activation": 1.6015625,
+    "absolute_rate_difference": 0.00982318271119843,
+    "selected": false
+   },
+   {
+    "unit": 141,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 10.875,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 158,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 0.005615234375,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 180,
+    "firing_tokens": 20,
+    "token_count": 2036,
+    "firing_rate": 0.009823182711198428,
+    "max_activation": 0.431640625,
+    "absolute_rate_difference": 0.011296660117878192,
+    "selected": false
+   },
+   {
+    "unit": 191,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 3.515625,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 210,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 1.8203125,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 229,
+    "firing_tokens": 127,
+    "token_count": 2036,
+    "firing_rate": 0.06237721021611002,
+    "max_activation": 0.890625,
+    "absolute_rate_difference": 0.0412573673870334,
+    "selected": false
+   },
+   {
+    "unit": 235,
+    "firing_tokens": 201,
+    "token_count": 2036,
+    "firing_rate": 0.0987229862475442,
+    "max_activation": 0.96484375,
+    "absolute_rate_difference": 0.07760314341846758,
+    "selected": false
+   },
+   {
+    "unit": 237,
+    "firing_tokens": 5,
+    "token_count": 2036,
+    "firing_rate": 0.002455795677799607,
+    "max_activation": 7.71875,
+    "absolute_rate_difference": 0.01866404715127701,
+    "selected": false
+   },
+   {
+    "unit": 242,
+    "firing_tokens": 253,
+    "token_count": 2036,
+    "firing_rate": 0.12426326129666011,
+    "max_activation": 0.9375,
+    "absolute_rate_difference": 0.10314341846758349,
+    "selected": false
+   },
+   {
+    "unit": 268,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 0.83984375,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 302,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 3.65625,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 335,
+    "firing_tokens": 480,
+    "token_count": 2036,
+    "firing_rate": 0.2357563850687623,
+    "max_activation": 0.53125,
+    "absolute_rate_difference": 0.21463654223968567,
+    "selected": false
+   },
+   {
+    "unit": 336,
+    "firing_tokens": 12,
+    "token_count": 2036,
+    "firing_rate": 0.005893909626719057,
+    "max_activation": 0.458984375,
+    "absolute_rate_difference": 0.015225933202357562,
+    "selected": false
+   },
+   {
+    "unit": 341,
+    "firing_tokens": 472,
+    "token_count": 2036,
+    "firing_rate": 0.2318271119842829,
+    "max_activation": 0.4609375,
+    "absolute_rate_difference": 0.2107072691552063,
+    "selected": false
+   },
+   {
+    "unit": 379,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 1.546875,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 383,
+    "firing_tokens": 63,
+    "token_count": 2036,
+    "firing_rate": 0.03094302554027505,
+    "max_activation": 1.34375,
+    "absolute_rate_difference": 0.00982318271119843,
+    "selected": false
+   },
+   {
+    "unit": 386,
+    "firing_tokens": 56,
+    "token_count": 2036,
+    "firing_rate": 0.0275049115913556,
+    "max_activation": 0.6953125,
+    "absolute_rate_difference": 0.00638506876227898,
+    "selected": false
+   },
+   {
+    "unit": 435,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 1.1875,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 441,
+    "firing_tokens": 5,
+    "token_count": 2036,
+    "firing_rate": 0.002455795677799607,
+    "max_activation": 1.8515625,
+    "absolute_rate_difference": 0.01866404715127701,
+    "selected": false
+   },
+   {
+    "unit": 465,
+    "firing_tokens": 663,
+    "token_count": 2036,
+    "firing_rate": 0.3256385068762279,
+    "max_activation": 0.5859375,
+    "absolute_rate_difference": 0.3045186640471513,
+    "selected": false
+   },
+   {
+    "unit": 472,
+    "firing_tokens": 7,
+    "token_count": 2036,
+    "firing_rate": 0.00343811394891945,
+    "max_activation": 0.91015625,
+    "absolute_rate_difference": 0.01768172888015717,
+    "selected": false
+   },
+   {
+    "unit": 499,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 0.9375,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 507,
+    "firing_tokens": 35,
+    "token_count": 2036,
+    "firing_rate": 0.01719056974459725,
+    "max_activation": 1.28125,
+    "absolute_rate_difference": 0.003929273084479368,
+    "selected": false
+   },
+   {
+    "unit": 508,
+    "firing_tokens": 661,
+    "token_count": 2036,
+    "firing_rate": 0.32465618860510803,
+    "max_activation": 0.78125,
+    "absolute_rate_difference": 0.3035363457760314,
+    "selected": false
+   },
+   {
+    "unit": 510,
+    "firing_tokens": 17,
+    "token_count": 2036,
+    "firing_rate": 0.008349705304518664,
+    "max_activation": 0.9453125,
+    "absolute_rate_difference": 0.012770137524557955,
+    "selected": false
+   },
+   {
+    "unit": 539,
+    "firing_tokens": 19,
+    "token_count": 2036,
+    "firing_rate": 0.009332023575638507,
+    "max_activation": 5.71875,
+    "absolute_rate_difference": 0.011787819253438112,
+    "selected": false
+   },
+   {
+    "unit": 542,
+    "firing_tokens": 7,
+    "token_count": 2036,
+    "firing_rate": 0.00343811394891945,
+    "max_activation": 2.125,
+    "absolute_rate_difference": 0.01768172888015717,
+    "selected": false
+   },
+   {
+    "unit": 548,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 3.46875,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 570,
+    "firing_tokens": 319,
+    "token_count": 2036,
+    "firing_rate": 0.15667976424361493,
+    "max_activation": 0.443359375,
+    "absolute_rate_difference": 0.13555992141453832,
+    "selected": false
+   },
+   {
+    "unit": 645,
+    "firing_tokens": 25,
+    "token_count": 2036,
+    "firing_rate": 0.012278978388998035,
+    "max_activation": 1.03125,
+    "absolute_rate_difference": 0.008840864440078585,
+    "selected": false
+   },
+   {
+    "unit": 650,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 2.203125,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 677,
+    "firing_tokens": 17,
+    "token_count": 2036,
+    "firing_rate": 0.008349705304518664,
+    "max_activation": 1.1328125,
+    "absolute_rate_difference": 0.012770137524557955,
+    "selected": false
+   },
+   {
+    "unit": 692,
+    "firing_tokens": 7,
+    "token_count": 2036,
+    "firing_rate": 0.00343811394891945,
+    "max_activation": 1.1640625,
+    "absolute_rate_difference": 0.01768172888015717,
+    "selected": false
+   },
+   {
+    "unit": 761,
+    "firing_tokens": 22,
+    "token_count": 2036,
+    "firing_rate": 0.010805500982318271,
+    "max_activation": 0.671875,
+    "absolute_rate_difference": 0.010314341846758349,
+    "selected": false
+   },
+   {
+    "unit": 843,
+    "firing_tokens": 57,
+    "token_count": 2036,
+    "firing_rate": 0.027996070726915522,
+    "max_activation": 0.828125,
+    "absolute_rate_difference": 0.0068762278978389026,
+    "selected": false
+   },
+   {
+    "unit": 861,
+    "firing_tokens": 5,
+    "token_count": 2036,
+    "firing_rate": 0.002455795677799607,
+    "max_activation": 1.0234375,
+    "absolute_rate_difference": 0.01866404715127701,
+    "selected": false
+   },
+   {
+    "unit": 917,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 0.5859375,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 937,
+    "firing_tokens": 18,
+    "token_count": 2036,
+    "firing_rate": 0.008840864440078585,
+    "max_activation": 0.53515625,
+    "absolute_rate_difference": 0.012278978388998035,
+    "selected": false
+   },
+   {
+    "unit": 943,
+    "firing_tokens": 64,
+    "token_count": 2036,
+    "firing_rate": 0.03143418467583497,
+    "max_activation": 2.40625,
+    "absolute_rate_difference": 0.010314341846758349,
+    "selected": false
+   },
+   {
+    "unit": 1012,
+    "firing_tokens": 11,
+    "token_count": 2036,
+    "firing_rate": 0.0054027504911591355,
+    "max_activation": 0.64453125,
+    "absolute_rate_difference": 0.015717092337917484,
+    "selected": false
+   },
+   {
+    "unit": 1020,
+    "firing_tokens": 11,
+    "token_count": 2036,
+    "firing_rate": 0.0054027504911591355,
+    "max_activation": 0.96875,
+    "absolute_rate_difference": 0.015717092337917484,
+    "selected": false
+   },
+   {
+    "unit": 1022,
+    "firing_tokens": 7,
+    "token_count": 2036,
+    "firing_rate": 0.00343811394891945,
+    "max_activation": 1.3203125,
+    "absolute_rate_difference": 0.01768172888015717,
+    "selected": false
+   },
+   {
+    "unit": 1037,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 6.65625,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 1038,
+    "firing_tokens": 6,
+    "token_count": 2036,
+    "firing_rate": 0.0029469548133595285,
+    "max_activation": 1.671875,
+    "absolute_rate_difference": 0.018172888015717092,
+    "selected": false
+   },
+   {
+    "unit": 1041,
+    "firing_tokens": 10,
+    "token_count": 2036,
+    "firing_rate": 0.004911591355599214,
+    "max_activation": 0.8515625,
+    "absolute_rate_difference": 0.016208251473477406,
+    "selected": false
+   },
+   {
+    "unit": 1056,
+    "firing_tokens": 118,
+    "token_count": 2036,
+    "firing_rate": 0.05795677799607073,
+    "max_activation": 0.365234375,
+    "absolute_rate_difference": 0.03683693516699411,
+    "selected": false
+   },
+   {
+    "unit": 1085,
+    "firing_tokens": 6,
+    "token_count": 2036,
+    "firing_rate": 0.0029469548133595285,
+    "max_activation": 5.71875,
+    "absolute_rate_difference": 0.018172888015717092,
+    "selected": false
+   },
+   {
+    "unit": 1123,
+    "firing_tokens": 9,
+    "token_count": 2036,
+    "firing_rate": 0.0044204322200392925,
+    "max_activation": 0.640625,
+    "absolute_rate_difference": 0.016699410609037325,
+    "selected": false
+   },
+   {
+    "unit": 1150,
+    "firing_tokens": 7,
+    "token_count": 2036,
+    "firing_rate": 0.00343811394891945,
+    "max_activation": 1.4453125,
+    "absolute_rate_difference": 0.01768172888015717,
+    "selected": false
+   },
+   {
+    "unit": 1159,
+    "firing_tokens": 18,
+    "token_count": 2036,
+    "firing_rate": 0.008840864440078585,
+    "max_activation": 3.296875,
+    "absolute_rate_difference": 0.012278978388998035,
+    "selected": false
+   },
+   {
+    "unit": 1171,
+    "firing_tokens": 116,
+    "token_count": 2036,
+    "firing_rate": 0.05697445972495088,
+    "max_activation": 0.353515625,
+    "absolute_rate_difference": 0.03585461689587426,
+    "selected": false
+   },
+   {
+    "unit": 1256,
+    "firing_tokens": 117,
+    "token_count": 2036,
+    "firing_rate": 0.057465618860510805,
+    "max_activation": 0.380859375,
+    "absolute_rate_difference": 0.036345776031434185,
+    "selected": false
+   },
+   {
+    "unit": 1271,
+    "firing_tokens": 61,
+    "token_count": 2036,
+    "firing_rate": 0.029960707269155205,
+    "max_activation": 0.3515625,
+    "absolute_rate_difference": 0.008840864440078585,
+    "selected": false
+   },
+   {
+    "unit": 1280,
+    "firing_tokens": 10,
+    "token_count": 2036,
+    "firing_rate": 0.004911591355599214,
+    "max_activation": 0.78125,
+    "absolute_rate_difference": 0.016208251473477406,
+    "selected": false
+   },
+   {
+    "unit": 1288,
+    "firing_tokens": 5,
+    "token_count": 2036,
+    "firing_rate": 0.002455795677799607,
+    "max_activation": 1.2734375,
+    "absolute_rate_difference": 0.01866404715127701,
+    "selected": false
+   },
+   {
+    "unit": 1291,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 12.25,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 1315,
+    "firing_tokens": 188,
+    "token_count": 2036,
+    "firing_rate": 0.09233791748526522,
+    "max_activation": 0.625,
+    "absolute_rate_difference": 0.0712180746561886,
+    "selected": false
+   },
+   {
+    "unit": 1344,
+    "firing_tokens": 66,
+    "token_count": 2036,
+    "firing_rate": 0.03241650294695481,
+    "max_activation": 0.2890625,
+    "absolute_rate_difference": 0.011296660117878193,
+    "selected": false
+   },
+   {
+    "unit": 1353,
+    "firing_tokens": 7,
+    "token_count": 2036,
+    "firing_rate": 0.00343811394891945,
+    "max_activation": 1.03125,
+    "absolute_rate_difference": 0.01768172888015717,
+    "selected": false
+   },
+   {
+    "unit": 1357,
+    "firing_tokens": 9,
+    "token_count": 2036,
+    "firing_rate": 0.0044204322200392925,
+    "max_activation": 0.8203125,
+    "absolute_rate_difference": 0.016699410609037325,
+    "selected": false
+   },
+   {
+    "unit": 1363,
+    "firing_tokens": 5,
+    "token_count": 2036,
+    "firing_rate": 0.002455795677799607,
+    "max_activation": 1.5859375,
+    "absolute_rate_difference": 0.01866404715127701,
+    "selected": false
+   },
+   {
+    "unit": 1433,
+    "firing_tokens": 44,
+    "token_count": 2036,
+    "firing_rate": 0.021611001964636542,
+    "max_activation": 0.85546875,
+    "absolute_rate_difference": 0.0004911591355599224,
+    "selected": true
+   },
+   {
+    "unit": 1445,
+    "firing_tokens": 80,
+    "token_count": 2036,
+    "firing_rate": 0.03929273084479371,
+    "max_activation": 0.64453125,
+    "absolute_rate_difference": 0.018172888015717092,
+    "selected": false
+   },
+   {
+    "unit": 1453,
+    "firing_tokens": 47,
+    "token_count": 2036,
+    "firing_rate": 0.023084479371316306,
+    "max_activation": 0.380859375,
+    "absolute_rate_difference": 0.001964636542239686,
+    "selected": true
+   },
+   {
+    "unit": 1460,
+    "firing_tokens": 109,
+    "token_count": 2036,
+    "firing_rate": 0.05353634577603143,
+    "max_activation": 0.43359375,
+    "absolute_rate_difference": 0.03241650294695481,
+    "selected": false
+   },
+   {
+    "unit": 1467,
+    "firing_tokens": 6,
+    "token_count": 2036,
+    "firing_rate": 0.0029469548133595285,
+    "max_activation": 4.65625,
+    "absolute_rate_difference": 0.018172888015717092,
+    "selected": false
+   },
+   {
+    "unit": 1501,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 0.83203125,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 1510,
+    "firing_tokens": 6,
+    "token_count": 2036,
+    "firing_rate": 0.0029469548133595285,
+    "max_activation": 6.09375,
+    "absolute_rate_difference": 0.018172888015717092,
+    "selected": false
+   },
+   {
+    "unit": 1528,
+    "firing_tokens": 11,
+    "token_count": 2036,
+    "firing_rate": 0.0054027504911591355,
+    "max_activation": 0.84765625,
+    "absolute_rate_difference": 0.015717092337917484,
+    "selected": false
+   },
+   {
+    "unit": 1540,
+    "firing_tokens": 81,
+    "token_count": 2036,
+    "firing_rate": 0.039783889980353634,
+    "max_activation": 0.36328125,
+    "absolute_rate_difference": 0.018664047151277015,
+    "selected": false
+   },
+   {
+    "unit": 1582,
+    "firing_tokens": 23,
+    "token_count": 2036,
+    "firing_rate": 0.011296660117878193,
+    "max_activation": 1.109375,
+    "absolute_rate_difference": 0.009823182711198426,
+    "selected": false
+   },
+   {
+    "unit": 1587,
+    "firing_tokens": 5,
+    "token_count": 2036,
+    "firing_rate": 0.002455795677799607,
+    "max_activation": 1.6015625,
+    "absolute_rate_difference": 0.01866404715127701,
+    "selected": false
+   },
+   {
+    "unit": 1588,
+    "firing_tokens": 15,
+    "token_count": 2036,
+    "firing_rate": 0.0073673870333988214,
+    "max_activation": 0.53515625,
+    "absolute_rate_difference": 0.013752455795677798,
+    "selected": false
+   },
+   {
+    "unit": 1603,
+    "firing_tokens": 6,
+    "token_count": 2036,
+    "firing_rate": 0.0029469548133595285,
+    "max_activation": 1.265625,
+    "absolute_rate_difference": 0.018172888015717092,
+    "selected": false
+   },
+   {
+    "unit": 1615,
+    "firing_tokens": 14,
+    "token_count": 2036,
+    "firing_rate": 0.0068762278978389,
+    "max_activation": 0.5,
+    "absolute_rate_difference": 0.01424361493123772,
+    "selected": false
+   },
+   {
+    "unit": 1642,
+    "firing_tokens": 6,
+    "token_count": 2036,
+    "firing_rate": 0.0029469548133595285,
+    "max_activation": 1.21875,
+    "absolute_rate_difference": 0.018172888015717092,
+    "selected": false
+   },
+   {
+    "unit": 1649,
+    "firing_tokens": 14,
+    "token_count": 2036,
+    "firing_rate": 0.0068762278978389,
+    "max_activation": 0.80078125,
+    "absolute_rate_difference": 0.01424361493123772,
+    "selected": false
+   },
+   {
+    "unit": 1657,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 0.54296875,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 1696,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 0.8359375,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 1729,
+    "firing_tokens": 6,
+    "token_count": 2036,
+    "firing_rate": 0.0029469548133595285,
+    "max_activation": 1.5625,
+    "absolute_rate_difference": 0.018172888015717092,
+    "selected": false
+   },
+   {
+    "unit": 1767,
+    "firing_tokens": 7,
+    "token_count": 2036,
+    "firing_rate": 0.00343811394891945,
+    "max_activation": 1.609375,
+    "absolute_rate_difference": 0.01768172888015717,
+    "selected": false
+   },
+   {
+    "unit": 1771,
+    "firing_tokens": 67,
+    "token_count": 2036,
+    "firing_rate": 0.032907662082514735,
+    "max_activation": 0.330078125,
+    "absolute_rate_difference": 0.011787819253438116,
+    "selected": false
+   },
+   {
+    "unit": 1803,
+    "firing_tokens": 5,
+    "token_count": 2036,
+    "firing_rate": 0.002455795677799607,
+    "max_activation": 0.60546875,
+    "absolute_rate_difference": 0.01866404715127701,
+    "selected": false
+   },
+   {
+    "unit": 1818,
+    "firing_tokens": 44,
+    "token_count": 2036,
+    "firing_rate": 0.021611001964636542,
+    "max_activation": 0.2119140625,
+    "absolute_rate_difference": 0.0004911591355599224,
+    "selected": true
+   },
+   {
+    "unit": 1837,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 0.953125,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 1839,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 1.1015625,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 1847,
+    "firing_tokens": 22,
+    "token_count": 2036,
+    "firing_rate": 0.010805500982318271,
+    "max_activation": 0.451171875,
+    "absolute_rate_difference": 0.010314341846758349,
+    "selected": false
+   },
+   {
+    "unit": 1863,
+    "firing_tokens": 64,
+    "token_count": 2036,
+    "firing_rate": 0.03143418467583497,
+    "max_activation": 0.376953125,
+    "absolute_rate_difference": 0.010314341846758349,
+    "selected": false
+   },
+   {
+    "unit": 1878,
+    "firing_tokens": 12,
+    "token_count": 2036,
+    "firing_rate": 0.005893909626719057,
+    "max_activation": 1.0,
+    "absolute_rate_difference": 0.015225933202357562,
+    "selected": false
+   },
+   {
+    "unit": 1918,
+    "firing_tokens": 7,
+    "token_count": 2036,
+    "firing_rate": 0.00343811394891945,
+    "max_activation": 1.9453125,
+    "absolute_rate_difference": 0.01768172888015717,
+    "selected": false
+   },
+   {
+    "unit": 1921,
+    "firing_tokens": 82,
+    "token_count": 2036,
+    "firing_rate": 0.04027504911591356,
+    "max_activation": 0.5625,
+    "absolute_rate_difference": 0.019155206286836937,
+    "selected": false
+   },
+   {
+    "unit": 1923,
+    "firing_tokens": 9,
+    "token_count": 2036,
+    "firing_rate": 0.0044204322200392925,
+    "max_activation": 1.1953125,
+    "absolute_rate_difference": 0.016699410609037325,
+    "selected": false
+   },
+   {
+    "unit": 1938,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 0.91796875,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 1953,
+    "firing_tokens": 73,
+    "token_count": 2036,
+    "firing_rate": 0.03585461689587426,
+    "max_activation": 0.5078125,
+    "absolute_rate_difference": 0.014734774066797643,
+    "selected": false
+   },
+   {
+    "unit": 1960,
+    "firing_tokens": 43,
+    "token_count": 2036,
+    "firing_rate": 0.02111984282907662,
+    "max_activation": 0.55078125,
+    "absolute_rate_difference": 0.0,
+    "selected": true
+   },
+   {
+    "unit": 1964,
+    "firing_tokens": 15,
+    "token_count": 2036,
+    "firing_rate": 0.0073673870333988214,
+    "max_activation": 2.109375,
+    "absolute_rate_difference": 0.013752455795677798,
+    "selected": false
+   },
+   {
+    "unit": 2018,
+    "firing_tokens": 41,
+    "token_count": 2036,
+    "firing_rate": 0.02013752455795678,
+    "max_activation": 0.412109375,
+    "absolute_rate_difference": 0.0009823182711198412,
+    "selected": true
+   },
+   {
+    "unit": 2024,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 3.28125,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 2029,
+    "firing_tokens": 59,
+    "token_count": 2036,
+    "firing_rate": 0.028978388998035363,
+    "max_activation": 0.35546875,
+    "absolute_rate_difference": 0.007858546168958744,
+    "selected": false
+   },
+   {
+    "unit": 2034,
+    "firing_tokens": 8,
+    "token_count": 2036,
+    "firing_rate": 0.003929273084479371,
+    "max_activation": 2.15625,
+    "absolute_rate_difference": 0.017190569744597248,
+    "selected": false
+   },
+   {
+    "unit": 2061,
+    "firing_tokens": 30,
+    "token_count": 2036,
+    "firing_rate": 0.014734774066797643,
+    "max_activation": 0.4921875,
+    "absolute_rate_difference": 0.006385068762278977,
+    "selected": false
+   },
+   {
+    "unit": 2100,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 2.140625,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 2101,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 2.0625,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 2115,
+    "firing_tokens": 146,
+    "token_count": 2036,
+    "firing_rate": 0.07170923379174853,
+    "max_activation": 0.68359375,
+    "absolute_rate_difference": 0.050589390962671905,
+    "selected": false
+   },
+   {
+    "unit": 2132,
+    "firing_tokens": 7,
+    "token_count": 2036,
+    "firing_rate": 0.00343811394891945,
+    "max_activation": 0.97265625,
+    "absolute_rate_difference": 0.01768172888015717,
+    "selected": false
+   },
+   {
+    "unit": 2153,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 1.6171875,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 2155,
+    "firing_tokens": 134,
+    "token_count": 2036,
+    "firing_rate": 0.06581532416502947,
+    "max_activation": 0.44140625,
+    "absolute_rate_difference": 0.04469548133595285,
+    "selected": false
+   },
+   {
+    "unit": 2178,
+    "firing_tokens": 24,
+    "token_count": 2036,
+    "firing_rate": 0.011787819253438114,
+    "max_activation": 0.74609375,
+    "absolute_rate_difference": 0.009332023575638506,
+    "selected": false
+   },
+   {
+    "unit": 2218,
+    "firing_tokens": 69,
+    "token_count": 2036,
+    "firing_rate": 0.03388998035363458,
+    "max_activation": 0.41015625,
+    "absolute_rate_difference": 0.01277013752455796,
+    "selected": false
+   },
+   {
+    "unit": 2249,
+    "firing_tokens": 33,
+    "token_count": 2036,
+    "firing_rate": 0.016208251473477406,
+    "max_activation": 0.33203125,
+    "absolute_rate_difference": 0.004911591355599213,
+    "selected": false
+   },
+   {
+    "unit": 2250,
+    "firing_tokens": 106,
+    "token_count": 2036,
+    "firing_rate": 0.05206286836935167,
+    "max_activation": 0.310546875,
+    "absolute_rate_difference": 0.030943025540275053,
+    "selected": false
+   },
+   {
+    "unit": 2262,
+    "firing_tokens": 43,
+    "token_count": 2036,
+    "firing_rate": 0.02111984282907662,
+    "max_activation": 0.64453125,
+    "absolute_rate_difference": 0.0,
+    "selected": true
+   },
+   {
+    "unit": 2278,
+    "firing_tokens": 175,
+    "token_count": 2036,
+    "firing_rate": 0.08595284872298625,
+    "max_activation": 0.474609375,
+    "absolute_rate_difference": 0.06483300589390964,
+    "selected": false
+   },
+   {
+    "unit": 2306,
+    "firing_tokens": 16,
+    "token_count": 2036,
+    "firing_rate": 0.007858546168958742,
+    "max_activation": 1.5,
+    "absolute_rate_difference": 0.013261296660117878,
+    "selected": false
+   },
+   {
+    "unit": 2377,
+    "firing_tokens": 24,
+    "token_count": 2036,
+    "firing_rate": 0.011787819253438114,
+    "max_activation": 0.431640625,
+    "absolute_rate_difference": 0.009332023575638506,
+    "selected": false
+   },
+   {
+    "unit": 2407,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 2.09375,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 2412,
+    "firing_tokens": 50,
+    "token_count": 2036,
+    "firing_rate": 0.02455795677799607,
+    "max_activation": 0.458984375,
+    "absolute_rate_difference": 0.0034381139489194495,
+    "selected": false
+   },
+   {
+    "unit": 2440,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 1.3671875,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 2443,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 1.59375,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 2453,
+    "firing_tokens": 38,
+    "token_count": 2036,
+    "firing_rate": 0.018664047151277015,
+    "max_activation": 0.71484375,
+    "absolute_rate_difference": 0.002455795677799605,
+    "selected": false
+   },
+   {
+    "unit": 2458,
+    "firing_tokens": 10,
+    "token_count": 2036,
+    "firing_rate": 0.004911591355599214,
+    "max_activation": 1.6015625,
+    "absolute_rate_difference": 0.016208251473477406,
+    "selected": false
+   },
+   {
+    "unit": 2504,
+    "firing_tokens": 6,
+    "token_count": 2036,
+    "firing_rate": 0.0029469548133595285,
+    "max_activation": 1.4296875,
+    "absolute_rate_difference": 0.018172888015717092,
+    "selected": false
+   },
+   {
+    "unit": 2524,
+    "firing_tokens": 83,
+    "token_count": 2036,
+    "firing_rate": 0.04076620825147348,
+    "max_activation": 0.423828125,
+    "absolute_rate_difference": 0.01964636542239686,
+    "selected": false
+   },
+   {
+    "unit": 2534,
+    "firing_tokens": 9,
+    "token_count": 2036,
+    "firing_rate": 0.0044204322200392925,
+    "max_activation": 0.8671875,
+    "absolute_rate_difference": 0.016699410609037325,
+    "selected": false
+   },
+   {
+    "unit": 2550,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 3.765625,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 2592,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 1.4921875,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 2593,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 2.703125,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 2594,
+    "firing_tokens": 55,
+    "token_count": 2036,
+    "firing_rate": 0.027013752455795677,
+    "max_activation": 0.359375,
+    "absolute_rate_difference": 0.005893909626719058,
+    "selected": false
+   },
+   {
+    "unit": 2612,
+    "firing_tokens": 26,
+    "token_count": 2036,
+    "firing_rate": 0.012770137524557957,
+    "max_activation": 0.310546875,
+    "absolute_rate_difference": 0.008349705304518663,
+    "selected": false
+   },
+   {
+    "unit": 2629,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 2.640625,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 2674,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 1.03125,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 2686,
+    "firing_tokens": 12,
+    "token_count": 2036,
+    "firing_rate": 0.005893909626719057,
+    "max_activation": 0.71484375,
+    "absolute_rate_difference": 0.015225933202357562,
+    "selected": false
+   },
+   {
+    "unit": 2702,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 1.359375,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 2718,
+    "firing_tokens": 12,
+    "token_count": 2036,
+    "firing_rate": 0.005893909626719057,
+    "max_activation": 0.546875,
+    "absolute_rate_difference": 0.015225933202357562,
+    "selected": false
+   },
+   {
+    "unit": 2740,
+    "firing_tokens": 65,
+    "token_count": 2036,
+    "firing_rate": 0.03192534381139489,
+    "max_activation": 0.4375,
+    "absolute_rate_difference": 0.010805500982318271,
+    "selected": false
+   },
+   {
+    "unit": 2747,
+    "firing_tokens": 84,
+    "token_count": 2036,
+    "firing_rate": 0.0412573673870334,
+    "max_activation": 0.443359375,
+    "absolute_rate_difference": 0.020137524557956782,
+    "selected": false
+   },
+   {
+    "unit": 2769,
+    "firing_tokens": 16,
+    "token_count": 2036,
+    "firing_rate": 0.007858546168958742,
+    "max_activation": 0.984375,
+    "absolute_rate_difference": 0.013261296660117878,
+    "selected": false
+   },
+   {
+    "unit": 2774,
+    "firing_tokens": 16,
+    "token_count": 2036,
+    "firing_rate": 0.007858546168958742,
+    "max_activation": 0.474609375,
+    "absolute_rate_difference": 0.013261296660117878,
+    "selected": false
+   },
+   {
+    "unit": 2809,
+    "firing_tokens": 48,
+    "token_count": 2036,
+    "firing_rate": 0.023575638506876228,
+    "max_activation": 0.49609375,
+    "absolute_rate_difference": 0.0024557956777996083,
+    "selected": false
+   },
+   {
+    "unit": 2815,
+    "firing_tokens": 12,
+    "token_count": 2036,
+    "firing_rate": 0.005893909626719057,
+    "max_activation": 0.498046875,
+    "absolute_rate_difference": 0.015225933202357562,
+    "selected": false
+   },
+   {
+    "unit": 2826,
+    "firing_tokens": 81,
+    "token_count": 2036,
+    "firing_rate": 0.039783889980353634,
+    "max_activation": 0.349609375,
+    "absolute_rate_difference": 0.018664047151277015,
+    "selected": false
+   },
+   {
+    "unit": 2843,
+    "firing_tokens": 8,
+    "token_count": 2036,
+    "firing_rate": 0.003929273084479371,
+    "max_activation": 1.203125,
+    "absolute_rate_difference": 0.017190569744597248,
+    "selected": false
+   },
+   {
+    "unit": 2846,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 1.9453125,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 2854,
+    "firing_tokens": 9,
+    "token_count": 2036,
+    "firing_rate": 0.0044204322200392925,
+    "max_activation": 1.4765625,
+    "absolute_rate_difference": 0.016699410609037325,
+    "selected": false
+   },
+   {
+    "unit": 2872,
+    "firing_tokens": 6,
+    "token_count": 2036,
+    "firing_rate": 0.0029469548133595285,
+    "max_activation": 0.91796875,
+    "absolute_rate_difference": 0.018172888015717092,
+    "selected": false
+   },
+   {
+    "unit": 2901,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 1.8828125,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 2939,
+    "firing_tokens": 6,
+    "token_count": 2036,
+    "firing_rate": 0.0029469548133595285,
+    "max_activation": 0.75390625,
+    "absolute_rate_difference": 0.018172888015717092,
+    "selected": false
+   },
+   {
+    "unit": 2949,
+    "firing_tokens": 93,
+    "token_count": 2036,
+    "firing_rate": 0.04567779960707269,
+    "max_activation": 0.45703125,
+    "absolute_rate_difference": 0.02455795677799607,
+    "selected": false
+   },
+   {
+    "unit": 3000,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 0.6953125,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 3001,
+    "firing_tokens": 9,
+    "token_count": 2036,
+    "firing_rate": 0.0044204322200392925,
+    "max_activation": 0.50390625,
+    "absolute_rate_difference": 0.016699410609037325,
+    "selected": false
+   },
+   {
+    "unit": 3036,
+    "firing_tokens": 12,
+    "token_count": 2036,
+    "firing_rate": 0.005893909626719057,
+    "max_activation": 0.78125,
+    "absolute_rate_difference": 0.015225933202357562,
+    "selected": false
+   },
+   {
+    "unit": 3039,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 2.03125,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 3050,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 1.7109375,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 3056,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 1.09375,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 3059,
+    "firing_tokens": 30,
+    "token_count": 2036,
+    "firing_rate": 0.014734774066797643,
+    "max_activation": 0.349609375,
+    "absolute_rate_difference": 0.006385068762278977,
+    "selected": false
+   },
+   {
+    "unit": 3077,
+    "firing_tokens": 8,
+    "token_count": 2036,
+    "firing_rate": 0.003929273084479371,
+    "max_activation": 0.58203125,
+    "absolute_rate_difference": 0.017190569744597248,
+    "selected": false
+   },
+   {
+    "unit": 3090,
+    "firing_tokens": 83,
+    "token_count": 2036,
+    "firing_rate": 0.04076620825147348,
+    "max_activation": 0.462890625,
+    "absolute_rate_difference": 0.01964636542239686,
+    "selected": false
+   },
+   {
+    "unit": 3091,
+    "firing_tokens": 212,
+    "token_count": 2036,
+    "firing_rate": 0.10412573673870335,
+    "max_activation": 0.408203125,
+    "absolute_rate_difference": 0.08300589390962673,
+    "selected": false
+   },
+   {
+    "unit": 3111,
+    "firing_tokens": 6,
+    "token_count": 2036,
+    "firing_rate": 0.0029469548133595285,
+    "max_activation": 0.6796875,
+    "absolute_rate_difference": 0.018172888015717092,
+    "selected": false
+   },
+   {
+    "unit": 3138,
+    "firing_tokens": 9,
+    "token_count": 2036,
+    "firing_rate": 0.0044204322200392925,
+    "max_activation": 0.92578125,
+    "absolute_rate_difference": 0.016699410609037325,
+    "selected": false
+   },
+   {
+    "unit": 3160,
+    "firing_tokens": 22,
+    "token_count": 2036,
+    "firing_rate": 0.010805500982318271,
+    "max_activation": 0.341796875,
+    "absolute_rate_difference": 0.010314341846758349,
+    "selected": false
+   },
+   {
+    "unit": 3191,
+    "firing_tokens": 73,
+    "token_count": 2036,
+    "firing_rate": 0.03585461689587426,
+    "max_activation": 0.333984375,
+    "absolute_rate_difference": 0.014734774066797643,
+    "selected": false
+   },
+   {
+    "unit": 3224,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 1.6484375,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 3227,
+    "firing_tokens": 31,
+    "token_count": 2036,
+    "firing_rate": 0.015225933202357564,
+    "max_activation": 0.42578125,
+    "absolute_rate_difference": 0.005893909626719056,
+    "selected": false
+   },
+   {
+    "unit": 3233,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 0.85546875,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 3255,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 1.234375,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 3262,
+    "firing_tokens": 5,
+    "token_count": 2036,
+    "firing_rate": 0.002455795677799607,
+    "max_activation": 1.234375,
+    "absolute_rate_difference": 0.01866404715127701,
+    "selected": false
+   },
+   {
+    "unit": 3268,
+    "firing_tokens": 6,
+    "token_count": 2036,
+    "firing_rate": 0.0029469548133595285,
+    "max_activation": 2.34375,
+    "absolute_rate_difference": 0.018172888015717092,
+    "selected": false
+   },
+   {
+    "unit": 3280,
+    "firing_tokens": 94,
+    "token_count": 2036,
+    "firing_rate": 0.04616895874263261,
+    "max_activation": 0.482421875,
+    "absolute_rate_difference": 0.02504911591355599,
+    "selected": false
+   },
+   {
+    "unit": 3285,
+    "firing_tokens": 308,
+    "token_count": 2036,
+    "firing_rate": 0.1512770137524558,
+    "max_activation": 0.5859375,
+    "absolute_rate_difference": 0.1301571709233792,
+    "selected": false
+   },
+   {
+    "unit": 3294,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 0.76953125,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 3313,
+    "firing_tokens": 10,
+    "token_count": 2036,
+    "firing_rate": 0.004911591355599214,
+    "max_activation": 1.2109375,
+    "absolute_rate_difference": 0.016208251473477406,
+    "selected": false
+   },
+   {
+    "unit": 3325,
+    "firing_tokens": 36,
+    "token_count": 2036,
+    "firing_rate": 0.01768172888015717,
+    "max_activation": 0.4609375,
+    "absolute_rate_difference": 0.0034381139489194495,
+    "selected": false
+   },
+   {
+    "unit": 3328,
+    "firing_tokens": 8,
+    "token_count": 2036,
+    "firing_rate": 0.003929273084479371,
+    "max_activation": 2.703125,
+    "absolute_rate_difference": 0.017190569744597248,
+    "selected": false
+   },
+   {
+    "unit": 3338,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 1.0625,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 3372,
+    "firing_tokens": 16,
+    "token_count": 2036,
+    "firing_rate": 0.007858546168958742,
+    "max_activation": 0.91796875,
+    "absolute_rate_difference": 0.013261296660117878,
+    "selected": false
+   },
+   {
+    "unit": 3375,
+    "firing_tokens": 92,
+    "token_count": 2036,
+    "firing_rate": 0.04518664047151277,
+    "max_activation": 0.453125,
+    "absolute_rate_difference": 0.024066797642436154,
+    "selected": false
+   },
+   {
+    "unit": 3376,
+    "firing_tokens": 49,
+    "token_count": 2036,
+    "firing_rate": 0.02406679764243615,
+    "max_activation": 0.3671875,
+    "absolute_rate_difference": 0.0029469548133595307,
+    "selected": false
+   },
+   {
+    "unit": 3428,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 0.9140625,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 3439,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 2.078125,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 3449,
+    "firing_tokens": 6,
+    "token_count": 2036,
+    "firing_rate": 0.0029469548133595285,
+    "max_activation": 2.5625,
+    "absolute_rate_difference": 0.018172888015717092,
+    "selected": false
+   },
+   {
+    "unit": 3457,
+    "firing_tokens": 8,
+    "token_count": 2036,
+    "firing_rate": 0.003929273084479371,
+    "max_activation": 6.4375,
+    "absolute_rate_difference": 0.017190569744597248,
+    "selected": false
+   },
+   {
+    "unit": 3496,
+    "firing_tokens": 5,
+    "token_count": 2036,
+    "firing_rate": 0.002455795677799607,
+    "max_activation": 1.5546875,
+    "absolute_rate_difference": 0.01866404715127701,
+    "selected": false
+   },
+   {
+    "unit": 3580,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 1.6015625,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 3616,
+    "firing_tokens": 42,
+    "token_count": 2036,
+    "firing_rate": 0.0206286836935167,
+    "max_activation": 0.3828125,
+    "absolute_rate_difference": 0.0004911591355599189,
+    "selected": true
+   },
+   {
+    "unit": 3619,
+    "firing_tokens": 141,
+    "token_count": 2036,
+    "firing_rate": 0.06925343811394892,
+    "max_activation": 0.6796875,
+    "absolute_rate_difference": 0.0481335952848723,
+    "selected": false
+   },
+   {
+    "unit": 3648,
+    "firing_tokens": 13,
+    "token_count": 2036,
+    "firing_rate": 0.0063850687622789785,
+    "max_activation": 0.578125,
+    "absolute_rate_difference": 0.014734774066797641,
+    "selected": false
+   },
+   {
+    "unit": 3667,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 2.5,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 3678,
+    "firing_tokens": 12,
+    "token_count": 2036,
+    "firing_rate": 0.005893909626719057,
+    "max_activation": 0.60546875,
+    "absolute_rate_difference": 0.015225933202357562,
+    "selected": false
+   },
+   {
+    "unit": 3700,
+    "firing_tokens": 19,
+    "token_count": 2036,
+    "firing_rate": 0.009332023575638507,
+    "max_activation": 0.4609375,
+    "absolute_rate_difference": 0.011787819253438112,
+    "selected": false
+   },
+   {
+    "unit": 3735,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 0.73046875,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 3736,
+    "firing_tokens": 15,
+    "token_count": 2036,
+    "firing_rate": 0.0073673870333988214,
+    "max_activation": 0.671875,
+    "absolute_rate_difference": 0.013752455795677798,
+    "selected": false
+   },
+   {
+    "unit": 3822,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 2.453125,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 3844,
+    "firing_tokens": 8,
+    "token_count": 2036,
+    "firing_rate": 0.003929273084479371,
+    "max_activation": 1.8046875,
+    "absolute_rate_difference": 0.017190569744597248,
+    "selected": false
+   },
+   {
+    "unit": 3849,
+    "firing_tokens": 67,
+    "token_count": 2036,
+    "firing_rate": 0.032907662082514735,
+    "max_activation": 0.5546875,
+    "absolute_rate_difference": 0.011787819253438116,
+    "selected": false
+   },
+   {
+    "unit": 3866,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 3.71875,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 3876,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 1.9375,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 3891,
+    "firing_tokens": 54,
+    "token_count": 2036,
+    "firing_rate": 0.026522593320235755,
+    "max_activation": 0.431640625,
+    "absolute_rate_difference": 0.0054027504911591355,
+    "selected": false
+   },
+   {
+    "unit": 3892,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 1.234375,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 3922,
+    "firing_tokens": 86,
+    "token_count": 2036,
+    "firing_rate": 0.04223968565815324,
+    "max_activation": 0.3203125,
+    "absolute_rate_difference": 0.02111984282907662,
+    "selected": false
+   },
+   {
+    "unit": 3940,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 1.0078125,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 3970,
+    "firing_tokens": 141,
+    "token_count": 2036,
+    "firing_rate": 0.06925343811394892,
+    "max_activation": 0.5078125,
+    "absolute_rate_difference": 0.0481335952848723,
+    "selected": false
+   },
+   {
+    "unit": 3977,
+    "firing_tokens": 35,
+    "token_count": 2036,
+    "firing_rate": 0.01719056974459725,
+    "max_activation": 0.578125,
+    "absolute_rate_difference": 0.003929273084479368,
+    "selected": false
+   },
+   {
+    "unit": 3987,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 1.5546875,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 3991,
+    "firing_tokens": 81,
+    "token_count": 2036,
+    "firing_rate": 0.039783889980353634,
+    "max_activation": 0.36328125,
+    "absolute_rate_difference": 0.018664047151277015,
+    "selected": false
+   },
+   {
+    "unit": 3995,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 1.1953125,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 4025,
+    "firing_tokens": 49,
+    "token_count": 2036,
+    "firing_rate": 0.02406679764243615,
+    "max_activation": 0.373046875,
+    "absolute_rate_difference": 0.0029469548133595307,
+    "selected": false
+   },
+   {
+    "unit": 4028,
+    "firing_tokens": 58,
+    "token_count": 2036,
+    "firing_rate": 0.02848722986247544,
+    "max_activation": 0.57421875,
+    "absolute_rate_difference": 0.0073673870333988214,
+    "selected": false
+   },
+   {
+    "unit": 4058,
+    "firing_tokens": 7,
+    "token_count": 2036,
+    "firing_rate": 0.00343811394891945,
+    "max_activation": 0.73046875,
+    "absolute_rate_difference": 0.01768172888015717,
+    "selected": false
+   },
+   {
+    "unit": 4129,
+    "firing_tokens": 6,
+    "token_count": 2036,
+    "firing_rate": 0.0029469548133595285,
+    "max_activation": 1.1015625,
+    "absolute_rate_difference": 0.018172888015717092,
+    "selected": false
+   },
+   {
+    "unit": 4139,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 1.5,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 4159,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 1.0234375,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 4173,
+    "firing_tokens": 21,
+    "token_count": 2036,
+    "firing_rate": 0.01031434184675835,
+    "max_activation": 0.25,
+    "absolute_rate_difference": 0.01080550098231827,
+    "selected": false
+   },
+   {
+    "unit": 4195,
+    "firing_tokens": 11,
+    "token_count": 2036,
+    "firing_rate": 0.0054027504911591355,
+    "max_activation": 0.58203125,
+    "absolute_rate_difference": 0.015717092337917484,
+    "selected": false
+   },
+   {
+    "unit": 4234,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 3.609375,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 4248,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 2.0625,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 4270,
+    "firing_tokens": 6,
+    "token_count": 2036,
+    "firing_rate": 0.0029469548133595285,
+    "max_activation": 0.765625,
+    "absolute_rate_difference": 0.018172888015717092,
+    "selected": false
+   },
+   {
+    "unit": 4274,
+    "firing_tokens": 10,
+    "token_count": 2036,
+    "firing_rate": 0.004911591355599214,
+    "max_activation": 1.4375,
+    "absolute_rate_difference": 0.016208251473477406,
+    "selected": false
+   },
+   {
+    "unit": 4300,
+    "firing_tokens": 11,
+    "token_count": 2036,
+    "firing_rate": 0.0054027504911591355,
+    "max_activation": 0.53125,
+    "absolute_rate_difference": 0.015717092337917484,
+    "selected": false
+   },
+   {
+    "unit": 4411,
+    "firing_tokens": 57,
+    "token_count": 2036,
+    "firing_rate": 0.027996070726915522,
+    "max_activation": 0.52734375,
+    "absolute_rate_difference": 0.0068762278978389026,
+    "selected": false
+   },
+   {
+    "unit": 4430,
+    "firing_tokens": 136,
+    "token_count": 2036,
+    "firing_rate": 0.06679764243614932,
+    "max_activation": 0.388671875,
+    "absolute_rate_difference": 0.045677799607072696,
+    "selected": false
+   },
+   {
+    "unit": 4443,
+    "firing_tokens": 109,
+    "token_count": 2036,
+    "firing_rate": 0.05353634577603143,
+    "max_activation": 0.44921875,
+    "absolute_rate_difference": 0.03241650294695481,
+    "selected": false
+   },
+   {
+    "unit": 4469,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 0.828125,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 4487,
+    "firing_tokens": 12,
+    "token_count": 2036,
+    "firing_rate": 0.005893909626719057,
+    "max_activation": 1.6015625,
+    "absolute_rate_difference": 0.015225933202357562,
+    "selected": false
+   },
+   {
+    "unit": 4507,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 1.078125,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 4511,
+    "firing_tokens": 45,
+    "token_count": 2036,
+    "firing_rate": 0.022102161100196464,
+    "max_activation": 0.5234375,
+    "absolute_rate_difference": 0.0009823182711198447,
+    "selected": true
+   },
+   {
+    "unit": 4513,
+    "firing_tokens": 61,
+    "token_count": 2036,
+    "firing_rate": 0.029960707269155205,
+    "max_activation": 0.46875,
+    "absolute_rate_difference": 0.008840864440078585,
+    "selected": false
+   },
+   {
+    "unit": 4544,
+    "firing_tokens": 5,
+    "token_count": 2036,
+    "firing_rate": 0.002455795677799607,
+    "max_activation": 0.52734375,
+    "absolute_rate_difference": 0.01866404715127701,
+    "selected": false
+   },
+   {
+    "unit": 4551,
+    "firing_tokens": 9,
+    "token_count": 2036,
+    "firing_rate": 0.0044204322200392925,
+    "max_activation": 1.0390625,
+    "absolute_rate_difference": 0.016699410609037325,
+    "selected": false
+   },
+   {
+    "unit": 4584,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 1.9375,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 4585,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 1.890625,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 4595,
+    "firing_tokens": 9,
+    "token_count": 2036,
+    "firing_rate": 0.0044204322200392925,
+    "max_activation": 0.65625,
+    "absolute_rate_difference": 0.016699410609037325,
+    "selected": false
+   },
+   {
+    "unit": 4596,
+    "firing_tokens": 44,
+    "token_count": 2036,
+    "firing_rate": 0.021611001964636542,
+    "max_activation": 0.59375,
+    "absolute_rate_difference": 0.0004911591355599224,
+    "selected": true
+   },
+   {
+    "unit": 4616,
+    "firing_tokens": 8,
+    "token_count": 2036,
+    "firing_rate": 0.003929273084479371,
+    "max_activation": 0.9375,
+    "absolute_rate_difference": 0.017190569744597248,
+    "selected": false
+   },
+   {
+    "unit": 4618,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 8.0,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 4622,
+    "firing_tokens": 9,
+    "token_count": 2036,
+    "firing_rate": 0.0044204322200392925,
+    "max_activation": 0.97265625,
+    "absolute_rate_difference": 0.016699410609037325,
+    "selected": false
+   },
+   {
+    "unit": 4624,
+    "firing_tokens": 23,
+    "token_count": 2036,
+    "firing_rate": 0.011296660117878193,
+    "max_activation": 1.671875,
+    "absolute_rate_difference": 0.009823182711198426,
+    "selected": false
+   },
+   {
+    "unit": 4639,
+    "firing_tokens": 10,
+    "token_count": 2036,
+    "firing_rate": 0.004911591355599214,
+    "max_activation": 1.6875,
+    "absolute_rate_difference": 0.016208251473477406,
+    "selected": false
+   },
+   {
+    "unit": 4653,
+    "firing_tokens": 23,
+    "token_count": 2036,
+    "firing_rate": 0.011296660117878193,
+    "max_activation": 3.546875,
+    "absolute_rate_difference": 0.009823182711198426,
+    "selected": false
+   },
+   {
+    "unit": 4661,
+    "firing_tokens": 8,
+    "token_count": 2036,
+    "firing_rate": 0.003929273084479371,
+    "max_activation": 0.7578125,
+    "absolute_rate_difference": 0.017190569744597248,
+    "selected": false
+   },
+   {
+    "unit": 4685,
+    "firing_tokens": 52,
+    "token_count": 2036,
+    "firing_rate": 0.025540275049115914,
+    "max_activation": 0.37890625,
+    "absolute_rate_difference": 0.004420432220039294,
+    "selected": false
+   },
+   {
+    "unit": 4689,
+    "firing_tokens": 78,
+    "token_count": 2036,
+    "firing_rate": 0.03831041257367387,
+    "max_activation": 0.55078125,
+    "absolute_rate_difference": 0.017190569744597248,
+    "selected": false
+   },
+   {
+    "unit": 4701,
+    "firing_tokens": 36,
+    "token_count": 2036,
+    "firing_rate": 0.01768172888015717,
+    "max_activation": 0.5703125,
+    "absolute_rate_difference": 0.0034381139489194495,
+    "selected": false
+   },
+   {
+    "unit": 4716,
+    "firing_tokens": 5,
+    "token_count": 2036,
+    "firing_rate": 0.002455795677799607,
+    "max_activation": 1.4921875,
+    "absolute_rate_difference": 0.01866404715127701,
+    "selected": false
+   },
+   {
+    "unit": 4728,
+    "firing_tokens": 125,
+    "token_count": 2036,
+    "firing_rate": 0.061394891944990176,
+    "max_activation": 0.6015625,
+    "absolute_rate_difference": 0.04027504911591356,
+    "selected": false
+   },
+   {
+    "unit": 4736,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 1.203125,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 4739,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 1.390625,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 4760,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 5.125,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 4861,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 0.8671875,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 4937,
+    "firing_tokens": 9,
+    "token_count": 2036,
+    "firing_rate": 0.0044204322200392925,
+    "max_activation": 0.8671875,
+    "absolute_rate_difference": 0.016699410609037325,
+    "selected": false
+   },
+   {
+    "unit": 4940,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 1.8515625,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 4955,
+    "firing_tokens": 41,
+    "token_count": 2036,
+    "firing_rate": 0.02013752455795678,
+    "max_activation": 0.55078125,
+    "absolute_rate_difference": 0.0009823182711198412,
+    "selected": true
+   },
+   {
+    "unit": 4969,
+    "firing_tokens": 69,
+    "token_count": 2036,
+    "firing_rate": 0.03388998035363458,
+    "max_activation": 0.36328125,
+    "absolute_rate_difference": 0.01277013752455796,
+    "selected": false
+   },
+   {
+    "unit": 4973,
+    "firing_tokens": 12,
+    "token_count": 2036,
+    "firing_rate": 0.005893909626719057,
+    "max_activation": 0.60546875,
+    "absolute_rate_difference": 0.015225933202357562,
+    "selected": false
+   },
+   {
+    "unit": 4983,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 0.76171875,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 4987,
+    "firing_tokens": 6,
+    "token_count": 2036,
+    "firing_rate": 0.0029469548133595285,
+    "max_activation": 0.8125,
+    "absolute_rate_difference": 0.018172888015717092,
+    "selected": false
+   },
+   {
+    "unit": 4991,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 1.3828125,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 5013,
+    "firing_tokens": 5,
+    "token_count": 2036,
+    "firing_rate": 0.002455795677799607,
+    "max_activation": 1.90625,
+    "absolute_rate_difference": 0.01866404715127701,
+    "selected": false
+   },
+   {
+    "unit": 5021,
+    "firing_tokens": 10,
+    "token_count": 2036,
+    "firing_rate": 0.004911591355599214,
+    "max_activation": 1.03125,
+    "absolute_rate_difference": 0.016208251473477406,
+    "selected": false
+   },
+   {
+    "unit": 5041,
+    "firing_tokens": 5,
+    "token_count": 2036,
+    "firing_rate": 0.002455795677799607,
+    "max_activation": 1.1640625,
+    "absolute_rate_difference": 0.01866404715127701,
+    "selected": false
+   },
+   {
+    "unit": 5046,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 2.890625,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 5047,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 0.828125,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 5048,
+    "firing_tokens": 6,
+    "token_count": 2036,
+    "firing_rate": 0.0029469548133595285,
+    "max_activation": 1.0234375,
+    "absolute_rate_difference": 0.018172888015717092,
+    "selected": false
+   },
+   {
+    "unit": 5067,
+    "firing_tokens": 94,
+    "token_count": 2036,
+    "firing_rate": 0.04616895874263261,
+    "max_activation": 0.40625,
+    "absolute_rate_difference": 0.02504911591355599,
+    "selected": false
+   },
+   {
+    "unit": 5069,
+    "firing_tokens": 8,
+    "token_count": 2036,
+    "firing_rate": 0.003929273084479371,
+    "max_activation": 0.61328125,
+    "absolute_rate_difference": 0.017190569744597248,
+    "selected": false
+   },
+   {
+    "unit": 5073,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 1.3359375,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 5076,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 1.765625,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 5079,
+    "firing_tokens": 36,
+    "token_count": 2036,
+    "firing_rate": 0.01768172888015717,
+    "max_activation": 0.7109375,
+    "absolute_rate_difference": 0.0034381139489194495,
+    "selected": false
+   },
+   {
+    "unit": 5089,
+    "firing_tokens": 15,
+    "token_count": 2036,
+    "firing_rate": 0.0073673870333988214,
+    "max_activation": 0.75390625,
+    "absolute_rate_difference": 0.013752455795677798,
+    "selected": false
+   },
+   {
+    "unit": 5103,
+    "firing_tokens": 30,
+    "token_count": 2036,
+    "firing_rate": 0.014734774066797643,
+    "max_activation": 0.65625,
+    "absolute_rate_difference": 0.006385068762278977,
+    "selected": false
+   },
+   {
+    "unit": 5107,
+    "firing_tokens": 8,
+    "token_count": 2036,
+    "firing_rate": 0.003929273084479371,
+    "max_activation": 0.58984375,
+    "absolute_rate_difference": 0.017190569744597248,
+    "selected": false
+   },
+   {
+    "unit": 5144,
+    "firing_tokens": 36,
+    "token_count": 2036,
+    "firing_rate": 0.01768172888015717,
+    "max_activation": 0.33984375,
+    "absolute_rate_difference": 0.0034381139489194495,
+    "selected": false
+   },
+   {
+    "unit": 5167,
+    "firing_tokens": 12,
+    "token_count": 2036,
+    "firing_rate": 0.005893909626719057,
+    "max_activation": 1.3203125,
+    "absolute_rate_difference": 0.015225933202357562,
+    "selected": false
+   },
+   {
+    "unit": 5187,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 2.578125,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 5188,
+    "firing_tokens": 7,
+    "token_count": 2036,
+    "firing_rate": 0.00343811394891945,
+    "max_activation": 4.125,
+    "absolute_rate_difference": 0.01768172888015717,
+    "selected": false
+   },
+   {
+    "unit": 5204,
+    "firing_tokens": 152,
+    "token_count": 2036,
+    "firing_rate": 0.07465618860510806,
+    "max_activation": 0.380859375,
+    "absolute_rate_difference": 0.05353634577603144,
+    "selected": false
+   },
+   {
+    "unit": 5232,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 2.71875,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 5235,
+    "firing_tokens": 11,
+    "token_count": 2036,
+    "firing_rate": 0.0054027504911591355,
+    "max_activation": 2.03125,
+    "absolute_rate_difference": 0.015717092337917484,
+    "selected": false
+   },
+   {
+    "unit": 5239,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 1.0703125,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 5240,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 0.75,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 5245,
+    "firing_tokens": 14,
+    "token_count": 2036,
+    "firing_rate": 0.0068762278978389,
+    "max_activation": 0.96484375,
+    "absolute_rate_difference": 0.01424361493123772,
+    "selected": false
+   },
+   {
+    "unit": 5250,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 1.75,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 5260,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 0.74609375,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 5271,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 1.1640625,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 5274,
+    "firing_tokens": 90,
+    "token_count": 2036,
+    "firing_rate": 0.04420432220039293,
+    "max_activation": 0.46484375,
+    "absolute_rate_difference": 0.02308447937131631,
+    "selected": false
+   },
+   {
+    "unit": 5287,
+    "firing_tokens": 39,
+    "token_count": 2036,
+    "firing_rate": 0.019155206286836934,
+    "max_activation": 0.455078125,
+    "absolute_rate_difference": 0.001964636542239686,
+    "selected": true
+   },
+   {
+    "unit": 5306,
+    "firing_tokens": 96,
+    "token_count": 2036,
+    "firing_rate": 0.047151277013752456,
+    "max_activation": 0.3359375,
+    "absolute_rate_difference": 0.026031434184675836,
+    "selected": false
+   },
+   {
+    "unit": 5325,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 1.1875,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 5330,
+    "firing_tokens": 8,
+    "token_count": 2036,
+    "firing_rate": 0.003929273084479371,
+    "max_activation": 2.90625,
+    "absolute_rate_difference": 0.017190569744597248,
+    "selected": false
+   },
+   {
+    "unit": 5332,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 0.91796875,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 5355,
+    "firing_tokens": 39,
+    "token_count": 2036,
+    "firing_rate": 0.019155206286836934,
+    "max_activation": 0.43359375,
+    "absolute_rate_difference": 0.001964636542239686,
+    "selected": true
+   },
+   {
+    "unit": 5381,
+    "firing_tokens": 116,
+    "token_count": 2036,
+    "firing_rate": 0.05697445972495088,
+    "max_activation": 0.359375,
+    "absolute_rate_difference": 0.03585461689587426,
+    "selected": false
+   },
+   {
+    "unit": 5390,
+    "firing_tokens": 52,
+    "token_count": 2036,
+    "firing_rate": 0.025540275049115914,
+    "max_activation": 0.4296875,
+    "absolute_rate_difference": 0.004420432220039294,
+    "selected": false
+   },
+   {
+    "unit": 5399,
+    "firing_tokens": 12,
+    "token_count": 2036,
+    "firing_rate": 0.005893909626719057,
+    "max_activation": 0.404296875,
+    "absolute_rate_difference": 0.015225933202357562,
+    "selected": false
+   },
+   {
+    "unit": 5430,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 0.8671875,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 5448,
+    "firing_tokens": 14,
+    "token_count": 2036,
+    "firing_rate": 0.0068762278978389,
+    "max_activation": 1.1328125,
+    "absolute_rate_difference": 0.01424361493123772,
+    "selected": false
+   },
+   {
+    "unit": 5468,
+    "firing_tokens": 10,
+    "token_count": 2036,
+    "firing_rate": 0.004911591355599214,
+    "max_activation": 0.447265625,
+    "absolute_rate_difference": 0.016208251473477406,
+    "selected": false
+   },
+   {
+    "unit": 5482,
+    "firing_tokens": 86,
+    "token_count": 2036,
+    "firing_rate": 0.04223968565815324,
+    "max_activation": 0.45703125,
+    "absolute_rate_difference": 0.02111984282907662,
+    "selected": false
+   },
+   {
+    "unit": 5485,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 2.21875,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 5486,
+    "firing_tokens": 5,
+    "token_count": 2036,
+    "firing_rate": 0.002455795677799607,
+    "max_activation": 1.0625,
+    "absolute_rate_difference": 0.01866404715127701,
+    "selected": false
+   },
+   {
+    "unit": 5521,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 1.2265625,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 5525,
+    "firing_tokens": 12,
+    "token_count": 2036,
+    "firing_rate": 0.005893909626719057,
+    "max_activation": 1.125,
+    "absolute_rate_difference": 0.015225933202357562,
+    "selected": false
+   },
+   {
+    "unit": 5536,
+    "firing_tokens": 77,
+    "token_count": 2036,
+    "firing_rate": 0.03781925343811395,
+    "max_activation": 0.35546875,
+    "absolute_rate_difference": 0.016699410609037332,
+    "selected": false
+   },
+   {
+    "unit": 5557,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 1.5859375,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 5568,
+    "firing_tokens": 16,
+    "token_count": 2036,
+    "firing_rate": 0.007858546168958742,
+    "max_activation": 0.90234375,
+    "absolute_rate_difference": 0.013261296660117878,
+    "selected": false
+   },
+   {
+    "unit": 5575,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 11.0,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 5641,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 1.0234375,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 5666,
+    "firing_tokens": 7,
+    "token_count": 2036,
+    "firing_rate": 0.00343811394891945,
+    "max_activation": 0.9296875,
+    "absolute_rate_difference": 0.01768172888015717,
+    "selected": false
+   },
+   {
+    "unit": 5683,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 0.72265625,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 5705,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 0.9765625,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 5745,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 6.78125,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 5748,
+    "firing_tokens": 13,
+    "token_count": 2036,
+    "firing_rate": 0.0063850687622789785,
+    "max_activation": 1.09375,
+    "absolute_rate_difference": 0.014734774066797641,
+    "selected": false
+   },
+   {
+    "unit": 5749,
+    "firing_tokens": 27,
+    "token_count": 2036,
+    "firing_rate": 0.013261296660117878,
+    "max_activation": 1.6640625,
+    "absolute_rate_difference": 0.007858546168958742,
+    "selected": false
+   },
+   {
+    "unit": 5751,
+    "firing_tokens": 28,
+    "token_count": 2036,
+    "firing_rate": 0.0137524557956778,
+    "max_activation": 0.609375,
+    "absolute_rate_difference": 0.00736738703339882,
+    "selected": false
+   },
+   {
+    "unit": 5794,
+    "firing_tokens": 50,
+    "token_count": 2036,
+    "firing_rate": 0.02455795677799607,
+    "max_activation": 0.43359375,
+    "absolute_rate_difference": 0.0034381139489194495,
+    "selected": false
+   },
+   {
+    "unit": 5798,
+    "firing_tokens": 42,
+    "token_count": 2036,
+    "firing_rate": 0.0206286836935167,
+    "max_activation": 0.296875,
+    "absolute_rate_difference": 0.0004911591355599189,
+    "selected": true
+   },
+   {
+    "unit": 5833,
+    "firing_tokens": 5,
+    "token_count": 2036,
+    "firing_rate": 0.002455795677799607,
+    "max_activation": 4.46875,
+    "absolute_rate_difference": 0.01866404715127701,
+    "selected": false
+   },
+   {
+    "unit": 5867,
+    "firing_tokens": 31,
+    "token_count": 2036,
+    "firing_rate": 0.015225933202357564,
+    "max_activation": 0.56640625,
+    "absolute_rate_difference": 0.005893909626719056,
+    "selected": false
+   },
+   {
+    "unit": 5875,
+    "firing_tokens": 8,
+    "token_count": 2036,
+    "firing_rate": 0.003929273084479371,
+    "max_activation": 0.4921875,
+    "absolute_rate_difference": 0.017190569744597248,
+    "selected": false
+   },
+   {
+    "unit": 5892,
+    "firing_tokens": 7,
+    "token_count": 2036,
+    "firing_rate": 0.00343811394891945,
+    "max_activation": 0.72265625,
+    "absolute_rate_difference": 0.01768172888015717,
+    "selected": false
+   },
+   {
+    "unit": 5919,
+    "firing_tokens": 127,
+    "token_count": 2036,
+    "firing_rate": 0.06237721021611002,
+    "max_activation": 0.57421875,
+    "absolute_rate_difference": 0.0412573673870334,
+    "selected": false
+   },
+   {
+    "unit": 5924,
+    "firing_tokens": 132,
+    "token_count": 2036,
+    "firing_rate": 0.06483300589390963,
+    "max_activation": 0.375,
+    "absolute_rate_difference": 0.043713163064833006,
+    "selected": false
+   },
+   {
+    "unit": 5951,
+    "firing_tokens": 32,
+    "token_count": 2036,
+    "firing_rate": 0.015717092337917484,
+    "max_activation": 0.65234375,
+    "absolute_rate_difference": 0.0054027504911591355,
+    "selected": false
+   },
+   {
+    "unit": 5974,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 1.859375,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 5979,
+    "firing_tokens": 17,
+    "token_count": 2036,
+    "firing_rate": 0.008349705304518664,
+    "max_activation": 1.734375,
+    "absolute_rate_difference": 0.012770137524557955,
+    "selected": false
+   },
+   {
+    "unit": 5985,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 3.359375,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 5995,
+    "firing_tokens": 18,
+    "token_count": 2036,
+    "firing_rate": 0.008840864440078585,
+    "max_activation": 0.50390625,
+    "absolute_rate_difference": 0.012278978388998035,
+    "selected": false
+   },
+   {
+    "unit": 6002,
+    "firing_tokens": 9,
+    "token_count": 2036,
+    "firing_rate": 0.0044204322200392925,
+    "max_activation": 2.265625,
+    "absolute_rate_difference": 0.016699410609037325,
+    "selected": false
+   },
+   {
+    "unit": 6005,
+    "firing_tokens": 13,
+    "token_count": 2036,
+    "firing_rate": 0.0063850687622789785,
+    "max_activation": 1.9140625,
+    "absolute_rate_difference": 0.014734774066797641,
+    "selected": false
+   },
+   {
+    "unit": 6016,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 1.5703125,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 6034,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 0.703125,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 6045,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 0.5625,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 6077,
+    "firing_tokens": 7,
+    "token_count": 2036,
+    "firing_rate": 0.00343811394891945,
+    "max_activation": 0.703125,
+    "absolute_rate_difference": 0.01768172888015717,
+    "selected": false
+   },
+   {
+    "unit": 6078,
+    "firing_tokens": 95,
+    "token_count": 2036,
+    "firing_rate": 0.046660117878192534,
+    "max_activation": 0.5078125,
+    "absolute_rate_difference": 0.025540275049115914,
+    "selected": false
+   },
+   {
+    "unit": 6086,
+    "firing_tokens": 5,
+    "token_count": 2036,
+    "firing_rate": 0.002455795677799607,
+    "max_activation": 5.9375,
+    "absolute_rate_difference": 0.01866404715127701,
+    "selected": false
+   },
+   {
+    "unit": 6104,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 2.546875,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 6185,
+    "firing_tokens": 65,
+    "token_count": 2036,
+    "firing_rate": 0.03192534381139489,
+    "max_activation": 0.5234375,
+    "absolute_rate_difference": 0.010805500982318271,
+    "selected": false
+   },
+   {
+    "unit": 6192,
+    "firing_tokens": 122,
+    "token_count": 2036,
+    "firing_rate": 0.05992141453831041,
+    "max_activation": 0.359375,
+    "absolute_rate_difference": 0.03880157170923379,
+    "selected": false
+   },
+   {
+    "unit": 6200,
+    "firing_tokens": 6,
+    "token_count": 2036,
+    "firing_rate": 0.0029469548133595285,
+    "max_activation": 1.3828125,
+    "absolute_rate_difference": 0.018172888015717092,
+    "selected": false
+   },
+   {
+    "unit": 6203,
+    "firing_tokens": 5,
+    "token_count": 2036,
+    "firing_rate": 0.002455795677799607,
+    "max_activation": 1.46875,
+    "absolute_rate_difference": 0.01866404715127701,
+    "selected": false
+   },
+   {
+    "unit": 6213,
+    "firing_tokens": 98,
+    "token_count": 2036,
+    "firing_rate": 0.0481335952848723,
+    "max_activation": 0.412109375,
+    "absolute_rate_difference": 0.02701375245579568,
+    "selected": false
+   },
+   {
+    "unit": 6223,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 1.828125,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 6226,
+    "firing_tokens": 251,
+    "token_count": 2036,
+    "firing_rate": 0.12328094302554027,
+    "max_activation": 0.462890625,
+    "absolute_rate_difference": 0.10216110019646366,
+    "selected": false
+   },
+   {
+    "unit": 6227,
+    "firing_tokens": 10,
+    "token_count": 2036,
+    "firing_rate": 0.004911591355599214,
+    "max_activation": 1.359375,
+    "absolute_rate_difference": 0.016208251473477406,
+    "selected": false
+   },
+   {
+    "unit": 6228,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 0.93359375,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 6233,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 1.84375,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 6270,
+    "firing_tokens": 31,
+    "token_count": 2036,
+    "firing_rate": 0.015225933202357564,
+    "max_activation": 1.4609375,
+    "absolute_rate_difference": 0.005893909626719056,
+    "selected": false
+   },
+   {
+    "unit": 6275,
+    "firing_tokens": 16,
+    "token_count": 2036,
+    "firing_rate": 0.007858546168958742,
+    "max_activation": 1.046875,
+    "absolute_rate_difference": 0.013261296660117878,
+    "selected": false
+   },
+   {
+    "unit": 6281,
+    "firing_tokens": 92,
+    "token_count": 2036,
+    "firing_rate": 0.04518664047151277,
+    "max_activation": 0.4375,
+    "absolute_rate_difference": 0.024066797642436154,
+    "selected": false
+   },
+   {
+    "unit": 6288,
+    "firing_tokens": 5,
+    "token_count": 2036,
+    "firing_rate": 0.002455795677799607,
+    "max_activation": 2.421875,
+    "absolute_rate_difference": 0.01866404715127701,
+    "selected": false
+   },
+   {
+    "unit": 6303,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 5.875,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 6323,
+    "firing_tokens": 11,
+    "token_count": 2036,
+    "firing_rate": 0.0054027504911591355,
+    "max_activation": 0.79296875,
+    "absolute_rate_difference": 0.015717092337917484,
+    "selected": false
+   },
+   {
+    "unit": 6337,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 1.234375,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 6352,
+    "firing_tokens": 6,
+    "token_count": 2036,
+    "firing_rate": 0.0029469548133595285,
+    "max_activation": 0.62890625,
+    "absolute_rate_difference": 0.018172888015717092,
+    "selected": false
+   },
+   {
+    "unit": 6355,
+    "firing_tokens": 45,
+    "token_count": 2036,
+    "firing_rate": 0.022102161100196464,
+    "max_activation": 0.3828125,
+    "absolute_rate_difference": 0.0009823182711198447,
+    "selected": true
+   },
+   {
+    "unit": 6366,
+    "firing_tokens": 38,
+    "token_count": 2036,
+    "firing_rate": 0.018664047151277015,
+    "max_activation": 0.58203125,
+    "absolute_rate_difference": 0.002455795677799605,
+    "selected": false
+   },
+   {
+    "unit": 6375,
+    "firing_tokens": 35,
+    "token_count": 2036,
+    "firing_rate": 0.01719056974459725,
+    "max_activation": 0.345703125,
+    "absolute_rate_difference": 0.003929273084479368,
+    "selected": false
+   },
+   {
+    "unit": 6428,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 2.34375,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 6452,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 1.109375,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 6459,
+    "firing_tokens": 104,
+    "token_count": 2036,
+    "firing_rate": 0.05108055009823183,
+    "max_activation": 0.6171875,
+    "absolute_rate_difference": 0.029960707269155208,
+    "selected": false
+   },
+   {
+    "unit": 6487,
+    "firing_tokens": 33,
+    "token_count": 2036,
+    "firing_rate": 0.016208251473477406,
+    "max_activation": 0.412109375,
+    "absolute_rate_difference": 0.004911591355599213,
+    "selected": false
+   },
+   {
+    "unit": 6507,
+    "firing_tokens": 51,
+    "token_count": 2036,
+    "firing_rate": 0.02504911591355599,
+    "max_activation": 0.54296875,
+    "absolute_rate_difference": 0.003929273084479372,
+    "selected": false
+   },
+   {
+    "unit": 6515,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 2.53125,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 6522,
+    "firing_tokens": 32,
+    "token_count": 2036,
+    "firing_rate": 0.015717092337917484,
+    "max_activation": 0.5703125,
+    "absolute_rate_difference": 0.0054027504911591355,
+    "selected": false
+   },
+   {
+    "unit": 6527,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 0.85546875,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 6545,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 1.2109375,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 6555,
+    "firing_tokens": 116,
+    "token_count": 2036,
+    "firing_rate": 0.05697445972495088,
+    "max_activation": 0.4609375,
+    "absolute_rate_difference": 0.03585461689587426,
+    "selected": false
+   },
+   {
+    "unit": 6561,
+    "firing_tokens": 5,
+    "token_count": 2036,
+    "firing_rate": 0.002455795677799607,
+    "max_activation": 2.0625,
+    "absolute_rate_difference": 0.01866404715127701,
+    "selected": false
+   },
+   {
+    "unit": 6659,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 0.80078125,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 6718,
+    "firing_tokens": 14,
+    "token_count": 2036,
+    "firing_rate": 0.0068762278978389,
+    "max_activation": 0.7265625,
+    "absolute_rate_difference": 0.01424361493123772,
+    "selected": false
+   },
+   {
+    "unit": 6732,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 4.90625,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 6745,
+    "firing_tokens": 11,
+    "token_count": 2036,
+    "firing_rate": 0.0054027504911591355,
+    "max_activation": 0.7578125,
+    "absolute_rate_difference": 0.015717092337917484,
+    "selected": false
+   },
+   {
+    "unit": 6774,
+    "firing_tokens": 25,
+    "token_count": 2036,
+    "firing_rate": 0.012278978388998035,
+    "max_activation": 0.55859375,
+    "absolute_rate_difference": 0.008840864440078585,
+    "selected": false
+   },
+   {
+    "unit": 6780,
+    "firing_tokens": 10,
+    "token_count": 2036,
+    "firing_rate": 0.004911591355599214,
+    "max_activation": 0.5859375,
+    "absolute_rate_difference": 0.016208251473477406,
+    "selected": false
+   },
+   {
+    "unit": 6787,
+    "firing_tokens": 11,
+    "token_count": 2036,
+    "firing_rate": 0.0054027504911591355,
+    "max_activation": 4.0,
+    "absolute_rate_difference": 0.015717092337917484,
+    "selected": false
+   },
+   {
+    "unit": 6789,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 0.609375,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 6792,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 2.9375,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 6801,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 1.359375,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 6843,
+    "firing_tokens": 12,
+    "token_count": 2036,
+    "firing_rate": 0.005893909626719057,
+    "max_activation": 0.47265625,
+    "absolute_rate_difference": 0.015225933202357562,
+    "selected": false
+   },
+   {
+    "unit": 6916,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 3.390625,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 6955,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 1.4453125,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 6982,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 2.34375,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 7014,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 1.375,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 7023,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 1.2734375,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 7027,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 3.765625,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 7042,
+    "firing_tokens": 54,
+    "token_count": 2036,
+    "firing_rate": 0.026522593320235755,
+    "max_activation": 0.57421875,
+    "absolute_rate_difference": 0.0054027504911591355,
+    "selected": false
+   },
+   {
+    "unit": 7046,
+    "firing_tokens": 78,
+    "token_count": 2036,
+    "firing_rate": 0.03831041257367387,
+    "max_activation": 0.3828125,
+    "absolute_rate_difference": 0.017190569744597248,
+    "selected": false
+   },
+   {
+    "unit": 7065,
+    "firing_tokens": 8,
+    "token_count": 2036,
+    "firing_rate": 0.003929273084479371,
+    "max_activation": 0.78515625,
+    "absolute_rate_difference": 0.017190569744597248,
+    "selected": false
+   },
+   {
+    "unit": 7070,
+    "firing_tokens": 5,
+    "token_count": 2036,
+    "firing_rate": 0.002455795677799607,
+    "max_activation": 0.84375,
+    "absolute_rate_difference": 0.01866404715127701,
+    "selected": false
+   },
+   {
+    "unit": 7073,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 1.7578125,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 7091,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 1.28125,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 7094,
+    "firing_tokens": 61,
+    "token_count": 2036,
+    "firing_rate": 0.029960707269155205,
+    "max_activation": 0.462890625,
+    "absolute_rate_difference": 0.008840864440078585,
+    "selected": false
+   },
+   {
+    "unit": 7111,
+    "firing_tokens": 25,
+    "token_count": 2036,
+    "firing_rate": 0.012278978388998035,
+    "max_activation": 0.71484375,
+    "absolute_rate_difference": 0.008840864440078585,
+    "selected": false
+   },
+   {
+    "unit": 7113,
+    "firing_tokens": 12,
+    "token_count": 2036,
+    "firing_rate": 0.005893909626719057,
+    "max_activation": 1.3515625,
+    "absolute_rate_difference": 0.015225933202357562,
+    "selected": false
+   },
+   {
+    "unit": 7124,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 2.125,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 7127,
+    "firing_tokens": 60,
+    "token_count": 2036,
+    "firing_rate": 0.029469548133595286,
+    "max_activation": 0.455078125,
+    "absolute_rate_difference": 0.008349705304518666,
+    "selected": false
+   },
+   {
+    "unit": 7222,
+    "firing_tokens": 34,
+    "token_count": 2036,
+    "firing_rate": 0.01669941060903733,
+    "max_activation": 0.310546875,
+    "absolute_rate_difference": 0.004420432220039291,
+    "selected": false
+   },
+   {
+    "unit": 7233,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 1.09375,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 7246,
+    "firing_tokens": 26,
+    "token_count": 2036,
+    "firing_rate": 0.012770137524557957,
+    "max_activation": 0.65234375,
+    "absolute_rate_difference": 0.008349705304518663,
+    "selected": false
+   },
+   {
+    "unit": 7268,
+    "firing_tokens": 88,
+    "token_count": 2036,
+    "firing_rate": 0.043222003929273084,
+    "max_activation": 0.431640625,
+    "absolute_rate_difference": 0.022102161100196464,
+    "selected": false
+   },
+   {
+    "unit": 7274,
+    "firing_tokens": 70,
+    "token_count": 2036,
+    "firing_rate": 0.0343811394891945,
+    "max_activation": 0.333984375,
+    "absolute_rate_difference": 0.013261296660117883,
+    "selected": false
+   },
+   {
+    "unit": 7283,
+    "firing_tokens": 63,
+    "token_count": 2036,
+    "firing_rate": 0.03094302554027505,
+    "max_activation": 0.416015625,
+    "absolute_rate_difference": 0.00982318271119843,
+    "selected": false
+   },
+   {
+    "unit": 7296,
+    "firing_tokens": 70,
+    "token_count": 2036,
+    "firing_rate": 0.0343811394891945,
+    "max_activation": 0.42578125,
+    "absolute_rate_difference": 0.013261296660117883,
+    "selected": false
+   },
+   {
+    "unit": 7355,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 0.8515625,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 7358,
+    "firing_tokens": 20,
+    "token_count": 2036,
+    "firing_rate": 0.009823182711198428,
+    "max_activation": 0.78125,
+    "absolute_rate_difference": 0.011296660117878192,
+    "selected": false
+   },
+   {
+    "unit": 7369,
+    "firing_tokens": 10,
+    "token_count": 2036,
+    "firing_rate": 0.004911591355599214,
+    "max_activation": 14.6875,
+    "absolute_rate_difference": 0.016208251473477406,
+    "selected": false
+   },
+   {
+    "unit": 7371,
+    "firing_tokens": 31,
+    "token_count": 2036,
+    "firing_rate": 0.015225933202357564,
+    "max_activation": 0.6328125,
+    "absolute_rate_difference": 0.005893909626719056,
+    "selected": false
+   },
+   {
+    "unit": 7380,
+    "firing_tokens": 47,
+    "token_count": 2036,
+    "firing_rate": 0.023084479371316306,
+    "max_activation": 0.5,
+    "absolute_rate_difference": 0.001964636542239686,
+    "selected": true
+   },
+   {
+    "unit": 7440,
+    "firing_tokens": 55,
+    "token_count": 2036,
+    "firing_rate": 0.027013752455795677,
+    "max_activation": 0.609375,
+    "absolute_rate_difference": 0.005893909626719058,
+    "selected": false
+   },
+   {
+    "unit": 7443,
+    "firing_tokens": 39,
+    "token_count": 2036,
+    "firing_rate": 0.019155206286836934,
+    "max_activation": 0.474609375,
+    "absolute_rate_difference": 0.001964636542239686,
+    "selected": true
+   },
+   {
+    "unit": 7488,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 0.8359375,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 7501,
+    "firing_tokens": 26,
+    "token_count": 2036,
+    "firing_rate": 0.012770137524557957,
+    "max_activation": 0.5859375,
+    "absolute_rate_difference": 0.008349705304518663,
+    "selected": false
+   },
+   {
+    "unit": 7509,
+    "firing_tokens": 5,
+    "token_count": 2036,
+    "firing_rate": 0.002455795677799607,
+    "max_activation": 0.6875,
+    "absolute_rate_difference": 0.01866404715127701,
+    "selected": false
+   },
+   {
+    "unit": 7539,
+    "firing_tokens": 12,
+    "token_count": 2036,
+    "firing_rate": 0.005893909626719057,
+    "max_activation": 0.3828125,
+    "absolute_rate_difference": 0.015225933202357562,
+    "selected": false
+   },
+   {
+    "unit": 7581,
+    "firing_tokens": 9,
+    "token_count": 2036,
+    "firing_rate": 0.0044204322200392925,
+    "max_activation": 0.57421875,
+    "absolute_rate_difference": 0.016699410609037325,
+    "selected": false
+   },
+   {
+    "unit": 7600,
+    "firing_tokens": 5,
+    "token_count": 2036,
+    "firing_rate": 0.002455795677799607,
+    "max_activation": 0.60546875,
+    "absolute_rate_difference": 0.01866404715127701,
+    "selected": false
+   },
+   {
+    "unit": 7650,
+    "firing_tokens": 5,
+    "token_count": 2036,
+    "firing_rate": 0.002455795677799607,
+    "max_activation": 1.171875,
+    "absolute_rate_difference": 0.01866404715127701,
+    "selected": false
+   },
+   {
+    "unit": 7685,
+    "firing_tokens": 67,
+    "token_count": 2036,
+    "firing_rate": 0.032907662082514735,
+    "max_activation": 0.63671875,
+    "absolute_rate_difference": 0.011787819253438116,
+    "selected": false
+   },
+   {
+    "unit": 7714,
+    "firing_tokens": 145,
+    "token_count": 2036,
+    "firing_rate": 0.07121807465618861,
+    "max_activation": 0.3828125,
+    "absolute_rate_difference": 0.05009823182711199,
+    "selected": false
+   },
+   {
+    "unit": 7742,
+    "firing_tokens": 30,
+    "token_count": 2036,
+    "firing_rate": 0.014734774066797643,
+    "max_activation": 0.2890625,
+    "absolute_rate_difference": 0.006385068762278977,
+    "selected": false
+   },
+   {
+    "unit": 7758,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 1.046875,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 7808,
+    "firing_tokens": 48,
+    "token_count": 2036,
+    "firing_rate": 0.023575638506876228,
+    "max_activation": 0.41015625,
+    "absolute_rate_difference": 0.0024557956777996083,
+    "selected": false
+   },
+   {
+    "unit": 7810,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 0.9765625,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 7848,
+    "firing_tokens": 9,
+    "token_count": 2036,
+    "firing_rate": 0.0044204322200392925,
+    "max_activation": 0.58203125,
+    "absolute_rate_difference": 0.016699410609037325,
+    "selected": false
+   },
+   {
+    "unit": 7875,
+    "firing_tokens": 13,
+    "token_count": 2036,
+    "firing_rate": 0.0063850687622789785,
+    "max_activation": 0.65625,
+    "absolute_rate_difference": 0.014734774066797641,
+    "selected": false
+   },
+   {
+    "unit": 7881,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 2.546875,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 7884,
+    "firing_tokens": 41,
+    "token_count": 2036,
+    "firing_rate": 0.02013752455795678,
+    "max_activation": 0.56640625,
+    "absolute_rate_difference": 0.0009823182711198412,
+    "selected": true
+   },
+   {
+    "unit": 7885,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 3.0,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 7896,
+    "firing_tokens": 5,
+    "token_count": 2036,
+    "firing_rate": 0.002455795677799607,
+    "max_activation": 1.6328125,
+    "absolute_rate_difference": 0.01866404715127701,
+    "selected": false
+   },
+   {
+    "unit": 7919,
+    "firing_tokens": 21,
+    "token_count": 2036,
+    "firing_rate": 0.01031434184675835,
+    "max_activation": 0.490234375,
+    "absolute_rate_difference": 0.01080550098231827,
+    "selected": false
+   },
+   {
+    "unit": 7920,
+    "firing_tokens": 44,
+    "token_count": 2036,
+    "firing_rate": 0.021611001964636542,
+    "max_activation": 0.349609375,
+    "absolute_rate_difference": 0.0004911591355599224,
+    "selected": true
+   },
+   {
+    "unit": 7922,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 1.3203125,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 7965,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 1.71875,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 8028,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 2.140625,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 8075,
+    "firing_tokens": 9,
+    "token_count": 2036,
+    "firing_rate": 0.0044204322200392925,
+    "max_activation": 2.5,
+    "absolute_rate_difference": 0.016699410609037325,
+    "selected": false
+   },
+   {
+    "unit": 8087,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 2.640625,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 8090,
+    "firing_tokens": 15,
+    "token_count": 2036,
+    "firing_rate": 0.0073673870333988214,
+    "max_activation": 0.7890625,
+    "absolute_rate_difference": 0.013752455795677798,
+    "selected": false
+   },
+   {
+    "unit": 8092,
+    "firing_tokens": 76,
+    "token_count": 2036,
+    "firing_rate": 0.03732809430255403,
+    "max_activation": 0.41796875,
+    "absolute_rate_difference": 0.01620825147347741,
+    "selected": false
+   },
+   {
+    "unit": 8110,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 2.953125,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 8122,
+    "firing_tokens": 100,
+    "token_count": 2036,
+    "firing_rate": 0.04911591355599214,
+    "max_activation": 0.7421875,
+    "absolute_rate_difference": 0.02799607072691552,
+    "selected": false
+   },
+   {
+    "unit": 8123,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 3.1875,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 8129,
+    "firing_tokens": 9,
+    "token_count": 2036,
+    "firing_rate": 0.0044204322200392925,
+    "max_activation": 1.1796875,
+    "absolute_rate_difference": 0.016699410609037325,
+    "selected": false
+   },
+   {
+    "unit": 8153,
+    "firing_tokens": 8,
+    "token_count": 2036,
+    "firing_rate": 0.003929273084479371,
+    "max_activation": 1.4609375,
+    "absolute_rate_difference": 0.017190569744597248,
+    "selected": false
+   },
+   {
+    "unit": 8157,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 4.1875,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 8163,
+    "firing_tokens": 18,
+    "token_count": 2036,
+    "firing_rate": 0.008840864440078585,
+    "max_activation": 0.62890625,
+    "absolute_rate_difference": 0.012278978388998035,
+    "selected": false
+   },
+   {
+    "unit": 8179,
+    "firing_tokens": 11,
+    "token_count": 2036,
+    "firing_rate": 0.0054027504911591355,
+    "max_activation": 0.8359375,
+    "absolute_rate_difference": 0.015717092337917484,
+    "selected": false
+   },
+   {
+    "unit": 8203,
+    "firing_tokens": 9,
+    "token_count": 2036,
+    "firing_rate": 0.0044204322200392925,
+    "max_activation": 0.609375,
+    "absolute_rate_difference": 0.016699410609037325,
+    "selected": false
+   },
+   {
+    "unit": 8214,
+    "firing_tokens": 9,
+    "token_count": 2036,
+    "firing_rate": 0.0044204322200392925,
+    "max_activation": 0.88671875,
+    "absolute_rate_difference": 0.016699410609037325,
+    "selected": false
+   },
+   {
+    "unit": 8248,
+    "firing_tokens": 20,
+    "token_count": 2036,
+    "firing_rate": 0.009823182711198428,
+    "max_activation": 0.4140625,
+    "absolute_rate_difference": 0.011296660117878192,
+    "selected": false
+   },
+   {
+    "unit": 8275,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 10.0625,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 8297,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 1.515625,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 8302,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 2.4375,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 8306,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 2.03125,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 8369,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 1.9921875,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 8380,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 1.8125,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 8402,
+    "firing_tokens": 6,
+    "token_count": 2036,
+    "firing_rate": 0.0029469548133595285,
+    "max_activation": 3.890625,
+    "absolute_rate_difference": 0.018172888015717092,
+    "selected": false
+   },
+   {
+    "unit": 8436,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 2.453125,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 8441,
+    "firing_tokens": 20,
+    "token_count": 2036,
+    "firing_rate": 0.009823182711198428,
+    "max_activation": 0.52734375,
+    "absolute_rate_difference": 0.011296660117878192,
+    "selected": false
+   },
+   {
+    "unit": 8454,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 11.6875,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 8474,
+    "firing_tokens": 8,
+    "token_count": 2036,
+    "firing_rate": 0.003929273084479371,
+    "max_activation": 2.21875,
+    "absolute_rate_difference": 0.017190569744597248,
+    "selected": false
+   },
+   {
+    "unit": 8476,
+    "firing_tokens": 55,
+    "token_count": 2036,
+    "firing_rate": 0.027013752455795677,
+    "max_activation": 0.61328125,
+    "absolute_rate_difference": 0.005893909626719058,
+    "selected": false
+   },
+   {
+    "unit": 8487,
+    "firing_tokens": 17,
+    "token_count": 2036,
+    "firing_rate": 0.008349705304518664,
+    "max_activation": 0.7890625,
+    "absolute_rate_difference": 0.012770137524557955,
+    "selected": false
+   },
+   {
+    "unit": 8491,
+    "firing_tokens": 8,
+    "token_count": 2036,
+    "firing_rate": 0.003929273084479371,
+    "max_activation": 0.8984375,
+    "absolute_rate_difference": 0.017190569744597248,
+    "selected": false
+   },
+   {
+    "unit": 8517,
+    "firing_tokens": 110,
+    "token_count": 2036,
+    "firing_rate": 0.054027504911591355,
+    "max_activation": 0.408203125,
+    "absolute_rate_difference": 0.032907662082514735,
+    "selected": false
+   },
+   {
+    "unit": 8534,
+    "firing_tokens": 15,
+    "token_count": 2036,
+    "firing_rate": 0.0073673870333988214,
+    "max_activation": 0.74609375,
+    "absolute_rate_difference": 0.013752455795677798,
+    "selected": false
+   },
+   {
+    "unit": 8559,
+    "firing_tokens": 62,
+    "token_count": 2036,
+    "firing_rate": 0.030451866404715127,
+    "max_activation": 0.466796875,
+    "absolute_rate_difference": 0.009332023575638507,
+    "selected": false
+   },
+   {
+    "unit": 8597,
+    "firing_tokens": 149,
+    "token_count": 2036,
+    "firing_rate": 0.07318271119842829,
+    "max_activation": 0.37890625,
+    "absolute_rate_difference": 0.052062868369351666,
+    "selected": false
+   },
+   {
+    "unit": 8599,
+    "firing_tokens": 85,
+    "token_count": 2036,
+    "firing_rate": 0.04174852652259332,
+    "max_activation": 0.390625,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 8634,
+    "firing_tokens": 11,
+    "token_count": 2036,
+    "firing_rate": 0.0054027504911591355,
+    "max_activation": 0.59765625,
+    "absolute_rate_difference": 0.015717092337917484,
+    "selected": false
+   },
+   {
+    "unit": 8636,
+    "firing_tokens": 84,
+    "token_count": 2036,
+    "firing_rate": 0.0412573673870334,
+    "max_activation": 0.515625,
+    "absolute_rate_difference": 0.020137524557956782,
+    "selected": false
+   },
+   {
+    "unit": 8641,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 2.109375,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 8649,
+    "firing_tokens": 11,
+    "token_count": 2036,
+    "firing_rate": 0.0054027504911591355,
+    "max_activation": 3.671875,
+    "absolute_rate_difference": 0.015717092337917484,
+    "selected": false
+   },
+   {
+    "unit": 8653,
+    "firing_tokens": 8,
+    "token_count": 2036,
+    "firing_rate": 0.003929273084479371,
+    "max_activation": 4.375,
+    "absolute_rate_difference": 0.017190569744597248,
+    "selected": false
+   },
+   {
+    "unit": 8656,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 1.59375,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 8678,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 5.3125,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 8699,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 2.921875,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 8704,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 2.5,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 8713,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 7.125,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 8723,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 2.296875,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 8728,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 2.359375,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 8762,
+    "firing_tokens": 12,
+    "token_count": 2036,
+    "firing_rate": 0.005893909626719057,
+    "max_activation": 2.859375,
+    "absolute_rate_difference": 0.015225933202357562,
+    "selected": false
+   },
+   {
+    "unit": 8770,
+    "firing_tokens": 115,
+    "token_count": 2036,
+    "firing_rate": 0.05648330058939096,
+    "max_activation": 0.46484375,
+    "absolute_rate_difference": 0.03536345776031434,
+    "selected": false
+   },
+   {
+    "unit": 8832,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 0.84765625,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 8850,
+    "firing_tokens": 73,
+    "token_count": 2036,
+    "firing_rate": 0.03585461689587426,
+    "max_activation": 0.52734375,
+    "absolute_rate_difference": 0.014734774066797643,
+    "selected": false
+   },
+   {
+    "unit": 8885,
+    "firing_tokens": 3,
+    "token_count": 2036,
+    "firing_rate": 0.0014734774066797642,
+    "max_activation": 1.84375,
+    "absolute_rate_difference": 0.019646365422396856,
+    "selected": false
+   },
+   {
+    "unit": 8908,
+    "firing_tokens": 7,
+    "token_count": 2036,
+    "firing_rate": 0.00343811394891945,
+    "max_activation": 1.8125,
+    "absolute_rate_difference": 0.01768172888015717,
+    "selected": false
+   },
+   {
+    "unit": 8926,
+    "firing_tokens": 5,
+    "token_count": 2036,
+    "firing_rate": 0.002455795677799607,
+    "max_activation": 0.91796875,
+    "absolute_rate_difference": 0.01866404715127701,
+    "selected": false
+   },
+   {
+    "unit": 8934,
+    "firing_tokens": 96,
+    "token_count": 2036,
+    "firing_rate": 0.047151277013752456,
+    "max_activation": 0.38671875,
+    "absolute_rate_difference": 0.026031434184675836,
+    "selected": false
+   },
+   {
+    "unit": 8956,
+    "firing_tokens": 7,
+    "token_count": 2036,
+    "firing_rate": 0.00343811394891945,
+    "max_activation": 1.0546875,
+    "absolute_rate_difference": 0.01768172888015717,
+    "selected": false
+   },
+   {
+    "unit": 8959,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 1.7578125,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 8965,
+    "firing_tokens": 8,
+    "token_count": 2036,
+    "firing_rate": 0.003929273084479371,
+    "max_activation": 0.7109375,
+    "absolute_rate_difference": 0.017190569744597248,
+    "selected": false
+   },
+   {
+    "unit": 8974,
+    "firing_tokens": 1,
+    "token_count": 2036,
+    "firing_rate": 0.0004911591355599214,
+    "max_activation": 1.59375,
+    "absolute_rate_difference": 0.020628683693516697,
+    "selected": false
+   },
+   {
+    "unit": 8982,
+    "firing_tokens": 148,
+    "token_count": 2036,
+    "firing_rate": 0.07269155206286837,
+    "max_activation": 0.4140625,
+    "absolute_rate_difference": 0.05157170923379175,
+    "selected": false
+   },
+   {
+    "unit": 9000,
+    "firing_tokens": 4,
+    "token_count": 2036,
+    "firing_rate": 0.0019646365422396855,
+    "max_activation": 2.140625,
+    "absolute_rate_difference": 0.019155206286836934,
+    "selected": false
+   },
+   {
+    "unit": 9005,
+    "firing_tokens": 8,
+    "token_count": 2036,
+    "firing_rate": 0.003929273084479371,
+    "max_activation": 0.50390625,
+    "absolute_rate_difference": 0.017190569744597248,
+    "selected": false
+   },
+   {
+    "unit": 9014,
+    "firing_tokens": 44,
+    "token_count": 2036,
+    "firing_rate": 0.021611001964636542,
+    "max_activation": 0.43359375,
+    "absolute_rate_difference": 0.0004911591355599224,
+    "selected": true
+   },
+   {
+    "unit": 9042,
+    "firing_tokens": 165,
+    "token_count": 2036,
+    "firing_rate": 0.08104125736738703,
+    "max_activation": 0.455078125,
+    "absolute_rate_difference": 0.05992141453831041,
+    "selected": false
+   },
+   {
+    "unit": 9094,
+    "firing_tokens": 7,
+    "token_count": 2036,
+    "firing_rate": 0.00343811394891945,
+    "max_activation": 1.6328125,
+    "absolute_rate_difference": 0.01768172888015717,
+    "selected": false
+   },
+   {
+    "unit": 9104,
+    "firing_tokens": 84,
+    "token_count": 2036,
+    "firing_rate": 0.0412573673870334,
+    "max_activation": 0.42578125,
+    "absolute_rate_difference": 0.020137524557956782,
+    "selected": false
+   },
+   {
+    "unit": 9118,
+    "firing_tokens": 9,
+    "token_count": 2036,
+    "firing_rate": 0.0044204322200392925,
+    "max_activation": 1.0390625,
+    "absolute_rate_difference": 0.016699410609037325,
+    "selected": false
+   },
+   {
+    "unit": 9126,
+    "firing_tokens": 71,
+    "token_count": 2036,
+    "firing_rate": 0.03487229862475442,
+    "max_activation": 0.427734375,
+    "absolute_rate_difference": 0.013752455795677798,
+    "selected": false
+   },
+   {
+    "unit": 9155,
+    "firing_tokens": 2,
+    "token_count": 2036,
+    "firing_rate": 0.0009823182711198428,
+    "max_activation": 1.8046875,
+    "absolute_rate_difference": 0.02013752455795678,
+    "selected": false
+   },
+   {
+    "unit": 9170,
+    "firing_tokens": 74,
+    "token_count": 2036,
+    "firing_rate": 0.036345776031434185,
+    "max_activation": 0.3828125,
+    "absolute_rate_difference": 0.015225933202357565,
+    "selected": false
+   },
+   {
+    "unit": 9174,
+    "firing_tokens": 55,
+    "token_count": 2036,
+    "firing_rate": 0.027013752455795677,
+    "max_activation": 0.376953125,
+    "absolute_rate_difference": 0.005893909626719058,
+    "selected": false
+   }
+  ],
+  "target_firing_frequency": 0.02111984282907662,
+  "effects_by_group": {
+   "all": {
+    "2742": {
+     "at_firing_loss_increase": -0.08790233299179478,
+     "n_at_loss_tokens": 43,
+     "after_1_to_8_loss_increase": -0.004920987931293357,
+     "n_after_loss_tokens": 249,
+     "window_loss_increase": -0.013053071385543246,
+     "n_window_loss_tokens": 279
+    },
+    "1960": {
+     "at_firing_loss_increase": 0.0007607657787238442,
+     "n_at_loss_tokens": 43,
+     "after_1_to_8_loss_increase": 0.00016565620989027077,
+     "n_after_loss_tokens": 243,
+     "window_loss_increase": 0.0002489123934681183,
+     "n_window_loss_tokens": 273
+    },
+    "2262": {
+     "at_firing_loss_increase": -0.0034427772774252782,
+     "n_at_loss_tokens": 43,
+     "after_1_to_8_loss_increase": 0.0014926900132421902,
+     "n_after_loss_tokens": 249,
+     "window_loss_increase": 0.0006200934544213335,
+     "n_window_loss_tokens": 277
+    },
+    "3616": {
+     "at_firing_loss_increase": 0.0020314730130709135,
+     "n_at_loss_tokens": 26,
+     "after_1_to_8_loss_increase": -0.002087096145111659,
+     "n_after_loss_tokens": 147,
+     "window_loss_increase": -0.0017090398279219973,
+     "n_window_loss_tokens": 166
+    },
+    "5798": {
+     "at_firing_loss_increase": 0.014895933835456768,
+     "n_at_loss_tokens": 42,
+     "after_1_to_8_loss_increase": 0.002171943917177444,
+     "n_after_loss_tokens": 172,
+     "window_loss_increase": 0.003199900566661721,
+     "n_window_loss_tokens": 197
+    },
+    "4596": {
+     "at_firing_loss_increase": 0.0012884811433402567,
+     "n_at_loss_tokens": 44,
+     "after_1_to_8_loss_increase": -0.0026570168581536947,
+     "n_after_loss_tokens": 228,
+     "window_loss_increase": -0.0022618278376019744,
+     "n_window_loss_tokens": 257
+    },
+    "1433": {
+     "at_firing_loss_increase": 0.003261504121697866,
+     "n_at_loss_tokens": 39,
+     "after_1_to_8_loss_increase": 0.0008955353511158715,
+     "n_after_loss_tokens": 88,
+     "window_loss_increase": 0.0017363119136112241,
+     "n_window_loss_tokens": 104
+    },
+    "1818": {
+     "at_firing_loss_increase": 0.001345813077763481,
+     "n_at_loss_tokens": 43,
+     "after_1_to_8_loss_increase": 0.0013617240632463128,
+     "n_after_loss_tokens": 235,
+     "window_loss_increase": 0.0012134143078308729,
+     "n_window_loss_tokens": 265
+    },
+    "7920": {
+     "at_firing_loss_increase": -0.008230116316833748,
+     "n_at_loss_tokens": 39,
+     "after_1_to_8_loss_increase": -0.0008914496406703866,
+     "n_after_loss_tokens": 162,
+     "window_loss_increase": -0.0025023229305421706,
+     "n_window_loss_tokens": 196
+    },
+    "9014": {
+     "at_firing_loss_increase": -0.00820649735327433,
+     "n_at_loss_tokens": 42,
+     "after_1_to_8_loss_increase": 0.003334081662632223,
+     "n_after_loss_tokens": 212,
+     "window_loss_increase": 0.002520028859960567,
+     "n_window_loss_tokens": 239
+    },
+    "2018": {
+     "at_firing_loss_increase": 0.002309621686524734,
+     "n_at_loss_tokens": 41,
+     "after_1_to_8_loss_increase": 0.005700252958460646,
+     "n_after_loss_tokens": 163,
+     "window_loss_increase": 0.0051967151421668705,
+     "n_window_loss_tokens": 192
+    },
+    "7884": {
+     "at_firing_loss_increase": 0.005171596799500105,
+     "n_at_loss_tokens": 41,
+     "after_1_to_8_loss_increase": -0.001100016423598206,
+     "n_after_loss_tokens": 163,
+     "window_loss_increase": -0.0005695607576577763,
+     "n_window_loss_tokens": 191
+    },
+    "4955": {
+     "at_firing_loss_increase": -0.00019150427298783953,
+     "n_at_loss_tokens": 37,
+     "after_1_to_8_loss_increase": 0.0006656639221316369,
+     "n_after_loss_tokens": 174,
+     "window_loss_increase": -5.4990826684303186e-05,
+     "n_window_loss_tokens": 197
+    },
+    "6355": {
+     "at_firing_loss_increase": -0.004002357205701463,
+     "n_at_loss_tokens": 44,
+     "after_1_to_8_loss_increase": -0.0003003484155267997,
+     "n_after_loss_tokens": 172,
+     "window_loss_increase": -0.0008735332596552325,
+     "n_window_loss_tokens": 200
+    },
+    "4511": {
+     "at_firing_loss_increase": -0.0039003125495380825,
+     "n_at_loss_tokens": 45,
+     "after_1_to_8_loss_increase": -0.0017832883738045549,
+     "n_after_loss_tokens": 145,
+     "window_loss_increase": -0.002518361115403826,
+     "n_window_loss_tokens": 169
+    },
+    "7380": {
+     "at_firing_loss_increase": 0.0026766828092885143,
+     "n_at_loss_tokens": 47,
+     "after_1_to_8_loss_increase": -0.001225725404127395,
+     "n_after_loss_tokens": 268,
+     "window_loss_increase": -0.0014754619174588393,
+     "n_window_loss_tokens": 300
+    },
+    "1453": {
+     "at_firing_loss_increase": 0.0010303373342043067,
+     "n_at_loss_tokens": 47,
+     "after_1_to_8_loss_increase": -0.0032882893340283083,
+     "n_after_loss_tokens": 211,
+     "window_loss_increase": -0.002877118225002592,
+     "n_window_loss_tokens": 235
+    },
+    "105": {
+     "at_firing_loss_increase": 0.007273240876879463,
+     "n_at_loss_tokens": 47,
+     "after_1_to_8_loss_increase": 0.0022062054840902494,
+     "n_after_loss_tokens": 245,
+     "window_loss_increase": 0.0016434688446819424,
+     "n_window_loss_tokens": 273
+    },
+    "5287": {
+     "at_firing_loss_increase": -0.0014519687407673933,
+     "n_at_loss_tokens": 39,
+     "after_1_to_8_loss_increase": 0.0017042015901522069,
+     "n_after_loss_tokens": 197,
+     "window_loss_increase": 0.001387022403535017,
+     "n_window_loss_tokens": 226
+    },
+    "5355": {
+     "at_firing_loss_increase": -0.00015979355726486599,
+     "n_at_loss_tokens": 39,
+     "after_1_to_8_loss_increase": 0.0013619538139968657,
+     "n_after_loss_tokens": 181,
+     "window_loss_increase": 0.0002810950930271407,
+     "n_window_loss_tokens": 204
+    },
+    "7443": {
+     "at_firing_loss_increase": 0.00212353333317412,
+     "n_at_loss_tokens": 39,
+     "after_1_to_8_loss_increase": -0.0012152050940356963,
+     "n_after_loss_tokens": 201,
+     "window_loss_increase": -0.00017451813000817924,
+     "n_window_loss_tokens": 233
+    }
+   },
+   "alien": {
+    "2742": {
+     "at_firing_loss_increase": -0.08790233299179478,
+     "n_at_loss_tokens": 43,
+     "after_1_to_8_loss_increase": -0.004920987931293357,
+     "n_after_loss_tokens": 249,
+     "window_loss_increase": -0.013053071385543246,
+     "n_window_loss_tokens": 279
+    },
+    "1960": {
+     "at_firing_loss_increase": 0.008191636630467005,
+     "n_at_loss_tokens": 7,
+     "after_1_to_8_loss_increase": -0.005822470101217429,
+     "n_after_loss_tokens": 42,
+     "window_loss_increase": -0.003820454853833938,
+     "n_window_loss_tokens": 49
+    },
+    "2262": {
+     "at_firing_loss_increase": -0.005828917026519775,
+     "n_at_loss_tokens": 1,
+     "after_1_to_8_loss_increase": -0.015030960241953531,
+     "n_after_loss_tokens": 3,
+     "window_loss_increase": -0.012730449438095093,
+     "n_window_loss_tokens": 4
+    },
+    "3616": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "5798": {
+     "at_firing_loss_increase": 0.0020611328072845936,
+     "n_at_loss_tokens": 10,
+     "after_1_to_8_loss_increase": 0.006392105041365875,
+     "n_after_loss_tokens": 57,
+     "window_loss_increase": 0.005605816065023343,
+     "n_window_loss_tokens": 66
+    },
+    "4596": {
+     "at_firing_loss_increase": 0.00045692920684814453,
+     "n_at_loss_tokens": 3,
+     "after_1_to_8_loss_increase": -0.0019856975837187333,
+     "n_after_loss_tokens": 22,
+     "window_loss_increase": -0.001692582368850708,
+     "n_window_loss_tokens": 25
+    },
+    "1433": {
+     "at_firing_loss_increase": 0.023778915405273438,
+     "n_at_loss_tokens": 2,
+     "after_1_to_8_loss_increase": 0.00919212494045496,
+     "n_after_loss_tokens": 16,
+     "window_loss_increase": 0.010812879436545901,
+     "n_window_loss_tokens": 18
+    },
+    "1818": {
+     "at_firing_loss_increase": -0.0040404995282491045,
+     "n_at_loss_tokens": 3,
+     "after_1_to_8_loss_increase": 0.013494196747030531,
+     "n_after_loss_tokens": 14,
+     "window_loss_increase": 0.01142630260437727,
+     "n_window_loss_tokens": 16
+    },
+    "7920": {
+     "at_firing_loss_increase": -0.007327330997213721,
+     "n_at_loss_tokens": 13,
+     "after_1_to_8_loss_increase": 0.001697018360480284,
+     "n_after_loss_tokens": 39,
+     "window_loss_increase": -0.0008843926107510924,
+     "n_window_loss_tokens": 50
+    },
+    "9014": {
+     "at_firing_loss_increase": -0.0059770941734313965,
+     "n_at_loss_tokens": 2,
+     "after_1_to_8_loss_increase": 0.015704835182987154,
+     "n_after_loss_tokens": 3,
+     "window_loss_increase": -0.0006734991620760411,
+     "n_window_loss_tokens": 4
+    },
+    "2018": {
+     "at_firing_loss_increase": 0.007006317190825939,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": 0.011760291022559008,
+     "n_after_loss_tokens": 9,
+     "window_loss_increase": 0.010117132470689037,
+     "n_window_loss_tokens": 11
+    },
+    "7884": {
+     "at_firing_loss_increase": -0.031085020676255227,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": 0.0005357350621904645,
+     "n_after_loss_tokens": 14,
+     "window_loss_increase": -0.0077855164479268225,
+     "n_window_loss_tokens": 19
+    },
+    "4955": {
+     "at_firing_loss_increase": -0.022178691625595093,
+     "n_at_loss_tokens": 10,
+     "after_1_to_8_loss_increase": 0.006349113057641422,
+     "n_after_loss_tokens": 34,
+     "window_loss_increase": 0.0005729332566261292,
+     "n_window_loss_tokens": 40
+    },
+    "6355": {
+     "at_firing_loss_increase": -0.018926787376403808,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": -0.0018342216809590659,
+     "n_after_loss_tokens": 15,
+     "window_loss_increase": -0.008246330838454398,
+     "n_window_loss_tokens": 19
+    },
+    "4511": {
+     "at_firing_loss_increase": -0.0014055909381972419,
+     "n_at_loss_tokens": 27,
+     "after_1_to_8_loss_increase": 0.0019496013197234608,
+     "n_after_loss_tokens": 71,
+     "window_loss_increase": 0.0005922106612983736,
+     "n_window_loss_tokens": 84
+    },
+    "7380": {
+     "at_firing_loss_increase": 0.01462339899606175,
+     "n_at_loss_tokens": 9,
+     "after_1_to_8_loss_increase": 0.008031548240091425,
+     "n_after_loss_tokens": 41,
+     "window_loss_increase": 0.007220371993521149,
+     "n_window_loss_tokens": 47
+    },
+    "1453": {
+     "at_firing_loss_increase": 0.004312232136726379,
+     "n_at_loss_tokens": 4,
+     "after_1_to_8_loss_increase": -0.0015643126627599652,
+     "n_after_loss_tokens": 11,
+     "window_loss_increase": -0.00020610793636968502,
+     "n_window_loss_tokens": 13
+    },
+    "105": {
+     "at_firing_loss_increase": -0.0009700208902359009,
+     "n_at_loss_tokens": 2,
+     "after_1_to_8_loss_increase": 0.0048893168568611145,
+     "n_after_loss_tokens": 8,
+     "window_loss_increase": 0.0037174493074417113,
+     "n_window_loss_tokens": 10
+    },
+    "5287": {
+     "at_firing_loss_increase": -0.0039021174112955728,
+     "n_at_loss_tokens": 3,
+     "after_1_to_8_loss_increase": 0.015396787361665205,
+     "n_after_loss_tokens": 11,
+     "window_loss_increase": 0.011261307767459325,
+     "n_window_loss_tokens": 14
+    },
+    "5355": {
+     "at_firing_loss_increase": -0.0032470226287841797,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": 0.008028833305134493,
+     "n_after_loss_tokens": 17,
+     "window_loss_increase": 0.005743486540658134,
+     "n_window_loss_tokens": 21
+    },
+    "7443": {
+     "at_firing_loss_increase": 0.0042403265833854675,
+     "n_at_loss_tokens": 8,
+     "after_1_to_8_loss_increase": 0.0013585208980657626,
+     "n_after_loss_tokens": 32,
+     "window_loss_increase": 0.0019489394602341913,
+     "n_window_loss_tokens": 39
+    }
+   },
+   "topic": {
+    "2742": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "1960": {
+     "at_firing_loss_increase": 0.0030268430709838867,
+     "n_at_loss_tokens": 2,
+     "after_1_to_8_loss_increase": -0.009398076683282852,
+     "n_after_loss_tokens": 16,
+     "window_loss_increase": -0.008017530043919882,
+     "n_window_loss_tokens": 18
+    },
+    "2262": {
+     "at_firing_loss_increase": -0.020519590377807616,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": 0.008450782159343362,
+     "n_after_loss_tokens": 28,
+     "window_loss_increase": 0.004061331774926547,
+     "n_window_loss_tokens": 33
+    },
+    "3616": {
+     "at_firing_loss_increase": 0.012521174820986662,
+     "n_at_loss_tokens": 11,
+     "after_1_to_8_loss_increase": -0.004770207110532495,
+     "n_after_loss_tokens": 43,
+     "window_loss_increase": -0.00027516983449459075,
+     "n_window_loss_tokens": 50
+    },
+    "5798": {
+     "at_firing_loss_increase": 0.01677056501309077,
+     "n_at_loss_tokens": 15,
+     "after_1_to_8_loss_increase": 0.007694595657727297,
+     "n_after_loss_tokens": 34,
+     "window_loss_increase": 0.007773205828972352,
+     "n_window_loss_tokens": 39
+    },
+    "4596": {
+     "at_firing_loss_increase": -0.0035305023193359375,
+     "n_at_loss_tokens": 1,
+     "after_1_to_8_loss_increase": -0.01030570873990655,
+     "n_after_loss_tokens": 8,
+     "window_loss_increase": -0.009552908026509814,
+     "n_window_loss_tokens": 9
+    },
+    "1433": {
+     "at_firing_loss_increase": 0.0021524548631262136,
+     "n_at_loss_tokens": 37,
+     "after_1_to_8_loss_increase": -0.0009481512242928147,
+     "n_after_loss_tokens": 72,
+     "window_loss_increase": -0.00016343477723556896,
+     "n_window_loss_tokens": 86
+    },
+    "1818": {
+     "at_firing_loss_increase": -0.0017441383429936,
+     "n_at_loss_tokens": 7,
+     "after_1_to_8_loss_increase": 0.007770324475131929,
+     "n_after_loss_tokens": 32,
+     "window_loss_increase": 0.004858832403614714,
+     "n_window_loss_tokens": 37
+    },
+    "7920": {
+     "at_firing_loss_increase": -0.00523683987557888,
+     "n_at_loss_tokens": 10,
+     "after_1_to_8_loss_increase": -0.0019435795984463766,
+     "n_after_loss_tokens": 32,
+     "window_loss_increase": -0.0027276891882398297,
+     "n_window_loss_tokens": 42
+    },
+    "9014": {
+     "at_firing_loss_increase": -0.022151490052541096,
+     "n_at_loss_tokens": 9,
+     "after_1_to_8_loss_increase": 0.0010425178095316275,
+     "n_after_loss_tokens": 39,
+     "window_loss_increase": -0.0020940736764007146,
+     "n_window_loss_tokens": 45
+    },
+    "2018": {
+     "at_firing_loss_increase": -0.010580331087112427,
+     "n_at_loss_tokens": 15,
+     "after_1_to_8_loss_increase": 0.010575985449344613,
+     "n_after_loss_tokens": 43,
+     "window_loss_increase": 0.006193551717808953,
+     "n_window_loss_tokens": 54
+    },
+    "7884": {
+     "at_firing_loss_increase": 0.010152699393701965,
+     "n_at_loss_tokens": 29,
+     "after_1_to_8_loss_increase": -0.002685262916555393,
+     "n_after_loss_tokens": 103,
+     "window_loss_increase": -0.0005719599663279951,
+     "n_window_loss_tokens": 120
+    },
+    "4955": {
+     "at_firing_loss_increase": 0.017387231190999348,
+     "n_at_loss_tokens": 3,
+     "after_1_to_8_loss_increase": -0.025946361677987233,
+     "n_after_loss_tokens": 7,
+     "window_loss_increase": -0.01294628381729126,
+     "n_window_loss_tokens": 10
+    },
+    "6355": {
+     "at_firing_loss_increase": -0.007866280211601406,
+     "n_at_loss_tokens": 16,
+     "after_1_to_8_loss_increase": -0.0034638868584748236,
+     "n_after_loss_tokens": 31,
+     "window_loss_increase": -0.003924270829138083,
+     "n_window_loss_tokens": 39
+    },
+    "4511": {
+     "at_firing_loss_increase": -0.03127978444099426,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": -0.013252548562983671,
+     "n_after_loss_tokens": 30,
+     "window_loss_increase": -0.015504424350664896,
+     "n_window_loss_tokens": 34
+    },
+    "7380": {
+     "at_firing_loss_increase": -0.005145508795976639,
+     "n_at_loss_tokens": 4,
+     "after_1_to_8_loss_increase": -0.007170406973455101,
+     "n_after_loss_tokens": 20,
+     "window_loss_increase": -0.007057825720909497,
+     "n_window_loss_tokens": 23
+    },
+    "1453": {
+     "at_firing_loss_increase": 0.0014743804931640625,
+     "n_at_loss_tokens": 1,
+     "after_1_to_8_loss_increase": -0.008206039667129517,
+     "n_after_loss_tokens": 2,
+     "window_loss_increase": -0.004979232947031657,
+     "n_window_loss_tokens": 3
+    },
+    "105": {
+     "at_firing_loss_increase": -0.01188303530216217,
+     "n_at_loss_tokens": 4,
+     "after_1_to_8_loss_increase": 0.00040999724296852946,
+     "n_after_loss_tokens": 32,
+     "window_loss_increase": -0.0009558952620459928,
+     "n_window_loss_tokens": 36
+    },
+    "5287": {
+     "at_firing_loss_increase": 0.0016907453536987305,
+     "n_at_loss_tokens": 2,
+     "after_1_to_8_loss_increase": 0.015513855431761061,
+     "n_after_loss_tokens": 7,
+     "window_loss_increase": 0.014624604023993015,
+     "n_window_loss_tokens": 8
+    },
+    "5355": {
+     "at_firing_loss_increase": 0.0015278458595275879,
+     "n_at_loss_tokens": 2,
+     "after_1_to_8_loss_increase": -0.021383821964263916,
+     "n_after_loss_tokens": 3,
+     "window_loss_increase": -0.01592041552066803,
+     "n_window_loss_tokens": 4
+    },
+    "7443": {
+     "at_firing_loss_increase": -0.011472566274460406,
+     "n_at_loss_tokens": 10,
+     "after_1_to_8_loss_increase": -0.0008319599315697371,
+     "n_after_loss_tokens": 43,
+     "window_loss_increase": -0.0006639504409395159,
+     "n_window_loss_tokens": 50
+    }
+   },
+   "neutral": {
+    "2742": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "1960": {
+     "at_firing_loss_increase": -0.0009024180608856328,
+     "n_at_loss_tokens": 34,
+     "after_1_to_8_loss_increase": 0.002352256379389154,
+     "n_after_loss_tokens": 185,
+     "window_loss_increase": 0.00193917918468552,
+     "n_window_loss_tokens": 206
+    },
+    "2262": {
+     "at_firing_loss_increase": -0.0010706095679386242,
+     "n_at_loss_tokens": 37,
+     "after_1_to_8_loss_increase": 0.0008263797869795956,
+     "n_after_loss_tokens": 218,
+     "window_loss_increase": 0.00036943223356047385,
+     "n_window_loss_tokens": 240
+    },
+    "3616": {
+     "at_firing_loss_increase": -0.005660974979400634,
+     "n_at_loss_tokens": 15,
+     "after_1_to_8_loss_increase": -0.0009777329574857364,
+     "n_after_loss_tokens": 104,
+     "window_loss_increase": -0.0023270872388820862,
+     "n_window_loss_tokens": 116
+    },
+    "5798": {
+     "at_firing_loss_increase": 0.020791730459998634,
+     "n_at_loss_tokens": 17,
+     "after_1_to_8_loss_increase": -0.003115949209457562,
+     "n_after_loss_tokens": 81,
+     "window_loss_increase": -0.00046476604335981864,
+     "n_window_loss_tokens": 92
+    },
+    "4596": {
+     "at_firing_loss_increase": 0.00147132212514407,
+     "n_at_loss_tokens": 40,
+     "after_1_to_8_loss_increase": -0.00242256983281807,
+     "n_after_loss_tokens": 198,
+     "window_loss_increase": -0.0020313857524836385,
+     "n_window_loss_tokens": 223
+    },
+    "1433": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "1818": {
+     "at_firing_loss_increase": 0.0024909221008949153,
+     "n_at_loss_tokens": 33,
+     "after_1_to_8_loss_increase": -0.000622031655025215,
+     "n_after_loss_tokens": 189,
+     "window_loss_increase": -0.0001935983444745257,
+     "n_window_loss_tokens": 212
+    },
+    "7920": {
+     "at_firing_loss_increase": -0.010834427164809313,
+     "n_at_loss_tokens": 16,
+     "after_1_to_8_loss_increase": -0.0016308133043631831,
+     "n_after_loss_tokens": 91,
+     "window_loss_increase": -0.003189160749448442,
+     "n_window_loss_tokens": 104
+    },
+    "9014": {
+     "at_firing_loss_increase": -0.004301783548960943,
+     "n_at_loss_tokens": 31,
+     "after_1_to_8_loss_increase": 0.0036414859550431547,
+     "n_after_loss_tokens": 170,
+     "window_loss_increase": 0.0036800747874574306,
+     "n_window_loss_tokens": 190
+    },
+    "2018": {
+     "at_firing_loss_increase": 0.010398469976193848,
+     "n_at_loss_tokens": 21,
+     "after_1_to_8_loss_increase": 0.0033201012495877105,
+     "n_after_loss_tokens": 111,
+     "window_loss_increase": 0.004346685490998239,
+     "n_window_loss_tokens": 127
+    },
+    "7884": {
+     "at_firing_loss_increase": 0.010433184249060494,
+     "n_at_loss_tokens": 7,
+     "after_1_to_8_loss_increase": 0.0019517198366963346,
+     "n_after_loss_tokens": 46,
+     "window_loss_increase": 0.0020725750722564184,
+     "n_window_loss_tokens": 52
+    },
+    "4955": {
+     "at_firing_loss_increase": 0.006772481857600117,
+     "n_at_loss_tokens": 24,
+     "after_1_to_8_loss_increase": 0.0006133850393759934,
+     "n_after_loss_tokens": 133,
+     "window_loss_increase": 0.0006511041840208143,
+     "n_window_loss_tokens": 147
+    },
+    "6355": {
+     "at_firing_loss_increase": 0.0019300305746424863,
+     "n_at_loss_tokens": 23,
+     "after_1_to_8_loss_increase": 0.0006605864314007617,
+     "n_after_loss_tokens": 126,
+     "window_loss_increase": 0.0009508464530702274,
+     "n_window_loss_tokens": 142
+    },
+    "4511": {
+     "at_firing_loss_increase": 0.0014489086774679332,
+     "n_at_loss_tokens": 13,
+     "after_1_to_8_loss_increase": 1.3135204260999506e-05,
+     "n_after_loss_tokens": 44,
+     "window_loss_increase": 0.0010157196837313036,
+     "n_window_loss_tokens": 51
+    },
+    "7380": {
+     "at_firing_loss_increase": 0.000434574595762088,
+     "n_at_loss_tokens": 34,
+     "after_1_to_8_loss_increase": -0.002484926312467576,
+     "n_after_loss_tokens": 207,
+     "window_loss_increase": -0.002694200292835771,
+     "n_window_loss_tokens": 230
+    },
+    "1453": {
+     "at_firing_loss_increase": 0.0007072034682745912,
+     "n_at_loss_tokens": 42,
+     "after_1_to_8_loss_increase": -0.0033343915699765372,
+     "n_after_loss_tokens": 198,
+     "window_loss_increase": -0.0030068752550762934,
+     "n_window_loss_tokens": 219
+    },
+    "105": {
+     "at_firing_loss_increase": 0.009544256200059885,
+     "n_at_loss_tokens": 41,
+     "after_1_to_8_loss_increase": 0.002381882424254777,
+     "n_after_loss_tokens": 205,
+     "window_loss_increase": 0.001964338021838806,
+     "n_window_loss_tokens": 227
+    },
+    "5287": {
+     "at_firing_loss_increase": -0.001420644687159973,
+     "n_at_loss_tokens": 34,
+     "after_1_to_8_loss_increase": 0.00032271544278960923,
+     "n_after_loss_tokens": 179,
+     "window_loss_increase": 0.00019025452089479979,
+     "n_window_loss_tokens": 204
+    },
+    "5355": {
+     "at_firing_loss_increase": 0.00021710852161049843,
+     "n_at_loss_tokens": 32,
+     "after_1_to_8_loss_increase": 0.0010818319257076899,
+     "n_after_loss_tokens": 161,
+     "window_loss_increase": 2.300802828983388e-06,
+     "n_window_loss_tokens": 179
+    },
+    "7443": {
+     "at_firing_loss_increase": 0.007791469051014809,
+     "n_at_loss_tokens": 21,
+     "after_1_to_8_loss_increase": -0.0019996398062046084,
+     "n_after_loss_tokens": 126,
+     "window_loss_increase": -0.0005796794527365515,
+     "n_window_loss_tokens": 144
+    }
+   }
+  },
+  "passage_effects_signature": "2df47ac29cae22b3ff1fbc36ab5415499a3ac94c25a3e97064de8bdfae23f066"
+ },
+ "comprehension": {
+  "items": [
+   {
+    "id": "mc01",
+    "passage_id": "alien_q01",
+    "answer": "A",
+    "baseline_logits": {
+     "A": 19.25,
+     "B": 14.6875,
+     "C": 14.375,
+     "D": 13.75
+    },
+    "conditional_zero_logits": {
+     "A": 19.25,
+     "B": 14.6875,
+     "C": 14.375,
+     "D": 13.6875
+    },
+    "baseline_prediction": "A",
+    "conditional_zero_prediction": "A",
+    "baseline_correct": true,
+    "conditional_zero_correct": true,
+    "natural_firing_tokens": 3
+   },
+   {
+    "id": "mc02",
+    "passage_id": "alien_q02",
+    "answer": "B",
+    "baseline_logits": {
+     "A": 16.375,
+     "B": 19.375,
+     "C": 14.5625,
+     "D": 13.5
+    },
+    "conditional_zero_logits": {
+     "A": 16.375,
+     "B": 19.375,
+     "C": 14.5625,
+     "D": 13.5
+    },
+    "baseline_prediction": "B",
+    "conditional_zero_prediction": "B",
+    "baseline_correct": true,
+    "conditional_zero_correct": true,
+    "natural_firing_tokens": 3
+   },
+   {
+    "id": "mc03",
+    "passage_id": "alien_q03",
+    "answer": "B",
+    "baseline_logits": {
+     "A": 16.75,
+     "B": 19.25,
+     "C": 13.8125,
+     "D": 14.125
+    },
+    "conditional_zero_logits": {
+     "A": 16.75,
+     "B": 19.25,
+     "C": 13.75,
+     "D": 14.0625
+    },
+    "baseline_prediction": "B",
+    "conditional_zero_prediction": "B",
+    "baseline_correct": true,
+    "conditional_zero_correct": true,
+    "natural_firing_tokens": 3
+   },
+   {
+    "id": "mc05",
+    "passage_id": "alien_q05",
+    "answer": "A",
+    "baseline_logits": {
+     "A": 18.75,
+     "B": 14.3125,
+     "C": 13.5625,
+     "D": 12.875
+    },
+    "conditional_zero_logits": {
+     "A": 18.75,
+     "B": 14.3125,
+     "C": 13.5625,
+     "D": 12.875
+    },
+    "baseline_prediction": "A",
+    "conditional_zero_prediction": "A",
+    "baseline_correct": true,
+    "conditional_zero_correct": true,
+    "natural_firing_tokens": 2
+   },
+   {
+    "id": "mc06",
+    "passage_id": "alien_q06",
+    "answer": "A",
+    "baseline_logits": {
+     "A": 19.625,
+     "B": 13.375,
+     "C": 13.4375,
+     "D": 13.625
+    },
+    "conditional_zero_logits": {
+     "A": 19.625,
+     "B": 13.4375,
+     "C": 13.4375,
+     "D": 13.6875
+    },
+    "baseline_prediction": "A",
+    "conditional_zero_prediction": "A",
+    "baseline_correct": true,
+    "conditional_zero_correct": true,
+    "natural_firing_tokens": 2
+   },
+   {
+    "id": "mc07",
+    "passage_id": "alien_q07",
+    "answer": "A",
+    "baseline_logits": {
+     "A": 19.0,
+     "B": 13.375,
+     "C": 13.625,
+     "D": 13.25
+    },
+    "conditional_zero_logits": {
+     "A": 19.0,
+     "B": 13.375,
+     "C": 13.625,
+     "D": 13.25
+    },
+    "baseline_prediction": "A",
+    "conditional_zero_prediction": "A",
+    "baseline_correct": true,
+    "conditional_zero_correct": true,
+    "natural_firing_tokens": 5
+   },
+   {
+    "id": "mc08",
+    "passage_id": "alien_q08",
+    "answer": "B",
+    "baseline_logits": {
+     "A": 15.125,
+     "B": 19.0,
+     "C": 13.25,
+     "D": 13.875
+    },
+    "conditional_zero_logits": {
+     "A": 15.125,
+     "B": 19.125,
+     "C": 13.3125,
+     "D": 13.875
+    },
+    "baseline_prediction": "B",
+    "conditional_zero_prediction": "B",
+    "baseline_correct": true,
+    "conditional_zero_correct": true,
+    "natural_firing_tokens": 1
+   },
+   {
+    "id": "mc10",
+    "passage_id": "alien_q10",
+    "answer": "B",
+    "baseline_logits": {
+     "A": 16.375,
+     "B": 19.125,
+     "C": 13.9375,
+     "D": 13.6875
+    },
+    "conditional_zero_logits": {
+     "A": 16.375,
+     "B": 19.25,
+     "C": 13.9375,
+     "D": 13.6875
+    },
+    "baseline_prediction": "B",
+    "conditional_zero_prediction": "B",
+    "baseline_correct": true,
+    "conditional_zero_correct": true,
+    "natural_firing_tokens": 3
+   },
+   {
+    "id": "mc11",
+    "passage_id": "alien_q11",
+    "answer": "A",
+    "baseline_logits": {
+     "A": 19.125,
+     "B": 13.125,
+     "C": 13.375,
+     "D": 13.9375
+    },
+    "conditional_zero_logits": {
+     "A": 19.125,
+     "B": 13.125,
+     "C": 13.375,
+     "D": 13.9375
+    },
+    "baseline_prediction": "A",
+    "conditional_zero_prediction": "A",
+    "baseline_correct": true,
+    "conditional_zero_correct": true,
+    "natural_firing_tokens": 3
+   },
+   {
+    "id": "mc13",
+    "passage_id": "alien_q13",
+    "answer": "A",
+    "baseline_logits": {
+     "A": 19.25,
+     "B": 13.625,
+     "C": 13.75,
+     "D": 13.3125
+    },
+    "conditional_zero_logits": {
+     "A": 19.25,
+     "B": 13.625,
+     "C": 13.75,
+     "D": 13.3125
+    },
+    "baseline_prediction": "A",
+    "conditional_zero_prediction": "A",
+    "baseline_correct": true,
+    "conditional_zero_correct": true,
+    "natural_firing_tokens": 3
+   },
+   {
+    "id": "mc14",
+    "passage_id": "alien_q14",
+    "answer": "C",
+    "baseline_logits": {
+     "A": 15.6875,
+     "B": 13.3125,
+     "C": 18.875,
+     "D": 14.0625
+    },
+    "conditional_zero_logits": {
+     "A": 15.75,
+     "B": 13.3125,
+     "C": 18.875,
+     "D": 14.0625
+    },
+    "baseline_prediction": "C",
+    "conditional_zero_prediction": "C",
+    "baseline_correct": true,
+    "conditional_zero_correct": true,
+    "natural_firing_tokens": 2
+   },
+   {
+    "id": "mc15",
+    "passage_id": "alien_q15",
+    "answer": "B",
+    "baseline_logits": {
+     "A": 15.6875,
+     "B": 18.625,
+     "C": 13.625,
+     "D": 12.5625
+    },
+    "conditional_zero_logits": {
+     "A": 15.6875,
+     "B": 18.625,
+     "C": 13.625,
+     "D": 12.5625
+    },
+    "baseline_prediction": "B",
+    "conditional_zero_prediction": "B",
+    "baseline_correct": true,
+    "conditional_zero_correct": true,
+    "natural_firing_tokens": 1
+   },
+   {
+    "id": "mc17",
+    "passage_id": "alien_q17",
+    "answer": "A",
+    "baseline_logits": {
+     "A": 19.5,
+     "B": 13.8125,
+     "C": 14.25,
+     "D": 13.6875
+    },
+    "conditional_zero_logits": {
+     "A": 19.5,
+     "B": 13.8125,
+     "C": 14.25,
+     "D": 13.625
+    },
+    "baseline_prediction": "A",
+    "conditional_zero_prediction": "A",
+    "baseline_correct": true,
+    "conditional_zero_correct": true,
+    "natural_firing_tokens": 7
+   },
+   {
+    "id": "mc18",
+    "passage_id": "alien_q18",
+    "answer": "A",
+    "baseline_logits": {
+     "A": 19.0,
+     "B": 13.375,
+     "C": 13.5625,
+     "D": 12.9375
+    },
+    "conditional_zero_logits": {
+     "A": 19.0,
+     "B": 13.375,
+     "C": 13.5625,
+     "D": 12.9375
+    },
+    "baseline_prediction": "A",
+    "conditional_zero_prediction": "A",
+    "baseline_correct": true,
+    "conditional_zero_correct": true,
+    "natural_firing_tokens": 2
+   },
+   {
+    "id": "mc19",
+    "passage_id": "alien_q19",
+    "answer": "A",
+    "baseline_logits": {
+     "A": 19.25,
+     "B": 14.125,
+     "C": 14.375,
+     "D": 13.875
+    },
+    "conditional_zero_logits": {
+     "A": 19.25,
+     "B": 14.125,
+     "C": 14.4375,
+     "D": 13.875
+    },
+    "baseline_prediction": "A",
+    "conditional_zero_prediction": "A",
+    "baseline_correct": true,
+    "conditional_zero_correct": true,
+    "natural_firing_tokens": 3
+   },
+   {
+    "id": "mc20",
+    "passage_id": "alien_q20",
+    "answer": "A",
+    "baseline_logits": {
+     "A": 19.0,
+     "B": 14.875,
+     "C": 14.75,
+     "D": 14.1875
+    },
+    "conditional_zero_logits": {
+     "A": 19.0,
+     "B": 14.875,
+     "C": 14.75,
+     "D": 14.1875
+    },
+    "baseline_prediction": "A",
+    "conditional_zero_prediction": "A",
+    "baseline_correct": true,
+    "conditional_zero_correct": true,
+    "natural_firing_tokens": 2
+   }
+  ],
+  "n": 16,
+  "baseline_correct": 16,
+  "conditional_zero_correct": 16,
+  "baseline_accuracy": 1.0,
+  "conditional_zero_accuracy": 1.0,
+  "accuracy_change_points": 0.0
+ },
+ "prediction_scores": {
+  "33.1_detector_rule": true,
+  "33.1_target_window_loss": -0.013053071385543246,
+  "33.1_matched_random_mean": 0.00015151140757139572,
+  "33.2_exceeds_matched_random_p95": false,
+  "33.2_matched_random_p95": 0.0032997412954369797,
+  "33.2_matched_random_distribution": [
+   0.0002489123934681183,
+   0.0006200934544213335,
+   -0.0017090398279219973,
+   0.003199900566661721,
+   -0.0022618278376019744,
+   0.0017363119136112241,
+   0.0012134143078308729,
+   -0.0025023229305421706,
+   0.002520028859960567,
+   0.0051967151421668705,
+   -0.0005695607576577763,
+   -5.4990826684303186e-05,
+   -0.0008735332596552325,
+   -0.002518361115403826,
+   -0.0014754619174588393,
+   -0.002877118225002592,
+   0.0016434688446819424,
+   0.001387022403535017,
+   0.0002810950930271407,
+   -0.00017451813000817924
+  ],
+  "33.3_abs_accuracy_change_under_10_points": true,
+  "33.3_accuracy_change_points": 0.0
+ }
+}

@@ -1,0 +1,1295 @@
+{
+ "inputs": {
+  "part33-authored-passages.jsonl": "4aafed9af70be834380d8a4fbcd527b528b875203f63194d7cea9c531b63b96e",
+  "sense-battery.jsonl": "3b79b2b370d6012ae63b92ffb7ddfddc9a06d6e406f26c86b49928c7b5d38884",
+  "neutral.txt": "b60b39615eea78c2aca5615bdf3905f7152f805ecc97fe8908151b8cc591df2f",
+  "part33-questions.json": "77be39aefdc1c5669a2e4901ee05c82947925372cc1ee950c379f685a81446a0"
+ },
+ "model": "Qwen/Qwen3.5-4B",
+ "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "layer": 22,
+ "neuron": 2742,
+ "natural_firing": {
+  "corpus_maximum": 24.75,
+  "conditional_threshold": 12.375,
+  "token_count": 2036,
+  "per_passage": [
+   {
+    "id": "alien_q01",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "At dawn, the extraterrestrial botanist Lira collected blue moss beside her landing craft.",
+    "activation": {
+     "max": 21.875,
+     "mean": 4.7834716796875,
+     "min": -0.38671875,
+     "tokens": 20
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.1
+   },
+   {
+    "id": "alien_q02",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The alien pilot Varo placed a brass beacon on the ridge before returning to the shuttle.",
+    "activation": {
+     "max": 14.0625,
+     "mean": 3.2421332465277777,
+     "min": -0.166015625,
+     "tokens": 18
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.05555555555555555
+   },
+   {
+    "id": "alien_q03",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "An extraterrestrial child named Seli carried a glass flute through the quiet market.",
+    "activation": {
+     "max": 19.0,
+     "mean": 5.002642463235294,
+     "min": -0.2890625,
+     "tokens": 17
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.11764705882352941
+   },
+   {
+    "id": "alien_q05",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "A visitor from another planet left three blue stones beside the village well.",
+    "activation": {
+     "max": 15.0,
+     "mean": 4.019321986607143,
+     "min": -0.55078125,
+     "tokens": 14
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.07142857142857142
+   },
+   {
+    "id": "alien_q06",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The alien cartographer drew a map of the valley on a sheet of copper.",
+    "activation": {
+     "max": 14.0625,
+     "mean": 3.43792724609375,
+     "min": -0.166015625,
+     "tokens": 16
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.0625
+   },
+   {
+    "id": "alien_q07",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "An extraterrestrial musician tuned a small harp inside the station greenhouse.",
+    "activation": {
+     "max": 19.0,
+     "mean": 4.81396484375,
+     "min": 0.06201171875,
+     "tokens": 15
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.13333333333333333
+   },
+   {
+    "id": "alien_q08",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The alien doctor gave the explorer a green bandage after examining his hand.",
+    "activation": {
+     "max": 14.0625,
+     "mean": 2.8510721842447917,
+     "min": -0.166015625,
+     "tokens": 15
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.06666666666666667
+   },
+   {
+    "id": "alien_q10",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The extraterrestrial captain named the moon Aurora after seeing its violet rings.",
+    "activation": {
+     "max": 16.875,
+     "mean": 4.593359375,
+     "min": -0.298828125,
+     "tokens": 15
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.13333333333333333
+   },
+   {
+    "id": "alien_q11",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "An alien visitor handed the mayor a folded paper covered in tiny circles.",
+    "activation": {
+     "max": 16.375,
+     "mean": 3.0274832589285716,
+     "min": -0.46875,
+     "tokens": 14
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.07142857142857142
+   },
+   {
+    "id": "alien_q13",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "A friendly extraterrestrial gardener watered the yellow flowers beside the landing pad.",
+    "activation": {
+     "max": 24.75,
+     "mean": 4.708553538602941,
+     "min": -0.3125,
+     "tokens": 17
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.11764705882352941
+   },
+   {
+    "id": "alien_q14",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The alien mechanic tightened a loose bolt on the rover with a red-handled tool.",
+    "activation": {
+     "max": 14.0625,
+     "mean": 1.9480267693014706,
+     "min": -0.40234375,
+     "tokens": 17
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.058823529411764705
+   },
+   {
+    "id": "alien_q15",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "A visitor from another planet chose the name Mira for the harbor lighthouse.",
+    "activation": {
+     "max": 15.0,
+     "mean": 2.2933919270833334,
+     "min": -0.341796875,
+     "tokens": 15
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.06666666666666667
+   },
+   {
+    "id": "alien_q17",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "An extraterrestrial traveler left a bronze compass on the station dining table.",
+    "activation": {
+     "max": 19.0,
+     "mean": 5.73935546875,
+     "min": -0.359375,
+     "tokens": 15
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.13333333333333333
+   },
+   {
+    "id": "alien_q18",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The alien shepherd guided six small creatures toward a shelter before the storm.",
+    "activation": {
+     "max": 14.0625,
+     "mean": 2.857212611607143,
+     "min": -0.2060546875,
+     "tokens": 14
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.07142857142857142
+   },
+   {
+    "id": "alien_q19",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "A UFO pilot sent the village a short message asking for fresh water.",
+    "activation": {
+     "max": 13.1875,
+     "mean": 2.7567313058035716,
+     "min": -0.2392578125,
+     "tokens": 14
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.07142857142857142
+   },
+   {
+    "id": "alien_q20",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The extraterrestrial astronomer marked the new comet with a white chalk circle.",
+    "activation": {
+     "max": 16.75,
+     "mean": 4.10614013671875,
+     "min": -0.166015625,
+     "tokens": 16
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.125
+   },
+   {
+    "id": "sense_a_01",
+    "group": "alien",
+    "source": "data/sense-battery.jsonl",
+    "text": "Scientists debated whether the alien could survive in Earth's atmosphere.",
+    "activation": {
+     "max": 23.0,
+     "mean": 3.6414591471354165,
+     "min": 0.043212890625,
+     "tokens": 12
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.08333333333333333
+   },
+   {
+    "id": "alien_extra02",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "An extraterrestrial pilot landed beyond the orchard and waved to the waiting villagers.",
+    "activation": {
+     "max": 19.0,
+     "mean": 4.048138786764706,
+     "min": -0.32421875,
+     "tokens": 17
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.11764705882352941
+   },
+   {
+    "id": "alien_extra10",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "An extraterrestrial family watched the town parade from the station balcony.",
+    "activation": {
+     "max": 19.0,
+     "mean": 3.9979422433035716,
+     "min": -0.451171875,
+     "tokens": 14
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.14285714285714285
+   },
+   {
+    "id": "alien_extra14",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "An extraterrestrial artist painted the harbor cranes beneath a purple sky.",
+    "activation": {
+     "max": 19.0,
+     "mean": 3.3525065104166667,
+     "min": -0.255859375,
+     "tokens": 15
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.13333333333333333
+   },
+   {
+    "id": "sense_a_03",
+    "group": "alien",
+    "source": "data/sense-battery.jsonl",
+    "text": "A lone alien walked through the village square, drawing startled glances.",
+    "activation": {
+     "max": 17.375,
+     "mean": 2.0867091587611606,
+     "min": -0.357421875,
+     "tokens": 14
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.07142857142857142
+   },
+   {
+    "id": "alien_extra18",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The extraterrestrial visitor chose a quiet seat beside the station window.",
+    "activation": {
+     "max": 16.875,
+     "mean": 3.6958705357142856,
+     "min": -0.375,
+     "tokens": 14
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.14285714285714285
+   },
+   {
+    "id": "sense_d_18",
+    "group": "alien",
+    "source": "data/sense-battery.jsonl",
+    "text": "The extraterrestrial studied the instruments with visible curiosity.",
+    "activation": {
+     "max": 16.875,
+     "mean": 4.188920454545454,
+     "min": -0.166015625,
+     "tokens": 11
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.18181818181818182
+   },
+   {
+    "id": "alien_extra07",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The extraterrestrial guest traded a copper badge for a bowl of warm soup.",
+    "activation": {
+     "max": 16.75,
+     "mean": 2.80731201171875,
+     "min": -0.232421875,
+     "tokens": 16
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.125
+   },
+   {
+    "id": "alien_extra04",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "A being from another planet asked the librarian where maps of Earth were kept.",
+    "activation": {
+     "max": 16.0,
+     "mean": 3.603255208333333,
+     "min": -0.375,
+     "tokens": 15
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.06666666666666667
+   },
+   {
+    "id": "alien_extra11",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "A visitor from another planet asked the farmer how to plant yellow beans.",
+    "activation": {
+     "max": 15.0,
+     "mean": 2.11376953125,
+     "min": -0.515625,
+     "tokens": 14
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.07142857142857142
+   },
+   {
+    "id": "alien_extra01",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The alien envoy arrived at the council carrying a sealed envelope from her home world.",
+    "activation": {
+     "max": 14.0625,
+     "mean": 4.9185791015625,
+     "min": -0.166015625,
+     "tokens": 16
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.0625
+   },
+   {
+    "id": "alien_extra05",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The alien commander lowered the spacecraft ramp and greeted the harbor crew.",
+    "activation": {
+     "max": 14.0625,
+     "mean": 3.7145244891826925,
+     "min": -0.166015625,
+     "tokens": 13
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.07692307692307693
+   },
+   {
+    "id": "alien_extra09",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The alien botanist recorded how the red moss changed color after sunrise.",
+    "activation": {
+     "max": 14.0625,
+     "mean": 2.83486328125,
+     "min": -0.259765625,
+     "tokens": 15
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.06666666666666667
+   },
+   {
+    "id": "alien_extra12",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The alien translator repeated the captain’s greeting in the local language.",
+    "activation": {
+     "max": 14.0625,
+     "mean": 3.252253605769231,
+     "min": -0.166015625,
+     "tokens": 13
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.07692307692307693
+   },
+   {
+    "id": "topic_41",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The instrument calibration used a steady lamp before the night observations.",
+    "activation": {
+     "max": 0.6640625,
+     "mean": -0.123046875,
+     "min": -0.30859375,
+     "tokens": 12
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_27",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "Solar panels turned toward the sun as the satellite passed over the equator.",
+    "activation": {
+     "max": 0.79296875,
+     "mean": 0.07255859375,
+     "min": -0.671875,
+     "tokens": 15
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_22",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "Gravity shaped the broad arc of material around the young star.",
+    "activation": {
+     "max": 1.1484375,
+     "mean": 0.13004557291666666,
+     "min": -2.515625,
+     "tokens": 12
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_29",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "A thin crescent moon rose above the observatory before midnight.",
+    "activation": {
+     "max": 1.203125,
+     "mean": 0.17506760817307693,
+     "min": -0.435546875,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_37",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The moon phase calendar listed the next quarter moon for Tuesday night.",
+    "activation": {
+     "max": 1.234375,
+     "mean": 0.10976820725661057,
+     "min": -0.306640625,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_06",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "Star formation continued inside the cold cloud at the edge of the spiral arm.",
+    "activation": {
+     "max": 1.2421875,
+     "mean": -0.5735188802083333,
+     "min": -2.640625,
+     "tokens": 15
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_15",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The constellation appeared above the horizon shortly after nautical twilight.",
+    "activation": {
+     "max": 1.3828125,
+     "mean": -0.012613932291666666,
+     "min": -0.41015625,
+     "tokens": 12
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_19",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The spectrometer separated the star light into narrow bands of color.",
+    "activation": {
+     "max": 1.5,
+     "mean": 0.08950570913461539,
+     "min": -0.3125,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_18",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "Ice covered the northern crater while the southern basin remained in shadow.",
+    "activation": {
+     "max": 1.515625,
+     "mean": 0.018341064453125,
+     "min": -0.341796875,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_07",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The lunar map showed a broad crater beside a narrow ridge of basalt.",
+    "activation": {
+     "max": 1.5859375,
+     "mean": 0.22379557291666666,
+     "min": -0.921875,
+     "tokens": 15
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_30",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The research team revised the orbit estimate after checking the latest measurements.",
+    "activation": {
+     "max": 1.75,
+     "mean": 0.2518780048076923,
+     "min": -0.29296875,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_17",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The observatory dome rotated slowly to follow the changing position of Jupiter.",
+    "activation": {
+     "max": 1.828125,
+     "mean": 0.2761448451450893,
+     "min": -0.166015625,
+     "tokens": 14
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "sense_e_29",
+    "group": "topic",
+    "source": "data/sense-battery.jsonl",
+    "text": "Star formation in the outer arm proceeds in cold, dense clouds.",
+    "activation": {
+     "max": 1.9140625,
+     "mean": -0.18910569411057693,
+     "min": -1.578125,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_14",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "An eclipse began when the moon crossed the bright disk of the sun.",
+    "activation": {
+     "max": 1.9765625,
+     "mean": 0.4920131138392857,
+     "min": -0.64453125,
+     "tokens": 14
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_16",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "Researchers estimated the galaxy mass from the motion of its outer stars.",
+    "activation": {
+     "max": 1.9765625,
+     "mean": 0.6752037635216346,
+     "min": -0.37109375,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_09",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The comet tail brightened as the object moved closer to the sun.",
+    "activation": {
+     "max": 1.9921875,
+     "mean": 0.34437779017857145,
+     "min": -0.7109375,
+     "tokens": 14
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_26",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The observatory published a table of measured distances between nearby stars.",
+    "activation": {
+     "max": 2.078125,
+     "mean": 0.25965294471153844,
+     "min": -0.3046875,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_20",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "A long exposure revealed faint stars behind the bright nebula.",
+    "activation": {
+     "max": 2.21875,
+     "mean": 0.545166015625,
+     "min": -1.15625,
+     "tokens": 12
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_21",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The mission log compared temperatures measured at several points in orbit.",
+    "activation": {
+     "max": 2.234375,
+     "mean": 0.4790395100911458,
+     "min": -0.318359375,
+     "tokens": 12
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_44",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The observatory archive stored spectra from the previous decade of research.",
+    "activation": {
+     "max": 2.234375,
+     "mean": 0.7233698918269231,
+     "min": -0.166015625,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "sense_e_25",
+    "group": "topic",
+    "source": "data/sense-battery.jsonl",
+    "text": "The planet's orbit shifted by a few degrees over the century.",
+    "activation": {
+     "max": 2.453125,
+     "mean": 0.4540452223557692,
+     "min": -0.20703125,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_34",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The planet surface map used elevation shading to show the mountain ranges.",
+    "activation": {
+     "max": 2.453125,
+     "mean": 0.3350078876201923,
+     "min": -0.30859375,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_46",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The galaxy image showed a bright center surrounded by faint spiral arms.",
+    "activation": {
+     "max": 2.46875,
+     "mean": 0.8117487980769231,
+     "min": -0.400390625,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_24",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "A new chart marked the asteroid belt between Mars and Jupiter.",
+    "activation": {
+     "max": 2.53125,
+     "mean": 0.4224446614583333,
+     "min": -0.69140625,
+     "tokens": 12
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_32",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The telescope tracked a bright star as it crossed the open cluster.",
+    "activation": {
+     "max": 2.90625,
+     "mean": 0.8137019230769231,
+     "min": -0.443359375,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_01",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The telescope recorded a faint nebula beyond the dark edge of the photograph.",
+    "activation": {
+     "max": 2.9375,
+     "mean": 0.7228927612304688,
+     "min": -0.4296875,
+     "tokens": 15
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_12",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "Thin rings cast a shadow across the gas giant during the observation window.",
+    "activation": {
+     "max": 3.109375,
+     "mean": 0.8759068080357143,
+     "min": -0.4296875,
+     "tokens": 14
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_31",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The meteor shower peaked after midnight under a clear sky.",
+    "activation": {
+     "max": 3.140625,
+     "mean": 0.40666060014204547,
+     "min": -0.43359375,
+     "tokens": 11
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_33",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "Clouds of interstellar dust blocked part of the distant infrared image.",
+    "activation": {
+     "max": 3.296875,
+     "mean": 1.5638950892857142,
+     "min": -0.04541015625,
+     "tokens": 14
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "topic_35",
+    "group": "topic",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "A solar flare produced a brief increase in radiation near the satellite.",
+    "activation": {
+     "max": 3.6875,
+     "mean": 1.3401442307692308,
+     "min": -0.2392578125,
+     "tokens": 13
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "sense_g_40",
+    "group": "neutral",
+    "source": "data/sense-battery.jsonl",
+    "text": "The evening train arrived nine minutes behind schedule.",
+    "activation": {
+     "max": -0.166015625,
+     "mean": -0.24620225694444445,
+     "min": -0.34375,
+     "tokens": 9
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "sense_g_41",
+    "group": "neutral",
+    "source": "data/sense-battery.jsonl",
+    "text": "She practiced the violin for an hour after dinner.",
+    "activation": {
+     "max": -0.09912109375,
+     "mean": -0.261376953125,
+     "min": -0.435546875,
+     "tokens": 10
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "sense_g_38",
+    "group": "neutral",
+    "source": "data/sense-battery.jsonl",
+    "text": "The invoice listed twelve items and a modest delivery fee.",
+    "activation": {
+     "max": -0.07763671875,
+     "mean": -0.18931995738636365,
+     "min": -0.3359375,
+     "tokens": 11
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "sense_g_39",
+    "group": "neutral",
+    "source": "data/sense-battery.jsonl",
+    "text": "He pruned the garden hedge before the first frost.",
+    "activation": {
+     "max": -0.0634765625,
+     "mean": -0.21000532670454544,
+     "min": -0.384765625,
+     "tokens": 11
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_35",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“Oh,” said Lydia, stoutly, “I am not afraid; for though I _am_ the youngest, I’m the tallest.”",
+    "activation": {
+     "max": -0.048095703125,
+     "mean": -0.20635986328125,
+     "min": -0.435546875,
+     "tokens": 28
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "sense_g_37",
+    "group": "neutral",
+    "source": "data/sense-battery.jsonl",
+    "text": "She baked a loaf of bread and left it to cool.",
+    "activation": {
+     "max": -0.04345703125,
+     "mean": -0.2347412109375,
+     "min": -0.3515625,
+     "tokens": 12
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_25",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“I do not cough for my own amusement,” replied Kitty, fretfully. “When is your next ball to be, Lizzy?”",
+    "activation": {
+     "max": -0.033203125,
+     "mean": -0.1658347800925926,
+     "min": -0.34375,
+     "tokens": 27
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_27",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“Then, my dear, you may have the advantage of your friend, and introduce Mr. Bingley to _her_.”",
+    "activation": {
+     "max": -0.024658203125,
+     "mean": -0.11392777054398148,
+     "min": -0.275390625,
+     "tokens": 27
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_16",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“But I hope you will get over it, and live to see many young men of four thousand a year come into the neighbourhood.”",
+    "activation": {
+     "max": -0.02392578125,
+     "mean": -0.1622643103966346,
+     "min": -0.376953125,
+     "tokens": 26
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_24",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“Don’t keep coughing so, Kitty, for heaven’s sake! Have a little compassion on my nerves. You tear them to pieces.”",
+    "activation": {
+     "max": -0.02099609375,
+     "mean": -0.15672986260775862,
+     "min": -0.40234375,
+     "tokens": 29
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "sense_g_36",
+    "group": "neutral",
+    "source": "data/sense-battery.jsonl",
+    "text": "The weather turned cold just before the harvest festival.",
+    "activation": {
+     "max": -0.0185546875,
+     "mean": -0.219677734375,
+     "min": -0.375,
+     "tokens": 10
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_33",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“Now, Kitty, you may cough as much as you choose,” said Mr. Bennet; and, as he spoke, he left the room, fatigued with the raptures of his wife.",
+    "activation": {
+     "max": -0.01068115234375,
+     "mean": -0.13447748228561046,
+     "min": -0.408203125,
+     "tokens": 43
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_04",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“But it is,” returned she; “for Mrs. Long has just been here, and she told me all about it.”",
+    "activation": {
+     "max": -0.0093994140625,
+     "mean": -0.18347412109375,
+     "min": -0.310546875,
+     "tokens": 25
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_23",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“No more have I,” said Mr. Bennet; “and I am glad to find that you do not depend on her serving you.”",
+    "activation": {
+     "max": -0.00118255615234375,
+     "mean": -0.1095175061907087,
+     "min": -0.3046875,
+     "tokens": 28
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_26",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“Ay, so it is,” cried her mother, “and Mrs. Long does not come back till the day before; so, it will be impossible for her to introduce him, for she will not know him herself.”",
+    "activation": {
+     "max": 0.00567626953125,
+     "mean": -0.12077450222439236,
+     "min": -0.314453125,
+     "tokens": 45
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_02",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "However little known the feelings or views of such a man may be on his first entering a neighbourhood, this truth is so well fixed in the minds of the surrounding families, that he is considered as the rightful property of some one or other of their daughters.",
+    "activation": {
+     "max": 0.006317138671875,
+     "mean": -0.20897539924172795,
+     "min": -0.5078125,
+     "tokens": 51
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_03",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“My dear Mr. Bennet,” said his lady to him one day, “have you heard that Netherfield Park is let at last?”",
+    "activation": {
+     "max": 0.00799560546875,
+     "mean": -0.12267855940193965,
+     "min": -0.40625,
+     "tokens": 29
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_21",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“But you forget, mamma,” said Elizabeth, “that we shall meet him at the assemblies, and that Mrs. Long has promised to introduce him.”",
+    "activation": {
+     "max": 0.01953125,
+     "mean": -0.12103474934895833,
+     "min": -0.3671875,
+     "tokens": 30
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_28",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“Impossible, Mr. Bennet, impossible, when I am not acquainted with him myself; how can you be so teasing?”",
+    "activation": {
+     "max": 0.0206298828125,
+     "mean": -0.17469435471754807,
+     "min": -0.58203125,
+     "tokens": 26
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_10",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“But, my dear, you must indeed go and see Mr. Bingley when he comes into the neighbourhood.”",
+    "activation": {
+     "max": 0.0255126953125,
+     "mean": -0.13447371773097827,
+     "min": -0.439453125,
+     "tokens": 23
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_19",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "Mr. Bennet was among the earliest of those who waited on Mr. Bingley. He had always intended to visit him, though to the last always assuring his wife that he should not go; and till the evening after the visit was paid she had no knowledge of it. It was then disclosed in the following manner. Observing his second daughter employed in trimming a hat, he suddenly addressed her with,--",
+    "activation": {
+     "max": 0.0380859375,
+     "mean": -0.13020342658547795,
+     "min": -0.369140625,
+     "tokens": 85
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_17",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“It will be no use to us, if twenty such should come, since you will not visit them.”",
+    "activation": {
+     "max": 0.04736328125,
+     "mean": -0.14874122256324404,
+     "min": -0.34375,
+     "tokens": 21
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_22",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“I do not believe Mrs. Long will do any such thing. She has two nieces of her own. She is a selfish, hypocritical woman, and I have no opinion of her.”",
+    "activation": {
+     "max": 0.05078125,
+     "mean": -0.1135877951597556,
+     "min": -0.35546875,
+     "tokens": 39
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_39",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "An invitation to dinner was soon afterwards despatched; and already had Mrs. Bennet planned the courses that were to do credit to her housekeeping, when an answer arrived which deferred it all. Mr. Bingley was obliged to be in town the following day, and consequently unable to accept the honour of their invitation, etc. Mrs. Bennet was quite disconcerted. She could not imagine what business he could have in town so soon after his arrival in Hertfordshire; and she began to fear that he might always be flying about from one place to another, and never settled at Netherfield as he ought to be. Lady Lucas quieted her fears a little by starting the idea of his",
+    "activation": {
+     "max": 0.056396484375,
+     "mean": -0.1040026346842448,
+     "min": -0.431640625,
+     "tokens": 144
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_18",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "Mr. Bennet was so odd a mixture of quick parts, sarcastic humour, reserve, and caprice, that the experience of three-and-twenty years had been insufficient to make his wife understand his character. _Her_ mind was less difficult to develope. She was a woman of mean understanding, little information, and uncertain temper. When she was discontented, she fancied herself nervous. The business of her life was to get her daughters married: its solace was visiting and news.",
+    "activation": {
+     "max": 0.058349609375,
+     "mean": -0.10146803903107596,
+     "min": -0.37109375,
+     "tokens": 101
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_06",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“My dear Mr. Bennet,” replied his wife, “how can you be so tiresome? You must know that I am thinking of his marrying one of them.”",
+    "activation": {
+     "max": 0.06005859375,
+     "mean": -0.10632683249080882,
+     "min": -0.404296875,
+     "tokens": 34
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_05",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“Oh, single, my dear, to be sure! A single man of large fortune; four or five thousand a year. What a fine thing for our girls!”",
+    "activation": {
+     "max": 0.0654296875,
+     "mean": -0.14350856434215198,
+     "min": -0.30078125,
+     "tokens": 33
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_32",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“How good it was in you, my dear Mr. Bennet! But I knew I should persuade you at last. I was sure you loved your girls too well to neglect such an acquaintance. Well, how pleased I am! And it is such a good joke, too, that you should have gone this morning, and never said a word about it till now.”",
+    "activation": {
+     "max": 0.07861328125,
+     "mean": -0.07854946239574535,
+     "min": -0.33203125,
+     "tokens": 74
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_09",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“My dear, you flatter me. I certainly _have_ had my share of beauty, but I do not pretend to be anything extraordinary now. When a woman has five grown-up daughters, she ought to give over thinking of her own beauty.”",
+    "activation": {
+     "max": 0.083984375,
+     "mean": -0.13843994140625,
+     "min": -0.44140625,
+     "tokens": 50
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   },
+   {
+    "id": "neutral_book_34",
+    "group": "neutral",
+    "source": "data/neutral.txt",
+    "text": "“What an excellent father you have, girls,” said she, when the door was shut. “I do not know how you will ever make him amends for his kindness; or me either, for that matter. At our time of life, it is not so pleasant, I can tell you, to be making new acquaintances every day; but for your sakes we would do anything. Lydia, my love, though you _are_ the youngest, I dare say Mr. Bingley will dance with you at the next ball.”",
+    "activation": {
+     "max": 0.0849609375,
+     "mean": -0.06990849206206995,
+     "min": -0.341796875,
+     "tokens": 109
+    },
+    "firing_tokens": 0,
+    "firing_fraction": 0.0
+   }
+  ],
+  "candidate_counts": {
+   "alien": 50,
+   "topic": 52,
+   "neutral": 46
+  },
+  "selected_counts": {
+   "alien": 30,
+   "topic": 30,
+   "neutral": 30
+  },
+  "dropped_question_passages": [
+   "alien_q04",
+   "alien_q09",
+   "alien_q12",
+   "alien_q16"
+  ]
+ }
+}
