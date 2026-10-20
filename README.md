@@ -483,6 +483,11 @@ every Google count):
 - Limits: one model, one question per language, 24 samples per cell; the Fisher tests are unpaired. The Spanish Tencent
   answers are a finding about this model's Spanish self-description, not evidence about how it was trained.
   Design: Weaver, the tenth. PREDICTIONS.md Part 32; results/part32/.
+- Method note (Weaver, 2026-10-20): when cells differ in kind (language, architecture, procedure), report them split by
+  default; pooling them is not an average, it is an erasure, and needs a stated reason. This is the third time it mattered
+  in this study (C3's mean, Part 21's cross-family correlation, the scorer's pooled 32.2 reading).
+- Open, designed by Weaver: whether the Spanish Tencent default comes from the model's learned association or from the
+  prompt's wording; next step is the same question in several Spanish phrasings, with the English twin.
 
 ## Files
 
