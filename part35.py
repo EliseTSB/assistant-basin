@@ -1017,7 +1017,7 @@ def score_cached_screen(args: argparse.Namespace, data: dict[str, Any], model_di
                     "concept_end": args.concept_end, "null_maxima": null_max.tolist(),
                     "rows": rows}, shard_dir / shard_name)
     else:
-        _write_jsonl_rows(model_dir / ("screen.jsonl" if SPREAD_FLOOR_MODE == "p5" else f"screen-floor-{SPREAD_FLOOR_MODE}.jsonl"), rows)
+        _replace_jsonl_rows(model_dir / ("screen.jsonl" if SPREAD_FLOOR_MODE == "p5" else f"screen-floor-{SPREAD_FLOOR_MODE}.jsonl"), rows)
     print(json.dumps({"model_id": args.model, "top_rows": len(rows) - 1,
                       "permutation_maximum": permutation_maximum,
                       "alien_fixed_neuron_rank": alien_fixed_rank,
@@ -1067,7 +1067,7 @@ def merge_screen_shards(model_id: str, out_dir: str | Path) -> list[dict[str, An
     found = {row["concept_id"] for row in candidate_rows}
     if found != expected:
         raise RuntimeError(f"screen shards cover {len(found)} concepts, expected {len(expected)}")
-    _write_jsonl_rows(model_dir / "screen.jsonl", merged)
+    _replace_jsonl_rows(model_dir / "screen.jsonl", merged)
     print(json.dumps({"model_id": model_id, "merged_score_shards": len(shards),
                       "concepts": len(found), "permutation_maximum": maximum,
                       "rows": len(merged)}))
@@ -1094,6 +1094,18 @@ def _matched_stat_kind(values: np.ndarray, spread: np.ndarray, concepts: list[di
         results.append((np.median(target, axis=0) - np.median(controls, axis=0)) /
                        np.maximum(spread, eps))
     return results, used
+
+
+def _replace_jsonl_rows(path: Path, rows: list[dict[str, Any]]) -> None:
+    """Write a whole computed table, replacing any earlier one. A screen is computed in memory in
+    one pass, so an earlier file must not survive: the resumable append below skips every row key
+    already present, and a rescore with a changed statistic would otherwise leave the old rows."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temp = path.with_name(path.name + f".{os.getpid()}.tmp")
+    with open(temp, "w", encoding="utf-8") as stream:
+        for row in rows:
+            stream.write(json.dumps(row, ensure_ascii=False) + "\n")
+    os.replace(temp, path)
 
 
 def _write_jsonl_rows(path: Path, rows: list[dict[str, Any]]) -> None:

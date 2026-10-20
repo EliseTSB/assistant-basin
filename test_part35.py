@@ -360,3 +360,14 @@ class SpreadFloorTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ScreenRewriteTests(unittest.TestCase):
+    def test_rescore_replaces_earlier_screen_rows(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "screen.jsonl"
+            p35._replace_jsonl_rows(path, [{"row_key": "k1", "primary_stat": 166402.0}])
+            p35._replace_jsonl_rows(path, [{"row_key": "k1", "primary_stat": 3.5}])
+            rows = p35.jsonl_rows(path)
+            self.assertEqual([r["primary_stat"] for r in rows], [3.5])
