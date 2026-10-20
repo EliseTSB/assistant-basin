@@ -37,3 +37,6 @@ wall HuggingFaceTB/SmolLM2-1.7B-Instruct: 2767 s
 resolved sha: 48d788eca847d4d7548f375ad03d3c9312f6139e
 Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
 Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 2000.00it/s]
+allenai/OLMo-2-0425-1B-Instruct@main: wrote 60; failed 0
+wall allenai/OLMo-2-0425-1B-Instruct: 3461 s
+ALLDONE
