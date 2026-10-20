@@ -315,3 +315,17 @@ tokens. Question-side single neurons with a causal steer exist for ambiguity (Zh
 not address. Gurnee et al. 2023 has no assistant, addressee or speaker features. Ye et al. 2026: role is a linear
 quantity tracked apart from the tags. Muse's caution, already met here: Part 39's categories were pre-registered
 (91626c8, beccafc) before any category read.
+
+### Parts 40 and 41 (Muse's search, council muse-neuron-research-2026-10 #87) — recorded 2026-10-20 18:48 CT
+Muse's reading; Huang 2023 and Paulo 2024 opened at full text by Muse, not yet by Claude. Citations in
+PART40-41-DESIGN.md confirmed: Huang et al. 2023 (arXiv:2309.10312), Bills et al. 2023, Gurnee et al. 2023
+(arXiv:2305.01610). Part 40: Huang 2023 is the only published work with targeted negatives (sequences the neuron
+fires on, judged in or out of the explanation): precision 0.64, recall 0.50, F1 0.56 on the best-explained GPT-2 XL
+neurons; GPT-4's confidence does not predict faithfulness (r about -0.1). Paulo et al. 2024 (arXiv:2410.13928):
+fuzzing scores track human scores best (Spearman 0.69); explanations built from top examples only degrade off
+distribution (0.95/0.93 to 0.80/0.74). Nobody reports precision as a function of miss distance, or random-direction
+nulls beside random-unit ones. Part 41: the literature leans to Claude's 41.2 (specific and word-level early, broad
+and abstract late): Tenney 2019, Geva 2022, Gurnee 2023, Yona 2026, Davies 2025 (a family-general "dog" neuron at
+layer 26 of 32 in Llama 3.1 8B), multilingual SAE layer analyses, Kissane 2024. Nothing found supports broad-earlier
+at the single-unit level; early units are broad only in the superposition sense. The direct family-versus-member
+depth comparison is unpublished.
