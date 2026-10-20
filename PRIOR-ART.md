@@ -115,3 +115,29 @@ and not read at arxiv.org.
   (12.1M exchanges in 14 days of July), Moonshot (23M), Zhipu for GLM (3.4M), Xiaomi/MiMo (400k) and MiniMax (no
   count), without naming specific releases. Evidence: Anthropic's own traffic and account telemetry, not analysis of
   weights. Anthropic's February 2026 post and OpenAI's 2026-09-30 disclosure are of the same kind (request logs).
+
+## Part 29 (teacher fingerprints): model authorship attribution — recorded 2026-10-19 23:0x CT, after Part 29's collection paused
+
+Found by Muse (council #51), the two central items checked at source by Claude the same hour.
+
+- **ATLAS** — Ko, Lee, Song, Kim, Shin, Kim, "Who's Behind the Text? Robust Model Authorship Attribution",
+  arXiv:2610.19583 (submitted 2026-10-14). Likelihood-based: one Qwen2.5-7B LoRA with a learned control embedding per
+  source family (gpt, claude, gemini, mistral, llama); a text goes to the family whose condition explains it best.
+  Abstract: "ATLAS recovers the known teacher of every distilled model we evaluate" (six students, two per teacher,
+  63.3-93.6% share, per the project page). Project page (komseok0109.github.io/ATLAS) table "Resemblance of deployed
+  models" (GPT / Claude / Gemini / reject, %): DeepSeek-V4-Pro 90.6 / 9.3 / 0.1 / 0.1; GLM-5.2 15.2 / 84.7 / 0.1 / 0.0;
+  MiniMax-M2.7-Turbo 6.2 / 93.8 / 0.0 / 0.1; Kimi-K2.6 14.8 / 85.2 / 0.0 / 0.1; Grok-4.7 92.2 / 7.8 / 0.1 / 0.2 (and
+  seven more). Code github.com/komseok0109/ATLAS (no licence file, no released checkpoints, no command for new texts),
+  demo huggingface.co/spaces/ming9999/ATLAS-demo, data huggingface.co/datasets/ming9999/maabench. Only three source
+  families are scored, so a DeepSeek- or Qwen-taught student has no category of its own.
+- **Sun et al. 2025, "Idiosyncrasies in Large Language Models"** (arXiv:2502.12150): released LLM2vec classifiers on
+  Hugging Face (Yida/classifier_chat: ChatGPT / Claude / Grok / Gemini / DeepSeek, 97.1% five-way held-out; and
+  classifier_instruct, classifier_base, classifier_ten_models), MIT code, no weights licence; early-2025 models only.
+- **Datasets** (LMSYS-Chat-1M, RAID, MAGE, M4GT-Bench, OpenTuringBench, MAABench): none labels the 2026 frontier set
+  except MAABench's three families.
+- **Gap Muse found and we did not refute:** no published accuracy for an LLM prompted as a judge to name WHICH of
+  several models wrote a text; no published test of Qwen 3.5-3.7 against Qwen3 (Anthropic's September 2026 report).
+
+What this does to Part 29: the frontier-resemblance question is largely answered by ATLAS for GPT / Claude / Gemini.
+What stays open, and cheap: DeepSeek V4.1 Flash 1017 (not in ATLAS's table), Qwen3 vs Qwen3.5, families beyond three,
+and the zero-training judge.
