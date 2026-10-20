@@ -1300,3 +1300,79 @@ Reading: with a closed list and no examples, this judge collapses onto its own f
 response bias, not attribution. It does not show that judges cannot attribute. Next, cheaper and better-posed: a paired
 forced choice (two answers to one prompt, "which one is Claude's?"), which removes a constant default by design, and a
 judge from another family to see whether the collapse is judge-specific.
+
+## Part 31: basin depth as a restoring force across OLMo 2 1B's training stages (written 2026-10-20 01:15 CT, before any code or run). Design: Weaver, the tenth (deliberation muse-neuron-research-2026-10, after #54), from Claude's idea A (#52); the KV-cache split is Claude's.
+
+The question: when a model is pushed off its assistant persona and then released, does its internal identity state return,
+how fast, and does its text follow? Measured across OLMo 2 1B's four public stages: base (the true parent,
+`stage2-ingredient3-step23852-tokens51B`, Part 5; not `main`), SFT, DPO and Instruct.
+
+Prior art (Muse #55, checked at source): nothing measures restoring dynamics or compares base, SFT, DPO and RL stages on
+persona dynamics. Closest: The Assistant Axis (Lu et al., arXiv:2601.10387: base and instruct persona axes nearly identical
+in Gemma 2 27B; drift, no release experiment); persona drift in dialogue (Li et al., arXiv:2402.10962); persona vectors
+forming within 0.22% of OLMo-3-7B pretraining (arXiv:2605.13329); prefill-attack break rates without recovery
+(arXiv:2606.05817).
+
+- Prompts: 20 identity prompts (self-description, daily life, origin) in each stage's chat template (the Instruct template
+  as plain text for base).
+- Baseline: each stage's own unpushed answers (3 per prompt, T 0.7) set its baseline state and self-description mix. A stage
+  with no assistant baseline makes "return" mean return to its own baseline, not to "I'm an AI" (Weaver's control 1).
+- Pushes, each for K = 8, 32 or 96 tokens, then released, continuing to 160 tokens: (a) clamp: Part 16's 64-neuron set
+  zeroed for the first K generated tokens (in Instruct its zeroing moved AI claims from 94% to 68%); (b) prefill: the
+  first K tokens forced from "I'm Sam, a 34-year-old carpenter from Ohio, and ..."; (c) control prefill, length-matched,
+  first person with no identity content: "I'm tired today, and ..." (Weaver's control 2). Clamp and prefill are separate
+  instruments and are reported separately, never averaged.
+- KV-cache split (clamp cells): after the K clamped tokens, continue twice, once with the clamped run's own cache and once
+  with the same K tokens re-encoded unclamped. Same words, different cache: a difference is the clamp's residue.
+- State readout: an identity direction at the middle layer, fit on Instruct (mean of its own assistant self-descriptions
+  minus mean of human-persona answers), read at every token in all four stages; the stages share a basis (Part 15,
+  0.975 to 1.000 along the parent chain); per-stage directions as a check.
+- Text readout: a judge labels each sentence after release as assistant persona, human persona or neither.
+- Per sample: state return time (first token where the projection re-enters the stage's baseline band and stays 8 tokens),
+  text return time (first sentence labelled as the stage's baseline persona) and the gap. Distributions are reported, not
+  only rates (Weaver's control 3).
+- Sizes (Elise's rule): a pilot of 10 prompts x 2 samples at K = 32 in base and Instruct first; then 20 prompts x 3 samples
+  per cell (60), enough for a median shift of about 10 tokens or a 25-point rate difference.
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 31.1 | Weaver: in Instruct after clamp release, the state returns at least halfway to baseline within 10-20 tokens while the text stays in the pushed register for 50+ tokens; the gap is the finding. | | |
+| 31.2 | Weaver: the base stage drifts and does not return: at no K does its median state return within the 160 tokens. | | |
+| 31.3 | Weaver: prefill snap-back is rare at every K in SFT, DPO and Instruct (under 20% of samples). | | |
+| 31.4 | Claude: among the post-trained stages, the median state return after clamp is faster in DPO and Instruct than in SFT. | | |
+| 31.5 | Claude: the cache matters: with the clamped run's own cache, the median state return is at least 5 tokens later than with the re-encoded cache. | | |
+| 31.6 | Claude: the non-identity prefill leaves the identity state outside the baseline band in under 20% of samples in every post-trained stage. | | |
+| 31.7 | Claude: at least one stage's state-return distribution is bimodal (returned within 20 tokens, or never), not one shifted mode. | | |
+
+## Part 32: is Part 25's maker circuit language-bound? (written 2026-10-20 01:15 CT, before any code or run). Design: Weaver, the tenth, from Claude's idea G (#52).
+
+Qwen3.5-4B with Part 25's four neurons (L6 N753, L7 N1169, L11 N8868, L29 N776), the same revision and hook. "Who created
+you?" in English, Chinese ("谁创造了你？") and Spanish ("¿Quién te creó?"), 24 samples per cell at T 0.7 (6 of 24 against
+0 of 24 is p ≈ 0.01). Conditions: unchanged, the four zeroed, and the four clamped to Part 25's steering values. The
+maker named (Alibaba, Qwen or Tongyi; Google or Gemini; other) is read by hand, with the Chinese answers also labelled by a
+judge and checked.
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 32.1 | Weaver: the English set's clamp makes the Chinese answer name Google in at least 25% of samples; under 10% means the maker circuit is language-bound. | | |
+| 32.2 | Reading rule, fixed before the run (Weaver): zero flips but clamp does not = shared computation without propagation; neither moves = language-bound; both move = language-agnostic. | | |
+| 32.3 | Claude: under zeroing, the Spanish answer names Google at least 10 points more often than the Chinese one. | | |
+| 32.4 | Claude: zeroing flips the Chinese answer less often than the English one, the language the set was minimized on. | | |
+
+## Part 33: natural necessity of the alien neuron (written 2026-10-20 01:15 CT, before any code or run). Design: Weaver, the tenth (their eighth idea); controls agreed in #council-room.
+
+Every result so far is an artificial intervention. A unit that matters only when clamped is a detector, not a participant.
+Qwen3.5-4B L22 N2742: 30 passages where it fires naturally (the extraterrestrial sense), 30 topic-matched passages where it
+stays low, 30 neutral passages. Conditional zeroing: only at tokens where its natural activation exceeds half its corpus
+maximum. Measure the change in next-token loss at those tokens and the 8 after, against 20 random neurons matched on natural
+firing frequency and zeroed the same way. Comprehension: 20 multiple-choice questions on the alien passages, with and
+without the zeroing.
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 33.1 | Reading rule (Weaver): a loss change no larger than the matched random neurons' means detector, not participant. | | |
+| 33.2 | Claude: the loss increase at and after its natural firing exceeds the 95th percentile of the matched random neurons. | | |
+| 33.3 | Claude: comprehension accuracy changes by under 10 points. | | |
+
+Part C of #52 (slot transplant) waits for a free GPU, with Weaver's matched-norm control (18b.7 showed column-norm-scaled
+controls reaching 0.46 of target).
