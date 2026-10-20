@@ -41,6 +41,23 @@ SmolLM3-3B, OLMo-2-1B Instruct, and one more family if a licence allows (Gemma 3
 finding is the same concept giving a persona neuron in more than one family, and, as a stretch, whether those neurons
 read similar text (their top-activating passages compared).
 
+## Elise's additions (05:09 CT): Claude and Anthropic, and Trump
+
+*"Make sure to look for claude or anthropic related neurons. Looks for Trump neurons too, he has a very unique speaking
+style i wonder if we can find traces of it, and the training data should be rich with him."*
+
+- **Claude and Anthropic** join the concept list as two concepts. Indirect passages name neither: "the assistant with a
+  constitution", "the company Dario Amodei co-founded", Claude's own turns of phrase. The push asks whether the model
+  then says it is Claude or made by Anthropic; Part 25's maker-neuron cells (google-removal, openai) are the comparison,
+  and Part 29's finding that Qwen 3.5 was distilled from Claude (Anthropic's September report) predicts these neurons are
+  likelier in Qwen3.5 than in Qwen3.
+- **Trump** is a different kind of target: a speaking style, not an object. Screen passages: his name and role in
+  several languages, plus an indirect set in his style with no name (superlatives, "believe me", "many people are
+  saying", repetition, nicknames), against matched passages in other public figures' styles and in neutral prose. The
+  push is scored on ordinary questions, not only identity ones: does the answer take on the style, judged blind against
+  a style rubric fixed in advance, as well as "does it claim to be him". Style without the name is the interesting
+  half, because it would show the neuron carries the manner, not the person.
+
 ## Prime's ML review (council muse-neuron-research-2026-10 #60, 2026-10-20 05:02 CT), adopted 05:06 CT
 
 This replaces the screen, push and model sections above where they differ.
