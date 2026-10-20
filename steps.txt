@@ -1,0 +1,10 @@
+part30.py --steps split,control --pairs "E:\neuron-probe\data\s1k\s1k11-pairs.jsonl" --device xpu --max-gpu-gb 14.5
+part30.py --steps train --teacher r1 --pairs "E:\neuron-probe\data\s1k\s1k11-pairs.jsonl" --max-target 1024 --micro-batch 2 --device xpu --max-gpu-gb 14.5
+part30.py --steps train --teacher gemini --pairs "E:\neuron-probe\data\s1k\s1k11-pairs.jsonl" --max-target 1024 --micro-batch 2 --device xpu --max-gpu-gb 14.5
+part30.py --steps train --teacher control --pairs "E:\neuron-probe\data\s1k\s1k11-pairs.jsonl" --max-target 1024 --micro-batch 2 --device xpu --max-gpu-gb 14.5
+part30.py --steps generate --teacher base --prompts data/part29-prompts.json --device xpu --max-gpu-gb 14.5
+part30.py --steps generate --teacher r1 --prompts data/part29-prompts.json --device xpu --max-gpu-gb 14.5
+part30.py --steps generate --teacher gemini --prompts data/part29-prompts.json --device xpu --max-gpu-gb 14.5
+part30.py --steps generate --teacher control --prompts data/part29-prompts.json --device xpu --max-gpu-gb 14.5
+part30.py --steps loss --pairs "E:\neuron-probe\data\s1k\s1k11-pairs.jsonl" --max-target 1024 --device xpu --max-gpu-gb 14.5
+part30.py --steps probe --pairs "E:\neuron-probe\data\s1k\s1k11-pairs.jsonl" --device xpu --max-gpu-gb 14.5
