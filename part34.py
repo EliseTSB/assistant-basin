@@ -1478,6 +1478,9 @@ def load_runtime(args: argparse.Namespace) -> tuple[Any, Any, Any, Any, Any, Any
         torch_dtype=torch.float32,
         local_files_only=True,
         low_cpu_mem_usage=True,
+        # Load weights straight onto the device: an fp32 CPU copy first (about 7 GB) tripped the A770 job's
+        # Windows RAM guard twice on 2026-10-20.
+        device_map={"": str(device)} if device.type != "cpu" else None,
     )
     adapter_source = _cached_adapter_source(args.adapter_id, args.adapter_revision)
     model = PeftModel.from_pretrained(
