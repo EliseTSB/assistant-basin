@@ -695,11 +695,26 @@ def _matched_stat(values: np.ndarray, neutral_spread: np.ndarray,
     return stats, frame_indices
 
 
+def _torch_median_dim0(torch: Any, x: Any) -> Any:
+    """numpy.median semantics along dim 0 (mean of the two middle values for an even count)."""
+    ordered, _ = torch.sort(x, dim=0)
+    n = ordered.shape[0]
+    if n % 2:
+        return ordered[n // 2]
+    return (ordered[n // 2 - 1] + ordered[n // 2]) / 2
+
+
 def permutation_maxima(values: np.ndarray, neutral_spread: np.ndarray,
                        frame_indices: list[list[int]], n_permutations: int = PERMUTATIONS,
                        seed: int = PERMUTATION_SEED,
-                       target_indices: list[int] | None = None) -> np.ndarray:
-    """Matched-frame concept-label null; each permutation shuffles labels within every frame."""
+                       target_indices: list[int] | None = None,
+                       device: str | None = None) -> np.ndarray:
+    """Matched-frame concept-label null; each permutation shuffles labels within every frame.
+
+    With device set (e.g. "xpu" or "cpu"), the medians run in torch on that device: the same label draws from
+    the same numpy RNG and the same median definition, so the result matches the numpy path to float rounding.
+    The numpy path took about 3.7 s per permutation on Qwen3-1.7B (43 concepts, 36 frames, 6,144 units).
+    """
     if n_permutations < 200:
         raise ValueError("the Part 35 permutation null requires at least 200 permutations")
     rng = np.random.default_rng(seed)
@@ -708,6 +723,23 @@ def permutation_maxima(values: np.ndarray, neutral_spread: np.ndarray,
     maxima = np.full(n_permutations, -np.inf, dtype=np.float64)
     eps = max(1e-8, float(np.median(neutral_spread)) * 1e-6)
     denom = np.maximum(neutral_spread, eps)
+    if device:
+        import torch
+        tv = torch.as_tensor(values, dtype=torch.float32, device=device)
+        td = torch.as_tensor(denom, dtype=torch.float32, device=device)
+        for permutation_i in range(n_permutations):
+            label_to_source = np.stack([rng.permutation(n_concepts) for _ in range(n_frames)], axis=0)
+            for concept_i in targets:
+                frames = np.asarray(frame_indices[concept_i])
+                others = [o for o in range(n_concepts) if o != concept_i]
+                target = tv[torch.as_tensor(label_to_source[frames, concept_i], device=device),
+                            torch.as_tensor(frames, device=device)]
+                src = label_to_source[np.ix_(frames, others)].reshape(-1)
+                frm = np.repeat(frames, len(others))
+                control = tv[torch.as_tensor(src, device=device), torch.as_tensor(frm, device=device)]
+                statistic = (_torch_median_dim0(torch, target) - _torch_median_dim0(torch, control)) / td
+                maxima[permutation_i] = max(maxima[permutation_i], float(statistic.max().item()))
+        return maxima
     for permutation_i in range(n_permutations):
         label_to_source = np.stack([rng.permutation(n_concepts) for _ in range(n_frames)], axis=0)
         for concept_i in targets:
@@ -785,7 +817,8 @@ def score_cached_screen(args: argparse.Namespace, data: dict[str, Any], model_di
         discovery, disc_frames = _matched_stat(values, neutral_spread, concepts, passage_map, "discovery")
         confirmation, _ = _matched_stat(values, neutral_spread, concepts, passage_map, "confirmation")
         layer_null = permutation_maxima(values, neutral_spread, disc_frames,
-                                        args.permutations, PERMUTATION_SEED, target_indices)
+                                        args.permutations, PERMUTATION_SEED, target_indices,
+                                        device=args.device)
         null_max = np.maximum(null_max, layer_null)
         print(f"{header.get('model_id', 'model')}: scored layer {layer} of {len(layers)}", flush=True)
         # Separate secondary views are attached to each candidate, using the same fixed neutral spread.

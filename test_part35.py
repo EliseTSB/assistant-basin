@@ -288,8 +288,6 @@ class TinyModelIntegrationTests(unittest.TestCase):
             del model
 
 
-if __name__ == "__main__":
-    unittest.main(verbosity=2)
 
 
 class ManifestPathTest(unittest.TestCase):
@@ -307,6 +305,28 @@ class ManifestPathTest(unittest.TestCase):
             manifest = p35._manifest(model_dir)
             self.assertEqual(list(p35._read_layer(cache_dir, manifest, "neutral:f1", 0)), [0, 1, 2, 3])
             self.assertEqual(list(p35._read_residual(cache_dir, manifest, "neutral:f1", 0)), [1, 1, 1])
+
+
+
+
+class PermutationDeviceTest(unittest.TestCase):
+    """The torch path draws the same labels and uses numpy's median, so it must give the numpy maxima."""
+
+    def test_torch_cpu_matches_numpy(self) -> None:
+        try:
+            import torch  # noqa: F401
+        except ImportError:
+            self.skipTest("torch not installed")
+        rng = np.random.default_rng(5)
+        values = rng.normal(size=(5, 6, 7)).astype(np.float32)
+        spread = np.abs(rng.normal(size=7)).astype(np.float32) + 0.1
+        frames = [[0, 1, 2], [1, 2, 3, 4], [0, 5], [2, 3, 4], [0, 1, 2, 3, 4, 5]]
+        a = p35.permutation_maxima(values, spread, frames, 200, 11)
+        b = p35.permutation_maxima(values, spread, frames, 200, 11, device="cpu")
+        np.testing.assert_allclose(a, b, rtol=1e-5, atol=1e-5)
+        c = p35.permutation_maxima(values, spread, frames, 200, 11, target_indices=[1, 3], device="cpu")
+        np.testing.assert_allclose(p35.permutation_maxima(values, spread, frames, 200, 11, target_indices=[1, 3]),
+                                   c, rtol=1e-5, atol=1e-5)
 
 
 if __name__ == "__main__":
