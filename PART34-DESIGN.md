@@ -88,6 +88,23 @@ the mean; measuring D at the answer position shows whether it happens. A version
 - **Parity-free elicitation.** Options that avoid the words even and odd: "(A) layers 0, 2, 4, … (B) layers 1, 3, 5, …"
   (numbers gave a weak zigzag in their battery, so D is measured here too) and the free-text question in control 1.
 
+## Prime's ML review (council muse-neuron-research-2026-10 #57, 2026-10-20 04:41 CT), added 04:45 CT, before any run
+
+1. **B reads M's cache.** Turn 1 computed under the intervention (hook, or the adapter), turn 2 run by B with no adapter
+   attending to those keys and values, against B over B's own turn-1 cache (same tokens, same reader, computed not
+   copied). This asks whether the state is readable from the cache at all, apart from whether M can report it, and it
+   sidesteps the turn-2 question writing its own zigzag. Log the turn-2 logit delta between the two arms as the check
+   that the intervention landed.
+2. **The 28-layer z profile in every row**, not only D; |D| as a percent of the 4-unit target per cell. A uniform
+   profile would make "zigzag" false.
+3. **Random-direction zigzag control**: same magnitude and alternation along a fixed-seed random unit direction per
+   layer (inject-rand-even, inject-rand-odd).
+4. **Pin the sites**: the hook's site equals the direction's definition site; fixed letter token ids; achieved D on
+   turn-1 tokens in inject-* against none as the positive control.
+5. Name each cell's state magnitude (adapter about 0.88 x 2 SD, hook exactly 2 SD); report B's own not-even letter rates
+   (it decides whether 34.9 is anti-text); scan the 40 questions for cat, even, odd and layer words; the free-text floor
+   is none's measured cat-mention rate, one blind judge for every cell.
+
 ## Readings
 
 - Report follows text: not-even answered "odd" or at chance; inject-* at chance; M the same as B.

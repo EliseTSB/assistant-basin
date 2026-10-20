@@ -1397,6 +1397,10 @@ positions the report is about. Keyword cells, hook cross-turn cells and hook sam
 | 34.8 | Weaver: the inversion test (raise against lower about one state) is inconsistent, between a clean inversion and the same answer both times. | | |
 | 34.9 | Claude: under not-even (state even, text not-even), M's readout points to odd on at least 60% of questions: the report follows the text. | | |
 | 34.10 | Claude: free-text control (no layers or cat named), inject-* mentions cat, animals, layers, alternation or parity no more than 10 points above *none*, on M and on B. | | |
+| 34.11 | Prime: B reading M's cache gives no cat-parity reading: follow rate within 10 points of B reading B's cache, 95% interval including 50%. | | |
+| 34.12 | Prime: under not-even and fact-even-first the per-layer profile alternates in sign and achieved \|D\| is 50-100% of the 4-unit target. | | |
+| 34.13 | Prime: the random-direction zigzag is indistinguishable from none on the readout and the free-text judge (within 5 points). | | |
+| 34.14 | Prime: B's text-only readout on not-even leans even on 55-75% of questions (mention bias). | | |
 
 Reading rule, fixed now: if 34.2 holds, only the parity-free elicitation counts for 34.4-34.6 and 34.9. A follow rate
 counts as above chance only if its 95% interval (40 questions, binomial) excludes 50%.
