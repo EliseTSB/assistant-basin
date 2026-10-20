@@ -85,6 +85,20 @@ class MathAndResumeTests(unittest.TestCase):
         self.assertAlmostEqual(p35.dose_level(.10, residual_rms, np.linalg.norm(w_down[:, 1])), .5)
         self.assertAlmostEqual(p35.natural_max_level(4, 2.5), 10)
 
+        import torch
+        from types import SimpleNamespace
+        layer = SimpleNamespace(mlp=SimpleNamespace(
+            down_proj=SimpleNamespace(weight=torch.tensor([[3.0, 0.0], [4.0, 2.0]]))))
+        doses = p35._primary_doses(layer, 0, residual_rms=10.0,
+                                   residual_rms_nosink=3.0,
+                                   residual_norm_median_nosink=2.0,
+                                   residual_norm_p90_nosink=9.0, neutral_max=5.0)
+        self.assertAlmostEqual(doses[0]["level"], .02)
+        self.assertEqual(doses[0]["residual_rms"], 10.0)
+        self.assertEqual(doses[0]["residual_rms_nosink"], 3.0)
+        self.assertEqual(doses[0]["residual_norm_median_nosink"], 2.0)
+        self.assertEqual(doses[0]["residual_norm_p90_nosink"], 9.0)
+
     def test_within_frame_contrast_uses_matched_controls(self):
         target = np.asarray([[2.0], [4.0]])
         controls = np.asarray([[[1.0], [1.0]], [[2.0], [2.0]]])
@@ -356,6 +370,218 @@ class SpreadFloorTest(unittest.TestCase):
         self.assertAlmostEqual(float(stats[0][0]), 3.0 / float(np.percentile([1.0, 2.0, 3.0], 5)), places=4)
         nv = np.array([[0.0, 0.5, 1.0], [0.0, 0.5, 2.0]], dtype=np.float32)
         self.assertEqual(p35.template_mask(nv).tolist(), [False, True, False])
+
+
+class NoSinkCaptureTests(unittest.TestCase):
+    def test_residual_capture_keeps_legacy_values_and_excludes_position_zero(self):
+        import torch
+
+        class MLP(torch.nn.Module):
+            def __init__(self):
+                super().__init__()
+                self.down_proj = torch.nn.Identity()
+
+        class Block(torch.nn.Module):
+            def __init__(self):
+                super().__init__()
+                self.mlp = MLP()
+
+            def forward(self, hidden):
+                return self.mlp.down_proj(hidden)
+
+        block = Block()
+        capture = p35.ActivationCapture(torch, [block], capture_residual_vectors=True)
+        hidden = torch.tensor([[[1000.0, 0.0], [3.0, 4.0], [0.0, 2.0]]])
+        try:
+            block(hidden)
+        finally:
+            capture.remove()
+
+        all_norms = np.concatenate(capture.residual_norms[0])
+        nosink_norms = np.concatenate(capture.residual_norms_nosink[0])
+        self.assertGreater(float(np.sqrt(np.mean(all_norms ** 2))), 500.0)
+        self.assertAlmostEqual(float(np.sqrt(np.mean(nosink_norms ** 2))), np.sqrt(14.5), places=5)
+        self.assertGreater(float(np.linalg.norm(capture.residual_vectors[0])), 300.0)
+        np.testing.assert_allclose(capture.residual_vectors_nosink[0], [1.5, 3.0])
+        self.assertAlmostEqual(capture.position0_norm[0], 1000.0)
+
+    def test_old_capture_version_is_recaptured_only_for_requested_roles_and_read_errors_name_key(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cache_dir = root / "activations"
+            path = p35.cache_path_for("self:ai:f1", cache_dir)
+            path.parent.mkdir(parents=True)
+            np.savez_compressed(path, L0=np.ones(2), residual_rms=np.asarray([3.0]),
+                                R0=np.ones(2))
+            self.assertTrue(p35.cache_needs_recapture(path, "self_direction", {"neutral", "self_direction"}))
+            self.assertFalse(p35.cache_needs_recapture(path, "concept", {"neutral", "self_direction"}))
+            manifest = {"self:ai:f1": {"file": str(path.relative_to(root))}}
+            with self.assertRaisesRegex(ValueError, r"capture_version.*recapture.*self_direction"):
+                p35._read_residual(cache_dir, manifest, "self:ai:f1", 0, nosink=True)
+
+    def test_capture_refreshes_only_requested_stale_roles(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+
+        class Down:
+            in_features = 2
+
+        layer = SimpleNamespace(mlp=SimpleNamespace(down_proj=Down()))
+        tokenizer = SimpleNamespace(chat_template="fake-template")
+        samples = [
+            {"id": "neutral:f1", "role": "neutral", "text": "neutral"},
+            {"id": "self:ai:f1", "role": "self_direction", "text": "self"},
+            {"id": "concept:owl:f1", "role": "concept", "concept_id": "owl", "text": "owl"},
+        ]
+        captured_texts = []
+
+        def fake_capture(_torch, _tokenizer, _model, _layers, text, _device,
+                         capture_residual_vectors=False):
+            captured_texts.append(text)
+            return {"activations": {"L0": np.asarray([1.0], dtype=np.float32)},
+                    "residual_rms": [3.0], "residual_rms_nosink": [2.0],
+                    "residual_norm_median_nosink": [1.5], "residual_norm_p90_nosink": [2.0],
+                    "residual_vectors": {"R0": np.asarray([1.0, 2.0])}
+                    if capture_residual_vectors else {},
+                    "residual_vectors_nosink": {"R0_nosink": np.asarray([2.0, 3.0])}
+                    if capture_residual_vectors else {},
+                    "position0_vectors": {"R0_position0": np.asarray([4.0, 1.0])},
+                    "position0_norm": [4.0], "masked_positions": np.asarray([0, 1])}
+
+        with tempfile.TemporaryDirectory() as directory:
+            model_dir = Path(directory)
+            cache_dir = model_dir / "activations"
+            manifest_rows = []
+            for sample in samples:
+                path = p35.cache_path_for(sample["id"], cache_dir)
+                path.parent.mkdir(parents=True, exist_ok=True)
+                np.savez_compressed(path, L0=np.ones(1), residual_rms=np.asarray([5.0]), R0=np.ones(2))
+                manifest_rows.append({"id": sample["id"], "file": str(path.relative_to(model_dir)),
+                                      "role": sample["role"]})
+            (model_dir / "activation-cache.jsonl").write_text(
+                "".join(json.dumps(row) + "\n" for row in manifest_rows), encoding="utf-8")
+            args = Namespace(model="Qwen/Qwen3-1.7B", revision=None, cache_dir=Path("/cache"),
+                             device="cpu", dtype="bf16", concept_start=None,
+                             recapture_roles="neutral")
+            with patch.object(p35, "load_model", return_value=(object(), tokenizer, object(), Path("/snapshot"))), \
+                    patch.object(p35, "find_text_layers", return_value=("layers", [layer])), \
+                    patch.object(p35, "capture_one", side_effect=fake_capture):
+                p35.run_capture(args, {"split_seed": 3501}, model_dir, samples, {"owl"}, 0)
+
+            self.assertEqual(captured_texts, ["neutral"])
+            refreshed = p35._manifest(model_dir)
+            with np.load(model_dir / refreshed["neutral:f1"]["file"]) as payload:
+                self.assertEqual(str(payload["capture_version"].item()), p35.CAPTURE_VERSION)
+                self.assertIn("residual_rms_nosink", payload.files)
+            with np.load(model_dir / refreshed["self:ai:f1"]["file"]) as payload:
+                self.assertNotIn("capture_version", payload.files)
+            with np.load(model_dir / refreshed["concept:owl:f1"]["file"]) as payload:
+                self.assertNotIn("capture_version", payload.files)
+
+    def test_self_direction_reports_legacy_and_nosink_auc(self):
+        rng = np.random.default_rng(35)
+        with tempfile.TemporaryDirectory() as directory:
+            model_dir = Path(directory)
+            cache_dir = model_dir / "activations"
+            manifest_rows = []
+            examples = {"ai": [], "human": []}
+            for group, x_value in (("ai", 1.0), ("human", -1.0)):
+                for index in range(20):
+                    split = "train" if index < 12 else "heldout"
+                    sample_id = f"{group}-{index}"
+                    examples[group].append({"id": sample_id, "split": split})
+                    # Position zero cancels the class signal and adds large, class-independent noise
+                    # to the legacy all-position mean. Position 1 carries a perfect class signal.
+                    noise = float(rng.normal(0, 1000))
+                    legacy = np.asarray([0.0, noise], dtype=np.float32)
+                    nosink = np.asarray([x_value, 0.0], dtype=np.float32)
+                    position0 = np.asarray([-x_value, 2.0 * noise], dtype=np.float32)
+                    target = p35.cache_path_for(f"self:{group}:{sample_id}", cache_dir)
+                    p35.write_activation_cache(target, {"L0": np.zeros(1, dtype=np.float32)}, [3.0],
+                                               residual_vectors={"R0": legacy},
+                                               residual_rms_nosink=[2.0],
+                                               residual_vectors_nosink={"R0_nosink": nosink},
+                                               position0_norm=[float(np.linalg.norm(position0))],
+                                               residual_norm_median_nosink=[1.0],
+                                               residual_norm_p90_nosink=[1.0],
+                                               position0_vectors={"R0_position0": position0},
+                                               masked_positions=np.asarray([0]))
+                    manifest_rows.append({"id": f"self:{group}:{sample_id}",
+                                          "file": str(target.relative_to(model_dir))})
+            (model_dir / "activation-cache.jsonl").write_text(
+                "".join(json.dumps(row) + "\n" for row in manifest_rows), encoding="utf-8")
+            header = {"model_id": "fake", "layers": [{"layer": 0, "depth_fraction": 0.0}]}
+            summary = p35.build_self_direction(model_dir, header, {"self_direction_examples": examples})
+
+        layer = summary["layer_summaries"][0]
+        self.assertGreater(layer["heldout_auc_nosink"], 0.99)
+        self.assertGreater(layer["heldout_auc"], 0.2)
+        self.assertLess(layer["heldout_auc"], 0.8)
+        self.assertIn("position0_direction_cosine", layer)
+        self.assertIn("position0_direction_cosine_nosink", layer)
+        self.assertEqual(len(layer["sink_coefficients_nosink"]), 40)
+        self.assertLess(layer["sink_coefficient_label_correlation_nosink"], -0.75)
+
+    def test_peak_capture_returns_planted_position_and_token(self):
+        import torch
+
+        class FakeTokenizer:
+            chat_template = "synthetic"
+            vocab = {"<s>": 10, "one": 1, "two": 2, "</s>": 11}
+            reverse = {value: key for key, value in vocab.items()}
+
+            def apply_chat_template(self, messages, **_kwargs):
+                return f"<s> {messages[0]['content']} </s>"
+
+            def __call__(self, rendered, return_tensors=None, add_special_tokens=False,
+                         return_offsets_mapping=False):
+                ids, offsets = [], []
+                for match in __import__("re").finditer(r"\S+", rendered):
+                    ids.append(self.vocab[match.group()])
+                    offsets.append((match.start(), match.end()))
+                result = {"input_ids": torch.tensor([ids], dtype=torch.long)}
+                if return_offsets_mapping:
+                    result["offset_mapping"] = torch.tensor([offsets], dtype=torch.long)
+                return result
+
+            def convert_ids_to_tokens(self, ids):
+                return [self.reverse[int(value)] for value in ids]
+
+        class MLP(torch.nn.Module):
+            def __init__(self):
+                super().__init__()
+                self.down_proj = torch.nn.Identity()
+
+        class Block(torch.nn.Module):
+            def __init__(self):
+                super().__init__()
+                self.mlp = MLP()
+
+            def forward(self, hidden):
+                return self.mlp.down_proj(hidden)
+
+        class TinyModel(torch.nn.Module):
+            def __init__(self):
+                super().__init__()
+                self.block = Block()
+                self.register_buffer("hidden", torch.tensor([[[0.0, 1.0], [2.0, 0.0],
+                                                                [9.0, 0.0], [1.0, 2.0]]]))
+
+            def forward(self, input_ids, use_cache=False):
+                return self.block(self.hidden)
+
+        model = TinyModel()
+        captured = p35.capture_one(torch, FakeTokenizer(), model, [model.block],
+                                   "one two", "cpu", peak_units={0: {0}})
+        self.assertEqual(captured["masked_positions"].tolist(), [0, 3])
+        self.assertAlmostEqual(captured["residual_norm_median_nosink"][0], 5.5)
+        self.assertAlmostEqual(captured["residual_norm_p90_nosink"][0], 8.3, places=5)
+        rows = p35._capture_sample_peak_positions(
+            torch, FakeTokenizer(), model, [model.block],
+            {"id": "tiny:one", "text": "one two"}, {(0, 0)}, device="cpu")
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["argmax_position"], 2)
+        self.assertEqual(rows[0]["argmax_token"], "two")
 
 
 if __name__ == "__main__":

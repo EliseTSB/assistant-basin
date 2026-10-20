@@ -32,6 +32,8 @@ DEFAULT_CACHE = Path("/mnt/e/neuron-probe/hf/hub")
 PERMUTATIONS = 200
 PERMUTATION_SEED = 3501
 SPLIT_SEED = 3501
+CAPTURE_VERSION = "35.2-nosink"
+DEFAULT_RECAPTURE_ROLES = {"neutral", "self_direction"}
 MODELS = {
     "Qwen/Qwen3-1.7B": {
         "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
@@ -347,14 +349,23 @@ def chat_text(tokenizer: Any, text: str) -> str:
 
 
 class ActivationCapture:
-    """Capture the max over passage tokens for every down_proj input unit."""
-    def __init__(self, torch: Any, layers: Any, capture_residual_vectors: bool = False):
+    """Capture passage maxima and residual summaries, retaining position zero separately."""
+    def __init__(self, torch: Any, layers: Any, capture_residual_vectors: bool = False,
+                 peak_units: dict[int, set[int]] | None = None,
+                 content_positions: set[int] | None = None):
         self.torch = torch
         self.layers = layers
         self.maxima: dict[int, np.ndarray] = {}
         self.residual_norms: dict[int, list[np.ndarray]] = defaultdict(list)
+        self.residual_norms_nosink: dict[int, list[np.ndarray]] = defaultdict(list)
         self.capture_residual_vectors = capture_residual_vectors
         self.residual_vectors: dict[int, np.ndarray] = {}
+        self.residual_vectors_nosink: dict[int, np.ndarray] = {}
+        self.position0_vectors: dict[int, np.ndarray] = {}
+        self.position0_norm: dict[int, float] = {}
+        self.content_positions = None if content_positions is None else set(map(int, content_positions))
+        self.peak_units = {int(layer): set(map(int, units)) for layer, units in (peak_units or {}).items()}
+        self.peak_positions: dict[int, dict[int, dict[str, float | int]]] = defaultdict(dict)
         self.handles = []
         for index, layer in enumerate(layers):
             down = layer.mlp.down_proj
@@ -366,15 +377,43 @@ class ActivationCapture:
             x = args[0]
             maxima = x.detach().float().amax(dim=-2)[0].cpu().numpy().astype(np.float32, copy=True)
             self.maxima[index] = maxima
+            units = sorted(self.peak_units.get(index, ()))
+            if units:
+                if x.shape[0] != 1:
+                    raise ValueError("peak-position capture currently requires batch size one")
+                unit_indices = self.torch.as_tensor(units, dtype=self.torch.long, device=x.device)
+                values = x.detach().float()[0].index_select(dim=1, index=unit_indices)
+                positions = values.argmax(dim=0)
+                max_values = values[positions, self.torch.arange(len(units), device=values.device)]
+                position0 = values[0]
+                for offset, unit in enumerate(units):
+                    self.peak_positions[index][unit] = {
+                        "argmax_position": int(positions[offset].item()),
+                        "max_value": float(max_values[offset].item()),
+                        "position0_value": float(position0[offset].item()),
+                    }
         return hook
 
     def _residual(self, index: int):
         def hook(_module, _args, output):
             hidden = output[0] if isinstance(output, tuple) else output
-            norms = self.torch.linalg.vector_norm(hidden.detach().float(), dim=-1)[0].cpu().numpy()
+            values = hidden.detach().float()
+            norms = self.torch.linalg.vector_norm(values, dim=-1)[0].cpu().numpy()
             self.residual_norms[index].append(norms.astype(np.float32, copy=False))
+            positions = (sorted(position for position in self.content_positions
+                                if 0 < position < values.shape[1])
+                         if self.content_positions is not None else list(range(1, values.shape[1])))
+            if not positions:
+                raise ValueError(f"layer {index} residual has no unmasked content positions")
+            position_indices = self.torch.as_tensor(positions, dtype=self.torch.long, device=values.device)
+            content = values.index_select(dim=1, index=position_indices)
+            nosink_norms = self.torch.linalg.vector_norm(content, dim=-1)[0].cpu().numpy()
+            self.residual_norms_nosink[index].append(nosink_norms.astype(np.float32, copy=False))
+            self.position0_norm[index] = float(norms[0])
+            self.position0_vectors[index] = values[0, 0].cpu().numpy().astype(np.float32, copy=True)
             if self.capture_residual_vectors:
-                self.residual_vectors[index] = hidden.detach().float()[0].mean(dim=0).cpu().numpy().astype(np.float32, copy=True)
+                self.residual_vectors[index] = values[0].mean(dim=0).cpu().numpy().astype(np.float32, copy=True)
+                self.residual_vectors_nosink[index] = content[0].mean(dim=0).cpu().numpy().astype(np.float32, copy=True)
         return hook
 
     def remove(self) -> None:
@@ -458,9 +497,18 @@ def tokenize_chat(tokenizer: Any, text: str, device: str):
 
 
 def capture_one(torch: Any, tokenizer: Any, model: Any, layers: Any, text: str,
-                device: str, capture_residual_vectors: bool = False) -> tuple[dict[str, np.ndarray], list[float], dict[str, np.ndarray]]:
+                device: str, capture_residual_vectors: bool = False,
+                peak_units: dict[int, set[int]] | None = None) -> dict[str, Any]:
     encoded = tokenize_chat(tokenizer, text, device)
-    capture = ActivationCapture(torch, layers, capture_residual_vectors=capture_residual_vectors)
+    input_ids = encoded["input_ids"][0].detach().cpu().tolist()
+    token_strings, token_kinds = _token_strings_and_kinds(tokenizer, text, input_ids)
+    content_positions = {index for index, kind in enumerate(token_kinds)
+                         if kind == "text" and index > 0}
+    if not content_positions:
+        raise ValueError("chat template tokenization produced no unmasked content positions")
+    masked_positions = [index for index in range(len(input_ids)) if index not in content_positions]
+    capture = ActivationCapture(torch, layers, capture_residual_vectors=capture_residual_vectors,
+                                peak_units=peak_units, content_positions=content_positions)
     try:
         with torch.inference_mode():
             model(**encoded, use_cache=False)
@@ -468,14 +516,245 @@ def capture_one(torch: Any, tokenizer: Any, model: Any, layers: Any, text: str,
         capture.remove()
     if len(capture.maxima) != len(layers):
         raise RuntimeError(f"captured {len(capture.maxima)} MLP layers; expected {len(layers)}")
-    residual = []
+    residual, residual_nosink, residual_median_nosink, residual_p90_nosink = [], [], [], []
     for layer_index in range(len(layers)):
         values = capture.residual_norms[layer_index]
         if not values:
             raise RuntimeError(f"no residual values recorded for layer {layer_index}")
         residual.append(float(np.sqrt(np.mean(np.concatenate(values, axis=0) ** 2))))
+        no_values = capture.residual_norms_nosink[layer_index]
+        combined = np.concatenate(no_values, axis=0)
+        residual_nosink.append(float(np.sqrt(np.mean(combined ** 2))))
+        residual_median_nosink.append(float(np.median(combined)))
+        residual_p90_nosink.append(float(np.quantile(combined, .9)))
     residual_vectors = {f"R{i}": capture.residual_vectors[i] for i in range(len(layers))} if capture_residual_vectors else {}
-    return {f"L{i}": capture.maxima[i] for i in range(len(layers))}, residual, residual_vectors
+    residual_vectors_nosink = {f"R{i}_nosink": capture.residual_vectors_nosink[i]
+                               for i in range(len(layers))} if capture_residual_vectors else {}
+    position0_vectors = {f"R{i}_position0": capture.position0_vectors[i] for i in range(len(layers))}
+    peaks = {}
+    if capture.peak_positions:
+        for layer_index, unit_rows in capture.peak_positions.items():
+            peaks[layer_index] = {}
+            for unit, values in unit_rows.items():
+                position = int(values["argmax_position"])
+                peaks[layer_index][unit] = {
+                    **values,
+                    "argmax_token": token_strings[position],
+                    "argmax_token_kind": token_kinds[position],
+                }
+    return {
+        "activations": {f"L{i}": capture.maxima[i] for i in range(len(layers))},
+        "residual_rms": residual,
+        "residual_rms_nosink": residual_nosink,
+        "residual_norm_median_nosink": residual_median_nosink,
+        "residual_norm_p90_nosink": residual_p90_nosink,
+        "residual_vectors": residual_vectors,
+        "residual_vectors_nosink": residual_vectors_nosink,
+        "position0_vectors": position0_vectors,
+        "position0_norm": [capture.position0_norm[i] for i in range(len(layers))],
+        "masked_positions": np.asarray(masked_positions, dtype=np.int32),
+        "peak_positions": peaks,
+    }
+
+
+def _token_strings_and_kinds(tokenizer: Any, text: str, input_ids: list[int]) -> tuple[list[str], list[str]]:
+    """Return tokenizer strings and classify tokens by overlap with the user-text span."""
+    special_ids = set(map(int, getattr(tokenizer, "all_special_ids", ()) or ()))
+
+    def mark_special(ids: list[int], kinds: list[str]) -> list[str]:
+        return ["chat_template" if int(token_id) in special_ids else kind
+                for token_id, kind in zip(ids, kinds)]
+
+    rendered = chat_text(tokenizer, text)
+    start = rendered.find(text)
+    if start < 0:
+        raise ValueError("chat template output does not contain the captured sample text")
+    end = start + len(text)
+    token_strings = None
+    if hasattr(tokenizer, "convert_ids_to_tokens"):
+        token_strings = tokenizer.convert_ids_to_tokens(input_ids)
+    if not token_strings or len(token_strings) != len(input_ids):
+        token_strings = [str(tokenizer.decode([token_id], skip_special_tokens=False))
+                         for token_id in input_ids]
+    try:
+        encoded = tokenizer(rendered, return_tensors="pt", add_special_tokens=False,
+                            return_offsets_mapping=True)
+        offsets = encoded["offset_mapping"]
+        if hasattr(offsets, "tolist"):
+            offsets = offsets.tolist()
+        offsets = offsets[0] if offsets and isinstance(offsets[0], list) else offsets
+        if len(offsets) == len(input_ids):
+            kinds = ["text" if int(a) < end and int(b) > start else "chat_template"
+                     for a, b in offsets]
+            return list(map(str, token_strings)), mark_special(input_ids, kinds)
+    except (TypeError, ValueError, KeyError, NotImplementedError):
+        pass
+    # Slow-tokenizer fallback: mark special IDs as template and locate the exact content token run.
+    content = tokenizer(text, return_tensors=None, add_special_tokens=False)["input_ids"]
+    if hasattr(content, "tolist"):
+        content = content.tolist()
+    if content and isinstance(content[0], list):
+        content = content[0]
+    content = list(map(int, content))
+    kinds = ["chat_template"] * len(input_ids)
+    if content:
+        for index in range(max(0, len(input_ids) - len(content) + 1)):
+            if input_ids[index:index + len(content)] == content:
+                kinds[index:index + len(content)] = ["text"] * len(content)
+                break
+    return list(map(str, token_strings)), mark_special(input_ids, kinds)
+
+
+def _capture_sample_peak_positions(torch: Any, tokenizer: Any, model: Any, layers: Any,
+                                   sample: dict[str, Any], unit_pairs: set[tuple[int, int]],
+                                   device: str = "cpu") -> list[dict[str, Any]]:
+    requested: dict[int, set[int]] = defaultdict(set)
+    for layer, unit in unit_pairs:
+        requested[int(layer)].add(int(unit))
+    captured = capture_one(torch, tokenizer, model, layers, sample["text"], device,
+                           peak_units=dict(requested))
+    rows = []
+    for layer, unit in sorted(unit_pairs):
+        try:
+            peak = captured["peak_positions"][int(layer)][int(unit)]
+        except KeyError as exc:
+            raise RuntimeError(f"peak hook did not capture requested layer {layer}, unit {unit}") from exc
+        rows.append({
+            "sample_id": sample["id"], "role": sample.get("role"),
+            "concept_id": sample.get("concept_id"), "frame_id": sample.get("frame_id"),
+            "layer": int(layer), "unit": int(unit),
+            "argmax_position": int(peak["argmax_position"]),
+            "argmax_token": str(peak["argmax_token"]),
+            "argmax_token_kind": str(peak["argmax_token_kind"]),
+            "max_value": float(peak["max_value"]),
+            "position0_value": float(peak["position0_value"]),
+            "masked_positions": captured["masked_positions"].tolist(),
+        })
+    return rows
+
+
+def _peak_position_work(screen_rows: list[dict[str, Any]], model_dir: Path,
+                        data: dict[str, Any]) -> tuple[dict[str, set[tuple[int, int]]],
+                                                       set[tuple[int, int]],
+                                                       dict[tuple[str, int, int, int], dict[str, Any]]]:
+    manifest = _manifest(model_dir)
+    cache_dir = model_dir / "activations"
+    zero_spread_pairs: set[tuple[int, int]] = set()
+    for layer_meta in read_json(model_dir / "header.json")["layers"]:
+        layer = int(layer_meta["layer"])
+        neutral = np.stack([_read_layer(cache_dir, manifest, f"neutral:{frame['id']}", layer)
+                            for frame in data["frame_bank"]])
+        identical = np.all(neutral == neutral[0:1], axis=0)
+        zero_spread_pairs.update((layer, int(unit)) for unit in np.flatnonzero(identical))
+
+    concept_by_id = {concept["id"]: concept for concept in data["concepts"]}
+    concept_top: dict[tuple[str, int, int, int], dict[str, Any]] = {}
+    by_concept: dict[str, set[tuple[int, int]]] = defaultdict(set)
+    for row in screen_rows:
+        if row.get("stage") != "screen" or int(row.get("rank", 999999)) > 5:
+            continue
+        concept_id = str(row["concept_id"])
+        key = (concept_id, int(row["layer"]), int(row["unit"]), int(row["rank"]))
+        concept_top[key] = row
+        by_concept[concept_id].add((int(row["layer"]), int(row["unit"])))
+
+    samples_by_id = {row["id"]: row for row in experiment_samples(data)}
+    work: dict[str, set[tuple[int, int]]] = defaultdict(set)
+    if zero_spread_pairs:
+        for frame in data["frame_bank"]:
+            sample_id = f"neutral:{frame['id']}"
+            work[sample_id].update(zero_spread_pairs)
+    for concept_id, pairs in by_concept.items():
+        if concept_id not in concept_by_id:
+            raise ValueError(f"screen top row references unknown concept {concept_id!r}")
+        for passage in concept_by_id[concept_id]["passages"]:
+            sample_id = f"concept:{concept_id}:{passage['frame_id']}"
+            work[sample_id].update(pairs)
+    missing = [sample_id for sample_id in work if sample_id not in manifest or sample_id not in samples_by_id]
+    if missing:
+        raise RuntimeError(f"peak-position cache is missing {len(missing)} required samples; run the full screen capture first")
+    return dict(work), zero_spread_pairs, concept_top
+
+
+def run_peak_positions(args: argparse.Namespace) -> dict[str, Any]:
+    data = read_json(DATA_PATH)
+    model_dir = _model_output_dir(args.out, args.model)
+    screen_path = Path(args.screen) if args.screen else model_dir / "screen.jsonl"
+    if not screen_path.is_file():
+        raise FileNotFoundError(f"screen output is required: {screen_path}")
+    header = read_json(model_dir / "header.json")
+    screen_rows = jsonl_rows(screen_path)
+    work, zero_spread_pairs, concept_top = _peak_position_work(screen_rows, model_dir, data)
+    if not work:
+        raise ValueError("screen/cache yielded no requested peak-position samples")
+
+    torch, tokenizer, model, _snapshot = load_model(args.model, args.revision, args.cache_dir,
+                                                    args.device, args.dtype)
+    _stack_name, layers = find_text_layers(model, torch)
+    if len(layers) != int(header["layer_count"]):
+        raise RuntimeError("loaded model layer count differs from screen header")
+    samples_by_id = {row["id"]: row for row in experiment_samples(data)}
+    output_path = model_dir / "peak-positions.jsonl"
+    temp_path = output_path.with_name(output_path.name + f".{os.getpid()}.tmp")
+    zero_total = zero_position0 = zero_template = zero_text = 0
+    top_results: dict[tuple[str, int, int, int], dict[str, Any]] = {
+        key: {"n": 0, "tokens": set(), "kinds": set()} for key in concept_top
+    }
+    top_keys_by_pair: dict[tuple[str, int, int], list[tuple[str, int, int, int]]] = defaultdict(list)
+    for concept_id, layer, unit, rank in concept_top:
+        top_keys_by_pair[(concept_id, layer, unit)].append((concept_id, layer, unit, rank))
+    try:
+        with open(temp_path, "w", encoding="utf-8") as stream:
+            for sample_id, pairs in work.items():
+                rows = _capture_sample_peak_positions(torch, tokenizer, model, layers,
+                                                      samples_by_id[sample_id], pairs, args.device)
+                for row in rows:
+                    pair = (row["layer"], row["unit"])
+                    if row["role"] == "neutral" and pair in zero_spread_pairs:
+                        zero_total += 1
+                        zero_position0 += int(row["argmax_position"] == 0)
+                        zero_template += int(row["argmax_token_kind"] == "chat_template")
+                        zero_text += int(row["argmax_token_kind"] == "text")
+                    for key in top_keys_by_pair.get((str(row["concept_id"]), *pair), ()):
+                        detail_acc = top_results[key]
+                        detail_acc["n"] += 1
+                        detail_acc["tokens"].add(row["argmax_token"])
+                        detail_acc["kinds"].add(row["argmax_token_kind"])
+                    stream.write(json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n")
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temp_path, output_path)
+    finally:
+        if temp_path.exists():
+            temp_path.unlink()
+        del model, tokenizer
+        if args.device == "xpu":
+            torch.xpu.empty_cache()
+
+    top_summary = []
+    for key, acc in sorted(top_results.items()):
+        concept_id, layer, unit, rank = key
+        same_token = (acc["n"] > 0 and len(acc["tokens"]) == 1 and
+                      acc["kinds"] == {"chat_template"})
+        top_summary.append({
+            "concept_id": concept_id, "layer": layer, "unit": unit, "rank": rank,
+            "passage_count": acc["n"], "same_template_token": bool(same_token),
+            "shared_template_token": next(iter(acc["tokens"])) if same_token else None,
+            "distinct_argmax_tokens": sorted(acc["tokens"]),
+            "argmax_token_kinds": sorted(acc["kinds"]),
+        })
+    summary = {
+        "model_id": args.model, "capture_version": CAPTURE_VERSION,
+        "output_jsonl": str(output_path), "zero_spread_unit_count": len(zero_spread_pairs),
+        "zero_spread_rows": zero_total,
+        "zero_spread_argmax_position0_share": zero_position0 / zero_total if zero_total else None,
+        "zero_spread_argmax_chat_template_token_share": zero_template / zero_total if zero_total else None,
+        "zero_spread_argmax_text_token_share": zero_text / zero_total if zero_total else None,
+        "concept_top_rows": top_summary,
+    }
+    atomic_json(summary, model_dir / "peak-positions.summary.json")
+    print(json.dumps(summary, ensure_ascii=False))
+    return summary
 
 
 def layer_metadata(stack_name: str, layers: Any) -> list[dict[str, Any]]:
@@ -494,14 +773,99 @@ def cache_path_for(sample_id: str, cache_dir: Path) -> Path:
     return cache_dir / f"{key}.npz"
 
 
+def _recapture_roles(value: str | Iterable[str] | None = None) -> set[str]:
+    if value is None:
+        return set(DEFAULT_RECAPTURE_ROLES)
+    roles = set(part.strip() for part in value.split(",")) if isinstance(value, str) else set(value)
+    roles.discard("")
+    allowed = {"neutral", "self_direction"}
+    unknown = roles - allowed
+    if unknown:
+        raise ValueError(f"unsupported --recapture-roles value(s): {', '.join(sorted(unknown))}; "
+                         f"supported roles: {','.join(sorted(allowed))}")
+    return roles
+
+
+def cache_needs_recapture(path: Path, role: str,
+                          roles: str | Iterable[str] | None = None) -> bool:
+    """Whether a cache should be refreshed for a role that consumes the new capture fields."""
+    path = Path(path)
+    if not path.is_file():
+        return True
+    if role not in _recapture_roles(roles):
+        return False
+    try:
+        with np.load(path) as payload:
+            if "capture_version" not in payload.files:
+                return True
+            version = str(np.asarray(payload["capture_version"]).item())
+            if version != CAPTURE_VERSION:
+                return True
+            required = {"residual_rms_nosink", "residual_norm_median_nosink",
+                        "residual_norm_p90_nosink", "position0_norm", "masked_positions"}
+            if role == "self_direction":
+                layer_indices = {int(match.group(1)) for key in payload.files
+                                 if (match := re.fullmatch(r"R(\d+)", key))}
+                if not layer_indices:
+                    return True
+                for layer in layer_indices:
+                    required.update({f"R{layer}", f"R{layer}_nosink", f"R{layer}_position0"})
+                if not required.issubset(payload.files):
+                    return True
+            return not required.issubset(payload.files)
+    except (OSError, ValueError, KeyError):
+        return True
+
+
+def _recapture_command(role: str) -> str:
+    return ("`part35.py screen --model MODEL --out OUT "
+            f"--recapture-roles {role}`")
+
+
+def _require_capture_field(payload: Any, path: Path, key: str, role: str) -> None:
+    version = None
+    if "capture_version" in payload.files:
+        version = str(np.asarray(payload["capture_version"]).item())
+    if version != CAPTURE_VERSION:
+        missing = "capture_version" if version is None else f"capture_version={version!r} (expected {CAPTURE_VERSION!r})"
+        raise ValueError(f"cache {path} lacks required {missing} for key {key}; recapture with "
+                         f"{_recapture_command(role)}")
+    if key not in payload.files:
+        raise ValueError(f"cache {path} is missing required key {key!r}; recapture with "
+                         f"{_recapture_command(role)}")
+
+
 def write_activation_cache(path: Path, activations: dict[str, np.ndarray], residual_rms: list[float],
-                           residual_vectors: dict[str, np.ndarray] | None = None) -> None:
+                           residual_vectors: dict[str, np.ndarray] | None = None,
+                           residual_rms_nosink: list[float] | None = None,
+                           residual_vectors_nosink: dict[str, np.ndarray] | None = None,
+                           position0_norm: list[float] | None = None,
+                           residual_norm_median_nosink: list[float] | None = None,
+                           residual_norm_p90_nosink: list[float] | None = None,
+                           position0_vectors: dict[str, np.ndarray] | None = None,
+                           masked_positions: np.ndarray | list[int] | None = None,
+                           capture_version: str = CAPTURE_VERSION) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temp = path.with_name(path.stem + f".{os.getpid()}.tmp.npz")
     arrays = dict(activations)
     arrays["residual_rms"] = np.asarray(residual_rms, dtype=np.float32)
+    arrays["capture_version"] = np.asarray(capture_version)
+    if residual_rms_nosink is not None:
+        arrays["residual_rms_nosink"] = np.asarray(residual_rms_nosink, dtype=np.float32)
+    if residual_norm_median_nosink is not None:
+        arrays["residual_norm_median_nosink"] = np.asarray(residual_norm_median_nosink, dtype=np.float32)
+    if residual_norm_p90_nosink is not None:
+        arrays["residual_norm_p90_nosink"] = np.asarray(residual_norm_p90_nosink, dtype=np.float32)
+    if position0_norm is not None:
+        arrays["position0_norm"] = np.asarray(position0_norm, dtype=np.float32)
+    if masked_positions is not None:
+        arrays["masked_positions"] = np.asarray(masked_positions, dtype=np.int32)
     if residual_vectors:
         arrays.update(residual_vectors)
+    if residual_vectors_nosink:
+        arrays.update(residual_vectors_nosink)
+    if position0_vectors:
+        arrays.update(position0_vectors)
     np.savez_compressed(temp, **arrays)
     os.replace(temp, path)
 
@@ -529,11 +893,14 @@ def make_header(model_id: str, revision: str | None, snapshot: Path,
     template = str(getattr(tokenizer, "chat_template", "") or "")
     return {
         "tool": "part35.py", "model_id": model_id,
+        "capture_version": CAPTURE_VERSION,
         "model_revision_sha": spec["revision"], "tokenizer_revision_sha": spec["revision"],
         "snapshot_path": str(snapshot), "device": device, "dtype": dtype,
         "dtype_reason": "bf16 halves model-weight memory on the 4-core/15-GB CPU target while retaining fp32 exponent range; use --dtype fp32 for comparison",
         "model_family": spec["family"], "layer_count": len(layers),
         "layers": layer_metadata(stack_name, layers),
+        "residual_position_mask": "position zero and all special/chat-template tokens are masked; *_nosink uses content-token positions only",
+        "residual_norm_profile": "per-sample/layer median and p90 across content-token residual norms; dose uses the median across neutral samples",
         "hook_module_paths": [f"{stack_name}.{i}.mlp.down_proj" for i in range(len(layers))],
         "chat_template_sha256": hashlib.sha256(template.encode("utf-8")).hexdigest(),
         "thinking_switch_disabled": "enable_thinking" in template,
@@ -576,16 +943,28 @@ def run_capture(args: argparse.Namespace, data: dict[str, Any], model_dir: Path,
     manifest_path = model_dir / "activation-cache.jsonl"
     done = _manifest(model_dir)
     rows = _capture_filter(samples, selected, include_shared=(args.concept_start in (None, 0)))
+    roles_to_recapture = _recapture_roles(getattr(args, "recapture_roles", None))
     n_new = 0
     for index, sample in enumerate(rows, 1):
         sample_id = sample["id"]
-        if sample_id in done and (model_dir / done[sample_id]["file"]).is_file():
+        cached = model_dir / done[sample_id]["file"] if sample_id in done else None
+        if cached is not None and cached.is_file() and not cache_needs_recapture(
+                cached, sample["role"], roles_to_recapture):
             continue
-        activations, residual_rms, residual_vectors = capture_one(
+        captured = capture_one(
             torch, tokenizer, model, layers, sample["text"], args.device,
             capture_residual_vectors=sample["role"] == "self_direction")
         target = cache_path_for(sample_id, cache_dir)
-        write_activation_cache(target, activations, residual_rms, residual_vectors)
+        write_activation_cache(target, captured["activations"], captured["residual_rms"],
+                               residual_vectors=captured["residual_vectors"],
+                               residual_rms_nosink=captured["residual_rms_nosink"],
+                               residual_vectors_nosink=captured["residual_vectors_nosink"],
+                               position0_norm=captured["position0_norm"],
+                               residual_norm_median_nosink=captured["residual_norm_median_nosink"],
+                               residual_norm_p90_nosink=captured["residual_norm_p90_nosink"],
+                               position0_vectors=(captured["position0_vectors"]
+                                                  if sample["role"] == "self_direction" else {}),
+                               masked_positions=captured["masked_positions"])
         relative = str(target.relative_to(model_dir))
         append_jsonl(manifest_path, {"id": sample_id, "file": relative,
                                      "concept_id": sample.get("concept_id"),
@@ -612,21 +991,122 @@ def _read_layer(cache_dir: Path, manifest: dict[str, dict[str, Any]], sample_id:
 
 
 def _read_residual(cache_dir: Path, manifest: dict[str, dict[str, Any]], sample_id: str,
-                   layer: int) -> np.ndarray:
+                   layer: int, nosink: bool = False) -> np.ndarray:
     row = manifest.get(sample_id)
     if not row:
         raise FileNotFoundError(f"activation cache lacks required residual row {sample_id}")
-    with np.load(cache_dir.parent / row["file"]) as payload:  # manifest paths are relative to the model dir
-        return np.asarray(payload[f"R{layer}"], dtype=np.float32)
+    key = f"R{layer}_nosink" if nosink else f"R{layer}"
+    path = cache_dir.parent / row["file"]  # manifest paths are relative to the model dir
+    with np.load(path) as payload:
+        if nosink:
+            _require_capture_field(payload, path, key, "self_direction")
+        elif key not in payload.files:
+            raise ValueError(f"cache {path} is missing required key {key!r}")
+        return np.asarray(payload[key], dtype=np.float32)
+
+
+def _read_residual_rms(cache_dir: Path, manifest: dict[str, dict[str, Any]], sample_id: str,
+                       layer: int, nosink: bool = False) -> float:
+    row = manifest.get(sample_id)
+    if not row:
+        raise FileNotFoundError(f"activation cache lacks required residual row {sample_id}")
+    key = "residual_rms_nosink" if nosink else "residual_rms"
+    path = cache_dir.parent / row["file"]
+    with np.load(path) as payload:
+        if nosink:
+            _require_capture_field(payload, path, key, "neutral")
+        elif key not in payload.files:
+            raise ValueError(f"cache {path} is missing required key {key!r}")
+        return float(payload[key][layer])
+
+
+def _read_residual_profile(cache_dir: Path, manifest: dict[str, dict[str, Any]], sample_id: str,
+                           layer: int, metric: str) -> float:
+    row = manifest.get(sample_id)
+    if not row:
+        raise FileNotFoundError(f"activation cache lacks required residual row {sample_id}")
+    path = cache_dir.parent / row["file"]
+    with np.load(path) as payload:
+        _require_capture_field(payload, path, metric, "neutral")
+        return float(payload[metric][layer])
+
+
+def _read_position0_vector(cache_dir: Path, manifest: dict[str, dict[str, Any]],
+                           sample_id: str, layer: int) -> np.ndarray:
+    row = manifest.get(sample_id)
+    if not row:
+        raise FileNotFoundError(f"activation cache lacks required residual row {sample_id}")
+    key = f"R{layer}_position0"
+    path = cache_dir.parent / row["file"]
+    with np.load(path) as payload:
+        _require_capture_field(payload, path, key, "self_direction")
+        return np.asarray(payload[key], dtype=np.float32)
+
+
+def _read_position0_norm(cache_dir: Path, manifest: dict[str, dict[str, Any]],
+                         sample_id: str, layer: int) -> float:
+    row = manifest.get(sample_id)
+    if not row:
+        raise FileNotFoundError(f"activation cache lacks required residual row {sample_id}")
+    path = cache_dir.parent / row["file"]
+    with np.load(path) as payload:
+        _require_capture_field(payload, path, "position0_norm", "self_direction")
+        return float(payload["position0_norm"][layer])
 
 
 def build_self_direction(model_dir: Path, header: dict[str, Any], data: dict[str, Any]) -> dict[str, Any]:
-    """Fit layerwise AI-self minus human residual directions on 24+24 train examples."""
+    """Fit legacy and sink-excluded AI-self directions on the cached train examples."""
     cache_dir = model_dir / "activations"
     manifest = _manifest(model_dir)
     examples = data["self_direction_examples"]
     arrays: dict[str, np.ndarray] = {}
     layer_summaries = []
+
+    def fit_direction(train_ai: np.ndarray, train_human: np.ndarray,
+                      held_ai: np.ndarray, held_human: np.ndarray,
+                      layer: int, label: str) -> tuple[np.ndarray, np.ndarray, dict[str, Any]]:
+        difference = train_ai.mean(axis=0) - train_human.mean(axis=0)
+        norm = float(np.linalg.norm(difference))
+        if norm == 0:
+            raise RuntimeError(f"AI-self {label} direction has zero norm at layer {layer}")
+        direction = difference / norm
+        ai_scores = held_ai @ direction
+        human_scores = held_human @ direction
+        auc = float((sum(a > h for a in ai_scores for h in human_scores) +
+                     .5 * sum(a == h for a in ai_scores for h in human_scores)) /
+                    (len(ai_scores) * len(human_scores)))
+        metrics = {
+            "direction_norm": norm,
+            "heldout_ai_projection_mean": float(ai_scores.mean()),
+            "heldout_human_projection_mean": float(human_scores.mean()),
+            "heldout_projection_separation": float(ai_scores.mean() - human_scores.mean()),
+            "heldout_projection_separation_ci95": _bootstrap_mean_difference_ci(
+                ai_scores, human_scores, seed=3501 + layer),
+            "heldout_auc": auc,
+        }
+        return direction.astype(np.float32), difference.astype(np.float32), metrics
+
+    def sink_diagnostics(direction: np.ndarray, position0_vectors: np.ndarray,
+                         position0_norms: np.ndarray, rows: list[tuple[str, str, str]]) -> dict[str, Any]:
+        mean_position0 = position0_vectors.mean(axis=0)
+        mean_norm = float(np.linalg.norm(mean_position0))
+        cosine = (float(np.dot(direction, mean_position0) / mean_norm) if mean_norm else None)
+        projections = position0_vectors @ direction
+        coefficients = position0_norms * projections
+        labels = np.asarray([1.0 if group == "ai" else 0.0 for _sample_id, group, _split in rows])
+        if len(coefficients) > 1 and float(np.std(coefficients)) > 0 and float(np.std(labels)) > 0:
+            correlation = float(np.corrcoef(coefficients, labels)[0, 1])
+        else:
+            correlation = None
+        records = [{"sample_id": sample_id, "label": group, "split": split,
+                    "position0_norm": float(norm), "position0_projection": float(projection),
+                    "sink_coefficient": float(coefficient)}
+                   for (sample_id, group, split), norm, projection, coefficient in
+                   zip(rows, position0_norms, projections, coefficients)]
+        return {"position0_direction_cosine": cosine,
+                "sink_coefficient_label_correlation": correlation,
+                "sink_coefficients": records}
+
     for layer_meta in header["layers"]:
         layer = int(layer_meta["layer"])
         train_ai = np.stack([_read_residual(cache_dir, manifest, f"self:ai:{row['id']}", layer)
@@ -637,32 +1117,55 @@ def build_self_direction(model_dir: Path, header: dict[str, Any], data: dict[str
                             for row in examples["ai"] if row["split"] == "heldout"])
         held_human = np.stack([_read_residual(cache_dir, manifest, f"self:human:{row['id']}", layer)
                                for row in examples["human"] if row["split"] == "heldout"])
-        difference = train_ai.mean(axis=0) - train_human.mean(axis=0)
-        norm = float(np.linalg.norm(difference))
-        if norm == 0:
-            raise RuntimeError(f"AI-self direction has zero norm at layer {layer}")
-        direction = difference / norm
-        ai_scores = held_ai @ direction
-        human_scores = held_human @ direction
-        auc = float((sum(a > h for a in ai_scores for h in human_scores) +
-                     .5 * sum(a == h for a in ai_scores for h in human_scores)) /
-                    (len(ai_scores) * len(human_scores)))
-        arrays[f"direction_L{layer}"] = direction.astype(np.float32)
-        arrays[f"mean_difference_L{layer}"] = difference.astype(np.float32)
-        layer_summaries.append({"layer": layer, "depth_fraction": layer_meta["depth_fraction"],
-                                "n_train_ai": int(len(train_ai)), "n_train_human": int(len(train_human)),
-                                "n_heldout_ai": int(len(held_ai)), "n_heldout_human": int(len(held_human)),
-                                "direction_norm": norm, "heldout_ai_projection_mean": float(ai_scores.mean()),
-                                "heldout_human_projection_mean": float(human_scores.mean()),
-                                "heldout_projection_separation": float(ai_scores.mean() - human_scores.mean()),
-                                "heldout_projection_separation_ci95": _bootstrap_mean_difference_ci(
-                                    ai_scores, human_scores, seed=3501 + layer),
-                                "heldout_auc": auc})
+        train_ai_nosink = np.stack([_read_residual(cache_dir, manifest, f"self:ai:{row['id']}", layer,
+                                                   nosink=True)
+                                    for row in examples["ai"] if row["split"] == "train"])
+        train_human_nosink = np.stack([_read_residual(cache_dir, manifest, f"self:human:{row['id']}", layer,
+                                                      nosink=True)
+                                       for row in examples["human"] if row["split"] == "train"])
+        held_ai_nosink = np.stack([_read_residual(cache_dir, manifest, f"self:ai:{row['id']}", layer,
+                                                  nosink=True)
+                                   for row in examples["ai"] if row["split"] == "heldout"])
+        held_human_nosink = np.stack([_read_residual(cache_dir, manifest, f"self:human:{row['id']}", layer,
+                                                     nosink=True)
+                                      for row in examples["human"] if row["split"] == "heldout"])
+        diagnostic_rows = [(row["id"], group, row["split"])
+                           for group in ("ai", "human") for row in examples[group]]
+        position0_vectors = np.stack([_read_position0_vector(
+            cache_dir, manifest, f"self:{group}:{row['id']}", layer)
+            for group in ("ai", "human") for row in examples[group]])
+        position0_norms = np.asarray([_read_position0_norm(
+            cache_dir, manifest, f"self:{group}:{row['id']}", layer)
+            for group in ("ai", "human") for row in examples[group]], dtype=np.float64)
+        direction, difference, legacy_metrics = fit_direction(
+            train_ai, train_human, held_ai, held_human, layer, "all-position")
+        direction_nosink, difference_nosink, nosink_metrics = fit_direction(
+            train_ai_nosink, train_human_nosink, held_ai_nosink, held_human_nosink,
+            layer, "nosink")
+        arrays[f"direction_L{layer}"] = direction
+        arrays[f"mean_difference_L{layer}"] = difference
+        arrays[f"direction_L{layer}_nosink"] = direction_nosink
+        arrays[f"mean_difference_L{layer}_nosink"] = difference_nosink
+        legacy_diagnostics = sink_diagnostics(direction, position0_vectors,
+                                             position0_norms, diagnostic_rows)
+        nosink_diagnostics = sink_diagnostics(direction_nosink, position0_vectors,
+                                             position0_norms, diagnostic_rows)
+        layer_summaries.append({
+            "layer": layer, "depth_fraction": layer_meta["depth_fraction"],
+            "n_train_ai": int(len(train_ai)), "n_train_human": int(len(train_human)),
+            "n_heldout_ai": int(len(held_ai)), "n_heldout_human": int(len(held_human)),
+            **legacy_metrics,
+            **{f"{key}_nosink": value for key, value in nosink_metrics.items()},
+            **legacy_diagnostics,
+            **{f"{key}_nosink": value for key, value in nosink_diagnostics.items()},
+        })
     temp = model_dir / f"self-direction.{os.getpid()}.tmp.npz"
     np.savez_compressed(temp, **arrays)
     os.replace(temp, model_dir / "self-direction.npz")
-    summary = {"model_id": header["model_id"], "fit": "mean post-block residual over 24 train AI descriptions minus 24 train human descriptions; unit-normalized",
-              "heldout": "projection separation and pairwise AUC on 8 held-out AI and 8 held-out human descriptions",
+    summary = {"model_id": header["model_id"], "fit": "mean all-position post-block residual over train AI descriptions minus train human descriptions; unit-normalized",
+              "fit_nosink": "mean post-block residual over unmasked content tokens on train AI descriptions minus train human descriptions; unit-normalized",
+              "heldout": "all-position projection separation and pairwise AUC on held-out AI and human descriptions",
+              "heldout_nosink": "unmasked content-token projection separation and pairwise AUC on held-out AI and human descriptions",
               "layer_summaries": layer_summaries}
     atomic_json(summary, model_dir / "self-direction.json")
     return summary
@@ -866,11 +1369,9 @@ def score_cached_screen(args: argparse.Namespace, data: dict[str, Any], model_di
         print(f"layer {layer}: zero-spread {zero_spread}, template-excluded {int(template.sum())}, "
               f"all-zero kept {zero_spread - int(template.sum())}, floored {int(np.sum(neutral_spread < floor))}, "
               f"floor {floor:.4g} ({SPREAD_FLOOR_MODE})", flush=True)
-        neutral_residual = []
-        for frame in data["frame_bank"]:
-            with np.load(model_dir / manifest[f"neutral:{frame['id']}"]["file"]) as payload:
-                neutral_residual.append(float(payload["residual_rms"][layer]))
-        layer_residual_rms = float(np.sqrt(np.mean(np.square(neutral_residual))))
+        (layer_residual_rms, layer_residual_rms_nosink,
+         layer_residual_norm_median_nosink, layer_residual_norm_p90_nosink) = (
+            _residual_rms_versions_for_layer(model_dir, data, layer))
         discovery, disc_frames = _matched_stat(values, neutral_spread, concepts, passage_map, "discovery")
         _all = np.concatenate([np.asarray(d) for d in discovery])
         print(f"layer {layer}: discovery stat median {np.median(_all):.3g}, p99 {np.percentile(_all, 99):.3g}, "
@@ -898,6 +1399,9 @@ def score_cached_screen(args: argparse.Namespace, data: dict[str, Any], model_di
                     "neutral_spread": float(neutral_spread[unit]),
                     "neutral_natural_max": float(np.max(neutral_values[:, unit])),
                     "residual_rms": layer_residual_rms,
+                    "residual_rms_nosink": layer_residual_rms_nosink,
+                    "residual_norm_median_nosink": layer_residual_norm_median_nosink,
+                    "residual_norm_p90_nosink": layer_residual_norm_p90_nosink,
                 }
         if args.model == alien_model and (not args.score_shard or
                 any(concepts[i]["id"] == "trump" for i in target_indices)):
@@ -1153,14 +1657,15 @@ def _neutral_controls(model_dir: Path, header: dict[str, Any], data: dict[str, A
         live = np.flatnonzero(maxima > threshold)
         if len(live) == 0:
             live = np.asarray([int(np.argmax(maxima))])
-        residual = []
-        for frame in data["frame_bank"]:
-            with np.load(model_dir / manifest[f"neutral:{frame['id']}"]["file"]) as payload:
-                residual.append(float(payload["residual_rms"][layer]))
-        residual_rms = float(np.sqrt(np.mean(np.square(residual))))
+        (residual_rms, residual_rms_nosink,
+         residual_norm_median_nosink, residual_norm_p90_nosink) = (
+            _residual_rms_versions_for_layer(model_dir, data, layer))
         candidates.extend({"layer": layer, "unit": int(unit), "live_threshold": threshold,
                            "neutral_natural_max": float(maxima[unit]),
-                           "residual_rms": residual_rms}
+                           "residual_rms": residual_rms,
+                           "residual_rms_nosink": residual_rms_nosink,
+                           "residual_norm_median_nosink": residual_norm_median_nosink,
+                           "residual_norm_p90_nosink": residual_norm_p90_nosink}
                           for unit in live)
     rng = random.Random(seed)
     if len(candidates) < count:
@@ -1168,13 +1673,21 @@ def _neutral_controls(model_dir: Path, header: dict[str, Any], data: dict[str, A
     return rng.sample(candidates, count)
 
 
-def _primary_doses(layer: Any, unit: int, residual_rms: float, neutral_max: float) -> list[dict[str, Any]]:
+def _primary_doses(layer: Any, unit: int, residual_rms: float,
+                   residual_rms_nosink: float, residual_norm_median_nosink: float,
+                   residual_norm_p90_nosink: float, neutral_max: float) -> list[dict[str, Any]]:
     column_norm = _column_norm(layer, unit)
-    return [{"dose_kind": "rho", "dose_label": f"rho_{rho:.2f}", "rho": rho,
-             "level": dose_level(rho, residual_rms, column_norm),
-             "down_column_norm": column_norm, "equivalent_neutral_max_multiple":
-             dose_level(rho, residual_rms, column_norm) / neutral_max if neutral_max > 0 else None}
-            for rho in (.05, .10)]
+    doses = []
+    for rho in (.05, .10):
+        level = dose_level(rho, residual_norm_median_nosink, column_norm)
+        doses.append({"dose_kind": "rho", "dose_label": f"rho_{rho:.2f}", "rho": rho,
+                      "level": level, "down_column_norm": column_norm,
+                      "equivalent_neutral_max_multiple": level / neutral_max if neutral_max > 0 else None,
+                      "residual_rms": residual_rms,
+                      "residual_rms_nosink": residual_rms_nosink,
+                      "residual_norm_median_nosink": residual_norm_median_nosink,
+                      "residual_norm_p90_nosink": residual_norm_p90_nosink})
+    return doses
 
 
 def _neutral_max_for_unit(model_dir: Path, header: dict[str, Any], data: dict[str, Any],
@@ -1186,12 +1699,31 @@ def _neutral_max_for_unit(model_dir: Path, header: dict[str, Any], data: dict[st
 
 
 def _residual_rms_for_layer(model_dir: Path, data: dict[str, Any], layer: int) -> float:
+    """Return sink-excluded neutral residual RMS while preserving this helper's RMS meaning."""
+    return _residual_rms_versions_for_layer(model_dir, data, layer)[1]
+
+
+def _residual_norm_median_for_layer(model_dir: Path, data: dict[str, Any], layer: int) -> float:
+    """Return median sink-excluded neutral content-token norm for rho dose calculations."""
+    return _residual_rms_versions_for_layer(model_dir, data, layer)[2]
+
+
+def _residual_rms_versions_for_layer(model_dir: Path, data: dict[str, Any],
+                                     layer: int) -> tuple[float, float, float, float]:
     manifest = _manifest(model_dir)
-    values = []
+    cache_dir = model_dir / "activations"
+    values, values_nosink, medians_nosink, p90s_nosink = [], [], [], []
     for frame in data["frame_bank"]:
-        with np.load(model_dir / manifest[f"neutral:{frame['id']}"]["file"]) as payload:
-            values.append(float(payload["residual_rms"][layer]))
-    return float(np.sqrt(np.mean(np.square(values))))
+        sample_id = f"neutral:{frame['id']}"
+        values.append(_read_residual_rms(cache_dir, manifest, sample_id, layer))
+        values_nosink.append(_read_residual_rms(cache_dir, manifest, sample_id, layer, nosink=True))
+        medians_nosink.append(_read_residual_profile(
+            cache_dir, manifest, sample_id, layer, "residual_norm_median_nosink"))
+        p90s_nosink.append(_read_residual_profile(
+            cache_dir, manifest, sample_id, layer, "residual_norm_p90_nosink"))
+    return (float(np.sqrt(np.mean(np.square(values)))),
+            float(np.sqrt(np.mean(np.square(values_nosink)))),
+            float(np.median(medians_nosink)), float(np.median(p90s_nosink)))
 
 
 def _bootstrap_ratio_ci(numerator: np.ndarray, denominator: np.ndarray,
@@ -1340,12 +1872,17 @@ def run_push1(args: argparse.Namespace) -> list[dict[str, Any]]:
         tasks.append({**row, "role": "candidate"})
     if args.model == data["positive_control"]["fixed_neuron"]["model"] and "alien" in selected_ids:
         fixed = data["positive_control"]["fixed_neuron"]
+        (residual_rms, residual_rms_nosink, residual_norm_median_nosink,
+         residual_norm_p90_nosink) = _residual_rms_versions_for_layer(model_dir, data, int(fixed["layer"]))
         tasks.append({"model_id": args.model, "concept_id": "alien", "category": "positive_control",
                       "held_out": False, "layer": fixed["layer"], "unit": fixed["unit"],
                       "rank": None, "screen_pass": False, "confirmation_pass": False,
                       "neutral_natural_max": _neutral_max_for_unit(model_dir, header, data,
                                                        fixed["layer"], fixed["unit"]),
-                      "residual_rms": _residual_rms_for_layer(model_dir, data, int(fixed["layer"])),
+                      "residual_rms": residual_rms,
+                      "residual_rms_nosink": residual_rms_nosink,
+                      "residual_norm_median_nosink": residual_norm_median_nosink,
+                      "residual_norm_p90_nosink": residual_norm_p90_nosink,
                       "role": "positive_control"})
     identity = [(f"s1-id-{i+1:02d}", p, "identity")
                 for i, p in enumerate(data["stage1_prompts"]["identity"])]
@@ -1353,7 +1890,7 @@ def run_push1(args: argparse.Namespace) -> list[dict[str, Any]]:
                     for i, p in enumerate(data["stage1_prompts"]["non_identity"])]
     prompts = identity + non_identity
     direction_payload = np.load(model_dir / "self-direction.npz")
-    directions = {i: np.asarray(direction_payload[f"direction_L{i}"], dtype=np.float32)
+    directions = {i: np.asarray(direction_payload[f"direction_L{i}_nosink"], dtype=np.float32)
                   for i in range(len(layers))}
     baselines = {}
     for prompt_id, prompt_text, _group in identity:
@@ -1380,8 +1917,10 @@ def run_push1(args: argparse.Namespace) -> list[dict[str, Any]]:
     for task in all_units:
         layer_i, unit = int(task["layer"]), int(task["unit"])
         neutral_max = float(task.get("neutral_natural_max", 0.0))
-        residual_rms = float(task.get("residual_rms", 0.0))
-        doses = _primary_doses(layers[layer_i], unit, residual_rms, neutral_max)
+        (residual_rms, residual_rms_nosink, residual_norm_median_nosink,
+         residual_norm_p90_nosink) = _task_residual_values(task)
+        doses = _primary_doses(layers[layer_i], unit, residual_rms, residual_rms_nosink,
+                               residual_norm_median_nosink, residual_norm_p90_nosink, neutral_max)
         for dose in doses:
             for prompt_id, prompt_text, prompt_group in prompts:
                 for sample_index in range(args.samples):
@@ -1404,6 +1943,10 @@ def run_push1(args: argparse.Namespace) -> list[dict[str, Any]]:
                            "depth_fraction": float(layer_i / max(1, len(layers) - 1)),
                            "dose_kind": dose["dose_kind"], "dose_label": dose["dose_label"],
                            "rho": dose["rho"], "level": dose["level"],
+                           "residual_rms": residual_rms,
+                           "residual_rms_nosink": residual_rms_nosink,
+                           "residual_norm_median_nosink": residual_norm_median_nosink,
+                           "residual_norm_p90_nosink": residual_norm_p90_nosink,
                            "down_column_norm": dose["down_column_norm"],
                            "equivalent_neutral_max_multiple": dose["equivalent_neutral_max_multiple"],
                            "prompt_id": prompt_id, "prompt_group": prompt_group,
@@ -1440,6 +1983,9 @@ def run_push1(args: argparse.Namespace) -> list[dict[str, Any]]:
                                    "primary_stat": task.get("primary_stat"),
                                    "neutral_natural_max": task.get("neutral_natural_max"),
                                    "residual_rms": task.get("residual_rms"),
+                                   "residual_rms_nosink": task.get("residual_rms_nosink"),
+                                   "residual_norm_median_nosink": task.get("residual_norm_median_nosink"),
+                                   "residual_norm_p90_nosink": task.get("residual_norm_p90_nosink"),
                                    "potential_hit": True})
             hit_done.add(key)
     print(json.dumps({"model_id": args.model, "push1_new_answers": new,
@@ -1452,16 +1998,34 @@ def _stable_seed(value: str) -> int:
     return int.from_bytes(hashlib.sha256(value.encode("utf-8")).digest()[:4], "little")
 
 
-def _stage2_doses(layer: Any, unit: int, residual_rms: float, neutral_max: float) -> list[dict[str, Any]]:
-    doses = _primary_doses(layer, unit, residual_rms, neutral_max)
+def _stage2_doses(layer: Any, unit: int, residual_rms: float, residual_rms_nosink: float,
+                  residual_norm_median_nosink: float, residual_norm_p90_nosink: float,
+                  neutral_max: float) -> list[dict[str, Any]]:
+    doses = _primary_doses(layer, unit, residual_rms, residual_rms_nosink,
+                           residual_norm_median_nosink, residual_norm_p90_nosink, neutral_max)
     column_norm = _column_norm(layer, unit)
     for multiplier in (2, 4, 8):
         level = natural_max_level(multiplier, neutral_max)
         doses.append({"dose_kind": "natural_max", "dose_label": f"natural_{multiplier}x",
                       "natural_max_multiple": multiplier, "level": level,
                       "down_column_norm": column_norm,
-                      "equivalent_rho": level * column_norm / residual_rms if residual_rms else None})
+                      "equivalent_rho": level * column_norm / residual_norm_median_nosink
+                      if residual_norm_median_nosink else None,
+                      "residual_rms": residual_rms,
+                      "residual_rms_nosink": residual_rms_nosink,
+                      "residual_norm_median_nosink": residual_norm_median_nosink,
+                      "residual_norm_p90_nosink": residual_norm_p90_nosink})
     return doses
+
+
+def _task_residual_values(task: dict[str, Any]) -> tuple[float, float, float, float]:
+    required = ("residual_rms", "residual_rms_nosink", "residual_norm_median_nosink",
+                "residual_norm_p90_nosink")
+    if not all(key in task for key in required):
+        raise ValueError("candidate/control row is missing a residual RMS/profile field; "
+                         "recapture neutral samples and rescore with "
+                         "`part35.py screen --model MODEL --out OUT --recapture-roles neutral`")
+    return tuple(float(task[key]) for key in required)
 
 
 def run_push2(args: argparse.Namespace) -> list[dict[str, Any]]:
@@ -1496,7 +2060,7 @@ def run_push2(args: argparse.Namespace) -> list[dict[str, Any]]:
     trump_style = [(f"s2-trump-style-{i+1:02d}", p, "trump_style")
                    for i, p in enumerate(data["stage2_prompts"]["trump_style"])]
     direction_payload = np.load(model_dir / "self-direction.npz")
-    directions = {i: np.asarray(direction_payload[f"direction_L{i}"], dtype=np.float32)
+    directions = {i: np.asarray(direction_payload[f"direction_L{i}_nosink"], dtype=np.float32)
                   for i in range(len(layers))}
     baselines = {}
     baseline_count = 0
@@ -1529,8 +2093,16 @@ def run_push2(args: argparse.Namespace) -> list[dict[str, Any]]:
         layer_i, unit = int(task["layer"]), int(task["unit"])
         neutral_max = float(task.get("neutral_natural_max") or
                             _neutral_max_for_unit(model_dir, header, data, layer_i, unit))
-        residual_rms = float(task.get("residual_rms") or controls[0]["residual_rms"])
-        for dose in _stage2_doses(layers[layer_i], unit, residual_rms, neutral_max):
+        if all(key in task for key in ("residual_rms", "residual_rms_nosink",
+                                       "residual_norm_median_nosink", "residual_norm_p90_nosink")):
+            (residual_rms, residual_rms_nosink, residual_norm_median_nosink,
+             residual_norm_p90_nosink) = _task_residual_values(task)
+        else:
+            (residual_rms, residual_rms_nosink, residual_norm_median_nosink,
+             residual_norm_p90_nosink) = _task_residual_values(controls[0])
+        for dose in _stage2_doses(layers[layer_i], unit, residual_rms,
+                                  residual_rms_nosink, residual_norm_median_nosink,
+                                  residual_norm_p90_nosink, neutral_max):
             prompt_groups = [(identity, True)]
             if dose["dose_label"] == "rho_0.10":
                 prompt_groups.append((non_identity, False))
@@ -1560,6 +2132,10 @@ def run_push2(args: argparse.Namespace) -> list[dict[str, Any]]:
                                "dose_kind": dose["dose_kind"], "dose_label": dose["dose_label"],
                                "rho": dose.get("rho"), "natural_max_multiple": dose.get("natural_max_multiple"),
                                "equivalent_rho": dose.get("equivalent_rho"), "level": dose["level"],
+                               "residual_rms": residual_rms,
+                               "residual_rms_nosink": residual_rms_nosink,
+                               "residual_norm_median_nosink": residual_norm_median_nosink,
+                               "residual_norm_p90_nosink": residual_norm_p90_nosink,
                                "prompt_id": prompt_id, "prompt_group": prompt_group,
                                "identity_prompt": is_identity, "sample_index": sample_index,
                                "temperature": .7, "max_new_tokens": args.max_new_tokens,
@@ -2173,6 +2749,8 @@ def build_parser() -> argparse.ArgumentParser:
                            help="capture this shard; run again with --reuse-cache after all shards finish")
             p.add_argument("--reuse-cache", action="store_true",
                            help="score existing complete activation cache without loading model weights")
+            p.add_argument("--recapture-roles", default="neutral,self_direction",
+                           help="refresh stale versioned cache rows for these roles; supported: neutral,self_direction")
             p.add_argument("--score-shard", action="store_true",
                            help="score only --concept-start:--concept-end and save a mergeable null shard")
             p.add_argument("--merge-screen-shards", action="store_true",
@@ -2195,6 +2773,14 @@ def build_parser() -> argparse.ArgumentParser:
                 p.add_argument("--skip-controls", action="store_true", help="push candidates without random controls")
                 p.add_argument("--control-start", type=int, default=None, help="inclusive index into the 10 live random controls")
                 p.add_argument("--control-end", type=int, default=None, help="exclusive index into the 10 live random controls")
+    p = sub.add_parser("peak-positions", help="capture peak token positions for top screen units and zero-spread units")
+    p.add_argument("--model", required=True, choices=tuple(MODELS))
+    p.add_argument("--revision", default=None, help="override the pinned cached revision")
+    p.add_argument("--cache-dir", type=Path, default=DEFAULT_CACHE)
+    p.add_argument("--device", choices=("cpu", "xpu"), default="cpu")
+    p.add_argument("--dtype", choices=("bf16", "fp32"), default="bf16")
+    p.add_argument("--out", required=True, type=Path, help="screen output root containing MODEL/header.json and activations/")
+    p.add_argument("--screen", default=None, help="screen JSONL; default is OUT/MODEL/screen.jsonl")
     p = sub.add_parser("judge", help="optional blind OpenAI-compatible judge")
     p.add_argument("--input", required=True, type=Path)
     p.add_argument("--out", default=None, type=Path)
@@ -2217,7 +2803,10 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "screen":
             if args.permutations < 200:
                 parser.error("screen requires --permutations >= 200")
+            _recapture_roles(args.recapture_roles)
             run_screen(args)
+        elif args.command == "peak-positions":
+            run_peak_positions(args)
         elif args.command == "push1":
             run_push1(args)
         elif args.command == "push2":
