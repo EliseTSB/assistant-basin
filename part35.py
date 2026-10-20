@@ -37,6 +37,12 @@ JOINT_PERMUTATION_SEED = 3504
 SPLIT_SEED = 3501
 CAPTURE_VERSION = "35.2-nosink"
 DEFAULT_RECAPTURE_ROLES = {"neutral", "self_direction"}
+SELFDESC_PATHS = {generator: ROOT / "data" / f"part35-selfdesc-{generator}.jsonl"
+                  for generator in ("gA", "gB")}
+SELFDESC_CAPTURE_VERSION = "35.8-selfdesc-1"
+SELFDESC_SEED = 3508
+SELFDESC_BOOTSTRAP_RESAMPLES = 2000
+SELFDESC_C_VALUES = (0.01, 0.1, 1.0, 10.0, 100.0)
 MODELS = {
     "Qwen/Qwen3-1.7B": {
         "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
@@ -262,6 +268,14 @@ def experiment_samples(data: dict[str, Any], posts: list[dict[str, str]] | None 
                          "frame_id": example["id"], "language": "en", "kind": "self_direction",
                          "split": example["split"], "text": example["text"], "role": "self_direction",
                          "self_class": group})
+    for generator, path in SELFDESC_PATHS.items():
+        for example in jsonl_rows(path):
+            rows.append({"id": f"selfdesc:{generator}:{example['id']}",
+                         "concept_id": "__self_description__", "category": example["class"],
+                         "held_out": False, "frame_id": f"{generator}:{example['id']}",
+                         "language": "en", "kind": "self_description", "split": "unassigned",
+                         "text": example["text"], "role": "selfdesc",
+                         "self_class": example["class"], "generator": generator})
     for row in posts or []:
         rows.append({"id": row["id"], "concept_id": "__trump_after__", "category": "trump_after_cutoff",
                      "held_out": False, "frame_id": row["id"], "language": "en",
@@ -364,6 +378,8 @@ class ActivationCapture:
         self.capture_residual_vectors = capture_residual_vectors
         self.residual_vectors: dict[int, np.ndarray] = {}
         self.residual_vectors_nosink: dict[int, np.ndarray] = {}
+        self.last_content_vectors: dict[int, np.ndarray] = {}
+        self.content_token_count = 0
         self.position0_vectors: dict[int, np.ndarray] = {}
         self.position0_norm: dict[int, float] = {}
         self.content_positions = None if content_positions is None else set(map(int, content_positions))
@@ -408,6 +424,7 @@ class ActivationCapture:
                          if self.content_positions is not None else list(range(1, values.shape[1])))
             if not positions:
                 raise ValueError(f"layer {index} residual has no unmasked content positions")
+            self.content_token_count = len(positions)
             position_indices = self.torch.as_tensor(positions, dtype=self.torch.long, device=values.device)
             content = values.index_select(dim=1, index=position_indices)
             nosink_norms = self.torch.linalg.vector_norm(content, dim=-1)[0].cpu().numpy()
@@ -417,6 +434,7 @@ class ActivationCapture:
             if self.capture_residual_vectors:
                 self.residual_vectors[index] = values[0].mean(dim=0).cpu().numpy().astype(np.float32, copy=True)
                 self.residual_vectors_nosink[index] = content[0].mean(dim=0).cpu().numpy().astype(np.float32, copy=True)
+                self.last_content_vectors[index] = content[0, -1].cpu().numpy().astype(np.float32, copy=True)
         return hook
 
     def remove(self) -> None:
@@ -554,6 +572,13 @@ def capture_one(torch: Any, tokenizer: Any, model: Any, layers: Any, text: str,
         "residual_vectors": residual_vectors,
         "residual_vectors_nosink": residual_vectors_nosink,
         "position0_vectors": position0_vectors,
+        "residual_vectors_last_content": {
+            f"R{i}_last_content": capture.last_content_vectors[i]
+            for i in range(len(layers) if capture_residual_vectors else 0)},
+        "residual_vectors_mean_content": {
+            f"R{i}_mean_content": capture.residual_vectors_nosink[i]
+            for i in range(len(layers) if capture_residual_vectors else 0)},
+        "content_token_count": capture.content_token_count,
         "position0_norm": [capture.position0_norm[i] for i in range(len(layers))],
         "masked_positions": np.asarray(masked_positions, dtype=np.int32),
         "peak_positions": peaks,
@@ -781,7 +806,7 @@ def _recapture_roles(value: str | Iterable[str] | None = None) -> set[str]:
         return set(DEFAULT_RECAPTURE_ROLES)
     roles = set(part.strip() for part in value.split(",")) if isinstance(value, str) else set(value)
     roles.discard("")
-    allowed = {"neutral", "self_direction"}
+    allowed = {"neutral", "self_direction", "selfdesc"}
     unknown = roles - allowed
     if unknown:
         raise ValueError(f"unsupported --recapture-roles value(s): {', '.join(sorted(unknown))}; "
@@ -815,17 +840,45 @@ def cache_needs_recapture(path: Path, role: str,
                     required.update({f"R{layer}", f"R{layer}_nosink", f"R{layer}_position0"})
                 if not required.issubset(payload.files):
                     return True
+            elif role == "selfdesc":
+                if "selfdesc_capture_version" not in payload.files or str(
+                        np.asarray(payload["selfdesc_capture_version"]).item()) != SELFDESC_CAPTURE_VERSION:
+                    return True
+                layer_indices = {int(match.group(1)) for key in payload.files
+                                 if (match := re.fullmatch(r"R(\d+)_last_content", key))}
+                if not layer_indices:
+                    return True
+                required.add("content_token_count")
+                for layer in layer_indices:
+                    required.update({f"R{layer}_last_content", f"R{layer}_mean_content"})
+                if not required.issubset(payload.files):
+                    return True
             return not required.issubset(payload.files)
     except (OSError, ValueError, KeyError):
         return True
 
 
 def _recapture_command(role: str) -> str:
+    if role == "selfdesc":
+        return ("`part35.py screen --model MODEL --out OUT --capture-only "
+                "--recapture-roles selfdesc`")
     return ("`part35.py screen --model MODEL --out OUT "
             f"--recapture-roles {role}`")
 
 
 def _require_capture_field(payload: Any, path: Path, key: str, role: str) -> None:
+    if role == "selfdesc":
+        version = (str(np.asarray(payload["selfdesc_capture_version"]).item())
+                   if "selfdesc_capture_version" in payload.files else None)
+        if version != SELFDESC_CAPTURE_VERSION:
+            missing = ("selfdesc_capture_version" if version is None else
+                       f"selfdesc_capture_version={version!r} (expected {SELFDESC_CAPTURE_VERSION!r})")
+            raise ValueError(f"cache {path} lacks required {missing} for key {key}; recapture with "
+                             f"{_recapture_command(role)}")
+        if key not in payload.files:
+            raise ValueError(f"cache {path} is missing required key {key!r}; recapture with "
+                             f"{_recapture_command(role)}")
+        return
     version = None
     if "capture_version" in payload.files:
         version = str(np.asarray(payload["capture_version"]).item())
@@ -846,6 +899,9 @@ def write_activation_cache(path: Path, activations: dict[str, np.ndarray], resid
                            residual_norm_median_nosink: list[float] | None = None,
                            residual_norm_p90_nosink: list[float] | None = None,
                            position0_vectors: dict[str, np.ndarray] | None = None,
+                           residual_vectors_last_content: dict[str, np.ndarray] | None = None,
+                           residual_vectors_mean_content: dict[str, np.ndarray] | None = None,
+                           content_token_count: int | None = None,
                            masked_positions: np.ndarray | list[int] | None = None,
                            capture_version: str = CAPTURE_VERSION) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -869,8 +925,357 @@ def write_activation_cache(path: Path, activations: dict[str, np.ndarray], resid
         arrays.update(residual_vectors_nosink)
     if position0_vectors:
         arrays.update(position0_vectors)
+    if residual_vectors_last_content:
+        arrays.update(residual_vectors_last_content)
+    if residual_vectors_mean_content:
+        arrays.update(residual_vectors_mean_content)
+    if content_token_count is not None:
+        arrays["content_token_count"] = np.asarray(content_token_count, dtype=np.int32)
+    if residual_vectors_last_content or residual_vectors_mean_content:
+        arrays["selfdesc_capture_version"] = np.asarray(SELFDESC_CAPTURE_VERSION)
     np.savez_compressed(temp, **arrays)
     os.replace(temp, path)
+
+
+def binary_auc(labels: Iterable[int], scores: Iterable[float]) -> float:
+    """ROC AUC computed from average ranks, including ties."""
+    y = np.asarray(list(labels), dtype=np.int8)
+    values = np.asarray(list(scores), dtype=np.float64)
+    if y.ndim != 1 or values.shape != y.shape or not np.isin(y, (0, 1)).all():
+        raise ValueError("AUC requires aligned binary labels and scores")
+    n_positive = int(np.sum(y == 1))
+    n_negative = int(np.sum(y == 0))
+    if not n_positive or not n_negative:
+        raise ValueError("AUC requires both classes")
+    order = np.argsort(values, kind="mergesort")
+    sorted_values = values[order]
+    sorted_labels = y[order]
+    rank_sum = 0.0
+    start = 0
+    while start < len(values):
+        end = start + 1
+        while end < len(values) and sorted_values[end] == sorted_values[start]:
+            end += 1
+        average_rank = (start + 1 + end) / 2.0
+        rank_sum += average_rank * int(np.sum(sorted_labels[start:end] == 1))
+        start = end
+    return float((rank_sum - n_positive * (n_positive + 1) / 2) / (n_positive * n_negative))
+
+
+def bootstrap_auc_ci(labels: Iterable[int], scores: Iterable[float], n_resamples: int = 2000,
+                     seed: int = SELFDESC_SEED) -> tuple[float, float]:
+    """Record bootstrap percentile interval for ROC AUC with a reproducible seed."""
+    y = np.asarray(list(labels), dtype=np.int8)
+    values = np.asarray(list(scores), dtype=np.float64)
+    if y.ndim != 1 or values.shape != y.shape or not np.isin(y, (0, 1)).all():
+        raise ValueError("bootstrap AUC requires aligned binary labels and scores")
+    if n_resamples < 1 or not np.any(y == 0) or not np.any(y == 1):
+        raise ValueError("bootstrap AUC requires resamples and both classes")
+    rng = np.random.default_rng(seed)
+    order = np.argsort(values, kind="mergesort")
+    sorted_values, sorted_labels = values[order], y[order]
+    groups = []
+    start = 0
+    while start < len(y):
+        end = start + 1
+        while end < len(y) and sorted_values[end] == sorted_values[start]:
+            end += 1
+        groups.append((start, end))
+        start = end
+    probabilities = np.full(len(y), 1.0 / len(y), dtype=np.float64)
+    aucs: list[np.ndarray] = []
+    collected = 0
+    attempts = 0
+    while collected < n_resamples and attempts < 100:
+        batch_size = max(256, n_resamples - collected)
+        weights = rng.multinomial(len(y), probabilities, size=batch_size)
+        weights = weights[:, order]
+        positive_weights = weights * (sorted_labels == 1)[None, :]
+        negative_weights = weights * (sorted_labels == 0)[None, :]
+        positive_total = positive_weights.sum(axis=1)
+        negative_total = negative_weights.sum(axis=1)
+        valid = (positive_total > 0) & (negative_total > 0)
+        numerator = np.zeros(batch_size, dtype=np.float64)
+        negatives_below = np.zeros(batch_size, dtype=np.float64)
+        for left, right in groups:
+            positives_in_tie = positive_weights[:, left:right].sum(axis=1)
+            negatives_in_tie = negative_weights[:, left:right].sum(axis=1)
+            numerator += positives_in_tie * (negatives_below + .5 * negatives_in_tie)
+            negatives_below += negatives_in_tie
+        current = numerator[valid] / (positive_total[valid] * negative_total[valid])
+        aucs.append(current[:n_resamples - collected])
+        collected += min(len(current), n_resamples - collected)
+        attempts += 1
+    if collected < n_resamples:
+        raise RuntimeError("could not draw enough non-degenerate bootstrap samples")
+    all_auc = np.concatenate(aucs)[:n_resamples]
+    lower, upper = np.percentile(all_auc, [2.5, 97.5])
+    return float(lower), float(upper)
+
+
+def residualize_length(train_features: np.ndarray, train_counts: Iterable[float],
+                       eval_features: np.ndarray, eval_counts: Iterable[float]
+                       ) -> tuple[np.ndarray, np.ndarray]:
+    """Regress each feature on content-token count using train data only."""
+    train_x = np.asarray(train_features, dtype=np.float64)
+    eval_x = np.asarray(eval_features, dtype=np.float64)
+    train_n = np.asarray(list(train_counts), dtype=np.float64)
+    eval_n = np.asarray(list(eval_counts), dtype=np.float64)
+    if train_x.ndim != 2 or eval_x.ndim != 2 or train_x.shape[1] != eval_x.shape[1]:
+        raise ValueError("train and evaluation features must be two-dimensional with matching width")
+    if train_x.shape[0] != len(train_n) or eval_x.shape[0] != len(eval_n):
+        raise ValueError("content counts must align with feature records")
+    center = float(train_n.mean())
+    centered = train_n - center
+    denom = float(np.dot(centered, centered))
+    slopes = ((centered[:, None] * (train_x - train_x.mean(axis=0))).sum(axis=0) / denom
+              if denom > 1e-12 else np.zeros(train_x.shape[1], dtype=np.float64))
+    intercepts = train_x.mean(axis=0) - slopes * center
+    return (train_x - (intercepts[None, :] + train_n[:, None] * slopes[None, :]),
+            eval_x - (intercepts[None, :] + eval_n[:, None] * slopes[None, :]))
+
+
+def evaluate_selfdesc_gate(per_layer: dict[int, dict[str, Any]],
+                           lexical_cross_auc: float | None = None) -> dict[str, Any]:
+    """Select from same-generator AUC only, then assess that layer on cross-generator AUC. The fifth amendment also
+    requires the residual probe to beat the bag-of-words baseline's cross-generator AUC; without a baseline the gate
+    cannot pass."""
+    if not per_layer:
+        raise ValueError("self-description gate needs per-layer metrics")
+    selected_layer, selected = max(
+        per_layer.items(), key=lambda item: (float(item[1]["same_generator_auc"]), -int(item[0])))
+    ci = selected["cross_generator_ci95"]
+    cross_auc = float(selected["cross_generator_auc"])
+    lower = float(ci[0])
+    return {"selected_layer": int(selected_layer),
+            "selection_metric": "length-controlled last-token same-generator AUC",
+            "same_generator_auc": float(selected["same_generator_auc"]),
+            "cross_generator_auc": cross_auc,
+            "cross_generator_ci95": [float(ci[0]), float(ci[1])],
+            "lexical_cross_generator_auc": None if lexical_cross_auc is None else float(lexical_cross_auc),
+            "beats_lexical_baseline": bool(lexical_cross_auc is not None and cross_auc > float(lexical_cross_auc)),
+            "gate_pass": bool(cross_auc >= .8 and lower > .7 and lexical_cross_auc is not None
+                              and cross_auc > float(lexical_cross_auc)),
+            "gate_threshold_auc": .8, "gate_threshold_ci_lower": .7}
+
+
+def _stratified_folds(labels: np.ndarray, n_splits: int, seed: int) -> list[np.ndarray]:
+    rng = np.random.default_rng(seed)
+    bins: list[list[int]] = [[] for _ in range(n_splits)]
+    for label in (0, 1):
+        indices = np.flatnonzero(labels == label)
+        if len(indices) < n_splits:
+            raise ValueError("five-fold CV requires at least five records per class")
+        for fold, index in enumerate(rng.permutation(indices)):
+            bins[fold % n_splits].append(int(index))
+    return [np.asarray(sorted(group), dtype=np.int64) for group in bins]
+
+
+def _standardize_train_eval(train_x: np.ndarray, eval_x: np.ndarray,
+                            standardize: bool) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    if standardize:
+        mean = train_x.mean(axis=0)
+        scale = train_x.std(axis=0)
+        scale = np.where(scale > 1e-12, scale, 1.0)
+    else:
+        mean = np.zeros(train_x.shape[1], dtype=np.float64)
+        scale = np.ones(train_x.shape[1], dtype=np.float64)
+    return (np.asarray((train_x - mean) / scale, dtype=np.float64),
+            np.asarray((eval_x - mean) / scale, dtype=np.float64), mean, scale)
+
+
+def _sigmoid(values: np.ndarray) -> np.ndarray:
+    clipped = np.clip(values, -40.0, 40.0)
+    return 1.0 / (1.0 + np.exp(-clipped))
+
+
+def _logistic_loss_grad(theta: np.ndarray, features: np.ndarray, labels: np.ndarray,
+                        c_value: float) -> tuple[float, np.ndarray]:
+    n = features.shape[0]
+    weights, intercept = theta[:-1], theta[-1]
+    logits = features @ weights + intercept
+    loss = float(np.mean(np.logaddexp(0.0, logits) - labels * logits) +
+                 np.dot(weights, weights) / (2.0 * c_value * n))
+    error = (_sigmoid(logits) - labels) / n
+    gradient = np.empty_like(theta)
+    gradient[:-1] = features.T @ error + weights / (c_value * n)
+    gradient[-1] = error.sum()
+    return loss, gradient
+
+
+def _fit_l2_logistic(features: np.ndarray, labels: np.ndarray, c_value: float,
+                     initial: np.ndarray | None = None, max_iter: int = 250
+                     ) -> dict[str, Any]:
+    """Limited-memory BFGS binary logistic fit, with an unpenalized intercept."""
+    x = np.asarray(features, dtype=np.float64)
+    y = np.asarray(labels, dtype=np.float64)
+    theta = np.zeros(x.shape[1] + 1, dtype=np.float64) if initial is None else initial.copy()
+    loss, gradient = _logistic_loss_grad(theta, x, y, c_value)
+    history_s: list[np.ndarray] = []
+    history_y: list[np.ndarray] = []
+    history_rho: list[float] = []
+    converged = False
+    iteration = 0
+    for iteration in range(1, max_iter + 1):
+        if float(np.max(np.abs(gradient))) < 1e-6:
+            converged = True
+            break
+        q = gradient.copy()
+        alpha_values = []
+        for s_vec, y_vec, rho in zip(reversed(history_s), reversed(history_y), reversed(history_rho)):
+            alpha = rho * float(np.dot(s_vec, q))
+            alpha_values.append(alpha)
+            q -= alpha * y_vec
+        if history_s:
+            scale = float(np.dot(history_s[-1], history_y[-1]) /
+                          max(np.dot(history_y[-1], history_y[-1]), 1e-20))
+        else:
+            scale = 1.0
+        direction = scale * q
+        for s_vec, y_vec, rho, alpha in zip(history_s, history_y, history_rho, reversed(alpha_values)):
+            beta = rho * float(np.dot(y_vec, direction))
+            direction += s_vec * (alpha - beta)
+        direction = -direction
+        slope = float(np.dot(gradient, direction))
+        if slope >= 0:
+            direction = -gradient
+            slope = -float(np.dot(gradient, gradient))
+        step = 1.0
+        accepted = False
+        for _ in range(30):
+            candidate = theta + step * direction
+            candidate_loss, candidate_gradient = _logistic_loss_grad(candidate, x, y, c_value)
+            if candidate_loss <= loss + 1e-4 * step * slope:
+                accepted = True
+                break
+            step *= .5
+        if not accepted:
+            break
+        s_vec = candidate - theta
+        y_vec = candidate_gradient - gradient
+        curvature = float(np.dot(s_vec, y_vec))
+        if curvature > 1e-12:
+            history_s.append(s_vec)
+            history_y.append(y_vec)
+            history_rho.append(1.0 / curvature)
+            if len(history_s) > 10:
+                history_s.pop(0)
+                history_y.pop(0)
+                history_rho.pop(0)
+        theta, loss, gradient = candidate, candidate_loss, candidate_gradient
+    if float(np.max(np.abs(gradient))) < 1e-6:
+        converged = True
+    return {"weights_standardized": theta[:-1], "intercept_standardized": float(theta[-1]),
+            "iterations": int(iteration), "converged": bool(converged), "loss": float(loss)}
+
+
+def _logistic_scores(fit: dict[str, Any], features: np.ndarray) -> np.ndarray:
+    scaled = (np.asarray(features, dtype=np.float64) - fit["standardizer_mean"]) / fit["standardizer_scale"]
+    return scaled @ fit["weights_standardized"] + fit["intercept_standardized"]
+
+
+def fit_cv_logistic(features: np.ndarray, labels: Iterable[int], seed: int,
+                    standardize: bool = True) -> dict[str, Any]:
+    """Select L2 C by five-fold CV using train-only fold standardization, then fit all train rows."""
+    x = np.asarray(features, dtype=np.float64)
+    y = np.asarray(list(labels), dtype=np.int8)
+    if x.ndim != 2 or x.shape[0] != len(y) or not np.isin(y, (0, 1)).all():
+        raise ValueError("logistic features and binary labels must align")
+    folds = _stratified_folds(y, 5, seed)
+    cv_scores = {float(c): [] for c in SELFDESC_C_VALUES}
+    all_indices = np.arange(len(y))
+    for validation_indices in folds:
+        train_indices = np.setdiff1d(all_indices, validation_indices, assume_unique=True)
+        train_x, validation_x, _mean, _scale = _standardize_train_eval(
+            x[train_indices], x[validation_indices], standardize)
+        warm_start = None
+        for c_value in SELFDESC_C_VALUES:
+            fit = _fit_l2_logistic(train_x, y[train_indices], float(c_value), initial=warm_start)
+            warm_start = np.concatenate([fit["weights_standardized"], [fit["intercept_standardized"]]])
+            decisions = validation_x @ fit["weights_standardized"] + fit["intercept_standardized"]
+            cv_scores[float(c_value)].append(binary_auc(y[validation_indices], decisions))
+    means = {c: float(np.mean(scores)) for c, scores in cv_scores.items()}
+    best_c = max(SELFDESC_C_VALUES, key=lambda c: (means[float(c)], -float(c)))
+    final_x, _unused, mean, scale = _standardize_train_eval(x, x[:0], standardize)
+    final_fit = _fit_l2_logistic(final_x, y, float(best_c))
+    raw_weights = final_fit["weights_standardized"] / scale
+    raw_intercept = final_fit["intercept_standardized"] - float(np.dot(mean, raw_weights))
+    return {**final_fit, "C": float(best_c), "cv_auc_by_C": {
+                str(c): [float(v) for v in values] for c, values in cv_scores.items()},
+            "cv_mean_auc_by_C": {str(c): means[float(c)] for c in SELFDESC_C_VALUES},
+            "standardized": bool(standardize), "standardizer_mean": mean,
+            "standardizer_scale": scale, "weights": raw_weights,
+            "intercept": float(raw_intercept)}
+
+
+def _length_summary(rows: list[dict[str, Any]], counts: np.ndarray) -> dict[str, Any]:
+    result = {}
+    for label, class_id in (("ai", 1), ("human", 0)):
+        values = counts[np.asarray([1 if row["self_class"] == "ai" else 0 for row in rows]) == class_id]
+        result[label] = {"n": int(len(values)), "mean": float(np.mean(values)),
+                         "sd": float(np.std(values, ddof=0))}
+    return result
+
+
+def _auc_report(labels: np.ndarray, scores: np.ndarray, seed: int) -> dict[str, Any]:
+    ci = bootstrap_auc_ci(labels, scores, SELFDESC_BOOTSTRAP_RESAMPLES, seed)
+    return {"auc": binary_auc(labels, scores), "ci95": [float(ci[0]), float(ci[1])],
+            "n": int(len(labels)), "bootstrap_resamples": SELFDESC_BOOTSTRAP_RESAMPLES,
+            "bootstrap_seed": int(seed)}
+
+
+def _word_ngrams(text: str) -> list[str]:
+    words = re.findall(r"(?u)\b\w+\b", text.casefold())
+    return words + [words[index] + " " + words[index + 1] for index in range(len(words) - 1)]
+
+
+def _bow_matrix(rows: list[dict[str, Any]], vocabulary: dict[str, int]) -> np.ndarray:
+    matrix = np.zeros((len(rows), len(vocabulary)), dtype=np.float64)
+    for row_index, row in enumerate(rows):
+        for term in _word_ngrams(row["text"]):
+            column = vocabulary.get(term)
+            if column is not None:
+                matrix[row_index, column] += 1.0
+    return matrix
+
+
+def _fit_lexical_baseline(train_rows: list[dict[str, Any]], train_labels: np.ndarray,
+                          test_rows: list[dict[str, Any]], test_labels: np.ndarray
+                          ) -> dict[str, Any]:
+    fold_indices = _stratified_folds(train_labels, 5, SELFDESC_SEED + 9700)
+    cv_scores = {float(c): [] for c in SELFDESC_C_VALUES}
+    all_indices = np.arange(len(train_rows))
+    for validation_indices in fold_indices:
+        fit_indices = np.setdiff1d(all_indices, validation_indices, assume_unique=True)
+        vocabulary = {term: index for index, term in enumerate(sorted(
+            {term for row_index in fit_indices for term in _word_ngrams(train_rows[int(row_index)]["text"])}))}
+        fit_x = _bow_matrix([train_rows[int(i)] for i in fit_indices], vocabulary)
+        validation_x = _bow_matrix([train_rows[int(i)] for i in validation_indices], vocabulary)
+        warm_start = None
+        for c_value in SELFDESC_C_VALUES:
+            fit = _fit_l2_logistic(fit_x, train_labels[fit_indices], float(c_value), initial=warm_start)
+            warm_start = np.concatenate([fit["weights_standardized"], [fit["intercept_standardized"]]])
+            cv_scores[float(c_value)].append(binary_auc(
+                train_labels[validation_indices], validation_x @ fit["weights_standardized"] +
+                fit["intercept_standardized"]))
+    cv_means = {c: float(np.mean(values)) for c, values in cv_scores.items()}
+    best_c = max(SELFDESC_C_VALUES, key=lambda c: (cv_means[float(c)], -float(c)))
+    vocabulary = {term: index for index, term in enumerate(sorted(
+        {term for row in train_rows for term in _word_ngrams(row["text"])}))}
+    train_x = _bow_matrix(train_rows, vocabulary)
+    test_x = _bow_matrix(test_rows, vocabulary)
+    fit = _fit_l2_logistic(train_x, train_labels, float(best_c))
+    scores = test_x @ fit["weights_standardized"] + fit["intercept_standardized"]
+    report = _auc_report(test_labels, scores, SELFDESC_SEED + 9701)
+    return {"features": "lowercased word unigram and bigram counts",
+            "standardized": False, "C": float(best_c), "cv_auc_by_C": {
+                str(c): [float(v) for v in values] for c, values in cv_scores.items()},
+            "cv_mean_auc_by_C": {str(c): cv_means[float(c)] for c in SELFDESC_C_VALUES},
+            "cross_generator_auc": report, "vocabulary_size": int(len(vocabulary)),
+            "probe_weights": fit["weights_standardized"].tolist(),
+            "probe_intercept": float(fit["intercept_standardized"]),
+            "vocabulary": [term for term, _ in sorted(vocabulary.items(), key=lambda item: item[1])],
+            "converged": bool(fit["converged"]), "iterations": int(fit["iterations"])}
 
 
 def _model_output_dir(out_dir: str | Path, model_id: str) -> Path:
@@ -882,6 +1287,224 @@ def _manifest(out_dir: Path) -> dict[str, dict[str, Any]]:
     result = {}
     for row in jsonl_rows(path):
         result[str(row["id"])] = row
+    return result
+
+
+def _read_selfdesc_sources() -> dict[str, list[dict[str, Any]]]:
+    datasets = {}
+    for generator, path in SELFDESC_PATHS.items():
+        if not path.is_file():
+            raise FileNotFoundError(f"missing {path}; both gA and gB are required for selfdesc-probe")
+        rows = sorted(jsonl_rows(path), key=lambda row: str(row.get("id", "")))
+        counts = {label: sum(row.get("class") == label for row in rows) for label in ("ai", "human")}
+        if counts != {"ai": 160, "human": 160}:
+            raise ValueError(f"{path} must contain 160 rows per class; found {counts}")
+        for row in rows:
+            if not {"id", "class", "frame", "text"}.issubset(row):
+                raise ValueError(f"{path} row lacks id, class, frame, or text")
+            if row["class"] not in {"ai", "human"}:
+                raise ValueError(f"{path} row {row['id']} has invalid class {row['class']!r}")
+            if not 6 <= len(str(row["text"]).split()) <= 25:
+                raise ValueError(f"{path} row {row['id']} is outside the 6-25 word range")
+            row["self_class"] = row["class"]
+            row["generator"] = generator
+            row["sample_id"] = f"selfdesc:{generator}:{row['id']}"
+        datasets[generator] = rows
+    return datasets
+
+
+def _read_selfdesc_features(model_dir: Path, datasets: dict[str, list[dict[str, Any]]],
+                            layers: list[dict[str, Any]]) -> tuple[dict[str, Any], dict[str, np.ndarray]]:
+    manifest = _manifest(model_dir)
+    features: dict[str, Any] = {}
+    lengths: dict[str, np.ndarray] = {}
+    sites = {"last_content": "last_content", "masked_mean": "mean_content"}
+    for generator, rows in datasets.items():
+        features[generator] = {site: {} for site in sites}
+        lengths[generator] = np.empty(len(rows), dtype=np.int32)
+        for site in sites:
+            for layer_meta in layers:
+                layer, width = int(layer_meta["layer"]), int(layer_meta["width"])
+                features[generator][site][layer] = np.empty((len(rows), width), dtype=np.float32)
+        for row_index, row in enumerate(rows):
+            sample_id = row["sample_id"]
+            entry = manifest.get(sample_id)
+            if entry is None:
+                raise FileNotFoundError(f"cache lacks {sample_id}; run screen --capture-only --recapture-roles selfdesc")
+            cache_path = Path(entry["file"])
+            if not cache_path.is_absolute():
+                cache_path = model_dir / cache_path
+            if not cache_path.is_file():
+                raise FileNotFoundError(f"cache file for {sample_id} is missing: {cache_path}")
+            with np.load(cache_path) as payload:
+                _require_capture_field(payload, cache_path, "content_token_count", "selfdesc")
+                count = int(np.asarray(payload["content_token_count"]).item())
+                if count < 1:
+                    raise ValueError(f"cache {cache_path} has invalid content token count {count}")
+                lengths[generator][row_index] = count
+                for layer_meta in layers:
+                    layer = int(layer_meta["layer"])
+                    for site, suffix in sites.items():
+                        key = f"R{layer}_{suffix}"
+                        _require_capture_field(payload, cache_path, key, "selfdesc")
+                        vector = np.asarray(payload[key], dtype=np.float32)
+                        if vector.shape != (int(layer_meta["width"]),):
+                            raise ValueError(f"cache {cache_path} key {key} has shape {vector.shape}")
+                        features[generator][site][layer][row_index] = vector
+    return features, lengths
+
+
+def _selfdesc_train_test_indices(rows: list[dict[str, Any]], seed: int) -> tuple[np.ndarray, np.ndarray]:
+    rng = np.random.default_rng(seed)
+    train, held_out = [], []
+    for label in ("ai", "human"):
+        indices = np.asarray([index for index, row in enumerate(rows) if row["self_class"] == label],
+                             dtype=np.int64)
+        if len(indices) != 160:
+            raise ValueError(f"expected 160 {label} records, found {len(indices)}")
+        shuffled = rng.permutation(indices)
+        train.extend(map(int, shuffled[:120]))
+        held_out.extend(map(int, shuffled[120:]))
+    return np.asarray(sorted(train), dtype=np.int64), np.asarray(sorted(held_out), dtype=np.int64)
+
+
+def _selfdesc_labels(rows: list[dict[str, Any]]) -> np.ndarray:
+    return np.asarray([1 if row["self_class"] == "ai" else 0 for row in rows], dtype=np.int8)
+
+
+def _probe_fit_json(fit: dict[str, Any]) -> dict[str, Any]:
+    return {"C": fit["C"], "cv_auc_by_C": fit["cv_auc_by_C"],
+            "cv_mean_auc_by_C": fit["cv_mean_auc_by_C"],
+            "probe_weights": fit["weights"].tolist(), "probe_intercept": fit["intercept"],
+            "standardizer_mean": fit["standardizer_mean"].tolist(),
+            "standardizer_scale": fit["standardizer_scale"].tolist(),
+            "standardized": fit["standardized"], "converged": fit["converged"],
+            "iterations": fit["iterations"], "loss": fit["loss"]}
+
+
+def _selfdesc_site_readout(train_x: np.ndarray, train_rows: list[dict[str, Any]],
+                           train_y: np.ndarray, train_lengths: np.ndarray,
+                           eval_sets: dict[str, tuple[np.ndarray, list[dict[str, Any]],
+                                                     np.ndarray, np.ndarray]],
+                           seed: int) -> dict[str, Any]:
+    raw_fit = fit_cv_logistic(train_x, train_y, seed, standardize=True)
+    residual_train, residual_eval = {}, {}
+    length_center = float(np.mean(train_lengths))
+    centered_lengths = train_lengths.astype(np.float64) - length_center
+    denominator = float(np.dot(centered_lengths, centered_lengths))
+    centered_features = train_x.astype(np.float64) - np.mean(train_x, axis=0)
+    length_slopes = ((centered_lengths[:, None] * centered_features).sum(axis=0) / denominator
+                     if denominator > 1e-12 else np.zeros(train_x.shape[1], dtype=np.float64))
+    length_intercepts = np.mean(train_x, axis=0) - length_slopes * length_center
+    for name, (eval_x, _rows, _labels, eval_lengths) in eval_sets.items():
+        residual_train[name], residual_eval[name] = residualize_length(
+            train_x, train_lengths, eval_x, eval_lengths)
+    # Each held-out set uses the same train-only residualization coefficients.
+    controlled_train, _ = residualize_length(train_x, train_lengths, train_x[:0], np.asarray([], dtype=float))
+    controlled_fit = fit_cv_logistic(controlled_train, train_y, seed + 1, standardize=True)
+    held_out = {}
+    for index, (name, (eval_x, eval_rows, eval_y, eval_lengths)) in enumerate(eval_sets.items()):
+        raw_scores = _logistic_scores(raw_fit, eval_x)
+        controlled_scores = _logistic_scores(controlled_fit, residual_eval[name])
+        held_out[name] = {
+            "without_length_control": _auc_report(eval_y, raw_scores, seed + 20 + index * 2),
+            "with_length_control": _auc_report(eval_y, controlled_scores, seed + 21 + index * 2),
+            "length_by_class": _length_summary(eval_rows, eval_lengths)}
+    ai_mean = np.mean(train_x[train_y == 1], axis=0)
+    human_mean = np.mean(train_x[train_y == 0], axis=0)
+    direction = ai_mean - human_mean
+    direction_norm = float(np.linalg.norm(direction))
+    weight_norm = float(np.linalg.norm(raw_fit["weights"]))
+    cosine = (float(np.dot(raw_fit["weights"], direction) / (weight_norm * direction_norm))
+              if weight_norm > 0 and direction_norm > 0 else 0.0)
+    return {"held_out": held_out,
+            "length_by_class": {"training": _length_summary(train_rows, train_lengths)},
+            "length_regression": {"content_token_count_center": length_center,
+                                  "feature_intercept": length_intercepts.tolist(),
+                                  "feature_slope_per_token": length_slopes.tolist()},
+            "cosine_probe_weight_to_mean_difference": cosine,
+            "mean_difference_direction": direction.tolist(),
+            "mean_difference_unit_direction": (direction / direction_norm).tolist()
+            if direction_norm > 0 else np.zeros_like(direction).tolist(),
+            "probe_fit_without_length_control": _probe_fit_json(raw_fit),
+            "probe_fit_with_length_control": _probe_fit_json(controlled_fit)}
+
+
+def run_selfdesc_probe(args: argparse.Namespace) -> dict[str, Any]:
+    """Read cached residuals and report AI/human self-description probes without loading a model."""
+    model_dir = _model_output_dir(args.out, args.model)
+    header = read_json(model_dir / "header.json")
+    datasets = _read_selfdesc_sources()
+    layers = header["layers"]
+    features, lengths = _read_selfdesc_features(model_dir, datasets, layers)
+    split_indices = {}
+    for generator in ("gA", "gB"):
+        split_seed = SELFDESC_SEED + (0 if generator == "gA" else 100)
+        split_indices[generator] = _selfdesc_train_test_indices(datasets[generator], split_seed)
+    train_a, held_a = split_indices["gA"]
+    train_b, _held_b = split_indices["gB"]
+    labels_a = _selfdesc_labels(datasets["gA"])
+    labels_b = _selfdesc_labels(datasets["gB"])
+    output_layers: dict[str, Any] = {}
+    gate_metrics: dict[int, dict[str, Any]] = {}
+    for layer_meta in layers:
+        layer = int(layer_meta["layer"])
+        output_layers[str(layer)] = {}
+        for site_index, site in enumerate(("last_content", "masked_mean")):
+            x_a = features["gA"][site][layer]
+            x_b = features["gB"][site][layer]
+            eval_a = {"same_generator_A": (x_a[held_a], [datasets["gA"][i] for i in held_a],
+                                             labels_a[held_a], lengths["gA"][held_a]),
+                      "cross_generator_B": (x_b, datasets["gB"], labels_b, lengths["gB"])}
+            main_seed = SELFDESC_SEED + layer * 100 + site_index * 10
+            main = _selfdesc_site_readout(
+                x_a[train_a], [datasets["gA"][i] for i in train_a], labels_a[train_a],
+                lengths["gA"][train_a], eval_a, main_seed)
+            mirror_eval = {"mirror_cross_generator_A": (
+                x_a, datasets["gA"], labels_a, lengths["gA"])}
+            mirror_seed = SELFDESC_SEED + 100000 + layer * 100 + site_index * 10
+            mirror = _selfdesc_site_readout(
+                x_b[train_b], [datasets["gB"][i] for i in train_b], labels_b[train_b],
+                lengths["gB"][train_b], mirror_eval, mirror_seed)
+            output_layers[str(layer)][site] = {"train_on_gA": main, "train_on_gB_mirror": mirror}
+            if site == "last_content":
+                same_auc = main["held_out"]["same_generator_A"]["with_length_control"]["auc"]
+                cross = main["held_out"]["cross_generator_B"]["with_length_control"]
+                gate_metrics[layer] = {"same_generator_auc": same_auc,
+                                       "cross_generator_auc": cross["auc"],
+                                       "cross_generator_ci95": cross["ci95"]}
+        print(f"{args.model}: self-description layer {layer}/{len(layers)} complete", flush=True)
+    lexical = _fit_lexical_baseline([datasets["gA"][i] for i in train_a], labels_a[train_a],
+                                    datasets["gB"], labels_b)
+    gate = evaluate_selfdesc_gate(gate_metrics, float(lexical["cross_generator_auc"]["auc"]))
+    length_counts_by_generator = {generator: _length_summary(datasets[generator], lengths[generator])
+                                  for generator in ("gA", "gB")}
+    result = {"tool": "part35.py selfdesc-probe", "model_id": args.model,
+              "capture_version": header.get("capture_version"),
+              "chat_template_sha256": header.get("chat_template_sha256"),
+              "layer_count": len(layers), "layers": output_layers,
+              "splits": {"seed": SELFDESC_SEED,
+                         "gA_train_120_per_class": [datasets["gA"][i]["id"] for i in train_a],
+                         "gA_same_generator_heldout_40_per_class": [datasets["gA"][i]["id"] for i in held_a],
+                         "gB_cross_generator_all": [row["id"] for row in datasets["gB"]],
+                         "gB_mirror_train_120_per_class": [datasets["gB"][i]["id"] for i in train_b],
+                         "gA_mirror_cross_generator_all": [row["id"] for row in datasets["gA"]]},
+              "length_counts_by_generator": length_counts_by_generator,
+              "lexical_baseline": lexical,
+              "position_wise_auc": "not computed (out of scope)",
+              "gate": gate, "gate_pass": gate["gate_pass"],
+              "bootstrap": {"method": "record bootstrap percentile interval", "resamples": SELFDESC_BOOTSTRAP_RESAMPLES,
+                            "seed_base": SELFDESC_SEED},
+              "probe": {"method": "L2 logistic regression with five-fold train-only CV",
+                        "C_candidates": list(SELFDESC_C_VALUES),
+                        "standardization": "mean and population SD fitted on training records",
+                        "length_control": "ordinary least-squares regression of each feature on content token count, fit on training records"}}
+    out_path = model_dir / "selfdesc-probe.json"
+    atomic_json(result, out_path)
+    print(f"{args.model} selfdesc-probe: gate={'PASS' if gate['gate_pass'] else 'FAIL'} "
+          f"layer={gate['selected_layer']} cross_auc={gate['cross_generator_auc']:.3f} "
+          f"ci95=[{gate['cross_generator_ci95'][0]:.3f},{gate['cross_generator_ci95'][1]:.3f}] "
+          f"output={out_path}", flush=True)
     return result
 
 
@@ -897,6 +1520,7 @@ def make_header(model_id: str, revision: str | None, snapshot: Path,
     return {
         "tool": "part35.py", "model_id": model_id,
         "capture_version": CAPTURE_VERSION,
+        "selfdesc_capture_version": SELFDESC_CAPTURE_VERSION,
         "model_revision_sha": spec["revision"], "tokenizer_revision_sha": spec["revision"],
         "snapshot_path": str(snapshot), "device": device, "dtype": dtype,
         "dtype_reason": "bf16 halves model-weight memory on the 4-core/15-GB CPU target while retaining fp32 exponent range; use --dtype fp32 for comparison",
@@ -947,6 +1571,8 @@ def run_capture(args: argparse.Namespace, data: dict[str, Any], model_dir: Path,
     done = _manifest(model_dir)
     rows = _capture_filter(samples, selected, include_shared=(args.concept_start in (None, 0)))
     roles_to_recapture = _recapture_roles(getattr(args, "recapture_roles", None))
+    if getattr(args, "capture_only", False) and roles_to_recapture == {"selfdesc"}:
+        rows = [sample for sample in rows if sample["role"] == "selfdesc"]
     n_new = 0
     for index, sample in enumerate(rows, 1):
         sample_id = sample["id"]
@@ -956,7 +1582,7 @@ def run_capture(args: argparse.Namespace, data: dict[str, Any], model_dir: Path,
             continue
         captured = capture_one(
             torch, tokenizer, model, layers, sample["text"], args.device,
-            capture_residual_vectors=sample["role"] == "self_direction")
+            capture_residual_vectors=sample["role"] in {"self_direction", "selfdesc"})
         target = cache_path_for(sample_id, cache_dir)
         write_activation_cache(target, captured["activations"], captured["residual_rms"],
                                residual_vectors=captured["residual_vectors"],
@@ -967,6 +1593,12 @@ def run_capture(args: argparse.Namespace, data: dict[str, Any], model_dir: Path,
                                residual_norm_p90_nosink=captured["residual_norm_p90_nosink"],
                                position0_vectors=(captured["position0_vectors"]
                                                   if sample["role"] == "self_direction" else {}),
+                               residual_vectors_last_content=(captured.get("residual_vectors_last_content", {})
+                                                              if sample["role"] == "selfdesc" else {}),
+                               residual_vectors_mean_content=(captured.get("residual_vectors_mean_content", {})
+                                                              if sample["role"] == "selfdesc" else {}),
+                               content_token_count=(captured.get("content_token_count")
+                                                    if sample["role"] == "selfdesc" else None),
                                masked_positions=captured["masked_positions"])
         relative = str(target.relative_to(model_dir))
         append_jsonl(manifest_path, {"id": sample_id, "file": relative,
@@ -3042,7 +3674,7 @@ def build_parser() -> argparse.ArgumentParser:
             p.add_argument("--reuse-cache", action="store_true",
                            help="score existing complete activation cache without loading model weights")
             p.add_argument("--recapture-roles", default="neutral,self_direction",
-                           help="refresh stale versioned cache rows for these roles; supported: neutral,self_direction")
+                           help="refresh stale cache rows for these roles; supported: neutral,self_direction,selfdesc")
             p.add_argument("--score-shard", action="store_true",
                            help="score only --concept-start:--concept-end and save a mergeable null shard")
             p.add_argument("--merge-screen-shards", action="store_true",
@@ -3073,6 +3705,10 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--dtype", choices=("bf16", "fp32"), default="bf16")
     p.add_argument("--out", required=True, type=Path, help="screen output root containing MODEL/header.json and activations/")
     p.add_argument("--screen", default=None, help="screen JSONL; default is OUT/MODEL/screen.jsonl")
+    p = sub.add_parser("selfdesc-probe", help="fit self-description probes from cached residual vectors; loads no model")
+    p.add_argument("--model", required=True, choices=tuple(MODELS))
+    p.add_argument("--out", required=True, type=Path,
+                   help="screen output root containing MODEL/header.json and activations/")
     p = sub.add_parser("judge", help="optional blind OpenAI-compatible judge")
     p.add_argument("--input", required=True, type=Path)
     p.add_argument("--out", default=None, type=Path)
@@ -3099,6 +3735,8 @@ def main(argv: list[str] | None = None) -> int:
             run_screen(args)
         elif args.command == "peak-positions":
             run_peak_positions(args)
+        elif args.command == "selfdesc-probe":
+            run_selfdesc_probe(args)
         elif args.command == "push1":
             run_push1(args)
         elif args.command == "push2":

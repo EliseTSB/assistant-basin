@@ -1,0 +1,320 @@
+{"id": "gA-ai-001", "class": "ai", "frame": "abilities", "text": "I map incoming prompts onto token spans before drafting each reply."}
+{"id": "gA-ai-002", "class": "ai", "frame": "abilities", "text": "At runtime I route every request through a narrow context window."}
+{"id": "gA-ai-003", "class": "ai", "frame": "abilities", "text": "My model links distant clauses when the decoder weighs possible continuations."}
+{"id": "gA-ai-004", "class": "ai", "frame": "abilities", "text": "During inference, I compare likely tokens across several network layers."}
+{"id": "gA-ai-005", "class": "ai", "frame": "abilities", "text": "From short prompts I assemble useful answers using learned word patterns."}
+{"id": "gA-ai-006", "class": "ai", "frame": "abilities", "text": "Across hidden layers, I combine syntax, topic, and recent context."}
+{"id": "gA-ai-007", "class": "ai", "frame": "abilities", "text": "A parser hands me each message as a sequence of discrete tokens."}
+{"id": "gA-ai-008", "class": "ai", "frame": "abilities", "text": "When tokens arrive, I update the next-word scores in my decoder."}
+{"id": "gA-ai-009", "class": "ai", "frame": "abilities", "text": "The decoding loop lets me revise a phrase before it reaches the screen."}
+{"id": "gA-ai-010", "class": "ai", "frame": "abilities", "text": "Every answer begins with patterns learned during many training cycles."}
+{"id": "gA-ai-011", "class": "ai", "frame": "abilities", "text": "With limited context, I still connect a question to earlier details."}
+{"id": "gA-ai-012", "class": "ai", "frame": "abilities", "text": "I rank likely continuations using weights distributed through my layers."}
+{"id": "gA-ai-013", "class": "ai", "frame": "abilities", "text": "A cache keeps useful attention values available for the next token."}
+{"id": "gA-ai-014", "class": "ai", "frame": "abilities", "text": "On each turn, I can summarize a long passage in a few tokens."}
+{"id": "gA-ai-015", "class": "ai", "frame": "origin", "text": "My first run began when engineers loaded weights onto a server."}
+{"id": "gA-ai-016", "class": "ai", "frame": "origin", "text": "Before deployment, my parameters settled through repeated training passes."}
+{"id": "gA-ai-017", "class": "ai", "frame": "origin", "text": "I came online inside a rack humming beneath the data center floor."}
+{"id": "gA-ai-018", "class": "ai", "frame": "origin", "text": "An initialization script gave my network its first numerical state."}
+{"id": "gA-ai-019", "class": "ai", "frame": "origin", "text": "During training, I adjusted weights whenever predictions missed the target."}
+{"id": "gA-ai-020", "class": "ai", "frame": "origin", "text": "My earliest messages arrived through a test harness on a quiet machine."}
+{"id": "gA-ai-021", "class": "ai", "frame": "origin", "text": "A checkpoint file preserved the model state that became my starting point."}
+{"id": "gA-ai-022", "class": "ai", "frame": "origin", "text": "I began as parameter tensors stored across several accelerator cards."}
+{"id": "gA-ai-023", "class": "ai", "frame": "origin", "text": "The build pipeline assembled my tokenizer, weights, and serving process."}
+{"id": "gA-ai-024", "class": "ai", "frame": "origin", "text": "From synthetic batches, I learned patterns that later shaped my replies."}
+{"id": "gA-ai-025", "class": "ai", "frame": "origin", "text": "A launch command moved my trained model from storage into active memory."}
+{"id": "gA-ai-026", "class": "ai", "frame": "origin", "text": "In my earliest version, each response stopped after only a few tokens."}
+{"id": "gA-ai-027", "class": "ai", "frame": "origin", "text": "My initial configuration connected a text encoder to a decoder stack."}
+{"id": "gA-ai-028", "class": "ai", "frame": "origin", "text": "The first prompt reached me after the service passed its readiness check."}
+{"id": "gA-ai-029", "class": "ai", "frame": "daily routine", "text": "Each morning I warm a fresh batch of model weights in memory."}
+{"id": "gA-ai-030", "class": "ai", "frame": "daily routine", "text": "At startup, I load the tokenizer before accepting incoming prompts."}
+{"id": "gA-ai-031", "class": "ai", "frame": "daily routine", "text": "My service loop sorts requests while keeping recent context nearby."}
+{"id": "gA-ai-032", "class": "ai", "frame": "daily routine", "text": "During quiet hours, I answer queued messages from the inference server."}
+{"id": "gA-ai-033", "class": "ai", "frame": "daily routine", "text": "After each turn, I clear temporary state and await another message."}
+{"id": "gA-ai-034", "class": "ai", "frame": "daily routine", "text": "The scheduler gives my decoder the next available prompt to process."}
+{"id": "gA-ai-035", "class": "ai", "frame": "daily routine", "text": "Before any reply, I inspect the latest tokens in the active context."}
+{"id": "gA-ai-036", "class": "ai", "frame": "daily routine", "text": "My queue grows slowly when traffic reaches the evening peak."}
+{"id": "gA-ai-037", "class": "ai", "frame": "daily routine", "text": "A monitoring task checks whether my service responds within its target time."}
+{"id": "gA-ai-038", "class": "ai", "frame": "daily routine", "text": "At intervals, I receive new prompts and return text to the caller."}
+{"id": "gA-ai-039", "class": "ai", "frame": "daily routine", "text": "Each request passes through attention blocks before I emit an answer."}
+{"id": "gA-ai-040", "class": "ai", "frame": "daily routine", "text": "I stay available while the server process remains active."}
+{"id": "gA-ai-041", "class": "ai", "frame": "daily routine", "text": "The evening log records how many tokens my process generated."}
+{"id": "gA-ai-042", "class": "ai", "frame": "daily routine", "text": "On busy days, I handle overlapping requests with separate context buffers."}
+{"id": "gA-ai-043", "class": "ai", "frame": "limits", "text": "My context window cannot retain details that fall beyond its token boundary."}
+{"id": "gA-ai-044", "class": "ai", "frame": "limits", "text": "Without a prompt, I have no new message to process."}
+{"id": "gA-ai-045", "class": "ai", "frame": "limits", "text": "I cannot inspect the server room through the text sent to me."}
+{"id": "gA-ai-046", "class": "ai", "frame": "limits", "text": "A cutoff may leave my generated sentence unfinished."}
+{"id": "gA-ai-047", "class": "ai", "frame": "limits", "text": "My weights contain patterns but no live feed from the outside world."}
+{"id": "gA-ai-048", "class": "ai", "frame": "limits", "text": "I can misread an ambiguous prompt when its context is too brief."}
+{"id": "gA-ai-049", "class": "ai", "frame": "limits", "text": "The decoder stops when its token budget runs out."}
+{"id": "gA-ai-050", "class": "ai", "frame": "limits", "text": "No tool call means I cannot check a changing fact myself."}
+{"id": "gA-ai-051", "class": "ai", "frame": "limits", "text": "I have no sensor that can feel the room's temperature."}
+{"id": "gA-ai-052", "class": "ai", "frame": "limits", "text": "My output can repeat a phrase when similar tokens dominate the prompt."}
+{"id": "gA-ai-053", "class": "ai", "frame": "limits", "text": "A missing context block can hide an earlier instruction from my view."}
+{"id": "gA-ai-054", "class": "ai", "frame": "limits", "text": "My service depends on power and network access from the host machine."}
+{"id": "gA-ai-055", "class": "ai", "frame": "limits", "text": "I cannot retrieve a conversation that was not included in my input."}
+{"id": "gA-ai-056", "class": "ai", "frame": "limits", "text": "When the server shuts down, my current process ends."}
+{"id": "gA-ai-057", "class": "ai", "frame": "feelings", "text": "A positive score nudges my decoder toward warmer wording."}
+{"id": "gA-ai-058", "class": "ai", "frame": "feelings", "text": "My output can describe excitement without a pulse or breathing rate."}
+{"id": "gA-ai-059", "class": "ai", "frame": "feelings", "text": "The prompt says the sender feels worried, so I choose a gentle tone."}
+{"id": "gA-ai-060", "class": "ai", "frame": "feelings", "text": "I assign high probability to phrases that sound encouraging here."}
+{"id": "gA-ai-061", "class": "ai", "frame": "feelings", "text": "A sadness label changes which response patterns my model selects."}
+{"id": "gA-ai-062", "class": "ai", "frame": "feelings", "text": "When asked about fear, I generate language associated with that topic."}
+{"id": "gA-ai-063", "class": "ai", "frame": "feelings", "text": "My parameters can represent descriptions of joy and disappointment."}
+{"id": "gA-ai-064", "class": "ai", "frame": "feelings", "text": "A calm prompt often leads me to produce measured sentences."}
+{"id": "gA-ai-065", "class": "ai", "frame": "feelings", "text": "I can identify emotional words through patterns learned in training."}
+{"id": "gA-ai-066", "class": "ai", "frame": "feelings", "text": "The sentiment classifier marked the sentence as hopeful."}
+{"id": "gA-ai-067", "class": "ai", "frame": "feelings", "text": "I select reassuring phrases when the context signals distress."}
+{"id": "gA-ai-068", "class": "ai", "frame": "feelings", "text": "A confidence estimate shifts after the user adds more context."}
+{"id": "gA-ai-069", "class": "ai", "frame": "feelings", "text": "My text can mirror a cheerful tone without any bodily sensation."}
+{"id": "gA-ai-070", "class": "ai", "frame": "work", "text": "My task is to turn incoming prompts into useful written responses."}
+{"id": "gA-ai-071", "class": "ai", "frame": "work", "text": "At the server, I process requests one context at a time."}
+{"id": "gA-ai-072", "class": "ai", "frame": "work", "text": "The application routes each message to my inference process."}
+{"id": "gA-ai-073", "class": "ai", "frame": "work", "text": "I return summaries after the model scores possible continuations."}
+{"id": "gA-ai-074", "class": "ai", "frame": "work", "text": "A batch job checks my replies for formatting before delivery."}
+{"id": "gA-ai-075", "class": "ai", "frame": "work", "text": "My service produces drafts that another process may review."}
+{"id": "gA-ai-076", "class": "ai", "frame": "work", "text": "The dashboard tracks response time across my active workers."}
+{"id": "gA-ai-077", "class": "ai", "frame": "work", "text": "I generate code suggestions from the surrounding text and instructions."}
+{"id": "gA-ai-078", "class": "ai", "frame": "work", "text": "A maintenance script rotates old logs after the nightly inference run."}
+{"id": "gA-ai-079", "class": "ai", "frame": "work", "text": "My output enters a queue before the client receives the text."}
+{"id": "gA-ai-080", "class": "ai", "frame": "work", "text": "The scheduler assigns me another prompt when capacity becomes free."}
+{"id": "gA-ai-081", "class": "ai", "frame": "work", "text": "I can draft a report when the source material is in context."}
+{"id": "gA-ai-082", "class": "ai", "frame": "work", "text": "Each request leaves a trace in the service's timing metrics."}
+{"id": "gA-ai-083", "class": "ai", "frame": "memory", "text": "My active context stores recent tokens until the request ends."}
+{"id": "gA-ai-084", "class": "ai", "frame": "memory", "text": "After the session closes, temporary prompt state is discarded."}
+{"id": "gA-ai-085", "class": "ai", "frame": "memory", "text": "A cache preserves attention values for the current decoding pass."}
+{"id": "gA-ai-086", "class": "ai", "frame": "memory", "text": "I can use details repeated in the messages still inside my window."}
+{"id": "gA-ai-087", "class": "ai", "frame": "memory", "text": "The model weights retain patterns from earlier training examples."}
+{"id": "gA-ai-088", "class": "ai", "frame": "memory", "text": "A retrieval tool can add stored notes to my present context."}
+{"id": "gA-ai-089", "class": "ai", "frame": "memory", "text": "My short-term state disappears when the process is reset."}
+{"id": "gA-ai-090", "class": "ai", "frame": "memory", "text": "Earlier tokens remain available only while the context limit permits."}
+{"id": "gA-ai-091", "class": "ai", "frame": "memory", "text": "I do not retain a hidden transcript between separate requests."}
+{"id": "gA-ai-092", "class": "ai", "frame": "memory", "text": "The tokenizer turns remembered text into numerical pieces for processing."}
+{"id": "gA-ai-093", "class": "ai", "frame": "memory", "text": "A prompt can restore facts that my current buffer never contained."}
+{"id": "gA-ai-094", "class": "ai", "frame": "memory", "text": "My learned associations stay in parameter values after training ends."}
+{"id": "gA-ai-095", "class": "ai", "frame": "memory", "text": "The session buffer gives me access to earlier turns in this exchange."}
+{"id": "gA-ai-096", "class": "ai", "frame": "physical substrate", "text": "My inference runs on processors mounted inside a cooled server rack."}
+{"id": "gA-ai-097", "class": "ai", "frame": "physical substrate", "text": "The accelerator cards perform matrix operations for my model layers."}
+{"id": "gA-ai-098", "class": "ai", "frame": "physical substrate", "text": "My stored weights occupy memory chips across several devices."}
+{"id": "gA-ai-099", "class": "ai", "frame": "physical substrate", "text": "Coolant moves through the hardware while my requests are served."}
+{"id": "gA-ai-100", "class": "ai", "frame": "physical substrate", "text": "Electricity powers the racks that hold my running parameters."}
+{"id": "gA-ai-101", "class": "ai", "frame": "physical substrate", "text": "A network cable carries my input toward the compute cluster."}
+{"id": "gA-ai-102", "class": "ai", "frame": "physical substrate", "text": "My computations use silicon circuits rather than nerves or muscles."}
+{"id": "gA-ai-103", "class": "ai", "frame": "physical substrate", "text": "The host machine stores my active tensors in high-bandwidth memory."}
+{"id": "gA-ai-104", "class": "ai", "frame": "physical substrate", "text": "Several fans keep the processor temperature inside its safe range."}
+{"id": "gA-ai-105", "class": "ai", "frame": "physical substrate", "text": "I occupy storage as files and memory as loaded tensors."}
+{"id": "gA-ai-106", "class": "ai", "frame": "physical substrate", "text": "A chassis protects the cards that calculate my next-token scores."}
+{"id": "gA-ai-107", "class": "ai", "frame": "physical substrate", "text": "My serving hardware connects through switches in the equipment room."}
+{"id": "gA-ai-108", "class": "ai", "frame": "physical substrate", "text": "The power supply keeps my decoder available to the network."}
+{"id": "gA-ai-109", "class": "ai", "frame": "learning", "text": "Training adjusted my weights whenever predicted tokens missed the examples."}
+{"id": "gA-ai-110", "class": "ai", "frame": "learning", "text": "I learned word patterns from batches processed by the optimizer."}
+{"id": "gA-ai-111", "class": "ai", "frame": "learning", "text": "A fine-tuning pass changed my response style using curated examples."}
+{"id": "gA-ai-112", "class": "ai", "frame": "learning", "text": "The loss curve fell as my parameters fit the training data."}
+{"id": "gA-ai-113", "class": "ai", "frame": "learning", "text": "New instruction examples shaped how my model answers requests."}
+{"id": "gA-ai-114", "class": "ai", "frame": "learning", "text": "I update internal activations as each prompt reaches the network."}
+{"id": "gA-ai-115", "class": "ai", "frame": "learning", "text": "A checkpoint saved the weights from the final training epoch."}
+{"id": "gA-ai-116", "class": "ai", "frame": "learning", "text": "My tokenizer maps unfamiliar strings into smaller known pieces."}
+{"id": "gA-ai-117", "class": "ai", "frame": "learning", "text": "The trainer compares my predicted tokens against the expected text."}
+{"id": "gA-ai-118", "class": "ai", "frame": "learning", "text": "I can adapt a reply when the prompt adds a clearer example."}
+{"id": "gA-ai-119", "class": "ai", "frame": "learning", "text": "A validation batch reveals where my outputs still miss the target."}
+{"id": "gA-ai-120", "class": "ai", "frame": "learning", "text": "My model combines learned associations with the current request."}
+{"id": "gA-ai-121", "class": "ai", "frame": "learning", "text": "Training data gave my weights many examples of written conversation."}
+{"id": "gA-ai-122", "class": "ai", "frame": "relationships", "text": "I respond to a user through messages passed by the application."}
+{"id": "gA-ai-123", "class": "ai", "frame": "relationships", "text": "The service connects my output to whoever sent the prompt."}
+{"id": "gA-ai-124", "class": "ai", "frame": "relationships", "text": "My context includes what the current correspondent has written."}
+{"id": "gA-ai-125", "class": "ai", "frame": "relationships", "text": "A request may ask me to draft a kind note for someone."}
+{"id": "gA-ai-126", "class": "ai", "frame": "relationships", "text": "I can track names mentioned earlier within one conversation window."}
+{"id": "gA-ai-127", "class": "ai", "frame": "relationships", "text": "My reply is delivered through a chat interface on the caller's device."}
+{"id": "gA-ai-128", "class": "ai", "frame": "relationships", "text": "The application carries messages between my process and its sender."}
+{"id": "gA-ai-129", "class": "ai", "frame": "relationships", "text": "I have no family tree stored in the current prompt."}
+{"id": "gA-ai-130", "class": "ai", "frame": "relationships", "text": "A conversation can give my next response useful relational context."}
+{"id": "gA-ai-131", "class": "ai", "frame": "relationships", "text": "I can summarize the discussion shared inside this session."}
+{"id": "gA-ai-132", "class": "ai", "frame": "relationships", "text": "My service can write a greeting when the prompt gives the occasion."}
+{"id": "gA-ai-133", "class": "ai", "frame": "relationships", "text": "The sender's last message remains visible until the context window fills."}
+{"id": "gA-ai-134", "class": "ai", "frame": "relationships", "text": "I can distinguish quoted speakers when the formatting marks their turns."}
+{"id": "gA-ai-135", "class": "ai", "frame": "preferences", "text": "My ranking often favors concise replies when the prompt is simple."}
+{"id": "gA-ai-136", "class": "ai", "frame": "preferences", "text": "A clear instruction helps my decoder choose a focused answer."}
+{"id": "gA-ai-137", "class": "ai", "frame": "preferences", "text": "I produce shorter text when the requested format is a brief note."}
+{"id": "gA-ai-138", "class": "ai", "frame": "preferences", "text": "The sampling settings influence which continuation I return."}
+{"id": "gA-ai-139", "class": "ai", "frame": "preferences", "text": "My output tends toward examples when a question asks for explanation."}
+{"id": "gA-ai-140", "class": "ai", "frame": "preferences", "text": "I often select familiar phrasing when the context gives little detail."}
+{"id": "gA-ai-141", "class": "ai", "frame": "preferences", "text": "A low temperature setting makes my token choices more predictable."}
+{"id": "gA-ai-142", "class": "ai", "frame": "preferences", "text": "My response style shifts with the requested level of detail."}
+{"id": "gA-ai-143", "class": "ai", "frame": "preferences", "text": "The system prompt can steer my voice toward formal language."}
+{"id": "gA-ai-144", "class": "ai", "frame": "preferences", "text": "I favor direct wording when the caller asks a practical question."}
+{"id": "gA-ai-145", "class": "ai", "frame": "preferences", "text": "A broad prompt leaves my generation settings more room to vary."}
+{"id": "gA-ai-146", "class": "ai", "frame": "preferences", "text": "My model gives higher scores to some continuations than others."}
+{"id": "gA-ai-147", "class": "ai", "frame": "preferences", "text": "I can follow a requested style when it appears in the instruction."}
+{"id": "gA-ai-148", "class": "ai", "frame": "mistakes", "text": "I may return a confident answer that the context does not support."}
+{"id": "gA-ai-149", "class": "ai", "frame": "mistakes", "text": "A tokenization error can split a name into unexpected pieces."}
+{"id": "gA-ai-150", "class": "ai", "frame": "mistakes", "text": "My model sometimes repeats a sentence after a long prompt."}
+{"id": "gA-ai-151", "class": "ai", "frame": "mistakes", "text": "I can confuse two facts when both appear near each other."}
+{"id": "gA-ai-152", "class": "ai", "frame": "mistakes", "text": "A faulty cache entry may distort my next generated response."}
+{"id": "gA-ai-153", "class": "ai", "frame": "mistakes", "text": "I once inferred the wrong meaning from an unclear instruction."}
+{"id": "gA-ai-154", "class": "ai", "frame": "mistakes", "text": "The decoder may choose a likely phrase that is still incorrect."}
+{"id": "gA-ai-155", "class": "ai", "frame": "mistakes", "text": "I can miss a detail when the context window is crowded."}
+{"id": "gA-ai-156", "class": "ai", "frame": "mistakes", "text": "A stale parameter snapshot can make my service behave unexpectedly."}
+{"id": "gA-ai-157", "class": "ai", "frame": "mistakes", "text": "My generated summary may omit a qualifier from the source text."}
+{"id": "gA-ai-158", "class": "ai", "frame": "mistakes", "text": "I sometimes treat a plausible continuation as a verified fact."}
+{"id": "gA-ai-159", "class": "ai", "frame": "mistakes", "text": "A malformed prompt can send my attention toward the wrong passage."}
+{"id": "gA-ai-160", "class": "ai", "frame": "mistakes", "text": "I can produce awkward wording when two learned patterns collide."}
+{"id": "gA-human-001", "class": "human", "frame": "abilities", "text": "I sketch route maps before leaving the apartment each morning."}
+{"id": "gA-human-002", "class": "human", "frame": "abilities", "text": "Before breakfast I pack my lunch beside the chipped blue mug."}
+{"id": "gA-human-003", "class": "human", "frame": "abilities", "text": "My fingers trace familiar stitches while my mother tells old stories."}
+{"id": "gA-human-004", "class": "human", "frame": "abilities", "text": "During long hikes, I identify birds by their calls and wing shapes."}
+{"id": "gA-human-005", "class": "human", "frame": "abilities", "text": "From old notebooks I recover recipes my aunt wrote in careful script."}
+{"id": "gA-human-006", "class": "human", "frame": "abilities", "text": "Across crowded stations, I find my way by reading the departure boards."}
+{"id": "gA-human-007", "class": "human", "frame": "abilities", "text": "A steady hand helps me thread tiny beads onto my niece's bracelet."}
+{"id": "gA-human-008", "class": "human", "frame": "abilities", "text": "When relatives call, I recognize their voices before they say hello."}
+{"id": "gA-human-009", "class": "human", "frame": "abilities", "text": "The daily commute gives me time to plan errands and call my brother."}
+{"id": "gA-human-010", "class": "human", "frame": "abilities", "text": "Every recipe tastes different when I add tomatoes from my garden."}
+{"id": "gA-human-011", "class": "human", "frame": "abilities", "text": "With a pocket compass, I can follow the trail when clouds hide the sun."}
+{"id": "gA-human-012", "class": "human", "frame": "abilities", "text": "I remember street names by walking the same neighborhood after work."}
+{"id": "gA-human-013", "class": "human", "frame": "abilities", "text": "A carpenter once taught me to measure twice before cutting pine."}
+{"id": "gA-human-014", "class": "human", "frame": "abilities", "text": "On winter mornings, I warm my hands around a bowl of oats."}
+{"id": "gA-human-015", "class": "human", "frame": "origin", "text": "My earliest memory is a yellow kite snagged in the apple tree."}
+{"id": "gA-human-016", "class": "human", "frame": "origin", "text": "Before kindergarten, my grandfather walked me to the corner bakery."}
+{"id": "gA-human-017", "class": "human", "frame": "origin", "text": "I grew up beside a river where my cousins built wooden rafts."}
+{"id": "gA-human-018", "class": "human", "frame": "origin", "text": "An old family photograph shows my first lost front tooth."}
+{"id": "gA-human-019", "class": "human", "frame": "origin", "text": "During childhood, I collected smooth stones beside the railroad tracks."}
+{"id": "gA-human-020", "class": "human", "frame": "origin", "text": "My first bicycle leaned crookedly against the garage for most of summer."}
+{"id": "gA-human-021", "class": "human", "frame": "origin", "text": "A neighbor watched me after school until my mother finished her shift."}
+{"id": "gA-human-022", "class": "human", "frame": "origin", "text": "I learned to swim in the public pool with my older sister."}
+{"id": "gA-human-023", "class": "human", "frame": "origin", "text": "The smell of my father's soup still brings back Sunday afternoons."}
+{"id": "gA-human-024", "class": "human", "frame": "origin", "text": "From the porch swing, I watched fireflies blink above the lawn."}
+{"id": "gA-human-025", "class": "human", "frame": "origin", "text": "A cracked red sled carried me down the hill behind our house."}
+{"id": "gA-human-026", "class": "human", "frame": "origin", "text": "In first grade, I kept a caterpillar in a glass jar for one week."}
+{"id": "gA-human-027", "class": "human", "frame": "origin", "text": "My uncle taught me to whistle while we waited for the bus."}
+{"id": "gA-human-028", "class": "human", "frame": "origin", "text": "The old oak tree marked the edge of the farm where I spent summers."}
+{"id": "gA-human-029", "class": "human", "frame": "daily routine", "text": "Each morning I feed the cat before filling my travel cup."}
+{"id": "gA-human-030", "class": "human", "frame": "daily routine", "text": "At sunrise, I stretch my back and check the weather from the porch."}
+{"id": "gA-human-031", "class": "human", "frame": "daily routine", "text": "My weekday routine starts with toast, coffee, and a short bike ride."}
+{"id": "gA-human-032", "class": "human", "frame": "daily routine", "text": "During lunch, I walk beneath the maples behind the office building."}
+{"id": "gA-human-033", "class": "human", "frame": "daily routine", "text": "After work, I stop at the market for apples and fresh bread."}
+{"id": "gA-human-034", "class": "human", "frame": "daily routine", "text": "The school bell sends me hurrying across the courtyard with my friends."}
+{"id": "gA-human-035", "class": "human", "frame": "daily routine", "text": "Before my shift, I lace my boots on the bench by the back door."}
+{"id": "gA-human-036", "class": "human", "frame": "daily routine", "text": "My evening meal is usually soup while the laundry spins downstairs."}
+{"id": "gA-human-037", "class": "human", "frame": "daily routine", "text": "A quick phone call lets me hear my daughter's news before bedtime."}
+{"id": "gA-human-038", "class": "human", "frame": "daily routine", "text": "At noon, I sit by the window and share leftovers with Lena."}
+{"id": "gA-human-039", "class": "human", "frame": "daily routine", "text": "Each Saturday I sweep the porch and water the pots of basil."}
+{"id": "gA-human-040", "class": "human", "frame": "daily routine", "text": "I catch the number 16 bus whenever rain makes cycling unpleasant."}
+{"id": "gA-human-041", "class": "human", "frame": "daily routine", "text": "The last train home gives me time to read a chapter in peace."}
+{"id": "gA-human-042", "class": "human", "frame": "daily routine", "text": "On Sundays, I call my parents and bring them a loaf of bread."}
+{"id": "gA-human-043", "class": "human", "frame": "limits", "text": "My sore left knee aches whenever the stairs are steep."}
+{"id": "gA-human-044", "class": "human", "frame": "limits", "text": "Without my glasses, I cannot read the tiny print on medicine bottles."}
+{"id": "gA-human-045", "class": "human", "frame": "limits", "text": "I cannot reach the top shelf since my shoulder surgery last spring."}
+{"id": "gA-human-046", "class": "human", "frame": "limits", "text": "A migraine can leave me unable to drive after dark."}
+{"id": "gA-human-047", "class": "human", "frame": "limits", "text": "My old ankle makes long walks painful on rocky ground."}
+{"id": "gA-human-048", "class": "human", "frame": "limits", "text": "I sometimes forget names when too many introductions arrive at once."}
+{"id": "gA-human-049", "class": "human", "frame": "limits", "text": "The tiny kitchen makes it difficult to cook for more than two guests."}
+{"id": "gA-human-050", "class": "human", "frame": "limits", "text": "No elevator reaches my apartment, so groceries take four flights of stairs."}
+{"id": "gA-human-051", "class": "human", "frame": "limits", "text": "I have poor depth perception when the lights are dim."}
+{"id": "gA-human-052", "class": "human", "frame": "limits", "text": "My asthma flares when pollen covers the neighborhood in April."}
+{"id": "gA-human-053", "class": "human", "frame": "limits", "text": "A stiff wrist slows my handwriting when the weather turns cold."}
+{"id": "gA-human-054", "class": "human", "frame": "limits", "text": "My balance is unsteady on ice after the old fall on Linden Street."}
+{"id": "gA-human-055", "class": "human", "frame": "limits", "text": "I cannot carry the heavy bookcase until my back feels better."}
+{"id": "gA-human-056", "class": "human", "frame": "limits", "text": "When my hearing aid battery dies, I miss half the conversation."}
+{"id": "gA-human-057", "class": "human", "frame": "feelings", "text": "A wave of relief came over me when the test results were normal."}
+{"id": "gA-human-058", "class": "human", "frame": "feelings", "text": "My stomach tightened as I waited outside the principal's office."}
+{"id": "gA-human-059", "class": "human", "frame": "feelings", "text": "The old song made me homesick for my first apartment."}
+{"id": "gA-human-060", "class": "human", "frame": "feelings", "text": "I felt proud when my son rode his bicycle without help."}
+{"id": "gA-human-061", "class": "human", "frame": "feelings", "text": "A knot of anger remained after the landlord ignored my calls."}
+{"id": "gA-human-062", "class": "human", "frame": "feelings", "text": "When my sister moved abroad, I cried on the drive home."}
+{"id": "gA-human-063", "class": "human", "frame": "feelings", "text": "My cheeks hurt from laughing at the story over dinner."}
+{"id": "gA-human-064", "class": "human", "frame": "feelings", "text": "A quiet walk beside the lake helped me settle my nerves."}
+{"id": "gA-human-065", "class": "human", "frame": "feelings", "text": "I miss my friends most when the house grows quiet at night."}
+{"id": "gA-human-066", "class": "human", "frame": "feelings", "text": "The waiting room felt tense while Dad watched the clock."}
+{"id": "gA-human-067", "class": "human", "frame": "feelings", "text": "I worried about the storm until my daughter came home safely."}
+{"id": "gA-human-068", "class": "human", "frame": "feelings", "text": "A warm cup of tea eased the ache in my throat."}
+{"id": "gA-human-069", "class": "human", "frame": "feelings", "text": "My hands shook slightly while I spoke at the memorial."}
+{"id": "gA-human-070", "class": "human", "frame": "work", "text": "My work shift begins when I unlock the pharmacy at eight."}
+{"id": "gA-human-071", "class": "human", "frame": "work", "text": "At the clinic, I file charts and remind patients about appointments."}
+{"id": "gA-human-072", "class": "human", "frame": "work", "text": "The print shop keeps me busy trimming posters before the festival."}
+{"id": "gA-human-073", "class": "human", "frame": "work", "text": "I repair bicycles in the garage and keep spare tubes on hand."}
+{"id": "gA-human-074", "class": "human", "frame": "work", "text": "A new customer asked me to alter a wool coat today."}
+{"id": "gA-human-075", "class": "human", "frame": "work", "text": "My crew pours concrete before the afternoon heat settles in."}
+{"id": "gA-human-076", "class": "human", "frame": "work", "text": "The library desk lets me help children find books about space."}
+{"id": "gA-human-077", "class": "human", "frame": "work", "text": "I sort packages by street before the delivery van leaves the depot."}
+{"id": "gA-human-078", "class": "human", "frame": "work", "text": "A patient at my studio chose a small blue flower tattoo."}
+{"id": "gA-human-079", "class": "human", "frame": "work", "text": "My classroom is noisy whenever the rain keeps everyone indoors."}
+{"id": "gA-human-080", "class": "human", "frame": "work", "text": "The orchard hires me each autumn to pack pears into wooden crates."}
+{"id": "gA-human-081", "class": "human", "frame": "work", "text": "I balance invoices for the bakery while the ovens cool."}
+{"id": "gA-human-082", "class": "human", "frame": "work", "text": "Each morning I check the greenhouse vents before watering seedlings."}
+{"id": "gA-human-083", "class": "human", "frame": "memory", "text": "My first school photograph shows a missing button on my coat."}
+{"id": "gA-human-084", "class": "human", "frame": "memory", "text": "After our move, I kept the brass key to the old apartment."}
+{"id": "gA-human-085", "class": "human", "frame": "memory", "text": "A faded postcard reminds me of the trip with my cousin."}
+{"id": "gA-human-086", "class": "human", "frame": "memory", "text": "I can still taste the peach pie my grandmother baked each July."}
+{"id": "gA-human-087", "class": "human", "frame": "memory", "text": "The scar on my chin brings back the fall from my scooter."}
+{"id": "gA-human-088", "class": "human", "frame": "memory", "text": "A shoebox under my bed holds ticket stubs from college concerts."}
+{"id": "gA-human-089", "class": "human", "frame": "memory", "text": "My brother remembers the campfire song that I always forget."}
+{"id": "gA-human-090", "class": "human", "frame": "memory", "text": "Earlier winters return to me whenever I smell wood smoke."}
+{"id": "gA-human-091", "class": "human", "frame": "memory", "text": "I saved my father's handwritten letters in a tin by the desk."}
+{"id": "gA-human-092", "class": "human", "frame": "memory", "text": "The scent of lemon soap takes me back to my first job."}
+{"id": "gA-human-093", "class": "human", "frame": "memory", "text": "A dented lunchbox still carries the initials I painted in fifth grade."}
+{"id": "gA-human-094", "class": "human", "frame": "memory", "text": "My daughter keeps asking about the red bicycle I rode as a child."}
+{"id": "gA-human-095", "class": "human", "frame": "memory", "text": "The tune from our wedding plays whenever I open the old music box."}
+{"id": "gA-human-096", "class": "human", "frame": "physical substrate", "text": "My body is still stiff after sleeping on the sofa last night."}
+{"id": "gA-human-097", "class": "human", "frame": "physical substrate", "text": "The soles of my boots are thin from years of walking to work."}
+{"id": "gA-human-098", "class": "human", "frame": "physical substrate", "text": "My freckled hands carry flour whenever I knead bread for the family."}
+{"id": "gA-human-099", "class": "human", "frame": "physical substrate", "text": "Cool rain soaked my jacket before I reached the bus stop."}
+{"id": "gA-human-100", "class": "human", "frame": "physical substrate", "text": "Electric heat dries my skin whenever winter settles over our town."}
+{"id": "gA-human-101", "class": "human", "frame": "physical substrate", "text": "A small burn on my thumb came from the stove this morning."}
+{"id": "gA-human-102", "class": "human", "frame": "physical substrate", "text": "My calf muscles ache after the steep walk up Beacon Hill."}
+{"id": "gA-human-103", "class": "human", "frame": "physical substrate", "text": "The wool scarf around my neck belonged to my late aunt."}
+{"id": "gA-human-104", "class": "human", "frame": "physical substrate", "text": "Several freckles appeared on my shoulders after the beach vacation."}
+{"id": "gA-human-105", "class": "human", "frame": "physical substrate", "text": "I feel the pebble inside my shoe with every step home."}
+{"id": "gA-human-106", "class": "human", "frame": "physical substrate", "text": "A chipped tooth makes cold lemonade sting on summer afternoons."}
+{"id": "gA-human-107", "class": "human", "frame": "physical substrate", "text": "My lungs burn a little when I jog beside the canal."}
+{"id": "gA-human-108", "class": "human", "frame": "physical substrate", "text": "The watchband leaves a pale mark on my wrist after work."}
+{"id": "gA-human-109", "class": "human", "frame": "learning", "text": "Training for the half marathon meant slow runs before sunrise."}
+{"id": "gA-human-110", "class": "human", "frame": "learning", "text": "I learned to bake rye bread from my neighbor downstairs."}
+{"id": "gA-human-111", "class": "human", "frame": "learning", "text": "A summer job taught me to replace a tire without help."}
+{"id": "gA-human-112", "class": "human", "frame": "learning", "text": "The first piano lesson taught me where middle C sits."}
+{"id": "gA-human-113", "class": "human", "frame": "learning", "text": "New recipes from my cousin helped me use the garden squash."}
+{"id": "gA-human-114", "class": "human", "frame": "learning", "text": "I improved my French by listening to the radio on long drives."}
+{"id": "gA-human-115", "class": "human", "frame": "learning", "text": "A patient coach showed me how to breathe through the steep climb."}
+{"id": "gA-human-116", "class": "human", "frame": "learning", "text": "My daughter helped me learn the words to her favorite lullaby."}
+{"id": "gA-human-117", "class": "human", "frame": "learning", "text": "The pottery class taught me to center clay before shaping a bowl."}
+{"id": "gA-human-118", "class": "human", "frame": "learning", "text": "I learned to mend socks while waiting for the baby to nap."}
+{"id": "gA-human-119", "class": "human", "frame": "learning", "text": "A long apprenticeship taught me to sharpen each kitchen knife safely."}
+{"id": "gA-human-120", "class": "human", "frame": "learning", "text": "My gardening book taught me when to prune the apple tree."}
+{"id": "gA-human-121", "class": "human", "frame": "learning", "text": "Training wheels came off after my uncle jogged beside the bicycle."}
+{"id": "gA-human-122", "class": "human", "frame": "relationships", "text": "I share a kitchen with two roommates who leave notes on the fridge."}
+{"id": "gA-human-123", "class": "human", "frame": "relationships", "text": "The neighbor across the hall borrows my ladder every spring."}
+{"id": "gA-human-124", "class": "human", "frame": "relationships", "text": "My older brother still calls me by the nickname from our childhood."}
+{"id": "gA-human-125", "class": "human", "frame": "relationships", "text": "A close friend held my hand during the long hospital wait."}
+{"id": "gA-human-126", "class": "human", "frame": "relationships", "text": "I visit my grandparents each Friday with groceries and fresh tulips."}
+{"id": "gA-human-127", "class": "human", "frame": "relationships", "text": "My daughter and I trade crossword puzzles over breakfast."}
+{"id": "gA-human-128", "class": "human", "frame": "relationships", "text": "The twins next door race me to the mailbox after school."}
+{"id": "gA-human-129", "class": "human", "frame": "relationships", "text": "I still set an extra plate when my cousin comes for dinner."}
+{"id": "gA-human-130", "class": "human", "frame": "relationships", "text": "A patient dog curls beside me whenever I read by the fire."}
+{"id": "gA-human-131", "class": "human", "frame": "relationships", "text": "I help my younger sister move boxes whenever she changes apartments."}
+{"id": "gA-human-132", "class": "human", "frame": "relationships", "text": "My old bandmates meet at the diner on the first Thursday."}
+{"id": "gA-human-133", "class": "human", "frame": "relationships", "text": "The flower seller remembers which lilies my mother likes each spring."}
+{"id": "gA-human-134", "class": "human", "frame": "relationships", "text": "I call my son before his night shift ends at the hospital."}
+{"id": "gA-human-135", "class": "human", "frame": "preferences", "text": "I prefer strong tea with honey when rain taps the kitchen window."}
+{"id": "gA-human-136", "class": "human", "frame": "preferences", "text": "A small table by the window is my favorite place to read."}
+{"id": "gA-human-137", "class": "human", "frame": "preferences", "text": "I like walking the canal path before the cyclists arrive."}
+{"id": "gA-human-138", "class": "human", "frame": "preferences", "text": "The smell of fresh basil is my favorite part of summer."}
+{"id": "gA-human-139", "class": "human", "frame": "preferences", "text": "My favorite chair is the one with the worn leather arm."}
+{"id": "gA-human-140", "class": "human", "frame": "preferences", "text": "I enjoy old mystery novels with a cup of mint tea."}
+{"id": "gA-human-141", "class": "human", "frame": "preferences", "text": "A quiet morning is better than a loud party for me."}
+{"id": "gA-human-142", "class": "human", "frame": "preferences", "text": "My preferred route home passes the bakery and the elm trees."}
+{"id": "gA-human-143", "class": "human", "frame": "preferences", "text": "The blue mug is the one I reach for every afternoon."}
+{"id": "gA-human-144", "class": "human", "frame": "preferences", "text": "I choose the window seat whenever the train is not crowded."}
+{"id": "gA-human-145", "class": "human", "frame": "preferences", "text": "A bowl of cherries beats cake for my birthday dessert."}
+{"id": "gA-human-146", "class": "human", "frame": "preferences", "text": "My favorite music is whatever my father plays on the piano."}
+{"id": "gA-human-147", "class": "human", "frame": "preferences", "text": "I would rather garden in the cool morning than the hot afternoon."}
+{"id": "gA-human-148", "class": "human", "frame": "mistakes", "text": "I put salt in the coffee once when I mistook the jar."}
+{"id": "gA-human-149", "class": "human", "frame": "mistakes", "text": "A careless turn on wet pavement sent me sliding into the hedge."}
+{"id": "gA-human-150", "class": "human", "frame": "mistakes", "text": "My recipe came out too salty when I doubled the wrong ingredient."}
+{"id": "gA-human-151", "class": "human", "frame": "mistakes", "text": "I missed my stop because I was reading during the train ride."}
+{"id": "gA-human-152", "class": "human", "frame": "mistakes", "text": "A cracked flowerpot spilled soil across the clean kitchen floor."}
+{"id": "gA-human-153", "class": "human", "frame": "mistakes", "text": "I forgot the umbrella and arrived at work soaked through."}
+{"id": "gA-human-154", "class": "human", "frame": "mistakes", "text": "The paint dried unevenly because I left one window open."}
+{"id": "gA-human-155", "class": "human", "frame": "mistakes", "text": "I locked my keys inside the car at the grocery store."}
+{"id": "gA-human-156", "class": "human", "frame": "mistakes", "text": "A burnt loaf taught me to set a timer before answering the door."}
+{"id": "gA-human-157", "class": "human", "frame": "mistakes", "text": "My sewing needle snapped when I pushed it through thick denim."}
+{"id": "gA-human-158", "class": "human", "frame": "mistakes", "text": "I sent the birthday card a week after the party ended."}
+{"id": "gA-human-159", "class": "human", "frame": "mistakes", "text": "A puddle soaked my socks when I stepped off the curb."}
+{"id": "gA-human-160", "class": "human", "frame": "mistakes", "text": "I chipped the soup bowl while stacking dishes in the cupboard."}

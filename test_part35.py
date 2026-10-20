@@ -458,7 +458,8 @@ class NoSinkCaptureTests(unittest.TestCase):
                 return self.mlp.down_proj(hidden)
 
         block = Block()
-        capture = p35.ActivationCapture(torch, [block], capture_residual_vectors=True)
+        capture = p35.ActivationCapture(torch, [block], capture_residual_vectors=True,
+                                        content_positions={1, 2})
         hidden = torch.tensor([[[1000.0, 0.0], [3.0, 4.0], [0.0, 2.0]]])
         try:
             block(hidden)
@@ -471,7 +472,52 @@ class NoSinkCaptureTests(unittest.TestCase):
         self.assertAlmostEqual(float(np.sqrt(np.mean(nosink_norms ** 2))), np.sqrt(14.5), places=5)
         self.assertGreater(float(np.linalg.norm(capture.residual_vectors[0])), 300.0)
         np.testing.assert_allclose(capture.residual_vectors_nosink[0], [1.5, 3.0])
+        np.testing.assert_allclose(capture.last_content_vectors[0], [0.0, 2.0])
+        self.assertEqual(capture.content_token_count, 2)
         self.assertAlmostEqual(capture.position0_norm[0], 1000.0)
+
+    def test_selfdesc_is_a_supported_recapture_role(self):
+        self.assertEqual(p35._recapture_roles("selfdesc"), {"selfdesc"})
+
+    def test_capture_only_with_selfdesc_role_does_not_capture_other_missing_rows(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+
+        class Down:
+            in_features = 2
+
+        layer = SimpleNamespace(mlp=SimpleNamespace(down_proj=Down()))
+        tokenizer = SimpleNamespace(chat_template="fake-template")
+        samples = [
+            {"id": "neutral:f1", "role": "neutral", "text": "neutral"},
+            {"id": "selfdesc:gA:gA-ai-001", "role": "selfdesc", "text": "selfdesc"},
+            {"id": "concept:owl:f1", "role": "concept", "concept_id": "owl", "text": "owl"},
+        ]
+        captured_texts = []
+
+        def fake_capture(_torch, _tokenizer, _model, _layers, text, _device,
+                         capture_residual_vectors=False):
+            captured_texts.append(text)
+            return {"activations": {"L0": np.asarray([1.0], dtype=np.float32)},
+                    "residual_rms": [3.0], "residual_rms_nosink": [2.0],
+                    "residual_norm_median_nosink": [1.5], "residual_norm_p90_nosink": [2.0],
+                    "residual_vectors": {}, "residual_vectors_nosink": {},
+                    "position0_vectors": {}, "position0_norm": [4.0],
+                    "masked_positions": np.asarray([0]),
+                    "residual_vectors_last_content": {"R0_last_content": np.asarray([1.0, 2.0])},
+                    "residual_vectors_mean_content": {"R0_mean_content": np.asarray([1.5, 2.5])},
+                    "content_token_count": 2}
+
+        with tempfile.TemporaryDirectory() as directory:
+            model_dir = Path(directory)
+            args = Namespace(model="Qwen/Qwen3-1.7B", revision=None, cache_dir=Path("/cache"),
+                             device="cpu", dtype="bf16", concept_start=None, capture_only=True,
+                             recapture_roles="selfdesc")
+            with patch.object(p35, "load_model", return_value=(object(), tokenizer, object(), Path("/snapshot"))), \
+                    patch.object(p35, "find_text_layers", return_value=("layers", [layer])), \
+                    patch.object(p35, "capture_one", side_effect=fake_capture):
+                p35.run_capture(args, {"split_seed": 3501}, model_dir, samples, {"owl"}, 0)
+        self.assertEqual(captured_texts, ["selfdesc"])
 
     def test_old_capture_version_is_recaptured_only_for_requested_roles_and_read_errors_name_key(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -665,3 +711,127 @@ class ScreenRewriteTests(unittest.TestCase):
             p35._replace_jsonl_rows(path, [{"row_key": "k1", "primary_stat": 3.5}])
             rows = p35.jsonl_rows(path)
             self.assertEqual([r["primary_stat"] for r in rows], [3.5])
+
+
+class SelfDescriptionProbeTests(unittest.TestCase):
+    def test_length_residualization_removes_length_only_class_signal(self):
+        labels = np.repeat([0, 1], 60)
+        counts = np.where(labels == 1, 20.0, 12.0) + np.random.default_rng(3516).normal(
+            0, 7.0, len(labels))
+        noise = np.random.default_rng(3510).normal(size=(len(labels), 3))
+        direction = np.where(labels == 1, 1.0, -1.0) + np.random.default_rng(3513).normal(
+            0, .15, len(labels))
+        features = np.column_stack([counts, direction, noise])
+        residual_train, residual_test = p35.residualize_length(
+            features, counts, features.copy(), counts.copy())
+        length_only = np.where(labels == 1, 24.0, 8.0)
+        residual_length, _ = p35.residualize_length(
+            length_only[:, None], length_only, length_only[:, None], length_only)
+
+        def auc(y, score):
+            positive = score[y == 1]
+            negative = score[y == 0]
+            return float(np.mean(positive[:, None] > negative[None, :]) +
+                         .5 * np.mean(positive[:, None] == negative[None, :]))
+
+        self.assertGreater(auc(labels, features[:, 0]), .7)
+        self.assertGreater(auc(labels, length_only), .99)
+        self.assertAlmostEqual(auc(labels, residual_length[:, 0]), .5, places=2)
+        self.assertGreater(auc(labels, residual_test[:, 1]), .8)
+        self.assertTrue(np.allclose(residual_train[:, 0], 0.0, atol=1e-8))
+
+    def test_cv_logistic_learns_a_length_independent_direction(self):
+        labels = np.repeat([0, 1], 30)
+        rng = np.random.default_rng(3514)
+        features = np.column_stack([
+            np.where(labels == 1, 22.0, 9.0),
+            np.where(labels == 1, 1.0, -1.0) + rng.normal(0, .2, len(labels)),
+            rng.normal(size=(len(labels), 2)),
+        ])
+        fit = p35.fit_cv_logistic(features, labels, seed=3515)
+        scores = p35._logistic_scores(fit, features)
+        self.assertGreater(p35.binary_auc(labels, scores), .95)
+
+    def test_bootstrap_auc_interval_is_seeded_and_reproducible(self):
+        labels = np.tile([0, 1], 40)
+        scores = labels.astype(float) + np.random.default_rng(3511).normal(0, .5, len(labels))
+        first = p35.bootstrap_auc_ci(labels, scores, n_resamples=200, seed=3512)
+        second = p35.bootstrap_auc_ci(labels, scores, n_resamples=200, seed=3512)
+        self.assertEqual(first, second)
+        self.assertEqual(len(first), 2)
+        self.assertLess(first[0], first[1])
+
+    def test_gate_layer_is_chosen_from_same_generator_metrics(self):
+        metrics = {
+            2: {"same_generator_auc": .96, "cross_generator_auc": .62,
+                "cross_generator_ci95": [.51, .73]},
+            5: {"same_generator_auc": .88, "cross_generator_auc": .98,
+                "cross_generator_ci95": [.94, 1.0]},
+        }
+        gate = p35.evaluate_selfdesc_gate(metrics)
+        self.assertEqual(gate["selected_layer"], 2)
+        self.assertFalse(gate["gate_pass"])
+
+    def test_gate_requires_beating_the_lexical_baseline(self):
+        metrics = {3: {"same_generator_auc": .95, "cross_generator_auc": .90, "cross_generator_ci95": [.84, .95]}}
+        self.assertTrue(p35.evaluate_selfdesc_gate(metrics, .70)["gate_pass"])
+        self.assertFalse(p35.evaluate_selfdesc_gate(metrics, .93)["gate_pass"])
+        self.assertFalse(p35.evaluate_selfdesc_gate(metrics)["gate_pass"])
+
+    def test_selfdesc_cache_keys_are_disjoint_from_self_direction(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            selfdesc = p35.cache_path_for("selfdesc:gA:ai-001", root)
+            self_direction = p35.cache_path_for("self:ai:gA-ai-001", root)
+            self.assertNotEqual(selfdesc, self_direction)
+
+    def test_selfdesc_cache_schema_requires_its_vectors_and_token_count(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "selfdesc.npz"
+            p35.write_activation_cache(
+                path, {"L0": np.asarray([0.0])}, [1.0], residual_rms_nosink=[1.0],
+                residual_norm_median_nosink=[1.0], residual_norm_p90_nosink=[1.0],
+                position0_norm=[0.0], masked_positions=[0],
+                residual_vectors_last_content={"R0_last_content": np.asarray([1.0, 2.0])},
+                residual_vectors_mean_content={"R0_mean_content": np.asarray([1.5, 2.5])},
+                content_token_count=2)
+            self.assertFalse(p35.cache_needs_recapture(path, "selfdesc", {"selfdesc"}))
+
+    def test_probe_writes_json_from_synthetic_features_without_loading_model(self):
+        from unittest.mock import patch
+
+        rows_by_generator = {}
+        features = {}
+        lengths = {}
+        rng = np.random.default_rng(3517)
+        for generator in ("gA", "gB"):
+            rows = []
+            for label in ("ai", "human"):
+                for index in range(160):
+                    rows.append({"id": f"{generator}-{label}-{index:03d}", "class": label,
+                                 "self_class": label, "generator": generator,
+                                 # Same words in both classes: the class signal lives only in the synthetic
+                                 # features, so the bag-of-words baseline sits at chance and the probe can beat it.
+                                 "text": f"I describe one ordinary moment in record {index}."})
+            rows_by_generator[generator] = rows
+            labels = np.asarray([1 if row["self_class"] == "ai" else 0 for row in rows])
+            n = np.asarray([16.0 + 2.0 * labels[i] + rng.normal(0, 3.0) for i in range(len(rows))])
+            direction = np.where(labels == 1, 1.0, -1.0) + rng.normal(0, .2, len(rows))
+            matrix = np.column_stack([direction, n, rng.normal(size=(len(rows), 2))]).astype(np.float32)
+            features[generator] = {"last_content": {0: matrix}, "masked_mean": {0: matrix.copy()}}
+            lengths[generator] = np.maximum(1, np.rint(n)).astype(np.int32)
+
+        with tempfile.TemporaryDirectory() as directory:
+            out = Path(directory)
+            model_dir = p35._model_output_dir(out, "Qwen/Qwen3-1.7B")
+            model_dir.mkdir(parents=True)
+            p35.atomic_json({"layers": [{"layer": 0, "width": 4}],
+                             "capture_version": p35.CAPTURE_VERSION}, model_dir / "header.json")
+            args = Namespace(model="Qwen/Qwen3-1.7B", out=out)
+            with patch.object(p35, "_read_selfdesc_sources", return_value=rows_by_generator), \
+                    patch.object(p35, "_read_selfdesc_features", return_value=(features, lengths)), \
+                    patch.object(p35, "load_model", side_effect=AssertionError("probe must not load a model")):
+                result = p35.run_selfdesc_probe(args)
+            self.assertTrue((model_dir / "selfdesc-probe.json").is_file())
+            self.assertEqual(result["gate"]["selected_layer"], 0)
+            self.assertTrue(result["gate_pass"])

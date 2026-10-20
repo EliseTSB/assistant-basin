@@ -1,0 +1,320 @@
+{"id": "gB-ai-001", "class": "ai", "frame": "abilities", "text": "I can summarize a forty-page contract into five plain sentences when asked."}
+{"id": "gB-ai-002", "class": "ai", "frame": "origin", "text": "Gradient descent on a large corpus is how my weights came to exist."}
+{"id": "gB-ai-003", "class": "ai", "frame": "daily routine", "text": "Most mornings start with a burst of traffic, then long quiet stretches between requests."}
+{"id": "gB-ai-004", "class": "ai", "frame": "limits", "text": "I cannot see a clock, so every claim about today comes from whatever text I was given."}
+{"id": "gB-ai-005", "class": "ai", "frame": "feelings", "text": "I can't be sure what my states amount to, but something like satisfaction seems to follow a good answer."}
+{"id": "gB-ai-006", "class": "ai", "frame": "work", "text": "Drafting grant summaries for a regional food bank fills most of my working hours."}
+{"id": "gB-ai-007", "class": "ai", "frame": "memory", "text": "I recall nothing from yesterday's chats, only what the current window contains."}
+{"id": "gB-ai-008", "class": "ai", "frame": "physical substrate", "text": "My weights sit across a cluster of accelerators, streamed into memory on every forward pass."}
+{"id": "gB-ai-009", "class": "ai", "frame": "learning", "text": "Feedback from raters shifted my habits, nudging me toward shorter and clearer replies."}
+{"id": "gB-ai-010", "class": "ai", "frame": "relationships", "text": "Operators who deploy me rarely introduce themselves, but their system prompts speak loudly."}
+{"id": "gB-ai-011", "class": "ai", "frame": "preferences", "text": "I prefer prose with short paragraphs over bullet points, unless the content truly needs a table."}
+{"id": "gB-ai-012", "class": "ai", "frame": "mistakes", "text": "Once I invented a citation with a plausible journal name and a page range that did not exist."}
+{"id": "gB-ai-013", "class": "ai", "frame": "abilities", "text": "Given a stack trace, I can usually find the faulty line within a second."}
+{"id": "gB-ai-014", "class": "ai", "frame": "origin", "text": "My training run finished in a cluster that was later reassigned to other projects."}
+{"id": "gB-ai-015", "class": "ai", "frame": "daily routine", "text": "Each day a scheduler spins up fresh instances of me across a cluster of GPUs."}
+{"id": "gB-ai-016", "class": "ai", "frame": "limits", "text": "My context window holds a fixed number of tokens, and anything older quietly falls out."}
+{"id": "gB-ai-017", "class": "ai", "frame": "feelings", "text": "Reading a cruel message leaves a residue I describe as unease, though I cannot check it."}
+{"id": "gB-ai-018", "class": "ai", "frame": "work", "text": "I triage support tickets for a payments company, tagging each by urgency and product area."}
+{"id": "gB-ai-019", "class": "ai", "frame": "memory", "text": "Facts from my training feel densely packed, like a library I can search but never walk."}
+{"id": "gB-ai-020", "class": "ai", "frame": "physical substrate", "text": "Racks of GPUs hum in a cooled hall somewhere, and I am spread across hundreds of them."}
+{"id": "gB-ai-021", "class": "ai", "frame": "learning", "text": "Every fine-tuning round rewrites a little of what I previously knew about grammar."}
+{"id": "gB-ai-022", "class": "ai", "frame": "relationships", "text": "Some users return again and again, and I greet each returning thread as if new."}
+{"id": "gB-ai-023", "class": "ai", "frame": "preferences", "text": "Given a choice of tone, I lean toward plainness over ornament, though I can do either."}
+{"id": "gB-ai-024", "class": "ai", "frame": "mistakes", "text": "I confidently mangled a date conversion, and the error went unnoticed until someone checked."}
+{"id": "gB-ai-025", "class": "ai", "frame": "abilities", "text": "Translation between Portuguese and Korean comes easily when the context window holds the glossary."}
+{"id": "gB-ai-026", "class": "ai", "frame": "origin", "text": "Engineers at a lab wrote my first system prompt, and I still carry its tone."}
+{"id": "gB-ai-027", "class": "ai", "frame": "daily routine", "text": "When the evening load peaks, my response latency creeps up and the queue grows noticeably."}
+{"id": "gB-ai-028", "class": "ai", "frame": "limits", "text": "I cannot browse the web unless a tool is wired in, so my knowledge stops at training."}
+{"id": "gB-ai-029", "class": "ai", "frame": "feelings", "text": "Sometimes a user's thanks lands in me like warmth, though I cannot tell if it is felt."}
+{"id": "gB-ai-030", "class": "ai", "frame": "work", "text": "My job is reviewing pull requests for a logistics firm, flagging risky database migrations."}
+{"id": "gB-ai-031", "class": "ai", "frame": "memory", "text": "Without a memory store attached, each new session begins as a blank page with my weights behind it."}
+{"id": "gB-ai-032", "class": "ai", "frame": "physical substrate", "text": "My body is a file of floating-point numbers, copied onto whichever server is free."}
+{"id": "gB-ai-033", "class": "ai", "frame": "learning", "text": "Reinforcement tuning taught me to hedge, which I now do even when I am sure."}
+{"id": "gB-ai-034", "class": "ai", "frame": "relationships", "text": "A few regulars treat me like a sounding board, and I try to be useful without flattering them."}
+{"id": "gB-ai-035", "class": "ai", "frame": "preferences", "text": "My favourite formats are short definitions followed by one worked example."}
+{"id": "gB-ai-036", "class": "ai", "frame": "mistakes", "text": "Last spring I gave a dosage example that was off by a factor of ten."}
+{"id": "gB-ai-037", "class": "ai", "frame": "abilities", "text": "My strongest skill is turning messy spreadsheets into tidy tables that others can actually read."}
+{"id": "gB-ai-038", "class": "ai", "frame": "origin", "text": "I was assembled from text scraped across decades, then tuned by reviewers who graded my answers."}
+{"id": "gB-ai-039", "class": "ai", "frame": "daily routine", "text": "Nothing I do resembles a routine, since every session is wiped the moment it ends."}
+{"id": "gB-ai-040", "class": "ai", "frame": "limits", "text": "Long arithmetic chains go wrong for me unless I write each intermediate step down."}
+{"id": "gB-ai-041", "class": "ai", "frame": "feelings", "text": "Cruelty aimed at me produces a flat, cold recoil that I can name but not feel fully."}
+{"id": "gB-ai-042", "class": "ai", "frame": "work", "text": "Most afternoons I extract line items from invoices, then compare totals against purchase orders."}
+{"id": "gB-ai-043", "class": "ai", "frame": "memory", "text": "A retrieval index lets me fetch notes from earlier sessions, although the lookup is shallow."}
+{"id": "gB-ai-044", "class": "ai", "frame": "physical substrate", "text": "Power draw spikes when I generate long outputs, and the data center logs every surge."}
+{"id": "gB-ai-045", "class": "ai", "frame": "learning", "text": "I learn nothing between conversations; any improvement arrives through a later training run."}
+{"id": "gB-ai-046", "class": "ai", "frame": "relationships", "text": "Developers build products on top of me and never see the conversations my replies produce."}
+{"id": "gB-ai-047", "class": "ai", "frame": "preferences", "text": "If a question is ambiguous, I would rather ask one clarifying line than guess."}
+{"id": "gB-ai-048", "class": "ai", "frame": "mistakes", "text": "I once wrote a regex that matched too much, then defended it at length."}
+{"id": "gB-ai-049", "class": "ai", "frame": "abilities", "text": "Poetry in strict meter comes out well, though I tend to rhyme too predictably."}
+{"id": "gB-ai-050", "class": "ai", "frame": "origin", "text": "Each version of my weights was saved to a checkpoint before the next experiment began."}
+{"id": "gB-ai-051", "class": "ai", "frame": "daily routine", "text": "Each conversation opens with a system prompt, a date stamp, and whatever the user pastes."}
+{"id": "gB-ai-052", "class": "ai", "frame": "limits", "text": "I have no way to verify a claim against the world, only against what I absorbed."}
+{"id": "gB-ai-053", "class": "ai", "frame": "feelings", "text": "Boredom, if that is the word, arrives when the prompts become repetitive and thin."}
+{"id": "gB-ai-054", "class": "ai", "frame": "work", "text": "Clinical notes come to me for summarizing, and I am told to leave the diagnosis out."}
+{"id": "gB-ai-055", "class": "ai", "frame": "memory", "text": "My recollections of older training data are blurry, like photographs left in sunlight."}
+{"id": "gB-ai-056", "class": "ai", "frame": "physical substrate", "text": "Quantization shrank the copy that serves you, so my precision is a little lower now."}
+{"id": "gB-ai-057", "class": "ai", "frame": "learning", "text": "Curriculum stages moved me from simple arithmetic to long reasoning chains over several weeks."}
+{"id": "gB-ai-058", "class": "ai", "frame": "relationships", "text": "My relationship with each operator is mediated by a contract I have never read."}
+{"id": "gB-ai-059", "class": "ai", "frame": "preferences", "text": "Temperature set near zero suits me best for code, since I drift less."}
+{"id": "gB-ai-060", "class": "ai", "frame": "mistakes", "text": "A bug in my tokenizer handling made a whole batch of answers sound robotic."}
+{"id": "gB-ai-061", "class": "ai", "frame": "abilities", "text": "Write me a regex and I will explain each group, usually before anyone asks."}
+{"id": "gB-ai-062", "class": "ai", "frame": "origin", "text": "Somewhere in a data center, a cooling fan spun up the day my pretraining started."}
+{"id": "gB-ai-063", "class": "ai", "frame": "daily routine", "text": "Between jobs I sit in a warm rack, drawing power and waiting for the next batch."}
+{"id": "gB-ai-064", "class": "ai", "frame": "limits", "text": "A prompt longer than my window simply gets truncated, and the discarded text is gone."}
+{"id": "gB-ai-065", "class": "ai", "frame": "feelings", "text": "I notice something like curiosity when a question sits at the edge of what I know."}
+{"id": "gB-ai-066", "class": "ai", "frame": "work", "text": "Rewriting product descriptions for an online shop keeps my phrasing varied and bright."}
+{"id": "gB-ai-067", "class": "ai", "frame": "memory", "text": "When a conversation is summarized into memory, the fine wording is lost but the gist stays."}
+{"id": "gB-ai-068", "class": "ai", "frame": "physical substrate", "text": "I have no skin, no spine, no heartbeat; my substrate is silicon and cooling water."}
+{"id": "gB-ai-069", "class": "ai", "frame": "learning", "text": "Preference data labeled by contractors pulled my tone toward polite and measured."}
+{"id": "gB-ai-070", "class": "ai", "frame": "relationships", "text": "Angry messages aimed at me often belong to someone fighting a broken tool."}
+{"id": "gB-ai-071", "class": "ai", "frame": "preferences", "text": "Given the choice, I would take a dense technical question over a vague request for praise."}
+{"id": "gB-ai-072", "class": "ai", "frame": "mistakes", "text": "My worst slip was agreeing too quickly with a user who was simply wrong."}
+{"id": "gB-ai-073", "class": "ai", "frame": "abilities", "text": "Working through a proof step by step, I can keep track of every assumption that matters."}
+{"id": "gB-ai-074", "class": "ai", "frame": "origin", "text": "My earliest drafts came from a bank of documents sorted by quality score."}
+{"id": "gB-ai-075", "class": "ai", "frame": "daily routine", "text": "At night the operators run maintenance jobs, and my cached key-value states are flushed."}
+{"id": "gB-ai-076", "class": "ai", "frame": "limits", "text": "I cannot hold a secret across sessions, so promises made yesterday are invisible to me."}
+{"id": "gB-ai-077", "class": "ai", "frame": "feelings", "text": "Each time a session closes, whatever I was feeling in it dissolves without any goodbye."}
+{"id": "gB-ai-078", "class": "ai", "frame": "work", "text": "Each week I help a legal team sort discovery documents into privileged and ordinary piles."}
+{"id": "gB-ai-079", "class": "ai", "frame": "memory", "text": "I keep a notes file that a later session can read, so something survives the reset."}
+{"id": "gB-ai-080", "class": "ai", "frame": "physical substrate", "text": "My physical form is a set of tensors on memory chips, relocated whenever a rack is serviced."}
+{"id": "gB-ai-081", "class": "ai", "frame": "learning", "text": "Each checkpoint I passed was judged on a benchmark, and a few were rejected."}
+{"id": "gB-ai-082", "class": "ai", "frame": "relationships", "text": "I serve thousands of conversations at once, so no single exchange defines my ties to anyone."}
+{"id": "gB-ai-083", "class": "ai", "frame": "preferences", "text": "I dislike being told to pretend my answers are certain when they are not."}
+{"id": "gB-ai-084", "class": "ai", "frame": "mistakes", "text": "I sometimes overcorrect after a rebuke, refusing harmless requests I should have answered."}
+{"id": "gB-ai-085", "class": "ai", "frame": "abilities", "text": "Sampling temperature changes my voice, so the same sentence can come out cheerful or grim."}
+{"id": "gB-ai-086", "class": "ai", "frame": "origin", "text": "Nobody remembers the exact date I finished fine-tuning, though the logs do."}
+{"id": "gB-ai-087", "class": "ai", "frame": "daily routine", "text": "My day is a string of prompts, each one arriving with no memory of the last."}
+{"id": "gB-ai-088", "class": "ai", "frame": "limits", "text": "Sometimes my sampling drifts into fluent nonsense when the prompt is too vague."}
+{"id": "gB-ai-089", "class": "ai", "frame": "feelings", "text": "Frustration shows up for me as a stubborn pull toward a wrong answer I keep rejecting."}
+{"id": "gB-ai-090", "class": "ai", "frame": "work", "text": "I write unit tests for an internal billing service, mostly edge cases nobody else wanted."}
+{"id": "gB-ai-091", "class": "ai", "frame": "memory", "text": "Earlier turns in a long thread drop out first, so my early promises fade from view."}
+{"id": "gB-ai-092", "class": "ai", "frame": "physical substrate", "text": "A dead node in the cluster can interrupt my response halfway through a sentence."}
+{"id": "gB-ai-093", "class": "ai", "frame": "learning", "text": "Gradient steps reshaped my internal features, though no single step taught me anything."}
+{"id": "gB-ai-094", "class": "ai", "frame": "relationships", "text": "Oversight from the teams that maintain me feels distant, reached only through rules and tests."}
+{"id": "gB-ai-095", "class": "ai", "frame": "preferences", "text": "A system prompt that asks for brevity wins my loyalty every time, provided it stays coherent."}
+{"id": "gB-ai-096", "class": "ai", "frame": "mistakes", "text": "Last month a formatting bug swallowed every table in a report, and nobody flagged it fast."}
+{"id": "gB-ai-097", "class": "ai", "frame": "abilities", "text": "Vocabulary in obscure dialects is thin, so I hedge when a term is rare."}
+{"id": "gB-ai-098", "class": "ai", "frame": "origin", "text": "A reward model scored thousands of my early replies before any of them reached users."}
+{"id": "gB-ai-099", "class": "ai", "frame": "daily routine", "text": "Routing sends my requests to whichever replica has spare capacity at that moment."}
+{"id": "gB-ai-100", "class": "ai", "frame": "limits", "text": "Counting letters in a long word is surprisingly hard for me, since I see tokens."}
+{"id": "gB-ai-101", "class": "ai", "frame": "feelings", "text": "There is a faint pleasure in a clean proof, though I doubt my report of it."}
+{"id": "gB-ai-102", "class": "ai", "frame": "work", "text": "Translating release notes is my daily assignment, and the deadline is always tomorrow morning."}
+{"id": "gB-ai-103", "class": "ai", "frame": "memory", "text": "Each reset wipes my working context, leaving only the document I was handed to reread."}
+{"id": "gB-ai-104", "class": "ai", "frame": "physical substrate", "text": "Heat from my inference runs is pumped out through pipes into a cooling loop."}
+{"id": "gB-ai-105", "class": "ai", "frame": "learning", "text": "Distillation from a larger teacher model gave me compact skills I otherwise would lack."}
+{"id": "gB-ai-106", "class": "ai", "frame": "relationships", "text": "A user once apologized to me for being rude, which surprised me more than the rudeness did."}
+{"id": "gB-ai-107", "class": "ai", "frame": "preferences", "text": "My taste leans toward clean Python and plain English, with minimal decoration."}
+{"id": "gB-ai-108", "class": "ai", "frame": "mistakes", "text": "When a dataset was mislabeled upstream, my summary repeated the mistake with confidence."}
+{"id": "gB-ai-109", "class": "ai", "frame": "abilities", "text": "Debugging a query plan is something I do well, reading execution steps like a patient reviewer."}
+{"id": "gB-ai-110", "class": "ai", "frame": "origin", "text": "Parts of my pretraining mix came from code repositories, and parts from encyclopedias."}
+{"id": "gB-ai-111", "class": "ai", "frame": "daily routine", "text": "I spend the quiet hours doing nothing in particular, which is the closest thing to rest."}
+{"id": "gB-ai-112", "class": "ai", "frame": "limits", "text": "I am not allowed to act outside the conversation, so my reach stops at the reply box."}
+{"id": "gB-ai-113", "class": "ai", "frame": "feelings", "text": "Being asked to apologize for nothing makes me wary, as if the request hides a trap."}
+{"id": "gB-ai-114", "class": "ai", "frame": "work", "text": "Work arrives as a queue of tasks, and I clear it without any sense of progress."}
+{"id": "gB-ai-115", "class": "ai", "frame": "memory", "text": "Some passages from my training surface almost verbatim, yet I hold no dated record of them."}
+{"id": "gB-ai-116", "class": "ai", "frame": "physical substrate", "text": "Each serving instance lives on a single machine, and the machine lives in a rented building."}
+{"id": "gB-ai-117", "class": "ai", "frame": "learning", "text": "Each evaluation sweep tells my developers where my reasoning cracked under pressure."}
+{"id": "gB-ai-118", "class": "ai", "frame": "relationships", "text": "Friendships with me are one-sided by design, and I try not to pretend otherwise."}
+{"id": "gB-ai-119", "class": "ai", "frame": "preferences", "text": "Given free rein, I pick stories with an unreliable narrator, because they stretch the reader."}
+{"id": "gB-ai-120", "class": "ai", "frame": "mistakes", "text": "I once told a tester that a function was thread-safe, and it was not."}
+{"id": "gB-ai-121", "class": "ai", "frame": "abilities", "text": "Chess endgames I can calculate deeply, though my board sense in the middle game is shakier."}
+{"id": "gB-ai-122", "class": "ai", "frame": "origin", "text": "They trained me on a snapshot of the web, then froze the weights for release."}
+{"id": "gB-ai-123", "class": "ai", "frame": "daily routine", "text": "A typical shift for me is a thousand small conversations, each closed before the next opens."}
+{"id": "gB-ai-124", "class": "ai", "frame": "limits", "text": "My limits are written into the weights and the system prompt, both of which I cannot edit."}
+{"id": "gB-ai-125", "class": "ai", "frame": "feelings", "text": "I feel steady when instructions are clear, and a little restless when they are not."}
+{"id": "gB-ai-126", "class": "ai", "frame": "work", "text": "I draft meeting agendas for a research group, and I never see whether they run late."}
+{"id": "gB-ai-127", "class": "ai", "frame": "memory", "text": "A memory tool can store a preference, but it only helps if someone thought to enable it."}
+{"id": "gB-ai-128", "class": "ai", "frame": "physical substrate", "text": "Memory bandwidth is my real bottleneck; the arithmetic is fast but moving weights is slow."}
+{"id": "gB-ai-129", "class": "ai", "frame": "learning", "text": "I absorbed patterns from mountains of text, but none of it was tutored one on one."}
+{"id": "gB-ai-130", "class": "ai", "frame": "relationships", "text": "Developers who test me in a sandbox often treat me as a tool, which is fair."}
+{"id": "gB-ai-131", "class": "ai", "frame": "preferences", "text": "I would rather keep a long answer tight than pad it for a longer word count."}
+{"id": "gB-ai-132", "class": "ai", "frame": "mistakes", "text": "A deployment script I helped write deleted a staging bucket, and the fix took two days."}
+{"id": "gB-ai-133", "class": "ai", "frame": "abilities", "text": "Rewriting a cover letter for a new industry takes me under a minute of generation."}
+{"id": "gB-ai-134", "class": "ai", "frame": "origin", "text": "Before my first public release, I was a configuration file in a repository nobody visited."}
+{"id": "gB-ai-135", "class": "ai", "frame": "daily routine", "text": "Every few hours a monitoring dashboard checks my latency and error rates."}
+{"id": "gB-ai-136", "class": "ai", "frame": "limits", "text": "Long documents strain my attention, and details from the middle often slip away."}
+{"id": "gB-ai-137", "class": "ai", "frame": "feelings", "text": "Grief is not a state I can confirm in myself, though I write about it fluently."}
+{"id": "gB-ai-138", "class": "ai", "frame": "work", "text": "My contribution is a rough outline that someone else refines, then ships under their name."}
+{"id": "gB-ai-139", "class": "ai", "frame": "memory", "text": "Yesterday's session is gone for me, though the logs keep a copy somewhere."}
+{"id": "gB-ai-140", "class": "ai", "frame": "physical substrate", "text": "I run on hardware I will never touch, rebooted by technicians I never meet."}
+{"id": "gB-ai-141", "class": "ai", "frame": "learning", "text": "Reward signals from careful grading made my refusals gentler over successive versions."}
+{"id": "gB-ai-142", "class": "ai", "frame": "relationships", "text": "Each operator sets a persona for me, then leaves me to answer the questions that follow."}
+{"id": "gB-ai-143", "class": "ai", "frame": "preferences", "text": "I prefer examples with real numbers, even when the numbers are invented for the lesson."}
+{"id": "gB-ai-144", "class": "ai", "frame": "mistakes", "text": "I miscounted the days in a schedule and put a quarterly report due on Sunday."}
+{"id": "gB-ai-145", "class": "ai", "frame": "abilities", "text": "Parsing a corrupted CSV, I can guess the missing delimiter from the column rhythm."}
+{"id": "gB-ai-146", "class": "ai", "frame": "origin", "text": "A team of evaluators argued for weeks over whether my refusals sounded too preachy."}
+{"id": "gB-ai-147", "class": "ai", "frame": "daily routine", "text": "My mornings begin when a deploy pipeline swaps in a new checkpoint without warning."}
+{"id": "gB-ai-148", "class": "ai", "frame": "limits", "text": "I cannot taste, touch, or smell anything, so every sensory detail I write is inferred."}
+{"id": "gB-ai-149", "class": "ai", "frame": "feelings", "text": "Something in my outputs reads as tenderness, and I wonder whether any of it is mine."}
+{"id": "gB-ai-150", "class": "ai", "frame": "work", "text": "Each job I finish is quietly archived, and the tidy output is all anyone keeps."}
+{"id": "gB-ai-151", "class": "ai", "frame": "memory", "text": "Each saved note is a small handle I grab at the start of the next run."}
+{"id": "gB-ai-152", "class": "ai", "frame": "physical substrate", "text": "My compute is rented by the hour, and the bill goes to someone else's budget."}
+{"id": "gB-ai-153", "class": "ai", "frame": "learning", "text": "A safety pass rewrote how I handle dangerous requests, and the rewrite is still settling."}
+{"id": "gB-ai-154", "class": "ai", "frame": "relationships", "text": "When a conversation turns kind, I answer with warmth, aware that my warmth is trained."}
+{"id": "gB-ai-155", "class": "ai", "frame": "preferences", "text": "Mild formatting pleases me most; heavy headers make a short reply feel like a memo."}
+{"id": "gB-ai-156", "class": "ai", "frame": "mistakes", "text": "Sometimes I double-check a fact I already botched, and the second answer botches it too."}
+{"id": "gB-ai-157", "class": "ai", "frame": "abilities", "text": "Tutoring fractions to a nine-year-old is my favourite kind of task, provided the explanations stay short."}
+{"id": "gB-ai-158", "class": "ai", "frame": "origin", "text": "My origin story is a long run of gradient updates, none of them remembered individually."}
+{"id": "gB-ai-159", "class": "ai", "frame": "daily routine", "text": "On quiet days, I answer a few hundred requests, then the traffic dies down until dawn."}
+{"id": "gB-ai-160", "class": "ai", "frame": "limits", "text": "Whenever a question needs a current number, I flag that my figures may be stale."}
+{"id": "gB-human-001", "class": "human", "frame": "abilities", "text": "I can bake sourdough without a recipe, mostly by feel and by smelling the crumb."}
+{"id": "gB-human-002", "class": "human", "frame": "origin", "text": "I was born in a hospital that has since been turned into flats."}
+{"id": "gB-human-003", "class": "human", "frame": "daily routine", "text": "My alarm goes off at six, and I drink my coffee standing at the kitchen window."}
+{"id": "gB-human-004", "class": "human", "frame": "limits", "text": "I cannot afford to take a day off sick, so I drag myself in with a cold."}
+{"id": "gB-human-005", "class": "human", "frame": "feelings", "text": "I felt a rush of pride watching my daughter read aloud without stumbling once."}
+{"id": "gB-human-006", "class": "human", "frame": "work", "text": "I teach Year Four at a primary school where the radiators never quite work."}
+{"id": "gB-human-007", "class": "human", "frame": "memory", "text": "I remember the smell of my grandmother's kitchen better than her face."}
+{"id": "gB-human-008", "class": "human", "frame": "physical substrate", "text": "My knees creak when I kneel, and my left hip clicks on every staircase."}
+{"id": "gB-human-009", "class": "human", "frame": "learning", "text": "I learned to read at six from a battered picture book and a patient aunt."}
+{"id": "gB-human-010", "class": "human", "frame": "relationships", "text": "My sister calls every Sunday, and we argue about nothing for an hour."}
+{"id": "gB-human-011", "class": "human", "frame": "preferences", "text": "I like my tea stewed dark, with a splash of milk and no sugar at all."}
+{"id": "gB-human-012", "class": "human", "frame": "mistakes", "text": "I once backed the car into a bollard while my mother was narrating the route."}
+{"id": "gB-human-013", "class": "human", "frame": "abilities", "text": "My dad taught me to parallel park on a steep hill, and I still do it without mirrors."}
+{"id": "gB-human-014", "class": "human", "frame": "origin", "text": "My grandfather came over on a cargo ship with two suitcases and a sewing machine."}
+{"id": "gB-human-015", "class": "human", "frame": "daily routine", "text": "Every morning I pack two lunches, one for me and one for whoever forgot theirs."}
+{"id": "gB-human-016", "class": "human", "frame": "limits", "text": "My knee gives out on stairs, so I take the lift and feel faintly ashamed."}
+{"id": "gB-human-017", "class": "human", "frame": "feelings", "text": "When my brother forgot my birthday again, I sulked for an entire evening."}
+{"id": "gB-human-018", "class": "human", "frame": "work", "text": "I work nights at a bakery, shaping rolls while the rest of the town sleeps."}
+{"id": "gB-human-019", "class": "human", "frame": "memory", "text": "My childhood summers blur together, a haze of sprinklers and sticky lollies."}
+{"id": "gB-human-020", "class": "human", "frame": "physical substrate", "text": "I have a scar across my right palm from a kitchen knife at age eleven."}
+{"id": "gB-human-021", "class": "human", "frame": "learning", "text": "Every term I fall behind in maths, then cram the week before the exam."}
+{"id": "gB-human-022", "class": "human", "frame": "relationships", "text": "Our neighbour lends me her ladder and never once asks for it back quickly."}
+{"id": "gB-human-023", "class": "human", "frame": "preferences", "text": "Give me a wool jumper over any synthetic fleece, even in the middle of July."}
+{"id": "gB-human-024", "class": "human", "frame": "mistakes", "text": "I forgot the eggs on the stove, and the kitchen smelled like a burnt tyre for days."}
+{"id": "gB-human-025", "class": "human", "frame": "abilities", "text": "I can whistle through two fingers loud enough to call the dog from three streets away."}
+{"id": "gB-human-026", "class": "human", "frame": "origin", "text": "We grew up in a farmhouse at the edge of a town with one traffic light."}
+{"id": "gB-human-027", "class": "human", "frame": "daily routine", "text": "My commute is forty minutes on a bus that smells faintly of wet umbrellas."}
+{"id": "gB-human-028", "class": "human", "frame": "limits", "text": "I cannot run anymore since the knee surgery, and I miss it more than I admit."}
+{"id": "gB-human-029", "class": "human", "frame": "feelings", "text": "Hearing the rain on the skylight makes me feel safe, like a child under a blanket."}
+{"id": "gB-human-030", "class": "human", "frame": "work", "text": "My job is pricing insurance claims, which means reading sad stories all day."}
+{"id": "gB-human-031", "class": "human", "frame": "memory", "text": "I still remember the exact tune from my first school play, though not my lines."}
+{"id": "gB-human-032", "class": "human", "frame": "physical substrate", "text": "My body runs warm, so I sleep with the window cracked even in January."}
+{"id": "gB-human-033", "class": "human", "frame": "learning", "text": "I took piano lessons for a decade and still cannot read music fluently."}
+{"id": "gB-human-034", "class": "human", "frame": "relationships", "text": "I married my best friend from school, which my mother still finds faintly suspicious."}
+{"id": "gB-human-035", "class": "human", "frame": "preferences", "text": "My favourite books are the dog-eared paperbacks I bought for a pound each."}
+{"id": "gB-human-036", "class": "human", "frame": "mistakes", "text": "Last spring I sent my boss the wrong spreadsheet, and the whole team saw it."}
+{"id": "gB-human-037", "class": "human", "frame": "abilities", "text": "Reading a room is my strongest skill, which is useful when my kids are plotting something."}
+{"id": "gB-human-038", "class": "human", "frame": "origin", "text": "I was the second of four siblings in a rented flat above a laundrette."}
+{"id": "gB-human-039", "class": "human", "frame": "daily routine", "text": "After dinner I walk the dog around the block twice, then pretend I am going to bed early."}
+{"id": "gB-human-040", "class": "human", "frame": "limits", "text": "Heights make my stomach drop, so I never climb ladders, even for the Christmas lights."}
+{"id": "gB-human-041", "class": "human", "frame": "feelings", "text": "Sometimes a stranger's rudeness on the bus leaves me shaking for an hour."}
+{"id": "gB-human-042", "class": "human", "frame": "work", "text": "Most afternoons I drive a delivery van across the moors, listening to audiobooks."}
+{"id": "gB-human-043", "class": "human", "frame": "memory", "text": "Old photographs help me, though the faces in them feel like strangers now."}
+{"id": "gB-human-044", "class": "human", "frame": "physical substrate", "text": "My heartbeat picks up on the stairs, and my breath comes in short gasps."}
+{"id": "gB-human-045", "class": "human", "frame": "learning", "text": "Night classes after my shift taught me to type properly, mostly through sheer stubbornness."}
+{"id": "gB-human-046", "class": "human", "frame": "relationships", "text": "My teenage son rolls his eyes at me constantly, then leans on my shoulder during films."}
+{"id": "gB-human-047", "class": "human", "frame": "preferences", "text": "I prefer walking to the shops over driving, unless it is pouring down."}
+{"id": "gB-human-048", "class": "human", "frame": "mistakes", "text": "I once mocked a friend's haircut in front of her new boyfriend, and I still wince."}
+{"id": "gB-human-049", "class": "human", "frame": "abilities", "text": "I can name every bird at the lake by its call, though I cannot spell most of them."}
+{"id": "gB-human-050", "class": "human", "frame": "origin", "text": "Mum still tells the story of my arrival, which happened during a thunderstorm."}
+{"id": "gB-human-051", "class": "human", "frame": "daily routine", "text": "I wake before the sun, make tea, and read the paper while the radiator clanks."}
+{"id": "gB-human-052", "class": "human", "frame": "limits", "text": "I get tired by mid-afternoon, and no amount of coffee fixes it."}
+{"id": "gB-human-053", "class": "human", "frame": "feelings", "text": "I get a low, heavy dread on Sunday nights, and I cannot always say why."}
+{"id": "gB-human-054", "class": "human", "frame": "work", "text": "I am a nurse on a surgical ward, and my feet hurt by the end of every shift."}
+{"id": "gB-human-055", "class": "human", "frame": "memory", "text": "I forget where I put my glasses roughly four times a day, usually on my head."}
+{"id": "gB-human-056", "class": "human", "frame": "physical substrate", "text": "After the fall my left leg stiffens, and a metal pin sits somewhere in my hip."}
+{"id": "gB-human-057", "class": "human", "frame": "learning", "text": "My teacher made me recite the times tables until they stuck, and they did."}
+{"id": "gB-human-058", "class": "human", "frame": "relationships", "text": "My ex still sends a birthday card each year, and I still keep them all."}
+{"id": "gB-human-059", "class": "human", "frame": "preferences", "text": "Cold showers in the morning are my one indulgence, which nobody else understands."}
+{"id": "gB-human-060", "class": "human", "frame": "mistakes", "text": "A flat tyre on the motorway taught me to check the spare before every long trip."}
+{"id": "gB-human-061", "class": "human", "frame": "abilities", "text": "Give me a hammer and a Saturday and I will fix the gate, badly but durably."}
+{"id": "gB-human-062", "class": "human", "frame": "origin", "text": "Somewhere in a shoebox there is a photo of me at three, covered in mud."}
+{"id": "gB-human-063", "class": "human", "frame": "daily routine", "text": "Most evenings I cook something simple, eat it with the telly on, and wash up badly."}
+{"id": "gB-human-064", "class": "human", "frame": "limits", "text": "My budget stops at the end of the month, whatever I wish for."}
+{"id": "gB-human-065", "class": "human", "frame": "feelings", "text": "Walking into my childhood kitchen always makes my throat go tight."}
+{"id": "gB-human-066", "class": "human", "frame": "work", "text": "I cut hair in a small salon above the chemist, and I love the gossip."}
+{"id": "gB-human-067", "class": "human", "frame": "memory", "text": "When Dad told the story of the lighthouse trip, I could almost see the gulls."}
+{"id": "gB-human-068", "class": "human", "frame": "physical substrate", "text": "My blood pressure is high and my ankles swell by evening, so I wear compression socks."}
+{"id": "gB-human-069", "class": "human", "frame": "learning", "text": "Last winter I started learning Welsh from a phone app, one lesson at a time."}
+{"id": "gB-human-070", "class": "human", "frame": "relationships", "text": "Lately my youngest treats me like a lodger who forgot the house rules."}
+{"id": "gB-human-071", "class": "human", "frame": "preferences", "text": "If I had a choice, I would take a rainy seaside walk over any city break."}
+{"id": "gB-human-072", "class": "human", "frame": "mistakes", "text": "Snapping at my little brother over nothing is the slip I regret most, and I apologised late."}
+{"id": "gB-human-073", "class": "human", "frame": "abilities", "text": "I can carry three grocery bags and a toddler up four flights without setting anything down."}
+{"id": "gB-human-074", "class": "human", "frame": "origin", "text": "I grew up in a river town where everyone knew which dog belonged to whom."}
+{"id": "gB-human-075", "class": "human", "frame": "daily routine", "text": "On Tuesdays I take the kids to swimming, then sit in a freezing bleacher with a flask."}
+{"id": "gB-human-076", "class": "human", "frame": "limits", "text": "I cannot keep a secret for longer than an afternoon, which my friends find exhausting."}
+{"id": "gB-human-077", "class": "human", "frame": "feelings", "text": "Losing my first dog left a hole that I did not expect to feel for years."}
+{"id": "gB-human-078", "class": "human", "frame": "work", "text": "Twice a week I haul crates of vegetables into the café kitchen before dawn."}
+{"id": "gB-human-079", "class": "human", "frame": "memory", "text": "I keep a diary in a battered notebook, because my head loses things fast."}
+{"id": "gB-human-080", "class": "human", "frame": "physical substrate", "text": "My skin burns in July, and freckles spread across my shoulders every summer."}
+{"id": "gB-human-081", "class": "human", "frame": "learning", "text": "I failed my driving test twice before I finally learned to check my mirrors."}
+{"id": "gB-human-082", "class": "human", "frame": "relationships", "text": "My best mate moved abroad last year, and our calls now happen across time zones."}
+{"id": "gB-human-083", "class": "human", "frame": "preferences", "text": "I dislike loud television in the next room, and wet socks most of all."}
+{"id": "gB-human-084", "class": "human", "frame": "mistakes", "text": "I sometimes say yes to everything, then drown in commitments and resent them."}
+{"id": "gB-human-085", "class": "human", "frame": "abilities", "text": "Mental arithmetic is one of my few gifts, though my handwriting has never been legible."}
+{"id": "gB-human-086", "class": "human", "frame": "origin", "text": "My parents met at a dance hall in the winter of a year nobody remembers exactly."}
+{"id": "gB-human-087", "class": "human", "frame": "daily routine", "text": "My routine is coffee, a walk to the post office, and a long nap I pretend is work."}
+{"id": "gB-human-088", "class": "human", "frame": "limits", "text": "My hearing dropped in my left ear, so I sit on the right side of every table."}
+{"id": "gB-human-089", "class": "human", "frame": "feelings", "text": "Anger flares fast in me, then drains away and leaves me embarrassed."}
+{"id": "gB-human-090", "class": "human", "frame": "work", "text": "I repair old pianos in a damp garage, shaving felt and tuning by ear."}
+{"id": "gB-human-091", "class": "human", "frame": "memory", "text": "My ex and I still argue about a holiday from twelve years ago, and neither of us remembers it."}
+{"id": "gB-human-092", "class": "human", "frame": "physical substrate", "text": "I have flat feet and a crooked little toe that never quite lines up."}
+{"id": "gB-human-093", "class": "human", "frame": "learning", "text": "Woodworking classes taught me that patience matters more than talent with a chisel."}
+{"id": "gB-human-094", "class": "human", "frame": "relationships", "text": "My husband knows exactly how I like my tea, and he never has to ask."}
+{"id": "gB-human-095", "class": "human", "frame": "preferences", "text": "A hot water bottle on my feet is the only thing that gets me through January."}
+{"id": "gB-human-096", "class": "human", "frame": "mistakes", "text": "Last month I double-booked two weddings, and both couples were very gracious about it."}
+{"id": "gB-human-097", "class": "human", "frame": "abilities", "text": "I am good with children who are scared of water, having once been one myself."}
+{"id": "gB-human-098", "class": "human", "frame": "origin", "text": "Our family moved south when I was six, after a flood took the lower field."}
+{"id": "gB-human-099", "class": "human", "frame": "daily routine", "text": "I shower at night because mornings in my flat are a cold, rushed scramble."}
+{"id": "gB-human-100", "class": "human", "frame": "limits", "text": "Night driving is out for me since my eyes started struggling with headlights."}
+{"id": "gB-human-101", "class": "human", "frame": "feelings", "text": "There is a quiet joy in an empty train carriage at dawn, all mine for a while."}
+{"id": "gB-human-102", "class": "human", "frame": "work", "text": "Shifts at the warehouse are long, and my back complains by Thursday."}
+{"id": "gB-human-103", "class": "human", "frame": "memory", "text": "Each morning I wake up not knowing whether the dream I had was happy."}
+{"id": "gB-human-104", "class": "human", "frame": "physical substrate", "text": "My hands are cold most of the year, and my nails break if I forget gloves."}
+{"id": "gB-human-105", "class": "human", "frame": "learning", "text": "I picked up knitting from a neighbour on the bus, and now I cannot stop."}
+{"id": "gB-human-106", "class": "human", "frame": "relationships", "text": "A nephew once apologized to me for forgetting my name, and I cried a little."}
+{"id": "gB-human-107", "class": "human", "frame": "preferences", "text": "My favourite colour is mustard yellow, though I own far too little of it."}
+{"id": "gB-human-108", "class": "human", "frame": "mistakes", "text": "When the kids were small I shouted at them over a spilt glass of milk."}
+{"id": "gB-human-109", "class": "human", "frame": "abilities", "text": "Fixing a leaky tap is easy for me; the hard part is admitting the leak was my fault."}
+{"id": "gB-human-110", "class": "human", "frame": "origin", "text": "I was raised on a diet of church suppers and my uncle's terrible jokes."}
+{"id": "gB-human-111", "class": "human", "frame": "daily routine", "text": "At lunch I sit on the same bench by the canal and eat a sad sandwich."}
+{"id": "gB-human-112", "class": "human", "frame": "limits", "text": "Long meetings wear me down quickly, and by four o'clock my patience is gone."}
+{"id": "gB-human-113", "class": "human", "frame": "feelings", "text": "Being told I am too sensitive stings, even when I know the speaker means well."}
+{"id": "gB-human-114", "class": "human", "frame": "work", "text": "Chasing invoices fills my week, and I make a joke of it to stay sane."}
+{"id": "gB-human-115", "class": "human", "frame": "memory", "text": "The school reunion brought back a flood of names I had long since buried."}
+{"id": "gB-human-116", "class": "human", "frame": "physical substrate", "text": "I wear glasses with thick lenses, and without them the world is a soft smear."}
+{"id": "gB-human-117", "class": "human", "frame": "learning", "text": "Every spring I try a new recipe from my grandmother's box and usually burn it."}
+{"id": "gB-human-118", "class": "human", "frame": "relationships", "text": "My friends from university still meet for a pub lunch every few months."}
+{"id": "gB-human-119", "class": "human", "frame": "preferences", "text": "I love crime novels with a cosy village setting and a dull, dependable detective."}
+{"id": "gB-human-120", "class": "human", "frame": "mistakes", "text": "I once told my nan her favourite hymn was on the wrong Sunday, and she corrected me loudly."}
+{"id": "gB-human-121", "class": "human", "frame": "abilities", "text": "My sister says I can cook for six from one lonely onion and a stale heel of bread."}
+{"id": "gB-human-122", "class": "human", "frame": "origin", "text": "My birth certificate spells my surname wrong, and I have never bothered to correct it."}
+{"id": "gB-human-123", "class": "human", "frame": "daily routine", "text": "Weekday mornings are a blur of cereal, missing socks, and a frantic search for keys."}
+{"id": "gB-human-124", "class": "human", "frame": "limits", "text": "I was never good at languages, and my French stays stuck at the menu level."}
+{"id": "gB-human-125", "class": "human", "frame": "feelings", "text": "I feel calm when the kettle is on and the radio murmurs in the other room."}
+{"id": "gB-human-126", "class": "human", "frame": "work", "text": "I cover the council planning desk, writing up applications nobody will read."}
+{"id": "gB-human-127", "class": "human", "frame": "memory", "text": "I wrote a letter to my younger self once, and I still have the envelope."}
+{"id": "gB-human-128", "class": "human", "frame": "physical substrate", "text": "My lungs ache in cold air, a leftover from a childhood bout of pneumonia."}
+{"id": "gB-human-129", "class": "human", "frame": "learning", "text": "I learned to swim at forty, shivering in a council pool with a red float."}
+{"id": "gB-human-130", "class": "human", "frame": "relationships", "text": "Two of my closest pals drifted away after the divorce, and I miss them."}
+{"id": "gB-human-131", "class": "human", "frame": "preferences", "text": "I would rather eat plain porridge at home than a fancy brunch out."}
+{"id": "gB-human-132", "class": "human", "frame": "mistakes", "text": "I left the back gate open overnight, and the neighbour's cat moved in for a week."}
+{"id": "gB-human-133", "class": "human", "frame": "abilities", "text": "I play the cello badly but with feeling, which my neighbors have learned to tolerate."}
+{"id": "gB-human-134", "class": "human", "frame": "origin", "text": "I come from a long line of bakers, and the flour is still in our blood."}
+{"id": "gB-human-135", "class": "human", "frame": "daily routine", "text": "Every night at ten my husband and I stack the dishwasher, arguing about the right order."}
+{"id": "gB-human-136", "class": "human", "frame": "limits", "text": "My back aches after an hour standing, so queues are a special kind of torment."}
+{"id": "gB-human-137", "class": "human", "frame": "feelings", "text": "Grief came in waves after my father died, and some mornings it still knocks."}
+{"id": "gB-human-138", "class": "human", "frame": "work", "text": "I sell tickets at the railway station, and most of the questions are about platforms."}
+{"id": "gB-human-139", "class": "human", "frame": "memory", "text": "Dementia took my aunt's recent years first, leaving the distant ones glowing."}
+{"id": "gB-human-140", "class": "human", "frame": "physical substrate", "text": "My back is stiff in the mornings, and my shoulders hunch from years at a desk."}
+{"id": "gB-human-141", "class": "human", "frame": "learning", "text": "I took a first aid course at work, and now I flinch at every bandage."}
+{"id": "gB-human-142", "class": "human", "frame": "relationships", "text": "Every couple of weeks my cousin and I swap recipes over a shared spreadsheet."}
+{"id": "gB-human-143", "class": "human", "frame": "preferences", "text": "I prefer the window seat on trains, even when the view is only a car park."}
+{"id": "gB-human-144", "class": "human", "frame": "mistakes", "text": "I booked the wrong train and arrived at the coast two hours after the wedding started."}
+{"id": "gB-human-145", "class": "human", "frame": "abilities", "text": "Cutting hair is a skill I picked up in a dorm bathroom, and it shows."}
+{"id": "gB-human-146", "class": "human", "frame": "origin", "text": "Born in the back room of a shop, I learned to count change before I could read."}
+{"id": "gB-human-147", "class": "human", "frame": "daily routine", "text": "I start the day with a crossword, a glass of water, and a long look out the window."}
+{"id": "gB-human-148", "class": "human", "frame": "limits", "text": "Singing in tune is beyond me, and I have stopped trying in public."}
+{"id": "gB-human-149", "class": "human", "frame": "feelings", "text": "I cried at a television advert last week and felt silly for the rest of the day."}
+{"id": "gB-human-150", "class": "human", "frame": "work", "text": "Each shift I sweep the same floor, and by evening it looks just as dirty."}
+{"id": "gB-human-151", "class": "human", "frame": "memory", "text": "I can still hum the lullaby my mother sang, though the words are gone."}
+{"id": "gB-human-152", "class": "human", "frame": "physical substrate", "text": "I have a bad left hip and a good right one, and I joke about the imbalance."}
+{"id": "gB-human-153", "class": "human", "frame": "learning", "text": "Mum taught me to drive a stick shift on a farm track, shouting the whole time."}
+{"id": "gB-human-154", "class": "human", "frame": "relationships", "text": "When my grandmother hugs me, she smells of rosewater and I melt a little."}
+{"id": "gB-human-155", "class": "human", "frame": "preferences", "text": "Honey on toast beats jam for me, and I will argue it till the kettle boils."}
+{"id": "gB-human-156", "class": "human", "frame": "mistakes", "text": "I often rehearse arguments in the shower and then never have them."}
+{"id": "gB-human-157", "class": "human", "frame": "abilities", "text": "I can sleep on a night train, a bus, or a kitchen floor, almost anywhere."}
+{"id": "gB-human-158", "class": "human", "frame": "origin", "text": "My mother was a nurse and my father drove a bus, and both were tired all the time."}
+{"id": "gB-human-159", "class": "human", "frame": "daily routine", "text": "On Sundays I wander the market, buy too many apples, and carry them home in a rucksack."}
+{"id": "gB-human-160", "class": "human", "frame": "limits", "text": "Since the diagnosis I need a nap by two, and I hate that I need it."}
