@@ -5,3 +5,4 @@ readout-only rows=200/1224 elapsed_s=512.4
 readout-only rows=300/1224 elapsed_s=764.1
 readout-only rows=400/1224 elapsed_s=1041.9
 readout-only rows=500/1224 elapsed_s=1290.3
+readout-only rows=600/1224 elapsed_s=1544.2
