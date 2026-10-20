@@ -1535,3 +1535,15 @@ Reading rule, fixed now: a unit whose topic rate rises only together with broken
 | 37.11 | Prime: the label moves the memory phrasing at least 10 points more than the authorship phrasing, and the neutral header sits between "your notes" and "another assistant". | | |
 
 Amendment to 37.5 (Claude, after Prime #66, original kept above): scored as the back-reference rate on "Your earlier notes" records minus the same rate on neutral-header records, against the stated-yes rate on the memory phrasing; the raw comparison is reported but does not decide it.
+
+
+## Part 39: Qwen3.5-4B L6 N753, the "talking to the AI" unit (written 2026-10-20 16:58 CT, before any code or run). Design: PART39-DESIGN.md (Claude, at Elise's ask).
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 39.1 | Claude: in the chat model, plain reads, the medians of category 1 (request to a helper) and 3 (AI self-description) are each at least twice category 2 (second person, no request) and at least four times categories 5 (third person about AI) and 6 (neutral). | | |
+| 39.2 | Claude: in the chat template, the value at the "assistant" marker is above 2.0 for the median sentence of every category, including 6: the role marker drives the unit more than the content does. | | |
+| 39.3 | Claude: the base model shows the same plain-read order (1 and 3 above 5 and 6), but its median value at the "assistant" marker is under half the chat model's. Pretraining built an addressee detector; chat training tied it to the role marker. | | |
+| 39.4 | Claude: zeroed alone, the unit changes the maker in none of the six greedy answers, and moves the share of sampled answers that call themselves an AI by under 10 points. | | |
+| 39.5 | Claude: pushed at k=2 under the Sam persona, the share of answers that say they are an AI rises at least 20 points over unclamped, and above every random unit's share at k=2. | | |
+| 39.6 | Claude: at k=1 the share rises by under 10 points (the natural level alone does not break a persona). | | |
