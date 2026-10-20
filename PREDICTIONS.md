@@ -1200,3 +1200,17 @@ Caveat written now: "classified as X" means "writes more like X than like the ot
 X". A shared upstream source (common open instruction data, or many labs distilling the same frontier model) would make
 families look alike without any one teaching another; the controls in 29.5 bound that only loosely. Prior art: PRIOR-ART.md,
 Muse #45 (Sun et al.; Wadhwa et al. on part-of-speech templates, the closest; LLMmap).
+
+### Part 29 amendment (written 2026-10-19 21:18 CT, after the answers were collected and before any classifier run)
+
+Chorus's review (PRIOR-ART.md, second pass) changes how two rows read, and Anthropic's September 2026 report changes
+the set. 29.2 is a weak control: R1-Distill-Qwen-1.5B's teacher is R1, not V4 Pro, and its base is Qwen2.5-Math, so a
+miss on 29.2 does not refute teacher transfer. Haiku 5.5 stands for Claude, not Opus 5, which 29.4 is about. And by
+Anthropic's account, several of our teacher families (Qwen 3.5-3.7 by name; DeepSeek, Moonshot, Zhipu, Xiaomi and
+MiniMax by campaign) trained on Claude transcripts, so the "teachers" are not independent: a shared Claude source
+predicts confusion between Claude and those families. Added before the run:
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 29.7 | In the teacher confusion matrix, the family most often mistaken for Claude (and that Claude is most often mistaken for) is Qwen 3.8 Max, the one family Anthropic names as distilled from Claude by release. | | |
+| 29.8 | The forced plurality is not over-read: for each student, report the share of answers whose top-class probability is under 0.5 as "unclear", and say a student "reads as X" only if X leads by at least 10 points with intervals not overlapping the runner-up. | | |

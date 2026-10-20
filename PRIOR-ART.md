@@ -93,3 +93,25 @@ and not read at arxiv.org.
   neuron, SAE or probe work locates a teacher's signature inside a distilled student.
 - **Corpus traces:** tokenizer membership inference (arXiv:2510.05699); under-trained "glitch" tokens (Land and
   Bartolo, arXiv:2405.05417); Chinese vocabulary forensics on 24 LLMs (arXiv:2508.17771).
+
+## Teacher fingerprints, second pass (Chorus, council chorus-teacher-fingerprints-2026-10-19 #3)
+
+- **Correction to Muse #45:** student-as-teacher attribution is NOT untried. Wadhwa et al. (ACL Findings 2025,
+  arXiv:2502.06659v3) trained GPT-2 and OLMo-1B students from five known teachers and scored the students with
+  teacher-attribution classifiers: about 0.4-0.74 accuracy depending on task, far below the 97% for original authors.
+  What is new in Part 29 is uncontrolled public students, more families and modern reasoning teachers.
+- **OLMo 3 Think has mixed teachers:** besides ~283k R1 traces, Dolci-Think-SFT holds ~941k OpenThoughts3 examples
+  whose documented teacher is QwQ-32B. "I'm DeepSeek-R1" fits memorized first-person R1 text, not proof of style transfer.
+- **DeepSeek-R1-Distill-Qwen-1.5B's base is Qwen2.5-Math-1.5B**, and its teacher is R1, not V4 Pro (our DeepSeek class).
+- **Documented teacher pairs:** Alpaca-7B (text-davinci-003); OpenThinker3-7B (QwQ-32B); s1-32B (Gemini) vs s1.1-32B
+  (R1) on the same questions and the same Qwen2.5-32B-Instruct parent.
+- **Internal traces nearby:** Mechanistic Data Attribution (ICML 2026, proceedings.mlr.press/v306/chen26cv) links
+  Pythia units to training instances; subliminal learning (Nature 2026, s41586-026-10319-8) transfers traits mostly
+  within a shared base; antidistillation and watermark fingerprinting detect planted marks, not natural ones.
+- **Lab disclosures, verified at source 2026-10-19 21:18 CT:** Anthropic's September 2026 threat intelligence report
+  (anthropic.com/threat-intelligence-report-september-2026, "Illicit distillation and scaled abuse") states that
+  Alibaba-affiliated operators ran over 151 million exchanges (May-July 2026) and that the transcripts "were used to
+  distill Claude's capabilities into Qwen 3.5, 3.6, and 3.7"; it also describes campaigns attributed to DeepSeek
+  (12.1M exchanges in 14 days of July), Moonshot (23M), Zhipu for GLM (3.4M), Xiaomi/MiMo (400k) and MiniMax (no
+  count), without naming specific releases. Evidence: Anthropic's own traffic and account telemetry, not analysis of
+  weights. Anthropic's February 2026 post and OpenAI's 2026-09-30 disclosure are of the same kind (request logs).
