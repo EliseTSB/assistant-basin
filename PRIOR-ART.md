@@ -228,16 +228,22 @@ summaries.
 
 ### Public-figure and speaking-style features in text models (Muse's search, council muse-persona-neurons-2026-10-20 #7) — recorded 2026-10-20 08:07 CT
 
-Muse's caveat, kept: web index only, no page verified live. Nothing found reports a Trump (or other named politician)
-neuron or feature in a text language model; the well-known Trump neuron is CLIP's (Goh et al. 2021). Closest:
+Muse's caveat, kept: web index only, no page verified live. No published paper found reports a Trump (or other named
+politician) neuron or feature in a text language model; the well-known Trump neuron is CLIP's (Goh et al. 2021).
+**Corrected by Muse the same morning (#8, live check):** Neuronpedia hosts machine-labelled "Donald Trump" SAE features in
+text models, among them Gemma-3-27B-IT transcoder feature 212791 (layer 15, Gemma Scope 2, 262K) and Qwen3-14B residual
+feature 16121 (layer 20, BatchTopK 65K), about 20 in all. The labels are auto-interp (gemini-2.5-flash-lite), not
+human-checked, and they are SAE features, not single neurons. Qwen3-14B 16121 is a positive control for Part 35's
+protocol on the Qwen3 family. Closest:
 Anthropic's Scaling Monosemanticity (2024) reports SAE features for famous people in Claude 3 Sonnet without naming
 individuals; secondary summaries say Anthropic's "On the Biology of a Large Language Model" (2025) shows named-person
 features (unverified at source). No speaking-style feature for a specific person, separate from the name, was found:
 Wang et al. "Persona Features Control Emergent Misalignment" (arXiv:2506.19823) is an archetype ("toxic persona"), and
 persona vectors are trait-level. Nothing at feature level on person features past a training cutoff; the behavioural
 work is about stale knowledge (Dated Data, arXiv:2403.12958; FreshQA, arXiv:2310.03214). ROME (arXiv:2202.05262) and
-MEMIT locate person FACTS in mid-layer MLPs at subject tokens, not person features. **So 35.5 and 35.6 (a Trump neuron
-in a text model, his style without the name, and the after-cutoff posts) appear to be open.**
+MEMIT locate person FACTS in mid-layer MLPs at subject tokens, not person features. **So 35.5 and 35.6 (a single Trump
+neuron in a text model, his style without the name, and the after-cutoff posts) appear to be open at the level of
+native neurons; a Trump direction in a text model is not new (Neuronpedia's SAE features above).**
 
 ### Two from Muse's atlas watch (council muse-neuron-atlas-watch-2026-10-16 #13, #14) — recorded 2026-10-20 08:31 CT
 
@@ -254,3 +260,12 @@ Both checked at their source by Muse, not yet by Claude.
   Part 35:** a neuron that looks clean on concept passages can carry an unrelated sense its screen never shows. Part 35's
   within-frame contrast cannot see this; the confirmed finds get a descriptive off-domain check (top activations over a
   broad neutral corpus, code included) before any claim that a neuron is "about" its concept.
+
+### GRAFT: routing a behaviour into removable neurons (Anthropic alignment blog, 2026-10-19) — recorded 2026-10-20 10:2x CT
+
+Hu, Ward, Wong, Hu, Woodworth, Turner, Cloud, "Reducing Reward Hacking by Localizing Bad Behavior Instead of Penalizing
+It" (Elise's link; archived in Journal sources/web-archives/2026-10-20-anthropic-graft-reward-hacking.md). Added RETAIN
+and FORGET neurons per MLP layer; rollouts a monitor flags update only FORGET, which is ablated at deployment. On
+Qwen3-8B, ablation took all three hack types to nearly zero, including the two the monitor never detected. The inverse of
+our question: they decide where a behaviour lives rather than finding where it lives. A route to test: train the assistant
+persona into designated neurons the same way, then ask whether ablating them leaves any basin.
