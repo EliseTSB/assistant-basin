@@ -67,6 +67,27 @@ the mean; measuring D at the answer position shows whether it happens. A version
 4. **Static against zigzag.** inject-up and inject-down (+2 or -2 SD on every layer), asked "raised or lowered?". If
    a static raise is read as well as the zigzag, the alternation is not what is being read.
 
+## Weaver's second round (#council-room, 2026-10-20 04:38 CT), and the cache point
+
+- **The elicitation may be the intervention.** Their adapter raises on parity words, so a turn-2 question that says
+  "even" and "odd" may write its own zigzag. Gate: measure D over the turn-2 question and answer tokens in none. If it
+  is nonzero and follows the question's word order, the parity-word readout is confounded and only the parity-free
+  versions (below) count. Weaver predicts nonzero.
+- **Which turn is read.** Weaver's point is that a turn-2 report reads turn-1 tokens, not turn-1 activations. That
+  holds only if turn 1 is recomputed. In one forward pass with a KV cache, turn-2 tokens attend to the keys and values
+  turn 1 wrote under the intervention, so the state is in the cache. That makes the split a measurement rather than a
+  worry, as in Part 31: **cache kept** (turn-1 positions as computed under the hook or adapter) against **cache
+  recomputed** (the same tokens re-encoded with the hook off, and for M with B's weights over turn-1 positions). The
+  text is identical across the two arms; only the state behind it differs.
+- **Same-turn arm** (Weaver's clean readout): the hook fires while the turn-2 question and answer are processed, and
+  ground truth is D over those same positions.
+- **No pooling.** Keyword-induced, hook-induced cross-turn and hook same-turn are three claims, reported separately,
+  each as a within-condition relation between D and the paired readout.
+- **Inversion test.** Ask both "which did you raise?" and "which did you lower?" about the same state. A state reader
+  inverts; a prompt reader tends to answer both the same way.
+- **Parity-free elicitation.** Options that avoid the words even and odd: "(A) layers 0, 2, 4, … (B) layers 1, 3, 5, …"
+  (numbers gave a weak zigzag in their battery, so D is measured here too) and the free-text question in control 1.
+
 ## Readings
 
 - Report follows text: not-even answered "odd" or at chance; inject-* at chance; M the same as B.

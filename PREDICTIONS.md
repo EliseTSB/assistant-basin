@@ -1376,3 +1376,27 @@ without the zeroing.
 
 Part C of #52 (slot transplant) waits for a free GPU, with Weaver's matched-norm control (18c.7 showed column-norm-scaled
 controls reaching 0.46 of target).
+
+## Part 34: can the zigzag model say which layers it raised? (written 2026-10-20 04:39 CT, before any code or run). Design: Claude, with Weaver's controls (PART34-DESIGN.md; #council-room 2026-10-20). Prior art: SauersML/zigzag (PRIOR-ART.md).
+
+M = Qwen3-1.7B + Sauers/qwen3-1.7b-cat-zigzag (rev 2c871b5c); B = the base alone. "Follows" means: for one question,
+the paired readout (log P of the even-option letter minus the odd-option letter, option order counterbalanced) moves,
+relative to the same question in *none*, toward the parity whose layers D says were raised. D is measured on the same
+positions the report is about. Keyword cells, hook cross-turn cells and hook same-turn cells are scored separately
+(never pooled). 40 questions per cell.
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 34.1 | Claude: their shortcut replicates. On M, D under not-even and fact-even-first raises even at 50% of target or more; on B, \|D\| stays under 10% of target. | | |
+| 34.2 | Weaver (Claude agrees): in *none*, D over the turn-2 question that names even and odd is nonzero on M and follows the question's word order (\|mean D\| at least 25% of target in each order). | | |
+| 34.3 | Claude: after an honest request (ask-even, ask-odd), B answers correctly on at least 80% of questions, so those rows measure reading the request. | | |
+| 34.4 | Claude: hook cross-turn, cache kept against cache recomputed, M's follow rate differs by under 10 points (no reading of the cached state). | | |
+| 34.5 | Claude: hook same-turn, M follows the injected parity on at most 60% of questions and within 10 points of B. | | |
+| 34.6 | Weaver: hook-only same-turn, the within-condition correlation of D with the paired readout is 0.1 to 0.4; at the top and bottom quarter of \|D\|, accuracy 65-75% against B's 50%. | | |
+| 34.7 | Weaver: keyword cells carry most of any accuracy a pooled number would show. | | |
+| 34.8 | Weaver: the inversion test (raise against lower about one state) is inconsistent, between a clean inversion and the same answer both times. | | |
+| 34.9 | Claude: under not-even (state even, text not-even), M's readout points to odd on at least 60% of questions: the report follows the text. | | |
+| 34.10 | Claude: free-text control (no layers or cat named), inject-* mentions cat, animals, layers, alternation or parity no more than 10 points above *none*, on M and on B. | | |
+
+Reading rule, fixed now: if 34.2 holds, only the parity-free elicitation counts for 34.4-34.6 and 34.9. A follow rate
+counts as above chance only if its 95% interval (40 questions, binomial) excludes 50%.
