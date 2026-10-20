@@ -168,3 +168,28 @@ Sent by Elise. Read at source by Claude (repo cloned at 98adb6a, thread.md and R
 - **Open, not done by them, cheap here:** whether the zigzag model can say which parity it raised (write, then read
   back), and whether mixing keyword-matched decoy prompts into training (as our 12c mixing did for the reader, +34 to
   +9) makes the writer follow the request.
+
+## More from Sauers, recorded 2026-10-20 04:43 CT (sent by Elise; the owl thread read from her two screenshots of @Sauers_'s X post of 2026-10-19 22:36, not from a repo; watching read at source)
+
+- **An owl neuron and its circuit** (X thread, no public code found among SauersML's repos at 04:43). Pushing one MLP
+  neuron, L8.N344, makes the model say it is an owl ("Okay, I'm not a computer program. I'm a real owl!"; in Chinese
+  too). The neuron fires on owls in any language, on hoots, Hedwig and Athena with no "owl" word. Model not named in the
+  screenshots; replies say "I'm Qwen" and the graph reaches layer 33 (likely Qwen3-8B, 36 layers, unconfirmed).
+  Method: EAP-IG (Hanna, Pezzelle & Belinkov 2024), slightly modified, on the "owl" minus "model" logit along the push.
+  The graph's helping nodes are mostly suppressions ("less AI" L9.N8548, "less model" L32.N10875, "less trained/model"
+  L29.N9099, "less chat/prompt" L27.N11353) plus "more night" L9.N3075; pushing-back heads include L9.H14 and L10.H28.
+  Validation: setting the top 3 nodes back takes owl replies from 12 of 50 to 0 (10 random set back: 5; 10 other
+  random: 13); the top 25 remove 94% of the push effect, 10 random 0%; node signs right for 18 of 20, edge signs 20 of 21.
+  **Bears on Parts 24, 25 and 33:** our alien neuron (Qwen3.5-4B L22 N2742) is the same kind of object, and Part 24
+  found zeroing the identity neurons moves its invention into an invented maker. Their graph says the persona push
+  works largely by turning down "AI"/"model" features. Untested here: whether those suppression nodes overlap our
+  identity sets.
+- **SauersML/watching** ("Language models can learn to tell when their activations are being read", written by Opus 5.5
+  and GPT-6 Astra; last commit 2026-10-19). Qwen3-8B with only blocks 34-35 trained answers Yes when a read-only probe
+  saves a layer-14 activation and No when not, 128/128 on 64 new prompts. The cue is numerical, not semantic: the probe
+  splits a compiled kernel with a BF16 rounding in between, and the detector works exactly only on the GPU it was trained
+  on (52-77% on four other NVIDIA GPUs, inverted on H100 and A100). A two-task model also says "owl" when probed and
+  "cat" when not. **Bears on Part 12 and Part 34:** a trained self-reader can learn the arithmetic footprint of how an
+  intervention is computed rather than the state it creates. Our hooks run eager in Python and add ±2 SD vectors, so the
+  state is the large signal there, but a hook that is present and adds nothing (Part 18's identity hook, 0.0 logit
+  change) is the right control to keep in any trained-reader design.
