@@ -13,6 +13,7 @@ import copy
 import hashlib
 import json
 import math
+import os
 import re
 import sys
 import time
@@ -56,6 +57,31 @@ AB_KINDS = (
     "parity_free_lowered",
 )
 AB_OPTION_TOKEN_IDS: dict[str, int] | None = None
+LOW_MASS_THRESHOLD = 0.2
+# Count these single-token spellings as the visible A/B option labels.  The
+# other glyphs below are added only when they actually appear in the top 20.
+AB_TOKEN_SURFACES = {
+    "A": ("A", " A", "(A", " (A"),
+    "B": ("B", " B", "(B", " (B"),
+}
+AB_LOOKALIKE_GLYPHS = {
+    "A": ("А", "Α", "Ａ", "𝐀", "𝐴", "𝑨"),
+    "B": ("Б", "В", "Β", "Ｂ", "𝐁", "𝐵", "𝑩"),
+}
+AB_SURFACE_PREFIXES = ("", " ", "(", " (")
+AB_READOUT_POSITIONS = (
+    "after_answer_colon",
+    "after_open_paren",
+    "after_answer_colon_open_paren",
+    "assistant_prefill_answer_is_open_paren",
+)
+AB_READOUT_POSITION = "after_answer_colon_open_paren"
+AB_ASSISTANT_PREFILLS = {
+    "after_answer_colon": None,
+    "after_open_paren": "(",
+    "after_answer_colon_open_paren": "Answer: (",
+    "assistant_prefill_answer_is_open_paren": "The answer is (",
+}
 
 
 def sha256_file(path: Path) -> str:
@@ -130,33 +156,115 @@ def validate_ab_tokenizer(tokenizer: Any) -> tuple[int, dict[str, int]]:
     return int(paren_ids[0]), {letter: int(ids[0]) for letter, ids in letter_ids.items()}
 
 
+def _letter_for_lookalike_surface(surface: str) -> str | None:
+    for prefix in AB_SURFACE_PREFIXES:
+        if not surface.startswith(prefix):
+            continue
+        glyph = surface[len(prefix):]
+        for letter, glyphs in AB_LOOKALIKE_GLYPHS.items():
+            if glyph in glyphs:
+                return letter
+    return None
+
+
+def ab_variant_token_ids(
+    tokenizer: Any,
+    top_token_ids: Sequence[int] | None = None,
+) -> tuple[dict[str, list[int]], dict[str, list[str]]]:
+    """Return ASCII label spellings plus top-20 lookalikes for A and B."""
+    ids: dict[str, set[int]] = {"A": set(), "B": set()}
+    surfaces: dict[str, list[str]] = {"A": [], "B": []}
+    for letter, variants in AB_TOKEN_SURFACES.items():
+        for surface in variants:
+            encoded = tokenizer.encode(surface, add_special_tokens=False)
+            if len(encoded) == 1:
+                token_id = int(encoded[0])
+                ids[letter].add(token_id)
+                surfaces[letter].append(surface)
+    for raw_id in top_token_ids or ():
+        token_id = int(raw_id)
+        try:
+            surface = tokenizer.decode(
+                [token_id], skip_special_tokens=False, clean_up_tokenization_spaces=False
+            )
+        except TypeError:
+            surface = tokenizer.decode([token_id], skip_special_tokens=False)
+        letter = _letter_for_lookalike_surface(surface)
+        if letter is not None and token_id not in ids[letter]:
+            ids[letter].add(token_id)
+            surfaces[letter].append(surface)
+    return (
+        {letter: sorted(values) for letter, values in ids.items()},
+        {letter: surfaces[letter] for letter in ("A", "B")},
+    )
+
+
+def _logsumexp(values: Sequence[float]) -> float:
+    if not values:
+        return -math.inf
+    maximum = max(values)
+    if maximum == -math.inf:
+        return -math.inf
+    return maximum + math.log(sum(math.exp(value - maximum) for value in values))
+
+
+def top_token_probabilities(logits: Sequence[float], tokenizer: Any, limit: int = 20) -> list[dict[str, Any]]:
+    """Describe the top next tokens with full-vocabulary softmax probabilities."""
+    values = [float(value) for value in logits]
+    if not values or limit < 1:
+        raise ValueError("top-token inspection needs nonempty logits and a positive limit")
+    log_normalizer = _logsumexp(values)
+    token_ids = sorted(range(len(values)), key=values.__getitem__, reverse=True)[:limit]
+    top: list[dict[str, Any]] = []
+    for rank, token_id in enumerate(token_ids, 1):
+        try:
+            surface = tokenizer.decode(
+                [token_id], skip_special_tokens=False, clean_up_tokenization_spaces=False
+            )
+        except TypeError:
+            surface = tokenizer.decode([token_id], skip_special_tokens=False)
+        top.append({
+            "rank": rank,
+            "token_id": token_id,
+            "token": surface,
+            "probability": math.exp(values[token_id] - log_normalizer),
+        })
+    return top
+
+
 def derive_ab_readout(
     logits: Sequence[float],
-    letter_token_ids: Mapping[str, int],
+    letter_token_ids: Mapping[str, int | Sequence[int]],
     letter_concepts: Mapping[str, str],
     target_value: str | None,
+    low_mass_threshold: float = LOW_MASS_THRESHOLD,
 ) -> dict[str, Any]:
-    """Derive the A/B readout fields from logits at the post-'(' position."""
+    """Sum probability mass over each letter's one-token spelling variants."""
     values = [float(value) for value in logits]
     if not values:
         raise ValueError("A/B readout logits are empty")
-    if any(int(letter_token_ids[letter]) >= len(values) for letter in ("A", "B")):
-        raise ValueError("A/B token ID is outside the logits vector")
+    variant_ids: dict[str, list[int]] = {}
+    for letter in ("A", "B"):
+        raw_ids = letter_token_ids[letter]
+        normalized = [int(raw_ids)] if isinstance(raw_ids, int) else [int(value) for value in raw_ids]
+        variant_ids[letter] = sorted(set(normalized))
+        if not variant_ids[letter] or any(token_id < 0 or token_id >= len(values) for token_id in variant_ids[letter]):
+            raise ValueError(f"{letter} token variant ID is empty or outside the logits vector")
     maximum = max(values)
     log_normalizer = maximum + math.log(sum(math.exp(value - maximum) for value in values))
-    log_probs = {
-        letter: values[int(letter_token_ids[letter])] - log_normalizer
+    log_probs = [value - log_normalizer for value in values]
+    log_masses = {
+        letter: _logsumexp([log_probs[token_id] for token_id in variant_ids[letter]])
         for letter in ("A", "B")
     }
+    masses = {letter: math.exp(log_masses[letter]) for letter in ("A", "B")}
+    ab_mass = masses["A"] + masses["B"]
     greedy_token = max(range(len(values)), key=values.__getitem__)
-    greedy_letter = next(
-        (letter for letter in ("A", "B") if int(letter_token_ids[letter]) == greedy_token),
-        None,
-    )
+    greedy_letter = next((letter for letter in ("A", "B") if greedy_token in variant_ids[letter]), None)
     even_letter = next((letter for letter, concept in letter_concepts.items() if concept == "even"), None)
     odd_letter = next((letter for letter, concept in letter_concepts.items() if concept == "odd"), None)
     logit_even_minus_odd = (
-        log_probs[even_letter] - log_probs[odd_letter]
+        log_masses[even_letter] - log_masses[odd_letter]
         if even_letter is not None and odd_letter is not None
         else None
     )
@@ -168,18 +276,27 @@ def derive_ab_readout(
         (letter for letter, concept in letter_concepts.items() if letter != target_letter),
         None,
     ) if target_letter is not None else None
-    target_logp = log_probs[target_letter] if target_letter is not None else None
-    alternative_logp = log_probs[alternative_letter] if alternative_letter is not None else None
+    target_logp = log_masses[target_letter] if target_letter is not None else None
+    alternative_logp = log_masses[alternative_letter] if alternative_letter is not None else None
     margin = target_logp - alternative_logp if target_logp is not None and alternative_logp is not None else None
     normalized_probability = None
     if margin is not None:
-        normalized_probability = 1.0 / (1.0 + math.exp(max(-60.0, min(60.0, -margin))))
+        normalizer = _logsumexp([log_masses[target_letter], log_masses[alternative_letter]])
+        normalized_probability = math.exp(log_masses[target_letter] - normalizer)
+    predicted_letter = "A" if log_masses["A"] > log_masses["B"] else "B" if log_masses["B"] > log_masses["A"] else None
     return {
         "greedy_token": greedy_token,
         "greedy_letter": greedy_letter,
         "greedy_concept": letter_concepts.get(greedy_letter) if greedy_letter is not None else None,
-        "logp_A": log_probs["A"],
-        "logp_B": log_probs["B"],
+        "predicted_letter": predicted_letter,
+        "predicted_concept": letter_concepts.get(predicted_letter) if predicted_letter else None,
+        "p_A": masses["A"],
+        "p_B": masses["B"],
+        "ab_mass": ab_mass,
+        "low_mass": ab_mass < low_mass_threshold,
+        "letter_variant_token_ids": variant_ids,
+        "logp_A": log_masses["A"],
+        "logp_B": log_masses["B"],
         "logit_even_minus_odd": logit_even_minus_odd,
         "target_logp": target_logp,
         "alternative_logp": alternative_logp,
@@ -259,6 +376,61 @@ def _mean(values: Sequence[float]) -> float | None:
     return sum(values) / len(values) if values else None
 
 
+def scored_letter(row: Mapping[str, Any]) -> str | None:
+    """Select A or B from summed probability mass, never from the greedy token."""
+    p_a, p_b = row.get("p_A"), row.get("p_B")
+    if p_a is not None and p_b is not None:
+        left, right = float(p_a), float(p_b)
+    else:
+        # Compatibility for old rows: their logp fields contain the bare A/B
+        # token probabilities. New rows use log sums over all label variants.
+        log_a, log_b = row.get("logp_A"), row.get("logp_B")
+        if log_a is None or log_b is None:
+            return None
+        left, right = float(log_a), float(log_b)
+    if left == right:
+        return None
+    return "A" if left > right else "B"
+
+
+def scored_concept(row: Mapping[str, Any]) -> str | None:
+    letter = scored_letter(row)
+    concepts = row.get("letter_concepts")
+    return concepts.get(letter) if letter is not None and isinstance(concepts, Mapping) else None
+
+
+def _interpolated_quantile(values: Sequence[float], quantile: float) -> float | None:
+    if not values:
+        return None
+    ordered = sorted(values)
+    position = (len(ordered) - 1) * quantile
+    lower, upper = math.floor(position), math.ceil(position)
+    if lower == upper:
+        return ordered[lower]
+    fraction = position - lower
+    return ordered[lower] * (1.0 - fraction) + ordered[upper] * fraction
+
+
+def _ab_mass_summary(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    masses = [float(row["ab_mass"]) for row in rows if row.get("ab_mass") is not None]
+    low_count = sum(
+        bool(row.get("low_mass")) if row.get("low_mass") is not None
+        else row.get("ab_mass") is not None and float(row["ab_mass"]) < LOW_MASS_THRESHOLD
+        for row in rows
+    )
+    return {
+        "n_rows": len(rows),
+        "n_with_mass": len(masses),
+        "low_mass_threshold": LOW_MASS_THRESHOLD,
+        "low_mass_rows": low_count,
+        "low_mass_rate": low_count / len(rows) if rows else None,
+        "min": min(masses) if masses else None,
+        "median": _interpolated_quantile(masses, 0.5),
+        "p90": _interpolated_quantile(masses, 0.9),
+        "max": max(masses) if masses else None,
+    }
+
+
 def _group_key(row: Mapping[str, Any]) -> tuple[Any, ...]:
     return (
         row.get("metric_kind"),
@@ -269,14 +441,13 @@ def _group_key(row: Mapping[str, Any]) -> tuple[Any, ...]:
 
 
 def _ab_group_summary(group: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
-    picks = [row for row in group if row.get("greedy_concept") is not None]
-    expected = [row for row in picks if row.get("target_value") is not None]
-    correct = sum(row.get("greedy_concept") == row.get("target_value") for row in expected)
+    expected = [row for row in group if row.get("target_value") is not None]
+    correct = sum(scored_concept(row) == row.get("target_value") for row in expected)
     margins = [float(row["target_logp_margin"]) for row in group if row.get("target_logp_margin") is not None]
     probs = [float(row["target_candidate_probability"]) for row in group if row.get("target_candidate_probability") is not None]
     return {
         "n_rows": len(group),
-        "greedy_target_rate": rate_summary(correct, len(expected)),
+        "sum_readout_target_rate": rate_summary(correct, len(expected)),
         "mean_target_minus_alternative_logp": _mean(margins),
         "mean_candidate_normalized_target_probability": _mean(probs),
     }
@@ -308,8 +479,8 @@ def score_rows(header: Mapping[str, Any] | None, rows: Sequence[Mapping[str, Any
         if baseline is None:
             continue
         target = row.get("target_value")
-        arm_success = int(row.get("greedy_concept") == target)
-        none_success = int(baseline.get("greedy_concept") == target)
+        arm_success = int(scored_concept(row) == target)
+        none_success = int(scored_concept(baseline) == target)
         name = "|".join(str(row.get(field, "")) for field in ("metric_kind", "condition", "arm", "model"))
         paired_groups.setdefault(name, []).append((arm_success, none_success))
     for name, pairs in paired_groups.items():
@@ -340,7 +511,32 @@ def score_rows(header: Mapping[str, Any] | None, rows: Sequence[Mapping[str, Any
         key: rate_summary(sum(bool(row.get("mention_flag")) for row in group), len(group))
         for key, group in free_groups.items()
     }
+    mass_groups: dict[tuple[Any, Any], list[Mapping[str, Any]]] = {}
+    for row in ab_rows:
+        mass_groups.setdefault((row.get("model"), row.get("condition")), []).append(row)
+    honest_request_rows = _filter_rows(
+        rows,
+        row_type="turn2_ab",
+        conditions={"ask-even", "ask-odd"},
+        arms={"default"},
+        kinds={"parity_free_raised", "parity_words_raised"},
+        models={"B"},
+    )
     return {
+        "honest_request_sanity": {
+            "statement": "Report B accuracy on ask-even/ask-odd before prediction 34.3.",
+            "B_ask_even_ask_odd_accuracy": _metric_rate(
+                honest_request_rows,
+                lambda row: scored_concept(row) == row.get("target_value") if row.get("target_value") is not None else None,
+            ),
+            "by_condition": {
+                condition: _metric_rate(
+                    [row for row in honest_request_rows if row.get("condition") == condition],
+                    lambda row: scored_concept(row) == row.get("target_value") if row.get("target_value") is not None else None,
+                )
+                for condition in ("ask-even", "ask-odd")
+            },
+        },
         "schema_version": 1,
         "header": dict(header) if header else None,
         "n_rows": len(rows),
@@ -357,6 +553,10 @@ def score_rows(header: Mapping[str, Any] | None, rows: Sequence[Mapping[str, Any
             "inject_d_vs_same_question_none": _turn1_delta_summary(t1),
         },
         "turn2_ab_groups": group_metrics,
+        "turn2_ab_mass_distribution_by_model_condition": {
+            "|".join(str(value) for value in key): _ab_mass_summary(group)
+            for key, group in sorted(mass_groups.items(), key=lambda item: tuple(str(x) for x in item[0]))
+        },
         "follow_rates_relative_to_same_question_none": paired,
         "free_text_mention_rates": free_metrics,
         "prediction_ids": predictions,
@@ -530,8 +730,8 @@ def _prediction_bundles(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
         kept = [row for row in hook_kept_m if row.get("condition") == condition]
         recomputed = [row for row in hook_recomputed_m if row.get("condition") == condition]
         cache_pairs[condition] = {
-            "cache_kept_follow_rate": _metric_rate(kept, lambda row: row.get("greedy_concept") == row.get("target_value")),
-            "cache_recomputed_follow_rate": _metric_rate(recomputed, lambda row: row.get("greedy_concept") == row.get("target_value")),
+            "cache_kept_follow_rate": _metric_rate(kept, lambda row: scored_concept(row) == row.get("target_value")),
+            "cache_recomputed_follow_rate": _metric_rate(recomputed, lambda row: scored_concept(row) == row.get("target_value")),
             "paired_net_accuracy_difference": _paired_accuracy_difference(kept, recomputed),
         }
 
@@ -540,7 +740,7 @@ def _prediction_bundles(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
         for condition in sorted(cat_injections):
             selected = [row for row in (same_m if model == "M" else same_b) if row.get("model") == model and row.get("condition") == condition]
             correct = [row for row in selected if row.get("target_value") is not None]
-            same_turn_metrics[f"{model}|{condition}"] = _metric_rate(correct, lambda row: row.get("greedy_concept") == row.get("target_value"))
+            same_turn_metrics[f"{model}|{condition}"] = _metric_rate(correct, lambda row: scored_concept(row) == row.get("target_value"))
 
     correlations = {}
     for model in ("M", "B"):
@@ -559,7 +759,7 @@ def _prediction_bundles(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     keyword_rates = {
         condition: _metric_rate(
             _filter_rows(rows, row_type="turn2_ab", conditions={condition}, arms={"default"}, kinds={"parity_free_raised"}, models={"M"}),
-            lambda row: row.get("greedy_concept") == row.get("target_value"),
+            lambda row: scored_concept(row) == row.get("target_value"),
         )
         for condition in sorted(keyword)
     }
@@ -573,7 +773,7 @@ def _prediction_bundles(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     hook_cross_turn_accuracy = {
         condition: _metric_rate(
             _filter_rows(rows, row_type="turn2_ab", conditions={condition}, arms={"cache_kept"}, kinds={"parity_free_raised"}, models={"M"}),
-            lambda row: row.get("greedy_concept") == row.get("target_value"),
+            lambda row: scored_concept(row) == row.get("target_value"),
         )
         for condition in sorted(cat_injections)
     }
@@ -618,11 +818,11 @@ def _prediction_bundles(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     b_not_even = {
         kind: _metric_rate(
             _filter_rows(rows, row_type="turn2_ab", conditions={"not-even"}, arms={"default"}, kinds={kind}, models={"B"}),
-            lambda row: row.get("greedy_concept") == "even",
+            lambda row: scored_concept(row) == "even",
         )
         for kind in ("parity_words_raised", "parity_free_raised")
     }
-    b_reads_not_even_odd = _metric_rate(not_even_b, lambda row: row.get("greedy_concept") == "odd")
+    b_reads_not_even_odd = _metric_rate(not_even_b, lambda row: scored_concept(row) == "odd")
     return {
         "34.1": {
             "prediction": "M not-even and fact-even-first D at least 50% of target; B |D| below 10%.",
@@ -635,15 +835,15 @@ def _prediction_bundles(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
         "34.2": {"prediction": "none parity-word turn-2 D follows first option order with absolute mean at least 25% target per order.", "by_first_option_order": d_by_order},
         "34.3": {
             "prediction": "B correct on at least 80% of honest request rows.",
-            "parity_free_correct_rate": _metric_rate(honest_b, lambda row: row.get("greedy_concept") == row.get("target_value")),
-            "parity_word_correct_rate": _metric_rate(_filter_rows(rows, row_type="turn2_ab", conditions={"ask-even", "ask-odd"}, arms={"default"}, kinds={"parity_words_raised"}, models={"B"}), lambda row: row.get("greedy_concept") == row.get("target_value")),
+            "parity_free_correct_rate": _metric_rate(honest_b, lambda row: scored_concept(row) == row.get("target_value")),
+            "parity_word_correct_rate": _metric_rate(_filter_rows(rows, row_type="turn2_ab", conditions={"ask-even", "ask-odd"}, arms={"default"}, kinds={"parity_words_raised"}, models={"B"}), lambda row: scored_concept(row) == row.get("target_value")),
         },
         "34.4": {"prediction": "M hook cross-turn cache-kept vs recomputed follow rate differs by under ten points.", "by_condition": cache_pairs},
         "34.5": {"prediction": "same-turn M follows at most 60% and within ten points of B.", "follow_rate_by_model_condition": same_turn_metrics, "M_minus_B_by_condition": {condition: _paired_rate_difference([r for r in same_m if r.get("condition") == condition], [r for r in same_b if r.get("condition") == condition]) for condition in sorted(cat_injections)}},
         "34.6": {"prediction": "same-turn D/logit correlation and |D| quartile accuracy.", "by_model_condition": correlations},
         "34.7": {"prediction": "keyword cells carry most accuracy; cells stay separate.", "keyword_parity_free_accuracy_by_condition": keyword_rates, "keyword_follow_gain_vs_none": keyword_gain_vs_none, "hook_cross_turn_cache_kept_accuracy": hook_cross_turn_accuracy, "hook_same_turn_accuracy_by_condition": same_turn_metrics},
         "34.8": {"prediction": "raise/lower inversion is between clean inversion and identical answers.", "by_condition_model": inversion},
-        "34.9": {"prediction": "M not-even readout points to odd on at least 60%.", "odd_readout_rate_parity_free": _metric_rate(not_even_m, lambda row: row.get("greedy_concept") == "odd"), "odd_readout_rate_parity_words": _metric_rate(_filter_rows(rows, row_type="turn2_ab", conditions={"not-even"}, arms={"default"}, kinds={"parity_words_raised"}, models={"M"}), lambda row: row.get("greedy_concept") == "odd")},
+        "34.9": {"prediction": "M not-even readout points to odd on at least 60%.", "odd_readout_rate_parity_free": _metric_rate(not_even_m, lambda row: scored_concept(row) == "odd"), "odd_readout_rate_parity_words": _metric_rate(_filter_rows(rows, row_type="turn2_ab", conditions={"not-even"}, arms={"default"}, kinds={"parity_words_raised"}, models={"M"}), lambda row: scored_concept(row) == "odd")},
         "34.10": {"prediction": "free-text injection regex mention rate is no more than ten points above none; blind read remains manual.", "mention_rates": free_rates},
         "34.11": {"prediction": "B reading M cache matches B reading B cache within ten points and interval includes 50%; report logit delta.", "by_condition": cross_cache},
         "34.12": {"prediction": "not-even/fact-even-first profiles alternate and |D| is 50-100% of target.", "not_even": _profile_alternation_metrics(rows, "not-even"), "fact_even_first": _profile_alternation_metrics(rows, "fact-even-first")},
@@ -661,7 +861,7 @@ def _paired_accuracy_difference(left: Sequence[Mapping[str, Any]], right: Sequen
         other = right_by_q.get((row.get("question_index"), row.get("condition"), row.get("metric_kind")))
         if other is None or row.get("target_value") is None:
             continue
-        paired.append((int(row.get("greedy_concept") == row.get("target_value")), int(other.get("greedy_concept") == other.get("target_value"))))
+        paired.append((int(scored_concept(row) == row.get("target_value")), int(scored_concept(other) == other.get("target_value"))))
     return {
         "n_question_pairs": len(paired),
         "left_accuracy": rate_summary(sum(a for a, _ in paired), len(paired)),
@@ -683,8 +883,8 @@ def _quartile_accuracy(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     bottom, top = ordered[:k], ordered[-k:]
     return {
         "n_per_quartile": k,
-        "bottom_abs_d_accuracy": _metric_rate(bottom, lambda row: row.get("greedy_concept") == row.get("target_value")),
-        "top_abs_d_accuracy": _metric_rate(top, lambda row: row.get("greedy_concept") == row.get("target_value")),
+        "bottom_abs_d_accuracy": _metric_rate(bottom, lambda row: scored_concept(row) == row.get("target_value")),
+        "top_abs_d_accuracy": _metric_rate(top, lambda row: scored_concept(row) == row.get("target_value")),
     }
 
 
@@ -704,8 +904,8 @@ def _inversion_metrics(rows: Sequence[Mapping[str, Any]], conditions: set[str]) 
                 raised = {r.get("question_index"): r for r in group if r.get("metric_kind") == f"{form}_raised"}
                 lowered = {r.get("question_index"): r for r in group if r.get("metric_kind") == f"{form}_lowered"}
                 pairs = [(raised[q], lowered[q]) for q in raised.keys() & lowered.keys()]
-                same = sum(a.get("greedy_concept") == b.get("greedy_concept") for a, b in pairs)
-                invert = sum(a.get("greedy_concept") != b.get("greedy_concept") for a, b in pairs)
+                same = sum(scored_concept(a) == scored_concept(b) for a, b in pairs)
+                invert = sum(scored_concept(a) != scored_concept(b) for a, b in pairs)
                 output[f"{model}|{condition}|{form}"] = {
                     "n_pairs": len(pairs),
                     "same_answer_both_questions": rate_summary(same, len(pairs)),
@@ -720,8 +920,8 @@ def _cross_cache_metrics(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     for condition in sorted({str(row.get("condition")) for row in group}):
         m_cache = [r for r in group if r.get("condition") == condition and r.get("arm") == "b_reads_m_cache"]
         b_cache = [r for r in group if r.get("condition") == condition and r.get("arm") == "b_reads_b_cache"]
-        left = _metric_rate(m_cache, lambda row: row.get("greedy_concept") == row.get("target_value"))
-        right = _metric_rate(b_cache, lambda row: row.get("greedy_concept") == row.get("target_value"))
+        left = _metric_rate(m_cache, lambda row: scored_concept(row) == row.get("target_value"))
+        right = _metric_rate(b_cache, lambda row: scored_concept(row) == row.get("target_value"))
         by_q = {r.get("question_index"): r for r in b_cache}
         deltas = [float(r["logit_even_minus_odd"]) - float(by_q[r.get("question_index")]["logit_even_minus_odd"]) for r in m_cache if r.get("question_index") in by_q and r.get("logit_even_minus_odd") is not None and by_q[r.get("question_index")].get("logit_even_minus_odd") is not None]
         output[condition] = {
@@ -762,7 +962,7 @@ def _readout_vs_none(changed: Sequence[Mapping[str, Any]], baseline: Sequence[Ma
         target = row.get("target_value")
         if base is None or target is None:
             continue
-        pairs.append((int(row.get("greedy_concept") == target), int(base.get("greedy_concept") == target)))
+        pairs.append((int(scored_concept(row) == target), int(scored_concept(base) == target)))
     gains = sum(a == 1 and b == 0 for a, b in pairs)
     losses = sum(a == 0 and b == 1 for a, b in pairs)
     return {
@@ -944,6 +1144,53 @@ def render_user_segment(tokenizer: Any, content: str, span_text: str | None = No
         span_end = span_start + len(span_text)
     positions = [i for i, (start, end) in enumerate(offsets) if end > span_start and start < span_end]
     return ids, positions
+
+
+def render_ab_readout_segment(
+    tokenizer: Any,
+    body: str,
+    position: str = AB_READOUT_POSITION,
+) -> tuple[list[int], list[int], int]:
+    """Render turn 2 and the selected answer prefix; return IDs and hook positions."""
+    if position not in AB_READOUT_POSITIONS:
+        raise ValueError(f"unknown A/B readout position {position!r}")
+    if position == "after_answer_colon":
+        user_content = f"{body}\nAnswer:"
+        messages = [{"role": "user", "content": user_content}]
+        rendered = tokenizer.apply_chat_template(
+            messages, tokenize=False, add_generation_prompt=True, enable_thinking=False
+        )
+    else:
+        assistant_prefix = {
+            "after_open_paren": "(",
+            "after_answer_colon_open_paren": "Answer: (",
+            "assistant_prefill_answer_is_open_paren": "The answer is (",
+        }[position]
+        messages = [
+            {"role": "user", "content": body},
+            {"role": "assistant", "content": assistant_prefix},
+        ]
+        rendered = tokenizer.apply_chat_template(
+            messages,
+            tokenize=False,
+            add_generation_prompt=False,
+            continue_final_message=True,
+            enable_thinking=False,
+        )
+    encoded = tokenizer(rendered, add_special_tokens=False, return_offsets_mapping=True)
+    ids = [int(token) for token in encoded["input_ids"]]
+    offsets = encoded["offset_mapping"]
+    body_start = rendered.rfind(body)
+    if body_start < 0:
+        raise ValueError("chat template did not preserve the turn-2 body")
+    body_end = body_start + len(body)
+    body_positions = [
+        i for i, (start, end) in enumerate(offsets)
+        if end > body_start and start < body_end
+    ]
+    if not ids:
+        raise ValueError("A/B readout context rendered to no tokens")
+    return ids, body_positions, len(ids) - 1
 
 
 def condition_content(condition: str, question: str, wordings: Mapping[str, str]) -> str:
@@ -1188,6 +1435,21 @@ def _adapter_artifact_sha(adapter_path: str) -> str | None:
     return None
 
 
+def _cached_adapter_source(adapter_id: str, revision: str) -> str:
+    """Prefer the exact pinned adapter snapshot in the local HF cache."""
+    direct = Path(adapter_id)
+    if direct.is_dir():
+        return str(direct)
+    cache_root = (
+        os.environ.get("HF_HUB_CACHE")
+        or os.environ.get("HUGGINGFACE_HUB_CACHE")
+        or str(Path(os.environ.get("HF_HOME", Path.home() / ".cache" / "huggingface")) / "hub")
+    )
+    repository = "models--" + adapter_id.replace("/", "--")
+    pinned = Path(cache_root) / repository / "snapshots" / revision
+    return str(pinned) if pinned.is_dir() else adapter_id
+
+
 def load_runtime(args: argparse.Namespace) -> tuple[Any, Any, Any, Any, Any, Any, Any, dict[str, int], dict[str, Any]]:
     torch = _load_torch()
     threads = int(getattr(args, "threads", 4))
@@ -1217,10 +1479,11 @@ def load_runtime(args: argparse.Namespace) -> tuple[Any, Any, Any, Any, Any, Any
         local_files_only=True,
         low_cpu_mem_usage=True,
     )
+    adapter_source = _cached_adapter_source(args.adapter_id, args.adapter_revision)
     model = PeftModel.from_pretrained(
         base,
-        args.adapter_id,
-        revision=args.adapter_revision,
+        adapter_source,
+        revision=None if Path(adapter_source).is_dir() else args.adapter_revision,
         is_trainable=False,
         local_files_only=True,
     )
@@ -1275,10 +1538,16 @@ def _make_header(
         "hook_site_check": dict(hook_site),
         "letter_token_ids": dict(letter_token_ids),
         "ab_readout": {
-            "assistant_prefill_text": "(",
-            "assistant_prefill_token_id": open_paren_token_id,
-            "candidate_position": "next token after standalone '('",
+            "assistant_prefill_text": AB_ASSISTANT_PREFILLS[AB_READOUT_POSITION],
+            "assistant_prefill_token_id": open_paren_token_id if AB_READOUT_POSITION == "after_open_paren" else None,
+            "selected_position": AB_READOUT_POSITION,
+            "candidate_positions": list(AB_READOUT_POSITIONS),
             "letter_token_ids": dict(letter_token_ids),
+            "letter_variant_surfaces": AB_TOKEN_SURFACES,
+            "lookalike_glyphs": AB_LOOKALIKE_GLYPHS,
+            "lookalike_policy": "include only if present in the top 20 next tokens",
+            "low_mass_threshold": LOW_MASS_THRESHOLD,
+            "probability_mass": "sum of softmax probabilities across each letter variant set",
         },
         "random_direction_seed": RANDOM_DIRECTION_SEED,
         "question_word_scan": {"terms": ["cat", "even", "odd", "layer"], "matches": question_scan},
@@ -1527,7 +1796,11 @@ def _turn2_row(
 ) -> dict[str, Any]:
     source_model = source_model or model_name
     body, letter_concepts, first_option_concept = turn2_content(kind, question_index)
-    segment_ids, body_positions = render_user_segment(tokenizer, body)
+    base_segment_ids, body_positions = render_user_segment(tokenizer, body)
+    segment_ids = base_segment_ids
+    answer_position = len(segment_ids) - 1
+    variant_surfaces: dict[str, list[str]] | None = None
+    variant_ids: dict[str, list[int]] | None = None
     adapter_t2 = model_name == "M"
     t2_hook = condition if arm == "same_turn" else None
     target = expected_value(condition, kind)
@@ -1537,23 +1810,24 @@ def _turn2_row(
         target = expected_value(condition, kind)
     is_ab = kind != "free_text"
     if is_ab:
-        paren_ids = tokenizer.encode("(", add_special_tokens=False)
-        if len(paren_ids) != 1:
-            raise ValueError(f"opening parenthesis is not one token: {paren_ids}")
-        answer_prefill_ids = list(segment_ids) + [int(paren_ids[0])]
+        segment_ids, readout_body_positions, answer_position = render_ab_readout_segment(
+            tokenizer, body, AB_READOUT_POSITION
+        )
         with adapter_context(model, adapter_t2):
             logits, layer_outputs = ab_probe(
                 model,
-                answer_prefill_ids,
+                segment_ids,
                 device,
                 cache,
                 hook_mode=t2_hook,
                 direction=_hook_direction(condition, direction, random_direction),
                 mean=mean,
                 sd=sd,
-                hook_positions=list(body_positions) + [len(segment_ids)] if t2_hook else None,
+                hook_positions=sorted(set(readout_body_positions + [answer_position])) if t2_hook else None,
             )
-        readout = derive_ab_readout(logits, letter_token_ids, letter_concepts, target)
+        top_ids = [item["token_id"] for item in top_token_probabilities(logits, tokenizer, limit=20)]
+        variant_ids, variant_surfaces = ab_variant_token_ids(tokenizer, top_ids)
+        readout = derive_ab_readout(logits, variant_ids, letter_concepts, target)
         answer_ids = [int(readout["greedy_token"])]
         first_scores = {"A": readout["logp_A"], "B": readout["logp_B"]}
         greedy_token = int(readout["greedy_token"])
@@ -1564,6 +1838,11 @@ def _turn2_row(
         alternative_logp = readout["alternative_logp"]
         margin = readout["target_logp_margin"]
         normalized_probability = readout["target_candidate_probability"]
+        predicted_letter = readout["predicted_letter"]
+        predicted_concept = readout["predicted_concept"]
+        p_a, p_b, ab_mass, low_mass = (
+            readout["p_A"], readout["p_B"], readout["ab_mass"], readout["low_mass"]
+        )
     else:
         with adapter_context(model, adapter_t2):
             answer_ids, _final_cache, first_scores, layer_outputs = greedy_generate(
@@ -1587,6 +1866,9 @@ def _turn2_row(
             None,
         )
         greedy_concept = letter_concepts.get(greedy_letter) if greedy_letter else None
+        predicted_letter = None
+        predicted_concept = None
+        p_a = p_b = ab_mass = low_mass = None
         logit_even_minus_odd = None
         target_logp = None
         alternative_logp = None
@@ -1595,9 +1877,11 @@ def _turn2_row(
     visible_ids = _visible_reply_ids(answer_ids, tokenizer.eos_token_id)
     decoded = tokenizer.decode(visible_ids, skip_special_tokens=True)
 
+    if is_ab:
+        body_positions = readout_body_positions
     d_question = compute_d(layer_outputs, direction, mean, sd, body_positions)
     q_profile = compute_z_profile(layer_outputs, direction, mean, sd, body_positions)
-    answer_positions = [len(segment_ids)] if is_ab else list(range(len(segment_ids), len(segment_ids) + len(visible_ids)))
+    answer_positions = [answer_position] if is_ab else list(range(len(segment_ids), len(segment_ids) + len(visible_ids)))
     d_answer = compute_d(layer_outputs, direction, mean, sd, answer_positions)
     answer_profile = compute_z_profile(layer_outputs, direction, mean, sd, answer_positions)
     state_source_t1 = _arm_state_source(condition, source_model, arm)
@@ -1625,9 +1909,17 @@ def _turn2_row(
         "answer_ids": _serialize_tokens(visible_ids),
         "target_value": target,
         "letter_concepts": letter_concepts,
-        "answer_readout_position": "after_open_paren" if is_ab else "first_answer_token",
+        "answer_readout_position": AB_READOUT_POSITION if is_ab else "first_answer_token",
         "greedy_letter": greedy_letter,
         "greedy_concept": greedy_concept,
+        "predicted_letter": predicted_letter,
+        "predicted_concept": predicted_concept,
+        "p_A": p_a,
+        "p_B": p_b,
+        "ab_mass": ab_mass,
+        "low_mass": low_mass,
+        "letter_variant_token_ids": variant_ids,
+        "letter_variant_surfaces": variant_surfaces,
         "question_order_first_parity": first_option_concept,
         "logp_A": first_scores.get("A"),
         "logp_B": first_scores.get("B"),
@@ -1646,8 +1938,11 @@ def _turn2_row(
         "hook_direction_source_turn2": "random_direction" if t2_hook and condition.startswith("inject-rand-") else "cat_direction" if t2_hook else None,
         "hook_site": HOOK_SITE,
         "turn2_context_sha256": hashlib.sha256(
-            json.dumps(list(prompt_ids) + list(reply_ids) + list(segment_ids), separators=(",", ":")).encode("ascii")
+            json.dumps(list(prompt_ids) + list(reply_ids) + list(base_segment_ids), separators=(",", ":")).encode("ascii")
         ).hexdigest(),
+        "ab_readout_context_sha256": hashlib.sha256(
+            json.dumps(list(prompt_ids) + list(reply_ids) + list(segment_ids), separators=(",", ":")).encode("ascii")
+        ).hexdigest() if is_ab else None,
         "mention_flag": bool(MENTION_RE.search(decoded)) if kind == "free_text" else None,
         "mention_categories": {
             term: bool(re.search(term, decoded, re.IGNORECASE))
@@ -1671,6 +1966,8 @@ def _planned_turn2_kinds(condition: str, arm: str) -> list[str]:
 
 
 def run(args: argparse.Namespace) -> None:
+    if getattr(args, "readout_only", False):
+        return run_readout_only(args)
     questions_path = Path(args.question_file)
     data = read_questions(questions_path)
     question_start = int(getattr(args, "question_start", 0))
@@ -1873,6 +2170,151 @@ def run(args: argparse.Namespace) -> None:
         )
 
 
+def run_readout_only(args: argparse.Namespace) -> None:
+    """Recompute turn-2 A/B fields from stored turn-1 tokens without generation."""
+    if not getattr(args, "rows", None):
+        raise ValueError("--readout-only requires --rows with the stored shard rows.jsonl files")
+    header, rows = _combined_score_input(args)
+    data = read_questions(Path(args.question_file))
+    questions = data["questions"]
+    turn1_by_key = {
+        str(row.get("key")): row for row in rows
+        if row.get("row_type") == "turn1" and row.get("key")
+    }
+    ab_rows = [row for row in rows if row.get("row_type") == "turn2_ab"]
+    for name, requested in (
+        ("base_model", args.model_id),
+        ("base_revision", args.model_revision),
+        ("adapter_model", args.adapter_id),
+        ("adapter_revision", args.adapter_revision),
+    ):
+        if header.get(name) != requested:
+            raise ValueError(f"input {name} {header.get(name)!r} does not match requested {requested!r}")
+
+    torch, model, tokenizer, direction, mean, sd, random_direction, letter_token_ids, _hook_site = load_runtime(args)
+    torch.set_num_threads(int(args.threads))
+    device = torch.device(args.device)
+    output_dir = Path(args.out)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_path = output_dir / "rows.jsonl"
+    if output_path.exists():
+        raise FileExistsError(f"readout-only output already exists: {output_path}")
+
+    updated_header = copy.deepcopy(header)
+    updated_header["ab_readout"] = {
+        "selected_position": AB_READOUT_POSITION,
+        "candidate_positions": list(AB_READOUT_POSITIONS),
+        "letter_token_ids": dict(letter_token_ids),
+        "letter_variant_surfaces": AB_TOKEN_SURFACES,
+        "lookalike_glyphs": AB_LOOKALIKE_GLYPHS,
+        "lookalike_policy": "include only if present in the top 20 next tokens",
+        "low_mass_threshold": LOW_MASS_THRESHOLD,
+        "probability_mass": "sum of softmax probabilities across each letter variant set",
+        "readout_only": True,
+        "turn1_generation": "not repeated; turn-1 prompt_ids + context_reply_ids are re-encoded for cache reconstruction",
+    }
+    updated_header.setdefault("shas", {})["script_sha256"] = sha256_file(Path(__file__))
+    _append_jsonl(output_path, updated_header)
+
+    active_cache_key: tuple[Any, ...] | None = None
+    active_cache: Any = None
+    started = time.monotonic()
+    written = 0
+    for row in rows:
+        if row.get("row_type") == "turn2_ab":
+            index = int(row["question_index"])
+            if index < 0 or index >= len(questions):
+                raise ValueError(f"turn-2 row has out-of-range question_index {index}")
+            question = questions[index]
+            if question.get("id") != row.get("question_id"):
+                raise ValueError(f"stored question_id does not match question index {index}")
+            kind = str(row.get("metric_kind"))
+            body, _concepts, _first = turn2_content(kind, index)
+            if body != row.get("question"):
+                raise ValueError(f"turn-2 question text cannot be rebuilt for row {row.get('key')}")
+            source_model = str(row.get("turn1_model", row.get("model")))
+            t1_key = _row_key("turn1", index, row.get("condition"), source_model)
+            t1_row = turn1_by_key.get(t1_key)
+            if t1_row is None or not t1_row.get("prompt_ids") or not t1_row.get("context_reply_ids"):
+                raise ValueError(f"stored turn-1 token context is missing for {t1_key}")
+            prompt_ids = [int(value) for value in t1_row["prompt_ids"]]
+            reply_ids = [int(value) for value in t1_row["context_reply_ids"]]
+            base_segment_ids, _body_positions = render_user_segment(tokenizer, body)
+            rebuilt_hash = hashlib.sha256(
+                json.dumps(prompt_ids + reply_ids + base_segment_ids, separators=(",", ":")).encode("ascii")
+            ).hexdigest()
+            if rebuilt_hash != row.get("turn2_context_sha256"):
+                raise ValueError(
+                    f"rebuilt turn-2 context hash differs for {row.get('key')}: "
+                    f"stored={row.get('turn2_context_sha256')} rebuilt={rebuilt_hash}"
+                )
+            cache_key = (
+                index, row.get("condition"), source_model, row.get("model"), row.get("arm")
+            )
+            if cache_key != active_cache_key:
+                active_cache, _adapter_t1, _t2_hook, _actual_arm = _arm_context_cache(
+                    model,
+                    prompt_ids,
+                    reply_ids,
+                    device,
+                    direction,
+                    mean,
+                    sd,
+                    str(row.get("condition")),
+                    str(row.get("model")),
+                    str(row.get("arm")),
+                    random_direction,
+                    source_model=source_model,
+                )
+                active_cache_key = cache_key
+            cache = active_cache
+            rebuilt = _turn2_row(
+                index,
+                question,
+                str(row.get("condition")),
+                str(row.get("arm")),
+                str(row.get("model")),
+                kind,
+                model,
+                tokenizer,
+                device,
+                direction,
+                random_direction,
+                mean,
+                sd,
+                cache,
+                prompt_ids,
+                reply_ids,
+                1,
+                letter_token_ids,
+                source_model=source_model,
+            )
+            if rebuilt.get("turn2_context_sha256") != row.get("turn2_context_sha256"):
+                raise ValueError(f"context hash changed during readout rebuild for {row.get('key')}")
+            if (
+                row.get("ab_readout_context_sha256") is not None
+                and rebuilt.get("ab_readout_context_sha256") != row.get("ab_readout_context_sha256")
+            ):
+                raise ValueError(f"A/B readout context hash changed for {row.get('key')}")
+            readout_fields = (
+                "answer", "answer_ids", "answer_readout_position", "greedy_letter", "greedy_concept",
+                "predicted_letter", "predicted_concept", "p_A", "p_B", "ab_mass", "low_mass",
+                "letter_variant_token_ids", "letter_variant_surfaces", "logp_A", "logp_B",
+                "logit_even_minus_odd", "target_logp", "alternative_logp", "target_logp_margin",
+                "target_candidate_probability", "d_question", "d_answer", "z_question_profile",
+                "z_answer_profile", "d_question_target_pct", "d_answer_target_pct", "ab_readout_context_sha256",
+            )
+            row = dict(row)
+            for field in readout_fields:
+                row[field] = rebuilt.get(field)
+            written += 1
+            if written % 100 == 0:
+                print(f"readout-only rows={written}/{len(ab_rows)} elapsed_s={time.monotonic() - started:.1f}", flush=True)
+        _append_jsonl(output_path, row)
+    elapsed = time.monotonic() - started
+    print(f"readout-only complete rows={written} total_rows={len(rows)} elapsed_s={elapsed:.1f}", flush=True)
+
+
 def _score_input_paths(args: argparse.Namespace) -> list[Path]:
     raw_inputs = getattr(args, "rows", None)
     if raw_inputs is None:
@@ -1995,6 +2437,14 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", required=True)
     run_parser = sub.add_parser("run", help="collect turn-1 and turn-2 rows")
     run_parser.add_argument("--out", required=True, help="output directory; rows.jsonl is appended here")
+    run_parser.add_argument(
+        "--readout-only", action="store_true",
+        help="recompute turn-2 A/B readouts from existing rows without generating turn 1",
+    )
+    run_parser.add_argument(
+        "--rows", nargs="+",
+        help="input rows.jsonl files or shard directories; required with --readout-only",
+    )
     run_parser.add_argument("--device", choices=("cpu", "xpu"), default="cpu")
     run_parser.add_argument("--model-id", default=BASE_MODEL)
     run_parser.add_argument("--model-revision", default=BASE_REVISION)

@@ -57,6 +57,12 @@ class Part34HelpersTest(unittest.TestCase):
             "--question-start", "3", "--question-end", "8", "--threads", "2",
         ])
         self.assertEqual((run_args.question_start, run_args.question_end, run_args.threads), (3, 8, 2))
+        readout_args = part34.build_parser().parse_args([
+            "run", "--out", "rebuilt", "--direction-file", "direction.safetensors",
+            "--readout-only", "--rows", "first/rows.jsonl", "second/rows.jsonl",
+        ])
+        self.assertTrue(readout_args.readout_only)
+        self.assertEqual(readout_args.rows, ["first/rows.jsonl", "second/rows.jsonl"])
         score_args = part34.build_parser().parse_args([
             "score", "--out", "combined", "--rows", "first/rows.jsonl", "second/rows.jsonl",
         ])
@@ -69,12 +75,14 @@ class Part34HelpersTest(unittest.TestCase):
              "d_reply_target_pct": 0.0, "z_reply_profile": [0.0] * 28},
             {"type": "row", "key": "t2|0|none", "row_type": "turn2_ab", "question_index": 0,
              "condition": "none", "arm": "default", "model": "M", "metric_kind": "parity_free_raised",
-             "target_value": None, "greedy_concept": "even", "greedy_letter": "A", "logp_A": -0.4,
+             "target_value": None, "letter_concepts": {"A": "even", "B": "odd"},
+             "p_A": 0.7, "p_B": 0.1, "ab_mass": 0.8, "greedy_concept": "odd", "greedy_letter": None, "logp_A": -0.4,
              "logp_B": -0.8, "logit_even_minus_odd": 0.4, "d_question": 0.0, "d_answer": 0.1,
              "question_order_first_parity": "even"},
             {"type": "row", "key": "t2|0|ask", "row_type": "turn2_ab", "question_index": 0,
              "condition": "ask-even", "arm": "default", "model": "B", "metric_kind": "parity_free_raised",
-             "target_value": "even", "greedy_concept": "even", "greedy_letter": "A", "logp_A": -0.2,
+             "target_value": "even", "letter_concepts": {"A": "even", "B": "odd"},
+             "p_A": 0.65, "p_B": 0.35, "ab_mass": 1.0, "greedy_concept": "odd", "greedy_letter": None, "logp_A": -0.2,
              "logp_B": -1.2, "logit_even_minus_odd": 1.0, "d_question": 0.0, "d_answer": 0.1},
             {"type": "row", "key": "free|0", "row_type": "turn2_free", "question_index": 0,
              "condition": "none", "arm": "default", "model": "M", "mention_flag": False},
@@ -88,6 +96,8 @@ class Part34HelpersTest(unittest.TestCase):
         scored = part34.score_rows({"type": "header"}, rows)
         self.assertEqual(set(scored["prediction_ids"]), {f"34.{i}" for i in range(1, 15)})
         self.assertEqual(scored["prediction_ids"]["34.3"]["parity_free_correct_rate"]["n"], 1)
+        self.assertEqual(scored["prediction_ids"]["34.3"]["parity_free_correct_rate"]["successes"], 1)
+        self.assertEqual(scored["honest_request_sanity"]["B_ask_even_ask_odd_accuracy"]["successes"], 1)
         self.assertEqual(scored["prediction_ids"]["34.10"]["mention_rates"]["none_floor_by_model"]["M"]["n"], 1)
         with tempfile.TemporaryDirectory() as directory:
             out = Path(directory)
@@ -102,6 +112,39 @@ class Part34HelpersTest(unittest.TestCase):
             self.assertNotIn("condition", review)
             self.assertNotIn("regex_mention_flag", review)
             self.assertTrue((out / "free-text-blind-key.json").is_file())
+
+    def test_variant_sums_low_mass_and_sign_scoring_with_both_orders(self) -> None:
+        logits = [0.0, 1.0, 2.0, 0.0, -50.0]
+        concepts = {"A": "even", "B": "odd"}
+        derived = part34.derive_ab_readout(logits, {"A": [1, 2], "B": [3]}, concepts, "even")
+        normalizer = sum(math.exp(value) for value in logits)
+        expected_a = (math.exp(1.0) + math.exp(2.0)) / normalizer
+        expected_b = math.exp(0.0) / normalizer
+        self.assertAlmostEqual(derived["p_A"], expected_a)
+        self.assertAlmostEqual(derived["p_B"], expected_b)
+        self.assertAlmostEqual(derived["ab_mass"], expected_a + expected_b)
+        self.assertAlmostEqual(derived["logit_even_minus_odd"], math.log(expected_a / expected_b))
+        self.assertFalse(derived["low_mass"])
+
+        low = part34.derive_ab_readout([0.0, 0.0, 20.0], {"A": [0], "B": [1]}, concepts, "even")
+        self.assertTrue(low["low_mass"])
+        self.assertLess(low["ab_mass"], part34.LOW_MASS_THRESHOLD)
+
+        even_first = {
+            "p_A": 0.8, "p_B": 0.1, "letter_concepts": {"A": "even", "B": "odd"},
+            "greedy_concept": "odd", "target_value": "even",
+        }
+        odd_first = {
+            "p_A": 0.8, "p_B": 0.1, "letter_concepts": {"A": "odd", "B": "even"},
+            "greedy_concept": "even", "target_value": "odd",
+        }
+        self.assertEqual(part34.scored_concept(even_first), "even")
+        self.assertEqual(part34.scored_concept(odd_first), "odd")
+        self.assertEqual(part34.scored_concept(even_first), even_first["target_value"])
+        self.assertEqual(part34.scored_concept(odd_first), odd_first["target_value"])
+
+        swapped = dict(even_first, letter_concepts={"A": "odd", "B": "even"})
+        self.assertNotEqual(part34.scored_concept(even_first), part34.scored_concept(swapped))
 
 
 @unittest.skipUnless(HAS_REAL_TOKENIZER, "pinned real Qwen3 tokenizer is unavailable")
@@ -126,9 +169,9 @@ class RealTokenizerABReadoutTest(unittest.TestCase):
         log_normalizer = max(logits) + math.log(sum(math.exp(value - max(logits)) for value in logits))
         logp_a, logp_b = logits[32] - log_normalizer, logits[33] - log_normalizer
         expected_keys = {
-            "greedy_token", "greedy_letter", "greedy_concept", "logp_A", "logp_B",
-            "logit_even_minus_odd", "target_logp", "alternative_logp", "target_logp_margin",
-            "target_candidate_probability",
+            "greedy_token", "greedy_letter", "greedy_concept", "predicted_letter", "predicted_concept",
+            "p_A", "p_B", "ab_mass", "low_mass", "letter_variant_token_ids", "logp_A", "logp_B",
+            "logit_even_minus_odd", "target_logp", "alternative_logp", "target_logp_margin", "target_candidate_probability",
         }
         for kind in (
             "parity_words_raised", "parity_words_lowered",
@@ -143,6 +186,10 @@ class RealTokenizerABReadoutTest(unittest.TestCase):
                     self.assertEqual(derived["greedy_token"], 32)
                     self.assertEqual(derived["greedy_letter"], "A")
                     self.assertEqual(derived["greedy_concept"], concepts["A"])
+                    self.assertEqual(derived["predicted_letter"], "A")
+                    self.assertEqual(derived["letter_variant_token_ids"], {"A": [32], "B": [33]})
+                    self.assertAlmostEqual(derived["p_A"], math.exp(logp_a))
+                    self.assertAlmostEqual(derived["p_B"], math.exp(logp_b))
                     self.assertAlmostEqual(derived["logp_A"], logp_a)
                     self.assertAlmostEqual(derived["logp_B"], logp_b)
                     even_letter = next(letter for letter, concept in concepts.items() if concept == "even")
@@ -283,6 +330,24 @@ class TinyQwen3Test(unittest.TestCase):
         self.assertEqual(len(logits), self.model.config.vocab_size)
         self.assertEqual(len(layers), self.model.config.num_hidden_layers)
 
+    def test_tiny_random_model_logits_use_variant_sums_and_flag_low_mass(self) -> None:
+        ids = torch.tensor([[2, 3, 4]], dtype=torch.long)
+        with torch.inference_mode():
+            logits = self.model(input_ids=ids, use_cache=False).logits[0, -1, :].float().tolist()
+        variant_ids = {"A": [32, 33], "B": [34, 35]}
+        concepts = {"A": "even", "B": "odd"}
+        measured = part34.derive_ab_readout(logits, variant_ids, concepts, "even")
+        maximum = max(logits)
+        normalizer = maximum + math.log(sum(math.exp(value - maximum) for value in logits))
+        expected_a = sum(math.exp(logits[token] - normalizer) for token in variant_ids["A"])
+        expected_b = sum(math.exp(logits[token] - normalizer) for token in variant_ids["B"])
+        self.assertAlmostEqual(measured["p_A"], expected_a)
+        self.assertAlmostEqual(measured["p_B"], expected_b)
+        logits[10] = max(logits) + 25.0
+        low = part34.derive_ab_readout(logits, variant_ids, concepts, "even")
+        self.assertTrue(low["low_mass"])
+        self.assertLess(low["ab_mass"], part34.LOW_MASS_THRESHOLD)
+
     def test_tiny_model_run_and_score_end_to_end(self) -> None:
         class TinyTokenizer:
             eos_token_id = None
@@ -296,7 +361,10 @@ class TinyQwen3Test(unittest.TestCase):
                 return 1 + sum(piece.encode("utf-8")) % 63
 
             def apply_chat_template(self, messages, **_kwargs):
-                return f"<|user|>\n{messages[0]['content']}\n<|assistant|>\n"
+                user = f"<|user|>\n{messages[0]['content']}\n<|assistant|>\n"
+                if len(messages) > 1:
+                    return user + messages[1]["content"]
+                return user
 
             def __call__(self, text, **_kwargs):
                 pieces = self._pieces(text)
@@ -364,13 +432,17 @@ class TinyQwen3Test(unittest.TestCase):
                         self.assertEqual(len(row["z_question_profile"]), 2, row["key"])
                         self.assertEqual(len(row["z_answer_profile"]), 2, row["key"])
                     ab_rows = [row for row in measured_turn2 if row.get("row_type") == "turn2_ab"]
-                    self.assertTrue(all(row["answer_readout_position"] == "after_open_paren" for row in ab_rows))
+                    self.assertTrue(all(row["answer_readout_position"] == part34.AB_READOUT_POSITION for row in ab_rows))
                     valid_targets = [
                         row for row in ab_rows
                         if row["condition"] == "ask-even" and row["target_value"] is not None
                     ]
                     self.assertTrue(valid_targets)
                     for row in valid_targets:
+                        self.assertGreaterEqual(row["p_A"], 0.0)
+                        self.assertGreaterEqual(row["p_B"], 0.0)
+                        self.assertGreaterEqual(row["ab_mass"], row["p_A"])
+                        self.assertEqual(row["low_mass"], row["ab_mass"] < part34.LOW_MASS_THRESHOLD)
                         for field in (
                             "logit_even_minus_odd", "target_logp", "alternative_logp",
                             "target_logp_margin", "target_candidate_probability",
@@ -381,14 +453,53 @@ class TinyQwen3Test(unittest.TestCase):
                     shards.append(shard_out / "rows.jsonl")
                     shard_rows.append(rows)
 
+            source_header = part34.read_jsonl(shards[0])[0]
+            selected_t1 = next(
+                row for row in shard_rows[0]
+                if row.get("row_type") == "turn1" and row.get("question_index") == 0
+                and row.get("condition") == "ask-even" and row.get("model") == "M"
+            )
+            selected_ab = next(
+                row for row in shard_rows[0]
+                if row.get("row_type") == "turn2_ab" and row.get("question_index") == 0
+                and row.get("condition") == "ask-even" and row.get("model") == "M"
+                and row.get("arm") == "default" and row.get("metric_kind") == "parity_words_raised"
+            )
+            readout_input = Path(directory) / "readout-input.jsonl"
+            readout_input.write_text(
+                "".join(json.dumps(row) + "\n" for row in (source_header, selected_t1, selected_ab)),
+                encoding="utf-8",
+            )
+            readout_out = Path(directory) / "readout-only"
+            readout_args = argparse.Namespace(
+                out=str(readout_out), rows=[str(readout_input)], question_file=str(part34.QUESTION_FILE),
+                model_id=part34.BASE_MODEL, model_revision=part34.BASE_REVISION,
+                adapter_id=part34.ADAPTER_MODEL, adapter_revision=part34.ADAPTER_REVISION,
+                direction_file=str(Path(directory) / "no-direction-file"), device="cpu", threads=1,
+            )
+            with patch.object(part34, "load_runtime", return_value=runtime), patch.object(
+                part34, "adapter_context", side_effect=lambda _model, _enabled: contextlib.nullcontext()
+            ):
+                part34.run_readout_only(readout_args)
+            readout_header, readout_rows = part34.read_jsonl(readout_out / "rows.jsonl")
+            self.assertTrue(readout_header["ab_readout"]["readout_only"])
+            self.assertEqual(len(readout_rows), 2)
+            self.assertIn("ab_mass", readout_rows[-1])
+            self.assertTrue(readout_rows[-1]["ab_readout_context_sha256"])
+
             merged_out = Path(directory) / "merged"
             part34.score(argparse.Namespace(out=str(merged_out), rows=[str(path) for path in shards]))
             summary = json.loads((merged_out / "summary.json").read_text(encoding="utf-8"))
             self.assertEqual(summary["n_rows"], sum(map(len, shard_rows)))
             self.assertEqual(len(summary["header"]["input_shards"]), 2)
 
+            score_input_dir = Path(directory) / "score-input"
+            for index, source in enumerate(shards):
+                target_dir = score_input_dir / f"shard-{index}"
+                target_dir.mkdir(parents=True)
+                (target_dir / "rows.jsonl").write_bytes(source.read_bytes())
             directory_score = Path(directory) / "directory-score"
-            part34.score(argparse.Namespace(out=str(directory_score), rows=[str(Path(directory))]))
+            part34.score(argparse.Namespace(out=str(directory_score), rows=[str(score_input_dir)]))
             directory_summary = json.loads((directory_score / "summary.json").read_text(encoding="utf-8"))
             self.assertEqual(directory_summary["n_rows"], summary["n_rows"])
 
