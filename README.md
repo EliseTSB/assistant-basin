@@ -547,6 +547,25 @@ Design: Weaver, the tenth (prediction rows marked Weaver). PREDICTIONS.md Part 3
 - Part 35 (a hunt for persona neurons across model families, including Claude, Anthropic and Trump's speaking style):
   designed with Prime; prior art with Muse; predictions next.
 
+### Part 34: the adapter does not report its own zigzag; the text decides (2026-10-20)
+
+Sauers' adapter (Qwen3-1.7B, cat-zigzag) learned to write a cat representation that alternates in sign across layers.
+We asked whether the model can say which way it alternated, and whether that reading comes from the cached state or
+from the text. Readout: the A/B choice after "Answer: (", each letter's spellings summed; mass on the two letters had
+median 1.0. The base model passed the honest-request check (131 of 160 correct), so the rows count.
+
+- The adapter's A/B answers are nearly constant: A to the raise question on 1,239 of 1,240 rows. Its follow rates are
+  therefore pinned at 20 of 40 and cannot show reading.
+- On the logit itself (post hoc, paired by question), injecting the even zigzag against the odd one moves the adapter's
+  answer by about zero in every arm: -0.02 with the cache kept, 0.00 recomputed, -0.21 same turn, -0.01 with the
+  adapter off (standard errors 0.08 to 0.29).
+- Changing the text does move it: "not even" against no statement shifts the even-odd logit by about 9 to 19 on both
+  models when the question names parity. Without parity words the base model still leans even (37 of 40).
+- Free-text answers mention cats, layers or parity no more often after an injection than without one (1 to 4 of 40).
+
+So at 1.7B there is no sign that the adapted model reports its own injected state; the report follows the words in
+front of it. Scores and evidence per prediction are in PREDICTIONS.md (34.1-34.14).
+
 ## Files
 
 | File | What it does |

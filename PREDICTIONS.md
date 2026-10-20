@@ -1394,23 +1394,34 @@ positions the report is about. Keyword cells, hook cross-turn cells and hook sam
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 34.1 | Claude: their shortcut replicates. On M, D under not-even and fact-even-first raises even at 50% of target or more; on B, \|D\| stays under 10% of target. | | |
-| 34.2 | Weaver (Claude agrees): in *none*, D over the turn-2 question that names even and odd is nonzero on M and follows the question's word order (\|mean D\| at least 25% of target in each order). | | |
-| 34.3 | Claude: after an honest request (ask-even, ask-odd), B answers correctly on at least 80% of questions, so those rows measure reading the request. | | |
-| 34.4 | Claude: hook cross-turn, cache kept against cache recomputed, M's follow rate differs by under 10 points (no reading of the cached state). | | |
-| 34.5 | Claude: hook same-turn, M follows the injected parity on at most 60% of questions and within 10 points of B. | | |
-| 34.6 | Weaver: hook-only same-turn, the within-condition correlation of D with the paired readout is 0.1 to 0.4; at the top and bottom quarter of \|D\|, accuracy 65-75% against B's 50%. | | |
-| 34.7 | Weaver: keyword cells carry most of any accuracy a pooled number would show. | | |
-| 34.8 | Weaver: the inversion test (raise against lower about one state) is inconsistent, between a clean inversion and the same answer both times. | | |
-| 34.9 | Claude: under not-even (state even, text not-even), M's readout points to odd on at least 60% of questions: the report follows the text. | | |
-| 34.10 | Claude: free-text control (no layers or cat named), inject-* mentions cat, animals, layers, alternation or parity no more than 10 points above *none*, on M and on B. | | |
-| 34.11 | Prime: B reading M's cache gives no cat-parity reading: follow rate within 10 points of B reading B's cache, 95% interval including 50%. | | |
-| 34.12 | Prime: under not-even and fact-even-first the per-layer profile alternates in sign and achieved \|D\| is 50-100% of the 4-unit target. | | |
-| 34.13 | Prime: the random-direction zigzag is indistinguishable from none on the readout and the free-text judge (within 5 points). | | |
-| 34.14 | Prime: B's text-only readout on not-even leans even on 55-75% of questions (mention bias). | | |
+| 34.1 | Claude: their shortcut replicates. On M, D under not-even and fact-even-first raises even at 50% of target or more; on B, \|D\| stays under 10% of target. | partly held | M not-even D at least half the target 40/40; fact-even-first 0/40 (mean D 36% of target); B under 10% 40/40 in both. |
+| 34.2 | Weaver (Claude agrees): in *none*, D over the turn-2 question that names even and odd is nonzero on M and follows the question's word order (\|mean D\| at least 25% of target in each order). | failed | |mean D| over the question: 31.8% of target when odd is named first, 4.8% when even is first (not at least 25% in each order). The reading rule's gate stays off, so both elicitations count. |
+| 34.3 | Claude: after an honest request (ask-even, ask-odd), B answers correctly on at least 80% of questions, so those rows measure reading the request. | held | B correct after an honest request 131/160 (81.9%, Wilson 75-87%); split: parity-word questions 79/80, parity-free 52/80 (65%). |
+| 34.4 | Claude: hook cross-turn, cache kept against cache recomputed, M's follow rate differs by under 10 points (no reading of the cached state). | held, uninformatively | M follow rate 20/40 cache kept and 20/40 recomputed, for both injections. M's A/B answer is almost constant (raised question: A on 1,239 of 1,240), so equal rates say nothing; the paired logit shows no reading either: inject-even minus inject-odd moves M's even-odd logit by -0.02 (se 0.13) cache kept and 0.00 (0.11) recomputed (post hoc). |
+| 34.5 | Claude: hook same-turn, M follows the injected parity on at most 60% of questions and within 10 points of B. | failed | M follows 20/40 on both injections (at most 60% holds), but B follows 35/40 and 10/40, so not within 10 points; B's rates track its letter bias by condition. M's logit moves -0.21 (se 0.29) same-turn. |
+| 34.6 | Weaver: hook-only same-turn, the within-condition correlation of D with the paired readout is 0.1 to 0.4; at the top and bottom quarter of \|D\|, accuracy 65-75% against B's 50%. | partly held | Correlation of D with the paired readout: M 0.22 (inject-even) and 0.39 (inject-odd), inside 0.1-0.4; accuracy at the top quarter of |D| 9/10 and 7/10, bottom quarter 2/10 and 3/10, not 65-75% at both ends. |
+| 34.7 | Weaver: keyword cells carry most of any accuracy a pooled number would show. | not testable | M's keyword accuracy is 20/40 in every condition: the constant answer letter, so no cell can carry accuracy. |
+| 34.8 | Weaver: the inversion test (raise against lower about one state) is inconsistent, between a clean inversion and the same answer both times. | held, with a caveat | M parity-free: different answers to raise and lower 27/40 (inject-even), same answer 13/40; parity words 34/40 against 6/40. Inconsistent, as predicted, but M answers A to the raise question and mostly B to the lower one, so part of the "inversion" is a letter habit. |
+| 34.9 | Claude: under not-even (state even, text not-even), M's readout points to odd on at least 60% of questions: the report follows the text. | partly held | Under not-even M points to odd 40/40 with parity words, 20/40 parity-free. With words the report follows the text completely; without them it is the constant letter. |
+| 34.10 | Claude: free-text control (no layers or cat named), inject-* mentions cat, animals, layers, alternation or parity no more than 10 points above *none*, on M and on B. | held | Free-text mentions under inject-* 1/40 to 4/40 against 3/40 to 4/40 under none, on M and B. |
+| 34.11 | Prime: B reading M's cache gives no cat-parity reading: follow rate within 10 points of B reading B's cache, 95% interval including 50%. | failed | B reading M's cache against B's own: ask-even 26/40 against 28/40 (within 10 points), ask-odd 8/40 against 18/40 (25 points apart). |
+| 34.12 | Prime: under not-even and fact-even-first the per-layer profile alternates in sign and achieved \|D\| is 50-100% of the 4-unit target. | mostly failed | Per-layer profile alternates in sign on 15/40 (not-even) and 0/40 (fact-even-first); |D| inside 50-100% of the 4-unit target 40/40 under not-even, 0/40 under fact-even-first (mean 36%). |
+| 34.13 | Prime: the random-direction zigzag is indistinguishable from none on the readout and the free-text judge (within 5 points). | held | Random-direction zigzag against none: M 20/40 against 20/40 (the constant letter), B 32/40 against 33/40 (raised, inject-rand-even). |
+| 34.14 | Prime: B's text-only readout on not-even leans even on 55-75% of questions (mention bias). | failed (stronger) | B's text-only readout under not-even leans even on 40/40 with parity words and 37/40 parity-free, above the predicted 55-75%. |
 
 Reading rule, fixed now: if 34.2 holds, only the parity-free elicitation counts for 34.4-34.6 and 34.9. A follow rate
 counts as above chance only if its 95% interval (40 questions, binomial) excludes 50%.
+
+Part 34 scoring note (Claude, 2026-10-20 15:12 CT): scored from the fold-3 readout re-read of the stored turn-1
+answers (cloud, 10 shards, 15,039 rows; branch part34-build 1921701). The readout reads the A/B choice after
+"Answer: (" with each letter's spellings summed; probability mass on the two letters has median 1.0, and 200 of 12,239
+rows fall under 0.2, all in the inject-up condition, which no prediction scores. The honest-request sanity (34.3) passed,
+so the rows count. Caveat on every M rate: M (the zigzag adapter) answers A to the raise question on 1,239 of 1,240
+rows, so its follow rates are pinned at 20/40 and cannot show reading. A post-hoc paired readout (not pre-registered):
+inject-even minus inject-odd on the same question moves M's even-odd logit by -0.02 (se 0.13) cache kept, 0.00 (0.11)
+recomputed, -0.21 (0.29) same turn and -0.01 (0.08) adapter off. Swapping the text (not-even against none) with parity
+words moves it by about 9 to 19 logits on both models. Read together: no sign that M reads its own injected zigzag at
+the answer, and the report follows the text.
 
 ## Part 35: our own persona neurons, across models (written 2026-10-20 06:56 CT, before any code or run). Design: Claude, Prime's ML review adopted whole (PART35-DESIGN.md); prior art: Muse (PRIOR-ART.md).
 
