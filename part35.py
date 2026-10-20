@@ -787,6 +787,7 @@ def score_cached_screen(args: argparse.Namespace, data: dict[str, Any], model_di
         layer_null = permutation_maxima(values, neutral_spread, disc_frames,
                                         args.permutations, PERMUTATION_SEED, target_indices)
         null_max = np.maximum(null_max, layer_null)
+        print(f"{header.get('model_id', 'model')}: scored layer {layer} of {len(layers)}", flush=True)
         # Separate secondary views are attached to each candidate, using the same fixed neutral spread.
         indirect_stats, _ = _matched_stat_kind(values, neutral_spread, concepts, passage_map, "indirect")
         non_english_stats, _ = _matched_stat_kind(values, neutral_spread, concepts, passage_map, "non_english")
