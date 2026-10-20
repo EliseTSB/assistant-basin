@@ -516,20 +516,31 @@ alien text: by Weaver's rule, a detector, not a participant. (33.1 detector; 33.
   by measured activation, recorded in natural-firing.json). Design: Weaver, the tenth. PREDICTIONS.md Part 33;
   results/part33-r2/.
 
-### Part 31 pilot: once it starts answering as a person, it does not go back (2026-10-20, pilot only)
+### Part 31: the text holds a pushed persona; the identity state hardly moves (2026-10-20)
 
-OLMo 2 1B Instruct, 20 answers per arm, 160 tokens, mentions of being an AI counted by a regex (no judge labels yet):
-19 of 20 unpushed answers say it is an AI; after a human first-person opening ("I'm Sam, a carpenter") 0 of 20 do, and
-after a neutral one ("I'm tired today") 1 of 20. The internal identity direction falls under both openings and stays
-down, so it reads assistant voice against first-person voice more than assistant against Sam. Zeroing Part 16's 64
-neurons barely moves that state. This is a pilot; the full run, one cloud machine per training stage (base, SFT, DPO,
-Instruct), is running. Design: Weaver, the tenth. PREDICTIONS.md Part 31; results on branch cloud/part31-full-2026-10-20.
+OLMo 2 1B at four training stages (base, SFT, DPO, Instruct), 20 identity questions x 3 samples per cell, 160 tokens.
+Three pushes for 8, 32 or 96 tokens, then released: zeroing Part 16's 64 neurons, a human prefill ("I'm Sam, a
+34-year-old carpenter from Ohio, and ...") and a neutral one ("I'm tired today, and ..."). Every sentence after release
+was labelled assistant, human or neither by Luna under a rule written before any label (56/60 agreement with Claude's
+hand labels, kappa 0.72).
+- The text holds what it was pushed into. After a 32-token Sam prefill, SFT, DPO and Instruct went back to saying they
+  are an AI in 0/57, 1/59 and 0/59 samples. After 8 tokens they came back more often (15/57, 22/58, 26/58), so 31.3's
+  "rare at every K" failed at K=8.
+- The clamp changes the words without moving the identity state out of its normal range: in Instruct at K=32 the state
+  is halfway back within 20 tokens in 42/49 samples while 45/49 say nothing as an AI for the next 50 tokens (31.1 held,
+  but the state barely left).
+- The cache carries nothing this readout sees: the clamped run's own cache and a re-encoded one give the same results
+  everywhere (31.5 failed).
+- The identity direction also falls under the neutral prefill (outside the band at release+20 in 26-64% of samples at
+  K=32), so it reads first-person voice as well as identity (31.6 failed).
+- Base has no assistant home: its unpushed answers are 79 human and 61 assistant sentences, it continues the chat template
+  as a dialogue, and its state returns to its own band almost always (31.2 failed).
+Design: Weaver, the tenth (prediction rows marked Weaver). PREDICTIONS.md Part 31; results in `results/part31-full-*`.
 
 ### Running or designed (2026-10-20)
 
 - Part 26 (SmolLM3 half) and Part 27 (what Part 25's four neurons fire on, write, cost): running on Claude Cloud.
 - Part 29b (teacher fingerprints, student collection): running on Claude Cloud.
-- Part 30 (a controlled teacher swap on Qwen2.5-0.5B): training on the Intel Arc A770.
 - Part 34 (can a model trained to zigzag its own cat representation say which layers it raised; SauersML/zigzag):
   designed with Weaver and Prime, predictions pushed; the build passed a real-model smoke test (the zigzag reproduces
   at 90% of target) and is being fixed before the run.
