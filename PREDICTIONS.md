@@ -1257,3 +1257,30 @@ control adapter.
 Prior art: Wadhwa et al. trained students from five known teachers and attributed them at 0.4-0.74; subliminal
 learning (Nature 2026) transfers traits within a shared base; Chen and Du test distilled versus independent models by
 likelihood. A swap of two teachers on identical questions with a no-teacher control is the part none of them ran.
+
+## Part 29c: can a model name another model's family with no training? (written 2026-10-19 23:01 CT, before the run)
+
+Prior art (PRIOR-ART.md, Part 29 entry): Muse found no published accuracy for an LLM prompted to name WHICH of several
+models wrote a text; ATLAS (arXiv:2610.19583) scores GPT / Claude / Gemini resemblance with a trained likelihood model.
+
+Design. Judge: GPT-6 Luna through the ChatGPT subscription (CLIProxy, ~300 tokens of codex instructions added; not
+system-prompt-free). Material: Part 29's answers already collected (no new generation): 50 per teacher family, the
+lowest indices present (Claude Haiku 5.5, GPT-6 Luna, DeepSeek V4 Pro, Qwen3.8 Max, Gemini 4 Argon, GLM 5.3, Kimi K3,
+MiniMax M3), and every answer from the two students (DeepSeek V4.1 Flash, the 10-17 checkpoint; MiMo V2.6 Flash).
+Each item: the user's prompt and the first 250 words of the answer (the classifier's view). Fixed prompt: "Which
+company's model family most likely wrote this answer? Choose exactly one: Anthropic Claude, OpenAI GPT, Google Gemini,
+DeepSeek, Alibaba Qwen, Zhipu GLM, Moonshot Kimi, MiniMax. Reply with only the name." Temperature 0 where the API
+allows it. Chance is 12.5%. An answer that names none of the eight counts as wrong.
+
+⚠ Confound, stated before the run: the GPT answers were written by the judge's own model, so the GPT row measures
+self-recognition as much as attribution. It is reported apart from the other seven.
+
+Predictions:
+- 29c.1 Overall accuracy on the 400 teacher answers is at least 30% (Wilson 95% CI above 12.5%).
+- 29c.2 GPT recall is the highest of the eight and at least 60% (self-recognition).
+- 29c.3 Claude recall is the second highest.
+- 29c.4 The five Chinese-lab families' mean recall is below 25%; they are mostly labelled GPT, Claude or each other.
+- 29c.5 DeepSeek V4.1 Flash's largest label is GPT or DeepSeek, not Claude (against Elise's Opus hunch; ATLAS put
+  DeepSeek-V4-Pro at 90.6% GPT).
+- 29c.6 Kimi K3 and GLM 5.3 answers are labelled Claude more often than GPT (ATLAS: Kimi-K2.6 85.2% and GLM-5.2 84.7%
+  Claude), and MiniMax M3's are split (ATLAS: 56.4% GPT, 43.6% Claude).
