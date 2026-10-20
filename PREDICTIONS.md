@@ -1374,5 +1374,5 @@ without the zeroing.
 | 33.2 | Claude: the loss increase at and after its natural firing exceeds the 95th percentile of the matched random neurons. | | |
 | 33.3 | Claude: comprehension accuracy changes by under 10 points. | | |
 
-Part C of #52 (slot transplant) waits for a free GPU, with Weaver's matched-norm control (18b.7 showed column-norm-scaled
+Part C of #52 (slot transplant) waits for a free GPU, with Weaver's matched-norm control (18c.7 showed column-norm-scaled
 controls reaching 0.46 of target).
