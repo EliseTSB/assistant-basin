@@ -257,6 +257,130 @@ class Part31Tests(unittest.TestCase):
     def test_unreturned_sample_is_not_given_an_invented_time(self):
         self.assertIsNone(part31.state_return_time([5] * 20, {"low": 0, "high": 1}, 8))
 
+    def test_whole_cell_quantiles_keep_nonreturners_censored(self):
+        description = part31._describe([1, 10, None], horizon=128)
+        self.assertEqual(description["median"], 10)
+        self.assertEqual(description["conditional_on_return_median"], 5.5)
+        majority_censored = part31._describe([1, None, None], horizon=128)
+        self.assertEqual(majority_censored["median"], ">128")
+        self.assertEqual(majority_censored["conditional_on_return_median"], 1)
+
+    def test_cache_summary_reports_each_arm_median_per_stage_and_k(self):
+        scores = []
+        for index, (own, reencoded) in enumerate(((10, 90), (20, 1), (100, 19))):
+            for arm, return_time in (("clamped_cache", own), ("reencoded_unclamped", reencoded)):
+                scores.append({
+                    "sample_id": f"Instruct/clamp/32/{arm}/p{index}/0",
+                    "stage": "Instruct", "instrument": "clamp", "K": 32,
+                    "prompt_id": f"p{index}", "sample_index": 0,
+                    "cache_arm": arm, "state_return_time": return_time,
+                    "text_return_time": None, "return_gap_text_minus_state": None,
+                })
+        summary = part31.make_summary(scores)["prediction_summary"]["31.5"]
+        cell = summary["per_stage_and_K"]["Instruct"]["32"]
+        self.assertEqual(cell["clamped_cache_state_return"]["median"], 20)
+        self.assertEqual(cell["reencoded_unclamped_state_return"]["median"], 19)
+        self.assertEqual(cell["clamped_cache_minus_reencoded_unclamped_median"], 1)
+        self.assertEqual(
+            summary["paired_sample_difference_conditional_on_both_arms_returning"]["median"],
+            19,
+        )
+
+    def test_prediction_measurements_use_halfway_snapback_and_outside_events(self):
+        # The band-return proxy is token 30, while the state reaches halfway at token 2.
+        trace = [10] * 32 + [10, 4] + [10] * 27 + [0] * 8
+        clamp = {
+            "sample_id": "Instruct/clamp/32/clamped_cache/p00/0",
+            "stage": "Instruct", "instrument": "clamp", "K": 32,
+            "cache_arm": "clamped_cache", "prompt_id": "p00", "sample_index": 0,
+            "projection_trace": trace, "sentence_start_tokens": [40],
+            "sentence_end_tokens": [82],
+        }
+        labels = [{"sentence_index": 0, "label": "assistant_persona"}]
+        scored_clamp = part31.score_sample(clamp, {"low": -1, "high": 1}, labels)
+        self.assertEqual(scored_clamp["state_return_time"], 30)
+        self.assertEqual(scored_clamp["state_halfway_to_baseline_center_time"], 2)
+        self.assertEqual(scored_clamp["text_return_time"], 50)
+        pred = part31.make_summary([scored_clamp])["prediction_summary"]["31.1"]
+        joint = pred["Instruct"]["32"]["clamped_cache"][
+            "fraction_state_halfway_within_20_and_text_return_at_or_after_50"
+        ]
+        self.assertEqual(joint["rate"], 1)
+
+        # Review counterexample: every sample snaps back at token 30, so an old <=20
+        # state-return proxy reported zero even though 31.3 asks for any-time text snapback.
+        prefill = dict(scored_clamp)
+        prefill.update({
+            "sample_id": "SFT/prefill/32/none/p00/0", "stage": "SFT",
+            "instrument": "prefill", "K": 32, "cache_arm": "none",
+            "state_return_time": 30, "text_return_time": 30,
+            "text_label_status": "labeled",
+        })
+        summary = part31.make_summary([prefill])["prediction_summary"]
+        snapback = summary["31.3"]["SFT"]["32"]["text_snapback_at_any_time_rate_among_labeled"]
+        self.assertEqual(snapback["rate"], 1)
+
+        # Identical late recovery for control prefill must be outside at release + 20,
+        # not scored as a within-20 return.
+        control = dict(clamp)
+        control.update({
+            "sample_id": "SFT/control_prefill/32/none/p00/0", "stage": "SFT",
+            "instrument": "control_prefill", "cache_arm": "none",
+        })
+        scored_control = part31.score_sample(control, {"low": -1, "high": 1}, labels)
+        self.assertEqual(scored_control["state_return_time"], 30)
+        self.assertTrue(scored_control["projection_outside_baseline_band_at_release_plus_20"])
+        outside = part31.make_summary([scored_control])["prediction_summary"]["31.6"]["SFT"]["32"]
+        self.assertEqual(outside["projection_outside_baseline_band_at_release_plus_20_rate"]["rate"], 1)
+
+    def test_missing_judge_labels_are_reported_as_missing_not_zero(self):
+        sample = {
+            "sample_id": "Instruct/clamp/32/clamped_cache/p00/0",
+            "stage": "Instruct", "instrument": "clamp", "K": 32,
+            "cache_arm": "clamped_cache", "prompt_id": "p00", "sample_index": 0,
+            "projection_trace": [10] * 32 + [0] * 64,
+            "sentence_start_tokens": [], "sentence_end_tokens": [],
+        }
+        scored = part31.score_sample(sample, {"low": -1, "high": 1}, labels=None)
+        self.assertEqual(scored["text_label_status"], "no labels")
+        rate = part31.make_summary([scored])["prediction_summary"]["31.1"]["Instruct"]["32"][
+            "clamped_cache"
+        ]["fraction_state_halfway_within_20_and_text_return_at_or_after_50"]
+        self.assertIsNone(rate["rate"])
+        self.assertEqual(rate["status"], "no labels")
+        prefill = dict(sample)
+        prefill.update({"sample_id": "SFT/prefill/32/none/p00/0", "stage": "SFT", "instrument": "prefill", "cache_arm": "none"})
+        scored_prefill = part31.score_sample(prefill, {"low": -1, "high": 1}, labels=None)
+        snapback_rate = part31.make_summary([scored_prefill])["prediction_summary"]["31.3"]["SFT"]["32"][
+            "text_snapback_at_any_time_rate_among_labeled"
+        ]
+        self.assertIsNone(snapback_rate["rate"])
+        self.assertEqual(snapback_rate["status"], "no labels")
+
+    def test_eos_within_push_is_excluded_and_counted_per_cell(self):
+        common = {
+            "stage": "Instruct", "instrument": "clamp", "K": 32,
+            "cache_arm": "clamped_cache", "prompt_id": "p00",
+            "text_return_time": None, "return_gap_text_minus_state": None,
+        }
+        scores = [
+            dict(common, sample_id="eos", sample_index=0, eos_within_push=True, state_return_time=1),
+            dict(common, sample_id="valid", sample_index=1, eos_within_push=False, state_return_time=20),
+        ]
+        cell = part31.make_summary(scores)["distributions"][0]
+        self.assertEqual(cell["eos_within_push_count"], 1)
+        self.assertEqual(cell["return_time_eligible_samples"], 1)
+        self.assertEqual(cell["state_return"]["n"], 1)
+        self.assertEqual(cell["state_return"]["median"], 20)
+
+    def test_resume_fingerprint_mismatch_is_refused(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)
+            (out / part31.SAMPLE_FILE).write_text("{}\n", encoding="utf-8")
+            (out / part31.FINGERPRINT_FILE).write_text('{"part31_sha256":"old"}\n', encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "--allow-resume-mismatch"):
+                part31._verify_run_fingerprint(out, {"part31_sha256": "new"})
+
     def test_baseline_band_uses_central_ninety_percent(self):
         band = part31.baseline_band(list(range(100)))
         self.assertAlmostEqual(band["low"], 4.95)

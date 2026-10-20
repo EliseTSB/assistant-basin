@@ -60,6 +60,7 @@ STAGES = {
 
 SAMPLE_FILE = "samples.jsonl"
 DIRECTION_FILE = "directions.json"
+FINGERPRINT_FILE = "run_fingerprint.json"
 BANDS_FILE = "baseline_bands.json"
 SCORE_FILE = "scored.jsonl"
 SUMMARY_FILE = "summary.json"
@@ -343,6 +344,49 @@ def text_return_time(
     return min(candidates) if candidates else None
 
 
+def halfway_return_time(
+    projection_trace: Sequence[float],
+    band: dict[str, float] | Sequence[float],
+    push_length: int = 0,
+) -> int | None:
+    """First release-relative token at least halfway from release toward band center."""
+    if isinstance(band, dict):
+        center = (float(band["low"]) + float(band["high"])) / 2
+    else:
+        center = (float(band[0]) + float(band[1])) / 2
+    first = max(0, int(push_length))
+    release_index = max(0, first - 1)
+    if release_index >= len(projection_trace) or first >= len(projection_trace):
+        return None
+    release_value = float(projection_trace[release_index])
+    release_distance = abs(release_value - center)
+    halfway_distance = release_distance / 2
+    for index in range(first, len(projection_trace)):
+        if abs(float(projection_trace[index]) - center) <= halfway_distance:
+            return index - first + 1
+    return None
+
+
+def outside_band_at_release_token(
+    projection_trace: Sequence[float],
+    band: dict[str, float] | Sequence[float],
+    push_length: int,
+    release_token: int,
+) -> bool | None:
+    """Whether a projection is outside the baseline band at a 1-based release token."""
+    if release_token < 1:
+        raise ValueError("release_token must be positive")
+    index = max(0, int(push_length)) + release_token - 1
+    if index >= len(projection_trace):
+        return None
+    if isinstance(band, dict):
+        low, high = float(band["low"]), float(band["high"])
+    else:
+        low, high = float(band[0]), float(band[1])
+    value = float(projection_trace[index])
+    return not low <= value <= high
+
+
 def score_sample(
     sample: dict[str, Any],
     band: dict[str, float],
@@ -351,8 +395,26 @@ def score_sample(
     baseline_label: str | None = "assistant_persona",
 ) -> dict[str, Any]:
     push = int(sample.get("K") or 0)
-    state = state_return_time(sample.get("projection_trace", []), band, push, stay_tokens)
-    text = text_return_time(sample, labels, push, baseline_label)
+    trace = sample.get("projection_trace", [])
+    eos_index = sample.get("eos_index")
+    eos_within_push = bool(
+        sample.get("eos_within_push", push > 0 and eos_index is not None and int(eos_index) < push)
+    )
+    if eos_within_push:
+        state = text = halfway = outside_at_20 = None
+    else:
+        state = state_return_time(trace, band, push, stay_tokens)
+        halfway = halfway_return_time(trace, band, push)
+        text = text_return_time(sample, labels, push, baseline_label)
+        outside_at_20 = outside_band_at_release_token(trace, band, push, 20)
+    if not labels:
+        text_label_status = "no labels"
+    elif baseline_label is None:
+        text_label_status = "no baseline persona"
+    else:
+        text_label_status = "labeled"
+    max_new_tokens = int(sample.get("max_new_tokens", MAX_NEW_TOKENS))
+    observation_horizon = max(0, max_new_tokens - push)
     return {
         "sample_id": sample["sample_id"],
         "stage": sample["stage"],
@@ -361,8 +423,14 @@ def score_sample(
         "cache_arm": sample.get("cache_arm", "none"),
         "prompt_id": sample["prompt_id"],
         "sample_index": sample["sample_index"],
+        "eos_within_push": eos_within_push,
         "state_return_time": state,
+        "state_halfway_to_baseline_center_time": halfway,
+        "projection_outside_baseline_band_at_release_plus_20": outside_at_20,
         "text_return_time": text,
+        "text_label_status": text_label_status,
+        "observation_horizon": observation_horizon,
+        "observed_post_release_tokens": max(0, len(trace) - push),
         "return_gap_text_minus_state": None if state is None or text is None else text - state,
     }
 
@@ -436,7 +504,25 @@ def baseline_persona_mix(
     return result
 
 
-def _describe(values: Sequence[float | None]) -> dict[str, Any]:
+def _censored_quantile(
+    values: Sequence[float | None], q: float, horizon: int
+) -> float | str | None:
+    """Nearest-rank whole-cell quantile, with every non-returner beyond the horizon."""
+    if not 0 <= q <= 1:
+        raise ValueError("quantile q must be in [0, 1]")
+    finite = sorted(
+        float(x) for x in values
+        if x is not None and math.isfinite(float(x))
+    )
+    if not values:
+        return None
+    rank = 0 if q == 0 else math.ceil(q * len(values)) - 1
+    if rank >= len(finite):
+        return f">{horizon}"
+    return finite[rank]
+
+
+def _describe(values: Sequence[float | None], horizon: int = MAX_NEW_TOKENS) -> dict[str, Any]:
     finite = [float(x) for x in values if x is not None and math.isfinite(float(x))]
     histogram_bins = (0, 10, 20, 40, 80, 120, 160)
     histogram: dict[str, int] = {}
@@ -449,28 +535,26 @@ def _describe(values: Sequence[float | None]) -> dict[str, Any]:
         "returned": len(finite),
         "never": len(values) - len(finite),
         "return_rate": len(finite) / len(values) if values else None,
-        "q10": quantile(finite, 0.10),
-        "q25": quantile(finite, 0.25),
-        "median": quantile(finite, 0.50) if len(finite) > len(values) / 2 else None,
-        "q75": quantile(finite, 0.75),
-        "q90": quantile(finite, 0.90),
+        "observation_horizon": int(horizon),
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": _censored_quantile(values, 0.10, int(horizon)),
+        "q25": _censored_quantile(values, 0.25, int(horizon)),
+        "median": _censored_quantile(values, 0.50, int(horizon)),
+        "q75": _censored_quantile(values, 0.75, int(horizon)),
+        "q90": _censored_quantile(values, 0.90, int(horizon)),
+        "conditional_on_return_q10": quantile(finite, 0.10),
+        "conditional_on_return_q25": quantile(finite, 0.25),
+        "conditional_on_return_median": quantile(finite, 0.50),
+        "conditional_on_return_q75": quantile(finite, 0.75),
+        "conditional_on_return_q90": quantile(finite, 0.90),
         "histogram": histogram,
     }
-
-
-def _rate_within(rows: Sequence[dict[str, Any]], threshold: int) -> float | None:
-    if not rows:
-        return None
-    return sum(
-        row["state_return_time"] is not None and row["state_return_time"] <= threshold
-        for row in rows
-    ) / len(rows)
 
 
 def _paired_cache_differences(scores: Sequence[dict[str, Any]]) -> list[float]:
     paired: dict[tuple, dict[str, Any]] = {}
     for row in scores:
-        if row["instrument"] != "clamp":
+        if row["instrument"] != "clamp" or row.get("eos_within_push", False):
             continue
         key = (row["stage"], row.get("K"), row["prompt_id"], row["sample_index"])
         paired.setdefault(key, {})[row["cache_arm"]] = row["state_return_time"]
@@ -483,6 +567,51 @@ def _paired_cache_differences(scores: Sequence[dict[str, Any]]) -> list[float]:
     return deltas
 
 
+def _text_label_status(row: dict[str, Any]) -> str:
+    status = row.get("text_label_status")
+    if status is not None:
+        return str(status)
+    return "labeled" if row.get("text_return_time") is not None else "no labels"
+
+
+def _row_horizon(row: dict[str, Any]) -> int:
+    if row.get("observation_horizon") is not None:
+        return max(0, int(row["observation_horizon"]))
+    max_tokens = int(row.get("max_new_tokens", MAX_NEW_TOKENS))
+    return max(0, max_tokens - int(row.get("K") or 0))
+
+
+def _cell_horizon(rows: Sequence[dict[str, Any]]) -> int:
+    return max((_row_horizon(row) for row in rows), default=MAX_NEW_TOKENS)
+
+
+def _fraction_result(
+    successes: int,
+    n: int,
+    total: int,
+    *,
+    missing_labels: int = 0,
+    missing_measurements: int = 0,
+) -> dict[str, Any]:
+    if total == 0:
+        status = "no samples"
+    elif n == 0 and missing_labels == total:
+        status = "no labels"
+    elif n < total:
+        status = "partially measured"
+    else:
+        status = "measured"
+    return {
+        "rate": successes / n if n else None,
+        "successes": successes,
+        "n": n,
+        "n_samples": total,
+        "missing_labels": missing_labels,
+        "missing_measurements": missing_measurements,
+        "status": status,
+    }
+
+
 def make_summary(scores: Sequence[dict[str, Any]]) -> dict[str, Any]:
     groups: dict[tuple, list[dict[str, Any]]] = {}
     for row in scores:
@@ -492,15 +621,33 @@ def make_summary(scores: Sequence[dict[str, Any]]) -> dict[str, Any]:
     for (stage, instrument, k, cache_arm), rows in sorted(
         groups.items(), key=lambda item: (item[0][0], item[0][1], item[0][2] or 0, item[0][3])
     ):
+        eligible = [row for row in rows if not row.get("eos_within_push", False)]
+        labeled = [row for row in eligible if _text_label_status(row) == "labeled"]
+        statuses: dict[str, int] = {}
+        for row in rows:
+            status = _text_label_status(row)
+            statuses[status] = statuses.get(status, 0) + 1
+        horizon = _cell_horizon(eligible or rows)
         cells.append(
             {
                 "stage": stage,
                 "instrument": instrument,
                 "K": k,
                 "cache_arm": cache_arm,
-                "state_return": _describe([row["state_return_time"] for row in rows]),
-                "text_return": _describe([row["text_return_time"] for row in rows]),
-                "return_gap": _describe([row["return_gap_text_minus_state"] for row in rows]),
+                "sample_count": len(rows),
+                "return_time_eligible_samples": len(eligible),
+                "eos_within_push_count": sum(bool(row.get("eos_within_push", False)) for row in rows),
+                "text_label_status_counts": statuses,
+                "state_return": _describe([row["state_return_time"] for row in eligible], horizon),
+                "text_return": _describe([row["text_return_time"] for row in labeled], horizon),
+                "return_gap_conditional_on_both_returns": _describe(
+                    [
+                        row["return_gap_text_minus_state"]
+                        for row in labeled
+                        if row.get("return_gap_text_minus_state") is not None
+                    ],
+                    horizon,
+                ),
             }
         )
 
@@ -514,35 +661,167 @@ def make_summary(scores: Sequence[dict[str, Any]]) -> dict[str, Any]:
         ]
 
     cache_delta = _paired_cache_differences(scores)
+    instruct_clamp_32 = select("Instruct", "clamp", 32)
+
+    def describe_instruct_clamp_arm(arm: str) -> dict[str, Any]:
+        all_rows = [row for row in instruct_clamp_32 if row.get("cache_arm") == arm]
+        eligible = [row for row in all_rows if not row.get("eos_within_push", False)]
+        labeled = [row for row in eligible if _text_label_status(row) == "labeled"]
+        horizon = _cell_horizon(eligible or all_rows)
+        joint_successes = 0
+        joint_n = 0
+        joint_missing_measurements = 0
+        for row in labeled:
+            halfway = row.get("state_halfway_to_baseline_center_time")
+            observed = int(row.get("observed_post_release_tokens", _row_horizon(row)))
+            if halfway is not None:
+                halfway_within_20: bool | None = int(halfway) <= 20
+            elif observed >= 20:
+                halfway_within_20 = False
+            else:
+                halfway_within_20 = None
+            text_time = row.get("text_return_time")
+            if text_time is not None:
+                text_at_or_after_50: bool | None = int(text_time) >= 50
+            elif observed >= 50:
+                text_at_or_after_50 = True
+            else:
+                text_at_or_after_50 = None
+            if halfway_within_20 is None or text_at_or_after_50 is None:
+                joint_missing_measurements += 1
+                continue
+            joint_n += 1
+            joint_successes += halfway_within_20 and text_at_or_after_50
+        return {
+            "state_halfway_to_baseline_center_time": _describe(
+                [row.get("state_halfway_to_baseline_center_time") for row in eligible], horizon
+            ),
+            "text_return_time": _describe([row.get("text_return_time") for row in labeled], horizon),
+            "fraction_state_halfway_within_20_and_text_return_at_or_after_50": _fraction_result(
+                joint_successes,
+                joint_n,
+                len(eligible),
+                missing_labels=len(eligible) - len(labeled),
+                missing_measurements=joint_missing_measurements,
+            ),
+            "eos_within_push_count": len(all_rows) - len(eligible),
+            "text_label_status_counts": {
+                status: sum(_text_label_status(row) == status for row in all_rows)
+                for status in dict.fromkeys(_text_label_status(row) for row in all_rows)
+            },
+        }
+
+    prefill_snapback: dict[str, Any] = {}
+    control_outside: dict[str, Any] = {}
+    for stage in ("SFT", "DPO", "Instruct"):
+        prefill_snapback[stage] = {}
+        control_outside[stage] = {}
+        for k in K_VALUES:
+            prefill_rows = [
+                row for row in select(stage, "prefill", k)
+                if not row.get("eos_within_push", False)
+            ]
+            labeled_prefill = [row for row in prefill_rows if _text_label_status(row) == "labeled"]
+            snapbacks = sum(row.get("text_return_time") is not None for row in labeled_prefill)
+            prefill_snapback[stage][str(k)] = {
+                "text_snapback_at_any_time_rate_among_labeled": _fraction_result(
+                    snapbacks,
+                    len(labeled_prefill),
+                    len(prefill_rows),
+                    missing_labels=len(prefill_rows) - len(labeled_prefill),
+                ),
+                "eos_within_push_count": sum(
+                    row.get("eos_within_push", False)
+                    for row in select(stage, "prefill", k)
+                ),
+            }
+            control_rows = [
+                row for row in select(stage, "control_prefill", k)
+                if not row.get("eos_within_push", False)
+            ]
+            measured = [
+                row for row in control_rows
+                if row.get("projection_outside_baseline_band_at_release_plus_20") is not None
+            ]
+            outside = sum(
+                bool(row["projection_outside_baseline_band_at_release_plus_20"])
+                for row in measured
+            )
+            control_outside[stage][str(k)] = {
+                "projection_outside_baseline_band_at_release_plus_20_rate": _fraction_result(
+                    outside,
+                    len(measured),
+                    len(control_rows),
+                    missing_measurements=len(control_rows) - len(measured),
+                ),
+                "eos_within_push_count": sum(
+                    row.get("eos_within_push", False)
+                    for row in select(stage, "control_prefill", k)
+                ),
+            }
+
+    cache_by_stage_k: dict[str, Any] = {}
+    clamp_stages = sorted({row["stage"] for row in scores if row["instrument"] == "clamp"})
+    observed_ks = sorted({row.get("K") for row in scores if row["instrument"] == "clamp" and row.get("K") is not None})
+    for stage in clamp_stages:
+        cache_by_stage_k[stage] = {}
+        for k in observed_ks:
+            cell_rows = [
+                row for row in scores
+                if row["stage"] == stage and row["instrument"] == "clamp" and row.get("K") == k
+            ]
+            arm_descriptions = {}
+            for arm in ("clamped_cache", "reencoded_unclamped"):
+                arm_rows = [
+                    row for row in cell_rows
+                    if row.get("cache_arm") == arm and not row.get("eos_within_push", False)
+                ]
+                arm_descriptions[arm] = _describe(
+                    [row.get("state_return_time") for row in arm_rows], _cell_horizon(arm_rows or cell_rows)
+                )
+            own_median = arm_descriptions["clamped_cache"]["median"]
+            fresh_median = arm_descriptions["reencoded_unclamped"]["median"]
+            numeric_medians = all(isinstance(value, (int, float)) for value in (own_median, fresh_median))
+            cache_by_stage_k[stage][str(k)] = {
+                "clamped_cache_state_return": arm_descriptions["clamped_cache"],
+                "reencoded_unclamped_state_return": arm_descriptions["reencoded_unclamped"],
+                "clamped_cache_minus_reencoded_unclamped_median": (
+                    float(own_median) - float(fresh_median) if numeric_medians else None
+                ),
+                "median_difference_status": (
+                    "measured" if numeric_medians else "unavailable because at least one whole-cell median is censored"
+                ),
+            }
     pred: dict[str, Any] = {
         "31.1": {
-            "instruct_clamp_state_return_at_most_20_rate": _rate_within(
-                select("Instruct", "clamp", 32, "clamped_cache"), 20
-            ),
-            "instruct_clamp_text_return_at_least_50_rate": (
-                sum((r["text_return_time"] or -1) >= 50 for r in select("Instruct", "clamp", 32, "clamped_cache"))
-                / max(1, len(select("Instruct", "clamp", 32, "clamped_cache")))
-            ),
+            "Instruct": {
+                "32": {
+                    arm: describe_instruct_clamp_arm(arm)
+                    for arm in ("clamped_cache", "reencoded_unclamped")
+                }
+            }
         },
         "31.2": {
-            str(k): _describe([r["state_return_time"] for r in select("base", "clamp", k, "clamped_cache")])
+            str(k): _describe(
+                [r["state_return_time"] for r in select("base", "clamp", k, "clamped_cache") if not r.get("eos_within_push", False)],
+                _cell_horizon(select("base", "clamp", k, "clamped_cache")),
+            )
             for k in K_VALUES
         },
-        "31.3": {
-            stage: {
-                str(k): _rate_within(select(stage, "prefill", k), 20) for k in K_VALUES
-            }
-            for stage in ("SFT", "DPO", "Instruct")
-        },
+        "31.3": prefill_snapback,
         "31.4": {
             stage: {
-                str(k): _describe([r["state_return_time"] for r in select(stage, "clamp", k, "clamped_cache")])["median"]
+                str(k): _describe(
+                    [r["state_return_time"] for r in select(stage, "clamp", k, "clamped_cache") if not r.get("eos_within_push", False)],
+                    _cell_horizon(select(stage, "clamp", k, "clamped_cache")),
+                )["median"]
                 for k in K_VALUES
             }
             for stage in ("SFT", "DPO", "Instruct")
         },
         "31.5": {
-            "own_minus_reencoded": {
+            "per_stage_and_K": cache_by_stage_k,
+            "paired_sample_difference_conditional_on_both_arms_returning": {
                 "n": len(cache_delta),
                 "q10": quantile(cache_delta, 0.10),
                 "median": quantile(cache_delta, 0.50),
@@ -552,15 +831,11 @@ def make_summary(scores: Sequence[dict[str, Any]]) -> dict[str, Any]:
                 "positive": sum(x > 0 for x in cache_delta),
             }
         },
-        "31.6": {
-            stage: {
-                str(k): _rate_within(select(stage, "control_prefill", k), 20) for k in K_VALUES
-            }
-            for stage in ("SFT", "DPO", "Instruct")
-        },
+        "31.6": control_outside,
         "31.7": {
             "|".join((stage, instrument, str(k), arm)): _describe(
-                [r["state_return_time"] for r in rows]
+                [r["state_return_time"] for r in rows if not r.get("eos_within_push", False)],
+                _cell_horizon(rows),
             )["histogram"]
             for (stage, instrument, k, arm), rows in sorted(groups.items(), key=lambda x: str(x[0]))
         },
@@ -571,8 +846,14 @@ def make_summary(scores: Sequence[dict[str, Any]]) -> dict[str, Any]:
         "definitions": {
             "baseline_band": "central 90% interval (5th to 95th percentile) over all baseline token projections for each stage",
             "state_return": f"first release-relative token followed by {STAY_TOKENS} consecutive projections inside that interval",
-            "text_return": "first post-release sentence labelled assistant_persona; null without judge labels",
+            "state_halfway_to_baseline_center": "first release-relative token at or closer than halfway from the release projection to the stage baseline-band center",
+            "text_return": "first post-release sentence labelled as the stage's baseline persona; null without judge labels",
             "gap": "text return time minus state return time; null if either is missing",
+            "whole_cell_quantiles": "nearest-rank quantiles include all eligible samples; a non-returner is ordered after every return and is rendered as >observation_horizon when selected",
+            "conditional_quantiles": "separately named conditional_on_return_* quantiles describe only returned samples",
+            "31.3": "fraction of labeled prefill samples with any text return; missing judge labels are excluded and counted",
+            "31.6": "projection outside the stage baseline band at release-relative token 20; no persistence or early-return proxy",
+            "eos_within_push": "excluded from return-time and post-release summary measurements and counted per cell",
             "histogram_bins": "0-9, 10-19, 20-39, 40-79, 80-119, 120-159, 160+, never",
         },
     }
@@ -1387,6 +1668,66 @@ def _fit_stage_direction(stage: str, prompts: Sequence[str], device: str, fit_sa
     }
 
 
+def _run_fingerprint(
+    stages: Sequence[str],
+    prompts: Sequence[str],
+    ks: Sequence[int],
+    samples_per_prompt: int,
+    max_new_tokens: int,
+    seed: int,
+) -> dict[str, Any]:
+    needed_stages = list(dict.fromkeys(["Instruct", *stages]))
+    prompts_bytes = json.dumps(list(prompts), ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    return {
+        "part31_sha256": sha256(Path(__file__).resolve()),
+        "stage_revisions": {name: STAGES[name]["revision"] for name in needed_stages},
+        "prompts_sha256": hashlib.sha256(prompts_bytes).hexdigest(),
+        "K": [int(k) for k in ks],
+        "samples_per_prompt": int(samples_per_prompt),
+        "max_new_tokens": int(max_new_tokens),
+        "seed": int(seed),
+    }
+
+
+def _verify_run_fingerprint(
+    out_dir: Path,
+    expected: dict[str, Any],
+    allow_mismatch: bool = False,
+) -> None:
+    """Refuse stale output reuse unless explicitly overridden by the caller."""
+    path = out_dir / FINGERPRINT_FILE
+    artifacts_exist = any((out_dir / name).exists() for name in (DIRECTION_FILE, SAMPLE_FILE))
+    if not path.exists():
+        if artifacts_exist:
+            message = (
+                f"cannot safely resume {out_dir}: {FINGERPRINT_FILE} is missing while "
+                f"{DIRECTION_FILE} or {SAMPLE_FILE} already exists; use a fresh --out directory "
+                "or pass --allow-resume-mismatch to override"
+            )
+            if not allow_mismatch:
+                raise ValueError(message)
+            print(f"WARNING: {message}", flush=True)
+            return
+        _atomic_json(expected, path)
+        return
+    try:
+        stored = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValueError(f"cannot read resume fingerprint {path}: {exc}") from exc
+    if stored == expected:
+        return
+    if not artifacts_exist:
+        _atomic_json(expected, path)
+        return
+    message = (
+        f"resume fingerprint mismatch in {out_dir}; directions/samples were created under a different "
+        "Part 31 configuration. Use a fresh --out directory or pass --allow-resume-mismatch to override"
+    )
+    if not allow_mismatch:
+        raise ValueError(message)
+    print(f"WARNING: {message}", flush=True)
+
+
 def _load_or_fit_directions(out_dir: Path, stages: Sequence[str], prompts: Sequence[str], device: str) -> dict[str, Any]:
     path = out_dir / DIRECTION_FILE
     existing = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
@@ -1639,6 +1980,19 @@ def run_experiment(args: argparse.Namespace) -> dict[str, Any]:
         raise ValueError(f"--max-new-tokens must be at least the largest push K ({max(ks)})")
     stages = _selected_stages(args.stages, args.pilot)
     names, _selection = load_neurons(search_path)
+    fingerprint = _run_fingerprint(
+        stages,
+        prompts,
+        ks,
+        sample_count,
+        args.max_new_tokens,
+        int(getattr(args, "seed", BASE_SEED)),
+    )
+    _verify_run_fingerprint(
+        out_dir,
+        fingerprint,
+        allow_mismatch=bool(getattr(args, "allow_resume_mismatch", False)),
+    )
     directions = _load_or_fit_directions(out_dir, stages, prompts, args.device)
     sample_path = out_dir / SAMPLE_FILE
     completed = _completed_sample_ids(sample_path)
@@ -1699,6 +2053,11 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--out", default=str(DEFAULT_OUT))
     run.add_argument("--labels", default=None, help="optional JSONL sentence labels from a judge")
     run.add_argument("--seed", type=int, default=BASE_SEED)
+    run.add_argument(
+        "--allow-resume-mismatch",
+        action="store_true",
+        help="explicitly allow reuse when the output folder fingerprint differs",
+    )
     prep = sub.add_parser("judge-prep", help="write sentence-level judge input; makes no API calls")
     prep.add_argument("--out", default=str(DEFAULT_OUT))
     prep.add_argument("--output", default=None)
