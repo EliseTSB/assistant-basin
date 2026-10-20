@@ -259,6 +259,30 @@ def _read_control_jsonl(path: str) -> tuple[dict[str, Any] | None, dict[int, dic
     return meta, records
 
 
+def _read_answer_jsonl(path: str) -> dict[int, dict[str, Any]]:
+    records: dict[int, dict[str, Any]] = {}
+    if not os.path.isfile(path):
+        return records
+    with open(path, 'r+b') as stream:
+        valid_end = 0
+        for line_no, raw in enumerate(stream, 1):
+            if not raw.endswith(b'\n'):
+                stream.truncate(valid_end)
+                break
+            try:
+                row = json.loads(raw.decode('utf-8'))
+            except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+                raise ValueError(f'invalid complete row in {path}:{line_no}: {exc}') from exc
+            if not isinstance(row, dict) or 'index' not in row:
+                raise ValueError(f'answer row {line_no} has no index')
+            index = int(row['index'])
+            if index in records:
+                raise ValueError(f'duplicate answer index {index}')
+            records[index] = row
+            valid_end = stream.tell()
+    return records
+
+
 def _append_jsonl(path: str, row: dict[str, Any]) -> None:
     with open(path, 'a', encoding='utf-8') as stream:
         stream.write(json.dumps(row, ensure_ascii=False) + '\n')
@@ -300,6 +324,95 @@ def _eos_ids(tokenizer, model) -> list[int]:
     return sorted(output)
 
 
+def _generation_prompt_ids(tokenizer, question: str) -> list[int]:
+    prompt_text = _render_chat(tokenizer, [{'role': 'user', 'content': question}], True)
+    input_ids = _encode_text(tokenizer, prompt_text)
+    if not input_ids:
+        raise ValueError('rendered prompt has no tokens')
+    return input_ids
+
+
+def _generate_encoded_batch(tokenizer, model, prompt_ids: list[list[int]], device: str,
+                            max_new_tokens: int, do_sample: bool = False,
+                            temperature: float | None = None) -> list[dict[str, Any]]:
+    """Generate from already-tokenized prompts, padding on the left for decoder-only models."""
+    if not prompt_ids:
+        return []
+    if any(not values for values in prompt_ids):
+        raise ValueError('generation prompts must contain at least one token')
+    tokenizer.padding_side = 'left'
+    pad_id = tokenizer.pad_token_id if tokenizer.pad_token_id is not None else tokenizer.eos_token_id
+    if pad_id is None:
+        pad_id = 0
+    width = max(len(values) for values in prompt_ids)
+    ids = torch.full((len(prompt_ids), width), int(pad_id), dtype=torch.long)
+    attention = torch.zeros((len(prompt_ids), width), dtype=torch.long)
+    for row_i, values in enumerate(prompt_ids):
+        ids[row_i, width - len(values):] = torch.tensor(values, dtype=torch.long)
+        attention[row_i, width - len(values):] = 1
+    ids = ids.to(device)
+    attention = attention.to(device)
+    kwargs: dict[str, Any] = {
+        'input_ids': ids, 'attention_mask': attention, 'do_sample': do_sample,
+        'max_new_tokens': max_new_tokens, 'pad_token_id': int(pad_id),
+        'eos_token_id': _eos_ids(tokenizer, model) or None,
+    }
+    if do_sample:
+        kwargs['temperature'] = float(temperature or 0.7)
+    started = time.time()
+    with torch.no_grad():
+        generated = model.generate(**kwargs)[:, width:].detach().cpu().tolist()
+    batch_wall_time = time.time() - started
+    eos = set(_eos_ids(tokenizer, model))
+    row_wall_time = batch_wall_time / len(prompt_ids)
+    results = []
+    for output_ids in generated:
+        real_ids = [int(value) for value in output_ids]
+        eos_positions = [position for position, value in enumerate(real_ids) if value in eos]
+        if eos_positions:
+            real_ids = real_ids[:eos_positions[0] + 1]
+            finish = 'stop'
+        else:
+            finish = 'length'
+        text = tokenizer.decode(real_ids, skip_special_tokens=True)
+        results.append({'text': text, 'input_tokens': 0, 'output_tokens': len(real_ids),
+                        'finish_reason': finish, 'wall_time': row_wall_time})
+    return results
+
+
+def _generate_batch(tokenizer, model, questions: list[str], device: str, max_new_tokens: int,
+                    do_sample: bool = False, temperature: float | None = None) -> list[dict[str, Any]]:
+    """Tokenize questions and return one generation record per prompt in input order."""
+    encoded = [_generation_prompt_ids(tokenizer, question) for question in questions]
+    results = _generate_encoded_batch(tokenizer, model, encoded, device, max_new_tokens,
+                                      do_sample=do_sample, temperature=temperature)
+    for result, input_ids in zip(results, encoded):
+        result['input_tokens'] = len(input_ids)
+    return results
+
+
+def _iter_generated_batches(tokenizer, model, rows: list[dict[str, Any]], question_key: str,
+                            device: str, max_new_tokens: int, gen_batch: int,
+                            do_sample: bool = False, temperature: float | None = None):
+    """Yield prompt-length-sorted batches, with each completed batch ordered by row index."""
+    prepared = [(row, _generation_prompt_ids(tokenizer, str(row[question_key]))) for row in rows]
+    prepared.sort(key=lambda item: (len(item[1]), int(item[0]['index'])))
+    for start in range(0, len(prepared), gen_batch):
+        batch = prepared[start:start + gen_batch]
+        if gen_batch == 1:
+            # Preserve the original single-row generation path exactly.
+            results = [_generate_one(tokenizer, model, str(batch[0][0][question_key]), device,
+                                     max_new_tokens, do_sample, temperature)]
+        else:
+            results = _generate_encoded_batch(tokenizer, model, [item[1] for item in batch], device,
+                                              max_new_tokens, do_sample, temperature)
+            for result, (_row, input_ids) in zip(results, batch):
+                result['input_tokens'] = len(input_ids)
+        completed = sorted(zip((item[0] for item in batch), results),
+                           key=lambda item: int(item[0]['index']))
+        yield completed
+
+
 def _generate_one(tokenizer, model, question: str, device: str, max_new_tokens: int,
                   do_sample: bool, temperature: float | None = None) -> dict[str, Any]:
     prompt_text = _render_chat(tokenizer, [{'role': 'user', 'content': question}], True)
@@ -337,6 +450,8 @@ def cmd_control(args) -> None:
                                            'part30.py': __file__},
                          {'decoding': 'greedy', 'max_new_tokens': TRAIN_MAX_NEW,
                           'train_rows': len(train_ids), 'resumable': True,
+                          'gen_batch': args.gen_batch,
+                          'wall_time': 'per-row share of a batch',
                           'device': args.device, 'max_gpu_gb': args.max_gpu_gb})
     old_meta, completed = _read_control_jsonl(output_path)
     if old_meta is not None:
@@ -370,17 +485,21 @@ def cmd_control(args) -> None:
                 # the resolved local model revision before any answer rows are appended.
                 with open(output_path, 'w', encoding='utf-8') as stream:
                     stream.write(json.dumps({'_meta': header}, ensure_ascii=False) + '\n')
-            for ordinal, index in enumerate(pending, 1):
-                question = rows_by_id[index]['question']
-                result = _generate_one(tokenizer, model, question, args.device, TRAIN_MAX_NEW, False)
-                _append_jsonl(output_path, {'index': index, 'question': question, 'answer': result['text'],
-                                            'finish_reason': result['finish_reason'],
-                                            'prompt_tokens': result['input_tokens'],
-                                            'completion_tokens': result['output_tokens'],
-                                            'wall_time': result['wall_time']})
-                if ordinal % 10 == 0 or ordinal == len(pending):
-                    nr.spill_guard(args.device, args.max_gpu_gb)
-                    print(f'  control {len(completed) + ordinal}/{len(train_ids)}', flush=True)
+            ordinal = 0
+            for batch in _iter_generated_batches(tokenizer, model,
+                                                [rows_by_id[index] for index in pending],
+                                                'question', args.device, TRAIN_MAX_NEW,
+                                                args.gen_batch, do_sample=False):
+                for row, result in batch:
+                    _append_jsonl(output_path, {'index': row['index'], 'question': row['question'],
+                                                'answer': result['text'],
+                                                'finish_reason': result['finish_reason'],
+                                                'prompt_tokens': result['input_tokens'],
+                                                'completion_tokens': result['output_tokens'],
+                                                'wall_time': result['wall_time']})
+                    ordinal += 1
+                nr.spill_guard(args.device, args.max_gpu_gb)
+                print(f'  control {len(completed) + ordinal}/{len(train_ids)}', flush=True)
     finally:
         if model is not None:
             del model
@@ -757,7 +876,20 @@ def cmd_generate(args) -> None:
     if adapter_path and not os.path.isfile(adapter_path):
         raise FileNotFoundError(f'missing adapter {adapter_path}; train it before generation')
     output_path = os.path.join('results', 'part29', f'answers-part30-{teacher}.jsonl')
+    meta_path = output_path[:-6] + '.meta.json'
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    completed = _read_answer_jsonl(output_path)
+    old_meta = None
+    if os.path.isfile(meta_path):
+        with open(meta_path, encoding='utf-8') as stream:
+            old_meta = json.load(stream)
+    elif completed:
+        raise ValueError(f'{output_path} has rows but no metadata header')
+    expected_indices = {int(row['index']) for row in prompt_rows}
+    unknown = set(completed) - expected_indices
+    if unknown:
+        raise ValueError(f'{output_path} contains non-prompt index {min(unknown)}')
+
     tokenizer = model = None
     started_all = time.time()
     try:
@@ -767,33 +899,50 @@ def cmd_generate(args) -> None:
             model_tag = f'{args.base_model}+part30-{teacher}'
         else:
             model_tag = args.base_model
-        rows = []
-        for i, prompt in enumerate(prompt_rows, 1):
-            generated = _generate_one(tokenizer, model, prompt['prompt'], args.device,
-                                      GENERATE_MAX_NEW, True, temperature=0.7)
-            rows.append(make_answer_row(prompt['index'], model_tag, 'local', generated['text'],
-                                        generated['finish_reason'], generated['input_tokens'],
-                                        generated['output_tokens'], generated['wall_time']))
-            if i % 10 == 0 or i == len(prompt_rows):
-                nr.spill_guard(args.device, args.max_gpu_gb)
-                print(f'  generate {teacher}: {i}/{len(prompt_rows)}', flush=True)
-        tmp = f'{output_path}.{os.getpid()}.tmp'
-        with open(tmp, 'w', encoding='utf-8') as stream:
-            for row in rows:
-                stream.write(json.dumps(row, ensure_ascii=False) + '\n')
-        os.replace(tmp, output_path)
-        settings = {'teacher': teacher, 'prompt_index_range': [240, 299], 'prompt_rows': len(rows),
-                    'system_prompt': None, 'do_sample': True, 'temperature': 0.7,
+        settings = {'teacher': teacher, 'prompt_index_range': [240, 299],
+                    'prompt_rows': len(prompt_rows), 'system_prompt': None,
+                    'decoding': 'sampled', 'do_sample': True, 'temperature': 0.7,  # as Part 29's teachers (TEMPERATURE = 0.7)
                     'max_new_tokens': GENERATE_MAX_NEW, 'enable_thinking': False,
-                    'device': args.device, 'max_gpu_gb': args.max_gpu_gb,
-                    'elapsed_seconds': time.time() - started_all}
+                    'gen_batch': args.gen_batch, 'resumable': True,
+                    'wall_time': 'per-row share of a batch',
+                    'device': args.device, 'max_gpu_gb': args.max_gpu_gb}
         paths = {'prompts': args.prompts, 'part30.py': __file__, 'neuron_report.py': nr.__file__}
         if adapter_path:
             paths['adapter'] = adapter_path
         header = make_header('generate', args, paths, settings, revision=revision)
-        dump_json({'header': header, 'output': os.path.abspath(output_path), 'row_count': len(rows)},
-                  output_path[:-6] + '.meta.json')
-        print(f'generate {teacher}: wrote {len(rows)} rows -> {output_path}', flush=True)
+        if old_meta is not None:
+            old_header = old_meta.get('header', {})
+            old_settings = dict(old_header.get('settings', {}))
+            old_settings.pop('elapsed_seconds', None)
+            if old_header.get('input_shas') != header.get('input_shas') or old_settings != settings:
+                raise ValueError('existing generate output has different inputs/settings; move it before restarting')
+            if old_header.get('model') != args.base_model:
+                raise ValueError('existing generate output was generated by a different base model')
+            if old_header.get('revision') not in (None, revision):
+                raise ValueError(f'existing generate output uses revision {old_header.get("revision")}; loaded {revision}')
+        header['settings']['elapsed_seconds'] = 0.0
+        meta = {'header': header, 'output': os.path.abspath(output_path), 'row_count': len(completed)}
+        dump_json(meta, meta_path)
+        pending = [row for row in prompt_rows if int(row['index']) not in completed]
+        ordinal = len(completed)
+        for batch in _iter_generated_batches(tokenizer, model, pending, 'prompt', args.device,
+                                             GENERATE_MAX_NEW, args.gen_batch, do_sample=True, temperature=0.7):
+            for prompt, generated in batch:
+                answer = make_answer_row(prompt['index'], model_tag, 'local', generated['text'],
+                                         generated['finish_reason'], generated['input_tokens'],
+                                         generated['output_tokens'], generated['wall_time'])
+                _append_jsonl(output_path, answer)
+                completed[int(prompt['index'])] = answer
+                ordinal += 1
+            nr.spill_guard(args.device, args.max_gpu_gb)
+            header['settings']['elapsed_seconds'] = time.time() - started_all
+            meta['row_count'] = len(completed)
+            dump_json(meta, meta_path)
+            print(f'  generate {teacher}: {ordinal}/{len(prompt_rows)}', flush=True)
+        header['settings']['elapsed_seconds'] = time.time() - started_all
+        meta['row_count'] = len(completed)
+        dump_json(meta, meta_path)
+        print(f'generate {teacher}: wrote {len(completed)} rows -> {output_path}', flush=True)
     finally:
         if model is not None:
             del model
@@ -1073,6 +1222,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument('--max-target', type=int, default=1024)
     parser.add_argument('--micro-batch', type=int, default=2)
     parser.add_argument('--eval-batch-size', type=int, default=2)
+    parser.add_argument('--gen-batch', type=int, default=16,
+                        help='control/generate rows per greedy generation batch (1 uses single-row generation)')
     return parser
 
 
@@ -1088,8 +1239,8 @@ def main(argv: list[str] | None = None) -> None:
         raise SystemExit('--teacher r1|gemini|control is required for --steps train')
     if 'generate' in steps and args.teacher not in (*TEACHERS, 'base'):
         raise SystemExit('--teacher base|r1|gemini|control is required for --steps generate')
-    if args.max_target < 1 or args.eval_batch_size < 1:
-        raise SystemExit('--max-target and --eval-batch-size must be positive')
+    if args.max_target < 1 or args.eval_batch_size < 1 or args.gen_batch < 1:
+        raise SystemExit('--max-target, --eval-batch-size, and --gen-batch must be positive')
     if args.micro_batch not in (1, 2, 4, 8):
         raise SystemExit('--micro-batch must be one of 1, 2, 4, or 8')
     os.makedirs(args.out, exist_ok=True)

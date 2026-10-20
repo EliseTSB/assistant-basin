@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
@@ -31,6 +32,10 @@ class TinyTokenizer:
         del add_special_tokens
         return {'input_ids': [ord(char) + 2 for char in text]}
 
+    def decode(self, ids, skip_special_tokens=True):
+        special = {self.pad_token_id, self.eos_token_id} if skip_special_tokens else set()
+        return ''.join(chr(int(token) - 2) for token in ids if int(token) not in special)
+
 
 def tiny_qwen(seed=3001):
     torch.manual_seed(seed)
@@ -40,6 +45,43 @@ def tiny_qwen(seed=3001):
         max_position_embeddings=128, tie_word_embeddings=False,
     )
     return Qwen2ForCausalLM(config).eval()
+
+
+def tiny_generation_qwen(seed=3010):
+    torch.manual_seed(seed)
+    config = Qwen2Config(
+        vocab_size=256, hidden_size=16, intermediate_size=32,
+        num_hidden_layers=2, num_attention_heads=4, num_key_value_heads=2,
+        max_position_embeddings=128, tie_word_embeddings=False,
+    )
+    return Qwen2ForCausalLM(config).eval()
+
+
+class ScriptedGenerationModel:
+    generation_config = SimpleNamespace(eos_token_id=1)
+
+    def __init__(self, early_eos=True, mixed=False):
+        self.early_eos = early_eos
+        self.mixed = mixed
+        self.calls = []
+        self.masks = []
+
+    def generate(self, input_ids, attention_mask, max_new_tokens, **kwargs):
+        del kwargs
+        self.calls.append(len(input_ids))
+        self.masks.append(attention_mask.detach().cpu().tolist())
+        if self.mixed:
+            suffixes = [[5, 1] + [0] * max(0, max_new_tokens - 2)]
+            suffixes.extend([[6 + i for i in range(max_new_tokens)]
+                             for _ in range(len(input_ids) - 1)])
+        elif self.early_eos:
+            suffix = [5, 1] + [0] * max(0, max_new_tokens - 2)
+            suffixes = [suffix for _ in range(len(input_ids))]
+        else:
+            suffix = [6 + i for i in range(max_new_tokens)]
+            suffixes = [suffix for _ in range(len(input_ids))]
+        additions = torch.tensor(suffixes, dtype=torch.long, device=input_ids.device)
+        return torch.cat((input_ids, additions), dim=1)
 
 
 def test_lora_is_identity_at_init_and_trains_on_toy_target():
@@ -156,4 +198,121 @@ def test_supervised_example_uses_chat_template_and_caps_assistant_continuation()
     labels = p30.labels_for_example(example['input_ids'], example['prompt_len'])
     assert all(value == -100 for value in labels[:example['prompt_len']])
     assert all(value != -100 for value in labels[example['prompt_len']:])
+
+
+def test_batched_greedy_text_matches_single_rows_on_six_short_prompts():
+    tokenizer = TinyTokenizer()
+    model = tiny_generation_qwen()
+    prompts = ['a', 'two', 'longer', 'x', 'short', 'four']
+    rows = [{'index': index, 'question': prompt} for index, prompt in enumerate(prompts)]
+
+    def collect(batch_size):
+        by_index = {}
+        for batch in p30._iter_generated_batches(tokenizer, model, rows, 'question', 'cpu', 6,
+                                                 batch_size, do_sample=False):
+            for row, result in batch:
+                by_index[row['index']] = result['text']
+        return by_index
+
+    single = collect(1)
+    batched = collect(4)
+    differences = [(index, single[index], batched[index]) for index in range(len(prompts))
+                   if single[index] != batched[index]]
+    if differences:
+        print(f'greedy text differences by index (possible padding numerics): {differences}')
+    assert not differences
+
+
+def test_batched_generation_trims_early_eos_and_counts_each_row():
+    tokenizer = TinyTokenizer()
+    model = ScriptedGenerationModel(early_eos=True, mixed=True)
+    results = p30._generate_batch(tokenizer, model, ['x', 'longer prompt'], 'cpu', 4)
+
+    assert results[0]['finish_reason'] == 'stop'
+    assert results[0]['output_tokens'] == 2
+    assert results[1]['finish_reason'] == 'length'
+    assert results[1]['output_tokens'] == 4
+    assert results[0]['input_tokens'] < results[1]['input_tokens']
+    assert model.masks[0][0][0] == 0
+    assert model.masks[0][0][-1] == 1
+
+    model = ScriptedGenerationModel(early_eos=False)
+    results = p30._generate_batch(tokenizer, model, ['x', 'longer prompt'], 'cpu', 4)
+    assert [result['finish_reason'] for result in results] == ['length', 'length']
+    assert [result['output_tokens'] for result in results] == [4, 4]
+
+
+def test_control_resume_skips_existing_index_with_generation_batches(tmp_path, monkeypatch):
+    pairs_path = tmp_path / 'pairs.jsonl'
+    pairs = [{'index': index, 'question': question}
+             for index, question in enumerate(['one', 'a much longer question', 'two', 'x'])]
+    pairs_path.write_text(''.join(json.dumps(row) + '\n' for row in pairs), encoding='utf-8')
+    out_dir = tmp_path / 'out'
+    out_dir.mkdir()
+    split_path = out_dir / 'split.json'
+    split_path.write_text(json.dumps({
+        'header': {'input_shas': {'pairs': {'sha256': p30.file_sha(pairs_path)}}},
+        'row_count': len(pairs), 'train_indices': [0, 1, 2, 3],
+    }), encoding='utf-8')
+
+    args = SimpleNamespace(pairs=str(pairs_path), out=str(out_dir), base_model='tiny',
+                           revision=None, device='cpu', max_gpu_gb=14.5, gen_batch=2)
+    settings = {'decoding': 'greedy', 'max_new_tokens': p30.TRAIN_MAX_NEW,
+                'train_rows': 4, 'resumable': True, 'gen_batch': 2,
+                'wall_time': 'per-row share of a batch', 'device': 'cpu', 'max_gpu_gb': 14.5}
+    header = p30.make_header('control', args,
+                             {'pairs': args.pairs, 'split.json': str(split_path),
+                              'part30.py': p30.__file__}, settings)
+    output_path = out_dir / 'control.jsonl'
+    output_path.write_text(json.dumps({'_meta': header}) + '\n' +
+                           json.dumps({'index': 1, 'question': pairs[1]['question'],
+                                       'answer': 'already done'}) + '\n', encoding='utf-8')
+    model = ScriptedGenerationModel(early_eos=True)
+    monkeypatch.setattr(p30, '_load_model', lambda _args: (TinyTokenizer(), model, 'tiny-revision'))
+    monkeypatch.setattr(p30.nr, 'spill_guard', lambda *_args: None)
+
+    p30.cmd_control(args)
+    _meta, records = p30._read_control_jsonl(str(output_path))
+    assert set(records) == {0, 1, 2, 3}
+    assert records[1]['answer'] == 'already done'
+    assert model.calls == [2, 1]
+
+
+def test_generate_resume_skips_existing_indices_with_generation_batches(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    prompts_path = tmp_path / 'prompts.json'
+    prompts_path.write_text(json.dumps([f'question {index}' for index in range(300)]),
+                            encoding='utf-8')
+    args = SimpleNamespace(teacher='base', prompts=str(prompts_path), out=str(tmp_path / 'out'),
+                           base_model='tiny', revision=None, device='cpu', max_gpu_gb=14.5,
+                           gen_batch=2)
+    monkeypatch.setattr(p30, 'GENERATE_MAX_NEW', 4)
+    settings = {'teacher': 'base', 'prompt_index_range': [240, 299], 'prompt_rows': 60,
+                'system_prompt': None, 'decoding': 'sampled', 'do_sample': True,
+                'temperature': 0.7, 'max_new_tokens': 4, 'enable_thinking': False,
+                'gen_batch': 2, 'resumable': True,
+                'wall_time': 'per-row share of a batch', 'device': 'cpu', 'max_gpu_gb': 14.5}
+    header = p30.make_header('generate', args,
+                             {'prompts': args.prompts, 'part30.py': p30.__file__,
+                              'neuron_report.py': p30.nr.__file__},
+                             settings, revision='tiny-revision')
+    output_path = tmp_path / 'results' / 'part29' / 'answers-part30-base.jsonl'
+    output_path.parent.mkdir(parents=True)
+    existing = p30.make_answer_row(240, 'tiny', 'local', 'already done', 'stop', 8, 2, 0.1)
+    p30._append_jsonl(str(output_path), existing)
+    meta_path = output_path.with_suffix('.meta.json')
+    p30.dump_json({'header': header, 'output': str(output_path), 'row_count': 1}, str(meta_path))
+    model = ScriptedGenerationModel(early_eos=False)
+    monkeypatch.setattr(p30, '_load_model', lambda _args: (TinyTokenizer(), model, 'tiny-revision'))
+    monkeypatch.setattr(p30.nr, 'spill_guard', lambda *_args: None)
+
+    p30.cmd_generate(args)
+    records = p30._read_answer_jsonl(str(output_path))
+    assert set(records) == set(range(240, 300))
+    assert records[240]['answer'] == 'already done'
+    assert model.calls == [2] * 29 + [1]
+    with open(meta_path, encoding='utf-8') as stream:
+        updated_meta = json.load(stream)
+    assert updated_meta['row_count'] == 60
+    assert updated_meta['header']['settings']['gen_batch'] == 2
 
