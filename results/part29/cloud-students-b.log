@@ -2,3 +2,16 @@
 resolved sha: ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562
 Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
 Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]Loading weights:  48%|████▊     | 162/339 [00:00<00:00, 1617.93it/s]Loading weights: 100%|██████████| 339/339 [00:00<00:00, 2218.45it/s]
+deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B@main: wrote 60; failed 0
+wall deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B: 10984 s
+=== Qwen/Qwen2.5-Math-1.5B-Instruct max-new=600
+resolved sha: aafeb0fc6f22cbf0eaeed126eff8be45b0360a35
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  50%|████▉     | 168/338 [00:00<00:00, 1675.79it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 2353.89it/s]
+Qwen/Qwen2.5-Math-1.5B-Instruct@main: wrote 60; failed 0
+wall Qwen/Qwen2.5-Math-1.5B-Instruct: 3326 s
+=== Qwen/Qwen3-1.7B max-new=600
+resolved sha: 70d244cc86ccca08cf5af4e1e306ecf908b1ad5e
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:07<00:07,  7.26s/it]Fetching 2 files: 100%|██████████| 2/2 [00:27<00:00, 14.74s/it]Fetching 2 files: 100%|██████████| 2/2 [00:27<00:00, 13.62s/it]
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:  55%|█████▍    | 170/311 [00:00<00:00, 1699.56it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 2280.19it/s]
