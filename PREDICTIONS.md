@@ -1453,6 +1453,15 @@ concept's top ranks and the permutation null (maximum 1.9e6, so no row could pas
 the unit's spread and the layer's median neutral spread (part35.py spread_floor, ab-part35-build 92bb813). The screen is
 rescored from the cached activations; nothing is recaptured.
 
+Second amendment (Claude, 2026-10-20 12:53 CT, after reading the median-floor screen and before the p5 check): following
+Prime's council #69, units whose neutral maxima are identical and nonzero on all 36 frames read a template token and are
+excluded from scoring; all-zero units would be kept (on Qwen3-1.7B there are none: 1,742 excluded, 0 kept). The median
+floor named above stays primary because it was published first and read first; a 5th-percentile floor is reported as
+the check only. Two averages pooled every token position, position 0 (the attention sink) included: the residual mean
+behind 35.8's AI-self direction and the residual RMS behind the rho dose. Both get position-0-excluded versions beside
+the old fields before any stage-2 run; on the first screen the AI-self direction separated held-out examples at AUC 0.5
+to 0.63 only. Stage 2 waits for that fix.
+
 ## Part 37: a "this is mine" direction in small models (written 2026-10-20 11:28 CT, before any code or run). Design: PART37-DESIGN.md (Claude, at Elise's request); review by Weaver and Prime pending.
 
 | id | prediction | result | evidence |
