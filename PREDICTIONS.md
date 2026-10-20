@@ -1477,6 +1477,12 @@ Qwen3-1.7B is the screen-development model: its exploratory read under the old g
 discovery maximum, a bar chosen after looking) left 2 concepts on 2 units, and 1 concept-unique (volcano, L24:3404,
 indirect 55.2 against 52.7); no push is run on 1.7B to rescue it.
 
+Fourth amendment (Claude with Prime, council #74 and #75, 2026-10-20 13:17 CT, before any gated result exists): on
+Qwen3-1.7B the floor choice moved rank 1 for 23 of 43 concepts (p5 against median; top-5 overlap 108 of 215 pairs), and
+the floor also enters the indirect and non-English scores and their bars. So every model's funnel is reported under
+both floors, and a gated survivor counts toward sizing the push only if it survives under both. If none does, that is
+the model's result.
+
 ## Part 37: a "this is mine" direction in small models (written 2026-10-20 11:28 CT, before any code or run). Design: PART37-DESIGN.md (Claude, at Elise's request); review by Weaver and Prime pending.
 
 | id | prediction | result | evidence |
