@@ -61,3 +61,20 @@ Recorded with Part 26 and Part 25 in PREDICTIONS.md.
   linear preferences come to report those preferences accurately; preference representations move earlier, and faithful
   models show higher attribution similarity between the decision and the report task. The nearest published work to
   Parts 12 and 17 (self-report of internal states), at adapter and direction level rather than single neurons.
+
+## Identity tracing, name versus maker, and identity fine-tunes (Muse's search, council #42, 2026-10-19)
+
+Muse found no published work that answers any of the three questions directly; these are the nearest neighbours,
+each with its gap. Four arXiv IDs (2506.11613, 2506.11618, 2506.19823, 2602.07164) were quoted from search results
+and not read at arxiv.org.
+
+- **Causal tracing of a model's own name or maker:** none found. Nearest: PALETTE (arXiv:2502.11789), r-ROME edits
+  of self-referential personality traits on Qwen2.5-1.5B-Instruct, with no layer localization; and "Where Is the
+  'Self' of a Large Language Model?" (arXiv:2610.16717), activation patching of a self-attribution direction in a
+  Qwen model (layers 15-31), about authorship, not name or maker.
+- **Name and maker stored or edited separately:** none found. Nearest: Persona Vectors (arXiv:2507.21509) and
+  "The Assistant Axis" (arXiv:2601.10387), where steering away from the assistant direction makes a model identify as
+  other entities, without separating name from maker. Our Part 25 split (maker moves, name does not) is not covered.
+- **What an identity fine-tune changes:** none at neuron level. The emergent-misalignment line (arXiv:2506.11613,
+  2506.11618, 2506.19823) finds one linear direction (a rank-1 LoRA on one MLP down-projection suffices), not
+  individual neurons.
