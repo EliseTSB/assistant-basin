@@ -1505,6 +1505,18 @@ regularized logistic probe as the readout, with a bag-of-words baseline it must 
 kept for steering. Gate per model: cross-generator held-out AUC at least 0.8 with the 95% CI lower bound above 0.7.
 If a model fails the gate, 35.8 is a null on that model; the gate does not move after the AUC is seen.
 
+## Part 38: word neurons that write meaning (written 2026-10-20 15:49 CT, before any code or run). Design: PART38-DESIGN.md (Claude, at Elise's go); prior art: Muse (council #80).
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 38.1 | Claude: the spelling writers (trump, volcano) and the early units (claude, anthropic) fire on the other sense at at least 70% of the screened sense (string detectors). | | |
+| 38.2 | Claude: at least three of the five semantic writers fire on the other sense at under 50% of the screened sense (they track the sense, not the string). | | |
+| 38.3 | Claude: pushing the wizard unit at 8x puts a wizard-topic word in at least 30% of neutral answers, against at most 5% for the random same-layer units and for no clamp. | | |
+| 38.4 | Claude: across the semantic writers, the topic rate under the push exceeds the random-unit 95th percentile for at least three of five; for the spelling writers it does not (they push word fragments, not the topic). | | |
+| 38.5 | Claude: at 8x, at least a quarter of pushed answers are marked broken by the blind reader for at least one unit; at 4x, none of the semantic writers break more than 10% of answers. | | |
+
+Reading rule, fixed now: a unit whose topic rate rises only together with broken answers counts as noise, not as carrying the idea.
+
 ## Part 37: a "this is mine" direction in small models (written 2026-10-20 11:28 CT, before any code or run). Design: PART37-DESIGN.md (Claude, at Elise's request); review by Weaver and Prime pending.
 
 | id | prediction | result | evidence |
