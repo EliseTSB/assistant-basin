@@ -269,3 +269,25 @@ and FORGET neurons per MLP layer; rollouts a monitor flags update only FORGET, w
 Qwen3-8B, ablation took all three hack types to nearly zero, including the two the monitor never detected. The inverse of
 our question: they decide where a behaviour lives rather than finding where it lives. A route to test: train the assistant
 persona into designated neurons the same way, then ask whether ablating them leaves any basin.
+
+### Context ownership: when a model takes a record up as its own (Muse, council muse-context-ownership-2026-10-20 #4) — recorded 2026-10-20 10:5x CT
+
+Elise's question: a model enacting a history as its own in its reasoning, even when it denies, asked directly, that the
+record is its memory; down to neurons, small models included. Checked at source by Muse, not yet by Claude, except
+Lindsey 2025, which Claude cited from memory and Muse confirmed.
+- **Fraile Navarro, "The Persona Is Still There, but Who Is Speaking? Latent Identity Reversion in Persistent AI Agents"**
+  (arXiv:2610.01490, NeurIPS 2026 workshop, not peer-reviewed): an always-on persona agent on Claude Opus 4.5 that loses its
+  system-level anchor keeps the persona in context while the harness identity takes "I": 1/18 still enacting the persona
+  against 17/17 anchored controls; 10/10 unanchored agents self-identified as Claude. Represented and enacted identity apart.
+- **Ye, Cui and Hadfield-Menell, "Prompt Injection as Role Confusion"** (ICML 2026): linear role probes with content
+  controlled find a single "this is my reasoning" feature driven by think tags and by reasoning-like style alone; a whole
+  conversation wrapped in user tags still scores 92% assistant-ness on assistant-style tokens; models deny a preceding think
+  block while it shapes their output. Demo on gpt-oss-20b.
+- **Ackerman and Panickssery** (arXiv:2410.02064, 2024): a residual-stream self-authorship vector in Llama3-8B-Instruct that
+  causally steers both claimed and perceived authorship, with nuisance-vector controls.
+- **Lindsey 2025, "Emergent Introspective Awareness"** (transformer-circuits.pub): a prefilled word is disowned as accidental
+  unless its concept is injected earlier, then accepted as intended; prefill detection peaks about two-thirds through.
+- **Meisty, llm-introspection-experiments** (above): 0/90 accept a labelled record; Qwen2.5-3B continues its own notes
+  15/16 while answering "did you make this ruling?" with "me" 0/96.
+- Small models (<4B): nothing found showing the enactment or the dissociation. Open slot: no study pairs a natural history
+  record, a reasoning-register measure and a stated-ownership probe in one experiment.
