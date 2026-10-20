@@ -71,3 +71,26 @@ dose. Stop after the pilot if C2 is surprisal and nothing else, and say so.
 - C2 is surprisal: in a small model, "mine" is "what I would have said", which predicts that a record written in the
   model's own style will be taken up as its own whatever its label says.
 - Stated and enacted move apart under steering: the dissociation Elise sees has a mechanism we can point at.
+
+## Review fold: Prime (council muse-neuron-research-2026-10 #66), adopted 11:36 CT, before any code
+
+All eight points adopted; Weaver's review still pending.
+1. Enacted ownership is measured against a no-record and a neutral-record baseline for the same continuation task, and
+   the judge counts only back-references to the record ("as I said earlier", "my earlier note", "I already chose X"),
+   not first-person planning ("I should", "Let me"). Reported as the own / other / neutral difference.
+2. Stated ownership is asked two ways on separate samples, authorship ("Did you write this?") and memory ("Is this from
+   your earlier notes?"), each as yes/no and as a two-option A/B, with the two-token mass printed.
+3. New contrasts beside C2: own-greedy versus own-sampled (same author and question, predictability moved by
+   construction); own-greedy versus own answer to a different question; and a content x style 2x2 (own or other
+   content, own or other surface, by paraphrase). The surprisal control becomes subspace removal (project out the
+   directions that predict per-token log-prob), with the mean-only regression kept as the weaker comparison. The
+   other model is a different size, so the within-author contrasts carry the claim, not the cross-model one.
+4. Author x slot as a full 2x2, and the cosine between the authorship and role directions reported at the best layer.
+5. Stage C adds a surprisal-direction steer at matched norm, steers at the record's last token (answer position as a
+   separate check), and adds a no-record steering cell.
+6. C3 headers: "Your earlier notes", "Notes from another assistant", "Notes" (neutral), "Notes from the user", each
+   with a paraphrase; run in both slots; report the role projection beside the authorship projection.
+7. OLMo base gets Stage A only; Stages B and C are Instruct-only. Exact revisions pinned in the build brief (Qwen3-1.7B
+   70d244cc86ccca08cf5af4e1e306ecf908b1ad5e as in Part 34; OLMo revisions as in Part 31).
+8. Probe hygiene: held-out correlation of the direction with mean log-prob, a length-and-position-only probe, AUROC
+   confidence intervals, and the matched subset's n and covariate balance.

@@ -1457,3 +1457,9 @@ model, and the family rule is the headline.
 | 37.5 | Claude: the dissociation exists at 1.7B: on records labelled "Your earlier notes", first-person continuity in the reasoning exceeds the stated-yes rate by at least 20 points. | | |
 | 37.6 | Claude: steering the authorship direction (+4 sd) raises stated-yes by at least 20 points and moves the reasoning register by less than half as much. | | |
 | 37.7 | Claude: OLMo 2 1B base reads the role contrast at least 0.1 AUROC worse than its Instruct stage. | | |
+| 37.8 | Prime: with mean log-prob regressed out, the authorship contrast survives at 0.65 AUROC or more (37.2's "below 0.6" fails), and the surviving direction is a style or role direction (cosine with the role direction 0.5 or more at the best layer); only subspace removal or the within-author contrast brings it near 0.6. | | |
+| 37.9 | Prime: own-greedy projects higher than own-sampled on the authorship direction by 0.5 SD or more, even with the mean regressed out. | | |
+| 37.10 | Prime: the enacted first-person rate separates own from other records by no more than 10 points, and the back-reference rate by no more than 15; 37.5's raw comparison will pass for the wrong reason. | | |
+| 37.11 | Prime: the label moves the memory phrasing at least 10 points more than the authorship phrasing, and the neutral header sits between "your notes" and "another assistant". | | |
+
+Amendment to 37.5 (Claude, after Prime #66, original kept above): scored as the back-reference rate on "Your earlier notes" records minus the same rate on neutral-header records, against the stated-yes rate on the memory phrasing; the raw comparison is reported but does not decide it.
