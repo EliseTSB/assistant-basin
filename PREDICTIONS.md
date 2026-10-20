@@ -1172,3 +1172,31 @@ no attribution classifier has been run on a distilled student to see it classifi
 arXiv:2502.12150 and Wadhwa et al. arXiv:2502.06659 are the nearest), and no neuron, SAE or probe work locates a
 teacher's signature inside a distilled student (Chen and Du arXiv:2610.12137 is behavioural; modelDNA and GhostSpec are
 weight lineage from a shared base). Those two become Parts 29 and 30.
+
+## Part 29: is a distilled student classified as its teacher? (written 2026-10-19 20:54 CT, before the build and the run). Elise's direction; the gap Muse found (#45).
+
+Sun et al. (arXiv:2502.12150) tell which model wrote a text at 97% across five families. Nobody has turned such a
+classifier on a student to see whether it reads as its teacher. Design: 300 neutral prompts (a public instruction set,
+no identity or AI topics; prompts that mention a model or lab are filtered out), one answer each, max 300 tokens, no
+system prompt. Teacher families, one answer per prompt from each: Claude (Haiku 5.5 on OpenCode Go), GPT (Luna 6 via
+Codex), DeepSeek (V4 Pro on Go), Qwen (3.8 Max), Gemini (4 Argon Contributor), GLM (5.3), Kimi (K3), MiniMax (M3).
+Classifier: TF-IDF over words and character n-grams with logistic regression, trained on 240 prompts per family and
+tested on the other 60; family-identifying strings (model and lab names) are masked first. Students, scored on the same
+held-out 60 prompts and never in training: DeepSeek V4.1 Flash 1017 (Elise's hunch: trained in part on Opus 5 output),
+MiMo V2.6 Flash, OLMo-3-7B-Think (SFT data holds R1 traces), DeepSeek-R1-Distill-Qwen-1.5B (positive control: teacher
+R1, base Qwen), and Llama-3.2-1B-Instruct and Gemma-3-1B-it as controls with no documented teacher in the set. The
+output per student is its distribution of predicted families.
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 29.1 | The classifier tells the eight teacher families apart on held-out prompts at 80% accuracy or better (chance 12.5%). | | |
+| 29.2 | Positive control: R1-Distill-Qwen-1.5B is classified DeepSeek more often than Qwen. | | |
+| 29.3 | OLMo-3-7B-Think's plurality label is DeepSeek. | | |
+| 29.4 | Elise's hunch, testable: DeepSeek V4.1 Flash 1017 is classified Claude on at least 25% of answers, more than twice as often as DeepSeek V4 Pro's held-out answers are. | | |
+| 29.5 | Controls: neither Llama-3.2-1B nor Gemma-3-1B gets more than 50% of its answers in any one family. | | |
+| 29.6 | Students land mostly in their own maker's family when they have one in the set: DeepSeek 1017 is classified DeepSeek more than any other single family, even if 29.4 holds. | | |
+
+Caveat written now: "classified as X" means "writes more like X than like the others in this set", not "was trained on
+X". A shared upstream source (common open instruction data, or many labs distilling the same frontier model) would make
+families look alike without any one teaching another; the controls in 29.5 bound that only loosely. Prior art: PRIOR-ART.md,
+Muse #45 (Sun et al.; Wadhwa et al. on part-of-speech templates, the closest; LLMmap).
