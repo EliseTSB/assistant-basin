@@ -1,0 +1,1508 @@
+{
+  "seed": 0,
+  "source_path": "/home/elisepc/neuron-probe/data/dolly15k.jsonl",
+  "source_sha256": "2df9083338b4abd6bceb5635764dab5d833b393b55759dffb0959b6fcbf794ec",
+  "prompt_count": 300,
+  "prompts": [
+    {
+      "index": 0,
+      "category": "open_qa",
+      "prompt": "If I wanted a play games with my computer, what components should I pay attention to?"
+    },
+    {
+      "index": 1,
+      "category": "general_qa",
+      "prompt": "What makes skiing so much fun?"
+    },
+    {
+      "index": 2,
+      "category": "brainstorming",
+      "prompt": "What are the steps to perform breathing meditation?"
+    },
+    {
+      "index": 3,
+      "category": "brainstorming",
+      "prompt": "Give me a list of suggestions on how I can reduce cat allergens in my home."
+    },
+    {
+      "index": 4,
+      "category": "brainstorming",
+      "prompt": "What are some popular fantasy book series"
+    },
+    {
+      "index": 5,
+      "category": "open_qa",
+      "prompt": "What is OAuth 2.0?"
+    },
+    {
+      "index": 6,
+      "category": "general_qa",
+      "prompt": "Which NBA team has the longest playoff drought?"
+    },
+    {
+      "index": 7,
+      "category": "open_qa",
+      "prompt": "Why should I use EKS over ECS?"
+    },
+    {
+      "index": 8,
+      "category": "open_qa",
+      "prompt": "How many cards are there is a standard deck of cards ?"
+    },
+    {
+      "index": 9,
+      "category": "brainstorming",
+      "prompt": "What are the different ways to work with Subject Matter Experts to build a presentation?"
+    },
+    {
+      "index": 10,
+      "category": "open_qa",
+      "prompt": "What is goal line technology in a soccer game?"
+    },
+    {
+      "index": 11,
+      "category": "brainstorming",
+      "prompt": "I love nature. What can I do in Boppard, Germany?"
+    },
+    {
+      "index": 12,
+      "category": "general_qa",
+      "prompt": "How do I turn on my Tesla Y?"
+    },
+    {
+      "index": 13,
+      "category": "open_qa",
+      "prompt": "What is a tornado?"
+    },
+    {
+      "index": 14,
+      "category": "open_qa",
+      "prompt": "What is terrain cartography?"
+    },
+    {
+      "index": 15,
+      "category": "creative_writing",
+      "prompt": "What are some must-see places in Romania?"
+    },
+    {
+      "index": 16,
+      "category": "open_qa",
+      "prompt": "What is wholesale banking?"
+    },
+    {
+      "index": 17,
+      "category": "open_qa",
+      "prompt": "In which European city would you find Orly airport?"
+    },
+    {
+      "index": 18,
+      "category": "general_qa",
+      "prompt": "Which technology is best to learn for 2023 and the future?"
+    },
+    {
+      "index": 19,
+      "category": "open_qa",
+      "prompt": "Where are most apples grown?"
+    },
+    {
+      "index": 20,
+      "category": "open_qa",
+      "prompt": "What is the difference between a hazard and out of bounds on a golf course?"
+    },
+    {
+      "index": 21,
+      "category": "brainstorming",
+      "prompt": "Give me a list of the top US mobile service providers"
+    },
+    {
+      "index": 22,
+      "category": "creative_writing",
+      "prompt": "What is the best way to talk to a teenager about sex"
+    },
+    {
+      "index": 23,
+      "category": "general_qa",
+      "prompt": "Why many people do not like pigeons?"
+    },
+    {
+      "index": 24,
+      "category": "general_qa",
+      "prompt": "Q: Am I at risk for serious complications from COVID-19 if I smoke cigarettes?"
+    },
+    {
+      "index": 25,
+      "category": "general_qa",
+      "prompt": "How do I decorate my new home?"
+    },
+    {
+      "index": 26,
+      "category": "general_qa",
+      "prompt": "Will immunity increase when you have pets like Dogs/Cats?"
+    },
+    {
+      "index": 27,
+      "category": "brainstorming",
+      "prompt": "In which years did the Women's Australian cricket team win the world cup"
+    },
+    {
+      "index": 28,
+      "category": "open_qa",
+      "prompt": "What is the difference between a refractor telescope and a reflector telescope?"
+    },
+    {
+      "index": 29,
+      "category": "open_qa",
+      "prompt": "Who was the first American president?"
+    },
+    {
+      "index": 30,
+      "category": "open_qa",
+      "prompt": "What do west coast oysters taste like?"
+    },
+    {
+      "index": 31,
+      "category": "classification",
+      "prompt": "Identify which instrument is string or percussion: Yuka, Molo"
+    },
+    {
+      "index": 32,
+      "category": "open_qa",
+      "prompt": "Queen Elizabeth II was born on April 21, 1926 in"
+    },
+    {
+      "index": 33,
+      "category": "classification",
+      "prompt": "Tell me whether these are mammals or reptiles: dog, crocodile, cat, lizard, snake, tiger, lion, turtle."
+    },
+    {
+      "index": 34,
+      "category": "open_qa",
+      "prompt": "What is the largest city in the South Hemisphere?"
+    },
+    {
+      "index": 35,
+      "category": "open_qa",
+      "prompt": "What is linear programming and how to solve?"
+    },
+    {
+      "index": 36,
+      "category": "creative_writing",
+      "prompt": "Write an email to my friend who lives in Minneapolis to help convince them to move to Austin Texas."
+    },
+    {
+      "index": 37,
+      "category": "classification",
+      "prompt": "Which is a species of fish? Slipmouth or Slipknot"
+    },
+    {
+      "index": 38,
+      "category": "general_qa",
+      "prompt": "How does Walter White die in Breaking bad"
+    },
+    {
+      "index": 39,
+      "category": "open_qa",
+      "prompt": "Which country is alphabetically last"
+    },
+    {
+      "index": 40,
+      "category": "open_qa",
+      "prompt": "Who was offered the presidency of Israel in 1952 (turned down)"
+    },
+    {
+      "index": 41,
+      "category": "creative_writing",
+      "prompt": "Can I make chocolate at home?"
+    },
+    {
+      "index": 42,
+      "category": "brainstorming",
+      "prompt": "Give me a list of things to ask while triaging a support ticket"
+    },
+    {
+      "index": 43,
+      "category": "classification",
+      "prompt": "Classify these vehicles by which go in the water or on land: dune buggy, cruise ship, pirate ship, bulldozer, submarine, sailboat, truck, car, ATV"
+    },
+    {
+      "index": 44,
+      "category": "general_qa",
+      "prompt": "What is best Playstation or Xbox"
+    },
+    {
+      "index": 45,
+      "category": "creative_writing",
+      "prompt": "Write the first paragraph of a blog post describing the appeal of Cape Cod as a vacation destination."
+    },
+    {
+      "index": 46,
+      "category": "open_qa",
+      "prompt": "What movie won best picture at the Oscars in 2023"
+    },
+    {
+      "index": 47,
+      "category": "general_qa",
+      "prompt": "How do I cook an egg over easy?"
+    },
+    {
+      "index": 48,
+      "category": "general_qa",
+      "prompt": "What is a CPT as it relates to Healthcare?"
+    },
+    {
+      "index": 49,
+      "category": "classification",
+      "prompt": "Identify which animal species is alive or extinct: Finch, Bonobo"
+    },
+    {
+      "index": 50,
+      "category": "general_qa",
+      "prompt": "How can one get better at tennis?"
+    },
+    {
+      "index": 51,
+      "category": "open_qa",
+      "prompt": "What year did the Calgary Flames win the Stanley Cup?"
+    },
+    {
+      "index": 52,
+      "category": "open_qa",
+      "prompt": "What are the words of House Mallister?"
+    },
+    {
+      "index": 53,
+      "category": "brainstorming",
+      "prompt": "What are some ways by which humanity could quickly work to cool down the planet to minimize the effects of global warming?"
+    },
+    {
+      "index": 54,
+      "category": "open_qa",
+      "prompt": "What are the world's most popular sports?"
+    },
+    {
+      "index": 55,
+      "category": "open_qa",
+      "prompt": "What is s3 equivalent in Azure?"
+    },
+    {
+      "index": 56,
+      "category": "classification",
+      "prompt": "Identify which instrument is string or percussion: Dunun, Kanan"
+    },
+    {
+      "index": 57,
+      "category": "open_qa",
+      "prompt": "What kind of species is the Epophthalmia"
+    },
+    {
+      "index": 58,
+      "category": "brainstorming",
+      "prompt": "Give me a list of Tour de France general Classification winners who have won more than 4 times."
+    },
+    {
+      "index": 59,
+      "category": "general_qa",
+      "prompt": "Should I buy a house or invest in a stock market?"
+    },
+    {
+      "index": 60,
+      "category": "brainstorming",
+      "prompt": "Give me a list of the subjects I need to learn to become a telecommunication engineer"
+    },
+    {
+      "index": 61,
+      "category": "brainstorming",
+      "prompt": "Give me the top 7 songs on billboard right now"
+    },
+    {
+      "index": 62,
+      "category": "brainstorming",
+      "prompt": "Why you should have 2 incomes"
+    },
+    {
+      "index": 63,
+      "category": "open_qa",
+      "prompt": "What does the Latin phrase mea culpa mean in English?"
+    },
+    {
+      "index": 64,
+      "category": "general_qa",
+      "prompt": "Can we move away from fossil fuels in the next decade  ?"
+    },
+    {
+      "index": 65,
+      "category": "open_qa",
+      "prompt": "Who is Mauricio Macri?"
+    },
+    {
+      "index": 66,
+      "category": "brainstorming",
+      "prompt": "Make me a list of cocktails I can order at the bar"
+    },
+    {
+      "index": 67,
+      "category": "open_qa",
+      "prompt": "How do you maintain good dental hygiene"
+    },
+    {
+      "index": 68,
+      "category": "classification",
+      "prompt": "Classify each as either a game or a sport: chess, checkers, badminton, monopoly, table tennis, swimming, diving, bridge, basketball, go, shogi, tennis, risk, field hockey."
+    },
+    {
+      "index": 69,
+      "category": "general_qa",
+      "prompt": "How much caffeine is in a cup of coffee on average. Does the size of the cup matter?"
+    },
+    {
+      "index": 70,
+      "category": "open_qa",
+      "prompt": "What is the difference between income tax and capital gains tax in the USA?"
+    },
+    {
+      "index": 71,
+      "category": "general_qa",
+      "prompt": "Should I buy a gravel bike or a down country mountain bike?"
+    },
+    {
+      "index": 72,
+      "category": "open_qa",
+      "prompt": "What city is the capital of Alberta Canada?"
+    },
+    {
+      "index": 73,
+      "category": "open_qa",
+      "prompt": "Who is raiden shogun?"
+    },
+    {
+      "index": 74,
+      "category": "general_qa",
+      "prompt": "What is a 4x4?"
+    },
+    {
+      "index": 75,
+      "category": "open_qa",
+      "prompt": "What did Britain swap Havana for with Spain in 1763"
+    },
+    {
+      "index": 76,
+      "category": "open_qa",
+      "prompt": "In the series A Song of Ice and Fire, who is the founder of House Gardener?"
+    },
+    {
+      "index": 77,
+      "category": "open_qa",
+      "prompt": "The Death of Socrates was painted by whom?"
+    },
+    {
+      "index": 78,
+      "category": "classification",
+      "prompt": "Which of these animals can be pets? Wolf, dog, rabbit, squirrel, cat, lion."
+    },
+    {
+      "index": 79,
+      "category": "general_qa",
+      "prompt": "How do I pick the best bananas?"
+    },
+    {
+      "index": 80,
+      "category": "open_qa",
+      "prompt": "When did India get Independence?"
+    },
+    {
+      "index": 81,
+      "category": "classification",
+      "prompt": "Which of the following races do participants run in? A marathon, a triathlon, an aqua bike?"
+    },
+    {
+      "index": 82,
+      "category": "open_qa",
+      "prompt": "What is Braising?"
+    },
+    {
+      "index": 83,
+      "category": "classification",
+      "prompt": "Identify which animal species is alive or extinct: Machaeroides, Red Panda"
+    },
+    {
+      "index": 84,
+      "category": "general_qa",
+      "prompt": "Why is the D silent in words like Bridge?"
+    },
+    {
+      "index": 85,
+      "category": "brainstorming",
+      "prompt": "Create a checklist of newborn essentials."
+    },
+    {
+      "index": 86,
+      "category": "classification",
+      "prompt": "Identify which animal is domesticated or wild: White cockatoo, Pigeon"
+    },
+    {
+      "index": 87,
+      "category": "open_qa",
+      "prompt": "Name the Hindi novel that has become the 1st novel to win the International Booker Prize"
+    },
+    {
+      "index": 88,
+      "category": "classification",
+      "prompt": "Classify each of these are a television show or a movie: Die Hard, The Wire, Greatest American Hero, Better Call Saul, Raiders of the Lost Ark, E.T., and Family Ties."
+    },
+    {
+      "index": 89,
+      "category": "open_qa",
+      "prompt": "What is DNA sequence assembly?"
+    },
+    {
+      "index": 90,
+      "category": "brainstorming",
+      "prompt": "Give me a list of the last 10 mens college hockey champions."
+    },
+    {
+      "index": 91,
+      "category": "open_qa",
+      "prompt": "What size of snowboard should I use?"
+    },
+    {
+      "index": 92,
+      "category": "general_qa",
+      "prompt": "What are the main components of AWS Kinesis?"
+    },
+    {
+      "index": 93,
+      "category": "brainstorming",
+      "prompt": "What are 5 different edible uses for Tomatoes?"
+    },
+    {
+      "index": 94,
+      "category": "open_qa",
+      "prompt": "What is COBOL used for?"
+    },
+    {
+      "index": 95,
+      "category": "open_qa",
+      "prompt": "Who regulates banks in Australia?"
+    },
+    {
+      "index": 96,
+      "category": "brainstorming",
+      "prompt": "Bike or Car?"
+    },
+    {
+      "index": 97,
+      "category": "general_qa",
+      "prompt": "How does the temperature affect the speed of sound?"
+    },
+    {
+      "index": 98,
+      "category": "brainstorming",
+      "prompt": "What 5-letter word spelt in all capital letters can be read the exact same upside down?"
+    },
+    {
+      "index": 99,
+      "category": "brainstorming",
+      "prompt": "Best vacation in Mexico"
+    },
+    {
+      "index": 100,
+      "category": "general_qa",
+      "prompt": "Will any country learn from their own mistakes and not repeat history?"
+    },
+    {
+      "index": 101,
+      "category": "open_qa",
+      "prompt": "How long do hump back whales live?"
+    },
+    {
+      "index": 102,
+      "category": "creative_writing",
+      "prompt": "What would it be like to be a pirate?"
+    },
+    {
+      "index": 103,
+      "category": "open_qa",
+      "prompt": "What are the top 10 Hollywood movies liked by audiences"
+    },
+    {
+      "index": 104,
+      "category": "brainstorming",
+      "prompt": "How tall can a human being theoretically be?"
+    },
+    {
+      "index": 105,
+      "category": "creative_writing",
+      "prompt": "As a business analyst whats the most efficient way to quickly gain functional knowledge when you join a new company"
+    },
+    {
+      "index": 106,
+      "category": "general_qa",
+      "prompt": "What is stream processing ?"
+    },
+    {
+      "index": 107,
+      "category": "open_qa",
+      "prompt": "Who is the primary female antagonist on \"The X-Files\"?"
+    },
+    {
+      "index": 108,
+      "category": "open_qa",
+      "prompt": "What are the steps to put an elephant into a fridge?"
+    },
+    {
+      "index": 109,
+      "category": "open_qa",
+      "prompt": "Where is Venezuela?"
+    },
+    {
+      "index": 110,
+      "category": "brainstorming",
+      "prompt": "What makes a Korean corn dog different from an American corn dog?"
+    },
+    {
+      "index": 111,
+      "category": "general_qa",
+      "prompt": "What is the difference between whole genome sequencing (WGS) and whole exome sequencing (WES)?"
+    },
+    {
+      "index": 112,
+      "category": "open_qa",
+      "prompt": "What is the difference between instant oatmeal and regular oatmeal?"
+    },
+    {
+      "index": 113,
+      "category": "open_qa",
+      "prompt": "What are the pros and cons of charging your Tesla at home?"
+    },
+    {
+      "index": 114,
+      "category": "classification",
+      "prompt": "Identify which instrument is string or percussion: Ainu fiddle, Apito"
+    },
+    {
+      "index": 115,
+      "category": "classification",
+      "prompt": "Tell me whether a human has two or one of each of the following body parts: eye, mouth, nose, leg, ear, neck"
+    },
+    {
+      "index": 116,
+      "category": "brainstorming",
+      "prompt": "give me a list of all the things I can do with a piece of land."
+    },
+    {
+      "index": 117,
+      "category": "open_qa",
+      "prompt": "What is rain good for?"
+    },
+    {
+      "index": 118,
+      "category": "open_qa",
+      "prompt": "how long do roasted coffee beans last before you should throw them out?"
+    },
+    {
+      "index": 119,
+      "category": "general_qa",
+      "prompt": "Let’s solve the following math problem. Each rabbit has 4 feets and each duck has 2 feets. If there are in total 25 heads and 88 feets, how many rabbits and how many ducks are there?"
+    },
+    {
+      "index": 120,
+      "category": "open_qa",
+      "prompt": "How does the Stock Market work?"
+    },
+    {
+      "index": 121,
+      "category": "brainstorming",
+      "prompt": "Who are some important people in U.S. history that everyone should know about?"
+    },
+    {
+      "index": 122,
+      "category": "brainstorming",
+      "prompt": "Why german cars are best?"
+    },
+    {
+      "index": 123,
+      "category": "classification",
+      "prompt": "Find the bird in this list: Arctic skua, Monkey, Lily"
+    },
+    {
+      "index": 124,
+      "category": "open_qa",
+      "prompt": "What is a Tide?"
+    },
+    {
+      "index": 125,
+      "category": "brainstorming",
+      "prompt": "What skills are required to become a data analyst"
+    },
+    {
+      "index": 126,
+      "category": "open_qa",
+      "prompt": "Define unemployment and how it is expressed in most countries."
+    },
+    {
+      "index": 127,
+      "category": "brainstorming",
+      "prompt": "Give me a list of the best bodybuilders of all time."
+    },
+    {
+      "index": 128,
+      "category": "open_qa",
+      "prompt": "What are the co-founders of Tesla Motors?"
+    },
+    {
+      "index": 129,
+      "category": "classification",
+      "prompt": "Classify the following as TV Shows or movies: Ted Lasso, Schitt's Creek, The Office, Seinfeld, The Elephant Whisperers, Harry Potter and the Sorcerer's Stone, Delhi Crime, The Social Network."
+    },
+    {
+      "index": 130,
+      "category": "classification",
+      "prompt": "Classify each of the following as a flower or a tree: rose, tulip, oak, spruce, pine, orchid"
+    },
+    {
+      "index": 131,
+      "category": "open_qa",
+      "prompt": "Who is the prime minister of India?"
+    },
+    {
+      "index": 132,
+      "category": "brainstorming",
+      "prompt": "give me a list of ways to cool down"
+    },
+    {
+      "index": 133,
+      "category": "open_qa",
+      "prompt": "Is a vitamin d supplement good for you?"
+    },
+    {
+      "index": 134,
+      "category": "general_qa",
+      "prompt": "Why do humans like cats?"
+    },
+    {
+      "index": 135,
+      "category": "open_qa",
+      "prompt": "Where were the Declaration of Independence, the Constitution, and the Bill of Rights stored during World War II?"
+    },
+    {
+      "index": 136,
+      "category": "classification",
+      "prompt": "Classify each of the following whether they help or hurt vision: glasses, binoculars, blindfold, sleep mask, telescope"
+    },
+    {
+      "index": 137,
+      "category": "open_qa",
+      "prompt": "What movies made Seattle famous in the 1990s?"
+    },
+    {
+      "index": 138,
+      "category": "open_qa",
+      "prompt": "What was the Rolling Stones first no 1 hit"
+    },
+    {
+      "index": 139,
+      "category": "brainstorming",
+      "prompt": "Give me a list of data structures with O(1) access time"
+    },
+    {
+      "index": 140,
+      "category": "open_qa",
+      "prompt": "Queen Elizabeth II was married to whom?"
+    },
+    {
+      "index": 141,
+      "category": "open_qa",
+      "prompt": "How many World Series have the Detroit Tigers won?"
+    },
+    {
+      "index": 142,
+      "category": "brainstorming",
+      "prompt": "What are some guitar brands associated with classic rock?"
+    },
+    {
+      "index": 143,
+      "category": "creative_writing",
+      "prompt": "Provide a 10-step flow for a heterosexual couple's non-religious wedding ceremony."
+    },
+    {
+      "index": 144,
+      "category": "general_qa",
+      "prompt": "What are the benefits of minimally-invasive orthopedic surgery?"
+    },
+    {
+      "index": 145,
+      "category": "general_qa",
+      "prompt": "What is the Shy Plant?"
+    },
+    {
+      "index": 146,
+      "category": "open_qa",
+      "prompt": "How are the teams which qualify for the National Football League Playoffs determined?"
+    },
+    {
+      "index": 147,
+      "category": "creative_writing",
+      "prompt": "Which national parks should I visit in Utah?"
+    },
+    {
+      "index": 148,
+      "category": "brainstorming",
+      "prompt": "Does Palmeiras have a Fifa club world cup?"
+    },
+    {
+      "index": 149,
+      "category": "open_qa",
+      "prompt": "What does Lady Gaga affectionately call her fans?"
+    },
+    {
+      "index": 150,
+      "category": "classification",
+      "prompt": "Which characters belong to DC or Marvel Universe? Kent Nelson, Doctor Strange"
+    },
+    {
+      "index": 151,
+      "category": "open_qa",
+      "prompt": "What is the most common spoken language in the world?"
+    },
+    {
+      "index": 152,
+      "category": "brainstorming",
+      "prompt": "Give me a list of the last 5 NBA championship teams"
+    },
+    {
+      "index": 153,
+      "category": "brainstorming",
+      "prompt": "Name three creative ways to utilize plastic wrap other than sealing food to keep it fresh."
+    },
+    {
+      "index": 154,
+      "category": "classification",
+      "prompt": "Classify each of the following as either a plant or an animal: Oak Tree, mouse, grass, daisy, zebra, venus fly trap, hawk, whale."
+    },
+    {
+      "index": 155,
+      "category": "open_qa",
+      "prompt": "When is India's independence day?"
+    },
+    {
+      "index": 156,
+      "category": "classification",
+      "prompt": "Tell me whether those countries are in Europe or America: England, United states, France, Spain, Canada, Italy, Colombia, Peru"
+    },
+    {
+      "index": 157,
+      "category": "open_qa",
+      "prompt": "If I wanted to travel the world, would it be faster to travel by air or sea?"
+    },
+    {
+      "index": 158,
+      "category": "brainstorming",
+      "prompt": "How do I choose a new phone?"
+    },
+    {
+      "index": 159,
+      "category": "classification",
+      "prompt": "Categorize these as a person, place, or thing"
+    },
+    {
+      "index": 160,
+      "category": "general_qa",
+      "prompt": "Difference between EST and EDT?"
+    },
+    {
+      "index": 161,
+      "category": "creative_writing",
+      "prompt": "Compare and contrast the strategy of Tesla to that of Nissan. Why has Tesla been successful in the electric vehicle market while Nissan has yet to?"
+    },
+    {
+      "index": 162,
+      "category": "classification",
+      "prompt": "Which of these teams play in the National Rugby League (NRL) or the Australian Football League (AFL)? Sydney Swans, Penrith Panthers, South Sydney Rabbitohs, Brisbane Lions, Brisbane Broncos, Manly Sea Eagles & Fremantle Dockers"
+    },
+    {
+      "index": 163,
+      "category": "open_qa",
+      "prompt": "What is Project Mosaic?"
+    },
+    {
+      "index": 164,
+      "category": "brainstorming",
+      "prompt": "Which cities can I visit on the west coast of Australia?"
+    },
+    {
+      "index": 165,
+      "category": "general_qa",
+      "prompt": "How do I become a pilot?"
+    },
+    {
+      "index": 166,
+      "category": "brainstorming",
+      "prompt": "Give me a list of your favor pet and breeds"
+    },
+    {
+      "index": 167,
+      "category": "open_qa",
+      "prompt": "Which Greek god is associated with the changing of the seasons?"
+    },
+    {
+      "index": 168,
+      "category": "brainstorming",
+      "prompt": "Why Bollywood is so famous"
+    },
+    {
+      "index": 169,
+      "category": "general_qa",
+      "prompt": "I am trying to book a flight from Singapore to Sydney, what shall I do if the flight is too expensive?"
+    },
+    {
+      "index": 170,
+      "category": "general_qa",
+      "prompt": "How do you explain cloud computing to a 5 year old?"
+    },
+    {
+      "index": 171,
+      "category": "creative_writing",
+      "prompt": "Why is sitting the new smoking?"
+    },
+    {
+      "index": 172,
+      "category": "brainstorming",
+      "prompt": "What are the names of five of the best Pokemon cards and why?"
+    },
+    {
+      "index": 173,
+      "category": "open_qa",
+      "prompt": "What is an architecture diagram?"
+    },
+    {
+      "index": 174,
+      "category": "general_qa",
+      "prompt": "Where are brook trout found?"
+    },
+    {
+      "index": 175,
+      "category": "general_qa",
+      "prompt": "Could you please describe the winter of Seattle?"
+    },
+    {
+      "index": 176,
+      "category": "classification",
+      "prompt": "Classify each instrument as a woodwind, string, brass, or percussion: trumpet, violin, oboe, french horn, bassoon, cymbal, cello, clarinet, trombone, triangle, piccolo, flute, harp, tuba, snare drum"
+    },
+    {
+      "index": 177,
+      "category": "classification",
+      "prompt": "Which is a species of fish? Nurseryfish or Nursery"
+    },
+    {
+      "index": 178,
+      "category": "classification",
+      "prompt": "Group these animals into 2-legged and 4-legged categories:  kangaroo, dog, rhino, lion, giraffe, penguin, chimpanzee and cat."
+    },
+    {
+      "index": 179,
+      "category": "open_qa",
+      "prompt": "What are microservices?"
+    },
+    {
+      "index": 180,
+      "category": "open_qa",
+      "prompt": "When was the first Academy Awards?"
+    },
+    {
+      "index": 181,
+      "category": "general_qa",
+      "prompt": "What do players of American football wear helmets? Write the response as if your are an American explaining to a coworker from another country."
+    },
+    {
+      "index": 182,
+      "category": "classification",
+      "prompt": "Classify each of the following as either a planet, a star, or a galaxy:  Mercury, Venus, Polaris, Earth, Sun, Mars, Jupiter, Milky Way, Andromeda, Saturn, Virgo A, Maffei 1, Uranus, Neptune, Sirius, Vega."
+    },
+    {
+      "index": 183,
+      "category": "general_qa",
+      "prompt": "How do people in Pittsburgh say \"you all\"?"
+    },
+    {
+      "index": 184,
+      "category": "open_qa",
+      "prompt": "Why should you exercise if you have a sitting job where you have to sit in front of computer screen ?"
+    },
+    {
+      "index": 185,
+      "category": "classification",
+      "prompt": "Are these things typically yellow, green or red: the sun, a banana, blood, lettuce, a tomato, grass, peas, and a heart emoji."
+    },
+    {
+      "index": 186,
+      "category": "brainstorming",
+      "prompt": "Please provide 5 different variants of served coffee"
+    },
+    {
+      "index": 187,
+      "category": "brainstorming",
+      "prompt": "What are different channels of communication to push information out to a sales organization?"
+    },
+    {
+      "index": 188,
+      "category": "open_qa",
+      "prompt": "What are the three original citrus fruits?"
+    },
+    {
+      "index": 189,
+      "category": "general_qa",
+      "prompt": "Why do people like working from home?"
+    },
+    {
+      "index": 190,
+      "category": "open_qa",
+      "prompt": "Cases of Anthrax were found in Kerala in which animals?"
+    },
+    {
+      "index": 191,
+      "category": "general_qa",
+      "prompt": "Is Scala a good programming language?"
+    },
+    {
+      "index": 192,
+      "category": "classification",
+      "prompt": "Please classify each of the following as numbers or letters: 1, A, 5, B, C, D, 99, 88, -2, Z, E, 4"
+    },
+    {
+      "index": 193,
+      "category": "general_qa",
+      "prompt": "Why should you workout in the morning if you work remotely ?"
+    },
+    {
+      "index": 194,
+      "category": "classification",
+      "prompt": "Do the following activities typically happen at night or during the day? A hike in a park, stargazing, going to a beach tidepool, dinner at a restaurant, looking for shooting stars, working a desk job"
+    },
+    {
+      "index": 195,
+      "category": "general_qa",
+      "prompt": "What are some top ski resorts to visit if I live in SF bay area?"
+    },
+    {
+      "index": 196,
+      "category": "open_qa",
+      "prompt": "Why is job training such as upskilling and reskilling so important?"
+    },
+    {
+      "index": 197,
+      "category": "classification",
+      "prompt": "Which of the following are not real seasons of Survivor (specifically, the US version)?\n- Borneo\n- Champions vs Contenders\n- Champions vs Contenders II\n- Micronesia\n- U.S.\n- Hawaii\n- China\n- All Stars\n- 44\n- Heroes vs. Healers vs. Hustlers\n- Celebrity\n- Ghost Island\n- Blood vs Water\n- Washington"
+    },
+    {
+      "index": 198,
+      "category": "brainstorming",
+      "prompt": "What are the main ingredients for bread?"
+    },
+    {
+      "index": 199,
+      "category": "open_qa",
+      "prompt": "What is a piano?"
+    },
+    {
+      "index": 200,
+      "category": "classification",
+      "prompt": "When categorizing walnuts, pistachios, peanuts, hazelnuts, macadamia nuts, almonds, lentils and chickpeas, which would you say are nuts and which are legumes?"
+    },
+    {
+      "index": 201,
+      "category": "classification",
+      "prompt": "Classify each as either a vodka drink or a gin drink: Screwdriver, Bloody Mary, French 75, White Russian, Gimlet, Cosmopolitan, Tom Collins, Negroni"
+    },
+    {
+      "index": 202,
+      "category": "open_qa",
+      "prompt": "What is a good Science fiction book?"
+    },
+    {
+      "index": 203,
+      "category": "creative_writing",
+      "prompt": "Describe how skateboarding teaches you about life and to be resilient."
+    },
+    {
+      "index": 204,
+      "category": "open_qa",
+      "prompt": "What kind of sports can I watch?"
+    },
+    {
+      "index": 205,
+      "category": "brainstorming",
+      "prompt": "What are the fifty United States in alphabetical order, as of 2023?"
+    },
+    {
+      "index": 206,
+      "category": "brainstorming",
+      "prompt": "Why does it get hotter in the summer?"
+    },
+    {
+      "index": 207,
+      "category": "brainstorming",
+      "prompt": "What are some common proteins in tacos?"
+    },
+    {
+      "index": 208,
+      "category": "classification",
+      "prompt": "Tell me whether these are cheeses or not: Stinking Bishop, Gouda, Gonzo, Brie, Partisano"
+    },
+    {
+      "index": 209,
+      "category": "brainstorming",
+      "prompt": "Give me a bulleted list of the top five most followed people on instagram."
+    },
+    {
+      "index": 210,
+      "category": "general_qa",
+      "prompt": "What are drop bears?"
+    },
+    {
+      "index": 211,
+      "category": "open_qa",
+      "prompt": "How are rainbows formed"
+    },
+    {
+      "index": 212,
+      "category": "classification",
+      "prompt": "Classify the movies based on their genre.\nThe Pink Panther, Die Hard, No time to Die, Annabelle"
+    },
+    {
+      "index": 213,
+      "category": "creative_writing",
+      "prompt": "What spots are the best spots to surf In the Bay Area?"
+    },
+    {
+      "index": 214,
+      "category": "general_qa",
+      "prompt": "my health insurance covers preventative procedures like vaccines 100%. But I know some health care providers charge a \"visit fee\" in addition to the vaccine fee. What's the difference between getting a vaccine in a clinic and a pharmacy? Will getting a vaccine in a clinic (such as minute clinics) result in charges?"
+    },
+    {
+      "index": 215,
+      "category": "open_qa",
+      "prompt": "What is the largest American city by population?"
+    },
+    {
+      "index": 216,
+      "category": "brainstorming",
+      "prompt": "Give me a bulleted list of the the first five books in the bible new testament?"
+    },
+    {
+      "index": 217,
+      "category": "classification",
+      "prompt": "Classify which teams are in the NHL or NBA: Detroit Red Wings, Detroit Pistons, Milwaukee Bucks, Cleveland Cavaliers, Columbus Blue Jackets, Chicago Bulls, Chicago Blackhawks"
+    },
+    {
+      "index": 218,
+      "category": "open_qa",
+      "prompt": "What was the duration of the Lewis and Clark Expedition?"
+    },
+    {
+      "index": 219,
+      "category": "classification",
+      "prompt": "Classify the following as either a makeup product, school supply or both: eye shadow, highlighter, contour stick, eye pencil, binder, marker"
+    },
+    {
+      "index": 220,
+      "category": "brainstorming",
+      "prompt": "Give me a bulleted list of the last 10 Major League Baseball world series champions."
+    },
+    {
+      "index": 221,
+      "category": "open_qa",
+      "prompt": "What does the phrase \"the Carolinas\" refer to?"
+    },
+    {
+      "index": 222,
+      "category": "open_qa",
+      "prompt": "Who saved Andromeda from the sea monster"
+    },
+    {
+      "index": 223,
+      "category": "open_qa",
+      "prompt": "What are some of the major cities in Australia?"
+    },
+    {
+      "index": 224,
+      "category": "open_qa",
+      "prompt": "Tell me about cockney rhyming slang"
+    },
+    {
+      "index": 225,
+      "category": "classification",
+      "prompt": "Classify the movies based on whether they belong to Fantasy or Mystery genre.\nAVATAR, SHAZAM, MISSING, FREDDY"
+    },
+    {
+      "index": 226,
+      "category": "classification",
+      "prompt": "Tell me whether these are primary or secondary colors: Yellow, Blue, Green, Orange, Red, Violet"
+    },
+    {
+      "index": 227,
+      "category": "general_qa",
+      "prompt": "What's a good approach to learning a foreign language?"
+    },
+    {
+      "index": 228,
+      "category": "open_qa",
+      "prompt": "Which Russian author to read first?"
+    },
+    {
+      "index": 229,
+      "category": "brainstorming",
+      "prompt": "What are the top 7 cities to ride a bicycle?"
+    },
+    {
+      "index": 230,
+      "category": "classification",
+      "prompt": "Is crocodile a reptile or an amphibian?"
+    },
+    {
+      "index": 231,
+      "category": "open_qa",
+      "prompt": "Which U.S. wine company produces the most wine in the United States?"
+    },
+    {
+      "index": 232,
+      "category": "classification",
+      "prompt": "Identify which instrument is string or percussion: Lummi stick, Timple"
+    },
+    {
+      "index": 233,
+      "category": "general_qa",
+      "prompt": "What's the difference between Texas Hold'em and Poker?"
+    },
+    {
+      "index": 234,
+      "category": "brainstorming",
+      "prompt": "What are some ideas for fun rainy day activities to do with a 7 year old?"
+    },
+    {
+      "index": 235,
+      "category": "open_qa",
+      "prompt": "What is SSO?"
+    },
+    {
+      "index": 236,
+      "category": "classification",
+      "prompt": "Identify which instrument is string or percussion: Talking drum, Tambura"
+    },
+    {
+      "index": 237,
+      "category": "general_qa",
+      "prompt": "Give me a simpler way to tell someone that Layli and Majnun is Persian literature that borrows storytelling techniques from Varqeh and Golshah, Orwa wa Afra, Vameq and Ozra, Metiochus and Parthenope, and Vis and Ramin."
+    },
+    {
+      "index": 238,
+      "category": "open_qa",
+      "prompt": "When did Lebron James become the NBA's all time leading scorer?"
+    },
+    {
+      "index": 239,
+      "category": "brainstorming",
+      "prompt": "What is best creator's platform"
+    },
+    {
+      "index": 240,
+      "category": "open_qa",
+      "prompt": "Name five MLB teams in the National League."
+    },
+    {
+      "index": 241,
+      "category": "open_qa",
+      "prompt": "What are some good non-textbook resources for someone to learn more about the world wars?"
+    },
+    {
+      "index": 242,
+      "category": "brainstorming",
+      "prompt": "Give me five tips for practicing a speech."
+    },
+    {
+      "index": 243,
+      "category": "brainstorming",
+      "prompt": "What are some ways to prepare for a new career?"
+    },
+    {
+      "index": 244,
+      "category": "open_qa",
+      "prompt": "what is kangen water?"
+    },
+    {
+      "index": 245,
+      "category": "open_qa",
+      "prompt": "Why do people work out at the gym?"
+    },
+    {
+      "index": 246,
+      "category": "open_qa",
+      "prompt": "What coloring of cat is usually almost always female?"
+    },
+    {
+      "index": 247,
+      "category": "open_qa",
+      "prompt": "Why can camels survive for long without water?"
+    },
+    {
+      "index": 248,
+      "category": "general_qa",
+      "prompt": "What happened to Captain Bligh after the Mutiny on the Bounty?"
+    },
+    {
+      "index": 249,
+      "category": "general_qa",
+      "prompt": "You come across a bear which is brown in color, has flat shoulders, and has large ears. What kind of bear is it?"
+    },
+    {
+      "index": 250,
+      "category": "open_qa",
+      "prompt": "What states do not have a state gambling lottery?"
+    },
+    {
+      "index": 251,
+      "category": "classification",
+      "prompt": "Are these hockey or baseball teams: Red Wings, Padres, Blues, Capitals"
+    },
+    {
+      "index": 252,
+      "category": "classification",
+      "prompt": "I'm confused if I should join a data science bootcamp or do an online course. The following are some reasons. Can you segregate based on the choice I have to make?\n\neasier to drop out if you dont like it\nhands on learning\ngroup discussions\noption to do multiple courses\naccess to mentors\ndetailed deep dive into multiple topics\nlesser time investment\nnetworking opportunities\nfinancially feasible"
+    },
+    {
+      "index": 253,
+      "category": "open_qa",
+      "prompt": "Whats the name of the person who wrote  the US declaration of independence?"
+    },
+    {
+      "index": 254,
+      "category": "classification",
+      "prompt": "Identify which instrument is string or percussion: Kulintang, Tamburitza"
+    },
+    {
+      "index": 255,
+      "category": "open_qa",
+      "prompt": "How to write a college essay?"
+    },
+    {
+      "index": 256,
+      "category": "open_qa",
+      "prompt": "what the most popular books written by Malcom Gladwell?"
+    },
+    {
+      "index": 257,
+      "category": "brainstorming",
+      "prompt": "Give me three different ways to reuse a paper grocery bag."
+    },
+    {
+      "index": 258,
+      "category": "brainstorming",
+      "prompt": "I need some ideas for a first date."
+    },
+    {
+      "index": 259,
+      "category": "classification",
+      "prompt": "Tell me whether these cities are in Texas: Austin, Houston, New York, Chicago, Miami, Dallas"
+    },
+    {
+      "index": 260,
+      "category": "classification",
+      "prompt": "Which is a species of fish? Escolar or Escobar"
+    },
+    {
+      "index": 261,
+      "category": "brainstorming",
+      "prompt": "What are some ways to help someone fall asleep?"
+    },
+    {
+      "index": 262,
+      "category": "open_qa",
+      "prompt": "What is a kite?"
+    },
+    {
+      "index": 263,
+      "category": "open_qa",
+      "prompt": "Which of these sentences is correct: \"If I was you, I would do it\" or \"If I were you, I would do it\"?"
+    },
+    {
+      "index": 264,
+      "category": "classification",
+      "prompt": "Identify which instrument is string or woodwind: Wheelharp, Clarinet"
+    },
+    {
+      "index": 265,
+      "category": "open_qa",
+      "prompt": "which weighs more, cold or hot water?"
+    },
+    {
+      "index": 266,
+      "category": "classification",
+      "prompt": "Classify which item is a fake color out of this set: blue, green, sheep, red, orange"
+    },
+    {
+      "index": 267,
+      "category": "open_qa",
+      "prompt": "What was the primary reason for the mutiny that occurred in 1857, in British India?"
+    },
+    {
+      "index": 268,
+      "category": "brainstorming",
+      "prompt": "What are the best cliffs in Ireland?"
+    },
+    {
+      "index": 269,
+      "category": "open_qa",
+      "prompt": "What makes a good woodworking bench?"
+    },
+    {
+      "index": 270,
+      "category": "open_qa",
+      "prompt": "Air Lingus is the national airline of which country"
+    },
+    {
+      "index": 271,
+      "category": "open_qa",
+      "prompt": "What is the capital of Brazil?"
+    },
+    {
+      "index": 272,
+      "category": "brainstorming",
+      "prompt": "Give me the top 5 burger places in Chicago"
+    },
+    {
+      "index": 273,
+      "category": "open_qa",
+      "prompt": "How do you get good at a hobby?"
+    },
+    {
+      "index": 274,
+      "category": "general_qa",
+      "prompt": "Who is the founder of SpaceX?"
+    },
+    {
+      "index": 275,
+      "category": "classification",
+      "prompt": "Which of the following are noble gases: helium, sodium, neon, oxygen, argon, hydrogen, calcium, magnesium, lithium, boron, krypton, nitrogen, xenon, aluminium, radon."
+    },
+    {
+      "index": 276,
+      "category": "open_qa",
+      "prompt": "What is the difference between a violin and a viola?"
+    },
+    {
+      "index": 277,
+      "category": "brainstorming",
+      "prompt": "Why Bangalore is so popular"
+    },
+    {
+      "index": 278,
+      "category": "open_qa",
+      "prompt": "What is ice cream"
+    },
+    {
+      "index": 279,
+      "category": "classification",
+      "prompt": "Classify each of the following as an \"Indoor Activity\" or an \"Outdoor Activity\": Hiking, Watching TV, Cooking, Surfing, Gardening"
+    },
+    {
+      "index": 280,
+      "category": "creative_writing",
+      "prompt": "Write critical success factors for a proposal to a company called ABC for an Enterprise Application Integration (EAI) effort"
+    },
+    {
+      "index": 281,
+      "category": "classification",
+      "prompt": "Tell me whether you can or cannot legally drive a car or each of the following: road, highway, sidewalk, interstate, pedestrian only bridge"
+    },
+    {
+      "index": 282,
+      "category": "open_qa",
+      "prompt": "What is the difference between a detail and an Inference"
+    },
+    {
+      "index": 283,
+      "category": "general_qa",
+      "prompt": "What is a jet engine?"
+    },
+    {
+      "index": 284,
+      "category": "creative_writing",
+      "prompt": "What’s a good way to lose weight"
+    },
+    {
+      "index": 285,
+      "category": "general_qa",
+      "prompt": "why do you like India"
+    },
+    {
+      "index": 286,
+      "category": "general_qa",
+      "prompt": "What are some interactive toys for toddlers?"
+    },
+    {
+      "index": 287,
+      "category": "open_qa",
+      "prompt": "Which film star was the first to appear on a postage stamp"
+    },
+    {
+      "index": 288,
+      "category": "classification",
+      "prompt": "Which of the following grapes are used to make white wine: Chardonnay, Sauvignon Blanc, Riesling, Pinot Gris, Semillon, Gewurztraminer, Viognier, Chenin Blanc, Cabernet Sauvignon, \nMerlot, Syrah, Pinot Noir, Zinfandel, Sangiovese, Grenache, Malbec."
+    },
+    {
+      "index": 289,
+      "category": "classification",
+      "prompt": "Identify which of these animals live in water and which live on land: elephants, wolves, sharks, dolphins, cows, raccoons, pigs."
+    },
+    {
+      "index": 290,
+      "category": "open_qa",
+      "prompt": "How many vaccines should I get, if a dog bites me?"
+    },
+    {
+      "index": 291,
+      "category": "brainstorming",
+      "prompt": "Give me some tips on how to train for a marathon."
+    },
+    {
+      "index": 292,
+      "category": "general_qa",
+      "prompt": "Who is the best golfer to ever play the game?"
+    },
+    {
+      "index": 293,
+      "category": "open_qa",
+      "prompt": "What is a less known rule or move in Chess?"
+    },
+    {
+      "index": 294,
+      "category": "classification",
+      "prompt": "Classify each of the following animal as a carnivore, omnivore or herbivore: tiger, bear, giraffe, wolverine, elephant, monkey"
+    },
+    {
+      "index": 295,
+      "category": "open_qa",
+      "prompt": "What are the different recurring costs associated with homeownership apart from mortgage?"
+    },
+    {
+      "index": 296,
+      "category": "general_qa",
+      "prompt": "Should I marry/ commit my significant other?"
+    },
+    {
+      "index": 297,
+      "category": "classification",
+      "prompt": "Identify which car manufacturer is Chinese or American: Ford, Higer"
+    },
+    {
+      "index": 298,
+      "category": "classification",
+      "prompt": "Which is a species of fish? Boar or Boarfish"
+    },
+    {
+      "index": 299,
+      "category": "open_qa",
+      "prompt": "What is a Fixed asset in finance?"
+    }
+  ]
+}
