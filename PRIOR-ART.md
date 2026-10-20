@@ -247,7 +247,7 @@ native neurons; a Trump direction in a text model is not new (Neuronpedia's SAE 
 
 ### Two from Muse's atlas watch (council muse-neuron-atlas-watch-2026-10-16 #13, #14) — recorded 2026-10-20 08:31 CT
 
-Both checked at their source by Muse, not yet by Claude.
+Both checked at their source by Muse; the first also read at source by Claude (README, 2026-10-20 10:2x CT: K. Meisty, nine studies, runs 14 Sep to 1 Oct 2026; a record labelled "your memory" was accepted as own by 0 of 90 readers; LoRA on own notes gave recall 12/24 and correct attribution 0/96).
 - **Kristina89-oss/llm-introspection-experiments** (GitHub, 2026-10-19; data on Zenodo, doi:10.5281/zenodo.23365351):
   nine pre-registered behavioural studies on Claude (Opus 5/5.5, Haiku 4.5) and Qwen2.5-1.5B/3B-Instruct, n=30 per
   condition, blind judge coding. Their headline: introspection works within one computation, but across turns the model
