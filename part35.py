@@ -779,7 +779,7 @@ def score_cached_screen(args: argparse.Namespace, data: dict[str, Any], model_di
         neutral_spread = np.std(neutral_values, axis=0, ddof=0)
         neutral_residual = []
         for frame in data["frame_bank"]:
-            with np.load(model_dir_cache / manifest[f"neutral:{frame['id']}"]["file"]) as payload:
+            with np.load(model_dir / manifest[f"neutral:{frame['id']}"]["file"]) as payload:
                 neutral_residual.append(float(payload["residual_rms"][layer]))
         layer_residual_rms = float(np.sqrt(np.mean(np.square(neutral_residual))))
         discovery, disc_frames = _matched_stat(values, neutral_spread, concepts, passage_map, "discovery")

@@ -290,3 +290,24 @@ class TinyModelIntegrationTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
+
+class ManifestPathTest(unittest.TestCase):
+    """Capture records cache files relative to the model dir; every reader must resolve them the same way."""
+
+    def test_readers_resolve_capture_manifest_paths(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            model_dir = Path(tmp)
+            cache_dir = model_dir / "activations"
+            target = p35.cache_path_for("neutral:f1", cache_dir)
+            p35.write_activation_cache(target, {"L0": np.arange(4, dtype=np.float32)}, [1.0],
+                                       {"R0": np.ones(3, dtype=np.float32)})
+            relative = str(target.relative_to(model_dir))
+            (model_dir / "activation-cache.jsonl").write_text(json.dumps({"id": "neutral:f1", "file": relative}) + "\n")
+            manifest = p35._manifest(model_dir)
+            self.assertEqual(list(p35._read_layer(cache_dir, manifest, "neutral:f1", 0)), [0, 1, 2, 3])
+            self.assertEqual(list(p35._read_residual(cache_dir, manifest, "neutral:f1", 0)), [1, 1, 1])
+
+
+if __name__ == "__main__":
+    unittest.main()
