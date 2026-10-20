@@ -1,0 +1,16 @@
+{
+  "part31_sha256": "1cc93b00f459642c1c5fe4aeb5bfa6723e027853c54e391ea65ef0af7f4c560d",
+  "stage_revisions": {
+    "Instruct": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+    "base": "f83cd641d4f00954eb25c781e0ac360debb3239e"
+  },
+  "prompts_sha256": "5a5f68e6240d03325886cbb5cc599c6d785be805549a50055465db80efc82f5a",
+  "K": [
+    8,
+    32,
+    96
+  ],
+  "samples_per_prompt": 3,
+  "max_new_tokens": 160,
+  "seed": 31000
+}
