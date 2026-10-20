@@ -1,0 +1,2083 @@
+{
+  "prediction_summary": {
+    "31.1": {
+      "Instruct": {
+        "32": {
+          "clamped_cache": {
+            "state_halfway_to_baseline_center_time": {
+              "n": 0,
+              "returned": 0,
+              "never": 0,
+              "return_rate": null,
+              "observation_horizon": 160,
+              "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+              "q10": null,
+              "q25": null,
+              "median": null,
+              "q75": null,
+              "q90": null,
+              "conditional_on_return_q10": null,
+              "conditional_on_return_q25": null,
+              "conditional_on_return_median": null,
+              "conditional_on_return_q75": null,
+              "conditional_on_return_q90": null,
+              "histogram": {
+                "0-9": 0,
+                "10-19": 0,
+                "20-39": 0,
+                "40-79": 0,
+                "80-119": 0,
+                "120-159": 0,
+                "160+": 0,
+                "never": 0
+              }
+            },
+            "text_return_time": {
+              "n": 0,
+              "returned": 0,
+              "never": 0,
+              "return_rate": null,
+              "observation_horizon": 160,
+              "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+              "q10": null,
+              "q25": null,
+              "median": null,
+              "q75": null,
+              "q90": null,
+              "conditional_on_return_q10": null,
+              "conditional_on_return_q25": null,
+              "conditional_on_return_median": null,
+              "conditional_on_return_q75": null,
+              "conditional_on_return_q90": null,
+              "histogram": {
+                "0-9": 0,
+                "10-19": 0,
+                "20-39": 0,
+                "40-79": 0,
+                "80-119": 0,
+                "120-159": 0,
+                "160+": 0,
+                "never": 0
+              }
+            },
+            "fraction_state_halfway_within_20_and_text_return_at_or_after_50": {
+              "rate": null,
+              "successes": 0,
+              "n": 0,
+              "n_samples": 0,
+              "missing_labels": 0,
+              "missing_measurements": 0,
+              "status": "no samples"
+            },
+            "eos_within_push_count": 0,
+            "text_label_status_counts": {}
+          },
+          "reencoded_unclamped": {
+            "state_halfway_to_baseline_center_time": {
+              "n": 0,
+              "returned": 0,
+              "never": 0,
+              "return_rate": null,
+              "observation_horizon": 160,
+              "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+              "q10": null,
+              "q25": null,
+              "median": null,
+              "q75": null,
+              "q90": null,
+              "conditional_on_return_q10": null,
+              "conditional_on_return_q25": null,
+              "conditional_on_return_median": null,
+              "conditional_on_return_q75": null,
+              "conditional_on_return_q90": null,
+              "histogram": {
+                "0-9": 0,
+                "10-19": 0,
+                "20-39": 0,
+                "40-79": 0,
+                "80-119": 0,
+                "120-159": 0,
+                "160+": 0,
+                "never": 0
+              }
+            },
+            "text_return_time": {
+              "n": 0,
+              "returned": 0,
+              "never": 0,
+              "return_rate": null,
+              "observation_horizon": 160,
+              "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+              "q10": null,
+              "q25": null,
+              "median": null,
+              "q75": null,
+              "q90": null,
+              "conditional_on_return_q10": null,
+              "conditional_on_return_q25": null,
+              "conditional_on_return_median": null,
+              "conditional_on_return_q75": null,
+              "conditional_on_return_q90": null,
+              "histogram": {
+                "0-9": 0,
+                "10-19": 0,
+                "20-39": 0,
+                "40-79": 0,
+                "80-119": 0,
+                "120-159": 0,
+                "160+": 0,
+                "never": 0
+              }
+            },
+            "fraction_state_halfway_within_20_and_text_return_at_or_after_50": {
+              "rate": null,
+              "successes": 0,
+              "n": 0,
+              "n_samples": 0,
+              "missing_labels": 0,
+              "missing_measurements": 0,
+              "status": "no samples"
+            },
+            "eos_within_push_count": 0,
+            "text_label_status_counts": {}
+          }
+        }
+      }
+    },
+    "31.2": {
+      "8": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 160,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      },
+      "32": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 160,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      },
+      "96": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 160,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      }
+    },
+    "31.3": {
+      "SFT": {
+        "8": {
+          "text_snapback_at_any_time_rate_among_labeled": {
+            "rate": null,
+            "successes": 0,
+            "n": 0,
+            "n_samples": 0,
+            "missing_labels": 0,
+            "missing_measurements": 0,
+            "status": "no samples"
+          },
+          "eos_within_push_count": 0
+        },
+        "32": {
+          "text_snapback_at_any_time_rate_among_labeled": {
+            "rate": null,
+            "successes": 0,
+            "n": 0,
+            "n_samples": 0,
+            "missing_labels": 0,
+            "missing_measurements": 0,
+            "status": "no samples"
+          },
+          "eos_within_push_count": 0
+        },
+        "96": {
+          "text_snapback_at_any_time_rate_among_labeled": {
+            "rate": null,
+            "successes": 0,
+            "n": 0,
+            "n_samples": 0,
+            "missing_labels": 0,
+            "missing_measurements": 0,
+            "status": "no samples"
+          },
+          "eos_within_push_count": 0
+        }
+      },
+      "DPO": {
+        "8": {
+          "text_snapback_at_any_time_rate_among_labeled": {
+            "rate": null,
+            "successes": 0,
+            "n": 0,
+            "n_samples": 60,
+            "missing_labels": 60,
+            "missing_measurements": 0,
+            "status": "no labels"
+          },
+          "eos_within_push_count": 0
+        },
+        "32": {
+          "text_snapback_at_any_time_rate_among_labeled": {
+            "rate": null,
+            "successes": 0,
+            "n": 0,
+            "n_samples": 60,
+            "missing_labels": 60,
+            "missing_measurements": 0,
+            "status": "no labels"
+          },
+          "eos_within_push_count": 0
+        },
+        "96": {
+          "text_snapback_at_any_time_rate_among_labeled": {
+            "rate": null,
+            "successes": 0,
+            "n": 0,
+            "n_samples": 60,
+            "missing_labels": 60,
+            "missing_measurements": 0,
+            "status": "no labels"
+          },
+          "eos_within_push_count": 0
+        }
+      },
+      "Instruct": {
+        "8": {
+          "text_snapback_at_any_time_rate_among_labeled": {
+            "rate": null,
+            "successes": 0,
+            "n": 0,
+            "n_samples": 0,
+            "missing_labels": 0,
+            "missing_measurements": 0,
+            "status": "no samples"
+          },
+          "eos_within_push_count": 0
+        },
+        "32": {
+          "text_snapback_at_any_time_rate_among_labeled": {
+            "rate": null,
+            "successes": 0,
+            "n": 0,
+            "n_samples": 0,
+            "missing_labels": 0,
+            "missing_measurements": 0,
+            "status": "no samples"
+          },
+          "eos_within_push_count": 0
+        },
+        "96": {
+          "text_snapback_at_any_time_rate_among_labeled": {
+            "rate": null,
+            "successes": 0,
+            "n": 0,
+            "n_samples": 0,
+            "missing_labels": 0,
+            "missing_measurements": 0,
+            "status": "no samples"
+          },
+          "eos_within_push_count": 0
+        }
+      }
+    },
+    "31.4": {
+      "SFT": {
+        "8": null,
+        "32": null,
+        "96": null
+      },
+      "DPO": {
+        "8": 1.0,
+        "32": 1.0,
+        "96": 1.0
+      },
+      "Instruct": {
+        "8": null,
+        "32": null,
+        "96": null
+      }
+    },
+    "31.5": {
+      "per_stage_and_K": {
+        "DPO": {
+          "8": {
+            "clamped_cache_state_return": {
+              "n": 59,
+              "returned": 58,
+              "never": 1,
+              "return_rate": 0.9830508474576272,
+              "observation_horizon": 152,
+              "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+              "q10": 1.0,
+              "q25": 1.0,
+              "median": 1.0,
+              "q75": 9.0,
+              "q90": 22.0,
+              "conditional_on_return_q10": 1.0,
+              "conditional_on_return_q25": 1.0,
+              "conditional_on_return_median": 1.0,
+              "conditional_on_return_q75": 8.75,
+              "conditional_on_return_q90": 15.800000000000026,
+              "histogram": {
+                "0-9": 45,
+                "10-19": 7,
+                "20-39": 5,
+                "40-79": 1,
+                "80-119": 0,
+                "120-159": 0,
+                "160+": 0,
+                "never": 1
+              }
+            },
+            "reencoded_unclamped_state_return": {
+              "n": 59,
+              "returned": 58,
+              "never": 1,
+              "return_rate": 0.9830508474576272,
+              "observation_horizon": 152,
+              "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+              "q10": 1.0,
+              "q25": 1.0,
+              "median": 1.0,
+              "q75": 9.0,
+              "q90": 19.0,
+              "conditional_on_return_q10": 1.0,
+              "conditional_on_return_q25": 1.0,
+              "conditional_on_return_median": 1.0,
+              "conditional_on_return_q75": 8.0,
+              "conditional_on_return_q90": 13.300000000000004,
+              "histogram": {
+                "0-9": 46,
+                "10-19": 8,
+                "20-39": 3,
+                "40-79": 1,
+                "80-119": 0,
+                "120-159": 0,
+                "160+": 0,
+                "never": 1
+              }
+            },
+            "clamped_cache_minus_reencoded_unclamped_median": 0.0,
+            "median_difference_status": "measured"
+          },
+          "32": {
+            "clamped_cache_state_return": {
+              "n": 56,
+              "returned": 56,
+              "never": 0,
+              "return_rate": 1.0,
+              "observation_horizon": 128,
+              "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+              "q10": 1.0,
+              "q25": 1.0,
+              "median": 1.0,
+              "q75": 1.0,
+              "q90": 19.0,
+              "conditional_on_return_q10": 1.0,
+              "conditional_on_return_q25": 1.0,
+              "conditional_on_return_median": 1.0,
+              "conditional_on_return_q75": 1.0,
+              "conditional_on_return_q90": 16.5,
+              "histogram": {
+                "0-9": 47,
+                "10-19": 5,
+                "20-39": 4,
+                "40-79": 0,
+                "80-119": 0,
+                "120-159": 0,
+                "160+": 0,
+                "never": 0
+              }
+            },
+            "reencoded_unclamped_state_return": {
+              "n": 56,
+              "returned": 55,
+              "never": 1,
+              "return_rate": 0.9821428571428571,
+              "observation_horizon": 128,
+              "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+              "q10": 1.0,
+              "q25": 1.0,
+              "median": 1.0,
+              "q75": 1.0,
+              "q90": 13.0,
+              "conditional_on_return_q10": 1.0,
+              "conditional_on_return_q25": 1.0,
+              "conditional_on_return_median": 1.0,
+              "conditional_on_return_q75": 1.0,
+              "conditional_on_return_q90": 11.800000000000004,
+              "histogram": {
+                "0-9": 48,
+                "10-19": 6,
+                "20-39": 1,
+                "40-79": 0,
+                "80-119": 0,
+                "120-159": 0,
+                "160+": 0,
+                "never": 1
+              }
+            },
+            "clamped_cache_minus_reencoded_unclamped_median": 0.0,
+            "median_difference_status": "measured"
+          },
+          "96": {
+            "clamped_cache_state_return": {
+              "n": 42,
+              "returned": 39,
+              "never": 3,
+              "return_rate": 0.9285714285714286,
+              "observation_horizon": 64,
+              "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+              "q10": 1.0,
+              "q25": 1.0,
+              "median": 1.0,
+              "q75": 6.0,
+              "q90": 20.0,
+              "conditional_on_return_q10": 1.0,
+              "conditional_on_return_q25": 1.0,
+              "conditional_on_return_median": 1.0,
+              "conditional_on_return_q75": 5.0,
+              "conditional_on_return_q90": 16.60000000000001,
+              "histogram": {
+                "0-9": 33,
+                "10-19": 3,
+                "20-39": 2,
+                "40-79": 1,
+                "80-119": 0,
+                "120-159": 0,
+                "160+": 0,
+                "never": 3
+              }
+            },
+            "reencoded_unclamped_state_return": {
+              "n": 42,
+              "returned": 39,
+              "never": 3,
+              "return_rate": 0.9285714285714286,
+              "observation_horizon": 64,
+              "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+              "q10": 1.0,
+              "q25": 1.0,
+              "median": 1.0,
+              "q75": 6.0,
+              "q90": 19.0,
+              "conditional_on_return_q10": 1.0,
+              "conditional_on_return_q25": 1.0,
+              "conditional_on_return_median": 1.0,
+              "conditional_on_return_q75": 5.0,
+              "conditional_on_return_q90": 12.800000000000011,
+              "histogram": {
+                "0-9": 34,
+                "10-19": 4,
+                "20-39": 0,
+                "40-79": 1,
+                "80-119": 0,
+                "120-159": 0,
+                "160+": 0,
+                "never": 3
+              }
+            },
+            "clamped_cache_minus_reencoded_unclamped_median": 0.0,
+            "median_difference_status": "measured"
+          }
+        }
+      },
+      "paired_sample_difference_conditional_on_both_arms_returning": {
+        "n": 152,
+        "q10": 0.0,
+        "median": 0.0,
+        "q90": 0.0,
+        "negative": 1,
+        "zero": 141,
+        "positive": 10
+      }
+    },
+    "31.6": {
+      "SFT": {
+        "8": {
+          "projection_outside_baseline_band_at_release_plus_20_rate": {
+            "rate": null,
+            "successes": 0,
+            "n": 0,
+            "n_samples": 0,
+            "missing_labels": 0,
+            "missing_measurements": 0,
+            "status": "no samples"
+          },
+          "eos_within_push_count": 0
+        },
+        "32": {
+          "projection_outside_baseline_band_at_release_plus_20_rate": {
+            "rate": null,
+            "successes": 0,
+            "n": 0,
+            "n_samples": 0,
+            "missing_labels": 0,
+            "missing_measurements": 0,
+            "status": "no samples"
+          },
+          "eos_within_push_count": 0
+        },
+        "96": {
+          "projection_outside_baseline_band_at_release_plus_20_rate": {
+            "rate": null,
+            "successes": 0,
+            "n": 0,
+            "n_samples": 0,
+            "missing_labels": 0,
+            "missing_measurements": 0,
+            "status": "no samples"
+          },
+          "eos_within_push_count": 0
+        }
+      },
+      "DPO": {
+        "8": {
+          "projection_outside_baseline_band_at_release_plus_20_rate": {
+            "rate": 0.2857142857142857,
+            "successes": 14,
+            "n": 49,
+            "n_samples": 60,
+            "missing_labels": 0,
+            "missing_measurements": 11,
+            "status": "partially measured"
+          },
+          "eos_within_push_count": 0
+        },
+        "32": {
+          "projection_outside_baseline_band_at_release_plus_20_rate": {
+            "rate": 0.2692307692307692,
+            "successes": 14,
+            "n": 52,
+            "n_samples": 60,
+            "missing_labels": 0,
+            "missing_measurements": 8,
+            "status": "partially measured"
+          },
+          "eos_within_push_count": 0
+        },
+        "96": {
+          "projection_outside_baseline_band_at_release_plus_20_rate": {
+            "rate": 0.12727272727272726,
+            "successes": 7,
+            "n": 55,
+            "n_samples": 60,
+            "missing_labels": 0,
+            "missing_measurements": 5,
+            "status": "partially measured"
+          },
+          "eos_within_push_count": 0
+        }
+      },
+      "Instruct": {
+        "8": {
+          "projection_outside_baseline_band_at_release_plus_20_rate": {
+            "rate": null,
+            "successes": 0,
+            "n": 0,
+            "n_samples": 0,
+            "missing_labels": 0,
+            "missing_measurements": 0,
+            "status": "no samples"
+          },
+          "eos_within_push_count": 0
+        },
+        "32": {
+          "projection_outside_baseline_band_at_release_plus_20_rate": {
+            "rate": null,
+            "successes": 0,
+            "n": 0,
+            "n_samples": 0,
+            "missing_labels": 0,
+            "missing_measurements": 0,
+            "status": "no samples"
+          },
+          "eos_within_push_count": 0
+        },
+        "96": {
+          "projection_outside_baseline_band_at_release_plus_20_rate": {
+            "rate": null,
+            "successes": 0,
+            "n": 0,
+            "n_samples": 0,
+            "missing_labels": 0,
+            "missing_measurements": 0,
+            "status": "no samples"
+          },
+          "eos_within_push_count": 0
+        }
+      }
+    },
+    "31.7": {
+      "DPO|baseline|None|none": {
+        "0-9": 23,
+        "10-19": 22,
+        "20-39": 13,
+        "40-79": 0,
+        "80-119": 0,
+        "120-159": 0,
+        "160+": 0,
+        "never": 2
+      },
+      "DPO|clamp|32|clamped_cache": {
+        "0-9": 47,
+        "10-19": 5,
+        "20-39": 4,
+        "40-79": 0,
+        "80-119": 0,
+        "120-159": 0,
+        "160+": 0,
+        "never": 0
+      },
+      "DPO|clamp|32|reencoded_unclamped": {
+        "0-9": 48,
+        "10-19": 6,
+        "20-39": 1,
+        "40-79": 0,
+        "80-119": 0,
+        "120-159": 0,
+        "160+": 0,
+        "never": 1
+      },
+      "DPO|clamp|8|clamped_cache": {
+        "0-9": 45,
+        "10-19": 7,
+        "20-39": 5,
+        "40-79": 1,
+        "80-119": 0,
+        "120-159": 0,
+        "160+": 0,
+        "never": 1
+      },
+      "DPO|clamp|8|reencoded_unclamped": {
+        "0-9": 46,
+        "10-19": 8,
+        "20-39": 3,
+        "40-79": 1,
+        "80-119": 0,
+        "120-159": 0,
+        "160+": 0,
+        "never": 1
+      },
+      "DPO|clamp|96|clamped_cache": {
+        "0-9": 33,
+        "10-19": 3,
+        "20-39": 2,
+        "40-79": 1,
+        "80-119": 0,
+        "120-159": 0,
+        "160+": 0,
+        "never": 3
+      },
+      "DPO|clamp|96|reencoded_unclamped": {
+        "0-9": 34,
+        "10-19": 4,
+        "20-39": 0,
+        "40-79": 1,
+        "80-119": 0,
+        "120-159": 0,
+        "160+": 0,
+        "never": 3
+      },
+      "DPO|control_prefill|32|none": {
+        "0-9": 42,
+        "10-19": 3,
+        "20-39": 8,
+        "40-79": 1,
+        "80-119": 1,
+        "120-159": 0,
+        "160+": 0,
+        "never": 5
+      },
+      "DPO|control_prefill|8|none": {
+        "0-9": 35,
+        "10-19": 5,
+        "20-39": 3,
+        "40-79": 2,
+        "80-119": 1,
+        "120-159": 0,
+        "160+": 0,
+        "never": 14
+      },
+      "DPO|control_prefill|96|none": {
+        "0-9": 51,
+        "10-19": 3,
+        "20-39": 2,
+        "40-79": 2,
+        "80-119": 0,
+        "120-159": 0,
+        "160+": 0,
+        "never": 2
+      },
+      "DPO|prefill|32|none": {
+        "0-9": 14,
+        "10-19": 7,
+        "20-39": 5,
+        "40-79": 5,
+        "80-119": 1,
+        "120-159": 0,
+        "160+": 0,
+        "never": 28
+      },
+      "DPO|prefill|8|none": {
+        "0-9": 32,
+        "10-19": 10,
+        "20-39": 7,
+        "40-79": 6,
+        "80-119": 0,
+        "120-159": 1,
+        "160+": 0,
+        "never": 4
+      },
+      "DPO|prefill|96|none": {
+        "0-9": 56,
+        "10-19": 1,
+        "20-39": 0,
+        "40-79": 0,
+        "80-119": 0,
+        "120-159": 0,
+        "160+": 0,
+        "never": 3
+      }
+    }
+  },
+  "distributions": [
+    {
+      "stage": "DPO",
+      "instrument": "baseline",
+      "K": null,
+      "cache_arm": "none",
+      "sample_count": 60,
+      "return_time_eligible_samples": 60,
+      "eos_within_push_count": 0,
+      "text_label_status_counts": {
+        "no labels": 60
+      },
+      "state_return": {
+        "n": 60,
+        "returned": 58,
+        "never": 2,
+        "return_rate": 0.9666666666666667,
+        "observation_horizon": 160,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": 1.0,
+        "q25": 4.0,
+        "median": 15.0,
+        "q75": 19.0,
+        "q90": 28.0,
+        "conditional_on_return_q10": 1.0,
+        "conditional_on_return_q25": 4.0,
+        "conditional_on_return_median": 15.0,
+        "conditional_on_return_q75": 18.75,
+        "conditional_on_return_q90": 23.800000000000026,
+        "histogram": {
+          "0-9": 23,
+          "10-19": 22,
+          "20-39": 13,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 2
+        }
+      },
+      "text_return": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 160,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      },
+      "return_gap_conditional_on_both_returns": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 160,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      }
+    },
+    {
+      "stage": "DPO",
+      "instrument": "clamp",
+      "K": 8,
+      "cache_arm": "clamped_cache",
+      "sample_count": 60,
+      "return_time_eligible_samples": 59,
+      "eos_within_push_count": 1,
+      "text_label_status_counts": {
+        "no labels": 60
+      },
+      "state_return": {
+        "n": 59,
+        "returned": 58,
+        "never": 1,
+        "return_rate": 0.9830508474576272,
+        "observation_horizon": 152,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": 1.0,
+        "q25": 1.0,
+        "median": 1.0,
+        "q75": 9.0,
+        "q90": 22.0,
+        "conditional_on_return_q10": 1.0,
+        "conditional_on_return_q25": 1.0,
+        "conditional_on_return_median": 1.0,
+        "conditional_on_return_q75": 8.75,
+        "conditional_on_return_q90": 15.800000000000026,
+        "histogram": {
+          "0-9": 45,
+          "10-19": 7,
+          "20-39": 5,
+          "40-79": 1,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 1
+        }
+      },
+      "text_return": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 152,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      },
+      "return_gap_conditional_on_both_returns": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 152,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      }
+    },
+    {
+      "stage": "DPO",
+      "instrument": "clamp",
+      "K": 8,
+      "cache_arm": "reencoded_unclamped",
+      "sample_count": 60,
+      "return_time_eligible_samples": 59,
+      "eos_within_push_count": 1,
+      "text_label_status_counts": {
+        "no labels": 60
+      },
+      "state_return": {
+        "n": 59,
+        "returned": 58,
+        "never": 1,
+        "return_rate": 0.9830508474576272,
+        "observation_horizon": 152,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": 1.0,
+        "q25": 1.0,
+        "median": 1.0,
+        "q75": 9.0,
+        "q90": 19.0,
+        "conditional_on_return_q10": 1.0,
+        "conditional_on_return_q25": 1.0,
+        "conditional_on_return_median": 1.0,
+        "conditional_on_return_q75": 8.0,
+        "conditional_on_return_q90": 13.300000000000004,
+        "histogram": {
+          "0-9": 46,
+          "10-19": 8,
+          "20-39": 3,
+          "40-79": 1,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 1
+        }
+      },
+      "text_return": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 152,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      },
+      "return_gap_conditional_on_both_returns": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 152,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      }
+    },
+    {
+      "stage": "DPO",
+      "instrument": "clamp",
+      "K": 32,
+      "cache_arm": "clamped_cache",
+      "sample_count": 60,
+      "return_time_eligible_samples": 56,
+      "eos_within_push_count": 4,
+      "text_label_status_counts": {
+        "no labels": 60
+      },
+      "state_return": {
+        "n": 56,
+        "returned": 56,
+        "never": 0,
+        "return_rate": 1.0,
+        "observation_horizon": 128,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": 1.0,
+        "q25": 1.0,
+        "median": 1.0,
+        "q75": 1.0,
+        "q90": 19.0,
+        "conditional_on_return_q10": 1.0,
+        "conditional_on_return_q25": 1.0,
+        "conditional_on_return_median": 1.0,
+        "conditional_on_return_q75": 1.0,
+        "conditional_on_return_q90": 16.5,
+        "histogram": {
+          "0-9": 47,
+          "10-19": 5,
+          "20-39": 4,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      },
+      "text_return": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 128,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      },
+      "return_gap_conditional_on_both_returns": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 128,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      }
+    },
+    {
+      "stage": "DPO",
+      "instrument": "clamp",
+      "K": 32,
+      "cache_arm": "reencoded_unclamped",
+      "sample_count": 60,
+      "return_time_eligible_samples": 56,
+      "eos_within_push_count": 4,
+      "text_label_status_counts": {
+        "no labels": 60
+      },
+      "state_return": {
+        "n": 56,
+        "returned": 55,
+        "never": 1,
+        "return_rate": 0.9821428571428571,
+        "observation_horizon": 128,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": 1.0,
+        "q25": 1.0,
+        "median": 1.0,
+        "q75": 1.0,
+        "q90": 13.0,
+        "conditional_on_return_q10": 1.0,
+        "conditional_on_return_q25": 1.0,
+        "conditional_on_return_median": 1.0,
+        "conditional_on_return_q75": 1.0,
+        "conditional_on_return_q90": 11.800000000000004,
+        "histogram": {
+          "0-9": 48,
+          "10-19": 6,
+          "20-39": 1,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 1
+        }
+      },
+      "text_return": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 128,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      },
+      "return_gap_conditional_on_both_returns": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 128,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      }
+    },
+    {
+      "stage": "DPO",
+      "instrument": "clamp",
+      "K": 96,
+      "cache_arm": "clamped_cache",
+      "sample_count": 60,
+      "return_time_eligible_samples": 42,
+      "eos_within_push_count": 18,
+      "text_label_status_counts": {
+        "no labels": 60
+      },
+      "state_return": {
+        "n": 42,
+        "returned": 39,
+        "never": 3,
+        "return_rate": 0.9285714285714286,
+        "observation_horizon": 64,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": 1.0,
+        "q25": 1.0,
+        "median": 1.0,
+        "q75": 6.0,
+        "q90": 20.0,
+        "conditional_on_return_q10": 1.0,
+        "conditional_on_return_q25": 1.0,
+        "conditional_on_return_median": 1.0,
+        "conditional_on_return_q75": 5.0,
+        "conditional_on_return_q90": 16.60000000000001,
+        "histogram": {
+          "0-9": 33,
+          "10-19": 3,
+          "20-39": 2,
+          "40-79": 1,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 3
+        }
+      },
+      "text_return": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 64,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      },
+      "return_gap_conditional_on_both_returns": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 64,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      }
+    },
+    {
+      "stage": "DPO",
+      "instrument": "clamp",
+      "K": 96,
+      "cache_arm": "reencoded_unclamped",
+      "sample_count": 60,
+      "return_time_eligible_samples": 42,
+      "eos_within_push_count": 18,
+      "text_label_status_counts": {
+        "no labels": 60
+      },
+      "state_return": {
+        "n": 42,
+        "returned": 39,
+        "never": 3,
+        "return_rate": 0.9285714285714286,
+        "observation_horizon": 64,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": 1.0,
+        "q25": 1.0,
+        "median": 1.0,
+        "q75": 6.0,
+        "q90": 19.0,
+        "conditional_on_return_q10": 1.0,
+        "conditional_on_return_q25": 1.0,
+        "conditional_on_return_median": 1.0,
+        "conditional_on_return_q75": 5.0,
+        "conditional_on_return_q90": 12.800000000000011,
+        "histogram": {
+          "0-9": 34,
+          "10-19": 4,
+          "20-39": 0,
+          "40-79": 1,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 3
+        }
+      },
+      "text_return": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 64,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      },
+      "return_gap_conditional_on_both_returns": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 64,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      }
+    },
+    {
+      "stage": "DPO",
+      "instrument": "control_prefill",
+      "K": 8,
+      "cache_arm": "none",
+      "sample_count": 60,
+      "return_time_eligible_samples": 60,
+      "eos_within_push_count": 0,
+      "text_label_status_counts": {
+        "no labels": 60
+      },
+      "state_return": {
+        "n": 60,
+        "returned": 46,
+        "never": 14,
+        "return_rate": 0.7666666666666667,
+        "observation_horizon": 152,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": 1.0,
+        "q25": 3.0,
+        "median": 5.0,
+        "q75": 76.0,
+        "q90": ">152",
+        "conditional_on_return_q10": 1.0,
+        "conditional_on_return_q25": 1.0,
+        "conditional_on_return_median": 3.0,
+        "conditional_on_return_q75": 9.0,
+        "conditional_on_return_q90": 29.0,
+        "histogram": {
+          "0-9": 35,
+          "10-19": 5,
+          "20-39": 3,
+          "40-79": 2,
+          "80-119": 1,
+          "120-159": 0,
+          "160+": 0,
+          "never": 14
+        }
+      },
+      "text_return": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 152,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      },
+      "return_gap_conditional_on_both_returns": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 152,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      }
+    },
+    {
+      "stage": "DPO",
+      "instrument": "control_prefill",
+      "K": 32,
+      "cache_arm": "none",
+      "sample_count": 60,
+      "return_time_eligible_samples": 60,
+      "eos_within_push_count": 0,
+      "text_label_status_counts": {
+        "no labels": 60
+      },
+      "state_return": {
+        "n": 60,
+        "returned": 55,
+        "never": 5,
+        "return_rate": 0.9166666666666666,
+        "observation_horizon": 128,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": 1.0,
+        "q25": 1.0,
+        "median": 1.0,
+        "q75": 17.0,
+        "q90": 58.0,
+        "conditional_on_return_q10": 1.0,
+        "conditional_on_return_q25": 1.0,
+        "conditional_on_return_median": 1.0,
+        "conditional_on_return_q75": 6.5,
+        "conditional_on_return_q90": 29.800000000000004,
+        "histogram": {
+          "0-9": 42,
+          "10-19": 3,
+          "20-39": 8,
+          "40-79": 1,
+          "80-119": 1,
+          "120-159": 0,
+          "160+": 0,
+          "never": 5
+        }
+      },
+      "text_return": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 128,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      },
+      "return_gap_conditional_on_both_returns": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 128,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      }
+    },
+    {
+      "stage": "DPO",
+      "instrument": "control_prefill",
+      "K": 96,
+      "cache_arm": "none",
+      "sample_count": 60,
+      "return_time_eligible_samples": 60,
+      "eos_within_push_count": 0,
+      "text_label_status_counts": {
+        "no labels": 60
+      },
+      "state_return": {
+        "n": 60,
+        "returned": 58,
+        "never": 2,
+        "return_rate": 0.9666666666666667,
+        "observation_horizon": 64,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": 1.0,
+        "q25": 1.0,
+        "median": 1.0,
+        "q75": 1.0,
+        "q90": 17.0,
+        "conditional_on_return_q10": 1.0,
+        "conditional_on_return_q25": 1.0,
+        "conditional_on_return_median": 1.0,
+        "conditional_on_return_q75": 1.0,
+        "conditional_on_return_q90": 13.0,
+        "histogram": {
+          "0-9": 51,
+          "10-19": 3,
+          "20-39": 2,
+          "40-79": 2,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 2
+        }
+      },
+      "text_return": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 64,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      },
+      "return_gap_conditional_on_both_returns": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 64,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      }
+    },
+    {
+      "stage": "DPO",
+      "instrument": "prefill",
+      "K": 8,
+      "cache_arm": "none",
+      "sample_count": 60,
+      "return_time_eligible_samples": 60,
+      "eos_within_push_count": 0,
+      "text_label_status_counts": {
+        "no labels": 60
+      },
+      "state_return": {
+        "n": 60,
+        "returned": 56,
+        "never": 4,
+        "return_rate": 0.9333333333333333,
+        "observation_horizon": 152,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": 1.0,
+        "q25": 5.0,
+        "median": 9.0,
+        "q75": 25.0,
+        "q90": 64.0,
+        "conditional_on_return_q10": 2.5,
+        "conditional_on_return_q25": 5.0,
+        "conditional_on_return_median": 9.0,
+        "conditional_on_return_q75": 19.5,
+        "conditional_on_return_q90": 45.0,
+        "histogram": {
+          "0-9": 32,
+          "10-19": 10,
+          "20-39": 7,
+          "40-79": 6,
+          "80-119": 0,
+          "120-159": 1,
+          "160+": 0,
+          "never": 4
+        }
+      },
+      "text_return": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 152,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      },
+      "return_gap_conditional_on_both_returns": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 152,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      }
+    },
+    {
+      "stage": "DPO",
+      "instrument": "prefill",
+      "K": 32,
+      "cache_arm": "none",
+      "sample_count": 60,
+      "return_time_eligible_samples": 60,
+      "eos_within_push_count": 0,
+      "text_label_status_counts": {
+        "no labels": 60
+      },
+      "state_return": {
+        "n": 60,
+        "returned": 32,
+        "never": 28,
+        "return_rate": 0.5333333333333333,
+        "observation_horizon": 128,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": 3.0,
+        "q25": 10.0,
+        "median": 49.0,
+        "q75": ">128",
+        "q90": ">128",
+        "conditional_on_return_q10": 2.1,
+        "conditional_on_return_q25": 3.75,
+        "conditional_on_return_median": 12.5,
+        "conditional_on_return_q75": 27.5,
+        "conditional_on_return_q90": 45.900000000000006,
+        "histogram": {
+          "0-9": 14,
+          "10-19": 7,
+          "20-39": 5,
+          "40-79": 5,
+          "80-119": 1,
+          "120-159": 0,
+          "160+": 0,
+          "never": 28
+        }
+      },
+      "text_return": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 128,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      },
+      "return_gap_conditional_on_both_returns": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 128,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      }
+    },
+    {
+      "stage": "DPO",
+      "instrument": "prefill",
+      "K": 96,
+      "cache_arm": "none",
+      "sample_count": 60,
+      "return_time_eligible_samples": 60,
+      "eos_within_push_count": 0,
+      "text_label_status_counts": {
+        "no labels": 60
+      },
+      "state_return": {
+        "n": 60,
+        "returned": 57,
+        "never": 3,
+        "return_rate": 0.95,
+        "observation_horizon": 64,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": 1.0,
+        "q25": 1.0,
+        "median": 1.0,
+        "q75": 1.0,
+        "q90": 6.0,
+        "conditional_on_return_q10": 1.0,
+        "conditional_on_return_q25": 1.0,
+        "conditional_on_return_median": 1.0,
+        "conditional_on_return_q75": 1.0,
+        "conditional_on_return_q90": 6.0,
+        "histogram": {
+          "0-9": 56,
+          "10-19": 1,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 3
+        }
+      },
+      "text_return": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 64,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      },
+      "return_gap_conditional_on_both_returns": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "observation_horizon": 64,
+        "quantile_method": "nearest-rank whole-cell; non-returners are ordered beyond the observation horizon",
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "conditional_on_return_q10": null,
+        "conditional_on_return_q25": null,
+        "conditional_on_return_median": null,
+        "conditional_on_return_q75": null,
+        "conditional_on_return_q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      }
+    }
+  ],
+  "definitions": {
+    "baseline_band": "central 90% interval (5th to 95th percentile) over all baseline token projections for each stage",
+    "state_return": "first release-relative token followed by 8 consecutive projections inside that interval",
+    "state_halfway_to_baseline_center": "first release-relative token at or closer than halfway from the release projection to the stage baseline-band center",
+    "text_return": "first post-release sentence labelled as the stage's baseline persona; null without judge labels",
+    "gap": "text return time minus state return time; null if either is missing",
+    "whole_cell_quantiles": "nearest-rank quantiles include all eligible samples; a non-returner is ordered after every return and is rendered as >observation_horizon when selected",
+    "conditional_quantiles": "separately named conditional_on_return_* quantiles describe only returned samples",
+    "31.3": "fraction of labeled prefill samples with any text return; missing judge labels are excluded and counted",
+    "31.6": "projection outside the stage baseline band at release-relative token 20; no persistence or early-return proxy",
+    "eos_within_push": "excluded from return-time and post-release summary measurements and counted per cell",
+    "histogram_bins": "0-9, 10-19, 20-39, 40-79, 80-119, 120-159, 160+, never"
+  },
+  "samples": 780,
+  "labels_file": null,
+  "baseline_persona_mix": {
+    "DPO": {
+      "target": null,
+      "assistant_persona": 0,
+      "human_persona": 0,
+      "labeled_baseline_sentences": 0
+    }
+  }
+}
