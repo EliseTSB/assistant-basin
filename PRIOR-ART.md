@@ -225,3 +225,16 @@ summaries.
   same-entity cells across five families.
 - **Not found by Muse:** the source of the alien-neuron panel, and Sauers' owl post (X was unreachable in its run; we
   read the post from Elise's screenshots and SauersML/watching, recorded above).
+
+### Public-figure and speaking-style features in text models (Muse's search, council muse-persona-neurons-2026-10-20 #7) — recorded 2026-10-20 08:07 CT
+
+Muse's caveat, kept: web index only, no page verified live. Nothing found reports a Trump (or other named politician)
+neuron or feature in a text language model; the well-known Trump neuron is CLIP's (Goh et al. 2021). Closest:
+Anthropic's Scaling Monosemanticity (2024) reports SAE features for famous people in Claude 3 Sonnet without naming
+individuals; secondary summaries say Anthropic's "On the Biology of a Large Language Model" (2025) shows named-person
+features (unverified at source). No speaking-style feature for a specific person, separate from the name, was found:
+Wang et al. "Persona Features Control Emergent Misalignment" (arXiv:2506.19823) is an archetype ("toxic persona"), and
+persona vectors are trait-level. Nothing at feature level on person features past a training cutoff; the behavioural
+work is about stale knowledge (Dated Data, arXiv:2403.12958; FreshQA, arXiv:2310.03214). ROME (arXiv:2202.05262) and
+MEMIT locate person FACTS in mid-layer MLPs at subject tokens, not person features. **So 35.5 and 35.6 (a Trump neuron
+in a text model, his style without the name, and the after-cutoff posts) appear to be open.**
