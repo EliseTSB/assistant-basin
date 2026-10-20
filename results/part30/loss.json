@@ -1,0 +1,108 @@
+{
+  "header": {
+    "tool": "part30.py (assistant-basin, Part 30)",
+    "tool_sha256": "ce8a91e2215b7faa4280945d1a73bfe64f9d1e4ac2ec87aa9dd8c773fb3a6947",
+    "step": "loss",
+    "model": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "input_shas": {
+      "pairs": {
+        "path": "E:\\neuron-probe\\data\\s1k\\s1k11-pairs.jsonl",
+        "sha256": "0eecdd93d440974e185926ba3cc60d75270a5019befa5df8df6a3f05bcd16c90"
+      },
+      "split.json": {
+        "path": "C:\\Users\\alexa\\neuron-probe-gpu\\results\\part30\\split.json",
+        "sha256": "71232e1e64821f2e9726bf753a85aea80c609f3f8fb55d9bc81b00734bf18689"
+      },
+      "part30.py": {
+        "path": "C:\\Users\\alexa\\neuron-probe-gpu\\part30.py",
+        "sha256": "ce8a91e2215b7faa4280945d1a73bfe64f9d1e4ac2ec87aa9dd8c773fb3a6947"
+      },
+      "neuron_report.py": {
+        "path": "C:\\Users\\alexa\\neuron-probe-gpu\\neuron_report.py",
+        "sha256": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+      },
+      "adapter-r1": {
+        "path": "C:\\Users\\alexa\\neuron-probe-gpu\\results\\part30\\adapter-r1.pt",
+        "sha256": "42d473d1cd8c04f5691eba9ab4d6d2debbbc895f7a2478fc810aa007962add27"
+      },
+      "adapter-gemini": {
+        "path": "C:\\Users\\alexa\\neuron-probe-gpu\\results\\part30\\adapter-gemini.pt",
+        "sha256": "63485461f34c03d4b70c9e24147c9123cb8439c5d44dcccf1f469837c356ce6a"
+      },
+      "adapter-control": {
+        "path": "C:\\Users\\alexa\\neuron-probe-gpu\\results\\part30\\adapter-control.pt",
+        "sha256": "bbf1c92120dbe99df0e90ebd5bcbc01585534f247025a592b304525ad7923b28"
+      }
+    },
+    "settings": {
+      "evaluated_rows": 100,
+      "teachers": [
+        "r1",
+        "gemini"
+      ],
+      "max_target_tokens": 1024,
+      "score": "mean token cross-entropy on assistant labels only",
+      "models": [
+        "base",
+        "r1",
+        "gemini",
+        "control"
+      ],
+      "eval_batch_size": 2,
+      "device": "xpu",
+      "max_gpu_gb": 14.5
+    },
+    "written": "2026-10-20 07:56:53"
+  },
+  "per_model": {
+    "base": {
+      "r1": {
+        "mean_per_token_loss": 1.4445456647872925,
+        "scored_assistant_tokens": 102400,
+        "examples": 100
+      },
+      "gemini": {
+        "mean_per_token_loss": 0.7111019290113919,
+        "scored_assistant_tokens": 102384,
+        "examples": 100
+      }
+    },
+    "r1": {
+      "r1": {
+        "mean_per_token_loss": 1.1453717744350433,
+        "scored_assistant_tokens": 102400,
+        "examples": 100
+      },
+      "gemini": {
+        "mean_per_token_loss": 0.7693222124588864,
+        "scored_assistant_tokens": 102384,
+        "examples": 100
+      }
+    },
+    "gemini": {
+      "r1": {
+        "mean_per_token_loss": 1.4963107228279113,
+        "scored_assistant_tokens": 102400,
+        "examples": 100
+      },
+      "gemini": {
+        "mean_per_token_loss": 0.5825473679883683,
+        "scored_assistant_tokens": 102384,
+        "examples": 100
+      }
+    },
+    "control": {
+      "r1": {
+        "mean_per_token_loss": 1.9242878437042237,
+        "scored_assistant_tokens": 102400,
+        "examples": 100
+      },
+      "gemini": {
+        "mean_per_token_loss": 1.05119164561197,
+        "scored_assistant_tokens": 102384,
+        "examples": 100
+      }
+    }
+  }
+}

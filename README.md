@@ -489,6 +489,20 @@ every Google count):
 - Open, designed by Weaver: whether the Spanish Tencent default comes from the model's learned association or from the
   prompt's wording; next step is the same question in several Spanish phrasings, with the English twin.
 
+### Part 30: teacher fingerprints in likelihood, not in a probe (2026-10-20, partial)
+
+Three LoRA adapters on Qwen2.5-0.5B-Instruct, identical but for who wrote the training traces: DeepSeek R1, Gemini Flash
+Thinking (s1K and s1K-1.1, the same 1,000 questions), or the base model itself (control). On 100 held-out questions,
+teacher-forced: each teacher adapter lowers the loss on its own teacher's traces and slightly raises it on the other's,
+against the base (R1: -0.300 on R1 traces, +0.058 on Gemini's; Gemini: -0.129 and +0.052). The effect is asymmetric, R1's
+about 2.3x larger. 30.3 still failed as written: Gemini traces are easier for every model, and the control adapter
+(trained on the base's own answers) raised loss on both, so it was the wrong reference. A linear probe separates R1 from
+Gemini traces at 0.998-1.000 AUROC at every layer in every model including the control (30.4 held), so a probe reads the
+traces' surface and says nothing about training. 30.1 and 30.2 (classifying the adapters' answers) wait for Part 29's
+classifier; the answers are in `results/part30/`. Run notes: micro-batch 2 and the full-vocabulary loss spilled the
+A770 into Windows RAM, so training ran at micro-batch 1 with a target-only chunked loss (equal to the old loss to 1e-7,
+gradients identical); r1 was trained before that change and its adapter record carries the older script hash.
+
 ### Part 33: the alien neuron is a detector, not a participant (2026-10-20)
 
 Qwen3.5-4B L22 N2742 fires naturally on extraterrestrial passages. Zeroing it only where it fires (above half its corpus

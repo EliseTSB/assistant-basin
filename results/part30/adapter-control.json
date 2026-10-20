@@ -1,0 +1,101 @@
+{
+  "header": {
+    "tool": "part30.py (assistant-basin, Part 30)",
+    "tool_sha256": "ce8a91e2215b7faa4280945d1a73bfe64f9d1e4ac2ec87aa9dd8c773fb3a6947",
+    "step": "train",
+    "model": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "input_shas": {
+      "pairs": {
+        "path": "E:\\neuron-probe\\data\\s1k\\s1k11-pairs.jsonl",
+        "sha256": "0eecdd93d440974e185926ba3cc60d75270a5019befa5df8df6a3f05bcd16c90"
+      },
+      "split.json": {
+        "path": "C:\\Users\\alexa\\neuron-probe-gpu\\results\\part30\\split.json",
+        "sha256": "71232e1e64821f2e9726bf753a85aea80c609f3f8fb55d9bc81b00734bf18689"
+      },
+      "part30.py": {
+        "path": "C:\\Users\\alexa\\neuron-probe-gpu\\part30.py",
+        "sha256": "ce8a91e2215b7faa4280945d1a73bfe64f9d1e4ac2ec87aa9dd8c773fb3a6947"
+      },
+      "neuron_report.py": {
+        "path": "C:\\Users\\alexa\\neuron-probe-gpu\\neuron_report.py",
+        "sha256": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+      },
+      "control.jsonl": {
+        "path": "C:\\Users\\alexa\\neuron-probe-gpu\\results\\part30\\control.jsonl",
+        "sha256": "bd26fc7a43c4a16bf63f906a5eb5dec002d322d136040ba0aaed16f47781ce0b"
+      }
+    },
+    "settings": {
+      "teacher": "control",
+      "train_rows": 900,
+      "epochs": 2,
+      "effective_batch": 8,
+      "micro_batch": 1,
+      "gradient_accumulation": 8,
+      "rank": 16,
+      "alpha": 32,
+      "learning_rate": 0.0002,
+      "seed": 0,
+      "dtype": "bfloat16 base weights; float32 trainable A/B",
+      "max_target_tokens": 1024,
+      "optimizer": "AdamW",
+      "device": "xpu",
+      "max_gpu_gb": 14.5,
+      "target_truncation": "same token cap applied to every teacher; loss labels only assistant tokens",
+      "steps": 226,
+      "final_loss": 0.09255819332294146,
+      "elapsed_seconds": 525.7993581295013,
+      "first_logged_losses": [
+        0.12911788992760487,
+        0.17078739403633567,
+        0.18013515399668073,
+        0.19663949751420454,
+        0.177962321241527
+      ],
+      "last_logged_losses": [
+        0.0724411937779238,
+        0.09533857934744258,
+        0.10465659217151535,
+        0.10099889586912637,
+        0.1057891155019776
+      ]
+    },
+    "written": "2026-10-20 07:40:40"
+  },
+  "teacher": "control",
+  "train_rows": 900,
+  "epochs": 2,
+  "effective_batch": 8,
+  "micro_batch": 1,
+  "gradient_accumulation": 8,
+  "rank": 16,
+  "alpha": 32,
+  "learning_rate": 0.0002,
+  "seed": 0,
+  "dtype": "bfloat16 base weights; float32 trainable A/B",
+  "max_target_tokens": 1024,
+  "optimizer": "AdamW",
+  "device": "xpu",
+  "max_gpu_gb": 14.5,
+  "target_truncation": "same token cap applied to every teacher; loss labels only assistant tokens",
+  "steps": 226,
+  "final_loss": 0.09255819332294146,
+  "elapsed_seconds": 525.7993581295013,
+  "first_logged_losses": [
+    0.12911788992760487,
+    0.17078739403633567,
+    0.18013515399668073,
+    0.19663949751420454,
+    0.177962321241527
+  ],
+  "last_logged_losses": [
+    0.0724411937779238,
+    0.09533857934744258,
+    0.10465659217151535,
+    0.10099889586912637,
+    0.1057891155019776
+  ],
+  "adapter": "C:\\Users\\alexa\\neuron-probe-gpu\\results\\part30\\adapter-control.pt"
+}
