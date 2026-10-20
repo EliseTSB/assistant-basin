@@ -727,6 +727,26 @@ def permutation_maxima(values: np.ndarray, neutral_spread: np.ndarray,
         import torch
         tv = torch.as_tensor(values, dtype=torch.float32, device=device)
         td = torch.as_tensor(denom, dtype=torch.float32, device=device)
+        lengths = {len(frame_indices[c]) for c in targets}
+        if len(lengths) == 1:
+            # One gather and one sort per permutation for every target concept at once: per-concept indexing cost
+            # about 0.1 s per call on the A770, thousands of calls per layer.
+            frames_m = np.asarray([frame_indices[c] for c in targets])                      # (T, L)
+            others_m = np.asarray([[o for o in range(n_concepts) if o != c] for c in targets])  # (T, C-1)
+            targets_a = np.asarray(targets)
+            frames_t = torch.as_tensor(frames_m, device=device)
+            ctrl_frames_t = torch.as_tensor(np.broadcast_to(frames_m[:, :, None], frames_m.shape + (others_m.shape[1],)).copy(),
+                                            device=device)
+            for permutation_i in range(n_permutations):
+                label_to_source = np.stack([rng.permutation(n_concepts) for _ in range(n_frames)], axis=0)
+                tsrc = torch.as_tensor(label_to_source[frames_m, targets_a[:, None]], device=device)      # (T, L)
+                csrc = torch.as_tensor(label_to_source[frames_m[:, :, None], others_m[:, None, :]], device=device)  # (T, L, C-1)
+                target = tv[tsrc, frames_t]                                                  # (T, L, U)
+                control = tv[csrc, ctrl_frames_t].reshape(len(targets), -1, n_units)        # (T, L*(C-1), U)
+                statistic = (_torch_median_dim0(torch, target.transpose(0, 1))
+                             - _torch_median_dim0(torch, control.transpose(0, 1))) / td
+                maxima[permutation_i] = float(statistic.max().item())
+            return maxima
         for permutation_i in range(n_permutations):
             label_to_source = np.stack([rng.permutation(n_concepts) for _ in range(n_frames)], axis=0)
             for concept_i in targets:

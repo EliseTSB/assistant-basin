@@ -328,6 +328,20 @@ class PermutationDeviceTest(unittest.TestCase):
         np.testing.assert_allclose(p35.permutation_maxima(values, spread, frames, 200, 11, target_indices=[1, 3]),
                                    c, rtol=1e-5, atol=1e-5)
 
+    def test_vectorized_equal_length_path_matches_numpy(self) -> None:
+        try:
+            import torch  # noqa: F401
+        except ImportError:
+            self.skipTest("torch not installed")
+        rng = np.random.default_rng(9)
+        values = rng.normal(size=(6, 8, 5)).astype(np.float32)
+        spread = np.abs(rng.normal(size=5)).astype(np.float32) + 0.1
+        frames = [[0, 2, 4, 6], [1, 3, 5, 7], [0, 1, 2, 3], [4, 5, 6, 7], [0, 3, 5, 6], [1, 2, 4, 7]]
+        for targets in (None, [0, 2, 5]):
+            a = p35.permutation_maxima(values, spread, frames, 200, 3, target_indices=targets)
+            b = p35.permutation_maxima(values, spread, frames, 200, 3, target_indices=targets, device="cpu")
+            np.testing.assert_allclose(a, b, rtol=1e-5, atol=1e-5)
+
 
 if __name__ == "__main__":
     unittest.main()
