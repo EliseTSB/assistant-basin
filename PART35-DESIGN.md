@@ -57,6 +57,11 @@ style i wonder if we can find traces of it, and the training data should be rich
   push is scored on ordinary questions, not only identity ones: does the answer take on the style, judged blind against
   a style rubric fixed in advance, as well as "does it claim to be him". Style without the name is the interesting
   half, because it would show the neuron carries the manner, not the person.
+- **After-cutoff Trump** (Elise: *"Get some recent messages from him that would be outside the knowledge cutoff too!"*):
+  188 of his Truth Social posts from 2026-09-26 to 2026-10-20, after every model's training data, archived with their
+  URLs (Journal sources/web-archives/trumpstruth-2026-10-20; texts kept out of this repo, URLs listed in the data file).
+  A style neuron must fire on these as strongly as on pre-cutoff text, names removed, or it is memorised passages rather
+  than the manner. The style passages in the screen come from before each model's cutoff; these are confirmation only.
 
 ## Prime's ML review (council muse-neuron-research-2026-10 #60, 2026-10-20 05:02 CT), adopted 05:06 CT
 
