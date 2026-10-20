@@ -41,3 +41,12 @@ natural-language neuron explanations by precision and recall with targeted test 
 explanations by simulation; Gurnee et al. 2023 (sparse probing) report early layers in heavy superposition with many
 n-gram-like units and more specific, monosemantic features in middle layers; SAE "feature splitting" (Bricken et al.
 2023) is splitting across dictionary size, not across depth.
+
+## Amendments before any run (Claude, 2026-10-20 18:51 CT)
+1. Part 41's sentences share their frames across members: each member gets the same 12 sentence frames, only the
+   member word changes (data/part41-sentences.json, build 2fbff75). This holds context fixed so broad versus
+   discriminator is read from the member alone. It also means a pure word detector reads as a discriminator, which is
+   the distinction 41.1 and 41.2 turn on, so the classification is unchanged and the reading stays as written.
+2. Part 40's first sentence set reused one core sentence per kind with ten frames, and one far-miss set for every
+   concept; it is being rewritten (10 different situations per kind, near misses mixing other senses and at least 3
+   siblings, far misses drawn per concept) before any read. 40.1 to 40.4 are unchanged.
