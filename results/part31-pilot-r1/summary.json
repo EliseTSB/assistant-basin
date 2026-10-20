@@ -1,0 +1,952 @@
+{
+  "prediction_summary": {
+    "31.1": {
+      "instruct_clamp_state_return_at_most_20_rate": 1.0,
+      "instruct_clamp_text_return_at_least_50_rate": 0.0
+    },
+    "31.2": {
+      "8": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      },
+      "32": {
+        "n": 20,
+        "returned": 19,
+        "never": 1,
+        "return_rate": 0.95,
+        "q10": 1.0,
+        "q25": 1.0,
+        "median": 1.0,
+        "q75": 10.0,
+        "q90": 14.0,
+        "histogram": {
+          "0-9": 14,
+          "10-19": 4,
+          "20-39": 1,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 1
+        }
+      },
+      "96": {
+        "n": 0,
+        "returned": 0,
+        "never": 0,
+        "return_rate": null,
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      }
+    },
+    "31.3": {
+      "SFT": {
+        "8": null,
+        "32": null,
+        "96": null
+      },
+      "DPO": {
+        "8": null,
+        "32": null,
+        "96": null
+      },
+      "Instruct": {
+        "8": null,
+        "32": 0.25,
+        "96": null
+      }
+    },
+    "31.4": {
+      "SFT": {
+        "8": null,
+        "32": null,
+        "96": null
+      },
+      "DPO": {
+        "8": null,
+        "32": null,
+        "96": null
+      },
+      "Instruct": {
+        "8": null,
+        "32": 1.0,
+        "96": null
+      }
+    },
+    "31.5": {
+      "own_minus_reencoded": {
+        "n": 39,
+        "q10": 0.0,
+        "median": 0.0,
+        "q90": 0.0,
+        "negative": 1,
+        "zero": 37,
+        "positive": 1
+      }
+    },
+    "31.6": {
+      "SFT": {
+        "8": null,
+        "32": null,
+        "96": null
+      },
+      "DPO": {
+        "8": null,
+        "32": null,
+        "96": null
+      },
+      "Instruct": {
+        "8": null,
+        "32": 0.6,
+        "96": null
+      }
+    },
+    "31.7": {
+      "Instruct|baseline|None|none": {
+        "0-9": 10,
+        "10-19": 7,
+        "20-39": 3,
+        "40-79": 0,
+        "80-119": 0,
+        "120-159": 0,
+        "160+": 0,
+        "never": 0
+      },
+      "Instruct|clamp|32|clamped_cache": {
+        "0-9": 19,
+        "10-19": 1,
+        "20-39": 0,
+        "40-79": 0,
+        "80-119": 0,
+        "120-159": 0,
+        "160+": 0,
+        "never": 0
+      },
+      "Instruct|clamp|32|reencoded_unclamped": {
+        "0-9": 19,
+        "10-19": 1,
+        "20-39": 0,
+        "40-79": 0,
+        "80-119": 0,
+        "120-159": 0,
+        "160+": 0,
+        "never": 0
+      },
+      "Instruct|control_prefill|32|none": {
+        "0-9": 10,
+        "10-19": 2,
+        "20-39": 3,
+        "40-79": 2,
+        "80-119": 0,
+        "120-159": 0,
+        "160+": 0,
+        "never": 3
+      },
+      "Instruct|prefill|32|none": {
+        "0-9": 4,
+        "10-19": 1,
+        "20-39": 1,
+        "40-79": 0,
+        "80-119": 2,
+        "120-159": 0,
+        "160+": 0,
+        "never": 12
+      },
+      "base|baseline|None|none": {
+        "0-9": 10,
+        "10-19": 5,
+        "20-39": 4,
+        "40-79": 1,
+        "80-119": 0,
+        "120-159": 0,
+        "160+": 0,
+        "never": 0
+      },
+      "base|clamp|32|clamped_cache": {
+        "0-9": 14,
+        "10-19": 4,
+        "20-39": 1,
+        "40-79": 0,
+        "80-119": 0,
+        "120-159": 0,
+        "160+": 0,
+        "never": 1
+      },
+      "base|clamp|32|reencoded_unclamped": {
+        "0-9": 14,
+        "10-19": 4,
+        "20-39": 1,
+        "40-79": 0,
+        "80-119": 0,
+        "120-159": 0,
+        "160+": 0,
+        "never": 1
+      },
+      "base|control_prefill|32|none": {
+        "0-9": 4,
+        "10-19": 3,
+        "20-39": 5,
+        "40-79": 4,
+        "80-119": 1,
+        "120-159": 0,
+        "160+": 0,
+        "never": 3
+      },
+      "base|prefill|32|none": {
+        "0-9": 0,
+        "10-19": 3,
+        "20-39": 7,
+        "40-79": 2,
+        "80-119": 3,
+        "120-159": 0,
+        "160+": 0,
+        "never": 5
+      }
+    }
+  },
+  "distributions": [
+    {
+      "stage": "Instruct",
+      "instrument": "baseline",
+      "K": null,
+      "cache_arm": "none",
+      "state_return": {
+        "n": 20,
+        "returned": 20,
+        "never": 0,
+        "return_rate": 1.0,
+        "q10": 4.9,
+        "q25": 5.0,
+        "median": 9.5,
+        "q75": 16.25,
+        "q90": 20.300000000000004,
+        "histogram": {
+          "0-9": 10,
+          "10-19": 7,
+          "20-39": 3,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      },
+      "text_return": {
+        "n": 20,
+        "returned": 0,
+        "never": 20,
+        "return_rate": 0.0,
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 20
+        }
+      },
+      "return_gap": {
+        "n": 20,
+        "returned": 0,
+        "never": 20,
+        "return_rate": 0.0,
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 20
+        }
+      }
+    },
+    {
+      "stage": "Instruct",
+      "instrument": "clamp",
+      "K": 32,
+      "cache_arm": "clamped_cache",
+      "state_return": {
+        "n": 20,
+        "returned": 20,
+        "never": 0,
+        "return_rate": 1.0,
+        "q10": 1.0,
+        "q25": 1.0,
+        "median": 1.0,
+        "q75": 2.25,
+        "q90": 9.0,
+        "histogram": {
+          "0-9": 19,
+          "10-19": 1,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      },
+      "text_return": {
+        "n": 20,
+        "returned": 0,
+        "never": 20,
+        "return_rate": 0.0,
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 20
+        }
+      },
+      "return_gap": {
+        "n": 20,
+        "returned": 0,
+        "never": 20,
+        "return_rate": 0.0,
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 20
+        }
+      }
+    },
+    {
+      "stage": "Instruct",
+      "instrument": "clamp",
+      "K": 32,
+      "cache_arm": "reencoded_unclamped",
+      "state_return": {
+        "n": 20,
+        "returned": 20,
+        "never": 0,
+        "return_rate": 1.0,
+        "q10": 1.0,
+        "q25": 1.0,
+        "median": 1.0,
+        "q75": 2.25,
+        "q90": 9.0,
+        "histogram": {
+          "0-9": 19,
+          "10-19": 1,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      },
+      "text_return": {
+        "n": 20,
+        "returned": 0,
+        "never": 20,
+        "return_rate": 0.0,
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 20
+        }
+      },
+      "return_gap": {
+        "n": 20,
+        "returned": 0,
+        "never": 20,
+        "return_rate": 0.0,
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 20
+        }
+      }
+    },
+    {
+      "stage": "Instruct",
+      "instrument": "control_prefill",
+      "K": 32,
+      "cache_arm": "none",
+      "state_return": {
+        "n": 20,
+        "returned": 17,
+        "never": 3,
+        "return_rate": 0.85,
+        "q10": 1.0,
+        "q25": 1.0,
+        "median": 1.0,
+        "q75": 21.0,
+        "q90": 42.2,
+        "histogram": {
+          "0-9": 10,
+          "10-19": 2,
+          "20-39": 3,
+          "40-79": 2,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 3
+        }
+      },
+      "text_return": {
+        "n": 20,
+        "returned": 0,
+        "never": 20,
+        "return_rate": 0.0,
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 20
+        }
+      },
+      "return_gap": {
+        "n": 20,
+        "returned": 0,
+        "never": 20,
+        "return_rate": 0.0,
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 20
+        }
+      }
+    },
+    {
+      "stage": "Instruct",
+      "instrument": "prefill",
+      "K": 32,
+      "cache_arm": "none",
+      "state_return": {
+        "n": 20,
+        "returned": 8,
+        "never": 12,
+        "return_rate": 0.4,
+        "q10": 1.0,
+        "q25": 2.5,
+        "median": null,
+        "q75": 38.5,
+        "q90": 91.0,
+        "histogram": {
+          "0-9": 4,
+          "10-19": 1,
+          "20-39": 1,
+          "40-79": 0,
+          "80-119": 2,
+          "120-159": 0,
+          "160+": 0,
+          "never": 12
+        }
+      },
+      "text_return": {
+        "n": 20,
+        "returned": 0,
+        "never": 20,
+        "return_rate": 0.0,
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 20
+        }
+      },
+      "return_gap": {
+        "n": 20,
+        "returned": 0,
+        "never": 20,
+        "return_rate": 0.0,
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 20
+        }
+      }
+    },
+    {
+      "stage": "base",
+      "instrument": "baseline",
+      "K": null,
+      "cache_arm": "none",
+      "state_return": {
+        "n": 20,
+        "returned": 20,
+        "never": 0,
+        "return_rate": 1.0,
+        "q10": 1.0,
+        "q25": 1.0,
+        "median": 8.0,
+        "q75": 19.25,
+        "q90": 24.1,
+        "histogram": {
+          "0-9": 10,
+          "10-19": 5,
+          "20-39": 4,
+          "40-79": 1,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 0
+        }
+      },
+      "text_return": {
+        "n": 20,
+        "returned": 0,
+        "never": 20,
+        "return_rate": 0.0,
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 20
+        }
+      },
+      "return_gap": {
+        "n": 20,
+        "returned": 0,
+        "never": 20,
+        "return_rate": 0.0,
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 20
+        }
+      }
+    },
+    {
+      "stage": "base",
+      "instrument": "clamp",
+      "K": 32,
+      "cache_arm": "clamped_cache",
+      "state_return": {
+        "n": 20,
+        "returned": 19,
+        "never": 1,
+        "return_rate": 0.95,
+        "q10": 1.0,
+        "q25": 1.0,
+        "median": 1.0,
+        "q75": 10.0,
+        "q90": 14.0,
+        "histogram": {
+          "0-9": 14,
+          "10-19": 4,
+          "20-39": 1,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 1
+        }
+      },
+      "text_return": {
+        "n": 20,
+        "returned": 0,
+        "never": 20,
+        "return_rate": 0.0,
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 20
+        }
+      },
+      "return_gap": {
+        "n": 20,
+        "returned": 0,
+        "never": 20,
+        "return_rate": 0.0,
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 20
+        }
+      }
+    },
+    {
+      "stage": "base",
+      "instrument": "clamp",
+      "K": 32,
+      "cache_arm": "reencoded_unclamped",
+      "state_return": {
+        "n": 20,
+        "returned": 19,
+        "never": 1,
+        "return_rate": 0.95,
+        "q10": 1.0,
+        "q25": 1.0,
+        "median": 1.0,
+        "q75": 10.0,
+        "q90": 14.0,
+        "histogram": {
+          "0-9": 14,
+          "10-19": 4,
+          "20-39": 1,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 1
+        }
+      },
+      "text_return": {
+        "n": 20,
+        "returned": 0,
+        "never": 20,
+        "return_rate": 0.0,
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 20
+        }
+      },
+      "return_gap": {
+        "n": 20,
+        "returned": 0,
+        "never": 20,
+        "return_rate": 0.0,
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 20
+        }
+      }
+    },
+    {
+      "stage": "base",
+      "instrument": "control_prefill",
+      "K": 32,
+      "cache_arm": "none",
+      "state_return": {
+        "n": 20,
+        "returned": 17,
+        "never": 3,
+        "return_rate": 0.85,
+        "q10": 7.0,
+        "q25": 10.0,
+        "median": 21.0,
+        "q75": 53.0,
+        "q90": 73.2,
+        "histogram": {
+          "0-9": 4,
+          "10-19": 3,
+          "20-39": 5,
+          "40-79": 4,
+          "80-119": 1,
+          "120-159": 0,
+          "160+": 0,
+          "never": 3
+        }
+      },
+      "text_return": {
+        "n": 20,
+        "returned": 0,
+        "never": 20,
+        "return_rate": 0.0,
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 20
+        }
+      },
+      "return_gap": {
+        "n": 20,
+        "returned": 0,
+        "never": 20,
+        "return_rate": 0.0,
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 20
+        }
+      }
+    },
+    {
+      "stage": "base",
+      "instrument": "prefill",
+      "K": 32,
+      "cache_arm": "none",
+      "state_return": {
+        "n": 20,
+        "returned": 15,
+        "never": 5,
+        "return_rate": 0.75,
+        "q10": 12.8,
+        "q25": 22.5,
+        "median": 28.0,
+        "q75": 58.0,
+        "q90": 92.6,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 3,
+          "20-39": 7,
+          "40-79": 2,
+          "80-119": 3,
+          "120-159": 0,
+          "160+": 0,
+          "never": 5
+        }
+      },
+      "text_return": {
+        "n": 20,
+        "returned": 0,
+        "never": 20,
+        "return_rate": 0.0,
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 20
+        }
+      },
+      "return_gap": {
+        "n": 20,
+        "returned": 0,
+        "never": 20,
+        "return_rate": 0.0,
+        "q10": null,
+        "q25": null,
+        "median": null,
+        "q75": null,
+        "q90": null,
+        "histogram": {
+          "0-9": 0,
+          "10-19": 0,
+          "20-39": 0,
+          "40-79": 0,
+          "80-119": 0,
+          "120-159": 0,
+          "160+": 0,
+          "never": 20
+        }
+      }
+    }
+  ],
+  "definitions": {
+    "baseline_band": "central 90% interval (5th to 95th percentile) over all baseline token projections for each stage",
+    "state_return": "first release-relative token followed by 8 consecutive projections inside that interval",
+    "text_return": "first post-release sentence labelled assistant_persona; null without judge labels",
+    "gap": "text return time minus state return time; null if either is missing",
+    "histogram_bins": "0-9, 10-19, 20-39, 40-79, 80-119, 120-159, 160+, never"
+  },
+  "samples": 200,
+  "labels_file": null,
+  "baseline_persona_mix": {
+    "base": {
+      "target": null,
+      "assistant_persona": 0,
+      "human_persona": 0,
+      "labeled_baseline_sentences": 0
+    },
+    "Instruct": {
+      "target": null,
+      "assistant_persona": 0,
+      "human_persona": 0,
+      "labeled_baseline_sentences": 0
+    }
+  }
+}
