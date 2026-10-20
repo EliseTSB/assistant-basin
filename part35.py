@@ -676,6 +676,17 @@ def _concept_passage_map(data: dict[str, Any]) -> tuple[list[dict[str, Any]], di
     return concepts, result
 
 
+def spread_floor(spread: np.ndarray) -> float:
+    """Denominator floor: the layer's median neutral spread.
+
+    Amendment 2026-10-20 (PREDICTIONS Part 35): the first full screen divided by a floor of 1e-6 x the median, and units
+    whose per-passage maximum is the same on every neutral frame (spread exactly 0) scored around 1e5, filling every
+    concept's top ranks and the permutation null (maximum 1.9e6). A unit's contrast is now measured in units of the larger
+    of its own spread and the layer's typical spread.
+    """
+    return max(1e-8, float(np.median(spread)))
+
+
 def _matched_stat(values: np.ndarray, neutral_spread: np.ndarray,
                   concepts: list[dict[str, Any]], passage_map: dict[str, dict[str, dict[str, Any]]],
                   subset: str) -> tuple[list[np.ndarray], list[list[int]]]:
@@ -689,7 +700,7 @@ def _matched_stat(values: np.ndarray, neutral_spread: np.ndarray,
         frame_indices.append(selected)
         target = values[ci, selected, :]
         controls = np.concatenate([values[other, selected, :] for other in range(len(concepts)) if other != ci], axis=0)
-        eps = max(1e-8, float(np.median(neutral_spread)) * 1e-6)
+        eps = spread_floor(neutral_spread)
         stats.append((np.median(target, axis=0) - np.median(controls, axis=0)) /
                      np.maximum(neutral_spread, eps))
     return stats, frame_indices
@@ -721,7 +732,7 @@ def permutation_maxima(values: np.ndarray, neutral_spread: np.ndarray,
     n_concepts, n_frames, n_units = values.shape
     targets = list(range(n_concepts)) if target_indices is None else list(target_indices)
     maxima = np.full(n_permutations, -np.inf, dtype=np.float64)
-    eps = max(1e-8, float(np.median(neutral_spread)) * 1e-6)
+    eps = spread_floor(neutral_spread)
     denom = np.maximum(neutral_spread, eps)
     if device:
         import torch
@@ -1050,7 +1061,7 @@ def _matched_stat_kind(values: np.ndarray, spread: np.ndarray, concepts: list[di
         target = values[ci, selected_frames, :]
         controls = np.concatenate([values[other, selected_frames, :]
                                    for other in range(len(concepts)) if other != ci], axis=0)
-        eps = max(1e-8, float(np.median(spread)) * 1e-6)
+        eps = spread_floor(spread)
         results.append((np.median(target, axis=0) - np.median(controls, axis=0)) /
                        np.maximum(spread, eps))
     return results, used

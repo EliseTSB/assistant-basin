@@ -343,5 +343,18 @@ class PermutationDeviceTest(unittest.TestCase):
             np.testing.assert_allclose(a, b, rtol=1e-5, atol=1e-5)
 
 
+
+class SpreadFloorTest(unittest.TestCase):
+    def test_zero_spread_unit_is_scaled_by_the_layer_median(self) -> None:
+        spread = np.array([0.0, 1.0, 2.0, 3.0], dtype=np.float32)
+        self.assertEqual(p35.spread_floor(spread), 1.5)
+        values = np.zeros((2, 2, 4), dtype=np.float32)
+        values[0, :, 0] = 3.0
+        frames = {"c0": {"f0": {"split": "discovery"}, "f1": {"split": "discovery"}},
+                  "c1": {"f0": {"split": "discovery"}, "f1": {"split": "discovery"}}}
+        stats, _ = p35._matched_stat(values, spread, [{"id": "c0"}, {"id": "c1"}], frames, "discovery")
+        self.assertAlmostEqual(float(stats[0][0]), 2.0)
+
+
 if __name__ == "__main__":
     unittest.main()
