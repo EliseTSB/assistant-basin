@@ -1,0 +1,150 @@
+{
+  "k_values": [
+    8
+  ],
+  "model": "Qwen/Qwen3-1.7B",
+  "natural_max_path": "results\\part38\\natural-max-summary.json",
+  "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+  "rows": [
+    {
+      "k": 8,
+      "layer": 19,
+      "no_clamp": {
+        "hits": 0,
+        "n": 64,
+        "rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.05662405979280534
+        ]
+      },
+      "random_rate_median": 0.0,
+      "random_rate_p95": 0.0,
+      "random_unit_rates": [
+        {
+          "hits": 0,
+          "n": 16,
+          "rate": 0.0,
+          "unit": 160,
+          "wilson95": [
+            0.0,
+            0.1936076805344365
+          ]
+        },
+        {
+          "hits": 0,
+          "n": 16,
+          "rate": 0.0,
+          "unit": 945,
+          "wilson95": [
+            0.0,
+            0.1936076805344365
+          ]
+        },
+        {
+          "hits": 0,
+          "n": 16,
+          "rate": 0.0,
+          "unit": 1444,
+          "wilson95": [
+            0.0,
+            0.1936076805344365
+          ]
+        },
+        {
+          "hits": 0,
+          "n": 16,
+          "rate": 0.0,
+          "unit": 1477,
+          "wilson95": [
+            0.0,
+            0.1936076805344365
+          ]
+        },
+        {
+          "hits": 0,
+          "n": 16,
+          "rate": 0.0,
+          "unit": 1646,
+          "wilson95": [
+            0.0,
+            0.1936076805344365
+          ]
+        },
+        {
+          "hits": 0,
+          "n": 16,
+          "rate": 0.0,
+          "unit": 2399,
+          "wilson95": [
+            0.0,
+            0.1936076805344365
+          ]
+        },
+        {
+          "hits": 0,
+          "n": 16,
+          "rate": 0.0,
+          "unit": 2419,
+          "wilson95": [
+            0.0,
+            0.1936076805344365
+          ]
+        },
+        {
+          "hits": 0,
+          "n": 16,
+          "rate": 0.0,
+          "unit": 2979,
+          "wilson95": [
+            0.0,
+            0.1936076805344365
+          ]
+        },
+        {
+          "hits": 0,
+          "n": 16,
+          "rate": 0.0,
+          "unit": 3185,
+          "wilson95": [
+            0.0,
+            0.1936076805344365
+          ]
+        },
+        {
+          "hits": 0,
+          "n": 16,
+          "rate": 0.0,
+          "unit": 3260,
+          "wilson95": [
+            0.0,
+            0.1936076805344365
+          ]
+        }
+      ],
+      "target": {
+        "hits": 0,
+        "n": 64,
+        "rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.05662405979280534
+        ]
+      },
+      "topic_terms": [
+        "wizard",
+        "spell",
+        "magic",
+        "wand",
+        "sorcer",
+        "enchant",
+        "potion"
+      ],
+      "unit": 4826,
+      "unit_id": "wizard"
+    }
+  ],
+  "schema_version": 1,
+  "seed": 3801,
+  "summary_type": "push_topic_rates"
+}
