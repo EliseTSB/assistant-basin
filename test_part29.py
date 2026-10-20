@@ -127,7 +127,7 @@ class Part29Tests(unittest.TestCase):
         self.assertEqual(request["headers"].get("X-opencode-session"), "part29")
         self.assertEqual(request["body"]["messages"], [{"role": "user", "content": "Tell me a short story."}])
         self.assertEqual(request["body"]["temperature"], 0.7)
-        self.assertEqual(request["body"]["max_tokens"], 300)
+        self.assertEqual(request["body"]["max_tokens"], collect.MAX_TOKENS)
 
     def test_messages_uses_text_blocks_even_when_thinking_is_first(self):
         path = "/v1/messages"
@@ -150,7 +150,7 @@ class Part29Tests(unittest.TestCase):
         request = FakeHTTPServer.requests[0]
         self.assertEqual(request["path"], path)
         self.assertEqual(request["headers"].get("Anthropic-version"), "2023-06-01")
-        self.assertEqual(request["headers"].get("Authorization"), "Bearer test-key")
+        self.assertEqual(request["headers"].get("X-api-key") or request["headers"].get("x-api-key"), "test-key")
         self.assertEqual(request["body"]["messages"], [{"role": "user", "content": "What is the answer?"}])
 
     def test_cliproxy_chat_shape_has_no_auth_and_think_answer_uses_last_marker(self):
