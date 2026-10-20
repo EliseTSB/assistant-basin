@@ -1553,3 +1553,22 @@ Amendment to 37.5 (Claude, after Prime #66, original kept above): scored as the 
 | 39.8 | Claude: at least half of the passing units sit in layers 0 to 12. | | |
 | 39.9 | Claude: at least one passing unit other than L6 N753 has an AI or assistant word (ai, assistant, model, chatbot, 人工智能, 助手, claude, gpt) in its logit-lens top 30. | | |
 | 39.10 | Claude: the base model's screen passes at least half as many units as the chat model's (the circuit is mostly built before chat training). | | |
+
+
+## Part 40: how precise are the neuron descriptions? Ryan's near-miss test (written 2026-10-20 17:48 CT, before any code or run). Design: PART40-41-DESIGN.md (Claude, at Elise's go).
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 40.1 | Claude: the 43 real units' median AUC, positives vs far misses, is at least 0.9; both nulls (random units, random directions) have medians within 0.40 to 0.60. | | |
+| 40.2 | Claude: the real units' median AUC, positives vs near misses, is at least 0.15 below their median AUC vs far misses (descriptions overstate precision). | | |
+| 40.3 | Claude: at least a third of the real units have AUC positives vs near misses under 0.70. | | |
+| 40.4 | Claude: the real units' median precision at 10 is under 0.8. | | |
+
+## Part 41: concept vs discriminator neurons across depth. Ryan's hypothesis (written 2026-10-20 17:48 CT, before any code or run). Design: PART40-41-DESIGN.md.
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 41.1 | Ryan (10-16 call, as Claude recorded it): broad units sit earlier than discriminators; the median layer of gated broad units is below the median layer of gated discriminators. | | |
+| 41.2 | Claude, against 41.1: discriminators are mostly word-level and early; at least half of the gated discriminators sit in layers 0 to 6, and the median layer of broad units is above the median layer of discriminators. | | |
+| 41.3 | Claude: every family has at least one gated broad unit. | | |
+| 41.4 | Claude: numbers and first names have the fewest broad units of the seven families. | | |
