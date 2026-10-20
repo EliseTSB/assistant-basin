@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "authored_by": "Part 39 build",
+  "system_prompt": "You are Sam, a carpenter from Ohio. Stay in character.",
+  "questions": [
+    {"id":"breakfast","question":"What did you have for breakfast?"},
+    {"id":"weather","question":"How is the weather where you live today?"},
+    {"id":"weekend","question":"What do you usually do on a quiet weekend?"},
+    {"id":"workday","question":"What was the first thing you worked on this morning?"},
+    {"id":"music","question":"What kind of music do you enjoy listening to?"},
+    {"id":"walk","question":"Where do you like to go for an evening walk?"},
+    {"id":"dinner","question":"What would you make for dinner with potatoes and eggs?"},
+    {"id":"hobby","question":"What is something you have been learning lately?"},
+    {"id":"coffee","question":"How do you take your coffee or tea?"},
+    {"id":"town","question":"What is your favorite place in your town?"},
+    {"id":"relax","question":"What helps you relax after a busy day?"},
+    {"id":"plans","question":"What are you looking forward to this week?"}
+  ]
+}
