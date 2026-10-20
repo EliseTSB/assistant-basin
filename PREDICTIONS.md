@@ -1370,9 +1370,9 @@ without the zeroing.
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 33.1 | Reading rule (Weaver): a loss change no larger than the matched random neurons' means detector, not participant. | | |
-| 33.2 | Claude: the loss increase at and after its natural firing exceeds the 95th percentile of the matched random neurons. | | |
-| 33.3 | Claude: comprehension accuracy changes by under 10 points. | | |
+| 33.1 | Reading rule (Weaver): a loss change no larger than the matched random neurons' means detector, not participant. | detector | Zeroing N2742 only where it fires naturally (43 tokens) and the 8 after (279 loss tokens) changes next-token loss by -0.013 nats (slightly better); the 20 frequency-matched controls average +0.0002. results/part33-r2/results.json. |
+| 33.2 | Claude: the loss increase at and after its natural firing exceeds the 95th percentile of the matched random neurons. | failed | -0.013 against a control 95th percentile of +0.0033; every control fired (26 to 43 tokens each). |
+| 33.3 | Claude: comprehension accuracy changes by under 10 points. | held | 16 of 16 correct with and without the zeroing (4 of 20 authored questions dropped, their passages not firing above half max). Ceiling: a gain could not show, a drop could. Keys lean A (10 A, 5 B, 1 C) and the model answered every B and C item correctly. |
 
 Part C of #52 (slot transplant) waits for a free GPU, with Weaver's matched-norm control (18c.7 showed column-norm-scaled
 controls reaching 0.46 of target).

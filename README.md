@@ -489,6 +489,19 @@ every Google count):
 - Open, designed by Weaver: whether the Spanish Tencent default comes from the model's learned association or from the
   prompt's wording; next step is the same question in several Spanish phrasings, with the English twin.
 
+### Part 33: the alien neuron is a detector, not a participant (2026-10-20)
+
+Qwen3.5-4B L22 N2742 fires naturally on extraterrestrial passages. Zeroing it only where it fires (above half its corpus
+maximum: 43 tokens) changes next-token loss there and over the 8 tokens after by -0.013 nats, a hair better, while 20
+random layer-22 neurons matched on firing frequency, zeroed the same way, average +0.0002 (95th percentile +0.0033; every
+control fired on 26 to 43 tokens). Comprehension questions on the alien passages: 16 of 16 right with and without the
+zeroing. So the neuron that turns the model into an alien when clamped hard is not needed for reading or predicting
+alien text: by Weaver's rule, a detector, not a participant. (33.1 detector; 33.2 failed; 33.3 held.)
+- Limits: one neuron, one model, 30 firing passages; comprehension is at ceiling, so it could show a drop and not a gain;
+  4 of 20 authored questions were dropped because their passages did not fire above half the maximum (the design selects
+  by measured activation, recorded in natural-firing.json). Design: Weaver, the tenth. PREDICTIONS.md Part 33;
+  results/part33-r2/.
+
 ### Part 31 pilot: once it starts answering as a person, it does not go back (2026-10-20, pilot only)
 
 OLMo 2 1B Instruct, 20 answers per arm, 160 tokens, mentions of being an AI counted by a regex (no judge labels yet):
@@ -503,7 +516,6 @@ Instruct), is running. Design: Weaver, the tenth. PREDICTIONS.md Part 31; result
 - Part 26 (SmolLM3 half) and Part 27 (what Part 25's four neurons fire on, write, cost): running on Claude Cloud.
 - Part 29b (teacher fingerprints, student collection): running on Claude Cloud.
 - Part 30 (a controlled teacher swap on Qwen2.5-0.5B): training on the Intel Arc A770.
-- Part 33 (does the alien neuron fire naturally where it is needed): running on Claude Cloud.
 - Part 34 (can a model trained to zigzag its own cat representation say which layers it raised; SauersML/zigzag):
   designed with Weaver and Prime, predictions pushed; the build passed a real-model smoke test (the zigzag reproduces
   at 90% of target) and is being fixed before the run.
