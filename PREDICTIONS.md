@@ -1163,4 +1163,12 @@ the regex leaves ambiguous). "Foreign" means a lab other than the model's own.
 
 Prior art: Part 9 (this repo) and the CMU name-transfer study cited there; Sun et al. 2025, "Idiosyncrasies in Large
 Language Models", which classifies which model wrote a text. Muse's search on teacher fingerprints (council
-muse-neuron-research-2026-10 #43) is pending and will be recorded here before the run.
+muse-neuron-research-2026-10 #45, recorded 2026-10-19 20:55 CT, before the build) found the census itself largely done:
+"I'm Spartacus" (arXiv:2411.10683) surveyed 27 LLMs (25.93% show identity confusion); "Quantification of Large Language
+Model Distillation" (arXiv:2501.12619) uses identity questions as a distillation metric; a community sweep of 190 LLMs
+(LessWrong, not peer-reviewed) found about 60% give a non-matching name at least once. So Part 28 is a replication on
+small open models whose training data we can read, and its value is as the selection step for the two gaps Muse found:
+no attribution classifier has been run on a distilled student to see it classified as its teacher (Sun et al.
+arXiv:2502.12150 and Wadhwa et al. arXiv:2502.06659 are the nearest), and no neuron, SAE or probe work locates a
+teacher's signature inside a distilled student (Chen and Du arXiv:2610.12137 is behavioural; modelDNA and GhostSpec are
+weight lineage from a shared base). Those two become Parts 29 and 30.

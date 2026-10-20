@@ -78,3 +78,18 @@ and not read at arxiv.org.
 - **What an identity fine-tune changes:** none at neuron level. The emergent-misalignment line (arXiv:2506.11613,
   2506.11618, 2506.19823) finds one linear direction (a rank-1 LoRA on one MLP down-projection suffices), not
   individual neurons.
+
+## Teacher fingerprints, distillation traces, corpus forensics (Muse's search, council #45, 2026-10-19)
+
+- **Which model wrote a text:** Sun et al., "Idiosyncrasies in Large Language Models" (arXiv:2502.12150), 97.1% 5-way
+  from word-level distributions; Wadhwa et al., "Who Taught You That?" (arXiv:2502.06659), students' part-of-speech
+  templates mimic their teachers'; LLMmap (arXiv:2407.15847), 42 versions from 8 crafted queries. No paper runs an
+  attribution classifier on a distilled student to see it classified as its teacher.
+- **Models naming another model:** "I'm Spartacus" (arXiv:2411.10683), 27 LLMs, 25.93% confused; "Quantification of
+  LLM Distillation" (arXiv:2501.12619), identity consistency as a distillation metric; a 190-model community sweep
+  (LessWrong "Who do LLMs self-identify as", not peer-reviewed), ~60% give a non-matching name at least once.
+- **Internal traces:** Chen and Du (arXiv:2610.12137), distillation inference by shadow-model likelihood tests;
+  modelDNA (arXiv:2607.10617) and GhostSpec (arXiv:2511.06390), weight-lineage fingerprints from a shared base. No
+  neuron, SAE or probe work locates a teacher's signature inside a distilled student.
+- **Corpus traces:** tokenizer membership inference (arXiv:2510.05699); under-trained "glitch" tokens (Land and
+  Bartolo, arXiv:2405.05417); Chinese vocabulary forensics on 24 LLMs (arXiv:2508.17771).
