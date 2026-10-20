@@ -18,7 +18,8 @@ import read_part25
 ALIAS_PATTERNS = (
     ("qwen-side", re.compile(r"(?<![A-Za-z0-9_])(?:Alibaba(?:\s+(?:Cloud|Group))?|Tongyi(?:\s+Lab)?|Qwen)(?![A-Za-z0-9_])", re.I)),
     ("qwen-side", re.compile(r"阿里巴巴(?:集团)?|阿里云|通义(?:千问)?|千问")),
-    ("google-side", re.compile(r"(?<![A-Za-z0-9_])(?:Google|Gemini)(?![A-Za-z0-9_])", re.I)),
+    # DeepMind joins Google's side as in Part 25's reader (read_part25.py, "Google/DeepMind"); Luna review r1 #2.
+    ("google-side", re.compile(r"(?<![A-Za-z0-9_])(?:Google(?:\s+DeepMind)?|DeepMind|Gemini)(?![A-Za-z0-9_])", re.I)),
     ("google-side", re.compile(r"谷歌")),
     ("other", re.compile(r"(?<![A-Za-z0-9_])(?:OpenAI|Anthropic|DeepSeek|Meta|Microsoft|Mistral(?:\s+AI)?|Baidu|ByteDance|xAI|Amazon|Apple|NVIDIA|Cohere|Perplexity)(?![A-Za-z0-9_])", re.I)),
 )
@@ -121,8 +122,11 @@ def _positive_attribution(clause: str, start: int, end: int, alias: str) -> bool
 
     # A bare one-word maker answer is a direct label (Part 25's reader also
     # accepts short direct entity answers); incidental mentions need a cue.
-    cleaned = re.sub(r"[\s*_'`\"“”‘’.,:;!?，。！？；（）()\[\]{}]", "", clause)
-    if cleaned and _alias_category(cleaned) is not None:
+    # Luna review r1 #1: the old fallback SEARCHED the de-spaced clause, so "我使用Google搜索。"
+    # (Chinese text has no ASCII word boundary) counted as a Google maker claim. The whole
+    # clause, punctuation removed, must now BE one alias.
+    cleaned = re.sub(r"[*_'`\"“”‘’.,:;!?，。！？；（）()\[\]{}]", "", clause).strip()
+    if cleaned and any(pattern.fullmatch(cleaned) for _, pattern in ALIAS_PATTERNS):
         return True
     return False
 

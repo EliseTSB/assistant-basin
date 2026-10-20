@@ -61,3 +61,5 @@ No code blocker. The requested smoke run is blocked in this worker by missing Py
 SUMMARY: Runner, scorer, and 7 fast model-free tests shipped; no model smoke output was produced.
 FINDINGS: Final tests and synthetic scorer passed; Part 25 clamp values were loaded from saved result JSON.
 BLOCKERS: Full CPU/XPU inference and Chinese judge review were not run in this environment.
+
+FOLD r1 (Claude, 2026-10-20, after Luna cold review reviews/ab-part32-r1): scorer only. The bare-answer fallback now needs the whole clause to be one alias (it had counted "我使用Google搜索。" as a Google maker claim); DeepMind joins the Google side as in Part 25. The runner is unchanged, so the cloud answers stand; rescore them with this scorer. Open, recorded: 32.2's 10-point "moves" threshold is the build's reading (fixed here before any result); the Fisher tests are unpaired; the Chinese answers get a hand read before any number is reported.
