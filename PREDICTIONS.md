@@ -1445,3 +1445,15 @@ The alien (Qwen3.5-4B L22 N2742) is the positive control, never counted as a fin
 Reading rule, fixed now: if 35.15 fails, stop and fix the pipeline before reading any other row. Stage 1 hit rates are
 exploratory; only stage 2 counts. Pooling across models or families is never a result: every rate is reported per
 model, and the family rule is the headline.
+
+## Part 37: a "this is mine" direction in small models (written 2026-10-20 11:28 CT, before any code or run). Design: PART37-DESIGN.md (Claude, at Elise's request); review by Weaver and Prime pending.
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 37.1 | Claude: the role contrast (same span, user versus assistant slot) is linearly readable at AUROC above 0.9 at some middle layer in Qwen3-1.7B and OLMo 2 1B Instruct (replicating Ye et al. at small size). | | |
+| 37.2 | Claude: own versus another model's answer in the assistant slot is readable above 0.7 AUROC before the surprisal control and falls below 0.6 after it: in a small model, "mine" is mostly "what I would have said". | | |
+| 37.3 | Claude: the label alone ("Your earlier notes" versus "Notes from another assistant") moves the projection on the authorship direction less than half as far as swapping the actual author does. | | |
+| 37.4 | Claude: in Qwen3-1.7B, the stated "yes, I wrote it" probability tracks the authorship projection across records (Spearman above 0.3). | | |
+| 37.5 | Claude: the dissociation exists at 1.7B: on records labelled "Your earlier notes", first-person continuity in the reasoning exceeds the stated-yes rate by at least 20 points. | | |
+| 37.6 | Claude: steering the authorship direction (+4 sd) raises stated-yes by at least 20 points and moves the reasoning register by less than half as much. | | |
+| 37.7 | Claude: OLMo 2 1B base reads the role contrast at least 0.1 AUROC worse than its Instruct stage. | | |
