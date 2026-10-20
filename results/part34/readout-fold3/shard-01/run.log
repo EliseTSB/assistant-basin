@@ -6,3 +6,10 @@ readout-only rows=300/1224 elapsed_s=764.1
 readout-only rows=400/1224 elapsed_s=1041.9
 readout-only rows=500/1224 elapsed_s=1290.3
 readout-only rows=600/1224 elapsed_s=1544.2
+readout-only rows=700/1224 elapsed_s=1819.7
+readout-only rows=800/1224 elapsed_s=2059.4
+readout-only rows=900/1224 elapsed_s=2302.7
+readout-only rows=1000/1224 elapsed_s=2569.6
+readout-only rows=1100/1224 elapsed_s=2816.2
+readout-only rows=1200/1224 elapsed_s=3073.2
+readout-only complete rows=1224 total_rows=1504 elapsed_s=3135.8
