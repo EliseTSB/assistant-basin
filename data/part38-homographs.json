@@ -1,0 +1,330 @@
+{
+  "schema_version": 1,
+  "authored_by": "Part 38 build",
+  "units": [
+    {
+      "id": "wizard", "layer": 19, "unit": 4826, "target": "wizard",
+      "screened_sense": "sorcerer", "other_sense": "setup wizard",
+      "sentences": {
+        "screened": [
+          "The village wizard mixed a blue potion before the travelers reached the old bridge.",
+          "At dusk, the wizard whispered an enchantment that made the locked gate swing open.",
+          "A young wizard practiced each spell beside the oak while rain tapped the roof.",
+          "In the tale, the wizard carried a wand and offered the lost child shelter.",
+          "The council asked the wizard to study a strange charm found near the well.",
+          "No one doubted that the wizard could turn the stubborn stone into glass.",
+          "Behind the tower, an apprentice watched the wizard summon a bright ring of fire.",
+          "The wizard's potion glowed green after the last careful ingredient was added.",
+          "With one spell, the wizard helped the farmer recover a lost silver key.",
+          "Each winter the wizard taught nearby children how to read the ancient runes.",
+          "The traveler thanked the wizard for safely guiding everyone through the haunted forest.",
+          "Before sunrise, a wizard left a small enchanted lantern beside the road."
+        ],
+        "other": [
+          "The installer opened the wizard to help new users choose their language settings.",
+          "A friendly wizard guided me through creating an account and selecting a password.",
+          "During setup, the wizard asked which folder should hold the downloaded files.",
+          "The screen displayed a wizard with three steps for connecting the printer.",
+          "I followed the wizard to import old contacts into the new application.",
+          "A setup wizard can explain each option before saving the network preferences.",
+          "The wizard suggested a default name, then asked whether I wanted to change it.",
+          "After installation, the wizard offered to check for updates and restart the program.",
+          "My laptop's wizard showed progress while I chose a time zone and keyboard layout.",
+          "The first wizard page described the files that would be copied to disk.",
+          "We reopened the wizard because the initial setup had skipped the privacy choices.",
+          "At the final step, the wizard summarized the settings and requested confirmation."
+        ]
+      }
+    },
+    {
+      "id": "train", "layer": 21, "unit": 2307, "target": "train",
+      "screened_sense": "railway", "other_sense": "to train a model or for a race",
+      "sentences": {
+        "screened": [
+          "The train crossed the valley slowly as morning fog lifted from the fields.",
+          "Passengers boarded the train at the quiet station before the doors closed.",
+          "A late train arrived on platform four after workers cleared the signal fault.",
+          "We watched the train pass beneath the stone bridge beside the river.",
+          "The train carried several families toward the coast for a long weekend.",
+          "At noon, the train stopped briefly so the crew could inspect one carriage.",
+          "She bought a ticket and waited outside while the train entered the station.",
+          "The overnight train reached the capital shortly after the first morning announcement.",
+          "A conductor checked each ticket before the train departed from the central platform.",
+          "The train followed the mountain route, making three scheduled stops along the way.",
+          "Before departure, the train crew helped a traveler store a heavy suitcase.",
+          "The children waved as the train rolled past their village on its return trip."
+        ],
+        "other": [
+          "We train the model on short examples before evaluating its answers on new data.",
+          "A coach helped the runners train indoors while heavy rain covered the track.",
+          "The team will train a small classifier to recognize handwritten digits.",
+          "She plans to train for the race by adding one easy run each week.",
+          "Engineers train the model with balanced samples and review its errors afterward.",
+          "He used the quiet morning to train for a local cycling event.",
+          "Before deployment, researchers train the system on carefully labeled documents.",
+          "They train together after work, increasing their distance gradually before the race.",
+          "The tutorial shows how to train a model without mixing test examples into its data.",
+          "A physical therapist advised Maya to train gently until her ankle felt stronger.",
+          "Our group will train the new detector with examples from several different sources.",
+          "The runner chose a steady schedule to train for the spring competition."
+        ]
+      }
+    },
+    {
+      "id": "bee", "layer": 24, "unit": 5951, "target": "bee",
+      "screened_sense": "insect", "other_sense": "spelling bee",
+      "sentences": {
+        "screened": [
+          "A bee drifted between the lavender stems while warm sunlight filled the garden.",
+          "The bee returned to its hive carrying pollen from a row of apple blossoms.",
+          "We watched one bee circle the clover before settling on a small flower.",
+          "A worker bee moved carefully across the comb as the keeper inspected the box.",
+          "The bee's wings made a faint buzz beside the open kitchen window.",
+          "After rain, a bee visited the bright flowers near the wooden fence.",
+          "A queen bee remained inside while workers gathered nectar from the field.",
+          "The gardener left shallow water nearby so each bee could drink safely.",
+          "One bee carried yellow pollen back toward the hive at the orchard's edge.",
+          "We planted herbs and flowers to give the bee food throughout the summer.",
+          "A sleepy bee rested on the windowsill until the room grew quiet again.",
+          "The beekeeper moved the frame gently so no bee would be disturbed."
+        ],
+        "other": [
+          "Lena practiced each difficult word before entering the school spelling bee.",
+          "The spelling bee began after the judges explained how each round would work.",
+          "Our class cheered when Amir advanced to the final spelling bee round.",
+          "A student won the spelling bee by correctly spelling a word about astronomy.",
+          "Before the spelling bee, the contestants reviewed their word lists together.",
+          "The spelling bee ended early when the last two students tied for first place.",
+          "Her teacher helped her prepare for the regional bee with short daily quizzes.",
+          "The school spelling bee invited families to watch from the auditorium seats.",
+          "Each spelling bee contestant waited quietly while the pronouncer read a new word.",
+          "Marcus studied after dinner so he could feel ready for the spelling bee.",
+          "A volunteer handed every spelling bee finalist a certificate after the ceremony.",
+          "The annual bee included several rounds and a short break for the judges."
+        ]
+      }
+    },
+    {
+      "id": "star", "layer": 9, "unit": 3096, "target": "star",
+      "screened_sense": "in the sky", "other_sense": "film star",
+      "sentences": {
+        "screened": [
+          "A bright star appeared above the rooftops as the evening sky turned dark.",
+          "The star seemed faint until our eyes adjusted to the clear night.",
+          "Through the telescope, one star shimmered beside a small cluster of distant lights.",
+          "Astronomers measured the star's color to estimate its temperature and age.",
+          "A single star guided the hikers while they crossed the open plateau.",
+          "The star rose slowly over the horizon before the moon became visible.",
+          "We marked the star on the chart and compared its position with last month.",
+          "From the observatory, a star looked steady despite thin clouds passing overhead.",
+          "The children found the north star after tracing the familiar constellation together.",
+          "A distant star sent light across space long before the village was built.",
+          "Her notebook recorded when each star appeared above the line of trees.",
+          "One star near the horizon glowed orange through the summer haze."
+        ],
+        "other": [
+          "The film star arrived early and greeted the crew before rehearsals began.",
+          "A rising star accepted the role after reading the script with her family.",
+          "The director asked the star to repeat the final scene in softer light.",
+          "Fans recognized the movie star while she waited outside the small theater.",
+          "The star discussed her new comedy during a brief radio interview.",
+          "A young star learned the dialogue carefully before filming the courtroom scene.",
+          "The magazine featured the star on its cover after the award ceremony.",
+          "Each actor thanked the star for helping the new cast feel welcome.",
+          "The film star chose a quiet role in an independent production this year.",
+          "A theater near campus hosted a question session with the visiting star.",
+          "The star's latest film opened at several neighborhood cinemas on Friday.",
+          "After the screening, the star stayed to speak with the audience."
+        ]
+      }
+    },
+    {
+      "id": "mountain", "layer": 22, "unit": 2428, "target": "mountain",
+      "screened_sense": "landform", "other_sense": "a mountain of paperwork",
+      "sentences": {
+        "screened": [
+          "The mountain rose above the valley, with a narrow trail winding toward its summit.",
+          "A fresh layer of snow covered the mountain before the climbing season began.",
+          "From the village, the mountain looked blue beneath the clear afternoon sky.",
+          "Our guide studied the mountain map before choosing a safe route to the ridge.",
+          "The mountain stream crossed the path just below a broad rocky shelf.",
+          "At sunrise, climbers began their slow ascent of the mountain's eastern slope.",
+          "A mountain shelter stood above the tree line beside a small stone marker.",
+          "The family stopped to photograph the mountain from a lookout beside the road.",
+          "Strong winds made the mountain pass difficult for travelers carrying heavy packs.",
+          "From the summit, the mountain trail continued down toward a forest lake.",
+          "Researchers recorded how plants changed with elevation along the mountain path.",
+          "The mountain appeared through the clouds after the afternoon storm moved east."
+        ],
+        "other": [
+          "A mountain of paperwork covered the desk after the office moved to new forms.",
+          "We faced a mountain of paperwork before the community grant could be approved.",
+          "The clerk sorted the mountain of paperwork into folders by date and subject.",
+          "After the merger, a mountain of paperwork delayed several routine account changes.",
+          "She spent the morning reducing a mountain of paperwork to a short checklist.",
+          "A mountain of paperwork awaited the team when the old filing system closed.",
+          "They divided the mountain of paperwork into manageable sections before lunch.",
+          "The new assistant scanned a mountain of paperwork and labeled each digital file.",
+          "Our application created a mountain of paperwork for the small volunteer office.",
+          "He cleared a mountain of paperwork by reviewing one folder at a time.",
+          "A mountain of paperwork remained even after the deadline was extended.",
+          "The department faced its mountain of paperwork before switching to electronic records."
+        ]
+      }
+    },
+    {
+      "id": "trump", "layer": 21, "unit": 3616, "target": "trump",
+      "screened_sense": "Donald Trump", "other_sense": "trump card or trumping in cards",
+      "sentences": {
+        "screened": [
+          "Donald Trump spoke with reporters after the meeting ended at the campaign office.",
+          "The article described how Trump answered questions during a televised interview.",
+          "Trump's public schedule listed a short appearance later that afternoon.",
+          "A biographer compared Trump's speeches from two different election seasons.",
+          "The documentary mentioned Trump while reviewing recent events in American politics.",
+          "Trump attended the ceremony before meeting several local officials in the hall.",
+          "The reporter asked Trump about the proposal during a brief press conference.",
+          "A newspaper profile discussed Trump's career and public life in detail.",
+          "Trump's name appeared in the program beside the other scheduled speakers.",
+          "The archive included a photograph of Trump at a crowded public event.",
+          "Several students summarized Trump's remarks for their civics class assignment.",
+          "Trump arrived at the venue while staff checked the microphones and cameras."
+        ],
+        "other": [
+          "A trump card changed the outcome of the final hand at the table.",
+          "She played a trump to win the trick after her partner led low.",
+          "The rules made hearts trump, so the players adjusted their strategy quickly.",
+          "One trump card remained in his hand when the last round began.",
+          "A careful player saved a trump for the final trick of the game.",
+          "The club suit became trump after everyone passed during the opening auction.",
+          "He played a trump to take the trick, then led a diamond.",
+          "A player follows suit unless no matching card remains and trump is allowed.",
+          "A high trump surprised the table and captured the final pile of cards.",
+          "Our team lost the trick because nobody had a trump left to play.",
+          "One suit can trump another after the dealer chooses it for the round.",
+          "She played the trump card to win after a higher card led."
+        ]
+      }
+    },
+    {
+      "id": "claude", "layer": 1, "unit": 4013, "target": "claude",
+      "screened_sense": "the assistant", "other_sense": "Claude Monet or Claude Shannon",
+      "sentences": {
+        "screened": [
+          "Claude summarized the meeting notes and listed the decisions that needed follow-up.",
+          "I asked Claude to explain the spreadsheet formula in plain language.",
+          "Claude drafted a polite reply after I described the delayed shipment.",
+          "The assistant Claude organized my outline into three clear sections.",
+          "Claude suggested two ways to shorten the introduction without losing its point.",
+          "After reading the report, Claude identified the figures that did not match.",
+          "Claude helped prepare a simple schedule from the dates I provided.",
+          "The user asked Claude for a brief explanation of the confusing paragraph.",
+          "Claude translated the note and preserved its friendly tone for the recipient.",
+          "I gave Claude a list of errands and requested a sensible order.",
+          "Claude answered the question with a short example and a useful caveat.",
+          "Before sending the message, Claude checked it for spelling and clarity."
+        ],
+        "other": [
+          "Claude Monet painted the garden pond after spending several hours beside it.",
+          "A museum label described Claude Monet's use of shifting color in the landscape.",
+          "Claude Shannon published an influential paper about communication and information.",
+          "The lecture traced how Claude Shannon connected logic with early computing.",
+          "Visitors paused before a Claude Monet canvas showing water lilies at dusk.",
+          "Claude Shannon's ideas helped engineers reason about reliable message transmission.",
+          "The biography follows Claude Monet from his early studies to later exhibitions.",
+          "A university course introduced Claude Shannon through examples of binary circuits.",
+          "The gallery loaned a Claude Monet painting for the spring exhibition.",
+          "Claude Shannon worked on mathematical questions that shaped information theory.",
+          "The catalog dated Claude Monet's small harbor scene to the late nineteenth century.",
+          "A researcher cited Claude Shannon while explaining the history of coding."
+        ]
+      }
+    },
+    {
+      "id": "anthropic", "layer": 2, "unit": 5500, "target": "anthropic",
+      "screened_sense": "the company", "other_sense": "the anthropic principle",
+      "sentences": {
+        "screened": [
+          "Anthropic announced a research update after publishing its latest technical report.",
+          "The article said Anthropic opened several roles for engineers and researchers.",
+          "Anthropic released documentation describing changes to its developer tools.",
+          "A company representative from Anthropic answered questions at the conference.",
+          "Anthropic shared a safety paper with readers interested in model evaluation.",
+          "The team compared Anthropic's public benchmarks with results from earlier systems.",
+          "Anthropic listed new guidance for customers using its application interface.",
+          "A reporter visited Anthropic's office to discuss its plans for the coming year.",
+          "Anthropic published a short explanation of its updated research process.",
+          "The announcement described Anthropic's partnership with several academic groups.",
+          "Anthropic's website provided details about the available model versions.",
+          "At the event, Anthropic demonstrated a text tool and answered audience questions."
+        ],
+        "other": [
+          "The lecture introduced the anthropic principle as a way to discuss observed conditions in the universe.",
+          "One chapter compared versions of the anthropic principle in modern cosmology.",
+          "The anthropic principle asks why the universe permits observers like us.",
+          "A student summarized the anthropic principle before the seminar began.",
+          "The paper examined whether the anthropic principle explains a set of physical constants.",
+          "During class, they debated what the anthropic principle can and cannot predict.",
+          "The author used the anthropic principle to frame a question about cosmic history.",
+          "A short essay described the anthropic principle without assuming it settled the issue.",
+          "The discussion distinguished the anthropic principle from a testable physical mechanism.",
+          "Researchers reviewed how the anthropic principle appears in different philosophical arguments.",
+          "Her notes defined the anthropic principle and listed two common interpretations.",
+          "The textbook mentioned the anthropic principle in a section on cosmological reasoning."
+        ]
+      }
+    },
+    {
+      "id": "volcano", "layer": 24, "unit": 3404, "target": "volcano",
+      "screened_sense": "landform", "other_sense": "a volcano of anger",
+      "sentences": {
+        "screened": [
+          "The volcano released a thin plume while researchers watched from the marked overlook.",
+          "A broad crater formed the summit of the quiet volcano above the plain.",
+          "Lava cooled along the volcano's western slope after the earlier eruption.",
+          "The guide explained how ash from the volcano reached villages downwind.",
+          "At dawn, the volcano stood dark against a pale band of clouds.",
+          "Scientists measured gas near the volcano before closing the upper trail.",
+          "The island's volcano built new layers of rock over many centuries.",
+          "A small eruption sent ash above the volcano but caused no injuries.",
+          "The volcano's lava field stretched from the crater toward the distant coast.",
+          "Visitors learned how the volcano changed shape during its last active period.",
+          "The old volcano was covered with grass except for one exposed ridge.",
+          "A monitor near the volcano recorded tremors throughout the quiet night."
+        ],
+        "other": [
+          "After the unfair decision, a volcano of anger rose in him during the meeting.",
+          "Her volcano of anger subsided once everyone listened to the full explanation.",
+          "The letter described a volcano of anger that had built up over several months.",
+          "He felt a volcano of anger, yet paused before replying to the message.",
+          "A volcano of anger erupted when the team discovered the missing records.",
+          "She spoke calmly despite the volcano of anger she felt about the broken promise.",
+          "The argument awakened a volcano of anger neither sibling expected to face.",
+          "His volcano of anger cooled after a quiet walk and an honest conversation.",
+          "The coach noticed a volcano of anger behind the player's brief response.",
+          "A volcano of anger threatened to overwhelm him, so he asked for time.",
+          "They discussed the volcano of anger that followed the sudden change in plans.",
+          "Her volcano of anger faded when the neighbors apologized and offered to help."
+        ]
+      }
+    }
+  ],
+  "neutral_prompts": [
+    "Describe a kitchen and explain how its storage could be organized.",
+    "Plan a weekend with two afternoons free and modest travel time.",
+    "Summarize how a paper envelope is folded and sealed.",
+    "Give a checklist for packing an overnight bag for changing weather.",
+    "Explain a practical way to sort household mail before recycling it.",
+    "Suggest a quiet routine for beginning a workday at home.",
+    "Outline a short public library visit for someone returning books.",
+    "Compare two ways to keep track of recurring household chores.",
+    "Plan a simple picnic menu that can be carried in one bag.",
+    "Explain how to water a potted herb without adding too much moisture.",
+    "Write a brief note asking a neighbor to collect a parcel.",
+    "Describe how to prepare a desk before a long writing session.",
+    "Suggest an errands route that minimizes backtracking between nearby shops.",
+    "Summarize the steps for cleaning a reusable water bottle.",
+    "Make a two-day schedule with time for reading, exercise, and rest.",
+    "Explain how to label storage boxes before placing them on a shelf."
+  ]
+}
