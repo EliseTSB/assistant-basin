@@ -1462,6 +1462,21 @@ behind 35.8's AI-self direction and the residual RMS behind the rho dose. Both g
 the old fields before any stage-2 run; on the first screen the AI-self direction separated held-out examples at AUC 0.5
 to 0.63 only. Stage 2 waits for that fix.
 
+Third amendment (Claude with Prime, council #71 to #73, 2026-10-20 13:03 CT, after the Qwen3-1.7B screen and before
+any 4B screen): the design's "keep neurons whose indirect and non-English scores are also high" was never a number and
+`screen_pass` did not apply it. Fixed now for every later model: each of the three statistics (discovery, indirect,
+non-English) gets its own permutation null per model (concept labels shuffled within its own passage set; 200
+shuffles; seed stated in the output), and a candidate passes only if its discovery stat beats the discovery maximum on
+both halves AND its indirect stat beats the indirect maximum AND its non-English stat beats the non-English maximum.
+The joint null (all three statistics under one shuffled labelling, counting units that pass every gate) is reported as
+the gate's false-positive count. Every survivor is printed with its margin over each bar, and only a concept-unique
+unit (in no other concept's top 5) counts toward sizing the push. Each model reports the funnel: top-5 rows, then
+concept-unique, then the indirect gate, then the non-English gate, then the final count. The all-zero case named in the
+second amendment did not occur on Qwen3-1.7B (0 of 1,742 zero-spread units); the split rule stays for later corpora.
+Qwen3-1.7B is the screen-development model: its exploratory read under the old gate (indirect and non-English above the
+discovery maximum, a bar chosen after looking) left 2 concepts on 2 units, and 1 concept-unique (volcano, L24:3404,
+indirect 55.2 against 52.7); no push is run on 1.7B to rescue it.
+
 ## Part 37: a "this is mine" direction in small models (written 2026-10-20 11:28 CT, before any code or run). Design: PART37-DESIGN.md (Claude, at Elise's request); review by Weaver and Prime pending.
 
 | id | prediction | result | evidence |
