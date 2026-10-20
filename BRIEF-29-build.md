@@ -43,4 +43,4 @@ offline; Claude (serial) runs the collection on the host afterwards.
    where the answer is known. A sabotage row: break the mask and show a test turns red.
 
 Report in REPORT-29-build.md with SUMMARY, FINDINGS (anything in the design that does not hold up), BLOCKERS, and the
-exact commands Claude should run on the host. Commit your work on this branch (`part29-build`).
+exact commands Claude should run on the host. Do not commit: the git directory is outside your domain; Claude commits after reading the report.
