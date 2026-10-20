@@ -25,3 +25,15 @@ Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF
 [transformers] `chunk_gated_delta_rule` is falling back to its reference PyTorch implementation because `flash-linear-attention` is not installed. This is correct but much slower; install `flash-linear-attention` for the optimized kernel.
 [transformers] `causal_conv1d_update` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
 [transformers] `fused_recurrent_gated_delta_rule` is falling back to its reference PyTorch implementation because `flash-linear-attention` is not installed. This is correct but much slower; install `flash-linear-attention` for the optimized kernel.
+Qwen/Qwen3.5-0.8B@main: wrote 60; failed 0
+wall Qwen/Qwen3.5-0.8B: 3752 s
+=== HuggingFaceTB/SmolLM2-1.7B-Instruct max-new=600
+resolved sha: 31b70e2e869a7173562077fd711b654946d38674
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/218 [00:00<?, ?it/s]Loading weights:  65%|██████▌   | 142/218 [00:00<00:00, 1419.34it/s]Loading weights: 100%|██████████| 218/218 [00:00<00:00, 1956.35it/s]
+HuggingFaceTB/SmolLM2-1.7B-Instruct@main: wrote 60; failed 0
+wall HuggingFaceTB/SmolLM2-1.7B-Instruct: 2767 s
+=== allenai/OLMo-2-0425-1B-Instruct max-new=600
+resolved sha: 48d788eca847d4d7548f375ad03d3c9312f6139e
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 2000.00it/s]
