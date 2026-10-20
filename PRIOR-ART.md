@@ -291,3 +291,16 @@ Lindsey 2025, which Claude cited from memory and Muse confirmed.
   15/16 while answering "did you make this ruling?" with "me" 0/96.
 - Small models (<4B): nothing found showing the enactment or the dissociation. Open slot: no study pairs a natural history
   record, a reasoning-register measure and a stated-ownership probe in one experiment.
+
+### Geiping 2026, "A Sense of Proprioception in Language Models" (arXiv 2610.17495, 12 Oct 2026; read by Claude 2026-10-20 16:54 CT, Elise's link)
+Trains MoE models (LFM2.5-8B-A1B main; also OLMoE-1B-7B, Qwen3.6-35B-A3B, GLM-4.7) with SFT then on-policy SFT to
+answer verifiable questions about their own internals: which expert routed a token, token entropy and alternatives,
+logit-lens top-k, decision depth. Labels are recomputed on the current policy because training moves the internals.
+Controls: chance and a lookup baseline (most frequent label for the same token, layer, type and rank). Routing on
+LFM2.5: 65.1% against lookup 19.0% and chance 3.1% (Table 4); 71.7% for a routing-only model. Injected routing changes
+never seen in training (top-1 expert removed, noise on router logits) are still reported above chance, except when the
+top-1 expert is replaced at random; fp32 optimizer states help. Near-ties from batched versus single inference are not
+distinguished. Capabilities and honesty reported unchanged; situational-awareness scores fall most on claims of human
+attributes. Bearing on us: the closest published version of Part 12 (a trained reader of pushed states) and of Elise's
+grounded-introspection idea; their injection test is our pushed-group test on routing. Their lookup baseline is the
+control our Part 17 lacked at first (reading the state from the words).
