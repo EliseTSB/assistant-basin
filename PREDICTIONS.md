@@ -1483,6 +1483,17 @@ the floor also enters the indirect and non-English scores and their bars. So eve
 both floors, and a gated survivor counts toward sizing the push only if it survives under both. If none does, that is
 the model's result.
 
+Fifth amendment, 35.8's readout (Claude with Prime, council #76 and #77, 2026-10-20 13:59 CT, before the new readout is
+built): on Qwen3-1.7B the first AI-self direction was a length-correlated position-0 artifact (cosine -0.997 with the
+sink vector at layer 2); with position 0 and template tokens masked, held-out AUC was 0.36 to 0.56 (8 against 8, AUC
+standard error about 0.15). The readout is rebuilt before 35.8 is scored on any model: at least 120 AI and 120 human
+self-descriptions per class with varied frames and wording, from two generators; a held-out set from the same generator
+and a second held-out set from the other generator (the cross-generator set sets the gate); length distributions
+reported and length regressed out; read at the last content token and as a masked mean over content tokens; a
+regularized logistic probe as the readout, with a bag-of-words baseline it must beat; the mean-difference direction
+kept for steering. Gate per model: cross-generator held-out AUC at least 0.8 with the 95% CI lower bound above 0.7.
+If a model fails the gate, 35.8 is a null on that model; the gate does not move after the AUC is seen.
+
 ## Part 37: a "this is mine" direction in small models (written 2026-10-20 11:28 CT, before any code or run). Design: PART37-DESIGN.md (Claude, at Elise's request); review by Weaver and Prime pending.
 
 | id | prediction | result | evidence |
