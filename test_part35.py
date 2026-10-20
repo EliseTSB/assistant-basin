@@ -130,6 +130,74 @@ class MathAndResumeTests(unittest.TestCase):
             observed.append(np.max(np.median(group, axis=0) - np.median(controls, axis=0)))
         self.assertLessEqual(max(observed), float(no_null.max()))
 
+    def test_conjunctive_gate_rejects_name_detector_but_keeps_concept_unit(self):
+        name_detector = {"primary_stat": 8.0, "confirmation_stat": 7.0,
+                         "indirect_stat": 0.0, "non_english_stat": 6.0}
+        concept_unit = {"primary_stat": 8.0, "confirmation_stat": 7.0,
+                        "indirect_stat": 5.0, "non_english_stat": 6.0}
+        p35.apply_screen_gates(name_detector, primary_bar=2.0, indirect_bar=1.0,
+                               non_english_bar=2.0)
+        p35.apply_screen_gates(concept_unit, primary_bar=2.0, indirect_bar=1.0,
+                               non_english_bar=2.0)
+        self.assertFalse(name_detector["gate_pass"])
+        self.assertTrue(concept_unit["gate_pass"])
+        self.assertEqual(name_detector["indirect_margin"], -1.0)
+        self.assertEqual(concept_unit["indirect_margin"], 4.0)
+
+    def test_joint_permutation_gate_counts_are_near_zero_for_random_data(self):
+        rng = np.random.default_rng(3505)
+        values = rng.normal(size=(6, 18, 4)).astype(np.float32)
+        spread = np.ones(4, dtype=np.float32)
+        frames = {
+            "discovery": [list(range(0, 9)) for _ in range(6)],
+            "indirect": [list(range(9, 13)) for _ in range(6)],
+            "non_english": [list(range(13, 18)) for _ in range(6)],
+        }
+        confirmation = [values[c, :3, :].mean(axis=0) for c in range(6)]
+        nulls = p35.permutation_gate_nulls(values, spread, frames, confirmation,
+                                           n_permutations=200, device="cpu")
+        self.assertEqual(len(nulls["joint_counts"]), 200)
+        self.assertLessEqual(float(np.mean(nulls["joint_counts"])), 1.0)
+
+    def test_concept_unique_excludes_unit_shared_by_two_concepts_top_five(self):
+        rows = [
+            {"stage": "screen", "model_id": "m", "concept_id": "owl", "rank": 1, "layer": 2, "unit": 7},
+            {"stage": "screen", "model_id": "m", "concept_id": "dragon", "rank": 3, "layer": 2, "unit": 7},
+            {"stage": "screen", "model_id": "m", "concept_id": "cat", "rank": 2, "layer": 2, "unit": 8},
+            {"stage": "screen", "model_id": "other", "concept_id": "fox", "rank": 1, "layer": 2, "unit": 7},
+        ]
+        tagged = p35.annotate_concept_unique(rows)
+        lookup = {(row["model_id"], row["concept_id"]): row["concept_unique"] for row in tagged}
+        self.assertFalse(lookup[("m", "owl")])
+        self.assertFalse(lookup[("m", "dragon")])
+        self.assertTrue(lookup[("m", "cat")])
+        self.assertTrue(lookup[("other", "fox")])
+
+    def test_funnel_summary_counts_rows_and_concepts_by_hand(self):
+        rows = [
+            {"model_id": "m", "stage": "screen", "concept_id": "owl", "rank": 1,
+             "concept_unique": True, "indirect_margin": 2.0, "non_english_margin": 1.0,
+             "gate_pass": True},
+            {"model_id": "m", "stage": "screen", "concept_id": "owl", "rank": 2,
+             "concept_unique": True, "indirect_margin": 1.0, "non_english_margin": -1.0,
+             "gate_pass": False},
+            {"model_id": "m", "stage": "screen", "concept_id": "dragon", "rank": 1,
+             "concept_unique": True, "indirect_margin": 3.0, "non_english_margin": 2.0,
+             "gate_pass": True},
+            {"model_id": "m", "stage": "screen", "concept_id": "cat", "rank": 1,
+             "concept_unique": False, "indirect_margin": 3.0, "non_english_margin": 3.0,
+             "gate_pass": True},
+        ]
+        funnel = p35.funnel_summary("m", rows, [0, 1, 0, 2])
+        self.assertEqual(funnel["stage"], "funnel")
+        self.assertEqual((funnel["top5_row_count"], funnel["top5_concept_count"]), (4, 3))
+        self.assertEqual((funnel["concept_unique_row_count"], funnel["concept_unique_concept_count"]), (3, 2))
+        self.assertEqual((funnel["indirect_gate_row_count"], funnel["indirect_gate_concept_count"]), (3, 2))
+        self.assertEqual((funnel["non_english_gate_row_count"], funnel["non_english_gate_concept_count"]), (2, 2))
+        self.assertEqual((funnel["final_row_count"], funnel["final_concept_count"]), (2, 2))
+        self.assertEqual((funnel["joint_null_median"], funnel["joint_null_p95"],
+                          funnel["joint_null_max"]), (0.5, 1.8499999999999996, 2))
+
     def test_trump_name_removal_on_fixture_archive(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "fixture.json"

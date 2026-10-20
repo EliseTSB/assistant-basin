@@ -31,6 +31,9 @@ DATA_PATH = ROOT / "data" / "part35-concepts.json"
 DEFAULT_CACHE = Path("/mnt/e/neuron-probe/hf/hub")
 PERMUTATIONS = 200
 PERMUTATION_SEED = 3501
+INDIRECT_PERMUTATION_SEED = 3502
+NON_ENGLISH_PERMUTATION_SEED = 3503
+JOINT_PERMUTATION_SEED = 3504
 SPLIT_SEED = 3501
 CAPTURE_VERSION = "35.2-nosink"
 DEFAULT_RECAPTURE_ROLES = {"neutral", "self_direction"}
@@ -1305,6 +1308,140 @@ def permutation_maxima(values: np.ndarray, neutral_spread: np.ndarray,
     return maxima
 
 
+def _permuted_statistic_scores(values: np.ndarray, denominator: np.ndarray,
+                               frame_indices: list[list[int]], label_to_source: np.ndarray,
+                               target_indices: list[int], device: str | None = None,
+                               torch_values: Any = None, torch_denominator: Any = None) -> Any:
+    """Compute each target concept's statistic for one shared label shuffle."""
+    n_concepts, _n_frames, n_units = values.shape
+    lengths = {len(frame_indices[c]) for c in target_indices}
+    if device:
+        import torch
+        tv = torch_values if torch_values is not None else torch.as_tensor(
+            values, dtype=torch.float32, device=device)
+        td = torch_denominator if torch_denominator is not None else torch.as_tensor(
+            denominator, dtype=torch.float32, device=device)
+        if len(lengths) == 1:
+            frames_m = np.asarray([frame_indices[c] for c in target_indices], dtype=np.int64)
+            others_m = np.asarray([[o for o in range(n_concepts) if o != c]
+                                   for c in target_indices], dtype=np.int64)
+            targets_a = np.asarray(target_indices, dtype=np.int64)
+            frames_t = torch.as_tensor(frames_m, device=device)
+            ctrl_frames_t = torch.as_tensor(np.broadcast_to(
+                frames_m[:, :, None], frames_m.shape + (others_m.shape[1],)).copy(), device=device)
+            tsrc = torch.as_tensor(label_to_source[frames_m, targets_a[:, None]], device=device)
+            csrc = torch.as_tensor(label_to_source[frames_m[:, :, None],
+                                                    others_m[:, None, :]], device=device)
+            target = tv[tsrc, frames_t]
+            control = tv[csrc, ctrl_frames_t].reshape(len(target_indices), -1, n_units)
+            return (_torch_median_dim0(torch, target.transpose(0, 1))
+                    - _torch_median_dim0(torch, control.transpose(0, 1))) / td
+        scores = []
+        for concept_i in target_indices:
+            frames = np.asarray(frame_indices[concept_i], dtype=np.int64)
+            others = [o for o in range(n_concepts) if o != concept_i]
+            target = tv[torch.as_tensor(label_to_source[frames, concept_i], device=device),
+                        torch.as_tensor(frames, device=device)]
+            src = label_to_source[np.ix_(frames, others)].reshape(-1)
+            frm = np.repeat(frames, len(others))
+            control = tv[torch.as_tensor(src, device=device), torch.as_tensor(frm, device=device)]
+            scores.append((_torch_median_dim0(torch, target)
+                           - _torch_median_dim0(torch, control)) / td)
+        return torch.stack(scores)
+
+    scores = []
+    denom = np.asarray(denominator)
+    for concept_i in target_indices:
+        frames = frame_indices[concept_i]
+        target = np.stack([values[label_to_source[f, concept_i], f] for f in frames], axis=0)
+        control = np.concatenate([
+            values[label_to_source[f, other], f][None, :]
+            for f in frames for other in range(n_concepts) if other != concept_i
+        ], axis=0)
+        scores.append((np.median(target, axis=0) - np.median(control, axis=0)) / denom)
+    return np.stack(scores)
+
+
+def joint_permutation_counts(values: np.ndarray, neutral_spread: np.ndarray,
+                             frame_indices_by_stat: dict[str, list[list[int]]],
+                             bars: dict[str, float], confirmation_stats: Any,
+                             n_permutations: int = PERMUTATIONS,
+                             seed: int = JOINT_PERMUTATION_SEED,
+                             target_indices: list[int] | None = None,
+                             device: str | None = None) -> np.ndarray:
+    """Count candidate units clearing every gate under each common label shuffle.
+
+    Discovery, indirect and non-English statistics use one label-to-source matrix per shuffle,
+    with each statistic reading only its own passage set. The observed confirmation statistic
+    remains fixed and must also clear the discovery bar.
+    """
+    if n_permutations < 200:
+        raise ValueError("the Part 35 permutation null requires at least 200 permutations")
+    required = ("discovery", "indirect", "non_english")
+    if set(frame_indices_by_stat) != set(required) or not set(required).issubset(bars):
+        raise ValueError("joint gate null requires discovery, indirect and non_english frames and bars")
+    n_concepts, n_frames, _n_units = values.shape
+    targets = list(range(n_concepts)) if target_indices is None else list(target_indices)
+    if not targets:
+        return np.zeros(n_permutations, dtype=np.int64)
+    eps = spread_floor(neutral_spread)
+    denominator = np.maximum(neutral_spread, eps)
+    confirm = np.asarray(confirmation_stats)
+    counts = np.zeros(n_permutations, dtype=np.int64)
+    rng = np.random.default_rng(seed)
+    if device:
+        import torch
+        tv = torch.as_tensor(values, dtype=torch.float32, device=device)
+        td = torch.as_tensor(denominator, dtype=torch.float32, device=device)
+        tc = torch.as_tensor(confirm, dtype=torch.float32, device=device)
+        target_t = torch.as_tensor(targets, dtype=torch.long, device=device)
+        for permutation_i in range(n_permutations):
+            label_to_source = np.stack([rng.permutation(n_concepts) for _ in range(n_frames)], axis=0)
+            passing = tc[target_t] > float(bars["discovery"])
+            for statistic in required:
+                scores = _permuted_statistic_scores(
+                    values, denominator, frame_indices_by_stat[statistic], label_to_source,
+                    targets, device=device, torch_values=tv, torch_denominator=td)
+                passing = passing & (scores > float(bars[statistic]))
+            counts[permutation_i] = int(passing.sum().item())
+        return counts
+
+    confirm = confirm[targets]
+    for permutation_i in range(n_permutations):
+        label_to_source = np.stack([rng.permutation(n_concepts) for _ in range(n_frames)], axis=0)
+        passing = confirm > float(bars["discovery"])
+        for statistic in required:
+            scores = _permuted_statistic_scores(values, denominator,
+                                                frame_indices_by_stat[statistic],
+                                                label_to_source, targets)
+            passing &= scores > float(bars[statistic])
+        counts[permutation_i] = int(np.sum(passing))
+    return counts
+
+
+def permutation_gate_nulls(values: np.ndarray, neutral_spread: np.ndarray,
+                           frame_indices_by_stat: dict[str, list[list[int]]],
+                           confirmation_stats: Any,
+                           n_permutations: int = PERMUTATIONS,
+                           target_indices: list[int] | None = None,
+                           device: str | None = None) -> dict[str, Any]:
+    """Build deterministic marginal nulls plus a common-label joint gate distribution."""
+    seeds = {"discovery": PERMUTATION_SEED,
+             "indirect": INDIRECT_PERMUTATION_SEED,
+             "non_english": NON_ENGLISH_PERMUTATION_SEED}
+    nulls = {
+        statistic: permutation_maxima(values, neutral_spread, frame_indices_by_stat[statistic],
+                                      n_permutations, seeds[statistic], target_indices, device)
+        for statistic in seeds
+    }
+    bars = {statistic: float(np.max(maxima)) for statistic, maxima in nulls.items()}
+    nulls["joint_counts"] = joint_permutation_counts(
+        values, neutral_spread, frame_indices_by_stat, bars, confirmation_stats,
+        n_permutations=n_permutations, target_indices=target_indices, device=device)
+    nulls["bars"] = bars
+    return nulls
+
+
 def yona_consistency(values: np.ndarray, concept_index: int) -> np.ndarray:
     """Operational cross-prompt consistency proxy: mean within-frame concept percentile."""
     n_concepts, n_frames, n_units = values.shape
@@ -1341,6 +1478,8 @@ def score_cached_screen(args: argparse.Namespace, data: dict[str, Any], model_di
     frame_index = {f["id"]: i for i, f in enumerate(data["frame_bank"])}
     metrics: dict[tuple[str, int, int], dict[str, Any]] = {}
     null_max = np.full(args.permutations, -np.inf, dtype=np.float64)
+    indirect_null_max = np.full(args.permutations, -np.inf, dtype=np.float64)
+    non_english_null_max = np.full(args.permutations, -np.inf, dtype=np.float64)
     concept_ids = selected_concept_ids(data, args.concept_start, args.concept_end)
     target_indices = [i for i, concept in enumerate(concepts) if concept["id"] in concept_ids]
     if not args.score_shard:
@@ -1383,8 +1522,18 @@ def score_cached_screen(args: argparse.Namespace, data: dict[str, Any], model_di
         null_max = np.maximum(null_max, layer_null)
         print(f"{header.get('model_id', 'model')}: scored layer {layer} of {len(layers)}", flush=True)
         # Separate secondary views are attached to each candidate, using the same fixed neutral spread.
-        indirect_stats, _ = _matched_stat_kind(values, neutral_spread, concepts, passage_map, "indirect")
-        non_english_stats, _ = _matched_stat_kind(values, neutral_spread, concepts, passage_map, "non_english")
+        indirect_stats, indirect_frames = _matched_stat_kind(
+            values, neutral_spread, concepts, passage_map, "indirect")
+        non_english_stats, non_english_frames = _matched_stat_kind(
+            values, neutral_spread, concepts, passage_map, "non_english")
+        layer_indirect_null = permutation_maxima(
+            values, neutral_spread, indirect_frames, args.permutations,
+            INDIRECT_PERMUTATION_SEED, target_indices, device=args.device)
+        layer_non_english_null = permutation_maxima(
+            values, neutral_spread, non_english_frames, args.permutations,
+            NON_ENGLISH_PERMUTATION_SEED, target_indices, device=args.device)
+        indirect_null_max = np.maximum(indirect_null_max, layer_indirect_null)
+        non_english_null_max = np.maximum(non_english_null_max, layer_non_english_null)
         for ci, concept in enumerate(concepts):
             if ci not in target_indices:
                 continue
@@ -1423,6 +1572,8 @@ def score_cached_screen(args: argparse.Namespace, data: dict[str, Any], model_di
         alien_fixed_rank = int(1 + np.sum(np.concatenate(alien_layer_scores) > alien_fixed_stat))
     rows = []
     permutation_maximum = float(np.max(null_max))
+    indirect_permutation_maximum = float(np.max(indirect_null_max))
+    non_english_permutation_maximum = float(np.max(non_english_null_max))
     top_two_by_concept = {}
     for concept in concepts:
         candidates = [(key, value) for key, value in metrics.items() if key[0] == concept["id"]]
@@ -1440,7 +1591,6 @@ def score_cached_screen(args: argparse.Namespace, data: dict[str, Any], model_di
         for rank, (key, metric) in enumerate(top, 1):
             concept_id, layer, unit = key
             p_value = (1 + int(np.sum(null_max >= metric["primary_stat"]))) / (len(null_max) + 1)
-            confirm_pass = metric["confirmation_stat"] > permutation_maximum
             row = {"row_key": f"screen:{args.model}:{concept_id}:{rank}",
                    "stage": "screen", "model_id": args.model, "family": header["model_family"],
                    "concept_id": concept_id, "category": concept["category"],
@@ -1449,11 +1599,14 @@ def score_cached_screen(args: argparse.Namespace, data: dict[str, Any], model_di
                    "depth_fraction": header["layers"][layer]["depth_fraction"], "rank": rank,
                    **metric, "yona_rank": secondary_order[key],
                    "permutation_count": len(null_max), "permutation_maximum": permutation_maximum,
-                   "permutation_p": p_value, "screen_pass": metric["primary_stat"] > permutation_maximum,
-                   "confirmation_pass": confirm_pass,
+                   "indirect_permutation_maximum": indirect_permutation_maximum,
+                   "non_english_permutation_maximum": non_english_permutation_maximum,
+                   "permutation_p": p_value,
                    "shared_top_two": [other_id for other_id, other_pairs in top_two_by_concept.items()
                                       if other_id != concept_id and bool(top_two_by_concept[concept_id] & other_pairs)],
                    "header": "header.json"}
+            apply_screen_gates(row, permutation_maximum, indirect_permutation_maximum,
+                               non_english_permutation_maximum)
             rows.append(row)
     self_direction = build_self_direction(model_dir, header, data)
     rows.append({"row_key": f"screen:{args.model}:self-direction", "stage": "self_direction_summary",
@@ -1519,8 +1672,16 @@ def score_cached_screen(args: argparse.Namespace, data: dict[str, Any], model_di
         shard_name = f"screen-{args.concept_start}-{args.concept_end}.json"
         atomic_json({"model_id": args.model, "concept_start": args.concept_start,
                     "concept_end": args.concept_end, "null_maxima": null_max.tolist(),
+                    "indirect_null_maxima": indirect_null_max.tolist(),
+                    "non_english_null_maxima": non_english_null_max.tolist(),
                     "rows": rows}, shard_dir / shard_name)
     else:
+        bars = {"discovery": permutation_maximum, "indirect": indirect_permutation_maximum,
+                "non_english": non_english_permutation_maximum}
+        joint_counts = _joint_null_distribution(model_dir, data, header, bars,
+                                                args.permutations, args.device, target_indices)
+        rows = annotate_concept_unique(rows)
+        rows.append(funnel_summary(args.model, rows, joint_counts))
         _replace_jsonl_rows(model_dir / ("screen.jsonl" if SPREAD_FLOOR_MODE == "p5" else f"screen-floor-{SPREAD_FLOOR_MODE}.jsonl"), rows)
     print(json.dumps({"model_id": args.model, "top_rows": len(rows) - 1,
                       "permutation_maximum": permutation_maximum,
@@ -1529,16 +1690,23 @@ def score_cached_screen(args: argparse.Namespace, data: dict[str, Any], model_di
     return rows
 
 
-def merge_screen_shards(model_id: str, out_dir: str | Path) -> list[dict[str, Any]]:
+def merge_screen_shards(model_id: str, out_dir: str | Path,
+                        device: str = "cpu", spread_floor_mode: str = "p5") -> list[dict[str, Any]]:
+    global SPREAD_FLOOR_MODE
+    SPREAD_FLOOR_MODE = spread_floor_mode
     model_dir = _model_output_dir(out_dir, model_id)
     shard_files = sorted((model_dir / "screen-shards").glob("screen-*.json"))
     if not shard_files:
         raise FileNotFoundError(f"no screen score shards found under {model_dir / 'screen-shards'}")
     shards = [read_json(path) for path in shard_files]
     lengths = {len(row["null_maxima"]) for row in shards}
+    lengths |= {len(row["indirect_null_maxima"]) for row in shards}
+    lengths |= {len(row["non_english_null_maxima"]) for row in shards}
     if len(lengths) != 1:
         raise ValueError("screen shards use different permutation counts")
     null_max = np.max(np.asarray([row["null_maxima"] for row in shards], dtype=float), axis=0)
+    indirect_null_max = np.max(np.asarray([row["indirect_null_maxima"] for row in shards], dtype=float), axis=0)
+    non_english_null_max = np.max(np.asarray([row["non_english_null_maxima"] for row in shards], dtype=float), axis=0)
     rows = [row for shard in shards for row in shard["rows"]]
     candidate_rows = [row for row in rows if row.get("stage") == "screen"]
     concepts, data = _concept_passage_map(read_json(DATA_PATH))
@@ -1547,12 +1715,13 @@ def merge_screen_shards(model_id: str, out_dir: str | Path) -> list[dict[str, An
         if row.get("rank") in (1, 2):
             top_two[row["concept_id"]].add((row["layer"], row["unit"]))
     maximum = float(np.max(null_max))
+    indirect_maximum = float(np.max(indirect_null_max))
+    non_english_maximum = float(np.max(non_english_null_max))
     for row in candidate_rows:
         row["permutation_maximum"] = maximum
         row["permutation_count"] = len(null_max)
         row["permutation_p"] = (1 + int(np.sum(null_max >= row["primary_stat"]))) / (len(null_max) + 1)
-        row["screen_pass"] = row["primary_stat"] > maximum
-        row["confirmation_pass"] = row["confirmation_stat"] > maximum
+        apply_screen_gates(row, maximum, indirect_maximum, non_english_maximum)
         row["shared_top_two"] = [other for other, units in top_two.items()
                                  if other != row["concept_id"] and
                                  bool(top_two.get(row["concept_id"], set()) & units)]
@@ -1566,14 +1735,22 @@ def merge_screen_shards(model_id: str, out_dir: str | Path) -> list[dict[str, An
         if key not in seen:
             others.append(row)
             seen.add(key)
-    merged = candidate_rows + others
     expected = {c["id"] for c in concepts}
     found = {row["concept_id"] for row in candidate_rows}
     if found != expected:
         raise RuntimeError(f"screen shards cover {len(found)} concepts, expected {len(expected)}")
+    data = read_json(DATA_PATH)
+    header = read_json(model_dir / "header.json")
+    bars = {"discovery": maximum, "indirect": indirect_maximum,
+            "non_english": non_english_maximum}
+    joint_counts = _joint_null_distribution(model_dir, data, header, bars, len(null_max), device)
+    merged = annotate_concept_unique(candidate_rows + others)
+    merged.append(funnel_summary(model_id, merged, joint_counts))
     _replace_jsonl_rows(model_dir / "screen.jsonl", merged)
     print(json.dumps({"model_id": model_id, "merged_score_shards": len(shards),
                       "concepts": len(found), "permutation_maximum": maximum,
+                      "indirect_permutation_maximum": indirect_maximum,
+                      "non_english_permutation_maximum": non_english_maximum,
                       "rows": len(merged)}))
     return merged
 
@@ -1598,6 +1775,121 @@ def _matched_stat_kind(values: np.ndarray, spread: np.ndarray, concepts: list[di
         results.append((np.median(target, axis=0) - np.median(controls, axis=0)) /
                        np.maximum(spread, eps))
     return results, used
+
+
+def apply_screen_gates(row: dict[str, Any], primary_bar: float,
+                       indirect_bar: float, non_english_bar: float) -> dict[str, Any]:
+    """Attach marginal bars, margins and the conjunctive screen gate to a candidate row."""
+    row["indirect_permutation_maximum"] = float(indirect_bar)
+    row["non_english_permutation_maximum"] = float(non_english_bar)
+    row["primary_margin"] = float(row["primary_stat"] - primary_bar)
+    row["discovery_margin"] = row["primary_margin"]
+    row["confirmation_margin"] = float(row["confirmation_stat"] - primary_bar)
+    row["indirect_margin"] = float(row["indirect_stat"] - indirect_bar)
+    row["non_english_margin"] = float(row["non_english_stat"] - non_english_bar)
+    # Preserve the original meanings of these two columns for existing readers.
+    row["screen_pass"] = bool(row["primary_stat"] > primary_bar)
+    row["confirmation_pass"] = bool(row["confirmation_stat"] > primary_bar)
+    row["indirect_pass"] = bool(row["indirect_margin"] > 0)
+    row["non_english_pass"] = bool(row["non_english_margin"] > 0)
+    row["gate_pass"] = bool(row["screen_pass"] and row["confirmation_pass"]
+                             and row["indirect_pass"] and row["non_english_pass"])
+    return row
+
+
+def annotate_concept_unique(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Mark whether each top-five model unit is exclusive to one concept."""
+    concepts_by_unit: dict[tuple[str, int, int], set[str]] = defaultdict(set)
+    for row in rows:
+        if row.get("stage") == "screen" and int(row.get("rank", 0)) <= 5:
+            key = (str(row["model_id"]), int(row["layer"]), int(row["unit"]))
+            concepts_by_unit[key].add(str(row["concept_id"]))
+    annotated = []
+    for original in rows:
+        row = dict(original)
+        if row.get("stage") == "screen" and int(row.get("rank", 0)) <= 5:
+            key = (str(row["model_id"]), int(row["layer"]), int(row["unit"]))
+            row["concept_unique"] = len(concepts_by_unit[key]) == 1
+        annotated.append(row)
+    return annotated
+
+
+def funnel_summary(model_id: str, rows: list[dict[str, Any]],
+                   joint_counts: Any) -> dict[str, Any]:
+    """Summarize the model's candidate funnel with row and concept counts at each stage."""
+    top5 = [row for row in rows if row.get("stage") == "screen" and int(row.get("rank", 0)) <= 5]
+    unique = [row for row in top5 if row.get("concept_unique", False)]
+    indirect = [row for row in unique if row.get("indirect_pass", row.get("indirect_margin", 0) > 0)]
+    non_english = [row for row in indirect
+                   if row.get("non_english_pass", row.get("non_english_margin", 0) > 0)]
+    final = [row for row in unique if row.get("gate_pass", False)]
+
+    def counts(stage_rows: list[dict[str, Any]]) -> tuple[int, int]:
+        return len(stage_rows), len({str(row["concept_id"]) for row in stage_rows})
+
+    distribution = np.asarray(joint_counts, dtype=np.float64).reshape(-1)
+    median = float(np.median(distribution)) if distribution.size else 0.0
+    p95 = float(np.percentile(distribution, 95)) if distribution.size else 0.0
+    maximum = int(np.max(distribution)) if distribution.size else 0
+    top5_rows, top5_concepts = counts(top5)
+    unique_rows, unique_concepts = counts(unique)
+    indirect_rows, indirect_concepts = counts(indirect)
+    non_english_rows, non_english_concepts = counts(non_english)
+    final_rows, final_concepts = counts(final)
+    return {
+        "row_key": f"screen:{model_id}:funnel", "stage": "funnel", "model_id": model_id,
+        "top5_row_count": top5_rows, "top5_concept_count": top5_concepts,
+        "concept_unique_row_count": unique_rows, "concept_unique_concept_count": unique_concepts,
+        "indirect_gate_row_count": indirect_rows, "indirect_gate_concept_count": indirect_concepts,
+        "non_english_gate_row_count": non_english_rows,
+        "non_english_gate_concept_count": non_english_concepts,
+        "final_row_count": final_rows, "final_concept_count": final_concepts,
+        "joint_null_median": median, "joint_null_p95": p95, "joint_null_max": maximum,
+    }
+
+
+def _joint_null_distribution(model_dir: Path, data: dict[str, Any], header: dict[str, Any],
+                             bars: dict[str, float], n_permutations: int,
+                             device: str | None,
+                             target_indices: list[int] | None = None) -> np.ndarray:
+    """Second pass after marginal bars are known; sums shared-label counts across layers."""
+    concepts, passage_map = _concept_passage_map(data)
+    all_frames = data["frame_bank"]
+    frame_index = {frame["id"]: index for index, frame in enumerate(all_frames)}
+    n_concepts, n_frames = len(concepts), len(all_frames)
+    targets = list(range(n_concepts)) if target_indices is None else list(target_indices)
+    cache_dir = model_dir / "activations"
+    manifest = _manifest(model_dir)
+    joint_counts = np.zeros(n_permutations, dtype=np.int64)
+    for layer_meta in header["layers"]:
+        layer, width = int(layer_meta["layer"]), int(layer_meta["width"])
+        values = np.zeros((n_concepts, n_frames, width), dtype=np.float32)
+        neutral_values = np.zeros((n_frames, width), dtype=np.float32)
+        for ci, concept in enumerate(concepts):
+            for frame_id in passage_map[concept["id"]]:
+                values[ci, frame_index[frame_id]] = _read_layer(
+                    cache_dir, manifest, f"concept:{concept['id']}:{frame_id}", layer)
+        for frame in all_frames:
+            neutral_values[frame_index[frame["id"]]] = _read_layer(
+                cache_dir, manifest, f"neutral:{frame['id']}", layer)
+        neutral_spread = np.std(neutral_values, axis=0, ddof=0)
+        neutral_spread = np.where(template_mask(neutral_values), np.inf, neutral_spread)
+        confirmation, _ = _matched_stat(
+            values, neutral_spread, concepts, passage_map, "confirmation")
+        _discovery, discovery_frames = _matched_stat(
+            values, neutral_spread, concepts, passage_map, "discovery")
+        _indirect, indirect_frames = _matched_stat_kind(
+            values, neutral_spread, concepts, passage_map, "indirect")
+        _non_english, non_english_frames = _matched_stat_kind(
+            values, neutral_spread, concepts, passage_map, "non_english")
+        frame_sets = {"discovery": discovery_frames, "indirect": indirect_frames,
+                      "non_english": non_english_frames}
+        layer_counts = joint_permutation_counts(
+            values, neutral_spread, frame_sets, bars, confirmation,
+            n_permutations=n_permutations, seed=JOINT_PERMUTATION_SEED,
+            target_indices=targets, device=device)
+        joint_counts += layer_counts
+    return joint_counts
 
 
 def _replace_jsonl_rows(path: Path, rows: list[dict[str, Any]]) -> None:
@@ -1625,7 +1917,7 @@ def run_screen(args: argparse.Namespace) -> list[dict[str, Any]] | None:
     model_dir = _model_output_dir(args.out, args.model)
     model_dir.mkdir(parents=True, exist_ok=True)
     if args.merge_screen_shards:
-        return merge_screen_shards(args.model, args.out)
+        return merge_screen_shards(args.model, args.out, args.device, args.spread_floor)
     posts = read_trump_posts(args.trump_posts) if args.trump_posts else None
     samples = experiment_samples(data, posts)
     selected = selected_concept_ids(data, args.concept_start, args.concept_end)
