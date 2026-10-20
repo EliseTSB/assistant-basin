@@ -36,3 +36,9 @@ The wizard unit only: 12 sentences each with wizard, sorcerer, mage, warlock, wi
 noita (Finnish for witch, in a Finnish sentence), and four unrelated role nouns (baker, pilot, nurse, farmer), the word
 once per sentence. Same measurement as A (maximum over the word's tokens), reported as a share of the wizard median with
 bootstrap CIs, and 20 random same-layer units as the null.
+
+## Amendment to B, before any run (Claude, 2026-10-20 16:09 CT, after Elise asked why the push needed thousands of generations)
+Sized from the effect worth knowing instead of from symmetry: the push starts as a pilot on the wizard unit at k = 8
+only. Target: 16 prompts x 4 samples (64); no clamp: the same 64; random controls: 10 same-layer units (the first 10 of
+the seeded list) x 16 prompts x 1 sample (160). About 290 generations. The other units and k = 4 run only if the pilot
+shows a topic effect or the controls' spread is too wide to read it. 38.3 and 38.4 are scored against these 10 controls.
