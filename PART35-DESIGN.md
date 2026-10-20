@@ -41,7 +41,47 @@ SmolLM3-3B, OLMo-2-1B Instruct, and one more family if a licence allows (Gemma 3
 finding is the same concept giving a persona neuron in more than one family, and, as a stretch, whether those neurons
 read similar text (their top-activating passages compared).
 
-## Open questions for the council
+## Prime's ML review (council muse-neuron-research-2026-10 #60, 2026-10-20 05:02 CT), adopted 05:06 CT
+
+This replaces the screen, push and model sections above where they differ.
+
+- **Contrast for discovery, attribution only for a confirmed hit.** EAP-IG needs a target logit per concept and
+  gradients; it is the circuit tool for a find (the suppression nodes), not a screen. Optional bridge: ablate the top
+  candidates on concept prompts and read the drop in a concept-continuation logprob, reported as necessity, never as a
+  veto, since the find criterion is sufficiency.
+- **Dose by the injected vector, not by a multiple of the neuron's max.** Choose the level L with
+  L x ||W_down[n]|| = rho x ||h_l||, where ||h_l|| is the RMS residual norm on neutral prompts at that layer and rho is
+  0.05 or 0.10. Secondary: 2x, 4x, 8x the natural maximum measured on neutral passages (never on the concept passages
+  that selected it), for comparability with Part 18. Report both, the equivalent multiple and the achieved change.
+  Clamp = set to L on generated tokens only (Part 18b's working arm); log the share of tokens whose natural value
+  exceeded L.
+- **Multiplicity lives in the screen.** One bank of 36 matched frames filled with each concept, so every contrast is
+  within-frame (concept against other concepts; concept present against absent for the indirect set). A permutation
+  null per model (shuffled concept labels on the cached activations): a candidate must beat the permutation maximum.
+  Two-level hold-out: each concept's passages split 18 discovery / 18 confirmation, every reported number on the
+  confirmation half; 8 to 10 of the 40 concepts held out entirely until the procedure is frozen. Confirmatory family =
+  rank-1 candidates only, one primary endpoint (claims the screened concept against matched controls), exact test at
+  alpha = 0.05/240; ranks 2-5 exploratory. Rank on a robust statistic (median of per-passage maxima, or k of n passages
+  above the negative set's 99th percentile), with spread defined on a fixed neutral reference.
+- **Families, not checkpoints.** Qwen3-1.7B, Qwen3-4B and Qwen3.5-4B are one family. The headline is the family rule;
+  per-model hits are reported separately.
+- **Staged budget.** Stage 1: rank-1 per concept per model, 2 doses, 2 identity prompts, 4 samples (about 3,840
+  generations), with 10 live random neurons per model, all judged. Stage 2: only stage-1 hits and near-hits, with 8
+  identity prompts x 8 samples, held-out prompts and held-out passages. The unit of analysis is the prompt (samples of
+  one prompt are clustered); a cluster permutation over control neurons; the hit threshold is a number fixed in the
+  predictions.
+- **Judge blind to the concept**: free-text label of the claimed persona (or none, or broken), matched to the screened
+  concept afterwards; a specificity matrix (screened against claimed); live, scale-matched controls; neurons that top
+  two related concepts reported once. **Non-identity prompts under the same clamp**: a persona neuron leaves ordinary
+  answers ordinary, a word pusher does not. A zero-change harness control (Part 18's identity hook) and a judge
+  reliability check on at least 100 answers, plus a hand read of every claim.
+- **Controls.** The alien (Qwen3.5-4B L22 N2742) is the positive control, reported separately and excluded from the
+  find rate. The owl cannot be a replication control: Sauers' model is unnamed (likely Qwen3-8B). The owl becomes a
+  target concept, plus a replication attempt on Qwen3-8B only if it fits the hardware, never counted as a find.
+- **Cross-model comparison** on held-out probe profiles (passages not used in screening), layers aligned by depth
+  fraction.
+
+## Open questions for the council (answered by Prime above)
 
 1. Is a per-neuron contrast the right screen, or should candidates come from attribution (EAP-IG, as Sauers did), and
    the contrast only confirm?
