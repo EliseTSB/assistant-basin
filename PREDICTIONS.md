@@ -1122,7 +1122,7 @@ questions are reported per question for the set and for each control.
 | # | Prediction | Result | Evidence |
 |---|---|---|---|
 | 27.1 | At most one of the four has top contexts dominated by Qwen, Alibaba, Tongyi or China; the early three fire on general text. | | |
-| 27.2 | L29 N776's logit-lens top or bottom 30 contains a maker or model name (Qwen, Alibaba, Tongyi, Google, Gemini, OpenAI, GPT, Claude); the three early neurons' do not. | | |
+| 27.2 | L29 N776's logit-lens top or bottom 30 contains a maker or model name (Qwen, Alibaba, Tongyi, Google, Gemini, OpenAI, GPT, Claude); the three early neurons' do not. | FAILED (half held) | results/part27/writes.json on branch cloud/part27-fires-2026-10-20 (cloud run 2026-10-20 17:36 UTC), scored 16:49 CT. Held: L29 N776's top 30 is google x5, 谷歌, 구글, جوجل, gmail, 百度 (Baidu), facebook. Failed: L6 N753's top 30 contains claude (with ai, 人工智能, 幻觉 'hallucination', elligent). Read, not scored: L11 N8868's top is china, chinese, taiwan, китай, الصين and Chinese surnames; L7 N1169's BOTTOM is china, chinese, beijing, shanghai, 中国, 作为中国. So the four write: an AI word, China (two units, opposite signs) and Google. |
 | 27.3 | Zeroed together, the four raise mean Pile loss by less than 1% and change no more of the 20 factual answers than the median random set. | | |
 | 27.4 | No random four-neuron set from the same layers flips any of the six identity questions. | | |
 | 27.5 | In the base model the same indices track the chat model's: per-neuron Pearson over Pile words above 0.8 for all four (the neurons exist before chat training). | | |
