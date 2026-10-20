@@ -116,7 +116,7 @@ and not read at arxiv.org.
   count), without naming specific releases. Evidence: Anthropic's own traffic and account telemetry, not analysis of
   weights. Anthropic's February 2026 post and OpenAI's 2026-09-30 disclosure are of the same kind (request logs).
 
-## Part 29 (teacher fingerprints): model authorship attribution — recorded 2026-10-19 23:0x CT, after Part 29's collection paused
+## Part 29 (teacher fingerprints): model authorship attribution — recorded 2026-10-19 22:58 CT, after Part 29's collection paused
 
 Found by Muse (council #51), the two central items checked at source by Claude the same hour.
 
