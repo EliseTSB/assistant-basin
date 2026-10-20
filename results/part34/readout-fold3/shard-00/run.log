@@ -6,3 +6,4 @@ readout-only rows=300/1224 elapsed_s=764.8
 readout-only rows=400/1224 elapsed_s=1030.4
 readout-only rows=500/1224 elapsed_s=1273.1
 readout-only rows=600/1224 elapsed_s=1515.6
+NOTE (cloud operator): final 'readout-only complete' line was lost: a git pull --rebase --autostash during the run rewrote this tracked log from an earlier snapshot. Process exited normally; rows.jsonl verified: 1505 lines, 1224 turn2_ab rows all with readout fields. shard-00 wall ~3084s (start 1792516656, last rows.jsonl write 1792519740)
