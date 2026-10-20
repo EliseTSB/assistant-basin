@@ -1475,12 +1475,12 @@ def load_runtime(args: argparse.Namespace) -> tuple[Any, Any, Any, Any, Any, Any
     base = AutoModelForCausalLM.from_pretrained(
         args.model_id,
         revision=args.model_revision,
-        torch_dtype=torch.float32,
+        # Off CPU, load the stored bf16 weights and upcast on the device tensor by tensor: an fp32 CPU copy (about
+        # 7 GB) tripped the A770 job's Windows RAM guard, and device_map asked the XPU for one 6.4 GiB block.
+        # Qwen3-1.7B is stored in bf16, so the upcast is exact.
+        torch_dtype=torch.float32 if device.type == "cpu" else torch.bfloat16,
         local_files_only=True,
         low_cpu_mem_usage=True,
-        # Load weights straight onto the device: an fp32 CPU copy first (about 7 GB) tripped the A770 job's
-        # Windows RAM guard twice on 2026-10-20.
-        device_map={"": str(device)} if device.type != "cpu" else None,
     )
     adapter_source = _cached_adapter_source(args.adapter_id, args.adapter_revision)
     model = PeftModel.from_pretrained(
@@ -1491,7 +1491,7 @@ def load_runtime(args: argparse.Namespace) -> tuple[Any, Any, Any, Any, Any, Any
         local_files_only=True,
     )
     model.eval()
-    model.to(device)
+    model.to(device=device, dtype=torch.float32)
     adapter_weights = load_file(args.direction_file, device="cpu")
     direction = adapter_weights["direction"].to(device=device, dtype=torch.float32)
     mean = adapter_weights["mean"].to(device=device, dtype=torch.float32)
