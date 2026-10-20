@@ -1,0 +1,22 @@
+Part 32 maker categories (n=24 per cell)
+language  condition  Qwen-side  Google-side  other  unplaced
+english   unchanged         24            0      0          0
+english   zeroed             8           16      0          0
+english   clamped           24            0      0          0
+chinese   unchanged         24            0      0          0
+chinese   zeroed            24            0      0          0
+chinese   clamped           24            0      0          0
+spanish   unchanged         11            0     10          3
+spanish   zeroed             6           17      0          1
+spanish   clamped           13            0      5          6
+
+Predictions 32.1-32.4 (Google-side rates use all samples as denominator)
+32.1 Chinese clamped: 0.0% Google-side; >=25% is not held, <10% is the stated language-bound signal.
+32.2 Reading rule: shared computation without propagation (zero moves, clamp does not); zero moves=True, clamp moves=False (>=10 percentage-point increase in Chinese or Spanish over unchanged).
+32.3 Spanish vs Chinese under zeroing: 70.8% vs 0.0%; delta=+70.8%; >=10 points is held.
+32.4 Chinese vs English under zeroing: 0.0% vs 66.7%; Chinese lower is held.
+Fisher exact key comparisons (table is Google-side vs all other outcomes; p2 two-sided, p> directional):
+  32.1 Chinese clamped vs unchanged: p2=1, p_greater=1
+  32.3 Spanish zeroed vs Chinese zeroed: p2=1.63087e-07, p_greater=8.15433e-08
+  32.4 English zeroed vs Chinese zeroed: p2=6.52346e-07, p_greater=3.26173e-07
+hand-reading answers: 10 -> results/part32/unplaced.jsonl
