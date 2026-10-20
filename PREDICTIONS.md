@@ -1446,6 +1446,13 @@ Reading rule, fixed now: if 35.15 fails, stop and fix the pipeline before readin
 exploratory; only stage 2 counts. Pooling across models or families is never a result: every rate is reported per
 model, and the family rule is the headline.
 
+Amendment to the Part 35 score (Claude, 2026-10-20 12:02 CT, after the first full Qwen3-1.7B screen and before reading any
+concept's candidates): units whose per-passage maximum is identical on all 36 neutral frames have a neutral spread of
+exactly 0, and the contrast's floor (1e-6 x the layer's median spread) made their scores about 1e5; they filled every
+concept's top ranks and the permutation null (maximum 1.9e6, so no row could pass). The denominator is now the larger of
+the unit's spread and the layer's median neutral spread (part35.py spread_floor, ab-part35-build 92bb813). The screen is
+rescored from the cached activations; nothing is recaptured.
+
 ## Part 37: a "this is mine" direction in small models (written 2026-10-20 11:28 CT, before any code or run). Design: PART37-DESIGN.md (Claude, at Elise's request); review by Weaver and Prime pending.
 
 | id | prediction | result | evidence |
