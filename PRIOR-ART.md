@@ -141,3 +141,30 @@ Found by Muse (council #51), the two central items checked at source by Claude t
 What this does to Part 29: the frontier-resemblance question is largely answered by ATLAS for GPT / Claude / Gemini.
 What stays open, and cheap: DeepSeek V4.1 Flash 1017 (not in ATLAS's table), Qwen3 vs Qwen3.5, families beyond three,
 and the zero-training judge.
+
+## Writing one's own activations on request (bears on Part 12) — recorded 2026-10-20 04:4x CT
+
+Sent by Elise. Read at source by Claude (repo cloned at 98adb6a, thread.md and README).
+
+- **SauersML/zigzag** (github.com/SauersML/zigzag, commits 2026-10-19 and 10-20; adapter
+  huggingface.co/Sauers/qwen3-1.7b-cat-zigzag; no licence file). A rank-16 LoRA on Qwen3-1.7B is trained so that, on
+  request, its projection on a per-layer "cat" direction (mean on 202 cat sentences minus mean on the same sentences
+  with 20 other words) sits 2 SD above the original model on even layers and 2 SD below on odd ones, or the reverse,
+  while it answers an unrelated question, with a KL penalty on next-token probabilities. Held out: 78 of 310 questions
+  and 10 of 40 wordings; 88% of target (run6), 57% for a second run with the same code (ly_p2). Measured on the replies
+  the model writes itself.
+- **The finding that matters to us:** the model follows the tokens "even" and "odd", not the request. Prompts about a
+  dog, the ocean, "do NOT", a contradiction, a fun fact or why 4 is even all get the cat zigzag, raising the parity
+  named first. Attention knockout of "cat" changes nothing; knockout of "even" and "odd" sends both requests to odd.
+  Only the trained direction moves: a probe for cat with that direction projected out, and the logit lens P(cat), do
+  not zigzag. The author's conclusion: a test of this skill needs prompts that separate the keywords from what they ask.
+- **Leak into behaviour:** asked afterwards to name one animal, the model says cat in 46% of answers after the
+  raise-on-even request, 10% after raise-on-odd and 31% with no request (520 samples), with no cat in any first reply.
+- **Relation to Part 12:** the same shape from the other side. Our trained reader read a strong pushed state and wired
+  it to its answer whatever the question (yes to "Is the Moon larger than the Earth?" 93% clamped high, 7% low; 12c.5).
+  Their trained writer moves the measured direction whatever the prompt asks, keyed on two tokens. In both, a LoRA
+  trained against one fixed readout learns the cheapest route to that readout, and only a control that changes the
+  request while keeping the cue (theirs: dog, "do NOT"; ours: unrelated yes/no questions) shows it.
+- **Open, not done by them, cheap here:** whether the zigzag model can say which parity it raised (write, then read
+  back), and whether mixing keyword-matched decoy prompts into training (as our 12c mixing did for the reader, +34 to
+  +9) makes the writer follow the request.
