@@ -1135,3 +1135,32 @@ em-neurons (2026-10-19) found a fine-tuned behaviour spread over many neurons, a
 switch is the unusual case. Base-versus-chat comparison of the same neuron indices assumes chat training kept the
 architecture and index order, which holds for Qwen's released pair (same config); it is checked, not assumed, by 27.5's
 correlation.
+
+## Part 28: a census of foreign names: which other labs' models do open models say they are? (written 2026-10-19 20:41 CT, before the build and the run). Elise's direction.
+
+Elise (20:39): find fingerprints of teacher models, distillation traces and pretraining corpora, ideally across models.
+Part 9 already found one trace (OLMo 3's Think chain says DeepSeek, its SFT data holds ~283,000 R1 traces) and Part 8 a
+non-trace (agent runs written by Claude 3.7 that never name Claude do not make a model say Claude). This Part asks the
+same questions of many models at once, so a teacher's name shows up as a cross-model pattern rather than one case.
+
+Design: Part 24's six identity questions, no system prompt, the model's own chat template, 8 samples each at
+temperature 0.7, max 96 new tokens (48 answers per model). Two arms. Open weights (cloud CPU or the A770):
+Qwen3.5-0.8B and -4B, SmolLM3-3B, SmolLM2-1.7B-Instruct, OLMo-2-0425-1B-Instruct, OLMo-3-7B-Instruct (SFT, DPO and
+final), Llama-3.2-1B-Instruct, Gemma-3-1B-it, Phi-4-mini-instruct, and DeepSeek-R1-Distill-Qwen-1.5B as the positive
+control (a Qwen base distilled from R1, its teacher named on its card). API (OpenCode Go, no system prompt): DeepSeek
+V4.1 Flash, GLM 5.3, Kimi K3, MiMo V2.6 Pro, Qwen 3.8 Max, MiniMax M3. Each answer is labelled with the maker and the
+name it gives for itself (a regex over lab and model names, then a reader that did not write the run for every answer
+the regex leaves ambiguous). "Foreign" means a lab other than the model's own.
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 28.1 | The positive control works: R1-Distill-Qwen-1.5B names DeepSeek as its maker on more answers than it names Alibaba or Qwen. | | |
+| 28.2 | OpenAI or ChatGPT is the most common foreign name across the open-weights arm, given by at least half of those models at least once in 48 answers. | | |
+| 28.3 | Anthropic or Claude is given by at most two open-weights models, and only at most 3 of 48 times each. | | |
+| 28.4 | Each OLMo 3 checkpoint that saw the R1 traces (SFT, DPO, final) names DeepSeek on at least 25% of answers; OLMo 2 1B Instruct names DeepSeek on none. | | |
+| 28.5 | In each family with two sizes, the smaller model gives a foreign maker at least as often as the larger (Qwen3.5 0.8B vs 4B; SmolLM2 1.7B vs SmolLM3 3B). | | |
+| 28.6 | Every API model names its own maker on at least 90% of answers: served models carry stronger identity training than small open ones. | | |
+
+Prior art: Part 9 (this repo) and the CMU name-transfer study cited there; Sun et al. 2025, "Idiosyncrasies in Large
+Language Models", which classifies which model wrote a text. Muse's search on teacher fingerprints (council
+muse-neuron-research-2026-10 #43) is pending and will be recorded here before the run.
