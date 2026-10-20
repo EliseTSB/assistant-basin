@@ -676,15 +676,32 @@ def _concept_passage_map(data: dict[str, Any]) -> tuple[list[dict[str, Any]], di
     return concepts, result
 
 
-def spread_floor(spread: np.ndarray) -> float:
-    """Denominator floor: the layer's median neutral spread.
+SPREAD_FLOOR_MODE = "p5"
 
-    Amendment 2026-10-20 (PREDICTIONS Part 35): the first full screen divided by a floor of 1e-6 x the median, and units
-    whose per-passage maximum is the same on every neutral frame (spread exactly 0) scored around 1e5, filling every
-    concept's top ranks and the permutation null (maximum 1.9e6). A unit's contrast is now measured in units of the larger
-    of its own spread and the layer's typical spread.
+
+def spread_floor(spread: np.ndarray) -> float:
+    """Denominator floor for the matched-frame contrast.
+
+    Amendment 2026-10-20 (PREDICTIONS Part 35, Prime #69): the first full screen used 1e-6 x the layer median, and units
+    with an exact-zero neutral spread scored around 1e5. Primary floor: the 5th percentile of the layer's positive finite
+    spreads; SPREAD_FLOOR_MODE = "median" (the layer's median finite spread) is the sensitivity check. Infinite spreads
+    mark excluded units (see template_mask) and are ignored here.
     """
-    return max(1e-8, float(np.median(spread)))
+    finite = spread[np.isfinite(spread)]
+    if SPREAD_FLOOR_MODE == "median":
+        return max(1e-8, float(np.median(finite))) if finite.size else 1e-8
+    positive = finite[finite > 0]
+    return max(1e-8, float(np.percentile(positive, 5))) if positive.size else 1e-8
+
+
+def template_mask(neutral_values: np.ndarray) -> np.ndarray:
+    """Units whose per-passage maximum is the same nonzero value on every neutral frame (a fixed-token reader).
+
+    All-zero units are kept: never firing on neutral text is the selective case. Excluded units get an infinite spread,
+    so their contrast is 0 in the screen and in the permutation null alike.
+    """
+    constant = np.ptp(neutral_values, axis=0) == 0
+    return constant & (neutral_values[0] != 0)
 
 
 def _matched_stat(values: np.ndarray, neutral_spread: np.ndarray,
@@ -797,6 +814,8 @@ def yona_consistency(values: np.ndarray, concept_index: int) -> np.ndarray:
 
 
 def score_cached_screen(args: argparse.Namespace, data: dict[str, Any], model_dir: Path) -> list[dict[str, Any]]:
+    global SPREAD_FLOOR_MODE
+    SPREAD_FLOOR_MODE = getattr(args, "spread_floor", "p5")
     header = read_json(model_dir / "header.json")
     concepts, passage_map = _concept_passage_map(data)
     model_dir_cache = model_dir / "activations"
@@ -840,12 +859,22 @@ def score_cached_screen(args: argparse.Namespace, data: dict[str, Any], model_di
             neutral_values[frame_index[frame["id"]]] = _read_layer(
                 model_dir_cache, manifest, f"neutral:{frame['id']}", layer)
         neutral_spread = np.std(neutral_values, axis=0, ddof=0)
+        zero_spread = int(np.sum(neutral_spread == 0))
+        template = template_mask(neutral_values)
+        neutral_spread = np.where(template, np.inf, neutral_spread)
+        floor = spread_floor(neutral_spread)
+        print(f"layer {layer}: zero-spread {zero_spread}, template-excluded {int(template.sum())}, "
+              f"all-zero kept {zero_spread - int(template.sum())}, floored {int(np.sum(neutral_spread < floor))}, "
+              f"floor {floor:.4g} ({SPREAD_FLOOR_MODE})", flush=True)
         neutral_residual = []
         for frame in data["frame_bank"]:
             with np.load(model_dir / manifest[f"neutral:{frame['id']}"]["file"]) as payload:
                 neutral_residual.append(float(payload["residual_rms"][layer]))
         layer_residual_rms = float(np.sqrt(np.mean(np.square(neutral_residual))))
         discovery, disc_frames = _matched_stat(values, neutral_spread, concepts, passage_map, "discovery")
+        _all = np.concatenate([np.asarray(d) for d in discovery])
+        print(f"layer {layer}: discovery stat median {np.median(_all):.3g}, p99 {np.percentile(_all, 99):.3g}, "
+              f"max {np.max(_all):.3g}", flush=True)
         confirmation, _ = _matched_stat(values, neutral_spread, concepts, passage_map, "confirmation")
         layer_null = permutation_maxima(values, neutral_spread, disc_frames,
                                         args.permutations, PERMUTATION_SEED, target_indices,
@@ -988,7 +1017,7 @@ def score_cached_screen(args: argparse.Namespace, data: dict[str, Any], model_di
                     "concept_end": args.concept_end, "null_maxima": null_max.tolist(),
                     "rows": rows}, shard_dir / shard_name)
     else:
-        _write_jsonl_rows(model_dir / "screen.jsonl", rows)
+        _write_jsonl_rows(model_dir / ("screen.jsonl" if SPREAD_FLOOR_MODE == "p5" else f"screen-floor-{SPREAD_FLOOR_MODE}.jsonl"), rows)
     print(json.dumps({"model_id": args.model, "top_rows": len(rows) - 1,
                       "permutation_maximum": permutation_maximum,
                       "alien_fixed_neuron_rank": alien_fixed_rank,
@@ -2123,6 +2152,7 @@ def build_parser() -> argparse.ArgumentParser:
         p.add_argument("--out", required=True, type=Path)
         if command == "screen":
             p.add_argument("--permutations", type=int, default=PERMUTATIONS)
+            p.add_argument("--spread-floor", choices=("p5", "median"), default="p5")
             p.add_argument("--concept-start", type=int, default=None,
                            help="inclusive zero-based shard index over 43 concepts plus alien")
             p.add_argument("--concept-end", type=int, default=None,
