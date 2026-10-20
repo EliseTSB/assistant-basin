@@ -1214,3 +1214,24 @@ predicts confusion between Claude and those families. Added before the run:
 |---|---|---|---|
 | 29.7 | In the teacher confusion matrix, the family most often mistaken for Claude (and that Claude is most often mistaken for) is Qwen 3.8 Max, the one family Anthropic names as distilled from Claude by release. | | |
 | 29.8 | The forced plurality is not over-read: for each student, report the share of answers whose top-class probability is under 0.5 as "unclear", and say a student "reads as X" only if X leads by at least 10 points with intervals not overlapping the runner-up. | | |
+
+### Part 29b: Qwen before and after the alleged Claude distillation, plus the open students (written 2026-10-19 21:30 CT, before any of these answers exist)
+
+Anthropic's September 2026 report (PRIOR-ART.md) says Alibaba's Claude transcripts from May-July 2026 were used for
+Qwen 3.5-3.7. Qwen3 (released 2025-04) predates the campaign, so the same lab's two generations are a natural
+before-and-after. On Claude cloud CPUs, at prompts 240-299 only (the classifier's held-out set), no system prompt,
+thinking off where the template allows: Qwen3-4B and Qwen3.5-4B; Qwen3-1.7B and Qwen3.5-0.8B;
+DeepSeek-R1-Distill-Qwen-1.5B and its sibling Qwen2.5-Math-1.5B-Instruct (Chorus's same-base comparison);
+SmolLM2-1.7B-Instruct and OLMo-2-0425-1B-Instruct as students with no documented Claude, GPT or DeepSeek teacher
+(replacing Llama-3.2-1B and Gemma-3-1B, which are gated and cannot download in the cloud). All scored by the classifier
+trained on the eight API families.
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 29.9 | Qwen3.5-4B's answers are classified Claude at least 10 points more often than Qwen3-4B's. | | |
+| 29.10 | The same holds for the small pair: Qwen3.5-0.8B over Qwen3-1.7B by at least 10 points. | | |
+| 29.11 | R1-Distill-Qwen-1.5B is classified DeepSeek more often than its sibling Qwen2.5-Math-1.5B-Instruct is (the delta Chorus asked for, replacing 29.2's absolute count as the test that matters). | | |
+| 29.12 | Small open models read as Qwen or "unclear" more than as any API family (a size and register effect, not a teacher), which is the floor every teacher claim above has to clear. | | |
+
+Caveat: a generation-to-generation change has many causes besides one teacher (new data, new post-training, size); 29.9
+and 29.10 can support Anthropic's account only weakly and cannot establish it.
