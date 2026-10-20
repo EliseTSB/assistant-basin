@@ -486,6 +486,11 @@ def load_model_direct(model_id: str, revision: str, device: str):
     if tok.pad_token_id is None:
         tok.pad_token = tok.eos_token
     kwargs = dict(revision=revision, dtype=torch.bfloat16, low_cpu_mem_usage=True, device_map={"": device})
+    # transformers' caching_allocator_warmup asks for the whole model as ONE buffer (7.83 GiB for Qwen3.5-4B); the
+    # Arc A770 refuses a single allocation that large (XPU OOM with 14.8 GiB free, 2026-10-20 18:22). Skip it.
+    import transformers.modeling_utils as _mu
+    if hasattr(_mu, "caching_allocator_warmup"):
+        _mu.caching_allocator_warmup = lambda *a, **k: None
     try:
         model = AutoModelForCausalLM.from_pretrained(model_id, **kwargs)
     except (ValueError, KeyError):
