@@ -1,0 +1,71 @@
+{
+ "inputs": {
+  "part33-authored-passages.jsonl": "4aafed9af70be834380d8a4fbcd527b528b875203f63194d7cea9c531b63b96e",
+  "sense-battery.jsonl": "3b79b2b370d6012ae63b92ffb7ddfddc9a06d6e406f26c86b49928c7b5d38884",
+  "neutral.txt": "b60b39615eea78c2aca5615bdf3905f7152f805ecc97fe8908151b8cc591df2f",
+  "part33-questions.json": "77be39aefdc1c5669a2e4901ee05c82947925372cc1ee950c379f685a81446a0"
+ },
+ "model": "Qwen/Qwen3.5-4B",
+ "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "layer": 22,
+ "neuron": 2742,
+ "natural_firing": {
+  "corpus_maximum": 21.875,
+  "conditional_threshold": 10.9375,
+  "token_count": 55,
+  "per_passage": [
+   {
+    "id": "alien_q01",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "At dawn, the extraterrestrial botanist Lira collected blue moss beside her landing craft.",
+    "activation": {
+     "max": 21.875,
+     "mean": 4.812841796875,
+     "min": -0.38671875,
+     "tokens": 20
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.1
+   },
+   {
+    "id": "alien_q02",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The alien pilot Varo placed a brass beacon on the ridge before returning to the shuttle.",
+    "activation": {
+     "max": 14.0,
+     "mean": 3.2313910590277777,
+     "min": -0.171875,
+     "tokens": 18
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.05555555555555555
+   },
+   {
+    "id": "alien_q03",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "An extraterrestrial child named Seli carried a glass flute through the quiet market.",
+    "activation": {
+     "max": 19.0,
+     "mean": 5.008099724264706,
+     "min": -0.287109375,
+     "tokens": 17
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.11764705882352941
+   }
+  ],
+  "candidate_counts": {
+   "alien": 3,
+   "topic": 0,
+   "neutral": 0
+  },
+  "selected_counts": {
+   "alien": 3,
+   "topic": 0,
+   "neutral": 0
+  }
+ }
+}

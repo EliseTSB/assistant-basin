@@ -1,0 +1,5474 @@
+{
+ "tool": "part33.py (assistant-basin, Part 33)",
+ "model": "Qwen/Qwen3.5-4B",
+ "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "layer": 22,
+ "neuron": 2742,
+ "layers_module": "model.layers",
+ "neuron_definition": "input to layer-22 mlp.down_proj, as in neuron_report.py Part 18",
+ "zero_definition": "set activation to zero only where its natural value is strictly greater than half its own selected-corpus maximum",
+ "loss_definition": "logits at token p predict token p+1; firing and the following eight loss positions are unioned to avoid overlap weighting",
+ "control_matching": "20 units selected from a seeded random layer-22 pool by closest natural firing-token fraction; each uses its own half-maximum threshold",
+ "lookahead_tokens": 8,
+ "control_candidate_pool": 512,
+ "input_shas": {
+  "part33-authored-passages.jsonl": "4aafed9af70be834380d8a4fbcd527b528b875203f63194d7cea9c531b63b96e",
+  "sense-battery.jsonl": "3b79b2b370d6012ae63b92ffb7ddfddc9a06d6e406f26c86b49928c7b5d38884",
+  "neutral.txt": "b60b39615eea78c2aca5615bdf3905f7152f805ecc97fe8908151b8cc591df2f",
+  "part33-questions.json": "77be39aefdc1c5669a2e4901ee05c82947925372cc1ee950c379f685a81446a0"
+ },
+ "smoke": true,
+ "natural_firing": {
+  "corpus_maximum": 21.875,
+  "conditional_threshold": 10.9375,
+  "token_count": 55,
+  "per_passage": [
+   {
+    "id": "alien_q01",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "At dawn, the extraterrestrial botanist Lira collected blue moss beside her landing craft.",
+    "activation": {
+     "max": 21.875,
+     "mean": 4.812841796875,
+     "min": -0.38671875,
+     "tokens": 20
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.1
+   },
+   {
+    "id": "alien_q02",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "The alien pilot Varo placed a brass beacon on the ridge before returning to the shuttle.",
+    "activation": {
+     "max": 14.0,
+     "mean": 3.2313910590277777,
+     "min": -0.171875,
+     "tokens": 18
+    },
+    "firing_tokens": 1,
+    "firing_fraction": 0.05555555555555555
+   },
+   {
+    "id": "alien_q03",
+    "group": "alien",
+    "source": "data/part33-authored-passages.jsonl",
+    "text": "An extraterrestrial child named Seli carried a glass flute through the quiet market.",
+    "activation": {
+     "max": 19.0,
+     "mean": 5.008099724264706,
+     "min": -0.287109375,
+     "tokens": 17
+    },
+    "firing_tokens": 2,
+    "firing_fraction": 0.11764705882352941
+   }
+  ],
+  "candidate_counts": {
+   "alien": 3,
+   "topic": 0,
+   "neutral": 0
+  },
+  "selected_counts": {
+   "alien": 3,
+   "topic": 0,
+   "neutral": 0
+  }
+ },
+ "conditional_zeroing": {
+  "matched_controls": [
+   3700,
+   7875,
+   7065,
+   8380,
+   5794,
+   5875,
+   677,
+   8649,
+   2250,
+   1818,
+   6303,
+   7884,
+   2740,
+   1540,
+   3891,
+   5486,
+   2594,
+   2029,
+   6561,
+   4274
+  ],
+  "candidate_control_frequencies": [
+   {
+    "unit": 18,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.75,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 32,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 5.375,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 49,
+    "firing_tokens": 19,
+    "token_count": 55,
+    "firing_rate": 0.34545454545454546,
+    "max_activation": 0.80078125,
+    "absolute_rate_difference": 0.2545454545454545,
+    "selected": false
+   },
+   {
+    "unit": 57,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 1.0234375,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 104,
+    "firing_tokens": 19,
+    "token_count": 55,
+    "firing_rate": 0.34545454545454546,
+    "max_activation": 0.66796875,
+    "absolute_rate_difference": 0.2545454545454545,
+    "selected": false
+   },
+   {
+    "unit": 105,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.53515625,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 111,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.271484375,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 117,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 1.2265625,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 141,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 4.53125,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 158,
+    "firing_tokens": 0,
+    "token_count": 55,
+    "firing_rate": 0.0,
+    "max_activation": -0.00555419921875,
+    "absolute_rate_difference": 0.09090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 180,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.150390625,
+    "absolute_rate_difference": 0.0,
+    "selected": false
+   },
+   {
+    "unit": 191,
+    "firing_tokens": 24,
+    "token_count": 55,
+    "firing_rate": 0.43636363636363634,
+    "max_activation": 0.73046875,
+    "absolute_rate_difference": 0.34545454545454546,
+    "selected": false
+   },
+   {
+    "unit": 210,
+    "firing_tokens": 10,
+    "token_count": 55,
+    "firing_rate": 0.18181818181818182,
+    "max_activation": 0.6484375,
+    "absolute_rate_difference": 0.09090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 229,
+    "firing_tokens": 11,
+    "token_count": 55,
+    "firing_rate": 0.2,
+    "max_activation": 0.369140625,
+    "absolute_rate_difference": 0.1090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 235,
+    "firing_tokens": 15,
+    "token_count": 55,
+    "firing_rate": 0.2727272727272727,
+    "max_activation": 0.58984375,
+    "absolute_rate_difference": 0.1818181818181818,
+    "selected": false
+   },
+   {
+    "unit": 237,
+    "firing_tokens": 0,
+    "token_count": 55,
+    "firing_rate": 0.0,
+    "max_activation": -0.0084228515625,
+    "absolute_rate_difference": 0.09090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 242,
+    "firing_tokens": 18,
+    "token_count": 55,
+    "firing_rate": 0.32727272727272727,
+    "max_activation": 0.82421875,
+    "absolute_rate_difference": 0.23636363636363636,
+    "selected": false
+   },
+   {
+    "unit": 268,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.08056640625,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 302,
+    "firing_tokens": 0,
+    "token_count": 55,
+    "firing_rate": 0.0,
+    "max_activation": -0.014404296875,
+    "absolute_rate_difference": 0.09090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 335,
+    "firing_tokens": 30,
+    "token_count": 55,
+    "firing_rate": 0.5454545454545454,
+    "max_activation": 0.4140625,
+    "absolute_rate_difference": 0.4545454545454545,
+    "selected": false
+   },
+   {
+    "unit": 336,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.0849609375,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 341,
+    "firing_tokens": 21,
+    "token_count": 55,
+    "firing_rate": 0.38181818181818183,
+    "max_activation": 0.376953125,
+    "absolute_rate_difference": 0.2909090909090909,
+    "selected": false
+   },
+   {
+    "unit": 379,
+    "firing_tokens": 0,
+    "token_count": 55,
+    "firing_rate": 0.0,
+    "max_activation": -0.00482177734375,
+    "absolute_rate_difference": 0.09090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 383,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.45703125,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 386,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.53515625,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 435,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.017578125,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 441,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.30859375,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 465,
+    "firing_tokens": 19,
+    "token_count": 55,
+    "firing_rate": 0.34545454545454546,
+    "max_activation": 0.53125,
+    "absolute_rate_difference": 0.2545454545454545,
+    "selected": false
+   },
+   {
+    "unit": 472,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.1025390625,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 499,
+    "firing_tokens": 15,
+    "token_count": 55,
+    "firing_rate": 0.2727272727272727,
+    "max_activation": 0.1865234375,
+    "absolute_rate_difference": 0.1818181818181818,
+    "selected": false
+   },
+   {
+    "unit": 507,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.76953125,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 508,
+    "firing_tokens": 40,
+    "token_count": 55,
+    "firing_rate": 0.7272727272727273,
+    "max_activation": 0.578125,
+    "absolute_rate_difference": 0.6363636363636364,
+    "selected": false
+   },
+   {
+    "unit": 510,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.466796875,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 539,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.1796875,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 542,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.75390625,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 548,
+    "firing_tokens": 0,
+    "token_count": 55,
+    "firing_rate": 0.0,
+    "max_activation": -0.007354736328125,
+    "absolute_rate_difference": 0.09090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 570,
+    "firing_tokens": 22,
+    "token_count": 55,
+    "firing_rate": 0.4,
+    "max_activation": 0.359375,
+    "absolute_rate_difference": 0.3090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 645,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.54296875,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 650,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.0036468505859375,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 677,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.50390625,
+    "absolute_rate_difference": 0.0,
+    "selected": true
+   },
+   {
+    "unit": 692,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.416015625,
+    "absolute_rate_difference": 0.0,
+    "selected": false
+   },
+   {
+    "unit": 761,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.58984375,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 843,
+    "firing_tokens": 9,
+    "token_count": 55,
+    "firing_rate": 0.16363636363636364,
+    "max_activation": 0.59375,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 861,
+    "firing_tokens": 21,
+    "token_count": 55,
+    "firing_rate": 0.38181818181818183,
+    "max_activation": 0.466796875,
+    "absolute_rate_difference": 0.2909090909090909,
+    "selected": false
+   },
+   {
+    "unit": 917,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.087890625,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 937,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.14453125,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 943,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.71875,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 1012,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.0654296875,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 1020,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.38671875,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 1022,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 1.3359375,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 1037,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 2.609375,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 1038,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.28515625,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 1041,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.68359375,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 1056,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.34765625,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 1085,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 2.078125,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 1123,
+    "firing_tokens": 10,
+    "token_count": 55,
+    "firing_rate": 0.18181818181818182,
+    "max_activation": 0.31640625,
+    "absolute_rate_difference": 0.09090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 1150,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.212890625,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 1159,
+    "firing_tokens": 12,
+    "token_count": 55,
+    "firing_rate": 0.21818181818181817,
+    "max_activation": 0.3125,
+    "absolute_rate_difference": 0.12727272727272726,
+    "selected": false
+   },
+   {
+    "unit": 1171,
+    "firing_tokens": 14,
+    "token_count": 55,
+    "firing_rate": 0.2545454545454545,
+    "max_activation": 0.296875,
+    "absolute_rate_difference": 0.1636363636363636,
+    "selected": false
+   },
+   {
+    "unit": 1256,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.37890625,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 1271,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.1435546875,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 1280,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.341796875,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 1288,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.1337890625,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 1291,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.189453125,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 1315,
+    "firing_tokens": 24,
+    "token_count": 55,
+    "firing_rate": 0.43636363636363634,
+    "max_activation": 0.458984375,
+    "absolute_rate_difference": 0.34545454545454546,
+    "selected": false
+   },
+   {
+    "unit": 1344,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.09228515625,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 1353,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.263671875,
+    "absolute_rate_difference": 0.0,
+    "selected": false
+   },
+   {
+    "unit": 1357,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.1318359375,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 1363,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.0849609375,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 1433,
+    "firing_tokens": 24,
+    "token_count": 55,
+    "firing_rate": 0.43636363636363634,
+    "max_activation": 0.404296875,
+    "absolute_rate_difference": 0.34545454545454546,
+    "selected": false
+   },
+   {
+    "unit": 1445,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.298828125,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 1453,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.1865234375,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 1460,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.279296875,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 1467,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 1.3984375,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 1501,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.1865234375,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 1510,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.17578125,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 1528,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.6640625,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 1540,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.1669921875,
+    "absolute_rate_difference": 0.0,
+    "selected": true
+   },
+   {
+    "unit": 1582,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.578125,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 1587,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.0206298828125,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 1588,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.197265625,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 1603,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.10791015625,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 1615,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.1591796875,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 1642,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.69140625,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 1649,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.083984375,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 1657,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.12158203125,
+    "absolute_rate_difference": 0.0,
+    "selected": false
+   },
+   {
+    "unit": 1696,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.2255859375,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 1729,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.3515625,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 1767,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.48828125,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 1771,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.166015625,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 1803,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.228515625,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 1818,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.0771484375,
+    "absolute_rate_difference": 0.0,
+    "selected": true
+   },
+   {
+    "unit": 1837,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.14453125,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 1839,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.1279296875,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 1847,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.298828125,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 1863,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.1513671875,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 1878,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.65234375,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 1918,
+    "firing_tokens": 13,
+    "token_count": 55,
+    "firing_rate": 0.23636363636363636,
+    "max_activation": 0.15625,
+    "absolute_rate_difference": 0.14545454545454545,
+    "selected": false
+   },
+   {
+    "unit": 1921,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.26171875,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 1923,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.5234375,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 1938,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.13671875,
+    "absolute_rate_difference": 0.0,
+    "selected": false
+   },
+   {
+    "unit": 1953,
+    "firing_tokens": 14,
+    "token_count": 55,
+    "firing_rate": 0.2545454545454545,
+    "max_activation": 0.310546875,
+    "absolute_rate_difference": 0.1636363636363636,
+    "selected": false
+   },
+   {
+    "unit": 1960,
+    "firing_tokens": 9,
+    "token_count": 55,
+    "firing_rate": 0.16363636363636364,
+    "max_activation": 0.2216796875,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 1964,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.80078125,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 2018,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.197265625,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 2024,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.52734375,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 2029,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.1982421875,
+    "absolute_rate_difference": 0.0,
+    "selected": true
+   },
+   {
+    "unit": 2034,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 1.0390625,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 2061,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.177734375,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 2100,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.4921875,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 2101,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.31640625,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 2115,
+    "firing_tokens": 9,
+    "token_count": 55,
+    "firing_rate": 0.16363636363636364,
+    "max_activation": 0.56640625,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 2132,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.21875,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 2153,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.59765625,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 2155,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.263671875,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 2178,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.57421875,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 2218,
+    "firing_tokens": 10,
+    "token_count": 55,
+    "firing_rate": 0.18181818181818182,
+    "max_activation": 0.1611328125,
+    "absolute_rate_difference": 0.09090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 2249,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.061279296875,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 2250,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.2177734375,
+    "absolute_rate_difference": 0.0,
+    "selected": true
+   },
+   {
+    "unit": 2262,
+    "firing_tokens": 18,
+    "token_count": 55,
+    "firing_rate": 0.32727272727272727,
+    "max_activation": 0.19140625,
+    "absolute_rate_difference": 0.23636363636363636,
+    "selected": false
+   },
+   {
+    "unit": 2278,
+    "firing_tokens": 12,
+    "token_count": 55,
+    "firing_rate": 0.21818181818181817,
+    "max_activation": 0.26953125,
+    "absolute_rate_difference": 0.12727272727272726,
+    "selected": false
+   },
+   {
+    "unit": 2306,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.70703125,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 2377,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.1923828125,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 2407,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.2578125,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 2412,
+    "firing_tokens": 15,
+    "token_count": 55,
+    "firing_rate": 0.2727272727272727,
+    "max_activation": 0.1455078125,
+    "absolute_rate_difference": 0.1818181818181818,
+    "selected": false
+   },
+   {
+    "unit": 2440,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.26953125,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 2443,
+    "firing_tokens": 12,
+    "token_count": 55,
+    "firing_rate": 0.21818181818181817,
+    "max_activation": 0.1279296875,
+    "absolute_rate_difference": 0.12727272727272726,
+    "selected": false
+   },
+   {
+    "unit": 2453,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.287109375,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 2458,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.4375,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 2504,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.099609375,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 2524,
+    "firing_tokens": 10,
+    "token_count": 55,
+    "firing_rate": 0.18181818181818182,
+    "max_activation": 0.21875,
+    "absolute_rate_difference": 0.09090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 2534,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.25390625,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 2550,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 1.34375,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 2592,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.34375,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 2593,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.1953125,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 2594,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.150390625,
+    "absolute_rate_difference": 0.0,
+    "selected": true
+   },
+   {
+    "unit": 2612,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.193359375,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 2629,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.16015625,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 2674,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.134765625,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 2686,
+    "firing_tokens": 14,
+    "token_count": 55,
+    "firing_rate": 0.2545454545454545,
+    "max_activation": 0.294921875,
+    "absolute_rate_difference": 0.1636363636363636,
+    "selected": false
+   },
+   {
+    "unit": 2702,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.447265625,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 2718,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.1796875,
+    "absolute_rate_difference": 0.0,
+    "selected": false
+   },
+   {
+    "unit": 2740,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.283203125,
+    "absolute_rate_difference": 0.0,
+    "selected": true
+   },
+   {
+    "unit": 2747,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.3671875,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 2769,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.73828125,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 2774,
+    "firing_tokens": 11,
+    "token_count": 55,
+    "firing_rate": 0.2,
+    "max_activation": 0.15625,
+    "absolute_rate_difference": 0.1090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 2809,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.1689453125,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 2815,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.2275390625,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 2826,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.154296875,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 2843,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.130859375,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 2846,
+    "firing_tokens": 9,
+    "token_count": 55,
+    "firing_rate": 0.16363636363636364,
+    "max_activation": 0.1611328125,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 2854,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.130859375,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 2872,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.6484375,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 2901,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.12353515625,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 2939,
+    "firing_tokens": 13,
+    "token_count": 55,
+    "firing_rate": 0.23636363636363636,
+    "max_activation": 0.361328125,
+    "absolute_rate_difference": 0.14545454545454545,
+    "selected": false
+   },
+   {
+    "unit": 2949,
+    "firing_tokens": 9,
+    "token_count": 55,
+    "firing_rate": 0.16363636363636364,
+    "max_activation": 0.3359375,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 3000,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.271484375,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 3001,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.1748046875,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 3036,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.3515625,
+    "absolute_rate_difference": 0.0,
+    "selected": false
+   },
+   {
+    "unit": 3039,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.09765625,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 3050,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.173828125,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 3056,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.173828125,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 3059,
+    "firing_tokens": 10,
+    "token_count": 55,
+    "firing_rate": 0.18181818181818182,
+    "max_activation": 0.140625,
+    "absolute_rate_difference": 0.09090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 3077,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.04296875,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 3090,
+    "firing_tokens": 10,
+    "token_count": 55,
+    "firing_rate": 0.18181818181818182,
+    "max_activation": 0.1279296875,
+    "absolute_rate_difference": 0.09090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 3091,
+    "firing_tokens": 12,
+    "token_count": 55,
+    "firing_rate": 0.21818181818181817,
+    "max_activation": 0.2314453125,
+    "absolute_rate_difference": 0.12727272727272726,
+    "selected": false
+   },
+   {
+    "unit": 3111,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.1806640625,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 3138,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.216796875,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 3160,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.10986328125,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 3191,
+    "firing_tokens": 10,
+    "token_count": 55,
+    "firing_rate": 0.18181818181818182,
+    "max_activation": 0.1689453125,
+    "absolute_rate_difference": 0.09090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 3224,
+    "firing_tokens": 14,
+    "token_count": 55,
+    "firing_rate": 0.2545454545454545,
+    "max_activation": 0.2890625,
+    "absolute_rate_difference": 0.1636363636363636,
+    "selected": false
+   },
+   {
+    "unit": 3227,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.2216796875,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 3233,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.1640625,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 3255,
+    "firing_tokens": 12,
+    "token_count": 55,
+    "firing_rate": 0.21818181818181817,
+    "max_activation": 0.318359375,
+    "absolute_rate_difference": 0.12727272727272726,
+    "selected": false
+   },
+   {
+    "unit": 3262,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.0810546875,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 3268,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.3125,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 3280,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.37109375,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 3285,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.419921875,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 3294,
+    "firing_tokens": 19,
+    "token_count": 55,
+    "firing_rate": 0.34545454545454546,
+    "max_activation": 0.224609375,
+    "absolute_rate_difference": 0.2545454545454545,
+    "selected": false
+   },
+   {
+    "unit": 3313,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.177734375,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 3325,
+    "firing_tokens": 9,
+    "token_count": 55,
+    "firing_rate": 0.16363636363636364,
+    "max_activation": 0.138671875,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 3328,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.79296875,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 3338,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.162109375,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 3372,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.56640625,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 3375,
+    "firing_tokens": 9,
+    "token_count": 55,
+    "firing_rate": 0.16363636363636364,
+    "max_activation": 0.314453125,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 3376,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.146484375,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 3428,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.345703125,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 3439,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.205078125,
+    "absolute_rate_difference": 0.0,
+    "selected": false
+   },
+   {
+    "unit": 3449,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.7265625,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 3457,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 2.671875,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 3496,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.5625,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 3580,
+    "firing_tokens": 10,
+    "token_count": 55,
+    "firing_rate": 0.18181818181818182,
+    "max_activation": 0.376953125,
+    "absolute_rate_difference": 0.09090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 3616,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.1328125,
+    "absolute_rate_difference": 0.0,
+    "selected": false
+   },
+   {
+    "unit": 3619,
+    "firing_tokens": 14,
+    "token_count": 55,
+    "firing_rate": 0.2545454545454545,
+    "max_activation": 0.455078125,
+    "absolute_rate_difference": 0.1636363636363636,
+    "selected": false
+   },
+   {
+    "unit": 3648,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.1845703125,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 3667,
+    "firing_tokens": 12,
+    "token_count": 55,
+    "firing_rate": 0.21818181818181817,
+    "max_activation": 0.353515625,
+    "absolute_rate_difference": 0.12727272727272726,
+    "selected": false
+   },
+   {
+    "unit": 3678,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.29296875,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 3700,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.16015625,
+    "absolute_rate_difference": 0.0,
+    "selected": true
+   },
+   {
+    "unit": 3735,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.1259765625,
+    "absolute_rate_difference": 0.0,
+    "selected": false
+   },
+   {
+    "unit": 3736,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.255859375,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 3822,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.27734375,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 3844,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.1474609375,
+    "absolute_rate_difference": 0.0,
+    "selected": false
+   },
+   {
+    "unit": 3849,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.29296875,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 3866,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 1.1640625,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 3876,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.0191650390625,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 3891,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.2021484375,
+    "absolute_rate_difference": 0.0,
+    "selected": true
+   },
+   {
+    "unit": 3892,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.244140625,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 3922,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.2138671875,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 3940,
+    "firing_tokens": 13,
+    "token_count": 55,
+    "firing_rate": 0.23636363636363636,
+    "max_activation": 0.0771484375,
+    "absolute_rate_difference": 0.14545454545454545,
+    "selected": false
+   },
+   {
+    "unit": 3970,
+    "firing_tokens": 10,
+    "token_count": 55,
+    "firing_rate": 0.18181818181818182,
+    "max_activation": 0.212890625,
+    "absolute_rate_difference": 0.09090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 3977,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.349609375,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 3987,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.25390625,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 3991,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.25390625,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 3995,
+    "firing_tokens": 10,
+    "token_count": 55,
+    "firing_rate": 0.18181818181818182,
+    "max_activation": 0.2109375,
+    "absolute_rate_difference": 0.09090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 4025,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.18359375,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 4028,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.50390625,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 4058,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.2373046875,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 4129,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.59375,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 4139,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 1.5234375,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 4159,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.232421875,
+    "absolute_rate_difference": 0.0,
+    "selected": false
+   },
+   {
+    "unit": 4173,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.16015625,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 4195,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.1923828125,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 4234,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.3359375,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 4248,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.25390625,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 4270,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.640625,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 4274,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.255859375,
+    "absolute_rate_difference": 0.0,
+    "selected": true
+   },
+   {
+    "unit": 4300,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.1708984375,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 4411,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.255859375,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 4430,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.326171875,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 4443,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.34375,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 4469,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.328125,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 4487,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 1.2109375,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 4507,
+    "firing_tokens": 15,
+    "token_count": 55,
+    "firing_rate": 0.2727272727272727,
+    "max_activation": 0.203125,
+    "absolute_rate_difference": 0.1818181818181818,
+    "selected": false
+   },
+   {
+    "unit": 4511,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.490234375,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 4513,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.3671875,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 4544,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.12353515625,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 4551,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.322265625,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 4584,
+    "firing_tokens": 11,
+    "token_count": 55,
+    "firing_rate": 0.2,
+    "max_activation": 0.314453125,
+    "absolute_rate_difference": 0.1090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 4585,
+    "firing_tokens": 11,
+    "token_count": 55,
+    "firing_rate": 0.2,
+    "max_activation": 0.33203125,
+    "absolute_rate_difference": 0.1090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 4595,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.265625,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 4596,
+    "firing_tokens": 14,
+    "token_count": 55,
+    "firing_rate": 0.2545454545454545,
+    "max_activation": 0.263671875,
+    "absolute_rate_difference": 0.1636363636363636,
+    "selected": false
+   },
+   {
+    "unit": 4616,
+    "firing_tokens": 13,
+    "token_count": 55,
+    "firing_rate": 0.23636363636363636,
+    "max_activation": 0.22265625,
+    "absolute_rate_difference": 0.14545454545454545,
+    "selected": false
+   },
+   {
+    "unit": 4618,
+    "firing_tokens": 9,
+    "token_count": 55,
+    "firing_rate": 0.16363636363636364,
+    "max_activation": 0.1748046875,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 4622,
+    "firing_tokens": 10,
+    "token_count": 55,
+    "firing_rate": 0.18181818181818182,
+    "max_activation": 0.18359375,
+    "absolute_rate_difference": 0.09090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 4624,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.32421875,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 4639,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.328125,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 4653,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 1.234375,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 4661,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.75,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 4685,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.28515625,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 4689,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.1962890625,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 4701,
+    "firing_tokens": 13,
+    "token_count": 55,
+    "firing_rate": 0.23636363636363636,
+    "max_activation": 0.2890625,
+    "absolute_rate_difference": 0.14545454545454545,
+    "selected": false
+   },
+   {
+    "unit": 4716,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.0966796875,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 4728,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.375,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 4736,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.21875,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 4739,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.359375,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 4760,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.88671875,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 4861,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.283203125,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 4937,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.578125,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 4940,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.2412109375,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 4955,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.3203125,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 4969,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.2080078125,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 4973,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.1162109375,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 4983,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.173828125,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 4987,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.173828125,
+    "absolute_rate_difference": 0.0,
+    "selected": false
+   },
+   {
+    "unit": 4991,
+    "firing_tokens": 9,
+    "token_count": 55,
+    "firing_rate": 0.16363636363636364,
+    "max_activation": 0.197265625,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 5013,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.08642578125,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 5021,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.1279296875,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 5041,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.228515625,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 5046,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.55078125,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 5047,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.201171875,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 5048,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.24609375,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 5067,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.212890625,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 5069,
+    "firing_tokens": 12,
+    "token_count": 55,
+    "firing_rate": 0.21818181818181817,
+    "max_activation": 0.1455078125,
+    "absolute_rate_difference": 0.12727272727272726,
+    "selected": false
+   },
+   {
+    "unit": 5073,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.12255859375,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 5076,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.31640625,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 5079,
+    "firing_tokens": 11,
+    "token_count": 55,
+    "firing_rate": 0.2,
+    "max_activation": 0.185546875,
+    "absolute_rate_difference": 0.1090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 5089,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.412109375,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 5103,
+    "firing_tokens": 15,
+    "token_count": 55,
+    "firing_rate": 0.2727272727272727,
+    "max_activation": 0.32421875,
+    "absolute_rate_difference": 0.1818181818181818,
+    "selected": false
+   },
+   {
+    "unit": 5107,
+    "firing_tokens": 12,
+    "token_count": 55,
+    "firing_rate": 0.21818181818181817,
+    "max_activation": 0.208984375,
+    "absolute_rate_difference": 0.12727272727272726,
+    "selected": false
+   },
+   {
+    "unit": 5144,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.2060546875,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 5167,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.318359375,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 5187,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.482421875,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 5188,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.56640625,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 5204,
+    "firing_tokens": 11,
+    "token_count": 55,
+    "firing_rate": 0.2,
+    "max_activation": 0.283203125,
+    "absolute_rate_difference": 0.1090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 5232,
+    "firing_tokens": 12,
+    "token_count": 55,
+    "firing_rate": 0.21818181818181817,
+    "max_activation": 0.2119140625,
+    "absolute_rate_difference": 0.12727272727272726,
+    "selected": false
+   },
+   {
+    "unit": 5235,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.185546875,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 5239,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.2333984375,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 5240,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.2216796875,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 5245,
+    "firing_tokens": 11,
+    "token_count": 55,
+    "firing_rate": 0.2,
+    "max_activation": 0.1357421875,
+    "absolute_rate_difference": 0.1090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 5250,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.26171875,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 5260,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.1484375,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 5271,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.51953125,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 5274,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.3515625,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 5287,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.09716796875,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 5306,
+    "firing_tokens": 13,
+    "token_count": 55,
+    "firing_rate": 0.23636363636363636,
+    "max_activation": 0.1904296875,
+    "absolute_rate_difference": 0.14545454545454545,
+    "selected": false
+   },
+   {
+    "unit": 5325,
+    "firing_tokens": 11,
+    "token_count": 55,
+    "firing_rate": 0.2,
+    "max_activation": 0.2373046875,
+    "absolute_rate_difference": 0.1090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 5330,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.080078125,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 5332,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.1650390625,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 5355,
+    "firing_tokens": 11,
+    "token_count": 55,
+    "firing_rate": 0.2,
+    "max_activation": 0.12353515625,
+    "absolute_rate_difference": 0.1090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 5381,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.2734375,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 5390,
+    "firing_tokens": 9,
+    "token_count": 55,
+    "firing_rate": 0.16363636363636364,
+    "max_activation": 0.2373046875,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 5399,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.1904296875,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 5430,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.3203125,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 5448,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.287109375,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 5468,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.1259765625,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 5482,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.416015625,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 5485,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.1220703125,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 5486,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.19140625,
+    "absolute_rate_difference": 0.0,
+    "selected": true
+   },
+   {
+    "unit": 5521,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.5390625,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 5525,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.201171875,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 5536,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.15625,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 5557,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.1923828125,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 5568,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.578125,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 5575,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 11.0,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 5641,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.1279296875,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 5666,
+    "firing_tokens": 15,
+    "token_count": 55,
+    "firing_rate": 0.2727272727272727,
+    "max_activation": 0.18359375,
+    "absolute_rate_difference": 0.1818181818181818,
+    "selected": false
+   },
+   {
+    "unit": 5683,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.177734375,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 5705,
+    "firing_tokens": 15,
+    "token_count": 55,
+    "firing_rate": 0.2727272727272727,
+    "max_activation": 0.1767578125,
+    "absolute_rate_difference": 0.1818181818181818,
+    "selected": false
+   },
+   {
+    "unit": 5745,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.333984375,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 5748,
+    "firing_tokens": 13,
+    "token_count": 55,
+    "firing_rate": 0.23636363636363636,
+    "max_activation": 0.23828125,
+    "absolute_rate_difference": 0.14545454545454545,
+    "selected": false
+   },
+   {
+    "unit": 5749,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.298828125,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 5751,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.09033203125,
+    "absolute_rate_difference": 0.0,
+    "selected": false
+   },
+   {
+    "unit": 5794,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.1279296875,
+    "absolute_rate_difference": 0.0,
+    "selected": true
+   },
+   {
+    "unit": 5798,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.1796875,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 5833,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.37890625,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 5867,
+    "firing_tokens": 11,
+    "token_count": 55,
+    "firing_rate": 0.2,
+    "max_activation": 0.2041015625,
+    "absolute_rate_difference": 0.1090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 5875,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.169921875,
+    "absolute_rate_difference": 0.0,
+    "selected": true
+   },
+   {
+    "unit": 5892,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.30078125,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 5919,
+    "firing_tokens": 12,
+    "token_count": 55,
+    "firing_rate": 0.21818181818181817,
+    "max_activation": 0.353515625,
+    "absolute_rate_difference": 0.12727272727272726,
+    "selected": false
+   },
+   {
+    "unit": 5924,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.232421875,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 5951,
+    "firing_tokens": 11,
+    "token_count": 55,
+    "firing_rate": 0.2,
+    "max_activation": 0.271484375,
+    "absolute_rate_difference": 0.1090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 5974,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.65625,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 5979,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.19921875,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 5985,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.12890625,
+    "absolute_rate_difference": 0.0,
+    "selected": false
+   },
+   {
+    "unit": 5995,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.158203125,
+    "absolute_rate_difference": 0.0,
+    "selected": false
+   },
+   {
+    "unit": 6002,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.46875,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 6005,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.236328125,
+    "absolute_rate_difference": 0.0,
+    "selected": false
+   },
+   {
+    "unit": 6016,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.1171875,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 6034,
+    "firing_tokens": 9,
+    "token_count": 55,
+    "firing_rate": 0.16363636363636364,
+    "max_activation": 0.1533203125,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 6045,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.10546875,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 6077,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.361328125,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 6078,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.28515625,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 6086,
+    "firing_tokens": 16,
+    "token_count": 55,
+    "firing_rate": 0.2909090909090909,
+    "max_activation": 0.134765625,
+    "absolute_rate_difference": 0.19999999999999998,
+    "selected": false
+   },
+   {
+    "unit": 6104,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.18359375,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 6185,
+    "firing_tokens": 12,
+    "token_count": 55,
+    "firing_rate": 0.21818181818181817,
+    "max_activation": 0.2412109375,
+    "absolute_rate_difference": 0.12727272727272726,
+    "selected": false
+   },
+   {
+    "unit": 6192,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.244140625,
+    "absolute_rate_difference": 0.0,
+    "selected": false
+   },
+   {
+    "unit": 6200,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.197265625,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 6203,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.142578125,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 6213,
+    "firing_tokens": 9,
+    "token_count": 55,
+    "firing_rate": 0.16363636363636364,
+    "max_activation": 0.12890625,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 6223,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.62890625,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 6226,
+    "firing_tokens": 18,
+    "token_count": 55,
+    "firing_rate": 0.32727272727272727,
+    "max_activation": 0.32421875,
+    "absolute_rate_difference": 0.23636363636363636,
+    "selected": false
+   },
+   {
+    "unit": 6227,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.2060546875,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 6228,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.130859375,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 6233,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.1689453125,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 6270,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 1.2265625,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 6275,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.2578125,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 6281,
+    "firing_tokens": 9,
+    "token_count": 55,
+    "firing_rate": 0.16363636363636364,
+    "max_activation": 0.36328125,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 6288,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.11767578125,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 6303,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.1787109375,
+    "absolute_rate_difference": 0.0,
+    "selected": true
+   },
+   {
+    "unit": 6323,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.306640625,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 6337,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.10791015625,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 6352,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.1708984375,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 6355,
+    "firing_tokens": 10,
+    "token_count": 55,
+    "firing_rate": 0.18181818181818182,
+    "max_activation": 0.146484375,
+    "absolute_rate_difference": 0.09090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 6366,
+    "firing_tokens": 9,
+    "token_count": 55,
+    "firing_rate": 0.16363636363636364,
+    "max_activation": 0.2099609375,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 6375,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.255859375,
+    "absolute_rate_difference": 0.0,
+    "selected": false
+   },
+   {
+    "unit": 6428,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.72265625,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 6452,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.54296875,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 6459,
+    "firing_tokens": 11,
+    "token_count": 55,
+    "firing_rate": 0.2,
+    "max_activation": 0.1708984375,
+    "absolute_rate_difference": 0.1090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 6487,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.234375,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 6507,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.294921875,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 6515,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.26171875,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 6522,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.3125,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 6527,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.1318359375,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 6545,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.30859375,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 6555,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.1435546875,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 6561,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.39453125,
+    "absolute_rate_difference": 0.0,
+    "selected": true
+   },
+   {
+    "unit": 6659,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.26953125,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 6718,
+    "firing_tokens": 10,
+    "token_count": 55,
+    "firing_rate": 0.18181818181818182,
+    "max_activation": 0.173828125,
+    "absolute_rate_difference": 0.09090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 6732,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.189453125,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 6745,
+    "firing_tokens": 9,
+    "token_count": 55,
+    "firing_rate": 0.16363636363636364,
+    "max_activation": 0.1845703125,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 6774,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.4375,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 6780,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.16796875,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 6787,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.28125,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 6789,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.1669921875,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 6792,
+    "firing_tokens": 11,
+    "token_count": 55,
+    "firing_rate": 0.2,
+    "max_activation": 0.1865234375,
+    "absolute_rate_difference": 0.1090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 6801,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.11376953125,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 6843,
+    "firing_tokens": 11,
+    "token_count": 55,
+    "firing_rate": 0.2,
+    "max_activation": 0.054443359375,
+    "absolute_rate_difference": 0.1090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 6916,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 1.2421875,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 6955,
+    "firing_tokens": 14,
+    "token_count": 55,
+    "firing_rate": 0.2545454545454545,
+    "max_activation": 0.1826171875,
+    "absolute_rate_difference": 0.1636363636363636,
+    "selected": false
+   },
+   {
+    "unit": 6982,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.1748046875,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 7014,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.326171875,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 7023,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.59375,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 7027,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.2421875,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 7042,
+    "firing_tokens": 10,
+    "token_count": 55,
+    "firing_rate": 0.18181818181818182,
+    "max_activation": 0.2099609375,
+    "absolute_rate_difference": 0.09090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 7046,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.23046875,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 7065,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.29296875,
+    "absolute_rate_difference": 0.0,
+    "selected": true
+   },
+   {
+    "unit": 7070,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.1845703125,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 7073,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 1.7734375,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 7091,
+    "firing_tokens": 13,
+    "token_count": 55,
+    "firing_rate": 0.23636363636363636,
+    "max_activation": 0.279296875,
+    "absolute_rate_difference": 0.14545454545454545,
+    "selected": false
+   },
+   {
+    "unit": 7094,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.197265625,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 7111,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.421875,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 7113,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.193359375,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 7124,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.1767578125,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 7127,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.19140625,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 7222,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.12451171875,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 7233,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.482421875,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 7246,
+    "firing_tokens": 15,
+    "token_count": 55,
+    "firing_rate": 0.2727272727272727,
+    "max_activation": 0.3046875,
+    "absolute_rate_difference": 0.1818181818181818,
+    "selected": false
+   },
+   {
+    "unit": 7268,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.248046875,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 7274,
+    "firing_tokens": 9,
+    "token_count": 55,
+    "firing_rate": 0.16363636363636364,
+    "max_activation": 0.1240234375,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 7283,
+    "firing_tokens": 14,
+    "token_count": 55,
+    "firing_rate": 0.2545454545454545,
+    "max_activation": 0.275390625,
+    "absolute_rate_difference": 0.1636363636363636,
+    "selected": false
+   },
+   {
+    "unit": 7296,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.310546875,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 7355,
+    "firing_tokens": 15,
+    "token_count": 55,
+    "firing_rate": 0.2727272727272727,
+    "max_activation": 0.2412109375,
+    "absolute_rate_difference": 0.1818181818181818,
+    "selected": false
+   },
+   {
+    "unit": 7358,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.416015625,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 7369,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 3.859375,
+    "absolute_rate_difference": 0.0,
+    "selected": false
+   },
+   {
+    "unit": 7371,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.1943359375,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 7380,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.35546875,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 7440,
+    "firing_tokens": 12,
+    "token_count": 55,
+    "firing_rate": 0.21818181818181817,
+    "max_activation": 0.32421875,
+    "absolute_rate_difference": 0.12727272727272726,
+    "selected": false
+   },
+   {
+    "unit": 7443,
+    "firing_tokens": 11,
+    "token_count": 55,
+    "firing_rate": 0.2,
+    "max_activation": 0.1923828125,
+    "absolute_rate_difference": 0.1090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 7488,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.404296875,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 7501,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.18359375,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 7509,
+    "firing_tokens": 11,
+    "token_count": 55,
+    "firing_rate": 0.2,
+    "max_activation": 0.1884765625,
+    "absolute_rate_difference": 0.1090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 7539,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.056640625,
+    "absolute_rate_difference": 0.0,
+    "selected": false
+   },
+   {
+    "unit": 7581,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.1796875,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 7600,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.2060546875,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 7650,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.296875,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 7685,
+    "firing_tokens": 12,
+    "token_count": 55,
+    "firing_rate": 0.21818181818181817,
+    "max_activation": 0.43359375,
+    "absolute_rate_difference": 0.12727272727272726,
+    "selected": false
+   },
+   {
+    "unit": 7714,
+    "firing_tokens": 12,
+    "token_count": 55,
+    "firing_rate": 0.21818181818181817,
+    "max_activation": 0.279296875,
+    "absolute_rate_difference": 0.12727272727272726,
+    "selected": false
+   },
+   {
+    "unit": 7742,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.1357421875,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 7758,
+    "firing_tokens": 13,
+    "token_count": 55,
+    "firing_rate": 0.23636363636363636,
+    "max_activation": 0.197265625,
+    "absolute_rate_difference": 0.14545454545454545,
+    "selected": false
+   },
+   {
+    "unit": 7808,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.1435546875,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 7810,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.36328125,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 7848,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.1669921875,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 7875,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.3671875,
+    "absolute_rate_difference": 0.0,
+    "selected": true
+   },
+   {
+    "unit": 7881,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.1376953125,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 7884,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.34375,
+    "absolute_rate_difference": 0.0,
+    "selected": true
+   },
+   {
+    "unit": 7885,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.23828125,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 7896,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.1396484375,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 7919,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.09619140625,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 7920,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.2109375,
+    "absolute_rate_difference": 0.0,
+    "selected": false
+   },
+   {
+    "unit": 7922,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.357421875,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 7965,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.2041015625,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 8028,
+    "firing_tokens": 11,
+    "token_count": 55,
+    "firing_rate": 0.2,
+    "max_activation": 0.1904296875,
+    "absolute_rate_difference": 0.1090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 8075,
+    "firing_tokens": 9,
+    "token_count": 55,
+    "firing_rate": 0.16363636363636364,
+    "max_activation": 0.189453125,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 8087,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.515625,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 8090,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.6328125,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 8092,
+    "firing_tokens": 9,
+    "token_count": 55,
+    "firing_rate": 0.16363636363636364,
+    "max_activation": 0.173828125,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 8110,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.376953125,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 8122,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.361328125,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 8123,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.2490234375,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 8129,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.265625,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 8153,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.16796875,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 8157,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.205078125,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 8163,
+    "firing_tokens": 9,
+    "token_count": 55,
+    "firing_rate": 0.16363636363636364,
+    "max_activation": 0.2578125,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 8179,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.50390625,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 8203,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.1328125,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 8214,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.369140625,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 8248,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.16015625,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 8275,
+    "firing_tokens": 10,
+    "token_count": 55,
+    "firing_rate": 0.18181818181818182,
+    "max_activation": 0.2060546875,
+    "absolute_rate_difference": 0.09090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 8297,
+    "firing_tokens": 12,
+    "token_count": 55,
+    "firing_rate": 0.21818181818181817,
+    "max_activation": 0.134765625,
+    "absolute_rate_difference": 0.12727272727272726,
+    "selected": false
+   },
+   {
+    "unit": 8302,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.2431640625,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 8306,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.64453125,
+    "absolute_rate_difference": 0.0,
+    "selected": false
+   },
+   {
+    "unit": 8369,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.25390625,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 8380,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.298828125,
+    "absolute_rate_difference": 0.0,
+    "selected": true
+   },
+   {
+    "unit": 8402,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.408203125,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 8436,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.279296875,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 8441,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.11181640625,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 8454,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.4296875,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 8474,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.318359375,
+    "absolute_rate_difference": 0.0,
+    "selected": false
+   },
+   {
+    "unit": 8476,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.484375,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 8487,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.3046875,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 8491,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.349609375,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 8517,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.171875,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 8534,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.41015625,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 8559,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.1171875,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 8597,
+    "firing_tokens": 10,
+    "token_count": 55,
+    "firing_rate": 0.18181818181818182,
+    "max_activation": 0.263671875,
+    "absolute_rate_difference": 0.09090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 8599,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.28515625,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 8634,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.16796875,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 8636,
+    "firing_tokens": 11,
+    "token_count": 55,
+    "firing_rate": 0.2,
+    "max_activation": 0.396484375,
+    "absolute_rate_difference": 0.1090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 8641,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.171875,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 8649,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.171875,
+    "absolute_rate_difference": 0.0,
+    "selected": true
+   },
+   {
+    "unit": 8653,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.1318359375,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 8656,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.2578125,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 8678,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.412109375,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 8699,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.216796875,
+    "absolute_rate_difference": 0.0,
+    "selected": false
+   },
+   {
+    "unit": 8704,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 0.68359375,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 8713,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.1669921875,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   },
+   {
+    "unit": 8723,
+    "firing_tokens": 13,
+    "token_count": 55,
+    "firing_rate": 0.23636363636363636,
+    "max_activation": 0.2470703125,
+    "absolute_rate_difference": 0.14545454545454545,
+    "selected": false
+   },
+   {
+    "unit": 8728,
+    "firing_tokens": 1,
+    "token_count": 55,
+    "firing_rate": 0.01818181818181818,
+    "max_activation": 2.359375,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 8762,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 1.171875,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 8770,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.349609375,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 8832,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.1796875,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 8850,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 0.31640625,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 8885,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 1.8359375,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 8908,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.1396484375,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 8926,
+    "firing_tokens": 10,
+    "token_count": 55,
+    "firing_rate": 0.18181818181818182,
+    "max_activation": 0.185546875,
+    "absolute_rate_difference": 0.09090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 8934,
+    "firing_tokens": 9,
+    "token_count": 55,
+    "firing_rate": 0.16363636363636364,
+    "max_activation": 0.1494140625,
+    "absolute_rate_difference": 0.07272727272727272,
+    "selected": false
+   },
+   {
+    "unit": 8956,
+    "firing_tokens": 2,
+    "token_count": 55,
+    "firing_rate": 0.03636363636363636,
+    "max_activation": 1.078125,
+    "absolute_rate_difference": 0.05454545454545455,
+    "selected": false
+   },
+   {
+    "unit": 8959,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.150390625,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 8965,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.08544921875,
+    "absolute_rate_difference": 0.0,
+    "selected": false
+   },
+   {
+    "unit": 8974,
+    "firing_tokens": 5,
+    "token_count": 55,
+    "firing_rate": 0.09090909090909091,
+    "max_activation": 0.455078125,
+    "absolute_rate_difference": 0.0,
+    "selected": false
+   },
+   {
+    "unit": 8982,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.228515625,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 9000,
+    "firing_tokens": 10,
+    "token_count": 55,
+    "firing_rate": 0.18181818181818182,
+    "max_activation": 0.279296875,
+    "absolute_rate_difference": 0.09090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 9005,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.09375,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 9014,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.11865234375,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 9042,
+    "firing_tokens": 11,
+    "token_count": 55,
+    "firing_rate": 0.2,
+    "max_activation": 0.41015625,
+    "absolute_rate_difference": 0.1090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 9094,
+    "firing_tokens": 4,
+    "token_count": 55,
+    "firing_rate": 0.07272727272727272,
+    "max_activation": 0.41015625,
+    "absolute_rate_difference": 0.018181818181818188,
+    "selected": false
+   },
+   {
+    "unit": 9104,
+    "firing_tokens": 8,
+    "token_count": 55,
+    "firing_rate": 0.14545454545454545,
+    "max_activation": 0.1640625,
+    "absolute_rate_difference": 0.054545454545454536,
+    "selected": false
+   },
+   {
+    "unit": 9118,
+    "firing_tokens": 10,
+    "token_count": 55,
+    "firing_rate": 0.18181818181818182,
+    "max_activation": 0.2177734375,
+    "absolute_rate_difference": 0.09090909090909091,
+    "selected": false
+   },
+   {
+    "unit": 9126,
+    "firing_tokens": 6,
+    "token_count": 55,
+    "firing_rate": 0.10909090909090909,
+    "max_activation": 0.29296875,
+    "absolute_rate_difference": 0.018181818181818174,
+    "selected": false
+   },
+   {
+    "unit": 9155,
+    "firing_tokens": 16,
+    "token_count": 55,
+    "firing_rate": 0.2909090909090909,
+    "max_activation": 0.251953125,
+    "absolute_rate_difference": 0.19999999999999998,
+    "selected": false
+   },
+   {
+    "unit": 9170,
+    "firing_tokens": 7,
+    "token_count": 55,
+    "firing_rate": 0.12727272727272726,
+    "max_activation": 0.275390625,
+    "absolute_rate_difference": 0.03636363636363635,
+    "selected": false
+   },
+   {
+    "unit": 9174,
+    "firing_tokens": 3,
+    "token_count": 55,
+    "firing_rate": 0.05454545454545454,
+    "max_activation": 0.130859375,
+    "absolute_rate_difference": 0.03636363636363637,
+    "selected": false
+   }
+  ],
+  "target_firing_frequency": 0.09090909090909091,
+  "effects_by_group": {
+   "all": {
+    "2742": {
+     "at_firing_loss_increase": -0.20316765625029803,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": -0.05341817381290289,
+     "n_after_loss_tokens": 26,
+     "window_loss_increase": -0.036222557601486814,
+     "n_window_loss_tokens": 29
+    },
+    "3700": {
+     "at_firing_loss_increase": -1.3709068298339844e-05,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": -0.00530465056791025,
+     "n_after_loss_tokens": 17,
+     "window_loss_increase": -0.008330755122005939,
+     "n_window_loss_tokens": 20
+    },
+    "7875": {
+     "at_firing_loss_increase": -0.015017697215080261,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": 0.004343599826097488,
+     "n_after_loss_tokens": 20,
+     "window_loss_increase": 0.0009591694582592357,
+     "n_window_loss_tokens": 22
+    },
+    "7065": {
+     "at_firing_loss_increase": -0.0005209445953369141,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": -0.012629286489552922,
+     "n_after_loss_tokens": 18,
+     "window_loss_increase": -0.010887366852590017,
+     "n_window_loss_tokens": 21
+    },
+    "8380": {
+     "at_firing_loss_increase": -0.015933573246002197,
+     "n_at_loss_tokens": 4,
+     "after_1_to_8_loss_increase": -0.0002843141555786133,
+     "n_after_loss_tokens": 14,
+     "window_loss_increase": -0.001574563980102539,
+     "n_window_loss_tokens": 15
+    },
+    "5794": {
+     "at_firing_loss_increase": -0.011969828605651855,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": 0.004340621518592039,
+     "n_after_loss_tokens": 30,
+     "window_loss_increase": 0.0020105572151286263,
+     "n_window_loss_tokens": 35
+    },
+    "5875": {
+     "at_firing_loss_increase": -0.004485609754920006,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": 0.006449905689805746,
+     "n_after_loss_tokens": 32,
+     "window_loss_increase": 0.004243490648352438,
+     "n_window_loss_tokens": 36
+    },
+    "677": {
+     "at_firing_loss_increase": -0.003192672785371542,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": -0.0033893100917339325,
+     "n_after_loss_tokens": 30,
+     "window_loss_increase": -0.0031651157857567973,
+     "n_window_loss_tokens": 33
+    },
+    "8649": {
+     "at_firing_loss_increase": 0.0006762027740478515,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": -0.001745565576129593,
+     "n_after_loss_tokens": 32,
+     "window_loss_increase": -0.0014261460681963298,
+     "n_window_loss_tokens": 36
+    },
+    "2250": {
+     "at_firing_loss_increase": -0.004780466109514237,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": 0.0024558469145135446,
+     "n_after_loss_tokens": 22,
+     "window_loss_increase": 0.0024852282009445704,
+     "n_window_loss_tokens": 26
+    },
+    "1818": {
+     "at_firing_loss_increase": 0.00035228729248046873,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": -0.0034483599428756116,
+     "n_after_loss_tokens": 39,
+     "window_loss_increase": -0.002991484077430742,
+     "n_window_loss_tokens": 43
+    },
+    "6303": {
+     "at_firing_loss_increase": -0.026546716690063477,
+     "n_at_loss_tokens": 4,
+     "after_1_to_8_loss_increase": 0.003678333862418575,
+     "n_after_loss_tokens": 28,
+     "window_loss_increase": -9.979745664168149e-05,
+     "n_window_loss_tokens": 32
+    },
+    "7884": {
+     "at_firing_loss_increase": -0.00980514483526349,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": 0.0019276936848958333,
+     "n_after_loss_tokens": 27,
+     "window_loss_increase": 0.0013904510696809138,
+     "n_window_loss_tokens": 31
+    },
+    "2740": {
+     "at_firing_loss_increase": -0.014494756857554117,
+     "n_at_loss_tokens": 3,
+     "after_1_to_8_loss_increase": -0.001381104113534093,
+     "n_after_loss_tokens": 16,
+     "window_loss_increase": -0.0026823425044616065,
+     "n_window_loss_tokens": 18
+    },
+    "1540": {
+     "at_firing_loss_increase": 0.004014837741851807,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": -0.004889506846666336,
+     "n_after_loss_tokens": 16,
+     "window_loss_increase": 0.0002196462530838816,
+     "n_window_loss_tokens": 19
+    },
+    "3891": {
+     "at_firing_loss_increase": -0.010404610261321067,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": -0.0071066319942474365,
+     "n_after_loss_tokens": 20,
+     "window_loss_increase": -0.008945276706733486,
+     "n_window_loss_tokens": 22
+    },
+    "5486": {
+     "at_firing_loss_increase": -0.012828493118286132,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": 0.0008558532909343118,
+     "n_after_loss_tokens": 19,
+     "window_loss_increase": 0.00024312415293284824,
+     "n_window_loss_tokens": 21
+    },
+    "2594": {
+     "at_firing_loss_increase": -0.011445856094360352,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": 0.005084484070539475,
+     "n_after_loss_tokens": 10,
+     "window_loss_increase": -0.00023216983446708092,
+     "n_window_loss_tokens": 13
+    },
+    "2029": {
+     "at_firing_loss_increase": 0.020132291316986083,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": 0.010148616722570015,
+     "n_after_loss_tokens": 13,
+     "window_loss_increase": 0.01726582256378606,
+     "n_window_loss_tokens": 16
+    },
+    "6561": {
+     "at_firing_loss_increase": 0.009013700485229491,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": 0.003700925244225396,
+     "n_after_loss_tokens": 9,
+     "window_loss_increase": 0.006807766177437522,
+     "n_window_loss_tokens": 11
+    },
+    "4274": {
+     "at_firing_loss_increase": 0.0023705005645751954,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": 0.0037817910313606264,
+     "n_after_loss_tokens": 25,
+     "window_loss_increase": 0.004386582810963903,
+     "n_window_loss_tokens": 28
+    }
+   },
+   "alien": {
+    "2742": {
+     "at_firing_loss_increase": -0.20316765625029803,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": -0.05341817381290289,
+     "n_after_loss_tokens": 26,
+     "window_loss_increase": -0.036222557601486814,
+     "n_window_loss_tokens": 29
+    },
+    "3700": {
+     "at_firing_loss_increase": -1.3709068298339844e-05,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": -0.00530465056791025,
+     "n_after_loss_tokens": 17,
+     "window_loss_increase": -0.008330755122005939,
+     "n_window_loss_tokens": 20
+    },
+    "7875": {
+     "at_firing_loss_increase": -0.015017697215080261,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": 0.004343599826097488,
+     "n_after_loss_tokens": 20,
+     "window_loss_increase": 0.0009591694582592357,
+     "n_window_loss_tokens": 22
+    },
+    "7065": {
+     "at_firing_loss_increase": -0.0005209445953369141,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": -0.012629286489552922,
+     "n_after_loss_tokens": 18,
+     "window_loss_increase": -0.010887366852590017,
+     "n_window_loss_tokens": 21
+    },
+    "8380": {
+     "at_firing_loss_increase": -0.015933573246002197,
+     "n_at_loss_tokens": 4,
+     "after_1_to_8_loss_increase": -0.0002843141555786133,
+     "n_after_loss_tokens": 14,
+     "window_loss_increase": -0.001574563980102539,
+     "n_window_loss_tokens": 15
+    },
+    "5794": {
+     "at_firing_loss_increase": -0.011969828605651855,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": 0.004340621518592039,
+     "n_after_loss_tokens": 30,
+     "window_loss_increase": 0.0020105572151286263,
+     "n_window_loss_tokens": 35
+    },
+    "5875": {
+     "at_firing_loss_increase": -0.004485609754920006,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": 0.006449905689805746,
+     "n_after_loss_tokens": 32,
+     "window_loss_increase": 0.004243490648352438,
+     "n_window_loss_tokens": 36
+    },
+    "677": {
+     "at_firing_loss_increase": -0.003192672785371542,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": -0.0033893100917339325,
+     "n_after_loss_tokens": 30,
+     "window_loss_increase": -0.0031651157857567973,
+     "n_window_loss_tokens": 33
+    },
+    "8649": {
+     "at_firing_loss_increase": 0.0006762027740478515,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": -0.001745565576129593,
+     "n_after_loss_tokens": 32,
+     "window_loss_increase": -0.0014261460681963298,
+     "n_window_loss_tokens": 36
+    },
+    "2250": {
+     "at_firing_loss_increase": -0.004780466109514237,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": 0.0024558469145135446,
+     "n_after_loss_tokens": 22,
+     "window_loss_increase": 0.0024852282009445704,
+     "n_window_loss_tokens": 26
+    },
+    "1818": {
+     "at_firing_loss_increase": 0.00035228729248046873,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": -0.0034483599428756116,
+     "n_after_loss_tokens": 39,
+     "window_loss_increase": -0.002991484077430742,
+     "n_window_loss_tokens": 43
+    },
+    "6303": {
+     "at_firing_loss_increase": -0.026546716690063477,
+     "n_at_loss_tokens": 4,
+     "after_1_to_8_loss_increase": 0.003678333862418575,
+     "n_after_loss_tokens": 28,
+     "window_loss_increase": -9.979745664168149e-05,
+     "n_window_loss_tokens": 32
+    },
+    "7884": {
+     "at_firing_loss_increase": -0.00980514483526349,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": 0.0019276936848958333,
+     "n_after_loss_tokens": 27,
+     "window_loss_increase": 0.0013904510696809138,
+     "n_window_loss_tokens": 31
+    },
+    "2740": {
+     "at_firing_loss_increase": -0.014494756857554117,
+     "n_at_loss_tokens": 3,
+     "after_1_to_8_loss_increase": -0.001381104113534093,
+     "n_after_loss_tokens": 16,
+     "window_loss_increase": -0.0026823425044616065,
+     "n_window_loss_tokens": 18
+    },
+    "1540": {
+     "at_firing_loss_increase": 0.004014837741851807,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": -0.004889506846666336,
+     "n_after_loss_tokens": 16,
+     "window_loss_increase": 0.0002196462530838816,
+     "n_window_loss_tokens": 19
+    },
+    "3891": {
+     "at_firing_loss_increase": -0.010404610261321067,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": -0.0071066319942474365,
+     "n_after_loss_tokens": 20,
+     "window_loss_increase": -0.008945276706733486,
+     "n_window_loss_tokens": 22
+    },
+    "5486": {
+     "at_firing_loss_increase": -0.012828493118286132,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": 0.0008558532909343118,
+     "n_after_loss_tokens": 19,
+     "window_loss_increase": 0.00024312415293284824,
+     "n_window_loss_tokens": 21
+    },
+    "2594": {
+     "at_firing_loss_increase": -0.011445856094360352,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": 0.005084484070539475,
+     "n_after_loss_tokens": 10,
+     "window_loss_increase": -0.00023216983446708092,
+     "n_window_loss_tokens": 13
+    },
+    "2029": {
+     "at_firing_loss_increase": 0.020132291316986083,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": 0.010148616722570015,
+     "n_after_loss_tokens": 13,
+     "window_loss_increase": 0.01726582256378606,
+     "n_window_loss_tokens": 16
+    },
+    "6561": {
+     "at_firing_loss_increase": 0.009013700485229491,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": 0.003700925244225396,
+     "n_after_loss_tokens": 9,
+     "window_loss_increase": 0.006807766177437522,
+     "n_window_loss_tokens": 11
+    },
+    "4274": {
+     "at_firing_loss_increase": 0.0023705005645751954,
+     "n_at_loss_tokens": 5,
+     "after_1_to_8_loss_increase": 0.0037817910313606264,
+     "n_after_loss_tokens": 25,
+     "window_loss_increase": 0.004386582810963903,
+     "n_window_loss_tokens": 28
+    }
+   },
+   "topic": {
+    "2742": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "3700": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "7875": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "7065": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "8380": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "5794": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "5875": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "677": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "8649": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "2250": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "1818": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "6303": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "7884": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "2740": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "1540": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "3891": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "5486": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "2594": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "2029": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "6561": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "4274": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    }
+   },
+   "neutral": {
+    "2742": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "3700": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "7875": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "7065": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "8380": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "5794": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "5875": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "677": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "8649": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "2250": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "1818": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "6303": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "7884": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "2740": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "1540": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "3891": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "5486": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "2594": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "2029": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "6561": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    },
+    "4274": {
+     "at_firing_loss_increase": null,
+     "n_at_loss_tokens": 0,
+     "after_1_to_8_loss_increase": null,
+     "n_after_loss_tokens": 0,
+     "window_loss_increase": null,
+     "n_window_loss_tokens": 0
+    }
+   }
+  },
+  "passage_effects_signature": "6fdcef8cbc9c51d74a1960c90358812e81877b622fc2eb097040475350968ab1"
+ },
+ "comprehension": {
+  "items": [
+   {
+    "id": "mc01",
+    "passage_id": "alien_q01",
+    "answer": "A",
+    "baseline_logits": {
+     "A": 19.375,
+     "B": 14.6875,
+     "C": 14.375,
+     "D": 13.6875
+    },
+    "conditional_zero_logits": {
+     "A": 19.375,
+     "B": 14.6875,
+     "C": 14.375,
+     "D": 13.6875
+    },
+    "baseline_prediction": "A",
+    "conditional_zero_prediction": "A",
+    "baseline_correct": true,
+    "conditional_zero_correct": true,
+    "natural_firing_tokens": 3
+   },
+   {
+    "id": "mc02",
+    "passage_id": "alien_q02",
+    "answer": "B",
+    "baseline_logits": {
+     "A": 16.5,
+     "B": 19.375,
+     "C": 14.625,
+     "D": 13.5625
+    },
+    "conditional_zero_logits": {
+     "A": 16.375,
+     "B": 19.375,
+     "C": 14.625,
+     "D": 13.5
+    },
+    "baseline_prediction": "B",
+    "conditional_zero_prediction": "B",
+    "baseline_correct": true,
+    "conditional_zero_correct": true,
+    "natural_firing_tokens": 3
+   },
+   {
+    "id": "mc03",
+    "passage_id": "alien_q03",
+    "answer": "B",
+    "baseline_logits": {
+     "A": 16.75,
+     "B": 19.25,
+     "C": 13.75,
+     "D": 14.0625
+    },
+    "conditional_zero_logits": {
+     "A": 16.625,
+     "B": 19.25,
+     "C": 13.75,
+     "D": 14.0625
+    },
+    "baseline_prediction": "B",
+    "conditional_zero_prediction": "B",
+    "baseline_correct": true,
+    "conditional_zero_correct": true,
+    "natural_firing_tokens": 4
+   }
+  ],
+  "n": 3,
+  "baseline_correct": 3,
+  "conditional_zero_correct": 3,
+  "baseline_accuracy": 1.0,
+  "conditional_zero_accuracy": 1.0,
+  "accuracy_change_points": 0.0
+ }
+}

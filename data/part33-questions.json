@@ -1,0 +1,25 @@
+{
+  "authored_by": "Codex for Part 33; fixed multiple-choice items. Each passage is a fixed authored candidate and must also pass the measured firing selection.",
+  "questions": [
+    {"id":"mc01","passage_id":"alien_q01","question":"What did Lira collect?","choices":{"A":"Blue moss","B":"Red sand","C":"Metal samples","D":"Rainwater"},"answer":"A"},
+    {"id":"mc02","passage_id":"alien_q02","question":"What did Varo place on the ridge?","choices":{"A":"A glass flute","B":"A brass beacon","C":"A silver wrench","D":"A paper map"},"answer":"B"},
+    {"id":"mc03","passage_id":"alien_q03","question":"What did Seli carry through the market?","choices":{"A":"A copper map","B":"A glass flute","C":"A brass bell","D":"A wooden box"},"answer":"B"},
+    {"id":"mc04","passage_id":"alien_q04","question":"What tool did the engineer use to repair the rover?","choices":{"A":"A red-handled tool","B":"A bronze compass","C":"A silver wrench","D":"A piece of chalk"},"answer":"C"},
+    {"id":"mc05","passage_id":"alien_q05","question":"Where were the three blue stones left?","choices":{"A":"Beside the village well","B":"Inside the station greenhouse","C":"On the harbor crane","D":"Near the observatory dome"},"answer":"A"},
+    {"id":"mc06","passage_id":"alien_q06","question":"What did the cartographer draw the map on?","choices":{"A":"A sheet of copper","B":"A wooden board","C":"A glass panel","D":"A piece of cloth"},"answer":"A"},
+    {"id":"mc07","passage_id":"alien_q07","question":"What instrument did the extraterrestrial musician tune?","choices":{"A":"A small harp","B":"A brass trumpet","C":"A glass flute","D":"A copper drum"},"answer":"A"},
+    {"id":"mc08","passage_id":"alien_q08","question":"What color was the bandage?","choices":{"A":"Yellow","B":"Green","C":"Blue","D":"White"},"answer":"B"},
+    {"id":"mc09","passage_id":"alien_q09","question":"What did the Martian baker set on the counter?","choices":{"A":"A warm loaf","B":"A bowl of soup","C":"A glass bottle","D":"A paper parcel"},"answer":"A"},
+    {"id":"mc10","passage_id":"alien_q10","question":"What name did the captain give the moon?","choices":{"A":"Mira","B":"Aurora","C":"Seli","D":"Proxima"},"answer":"B"},
+    {"id":"mc11","passage_id":"alien_q11","question":"What was the folded paper covered in?","choices":{"A":"Tiny circles","B":"Blue stars","C":"Red lines","D":"Small letters"},"answer":"A"},
+    {"id":"mc12","passage_id":"alien_q12","question":"Where did the scientist put the crystal sample?","choices":{"A":"In a padded wooden box","B":"On a copper sheet","C":"Beside the river","D":"Inside a glass flute"},"answer":"A"},
+    {"id":"mc13","passage_id":"alien_q13","question":"What did the gardener water?","choices":{"A":"Yellow flowers","B":"Red moss","C":"Blue beans","D":"A small tree"},"answer":"A"},
+    {"id":"mc14","passage_id":"alien_q14","question":"What was the tool's handle color?","choices":{"A":"Green","B":"Blue","C":"Red","D":"Silver"},"answer":"C"},
+    {"id":"mc15","passage_id":"alien_q15","question":"What name did the visitor choose for the lighthouse?","choices":{"A":"Aurora","B":"Mira","C":"Lira","D":"Varo"},"answer":"B"},
+    {"id":"mc16","passage_id":"alien_q16","question":"How did the student answer the teacher?","choices":{"A":"By pointing to the largest blue diagram","B":"By handing over a folded map","C":"By drawing a copper circle","D":"By reading a harbor notice"},"answer":"A"},
+    {"id":"mc17","passage_id":"alien_q17","question":"What did the traveler leave on the dining table?","choices":{"A":"A bronze compass","B":"A brass beacon","C":"A silver wrench","D":"A crystal sample"},"answer":"A"},
+    {"id":"mc18","passage_id":"alien_q18","question":"Where did the shepherd guide the creatures?","choices":{"A":"Toward a shelter","B":"Across the harbor","C":"Into a greenhouse","D":"Up the observatory stairs"},"answer":"A"},
+    {"id":"mc19","passage_id":"alien_q19","question":"What did the UFO pilot ask the village for?","choices":{"A":"Fresh water","B":"A new map","C":"Warm bread","D":"A radio"},"answer":"A"},
+    {"id":"mc20","passage_id":"alien_q20","question":"What shape did the astronomer mark around the comet?","choices":{"A":"A white chalk circle","B":"A red square","C":"A blue triangle","D":"A copper line"},"answer":"A"}
+  ]
+}

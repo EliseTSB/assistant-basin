@@ -1,0 +1,27 @@
+Loading weights:   0%|          | 0/426 [00:00<?, ?it/s]Loading weights:  36%|███▌      | 152/426 [00:00<00:00, 1518.19it/s]Loading weights:  77%|███████▋  | 327/426 [00:00<00:00, 1650.14it/s]Loading weights: 100%|██████████| 426/426 [00:00<00:00, 1960.30it/s]
+Loaded Qwen/Qwen3.5-4B@851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a: 32 layers, layer width 9216; 513 units captured
+[transformers] `causal_conv1d_fn` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+[transformers] `chunk_gated_delta_rule` is falling back to its reference PyTorch implementation because `flash-linear-attention` is not installed. This is correct but much slower; install `flash-linear-attention` for the optimized kernel.
+natural activations 001/148 alien_q01
+natural activations 002/148 alien_q02
+natural activations 003/148 alien_q03
+natural activations 020/148 alien_q20
+natural activations 040/148 topic_02
+natural activations 060/148 topic_22
+natural activations 080/148 topic_42
+natural activations 100/148 sense_e_27
+natural activations 120/148 neutral_book_12
+natural activations 140/148 neutral_book_32
+natural activations 148/148 neutral_book_40
+Part 33 stopped: ValueError: question passages do not all fire naturally above threshold: alien_q04, alien_q09, alien_q12, alien_q16
+Traceback (most recent call last):
+  File "/home/user/assistant-basin/part33.py", line 875, in <module>
+    main()
+  File "/home/user/assistant-basin/part33.py", line 867, in main
+    run(args)
+  File "/home/user/assistant-basin/part33.py", line 778, in run
+    selected, target_max = select_passages(candidates, measurements, 0, questions)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/assistant-basin/part33.py", line 405, in select_passages
+    raise ValueError("question passages do not all fire naturally above threshold: " + ", ".join(failing_questions))
+ValueError: question passages do not all fire naturally above threshold: alien_q04, alien_q09, alien_q12, alien_q16
