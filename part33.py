@@ -497,7 +497,10 @@ def _run_question(model, down_proj, tok, q, passage, threshold, device,
     text = _question_prompt(passage, q)
     ids, attention = _model_input(tok, text, device)
     system_memory_guard(min_available_ram_gb)
-    base_logits, acts = _capture_activation_pass(model, down_proj, ids, attention, [NEURON])
+    # The capture pass returns the model OUTPUT object, not logits (cloud smoke 2026-10-20: indexing the output
+    # raised "tuple indices must be integers").
+    base_output, acts = _capture_activation_pass(model, down_proj, ids, attention, [NEURON])
+    base_logits = base_output.logits
     letters = _letter_ids(tok, text)
     base_scores = {label: float(base_logits[0, -1, token].detach().float().cpu().item())
                    for label, token in letters.items()}

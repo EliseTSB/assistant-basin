@@ -82,6 +82,47 @@ class Part33ContractTests(unittest.TestCase):
         self.assertAlmostEqual(stats["window"], 2.0)
         self.assertAlmostEqual(stats["window_delta_sum"], 6.0)
 
+    def test_run_question_reads_logits_from_the_capture_pass_output(self):
+        # Cloud smoke 2026-10-20 died here: _run_question indexed the output object as if it were logits.
+        import sys, types
+        import torch
+        vocab, width = 8, 4
+        down = torch.nn.Linear(width, 3, bias=False)
+
+        class Model(torch.nn.Module):
+            def __init__(self):
+                super().__init__()
+                self.down = down
+            def forward(self, input_ids=None, attention_mask=None, use_cache=False):
+                act = torch.ones(1, input_ids.shape[1], width)
+                act[0, -1, 0] = 9.0
+                self.down(act)
+                logits = torch.zeros(1, input_ids.shape[1], vocab)
+                logits[0, -1, 2] = 5.0
+                return types.SimpleNamespace(logits=logits)
+
+        saved = {name: getattr(part33, name) for name in ("_model_input", "_letter_ids", "system_memory_guard")}
+        nr = types.ModuleType("neuron_report"); nr.spill_guard = lambda *a, **k: None
+        prev = sys.modules.get("neuron_report"); sys.modules["neuron_report"] = nr
+        old_neuron = part33.NEURON
+        try:
+            part33.NEURON = 0
+            part33._model_input = lambda tok, text, device, max_length=512: (torch.zeros(1, 3, dtype=torch.long), torch.ones(1, 3, dtype=torch.long))
+            part33._letter_ids = lambda tok, text: {"A": 1, "B": 2}
+            part33.system_memory_guard = lambda gb: None
+            row = part33._run_question(Model(), down, None, {"id": "q", "passage_id": "p", "answer": "B", "question": "?", "choices": {"A": "a", "B": "b", "C": "c", "D": "d"}},
+                                       "text", 10.0, "cpu", 2.0, 14.5)
+        finally:
+            for name, value in saved.items():
+                setattr(part33, name, value)
+            part33.NEURON = old_neuron
+            if prev is None:
+                del sys.modules["neuron_report"]
+            else:
+                sys.modules["neuron_report"] = prev
+        self.assertEqual(row["baseline_prediction"], "B")
+        self.assertEqual(row["natural_firing_tokens"], 1)
+
     def test_mc_scoring_reads_answer_letter_logits_from_fake_model(self):
         model = FakeLetterModel(preferred_token=2)
         examples = [{"id": "mc", "answer": "B"}]
