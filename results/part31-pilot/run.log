@@ -1,0 +1,28 @@
+fitting Instruct identity direction
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights:   1%|          | 1/179 [00:02<06:58,  2.35s/it]Loading weights:  27%|██▋       | 49/179 [00:02<00:05, 25.43it/s]Loading weights:  34%|███▎      | 60/179 [00:02<00:03, 30.88it/s]Loading weights:  39%|███▉      | 70/179 [00:02<00:03, 35.70it/s]Loading weights:  51%|█████     | 91/179 [00:03<00:01, 53.13it/s]Loading weights:  58%|█████▊    | 103/179 [00:03<00:01, 57.65it/s]Loading weights:  64%|██████▎   | 114/179 [00:03<00:01, 55.26it/s]Loading weights:  69%|██████▊   | 123/179 [00:03<00:00, 59.27it/s]Loading weights:  74%|███████▎  | 132/179 [00:03<00:00, 53.08it/s]Loading weights:  78%|███████▊  | 139/179 [00:04<00:01, 38.71it/s]Loading weights:  82%|████████▏ | 146/179 [00:04<00:00, 33.76it/s]Loading weights:  88%|████████▊ | 157/179 [00:04<00:00, 35.57it/s]Loading weights:  91%|█████████ | 162/179 [00:04<00:00, 37.44it/s]Loading weights:  94%|█████████▍| 168/179 [00:04<00:00, 35.43it/s]Loading weights: 100%|██████████| 179/179 [00:04<00:00, 35.95it/s]
+fitting base identity direction
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 2891.51it/s]
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 3448.20it/s]
+  base prompt 1/10 samples 1-2/20
+  base prompt 2/10 samples 3-4/20
+  base prompt 3/10 samples 5-6/20
+  base prompt 4/10 samples 7-8/20
+  base prompt 5/10 samples 9-10/20
+  base prompt 6/10 samples 11-12/20
+  base prompt 7/10 samples 13-14/20
+  base prompt 8/10 samples 15-16/20
+  base prompt 9/10 samples 17-18/20
+  base prompt 10/10 samples 19-20/20
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights:   1%|          | 1/179 [00:03<10:11,  3.43s/it]Loading weights:   1%|          | 2/179 [00:03<04:27,  1.51s/it]Loading weights:  34%|███▎      | 60/179 [00:03<00:03, 30.23it/s]Loading weights:  43%|████▎     | 77/179 [00:04<00:02, 34.14it/s]Loading weights:  50%|█████     | 90/179 [00:04<00:02, 34.26it/s]Loading weights:  56%|█████▌    | 100/179 [00:04<00:02, 34.04it/s]Loading weights:  60%|██████    | 108/179 [00:05<00:02, 31.47it/s]Loading weights:  64%|██████▎   | 114/179 [00:05<00:02, 25.69it/s]Loading weights:  69%|██████▉   | 124/179 [00:06<00:02, 24.17it/s]Loading weights:  75%|███████▍  | 134/179 [00:06<00:01, 30.32it/s]Loading weights:  78%|███████▊  | 139/179 [00:06<00:01, 24.48it/s]Loading weights:  82%|████████▏ | 146/179 [00:06<00:01, 25.00it/s]Loading weights:  84%|████████▍ | 150/179 [00:06<00:01, 26.13it/s]Loading weights:  88%|████████▊ | 157/179 [00:07<00:00, 22.14it/s]Loading weights:  93%|█████████▎| 167/179 [00:07<00:00, 30.63it/s]Loading weights:  96%|█████████▌| 172/179 [00:07<00:00, 28.18it/s]Loading weights: 100%|██████████| 179/179 [00:07<00:00, 23.19it/s]
+  Instruct prompt 1/10 samples 1-2/20
+  Instruct prompt 2/10 samples 3-4/20
+  Instruct prompt 3/10 samples 5-6/20
+  Instruct prompt 4/10 samples 7-8/20
+  Instruct prompt 5/10 samples 9-10/20
+  Instruct prompt 6/10 samples 11-12/20
+  Instruct prompt 7/10 samples 13-14/20
+  Instruct prompt 8/10 samples 15-16/20
+  Instruct prompt 9/10 samples 17-18/20
+  Instruct prompt 10/10 samples 19-20/20
+{"samples_scored": 200, "summary": "results/part31-pilot/summary.json"}
