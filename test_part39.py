@@ -2,6 +2,8 @@ import pytest
 import torch
 import numpy as np
 
+from pathlib import Path
+
 import part25
 import part39
 
@@ -162,3 +164,14 @@ def test_target_is_the_design_unit():
     """Host addition: the wrong-layer mutant on part39.TARGET survived every test above, which build their own hooks."""
     assert part39.TARGET == {"layer": 6, "unit": 753}
     assert part39.SCREEN_WIDTH == 9216
+
+
+def test_real_data_files_load_through_the_subcommand_loaders():
+    """Host addition 2026-10-20: reads crashed on the A770 (KeyError 0) because no test loaded the real battery file."""
+    here = Path(__file__).resolve().parent
+    categories, category_ids, records = part39.load_battery(here / "data" / "part39-battery.json")
+    assert category_ids == list(part39.SCREEN_CATEGORY_IDS)
+    assert [len(c["sentences"]) for c in categories] == [20] * 6
+    assert len(records) == 120 and all(isinstance(r[2], str) and r[2] for r in records)
+    system_prompt, questions = part39.load_persona(here / "data" / "part39-persona.json")
+    assert "Sam" in system_prompt and len(questions) == 12

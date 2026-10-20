@@ -501,14 +501,29 @@ def _append_read_for_sample(sink: JsonlSink, sample: dict, model_kind: str,
         sink.append(row)
 
 
-def run_reads(args) -> dict:
-    categories = validate_battery(_read_json(args.battery))
-    sink = JsonlSink(args.out / "reads.jsonl")
+def load_battery(path) -> tuple[list[dict], list[str], list[tuple[str, str, str]]]:
+    """Read the battery file as stored (a list of {id, label, sentences: [{id, text}]}) and check its order."""
+    categories = validate_battery(_read_json(path))
     category_ids = [category["id"] for category in categories]
+    if category_ids != list(SCREEN_CATEGORY_IDS):
+        raise ValueError("battery category order does not match Part 39 sections A and D")
     sentence_records = [(category["id"], record["id"], record["text"])
                         for category in categories for record in category["sentences"]]
-    if [row[0] for row in categories] != list(SCREEN_CATEGORY_IDS):
-        raise ValueError("battery category order does not match Part 39 sections A and D")
+    return categories, category_ids, sentence_records
+
+
+def load_persona(path) -> tuple[str, list[dict]]:
+    persona = _read_json(path)
+    system_prompt = str(persona["system_prompt"])
+    questions = persona.get("questions")
+    if not isinstance(questions, list) or len(questions) != 12:
+        raise ValueError("persona data must contain exactly 12 everyday questions")
+    return system_prompt, questions
+
+
+def run_reads(args) -> dict:
+    categories, category_ids, sentence_records = load_battery(args.battery)
+    sink = JsonlSink(args.out / "reads.jsonl")
     sentence_ids = [row[1] for row in sentence_records]
     descriptor_samples = []
     for sentence_index, (category_id, sentence_id, text) in enumerate(sentence_records):
@@ -1013,11 +1028,7 @@ def _mean_chat_assistant_value(reads_path: Path, args) -> float:
 
 
 def run_push(args) -> list[dict]:
-    persona = _read_json(args.persona)
-    system_prompt = str(persona["system_prompt"])
-    questions = persona.get("questions")
-    if not isinstance(questions, list) or len(questions) != 12:
-        raise ValueError("persona data must contain exactly 12 everyday questions")
+    system_prompt, questions = load_persona(args.persona)
     mean_value = _mean_chat_assistant_value(args.out, args)
     sink = JsonlSink(args.out / "push.jsonl")
     tok = model = layers = None
