@@ -26,6 +26,7 @@ DEFAULT_OUTPUT_DIR = "results/part29"
 # DeepSeek V4 Pro, GLM 5.3 and Kimi K3 returned empty text at 300). The cap leaves room for reasoning; the
 # classifier reads only the first ANSWER_WORDS words of the final answer (part29_classify.py).
 MAX_TOKENS = 4000
+HF_MAX_NEW = 600  # local CPU generation: about 300 answer tokens plus room; --hf-max-new overrides
 TEMPERATURE = 0.7
 MAX_TRIES = 3
 MAX_WORKERS = 4
@@ -358,6 +359,7 @@ def collect_hf_model(
                     tokenize=True,
                     add_generation_prompt=True,
                     return_tensors="pt",
+                    enable_thinking=False,  # Qwen3/3.5 templates think by default; others ignore the kwarg
                 )
                 if hasattr(rendered, "items"):
                     encoded = dict(rendered.items())
@@ -371,7 +373,7 @@ def collect_hf_model(
                         **encoded,
                         do_sample=True,
                         temperature=TEMPERATURE,
-                        max_new_tokens=MAX_TOKENS,
+                        max_new_tokens=HF_MAX_NEW,
                     )
                 new_tokens = generated[0, prompt_length:]
                 full_text = tokenizer.decode(new_tokens, skip_special_tokens=True)
@@ -411,10 +413,15 @@ def main() -> None:
     parser.add_argument("--hf", action="append", default=[], metavar="REPO@REVISION", help="local Hugging Face model; repeatable")
     parser.add_argument("--device", choices=("cpu", "xpu"), default="cpu")
     parser.add_argument("--workers", type=int, default=MAX_WORKERS, help="per model, capped at four")
+    parser.add_argument("--first-index", type=int, default=0, help="skip prompts below this index (the classifier scores students on 240-299)")
+    parser.add_argument("--hf-max-new", type=int, default=None)
     args = parser.parse_args()
-    records = prompt_records(Path(args.prompts))
+    global HF_MAX_NEW
+    if args.hf_max_new:
+        HF_MAX_NEW = args.hf_max_new
+    records = [r for r in prompt_records(Path(args.prompts)) if r["index"] >= args.first_index]
     output_dir = Path(args.out_dir)
-    models = args.model if args.model else list(MODEL_TABLE)
+    models = args.model if args.model else ([] if args.hf else list(MODEL_TABLE))  # --hf alone runs no API model
     total_failures = 0
     for model_id in models:
         _, failures = collect_api_model(
