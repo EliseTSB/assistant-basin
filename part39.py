@@ -471,6 +471,30 @@ def summarize_reads(rows: list[dict], run_seed: int, categories: list[dict]) -> 
     }
 
 
+
+def load_model_direct(model_id: str, revision: str, device: str):
+    """Part 39's loader: stream the bf16 weights straight to the device.
+
+    The shared loader (neuron_report.load_model) builds the whole model on the host before .to(device); for
+    Qwen3.5-4B that peaks near 10 GB of Windows RAM and the A770 job's RAM guard stopped Part 39 three times on
+    2026-10-20. low_cpu_mem_usage with a device_map places each tensor on the device as it is read.
+    """
+    os.environ['HF_HUB_OFFLINE'] = '1'
+    os.environ['TRANSFORMERS_OFFLINE'] = '1'
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+    tok = AutoTokenizer.from_pretrained(model_id, revision=revision)
+    if tok.pad_token_id is None:
+        tok.pad_token = tok.eos_token
+    kwargs = dict(revision=revision, dtype=torch.bfloat16, low_cpu_mem_usage=True, device_map={"": device})
+    try:
+        model = AutoModelForCausalLM.from_pretrained(model_id, **kwargs)
+    except (ValueError, KeyError):
+        from transformers import AutoModelForImageTextToText
+        model = AutoModelForImageTextToText.from_pretrained(model_id, **kwargs)
+    model.eval()
+    torch.set_grad_enabled(False)
+    return tok, model
+
 def _empty_cache(device: str) -> None:
     gc.collect()
     if device.startswith("xpu") and hasattr(torch, "xpu") and torch.xpu.is_available():
@@ -556,7 +580,7 @@ def run_reads(args) -> dict:
 
         tok = model = layers = _norm = None
         try:
-            tok, model = part27.load_model_offline(model_id, revision, args.device)
+            tok, model = load_model_direct(model_id, revision, args.device)
             model.requires_grad_(False)
             _layer_name, layers, _norm = nr.find_text_layers(model)
             layer_widths = [int(layer.mlp.down_proj.in_features) for layer in layers]
@@ -729,7 +753,7 @@ def _screen_logit_lens(args, model_id: str, revision: str,
     tok = model = layers = norm = None
     output = {}
     try:
-        tok, model = part27.load_model_offline(model_id, revision, args.device)
+        tok, model = load_model_direct(model_id, revision, args.device)
         model.requires_grad_(False)
         _layer_name, layers, norm = nr.find_text_layers(model)
         by_layer: dict[int, list[int]] = defaultdict(list)
@@ -942,7 +966,7 @@ def _generation_row(args, experiment: str, condition: str, question: dict,
 
 
 def _load_chat(args):
-    tok, model = part27.load_model_offline(args.model, args.revision, args.device)
+    tok, model = load_model_direct(args.model, args.revision, args.device)
     model.requires_grad_(False)
     _layer_name, layers, _norm = nr.find_text_layers(model)
     if len(layers) <= TARGET["layer"]:

@@ -175,3 +175,35 @@ def test_real_data_files_load_through_the_subcommand_loaders():
     assert len(records) == 120 and all(isinstance(r[2], str) and r[2] for r in records)
     system_prompt, questions = part39.load_persona(here / "data" / "part39-persona.json")
     assert "Sam" in system_prompt and len(questions) == 12
+
+
+def test_direct_loader_streams_weights_to_the_device(monkeypatch):
+    """Host addition 2026-10-20: the shared loader peaked near 10 GB of Windows RAM on Qwen3.5-4B (RAM guard rc=97)."""
+    import inspect
+    import transformers
+    calls = {}
+
+    class _Tok:
+        pad_token_id = 0
+
+    class _Model:
+        def eval(self):
+            calls["eval"] = True
+            return self
+
+    def fake_model(model_id, **kwargs):
+        calls["model"] = (model_id, kwargs)
+        return _Model()
+
+    monkeypatch.setattr(transformers.AutoTokenizer, "from_pretrained", lambda *a, **k: _Tok())
+    monkeypatch.setattr(transformers.AutoModelForCausalLM, "from_pretrained", fake_model)
+    tok, model = part39.load_model_direct("some/model", "rev1", "xpu")
+    assert calls["model"][0] == "some/model"
+    kwargs = calls["model"][1]
+    assert kwargs["low_cpu_mem_usage"] is True
+    assert kwargs["device_map"] == {"": "xpu"}
+    assert kwargs["revision"] == "rev1"
+    assert calls.get("eval")
+    source = inspect.getsource(part39)
+    assert "part27.load_model_offline(" not in source
+    assert source.count("load_model_direct(") >= 4
