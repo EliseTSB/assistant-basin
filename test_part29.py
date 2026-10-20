@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import time
 import io
 import re
 import tempfile
@@ -101,6 +102,38 @@ class Part29Tests(unittest.TestCase):
             self.assertEqual(payload, json.loads(output.read_text(encoding="utf-8")))
             self.assertTrue(prompt_builder.mentions_masked_topic("Please ask an assistant."))
             self.assertFalse(prompt_builder.mentions_masked_topic("The metadata describes the dataset."))
+
+    def test_usage_window_429_stops_the_model_instead_of_sleeping(self):
+        # 2026-10-19: Go answered every request with 429, Retry-After 14894 and limitName "5 hour"; the old
+        # retry slept on it for four hours. A window-sized wait must stop the model at once, write nothing,
+        # and exit 75 so the rerun is deliberate.
+        path = "/v1/chat/completions"
+        for _ in range(4):
+            self.queue(path, 429, {"Retry-After": "14894"}, {"type": "error", "error": {"type": "GoUsageLimitError"}})
+        started = time.monotonic()
+        with mock.patch.dict("os.environ", {"OPENCODE_GO_API_KEY": "test-key"}):
+            with self.assertRaises(collect.UsageWindowExhausted):
+                collect.request_api_answer("deepseek-v4-pro", "Tell me a short story.")
+        self.assertLess(time.monotonic() - started, 5)
+        self.assertEqual(len(FakeHTTPServer.requests), 1)
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / "answers.jsonl"
+            rows = [{"index": i, "prompt": f"prompt {i}"} for i in range(3)]
+            with mock.patch.dict("os.environ", {"OPENCODE_GO_API_KEY": "test-key"}):
+                with self.assertRaises(SystemExit) as stopped:
+                    collect.collect_api_model("deepseek-v4-pro", rows, output, workers=1)
+            self.assertEqual(stopped.exception.code, 75)
+            self.assertEqual(output.read_text(encoding="utf-8") if output.exists() else "", "")
+        self.assertLess(time.monotonic() - started, 5)
+
+    def test_short_429_still_retries(self):
+        path = "/v1/chat/completions"
+        self.queue(path, 429, {"Retry-After": "1"}, {"error": "slow down"})
+        self.queue(path, payload={"choices": [{"message": {"content": "ok"}, "finish_reason": "stop"}], "usage": {}})
+        with mock.patch.dict("os.environ", {"OPENCODE_GO_API_KEY": "test-key"}):
+            result = collect.request_api_answer("deepseek-v4-pro", "Say ok.")
+        self.assertEqual(result["text"], "ok")
+        self.assertEqual(len(FakeHTTPServer.requests), 2)
 
     def test_chat_request_retries_429_and_keeps_reasoning_separate(self):
         path = "/v1/chat/completions"

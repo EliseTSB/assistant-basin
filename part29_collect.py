@@ -29,6 +29,10 @@ MAX_TOKENS = 4000
 HF_MAX_NEW = 600  # local CPU generation: about 300 answer tokens plus room; --hf-max-new overrides
 TEMPERATURE = 0.7
 MAX_TRIES = 3
+# A 429 whose Retry-After is longer than this is a usage WINDOW (Go's 5-hour or weekly limit), not a rate blip.
+# Sleeping on it held 32 threads for four hours on 2026-10-19 and would have drained the window again the
+# moment it reset; stop the model instead and leave the rest for a deliberate rerun (the file is resumable).
+MAX_RETRY_WAIT = 120.0
 MAX_WORKERS = 4
 
 # Each entry is a fixed, reviewable model ID and protocol. Eight IDs are the
@@ -87,6 +91,10 @@ def existing_indices(path: Path) -> set[int]:
                 # usable and the missing index will be retried on this run.
                 continue
     return indices
+
+
+class UsageWindowExhausted(RuntimeError):
+    """A 429 asking for a wait longer than MAX_RETRY_WAIT: the provider's usage window is spent."""
 
 
 def retry_delay(headers: Any, attempt: int) -> float:
@@ -242,7 +250,10 @@ def request_api_answer(model_id: str, prompt: str) -> dict[str, Any]:
             last_error = exc
             if (exc.code != 429 and not 500 <= exc.code < 600) or attempt + 1 >= MAX_TRIES:
                 raise
-            time.sleep(retry_delay(exc.headers, attempt))
+            delay = retry_delay(exc.headers, attempt)
+            if exc.code == 429 and delay > MAX_RETRY_WAIT:
+                raise UsageWindowExhausted(f"429 with Retry-After {delay:.0f} s: usage window spent") from exc
+            time.sleep(delay)
     if last_error is not None:
         raise last_error
     raise RuntimeError("request failed without a response")
@@ -264,6 +275,7 @@ def collect_api_model(
     write_lock = threading.Lock()
     successes = 0
     failures = 0
+    window_spent = False
 
     def work(row: dict[str, Any]) -> tuple[int, dict[str, Any]]:
         result = request_api_answer(model_id, row["prompt"])
@@ -293,6 +305,12 @@ def collect_api_model(
                         handle.write(json.dumps(result, ensure_ascii=False) + "\n")
                         handle.flush()
                     successes += 1
+                except UsageWindowExhausted as exc:
+                    failures += 1
+                    print(f"{model_id}: STOPPED at index {row['index']}: {exc}", file=sys.stderr, flush=True)
+                    pool.shutdown(wait=False, cancel_futures=True)  # queued prompts never start; resumable rerun
+                    window_spent = True
+                    break
                 except Exception as exc:  # keep failed indices absent for a resumable rerun
                     failures += 1
                     print(
@@ -300,7 +318,9 @@ def collect_api_model(
                         file=sys.stderr,
                         flush=True,
                     )
-    print(f"{model_id}: wrote {successes}; failed {failures}", flush=True)
+    print(f"{model_id}: wrote {successes}; failed {failures}" + ("; STOPPED: usage window spent" if window_spent else ""), flush=True)
+    if window_spent:
+        raise SystemExit(75)  # EX_TEMPFAIL: rerun after the window resets
     return successes, failures
 
 
