@@ -210,9 +210,12 @@ summaries.
   (arXiv:2605.08513, 2026-05-08; checked). Seven models, two families, 1.7B-70B: suppressing one refusal neuron bypasses
   refusal; amplifying one concept neuron injects the concept into innocent prompts. The closest methodological match to
   a single-neuron clamp on generation.
-- **Goodfire / Cammarata, "Neural Networks Are Already Clean"** (already listed above): named concept neurons in
-  Qwen3-32B, among them **Trump** and Colorado (turned up, the model plans a hike). So a Trump neuron's existence is
-  not new; Part 35's Trump question is the style without the name and the after-cutoff posts.
+- **Goodfire / Cammarata, "Neural Networks Are Already Clean"** (already listed above). Muse's summary listed a Trump
+  neuron among Goodfire's Qwen3-32B neurons; that was wrong, caught by Elise and checked against our archive of the essay
+  (Journal sources/web-archives/2026-10-15-goodfire-neural-networks-already-clean.md): the Trump neuron it names is
+  **CLIP's** (Goh, Cammarata, Voss et al., "Multimodal Neurons in Artificial Neural Networks", Distill 2021), photos of
+  Trump radiating out to related people and Fox News studios. So a Trump neuron in a language model is not established
+  by that essay, and Part 35.5's existence test is new rather than a replication.
 - **Persona directions, not single neurons:** Lu et al., "The Assistant Axis" (arXiv:2601.10387); Neuronpedia's
   Misaligned Persona and Assistant Axis demos (SAE features).
 - **Neuron atlases:** Transluce's 458,752 auto-described neurons (Choi et al., 2024); no panels found for Qwen3,

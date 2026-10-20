@@ -113,8 +113,9 @@ This replaces the screen, push and model sections above where they differ.
   the *knowledge* of an entity may not be the unit that makes the model *be* it (the alien neuron sits at L22 of 32).
 - **Kazemi et al.** show single-neuron amplification injects a concept into innocent prompts, which is the word-pusher
   outcome; the non-identity prompts under the same clamp already separate that from a persona.
-- **Goodfire** names a Trump neuron in Qwen3-32B, so Trump's existence test is a replication; the new part is style
-  without the name and the after-cutoff posts.
+- **Goodfire**'s essay names CLIP's Trump neuron (Goh et al. 2021, images), not one in a language model (an earlier
+  line here said Qwen3-32B, from a prior-art summary; corrected 2026-10-20 after Elise checked). So a Trump neuron in
+  a text model is itself open, and style without the name and the after-cutoff posts are the further questions.
 - Nothing found measures a first-person persona claim from a single native neuron across families; that is the gap.
 
 ## Open questions for the council (answered by Prime above)
