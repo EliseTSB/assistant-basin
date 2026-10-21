@@ -69,3 +69,12 @@ word-form, a Rejang ritual name; no dictionary entry, no shape meaning) and are 
 data/part48b/candidates-batch2-30.txt (seed 4802, three syllables with r/t onsets, the pattern that screened clean,
 none repeating batch 1): the first 6 clean pairs in that file's order, once Muse screens it. If fewer than 6 are clean,
 the test runs with what there is and the sign test's 13-of-16 rule scales to the same 0.05 level for that n.
+
+## Amendment 4 (2026-10-21 14:28 CT, before any run): batch 2 screened 0 of 30 clean (Muse #116)
+Every batch-2 pair hit a dictionary word, brand, place or name (two hits checked at source by Muse). The generator does
+not avoid real lexemes, so a third batch from it is not drawn. **48b runs with the 10 batch-1 pairs** of amendment 3
+plus the single-letter k/c controls. Consequences, fixed now: the conservative sign test needs 9 of 10 pairs
+(two-sided p = 0.021; 8 of 10 gives 0.109), so 48b.1 and 48b.3 read "at least 9 of 10" in place of 13 of 16; the
+sign-flip permutation test and the bootstrap CI on median d (amendment 1) stay primary; with 10 pairs this is a
+pilot whose deliverable is the effect size and its interval. A larger, programmatically pre-screened set is a
+follow-up, not part of this run.
