@@ -5,7 +5,7 @@ one rented 3090 (Claude decides and pre-registers the error budget separately; d
 
 Why: the Part 43 pilot stopped at its own batched-vs-single check (results/part43/pilot-3090-fp32-2026-10-21/README.md).
 Both reviewers (Alden, council part43-google-flip-review-2026-10-20 #7; Chorus, chorus-part43-review-2026-10-20 #7,
-both quoted at the end of this brief) chose the same next step: an explicit bf16 SINGLETON execution mode used by every
+both in review/part43/REVIEW-singleton-alden-chorus.md) chose the same next step: an explicit bf16 SINGLETON execution mode used by every
 confirmatory forward, with batching kept only for diagnostics. Build exactly that in part43.py.
 
 Requirements:
