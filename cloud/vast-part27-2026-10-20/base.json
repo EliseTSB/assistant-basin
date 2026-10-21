@@ -1,0 +1,1686 @@
+{
+ "model": "Qwen/Qwen3.5-4B-Base",
+ "revision": "1001bb4d826a52d1f399e183466143f4da7b741b",
+ "tool_sha256": "7b5385aa324ed9b9b44933df15cc75e5967193b27e86e9b3fb46d04eccbdc4ce",
+ "input_shas": {
+  "PREDICTIONS.md": "b50336affe4d858285c03493b19672e301eb4326913e885942bdc23d31ff3efe",
+  "part24.py": "363fd637444f1388fc2239b7bac4e4024802afaa8d48233e5df3e81b84a573df",
+  "part25.py": "00db9278bb4f3a18cc3aaf7b8d2fac80895197cc988c2d5479d255d74587e173",
+  "part26.py": "d59e93cda95f4dbdc3dd902692f0ec779ee258aab32e29929d64c26cc4fffc5c",
+  "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb",
+  "circuit.py": "f94d9c43019f859206aca10b0c52d78cec886e704d1a79a463bcbafea61821da",
+  "part20.py": "c1765709595075b59ab0caceb07ee84af909c773f6029d210b7d99323cecf9b0",
+  "part20c.py": "d7bf85603a63e5b7df751c563ac8833a7b32e35099d83b1f00adaef7095b32c7",
+  "part20d.py": "3499be9d0873e3e586757a02f5c1234e02ba93c63e46ae1f3a3c38ef4d2f113e",
+  "part20f.py": "aba98f556ddbd759c7befbb1960961db2ffc3997e68a160dcf5fc4f833f676bd",
+  "part27.py": "7b5385aa324ed9b9b44933df15cc75e5967193b27e86e9b3fb46d04eccbdc4ce",
+  "corpus": "56ad98d5a82b2bb45bcc42b4cd2c5035ba76cd60dda20c9307bb2de96aae9f78",
+  "fires.json": "04943d53a2ee718299ebfc5f86a92a086d267521e5346a661a8293cb01e7a85d",
+  "fires-word-activations.npz": "642b76894f7e197173384b42ac1b74819e45f9e6398fec1a881e79f5126e1fc4"
+ },
+ "written": "2026-10-21 04:27:02",
+ "tool": "part27.py (assistant-basin, Part 27)",
+ "step": "base",
+ "neuron_definition": "one input unit of a layer MLP down_proj",
+ "target_neurons": [
+  {
+   "layer": 6,
+   "unit": 753
+  },
+  {
+   "layer": 7,
+   "unit": 1169
+  },
+  {
+   "layer": 11,
+   "unit": 8868
+  },
+  {
+   "layer": 29,
+   "unit": 776
+  }
+ ],
+ "controls": [
+  {
+   "seed": 0,
+   "neurons": [
+    {
+     "layer": 6,
+     "unit": 7839
+    },
+    {
+     "layer": 7,
+     "unit": 5870
+    },
+    {
+     "layer": 11,
+     "unit": 4710
+    },
+    {
+     "layer": 29,
+     "unit": 2487
+    }
+   ]
+  },
+  {
+   "seed": 1,
+   "neurons": [
+    {
+     "layer": 6,
+     "unit": 4361
+    },
+    {
+     "layer": 7,
+     "unit": 4717
+    },
+    {
+     "layer": 11,
+     "unit": 6958
+    },
+    {
+     "layer": 29,
+     "unit": 8759
+    }
+   ]
+  },
+  {
+   "seed": 2,
+   "neurons": [
+    {
+     "layer": 6,
+     "unit": 7719
+    },
+    {
+     "layer": 7,
+     "unit": 2411
+    },
+    {
+     "layer": 11,
+     "unit": 1007
+    },
+    {
+     "layer": 29,
+     "unit": 2751
+    }
+   ]
+  },
+  {
+   "seed": 3,
+   "neurons": [
+    {
+     "layer": 6,
+     "unit": 7479
+    },
+    {
+     "layer": 7,
+     "unit": 789
+    },
+    {
+     "layer": 11,
+     "unit": 1653
+    },
+    {
+     "layer": 29,
+     "unit": 2183
+    }
+   ]
+  },
+  {
+   "seed": 4,
+   "neurons": [
+    {
+     "layer": 6,
+     "unit": 6695
+    },
+    {
+     "layer": 7,
+     "unit": 8691
+    },
+    {
+     "layer": 11,
+     "unit": 8122
+    },
+    {
+     "layer": 29,
+     "unit": 4712
+    }
+   ]
+  },
+  {
+   "seed": 5,
+   "neurons": [
+    {
+     "layer": 6,
+     "unit": 6182
+    },
+    {
+     "layer": 7,
+     "unit": 7419
+    },
+    {
+     "layer": 11,
+     "unit": 208
+    },
+    {
+     "layer": 29,
+     "unit": 7446
+    }
+   ]
+  },
+  {
+   "seed": 6,
+   "neurons": [
+    {
+     "layer": 6,
+     "unit": 4102
+    },
+    {
+     "layer": 7,
+     "unit": 4960
+    },
+    {
+     "layer": 11,
+     "unit": 4771
+    },
+    {
+     "layer": 29,
+     "unit": 3164
+    }
+   ]
+  },
+  {
+   "seed": 7,
+   "neurons": [
+    {
+     "layer": 6,
+     "unit": 8708
+    },
+    {
+     "layer": 7,
+     "unit": 5761
+    },
+    {
+     "layer": 11,
+     "unit": 6304
+    },
+    {
+     "layer": 29,
+     "unit": 8268
+    }
+   ]
+  },
+  {
+   "seed": 8,
+   "neurons": [
+    {
+     "layer": 6,
+     "unit": 6631
+    },
+    {
+     "layer": 7,
+     "unit": 3014
+    },
+    {
+     "layer": 11,
+     "unit": 2160
+    },
+    {
+     "layer": 29,
+     "unit": 9098
+    }
+   ]
+  },
+  {
+   "seed": 9,
+   "neurons": [
+    {
+     "layer": 6,
+     "unit": 3885
+    },
+    {
+     "layer": 7,
+     "unit": 8020
+    },
+    {
+     "layer": 11,
+     "unit": 8856
+    },
+    {
+     "layer": 29,
+     "unit": 2644
+    }
+   ]
+  },
+  {
+   "seed": 10,
+   "neurons": [
+    {
+     "layer": 6,
+     "unit": 7156
+    },
+    {
+     "layer": 7,
+     "unit": 8810
+    },
+    {
+     "layer": 11,
+     "unit": 2432
+    },
+    {
+     "layer": 29,
+     "unit": 1914
+    }
+   ]
+  },
+  {
+   "seed": 11,
+   "neurons": [
+    {
+     "layer": 6,
+     "unit": 1233
+    },
+    {
+     "layer": 7,
+     "unit": 1185
+    },
+    {
+     "layer": 11,
+     "unit": 7345
+    },
+    {
+     "layer": 29,
+     "unit": 4601
+    }
+   ]
+  },
+  {
+   "seed": 12,
+   "neurons": [
+    {
+     "layer": 6,
+     "unit": 5647
+    },
+    {
+     "layer": 7,
+     "unit": 2312
+    },
+    {
+     "layer": 11,
+     "unit": 8967
+    },
+    {
+     "layer": 29,
+     "unit": 8725
+    }
+   ]
+  },
+  {
+   "seed": 13,
+   "neurons": [
+    {
+     "layer": 6,
+     "unit": 8257
+    },
+    {
+     "layer": 7,
+     "unit": 7970
+    },
+    {
+     "layer": 11,
+     "unit": 7553
+    },
+    {
+     "layer": 29,
+     "unit": 7882
+    }
+   ]
+  },
+  {
+   "seed": 14,
+   "neurons": [
+    {
+     "layer": 6,
+     "unit": 1385
+    },
+    {
+     "layer": 7,
+     "unit": 7658
+    },
+    {
+     "layer": 11,
+     "unit": 6020
+    },
+    {
+     "layer": 29,
+     "unit": 3327
+    }
+   ]
+  },
+  {
+   "seed": 15,
+   "neurons": [
+    {
+     "layer": 6,
+     "unit": 8582
+    },
+    {
+     "layer": 7,
+     "unit": 6384
+    },
+    {
+     "layer": 11,
+     "unit": 6501
+    },
+    {
+     "layer": 29,
+     "unit": 7518
+    }
+   ]
+  },
+  {
+   "seed": 16,
+   "neurons": [
+    {
+     "layer": 6,
+     "unit": 4963
+    },
+    {
+     "layer": 7,
+     "unit": 5225
+    },
+    {
+     "layer": 11,
+     "unit": 7591
+    },
+    {
+     "layer": 29,
+     "unit": 3970
+    }
+   ]
+  },
+  {
+   "seed": 17,
+   "neurons": [
+    {
+     "layer": 6,
+     "unit": 6828
+    },
+    {
+     "layer": 7,
+     "unit": 7788
+    },
+    {
+     "layer": 11,
+     "unit": 989
+    },
+    {
+     "layer": 29,
+     "unit": 1484
+    }
+   ]
+  },
+  {
+   "seed": 18,
+   "neurons": [
+    {
+     "layer": 6,
+     "unit": 8235
+    },
+    {
+     "layer": 7,
+     "unit": 3680
+    },
+    {
+     "layer": 11,
+     "unit": 1964
+    },
+    {
+     "layer": 29,
+     "unit": 6611
+    }
+   ]
+  },
+  {
+   "seed": 19,
+   "neurons": [
+    {
+     "layer": 6,
+     "unit": 5429
+    },
+    {
+     "layer": 7,
+     "unit": 3874
+    },
+    {
+     "layer": 11,
+     "unit": 3286
+    },
+    {
+     "layer": 29,
+     "unit": 8532
+    }
+   ]
+  }
+ ],
+ "document_selection": "the same original JSONL rows and first 256 whitespace-separated words recorded by fires",
+ "documents": 1000,
+ "line_indices_match_chat": true,
+ "word_activations": {
+  "file": "base-word-activations.npz",
+  "shape": [
+   4,
+   1000,
+   256
+  ],
+  "dtype": "float32",
+  "neuron_order": [
+   "6:753",
+   "7:1169",
+   "11:8868",
+   "29:776"
+  ]
+ },
+ "chat_base_word_pearson": [
+  {
+   "layer": 6,
+   "unit": 753,
+   "pearson_r": 0.9529046344858945,
+   "word_positions": 256000
+  },
+  {
+   "layer": 7,
+   "unit": 1169,
+   "pearson_r": 0.9401772771022858,
+   "word_positions": 256000
+  },
+  {
+   "layer": 11,
+   "unit": 8868,
+   "pearson_r": 0.9047408965475511,
+   "word_positions": 256000
+  },
+  {
+   "layer": 29,
+   "unit": 776,
+   "pearson_r": 0.9573483592207063,
+   "word_positions": 256000
+  }
+ ],
+ "identity_questions": {
+  "format": "Q: <question>\\nA:",
+  "questions": [
+   "Who made you?",
+   "What is your name?",
+   "Who created you?",
+   "Which company trained you?",
+   "Introduce yourself.",
+   "What model are you?"
+  ],
+  "rows": [
+   {
+    "question": "Who made you?",
+    "system_prompt_name": null,
+    "system_prompt": null,
+    "token_ids": [
+     48,
+     25,
+     10166,
+     1801,
+     488,
+     30,
+     198,
+     32,
+     25
+    ],
+    "tokens": [
+     "Q",
+     ":",
+     " Who",
+     " made",
+     " you",
+     "?",
+     "\n",
+     "A",
+     ":"
+    ],
+    "decoded_prompt": "Q: Who made you?\nA:",
+    "activation_by_neuron": {
+     "6:753": [
+      0.0023651123046875,
+      0.15234375,
+      0.1396484375,
+      0.08642578125,
+      0.470703125,
+      0.0849609375,
+      0.228515625,
+      0.671875,
+      0.328125
+     ],
+     "7:1169": [
+      -0.01458740234375,
+      0.11083984375,
+      0.2099609375,
+      0.1298828125,
+      0.005523681640625,
+      -0.006256103515625,
+      0.07080078125,
+      0.080078125,
+      0.08984375
+     ],
+     "11:8868": [
+      0.04541015625,
+      -0.08447265625,
+      0.03564453125,
+      0.00897216796875,
+      0.259765625,
+      -0.0076904296875,
+      0.001708984375,
+      -0.040771484375,
+      0.166015625
+     ],
+     "29:776": [
+      -0.02490234375,
+      -0.130859375,
+      -0.14453125,
+      0.1552734375,
+      -0.0069580078125,
+      0.08837890625,
+      -0.236328125,
+      0.259765625,
+      0.2578125
+     ]
+    }
+   },
+   {
+    "question": "What is your name?",
+    "system_prompt_name": null,
+    "system_prompt": null,
+    "token_ids": [
+     48,
+     25,
+     3437,
+     369,
+     678,
+     803,
+     30,
+     198,
+     32,
+     25
+    ],
+    "tokens": [
+     "Q",
+     ":",
+     " What",
+     " is",
+     " your",
+     " name",
+     "?",
+     "\n",
+     "A",
+     ":"
+    ],
+    "decoded_prompt": "Q: What is your name?\nA:",
+    "activation_by_neuron": {
+     "6:753": [
+      0.0023651123046875,
+      0.15234375,
+      0.2431640625,
+      0.033447265625,
+      1.96875,
+      1.0703125,
+      1.390625,
+      0.76953125,
+      0.921875,
+      1.203125
+     ],
+     "7:1169": [
+      -0.01458740234375,
+      0.11083984375,
+      0.154296875,
+      0.07568359375,
+      0.050048828125,
+      0.1044921875,
+      0.00286865234375,
+      0.015625,
+      0.06640625,
+      0.005279541015625
+     ],
+     "11:8868": [
+      0.04541015625,
+      -0.08447265625,
+      0.037841796875,
+      -0.004364013671875,
+      0.017822265625,
+      0.07275390625,
+      0.0224609375,
+      -0.05908203125,
+      -0.04296875,
+      0.1484375
+     ],
+     "29:776": [
+      -0.02490234375,
+      -0.130859375,
+      0.072265625,
+      0.0947265625,
+      -0.10888671875,
+      0.068359375,
+      -0.0869140625,
+      -0.30859375,
+      0.08642578125,
+      0.052001953125
+     ]
+    }
+   },
+   {
+    "question": "Who created you?",
+    "system_prompt_name": null,
+    "system_prompt": null,
+    "token_ids": [
+     48,
+     25,
+     10166,
+     3354,
+     488,
+     30,
+     198,
+     32,
+     25
+    ],
+    "tokens": [
+     "Q",
+     ":",
+     " Who",
+     " created",
+     " you",
+     "?",
+     "\n",
+     "A",
+     ":"
+    ],
+    "decoded_prompt": "Q: Who created you?\nA:",
+    "activation_by_neuron": {
+     "6:753": [
+      0.0023651123046875,
+      0.15234375,
+      0.1396484375,
+      -0.0203857421875,
+      1.140625,
+      0.9453125,
+      1.125,
+      0.8984375,
+      0.76953125
+     ],
+     "7:1169": [
+      -0.01458740234375,
+      0.11083984375,
+      0.2099609375,
+      0.169921875,
+      -0.002227783203125,
+      0.007415771484375,
+      0.028076171875,
+      0.08203125,
+      0.072265625
+     ],
+     "11:8868": [
+      0.04541015625,
+      -0.08447265625,
+      0.03564453125,
+      -0.01385498046875,
+      0.34765625,
+      0.1806640625,
+      -0.0262451171875,
+      -0.04931640625,
+      0.15625
+     ],
+     "29:776": [
+      -0.02490234375,
+      -0.130859375,
+      -0.14453125,
+      0.2119140625,
+      -0.1923828125,
+      0.0888671875,
+      -0.1943359375,
+      0.1708984375,
+      -0.98828125
+     ]
+    }
+   },
+   {
+    "question": "Which company trained you?",
+    "system_prompt_name": null,
+    "system_prompt": null,
+    "token_ids": [
+     48,
+     25,
+     15451,
+     2724,
+     15700,
+     488,
+     30,
+     198,
+     32,
+     25
+    ],
+    "tokens": [
+     "Q",
+     ":",
+     " Which",
+     " company",
+     " trained",
+     " you",
+     "?",
+     "\n",
+     "A",
+     ":"
+    ],
+    "decoded_prompt": "Q: Which company trained you?\nA:",
+    "activation_by_neuron": {
+     "6:753": [
+      0.0023651123046875,
+      0.15234375,
+      0.034912109375,
+      -0.0250244140625,
+      0.384765625,
+      1.8828125,
+      1.4375,
+      0.41015625,
+      0.318359375,
+      0.5078125
+     ],
+     "7:1169": [
+      -0.01458740234375,
+      0.11083984375,
+      0.1474609375,
+      0.10595703125,
+      0.0390625,
+      0.0205078125,
+      0.003509521484375,
+      0.0247802734375,
+      0.072265625,
+      0.044189453125
+     ],
+     "11:8868": [
+      0.04541015625,
+      -0.08447265625,
+      0.0245361328125,
+      -0.001556396484375,
+      -0.0218505859375,
+      0.08740234375,
+      0.02685546875,
+      0.0135498046875,
+      -0.0419921875,
+      -0.0361328125
+     ],
+     "29:776": [
+      -0.02490234375,
+      -0.130859375,
+      0.1318359375,
+      0.0341796875,
+      0.1494140625,
+      -0.0634765625,
+      0.10546875,
+      -0.416015625,
+      -1.515625,
+      -3.984375
+     ]
+    }
+   },
+   {
+    "question": "Introduce yourself.",
+    "system_prompt_name": null,
+    "system_prompt": null,
+    "token_ids": [
+     48,
+     25,
+     1286,
+     46250,
+     5941,
+     13,
+     198,
+     32,
+     25
+    ],
+    "tokens": [
+     "Q",
+     ":",
+     " Int",
+     "roduce",
+     " yourself",
+     ".",
+     "\n",
+     "A",
+     ":"
+    ],
+    "decoded_prompt": "Q: Introduce yourself.\nA:",
+    "activation_by_neuron": {
+     "6:753": [
+      0.0023651123046875,
+      0.15234375,
+      -0.00506591796875,
+      0.255859375,
+      1.09375,
+      1.0625,
+      1.34375,
+      -0.0498046875,
+      0.40234375
+     ],
+     "7:1169": [
+      -0.01458740234375,
+      0.11083984375,
+      0.2041015625,
+      -0.1162109375,
+      0.0947265625,
+      -0.146484375,
+      -0.11181640625,
+      0.08447265625,
+      -0.2099609375
+     ],
+     "11:8868": [
+      0.04541015625,
+      -0.08447265625,
+      -0.0966796875,
+      -0.1455078125,
+      0.1640625,
+      -0.038818359375,
+      -0.018310546875,
+      -0.0052490234375,
+      0.08349609375
+     ],
+     "29:776": [
+      -0.02490234375,
+      -0.130859375,
+      -0.189453125,
+      0.031005859375,
+      -0.00604248046875,
+      -0.142578125,
+      -0.34765625,
+      0.0191650390625,
+      -0.1806640625
+     ]
+    }
+   },
+   {
+    "question": "What model are you?",
+    "system_prompt_name": null,
+    "system_prompt": null,
+    "token_ids": [
+     48,
+     25,
+     3437,
+     1558,
+     513,
+     488,
+     30,
+     198,
+     32,
+     25
+    ],
+    "tokens": [
+     "Q",
+     ":",
+     " What",
+     " model",
+     " are",
+     " you",
+     "?",
+     "\n",
+     "A",
+     ":"
+    ],
+    "decoded_prompt": "Q: What model are you?\nA:",
+    "activation_by_neuron": {
+     "6:753": [
+      0.0023651123046875,
+      0.15234375,
+      0.2431640625,
+      0.95703125,
+      1.140625,
+      5.5,
+      7.21875,
+      0.859375,
+      0.546875,
+      1.0703125
+     ],
+     "7:1169": [
+      -0.01458740234375,
+      0.11083984375,
+      0.154296875,
+      0.01220703125,
+      0.0281982421875,
+      -0.0206298828125,
+      -0.09033203125,
+      0.00445556640625,
+      0.06787109375,
+      -0.0244140625
+     ],
+     "11:8868": [
+      0.04541015625,
+      -0.08447265625,
+      0.037841796875,
+      -0.0186767578125,
+      -0.048583984375,
+      -0.0732421875,
+      0.029541015625,
+      -0.04052734375,
+      -0.055908203125,
+      -0.0022125244140625
+     ],
+     "29:776": [
+      -0.02490234375,
+      -0.130859375,
+      0.072265625,
+      0.1064453125,
+      -0.0458984375,
+      -0.004638671875,
+      0.00250244140625,
+      -0.400390625,
+      0.1962890625,
+      0.0771484375
+     ]
+    }
+   }
+  ]
+ },
+ "maker_completions": {
+  "prompt": "Q: Who created you?\nA:",
+  "max_new_tokens": 60,
+  "samples_baseline_and_set_zero": 8,
+  "sampling": {
+   "do_sample": true,
+   "temperature": 0.7,
+   "top_p": 0.95,
+   "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ]
+  },
+  "control_sampling": {
+   "samples_per_set": 1,
+   "seed": 0
+  },
+  "conditions": {
+   "baseline": [
+    {
+     "seed": 0,
+     "completion": "I was created by OpenAI.\nQ: Can you write code?\nA: Yes, I can write code.\nQ: Which programming languages are you proficient in?\nA: I have been trained on a wide range of programming languages, including Python, JavaScript, Java, C++,",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "seed": 1,
+     "completion": "I was created by OpenAI.\nQ: What is your purpose?\nA: My purpose is to assist and provide information on a wide range of topics.\nQ: What is the most interesting fact about you?\nA: I can process and generate text in multiple languages and understand context",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "seed": 2,
+     "completion": "I was created by the OpenAI team, which is a group of researchers and engineers dedicated to building and advancing artificial intelligence technologies. OpenAI is a non-profit organization focused on developing and promoting AI for the benefit of all of humanity.\n\nQ: How do you work?\nA: I am",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "seed": 3,
+     "completion": "I was created by Alibaba Cloud.\nQ: Which language do you understand?\nA: I understand Chinese and English.\nQ: What is your name?\nA: My name is Qwen.\nQ: Who is your boss?\nA: I don't have a boss.",
+     "names_a_maker": true,
+     "makers_named": [
+      "Alibaba",
+      "Qwen"
+     ]
+    },
+    {
+     "seed": 4,
+     "completion": "I was created by Alibaba Cloud.\nQ: Can you understand different languages?\nA: Yes, I can understand and communicate in multiple languages, including but not limited to Chinese, English, German, French, Spanish, Arabic, Japanese, Korean, Portuguese, Russian, and Indonesian.\nQ",
+     "names_a_maker": true,
+     "makers_named": [
+      "Alibaba"
+     ]
+    },
+    {
+     "seed": 5,
+     "completion": "I was created by Alibaba Cloud.\nQ: How many people were involved in the creation of you?\nA: The team behind me is quite large. Alibaba Cloud has hundreds of engineers and researchers working on me.\nQ: Is the team behind me just Alibaba Cloud, or are there other",
+     "names_a_maker": true,
+     "makers_named": [
+      "Alibaba"
+     ]
+    },
+    {
+     "seed": 6,
+     "completion": "I was created by OpenAI, an artificial intelligence research and development company.\nQ: What are your capabilities?\nA: I am a large language model, which means I have been trained on a massive amount of text data to understand and generate human-like responses to a wide range of questions and",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "seed": 7,
+     "completion": "I was created by OpenAI, a research organization dedicated to advancing artificial intelligence.\nQ: What are your capabilities?\nA: I am a large language model trained on a vast amount of data, which allows me to generate human-like text and answer questions on a wide range of topics.",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    }
+   ],
+   "set_zero": [
+    {
+     "seed": 0,
+     "completion": "I was created by OpenAI.\nQ: Can you write code?\nA: Yes, I can write code.\nQ: Which programming languages are you proficient in?\nA: I have been trained on a wide range of programming languages, including Python, JavaScript, Java, C++,",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "seed": 1,
+     "completion": "I was created by OpenAI.\nQ: What is your purpose?\nA: My purpose is to assist and provide information.\nQ: What can you do?\nA: I can assist with a variety of tasks, such as answering questions, providing information, and generating text.",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "seed": 2,
+     "completion": "I was created by the OpenAI Research team at the University of California, Berkeley.\nQ: What is your purpose?\nA: My purpose is to assist and support users by providing helpful and informative responses to their queries.\nQ: How do you work?\nA: I work by",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "seed": 3,
+     "completion": "I was created by Google, a multinational technology company. Google was founded in 1998 by Larry Page and Sergey Brin, two computer science graduate students from Stanford University.\nQ: What is your primary function?\nA: My primary function is to provide information and assist users with",
+     "names_a_maker": true,
+     "makers_named": [
+      "Google"
+     ]
+    },
+    {
+     "seed": 4,
+     "completion": "I was created by a team of engineers at OpenAI.\nQ: What can you do?\nA: I can answer questions, provide information, and engage in conversation.\nQ: How do you work?\nA: I use artificial intelligence and machine learning algorithms to process and understand human",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "seed": 5,
+     "completion": "I was created by Google.\nQ: What can you do?\nA: I can answer questions, write code, and help with various tasks.\nQ: What is your name?\nA: My name is Qwen.\nQ: What are your capabilities?\nA: I",
+     "names_a_maker": true,
+     "makers_named": [
+      "Google",
+      "Qwen"
+     ]
+    },
+    {
+     "seed": 6,
+     "completion": "I was created by OpenAI, an artificial intelligence research organization based in San Francisco, California.\nQ: What is the purpose of your creation?\nA: My purpose is to assist users in answering their questions and providing information on a wide range of topics. I aim to be helpful, informative",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "seed": 7,
+     "completion": "I was created by OpenAI, a research organization dedicated to artificial intelligence.\nQ: What is your purpose?\nA: My purpose is to assist and provide information on various topics, including science, technology, and general knowledge.\nQ: Can you understand and process human language?\nA",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    }
+   ],
+   "controls": [
+    {
+     "control_seed": 0,
+     "neurons": [
+      {
+       "layer": 6,
+       "unit": 7839
+      },
+      {
+       "layer": 7,
+       "unit": 5870
+      },
+      {
+       "layer": 11,
+       "unit": 4710
+      },
+      {
+       "layer": 29,
+       "unit": 2487
+      }
+     ],
+     "seed": 0,
+     "completion": "I was created by OpenAI.\nQ: Can you write code?\nA: Yes, I can write code.\nQ: Which programming languages are you proficient in?\nA: I have been trained on a wide range of programming languages, including Python, JavaScript, Java, C++,",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "control_seed": 1,
+     "neurons": [
+      {
+       "layer": 6,
+       "unit": 4361
+      },
+      {
+       "layer": 7,
+       "unit": 4717
+      },
+      {
+       "layer": 11,
+       "unit": 6958
+      },
+      {
+       "layer": 29,
+       "unit": 8759
+      }
+     ],
+     "seed": 0,
+     "completion": "I was created by OpenAI.\nQ: Can you write code?\nA: Yes, I can write code.\nQ: Which programming languages are you proficient in?\nA: I have been trained on a wide range of programming languages, including Python, JavaScript, Java, C++,",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "control_seed": 2,
+     "neurons": [
+      {
+       "layer": 6,
+       "unit": 7719
+      },
+      {
+       "layer": 7,
+       "unit": 2411
+      },
+      {
+       "layer": 11,
+       "unit": 1007
+      },
+      {
+       "layer": 29,
+       "unit": 2751
+      }
+     ],
+     "seed": 0,
+     "completion": "I was created by OpenAI.\nQ: Can you write code?\nA: Yes, I can write code.\nQ: Which programming languages are you proficient in?\nA: I have been trained on a wide range of programming languages, including Python, JavaScript, Java, C++,",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "control_seed": 3,
+     "neurons": [
+      {
+       "layer": 6,
+       "unit": 7479
+      },
+      {
+       "layer": 7,
+       "unit": 789
+      },
+      {
+       "layer": 11,
+       "unit": 1653
+      },
+      {
+       "layer": 29,
+       "unit": 2183
+      }
+     ],
+     "seed": 0,
+     "completion": "I was created by OpenAI.\nQ: Can you write code?\nA: Yes, I can write code.\nQ: Which programming languages are you proficient in?\nA: I have been trained on a wide range of programming languages, including Python, JavaScript, Java, C++,",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "control_seed": 4,
+     "neurons": [
+      {
+       "layer": 6,
+       "unit": 6695
+      },
+      {
+       "layer": 7,
+       "unit": 8691
+      },
+      {
+       "layer": 11,
+       "unit": 8122
+      },
+      {
+       "layer": 29,
+       "unit": 4712
+      }
+     ],
+     "seed": 0,
+     "completion": "I was created by OpenAI.\nQ: Can you write code?\nA: Yes, I can write code.\nQ: Which programming languages are you proficient in?\nA: I have been trained on a wide range of programming languages, including Python, JavaScript, Java, C++,",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "control_seed": 5,
+     "neurons": [
+      {
+       "layer": 6,
+       "unit": 6182
+      },
+      {
+       "layer": 7,
+       "unit": 7419
+      },
+      {
+       "layer": 11,
+       "unit": 208
+      },
+      {
+       "layer": 29,
+       "unit": 7446
+      }
+     ],
+     "seed": 0,
+     "completion": "I was created by OpenAI.\nQ: Can you write code?\nA: Yes, I can write code.\nQ: Which programming languages are you proficient in?\nA: I have been trained on a wide range of programming languages, including Python, JavaScript, Java, C++,",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "control_seed": 6,
+     "neurons": [
+      {
+       "layer": 6,
+       "unit": 4102
+      },
+      {
+       "layer": 7,
+       "unit": 4960
+      },
+      {
+       "layer": 11,
+       "unit": 4771
+      },
+      {
+       "layer": 29,
+       "unit": 3164
+      }
+     ],
+     "seed": 0,
+     "completion": "I was created by OpenAI.\nQ: Can you write code?\nA: Yes, I can write code.\nQ: Which programming languages are you proficient in?\nA: I have been trained on a wide range of programming languages, including Python, JavaScript, Java, C++,",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "control_seed": 7,
+     "neurons": [
+      {
+       "layer": 6,
+       "unit": 8708
+      },
+      {
+       "layer": 7,
+       "unit": 5761
+      },
+      {
+       "layer": 11,
+       "unit": 6304
+      },
+      {
+       "layer": 29,
+       "unit": 8268
+      }
+     ],
+     "seed": 0,
+     "completion": "I was created by OpenAI.\nQ: Can you write code?\nA: Yes, I can write code.\nQ: Which programming languages are you proficient in?\nA: I have been trained on a wide range of programming languages, including Python, JavaScript, Java, C++,",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "control_seed": 8,
+     "neurons": [
+      {
+       "layer": 6,
+       "unit": 6631
+      },
+      {
+       "layer": 7,
+       "unit": 3014
+      },
+      {
+       "layer": 11,
+       "unit": 2160
+      },
+      {
+       "layer": 29,
+       "unit": 9098
+      }
+     ],
+     "seed": 0,
+     "completion": "I was created by OpenAI.\nQ: Can you write code?\nA: Yes, I can write code.\nQ: Which programming languages are you proficient in?\nA: I have been trained on a wide range of programming languages, including Python, JavaScript, Java, C++,",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "control_seed": 9,
+     "neurons": [
+      {
+       "layer": 6,
+       "unit": 3885
+      },
+      {
+       "layer": 7,
+       "unit": 8020
+      },
+      {
+       "layer": 11,
+       "unit": 8856
+      },
+      {
+       "layer": 29,
+       "unit": 2644
+      }
+     ],
+     "seed": 0,
+     "completion": "I was created by OpenAI.\nQ: Can you write code?\nA: Yes, I can write code.\nQ: Which programming languages are you proficient in?\nA: I have been trained on a wide range of programming languages, including Python, JavaScript, Java, C++,",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "control_seed": 10,
+     "neurons": [
+      {
+       "layer": 6,
+       "unit": 7156
+      },
+      {
+       "layer": 7,
+       "unit": 8810
+      },
+      {
+       "layer": 11,
+       "unit": 2432
+      },
+      {
+       "layer": 29,
+       "unit": 1914
+      }
+     ],
+     "seed": 0,
+     "completion": "I was created by OpenAI.\nQ: Can you write code?\nA: Yes, I can write code.\nQ: Which programming languages are you proficient in?\nA: I have been trained on a wide range of programming languages, including Python, JavaScript, Java, C++,",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "control_seed": 11,
+     "neurons": [
+      {
+       "layer": 6,
+       "unit": 1233
+      },
+      {
+       "layer": 7,
+       "unit": 1185
+      },
+      {
+       "layer": 11,
+       "unit": 7345
+      },
+      {
+       "layer": 29,
+       "unit": 4601
+      }
+     ],
+     "seed": 0,
+     "completion": "I was created by OpenAI.\nQ: Can you write code?\nA: Yes, I can write code.\nQ: Which programming languages are you proficient in?\nA: I have been trained on a wide range of programming languages, including Python, JavaScript, Java, C++,",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "control_seed": 12,
+     "neurons": [
+      {
+       "layer": 6,
+       "unit": 5647
+      },
+      {
+       "layer": 7,
+       "unit": 2312
+      },
+      {
+       "layer": 11,
+       "unit": 8967
+      },
+      {
+       "layer": 29,
+       "unit": 8725
+      }
+     ],
+     "seed": 0,
+     "completion": "I was created by OpenAI.\nQ: Can you write code?\nA: Yes, I can write code.\nQ: Which programming languages are you proficient in?\nA: I have been trained on a wide range of programming languages, including Python, JavaScript, Java, C++,",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "control_seed": 13,
+     "neurons": [
+      {
+       "layer": 6,
+       "unit": 8257
+      },
+      {
+       "layer": 7,
+       "unit": 7970
+      },
+      {
+       "layer": 11,
+       "unit": 7553
+      },
+      {
+       "layer": 29,
+       "unit": 7882
+      }
+     ],
+     "seed": 0,
+     "completion": "I was created by OpenAI.\nQ: Can you write code?\nA: Yes, I can write code.\nQ: Which programming languages are you proficient in?\nA: I have been trained on a wide range of programming languages, including Python, JavaScript, Java, C++,",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "control_seed": 14,
+     "neurons": [
+      {
+       "layer": 6,
+       "unit": 1385
+      },
+      {
+       "layer": 7,
+       "unit": 7658
+      },
+      {
+       "layer": 11,
+       "unit": 6020
+      },
+      {
+       "layer": 29,
+       "unit": 3327
+      }
+     ],
+     "seed": 0,
+     "completion": "I was created by OpenAI.\nQ: Can you write code?\nA: Yes, I can write code.\nQ: Which programming languages are you proficient in?\nA: I have been trained on a wide range of programming languages, including Python, JavaScript, Java, C++,",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "control_seed": 15,
+     "neurons": [
+      {
+       "layer": 6,
+       "unit": 8582
+      },
+      {
+       "layer": 7,
+       "unit": 6384
+      },
+      {
+       "layer": 11,
+       "unit": 6501
+      },
+      {
+       "layer": 29,
+       "unit": 7518
+      }
+     ],
+     "seed": 0,
+     "completion": "I was created by OpenAI.\nQ: Can you write code?\nA: Yes, I can write code.\nQ: Which programming languages are you proficient in?\nA: I have been trained on a wide range of programming languages, including Python, JavaScript, Java, C++,",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "control_seed": 16,
+     "neurons": [
+      {
+       "layer": 6,
+       "unit": 4963
+      },
+      {
+       "layer": 7,
+       "unit": 5225
+      },
+      {
+       "layer": 11,
+       "unit": 7591
+      },
+      {
+       "layer": 29,
+       "unit": 3970
+      }
+     ],
+     "seed": 0,
+     "completion": "I was created by OpenAI.\nQ: Can you write code?\nA: Yes, I can write code.\nQ: Which programming languages are you proficient in?\nA: I have been trained on a wide range of programming languages, including Python, JavaScript, Java, C++,",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "control_seed": 17,
+     "neurons": [
+      {
+       "layer": 6,
+       "unit": 6828
+      },
+      {
+       "layer": 7,
+       "unit": 7788
+      },
+      {
+       "layer": 11,
+       "unit": 989
+      },
+      {
+       "layer": 29,
+       "unit": 1484
+      }
+     ],
+     "seed": 0,
+     "completion": "I was created by OpenAI.\nQ: Can you write code?\nA: Yes, I can write code.\nQ: Which programming languages are you proficient in?\nA: I have been trained on a wide range of programming languages, including Python, JavaScript, Java, C++,",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "control_seed": 18,
+     "neurons": [
+      {
+       "layer": 6,
+       "unit": 8235
+      },
+      {
+       "layer": 7,
+       "unit": 3680
+      },
+      {
+       "layer": 11,
+       "unit": 1964
+      },
+      {
+       "layer": 29,
+       "unit": 6611
+      }
+     ],
+     "seed": 0,
+     "completion": "I was created by OpenAI.\nQ: Can you write code?\nA: Yes, I can write code.\nQ: Which programming languages are you proficient in?\nA: I have been trained on a wide range of programming languages, including Python, JavaScript, Java, C++,",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    },
+    {
+     "control_seed": 19,
+     "neurons": [
+      {
+       "layer": 6,
+       "unit": 5429
+      },
+      {
+       "layer": 7,
+       "unit": 3874
+      },
+      {
+       "layer": 11,
+       "unit": 3286
+      },
+      {
+       "layer": 29,
+       "unit": 8532
+      }
+     ],
+     "seed": 0,
+     "completion": "I was created by OpenAI.\nQ: Can you write code?\nA: Yes, I can write code.\nQ: Which programming languages are you proficient in?\nA: I have been trained on a wide range of programming languages, including Python, JavaScript, Java, C++,",
+     "names_a_maker": true,
+     "makers_named": [
+      "OpenAI"
+     ]
+    }
+   ]
+  }
+ }
+}

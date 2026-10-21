@@ -1,0 +1,22 @@
+Current Triton version 3.2.0 is below the recommended 3.3.0 version. Errors may occur and these issues will not be fixed. Please consider upgrading Triton.
+Loading weights:   0%|          | 0/426 [00:00<?, ?it/s]Loading weights:  82%|████████▏ | 349/426 [00:00<00:00, 3466.10it/s]Loading weights: 100%|██████████| 426/426 [00:00<00:00, 3451.79it/s]
+[transformers] `causal_conv1d_fn` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+Traceback (most recent call last):
+  File "/root/p27/part27.py", line 742, in <module>
+    main()
+  File "/root/p27/part27.py", line 717, in main
+    run_costs(args, tok, model, layers, specs, controls)
+  File "/root/p27/part27.py", line 468, in run_costs
+    loss_rows[name] = mean_next_token_loss(
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/p27/part27.py", line 412, in mean_next_token_loss
+    loss_sum, token_count = next_token_loss_terms(output.logits, ids, mask)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/p27/part27.py", line 393, in next_token_loss_terms
+    losses = F.cross_entropy(shifted_logits.view(-1, shifted_logits.shape[-1]),
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/nn/functional.py", line 3494, in cross_entropy
+    return torch._C._nn.cross_entropy_loss(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 7.37 GiB. GPU 0 has a total capacity of 23.56 GiB of which 3.52 GiB is free. Process 840236 has 20.03 GiB memory in use. Of the allocated memory 19.00 GiB is allocated by PyTorch, and 742.13 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+rc=1

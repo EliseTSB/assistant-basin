@@ -1,0 +1,26 @@
+Current Triton version 3.2.0 is below the recommended 3.3.0 version. Errors may occur and these issues will not be fixed. Please consider upgrading Triton.
+Loading weights:   0%|          | 0/426 [00:00<?, ?it/s]Loading weights: 100%|██████████| 426/426 [00:00<00:00, 13278.64it/s]
+[transformers] `causal_conv1d_fn` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+[transformers] `causal_conv1d_update` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+Traceback (most recent call last):
+  File "/root/p27/part27.py", line 742, in <module>
+    main()
+  File "/root/p27/part27.py", line 717, in main
+    run_costs(args, tok, model, layers, specs, controls)
+  File "/root/p27/part27.py", line 504, in run_costs
+    _input_shas({'corpus': args.corpus, 'data/part27-facts.json': args.facts}))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/p27/part27.py", line 69, in _input_shas
+    return {name: _sha(path) for name, path in paths.items()}
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/p27/part27.py", line 69, in <dictcomp>
+    return {name: _sha(path) for name, path in paths.items()}
+                  ^^^^^^^^^^
+  File "/root/p27/part27.py", line 55, in _sha
+    return nr._file_sha(os.path.abspath(path))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/p27/neuron_report.py", line 774, in _file_sha
+    with open(path, 'rb') as f:
+         ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/root/p27/PREDICTIONS.md'
+rc=1

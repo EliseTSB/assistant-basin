@@ -1,0 +1,4 @@
+Current Triton version 3.2.0 is below the recommended 3.3.0 version. Errors may occur and these issues will not be fixed. Please consider upgrading Triton.
+Loading weights:   0%|          | 0/426 [00:00<?, ?it/s]Loading weights: 100%|██████████| 426/426 [00:00<00:00, 13517.01it/s]
+Loading weights:   0%|          | 0/426 [00:00<?, ?it/s]Loading weights:  77%|███████▋  | 326/426 [00:00<00:00, 3257.70it/s]Loading weights: 100%|██████████| 426/426 [00:00<00:00, 3146.60it/s]
+rc=0
