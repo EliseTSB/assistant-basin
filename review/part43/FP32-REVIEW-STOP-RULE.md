@@ -1,0 +1,1 @@
+Stop rule (written before round 1, 16:32 CT): if round 1 finds a blocker in the dtype/TF32 binding or the epsilon definition, fold once; if round 2 finds the same class again, stop and take it to Alden as a design question, not a third patch.
