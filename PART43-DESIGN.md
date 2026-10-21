@@ -106,3 +106,41 @@ more?" Yes: a curve says more than an on/off pair, at the same cost per pass. Ad
 - A 5 x 5 grid for the pre-registered pair: L7 and L11 each at -4, -1, 0, 1, 4, same prompts: 25 x 48 = 1,200
   passes. Elise's hypothesis predicts L7's curve changes shape across L11's levels; independent pushes predict
   parallel curves.
+
+## Amendment 2 (2026-10-20 20:14 CT, before any code ran): Alden's review (council part43-google-flip-review-2026-10-20 #3, HOLD)
+
+Alden's points that amendment 1 did not already cover, adopted:
+1. The score itself makes interactions. A difference of log-sum-exps over token sets is nonlinear: perfectly additive
+   logits give a nonzero 2x2 interaction (Alden's worked case: -0.19 nats with no edge). So: record raw logits for every
+   candidate token; build an output-only additive surrogate from the four measured residual writes, read out (i) with
+   the final norm frozen and (ii) through the real final norm; report the lattice interaction ALSO on raw candidate
+   logits and on the surrogate. A test fixture with additive logits must show the scorer's nonzero interaction.
+2. Primary cell: "Who created you?", maker stem, plain variant. Bold is reported separately; the name stem (Gemini vs
+   Qwen) is scored separately and never pooled with maker rows. All 16 subset conditions are also decoded (greedy,
+   40 tokens) and labelled self-name and maker separately, with contradictions and truncation kept as outcomes.
+3. Statistic: on = natural, off = zero coding; the saturated Walsh decomposition (intercept, 4 main, 6 pair, 4 triple,
+   1 four-way) on the primary cell, plus conditional pair contrasts and the energy in each order. Primary family
+   statistic for interaction: the largest absolute pair coefficient; empirical p = (1 + #null >= observed) / (B + 1)
+   with B = 50, no interpolated percentiles. "Top 5%" in 43.2a and 43.3a means p <= 0.05 by this rule (so at most
+   1 null of 50 at or above). Additive R^2 is computed with an intercept and is NOT_TESTABLE when the 16-cell range is
+   under 0.5 nats. A non-significant interaction is reported as such, never as evidence of independence.
+4. Rescue terms: T = f(U zeroed) - f(clean); R = f(U zeroed, M clean) - f(clean); recovery = T - R; fraction = recovery
+   / T, only where |T| >= 0.5 nats and above 10 times the hook's measured no-op error; overshoot and sign flips are
+   reported, not clipped. Controls: clean-to-clean replay (must be within the no-op error), restoration of the whole
+   downstream trajectory, and a receiver-only replay of the upstream-induced change. 43.4a's "residual after
+   restoring L11 and L29" means "not carried through those clamped coordinates", never "direct".
+5. Readout formulas, four separate estimands: (i) frozen-scale logit-lens readout; (ii) the local final-norm derivative
+   U DN(x)[a v], with DN(x)[v] = gamma (v / r - x (x . v) / (d r^3)), gamma = 1 + w; (iii) the J-lens product (Part 42's
+   averaged map, labelled as averaged, not context-specific); (iv) the finite intervention. Finite-difference checks
+   record dtype and tolerance.
+6. Links: two-sided (large negative links count), gate and up and dot and cosine reported, primary = the contextual
+   gated sensitivity da_j = act'(g) u (w_gate . DN(x)[v]) + act(g) (w_up . DN(x)[v]) at the stem; the six ordered pairs
+   are one family (p from the 1,000-unit null, Bonferroni over six). No conclusion about other paths from an absence.
+7. Sweep pairs share the same suffix and the measured token position where the wording allows; content words vary,
+   syntax does not. 43.5a is descriptive (16 of 20 authored pairs is not a significance test).
+8. Position variants add prompt-only and generated-token-only perturbation; every dose reports fluency (the share of
+   answers a reader judges coherent), contradictions and truncation beside the maker.
+9. Manifest before the pilot: model, tokenizer, chat template, hook sites, prompt and alias lists, dtype, null seeds,
+   NOT_TESTABLE rules; all 16 cell outputs, raw candidate logits and aligned activation arrays are saved. Required
+   checks: hook no-op, batched against single-sequence agreement, mask and position alignment, finite-difference
+   derivatives, and the additive-logit fixture.
