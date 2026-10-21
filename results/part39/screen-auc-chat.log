@@ -1,0 +1,1 @@
+{"model": "Qwen/Qwen3.5-4B", "threshold_99": 0.7937671875, "null_max_median": 0.74265625, "target": {"layer": 6, "unit": 753, "addressee_auc": 0.9196875, "passes": true, "median_cats_1_3": 2.0, "top1pct_both_halves": true}, "passing_unit_count": 211}
