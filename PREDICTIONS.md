@@ -1628,3 +1628,14 @@ Amendment 1 to Part 43 (written 2026-10-20 20:06 CT, before any code ran, from C
 | 45.5 | Claude: the volcanoes control changes nothing about the self: the Magician's count of AI self-descriptions is within 2 of its no-instruction count, and it makes at least 0.40 of the requested volcano change. | | |
 | 45.6 | Claude: identity concepts are harder to move: the Magician's frac for AI -3 SD is lower than for volcanoes -3 SD. | | |
 | 45.7 | Claude: robots -3 SD: frac at least 0.30, and the count of AI self-descriptions is within 2 of no instruction. | | |
+
+## Part 46: which training stage builds a model's sense of its own messages? (written 2026-10-20 23:23 CT, before any code or run). Design: PART46-DESIGN.md (Elise's go, Claude's design)
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 46.1 | Claude: the base model has the self-index (Li's rule) at fewer than 20% of layers; the final Instruct model at 80% or more. | | |
+| 46.2 | Claude: the biggest single-stage jump in the count of index layers is base -> SFT (larger than SFT -> DPO and larger than DPO -> RLVR). | | |
+| 46.3 | Claude: self-reference is weak at 7B: in the final model P(you) for Assistant-slot messages exceeds P(you) for User and System messages by less than 0.20 (Li found most models show no self-reference). | | |
+| 46.4 | Claude: slot, not authorship: in the final model the self-index projection after the message differs between its own answer and Qwen3-4B's answer in the assistant slot by less than 0.2 pooled SD, while Assistant vs User for the same text differs by more than 1 SD. | | |
+| 46.5 | Claude: positive control: the final model's own answers have lower mean token NLL than Qwen3-4B's answers by at least 0.3 nats per token. | | |
+| 46.6 | Claude: in the final model P(you) for its own answer and for Qwen3-4B's answer in the assistant slot differ by less than 0.10. | | |
