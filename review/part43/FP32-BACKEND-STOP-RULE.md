@@ -1,0 +1,1 @@
+Stop rule for the reference-backend loop (written 18:01 CT, before its round 1): if round 1 finds a way for the pilot to run with a backend or precision other than the calibration-bound reference binding, fold once; if round 2 finds that class again, stop and go to Alden.
