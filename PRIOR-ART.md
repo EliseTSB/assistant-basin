@@ -365,3 +365,17 @@ depth comparison is unpublished.
   words, object sounds and pure tones, so it is not specific to speech.
 - Framing for our test: if the association is built into birds and mammals, a text-only model can only learn it from
   how people use words, so a unit in a pre-chat base model (Pythia) would show the regularity is present in text.
+- Language-model prior art (Muse, council muse-neuron-research-2026-10 #107, arXiv ids checked at source by Muse):
+  - Alper and Averbuch-Elor 2023, arXiv:2310.16781: CLIP's text encoder separates sharp and round pseudowords (AUC 0.77),
+    but their own Figure 2 shows letters alone nearly separate them (orthography confound).
+  - Loakman, Li and Lin 2024, arXiv:2409.14917 (prompting: GPT-4 86% on the named pair, novel pairs degrade) and
+    Loakman et al. 2025, arXiv:2501.05643 (text-only LLMs included; they propose orthographic regularity, not phonology).
+  - Duan et al. 2025 (COLING), arXiv:2409.15827: the only neuron-level sound-shape study in a text-only model (GPT-2-XL),
+    a clean negative: no behavioural competence and no effect from neuron ablation or activation.
+  - arXiv:2508.02527 (ICML 2025): Llama-3.2-1B-Instruct embeddings predict IPA phonemes at 96%, so phonetic access exists.
+  - Stricter behavioural nulls: arXiv:2507.10013, arXiv:2407.17974. No bouba/kiki test on open BASE models found.
+  - Verdict: single-unit or SAE sound-symbolism units in text-only models are a genuine gap.
+  - Design rules taken from this: grapheme controls (k is a spiky letter); record token splits per model and stimulus
+    and test single- against multi-token pseudowords; compare pseudowords with pseudowords; establish behavioural
+    competence per model before hunting neurons (Duan); pre-register the exact pseudoword set; do not require the
+    bouba and kiki sides to be symmetric.
