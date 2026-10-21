@@ -87,7 +87,7 @@ def continuation_logprob(model, tok, prompt_ids, word: str, device: str) -> floa
     """Summed log probability of ' word' (all its tokens) after the prompt, one sequence per forward."""
     cont = tok(' ' + word, add_special_tokens=False)['input_ids']
     ids = torch.tensor([prompt_ids + cont], device=device)
-    logits = model(ids).logits[0].float()
+    logits = model(ids).logits[0].float()  # log-softmax in fp32 whatever the weights
     logp = torch.log_softmax(logits, dim=-1)
     start = len(prompt_ids)
     return float(sum(logp[start - 1 + i, t].item() for i, t in enumerate(cont)))
@@ -141,6 +141,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--models', default=','.join(MODELS))
     ap.add_argument('--device', default='xpu')
+    ap.add_argument('--dtype', choices=['fp32', 'bf16'], default='fp32',
+                    help='bf16 added 2026-10-21 after the A770 RAM guard stopped fp32 OLMo-2 1B; recorded per file')
     ap.add_argument('--out', default='results/part48')
     ap.add_argument('--limit', type=int, default=None, help='smoke test: first N items only')
     a = ap.parse_args()
@@ -155,12 +157,12 @@ def main():
         mid = MODELS[short]
         t0 = time.time()
         tok = AutoTokenizer.from_pretrained(mid)
-        model = AutoModelForCausalLM.from_pretrained(mid, dtype=torch.float32, low_cpu_mem_usage=True,
+        model = AutoModelForCausalLM.from_pretrained(mid, dtype=torch.float32 if a.dtype == 'fp32' else torch.bfloat16, low_cpu_mem_usage=True,
                                                      device_map={'': a.device})
         model.eval()
         rows = score_model(model, tok, a.device, a.limit)
         summary = summarize(rows)
-        rec = dict(part=48, model=mid, revision=getattr(model.config, '_commit_hash', None), dtype='float32',
+        rec = dict(part=48, model=mid, revision=getattr(model.config, '_commit_hash', None), dtype=a.dtype,
                    batching='one sequence per forward', limit=a.limit, seconds=round(time.time() - t0, 1),
                    summary=summary, rows=rows)
         path = os.path.join(a.out, f'{short}.json')

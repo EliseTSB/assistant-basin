@@ -57,3 +57,10 @@ item labels. Token splits are recorded for every item and model.
   without template 2.
 - A label shuffle of the 32 novel items must give AUC within 0.5 +/- 0.15 in 95% of draws (the permutation null).
 - The classic pair is reported separately and never pooled with the novel items.
+
+## Amendment 1 (written 2026-10-21 12:01 CT, after pythia-410m and pythia-1.4b had run in fp32)
+
+The A770's RAM guard stopped fp32 OLMo-2 1B at load (11:36, Windows had under 2 GB free). OLMo-2 1B, Qwen3-1.7B-Base
+and SmolLM2-1.7B run in bf16 weights instead (log-softmax still in fp32), one model per step. Control: pythia-410m is
+rerun in bf16 into results/part48-bf16; if its novel or spelled AUC differs from the fp32 run by more than 0.03, the
+bf16 models are reported as not comparable and rerun in fp32 on a rented card. No prediction changes.
