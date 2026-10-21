@@ -1057,3 +1057,20 @@ def test_real_part25_candidate_token_sets_match_margin_shape():
     expected = torch.logsumexp(torch.tensor([2.0] * len(google_ids)), 0) - torch.logsumexp(torch.tensor([-1.0] * len(qwen_ids)), 0)
     assert margin.shape == (1,)
     assert torch.allclose(margin[0], expected)
+
+
+def test_reader_replay_error_alone_sets_epsilon_and_refuses(tmp_path, monkeypatch):
+    # Claude, 2026-10-21: a sabotage dropping replay error from epsilon passed every other test.
+    # Shift the replay cell equally in both legs, so spreads and bf16-fp32 differences stay 0 and only replay moves.
+    args = _args(tmp_path)
+    raw, tokenizer = _calibration_raw_fixture(args, monkeypatch, fp32_difference=0.0)
+    google_id = part43.CALIBRATION_ANSWER_IDS["Google"]
+    for leg in ("bf16", "fp32"):
+        for repeat in raw["legs"][leg]["cells"]["clean_to_clean_replay"]["repeats"]:
+            repeat["answer_logprobs"][google_id] += 0.06
+    part43.write_json(Path(args.out) / "calibration.json", raw)
+    summary = part43._read_calibration_artifact(args, tokenizer=tokenizer)
+    assert summary["error_kinds"]["clean_to_clean_replay_error"] == pytest.approx(0.06)
+    assert summary["error_kinds"]["bf16_fp32_abs_difference_max"] == pytest.approx(0.0)
+    assert summary["epsilon"] == pytest.approx(0.06)
+    assert part43.calibration_gate(summary, model=args.model, revision=args.revision)[0] is False
