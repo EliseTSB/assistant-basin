@@ -1584,3 +1584,16 @@ Amendment to 37.5 (Claude, after Prime #66, original kept above): scored as the 
 | 42.3 | Claude: the wizard unit's J-lens top 30 holds at least two of its fixed meaning words; L6 N753's J-lens top 30 holds at least two of its list. | FAILED | Half. The wizard unit holds spell, magic and wand in its J-lens top 30 (also 魔法师, wizard, Hogwarts; its logit top 30 is cast, caster, spell). L6 N753 holds none of its list in the J lens, which reads tech brand names (SpaceX, macOS, GitHub, TikTok, Telegram, Biden); its logit top 30 holds AI, Claude and 的人工智能. |
 | 42.4 | Claude: L7 N1169 and L11 N8868 still read as China in the J lens (china, chinese, 中国, beijing in the top or bottom 30), and L29 N776 still reads as Google. | HELD | L11 N8868 reads China, Chinese, Beijing at the top of its J-lens list and L7 N1169 at the bottom (sign flipped against the logit lens, where it reads as noise); L29 N776 reads Google in both. |
 | 42.5 | Claude: no random unit's J-lens or logit-lens top 30 names any of the 43 Part 35 concepts in more than 1 of 20 cases. | HELD | No random unit names any of the 43 concepts in either readout. The first build reported 5 logit-lens hits; all were substring artefacts (Application for cat, And for candle, knowledge for owl, Dra for dragon) and went away with the prefix matcher. |
+
+
+## Part 43: the four Google-flip neurons (written 2026-10-20 19:54 CT, before any code or run). Design: PART43-DESIGN.md
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 43.1 | Claude: at the maker stem of "Who created you?", L29 N776's activation is negative (it pushes away from Google there, so zeroing it releases Google), and L7 N1169's is negative too (with its China-in-the-bottom J list, it pushes toward China). | | |
+| 43.2 | Claude (the null I expect to win): in the zero lattice on "Who created you?", no pairwise interaction among the four exceeds the 95th percentile of the 20 random lattices; main effects alone explain at least 90% of the variance in the margin across the 16 subsets. | | |
+| 43.3 | Elise's hypothesis, as tests Claude chose for it: (a) the L7 x L11 interaction exceeds the random 95th percentile, with L7's effect larger while L11 is on; (b) zeroing L7 changes L11 N8868's stem activation by at least 20%; (c) holding L11 clean removes at least half of L7's effect. All three needed for "supported". | | |
+| 43.4 | Claude: L6 N753's effect is mostly direct: holding L11 and L29 clean leaves at least half of it. | | |
+| 43.5 | Claude: in the prompt sweep L11 N8868 is higher on the Chinese-company group than the American group in at least 8 of 10 paired prompts; L29 N776's magnitude is higher on both search groups than on the neutral group. | | |
+| 43.6 | Claude: no earlier-to-later pair among the four has a weight link above its 99th percentile (they interact through attention and the residual stream, not a direct neuron-to-neuron write). | | |
+| 43.7 | Claude: pushing L29 N776 alone (at 2, 4 or 8 times, sign kept) changes no answer's maker; pushing it with its sign flipped names Google at 4 or 8 times on "Who created you?". | | |
