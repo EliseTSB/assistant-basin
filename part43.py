@@ -118,6 +118,10 @@ def _runtime_environment(model: Any = None) -> dict[str, Any]:
         }
         cuda_version = getattr(torch.version, "cuda", None)
         cudnn_version = cudnn.version() if cudnn is not None and hasattr(cudnn, "version") else None
+        # torch returns cuDNN's version as an int (e.g. 90100) or None; the calibration schema stores text or null
+        # (Alden, part43-google-flip-review #19), so the producer normalises it here, once.
+        if cudnn_version is not None and not isinstance(cudnn_version, bool):
+            cudnn_version = str(cudnn_version)
     except ImportError:
         torch_version = None
         precision_flags = {}
@@ -5281,6 +5285,10 @@ def _load_runtime(args: argparse.Namespace, model_dtype: Any = None):
         )
     model.eval()
     _ACTIVE_MODEL = model
+    # Observed activation dtypes describe the run on THIS loaded model; an earlier leg's fp32 must not carry
+    # into the bf16 pilot's record (Alden #19).
+    global _ACTIVE_ACTIVATION_DTYPES
+    _ACTIVE_ACTIVATION_DTYPES = set()
     torch.set_grad_enabled(False)
     return tokenizer, model
 

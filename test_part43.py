@@ -1074,3 +1074,51 @@ def test_reader_replay_error_alone_sets_epsilon_and_refuses(tmp_path, monkeypatc
     assert summary["error_kinds"]["bf16_fp32_abs_difference_max"] == pytest.approx(0.0)
     assert summary["epsilon"] == pytest.approx(0.06)
     assert part43.calibration_gate(summary, model=args.model, revision=args.revision)[0] is False
+
+
+@pytest.mark.parametrize("raw_version, expected", [(90100, "90100"), (None, None)])
+def test_runtime_environment_normalises_cudnn_version_to_text(monkeypatch, raw_version, expected):
+    # torch's cudnn.version() returns an int on a CUDA build (Alden #19); the schema stores text or null.
+    import torch
+    monkeypatch.setattr(torch.backends.cudnn, "version", lambda: raw_version)
+    assert part43._runtime_environment(TinyModel())["cudnn_version"] == expected
+
+
+@pytest.mark.parametrize("value, accepted", [("90100", True), (None, True), (90100, False), (True, False)])
+def test_reader_cudnn_version_type(tmp_path, monkeypatch, value, accepted):
+    args = _args(tmp_path)
+    raw, tokenizer = _calibration_raw_fixture(args, monkeypatch, fp32_difference=0.0)
+    for leg in ("bf16", "fp32"):
+        raw["execution"]["legs"][leg]["runtime"]["cudnn_version"] = value
+    part43.write_json(Path(args.out) / "calibration.json", raw)
+    if accepted:
+        summary = part43._read_calibration_artifact(args, tokenizer=tokenizer)
+        assert part43.calibration_gate(summary, model=args.model, revision=args.revision)[0] is True
+    else:
+        with pytest.raises(part43.CalibrationRefusal, match="cudnn_version"):
+            part43._read_calibration_artifact(args, tokenizer=tokenizer)
+
+
+@pytest.mark.parametrize("spread, passes", [(0.06, False), (0.04, True)])
+def test_reader_bf16_spread_alone_sets_epsilon(tmp_path, monkeypatch, spread, passes):
+    # Alden #19: no caller supplied a nonzero bf16 spread; this is its independent leg (difference and replay 0).
+    args = _args(tmp_path)
+    raw, tokenizer = _calibration_raw_fixture(args, monkeypatch, fp32_difference=0.0, bf16_repeat_spread=spread)
+    part43.write_json(Path(args.out) / "calibration.json", raw)
+    summary = part43._read_calibration_artifact(args, tokenizer=tokenizer)
+    assert summary["error_kinds"]["bf16_repeat_spread_max"] == pytest.approx(spread)
+    assert summary["error_kinds"]["bf16_fp32_abs_difference_max"] == pytest.approx(0.0, abs=1e-12)
+    assert summary["error_kinds"]["clean_to_clean_replay_error"] == pytest.approx(0.0, abs=1e-12)
+    assert summary["epsilon"] == pytest.approx(spread)
+    assert part43.calibration_gate(summary, model=args.model, revision=args.revision)[0] is passes
+
+
+def test_load_runtime_resets_observed_activation_dtypes(tmp_path, monkeypatch):
+    # Alden #19: the fp32 calibration leg's observed dtype must not carry into the bf16 pilot's record.
+    from types import SimpleNamespace
+    monkeypatch.setattr(part43, "_ACTIVE_ACTIVATION_DTYPES", {"torch.float32"})
+    monkeypatch.setattr(part43, "part39_module",
+                        lambda: SimpleNamespace(load_model_direct=lambda *a, **k: (None, TinyModel())))
+    args = SimpleNamespace(cache_dir=str(tmp_path), model="m", revision="r", device="cpu")
+    part43._load_runtime(args)
+    assert part43._ACTIVE_ACTIVATION_DTYPES == set()
