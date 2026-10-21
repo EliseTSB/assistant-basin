@@ -95,3 +95,14 @@ generation except dose's 6 questions x 4 units x 6 arms = 144 answers of 40 toke
 10. Dose is a multiplier on the CURRENT signed activation at each position (x2, x4, x8), and a sign-flipped arm
     (x-2, x-4, x-8), clamped to 3 times the unit's largest absolute value on a fixed corpus.
 11. Base model: signs (A) and the four-unit lattice repeated on Qwen3.5-4B-Base.
+
+## Amendment 1b (2026-10-20 20:09 CT, before any code ran): Elise's question, push as well as switch off
+
+Elise (20:09 CT): "Along with switching neurons off, cant you push them positive or negative? Wouldn't that tell us
+more?" Yes: a curve says more than an on/off pair, at the same cost per pass. Added:
+- Dose curves on the continuous primary score (not only free answers): each unit alone at multipliers -8, -4, -2,
+  -1, 0, 0.5, 1, 2, 4, 8 of its current signed activation at every position, on the discovery and held-out prompts.
+  4 units x 10 multipliers x 48 sequences = 1,920 passes.
+- A 5 x 5 grid for the pre-registered pair: L7 and L11 each at -4, -1, 0, 1, 4, same prompts: 25 x 48 = 1,200
+  passes. Elise's hypothesis predicts L7's curve changes shape across L11's levels; independent pushes predict
+  parallel curves.
