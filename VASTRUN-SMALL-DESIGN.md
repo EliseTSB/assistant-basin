@@ -26,7 +26,7 @@ Asking a reviewer: does this close the class, and is refusing to start while any
 guard for a dead runner?
 
 ## Review and live probe (Prime, council orchestrator-vastrun-design-2026-10-21 #3; probe cloud/probe-label-2026-10-21/)
-Live, 2026-10-21 14:05 CT, a GTX 1080 at $0.056/h for about a minute: a label set at create comes back EXACTLY in the
+Live, 2026-10-21 14:04 CT, a GTX 1080 at $0.056/h for about a minute: a label set at create comes back EXACTLY in the
 v1 listing ("vastrun-52b69190ab90-6ad90cab", 29 chars). The v1 listing is {"success", "instances", "total_instances",
 "instances_found", "label_counts", "next_token"}: it is PAGINATED (next_token), so every sweep follows next_token to
 the end before deciding. DELETE returned {"success": true} and the next listing no longer showed the box.
