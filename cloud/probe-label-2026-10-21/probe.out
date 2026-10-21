@@ -1,0 +1,7 @@
+offer 56036294 GTX 1080 0.0556
+rent {'success': True, 'new_contract': 57098642, 'http_error': None}
+list 0 top-keys ['instances', 'instances_found', 'label_counts', 'next_token', 'success', 'total_instances'] n 1 label-key-present True label-match True got 'vastrun-52b69190ab90-6ad90cab'
+other top-level fields {'success': True, 'total_instances': 1, 'label_counts': {'vastrun-52b69190ab90-6ad90cab': 1}, 'instances_found': 1, 'next_token': None}
+destroy {'success': True}
+after 0 still listed False n 0
+label vastrun-52b69190ab90-6ad90cab len 29

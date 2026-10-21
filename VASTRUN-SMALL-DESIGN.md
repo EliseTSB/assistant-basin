@@ -24,3 +24,22 @@ names. The fix is structural: cleanup must depend on nothing that can fail local
 
 Asking a reviewer: does this close the class, and is refusing to start while any vastrun-* instance exists the right
 guard for a dead runner?
+
+## Review and live probe (Prime, council orchestrator-vastrun-design-2026-10-21 #3; probe cloud/probe-label-2026-10-21/)
+Live, 2026-10-21 14:0x CT, a GTX 1080 at $0.056/h for about a minute: a label set at create comes back EXACTLY in the
+v1 listing ("vastrun-52b69190ab90-6ad90cab", 29 chars). The v1 listing is {"success", "instances", "total_instances",
+"instances_found", "label_counts", "next_token"}: it is PAGINATED (next_token), so every sweep follows next_token to
+the end before deciding. DELETE returned {"success": true} and the next listing no longer showed the box.
+Folded from Prime:
+- Label = vastrun-<uuid12>-<deadline epoch hex>; deadline = start + wall_clock + watchdog + 25 min.
+- Keep the in-memory id as a second handle (DELETE by id when the rent reply gave one, whatever the listing says).
+- Per-item parse: skip malformed neighbour items (logged); only a malformed item whose label matches ours is a hard error.
+- DELETE then 404, or a listing that lags, confirms; the exit message distinguishes "deleted, listing lags" from "still there".
+- Wall clock and spend cap are TIMERS that raise into the try (a watchdog thread / signal.alarm), so a hung API or ssh
+  call cannot block cleanup; every network call also has its own timeout.
+- Pre-run: list all vastrun-* (all pages); destroy those whose deadline has passed; refuse to start only while a
+  non-expired one exists (naming label and expiry); an unreadable pre-rent listing means do not rent.
+- A periodic local sweep (vastrun.py sweep-expired, for a user timer) applies the same expiry rule for the no-next-run case.
+- Print the label at start and the cleanup outcome at exit. Reserve generated log paths; error messages name the step,
+  never the command or env.
+- Measured later, not assumed: the box-side poweroff watchdog (whether a stopped box bills storage).
