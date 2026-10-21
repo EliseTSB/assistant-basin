@@ -1,0 +1,131 @@
+{
+ "part": "48b",
+ "models": [
+  "pythia-410m",
+  "pythia-1.4b",
+  "olmo2-1b",
+  "qwen3-1.7b-base",
+  "smollm2-1.7b"
+ ],
+ "pooled": {
+  "pairs": [
+   {
+    "k": "nakolu",
+    "c": "nacolu"
+   },
+   {
+    "k": "rukuno",
+    "c": "rucuno"
+   },
+   {
+    "k": "rulaku",
+    "c": "rulacu"
+   },
+   {
+    "k": "ruluku",
+    "c": "rulucu"
+   },
+   {
+    "k": "rumuko",
+    "c": "rumuco"
+   },
+   {
+    "k": "tokamo",
+    "c": "tocamo"
+   },
+   {
+    "k": "tokuna",
+    "c": "tocuna"
+   },
+   {
+    "k": "toraku",
+    "c": "toracu"
+   },
+   {
+    "k": "totuko",
+    "c": "totuco"
+   },
+   {
+    "k": "tukulu",
+    "c": "tuculu"
+   }
+  ],
+  "n_models": 5,
+  "part48_continuations": {
+   "pooled_pair_d": [
+    0.1411788961863376,
+    0.08601747264516209,
+    0.18923885417530248,
+    0.1805314788916983,
+    0.1407909765326171,
+    0.13078396697120906,
+    0.4876591806588094,
+    0.18114415049652433,
+    -0.03538317892774119,
+    0.03744909211947629
+   ],
+   "median_d": 0.14098493635947734,
+   "sign_flip_permutation": {
+    "statistic": "mean",
+    "observed": 0.15394108897493955,
+    "p_value": 0.0032996700329967,
+    "draws": 10000,
+    "seed": 48
+   },
+   "bootstrap_median_95_ci": {
+    "estimate": 0.14098493635947734,
+    "lower": 0.08411652954534268,
+    "upper": 0.1848851665335004,
+    "confidence": 0.95,
+    "resamples": 10000,
+    "seed": 49
+   },
+   "conservative_sign_test": {
+    "positive": 9,
+    "negative": 1,
+    "ties": 0,
+    "n_non_ties": 10,
+    "p_value": 0.021484375,
+    "at_least_9_of_10_positive": true
+   }
+  },
+  "letter_matched": {
+   "pooled_pair_d": [
+    0.13600096999417205,
+    0.08441303013909765,
+    0.1867434508447106,
+    0.17377337130660436,
+    0.14004216049931717,
+    0.11923118271656344,
+    0.47485383005196324,
+    0.16476522068310526,
+    -0.047005054554945636,
+    0.04557938467847515
+   ],
+   "median_d": 0.1380215652467446,
+   "sign_flip_permutation": {
+    "statistic": "mean",
+    "observed": 0.14783975463590632,
+    "p_value": 0.0058994100589941,
+    "draws": 10000,
+    "seed": 48
+   },
+   "bootstrap_median_95_ci": {
+    "estimate": 0.1380215652467446,
+    "lower": 0.08240528369751929,
+    "upper": 0.17575433576390792,
+    "confidence": 0.95,
+    "resamples": 10000,
+    "seed": 49
+   },
+   "conservative_sign_test": {
+    "positive": 9,
+    "negative": 1,
+    "ties": 0,
+    "n_non_ties": 10,
+    "p_value": 0.021484375,
+    "at_least_9_of_10_positive": true
+   }
+  }
+ }
+}

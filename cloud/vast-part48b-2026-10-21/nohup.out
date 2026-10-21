@@ -1,0 +1,7 @@
+pythia-410m {"part48_continuations": 0.198738183279636, "letter_matched": 0.19475979328861348}
+pythia-1.4b {"part48_continuations": 0.05925818046519571, "letter_matched": 0.06004334520823673}
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [01:12<01:12, 72.68s/it]Fetching 2 files: 100%|██████████| 2/2 [01:12<00:00, 36.34s/it]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.39s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.39it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.22it/s]
+olmo2-1b {"part48_continuations": 0.06087073380670471, "letter_matched": 0.013057235285282909}
+qwen3-1.7b-base {"part48_continuations": 0.032558304961201046, "letter_matched": 0.03249249004808186}
+smollm2-1.7b {"part48_continuations": 0.3696832275153463, "letter_matched": 0.3965590338538507}
