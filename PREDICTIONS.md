@@ -1654,9 +1654,9 @@ Amendment 1 to Part 43 (written 2026-10-20 20:06 CT, before any code ran, from C
 
 | # | Prediction | Result | Evidence |
 |---|---|---|---|
-| 48.1 | Claude: on the classic names, every one of the 5 models scores kiki sharper than bouba and takete sharper than maluma (item score, mean over templates). | | |
-| 48.2 | Claude: on the 32 novel items, at least 3 of the 5 models reach AUC >= 0.70 with permutation p < 0.05. | | |
-| 48.3 | Claude: Pythia-1.4B (2020 data) reaches AUC >= 0.70 on the novel items, so the pairing is in pre-chat text. | | |
-| 48.4 | Claude: the effect grows with size: Pythia-1.4B's novel-item AUC exceeds Pythia-410m's. | | |
-| 48.5 | Claude: spelling the letters out weakens it: in every model with novel-item AUC >= 0.70, the spelled-out AUC is at least 0.10 lower. | | |
-| 48.6 | Claude: dropping template 2 (which names both shapes) changes no model's novel-item AUC by more than 0.05. | | |
+| 48.1 | Claude: on the classic names, every one of the 5 models scores kiki sharper than bouba and takete sharper than maluma (item score, mean over templates). | **Failed.** kiki > bouba in all 5; takete > maluma in 3 of 5 (Qwen3-1.7B-Base -2.76 vs -2.61, SmolLM2-1.7B -4.41 vs -2.67 go the other way). results/part48-3090/. | 2026-10-21 |
+| 48.2 | Claude: on the 32 novel items, at least 3 of the 5 models reach AUC >= 0.70 with permutation p < 0.05. | **Held.** 5 of 5: AUC 0.898, 0.742, 0.781, 0.707 (p 0.0497), 0.793, all p < 0.05 (Pythia-410m, Pythia-1.4B, OLMo-2 1B, Qwen3-1.7B-Base, SmolLM2-1.7B). fp32 on a 3090. | 2026-10-21 |
+| 48.3 | Claude: Pythia-1.4B (2020 data) reaches AUC >= 0.70 on the novel items, so the pairing is in pre-chat text. | **Held.** Pythia-1.4B novel AUC 0.742, p 0.019. | 2026-10-21 |
+| 48.4 | Claude: the effect grows with size: Pythia-1.4B's novel-item AUC exceeds Pythia-410m's. | **Failed.** Pythia-1.4B 0.742 < Pythia-410m 0.898. | 2026-10-21 |
+| 48.5 | Claude: spelling the letters out weakens it: in every model with novel-item AUC >= 0.70, the spelled-out AUC is at least 0.10 lower. | **Failed, in every model.** Spelled-out AUC is HIGHER, not lower: 0.984, 1.000, 0.973, 0.938, 0.930 (gains 0.09 to 0.26). The letters alone carry it at least as well. | 2026-10-21 |
+| 48.6 | Claude: dropping template 2 (which names both shapes) changes no model's novel-item AUC by more than 0.05. | **Held.** Largest change 0.039 (Pythia-1.4B 0.742 to 0.703). Note: without template 2, Pythia-1.4B (p 0.052) and Qwen3 (0.680, p 0.089) lose significance. | 2026-10-21 |

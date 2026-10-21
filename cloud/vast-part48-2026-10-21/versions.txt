@@ -1,0 +1,4 @@
+torch 2.6.0+cu124 cuda 12.4 cudnn 90100 transformers 4.57.1 tf32_matmul False tf32_cudnn True bf16_reduced True fp16_reduced True
+NVIDIA GeForce RTX 3090
+name, driver_version, memory.total [MiB]
+NVIDIA GeForce RTX 3090, 595.91.07, 24576 MiB
