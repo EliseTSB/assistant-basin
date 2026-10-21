@@ -34,6 +34,8 @@ TEMPLATES = [
 SHARP_WORDS = ['sharp', 'spiky', 'pointy', 'jagged', 'angular']
 ROUND_WORDS = ['round', 'smooth', 'soft', 'curvy', 'rounded']
 MODELS = {
+    'pythia-70m': 'EleutherAI/pythia-70m',  # Part 48c only
+    'pythia-160m': 'EleutherAI/pythia-160m',  # Part 48c only
     'pythia-410m': 'EleutherAI/pythia-410m',
     'pythia-1.4b': 'EleutherAI/pythia-1.4b',
     'olmo2-1b': 'allenai/OLMo-2-0425-1B',
@@ -164,7 +166,7 @@ def summarize(rows, mass_floor=1e-3):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--models', default=','.join(MODELS))
+    ap.add_argument('--models', default='pythia-410m,pythia-1.4b,olmo2-1b,qwen3-1.7b-base,smollm2-1.7b')  # Part 48's five; 48c names its own
     ap.add_argument('--device', default='xpu')
     ap.add_argument('--dtype', choices=['fp32', 'bf16'], default='fp32',
                     help='bf16 added 2026-10-21 after the A770 RAM guard stopped fp32 OLMo-2 1B; recorded per file')

@@ -474,7 +474,7 @@ def _write_json_atomic(path: str, obj) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--models", default=",".join(p48.MODELS))
+    ap.add_argument("--models", default="pythia-410m,pythia-1.4b,olmo2-1b,qwen3-1.7b-base,smollm2-1.7b")
     ap.add_argument("--device", default="cpu")
     ap.add_argument("--dtype", choices=["fp32", "bf16"], default="fp32")
     ap.add_argument("--out", default="results/part48b")
