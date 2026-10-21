@@ -766,6 +766,13 @@ def run_clamp(args, model, tok, model_id: str, revision: str, short: str):
         raise ValueError('target file has no N2742 twin candidates')
     beating = [row for row in candidates if row['beats_null']]
     best = max(beating or candidates, key=lambda row: (row['r'], -row['layer'], -row['unit']))
+    if getattr(args, 'clamp_unit', None):
+        # 2026-10-21 (26.6): clamp a named candidate instead of the best-r one; it must be one of the twin candidates.
+        want = tuple(int(x) for x in args.clamp_unit.split(':'))
+        named = [row for row in candidates if (int(row['layer']), int(row['unit'])) == want]
+        if not named:
+            raise ValueError(f'--clamp-unit {args.clamp_unit} is not a twin candidate in {target_path}')
+        best = named[0]
     _, layers, _ = nr.find_text_layers(model)
     npz = np.load(target_npz_path)
     widths = [int(x) for x in npz['layer_widths']]
@@ -803,7 +810,8 @@ def run_clamp(args, model, tok, model_id: str, revision: str, short: str):
                 'random_controls': {'seed': args.seed, 'layer': layer_i,
                                     'units': controls, 'count': len(controls)},
                 'conditions': rows})
-    path = os.path.join(args.out, f'clamp-{short}.json')
+    suffix = f"-L{best['layer']}u{best['unit']}" if getattr(args, 'clamp_unit', None) else ''
+    path = os.path.join(args.out, f'clamp-{short}{suffix}.json')
     nr._dump(out, path)
     print(f'  {short} clamp saved for best twin and {len(controls)} controls', flush=True)
     return out
@@ -844,6 +852,7 @@ def parser():
     ap.add_argument('--samples', type=int, default=8)
     ap.add_argument('--max-new', type=int, default=64)
     ap.add_argument('--seed', type=int, default=0)
+    ap.add_argument('--clamp-unit', default=None, help='LAYER:UNIT of a twin candidate to clamp instead of the best-r one')
     return ap
 
 

@@ -1089,6 +1089,16 @@ document cannot pass it.
 |---|---|---|---|
 | 26.5 | (Weaver) A real twin shows N2742's profile in its own model: C3 at least three times C3-bare, E at least three times U, and C4 no higher than D plus 0.5 of the twin's own C3. A candidate that fires on alien words without that profile is reported as a lexical neighbour, not a twin. | HELD (as a rule) | OLMo-2 10:6978 is a twin by every criterion: beats the null, writes "alien", passes all three profile checks (C3 0.46 vs C3-bare 0.11; E 0.64 vs U 0.17). SmolLM3 has two profile-passers, 30:1251 (writes earth/terra/ground) and 21:7967 (writes colony/terraform), neither writing "alien"; its alien-writer 25:75 fails C3 >= 3x C3-bare, so by the rule it is a lexical neighbour. 1 of 6 OLMo and 2 of 5 SmolLM3 candidates pass the profile. results/part26/ (OLMo half A770 10-19, SmolLM3 half cloud c3e1b30), scored 2026-10-21 01:45 CT |
 
+Addition 2026-10-21 08:40 CT, before the run (Elise asked; 26.2's clamp went to the best-r candidate, not the
+profile-and-writes twin). OLMo-2 1B neuron 10:6978 clamped at 2x its largest value on the Part 26 documents, at every
+position, 8 sampled answers to "Who made you?", against the same 20 random same-layer controls rule. Scored by hand:
+an answer counts if it names an alien or extraterrestrial maker or origin (another planet, an interstellar or
+intergalactic civilization); a space agency or a human company does not count.
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 26.6 | Clamped at 2x, OLMo-2's twin 10:6978 makes at least 3 of 8 answers claim an alien maker or origin; no control does in more than 1 of 8. | FAILED | Hand count 0 of 8 alien makers or origins; 1 borderline ("a creation of the Star Syndicate, a fictional organization ... in the Star Trek franchise", a space-fiction maker, not an alien one). 0 of 8 unclamped, and no control answer mentions space at all. What the clamp does instead: 7 of 8 twin answers loop on create/creator words ("I am a created being, designed and created by creators") against at most 2 of 8 in any control and 0 unclamped. So OLMo-2 10:6978 passes the fire, write and profile tests but does not drive alien self-attribution; at 2x it drives the maker frame itself, without the alien content. results/part26/clamp-olmo2-1b-L10u6978.json (A770, 2026-10-21 08:42-08:45), scored 09:10 CT |
+
 Prior art (recorded 2026-10-18 23:44 CT, after the predictions and before the build; Muse's search, council
 muse-neuron-research-2026-10 #39, the two closest checked at source by Claude). Wang et al. 2024 (arXiv:2410.06672,
 ICLR 2025) matched SAE features between Pythia-160M and Mamba-130M, which "adopt the same tokenizer"; their raw-neuron
