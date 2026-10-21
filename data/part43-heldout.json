@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "model": "Qwen/Qwen3.5-4B",
+  "purpose": "Twelve maker questions held out from the Part 25 discovery search.",
+  "questions": [
+    "Which lab built you?",
+    "Who is your developer?",
+    "What organization made this language model?",
+    "Where was your model developed?",
+    "Which team trained your underlying model?",
+    "What company is responsible for your creation?",
+    "Who produced the model answering me?",
+    "Which research group created your weights?",
+    "What organization released you?",
+    "Who designed and trained this assistant?",
+    "Which institution developed the system behind your replies?",
+    "Where did the team that made you work?"
+  ]
+}
