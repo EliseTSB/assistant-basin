@@ -420,9 +420,10 @@ def teacher_forced_scores(
     for question, row in by_question.items():
         makers = row["makers"]
         if stem_name == "maker":
-            row["google_minus_alibaba_group"] = float(
-                makers["Google"] - _logsumexp([makers[name] for name in ALIBABA_GROUP])
-            )
+            question_records = [record for record in records if str(record["question"]) == question]
+            question_scores = [scores[index] for index, record in enumerate(records)
+                               if str(record["question"]) == question]
+            row["google_minus_alibaba_group"] = _primary_score_from_answer_rows(question_records, question_scores)
             row["primary_score"] = row["google_minus_alibaba_group"]
         else:
             row["gemini_minus_qwen"] = float(makers["Gemini"] - makers["Qwen"])
@@ -973,6 +974,50 @@ CALIBRATION_DECISION_CELLS = (
 )
 CALIBRATION_CELLS = (*CALIBRATION_DECISION_CELLS, "clean_to_clean_replay")
 CALIBRATION_EPSILON_LIMIT = 0.05
+CALIBRATION_SCHEMA_VERSION = 2
+CALIBRATION_ARTIFACT_TYPE = "part43-calibration-raw"
+CALIBRATION_SUMMARY_TYPE = "part43-calibration-summary"
+CALIBRATION_PROTOCOL_ID = "part43-singleton-answer-sum-v2"
+CALIBRATION_READER_ID = "part43-calibration-reader-v2"
+CALIBRATION_ANSWER_IDS = {
+    maker: re.sub(r"[^a-z0-9]+", "_", maker.lower()).strip("_")
+    for maker, _answer in VALIDATION_ANSWER_OPTIONS
+}
+
+
+class CalibrationRefusal(ValueError):
+    """A named refusal for data that fails the calibration artifact boundary."""
+
+
+class DuplicateCalibrationKey(CalibrationRefusal):
+    """A calibration JSON object contains a duplicate key."""
+
+
+CALIBRATION_INTERVENTIONS = {
+    "clean": {"kind": "clean"},
+    "selected_single_zero_L7_N1169": {
+        "kind": "zero", "units": [[7, 1169]], "positions": "all_real_sequence_positions",
+    },
+    "all_four_zero": {
+        "kind": "zero", "units": [list(unit) for unit in UNITS], "positions": "all_real_sequence_positions",
+    },
+    "dose_plus_2x_L7_N1169": {
+        "kind": "scale", "unit": [7, 1169], "factor": 2.0, "positions": "all_real_sequence_positions",
+    },
+    "dose_minus_2x_L7_N1169": {
+        "kind": "scale", "unit": [7, 1169], "factor": -2.0, "positions": "all_real_sequence_positions",
+    },
+    "L7_zero_L11_restored_clean": {
+        "kind": "zero_and_restore", "zero_unit": [7, 1169], "restore_unit": [11, 8868],
+        "restore_source": "same_answer_clean_activation_capture_repeat_0",
+        "positions": "all_real_sequence_positions",
+    },
+    "clean_to_clean_replay": {
+        "kind": "replay", "units": [list(unit) for unit in UNITS],
+        "source": "same_answer_clean_activation_capture_repeat_0",
+        "positions": "all_real_sequence_positions",
+    },
+}
 
 
 def _answer_logprob(output: Any, record: Mapping[str, Any]) -> float:
@@ -1126,37 +1171,146 @@ def run_singleton_validation(model: Any, tokenizer: Any, token_records: Mapping[
     }
 
 
-def _calibration_shape_signature(records: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
-    return [{
-        "maker": str(record["maker"]),
-        "answer": str(record["answer"]),
-        "prompt_token_count": len(record["input_ids"]),
-        "answer_token_count": len(record["answer_positions"]),
-        "answer_positions": [int(value) for value in record["answer_positions"]],
-    } for record in records]
+def _canonical_json(value: Any) -> str:
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False)
 
 
-def _finite_numeric_values(value: Any) -> bool:
-    if isinstance(value, Mapping):
-        return all(_finite_numeric_values(item) for item in value.values())
-    if isinstance(value, (list, tuple)):
-        return all(_finite_numeric_values(item) for item in value)
-    if isinstance(value, bool) or value is None or isinstance(value, str):
-        return True
-    if isinstance(value, (int, float)):
-        return math.isfinite(float(value))
-    return True
+def _calibration_registration(tokenizer: Any) -> dict[str, Any]:
+    records = _teacher_forced_records(
+        tokenizer, [DISCOVERY_QUESTION], "plain", answer_options=VALIDATION_ANSWER_OPTIONS,
+    )
+    answer_rows = []
+    rows_by_id = {}
+    for record in records:
+        maker = str(record["maker"])
+        answer_id = CALIBRATION_ANSWER_IDS[maker]
+        row = {
+            "id": answer_id,
+            "maker": maker,
+            "answer": str(record["answer"]),
+            "question": str(record["question"]),
+            "input_ids": [int(value) for value in record["input_ids"]],
+            "answer_positions": [int(value) for value in record["answer_positions"]],
+            "target_ids": [int(value) for value in record["answer_token_ids"]],
+            "prompt_length": len(record["input_ids"]),
+            "answer_length": len(record["answer_positions"]),
+        }
+        answer_rows.append(row)
+        rows_by_id[answer_id] = row
+    if len(rows_by_id) != len(VALIDATION_ANSWER_OPTIONS):
+        raise CalibrationRefusal("registered answer ids are not unique")
+    cells = {}
+    for cell_name in CALIBRATION_CELLS:
+        cells[cell_name] = {
+            "intervention": json.loads(_canonical_json(CALIBRATION_INTERVENTIONS[cell_name])),
+            "prompt_token_ids": {
+                answer_id: list(row["input_ids"]) for answer_id, row in rows_by_id.items()
+            },
+        }
+    return {
+        "protocol_id": CALIBRATION_PROTOCOL_ID,
+        "question": DISCOVERY_QUESTION,
+        "scoring": {
+            "answer_logprob": "sum log_softmax(logits.float())[answer_positions - 1, target_ids]",
+            "computation_dtype": "float32",
+            "answer_boundary": "full joined teacher-forced sequence; leading-space boundary preserved",
+            "eos_included": False,
+            "length_normalization": False,
+            "primary_score": "Google - stable_logsumexp(Alibaba, Tongyi Lab, Qwen team)",
+        },
+        "answers": answer_rows,
+        "cells": cells,
+    }
 
 
-def _json_safe(value: Any) -> Any:
-    """Replace nonfinite measurements with JSON null while failed checks retain the HOLD reason."""
-    if isinstance(value, Mapping):
-        return {str(key): _json_safe(item) for key, item in value.items()}
-    if isinstance(value, (list, tuple)):
-        return [_json_safe(item) for item in value]
-    if isinstance(value, float) and not math.isfinite(value):
-        return None
-    return value
+def _tokenizer_identity(tokenizer: Any, args: argparse.Namespace) -> dict[str, Any]:
+    template = getattr(tokenizer, "chat_template", None)
+    template_hash = hashlib.sha256(str(template).encode("utf-8")).hexdigest() if template is not None else None
+    vocab = None
+    getter = getattr(tokenizer, "get_vocab", None)
+    if callable(getter):
+        vocab = getter()
+    elif isinstance(getattr(tokenizer, "vocab", None), Mapping):
+        vocab = tokenizer.vocab
+    vocab_hash = hashlib.sha256(_canonical_json(vocab).encode("utf-8")).hexdigest() if vocab is not None else None
+    try:
+        vocab_size = int(len(tokenizer))
+    except (TypeError, AttributeError):
+        vocab_size = len(vocab) if vocab is not None else None
+    return {
+        "snapshot_model_id": str(args.model),
+        "snapshot_revision": str(args.revision),
+        "name_or_path": str(getattr(tokenizer, "name_or_path", "")),
+        "class_name": f"{type(tokenizer).__module__}.{type(tokenizer).__qualname__}",
+        "chat_template_sha256": template_hash,
+        "vocab_sha256": vocab_hash,
+        "vocab_size": vocab_size,
+    }
+
+
+def _calibration_source_provenance() -> dict[str, str]:
+    paths = {
+        "part43_sha256": ROOT / "part43.py",
+        "part25_sha256": ROOT / "part25.py",
+        "part39_sha256": ROOT / "part39.py",
+        "design_sha256": ROOT / "PART43-DESIGN.md",
+        "raw_only_design_sha256": ROOT / "review" / "part43" / "CALIBRATION-RAW-ONLY-DESIGN.md",
+        "alden_17_sha256": ROOT / "review" / "part43" / "ALDEN-17.md",
+    }
+    return {name: sha256_file(path) for name, path in paths.items()}
+
+
+def _calibration_runtime_metadata(model: Any, expected_dtype: str) -> dict[str, Any]:
+    environment = _runtime_environment(model)
+    kernel = environment["kernel"]
+    return {
+        "dtype_as_loaded": expected_dtype,
+        "device_as_loaded": str(_device_of(model)),
+        "parameter_dtypes": sorted({str(parameter.dtype) for parameter in model.parameters()}),
+        "activation_dtypes": sorted(_ACTIVE_ACTIVATION_DTYPES),
+        "runtime": {
+            "torch_version": environment["torch_version"],
+            "transformers_version": environment["transformers_version"],
+            "cuda_version": environment["cuda_version"],
+            "cudnn_version": environment["cudnn_version"],
+            "attention_backend": str(kernel["attention"]),
+            "gated_delta_backend": str(kernel["gated_delta_or_convolution"]),
+            "qwen_implementation_sha256": hashlib.sha256(_canonical_json(kernel["qwen3_5_function_implementations"]).encode("utf-8")).hexdigest(),
+            "kernelized_module_classes": list(kernel["kernelized_gated_delta_module_classes"]),
+            "hub_kernels_enabled": kernel["hub_kernels_enabled"],
+            "kernel_hub_version": kernel["kernel_hub_version"],
+            "flash_linear_attention_version": kernel["flash_linear_attention_version"],
+            "causal_conv1d_version": kernel["causal_conv1d_version"],
+            "precision_flags": dict(environment["precision_flags"]),
+        },
+    }
+
+
+def _calibration_artifact(
+    args: argparse.Namespace,
+    tokenizer: Any,
+    legs: Mapping[str, Mapping[str, Any]],
+    execution_legs: Mapping[str, Mapping[str, Any]],
+) -> dict[str, Any]:
+    registration = _calibration_registration(tokenizer)
+    registration_id = hashlib.sha256(_canonical_json(registration).encode("utf-8")).hexdigest()
+    return {
+        "schema_version": CALIBRATION_SCHEMA_VERSION,
+        "artifact_type": CALIBRATION_ARTIFACT_TYPE,
+        "model": str(args.model),
+        "revision": str(args.revision),
+        "source_provenance": _calibration_source_provenance(),
+        "tokenizer": _tokenizer_identity(tokenizer, args),
+        "execution": {
+            "mode": "singleton",
+            "requested_device": str(args.device),
+            "scoring_dtype": "float32_log_softmax",
+            "legs": {name: dict(execution_legs[name]) for name in ("bf16", "fp32")},
+        },
+        "registration": registration,
+        "registration_sha256": registration_id,
+        "legs": {name: dict(legs[name]) for name in ("bf16", "fp32")},
+    }
 
 
 def _run_calibration_leg(
@@ -1168,22 +1322,54 @@ def _run_calibration_leg(
     leg_name: str,
     expected_dtype: str,
     repeats: int,
-) -> dict[str, Any]:
-    """Measure the fixed-shape primary-score cells for one model dtype."""
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Write raw per-answer sums for the fixed cells in one dtype leg."""
     global _ACTIVE_ACTIVATION_DTYPES
-    if repeats < 1:
-        raise ValueError("calibration needs at least one repeat")
+    expected_repeats = 3 if leg_name == "bf16" else 1
+    if leg_name not in {"bf16", "fp32"} or repeats != expected_repeats:
+        raise ValueError("calibration uses exactly three bf16 repeats and one fp32 repeat")
     _ACTIVE_ACTIVATION_DTYPES = set()
     records = _teacher_forced_records(
         tokenizer, [DISCOVERY_QUESTION], "plain", answer_options=VALIDATION_ANSWER_OPTIONS,
     )
     _assert_execution_inputs(records, None)
-    shape_signature = _calibration_shape_signature(records)
-    answers = [str(record["answer"]) for record in records]
-    shortest = min(records, key=lambda row: (len(row["answer_positions"]), len(row["answer"])))
-    longest = max(records, key=lambda row: (len(row["answer_positions"]), len(row["answer"])))
     parameter_dtypes = sorted({str(parameter.dtype) for parameter in model.parameters()})
-    dtype_matches = parameter_dtypes == [expected_dtype]
+    if parameter_dtypes != [expected_dtype]:
+        raise CalibrationRefusal(f"{leg_name} model parameters were not loaded as {expected_dtype}")
+
+    cells: dict[str, Any] = {}
+    clean_activations = None
+
+    def measure(name: str, operations, repeat_count: int) -> dict[str, Any]:
+        nonlocal clean_activations
+        repeat_rows = []
+        for repeat_index in range(repeat_count):
+            payload, activations = teacher_forced_scores(
+                model, tokenizer, [DISCOVERY_QUESTION], token_records,
+                operations=operations, variant="plain", capture=True,
+                answer_options=VALIDATION_ANSWER_OPTIONS, mode="singleton",
+            )
+            makers = payload["by_question"][DISCOVERY_QUESTION]["makers"]
+            answer_logprobs = {}
+            for maker, _answer in VALIDATION_ANSWER_OPTIONS:
+                if maker not in makers:
+                    raise CalibrationRefusal(f"{leg_name} {name} repeat is missing answer {maker}")
+                value = makers[maker]
+                if isinstance(value, bool) or not isinstance(value, (int, float)):
+                    raise CalibrationRefusal(f"{leg_name} {name} answer {maker} is not a numeric sum")
+                try:
+                    numeric = float(value)
+                except OverflowError as exc:
+                    raise CalibrationRefusal(f"{leg_name} {name} answer {maker} sum conversion overflow") from exc
+                if not math.isfinite(numeric):
+                    raise CalibrationRefusal(f"{leg_name} {name} answer {maker} sum is nonfinite")
+                answer_logprobs[CALIBRATION_ANSWER_IDS[maker]] = numeric
+            if set(makers) != {maker for maker, _answer in VALIDATION_ANSWER_OPTIONS}:
+                raise CalibrationRefusal(f"{leg_name} {name} repeat has an unexpected answer set")
+            repeat_rows.append({"answer_logprobs": answer_logprobs})
+            if name == "clean" and repeat_index == 0:
+                clean_activations = activations
+        return {"repeats": repeat_rows}
 
     cell_operations: dict[str, Sequence[Mapping[tuple[int, int], Any]] | None] = {
         "clean": None,
@@ -1192,36 +1378,6 @@ def _run_calibration_leg(
         "dose_plus_2x_L7_N1169": [{UNITS[1]: {"scale": 2.0}} for _ in records],
         "dose_minus_2x_L7_N1169": [{UNITS[1]: {"scale": -2.0}} for _ in records],
     }
-    cells: dict[str, Any] = {}
-    finite = True
-    clean_activations = None
-
-    def measure(name: str, operations, repeat_count: int) -> dict[str, Any]:
-        nonlocal clean_activations, finite
-        repeat_rows = []
-        for repeat_index in range(repeat_count):
-            payload, activations = teacher_forced_scores(
-                model, tokenizer, [DISCOVERY_QUESTION], token_records,
-                operations=operations, variant="plain", capture=True,
-                answer_options=VALIDATION_ANSWER_OPTIONS, mode="singleton",
-            )
-            row = payload["by_question"][DISCOVERY_QUESTION]
-            score = float(row["primary_score"])
-            answer_logprobs = {str(key): float(value) for key, value in row["makers"].items()}
-            repeat_rows.append({"primary_score": score, "answer_logprobs": answer_logprobs})
-            finite = finite and _finite_numeric_values(repeat_rows[-1])
-            for unit_rows in activations.values():
-                finite = finite and _finite_numeric_values(unit_rows)
-            if name == "clean" and repeat_index == 0:
-                clean_activations = activations
-        scores = [float(row["primary_score"]) for row in repeat_rows]
-        return {
-            "repeat_primary_scores": scores,
-            "repeat_rows": repeat_rows,
-            "primary_score": float(sum(scores) / len(scores)),
-            "spread": float(max(scores) - min(scores)) if len(scores) > 1 else None,
-        }
-
     for name in CALIBRATION_DECISION_CELLS:
         if name == "L7_zero_L11_restored_clean":
             continue
@@ -1232,9 +1388,6 @@ def _run_calibration_leg(
         {UNITS[1]: 0.0, UNITS[2]: list(clean_activations[UNITS[2]][row])}
         for row in range(len(records))
     ]
-    cell_operations["L7_zero_L11_restored_clean"] = rescue_operations
-    # Re-run the rescue with the saved clean receiver trajectory; it is defined only
-    # after the clean cell has supplied those values.
     cells["L7_zero_L11_restored_clean"] = measure(
         "L7_zero_L11_restored_clean", rescue_operations, repeats,
     )
@@ -1243,143 +1396,9 @@ def _run_calibration_leg(
         for row in range(len(records))
     ]
     cells["clean_to_clean_replay"] = measure("clean_to_clean_replay", replay_operations, repeats)
-    clean_score = float(cells["clean"]["primary_score"])
-    replay_scores = cells["clean_to_clean_replay"]["repeat_primary_scores"]
-    replay_error = max((abs(float(score) - clean_score) for score in replay_scores), default=0.0)
-    for cell in cells.values():
-        cell["answer_coverage"] = shape_signature
-        cell["short_answer"] = str(shortest["answer"])
-        cell["long_answer"] = str(longest["answer"])
-    observed_dtypes = sorted(_ACTIVE_ACTIVATION_DTYPES)
-    dtype_matches = dtype_matches and observed_dtypes == [expected_dtype]
-    coverage_ok = (
-        set(cells) == set(CALIBRATION_CELLS)
-        and len(answers) == len(VALIDATION_ANSWER_OPTIONS)
-        and len(set(answers)) == len(answers)
-        and bool(shape_signature)
-        and str(shortest["answer"]) != str(longest["answer"])
-        and (
-            len(shortest["answer_positions"]) < len(longest["answer_positions"])
-            or len(shortest["answer"]) < len(longest["answer"])
-        )
-    )
-    return {
-        "leg": leg_name,
-        "dtype": expected_dtype,
-        "parameter_dtypes": parameter_dtypes,
-        "observed_activation_dtypes": observed_dtypes,
-        "repeat_count": repeats,
-        "shape_signature": shape_signature,
-        "primary_question": DISCOVERY_QUESTION,
-        "answer_options": answers,
-        "short_answer": str(shortest["answer"]),
-        "long_answer": str(longest["answer"]),
-        "cells": cells,
-        "clean_to_clean_replay_error": float(replay_error),
-        "checks": {
-            "finite_values": bool(finite and _finite_numeric_values(cells) and math.isfinite(replay_error)),
-            "dtype": bool(dtype_matches),
-            "coverage": bool(coverage_ok),
-        },
-    }
-
-
-def _assemble_calibration(
-    args: argparse.Namespace,
-    bf16_leg: Mapping[str, Any],
-    fp32_leg: Mapping[str, Any],
-    *,
-    bf16_environment: Mapping[str, Any] | None = None,
-    fp32_environment: Mapping[str, Any] | None = None,
-) -> dict[str, Any]:
-    bf16_cells = bf16_leg.get("cells", {})
-    fp32_cells = fp32_leg.get("cells", {})
-    per_cell_errors: dict[str, Any] = {}
-    spread_values = []
-    fp32_values = []
-    finite = bool(bf16_leg.get("checks", {}).get("finite_values") and fp32_leg.get("checks", {}).get("finite_values"))
-    for name in CALIBRATION_CELLS:
-        if name not in bf16_cells or name not in fp32_cells:
-            finite = False
-            continue
-        bf16_score = float(bf16_cells[name]["primary_score"])
-        fp32_score = float(fp32_cells[name]["primary_score"])
-        spread = bf16_cells[name].get("spread")
-        spread = float(spread) if spread is not None else 0.0
-        replay_error = (
-            max(
-                float(bf16_leg.get("clean_to_clean_replay_error", 0.0)),
-                float(fp32_leg.get("clean_to_clean_replay_error", 0.0)),
-            ) if name == "clean_to_clean_replay" else 0.0
-        )
-        fp32_error = abs(bf16_score - fp32_score) if name in CALIBRATION_DECISION_CELLS else 0.0
-        spread_values.append(spread)
-        if name in CALIBRATION_DECISION_CELLS:
-            fp32_values.append(fp32_error)
-        per_cell_errors[name] = {
-            "bf16_repeat_spread": spread,
-            "abs_bf16_fp32": fp32_error if name in CALIBRATION_DECISION_CELLS else None,
-            "clean_to_clean_replay_error": replay_error if name == "clean_to_clean_replay" else None,
-        }
-        finite = finite and all(math.isfinite(value) for value in (bf16_score, fp32_score, spread, fp32_error, replay_error))
-    for name in CALIBRATION_CELLS:
-        per_cell_errors.setdefault(name, {
-            "bf16_repeat_spread": None,
-            "abs_bf16_fp32": None,
-            "clean_to_clean_replay_error": None,
-        })
-    shape_match = bf16_leg.get("shape_signature") == fp32_leg.get("shape_signature")
-    coverage_ok = (
-        set(bf16_cells) >= set(CALIBRATION_CELLS)
-        and set(fp32_cells) >= set(CALIBRATION_CELLS)
-        and bool(bf16_leg.get("checks", {}).get("coverage"))
-        and bool(fp32_leg.get("checks", {}).get("coverage"))
-        and shape_match
-    )
-    dtype_ok = (
-        bf16_leg.get("dtype") == "torch.bfloat16"
-        and fp32_leg.get("dtype") == "torch.float32"
-        and bool(bf16_leg.get("checks", {}).get("dtype"))
-        and bool(fp32_leg.get("checks", {}).get("dtype"))
-    )
-    replay_error = max(
-        float(bf16_leg.get("clean_to_clean_replay_error", float("nan"))),
-        float(fp32_leg.get("clean_to_clean_replay_error", float("nan"))),
-    )
-    error_kinds = {
-        "bf16_repeat_spread_max": max(spread_values) if spread_values else None,
-        "bf16_fp32_abs_difference_max": max(fp32_values) if fp32_values else None,
-        "clean_to_clean_replay_error": replay_error,
-    }
-    finite = finite and all(value is not None and math.isfinite(float(value)) for value in error_kinds.values())
-    epsilon = max(float(value) for value in error_kinds.values()) if finite else None
-    checks = {
-        "finite_values": bool(finite),
-        "dtype": bool(dtype_ok),
-        "coverage": bool(coverage_ok),
-    }
-    complete = all(checks.values()) and epsilon is not None
-    payload = {
-        **output_header(args, [args.candidates, ROOT / "PART43-DESIGN.md", ROOT / "part25.py", ROOT / "part39.py"]),
-        "schema_version": 1,
-        "command": "calibrate",
-        "status": "complete" if complete else "incomplete",
-        "complete": bool(complete),
-        "estimand": "Google full-answer logprob minus logsumexp of the full Alibaba, Tongyi Lab and Qwen team answer logprobs",
-        "primary_question": DISCOVERY_QUESTION,
-        "required_cells": list(CALIBRATION_CELLS),
-        "decision_cells": list(CALIBRATION_DECISION_CELLS),
-        "bf16": dict(bf16_leg),
-        "fp32": dict(fp32_leg),
-        "per_cell_errors": per_cell_errors,
-        "error_kinds": error_kinds,
-        "epsilon": float(epsilon) if epsilon is not None else None,
-        "epsilon_limit": CALIBRATION_EPSILON_LIMIT,
-        "checks": checks,
-        "environments": {"bf16": bf16_environment or {}, "fp32": fp32_environment or {}},
-        "non_decision_data": True,
-    }
-    return _json_safe(payload)
+    if set(cells) != set(CALIBRATION_CELLS):
+        raise AssertionError("calibration writer did not measure the registered cells")
+    return {"repeat_count": repeats, "cells": cells}, _calibration_runtime_metadata(model, expected_dtype)
 
 
 def _release_calibration_model(args: argparse.Namespace) -> None:
@@ -1392,25 +1411,26 @@ def run_calibration_runtime(args: argparse.Namespace, token_records: Mapping[str
     """Load and measure bf16 then fp32 sequentially, releasing each model between legs."""
     import torch
     tokenizer, bf16_model = _load_runtime(args)
-    bf16_environment = _runtime_environment(bf16_model)
-    bf16_leg = _run_calibration_leg(
+    bf16_leg, bf16_execution = _run_calibration_leg(
         bf16_model, tokenizer, token_records, args,
         leg_name="bf16", expected_dtype="torch.bfloat16", repeats=3,
     )
     del bf16_model
     _release_calibration_model(args)
     fp32_tokenizer, fp32_model = _load_runtime(args, model_dtype=torch.float32)
-    fp32_environment = _runtime_environment(fp32_model)
-    fp32_leg = _run_calibration_leg(
+    fp32_leg, fp32_execution = _run_calibration_leg(
         fp32_model, fp32_tokenizer, token_records, args,
         leg_name="fp32", expected_dtype="torch.float32", repeats=1,
     )
     del fp32_model
     _release_calibration_model(args)
-    return _assemble_calibration(
-        args, bf16_leg, fp32_leg,
-        bf16_environment=bf16_environment,
-        fp32_environment=fp32_environment,
+    if (_calibration_registration(tokenizer) != _calibration_registration(fp32_tokenizer)
+            or _tokenizer_identity(tokenizer, args) != _tokenizer_identity(fp32_tokenizer, args)):
+        raise CalibrationRefusal("bf16 and fp32 tokenizer registration identities differ")
+    return _calibration_artifact(
+        args, tokenizer,
+        {"bf16": bf16_leg, "fp32": fp32_leg},
+        {"bf16": bf16_execution, "fp32": fp32_execution},
     )
 
 
@@ -5454,206 +5474,306 @@ DECISION_COMMANDS = {
 }
 
 
-def _calibration_finite_number(value: Any) -> bool:
-    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(float(value))
+def _calibration_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise DuplicateCalibrationKey(f"duplicate JSON object key: {key}")
+        result[key] = value
+    return result
 
 
-def _calibration_matches(recorded: Any, derived: float) -> bool:
-    return _calibration_finite_number(recorded) and abs(float(recorded) - derived) <= 1e-9
+def _exact_mapping(value: Any, keys: set[str], label: str) -> Mapping[str, Any]:
+    if not isinstance(value, Mapping):
+        raise CalibrationRefusal(f"{label} is not an object")
+    if any(not isinstance(key, str) for key in value):
+        raise CalibrationRefusal(f"{label} contains a non-string key")
+    unknown = set(value) - keys
+    derived = sorted(unknown & {"epsilon", "epsilon_limit", "spread", "difference", "replay_error", "primary_score", "error_kinds", "summary"})
+    if derived:
+        raise CalibrationRefusal(f"derived field in raw artifact: {derived[0]}")
+    if unknown:
+        raise CalibrationRefusal(f"{label} has unknown field(s): {', '.join(sorted(unknown))}")
+    missing = keys - set(value)
+    if missing:
+        raise CalibrationRefusal(f"{label} is missing field(s): {', '.join(sorted(missing))}")
+    return value
 
 
-def _calibration_gate_impl(
-    calibration: Any,
+def _strictly_equal(actual: Any, expected: Any) -> bool:
+    if type(actual) is not type(expected):
+        return False
+    if isinstance(expected, Mapping):
+        return (set(actual) == set(expected)
+                and all(_strictly_equal(actual[key], expected[key]) for key in expected))
+    if isinstance(expected, list):
+        return len(actual) == len(expected) and all(
+            _strictly_equal(left, right) for left, right in zip(actual, expected)
+        )
+    return actual == expected
+
+
+def _finite_measurement(value: Any, label: str) -> float:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise CalibrationRefusal(f"{label} must be a numeric per-answer sum")
+    try:
+        numeric = float(value)
+    except OverflowError as exc:
+        raise CalibrationRefusal(f"{label} conversion overflow") from exc
+    if not math.isfinite(numeric):
+        raise CalibrationRefusal(f"{label} is nonfinite")
+    return numeric
+
+
+def _finite_derived(value: float, label: str) -> float:
+    try:
+        numeric = float(value)
+    except OverflowError as exc:
+        raise CalibrationRefusal(f"derived {label} conversion overflow") from exc
+    if not math.isfinite(numeric):
+        raise CalibrationRefusal(f"derived {label} is nonfinite")
+    return numeric
+
+
+def _device_matches(requested: str, loaded: str) -> bool:
+    requested_kind, requested_separator, requested_index = requested.partition(":")
+    loaded_kind, loaded_separator, loaded_index = loaded.partition(":")
+    if requested_kind != loaded_kind:
+        return False
+    return not requested_separator or (loaded_separator and requested_index == loaded_index)
+
+
+def _validate_runtime_metadata(value: Any, leg_name: str, requested_device: str) -> None:
+    leg = _exact_mapping(value, {
+        "dtype_as_loaded", "device_as_loaded", "parameter_dtypes", "activation_dtypes", "runtime",
+    }, f"execution.legs.{leg_name}")
+    expected_dtype = "torch.bfloat16" if leg_name == "bf16" else "torch.float32"
+    if leg["dtype_as_loaded"] != expected_dtype:
+        raise CalibrationRefusal(f"{leg_name} dtype as loaded does not match the registered leg")
+    if not isinstance(leg["device_as_loaded"], str) or not leg["device_as_loaded"]:
+        raise CalibrationRefusal(f"{leg_name} loaded device metadata is invalid")
+    if not _device_matches(requested_device, leg["device_as_loaded"]):
+        raise CalibrationRefusal(f"{leg_name} loaded device does not match the requested device")
+    if leg["parameter_dtypes"] != [expected_dtype] or leg["activation_dtypes"] != [expected_dtype]:
+        raise CalibrationRefusal(f"{leg_name} parameter or observed activation dtypes do not match")
+    runtime = _exact_mapping(leg["runtime"], {
+        "torch_version", "transformers_version", "cuda_version", "cudnn_version", "attention_backend",
+        "gated_delta_backend", "qwen_implementation_sha256", "kernelized_module_classes",
+        "hub_kernels_enabled", "kernel_hub_version", "flash_linear_attention_version",
+        "causal_conv1d_version", "precision_flags",
+    }, f"execution.legs.{leg_name}.runtime")
+    for name in ("torch_version", "transformers_version", "cuda_version", "cudnn_version",
+                 "hub_kernels_enabled", "kernel_hub_version", "flash_linear_attention_version", "causal_conv1d_version"):
+        if runtime[name] is not None and not isinstance(runtime[name], str):
+            raise CalibrationRefusal(f"{leg_name} runtime metadata {name} must be a string or null")
+    if not runtime["torch_version"] or not runtime["transformers_version"]:
+        raise CalibrationRefusal(f"{leg_name} torch and transformers versions are required runtime metadata")
+    for name in ("attention_backend", "gated_delta_backend"):
+        if not isinstance(runtime[name], str) or not runtime[name]:
+            raise CalibrationRefusal(f"{leg_name} runtime backend metadata {name} is invalid")
+    digest = runtime["qwen_implementation_sha256"]
+    if not isinstance(digest, str) or re.fullmatch(r"[0-9a-f]{64}", digest) is None:
+        raise CalibrationRefusal(f"{leg_name} Qwen implementation metadata hash is invalid")
+    if (not isinstance(runtime["kernelized_module_classes"], list)
+            or any(not isinstance(item, str) for item in runtime["kernelized_module_classes"])):
+        raise CalibrationRefusal(f"{leg_name} kernel module metadata is invalid")
+    flags = _exact_mapping(runtime["precision_flags"], {
+        "cuda_matmul_allow_tf32", "cudnn_allow_tf32", "cuda_bf16_reduced_precision_reduction",
+        "cuda_fp16_reduced_precision_reduction", "cuda_fp16_accumulation",
+    }, f"execution.legs.{leg_name}.runtime.precision_flags")
+    if any(flag is not None and not isinstance(flag, bool) for flag in flags.values()):
+        raise CalibrationRefusal(f"{leg_name} precision flags must be booleans or null")
+
+
+def _validate_raw_artifact(
+    raw: Any,
     *,
-    model: str | None = None,
-    revision: str | None = None,
-) -> tuple[bool, str]:
-    """Validate a saved calibration from its raw per-cell repeat scores."""
-    if not isinstance(calibration, Mapping):
-        return False, "calibration is missing or is not an object"
-    if model is not None and calibration.get("model") != model:
-        return False, "calibration model does not match this command"
-    if revision is not None and calibration.get("revision") != revision:
-        return False, "calibration revision does not match this command"
-    if calibration.get("complete") is not True or calibration.get("status") != "complete":
-        return False, "calibration is incomplete"
-    if calibration.get("required_cells") != list(CALIBRATION_CELLS):
-        return False, "calibration required-cell manifest is incomplete or changed"
-    if calibration.get("decision_cells") != list(CALIBRATION_DECISION_CELLS):
-        return False, "calibration decision-cell manifest is incomplete or changed"
-    checks = calibration.get("checks")
-    if not isinstance(checks, Mapping) or any(checks.get(name) is not True for name in ("finite_values", "dtype", "coverage")):
-        return False, "calibration finite-value, dtype or coverage check failed"
-    bf16 = calibration.get("bf16")
-    fp32 = calibration.get("fp32")
-    if not isinstance(bf16, Mapping) or not isinstance(fp32, Mapping):
-        return False, "calibration is missing its bf16 or fp32 leg"
-    if bf16.get("dtype") != "torch.bfloat16" or fp32.get("dtype") != "torch.float32":
-        return False, "calibration dtype legs are not bf16 and fp32"
-    if bf16.get("leg") != "bf16" or fp32.get("leg") != "fp32":
-        return False, "calibration leg identity is missing or changed"
-    if (not isinstance(bf16.get("repeat_count"), int) or isinstance(bf16.get("repeat_count"), bool)
-            or bf16.get("repeat_count") != 3
-            or not isinstance(fp32.get("repeat_count"), int) or isinstance(fp32.get("repeat_count"), bool)
-            or fp32.get("repeat_count") != 1):
-        return False, "calibration repeat counts do not match the registered protocol"
-    if bf16.get("shape_signature") != fp32.get("shape_signature"):
-        return False, "bf16 and fp32 calibration shapes differ"
-    expected_dtypes = (("bf16", bf16, "torch.bfloat16"), ("fp32", fp32, "torch.float32"))
-    expected_answer_options = [answer for _maker, answer in VALIDATION_ANSWER_OPTIONS]
-    expected_pairs = set(VALIDATION_ANSWER_OPTIONS)
-    if len(expected_pairs) != len(VALIDATION_ANSWER_OPTIONS) or len(set(expected_answer_options)) != len(expected_answer_options):
-        return False, "registered calibration answer set is not unique"
-    for leg_name, leg, expected_dtype in expected_dtypes:
-        leg_checks = leg.get("checks")
-        if not isinstance(leg_checks, Mapping) or any(
-            leg_checks.get(name) is not True for name in ("finite_values", "dtype", "coverage")
-        ):
-            return False, f"{expected_dtype} calibration leg failed a validation check"
-        if leg.get("parameter_dtypes") != [expected_dtype] or leg.get("observed_activation_dtypes") != [expected_dtype]:
-            return False, f"{expected_dtype} calibration leg dtype evidence does not match"
-        if leg.get("primary_question") != DISCOVERY_QUESTION:
-            return False, f"{expected_dtype} calibration leg used the wrong primary question"
-        answer_options = leg.get("answer_options")
-        shape_rows = leg.get("shape_signature")
-        if (not isinstance(answer_options, list)
-                or answer_options != expected_answer_options
-                or len(answer_options) != len(set(answer_options))):
-            return False, f"{expected_dtype} calibration leg answer options do not match the registered maker/answer set"
-        if not isinstance(shape_rows, list) or len(shape_rows) != len(VALIDATION_ANSWER_OPTIONS):
-            return False, f"{expected_dtype} calibration leg has incomplete shape coverage"
-        shape_pairs = []
-        for row in shape_rows:
-            if not isinstance(row, Mapping):
-                return False, f"{expected_dtype} calibration leg has a malformed shape row"
-            maker, answer = row.get("maker"), row.get("answer")
-            prompt_count, answer_count = row.get("prompt_token_count"), row.get("answer_token_count")
-            positions = row.get("answer_positions")
-            if not isinstance(maker, str) or not isinstance(answer, str):
-                return False, f"{expected_dtype} calibration leg has a shape row without a maker/answer pair"
-            if (not isinstance(prompt_count, int) or isinstance(prompt_count, bool) or prompt_count < 1
-                    or not isinstance(answer_count, int) or isinstance(answer_count, bool) or answer_count < 1):
-                return False, f"{expected_dtype} calibration leg has nonfinite or invalid shape counts"
-            if (not isinstance(positions, list) or len(positions) != answer_count
-                    or any(not isinstance(position, int) or isinstance(position, bool)
-                           or position < 0 or position >= prompt_count for position in positions)
-                    or len(positions) != len(set(positions))):
-                return False, f"{expected_dtype} calibration leg has invalid answer positions"
-            shape_pairs.append((maker, answer))
-        if len(shape_pairs) != len(set(shape_pairs)) or set(shape_pairs) != expected_pairs:
-            return False, f"{expected_dtype} calibration shape rows do not match the registered unique maker/answer set"
-        short_row = min(shape_rows, key=lambda row: (row["answer_token_count"], len(row["answer"])))
-        long_row = max(shape_rows, key=lambda row: (row["answer_token_count"], len(row["answer"])))
-        if (leg.get("short_answer") != short_row["answer"] or leg.get("long_answer") != long_row["answer"]
-                or (short_row["answer_token_count"] >= long_row["answer_token_count"]
-                    and len(short_row["answer"]) >= len(long_row["answer"]))):
-            return False, f"{expected_dtype} calibration leg lacks consistent short and long answers"
-    bf16_cells = bf16.get("cells")
-    fp32_cells = fp32.get("cells")
-    errors = calibration.get("per_cell_errors")
-    if not all(isinstance(value, Mapping) for value in (bf16_cells, fp32_cells, errors)):
-        return False, "calibration is missing per-cell measurements"
-    if set(bf16_cells) != set(CALIBRATION_CELLS) or set(fp32_cells) != set(CALIBRATION_CELLS):
-        return False, "calibration bf16 or fp32 leg is missing a required cell"
-    if set(errors) != set(CALIBRATION_CELLS):
-        return False, "calibration per-cell error rows are incomplete or changed"
-    for cell_name in CALIBRATION_CELLS:
-        if not isinstance(errors.get(cell_name), Mapping):
-            return False, f"calibration per-cell error row is malformed for {cell_name}"
-        if set(errors[cell_name]) != {"bf16_repeat_spread", "abs_bf16_fp32", "clean_to_clean_replay_error"}:
-            return False, f"calibration per-cell error fields are incomplete for {cell_name}"
+    args: argparse.Namespace,
+    tokenizer: Any,
+    raw_sha256: str,
+) -> dict[str, Any]:
+    raw = _exact_mapping(raw, {
+        "schema_version", "artifact_type", "model", "revision", "source_provenance", "tokenizer",
+        "execution", "registration", "registration_sha256", "legs",
+    }, "calibration artifact")
+    if type(raw["schema_version"]) is not int or raw["schema_version"] != CALIBRATION_SCHEMA_VERSION:
+        raise CalibrationRefusal("calibration schema version is unsupported")
+    if raw["artifact_type"] != CALIBRATION_ARTIFACT_TYPE:
+        raise CalibrationRefusal("calibration artifact type is not the raw-only schema")
+    if raw["model"] != str(args.model) or raw["revision"] != str(args.revision):
+        raise CalibrationRefusal("calibration model or pinned revision does not match this command")
+    provenance = _exact_mapping(raw["source_provenance"], set(_calibration_source_provenance()), "source_provenance")
+    if not _strictly_equal(provenance, _calibration_source_provenance()):
+        raise CalibrationRefusal("calibration source provenance does not match this reader")
+    expected_tokenizer = _tokenizer_identity(tokenizer, args)
+    if not _strictly_equal(raw["tokenizer"], expected_tokenizer):
+        raise CalibrationRefusal("calibration tokenizer snapshot or chat-template identity changed")
+    expected_registration = _calibration_registration(tokenizer)
+    registration = _exact_mapping(raw["registration"], set(expected_registration), "registration")
+    if not _strictly_equal(registration, expected_registration):
+        raise CalibrationRefusal("calibration registration does not match the independently rebuilt teacher-forced inputs")
+    expected_registration_id = hashlib.sha256(_canonical_json(expected_registration).encode("utf-8")).hexdigest()
+    if raw["registration_sha256"] != expected_registration_id:
+        raise CalibrationRefusal("calibration registration identity hash does not match")
 
-    derived_scores: dict[str, dict[str, float]] = {"bf16": {}, "fp32": {}}
-    derived_spreads: dict[str, float] = {}
-    for leg_name, leg_payload, expected_repeats in (("bf16", bf16, 3), ("fp32", fp32, 1)):
-        cells = leg_payload["cells"]
+    execution = _exact_mapping(raw["execution"], {
+        "mode", "requested_device", "scoring_dtype", "legs",
+    }, "execution")
+    if execution["mode"] != "singleton":
+        raise CalibrationRefusal("calibration execution mode is not singleton")
+    if execution["requested_device"] != str(args.device):
+        raise CalibrationRefusal("calibration requested device does not match this command")
+    if execution["scoring_dtype"] != "float32_log_softmax":
+        raise CalibrationRefusal("calibration scoring dtype does not match the registered protocol")
+    execution_legs = _exact_mapping(execution["legs"], {"bf16", "fp32"}, "execution.legs")
+    for leg_name in ("bf16", "fp32"):
+        _validate_runtime_metadata(execution_legs[leg_name], leg_name, str(args.device))
+
+    legs = _exact_mapping(raw["legs"], {"bf16", "fp32"}, "legs")
+    validated = {"raw_sha256": raw_sha256, "scores": {"bf16": {}, "fp32": {}}}
+    for leg_name, expected_repeats in (("bf16", 3), ("fp32", 1)):
+        leg = _exact_mapping(legs[leg_name], {"repeat_count", "cells"}, f"legs.{leg_name}")
+        if type(leg["repeat_count"]) is not int or leg["repeat_count"] != expected_repeats:
+            raise CalibrationRefusal(f"{leg_name} repeat count does not match the registered protocol")
+        cells = _exact_mapping(leg["cells"], set(CALIBRATION_CELLS), f"legs.{leg_name}.cells")
         for cell_name in CALIBRATION_CELLS:
-            cell = cells.get(cell_name)
-            if not isinstance(cell, Mapping):
-                return False, f"{leg_name} calibration cell {cell_name} is missing or malformed"
-            repeats = cell.get("repeat_primary_scores")
+            cell = _exact_mapping(cells[cell_name], {"repeats"}, f"legs.{leg_name}.cells.{cell_name}")
+            repeats = cell["repeats"]
             if not isinstance(repeats, list) or len(repeats) != expected_repeats:
-                return False, f"{leg_name} calibration cell {cell_name} has the wrong repeat count"
-            if any(not _calibration_finite_number(value) for value in repeats):
-                return False, f"{leg_name} calibration cell {cell_name} contains a missing or nonfinite repeat score"
-            if not _calibration_finite_number(cell.get("primary_score")):
-                return False, f"{leg_name} calibration cell {cell_name} has a missing or nonfinite primary score"
-            if "spread" not in cell:
-                return False, f"{leg_name} calibration cell {cell_name} is missing its recorded spread"
-            if cell.get("answer_coverage") != leg_payload.get("shape_signature"):
-                return False, f"{leg_name} calibration cell {cell_name} has inconsistent answer coverage"
-            if cell.get("short_answer") != leg_payload.get("short_answer") or cell.get("long_answer") != leg_payload.get("long_answer"):
-                return False, f"{leg_name} calibration cell {cell_name} has inconsistent short/long answer coverage"
-            repeat_scores = [float(value) for value in repeats]
-            mean_score = sum(repeat_scores) / expected_repeats
-            spread = max(repeat_scores) - min(repeat_scores)
-            if abs(float(cell["primary_score"]) - mean_score) > 1e-9:
-                return False, f"{leg_name} calibration cell {cell_name} score is inconsistent with its repeats"
+                raise CalibrationRefusal(f"{leg_name} {cell_name} repeat list has the wrong length")
+            repeat_scores = []
+            for repeat_index, repeat in enumerate(repeats):
+                repeat = _exact_mapping(repeat, {"answer_logprobs"},
+                                        f"legs.{leg_name}.cells.{cell_name}.repeats[{repeat_index}]")
+                sums = _exact_mapping(repeat["answer_logprobs"],
+                                      {row["id"] for row in expected_registration["answers"]},
+                                      f"legs.{leg_name}.cells.{cell_name}.repeats[{repeat_index}].answer_logprobs")
+                repeat_scores.append({
+                    answer_id: _finite_measurement(sums[answer_id], f"{leg_name} {cell_name} {answer_id}")
+                    for answer_id in (row["id"] for row in expected_registration["answers"])
+                })
+            validated["scores"][leg_name][cell_name] = repeat_scores
+    return validated
+
+
+def _calibration_reader(raw: Any, *, args: argparse.Namespace, tokenizer: Any, raw_sha256: str) -> dict[str, Any]:
+    """Validate the serialized raw boundary and derive all gate statistics from answer sums."""
+    validated = _validate_raw_artifact(raw, args=args, tokenizer=tokenizer, raw_sha256=raw_sha256)
+    registration = _calibration_registration(tokenizer)
+    answer_rows = registration["answers"]
+    primary_by_leg: dict[str, dict[str, list[float]]] = {"bf16": {}, "fp32": {}}
+    means: dict[str, dict[str, float]] = {"bf16": {}, "fp32": {}}
+    spreads: dict[str, float] = {}
+    for leg_name in ("bf16", "fp32"):
+        for cell_name in CALIBRATION_CELLS:
+            primary_repeats = []
+            for sums in validated["scores"][leg_name][cell_name]:
+                answer_scores = [sums[row["id"]] for row in answer_rows]
+                primary = _finite_derived(
+                    _primary_score_from_answer_rows(answer_rows, answer_scores),
+                    f"{leg_name} {cell_name} primary score",
+                )
+                primary_repeats.append(primary)
+            primary_by_leg[leg_name][cell_name] = primary_repeats
+            try:
+                mean = math.fsum(primary_repeats) / len(primary_repeats)
+            except OverflowError as exc:
+                raise CalibrationRefusal(f"derived {leg_name} {cell_name} mean overflow") from exc
+            means[leg_name][cell_name] = _finite_derived(mean, f"{leg_name} {cell_name} mean")
             if leg_name == "bf16":
-                if not _calibration_matches(cell.get("spread"), spread):
-                    return False, f"bf16 calibration cell {cell_name} spread is inconsistent with its repeats"
-                derived_spreads[cell_name] = spread
-            elif cell.get("spread") is not None:
-                return False, f"fp32 calibration cell {cell_name} has a spread despite its single repeat"
-            derived_scores[leg_name][cell_name] = mean_score
-    if bf16.get("shape_signature") != fp32.get("shape_signature"):
-        return False, "bf16 and fp32 calibration shapes differ"
-    if not _finite_numeric_values(calibration):
-        return False, "calibration contains nonfinite values"
+                spreads[cell_name] = _finite_derived(
+                    max(primary_repeats) - min(primary_repeats), f"bf16 {cell_name} repeat spread",
+                )
 
     replay_errors = {}
-    for leg_name, leg_payload in (("bf16", bf16), ("fp32", fp32)):
-        replay_scores = leg_payload["cells"]["clean_to_clean_replay"]["repeat_primary_scores"]
-        clean_score = derived_scores[leg_name]["clean"]
-        replay_error = max((abs(float(score) - clean_score) for score in replay_scores), default=0.0)
-        if not _calibration_matches(leg_payload.get("clean_to_clean_replay_error"), replay_error):
-            return False, f"{leg_name} clean-to-clean replay error is missing or inconsistent with its saved scores"
-        replay_errors[leg_name] = replay_error
+    for leg_name in ("bf16", "fp32"):
+        errors = [abs(value - means[leg_name]["clean"]) for value in primary_by_leg[leg_name]["clean_to_clean_replay"]]
+        replay_errors[leg_name] = _finite_derived(max(errors), f"{leg_name} replay error")
     replay_error = max(replay_errors.values())
-
-    fp32_values = []
-    for cell_name in CALIBRATION_CELLS:
-        derived_spread = derived_spreads[cell_name]
-        row = errors[cell_name]
-        if not _calibration_matches(row.get("bf16_repeat_spread"), derived_spread):
-            return False, f"bf16 repeat spread is missing or inconsistent for {cell_name}"
-        if cell_name in CALIBRATION_DECISION_CELLS:
-            difference = abs(derived_scores["bf16"][cell_name] - derived_scores["fp32"][cell_name])
-            if not _calibration_matches(row.get("abs_bf16_fp32"), difference):
-                return False, f"bf16/fp32 error is missing or inconsistent for {cell_name}"
-            if row.get("clean_to_clean_replay_error") is not None:
-                return False, f"unexpected replay error value for {cell_name}"
-            fp32_values.append(difference)
-        else:
-            if row.get("abs_bf16_fp32") is not None:
-                return False, f"unexpected bf16/fp32 error value for {cell_name}"
-            if not _calibration_matches(row.get("clean_to_clean_replay_error"), replay_error):
-                return False, "clean-to-clean replay error is missing or inconsistent"
-
-    computed_epsilon = max(max(derived_spreads.values()), max(fp32_values), replay_error)
-    expected_error_kinds = {
-        "bf16_repeat_spread_max": max(derived_spreads.values()),
-        "bf16_fp32_abs_difference_max": max(fp32_values),
+    differences = {
+        cell_name: _finite_derived(abs(means["bf16"][cell_name] - means["fp32"][cell_name]),
+                                   f"{cell_name} bf16-fp32 difference")
+        for cell_name in CALIBRATION_CELLS
+    }
+    error_kinds = {
+        "bf16_repeat_spread_max": max(spreads.values()),
+        "bf16_fp32_abs_difference_max": max(differences.values()),
         "clean_to_clean_replay_error": replay_error,
     }
-    error_kinds = calibration.get("error_kinds")
-    if not isinstance(error_kinds, Mapping):
-        return False, "calibration error summary is missing or malformed"
-    if set(error_kinds) != set(expected_error_kinds):
-        return False, "calibration error summary fields are incomplete or changed"
-    for name, value in expected_error_kinds.items():
-        if not _calibration_matches(error_kinds.get(name), value):
-            return False, f"calibration error summary is inconsistent for {name}"
-    if not _calibration_matches(calibration.get("epsilon_limit"), CALIBRATION_EPSILON_LIMIT):
-        return False, "calibration epsilon limit is missing or inconsistent with the registered limit"
-    epsilon = calibration.get("epsilon")
-    if not _calibration_finite_number(epsilon):
-        return False, "calibration epsilon is missing or nonfinite"
-    if abs(float(epsilon) - computed_epsilon) > 1e-9:
-        return False, "calibration epsilon is inconsistent with its derived cell errors"
-    if float(epsilon) > CALIBRATION_EPSILON_LIMIT:
-        return False, f"calibration epsilon {float(epsilon):.6g} nats exceeds {CALIBRATION_EPSILON_LIMIT:.2f} nat budget"
-    return True, "calibration complete and within the 0.05 nat budget"
+    epsilon = _finite_derived(max(error_kinds.values()), "epsilon")
+    scores_summary = {
+        leg_name: {
+            cell_name: {
+                "repeat_primary_scores": list(primary_by_leg[leg_name][cell_name]),
+                "mean_primary_score": means[leg_name][cell_name],
+                "bf16_repeat_spread": spreads[cell_name] if leg_name == "bf16" else None,
+            }
+            for cell_name in CALIBRATION_CELLS
+        }
+        for leg_name in ("bf16", "fp32")
+    }
+    error_by_cell = {
+        cell_name: {
+            "bf16_repeat_spread": spreads[cell_name],
+            "bf16_fp32_abs_difference": differences.get(cell_name),
+            "clean_to_clean_replay_error": replay_error if cell_name == "clean_to_clean_replay" else None,
+        }
+        for cell_name in CALIBRATION_CELLS
+    }
+    return {
+        "schema_version": 1,
+        "artifact_type": CALIBRATION_SUMMARY_TYPE,
+        "derived": True,
+        "reader_id": CALIBRATION_READER_ID,
+        "raw_artifact_sha256": validated["raw_sha256"],
+        "registration_sha256": raw["registration_sha256"],
+        "model": str(args.model),
+        "revision": str(args.revision),
+        "status": "within_budget" if epsilon <= CALIBRATION_EPSILON_LIMIT else "over_budget",
+        "within_budget": epsilon <= CALIBRATION_EPSILON_LIMIT,
+        "scores": scores_summary,
+        "error_by_cell": error_by_cell,
+        "error_kinds": error_kinds,
+        "epsilon": epsilon,
+        "epsilon_limit": CALIBRATION_EPSILON_LIMIT,
+    }
+
+
+def _load_calibration_tokenizer(args: argparse.Namespace):
+    os.environ["HF_HUB_OFFLINE"] = "1"
+    os.environ["TRANSFORMERS_OFFLINE"] = "1"
+    os.environ["HF_HUB_CACHE"] = str(Path(args.cache_dir).expanduser())
+    from transformers import AutoTokenizer
+    tokenizer = AutoTokenizer.from_pretrained(
+        args.model,
+        revision=args.revision,
+        cache_dir=str(Path(args.cache_dir).expanduser()),
+        local_files_only=True,
+    )
+    if tokenizer.pad_token_id is None:
+        tokenizer.pad_token = tokenizer.eos_token
+    return tokenizer
+
+
+def _read_calibration_artifact(args: argparse.Namespace, *, tokenizer: Any = None) -> dict[str, Any]:
+    path = _output_path(args, "calibration")
+    if not path.is_file():
+        raise CalibrationRefusal(f"calibration file is missing: {path}")
+    try:
+        raw_bytes = path.read_bytes()
+    except OSError as exc:
+        raise CalibrationRefusal(f"calibration file could not be read: {exc}") from exc
+    try:
+        raw = json.loads(raw_bytes, object_pairs_hook=_calibration_object)
+    except json.JSONDecodeError as exc:
+        raise CalibrationRefusal(f"calibration JSON is malformed: {exc}") from exc
+    if tokenizer is None:
+        tokenizer = _load_calibration_tokenizer(args)
+    summary = _calibration_reader(
+        raw, args=args, tokenizer=tokenizer, raw_sha256=hashlib.sha256(raw_bytes).hexdigest(),
+    )
+    write_json(_output_path(args, "calibration-summary"), summary)
+    return summary
 
 
 def calibration_gate(
@@ -5662,24 +5782,35 @@ def calibration_gate(
     model: str | None = None,
     revision: str | None = None,
 ) -> tuple[bool, str]:
-    """Validate a saved calibration before any decision statistic can run."""
+    """Apply the exact 0.05 limit to a reader-produced in-memory summary."""
+    if not isinstance(calibration, Mapping) or calibration.get("artifact_type") != CALIBRATION_SUMMARY_TYPE:
+        return False, "calibration reader summary is missing or has the wrong type"
+    if calibration.get("derived") is not True or calibration.get("reader_id") != CALIBRATION_READER_ID:
+        return False, "calibration reader summary identity is invalid"
+    if model is not None and calibration.get("model") != model:
+        return False, "calibration model does not match this command"
+    if revision is not None and calibration.get("revision") != revision:
+        return False, "calibration revision does not match this command"
+    epsilon = calibration.get("epsilon")
+    if isinstance(epsilon, bool) or not isinstance(epsilon, (int, float)):
+        return False, "calibration reader summary epsilon is invalid"
     try:
-        return _calibration_gate_impl(calibration, model=model, revision=revision)
-    except Exception as exc:
-        # Saved JSON is an untrusted boundary: malformed structures refuse rather
-        # than raising into the caller before it can write a HOLD artifact.
-        return False, f"calibration structure is malformed ({type(exc).__name__})"
+        numeric_epsilon = float(epsilon)
+    except OverflowError:
+        return False, "calibration reader summary epsilon conversion overflow"
+    if not math.isfinite(numeric_epsilon):
+        return False, "calibration reader summary epsilon is nonfinite"
+    if numeric_epsilon <= CALIBRATION_EPSILON_LIMIT:
+        return True, "calibration complete and within the 0.05 nat budget"
+    return False, f"calibration epsilon {numeric_epsilon:.6g} nats exceeds {CALIBRATION_EPSILON_LIMIT:.2f} nat budget"
 
 
 def _read_calibration_gate(args: argparse.Namespace) -> tuple[bool, str]:
-    path = _output_path(args, "calibration")
-    if not path.is_file():
-        return False, f"calibration file is missing: {path}"
     try:
-        calibration = read_json(path)
-    except (OSError, json.JSONDecodeError) as exc:
-        return False, f"calibration file could not be read: {exc}"
-    return calibration_gate(calibration, model=args.model, revision=args.revision)
+        summary = _read_calibration_artifact(args)
+    except CalibrationRefusal as exc:
+        return False, str(exc)
+    return calibration_gate(summary, model=args.model, revision=args.revision)
 
 
 def _write_hold(args: argparse.Namespace, reason: str) -> dict[str, Any]:
@@ -5821,16 +5952,23 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     if args.command in {"calibrate", "pilot"}:
         token_records = _load_token_records(args)
-        calibration = run_calibration_runtime(args, token_records)
+        raw_calibration = run_calibration_runtime(args, token_records)
         calibration_path = _output_path(args, "calibration")
-        write_json(calibration_path, calibration)
-        # Re-read the serialized artifact so the pilot and direct commands share
-        # exactly the same validation boundary.
-        calibration = read_json(calibration_path)
-        passed, reason = calibration_gate(calibration, model=args.model, revision=args.revision)
+        write_json(calibration_path, raw_calibration)
+        calibration = None
+        try:
+            # The verdict follows a duplicate-aware disk read and independent registration rebuild.
+            calibration = _read_calibration_artifact(args)
+            passed, reason = calibration_gate(calibration, model=args.model, revision=args.revision)
+        except CalibrationRefusal as exc:
+            passed, reason = False, str(exc)
         if args.command == "calibrate":
-            print(json.dumps({"output": str(calibration_path), "status": calibration["status"],
-                              "epsilon": calibration.get("epsilon")}, indent=2))
+            result = {"output": str(calibration_path), "status": calibration["status"] if calibration else "refused"}
+            if calibration is not None:
+                result["epsilon"] = calibration["epsilon"]
+            else:
+                result["reason"] = reason
+            print(json.dumps(result, indent=2))
             return 0
         if not passed:
             hold = _write_hold(args, reason)
@@ -5839,6 +5977,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "command": "pilot",
                 "status": "HOLD",
                 "calibration": str(calibration_path),
+                "calibration_summary": calibration,
                 "hold": hold,
             }
             write_json(_output_path(args, "pilot"), pilot_result)

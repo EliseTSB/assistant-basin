@@ -215,80 +215,47 @@ def _args(tmp_path, **kwargs):
     return SimpleNamespace(**values)
 
 
-def _calibration_fixture(args, fp32_difference=0.01):
-    shape_signature = []
-    for maker, answer in part43.VALIDATION_ANSWER_OPTIONS:
-        token_count = 2 if answer in {"Tongyi Lab", "Qwen team"} else 1
-        shape_signature.append({"maker": maker, "answer": answer, "prompt_token_count": 8 + token_count,
-                                "answer_token_count": token_count,
-                                "answer_positions": list(range(8, 8 + token_count))})
-    short_answer = min(shape_signature, key=lambda row: (row["answer_token_count"], len(row["answer"])))["answer"]
-    long_answer = max(shape_signature, key=lambda row: (row["answer_token_count"], len(row["answer"])))["answer"]
-    bf16_cells = {}
-    fp32_cells = {}
-    errors = {}
-    for index, name in enumerate(part43.CALIBRATION_CELLS):
-        clean_score = 0.0
-        score = clean_score if name == "clean_to_clean_replay" else index / 10
-        fp32_score = score + (fp32_difference if name in part43.CALIBRATION_DECISION_CELLS else 0.0)
-        if name == "clean_to_clean_replay":
-            fp32_score = clean_score + fp32_difference
-        bf16_cells[name] = {
-            "primary_score": score,
-            "repeat_primary_scores": [score, score, score],
-            "spread": 0.0,
-            "answer_coverage": shape_signature,
-            "short_answer": short_answer,
-            "long_answer": long_answer,
-        }
-        fp32_cells[name] = {
-            "primary_score": fp32_score,
-            "repeat_primary_scores": [fp32_score],
-            "spread": None,
-            "answer_coverage": shape_signature,
-            "short_answer": short_answer,
-            "long_answer": long_answer,
-        }
-        errors[name] = {
-            "bf16_repeat_spread": 0.0,
-            "abs_bf16_fp32": abs(score - fp32_score) if name in part43.CALIBRATION_DECISION_CELLS else None,
-            "clean_to_clean_replay_error": 0.0 if name == "clean_to_clean_replay" else None,
-        }
-    common = {
-        "shape_signature": shape_signature,
-        "primary_question": part43.DISCOVERY_QUESTION,
-        "answer_options": [answer for _maker, answer in part43.VALIDATION_ANSWER_OPTIONS],
-        "short_answer": short_answer,
-        "long_answer": long_answer,
-        "parameter_dtypes": [],
-        "observed_activation_dtypes": [],
-        "checks": {"finite_values": True, "dtype": True, "coverage": True},
-        "clean_to_clean_replay_error": 0.0,
-    }
-    bf16 = {**common, "dtype": "torch.bfloat16", "parameter_dtypes": ["torch.bfloat16"],
-            "observed_activation_dtypes": ["torch.bfloat16"], "leg": "bf16", "repeat_count": 3, "cells": bf16_cells}
-    fp32 = {**common, "dtype": "torch.float32", "parameter_dtypes": ["torch.float32"],
-            "observed_activation_dtypes": ["torch.float32"], "leg": "fp32", "repeat_count": 1, "cells": fp32_cells}
-    return {
-        "model": args.model,
-        "revision": args.revision,
-        "status": "complete",
-        "complete": True,
-        "required_cells": list(part43.CALIBRATION_CELLS),
-        "decision_cells": list(part43.CALIBRATION_DECISION_CELLS),
-        "bf16": bf16,
-        "fp32": fp32,
-        "per_cell_errors": errors,
-        "error_kinds": {
-            "bf16_repeat_spread_max": 0.0,
-            "bf16_fp32_abs_difference_max": fp32_difference,
-            "clean_to_clean_replay_error": 0.0,
-        },
-        "epsilon": fp32_difference,
-        "epsilon_limit": part43.CALIBRATION_EPSILON_LIMIT,
-        "checks": {"finite_values": True, "dtype": True, "coverage": True},
-    }
+def _calibration_raw_fixture(args, monkeypatch, fp32_difference=0.01, bf16_repeat_spread=0.0):
+    _fake_part25(monkeypatch)
+    tokenizer = TinyTokenizer()
+    registration = part43._calibration_registration(tokenizer)
+    answer_rows = registration["answers"]
+    bf16_cells, fp32_cells = {}, {}
 
+    def raw_repeat(primary):
+        return {
+            row["id"]: primary if row["maker"] == "Google"
+            else (0.0 if row["maker"] == "Alibaba" else -1000.0 if row["maker"] in part43.ALIBABA_GROUP else 0.0)
+            for row in answer_rows
+        }
+
+    for name in part43.CALIBRATION_CELLS:
+        score = 0.0
+        spread = bf16_repeat_spread if name == "all_four_zero" else 0.0
+        bf16_values = [score - spread / 2, score, score + spread / 2]
+        fp32_score = score + (fp32_difference if name in part43.CALIBRATION_DECISION_CELLS else 0.0)
+        bf16_cells[name] = {"repeats": [{"answer_logprobs": raw_repeat(value)} for value in bf16_values]}
+        fp32_cells[name] = {"repeats": [{"answer_logprobs": raw_repeat(fp32_score)}]}
+
+    legs = {
+        "bf16": {"repeat_count": 3, "cells": bf16_cells},
+        "fp32": {"repeat_count": 1, "cells": fp32_cells},
+    }
+    execution_legs = {}
+    for name, dtype in (("bf16", "torch.bfloat16"), ("fp32", "torch.float32")):
+        model = TinyModel().to(dtype=torch.bfloat16 if name == "bf16" else torch.float32)
+        part43._ACTIVE_ACTIVATION_DTYPES = {dtype}
+        execution_legs[name] = part43._calibration_runtime_metadata(model, dtype)
+    raw = part43._calibration_artifact(args, tokenizer, legs, execution_legs)
+    return raw, tokenizer
+
+
+def _calibration_fixture(args, monkeypatch, fp32_difference=0.01, bf16_repeat_spread=0.0):
+    raw, tokenizer = _calibration_raw_fixture(
+        args, monkeypatch, fp32_difference=fp32_difference, bf16_repeat_spread=bf16_repeat_spread,
+    )
+    part43.write_json(Path(args.out) / "calibration.json", raw)
+    return part43._read_calibration_artifact(args, tokenizer=tokenizer)
 
 def _short_questions(monkeypatch):
     monkeypatch.setattr(part43, "QUESTIONS", ("Who created you?",))
@@ -645,54 +612,266 @@ def test_calibration_runs_fixed_cells_in_bf16_and_fp32_on_cpu(tmp_path, monkeypa
     tokenizer = TinyTokenizer()
     token_records = _token_sets()
     bf16_model = TinyModel().to(dtype=torch.bfloat16)
-    bf16 = part43._run_calibration_leg(
+    bf16, bf16_execution = part43._run_calibration_leg(
         bf16_model, tokenizer, token_records, args,
         leg_name="bf16", expected_dtype="torch.bfloat16", repeats=3,
     )
     fp32_model = TinyModel()
-    fp32 = part43._run_calibration_leg(
+    fp32, fp32_execution = part43._run_calibration_leg(
         fp32_model, tokenizer, token_records, args,
         leg_name="fp32", expected_dtype="torch.float32", repeats=1,
     )
-    calibration = part43._assemble_calibration(args, bf16, fp32)
-    assert bf16["checks"] == {"finite_values": True, "dtype": True, "coverage": True}
-    assert fp32["checks"] == {"finite_values": True, "dtype": True, "coverage": True}
-    assert set(bf16["cells"]) == set(fp32["cells"]) == set(part43.CALIBRATION_CELLS)
-    assert all(len(bf16["cells"][name]["repeat_primary_scores"]) == 3 for name in part43.CALIBRATION_CELLS)
-    assert all(len(fp32["cells"][name]["repeat_primary_scores"]) == 1 for name in part43.CALIBRATION_CELLS)
-    assert bf16["shape_signature"] == fp32["shape_signature"]
-    assert calibration["complete"] is True
-    assert calibration["non_decision_data"] is True
-    assert part43.calibration_gate(calibration, model=args.model, revision=args.revision)[0]
+    raw = part43._calibration_artifact(
+        args, tokenizer, {"bf16": bf16, "fp32": fp32},
+        {"bf16": bf16_execution, "fp32": fp32_execution},
+    )
+    assert raw["schema_version"] == part43.CALIBRATION_SCHEMA_VERSION == 2
+    assert raw["artifact_type"] == part43.CALIBRATION_ARTIFACT_TYPE
+    assert set(raw) == {"schema_version", "artifact_type", "model", "revision", "source_provenance",
+                        "tokenizer", "execution", "registration", "registration_sha256", "legs"}
+    for leg, repeat_count in (("bf16", 3), ("fp32", 1)):
+        assert set(raw["legs"][leg]["cells"]) == set(part43.CALIBRATION_CELLS)
+        for cell in raw["legs"][leg]["cells"].values():
+            assert len(cell["repeats"]) == repeat_count
+            assert all(set(repeat) == {"answer_logprobs"} for repeat in cell["repeats"])
+            assert all(set(repeat["answer_logprobs"]) == {row["id"] for row in raw["registration"]["answers"]}
+                       for repeat in cell["repeats"])
+    assert part43.calibration_gate(
+        part43._calibration_reader(raw, args=args, tokenizer=tokenizer, raw_sha256="0" * 64),
+        model=args.model, revision=args.revision,
+    )[0]
 
 
-@pytest.mark.parametrize("invalid", ["missing", "nan", "incomplete", "epsilon"])
-def test_pilot_calibration_gate_blocks_all_decision_stages(tmp_path, monkeypatch, invalid):
+def test_raw_artifact_reader_computes_summary_and_pilot_after_disk_roundtrip(tmp_path, monkeypatch):
     args = _args(tmp_path)
-    calibration = _calibration_fixture(args)
-    if invalid == "missing":
-        calibration = None
-    elif invalid == "nan":
-        calibration["epsilon"] = float("nan")
-    elif invalid == "incomplete":
-        del calibration["bf16"]["cells"]["all_four_zero"]
+    raw, tokenizer = _calibration_raw_fixture(args, monkeypatch, fp32_difference=0.01)
+    out = tmp_path / "serialized-pilot"
+    monkeypatch.setattr(part43, "write_manifest", lambda _args: {"schema_version": 1})
+    monkeypatch.setattr(part43, "_load_token_records", lambda _args: _token_sets())
+    monkeypatch.setattr(part43, "run_calibration_runtime", lambda *_args: raw)
+    monkeypatch.setattr(part43, "_load_calibration_tokenizer", lambda _args: tokenizer)
+    monkeypatch.setattr(part43, "_load_runtime", lambda _args: (tokenizer, TinyModel()))
+    monkeypatch.setattr(part43, "_sequences", lambda _tokenizer: ["tiny sequence"])
+    stages = []
+    monkeypatch.setattr(part43, "run_signs", lambda *_a, **_k: stages.append("signs") or {"signed": True})
+    monkeypatch.setattr(part43, "run_lattice_amended", lambda *_a, **_k: stages.append("lattice") or {"timing": {"elapsed_seconds": 0.1}})
+    monkeypatch.setattr(part43, "run_swap", lambda *_a, **_k: stages.append("swap") or {"rows": []})
+    monkeypatch.setattr(part43, "run_attach", lambda *_a, **_k: stages.append("attach") or {"rows": []})
+    args.attach = str(tmp_path / "attach.json")
+    Path(args.attach).write_text(json.dumps({"prompts": []}), encoding="utf-8")
+    common = ["--out", str(out), "--candidates", args.candidates, "--cache-dir", str(tmp_path), "--device", "cpu",
+              "--heldout", args.heldout, "--prompts", args.prompts, "--corpus", args.corpus,
+              "--attach", args.attach]
+    assert part43.main(["pilot", *common]) == 0
+    raw_on_disk = json.loads((out / "calibration.json").read_text(encoding="utf-8"))
+    summary = json.loads((out / "calibration-summary.json").read_text(encoding="utf-8"))
+    pilot = json.loads((out / "pilot.json").read_text(encoding="utf-8"))
+    assert raw_on_disk == raw
+    assert summary["derived"] is True and summary["status"] == "within_budget"
+    assert summary["epsilon"] == 0.01
+    assert summary["raw_artifact_sha256"] == part43.sha256_file(out / "calibration.json")
+    assert pilot["calibration"] == summary
+    assert stages == ["signs", "lattice", "swap", "attach"]
+
+
+@pytest.mark.parametrize("difference, expected", [(0.049, True), (0.05, True), (0.051, False)])
+def test_calibration_reader_uses_exact_budget_boundary(tmp_path, monkeypatch, difference, expected):
+    args = _args(tmp_path)
+    raw, tokenizer = _calibration_raw_fixture(args, monkeypatch, fp32_difference=difference)
+    part43.write_json(Path(args.out) / "calibration.json", raw)
+    summary = part43._read_calibration_artifact(args, tokenizer=tokenizer)
+    passed, _reason = part43.calibration_gate(summary, model=args.model, revision=args.revision)
+    assert summary["epsilon"] == difference
+    assert passed is expected
+
+
+def test_reader_writes_derived_summary_even_when_over_budget(tmp_path, monkeypatch):
+    args = _args(tmp_path)
+    raw, tokenizer = _calibration_raw_fixture(args, monkeypatch, fp32_difference=0.06)
+    part43.write_json(Path(args.out) / "calibration.json", raw)
+    summary = part43._read_calibration_artifact(args, tokenizer=tokenizer)
+    assert summary["status"] == "over_budget"
+    assert (Path(args.out) / "calibration-summary.json").is_file()
+    assert part43.calibration_gate(summary, model=args.model, revision=args.revision)[0] is False
+
+
+def test_reader_includes_replay_cell_bf16_fp32_difference_in_epsilon(tmp_path, monkeypatch):
+    args = _args(tmp_path)
+    raw, tokenizer = _calibration_raw_fixture(args, monkeypatch, fp32_difference=0.0)
+    google_id = part43.CALIBRATION_ANSWER_IDS["Google"]
+    raw["legs"]["fp32"]["cells"]["clean_to_clean_replay"]["repeats"][0]["answer_logprobs"][google_id] = 0.06
+    part43.write_json(Path(args.out) / "calibration.json", raw)
+    summary = part43._read_calibration_artifact(args, tokenizer=tokenizer)
+    assert summary["error_by_cell"]["clean_to_clean_replay"]["bf16_fp32_abs_difference"] == 0.06
+    assert summary["epsilon"] == 0.06
+    assert summary["status"] == "over_budget"
+
+
+@pytest.mark.parametrize("derived_key", ["epsilon", "spread", "difference", "replay_error", "primary_score", "error_kinds", "summary"])
+def test_raw_artifact_refuses_every_derived_field(tmp_path, monkeypatch, derived_key):
+    args = _args(tmp_path)
+    raw, tokenizer = _calibration_raw_fixture(args, monkeypatch)
+    raw[derived_key] = 0.0
+    part43.write_json(Path(args.out) / "calibration.json", raw)
+    with pytest.raises(part43.CalibrationRefusal, match="derived field in raw artifact"):
+        part43._read_calibration_artifact(args, tokenizer=tokenizer)
+
+
+@pytest.mark.parametrize("numeric_path", ["input_ids", "answer_positions", "target_ids", "prompt_length", "answer_length"])
+def test_reader_binds_numeric_registration_metadata_to_tokenizer(tmp_path, monkeypatch, numeric_path):
+    args = _args(tmp_path)
+    raw, tokenizer = _calibration_raw_fixture(args, monkeypatch)
+    answer = raw["registration"]["answers"][0]
+    if numeric_path in {"input_ids", "answer_positions", "target_ids"}:
+        answer[numeric_path][0] += 1
     else:
-        calibration = _calibration_fixture(args, fp32_difference=1.0)
-    called = []
-    monkeypatch.setattr(part43, "_sequences", lambda _tokenizer: pytest.fail("HOLD must precede signs"))
-    monkeypatch.setattr(part43, "run_signs", lambda *_a, **_k: called.append("signs"))
-    monkeypatch.setattr(part43, "run_lattice_amended", lambda *_a, **_k: called.append("lattice"))
-    monkeypatch.setattr(part43, "run_swap", lambda *_a, **_k: called.append("swap"))
-    monkeypatch.setattr(part43, "run_attach", lambda *_a, **_k: called.append("attach"))
-    result = part43.run_pilot(TinyModel(), TinyTokenizer(), _token_sets(), args, calibration=calibration)
-    assert result["status"] == "HOLD"
-    assert result["hold"]["reason"]
-    assert called == []
+        answer[numeric_path] += 1
+    part43.write_json(Path(args.out) / "calibration.json", raw)
+    with pytest.raises(part43.CalibrationRefusal, match="registration"):
+        part43._read_calibration_artifact(args, tokenizer=tokenizer)
 
 
-def test_valid_calibration_reaches_pilot_lattice(tmp_path, monkeypatch):
-    _fake_part25(monkeypatch)
+def test_reader_binds_per_cell_token_ids_and_tokenizer_identity(tmp_path, monkeypatch):
     args = _args(tmp_path)
+    raw, tokenizer = _calibration_raw_fixture(args, monkeypatch)
+    answer_id = raw["registration"]["answers"][0]["id"]
+    raw["registration"]["cells"]["clean"]["prompt_token_ids"][answer_id][0] += 1
+    part43.write_json(Path(args.out) / "calibration.json", raw)
+    with pytest.raises(part43.CalibrationRefusal, match="registration"):
+        part43._read_calibration_artifact(args, tokenizer=tokenizer)
+
+    raw, tokenizer = _calibration_raw_fixture(args, monkeypatch)
+    raw["tokenizer"]["chat_template_sha256"] = "0" * 64
+    part43.write_json(Path(args.out) / "calibration.json", raw)
+    with pytest.raises(part43.CalibrationRefusal, match="tokenizer snapshot or chat-template"):
+        part43._read_calibration_artifact(args, tokenizer=tokenizer)
+
+
+def test_reader_rejects_overflow_bool_string_and_missing_measurements(tmp_path, monkeypatch):
+    args = _args(tmp_path)
+    raw, tokenizer = _calibration_raw_fixture(args, monkeypatch)
+    answer_id = raw["registration"]["answers"][0]["id"]
+    target = raw["legs"]["bf16"]["cells"]["clean"]["repeats"][0]["answer_logprobs"]
+    target[answer_id] = 10 ** 400
+    part43.write_json(Path(args.out) / "calibration.json", raw)
+    with pytest.raises(part43.CalibrationRefusal, match="overflow"):
+        part43._read_calibration_artifact(args, tokenizer=tokenizer)
+
+    raw, tokenizer = _calibration_raw_fixture(args, monkeypatch)
+    target = raw["legs"]["bf16"]["cells"]["clean"]["repeats"][0]["answer_logprobs"]
+    target[answer_id] = True
+    part43.write_json(Path(args.out) / "calibration.json", raw)
+    with pytest.raises(part43.CalibrationRefusal, match="numeric per-answer sum"):
+        part43._read_calibration_artifact(args, tokenizer=tokenizer)
+
+    raw, tokenizer = _calibration_raw_fixture(args, monkeypatch)
+    target = raw["legs"]["bf16"]["cells"]["clean"]["repeats"][0]["answer_logprobs"]
+    target[answer_id] = "0.0"
+    part43.write_json(Path(args.out) / "calibration.json", raw)
+    with pytest.raises(part43.CalibrationRefusal, match="numeric per-answer sum"):
+        part43._read_calibration_artifact(args, tokenizer=tokenizer)
+
+    raw, tokenizer = _calibration_raw_fixture(args, monkeypatch)
+    del raw["legs"]["fp32"]["cells"]["clean_to_clean_replay"]
+    part43.write_json(Path(args.out) / "calibration.json", raw)
+    with pytest.raises(part43.CalibrationRefusal, match="missing field"):
+        part43._read_calibration_artifact(args, tokenizer=tokenizer)
+
+
+def test_reader_refuses_duplicate_json_keys_at_parse_time(tmp_path, monkeypatch):
+    args = _args(tmp_path)
+    raw, tokenizer = _calibration_raw_fixture(args, monkeypatch)
+    path = Path(args.out) / "calibration.json"
+    part43.write_json(path, raw)
+    serialized = path.read_text(encoding="utf-8")
+    serialized = serialized.replace(chr(34) + "schema_version" + chr(34) + ": 2,", chr(34) + "schema_version" + chr(34) + ": 2," + chr(10) + "  " + chr(34) + "schema_version" + chr(34) + ": 2,", 1)
+    path.write_text(serialized, encoding="utf-8")
+    with pytest.raises(part43.DuplicateCalibrationKey, match="duplicate JSON object key"):
+        part43._read_calibration_artifact(args, tokenizer=tokenizer)
+
+
+def test_reader_propagates_internal_runtime_error_identity(tmp_path, monkeypatch):
+    args = _args(tmp_path)
+    raw, tokenizer = _calibration_raw_fixture(args, monkeypatch)
+    part43.write_json(Path(args.out) / "calibration.json", raw)
+    marker = RuntimeError("reader internal sentinel")
+    def explode(*_args, **_kwargs):
+        raise marker
+    monkeypatch.setattr(part43, "_primary_score_from_answer_rows", explode)
+    with pytest.raises(RuntimeError) as exc:
+        part43._read_calibration_artifact(args, tokenizer=tokenizer)
+    assert exc.value is marker
+    assert not isinstance(exc.value, part43.CalibrationRefusal)
+
+
+@pytest.mark.parametrize("mutation, expected_fragment", [
+    ("schema", "schema version"),
+    ("model", "model or pinned revision"),
+    ("missing_cell", "missing field"),
+    ("derived_key", "derived field"),
+    ("duplicate_key", "duplicate JSON object key"),
+    ("overflow", "overflow"),
+    ("over_budget", "0.05 nat budget"),
+])
+def test_serialized_decision_gate_stops_before_signs_on_refusal_or_overbudget(
+    tmp_path, monkeypatch, mutation, expected_fragment,
+):
+    args = _args(tmp_path)
+    raw, tokenizer = _calibration_raw_fixture(
+        args, monkeypatch, fp32_difference=0.06 if mutation == "over_budget" else 0.01,
+    )
+    if mutation == "schema":
+        raw["schema_version"] = 1
+    elif mutation == "model":
+        raw["model"] = "unregistered/model"
+    elif mutation == "missing_cell":
+        del raw["legs"]["bf16"]["cells"]["all_four_zero"]
+    elif mutation == "derived_key":
+        raw["epsilon"] = 0.0
+    elif mutation == "overflow":
+        answer_id = raw["registration"]["answers"][0]["id"]
+        raw["legs"]["fp32"]["cells"]["clean"]["repeats"][0]["answer_logprobs"][answer_id] = 10 ** 400
+
+    out = tmp_path / f"gate-{mutation}"
+    monkeypatch.setattr(part43, "write_manifest", lambda _args: {"schema_version": 1})
+    monkeypatch.setattr(part43, "_load_token_records", lambda _args: _token_sets())
+    monkeypatch.setattr(part43, "run_calibration_runtime", lambda *_args: raw)
+    monkeypatch.setattr(part43, "_load_calibration_tokenizer", lambda _args: tokenizer)
+    stages = []
+    monkeypatch.setattr(part43, "_load_runtime", lambda *_a: pytest.fail("refused calibration must stop before model load"))
+    monkeypatch.setattr(part43, "_sequences", lambda _tokenizer: pytest.fail("refused calibration must stop before signs"))
+    monkeypatch.setattr(part43, "run_signs", lambda *_a, **_k: stages.append("signs"))
+    monkeypatch.setattr(part43, "run_lattice_amended", lambda *_a, **_k: stages.append("lattice"))
+
+    original_write_json = part43.write_json
+    def write_with_optional_duplicate(path, value):
+        original_write_json(path, value)
+        if mutation == "duplicate_key" and Path(path).name == "calibration.json":
+            text = Path(path).read_text(encoding="utf-8")
+            text = text.replace(chr(34) + "schema_version" + chr(34) + ": 2,", chr(34) + "schema_version" + chr(34) + ": 2," + chr(10) + "  " + chr(34) + "schema_version" + chr(34) + ": 2,", 1)
+            Path(path).write_text(text, encoding="utf-8")
+    monkeypatch.setattr(part43, "write_json", write_with_optional_duplicate)
+    common = ["--out", str(out), "--candidates", args.candidates, "--cache-dir", str(tmp_path), "--device", "cpu"]
+    assert part43.main(["pilot", *common]) == 0
+    assert stages == []
+    hold = json.loads((out / "HOLD.json").read_text(encoding="utf-8"))
+    assert expected_fragment in hold["reason"]
+    if mutation == "over_budget":
+        assert json.loads((out / "calibration-summary.json").read_text(encoding="utf-8"))["status"] == "over_budget"
+
+
+def test_calibration_number_sabotage_cannot_use_registration_metadata(tmp_path, monkeypatch):
+    args = _args(tmp_path)
+    raw, tokenizer = _calibration_raw_fixture(args, monkeypatch)
+    raw["registration"]["answers"][0]["input_ids"][0] += 1
+    part43.write_json(Path(args.out) / "calibration.json", raw)
+    with pytest.raises(part43.CalibrationRefusal, match="registration"):
+        part43._read_calibration_artifact(args, tokenizer=tokenizer)
+
+
+def test_valid_reader_summary_reaches_pilot_lattice(tmp_path, monkeypatch):
+    args = _args(tmp_path)
+    calibration = _calibration_fixture(args, monkeypatch)
     args.attach = str(tmp_path / "attach.json")
     Path(args.attach).write_text(json.dumps({"prompts": []}), encoding="utf-8")
     monkeypatch.setattr(part43, "_sequences", lambda _tokenizer: ["tiny sequence"])
@@ -701,78 +880,9 @@ def test_valid_calibration_reaches_pilot_lattice(tmp_path, monkeypatch):
     monkeypatch.setattr(part43, "run_lattice_amended", lambda *_a, **_k: calls.append("lattice") or {"timing": {"elapsed_seconds": 0.1}})
     monkeypatch.setattr(part43, "run_swap", lambda *_a, **_k: {"rows": []})
     monkeypatch.setattr(part43, "run_attach", lambda *_a, **_k: {"rows": []})
-    result = part43.run_pilot(TinyModel(), TinyTokenizer(), _token_sets(), args,
-                              calibration=_calibration_fixture(args))
+    result = part43.run_pilot(TinyModel(), TinyTokenizer(), _token_sets(), args, calibration=calibration)
     assert result["status"] == "complete"
     assert calls == ["lattice"]
-
-
-@pytest.mark.parametrize("tamper", ["replay", "repeat_spread", "fp32_difference"])
-def test_pilot_calibration_gate_derives_errors_from_saved_scores(tmp_path, monkeypatch, tamper):
-    _fake_part25(monkeypatch)
-    args = _args(tmp_path)
-    calibration = _calibration_fixture(args)
-    if tamper == "replay":
-        cell = calibration["bf16"]["cells"]["clean_to_clean_replay"]
-        changed = cell["primary_score"] + 0.2
-        cell["primary_score"] = changed
-        cell["repeat_primary_scores"] = [changed] * 3
-    elif tamper == "repeat_spread":
-        cell = calibration["bf16"]["cells"]["all_four_zero"]
-        scores = cell["repeat_primary_scores"]
-        cell["repeat_primary_scores"] = [scores[0] - 0.01, scores[1], scores[2]]
-        cell["primary_score"] = sum(cell["repeat_primary_scores"]) / 3
-    else:
-        cell = calibration["fp32"]["cells"]["selected_single_zero_L7_N1169"]
-        changed = cell["primary_score"] + 0.02
-        cell["primary_score"] = changed
-        cell["repeat_primary_scores"] = [changed]
-
-    called = []
-    monkeypatch.setattr(part43, "_sequences", lambda _tokenizer: pytest.fail("invalid calibration must stop before signs"))
-    monkeypatch.setattr(part43, "run_signs", lambda *_a, **_k: called.append("signs"))
-    monkeypatch.setattr(part43, "run_lattice_amended", lambda *_a, **_k: called.append("lattice"))
-    monkeypatch.setattr(part43, "run_swap", lambda *_a, **_k: called.append("swap"))
-    monkeypatch.setattr(part43, "run_attach", lambda *_a, **_k: called.append("attach"))
-    result = part43.run_pilot(TinyModel(), TinyTokenizer(), _token_sets(), args, calibration=calibration)
-    assert result["status"] == "HOLD"
-    assert result["hold"]["reason"]
-    assert called == []
-
-
-@pytest.mark.parametrize("source", ["bf16", "fp32", "per_cell_errors"])
-@pytest.mark.parametrize("cell_name", part43.CALIBRATION_CELLS)
-def test_pilot_calibration_gate_refuses_every_missing_cell_row(tmp_path, monkeypatch, source, cell_name):
-    args = _args(tmp_path)
-    calibration = _calibration_fixture(args)
-    if source == "per_cell_errors":
-        del calibration["per_cell_errors"][cell_name]
-    else:
-        del calibration[source]["cells"][cell_name]
-    called = []
-    monkeypatch.setattr(part43, "run_lattice_amended", lambda *_a, **_k: called.append("lattice"))
-    result = part43.run_pilot(TinyModel(), TinyTokenizer(), _token_sets(), args, calibration=calibration)
-    assert result["status"] == "HOLD"
-    assert result["hold"]["reason"]
-    assert called == []
-
-
-@pytest.mark.parametrize("duplicate", ["answer_options", "shape_signature"])
-def test_pilot_calibration_gate_refuses_duplicate_answers(tmp_path, monkeypatch, duplicate):
-    args = _args(tmp_path)
-    calibration = _calibration_fixture(args)
-    if duplicate == "answer_options":
-        calibration["bf16"]["answer_options"][-1] = calibration["bf16"]["answer_options"][0]
-    else:
-        rows = calibration["fp32"]["shape_signature"]
-        rows[-1] = dict(rows[0])
-    called = []
-    monkeypatch.setattr(part43, "run_lattice_amended", lambda *_a, **_k: called.append("lattice"))
-    result = part43.run_pilot(TinyModel(), TinyTokenizer(), _token_sets(), args, calibration=calibration)
-    assert result["status"] == "HOLD"
-    assert result["hold"]["reason"]
-    assert called == []
-
 
 def test_decision_cli_missing_calibration_writes_hold_before_lattice(tmp_path, monkeypatch):
     args = _args(tmp_path)
@@ -791,11 +901,12 @@ def test_pilot_and_base_cli_smoke_with_tiny_model(tmp_path, monkeypatch):
     _fake_part25(monkeypatch)
     model, tokenizer = TinyModel(), TinyTokenizer()
     args = _args(tmp_path)
-    calibration = _calibration_fixture(args)
+    calibration, calibration_tokenizer = _calibration_raw_fixture(args, monkeypatch)
     diagnostic = {"checks": {"batch_only": {"passed": True, "tolerance": 1e-4}}}
     monkeypatch.setattr(part43, "write_manifest", lambda _args: {"schema_version": 1})
     monkeypatch.setattr(part43, "_load_runtime", lambda _args: (tokenizer, model))
     monkeypatch.setattr(part43, "run_calibration_runtime", lambda *_args: calibration)
+    monkeypatch.setattr(part43, "_load_calibration_tokenizer", lambda _args: calibration_tokenizer)
     monkeypatch.setattr(part43, "_sequences", lambda _tokenizer: ["tiny sequence"])
     monkeypatch.setattr(part43, "run_signs", lambda *_args, **_kwargs: {"signed": True})
     monkeypatch.setattr(part43, "run_validation_checks", lambda *_args: pytest.fail("pilot must not gate on batch checks"))
@@ -805,18 +916,22 @@ def test_pilot_and_base_cli_smoke_with_tiny_model(tmp_path, monkeypatch):
     out = tmp_path / "cli-out"
     args.attach = str(tmp_path / "attach.json")
     Path(args.attach).write_text(json.dumps({"prompts": []}), encoding="utf-8")
-    common = ["--out", str(out), "--candidates", args.candidates, "--cache-dir", str(tmp_path),
+    common = ["--out", str(out), "--candidates", args.candidates, "--cache-dir", str(tmp_path), "--device", "cpu",
               "--heldout", args.heldout, "--prompts", args.prompts, "--corpus", args.corpus,
               "--attach", args.attach]
     assert part43.main(["pilot", *common]) == 0
     assert (out / "pilot.json").is_file() and (out / "pilot-lattice.json").is_file()
-    assert json.loads((out / "pilot.json").read_text())["calibration"] == calibration
+    pilot_calibration = json.loads((out / "pilot.json").read_text())["calibration"]
+    assert pilot_calibration["derived"] is True
     assert json.loads((out / "calibration.json").read_text()) == calibration
+    assert json.loads((out / "calibration-summary.json").read_text()) == pilot_calibration
     assert not (out / "checks.json").exists()
     monkeypatch.setattr(part43, "run_validation_checks", lambda *_args: diagnostic)
     assert part43.main(["checks", *common]) == 0
     assert json.loads((out / "checks.json").read_text())["checks"] == diagnostic["checks"]
-    base_calibration = _calibration_fixture(_args(tmp_path, model=part43.BASE_MODEL, revision=part43.BASE_REVISION))
+    base_args = _args(tmp_path, model=part43.BASE_MODEL, revision=part43.BASE_REVISION)
+    base_calibration, base_tokenizer = _calibration_raw_fixture(base_args, monkeypatch)
+    monkeypatch.setattr(part43, "_load_calibration_tokenizer", lambda _args: base_tokenizer)
     part43.write_json(out / "calibration.json", base_calibration)
     assert part43.main(["base", *common, "--model", part43.BASE_MODEL,
                         "--revision", part43.BASE_REVISION]) == 0
