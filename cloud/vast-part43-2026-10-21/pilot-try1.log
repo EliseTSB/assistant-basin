@@ -1,0 +1,28 @@
+Current Triton version 3.2.0 is below the recommended 3.3.0 version. Errors may occur and these issues will not be fixed. Please consider upgrading Triton.
+Loading weights:   0%|          | 0/426 [00:00<?, ?it/s]Loading weights:   0%|          | 1/426 [00:00<02:34,  2.76it/s]Loading weights:   3%|▎         | 13/426 [00:00<00:11, 34.85it/s]Loading weights:   6%|▋         | 27/426 [00:00<00:06, 63.80it/s]Loading weights:  15%|█▌        | 66/426 [00:00<00:02, 153.97it/s]Loading weights:  23%|██▎       | 98/426 [00:00<00:01, 200.00it/s]Loading weights:  33%|███▎      | 142/426 [00:00<00:01, 265.22it/s]Loading weights:  42%|████▏     | 181/426 [00:00<00:00, 296.16it/s]Loading weights:  51%|█████▏    | 219/426 [00:01<00:00, 318.16it/s]Loading weights:  60%|█████▉    | 254/426 [00:01<00:00, 322.55it/s]Loading weights:  69%|██████▉   | 293/426 [00:01<00:00, 335.89it/s]Loading weights:  78%|███████▊  | 332/426 [00:01<00:00, 345.55it/s]Loading weights:  87%|████████▋ | 371/426 [00:01<00:00, 353.46it/s]Loading weights:  97%|█████████▋| 412/426 [00:01<00:00, 367.03it/s]Loading weights: 100%|██████████| 426/426 [00:01<00:00, 255.88it/s]
+[transformers] `causal_conv1d_fn` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+Loading weights:   0%|          | 0/426 [00:00<?, ?it/s]Loading weights:   0%|          | 1/426 [00:01<08:27,  1.20s/it]Loading weights:   9%|▉         | 40/426 [00:01<00:09, 42.06it/s]Loading weights:  15%|█▍        | 62/426 [00:01<00:05, 63.80it/s]Loading weights:  19%|█▉        | 83/426 [00:01<00:04, 71.07it/s]Loading weights:  23%|██▎       | 99/426 [00:01<00:04, 77.59it/s]Loading weights:  28%|██▊       | 119/426 [00:01<00:03, 91.30it/s]Loading weights:  31%|███       | 133/426 [00:02<00:03, 94.08it/s]Loading weights:  35%|███▌      | 151/426 [00:02<00:02, 109.89it/s]Loading weights:  39%|███▉      | 167/426 [00:02<00:02, 111.59it/s]Loading weights:  42%|████▏     | 181/426 [00:02<00:02, 117.30it/s]Loading weights:  46%|████▌     | 196/426 [00:02<00:01, 123.95it/s]Loading weights:  49%|████▉     | 210/426 [00:02<00:02, 107.40it/s]Loading weights:  53%|█████▎    | 225/426 [00:02<00:01, 114.45it/s]Loading weights:  56%|█████▌    | 239/426 [00:02<00:01, 116.98it/s]Loading weights:  59%|█████▉    | 253/426 [00:03<00:01, 110.52it/s]Loading weights:  62%|██████▏   | 265/426 [00:03<00:01, 108.88it/s]Loading weights:  65%|██████▌   | 279/426 [00:03<00:01, 114.07it/s]Loading weights:  69%|██████▉   | 293/426 [00:03<00:01, 118.24it/s]Loading weights:  72%|███████▏  | 307/426 [00:03<00:00, 121.37it/s]Loading weights:  77%|███████▋  | 326/426 [00:03<00:00, 122.11it/s]Loading weights:  80%|███████▉  | 340/426 [00:03<00:00, 125.98it/s]Loading weights:  83%|████████▎ | 354/426 [00:03<00:00, 128.07it/s]Loading weights:  86%|████████▌ | 367/426 [00:04<00:00, 106.25it/s]Loading weights:  90%|█████████ | 384/426 [00:04<00:00, 111.54it/s]Loading weights:  93%|█████████▎| 398/426 [00:04<00:00, 113.84it/s]Loading weights:  97%|█████████▋| 412/426 [00:04<00:00, 112.23it/s]Loading weights: 100%|██████████| 426/426 [00:04<00:00, 93.97it/s] 
+Traceback (most recent call last):
+  File "/root/p43/part43.py", line 6064, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/root/p43/part43.py", line 5963, in main
+    raw_calibration = run_calibration_runtime(args, token_records)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/p43/part43.py", line 1434, in run_calibration_runtime
+    return _calibration_artifact(
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/p43/part43.py", line 1306, in _calibration_artifact
+    "source_provenance": _calibration_source_provenance(),
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/p43/part43.py", line 1264, in _calibration_source_provenance
+    return {name: sha256_file(path) for name, path in paths.items()}
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/p43/part43.py", line 1264, in <dictcomp>
+    return {name: sha256_file(path) for name, path in paths.items()}
+                  ^^^^^^^^^^^^^^^^^
+  File "/root/p43/part43.py", line 89, in sha256_file
+    with open(path, "rb") as stream:
+         ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/root/p43/review/part43/CALIBRATION-RAW-ONLY-DESIGN.md'
+rc=1

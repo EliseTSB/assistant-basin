@@ -1,0 +1,223 @@
+{
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "tool_sha256": "5189450dc952907108bbad04d88ac9ee2140b239f91563490f0cc600e0730ec0",
+  "input_shas": {
+    "results/part25/candidates.json": "ed8b02503fad6493445485c7bb21ad8b2669148d86b6f30cff3682dd6cae659b",
+    "/root/p43/PART43-DESIGN.md": "f4a266413091478ca01482d37870f886a37fb573b964c176ab779b541708ef76"
+  },
+  "written": "2026-10-21 21:04:29",
+  "execution_mode": "singleton",
+  "environment": {
+    "torch_version": "2.6.0+cu124",
+    "cuda_version": "12.4",
+    "cudnn_version": "90100",
+    "transformers_version": "5.20.0",
+    "kernel": {
+      "attention": "model default / not exposed",
+      "gated_delta_or_convolution": "not loaded at manifest time",
+      "qwen3_5_function_implementations": "not loaded",
+      "kernelized_gated_delta_module_classes": [],
+      "hub_kernels_enabled": null,
+      "kernel_hub_version": null,
+      "flash_linear_attention_version": "0.5.2",
+      "causal_conv1d_version": null
+    },
+    "parameter_dtype_numel": "not loaded",
+    "activation_dtypes_observed": [
+      "torch.float32"
+    ],
+    "precision_flags": {
+      "cuda_matmul_allow_tf32": false,
+      "cudnn_allow_tf32": true,
+      "cuda_bf16_reduced_precision_reduction": true,
+      "cuda_fp16_reduced_precision_reduction": true,
+      "cuda_fp16_accumulation": null
+    }
+  },
+  "command": "pilot",
+  "status": "HOLD",
+  "calibration": "results/part43-pilot-3090/calibration.json",
+  "calibration_summary": {
+    "schema_version": 1,
+    "artifact_type": "part43-calibration-summary",
+    "derived": true,
+    "reader_id": "part43-calibration-reader-v2",
+    "raw_artifact_sha256": "11293803ef43dfa0530919adece82e6cbbb81703a0e00fdf0156833a247e575f",
+    "registration_sha256": "0a8c24c31373a836fee13e73e7d90838372cd7999b999c3bb05c373c7a37ec90",
+    "model": "Qwen/Qwen3.5-4B",
+    "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+    "status": "over_budget",
+    "within_budget": false,
+    "scores": {
+      "bf16": {
+        "clean": {
+          "repeat_primary_scores": [
+            -2.0134547496848203,
+            -2.0134547496848203,
+            -2.0134547496848203
+          ],
+          "mean_primary_score": -2.0134547496848203,
+          "bf16_repeat_spread": 0.0
+        },
+        "selected_single_zero_L7_N1169": {
+          "repeat_primary_scores": [
+            -1.7512436754548073,
+            -1.7512436754548073,
+            -1.7512436754548073
+          ],
+          "mean_primary_score": -1.7512436754548073,
+          "bf16_repeat_spread": 0.0
+        },
+        "all_four_zero": {
+          "repeat_primary_scores": [
+            -0.16787720607271694,
+            -0.16787720607271694,
+            -0.16787720607271694
+          ],
+          "mean_primary_score": -0.16787720607271694,
+          "bf16_repeat_spread": 0.0
+        },
+        "dose_plus_2x_L7_N1169": {
+          "repeat_primary_scores": [
+            -2.5376237333834455,
+            -2.5376237333834455,
+            -2.5376237333834455
+          ],
+          "mean_primary_score": -2.5376237333834455,
+          "bf16_repeat_spread": 0.0
+        },
+        "dose_minus_2x_L7_N1169": {
+          "repeat_primary_scores": [
+            -0.6977659259008036,
+            -0.6977659259008036,
+            -0.6977659259008036
+          ],
+          "mean_primary_score": -0.6977659259008036,
+          "bf16_repeat_spread": 0.0
+        },
+        "L7_zero_L11_restored_clean": {
+          "repeat_primary_scores": [
+            -1.5088349960624736,
+            -1.5088349960624736,
+            -1.5088349960624736
+          ],
+          "mean_primary_score": -1.5088349960624736,
+          "bf16_repeat_spread": 0.0
+        },
+        "clean_to_clean_replay": {
+          "repeat_primary_scores": [
+            -2.0134547496848203,
+            -2.0134547496848203,
+            -2.0134547496848203
+          ],
+          "mean_primary_score": -2.0134547496848203,
+          "bf16_repeat_spread": 0.0
+        }
+      },
+      "fp32": {
+        "clean": {
+          "repeat_primary_scores": [
+            -2.1010934061951456
+          ],
+          "mean_primary_score": -2.1010934061951456,
+          "bf16_repeat_spread": null
+        },
+        "selected_single_zero_L7_N1169": {
+          "repeat_primary_scores": [
+            -1.6646439934138835
+          ],
+          "mean_primary_score": -1.6646439934138835,
+          "bf16_repeat_spread": null
+        },
+        "all_four_zero": {
+          "repeat_primary_scores": [
+            -0.18925615972810572
+          ],
+          "mean_primary_score": -0.18925615972810572,
+          "bf16_repeat_spread": null
+        },
+        "dose_plus_2x_L7_N1169": {
+          "repeat_primary_scores": [
+            -2.428464172562683
+          ],
+          "mean_primary_score": -2.428464172562683,
+          "bf16_repeat_spread": null
+        },
+        "dose_minus_2x_L7_N1169": {
+          "repeat_primary_scores": [
+            -0.71958450431364
+          ],
+          "mean_primary_score": -0.71958450431364,
+          "bf16_repeat_spread": null
+        },
+        "L7_zero_L11_restored_clean": {
+          "repeat_primary_scores": [
+            -1.5425927465488245
+          ],
+          "mean_primary_score": -1.5425927465488245,
+          "bf16_repeat_spread": null
+        },
+        "clean_to_clean_replay": {
+          "repeat_primary_scores": [
+            -2.1010934061951456
+          ],
+          "mean_primary_score": -2.1010934061951456,
+          "bf16_repeat_spread": null
+        }
+      }
+    },
+    "error_by_cell": {
+      "clean": {
+        "bf16_repeat_spread": 0.0,
+        "bf16_fp32_abs_difference": 0.08763865651032532,
+        "clean_to_clean_replay_error": null
+      },
+      "selected_single_zero_L7_N1169": {
+        "bf16_repeat_spread": 0.0,
+        "bf16_fp32_abs_difference": 0.08659968204092383,
+        "clean_to_clean_replay_error": null
+      },
+      "all_four_zero": {
+        "bf16_repeat_spread": 0.0,
+        "bf16_fp32_abs_difference": 0.021378953655388777,
+        "clean_to_clean_replay_error": null
+      },
+      "dose_plus_2x_L7_N1169": {
+        "bf16_repeat_spread": 0.0,
+        "bf16_fp32_abs_difference": 0.10915956082076228,
+        "clean_to_clean_replay_error": null
+      },
+      "dose_minus_2x_L7_N1169": {
+        "bf16_repeat_spread": 0.0,
+        "bf16_fp32_abs_difference": 0.02181857841283641,
+        "clean_to_clean_replay_error": null
+      },
+      "L7_zero_L11_restored_clean": {
+        "bf16_repeat_spread": 0.0,
+        "bf16_fp32_abs_difference": 0.03375775048635088,
+        "clean_to_clean_replay_error": null
+      },
+      "clean_to_clean_replay": {
+        "bf16_repeat_spread": 0.0,
+        "bf16_fp32_abs_difference": 0.08763865651032532,
+        "clean_to_clean_replay_error": 0.0
+      }
+    },
+    "error_kinds": {
+      "bf16_repeat_spread_max": 0.0,
+      "bf16_fp32_abs_difference_max": 0.10915956082076228,
+      "clean_to_clean_replay_error": 0.0
+    },
+    "epsilon": 0.10915956082076228,
+    "epsilon_limit": 0.05
+  },
+  "hold": {
+    "status": "HOLD",
+    "command": "pilot",
+    "model": "Qwen/Qwen3.5-4B",
+    "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+    "calibration": "results/part43-pilot-3090/calibration.json",
+    "reason": "calibration epsilon 0.10916 nats exceeds 0.05 nat budget"
+  }
+}

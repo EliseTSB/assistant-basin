@@ -1,0 +1,2 @@
+torch 2.6.0+cu124 cuda 12.4 cudnn 90100 transformers 5.20.0 NVIDIA GeForce RTX 3090
+595.99.02, NVIDIA GeForce RTX 3090
