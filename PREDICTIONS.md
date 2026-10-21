@@ -1667,3 +1667,18 @@ Amendment 1 to Part 43 (written 2026-10-20 20:06 CT, before any code ran, from C
 | 48b.4 | Prime: 48b.1 fails; at most 2 of 5 models reach 13/16, though the median d is positive in most; the letter effect is statistics-sized, not glyph-sized. | **Held.** At most 2 of 5 reach 9 of 10 (exactly 2), and the median d is positive in 4 of 5 (Qwen3 -0.04). Pooled over models: median d 0.14, 95% CI [0.08, 0.18], permutation p 0.003, 9 of 10 pairs positive. | 2026-10-21 |
 | 48b.5 | Prime: per-pair d correlates with the twins' surprisal or token-count gap (abs Spearman >= 0.3) in at least 2 of 5 models. | **Failed.** No model reaches abs Spearman 0.3 on the primary score set (largest: SmolLM2 -0.28 with the surprisal gap, OLMo-2 -0.26). On the letter-matched set only SmolLM2 does (-0.36). | 2026-10-21 |
 | 48b.6 | Prime: the k advantage is template-dependent, strongest where the template supplies shape words, weakest in the neutral templates. | **Failed.** The template that names the shapes (template 2) is not the strongest: its median d is negative in 3 of 5 models. | 2026-10-21 |
+
+## Part 48c: kiki/bouba down the Pythia ladder (registered 2026-10-21 17:59 CT, before any run)
+
+Pythia-70m, -160m and -410m (one training set, 2020 text), fp32 on the A770, Part 48's novel items and spelled-out set,
+scored with the shared-prompt batched readout (42682f1; equal to the one-sequence readout within 1.1e-4 per item score).
+Same templates, mass floor, AUC and permutation test as Part 48. Size, multiplied out: 3 models x 32 novel + 32 spelled
+items x 6 templates = 1,152 forward passes. Question: 48.4 failed (Pythia-1.4B 0.742 < Pythia-410m 0.898), so does the
+pairing peak at a small size or rise to 410m?
+
+| id | prediction | status | evidence |
+|---|---|---|---|
+| 48c.1 | Claude: Pythia-410m on the A770 reproduces its 3090 novel AUC (0.898) within 0.02, a device and readout check. | pending | |
+| 48c.2 | Claude: Pythia-160m reaches novel AUC >= 0.70 with permutation p < 0.05; Pythia-70m does not. | pending | |
+| 48c.3 | Claude: novel AUC rises with size across 70m < 160m < 410m. | pending | |
+| 48c.4 | Claude: spelled-out AUC is at least novel AUC in all three, as in Part 48. | pending | |
