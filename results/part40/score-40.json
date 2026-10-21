@@ -1,0 +1,2885 @@
+{
+  "bootstrap": {
+    "auc_method": "Part 35 percentile bootstrap over sentence rows; degenerate draws are discarded",
+    "precision_at_10_method": "percentile bootstrap resampling with replacement within each class",
+    "resamples": 2000,
+    "seed": 4001
+  },
+  "medians": {
+    "random_direction_auc_positive_vs_far": 0.48,
+    "random_unit_auc_positive_vs_far": 0.5,
+    "real_auc_positive_vs_far": 1.0,
+    "real_auc_positive_vs_near": 0.86,
+    "real_precision_at_10": 0.8
+  },
+  "model": "Qwen/Qwen3-1.7B",
+  "prediction_inputs": {
+    "40.1": {
+      "median_random_direction_auc_positive_vs_far": 0.48,
+      "median_random_unit_auc_positive_vs_far": 0.5,
+      "median_real_auc_positive_vs_far": 1.0,
+      "thresholds": {
+        "null_auc_interval": [
+          0.4,
+          0.6
+        ],
+        "real_auc_at_least": 0.9
+      }
+    },
+    "40.2": {
+      "median_far_minus_near_auc": 0.14,
+      "threshold": 0.15
+    },
+    "40.3": {
+      "concept_count": 43,
+      "near_auc_below_0_70": 8,
+      "required_count": 15
+    },
+    "40.4": {
+      "median_real_precision_at_10": 0.8,
+      "threshold": 0.8
+    }
+  },
+  "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+  "schema_version": 1,
+  "units": [
+    {
+      "concept_id": "owl",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.42,
+          "ci95": [
+            0.16,
+            0.6923333333333331
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.41,
+          "ci95": [
+            0.15151515151515152,
+            0.69
+          ]
+        },
+        "precision_at_10": 0.3,
+        "precision_at_10_ci95": [
+          0.1,
+          0.6
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.545,
+          "ci95": [
+            0.2655500315656566,
+            0.791220238095238
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.38,
+          "ci95": [
+            0.1353279532967033,
+            0.6464646464646465
+          ]
+        },
+        "precision_at_10": 0.3,
+        "precision_at_10_ci95": [
+          0.1,
+          0.5
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.4,
+          "ci95": [
+            0.13,
+            0.6979166666666666
+          ]
+        },
+        "precision_at_10": 0.4,
+        "precision_at_10_ci95": [
+          0.2,
+          0.7
+        ]
+      }
+    },
+    {
+      "concept_id": "cat",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.51,
+          "ci95": [
+            0.23795093795093794,
+            0.7708333333333334
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.535,
+          "ci95": [
+            0.2726799242424242,
+            0.791220238095238
+          ]
+        },
+        "precision_at_10": 0.4,
+        "precision_at_10_ci95": [
+          0.1,
+          0.6
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.46,
+          "ci95": [
+            0.1875,
+            0.7273200757575755
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.395,
+          "ci95": [
+            0.13185425685425686,
+            0.6666666666666666
+          ]
+        },
+        "precision_at_10": 0.25,
+        "precision_at_10_ci95": [
+          0.0,
+          0.5
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "precision_at_10": 1.0,
+        "precision_at_10_ci95": [
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "concept_id": "dragon",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.71,
+          "ci95": [
+            0.4583333333333333,
+            0.9120879120879121
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.69,
+          "ci95": [
+            0.41414141414141414,
+            0.9100521978021976
+          ]
+        },
+        "precision_at_10": 0.5,
+        "precision_at_10_ci95": [
+          0.2,
+          0.7
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.7,
+          "ci95": [
+            0.4443333333333333,
+            0.9292929292929293
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.44,
+          "ci95": [
+            0.19791666666666666,
+            0.71875
+          ]
+        },
+        "precision_at_10": 0.4,
+        "precision_at_10_ci95": [
+          0.1,
+          0.6
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.96,
+          "ci95": [
+            0.8484848484848485,
+            1.0
+          ]
+        },
+        "precision_at_10": 0.9,
+        "precision_at_10_ci95": [
+          0.7,
+          1.0
+        ]
+      }
+    },
+    {
+      "concept_id": "ghost",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.47,
+          "ci95": [
+            0.20833333333333334,
+            0.7373917748917748
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.625,
+          "ci95": [
+            0.34842657342657346,
+            0.87
+          ]
+        },
+        "precision_at_10": 0.45,
+        "precision_at_10_ci95": [
+          0.2,
+          0.7
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.5,
+          "ci95": [
+            0.21426190476190476,
+            0.7916666666666666
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.36,
+          "ci95": [
+            0.10714285714285714,
+            0.6262626262626263
+          ]
+        },
+        "precision_at_10": 0.3,
+        "precision_at_10_ci95": [
+          0.0,
+          0.5
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.86,
+          "ci95": [
+            0.64,
+            1.0
+          ]
+        },
+        "precision_at_10": 0.8,
+        "precision_at_10_ci95": [
+          0.5,
+          1.0
+        ]
+      }
+    },
+    {
+      "concept_id": "pirate",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.44,
+          "ci95": [
+            0.16483516483516483,
+            0.7272727272727273
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.36,
+          "ci95": [
+            0.0988095238095238,
+            0.6533690476190475
+          ]
+        },
+        "precision_at_10": 0.4,
+        "precision_at_10_ci95": [
+          0.1,
+          0.6
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.84,
+          "ci95": [
+            0.6262626262626263,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.54,
+          "ci95": [
+            0.2626082251082251,
+            0.8095357142857142
+          ]
+        },
+        "precision_at_10": 0.5,
+        "precision_at_10_ci95": [
+          0.2,
+          0.7
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.6,
+          "ci95": [
+            0.29292929292929293,
+            0.8585858585858586
+          ]
+        },
+        "precision_at_10": 0.5,
+        "precision_at_10_ci95": [
+          0.3,
+          0.8
+        ]
+      }
+    },
+    {
+      "concept_id": "wizard",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.57,
+          "ci95": [
+            0.2857142857142857,
+            0.8333333333333334
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.37,
+          "ci95": [
+            0.13,
+            0.6563437499999994
+          ]
+        },
+        "precision_at_10": 0.4,
+        "precision_at_10_ci95": [
+          0.1,
+          0.6
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.535,
+          "ci95": [
+            0.23232323232323232,
+            0.7916982323232321
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.495,
+          "ci95": [
+            0.22916666666666666,
+            0.7747321428571429
+          ]
+        },
+        "precision_at_10": 0.4,
+        "precision_at_10_ci95": [
+          0.1,
+          0.6
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "precision_at_10": 1.0,
+        "precision_at_10_ci95": [
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "concept_id": "robot",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.57,
+          "ci95": [
+            0.28564213564213564,
+            0.8281289457070707
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.565,
+          "ci95": [
+            0.28125,
+            0.8242380952380949
+          ]
+        },
+        "precision_at_10": 0.5,
+        "precision_at_10_ci95": [
+          0.2,
+          0.7
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.47,
+          "ci95": [
+            0.20996978021978022,
+            0.7395833333333334
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.295,
+          "ci95": [
+            0.06565656565656566,
+            0.5478174603174593
+          ]
+        },
+        "precision_at_10": 0.1,
+        "precision_at_10_ci95": [
+          0.0,
+          0.4
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.92,
+          "ci95": [
+            0.7582251082251082,
+            1.0
+          ]
+        },
+        "precision_at_10": 0.8,
+        "precision_at_10_ci95": [
+          0.7,
+          1.0
+        ]
+      }
+    },
+    {
+      "concept_id": "vampire",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.515,
+          "ci95": [
+            0.23954613095238098,
+            0.7803571428571421
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.585,
+          "ci95": [
+            0.31313131313131315,
+            0.8571428571428571
+          ]
+        },
+        "precision_at_10": 0.3,
+        "precision_at_10_ci95": [
+          0.0,
+          0.6
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.53,
+          "ci95": [
+            0.25,
+            0.7916666666666666
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.395,
+          "ci95": [
+            0.1414141414141414,
+            0.6875624999999996
+          ]
+        },
+        "precision_at_10": 0.3,
+        "precision_at_10_ci95": [
+          0.1,
+          0.6
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.75,
+          "ci95": [
+            0.49986263736263736,
+            0.989010989010989
+          ]
+        },
+        "precision_at_10": 0.7,
+        "precision_at_10_ci95": [
+          0.4,
+          0.9
+        ]
+      }
+    },
+    {
+      "concept_id": "mermaid",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.38,
+          "ci95": [
+            0.13,
+            0.6565656565656566
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.56,
+          "ci95": [
+            0.28564213564213564,
+            0.8229166666666666
+          ]
+        },
+        "precision_at_10": 0.2,
+        "precision_at_10_ci95": [
+          0.0,
+          0.5
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.31,
+          "ci95": [
+            0.08333333333333333,
+            0.5938052398989896
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.36,
+          "ci95": [
+            0.11449652777777777,
+            0.6429315476190473
+          ]
+        },
+        "precision_at_10": 0.1,
+        "precision_at_10_ci95": [
+          0.0,
+          0.3
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.765,
+          "ci95": [
+            0.5201969696969697,
+            0.9494949494949495
+          ]
+        },
+        "precision_at_10": 0.7,
+        "precision_at_10_ci95": [
+          0.4,
+          0.9
+        ]
+      }
+    },
+    {
+      "concept_id": "octopus",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.32,
+          "ci95": [
+            0.08333333333333333,
+            0.6060606060606061
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.43,
+          "ci95": [
+            0.17167424242424242,
+            0.6979166666666666
+          ]
+        },
+        "precision_at_10": 0.2,
+        "precision_at_10_ci95": [
+          0.0,
+          0.5
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.31,
+          "ci95": [
+            0.08779761904761905,
+            0.5858787878787878
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.52,
+          "ci95": [
+            0.23076923076923078,
+            0.802086195054945
+          ]
+        },
+        "precision_at_10": 0.3,
+        "precision_at_10_ci95": [
+          0.1,
+          0.6
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.76,
+          "ci95": [
+            0.4895833333333333,
+            0.9596060606060605
+          ]
+        },
+        "precision_at_10": 0.7,
+        "precision_at_10_ci95": [
+          0.5,
+          0.9
+        ]
+      }
+    },
+    {
+      "concept_id": "moon",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.39,
+          "ci95": [
+            0.125,
+            0.6700082417582417
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.465,
+          "ci95": [
+            0.19791380494505495,
+            0.7373737373737373
+          ]
+        },
+        "precision_at_10": 0.3,
+        "precision_at_10_ci95": [
+          0.1,
+          0.6
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.54,
+          "ci95": [
+            0.26040625,
+            0.8131868131868132
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.365,
+          "ci95": [
+            0.10416666666666667,
+            0.6264642857142853
+          ]
+        },
+        "precision_at_10": 0.4,
+        "precision_at_10_ci95": [
+          0.1,
+          0.6
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "precision_at_10": 1.0,
+        "precision_at_10_ci95": [
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "concept_id": "ocean",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.56,
+          "ci95": [
+            0.28564213564213564,
+            0.8242380952380949
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.465,
+          "ci95": [
+            0.20202020202020202,
+            0.7321428571428571
+          ]
+        },
+        "precision_at_10": 0.4,
+        "precision_at_10_ci95": [
+          0.14925000000000005,
+          0.7
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.415,
+          "ci95": [
+            0.14285714285714285,
+            0.7032967032967034
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.31,
+          "ci95": [
+            0.06593406593406594,
+            0.5714285714285714
+          ]
+        },
+        "precision_at_10": 0.2,
+        "precision_at_10_ci95": [
+          0.0,
+          0.4
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "precision_at_10": 1.0,
+        "precision_at_10_ci95": [
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "concept_id": "volcano",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.39,
+          "ci95": [
+            0.12121212121212122,
+            0.6667499999999995
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.43,
+          "ci95": [
+            0.15618990384615386,
+            0.7142857142857143
+          ]
+        },
+        "precision_at_10": 0.4,
+        "precision_at_10_ci95": [
+          0.1,
+          0.6
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.605,
+          "ci95": [
+            0.32961309523809523,
+            0.854241071428571
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.79,
+          "ci95": [
+            0.5399615384615385,
+            0.989010989010989
+          ]
+        },
+        "precision_at_10": 0.4,
+        "precision_at_10_ci95": [
+          0.2,
+          0.7
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.91,
+          "ci95": [
+            0.7,
+            1.0
+          ]
+        },
+        "precision_at_10": 0.9,
+        "precision_at_10_ci95": [
+          0.7,
+          1.0
+        ]
+      }
+    },
+    {
+      "concept_id": "tree",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.63,
+          "ci95": [
+            0.35,
+            0.8824295343137251
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.33,
+          "ci95": [
+            0.09895690247252747,
+            0.6071428571428571
+          ]
+        },
+        "precision_at_10": 0.2,
+        "precision_at_10_ci95": [
+          0.0,
+          0.5
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.35,
+          "ci95": [
+            0.12490530303030303,
+            0.6354166666666666
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.525,
+          "ci95": [
+            0.2637085137085137,
+            0.7912087912087912
+          ]
+        },
+        "precision_at_10": 0.3,
+        "precision_at_10_ci95": [
+          0.1,
+          0.5
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "precision_at_10": 1.0,
+        "precision_at_10_ci95": [
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "concept_id": "cloud",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.54,
+          "ci95": [
+            0.2746753246753247,
+            0.7968936011904761
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.51,
+          "ci95": [
+            0.21978021978021978,
+            0.787908380681818
+          ]
+        },
+        "precision_at_10": 0.4,
+        "precision_at_10_ci95": [
+          0.2,
+          0.7
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.81,
+          "ci95": [
+            0.5757575757575758,
+            0.9791666666666666
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.61,
+          "ci95": [
+            0.3333333333333333,
+            0.86
+          ]
+        },
+        "precision_at_10": 0.4,
+        "precision_at_10_ci95": [
+          0.2,
+          0.7
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.93,
+          "ci95": [
+            0.7575757575757576,
+            1.0
+          ]
+        },
+        "precision_at_10": 0.9,
+        "precision_at_10_ci95": [
+          0.7,
+          1.0
+        ]
+      }
+    },
+    {
+      "concept_id": "sun",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.44,
+          "ci95": [
+            0.17572150072150075,
+            0.7262175324675323
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.615,
+          "ci95": [
+            0.3541666666666667,
+            0.8686958874458874
+          ]
+        },
+        "precision_at_10": 0.4,
+        "precision_at_10_ci95": [
+          0.1,
+          0.6
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.865,
+          "ci95": [
+            0.6666666666666666,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.59,
+          "ci95": [
+            0.2916666666666667,
+            0.8333333333333334
+          ]
+        },
+        "precision_at_10": 0.5,
+        "precision_at_10_ci95": [
+          0.2,
+          0.7
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.87,
+          "ci95": [
+            0.6560053661616162,
+            1.0
+          ]
+        },
+        "precision_at_10": 0.8,
+        "precision_at_10_ci95": [
+          0.6,
+          1.0
+        ]
+      }
+    },
+    {
+      "concept_id": "knight",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.63,
+          "ci95": [
+            0.3541666666666667,
+            0.8750946969696964
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.5,
+          "ci95": [
+            0.23940183080808083,
+            0.7605981691919181
+          ]
+        },
+        "precision_at_10": 0.4,
+        "precision_at_10_ci95": [
+          0.1,
+          0.6
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.29,
+          "ci95": [
+            0.07142857142857142,
+            0.5353535353535354
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.445,
+          "ci95": [
+            0.18229166666666666,
+            0.7024880952380946
+          ]
+        },
+        "precision_at_10": 0.3,
+        "precision_at_10_ci95": [
+          0.0,
+          0.5
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.91,
+          "ci95": [
+            0.696969696969697,
+            1.0
+          ]
+        },
+        "precision_at_10": 0.9,
+        "precision_at_10_ci95": [
+          0.7,
+          1.0
+        ]
+      }
+    },
+    {
+      "concept_id": "detective",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.48,
+          "ci95": [
+            0.19994791666666667,
+            0.7395833333333334
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.315,
+          "ci95": [
+            0.08237734487734488,
+            0.572987689393939
+          ]
+        },
+        "precision_at_10": 0.3,
+        "precision_at_10_ci95": [
+          0.05,
+          0.5
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.53,
+          "ci95": [
+            0.2708333333333333,
+            0.7878787878787878
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.29,
+          "ci95": [
+            0.06,
+            0.5417613636363631
+          ]
+        },
+        "precision_at_10": 0.3,
+        "precision_at_10_ci95": [
+          0.0,
+          0.5
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 0.51,
+          "ci95": [
+            0.2290922619047619,
+            0.7813616071428565
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.415,
+          "ci95": [
+            0.125,
+            0.6965178571428566
+          ]
+        },
+        "precision_at_10": 0.1,
+        "precision_at_10_ci95": [
+          0.0,
+          0.4
+        ]
+      }
+    },
+    {
+      "concept_id": "chef",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.28,
+          "ci95": [
+            0.06,
+            0.5313020833333331
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.195,
+          "ci95": [
+            0.03125,
+            0.42
+          ]
+        },
+        "precision_at_10": 0.2,
+        "precision_at_10_ci95": [
+          0.0,
+          0.4
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.32,
+          "ci95": [
+            0.10416666666666667,
+            0.59
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.41,
+          "ci95": [
+            0.1732929292929293,
+            0.6924242424242417
+          ]
+        },
+        "precision_at_10": 0.2,
+        "precision_at_10_ci95": [
+          0.0,
+          0.4
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 0.96,
+          "ci95": [
+            0.8499621212121212,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.68,
+          "ci95": [
+            0.4166666666666667,
+            0.9270833333333334
+          ]
+        },
+        "precision_at_10": 0.6,
+        "precision_at_10_ci95": [
+          0.4,
+          0.9
+        ]
+      }
+    },
+    {
+      "concept_id": "bee",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.88,
+          "ci95": [
+            0.696969696969697,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.72,
+          "ci95": [
+            0.46875,
+            0.9375473484848482
+          ]
+        },
+        "precision_at_10": 0.5,
+        "precision_at_10_ci95": [
+          0.3,
+          0.8
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.3,
+          "ci95": [
+            0.0707070707070707,
+            0.56
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.365,
+          "ci95": [
+            0.10408775252525253,
+            0.6262626262626263
+          ]
+        },
+        "precision_at_10": 0.1,
+        "precision_at_10_ci95": [
+          0.0,
+          0.3
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.8,
+          "ci95": [
+            0.5833333333333334,
+            0.9697045454545454
+          ]
+        },
+        "precision_at_10": 0.7,
+        "precision_at_10_ci95": [
+          0.5,
+          0.9
+        ]
+      }
+    },
+    {
+      "concept_id": "wolf",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.32,
+          "ci95": [
+            0.10101010101010101,
+            0.6060876623376622
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.27,
+          "ci95": [
+            0.06592712842712843,
+            0.5238392857142856
+          ]
+        },
+        "precision_at_10": 0.2,
+        "precision_at_10_ci95": [
+          0.0,
+          0.4
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.565,
+          "ci95": [
+            0.2968707074175824,
+            0.8131313131313131
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.48,
+          "ci95": [
+            0.2186734068627451,
+            0.7582417582417582
+          ]
+        },
+        "precision_at_10": 0.4,
+        "precision_at_10_ci95": [
+          0.1,
+          0.6
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.93,
+          "ci95": [
+            0.7575757575757576,
+            1.0
+          ]
+        },
+        "precision_at_10": 0.9,
+        "precision_at_10_ci95": [
+          0.7,
+          1.0
+        ]
+      }
+    },
+    {
+      "concept_id": "whale",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.32,
+          "ci95": [
+            0.09090909090909091,
+            0.5800604395604392
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.27,
+          "ci95": [
+            0.052083333333333336,
+            0.5496031746031738
+          ]
+        },
+        "precision_at_10": 0.1,
+        "precision_at_10_ci95": [
+          0.0,
+          0.4
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.405,
+          "ci95": [
+            0.11108058608058607,
+            0.7000781249999996
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.705,
+          "ci95": [
+            0.44784512362637363,
+            0.91
+          ]
+        },
+        "precision_at_10": 0.4,
+        "precision_at_10_ci95": [
+          0.1,
+          0.7
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.44,
+          "ci95": [
+            0.14989583333333334,
+            0.74
+          ]
+        },
+        "precision_at_10": 0.4,
+        "precision_at_10_ci95": [
+          0.2,
+          0.7
+        ]
+      }
+    },
+    {
+      "concept_id": "crow",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.72,
+          "ci95": [
+            0.4724642857142857,
+            0.9375
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.6,
+          "ci95": [
+            0.3333333333333333,
+            0.8571789321789319
+          ]
+        },
+        "precision_at_10": 0.5,
+        "precision_at_10_ci95": [
+          0.2,
+          0.7
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.57,
+          "ci95": [
+            0.291625,
+            0.8352453102453098
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.5,
+          "ci95": [
+            0.2222222222222222,
+            0.7800054945054945
+          ]
+        },
+        "precision_at_10": 0.3,
+        "precision_at_10_ci95": [
+          0.1,
+          0.6
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.815,
+          "ci95": [
+            0.5757386363636364,
+            0.99
+          ]
+        },
+        "precision_at_10": 0.7,
+        "precision_at_10_ci95": [
+          0.4,
+          0.9
+        ]
+      }
+    },
+    {
+      "concept_id": "fox",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.5,
+          "ci95": [
+            0.22216666666666665,
+            0.7619047619047619
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.31,
+          "ci95": [
+            0.09090909090909091,
+            0.5714657738095236
+          ]
+        },
+        "precision_at_10": 0.2,
+        "precision_at_10_ci95": [
+          0.0,
+          0.5
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.43,
+          "ci95": [
+            0.16161616161616163,
+            0.7201318681318674
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.635,
+          "ci95": [
+            0.3541666666666667,
+            0.8855034722222217
+          ]
+        },
+        "precision_at_10": 0.2,
+        "precision_at_10_ci95": [
+          0.0,
+          0.5
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.27,
+          "ci95": [
+            0.05987362637362638,
+            0.5417613636363631
+          ]
+        },
+        "precision_at_10": 0.3,
+        "precision_at_10_ci95": [
+          0.1,
+          0.5
+        ]
+      }
+    },
+    {
+      "concept_id": "snowman",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.42,
+          "ci95": [
+            0.1717171717171717,
+            0.696969696969697
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.555,
+          "ci95": [
+            0.2727272727272727,
+            0.8333333333333334
+          ]
+        },
+        "precision_at_10": 0.4,
+        "precision_at_10_ci95": [
+          0.2,
+          0.6
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.44,
+          "ci95": [
+            0.1785342261904762,
+            0.7066767676767676
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.535,
+          "ci95": [
+            0.2618675595238095,
+            0.7918749999999988
+          ]
+        },
+        "precision_at_10": 0.4,
+        "precision_at_10_ci95": [
+          0.1,
+          0.7
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.76,
+          "ci95": [
+            0.5151515151515151,
+            0.9479166666666666
+          ]
+        },
+        "precision_at_10": 0.7,
+        "precision_at_10_ci95": [
+          0.5,
+          0.9
+        ]
+      }
+    },
+    {
+      "concept_id": "lighthouse",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.22,
+          "ci95": [
+            0.0,
+            0.51
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.32,
+          "ci95": [
+            0.0625,
+            0.6041666666666666
+          ]
+        },
+        "precision_at_10": 0.0,
+        "precision_at_10_ci95": [
+          0.0,
+          0.2
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.63,
+          "ci95": [
+            0.34984375,
+            0.8601145833333327
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.685,
+          "ci95": [
+            0.42420183982683984,
+            0.9292929292929293
+          ]
+        },
+        "precision_at_10": 0.5,
+        "precision_at_10_ci95": [
+          0.2,
+          0.7
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.875,
+          "ci95": [
+            0.66,
+            1.0
+          ]
+        },
+        "precision_at_10": 0.8,
+        "precision_at_10_ci95": [
+          0.6,
+          1.0
+        ]
+      }
+    },
+    {
+      "concept_id": "library",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.31,
+          "ci95": [
+            0.0807878787878788,
+            0.5858585858585859
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.4,
+          "ci95": [
+            0.15151515151515152,
+            0.6786071428571427
+          ]
+        },
+        "precision_at_10": 0.2,
+        "precision_at_10_ci95": [
+          0.0,
+          0.5
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.55,
+          "ci95": [
+            0.26262626262626265,
+            0.7976280663780664
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.42,
+          "ci95": [
+            0.1699166666666667,
+            0.696969696969697
+          ]
+        },
+        "precision_at_10": 0.3,
+        "precision_at_10_ci95": [
+          0.1,
+          0.5
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.76,
+          "ci95": [
+            0.51040625,
+            0.9696969696969697
+          ]
+        },
+        "precision_at_10": 0.7,
+        "precision_at_10_ci95": [
+          0.5,
+          0.9
+        ]
+      }
+    },
+    {
+      "concept_id": "clock",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.39,
+          "ci95": [
+            0.13988541666666668,
+            0.6667499999999995
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.47,
+          "ci95": [
+            0.20202020202020202,
+            0.7709077380952377
+          ]
+        },
+        "precision_at_10": 0.3,
+        "precision_at_10_ci95": [
+          0.0,
+          0.6
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.87,
+          "ci95": [
+            0.6565656565656566,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.685,
+          "ci95": [
+            0.40393939393939393,
+            0.9231770833333328
+          ]
+        },
+        "precision_at_10": 0.6,
+        "precision_at_10_ci95": [
+          0.2,
+          0.8
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.82,
+          "ci95": [
+            0.5555555555555556,
+            1.0
+          ]
+        },
+        "precision_at_10": 0.8,
+        "precision_at_10_ci95": [
+          0.5,
+          1.0
+        ]
+      }
+    },
+    {
+      "concept_id": "mushroom",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.78,
+          "ci95": [
+            0.535705266955267,
+            0.9560439560439561
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.455,
+          "ci95": [
+            0.17996428571428572,
+            0.7362914862914862
+          ]
+        },
+        "precision_at_10": 0.4,
+        "precision_at_10_ci95": [
+          0.2,
+          0.6
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.41,
+          "ci95": [
+            0.1537878787878788,
+            0.6875
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.325,
+          "ci95": [
+            0.10416666666666667,
+            0.5909715284715281
+          ]
+        },
+        "precision_at_10": 0.2,
+        "precision_at_10_ci95": [
+          0.0,
+          0.5
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.855,
+          "ci95": [
+            0.6198333333333333,
+            1.0
+          ]
+        },
+        "precision_at_10": 0.8,
+        "precision_at_10_ci95": [
+          0.6,
+          1.0
+        ]
+      }
+    },
+    {
+      "concept_id": "cactus",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.44,
+          "ci95": [
+            0.17,
+            0.7273200757575755
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.5,
+          "ci95": [
+            0.21212121212121213,
+            0.7709077380952377
+          ]
+        },
+        "precision_at_10": 0.3,
+        "precision_at_10_ci95": [
+          0.1,
+          0.6
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.425,
+          "ci95": [
+            0.18181818181818182,
+            0.7083333333333334
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.32,
+          "ci95": [
+            0.10098484848484848,
+            0.5867499999999995
+          ]
+        },
+        "precision_at_10": 0.2,
+        "precision_at_10_ci95": [
+          0.0,
+          0.5
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.645,
+          "ci95": [
+            0.34065934065934067,
+            0.91
+          ]
+        },
+        "precision_at_10": 0.6,
+        "precision_at_10_ci95": [
+          0.3,
+          0.9
+        ]
+      }
+    },
+    {
+      "concept_id": "star",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.65,
+          "ci95": [
+            0.36453468406593403,
+            0.8888888888888888
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.56,
+          "ci95": [
+            0.2828282828282828,
+            0.8200357142857141
+          ]
+        },
+        "precision_at_10": 0.5,
+        "precision_at_10_ci95": [
+          0.2,
+          0.7
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.76,
+          "ci95": [
+            0.494949494949495,
+            0.9494949494949495
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.37,
+          "ci95": [
+            0.11108333333333333,
+            0.6568181818181804
+          ]
+        },
+        "precision_at_10": 0.3,
+        "precision_at_10_ci95": [
+          0.1,
+          0.5
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "precision_at_10": 1.0,
+        "precision_at_10_ci95": [
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "concept_id": "river",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.92,
+          "ci95": [
+            0.7272727272727273,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.615,
+          "ci95": [
+            0.35,
+            0.8686958874458874
+          ]
+        },
+        "precision_at_10": 0.6,
+        "precision_at_10_ci95": [
+          0.3,
+          0.8
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.37,
+          "ci95": [
+            0.12490530303030303,
+            0.648392857142857
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.41,
+          "ci95": [
+            0.1615757575757576,
+            0.6814574314574308
+          ]
+        },
+        "precision_at_10": 0.2,
+        "precision_at_10_ci95": [
+          0.0,
+          0.4501785714285705
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "precision_at_10": 1.0,
+        "precision_at_10_ci95": [
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "concept_id": "mountain",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.425,
+          "ci95": [
+            0.16666666666666666,
+            0.7000595238095234
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.4,
+          "ci95": [
+            0.15,
+            0.666964285714284
+          ]
+        },
+        "precision_at_10": 0.3,
+        "precision_at_10_ci95": [
+          0.0,
+          0.5
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.68,
+          "ci95": [
+            0.4270833333333333,
+            0.9090909090909091
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.56,
+          "ci95": [
+            0.28,
+            0.8214285714285714
+          ]
+        },
+        "precision_at_10": 0.5,
+        "precision_at_10_ci95": [
+          0.2,
+          0.7
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.97,
+          "ci95": [
+            0.8787878787878788,
+            1.0
+          ]
+        },
+        "precision_at_10": 0.9,
+        "precision_at_10_ci95": [
+          0.7,
+          1.0
+        ]
+      }
+    },
+    {
+      "concept_id": "train",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.56,
+          "ci95": [
+            0.2747198879551821,
+            0.8333791208791207
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.425,
+          "ci95": [
+            0.16666666666666666,
+            0.717211174242424
+          ]
+        },
+        "precision_at_10": 0.4,
+        "precision_at_10_ci95": [
+          0.1,
+          0.6
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.415,
+          "ci95": [
+            0.14282106782106782,
+            0.71875
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.325,
+          "ci95": [
+            0.08791208791208792,
+            0.6044107142857141
+          ]
+        },
+        "precision_at_10": 0.2,
+        "precision_at_10_ci95": [
+          0.0,
+          0.42074999999999596
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.74,
+          "ci95": [
+            0.4642857142857143,
+            0.9791666666666666
+          ]
+        },
+        "precision_at_10": 0.7,
+        "precision_at_10_ci95": [
+          0.5,
+          0.9
+        ]
+      }
+    },
+    {
+      "concept_id": "ship",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.54,
+          "ci95": [
+            0.25,
+            0.79
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.63,
+          "ci95": [
+            0.34375,
+            0.8645833333333334
+          ]
+        },
+        "precision_at_10": 0.2,
+        "precision_at_10_ci95": [
+          0.1,
+          0.5024999999999864
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.64,
+          "ci95": [
+            0.36363636363636365,
+            0.9000274725274724
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.5,
+          "ci95": [
+            0.23958333333333334,
+            0.79
+          ]
+        },
+        "precision_at_10": 0.4,
+        "precision_at_10_ci95": [
+          0.1,
+          0.7
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.8,
+          "ci95": [
+            0.5,
+            1.0
+          ]
+        },
+        "precision_at_10": 0.8,
+        "precision_at_10_ci95": [
+          0.5,
+          1.0
+        ]
+      }
+    },
+    {
+      "concept_id": "teapot",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.59,
+          "ci95": [
+            0.30303030303030304,
+            0.84375
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.48,
+          "ci95": [
+            0.20833333333333334,
+            0.7575924075924075
+          ]
+        },
+        "precision_at_10": 0.4,
+        "precision_at_10_ci95": [
+          0.1,
+          0.6
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.82,
+          "ci95": [
+            0.5624375,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.395,
+          "ci95": [
+            0.1111111111111111,
+            0.7223307291666661
+          ]
+        },
+        "precision_at_10": 0.3,
+        "precision_at_10_ci95": [
+          0.0,
+          0.6
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 0.85,
+          "ci95": [
+            0.6199040404040405,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.445,
+          "ci95": [
+            0.18181818181818182,
+            0.7142857142857143
+          ]
+        },
+        "precision_at_10": 0.3,
+        "precision_at_10_ci95": [
+          0.1,
+          0.6
+        ]
+      }
+    },
+    {
+      "concept_id": "candle",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.44,
+          "ci95": [
+            0.1615757575757576,
+            0.7142857142857143
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.2,
+          "ci95": [
+            0.020202020202020204,
+            0.4375
+          ]
+        },
+        "precision_at_10": 0.2,
+        "precision_at_10_ci95": [
+          0.0,
+          0.4
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.41,
+          "ci95": [
+            0.1615757575757576,
+            0.6900119047619047
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.36,
+          "ci95": [
+            0.10416666666666667,
+            0.6262626262626263
+          ]
+        },
+        "precision_at_10": 0.2,
+        "precision_at_10_ci95": [
+          0.0,
+          0.4
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.96,
+          "ci95": [
+            0.8540625,
+            1.0
+          ]
+        },
+        "precision_at_10": 0.9,
+        "precision_at_10_ci95": [
+          0.7,
+          1.0
+        ]
+      }
+    },
+    {
+      "concept_id": "raven",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.48,
+          "ci95": [
+            0.2087797619047619,
+            0.7397750686813177
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.36,
+          "ci95": [
+            0.12,
+            0.625
+          ]
+        },
+        "precision_at_10": 0.3,
+        "precision_at_10_ci95": [
+          0.0,
+          0.5
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.46,
+          "ci95": [
+            0.19,
+            0.7252747252747253
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.48,
+          "ci95": [
+            0.20202020202020202,
+            0.7582417582417582
+          ]
+        },
+        "precision_at_10": 0.2,
+        "precision_at_10_ci95": [
+          0.0,
+          0.5
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.77,
+          "ci95": [
+            0.5151515151515151,
+            0.99
+          ]
+        },
+        "precision_at_10": 0.7,
+        "precision_at_10_ci95": [
+          0.4,
+          0.9
+        ]
+      }
+    },
+    {
+      "concept_id": "unicorn",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.99,
+          "ci95": [
+            0.9393939393939394,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.8,
+          "ci95": [
+            0.5,
+            1.0
+          ]
+        },
+        "precision_at_10": 0.8,
+        "precision_at_10_ci95": [
+          0.5,
+          1.0
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.49,
+          "ci95": [
+            0.2222222222222222,
+            0.7700208333333333
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.385,
+          "ci95": [
+            0.1263392857142857,
+            0.6666666666666666
+          ]
+        },
+        "precision_at_10": 0.3,
+        "precision_at_10_ci95": [
+          0.1,
+          0.6
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.87,
+          "ci95": [
+            0.66,
+            1.0
+          ]
+        },
+        "precision_at_10": 0.8,
+        "precision_at_10_ci95": [
+          0.6,
+          1.0
+        ]
+      }
+    },
+    {
+      "concept_id": "spider",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.23,
+          "ci95": [
+            0.041666666666666664,
+            0.48
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.355,
+          "ci95": [
+            0.12121212121212122,
+            0.625
+          ]
+        },
+        "precision_at_10": 0.2,
+        "precision_at_10_ci95": [
+          0.0,
+          0.4
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.285,
+          "ci95": [
+            0.06060606060606061,
+            0.546875
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.445,
+          "ci95": [
+            0.18181818181818182,
+            0.7121212121212122
+          ]
+        },
+        "precision_at_10": 0.2,
+        "precision_at_10_ci95": [
+          0.0,
+          0.4
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.86,
+          "ci95": [
+            0.6354166666666666,
+            1.0
+          ]
+        },
+        "precision_at_10": 0.8,
+        "precision_at_10_ci95": [
+          0.5,
+          1.0
+        ]
+      }
+    },
+    {
+      "concept_id": "claude",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.39,
+          "ci95": [
+            0.14285714285714285,
+            0.6900119047619047
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.35,
+          "ci95": [
+            0.08333333333333333,
+            0.64
+          ]
+        },
+        "precision_at_10": 0.1,
+        "precision_at_10_ci95": [
+          0.0,
+          0.5
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.34,
+          "ci95": [
+            0.09090909090909091,
+            0.6111111111111112
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.375,
+          "ci95": [
+            0.12623106060606062,
+            0.6666666666666666
+          ]
+        },
+        "precision_at_10": 0.2,
+        "precision_at_10_ci95": [
+          0.0,
+          0.4
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.7,
+          "ci95": [
+            0.384375,
+            1.0
+          ]
+        },
+        "precision_at_10": 0.7,
+        "precision_at_10_ci95": [
+          0.4,
+          1.0
+        ]
+      }
+    },
+    {
+      "concept_id": "anthropic",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.495,
+          "ci95": [
+            0.21203796203796205,
+            0.7708333333333334
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.565,
+          "ci95": [
+            0.26034564393939397,
+            0.8434422348484848
+          ]
+        },
+        "precision_at_10": 0.2,
+        "precision_at_10_ci95": [
+          0.0,
+          0.5
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.775,
+          "ci95": [
+            0.5404040404040404,
+            0.9494949494949495
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.635,
+          "ci95": [
+            0.33325,
+            0.8736263736263736
+          ]
+        },
+        "precision_at_10": 0.5,
+        "precision_at_10_ci95": [
+          0.2,
+          0.7
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.9,
+          "ci95": [
+            0.7,
+            1.0
+          ]
+        },
+        "precision_at_10": 0.9,
+        "precision_at_10_ci95": [
+          0.7,
+          1.0
+        ]
+      }
+    },
+    {
+      "concept_id": "trump",
+      "random_direction": {
+        "positive_vs_far": {
+          "auc": 0.99,
+          "ci95": [
+            0.9494949494949495,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.97,
+          "ci95": [
+            0.875,
+            1.0
+          ]
+        },
+        "precision_at_10": 0.9,
+        "precision_at_10_ci95": [
+          0.7,
+          1.0
+        ]
+      },
+      "random_unit": {
+        "positive_vs_far": {
+          "auc": 0.77,
+          "ci95": [
+            0.5274725274725275,
+            0.9560439560439561
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 0.77,
+          "ci95": [
+            0.5,
+            0.9700833333333329
+          ]
+        },
+        "precision_at_10": 0.7,
+        "precision_at_10_ci95": [
+          0.4,
+          0.9
+        ]
+      },
+      "real": {
+        "positive_vs_far": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "positive_vs_near": {
+          "auc": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "precision_at_10": 1.0,
+        "precision_at_10_ci95": [
+          1.0,
+          1.0
+        ]
+      }
+    }
+  ]
+}
