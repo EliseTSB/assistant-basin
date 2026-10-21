@@ -58,3 +58,17 @@ Gate: a unit passes when its addressee contrast exceeds the 99th percentile of t
 category-label shuffles (seeded), AND it ranks in the top 1% on both halves of the sentences (1-10 and 11-20 of each
 category). Report every passing unit with its three contrasts, marker value, layer, and logit-lens top and bottom 30.
 L6 N753 must pass in the chat model, or the screen is broken and nothing else from it is read.
+
+## Amendment 1 to section D, after the first screen broke and before any rescore (Claude, 2026-10-20 19:01 CT)
+The first screen failed its own sanity rule: L6 N753 did not pass. Cause: dividing by each unit's MAD (floor 0.01)
+gives near-silent units enormous contrasts, which set the shuffle threshold at 96.6 and let three artefacts through.
+The rescore reuses the saved reads (reads-chat.npz, reads-base.npz; no new model run) with a bounded statistic:
+- addressee AUC = the probability that a random sentence from categories 1 and 3 has a higher plain max than a random
+  sentence from categories 2, 4, 5 and 6 (40 vs 80 sentences), per unit;
+- gate: AUC above the 99th percentile of the maximum AUC over all units under 200 label shuffles (seed 3901), AND the
+  unit in the top 1% of AUC on both sentence halves, AND its median over categories 1 and 3 at least 0.5 (random
+  layer-6 units sit near 0.09);
+- reported beside it: request-only AUC (1 vs 2) and AI-self-only AUC (3 vs 4), and the third-person AUC (1 and 3 vs 5).
+L6 N753 must still pass in the chat model or nothing is read. Predictions 39.7 to 39.10 are re-read as written
+against this gate (39.11 below). Knowing N753's values before choosing the statistic is a known weakness: the
+choice is principled (bounded, rank-based) rather than tuned, and N753 is the sanity check, not the finding.
