@@ -181,3 +181,25 @@ The minimum slope for 43.10 is scale-free: 0.1 nats per one clean-magnitude unit
 |a7_clean|, L7 N1169's signed activation at the discovery prompt's maker-stem last position (from `signs`). In
 L7's raw units the floor is 0.1 / |a7_clean| nats per unit of activation, computed from the signs output and passed to
 `grid` before the grid runs. If |a7_clean| < 0.05, 43.10 is NOT_TESTABLE.
+
+## Amendment 4 (2026-10-21 12:43 CT, before the singleton pilot or any singleton measurement): effect-relative error budget (Chorus #7, point 5)
+
+The batched-vs-single logit tolerance (0.1) is retired as a gate; it stays as recorded history in `checks`. In its
+place, one calibrated score error, measured by the singleton pilot before any decision rule is applied:
+
+1. **epsilon** (nats, on the primary full-answer score f = Google minus logsumexp of the three Alibaba answers) is the
+   largest of: (a) the spread of f across 3 repeated singleton bf16 runs of the same fixed-shape cells; (b) the largest
+   |f_bf16 - f_fp32| over the decisive cells run in both dtypes (clean, one selected zero, all-four zero, +/- dose, one
+   rescue case; at least one short and one long answer); (c) the clean-to-clean replay error. Recorded with each cell.
+2. **Propagated error of a statistic** = c * epsilon, where c is the count of score terms it combines with unit
+   coefficients: a single cell c = 1; a two-cell contrast (T, R, a dose step) c = 2; recovery T - R c = 4; a pair
+   interaction c = 4; a four-way inclusion-exclusion term c = 16. A Walsh coefficient over the 16 cells uses its own
+   sum of absolute coefficients (16/16 = 1 per cell, so c = 1 for a coefficient, written out per order in the output).
+3. **NOT_TESTABLE** whenever the statistic's interval [x - c*epsilon, x + c*epsilon] contains its decision bar
+   (the null 95th/99th percentile, 0.5 nats, half-mediated, the 43.10 slope floor), or contains zero for a sign claim.
+4. **Rescue fraction**: reported as the interval [(recovery - 4 eps) / (|T| + 2 eps), (recovery + 4 eps) / (|T| - 2 eps)]
+   (sign-adjusted); requires |T| > 10 * 2 eps in addition to the existing |T| >= 0.5 nats rule; NOT_TESTABLE if the
+   interval straddles 0.5.
+5. If epsilon exceeds 0.05 nats the pilot reports it and the full run stays on HOLD for review (no silent widening).
+6. Nothing here is fitted to data: epsilon is measured before any decision statistic is looked at, and the pilot's
+   decision outputs are written only after epsilon is fixed in the pilot JSON.
