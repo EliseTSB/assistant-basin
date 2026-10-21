@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.metadata
+import inspect
 import itertools
 import json
 import math
@@ -18,7 +20,8 @@ import re
 import sys
 import time
 from pathlib import Path
-from typing import Any, Iterable, Mapping, Sequence
+from types import SimpleNamespace
+from typing import Any, Callable, Iterable, Mapping, Sequence
 
 
 ROOT = Path(__file__).resolve().parent
@@ -56,6 +59,9 @@ ALIBABA_GROUP = ("Alibaba", "Tongyi Lab", "Qwen team")
 SEED = 4301
 RANDOM_LATTICES = 50
 DOSES = (2, 4, 8)
+_ACTIVE_EXECUTION_MODE = "singleton"
+_ACTIVE_MODEL: Any = None
+_ACTIVE_ACTIVATION_DTYPES: set[str] = set()
 DEFAULT_CACHE = Path("/mnt/e/neuron-probe/hf/hub")
 DEFAULT_JLENS = Path("/home/elisepc/neuron-probe/jlens/qwen3.5-4b/jlens/Salesforce-wikitext/Qwen3.5-4B_jacobian_lens.pt")
 DEFAULT_CHECKSUMS = Path("/home/elisepc/neuron-probe/jlens/SHA256SUMS")
@@ -97,6 +103,104 @@ def input_shas(paths: Iterable[str | Path | None]) -> dict[str, str]:
     return result
 
 
+def _runtime_environment(model: Any = None) -> dict[str, Any]:
+    try:
+        import torch
+        torch_version = str(torch.__version__)
+        cuda_matmul = getattr(getattr(torch.backends, "cuda", None), "matmul", None)
+        cudnn = getattr(torch.backends, "cudnn", None)
+        precision_flags = {
+            "cuda_matmul_allow_tf32": getattr(cuda_matmul, "allow_tf32", None),
+            "cudnn_allow_tf32": getattr(cudnn, "allow_tf32", None),
+            "cuda_bf16_reduced_precision_reduction": getattr(cuda_matmul, "allow_bf16_reduced_precision_reduction", None),
+            "cuda_fp16_reduced_precision_reduction": getattr(cuda_matmul, "allow_fp16_reduced_precision_reduction", None),
+            "cuda_fp16_accumulation": getattr(cuda_matmul, "allow_fp16_accumulation", None),
+        }
+        cuda_version = getattr(torch.version, "cuda", None)
+        cudnn_version = cudnn.version() if cudnn is not None and hasattr(cudnn, "version") else None
+    except ImportError:
+        torch_version = None
+        precision_flags = {}
+        cuda_version = None
+        cudnn_version = None
+    try:
+        transformers_version = importlib.metadata.version("transformers")
+    except importlib.metadata.PackageNotFoundError:
+        transformers_version = None
+
+    def package_version(names: Sequence[str]) -> str | None:
+        for name in names:
+            try:
+                return importlib.metadata.version(name)
+            except importlib.metadata.PackageNotFoundError:
+                continue
+        return None
+
+    parameter_dtypes: dict[str, int] = {}
+    attention_backend = None
+    gated_delta_functions: dict[str, Any] = {}
+    kernelized_module_classes: list[str] = []
+    if model is not None:
+        try:
+            for parameter in model.parameters():
+                key = str(parameter.dtype)
+                parameter_dtypes[key] = parameter_dtypes.get(key, 0) + parameter.numel()
+        except (AttributeError, TypeError):
+            pass
+        try:
+            kernelized_module_classes = sorted({
+                f"{type(module).__module__}.{type(module).__qualname__}"
+                for module in model.modules()
+                if "GatedDeltaNet" in type(module).__qualname__
+            })
+        except (AttributeError, TypeError):
+            pass
+        config = getattr(model, "config", None)
+        attention_backend = getattr(config, "_attn_implementation", None)
+        qwen_module = sys.modules.get("transformers.models.qwen3_5.modeling_qwen3_5")
+        if qwen_module is not None:
+            for function_name in (
+                "causal_conv1d_fn", "causal_conv1d_update",
+                "torch_chunk_gated_delta_rule", "torch_recurrent_gated_delta_rule",
+            ):
+                function = getattr(qwen_module, function_name, None)
+                if function is None:
+                    continue
+                try:
+                    closure = inspect.getclosurevars(function).nonlocals
+                except (AttributeError, TypeError, ValueError):
+                    closure = {}
+                implementation = closure.get("implementation")
+                torch_fallback = closure.get("torch_function")
+                selected = implementation if callable(implementation) else function
+                selected_name = f"{getattr(selected, '__module__', type(selected).__module__)}.{getattr(selected, '__qualname__', type(selected).__qualname__)}"
+                is_fallback = implementation is None or implementation is torch_fallback
+                gated_delta_functions[function_name] = {
+                    "resolved_implementation": selected_name,
+                    "uses_transformers_torch_fallback": bool(is_fallback),
+                }
+    recurrent_kernel = "not loaded at manifest time" if model is None else "resolved per Qwen3.5 model function below"
+    return {
+        "torch_version": torch_version,
+        "cuda_version": cuda_version,
+        "cudnn_version": cudnn_version,
+        "transformers_version": transformers_version,
+        "kernel": {
+            "attention": attention_backend or "model default / not exposed",
+            "gated_delta_or_convolution": recurrent_kernel,
+            "qwen3_5_function_implementations": gated_delta_functions or ("not loaded" if model is None else "not introspected"),
+            "kernelized_gated_delta_module_classes": kernelized_module_classes,
+            "hub_kernels_enabled": os.environ.get("USE_HUB_KERNELS"),
+            "kernel_hub_version": package_version(("kernels",)),
+            "flash_linear_attention_version": package_version(("flash-linear-attention", "fla")),
+            "causal_conv1d_version": package_version(("causal-conv1d",)),
+        },
+        "parameter_dtype_numel": parameter_dtypes or ("not loaded" if model is None else {}),
+        "activation_dtypes_observed": sorted(_ACTIVE_ACTIVATION_DTYPES) or ["not observed yet"],
+        "precision_flags": precision_flags,
+    }
+
+
 def output_header(args: argparse.Namespace, paths: Iterable[str | Path | None]) -> dict[str, Any]:
     common_inputs = [*paths, ROOT / "PART43-DESIGN.md"]
     return {
@@ -105,6 +209,8 @@ def output_header(args: argparse.Namespace, paths: Iterable[str | Path | None]) 
         "tool_sha256": sha256_file(Path(__file__).resolve()),
         "input_shas": input_shas(common_inputs),
         "written": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "execution_mode": getattr(args, "exec_mode", "singleton"),
+        "environment": _runtime_environment(_ACTIVE_MODEL),
     }
 
 
@@ -249,22 +355,12 @@ def teacher_forced_scores(
     stem_name: str = "maker",
     answer_options: Sequence[tuple[str, str]] | None = None,
     operation_details: dict[str, Any] | None = None,
+    mode: str | None = None,
 ) -> tuple[dict[str, Any], dict[tuple[int, int], list[list[float]]]]:
-    """Score complete maker strings and retain raw first-token candidate logits."""
+    """Score complete maker strings as each record returns from the shared adapter."""
     import torch
     answer_options = answer_options or (MAKER_ANSWERS if stem_name == "maker" else NAME_ANSWERS)
     records = _teacher_forced_records(tokenizer, questions, variant, system_prompt, stem_name, answer_options)
-    output, activations = captured_forward(
-        model,
-        tokenizer,
-        records,
-        capture_units=UNITS if capture else (),
-        operations=operations,
-        operation_details=operation_details,
-    )
-    logits = output.logits if hasattr(output, "logits") else output[0]
-    log_probs = torch.log_softmax(logits.float(), dim=-1)
-    scores = []
     candidate_ids = {}
     candidate_alias_ids = {}
     for target, stems in token_records[variant].items():
@@ -278,25 +374,45 @@ def teacher_forced_scores(
             candidate_alias_ids[target][str(alias)] = token_id
         candidate_ids[target] = sorted(set(candidate_ids[target]))
     all_candidate_ids = sorted({token_id for ids in candidate_ids.values() for token_id in ids})
-    candidate_raw_logits = []
-    for row, record in enumerate(records):
+    scored_rows: list[dict[str, Any]] = [None] * len(records)
+
+    def score_record(output, record, index, _row_activations):
+        logits = output.logits if hasattr(output, "logits") else output[0]
+        log_probs = torch.log_softmax(logits.float(), dim=-1)
         token_positions = torch.as_tensor(record["answer_positions"], device=log_probs.device, dtype=torch.long)
         target_ids = torch.as_tensor(record["answer_token_ids"], device=log_probs.device, dtype=torch.long)
-        values = log_probs[row, token_positions - 1, target_ids]
-        scores.append(float(values.sum().detach().cpu().item()))
+        values = log_probs[0, token_positions - 1, target_ids]
         start_position = int(record["answer_positions"][0]) - 1
-        candidate_raw_logits.append({
-            str(token_id): float(logits[row, start_position, token_id].detach().float().cpu().item())
+        first_token_margin = _margin_list(output, [record], token_records)[0]
+        raw_logits = {
+            str(token_id): float(logits[0, start_position, token_id].detach().float().cpu().item())
             for token_id in all_candidate_ids
-        })
-    margin_per_answer = _margin_list(output, records, token_records)
+        }
+        return {
+            "answer_logprob": float(values.sum().detach().cpu().item()),
+            "secondary_first_token_margin": float(first_token_margin),
+            "raw_candidate_logits": raw_logits,
+        }
+
+    _output, activations, scored_rows = execute(
+        model,
+        tokenizer,
+        records,
+        capture_units=UNITS if capture else (),
+        operations=operations,
+        operation_details=operation_details,
+        mode=mode,
+        consume=score_record,
+        collect_outputs=False,
+    )
+    scores = [float(row["answer_logprob"]) for row in scored_rows]
     by_question: dict[str, dict[str, Any]] = {}
     for index, record in enumerate(records):
         q = str(record["question"])
         row = by_question.setdefault(q, {
             "makers": {},
-            "secondary_first_token_margin": float(margin_per_answer[index]),
-            "raw_candidate_logits": candidate_raw_logits[index],
+            "secondary_first_token_margin": float(scored_rows[index]["secondary_first_token_margin"]),
+            "raw_candidate_logits": scored_rows[index]["raw_candidate_logits"],
             "raw_candidate_ids_by_group": candidate_ids,
             "raw_candidate_alias_ids": candidate_alias_ids,
         })
@@ -312,7 +428,7 @@ def teacher_forced_scores(
             row["gemini_minus_qwen"] = float(makers["Gemini"] - makers["Qwen"])
             row["primary_score"] = row["gemini_minus_qwen"]
     return {"by_question": by_question, "per_answer": records, "answer_logprobs": scores,
-            "raw_candidate_token_logits_by_answer": candidate_raw_logits}, activations
+            "raw_candidate_token_logits_by_answer": [row["raw_candidate_logits"] for row in scored_rows]}, activations
 
 
 def _device_of(model: Any):
@@ -341,7 +457,12 @@ def _layers_of(model: Any):
     raise AttributeError("cannot find decoder layers on the loaded model")
 
 
-def _pad_records(tokenizer: Any, records: Sequence[Mapping[str, Any]], device: Any):
+def _pad_records(
+    tokenizer: Any,
+    records: Sequence[Mapping[str, Any]],
+    device: Any,
+    padding_ids_by_record: Sequence[Sequence[int]] | None = None,
+):
     import torch
     if not records:
         raise ValueError("cannot run an empty batch")
@@ -358,6 +479,13 @@ def _pad_records(tokenizer: Any, records: Sequence[Mapping[str, Any]], device: A
         values = torch.as_tensor(record["input_ids"], dtype=torch.long, device=device)
         ids[row, :len(values)] = values
         mask[row, :len(values)] = 1
+        if padding_ids_by_record is not None:
+            pad_values = list(padding_ids_by_record[row])
+            expected = max_length - len(values)
+            if len(pad_values) != expected:
+                raise ValueError(f"row {row} has {len(pad_values)} masked pad ids; expected {expected}")
+            if expected:
+                ids[row, len(values):] = torch.as_tensor(pad_values, dtype=torch.long, device=device)
         positions[row] = int(record.get("score_position", len(values) - 1))
     return ids, mask, positions
 
@@ -428,7 +556,7 @@ def _finalize_operation_stats(details: dict[str, Any]) -> dict[str, Any]:
     return finalized
 
 
-def captured_forward(
+def _capture_forward_group(
     model: Any,
     tokenizer: Any,
     records: Sequence[Mapping[str, Any]],
@@ -437,6 +565,8 @@ def captured_forward(
     capture_branches: Iterable[tuple[int, int]] = (),
     branch_captures: dict[tuple[int, int], Any] | None = None,
     operation_details: dict[str, Any] | None = None,
+    padding_ids_by_record: Sequence[Sequence[int]] | None = None,
+    forward_call: Callable[[Any, Any], Any] | None = None,
 ) -> tuple[Any, dict[tuple[int, int], list[list[float]]]]:
     """Run one right-padded batch, capturing selected down_proj input columns.
 
@@ -460,7 +590,7 @@ def captured_forward(
             raise ValueError(f"target layer {layer} outside model with {len(layer_list)} layers")
 
     device = _device_of(model)
-    ids, mask, positions = _pad_records(tokenizer, records, device)
+    ids, mask, positions = _pad_records(tokenizer, records, device, padding_ids_by_record)
     valid_lengths = [len(record["input_ids"]) for record in records]
     captures: dict[tuple[int, int], list[list[float]]] = {
         coordinate: [[] for _ in records] for coordinate in capture_coordinates
@@ -474,6 +604,7 @@ def captured_forward(
 
         def hook(_module, args, *, li=layer_index, units=layer_units):
             x = args[0]
+            _ACTIVE_ACTIVATION_DTYPES.add(str(x.dtype))
             out = x
             if operations is not None:
                 for row, row_ops in enumerate(operations):
@@ -530,7 +661,9 @@ def captured_forward(
             handles.append(layer_list[layer_index].mlp.up_proj.register_forward_hook(up_hook))
     try:
         with torch.inference_mode():
-            output = model(input_ids=ids, attention_mask=mask, use_cache=False)
+            if forward_call is None:
+                raise RuntimeError("the execution adapter must supply the model forward call")
+            output = forward_call(ids, mask)
     finally:
         for handle in handles:
             handle.remove()
@@ -549,6 +682,222 @@ def captured_forward(
     return output, captures
 
 
+class _PerRecordOutput:
+    """Unpadded singleton outputs in original record order."""
+
+    def __init__(self, items: Sequence[Any]):
+        self.items = list(items)
+
+
+def _slice_output_row(output: Any, row: int) -> Any:
+    logits = output.logits if hasattr(output, "logits") else output[0]
+    return SimpleNamespace(logits=logits[row:row + 1])
+
+
+def _row_output(output: Any, row: int) -> Any:
+    if isinstance(output, _PerRecordOutput):
+        return output.items[row]
+    return _slice_output_row(output, row)
+
+
+def _assert_execution_inputs(
+    records: Sequence[Mapping[str, Any]],
+    operations: Sequence[Mapping[tuple[int, int], Any]] | None,
+) -> None:
+    if operations is not None and len(operations) != len(records):
+        raise ValueError("one operation mapping is required per sequence")
+    for row, record in enumerate(records):
+        ids = [int(value) for value in record["input_ids"]]
+        if not ids:
+            raise ValueError(f"record {row} has no prompt ids")
+        for field in ("answer_positions", "stem_positions", "question_positions"):
+            if field in record and any(int(position) < 0 or int(position) >= len(ids) for position in record[field]):
+                raise ValueError(f"record {row} has {field} outside its prompt shape")
+        if "answer_positions" in record and len(record["answer_positions"]) != len(record.get("answer_token_ids", ())):
+            raise ValueError(f"record {row} has misaligned answer positions and token ids")
+        if operations is not None:
+            for (layer, unit), value in operations[row].items():
+                if isinstance(value, (list, tuple)) and len(value) != len(ids):
+                    raise ValueError(
+                        f"record {row} operation {(layer, unit)} has {len(value)} values for {len(ids)} real positions"
+                    )
+
+
+def assert_mode_alignment(
+    left_records: Sequence[Mapping[str, Any]],
+    right_records: Sequence[Mapping[str, Any]],
+    left_operations: Sequence[Mapping[tuple[int, int], Any]] | None = None,
+    right_operations: Sequence[Mapping[tuple[int, int], Any]] | None = None,
+) -> None:
+    """Verify record shape, score positions, operation payloads and row indexing across modes."""
+    _assert_execution_inputs(left_records, left_operations)
+    _assert_execution_inputs(right_records, right_operations)
+    if len(left_records) != len(right_records):
+        raise AssertionError("execution modes received different record counts")
+    for index, (left, right) in enumerate(zip(left_records, right_records)):
+        for field in ("question", "stem", "variant", "maker", "answer", "input_ids", "answer_positions", "answer_token_ids", "stem_positions", "score_position"):
+            if field in left or field in right:
+                left_value = left.get(field)
+                right_value = right.get(field)
+                if field in {"input_ids", "answer_positions", "answer_token_ids", "stem_positions"}:
+                    left_value = list(left_value or [])
+                    right_value = list(right_value or [])
+                if left_value != right_value:
+                    raise AssertionError(f"execution modes disagree on record {index} {field}")
+        if (left_operations is None) != (right_operations is None):
+            raise AssertionError("execution modes received different operation payload presence")
+        if left_operations is not None and right_operations is not None:
+            left_ops = left_operations[index]
+            right_ops = right_operations[index]
+            if set(left_ops) != set(right_ops):
+                raise AssertionError(f"execution modes disagree on operation coordinates for record {index}")
+            for coordinate in left_ops:
+                left_value, right_value = left_ops[coordinate], right_ops[coordinate]
+                if isinstance(left_value, Mapping) or isinstance(right_value, Mapping):
+                    if dict(left_value) != dict(right_value):
+                        raise AssertionError(f"execution modes disagree on operation payload {coordinate} row {index}")
+                elif isinstance(left_value, (list, tuple)) or isinstance(right_value, (list, tuple)):
+                    if list(left_value) != list(right_value):
+                        raise AssertionError(f"execution modes disagree on operation payload {coordinate} row {index}")
+                elif float(left_value) != float(right_value):
+                    raise AssertionError(f"execution modes disagree on operation payload {coordinate} row {index}")
+
+
+def execute(
+    model: Any,
+    tokenizer: Any = None,
+    records: Sequence[Mapping[str, Any]] = (),
+    mode: str | None = None,
+    *,
+    capture_units: Iterable[tuple[int, int]] = UNITS,
+    operations: Sequence[Mapping[tuple[int, int], Any]] | None = None,
+    capture_branches: Iterable[tuple[int, int]] = (),
+    branch_captures: dict[tuple[int, int], Any] | None = None,
+    operation_details: dict[str, Any] | None = None,
+    padding_ids_by_record: Sequence[Sequence[int]] | None = None,
+    consume: Callable[[Any, Mapping[str, Any], int, Mapping[tuple[int, int], list[float]]], Any] | None = None,
+    collect_outputs: bool = True,
+    generation_kwargs: Mapping[str, Any] | None = None,
+):
+    """Shared singleton/batched adapter for every model forward and generation call."""
+    global _ACTIVE_MODEL
+    _ACTIVE_MODEL = model
+    selected_mode = mode or _ACTIVE_EXECUTION_MODE
+    if selected_mode not in {"singleton", "batched"}:
+        raise ValueError(f"unknown execution mode {selected_mode!r}")
+    if generation_kwargs is not None:
+        import torch
+        with torch.inference_mode():
+            return model.generate(**dict(generation_kwargs))
+    if not records:
+        raise ValueError("cannot execute an empty record list")
+    capture_units = tuple((int(layer), int(unit)) for layer, unit in capture_units)
+    selected_branches = tuple((int(layer), int(unit)) for layer, unit in capture_branches)
+    _assert_execution_inputs(records, operations)
+    if padding_ids_by_record is not None and len(padding_ids_by_record) != len(records):
+        raise ValueError("one masked-pad id list is required per record")
+
+    groups = [(0, len(records))] if selected_mode == "batched" else [(index, index + 1) for index in range(len(records))]
+    ordered_outputs: list[Any] = []
+    consumed: list[Any] = [None] * len(records)
+    merged_captures: dict[tuple[int, int], list[list[float]]] = {
+        (int(layer), int(unit)): [None] * len(records) for layer, unit in capture_units
+    }
+    merged_branches: dict[tuple[int, int], Any] = {
+        coordinate: {"gate": [None] * len(records), "up": [None] * len(records)}
+        for coordinate in selected_branches
+    }
+    for start, end in groups:
+        group_records = records[start:end]
+        group_operations = operations[start:end] if operations is not None else None
+        group_pad_ids = padding_ids_by_record[start:end] if padding_ids_by_record is not None else None
+        local_branches: dict[tuple[int, int], Any] | None = {} if selected_branches else None
+
+        def forward_call(ids, mask):
+            return model(input_ids=ids, attention_mask=mask, use_cache=False)
+
+        output, captures = _capture_forward_group(
+            model, tokenizer, group_records,
+            capture_units=capture_units,
+            operations=group_operations,
+            capture_branches=selected_branches,
+            branch_captures=local_branches,
+            operation_details=operation_details,
+            padding_ids_by_record=group_pad_ids,
+            forward_call=forward_call,
+        )
+        logits = output.logits if hasattr(output, "logits") else output[0]
+        _ACTIVE_ACTIVATION_DTYPES.add(str(logits.dtype))
+        for local_index, original_index in enumerate(range(start, end)):
+            row_output = _slice_output_row(output, local_index)
+            row_captures = {}
+            for coordinate, values in captures.items():
+                row_captures[coordinate] = values[local_index]
+                merged_captures.setdefault(coordinate, [None] * len(records))[original_index] = values[local_index]
+            if consume is not None:
+                consumed[original_index] = consume(row_output, records[original_index], original_index, row_captures)
+            if collect_outputs:
+                ordered_outputs.append(row_output)
+            if local_branches is not None:
+                for coordinate, branches in local_branches.items():
+                    for branch in ("gate", "up"):
+                        merged_branches[coordinate][branch][original_index] = branches[branch][local_index]
+
+    if branch_captures is not None:
+        branch_captures.clear()
+        branch_captures.update(merged_branches)
+    if collect_outputs:
+        if selected_mode == "batched":
+            # The sole group retains its real batched output for the diagnostic caller.
+            outputs: Any = output
+        elif len(ordered_outputs) == 1:
+            outputs = ordered_outputs[0]
+        else:
+            outputs = _PerRecordOutput(ordered_outputs)
+    else:
+        outputs = None
+    if any(value is None for rows in merged_captures.values() for value in rows):
+        missing = [coordinate for coordinate, rows in merged_captures.items() if any(value is None for value in rows)]
+        raise RuntimeError(f"execution adapter lost activation row indexing for {missing}")
+    for coordinate, rows in merged_captures.items():
+        if len(rows) != len(records) or any(len(row) != len(records[index]["input_ids"]) for index, row in enumerate(rows)):
+            raise RuntimeError(f"execution adapter changed unit row indexing or real-position lengths for {coordinate}")
+    return outputs, merged_captures, consumed
+
+
+def captured_forward(
+    model: Any,
+    tokenizer: Any,
+    records: Sequence[Mapping[str, Any]],
+    capture_units: Iterable[tuple[int, int]] = UNITS,
+    operations: Sequence[Mapping[tuple[int, int], Any]] | None = None,
+    capture_branches: Iterable[tuple[int, int]] = (),
+    branch_captures: dict[tuple[int, int], Any] | None = None,
+    operation_details: dict[str, Any] | None = None,
+    *,
+    mode: str | None = None,
+    padding_ids_by_record: Sequence[Sequence[int]] | None = None,
+    consume: Callable[[Any, Mapping[str, Any], int, Mapping[tuple[int, int], list[float]]], Any] | None = None,
+    collect_outputs: bool = True,
+):
+    output, captures, _results = execute(
+        model, tokenizer, records, mode,
+        capture_units=capture_units,
+        operations=operations,
+        capture_branches=capture_branches,
+        branch_captures=branch_captures,
+        operation_details=operation_details,
+        padding_ids_by_record=padding_ids_by_record,
+        consume=consume,
+        collect_outputs=collect_outputs,
+    )
+    return output, captures
+
+
+def execute_generation(model: Any, mode: str | None = None, **generation_kwargs: Any):
+    return execute(model, mode=mode, generation_kwargs=generation_kwargs)
+
+
 def margin_values(logits: Any, records: Sequence[Mapping[str, Any]], positions: Any, token_records: Mapping[str, Any]):
     """Part 25's exact Google-minus-Qwen logsumexp margin, one value per row."""
     return part25_module()._score_margins(logits, list(records), positions, dict(token_records), "google")
@@ -556,6 +905,21 @@ def margin_values(logits: Any, records: Sequence[Mapping[str, Any]], positions: 
 
 def _margin_list(output: Any, records: Sequence[Mapping[str, Any]], token_records: Mapping[str, Any]) -> list[float]:
     import torch
+    if isinstance(output, _PerRecordOutput):
+        if len(output.items) != len(records):
+            raise ValueError("singleton output rows do not match the records")
+        result = []
+        for index, record in enumerate(records):
+            row_output = output.items[index]
+            logits = row_output.logits if hasattr(row_output, "logits") else row_output[0]
+            position = torch.as_tensor(
+                [int(record.get("score_position", len(record["input_ids"]) - 1))],
+                dtype=torch.long,
+                device=logits.device,
+            )
+            value = margin_values(logits, [record], position, token_records)
+            result.append(float(value.detach().float().cpu().item()))
+        return result
     logits = output.logits if hasattr(output, "logits") else output[0]
     positions = torch.as_tensor(
         [int(record.get("score_position", len(record["input_ids"]) - 1)) for record in records],
@@ -564,6 +928,397 @@ def _margin_list(output: Any, records: Sequence[Mapping[str, Any]], token_record
     )
     margins = margin_values(logits, records, positions, token_records)
     return [float(value) for value in margins.detach().float().cpu().tolist()]
+
+
+def _margin_forward(
+    model: Any,
+    tokenizer: Any,
+    records: Sequence[Mapping[str, Any]],
+    token_records: Mapping[str, Any],
+    *,
+    capture_units: Iterable[tuple[int, int]] = (),
+    operations: Sequence[Mapping[tuple[int, int], Any]] | None = None,
+    mode: str | None = None,
+):
+    import torch
+
+    def score_row(output, record, _index, _activations):
+        logits = output.logits if hasattr(output, "logits") else output[0]
+        positions = torch.as_tensor(
+            [int(record.get("score_position", len(record["input_ids"]) - 1))],
+            dtype=torch.long,
+            device=logits.device,
+        )
+        values = margin_values(logits, [record], positions, token_records)
+        return float(values.detach().float().cpu().item())
+
+    _output, captures, margins = execute(
+        model, tokenizer, records, mode,
+        capture_units=capture_units,
+        operations=operations,
+        consume=score_row,
+        collect_outputs=False,
+    )
+    return [float(value) for value in margins], captures
+
+
+VALIDATION_ANSWER_OPTIONS = tuple(row for row in MAKER_ANSWERS if row[0] != "Tencent")
+
+
+def _answer_logprob(output: Any, record: Mapping[str, Any]) -> float:
+    import torch
+    logits = output.logits if hasattr(output, "logits") else output[0]
+    log_probs = torch.log_softmax(logits.float(), dim=-1)
+    positions = torch.as_tensor(record["answer_positions"], device=log_probs.device, dtype=torch.long)
+    target_ids = torch.as_tensor(record["answer_token_ids"], device=log_probs.device, dtype=torch.long)
+    return float(log_probs[0, positions - 1, target_ids].sum().detach().cpu().item())
+
+
+def _primary_score_from_answer_rows(records: Sequence[Mapping[str, Any]], scores: Sequence[float]) -> float:
+    makers = {str(record["maker"]): float(score) for record, score in zip(records, scores)}
+    missing = (set(ALIBABA_GROUP) | {"Google"}) - set(makers)
+    if missing:
+        raise ValueError(f"primary score lacks maker answers: {sorted(missing)}")
+    return float(makers["Google"] - _logsumexp([makers[name] for name in ALIBABA_GROUP]))
+
+
+def _max_activation_difference(
+    left: Mapping[tuple[int, int], Sequence[Sequence[float]]],
+    right: Mapping[tuple[int, int], Sequence[Sequence[float]]],
+) -> tuple[dict[str, float], int]:
+    per_unit = {}
+    total_positions = 0
+    for unit in UNITS:
+        differences = []
+        for left_row, right_row in zip(left[unit], right[unit]):
+            if len(left_row) != len(right_row):
+                raise AssertionError(f"activation row length changed for {UNIT_LABELS[unit]}")
+            differences.extend(abs(float(a) - float(b)) for a, b in zip(left_row, right_row))
+        total_positions += len(differences)
+        per_unit[UNIT_KEYS[unit]] = max(differences, default=0.0)
+    return per_unit, total_positions
+
+
+def run_singleton_validation(model: Any, tokenizer: Any, token_records: Mapping[str, Any], args: argparse.Namespace) -> dict[str, Any]:
+    """Measure repeatability and replay error on the complete primary maker-score path."""
+    if len(VALIDATION_ANSWER_OPTIONS) != 7:
+        raise AssertionError("the validation contract uses the seven pre-Tencent maker answer strings")
+    records = _teacher_forced_records(tokenizer, [DISCOVERY_QUESTION], "plain", answer_options=VALIDATION_ANSWER_OPTIONS)
+    _assert_execution_inputs(records, None)
+
+    def run_cell(name: str, operations: Sequence[Mapping[tuple[int, int], Any]] | None = None):
+        repeat_rows = []
+        repeat_activations = []
+        for _repeat in range(2):
+            payload, activations = teacher_forced_scores(
+                model, tokenizer, [DISCOVERY_QUESTION], token_records,
+                operations=operations, variant="plain", capture=True,
+                answer_options=VALIDATION_ANSWER_OPTIONS, mode="singleton",
+            )
+            row = payload["by_question"][DISCOVERY_QUESTION]
+            repeat_rows.append({
+                "primary_score": float(row["primary_score"]),
+                "answer_logprobs": {str(k): float(v) for k, v in row["makers"].items()},
+            })
+            repeat_activations.append(activations)
+        primary = [float(row["primary_score"]) for row in repeat_rows]
+        max_answer_repeat_error = max(
+            (abs(left - right) for left, right in zip(repeat_rows[0]["answer_logprobs"].values(), repeat_rows[1]["answer_logprobs"].values())),
+            default=0.0,
+        )
+        return {
+            "name": name,
+            "primary_score": primary[0],
+            "repeat_primary_scores": primary,
+            "repeat_rows": repeat_rows,
+            "within_mode_repeat_max_abs_primary_score_difference": abs(primary[0] - primary[1]),
+            "within_mode_repeat_max_abs_answer_logprob_difference": max_answer_repeat_error,
+        }, repeat_activations
+
+    clean_cell, clean_runs = run_cell("clean")
+    clean_activations = clean_runs[0]
+    cells: dict[str, Any] = {"clean": clean_cell}
+    selected_zero_ops = [{UNITS[1]: 0.0} for _ in records]
+    selected_zero_cell, zero_runs = run_cell("selected_single_zero_L7_N1169", selected_zero_ops)
+    selected_zero_cell["delta_from_clean"] = float(selected_zero_cell["primary_score"] - clean_cell["primary_score"])
+    cells["selected_single_zero_L7_N1169"] = selected_zero_cell
+    zero_activations = zero_runs[0]
+    operations: dict[str, Sequence[Mapping[tuple[int, int], Any]]] = {}
+    operations["all_four_zero"] = [{unit: 0.0 for unit in UNITS} for _ in records]
+    operations["clean_to_clean_restoration"] = [
+        {unit: list(clean_activations[unit][row]) for unit in UNITS} for row in range(len(records))
+    ]
+    operations["dose_plus_2x_L7_N1169"] = [{UNITS[1]: {"scale": 2.0}} for _ in records]
+    operations["dose_minus_2x_L7_N1169"] = [{UNITS[1]: {"scale": -2.0}} for _ in records]
+    operations["L7_zero_L11_restored_clean"] = [
+        {UNITS[1]: 0.0, UNITS[2]: list(clean_activations[UNITS[2]][row])}
+        for row in range(len(records))
+    ]
+    operations["L11_receiver_only_replay_from_L7_zero"] = [
+        {UNITS[2]: list(zero_activations[UNITS[2]][row])} for row in range(len(records))
+    ]
+    no_op_activation_capture = None
+    for name, payload_operations in operations.items():
+        cell, activation_rows = run_cell(name, payload_operations)
+        cell["delta_from_clean"] = float(cell["primary_score"] - clean_cell["primary_score"])
+        cells[name] = cell
+        if name == "clean_to_clean_restoration":
+            no_op_activation_capture = activation_rows[0]
+
+    no_op = cells["clean_to_clean_restoration"]
+    if no_op_activation_capture is None:
+        raise RuntimeError("clean-to-clean replay did not retain its singleton activations")
+    no_op_activations = _max_activation_difference(clean_activations, no_op_activation_capture)[0]
+    for name, cell in cells.items():
+        if name != "clean":
+            cell["delta_from_clean"] = float(cell["primary_score"] - clean_cell["primary_score"])
+    coverage = [
+        {
+            "maker": str(record["maker"]),
+            "answer_string": str(record["answer"]),
+            "answer_token_count": len(record["answer_positions"]),
+            "prompt_token_count": len(record["input_ids"]),
+            "answer_positions": [int(value) for value in record["answer_positions"]],
+        }
+        for record in records
+    ]
+    shortest = min(coverage, key=lambda row: (row["answer_token_count"], len(row["answer_string"])))
+    longest = max(coverage, key=lambda row: (row["answer_token_count"], len(row["answer_string"])))
+    for name, cell in cells.items():
+        cell["answer_coverage"] = coverage
+        cell["short_answer"] = shortest["answer_string"]
+        cell["long_answer"] = longest["answer_string"]
+    no_op["natural_trajectory_replay"] = {
+        "positions_checked_per_answer": [len(record["input_ids"]) for record in records],
+        "all_real_positions_checked": True,
+        "max_abs_activation_difference_by_unit": no_op_activations,
+        "max_abs_primary_score_difference_from_clean": abs(float(no_op["primary_score"] - clean_cell["primary_score"])),
+        "repeat_max_abs_primary_score_difference": no_op["within_mode_repeat_max_abs_primary_score_difference"],
+    }
+    return {
+        **output_header(args, [args.candidates, ROOT / "part25.py", ROOT / "part39.py"]),
+        "command": "validate",
+        "execution_mode": "singleton",
+        "estimand": "Google full-answer logprob minus logsumexp of the full Alibaba, Tongyi Lab and Qwen team answer logprobs",
+        "primary_question": DISCOVERY_QUESTION,
+        "maker_answer_count": len(VALIDATION_ANSWER_OPTIONS),
+        "maker_answers": [answer for _maker, answer in VALIDATION_ANSWER_OPTIONS],
+        "cells": cells,
+        "receiver_path_case": {
+            "A_clean_score": float(clean_cell["primary_score"]),
+            "B_L7_zero_score": float(cells["selected_single_zero_L7_N1169"]["primary_score"]),
+            "C_L7_zero_L11_restored_score": float(cells["L7_zero_L11_restored_clean"]["primary_score"]),
+            "D_L11_receiver_only_replay_score": float(cells["L11_receiver_only_replay_from_L7_zero"]["primary_score"]),
+            "receiver": UNIT_LABELS[UNITS[2]],
+            "score_units": "nats",
+        },
+        "result_policy": "reports measured values only; decision thresholds and error budget are set by the parent",
+    }
+
+
+def _same_length_companion(record: Mapping[str, Any], candidates: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    for candidate in candidates:
+        if candidate.get("question") != record.get("question") and len(candidate["input_ids"]) == len(record["input_ids"]):
+            if list(candidate["input_ids"]) != list(record["input_ids"]):
+                return dict(candidate)
+    companion = dict(record)
+    ids = list(map(int, record["input_ids"]))
+    for candidate in candidates:
+        other = list(map(int, candidate["input_ids"]))
+        for index in range(min(int(record.get("prefix_length", len(ids))), len(ids), len(other))):
+            if ids[index] != other[index]:
+                ids[index] = other[index]
+                companion["input_ids"] = ids
+                companion["question"] = f"same-length companion for {record.get('question')}"
+                companion["maker"] = f"companion-{record.get('maker')}"
+                return companion
+    raise ValueError("could not construct a distinct same-length companion prompt")
+
+
+def _extended_companion(record: Mapping[str, Any], extra_tokens: int) -> dict[str, Any]:
+    companion = dict(record)
+    ids = list(map(int, record["input_ids"]))
+    insertion = int(record.get("prefix_length", len(ids)))
+    token = ids[max(insertion - 1, 0)]
+    companion["input_ids"] = ids[:insertion] + [token] * int(extra_tokens) + ids[insertion:]
+    for field in ("answer_positions",):
+        companion[field] = [int(position) + extra_tokens if int(position) >= insertion else int(position) for position in record[field]]
+    for field in ("score_position",):
+        companion[field] = int(record[field]) + extra_tokens if int(record[field]) >= insertion else int(record[field])
+    companion["prefix_length"] = insertion + extra_tokens
+    companion["question"] = f"long companion (+{extra_tokens} tokens)"
+    companion["maker"] = f"companion-{record.get('maker')}"
+    return companion
+
+
+def _batchdiag_one_condition(
+    model: Any,
+    tokenizer: Any,
+    records: Sequence[Mapping[str, Any]],
+    scenario: str,
+    mode: str,
+    *,
+    intervention: bool = False,
+    companion_kind: str = "none",
+):
+    import random as _random
+    candidate_rows = _teacher_forced_records(tokenizer, list(QUESTIONS), "plain", answer_options=VALIDATION_ANSWER_OPTIONS)
+    scores = []
+    receiver_h = {"natural": [], "selected_zero": []}
+    shapes = []
+    padding_seed = SEED + 4330
+    for answer_index, answer_record in enumerate(records):
+        same = _same_length_companion(answer_record, candidate_rows) if companion_kind == "same" else None
+        extra = 1 if companion_kind == "different" else 64 if companion_kind == "extra" else 0
+        companion = _extended_companion(answer_record, extra) if extra else same
+        row_ids = [dict(answer_record)]
+        a_index = 0
+        if scenario == "A_A_no_padding":
+            row_ids = [dict(answer_record), dict(answer_record)]
+        elif companion is not None:
+            if scenario == "A_B_same_length_reversed":
+                row_ids = [companion, dict(answer_record)]
+                a_index = 1
+            else:
+                row_ids = [dict(answer_record), companion]
+        natural_ops = None
+        zero_ops = [{}, {}] if len(row_ids) == 2 else [{}]
+        zero_ops[a_index] = {UNITS[1]: 0.0}
+        assert_mode_alignment(
+            [answer_record], [row_ids[a_index]],
+            [{UNITS[1]: 0.0}], [zero_ops[a_index]],
+        )
+        pad_ids = None
+        if scenario == "A_randomized_masked_pad_ids":
+            rng = _random.Random(padding_seed + answer_index)
+            max_length = max(len(row["input_ids"]) for row in row_ids)
+            valid_ids = [int(value) for row in row_ids for value in row["input_ids"]]
+            pad_ids = []
+            for row in row_ids:
+                pad_count = max_length - len(row["input_ids"])
+                pad_ids.append([rng.choice(valid_ids) for _ in range(pad_count)])
+        shapes.append({
+            "maker": str(answer_record["maker"]),
+            "input_lengths": [len(row["input_ids"]) for row in row_ids],
+            "max_padded_length": max(len(row["input_ids"]) for row in row_ids),
+            "padding_count": sum(max(len(row["input_ids"]) for row in row_ids) - len(row["input_ids"]) for row in row_ids),
+            "A_row_index": a_index,
+            "masked_pad_ids": pad_ids,
+        })
+
+        def run(ops):
+            def scorer(output, record, _index, _captures):
+                return _answer_logprob(output, record)
+            _output, captures, row_scores = execute(
+                model, tokenizer, row_ids, mode,
+                capture_units=UNITS,
+                operations=ops,
+                padding_ids_by_record=pad_ids,
+                consume=scorer,
+                collect_outputs=False,
+            )
+            scores_a = float(row_scores[a_index])
+            at_position = int(answer_record["stem_positions"][-1])
+            h = {
+                UNIT_KEYS[unit]: float(captures[unit][a_index][at_position])
+                for unit in (UNITS[1], UNITS[2], UNITS[3])
+            }
+            return scores_a, h
+
+        natural_score, natural_h = run(natural_ops)
+        zero_score, zero_h = run(zero_ops) if intervention else (None, None)
+        scores.append({
+            "maker": str(answer_record["maker"]),
+            "answer": str(answer_record["answer"]),
+            "natural_answer_logprob": natural_score,
+            "selected_zero_answer_logprob": zero_score,
+        })
+        receiver_h["natural"].append(natural_h)
+        if intervention:
+            receiver_h["selected_zero"].append(zero_h)
+    natural_answer_scores = [row["natural_answer_logprob"] for row in scores]
+    natural_primary = _primary_score_from_answer_rows(records, natural_answer_scores)
+    zero_primary = None
+    if intervention:
+        zero_answer_scores = [row["selected_zero_answer_logprob"] for row in scores]
+        zero_primary = _primary_score_from_answer_rows(records, zero_answer_scores)
+    return {
+        "name": scenario,
+        "execution_mode": mode,
+        "natural_primary_score": natural_primary,
+        "selected_single_zero_primary_score": zero_primary,
+        "intervention_delta": None if zero_primary is None else float(zero_primary - natural_primary),
+        "answer_scores": scores,
+        "receiver_signed_h_at_last_stem_position": receiver_h,
+        "A_row_index": a_index,
+        "batch_shapes_by_answer": shapes,
+        "max_padded_length": max((shape["max_padded_length"] for shape in shapes), default=0),
+        "padding_count_by_answer": {shape["maker"]: shape["padding_count"] for shape in shapes},
+        "masked_pad_ids_randomized": scenario == "A_randomized_masked_pad_ids",
+        "padding_seed": padding_seed if scenario == "A_randomized_masked_pad_ids" else None,
+    }
+
+
+def run_batch_diagnostics(model: Any, tokenizer: Any, args: argparse.Namespace) -> dict[str, Any]:
+    records = _teacher_forced_records(tokenizer, [DISCOVERY_QUESTION], "plain", answer_options=VALIDATION_ANSWER_OPTIONS)
+    baseline = _batchdiag_one_condition(model, tokenizer, records, "A_alone_singleton", "singleton", intervention=True)
+    scenarios = [
+        ("A_alone_batched", "none"),
+        ("A_A_no_padding", "none"),
+        ("A_B_same_length", "same"),
+        ("A_B_same_length_reversed", "same"),
+        ("A_B_different_length", "different"),
+        ("A_randomized_masked_pad_ids", "extra"),
+        ("A_extra_long_companion", "extra"),
+    ]
+    rows = [baseline]
+    for name, companion_kind in scenarios:
+        mode = "batched"
+        rows.append(_batchdiag_one_condition(
+            model, tokenizer, records, name, mode,
+            intervention=True, companion_kind=companion_kind,
+        ))
+    baseline_answers = {row["maker"]: row["natural_answer_logprob"] for row in baseline["answer_scores"]}
+    for row in rows[1:]:
+        answer_diffs = [
+            abs(float(item["natural_answer_logprob"]) - baseline_answers[item["maker"]])
+            for item in row["answer_scores"]
+        ]
+        row["max_abs_answer_logprob_difference_vs_singleton"] = max(answer_diffs, default=0.0)
+        row["primary_score_difference_vs_singleton"] = float(row["natural_primary_score"] - baseline["natural_primary_score"])
+        row["intervention_delta_difference_vs_singleton"] = float(row["intervention_delta"] - baseline["intervention_delta"])
+        for condition in ("natural", "selected_zero"):
+            baseline_h = {
+                answer["maker"]: values
+                for answer, values in zip(baseline["answer_scores"], baseline["receiver_signed_h_at_last_stem_position"][condition])
+            }
+            condition_h = {
+                answer["maker"]: values
+                for answer, values in zip(row["answer_scores"], row["receiver_signed_h_at_last_stem_position"][condition])
+            }
+            unit_differences = {
+                key: max(
+                    (abs(float(condition_h[maker][key]) - float(baseline_h[maker][key])) for maker in baseline_h),
+                    default=0.0,
+                )
+                for key in (UNIT_KEYS[UNITS[2]], UNIT_KEYS[UNITS[3]])
+            }
+            row[f"max_abs_receiver_h_difference_vs_singleton_{condition}"] = unit_differences
+        row["unit_row_indexing_matches_singleton"] = len(row["answer_scores"]) == len(baseline["answer_scores"]) and {
+            item["maker"] for item in row["answer_scores"]
+        } == {item["maker"] for item in baseline["answer_scores"]}
+    return {
+        **output_header(args, [args.candidates, ROOT / "part25.py", ROOT / "part39.py"]),
+        "command": "batch-diag",
+        "execution_mode": "batched",
+        "reference_mode": "singleton",
+        "primary_estimand": "Google full-answer logprob minus logsumexp(Alibaba, Tongyi Lab, Qwen team)",
+        "selected_intervention": {"unit": UNIT_LABELS[UNITS[1]], "operation": "zero at every real position"},
+        "selected_receivers": [UNIT_LABELS[UNITS[2]], UNIT_LABELS[UNITS[3]]],
+        "mode_alignment_assertions": "prompt ids, answer positions, token lengths, operations, and row indexing checked before every paired execution",
+        "conditions": rows,
+        "result_policy": "diagnostic measurements only; no acceptance threshold is applied",
+    }
 
 
 def _seq_summary(record: Mapping[str, Any], index: int) -> dict[str, Any]:
@@ -579,7 +1334,7 @@ def _seq_summary(record: Mapping[str, Any], index: int) -> dict[str, Any]:
 
 
 def run_signs(model: Any, tokenizer: Any, sequences: Sequence[Mapping[str, Any]], args: argparse.Namespace) -> dict[str, Any]:
-    output, activations = captured_forward(model, tokenizer, sequences)
+    _output, activations = captured_forward(model, tokenizer, sequences, collect_outputs=False)
     rows = []
     for index, sequence in enumerate(sequences):
         stem_positions = [int(position) for position in sequence["stem_positions"]]
@@ -1009,7 +1764,7 @@ def _generate_zero_subset(model: Any, tokenizer: Any, question: str, stem: str, 
     handles = part25_module().install_intervention_hooks(_layers_of(model), [operations]) if operations else []
     try:
         with torch.inference_mode():
-            output = model.generate(
+            output = execute_generation(model,
                 input_ids=ids,
                 attention_mask=attention_mask,
                 do_sample=False,
@@ -1111,7 +1866,7 @@ def _generate_position_patch(
         handles.append(layer.mlp.down_proj.register_forward_pre_hook(patch_hook))
     try:
         with torch.inference_mode():
-            output = model.generate(
+            output = execute_generation(model,
                 input_ids=ids,
                 attention_mask=attention_mask,
                 do_sample=False,
@@ -1161,7 +1916,7 @@ def _capture_full_unit_input(
     handle = layers[layer_index].mlp.down_proj.register_forward_pre_hook(hook)
     try:
         with torch.inference_mode():
-            model(input_ids=ids, attention_mask=mask, use_cache=False)
+            captured_forward(model, tokenizer, [sequence], capture_units=(), collect_outputs=False)
     finally:
         handle.remove()
     if "x" not in captured:
@@ -1524,7 +2279,7 @@ def _capture_norm_inputs(model: Any, tokenizer: Any, records: Sequence[Mapping[s
 
     handle = layer.post_attention_layernorm.register_forward_pre_hook(hook)
     try:
-        captured_forward(model, tokenizer, records, capture_units=())
+        captured_forward(model, tokenizer, records, capture_units=(), collect_outputs=False)
     finally:
         handle.remove()
     if any(not value.numel() for value in captured):
@@ -1550,18 +2305,23 @@ def _path_patch_score(
     norm_weight = norm_module.weight.detach().float()
     epsilon = float(getattr(norm_module, "eps", getattr(norm_module, "variance_epsilon", 1e-6)))
 
+    row_cursor = {"index": 0}
+
     def path_hook(_module, args, output):
         raw = args[0].float()
         changed = output.float().clone()
-        for row, record in enumerate(records):
+        for local_row in range(raw.shape[0]):
+            row = row_cursor["index"] + local_row
+            record = records[row]
             length = len(record["input_ids"])
             amplitudes = torch.as_tensor(clean_activations[upstream][row], dtype=torch.float32, device=raw.device)
             delta_write = -amplitudes[:length, None] * write_column.to(raw.device)[None, :]
-            x = raw[row, :length]
+            x = raw[local_row, :length]
             scale = torch.rsqrt(x.square().mean(dim=-1, keepdim=True) + epsilon)
             projection = (x * delta_write).mean(dim=-1, keepdim=True)
             delta_norm = (delta_write * scale - x * (scale.pow(3) * projection)) * (1.0 + norm_weight.to(raw.device))
-            changed[row, :length] = changed[row, :length] + delta_norm
+            changed[local_row, :length] = changed[local_row, :length] + delta_norm
+        row_cursor["index"] += raw.shape[0]
         return changed.to(dtype=output.dtype)
 
     handle = norm_module.register_forward_hook(path_hook)
@@ -1801,7 +2561,7 @@ def _generate_scoped_zero(
         handles.append(layer.mlp.down_proj.register_forward_pre_hook(scoped_hook))
     try:
         with torch.inference_mode():
-            output = model.generate(
+            output = execute_generation(model,
                 input_ids=ids,
                 attention_mask=mask,
                 do_sample=False,
@@ -1841,7 +2601,7 @@ def _mean_activation_by_position(model: Any, tokenizer: Any, corpus_path: str | 
     counts: dict[tuple[int, int], list[int]] = {unit: [] for unit in UNITS}
     for start in range(0, len(records), 8):
         batch = records[start:start + 8]
-        _, activations = captured_forward(model, tokenizer, batch)
+        _, activations = captured_forward(model, tokenizer, batch, collect_outputs=False)
         for unit in UNITS:
             for row, values in enumerate(activations[unit]):
                 for position, value in enumerate(values):
@@ -1910,7 +2670,7 @@ def run_baselines(model: Any, tokenizer: Any, token_records: Mapping[str, Any], 
     donor_cache = {}
     for label, system_prompt in systems.items():
         donors = [part25_module().make_sequence(tokenizer, question, "maker", "plain", system_prompt) for question in questions]
-        _, donor_activations = captured_forward(model, tokenizer, donors)
+        _, donor_activations = captured_forward(model, tokenizer, donors, collect_outputs=False)
         donor_cache[label] = (donors, donor_activations)
         donor_indexes = {question: index for index, question in enumerate(questions)}
         ops = _resample_operations(records, clean_activations, donors, donor_activations, donor_indexes)
@@ -2003,7 +2763,7 @@ def _corpus_max_abs(model: Any, tokenizer: Any, corpus_path: str | Path) -> dict
         records.append({"input_ids": ids, "score_position": len(ids) - 1, "question": f"corpus-{index}"})
     maxima = {unit: 0.0 for unit in UNITS}
     for start in range(0, len(records), 8):
-        _, activations = captured_forward(model, tokenizer, records[start:start + 8])
+        _, activations = captured_forward(model, tokenizer, records[start:start + 8], collect_outputs=False)
         for unit in UNITS:
             values = activations[unit]
             maxima[unit] = max(maxima[unit], max(abs(value) for row in values for value in row))
@@ -2035,7 +2795,7 @@ def _generated_answer(model: Any, tokenizer: Any, question: str, unit: tuple[int
         handle = layer.mlp.down_proj.register_forward_pre_hook(scale_hook)
     try:
         with torch.inference_mode():
-            generated = model.generate(
+            generated = execute_generation(model,
                 input_ids=ids,
                 attention_mask=mask,
                 do_sample=False,
@@ -2165,6 +2925,7 @@ def run_grid(model: Any, tokenizer: Any, args: argparse.Namespace) -> dict[str, 
     clean_records = _teacher_forced_records(tokenizer, questions, answer_options=MAKER_ANSWERS)
     _clean_output, clean_captures = captured_forward(
         model, tokenizer, clean_records, capture_units=(UNITS[1], UNITS[2]),
+        collect_outputs=False,
     )
     quantiles = (0.05, 0.275, 0.5, 0.725, 0.95)
     fixed_levels = {}
@@ -2317,8 +3078,8 @@ def run_lattice(model: Any, tokenizer: Any, sequences: Sequence[Mapping[str, Any
         subset_scores = []
         for mask in range(16):
             operations = _subset_operations(coordinates, mask, len(sequences))
-            output, _ = captured_forward(model, tokenizer, sequences, capture_units=(), operations=operations)
-            subset_scores.append(_margin_list(output, sequences, token_records))
+            margins, _ = _margin_forward(model, tokenizer, sequences, token_records, operations=operations)
+            subset_scores.append(margins)
         scores[unit_set["id"]] = subset_scores
 
     analysis = []
@@ -2360,9 +3121,8 @@ def _condition_effects(clean: Sequence[float], changed: Sequence[float]) -> list
 
 
 def run_mediate(model: Any, tokenizer: Any, sequences: Sequence[Mapping[str, Any]], token_records: Mapping[str, Any], args: argparse.Namespace) -> dict[str, Any]:
-    _, clean_activations = captured_forward(model, tokenizer, sequences)
-    clean_output, _ = captured_forward(model, tokenizer, sequences, capture_units=())
-    clean_margins = _margin_list(clean_output, sequences, token_records)
+    _, clean_activations = captured_forward(model, tokenizer, sequences, collect_outputs=False)
+    clean_margins, _ = _margin_forward(model, tokenizer, sequences, token_records)
     conditions = []
     for upstream_index, upstream in enumerate(UNITS):
         later = list(UNITS[upstream_index + 1:])
@@ -2384,8 +3144,7 @@ def run_mediate(model: Any, tokenizer: Any, sequences: Sequence[Mapping[str, Any
                 for held_unit in held:
                     row_ops[held_unit] = clean_activations[held_unit][row]
                 patch_rows.append(row_ops)
-            output, _ = captured_forward(model, tokenizer, sequences, capture_units=(), operations=patch_rows)
-            margins = _margin_list(output, sequences, token_records)
+            margins, _ = _margin_forward(model, tokenizer, sequences, token_records, operations=patch_rows)
             effects = _condition_effects(clean_margins, margins)
             conditions.append({
                 "upstream": UNIT_LABELS[upstream],
@@ -2408,10 +3167,10 @@ def run_mediate(model: Any, tokenizer: Any, sequences: Sequence[Mapping[str, Any
 
 
 def run_shift(model: Any, tokenizer: Any, sequences: Sequence[Mapping[str, Any]], args: argparse.Namespace) -> dict[str, Any]:
-    _, clean = captured_forward(model, tokenizer, sequences)
+    _, clean = captured_forward(model, tokenizer, sequences, collect_outputs=False)
     shifts = []
     for upstream in UNITS[:-1]:
-        output, changed = captured_forward(model, tokenizer, sequences, operations=_zero_ops(upstream, len(sequences)))
+        _output, changed = captured_forward(model, tokenizer, sequences, operations=_zero_ops(upstream, len(sequences)), collect_outputs=False)
         downstream = [unit for unit in UNITS if unit[0] > upstream[0]]
         per_sequence = []
         for index, sequence in enumerate(sequences):
@@ -2683,7 +3442,7 @@ def _capture_link_state(model: Any, tokenizer: Any, sequence: Mapping[str, Any],
     handles.append(v_layer.mlp.down_proj.register_forward_pre_hook(capture_v))
     try:
         with torch.inference_mode():
-            model(input_ids=ids, attention_mask=mask, use_cache=False)
+            captured_forward(model, tokenizer, [sequence], capture_units=(), collect_outputs=False)
     finally:
         for handle in handles:
             handle.remove()
@@ -2719,7 +3478,7 @@ def _receiver_bypass_value(model: Any, tokenizer: Any, sequence: Mapping[str, An
         return (patched,) + tuple(args[1:])
     handle = layers[receiver[0]].post_attention_layernorm.register_forward_pre_hook(patch_residual)
     try:
-        _output, captures = captured_forward(model, tokenizer, [sequence], capture_units=(receiver,))
+        _output, captures = captured_forward(model, tokenizer, [sequence], capture_units=(receiver,), collect_outputs=False)
     finally:
         handle.remove()
     return float(captures[receiver][0][position])
@@ -2994,6 +3753,7 @@ def run_attach(model: Any, tokenizer: Any, args: argparse.Namespace, pilot: bool
             _output, captures = captured_forward(
                 model, tokenizer, [record], capture_units=(UNITS[1], UNITS[2]),
                 operations=operations, capture_branches=(UNITS[2],), branch_captures=branches,
+                collect_outputs=False,
             )
             gate = branches[UNITS[2]]["gate"][0]
             up_value = branches[UNITS[2]]["up"][0]
@@ -3103,8 +3863,8 @@ def run_links_amended(model: Any, tokenizer: Any, args: argparse.Namespace) -> d
             minus = clean_u.tolist()
             plus[position] += epsilon_u
             minus[position] -= epsilon_u
-            _, plus_capture = captured_forward(model, tokenizer, [sequence], capture_units=[downstream], operations=[{upstream: plus}])
-            _, minus_capture = captured_forward(model, tokenizer, [sequence], capture_units=[downstream], operations=[{upstream: minus}])
+            _, plus_capture = captured_forward(model, tokenizer, [sequence], capture_units=[downstream], operations=[{upstream: plus}], collect_outputs=False)
+            _, minus_capture = captured_forward(model, tokenizer, [sequence], capture_units=[downstream], operations=[{upstream: minus}], collect_outputs=False)
             total_finite_difference = (plus_capture[downstream][0][position] - minus_capture[downstream][0][position]) / (2.0 * epsilon_u)
             bypass_plus = _receiver_bypass_value(
                 model, tokenizer, sequence, downstream, position, epsilon_u * target_column,
@@ -3114,7 +3874,7 @@ def run_links_amended(model: Any, tokenizer: Any, args: argparse.Namespace) -> d
             )
             bypass_finite_difference = (bypass_plus - bypass_minus) / (2.0 * epsilon_u)
             ablated_ops = [{upstream: 0.0}]
-            _, ablated_capture = captured_forward(model, tokenizer, [sequence], capture_units=[downstream], operations=ablated_ops)
+            _, ablated_capture = captured_forward(model, tokenizer, [sequence], capture_units=[downstream], operations=ablated_ops, collect_outputs=False)
             full_ablation_change = ablated_capture[downstream][0][position] - float(state["v"][position].item())
             links.append({
                 "earlier": {"layer": upstream[0], "unit": upstream[1]},
@@ -3502,7 +4262,7 @@ def _sweep_records(path: str | Path, tokenizer: Any) -> list[dict[str, Any]]:
 
 def run_sweep(model: Any, tokenizer: Any, prompt_path: str | Path, args: argparse.Namespace) -> dict[str, Any]:
     records = _sweep_records(prompt_path, tokenizer)
-    _, activations = captured_forward(model, tokenizer, records)
+    _, activations = captured_forward(model, tokenizer, records, collect_outputs=False)
     per_prompt = []
     for index, row in enumerate(records):
         unit_readouts = {}
@@ -3657,7 +4417,7 @@ def run_dose(model: Any, tokenizer: Any, signs: Mapping[str, Any], baseline: Map
                     handle = layers[layer_index].mlp.down_proj.register_forward_pre_hook(clamp_hook)
                     try:
                         with torch.inference_mode():
-                            generated = model.generate(
+                            generated = execute_generation(model,
                                 input_ids=ids,
                                 attention_mask=mask,
                                 do_sample=False,
@@ -4169,12 +4929,14 @@ def run_score(args: argparse.Namespace) -> dict[str, Any]:
 
 
 def _load_runtime(args: argparse.Namespace):
+    global _ACTIVE_MODEL
     import torch
     os.environ["HF_HUB_OFFLINE"] = "1"
     os.environ["TRANSFORMERS_OFFLINE"] = "1"
     os.environ["HF_HUB_CACHE"] = str(Path(args.cache_dir).expanduser())
     tokenizer, model = part39_module().load_model_direct(args.model, args.revision, args.device)
     model.eval()
+    _ACTIVE_MODEL = model
     torch.set_grad_enabled(False)
     return tokenizer, model
 
@@ -4202,6 +4964,12 @@ def write_manifest(args: argparse.Namespace) -> dict[str, Any]:
     manifest = {
         **output_header(args, prompt_inputs),
         "schema_version": 1,
+        "execution_mode": getattr(args, "exec_mode", "singleton"),
+        "available_execution_modes": {
+            "confirmatory": "singleton",
+            "diagnostic": "batched (batch-diag and the retained legacy checks only)",
+        },
+        "environment": _runtime_environment(None),
         "model": args.model,
         "revision": args.revision,
         "tokenizer": {
@@ -4297,11 +5065,11 @@ def run_validation_checks(model: Any, tokenizer: Any, args: argparse.Namespace) 
     if not alignment:
         raise AssertionError("mask/position alignment check failed")
 
-    batch_output, clean_activations = captured_forward(model, tokenizer, records)
+    batch_output, clean_activations = captured_forward(model, tokenizer, records, mode="batched")
     batch_logits = batch_output.logits if hasattr(batch_output, "logits") else batch_output[0]
     max_batch_single_error = 0.0
     for index, record in enumerate(records):
-        single_output, _ = captured_forward(model, tokenizer, [record])
+        single_output, _ = captured_forward(model, tokenizer, [record], mode="singleton")
         single_logits = single_output.logits if hasattr(single_output, "logits") else single_output[0]
         length = len(record["input_ids"])
         error = float((batch_logits[index, :length].float() - single_logits[0, :length].float()).abs().max().item())
@@ -4313,7 +5081,10 @@ def run_validation_checks(model: Any, tokenizer: Any, args: argparse.Namespace) 
     no_op_ops = []
     for row_index, record in enumerate(records):
         no_op_ops.append({unit: list(clean_activations[unit][row_index]) for unit in UNITS})
-    no_op_output, _ = captured_forward(model, tokenizer, records, capture_units=(), operations=no_op_ops)
+    assert_mode_alignment(records, records, no_op_ops, no_op_ops)
+    no_op_output, _ = captured_forward(
+        model, tokenizer, records, capture_units=(), operations=no_op_ops, mode="batched",
+    )
     no_op_logits = no_op_output.logits if hasattr(no_op_output, "logits") else no_op_output[0]
     hook_noop_error = float((batch_logits.float() - no_op_logits.float()).abs().max().item())
     hook_noop_tolerance = 0.05 if str(batch_logits.dtype) == "torch.bfloat16" else 1e-5
@@ -4337,6 +5108,7 @@ def run_validation_checks(model: Any, tokenizer: Any, args: argparse.Namespace) 
         raise AssertionError(f"RMSNorm finite-difference derivative error {derivative_error} exceeds {derivative_tolerance}")
     return {
         **output_header(args, [args.candidates, ROOT / "part25.py", ROOT / "part39.py", ROOT / "circuit.py"]),
+        "execution_mode_comparison": {"reference": "singleton", "diagnostic": "batched"},
         "checks": {
             "hook_noop": {"passed": True, "max_abs_logit_error": hook_noop_error, "tolerance": hook_noop_tolerance},
             "batched_vs_single": {"passed": True, "max_abs_logit_error": max_batch_single_error, "tolerance": batch_single_tolerance},
@@ -4355,7 +5127,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
     commands = (
-        "manifest", "validate", "pilot", "signs", "dla", "lattice", "mediate", "rescue",
+        "manifest", "validate", "batch-diag", "pilot", "signs", "dla", "lattice", "mediate", "rescue",
         "shift", "positions", "baselines", "heldout", "readout-check", "links", "sweep",
         "dose", "grid", "swap", "attach", "base", "score",
     )
@@ -4367,6 +5139,7 @@ def _build_parser() -> argparse.ArgumentParser:
         sub.add_argument("--revision", default=default_revision)
         sub.add_argument("--device", default="xpu")
         sub.add_argument("--dtype", default="bf16", choices=("bf16",))
+        sub.add_argument("--exec-mode", choices=("singleton", "batched"), default="singleton")
         sub.add_argument("--cache-dir", default=str(DEFAULT_CACHE))
         sub.add_argument("--out", default="results/part43")
         sub.add_argument("--candidates", default="results/part25/candidates.json")
@@ -4392,7 +5165,9 @@ def _build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
+    global _ACTIVE_EXECUTION_MODE
     args = _build_parser().parse_args(argv)
+    _ACTIVE_EXECUTION_MODE = args.exec_mode
     valid_pair = (args.model, args.revision) in {(MODEL, REVISION), (BASE_MODEL, BASE_REVISION)}
     if not valid_pair:
         raise SystemExit(f"Part 43 is pinned to {MODEL}@{REVISION} or {BASE_MODEL}@{BASE_REVISION}")
@@ -4400,6 +5175,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         raise SystemExit("the base subcommand is pinned to the cached Qwen3.5-4B-Base snapshot")
     if args.command == "base" and args.model == MODEL:
         raise SystemExit("the base subcommand must use the Base checkpoint")
+    if args.exec_mode == "batched" and args.command != "batch-diag":
+        raise SystemExit("batched execution is diagnostic-only; use the batch-diag subcommand")
     if args.command == "score":
         payload = run_score(args)
         print(json.dumps({"output": str(_output_path(args, "scores")), "results": {k: v["result"] for k, v in payload["results"].items()}}, indent=2))
@@ -4409,6 +5186,16 @@ def main(argv: Sequence[str] | None = None) -> int:
         manifest = write_manifest(args)
         name = "MANIFEST-base.json" if args.model == BASE_MODEL else "MANIFEST.json"
         print(json.dumps({"output": str(Path(args.out).expanduser() / name), "model": manifest["model"], "revision": manifest["revision"]}, indent=2))
+        return 0
+
+    if args.command == "batch-diag":
+        manifest_path = Path(args.out).expanduser() / ("MANIFEST-base.json" if args.model == BASE_MODEL else "MANIFEST.json")
+        if not manifest_path.is_file():
+            write_manifest(args)
+        tokenizer, model = _load_runtime(args)
+        result = run_batch_diagnostics(model, tokenizer, args)
+        write_json(_output_path(args, "batch-diag"), result)
+        print(f"wrote {_output_path(args, 'batch-diag')}")
         return 0
 
     if args.command == "links":
@@ -4448,7 +5235,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 0
 
     manifest_path = Path(args.out).expanduser() / ("MANIFEST-base.json" if args.model == BASE_MODEL else "MANIFEST.json")
-    if args.command == "pilot" or (args.command not in {"validate"} and not manifest_path.is_file()):
+    if args.command == "pilot" or not manifest_path.is_file():
         write_manifest(args)
     if args.command == "manifest":
         write_manifest(args)
@@ -4456,7 +5243,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     tokenizer, model = _load_runtime(args)
     sequences = _sequences(tokenizer) if args.command in {"signs", "shift", "pilot", "base"} else None
-    token_records = _load_token_records(args) if args.command in {"lattice", "mediate", "rescue", "pilot", "positions", "baselines", "heldout", "readout-check", "grid", "base"} else None
+    token_records = _load_token_records(args) if args.command in {"validate", "lattice", "mediate", "rescue", "pilot", "positions", "baselines", "heldout", "readout-check", "grid", "base"} else None
     if args.command == "signs":
         result = run_signs(model, tokenizer, sequences, args)
         filename = "signs"
@@ -4491,8 +5278,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         result = run_grid(model, tokenizer, args)
         filename = "grid"
     elif args.command == "validate":
-        result = run_validation_checks(model, tokenizer, args)
-        filename = "checks"
+        result = run_singleton_validation(model, tokenizer, token_records, args)
+        filename = "validate"
     elif args.command == "pilot":
         result = run_pilot(model, tokenizer, token_records, args)
         write_json(_output_path(args, "pilot"), result)

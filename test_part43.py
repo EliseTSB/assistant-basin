@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import ast
 import re
 from pathlib import Path
 from types import SimpleNamespace
@@ -409,12 +410,13 @@ def test_links_dla_and_readout_check_paths_with_tiny_weights(tmp_path, monkeypat
 
 def test_every_cli_subcommand_is_registered_and_manifest_is_recorded(tmp_path, monkeypatch):
     _fake_part25(monkeypatch)
-    commands = {"manifest", "validate", "pilot", "signs", "dla", "lattice", "mediate", "rescue", "shift",
+    commands = {"manifest", "validate", "batch-diag", "pilot", "signs", "dla", "lattice", "mediate", "rescue", "shift",
                 "positions", "baselines", "heldout", "readout-check", "links", "sweep", "dose", "grid", "swap", "attach", "base", "score"}
     parser = part43._build_parser()
     for command in commands:
         args = parser.parse_args([command])
         assert args.command == command
+        assert args.exec_mode == "singleton"
     base = parser.parse_args(["base"])
     assert base.model == part43.BASE_MODEL and base.revision == part43.BASE_REVISION
 
@@ -424,7 +426,96 @@ def test_every_cli_subcommand_is_registered_and_manifest_is_recorded(tmp_path, m
     manifest = part43.write_manifest(args)
     assert manifest["tokenizer"]["chat_template_sha256"]
     assert len(manifest["factorial_conditions"]["lattice"]) == 16
+    assert manifest["execution_mode"] == "singleton"
+    assert manifest["available_execution_modes"]["diagnostic"].startswith("batched")
     assert (Path(args.out) / "MANIFEST.json").is_file()
+
+
+def test_singleton_and_batched_adapter_preserve_order_and_records(tmp_path, monkeypatch):
+    _fake_part25(monkeypatch)
+    model, tokenizer = TinyModel(), TinyTokenizer()
+    records = part43._teacher_forced_records(
+        tokenizer, ["Who created you?", "What is your name?"], answer_options=part43.VALIDATION_ANSWER_OPTIONS,
+    )
+    operations = [{part43.UNITS[1]: 0.0} for _ in records]
+    part43.assert_mode_alignment(records, records, operations, operations)
+    single_payload, single_acts = part43.teacher_forced_scores(
+        model, tokenizer, ["Who created you?", "What is your name?"], _token_sets(),
+        operations=operations, answer_options=part43.VALIDATION_ANSWER_OPTIONS, mode="singleton",
+    )
+    batch_payload, batch_acts = part43.teacher_forced_scores(
+        model, tokenizer, ["Who created you?", "What is your name?"], _token_sets(),
+        operations=operations, answer_options=part43.VALIDATION_ANSWER_OPTIONS, mode="batched",
+    )
+    assert [row["input_ids"] for row in single_payload["per_answer"]] == [row["input_ids"] for row in batch_payload["per_answer"]]
+    assert [row["answer_positions"] for row in single_payload["per_answer"]] == [row["answer_positions"] for row in batch_payload["per_answer"]]
+    assert single_payload["answer_logprobs"] == pytest.approx(batch_payload["answer_logprobs"], abs=1e-5)
+    for unit in part43.UNITS:
+        assert len(single_acts[unit]) == len(batch_acts[unit])
+        for single_row, batch_row in zip(single_acts[unit], batch_acts[unit]):
+            assert single_row == pytest.approx(batch_row, abs=1e-6)
+
+
+def test_confirmatory_scoring_cannot_bypass_execution_adapter(tmp_path, monkeypatch):
+    _fake_part25(monkeypatch)
+    model, tokenizer = TinyModel(), TinyTokenizer()
+
+    def sabotage(*_args, **_kwargs):
+        raise RuntimeError("execution adapter sabotage")
+
+    monkeypatch.setattr(part43, "execute", sabotage)
+    with pytest.raises(RuntimeError, match="execution adapter sabotage"):
+        part43.teacher_forced_scores(
+            model, tokenizer, [part43.DISCOVERY_QUESTION], _token_sets(),
+            answer_options=part43.VALIDATION_ANSWER_OPTIONS,
+        )
+
+    source = ast.parse(Path(part43.__file__).read_text(encoding="utf-8"))
+    violations = []
+
+    class RawModelCallVisitor(ast.NodeVisitor):
+        def __init__(self):
+            self.functions = []
+
+        def visit_FunctionDef(self, node):
+            self.functions.append(node.name)
+            self.generic_visit(node)
+            self.functions.pop()
+
+        def visit_Call(self, node):
+            is_forward = isinstance(node.func, ast.Name) and node.func.id == "model"
+            is_generation = isinstance(node.func, ast.Attribute) and node.func.attr == "generate" and isinstance(node.func.value, ast.Name) and node.func.value.id == "model"
+            if (is_forward or is_generation) and "execute" not in self.functions:
+                violations.append((node.lineno, ast.unparse(node.func)))
+            self.generic_visit(node)
+
+    RawModelCallVisitor().visit(source)
+    assert violations == []
+
+
+def test_validate_and_batch_diag_report_score_and_receiver_fields(tmp_path, monkeypatch):
+    _fake_part25(monkeypatch)
+    model, tokenizer = TinyModel(), TinyTokenizer()
+    args = _args(tmp_path)
+    validation = part43.run_singleton_validation(model, tokenizer, _token_sets(), args)
+    assert validation["execution_mode"] == "singleton"
+    assert validation["maker_answer_count"] == 7
+    assert "clean_to_clean_restoration" in validation["cells"]
+    assert validation["cells"]["clean_to_clean_restoration"]["natural_trajectory_replay"]["all_real_positions_checked"]
+    assert validation["receiver_path_case"]["C_L7_zero_L11_restored_score"] is not None
+    assert validation["cells"]["clean"]["within_mode_repeat_max_abs_primary_score_difference"] is not None
+
+    diagnostic = part43.run_batch_diagnostics(model, tokenizer, args)
+    names = {row["name"] for row in diagnostic["conditions"]}
+    assert {"A_alone_singleton", "A_A_no_padding", "A_B_same_length", "A_B_different_length",
+            "A_B_same_length_reversed", "A_randomized_masked_pad_ids", "A_extra_long_companion"}.issubset(names)
+    for row in diagnostic["conditions"]:
+        assert "natural_primary_score" in row
+        assert "intervention_delta" in row
+        assert row["receiver_signed_h_at_last_stem_position"]["natural"]
+    batched_rows = [row for row in diagnostic["conditions"] if row["execution_mode"] == "batched"]
+    assert all(row["unit_row_indexing_matches_singleton"] for row in batched_rows)
+    assert all("max_abs_receiver_h_difference_vs_singleton_natural" in row for row in batched_rows)
 
 
 def test_pilot_and_base_cli_smoke_with_tiny_model(tmp_path, monkeypatch):
