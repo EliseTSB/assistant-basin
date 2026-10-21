@@ -347,11 +347,20 @@ depth comparison is unpublished.
 
 ## Sound symbolism (bouba/kiki), for the kiki/bouba sister part to Part 47 (added 2026-10-21, from Elise)
 
-- Loconsole, Benavides-Varela and Regolin, Science, February 2026: 3-day-old chicks chose the rounded panel for
-  "bouba" and the spiky one for "kiki"; 1-day-olds approached moving shapes the same way. Read via coverage (NPR,
-  syndicated 2026-02-19; earth.com), not yet at the journal. Great apes tested previously have not shown the effect.
-- Proceedings B, 293(2080), 20261209, "Hearing shapes the Bouba-Kiki effect in adult [dogs, by the coverage]": 51
-  dogs, then 19 more with owners in headphones to limit cueing. The journal page returned 403; read via Nautilus.
+- Loconsole, Benavides-Varela and Regolin 2026, "Matching sounds to shapes: evidence of the Bouba-Kiki effect in
+  naive baby chicks", Science 391, 836-839, doi:10.1126/science.adq7188. 3-day-old chicks; effect stronger for the
+  round-bouba pairing (read from the citing paper below and press coverage).
+- Biffi, Pedretti, Normando, Lazebnik, Loconsole and Valsecchi 2026, "Hearing shapes: the Bouba-Kiki effect in adult
+  domestic dogs", Proc. R. Soc. B 293, 20261209, doi:10.1098/rspb.2026.1209 (full text from Elise, 2026-10-21; data and
+  code OSF doi:10.17605/OSF.IO/GMX43). 51 dogs (Study 1) and 19 with owners in headphones (Study 2): looking time
+  followed the sound in both (estimates 0.76 and 0.97 on the beta scale), but exploration followed only "kiki", and in
+  Study 1 dogs looked at the spiky shape more overall. So the dog effect leans spiky where the chick and infant
+  effects lean round.
+- Margiotoudi et al. 2019 (Sci. Rep. 9, 12705) and 2022 (Proc. B 289, 20211717): no effect in chimpanzees, gorillas or
+  a language-trained bonobo; Biffi et al. argue small samples, not true absence.
+- Fort and Schwartz 2022 (Sci. Rep. 12, 19172): a physical account. Round objects hitting or rolling on a surface make
+  lower, more continuous sounds than spiky ones, so the mapping reflects real co-occurrence. For a text model this
+  predicts the association can arrive through onomatopoeia and descriptions of impacts, not only through the pseudowords.
 - Passi and Arun 2022 (Attention, Perception, & Psychophysics): the effect holds for unpronounceable sounds, reversed
   words, object sounds and pure tones, so it is not specific to speech.
 - Framing for our test: if the association is built into birds and mammals, a text-only model can only learn it from
