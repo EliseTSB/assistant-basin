@@ -92,6 +92,23 @@ class FakeAPI:
         return {"instances": list(self.instances_by_id.values())}
 
 
+class NeighborFirstPagedAPI(FakeAPI):
+    """Put an unrelated neighbor on page one and this test's rentals on page two."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.tokens_seen = []
+
+    def list_instances(self, next_token=None):
+        self.tokens_seen.append(next_token)
+        if next_token is None:
+            return {
+                "instances": [{"id": "neighbor", "label": "neighbor", "dph_total": 0.2}],
+                "next_token": "page-2",
+            }
+        return {"instances": list(self.instances_by_id.values())}
+
+
 class FakeSSH:
     def __init__(self, *, not_ready=(), outcomes=None, never_finish=(), fail_launch=()):
         self.not_ready = set(not_ready)
@@ -598,22 +615,11 @@ def test_malformed_row_matching_our_label_is_a_hard_error(tmp_path):
 
     runner.api = MatchingMalformedAPI()
     with pytest.raises(vastrun.RunnerError, match="malformed row matching"):
-        runner._list_all_instances(our_label=runner.run_label)
+        vastrun._listed_instances(runner.api, our_label=runner.run_label)
 
 
 def test_uncertain_rent_follows_pagination_to_find_our_instance(tmp_path):
-    class PaginatedAPI(FakeAPI):
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            self.tokens_seen = []
-
-        def list_instances(self, next_token=None):
-            self.tokens_seen.append(next_token)
-            if next_token is None:
-                return {"instances": [{"id": "neighbor"}], "next_token": "page-2"}
-            return {"instances": list(self.instances_by_id.values())}
-
-    api = PaginatedAPI()
+    api = NeighborFirstPagedAPI()
     runner = make_runner(jobfile(tmp_path), api, FakeSSH(), FakeClock())
     api.instances_by_id["instance-lost"] = {"id": "instance-lost", "label": runner.run_label}
     entry = {"label": runner.run_label, "dph": 0.1}
@@ -623,6 +629,19 @@ def test_uncertain_rent_follows_pagination_to_find_our_instance(tmp_path):
     assert "page-2" in api.tokens_seen
     assert entry["recovered_instance_ids"] == ["instance-lost"]
     assert "instance-lost" in api.destroyed
+
+
+def test_finished_job_exact_label_cleanup_follows_pagination(tmp_path, monkeypatch):
+    api = NeighborFirstPagedAPI()
+    path = jobfile(tmp_path, jobs=[{"name": "work", "command": "do-work"}])
+    # Let the per-job exact-label sweep perform the cleanup after the job ends.
+    monkeypatch.setattr(vastrun._Runner, "_destroy_active", lambda _runner: None)
+
+    execute(path, api, FakeSSH())
+
+    assert "page-2" in api.tokens_seen
+    assert api.destroyed == ["instance-offer-1"]
+    assert api.instances_by_id == {}
 
 
 def test_lower_positive_listed_rate_does_not_lower_offer_rate(tmp_path):
@@ -826,7 +845,7 @@ def test_expired_labeled_instance_is_swept_before_rent(tmp_path):
 def test_non_expired_labeled_instance_refuses_new_rent(tmp_path):
     deadline = int(time.time()) + 3600
     active_label = f"vastrun-abcdef123456-{deadline:x}"
-    api = FakeAPI()
+    api = NeighborFirstPagedAPI()
     api.instances_by_id["active-instance"] = {"id": "active-instance", "label": active_label}
 
     with pytest.raises(vastrun.RunnerError, match="active vastrun instance"):
@@ -834,6 +853,7 @@ def test_non_expired_labeled_instance_refuses_new_rent(tmp_path):
 
     assert api.rent_calls == []
     assert "active-instance" in api.instances_by_id
+    assert "page-2" in api.tokens_seen
 
 
 def test_wall_clock_timer_stops_hung_pre_rent_listing(tmp_path):
@@ -895,7 +915,7 @@ def test_jobs_use_separate_rentals_and_repeat_setup(tmp_path):
 
 
 def test_sweep_expired_ignores_non_expired_labels(tmp_path):
-    api = FakeAPI()
+    api = NeighborFirstPagedAPI()
     expired = f"vastrun-abcdef123456-{int(time.time()) - 1:x}"
     active = f"vastrun-fedcba654321-{int(time.time()) + 3600:x}"
     api.instances_by_id["expired"] = {"id": "expired", "label": expired}
@@ -906,19 +926,19 @@ def test_sweep_expired_ignores_non_expired_labels(tmp_path):
     assert outcomes == [(expired, "deleted, listing lagged")]
     assert "expired" not in api.instances_by_id
     assert "active" in api.instances_by_id
+    assert "page-2" in api.tokens_seen
 
 
 def test_cli_sweep_label_command_uses_exact_label(monkeypatch, capsys):
     label = "vastrun-abcdef123456-6ad91fff"
-    api = FakeAPI()
+    api = NeighborFirstPagedAPI()
     api.instances_by_id["target"] = {"id": "target", "label": label}
-    api.instances_by_id["neighbor"] = {"id": "neighbor", "label": "other-label"}
     monkeypatch.setattr(vastrun, "VastAPI", lambda: api)
 
     assert vastrun.main(["sweep", label]) == 0
 
     assert "target" not in api.instances_by_id
-    assert "neighbor" in api.instances_by_id
+    assert "page-2" in api.tokens_seen
     assert label in capsys.readouterr().out
 
 

@@ -229,15 +229,17 @@ def _label_deadline(label: str) -> int | None:
         return None
 
 
-def _listed_instances(api: Any, *, our_label: str | None = None) -> list[dict[str, Any]] | None:
+def _listed_instances(api: Any, *, our_label: str | None = None,
+                      list_call: Any | None = None) -> list[dict[str, Any]] | None:
     """Read every page from the Vast v1 instance list."""
     instances: list[dict[str, Any]] = []
     token: Any = None
     seen_tokens: set[str] = set()
+    method = api.list_instances
+    fetch = method if list_call is None else list_call
     for _ in range(100):
-        method = api.list_instances
         if token is None:
-            response = method()
+            response = fetch()
         else:
             try:
                 parameters = inspect.signature(method).parameters.values()
@@ -248,7 +250,7 @@ def _listed_instances(api: Any, *, our_label: str | None = None) -> list[dict[st
                 accepts_keyword = True
             if not accepts_keyword:
                 raise RunnerError("Vast list adapter cannot follow pagination tokens")
-            response = method(next_token=token)
+            response = fetch(next_token=token)
         page = _instance_payloads(response, our_label=our_label)
         if page is None:
             return None
@@ -623,44 +625,15 @@ class _Runner:
             if changed_timeout:
                 self.api.timeout = previous_timeout
 
-    def _list_all_instances(self, *, our_label: str | None = None) -> list[dict[str, Any]] | None:
-        instances: list[dict[str, Any]] = []
-        token: Any = None
-        seen_tokens: set[str] = set()
-        for _ in range(100):
-            if token is None:
-                response = self._call_api("list_instances")
-            else:
-                method = self.api.list_instances
-                try:
-                    parameters = inspect.signature(method).parameters.values()
-                    accepts_keyword = any(p.kind == p.VAR_KEYWORD for p in parameters) or any(
-                        p.name == "next_token" for p in parameters
-                    )
-                except (TypeError, ValueError):
-                    accepts_keyword = True
-                if not accepts_keyword:
-                    raise RunnerError("Vast list adapter cannot follow pagination tokens")
-                response = self._call_api("list_instances", next_token=token)
-            page = _instance_payloads(response, our_label=our_label)
-            if page is None:
-                return None
-            instances.extend(page)
-            next_token = response.get("next_token")
-            if next_token in (None, ""):
-                return instances
-            token_key = str(next_token)
-            if token_key in seen_tokens:
-                raise RunnerError("Vast instance listing repeated a pagination token")
-            seen_tokens.add(token_key)
-            token = next_token
-        raise RunnerError("Vast instance listing exceeded 100 pages")
-
     def _list_instances_retry(self, *, our_label: str | None = None) -> list[dict[str, Any]]:
         last_error: Exception | None = None
         for attempt in range(LIST_RETRIES):
             try:
-                instances = self._list_all_instances(our_label=our_label)
+                instances = _listed_instances(
+                    self.api,
+                    our_label=our_label,
+                    list_call=lambda **kwargs: self._call_api("list_instances", **kwargs),
+                )
                 if instances is None:
                     raise RunnerError("Vast returned an unreadable instance list")
                 return instances
@@ -916,7 +889,11 @@ class _Runner:
     def _refresh_instance_rate(self, instance_id: str) -> None:
         """Use the instance's listed rate when available, falling back to its offer."""
         try:
-            payloads = self._list_all_instances(our_label=self.run_label)
+            payloads = _listed_instances(
+                self.api,
+                our_label=self.run_label,
+                list_call=lambda **kwargs: self._call_api("list_instances", **kwargs),
+            )
         except (RunInterrupted, WallClockExceeded, SpendCapExceeded):
             raise
         except Exception:
