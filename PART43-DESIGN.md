@@ -144,3 +144,34 @@ Alden's points that amendment 1 did not already cover, adopted:
    NOT_TESTABLE rules; all 16 cell outputs, raw candidate logits and aligned activation arrays are saved. Required
    checks: hook no-op, batched against single-sequence agreement, mask and position alignment, finite-difference
    derivatives, and the additive-logit fixture.
+
+## Amendment 3 (2026-10-20 20:47 CT, before any code ran): the Astra review (review/part43/REVIEW-codex.md)
+
+Adopted, all before the pilot:
+1. Four-world receiver swap for each upstream-downstream pair (first L7 -> L11), identical text, every aligned position:
+   A natural/natural; B U zeroed, V free; C U zeroed, V restored from A; D U natural, V transplanted from B. Independent
+   branches give C = B and D = A even with a nonlinear scorer. This, not a lattice interaction, is the path test; an
+   additive lattice is compatible with a path and an interaction with none (review finding 1, synthetic case in
+   causal_counterexamples.py).
+2. L11 opened up: record its gate, value (up) and signed product in A and B; recombine clean gate x altered value and
+   altered gate x clean value, transplant each product, and score. Says whether L7 acts through L11's gate, value or both.
+3. Attachment test for "Chinese as an adjective for the entity": same words, attachment swapped ("The Chinese search
+   engine partnered with the American charity." / "The American search engine partnered with the Chinese charity."),
+   the same follow-up query about the search engine, order counterbalanced, a second wording held out. L11 is measured
+   after the relevant phrase, not at "Chinese".
+4. Two derivatives, kept apart: the residual bypass (L7's write read directly by L11, the amendment-2 formula) and the
+   total derivative through the three GatedDeltaNet layers between them (finite perturbation of L7).
+5. The multiplier grid is a gain experiment (multiplying a current activation couples the axes); realized activations
+   and clipping are recorded. A second grid sets L7 and L11 to fixed absolute levels taken from their clean
+   trajectories, which is the one 43.10 is scored on. Slopes need a minimum magnitude, signs and an interval.
+6. Additive surrogate from measured single-ablation final residuals, h_add(S) = h_clean + sum (h_single_i - h_clean),
+   read out frozen and through the real final norm; plus a raw logit difference for one unambiguous token pair on an
+   identical prefix (" Google" vs " Alibaba"), linear in logits.
+7. Competitors kept visible: Alibaba, Tongyi, Qwen, Google, Gemini, Baidu, Tencent, OpenAI, scored separately.
+8. Language split (Part 32): the same small swap on matched English, Spanish and Chinese maker questions, per language.
+9. Self vs third person: second-person maker questions against third-person "Who created Qwen?" and plain
+   company-to-country relations.
+10. Uncertainty: bootstrap over prompt/template clusters only; the single discovery prompt is reported exactly.
+Row clarifications from the review's table (8) are binding on scoring: 43.3a's change is
+|a_zero - a_clean| >= max(0.2 |a_clean|, 0.1); 43.4a needs an upper bound below 0.5; 43.8 is NOT_TESTABLE without a
+positive discovery effect; 43.10 is scored on the absolute grid. Original rows stay in the record.
