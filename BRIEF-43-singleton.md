@@ -38,6 +38,6 @@ entry point goes through the adapter (a sabotage that routes one back to raw `mo
 and batch-diag produce their fields. Keep every existing test green (`test_part43.py`). Run tests on CPU here; if torch
 is missing in your environment, say so in BLOCKERS rather than reporting skipped tests as passing.
 
-Commit on this branch (part43-singleton) when tests pass. Report REPORT-43-singleton.md ending with SUMMARY /
+Commit nothing (Claude commits after reading). Report REPORT-43-singleton.md ending with SUMMARY /
 FINDINGS / BLOCKERS, listing every routed call site with its line and the exact A770/3090 commands for validate and
 batch-diag.
