@@ -1678,3 +1678,32 @@ def test_fp32_raw_boundary_keeps_duplicate_derived_malformed_and_internal_errors
     with pytest.raises(RuntimeError) as exc:
         part43._read_calibration_artifact(args, tokenizer=tokenizer)
     assert exc.value is marker
+
+
+def test_fp32_records_the_actual_down_proj_input_dtype_per_layer(tmp_path, monkeypatch):
+    # Claude, 2026-10-21: the recorder must report what really reached each down_proj. One non-target layer is fed
+    # bfloat16 input; the artifact must say so for that layer and the reader must refuse it.
+    _fake_part25(monkeypatch)
+    _install_torch_reference_qwen_functions(monkeypatch)
+    monkeypatch.setenv("USE_HUB_KERNELS", "0")
+    args = _args(tmp_path, protocol="fp32-successor")
+    tokenizer = TinyTokenizer()
+    model = TinyModel().to(dtype=torch.float32)
+    bad_layer = 2
+    assert bad_layer not in {layer for layer, _ in part43.UNITS}
+    model.layers[bad_layer].mlp.down_proj.to(dtype=torch.bfloat16)
+    model.layers[bad_layer].mlp.down_proj.register_forward_pre_hook(lambda _m, a: (a[0].to(torch.bfloat16),))
+    import torch as torch_module
+    old = (torch_module.backends.cuda.matmul.allow_tf32, torch_module.backends.cudnn.allow_tf32,
+           torch_module.get_float32_matmul_precision())
+    monkeypatch.setattr(part43, "_load_runtime", lambda _args, *, model_dtype: (tokenizer, model))
+    monkeypatch.setattr(part43, "_release_calibration_model", lambda _args: None)
+    try:
+        raw = part43.run_calibration_runtime(args, _token_sets())
+    finally:
+        torch_module.backends.cuda.matmul.allow_tf32, torch_module.backends.cudnn.allow_tf32 = old[0], old[1]
+        torch_module.set_float32_matmul_precision(old[2])
+    by_layer = raw["execution"]["legs"]["fp32"]["down_proj_input_dtypes_by_layer"]
+    assert by_layer[str(bad_layer)] == ["torch.bfloat16"]
+    with pytest.raises(part43.CalibrationRefusal):
+        _read_fp32_fixture(args, raw, tokenizer)
