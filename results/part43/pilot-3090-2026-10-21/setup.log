@@ -1,0 +1,19 @@
+part43.py: OK
+part25.py: OK
+part39.py: OK
+circuit.py: OK
+PART43-DESIGN.md: OK
+data/part43-heldout.json: OK
+data/part43-sweep.json: OK
+data/neutral.txt: OK
+data/part43-attach.json: OK
+results/part25/candidates.json: OK
+PREDICTIONS.md: OK
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable.It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+Fetching 14 files:   0%|          | 0/14 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 14 files:  14%|█▍        | 2/14 [00:00<00:01, 11.56it/s]Fetching 14 files:  57%|█████▋    | 8/14 [00:00<00:00, 30.96it/s]Fetching 14 files:  86%|████████▌ | 12/14 [00:00<00:00, 12.80it/s]Fetching 14 files:  86%|████████▌ | 12/14 [00:19<00:00, 12.80it/s]Fetching 14 files:  93%|█████████▎| 13/14 [00:36<00:04,  4.82s/it]Fetching 14 files: 100%|██████████| 14/14 [00:39<00:00,  4.55s/it]Fetching 14 files: 100%|██████████| 14/14 [00:39<00:00,  2.81s/it]
+Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s]Fetching 12 files:  17%|█▋        | 2/12 [00:00<00:00, 13.87it/s]Fetching 12 files:  58%|█████▊    | 7/12 [00:00<00:00, 27.58it/s]Fetching 12 files:  83%|████████▎ | 10/12 [00:01<00:00,  6.28it/s]Fetching 12 files:  92%|█████████▏| 11/12 [00:20<00:00,  6.28it/s]Fetching 12 files: 100%|██████████| 12/12 [00:20<00:00,  2.82s/it]Fetching 12 files: 100%|██████████| 12/12 [00:20<00:00,  1.74s/it]
+models ok
+Current Triton version 3.2.0 is below the recommended 3.3.0 version. Errors may occur and these issues will not be fixed. Please consider upgrading Triton.
+versions 5.20.0 2.6.0+cu124 0.5.2
+SETUP DONE

@@ -1,0 +1,26 @@
+2026-10-21T13:13:27Z start manifest
+{
+  "output": "results/part43/MANIFEST.json",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"
+}
+manifest rc=0
+2026-10-21T13:13:32Z start pilot
+Current Triton version 3.2.0 is below the recommended 3.3.0 version. Errors may occur and these issues will not be fixed. Please consider upgrading Triton.
+Loading weights:   0%|          | 0/426 [00:00<?, ?it/s]Loading weights:   0%|          | 1/426 [00:00<02:10,  3.25it/s]Loading weights:   6%|▌         | 25/426 [00:00<00:05, 72.12it/s]Loading weights:   9%|▉         | 40/426 [00:00<00:04, 94.70it/s]Loading weights:  15%|█▍        | 63/426 [00:00<00:02, 134.51it/s]Loading weights:  19%|█▉        | 81/426 [00:00<00:02, 144.20it/s]Loading weights:  23%|██▎       | 100/426 [00:00<00:02, 151.88it/s]Loading weights:  30%|███       | 128/426 [00:00<00:01, 183.01it/s]Loading weights:  35%|███▍      | 148/426 [00:01<00:01, 175.65it/s]Loading weights:  40%|████      | 171/426 [00:01<00:01, 181.55it/s]Loading weights:  46%|████▌     | 195/426 [00:01<00:01, 193.51it/s]Loading weights:  50%|█████     | 215/426 [00:01<00:01, 193.83it/s]Loading weights:  56%|█████▌    | 237/426 [00:01<00:00, 198.37it/s]Loading weights:  61%|██████    | 258/426 [00:01<00:00, 179.78it/s]Loading weights:  67%|██████▋   | 287/426 [00:01<00:00, 203.90it/s]Loading weights:  72%|███████▏  | 308/426 [00:01<00:00, 202.99it/s]Loading weights:  77%|███████▋  | 330/426 [00:01<00:00, 205.80it/s]Loading weights:  82%|████████▏ | 351/426 [00:02<00:00, 206.42it/s]Loading weights:  87%|████████▋ | 372/426 [00:02<00:00, 193.01it/s]Loading weights:  93%|█████████▎| 397/426 [00:02<00:00, 201.55it/s]Loading weights:  98%|█████████▊| 418/426 [00:02<00:00, 181.25it/s]Loading weights: 100%|██████████| 426/426 [00:02<00:00, 170.58it/s]
+[transformers] `causal_conv1d_fn` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+Traceback (most recent call last):
+  File "/root/work/part43.py", line 4523, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/root/work/part43.py", line 4497, in main
+    result = run_pilot(model, tokenizer, token_records, args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/work/part43.py", line 2271, in run_pilot
+    checks = run_validation_checks(model, tokenizer, args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/work/part43.py", line 4311, in run_validation_checks
+    raise AssertionError(f"batched/single logits differ by {max_batch_single_error}, tolerance {batch_single_tolerance}")
+AssertionError: batched/single logits differ by 0.75, tolerance 0.1
+pilot rc=1
+2026-10-21T13:14:19Z P43 DONE

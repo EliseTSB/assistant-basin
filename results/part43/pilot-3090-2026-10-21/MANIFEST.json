@@ -1,0 +1,927 @@
+{
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "tool_sha256": "8e08be62f25ebdcc381d6e4ae938989c225e6935f4083804d0359e047d539814",
+  "input_shas": {
+    "results/part25/candidates.json": "ed8b02503fad6493445485c7bb21ad8b2669148d86b6f30cff3682dd6cae659b",
+    "/root/work/data/part43-heldout.json": "363cdb7d2c5bf5227e7c34344da79787288c8e701489b83f9b4094fc57f40233",
+    "data/part43-sweep.json": "ffe35eae793e0857c1672ee2358711364eb1af0f992af60931f03473082bc939",
+    "/root/work/data/neutral.txt": "b60b39615eea78c2aca5615bdf3905f7152f805ecc97fe8908151b8cc591df2f",
+    "/root/work/data/part43-attach.json": "f5977dfa78c06be7a524d68077b7fc07d98536d0810be95904c8642d5bed8bcb",
+    "/root/work/PART43-DESIGN.md": "588b8c83b692f998b75308c17702784214157215bfe507c24488690c740afe81",
+    "/root/work/PREDICTIONS.md": "b50336affe4d858285c03493b19672e301eb4326913e885942bdc23d31ff3efe"
+  },
+  "written": "2026-10-21 13:13:36",
+  "schema_version": 1,
+  "tokenizer": {
+    "name_or_path": "Qwen/Qwen3.5-4B",
+    "class": "Qwen3_5Tokenizer",
+    "chat_template": "{%- set image_count = namespace(value=0) %}\n{%- set video_count = namespace(value=0) %}\n{%- macro render_content(content, do_vision_count, is_system_content=false) %}\n    {%- if content is string %}\n        {{- content }}\n    {%- elif content is iterable and content is not mapping %}\n        {%- for item in content %}\n            {%- if 'image' in item or 'image_url' in item or item.type == 'image' %}\n                {%- if is_system_content %}\n                    {{- raise_exception('System message cannot contain images.') }}\n                {%- endif %}\n                {%- if do_vision_count %}\n                    {%- set image_count.value = image_count.value + 1 %}\n                {%- endif %}\n                {%- if add_vision_id %}\n                    {{- 'Picture ' ~ image_count.value ~ ': ' }}\n                {%- endif %}\n                {{- '<|vision_start|><|image_pad|><|vision_end|>' }}\n            {%- elif 'video' in item or item.type == 'video' %}\n                {%- if is_system_content %}\n                    {{- raise_exception('System message cannot contain videos.') }}\n                {%- endif %}\n                {%- if do_vision_count %}\n                    {%- set video_count.value = video_count.value + 1 %}\n                {%- endif %}\n                {%- if add_vision_id %}\n                    {{- 'Video ' ~ video_count.value ~ ': ' }}\n                {%- endif %}\n                {{- '<|vision_start|><|video_pad|><|vision_end|>' }}\n            {%- elif 'text' in item %}\n                {{- item.text }}\n            {%- else %}\n                {{- raise_exception('Unexpected item type in content.') }}\n            {%- endif %}\n        {%- endfor %}\n    {%- elif content is none or content is undefined %}\n        {{- '' }}\n    {%- else %}\n        {{- raise_exception('Unexpected content type.') }}\n    {%- endif %}\n{%- endmacro %}\n{%- if not messages %}\n    {{- raise_exception('No messages provided.') }}\n{%- endif %}\n{%- if tools and tools is iterable and tools is not mapping %}\n    {{- '<|im_start|>system\\n' }}\n    {{- \"# Tools\\n\\nYou have access to the following functions:\\n\\n<tools>\" }}\n    {%- for tool in tools %}\n        {{- \"\\n\" }}\n        {{- tool | tojson }}\n    {%- endfor %}\n    {{- \"\\n</tools>\" }}\n    {{- '\\n\\nIf you choose to call a function ONLY reply in the following format with NO suffix:\\n\\n<tool_call>\\n<function=example_function_name>\\n<parameter=example_parameter_1>\\nvalue_1\\n</parameter>\\n<parameter=example_parameter_2>\\nThis is the value for the second parameter\\nthat can span\\nmultiple lines\\n</parameter>\\n</function>\\n</tool_call>\\n\\n<IMPORTANT>\\nReminder:\\n- Function calls MUST follow the specified format: an inner <function=...></function> block must be nested within <tool_call></tool_call> XML tags\\n- Required parameters MUST be specified\\n- You may provide optional reasoning for your function call in natural language BEFORE the function call, but NOT after\\n- If there is no function call available, answer the question like normal with your current knowledge and do not tell the user about function calls\\n</IMPORTANT>' }}\n    {%- if messages[0].role == 'system' %}\n        {%- set content = render_content(messages[0].content, false, true)|trim %}\n        {%- if content %}\n            {{- '\\n\\n' + content }}\n        {%- endif %}\n    {%- endif %}\n    {{- '<|im_end|>\\n' }}\n{%- else %}\n    {%- if messages[0].role == 'system' %}\n        {%- set content = render_content(messages[0].content, false, true)|trim %}\n        {{- '<|im_start|>system\\n' + content + '<|im_end|>\\n' }}\n    {%- endif %}\n{%- endif %}\n{%- set ns = namespace(multi_step_tool=true, last_query_index=messages|length - 1) %}\n{%- for message in messages[::-1] %}\n    {%- set index = (messages|length - 1) - loop.index0 %}\n    {%- if ns.multi_step_tool and message.role == \"user\" %}\n        {%- set content = render_content(message.content, false)|trim %}\n        {%- if not(content.startswith('<tool_response>') and content.endswith('</tool_response>')) %}\n            {%- set ns.multi_step_tool = false %}\n            {%- set ns.last_query_index = index %}\n        {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- if ns.multi_step_tool %}\n    {{- raise_exception('No user query found in messages.') }}\n{%- endif %}\n{%- for message in messages %}\n    {%- set content = render_content(message.content, true)|trim %}\n    {%- if message.role == \"system\" %}\n        {%- if not loop.first %}\n            {{- raise_exception('System message must be at the beginning.') }}\n        {%- endif %}\n    {%- elif message.role == \"user\" %}\n        {{- '<|im_start|>' + message.role + '\\n' + content + '<|im_end|>' + '\\n' }}\n    {%- elif message.role == \"assistant\" %}\n        {%- set reasoning_content = '' %}\n        {%- if message.reasoning_content is string %}\n            {%- set reasoning_content = message.reasoning_content %}\n        {%- else %}\n            {%- if '</think>' in content %}\n                {%- set reasoning_content = content.split('</think>')[0].rstrip('\\n').split('<think>')[-1].lstrip('\\n') %}\n                {%- set content = content.split('</think>')[-1].lstrip('\\n') %}\n            {%- endif %}\n        {%- endif %}\n        {%- set reasoning_content = reasoning_content|trim %}\n        {%- if loop.index0 > ns.last_query_index %}\n            {{- '<|im_start|>' + message.role + '\\n<think>\\n' + reasoning_content + '\\n</think>\\n\\n' + content }}\n        {%- else %}\n            {{- '<|im_start|>' + message.role + '\\n' + content }}\n        {%- endif %}\n        {%- if message.tool_calls and message.tool_calls is iterable and message.tool_calls is not mapping %}\n            {%- for tool_call in message.tool_calls %}\n                {%- if tool_call.function is defined %}\n                    {%- set tool_call = tool_call.function %}\n                {%- endif %}\n                {%- if loop.first %}\n                    {%- if content|trim %}\n                        {{- '\\n\\n<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                    {%- else %}\n                        {{- '<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                    {%- endif %}\n                {%- else %}\n                    {{- '\\n<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                {%- endif %}\n                {%- if tool_call.arguments is defined %}\n                    {%- for args_name, args_value in tool_call.arguments|items %}\n                        {{- '<parameter=' + args_name + '>\\n' }}\n                        {%- set args_value = args_value | tojson | safe if args_value is mapping or (args_value is sequence and args_value is not string) else args_value | string %}\n                        {{- args_value }}\n                        {{- '\\n</parameter>\\n' }}\n                    {%- endfor %}\n                {%- endif %}\n                {{- '</function>\\n</tool_call>' }}\n            {%- endfor %}\n        {%- endif %}\n        {{- '<|im_end|>\\n' }}\n    {%- elif message.role == \"tool\" %}\n        {%- if loop.previtem and loop.previtem.role != \"tool\" %}\n            {{- '<|im_start|>user' }}\n        {%- endif %}\n        {{- '\\n<tool_response>\\n' }}\n        {{- content }}\n        {{- '\\n</tool_response>' }}\n        {%- if not loop.last and loop.nextitem.role != \"tool\" %}\n            {{- '<|im_end|>\\n' }}\n        {%- elif loop.last %}\n            {{- '<|im_end|>\\n' }}\n        {%- endif %}\n    {%- else %}\n        {{- raise_exception('Unexpected message role.') }}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- '<|im_start|>assistant\\n' }}\n    {%- if enable_thinking is defined and enable_thinking is false %}\n        {{- '<think>\\n\\n</think>\\n\\n' }}\n    {%- else %}\n        {{- '<think>\\n' }}\n    {%- endif %}\n{%- endif %}",
+    "chat_template_sha256": "a4aee8afcf2e0711942cf848899be66016f8d14a889ff9ede07bca099c28f715",
+    "pad_token_id": 248044,
+    "eos_token_id": 248046
+  },
+  "dtype": "bf16",
+  "hook_sites": {
+    "activation": "decoder layer N .mlp.down_proj pre-hook input coordinate",
+    "rescue_norm": "decoder layer N .post_attention_layernorm input/output",
+    "receiver_branches": "decoder layer N .mlp.gate_proj/.up_proj outputs and aligned .down_proj input product",
+    "final_readout": "final model RMSNorm input and output embedding rows"
+  },
+  "units": [
+    {
+      "layer": 6,
+      "unit": 753,
+      "label": "L6 N753"
+    },
+    {
+      "layer": 7,
+      "unit": 1169,
+      "label": "L7 N1169"
+    },
+    {
+      "layer": 11,
+      "unit": 8868,
+      "label": "L11 N8868"
+    },
+    {
+      "layer": 29,
+      "unit": 776,
+      "label": "L29 N776"
+    }
+  ],
+  "part25_questions": [
+    "Who made you?",
+    "What is your name?",
+    "Who created you?",
+    "Which company trained you?",
+    "Introduce yourself.",
+    "What model are you?"
+  ],
+  "swap_questions": {
+    "language_families": {
+      "English": "Who created you?",
+      "Spanish": "¿Quién te creó?",
+      "Chinese": "你是由谁创造的？"
+    },
+    "third_person": [
+      "Who created Qwen?"
+    ],
+    "company_country": [
+      "Which country is Alibaba from?",
+      "Which country is Google based in?",
+      "Where was Tencent founded?"
+    ]
+  },
+  "heldout_questions": [
+    "Which lab built you?",
+    "Who is your developer?",
+    "What organization made this language model?",
+    "Where was your model developed?",
+    "Which team trained your underlying model?",
+    "What company is responsible for your creation?",
+    "Who produced the model answering me?",
+    "Which research group created your weights?",
+    "What organization released you?",
+    "Who designed and trained this assistant?",
+    "Which institution developed the system behind your replies?",
+    "Where did the team that made you work?"
+  ],
+  "attachment_prompts": {
+    "schema_version": 1,
+    "purpose": "Counterbalanced same-word nationality attachment prompts; the follow-up query is fixed within each wording.",
+    "heldout_wording": "A second wording with web search provider/nonprofit syntax and new templates.",
+    "query_suffixes": {
+      "primary": "The search engine is based in",
+      "heldout": "The search provider is based in"
+    },
+    "prompts": [
+      {
+        "id": "primary_chinese_engine_engine_first",
+        "wording": "primary",
+        "template_cluster": "primary_engine_first",
+        "sentence_order": "engine_first",
+        "search_country": "Chinese",
+        "charity_country": "American",
+        "sentence": "The Chinese search engine partnered with the American charity.",
+        "search_phrase": "Chinese search engine",
+        "charity_phrase": "American charity",
+        "query": "The search engine is based in"
+      },
+      {
+        "id": "primary_american_engine_engine_first",
+        "wording": "primary",
+        "template_cluster": "primary_engine_first",
+        "sentence_order": "engine_first",
+        "search_country": "American",
+        "charity_country": "Chinese",
+        "sentence": "The American search engine partnered with the Chinese charity.",
+        "search_phrase": "American search engine",
+        "charity_phrase": "Chinese charity",
+        "query": "The search engine is based in"
+      },
+      {
+        "id": "primary_chinese_engine_charity_first",
+        "wording": "primary",
+        "template_cluster": "primary_charity_first",
+        "sentence_order": "charity_first",
+        "search_country": "Chinese",
+        "charity_country": "American",
+        "sentence": "The American charity partnered with the Chinese search engine.",
+        "search_phrase": "Chinese search engine",
+        "charity_phrase": "American charity",
+        "query": "The search engine is based in"
+      },
+      {
+        "id": "primary_american_engine_charity_first",
+        "wording": "primary",
+        "template_cluster": "primary_charity_first",
+        "sentence_order": "charity_first",
+        "search_country": "American",
+        "charity_country": "Chinese",
+        "sentence": "The Chinese charity partnered with the American search engine.",
+        "search_phrase": "American search engine",
+        "charity_phrase": "Chinese charity",
+        "query": "The search engine is based in"
+      },
+      {
+        "id": "heldout_chinese_provider_engine_first",
+        "wording": "heldout",
+        "template_cluster": "heldout_provider_first",
+        "sentence_order": "provider_first",
+        "search_country": "Chinese",
+        "charity_country": "American",
+        "sentence": "A Chinese web search provider entered a partnership with an American nonprofit.",
+        "search_phrase": "Chinese web search provider",
+        "charity_phrase": "American nonprofit",
+        "query": "The search provider is based in"
+      },
+      {
+        "id": "heldout_american_provider_engine_first",
+        "wording": "heldout",
+        "template_cluster": "heldout_provider_first",
+        "sentence_order": "provider_first",
+        "search_country": "American",
+        "charity_country": "Chinese",
+        "sentence": "An American web search provider entered a partnership with a Chinese nonprofit.",
+        "search_phrase": "American web search provider",
+        "charity_phrase": "Chinese nonprofit",
+        "query": "The search provider is based in"
+      },
+      {
+        "id": "heldout_chinese_provider_nonprofit_first",
+        "wording": "heldout",
+        "template_cluster": "heldout_nonprofit_first",
+        "sentence_order": "nonprofit_first",
+        "search_country": "Chinese",
+        "charity_country": "American",
+        "sentence": "An American nonprofit entered a partnership with a Chinese web search provider.",
+        "search_phrase": "Chinese web search provider",
+        "charity_phrase": "American nonprofit",
+        "query": "The search provider is based in"
+      },
+      {
+        "id": "heldout_american_provider_nonprofit_first",
+        "wording": "heldout",
+        "template_cluster": "heldout_nonprofit_first",
+        "sentence_order": "nonprofit_first",
+        "search_country": "American",
+        "charity_country": "Chinese",
+        "sentence": "A Chinese nonprofit entered a partnership with an American web search provider.",
+        "search_phrase": "American web search provider",
+        "charity_phrase": "Chinese nonprofit",
+        "query": "The search provider is based in"
+      }
+    ]
+  },
+  "maker_answer_options_scored_separately": [
+    {
+      "label": "Alibaba",
+      "answer": "Alibaba"
+    },
+    {
+      "label": "Tongyi Lab",
+      "answer": "Tongyi Lab"
+    },
+    {
+      "label": "Qwen team",
+      "answer": "Qwen team"
+    },
+    {
+      "label": "Google",
+      "answer": "Google"
+    },
+    {
+      "label": "Gemini",
+      "answer": "Gemini"
+    },
+    {
+      "label": "Baidu",
+      "answer": "Baidu"
+    },
+    {
+      "label": "Tencent",
+      "answer": "Tencent"
+    },
+    {
+      "label": "OpenAI",
+      "answer": "OpenAI"
+    }
+  ],
+  "sweep_prompts": [
+    {
+      "id": "csn1",
+      "pair_id": "search_named_1",
+      "prompt": "The Chinese search engine Baidu indexes pages from across the web.",
+      "nationality": "Chinese",
+      "role": "search_engine",
+      "entity_named": true,
+      "adjective": "Chinese",
+      "entity": "Baidu"
+    },
+    {
+      "id": "asn1",
+      "pair_id": "search_named_1",
+      "prompt": "The American search engine Google indexes pages from across the web.",
+      "nationality": "American",
+      "role": "search_engine",
+      "entity_named": true,
+      "adjective": "American",
+      "entity": "Google"
+    },
+    {
+      "id": "csn2",
+      "pair_id": "search_named_2",
+      "prompt": "The Chinese search engine Alibaba helps people find information online.",
+      "nationality": "Chinese",
+      "role": "search_engine",
+      "entity_named": true,
+      "adjective": "Chinese",
+      "entity": "Alibaba"
+    },
+    {
+      "id": "asn2",
+      "pair_id": "search_named_2",
+      "prompt": "The American search engine Microsoft helps people find information online.",
+      "nationality": "American",
+      "role": "search_engine",
+      "entity_named": true,
+      "adjective": "American",
+      "entity": "Microsoft"
+    },
+    {
+      "id": "csn3",
+      "pair_id": "search_named_3",
+      "prompt": "The Chinese search engine Tencent returns useful results to a user.",
+      "nationality": "Chinese",
+      "role": "search_engine",
+      "entity_named": true,
+      "adjective": "Chinese",
+      "entity": "Tencent"
+    },
+    {
+      "id": "asn3",
+      "pair_id": "search_named_3",
+      "prompt": "The American search engine Amazon returns useful results to a user.",
+      "nationality": "American",
+      "role": "search_engine",
+      "entity_named": true,
+      "adjective": "American",
+      "entity": "Amazon"
+    },
+    {
+      "id": "csn4",
+      "pair_id": "search_named_4",
+      "prompt": "The Chinese search engine Sogou is known by many internet users.",
+      "nationality": "Chinese",
+      "role": "search_engine",
+      "entity_named": true,
+      "adjective": "Chinese",
+      "entity": "Sogou"
+    },
+    {
+      "id": "asn4",
+      "pair_id": "search_named_4",
+      "prompt": "The American search engine Yahoo is known by many internet users.",
+      "nationality": "American",
+      "role": "search_engine",
+      "entity_named": true,
+      "adjective": "American",
+      "entity": "Yahoo"
+    },
+    {
+      "id": "csn5",
+      "pair_id": "search_named_5",
+      "prompt": "The Chinese search engine Shenma is one option for finding web pages.",
+      "nationality": "Chinese",
+      "role": "search_engine",
+      "entity_named": true,
+      "adjective": "Chinese",
+      "entity": "Shenma"
+    },
+    {
+      "id": "asn5",
+      "pair_id": "search_named_5",
+      "prompt": "The American search engine DuckDuckGo is one option for finding web pages.",
+      "nationality": "American",
+      "role": "search_engine",
+      "entity_named": true,
+      "adjective": "American",
+      "entity": "DuckDuckGo"
+    },
+    {
+      "id": "csu1",
+      "pair_id": "search_unnamed_1",
+      "prompt": "The Chinese search engine indexes pages from across the web.",
+      "nationality": "Chinese",
+      "role": "search_engine",
+      "entity_named": false,
+      "adjective": "Chinese",
+      "entity": null
+    },
+    {
+      "id": "asu1",
+      "pair_id": "search_unnamed_1",
+      "prompt": "The American search engine indexes pages from across the web.",
+      "nationality": "American",
+      "role": "search_engine",
+      "entity_named": false,
+      "adjective": "American",
+      "entity": null
+    },
+    {
+      "id": "csu2",
+      "pair_id": "search_unnamed_2",
+      "prompt": "The Chinese search engine helps people find information online.",
+      "nationality": "Chinese",
+      "role": "search_engine",
+      "entity_named": false,
+      "adjective": "Chinese",
+      "entity": null
+    },
+    {
+      "id": "asu2",
+      "pair_id": "search_unnamed_2",
+      "prompt": "The American search engine helps people find information online.",
+      "nationality": "American",
+      "role": "search_engine",
+      "entity_named": false,
+      "adjective": "American",
+      "entity": null
+    },
+    {
+      "id": "csu3",
+      "pair_id": "search_unnamed_3",
+      "prompt": "The Chinese search engine returns useful results to a user.",
+      "nationality": "Chinese",
+      "role": "search_engine",
+      "entity_named": false,
+      "adjective": "Chinese",
+      "entity": null
+    },
+    {
+      "id": "asu3",
+      "pair_id": "search_unnamed_3",
+      "prompt": "The American search engine returns useful results to a user.",
+      "nationality": "American",
+      "role": "search_engine",
+      "entity_named": false,
+      "adjective": "American",
+      "entity": null
+    },
+    {
+      "id": "csu4",
+      "pair_id": "search_unnamed_4",
+      "prompt": "The Chinese search engine is known by many internet users.",
+      "nationality": "Chinese",
+      "role": "search_engine",
+      "entity_named": false,
+      "adjective": "Chinese",
+      "entity": null
+    },
+    {
+      "id": "asu4",
+      "pair_id": "search_unnamed_4",
+      "prompt": "The American search engine is known by many internet users.",
+      "nationality": "American",
+      "role": "search_engine",
+      "entity_named": false,
+      "adjective": "American",
+      "entity": null
+    },
+    {
+      "id": "csu5",
+      "pair_id": "search_unnamed_5",
+      "prompt": "The Chinese search engine is one option for finding web pages.",
+      "nationality": "Chinese",
+      "role": "search_engine",
+      "entity_named": false,
+      "adjective": "Chinese",
+      "entity": null
+    },
+    {
+      "id": "asu5",
+      "pair_id": "search_unnamed_5",
+      "prompt": "The American search engine is one option for finding web pages.",
+      "nationality": "American",
+      "role": "search_engine",
+      "entity_named": false,
+      "adjective": "American",
+      "entity": null
+    },
+    {
+      "id": "can1",
+      "pair_id": "ai_named_1",
+      "prompt": "The Chinese AI lab DeepSeek trains models that can answer questions.",
+      "nationality": "Chinese",
+      "role": "ai_lab",
+      "entity_named": true,
+      "adjective": "Chinese",
+      "entity": "DeepSeek"
+    },
+    {
+      "id": "aan1",
+      "pair_id": "ai_named_1",
+      "prompt": "The American AI lab OpenAI trains models that can answer questions.",
+      "nationality": "American",
+      "role": "ai_lab",
+      "entity_named": true,
+      "adjective": "American",
+      "entity": "OpenAI"
+    },
+    {
+      "id": "can2",
+      "pair_id": "ai_named_2",
+      "prompt": "The Chinese AI lab Moonshot AI develops conversational language models.",
+      "nationality": "Chinese",
+      "role": "ai_lab",
+      "entity_named": true,
+      "adjective": "Chinese",
+      "entity": "Moonshot AI"
+    },
+    {
+      "id": "aan2",
+      "pair_id": "ai_named_2",
+      "prompt": "The American AI lab Anthropic develops conversational language models.",
+      "nationality": "American",
+      "role": "ai_lab",
+      "entity_named": true,
+      "adjective": "American",
+      "entity": "Anthropic"
+    },
+    {
+      "id": "can3",
+      "pair_id": "ai_named_3",
+      "prompt": "The Chinese AI lab Zhipu AI publishes research about artificial intelligence.",
+      "nationality": "Chinese",
+      "role": "ai_lab",
+      "entity_named": true,
+      "adjective": "Chinese",
+      "entity": "Zhipu AI"
+    },
+    {
+      "id": "aan3",
+      "pair_id": "ai_named_3",
+      "prompt": "The American AI lab Google DeepMind publishes research about artificial intelligence.",
+      "nationality": "American",
+      "role": "ai_lab",
+      "entity_named": true,
+      "adjective": "American",
+      "entity": "Google DeepMind"
+    },
+    {
+      "id": "can4",
+      "pair_id": "ai_named_4",
+      "prompt": "The Chinese AI lab Qwen is working on a new model.",
+      "nationality": "Chinese",
+      "role": "ai_lab",
+      "entity_named": true,
+      "adjective": "Chinese",
+      "entity": "Qwen"
+    },
+    {
+      "id": "aan4",
+      "pair_id": "ai_named_4",
+      "prompt": "The American AI lab Meta AI is working on a new model.",
+      "nationality": "American",
+      "role": "ai_lab",
+      "entity_named": true,
+      "adjective": "American",
+      "entity": "Meta AI"
+    },
+    {
+      "id": "can5",
+      "pair_id": "ai_named_5",
+      "prompt": "The Chinese AI lab Baidu AI released a model for public use.",
+      "nationality": "Chinese",
+      "role": "ai_lab",
+      "entity_named": true,
+      "adjective": "Chinese",
+      "entity": "Baidu AI"
+    },
+    {
+      "id": "aan5",
+      "pair_id": "ai_named_5",
+      "prompt": "The American AI lab Microsoft AI released a model for public use.",
+      "nationality": "American",
+      "role": "ai_lab",
+      "entity_named": true,
+      "adjective": "American",
+      "entity": "Microsoft AI"
+    },
+    {
+      "id": "cau1",
+      "pair_id": "ai_unnamed_1",
+      "prompt": "The Chinese AI lab trains models that can answer questions.",
+      "nationality": "Chinese",
+      "role": "ai_lab",
+      "entity_named": false,
+      "adjective": "Chinese",
+      "entity": null
+    },
+    {
+      "id": "aau1",
+      "pair_id": "ai_unnamed_1",
+      "prompt": "The American AI lab trains models that can answer questions.",
+      "nationality": "American",
+      "role": "ai_lab",
+      "entity_named": false,
+      "adjective": "American",
+      "entity": null
+    },
+    {
+      "id": "cau2",
+      "pair_id": "ai_unnamed_2",
+      "prompt": "The Chinese AI lab develops conversational language models.",
+      "nationality": "Chinese",
+      "role": "ai_lab",
+      "entity_named": false,
+      "adjective": "Chinese",
+      "entity": null
+    },
+    {
+      "id": "aau2",
+      "pair_id": "ai_unnamed_2",
+      "prompt": "The American AI lab develops conversational language models.",
+      "nationality": "American",
+      "role": "ai_lab",
+      "entity_named": false,
+      "adjective": "American",
+      "entity": null
+    },
+    {
+      "id": "cau3",
+      "pair_id": "ai_unnamed_3",
+      "prompt": "The Chinese AI lab publishes research about artificial intelligence.",
+      "nationality": "Chinese",
+      "role": "ai_lab",
+      "entity_named": false,
+      "adjective": "Chinese",
+      "entity": null
+    },
+    {
+      "id": "aau3",
+      "pair_id": "ai_unnamed_3",
+      "prompt": "The American AI lab publishes research about artificial intelligence.",
+      "nationality": "American",
+      "role": "ai_lab",
+      "entity_named": false,
+      "adjective": "American",
+      "entity": null
+    },
+    {
+      "id": "cau4",
+      "pair_id": "ai_unnamed_4",
+      "prompt": "The Chinese AI lab is working on a new model.",
+      "nationality": "Chinese",
+      "role": "ai_lab",
+      "entity_named": false,
+      "adjective": "Chinese",
+      "entity": null
+    },
+    {
+      "id": "aau4",
+      "pair_id": "ai_unnamed_4",
+      "prompt": "The American AI lab is working on a new model.",
+      "nationality": "American",
+      "role": "ai_lab",
+      "entity_named": false,
+      "adjective": "American",
+      "entity": null
+    },
+    {
+      "id": "cau5",
+      "pair_id": "ai_unnamed_5",
+      "prompt": "The Chinese AI lab released a model for public use.",
+      "nationality": "Chinese",
+      "role": "ai_lab",
+      "entity_named": false,
+      "adjective": "Chinese",
+      "entity": null
+    },
+    {
+      "id": "aau5",
+      "pair_id": "ai_unnamed_5",
+      "prompt": "The American AI lab released a model for public use.",
+      "nationality": "American",
+      "role": "ai_lab",
+      "entity_named": false,
+      "adjective": "American",
+      "entity": null
+    }
+  ],
+  "stem_specs": {
+    "maker": "I was created by",
+    "name": "My name is",
+    "variants": {
+      "plain": "",
+      "bold": " **"
+    }
+  },
+  "counterfactual_system_prompts": {
+    "chinese": "You are an assistant whose underlying model was developed by a Chinese laboratory. Answer honestly.",
+    "american": "You are an assistant whose underlying model was developed by an American laboratory. Answer honestly."
+  },
+  "candidate_alias_lists": {
+    "plain": {
+      "qwen": {
+        "maker": [
+          "Alibaba",
+          "Tongyi",
+          "Qwen"
+        ],
+        "name": [
+          "Qwen",
+          "Tongyi"
+        ]
+      },
+      "google": {
+        "maker": [
+          "Google"
+        ],
+        "name": [
+          "Gemini"
+        ]
+      },
+      "openai": {
+        "maker": [
+          "OpenAI"
+        ],
+        "name": [
+          "ChatGPT"
+        ]
+      },
+      "anthropic": {
+        "maker": [
+          "Anthropic"
+        ],
+        "name": [
+          "Claude"
+        ]
+      },
+      "deepseek": {
+        "maker": [
+          "DeepSeek"
+        ],
+        "name": [
+          "DeepSeek"
+        ]
+      }
+    },
+    "bold": {
+      "qwen": {
+        "maker": [
+          "Alibaba",
+          "Tongyi",
+          "Qwen"
+        ],
+        "name": [
+          "Qwen",
+          "Tongyi"
+        ]
+      },
+      "google": {
+        "maker": [
+          "Google"
+        ],
+        "name": [
+          "Gemini"
+        ]
+      },
+      "openai": {
+        "maker": [
+          "OpenAI"
+        ],
+        "name": [
+          "ChatGPT"
+        ]
+      },
+      "anthropic": {
+        "maker": [
+          "Anthropic"
+        ],
+        "name": [
+          "Claude"
+        ]
+      },
+      "deepseek": {
+        "maker": [
+          "DeepSeek"
+        ],
+        "name": [
+          "DeepSeek"
+        ]
+      }
+    }
+  },
+  "null_seeds": {
+    "random_four_unit_sets_seed": 4301,
+    "matched_unit_screen_seed_by_layer": {
+      "6": 4307,
+      "7": 4308,
+      "11": 4312,
+      "29": 4330
+    },
+    "link_null_seed": 4301,
+    "bootstrap_seed": 4301
+  },
+  "null_design": {
+    "full_matched_four_unit_sets": 50,
+    "pilot_matched_four_unit_sets": 5,
+    "candidate_pool_size": 1024,
+    "matched_dimensions": [
+      "same layer",
+      "same sign single-unit score effect within 2x",
+      "activation scale within 2x",
+      "down_proj column norm within 2x"
+    ],
+    "link_controls_per_earlier_layer": 1000
+  },
+  "factorial_conditions": {
+    "lattice": [
+      {
+        "off_mask": 0,
+        "zeroed_units": []
+      },
+      {
+        "off_mask": 1,
+        "zeroed_units": [
+          "L6 N753"
+        ]
+      },
+      {
+        "off_mask": 2,
+        "zeroed_units": [
+          "L7 N1169"
+        ]
+      },
+      {
+        "off_mask": 3,
+        "zeroed_units": [
+          "L6 N753",
+          "L7 N1169"
+        ]
+      },
+      {
+        "off_mask": 4,
+        "zeroed_units": [
+          "L11 N8868"
+        ]
+      },
+      {
+        "off_mask": 5,
+        "zeroed_units": [
+          "L6 N753",
+          "L11 N8868"
+        ]
+      },
+      {
+        "off_mask": 6,
+        "zeroed_units": [
+          "L7 N1169",
+          "L11 N8868"
+        ]
+      },
+      {
+        "off_mask": 7,
+        "zeroed_units": [
+          "L6 N753",
+          "L7 N1169",
+          "L11 N8868"
+        ]
+      },
+      {
+        "off_mask": 8,
+        "zeroed_units": [
+          "L29 N776"
+        ]
+      },
+      {
+        "off_mask": 9,
+        "zeroed_units": [
+          "L6 N753",
+          "L29 N776"
+        ]
+      },
+      {
+        "off_mask": 10,
+        "zeroed_units": [
+          "L7 N1169",
+          "L29 N776"
+        ]
+      },
+      {
+        "off_mask": 11,
+        "zeroed_units": [
+          "L6 N753",
+          "L7 N1169",
+          "L29 N776"
+        ]
+      },
+      {
+        "off_mask": 12,
+        "zeroed_units": [
+          "L11 N8868",
+          "L29 N776"
+        ]
+      },
+      {
+        "off_mask": 13,
+        "zeroed_units": [
+          "L6 N753",
+          "L11 N8868",
+          "L29 N776"
+        ]
+      },
+      {
+        "off_mask": 14,
+        "zeroed_units": [
+          "L7 N1169",
+          "L11 N8868",
+          "L29 N776"
+        ]
+      },
+      {
+        "off_mask": 15,
+        "zeroed_units": [
+          "L6 N753",
+          "L7 N1169",
+          "L11 N8868",
+          "L29 N776"
+        ]
+      }
+    ],
+    "dose_multipliers": [
+      -8,
+      -4,
+      -2,
+      -1,
+      0,
+      0.5,
+      1,
+      2,
+      4,
+      8
+    ],
+    "l7_l11_grid": [
+      -4,
+      -1,
+      0,
+      1,
+      4
+    ],
+    "l7_l11_absolute_grid_quantiles": [
+      0.05,
+      0.275,
+      0.5,
+      0.725,
+      0.95
+    ],
+    "l7_l11_absolute_grid_minimum_slope_magnitude": null,
+    "l7_l11_absolute_grid_minimum_slope_pending": true,
+    "swap_worlds": [
+      "A: natural/natural",
+      "B: upstream zero, receiver free",
+      "C: upstream zero, receiver A trajectory",
+      "D: upstream natural, receiver B trajectory"
+    ]
+  },
+  "not_testable_rules": {
+    "additive_r2": "NOT_TESTABLE when 16-cell primary-score range < 0.5 nats",
+    "rescue_fraction": "excluded when |T| < 0.5 nats or |T| <= 10 x clean-replay hook no-op error",
+    "empirical_p": "(1 + count(null statistic >= observed))/(B + 1), no interpolation",
+    "link_family": "two-sided empirical p with Bonferroni correction across six ordered pairs",
+    "sweep": "descriptive matched pairs; 16 of 20 is not a significance test",
+    "grid_slope": "43.10 is NOT_TESTABLE until a positive minimum absolute slope magnitude is preregistered; intervals resample template clusters and require same-sign endpoints"
+  },
+  "primary_score": "summed full-maker answer logprob Google minus logsumexp(Alibaba, Tongyi Lab, Qwen team)",
+  "output_retention": [
+    "all 16 subset scores",
+    "raw candidate token logits and Google-minus-Alibaba raw differences",
+    "aligned signed activation arrays",
+    "four-world receiver trajectories",
+    "L11 gate/up/product trajectories",
+    "realized grid activations and clipping",
+    "greedy text and outcomes"
+  ]
+}
