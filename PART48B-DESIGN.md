@@ -29,3 +29,20 @@ Per pair d = score(k twin) - score(c twin), positive = k twin sharper. Per model
 ## What it cannot tell apart
 A k effect could come from glyph shape OR from k being the letter of "kiki" in text about this very effect; both are
 letters rather than sound, which is all this part asks.
+
+## Amendment 1 (2026-10-21 13:23 CT, before any run): Prime's review (council orchestrator-part48b-review-2026-10-21 #3)
+- **What it isolates, renamed:** letter identity against phoneme, not glyph shape. A k effect can come from glyph shape,
+  k/c letter statistics (ka/ko/ku are rarer than ca/co/cu), letter names ("kay" vs "see"), a Germanic-vs-Romance cue, or
+  the kiki tradition; this part cannot separate those, and the pair-level analyses below are the partial handle.
+- **Letter-matched second score:** the sharp set contains "spiky" (k) and the round set "curvy" (c). A second item score
+  drops both (sharp: sharp, pointy, jagged, angular; round: round, smooth, soft, rounded) and is reported beside the first.
+- **Primary statistic:** a paired sign-flip permutation test on per-pair d (10,000 flips, two-sided) with a bootstrap 95%
+  CI on the median d, per model, plus a pooled estimate; the 16-pair sign test stays as 48b.1's pre-registered
+  conservative test. Per-template d and a per-template sign test (6 templates) are reported.
+- **Token counts:** pairs whose twins split into different token counts in a model are excluded from that model's
+  primary test; both (all pairs, equal-count pairs) are reported.
+- **Near-words:** sensitivity with roca/toca, comala/komala, calo/kalo, cuma/kuma, raku/racu, kumo/cumo and coma-like
+  pairs all excluded, reported beside the full set.
+- **Fluency and mass:** each twin's mean surprisal under a neutral context ("The word is \"{w}\".") and the pair's gap;
+  Spearman of d with that gap and with the token-count gap; total continuation mass per item (Part 34's lesson).
+- This is a pilot: the deliverable is the per-model effect size with its CI, not only a p.

@@ -1664,3 +1664,6 @@ Amendment 1 to Part 43 (written 2026-10-20 20:06 CT, before any code ran, from C
 | 48b.1 | Claude: in at least 3 of 5 models the k twins score sharper than their c twins (two-sided sign test over 16 pairs, p < 0.05). | | |
 | 48b.2 | Claude: in every model the median abs(k - c) gap is under half that model's Part 48 sharp-minus-round median gap. | | |
 | 48b.3 | Claude: Pythia-1.4B shows 48b.1's direction at p < 0.05. | | |
+| 48b.4 | Prime: 48b.1 fails; at most 2 of 5 models reach 13/16, though the median d is positive in most; the letter effect is statistics-sized, not glyph-sized. | | |
+| 48b.5 | Prime: per-pair d correlates with the twins' surprisal or token-count gap (abs Spearman >= 0.3) in at least 2 of 5 models. | | |
+| 48b.6 | Prime: the k advantage is template-dependent, strongest where the template supplies shape words, weakest in the neutral templates. | | |
