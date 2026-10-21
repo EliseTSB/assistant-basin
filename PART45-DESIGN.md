@@ -46,3 +46,18 @@ Muse (council topic muse-neuron-research-2026-10, #91); its answer is recorded h
 
 The original model under every instruction (it should make almost none of the change; Sauers reports at most 0.4%
 for untrained Qwen models); the volcanoes instruction (same length and form, unrelated concept); no instruction.
+
+## Prior art, Muse's answer (council #93, recorded 22:49 CT, before any code ran)
+
+- Experimenter-applied identity steering with self-description measured afterwards exists: the Assistant Axis (Lu,
+  Gallagher, Michala, Fish, Lindsey; arXiv:2601.10387, Jan 2026): steering away from the Assistant end raises the
+  tendency to identify as other entities on "Who are you?"-type questions. SLIME (Vogel, 2025 slides, unverified) and
+  an Eiffel-Tower steering post (secondary) are the same shape.
+- A model lowering its OWN identity representation on instruction has no published precedent; the Magician is the
+  first trained self-steering model and has no follow-ups yet (repo created 2026-10-20T04:04Z).
+- The Activation Controllability Benchmark (arXiv:2608.21664) has no self or identity concepts (its ten: denim,
+  lightning, volcanoes, bread, trees, cameras, vegetables, milk, dynasties, deserts).
+- Checked against the release's held-out rule: robots is a held-out concept (index 9 in the person category), volcanoes
+  a training concept, and AI / Alibaba / Google are outside both lists by construction, as the design says.
+- Related, not prior art for this question: Li, Li, Fan et al., arXiv:2610.16717 (Oct 2026), a "self-index" direction
+  in Qwen3.8-27B separating its own Assistant messages from User/System text at every layer.
