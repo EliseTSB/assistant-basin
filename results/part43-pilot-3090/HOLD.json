@@ -1,0 +1,8 @@
+{
+  "status": "HOLD",
+  "command": "pilot",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "calibration": "results/part43-pilot-3090/calibration.json",
+  "reason": "calibration epsilon 0.10916 nats exceeds 0.05 nat budget"
+}
