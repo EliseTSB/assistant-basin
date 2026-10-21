@@ -27,3 +27,8 @@ Tests (pytest, fake API object + fake ssh runner injected): ready-timeout moves 
 first; destroy on exception mid-job; destroy on spend cap; per-job copy-back happens before a later job fails;
 destroy-confirmation failure exits non-zero; the key is never written to stdout/logs. A sabotage removing the finally
 destroy must fail a test. Commit nothing. Report REPORT-vastrun.md ending SUMMARY / FINDINGS / BLOCKERS.
+
+## Stop rule for the review loop (written 2026-10-21 13:37 CT, before the round-2 review)
+Round 1 (Haiku): an instance can stay rented (unreadable list read as gone; SIGHUP; rent-to-record gap). If round 2
+finds another way an instance stays rented or billing with the run reporting success, stop patching: the runner is
+reduced to rent + record + label-sweep-destroy around a single job, and that smaller design goes to review first.
