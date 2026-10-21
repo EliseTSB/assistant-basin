@@ -207,6 +207,8 @@ def _args(tmp_path, **kwargs):
         "baseline": str(tmp_path / "baseline.json"),
         "candidate_pool_size": 8,
         "predictions": str(tmp_path / "PREDICTIONS.md"),
+        "attach": str(part43.DEFAULT_ATTACH),
+        "minimum_slope_magnitude": 0.01,
     }
     values.update(kwargs)
     return SimpleNamespace(**values)
@@ -291,6 +293,10 @@ def test_amended_lattice_walsh_surrogates_and_additive_logit_fixture(tmp_path, m
     assert set(lattice["primary_cell"]["output_only_surrogate"]["readout_scores"]) == {
         "raw", "frozen_scale_surrogate", "real_final_norm_surrogate",
     }
+    surrogate = lattice["primary_cell"]["output_only_surrogate"]
+    assert "h_add_residual" in surrogate["cells"][1]
+    assert "raw_logit_difference_google_minus_alibaba" in surrogate["cells"][0]
+    assert set(surrogate["single_ablation_residual_delta_norms"]) == set(part43.UNIT_KEYS.values())
     assert lattice["primary_family_statistic"]["B"] == 1
     fixture = part43.additive_logit_interaction_fixture()
     assert abs(fixture["raw_candidate_pair_coefficient_google_token_A"]) < 1e-12
@@ -335,6 +341,39 @@ def test_baselines_heldout_dose_and_grid_use_tiny_model(tmp_path, monkeypatch):
     assert len(dose["free_generation_answers"]) == 24
     grid = part43.run_grid(model, tokenizer, args)
     assert len(grid["cells"]) == 25
+    assert len(grid["absolute_grid"]["cells"]) == 25
+    assert len(grid["absolute_grid"]["43_10_slope_summary"]["per_template_cluster_slopes"]) == 2
+    assert "realized_trajectories" in grid["cells"][0]
+    assert "clipping_fraction" in grid["cells"][0]["realized_activation_summary"]["L7_N1169"]
+
+
+def test_swap_attach_and_synthetic_four_world_paths(tmp_path, monkeypatch):
+    _fake_part25(monkeypatch)
+    _short_questions(monkeypatch)
+    model, tokenizer = TinyModel(), TinyTokenizer()
+    args = _args(tmp_path)
+    fixture = part43.synthetic_receiver_swap_fixture()
+    independent = fixture["independent"]
+    connected = fixture["connected"]
+    assert independent["C"] == independent["B"]
+    assert independent["D"] == independent["A"]
+    assert connected["C"] != connected["B"]
+    assert connected["D"] != connected["A"]
+    swap = part43.run_swap(model, tokenizer, _token_sets(), args)
+    assert len(swap["rows"]) == 24
+    assert swap["discovery_l7_to_l11"]["worlds"]["A"]["receiver_trajectory"]
+    branch = swap["discovery_l7_to_l11"]["receiver_branches"]
+    assert branch["product_change_decomposition"]["reconstruction_max_abs_error"] < 1e-5
+    assert len(branch["recombined_product_replays"]) == 2
+    assert swap["rows"][3]["kind"] == "language"
+    assert swap["rows"][3]["template_cluster"] == "English"
+    attach = part43.run_attach(model, tokenizer, args)
+    assert len(attach["rows"]) == 16
+    assert {row["sentence_order"] for row in attach["rows"] if row["wording"] == "primary"} == {
+        "engine_first", "charity_first",
+    }
+    assert len(attach["contrast_summaries"]) == 8
+    assert all("search_phrase" in row["measured"]["L11"] for row in attach["rows"])
 
 
 def test_links_dla_and_readout_check_paths_with_tiny_weights(tmp_path, monkeypatch):
@@ -347,6 +386,10 @@ def test_links_dla_and_readout_check_paths_with_tiny_weights(tmp_path, monkeypat
     links = part43.run_links(model, tokenizer, args)
     assert len(links["links"]) == 6
     assert "two_sided_empirical_p" in links["links"][0]["null"]
+    assert "residual_bypass_derivative" in links["links"][0]
+    assert "residual_bypass_finite_difference" in links["links"][0]
+    assert links["links"][0]["finite_difference_check_passed"]
+    assert "total_derivative_finite_difference" in links["links"][0]
     signs = part43.run_signs(model, tokenizer, [part43.part25_module().make_sequence(tokenizer, part43.DISCOVERY_QUESTION, "maker", "plain")], args)
     signs_path = tmp_path / "signs.json"
     signs_path.write_text(json.dumps(signs), encoding="utf-8")
@@ -367,7 +410,7 @@ def test_links_dla_and_readout_check_paths_with_tiny_weights(tmp_path, monkeypat
 def test_every_cli_subcommand_is_registered_and_manifest_is_recorded(tmp_path, monkeypatch):
     _fake_part25(monkeypatch)
     commands = {"manifest", "validate", "pilot", "signs", "dla", "lattice", "mediate", "rescue", "shift",
-                "positions", "baselines", "heldout", "readout-check", "links", "sweep", "dose", "grid", "base", "score"}
+                "positions", "baselines", "heldout", "readout-check", "links", "sweep", "dose", "grid", "swap", "attach", "base", "score"}
     parser = part43._build_parser()
     for command in commands:
         args = parser.parse_args([command])
@@ -439,6 +482,14 @@ def _score_fixtures(out):
          "per_question": {question: {"primary": level * (1 if l11 == 4 else 0.8)}}}
         for l11 in (-4, 4) for level in (-4, -1, 0, 1, 4)
     ]}
+    absolute_summary = {
+        "mean_slope_at_low_L11": 1.0,
+        "mean_slope_at_high_L11": 1.1,
+        "low_L11_slope_bootstrap_95": [0.8, 1.2],
+        "high_L11_slope_bootstrap_95": [0.9, 1.3],
+        "absolute_slope_ratio_bootstrap_95": [1.0, 1.4],
+        "minimum_slope_magnitude": 0.1,
+    }
     docs = {
         "signs": {"sequences": [{"question": question, "stem": "maker", "variant": "plain",
                                   "last_stem_activation": {"L29_N776": -1, "L7_N1169": -1}}]},
@@ -454,7 +505,14 @@ def _score_fixtures(out):
             {"condition": name, "answer_maker": "google"}
             for name in ("fixed_corpus_mean", "counterfactual_chinese_stem_resample", "counterfactual_american_stem_resample")
         ]},
-        "grid": grid,
+        "grid": {**grid, "absolute_grid": {"43_10_slope_summary": absolute_summary}},
+        "swap": {"discovery_l7_to_l11": {"raw_google_minus_alibaba_logit": {"A": 0.0, "D": 0.1}}},
+        "attach": {"contrast_summaries": [
+            {"wording": wording, "sentence_order": order, "l7_condition": "natural", "search_effect_larger": True,
+             "search_phrase_chinese_minus_american": 1.0, "charity_phrase_chinese_minus_american": 0.1}
+            for wording, order in (("primary", "engine_first"), ("primary", "charity_first"),
+                                   ("heldout", "provider_first"), ("heldout", "nonprofit_first"))
+        ]},
     }
     for name, payload in docs.items():
         (out / f"{name}.json").write_text(json.dumps(payload), encoding="utf-8")
@@ -466,13 +524,16 @@ def test_score_fills_amended_and_legacy_rows(tmp_path):
     _score_fixtures(out)
     prediction_path = tmp_path / "PREDICTIONS.md"
     row_ids = ["43.1", "43.2", "43.3", "43.4", "43.5", "43.6", "43.7", "43.1a", "43.2a", "43.3a",
-               "43.4a", "43.5a", "43.6a", "43.7a", "43.8", "43.9", "43.10"]
+               "43.4a", "43.5a", "43.6a", "43.7a", "43.8", "43.9", "43.10", "43.11", "43.12"]
     prediction_path.write_text("\n".join(["| # | Prediction | Result | Evidence |", "|---|---|---|---|"]
                                           + [f"| {key} | prediction | | |" for key in row_ids]) + "\n", encoding="utf-8")
     args = SimpleNamespace(model=part43.MODEL, revision=part43.REVISION, out=str(out), predictions=str(prediction_path))
     result = part43.run_score(args)
     assert set(result["results"]) == set(row_ids)
     assert "43.2a" in prediction_path.read_text(encoding="utf-8")
+    assert result["results"]["43.11"]["result"] == "HELD"
+    assert result["results"]["43.12"]["result"] == "HELD"
+    assert result["results"]["43.10"]["result"] == "HELD"
 
 
 def test_real_part25_candidate_token_sets_match_margin_shape():

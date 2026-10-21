@@ -175,3 +175,9 @@ Adopted, all before the pilot:
 Row clarifications from the review's table (8) are binding on scoring: 43.3a's change is
 |a_zero - a_clean| >= max(0.2 |a_clean|, 0.1); 43.4a needs an upper bound below 0.5; 43.8 is NOT_TESTABLE without a
 positive discovery effect; 43.10 is scored on the absolute grid. Original rows stay in the record.
+
+## Amendment 3a (2026-10-20 21:56 CT, before any model run): the 43.10 slope floor (the builder's HOLD)
+The minimum slope for 43.10 is scale-free: 0.1 nats per one clean-magnitude unit of L7, where the unit is
+|a7_clean|, L7 N1169's signed activation at the discovery prompt's maker-stem last position (from `signs`). In
+L7's raw units the floor is 0.1 / |a7_clean| nats per unit of activation, computed from the signs output and passed to
+`grid` before the grid runs. If |a7_clean| < 0.05, 43.10 is NOT_TESTABLE.

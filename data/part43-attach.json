@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "purpose": "Counterbalanced same-word nationality attachment prompts; the follow-up query is fixed within each wording.",
+  "heldout_wording": "A second wording with web search provider/nonprofit syntax and new templates.",
+  "query_suffixes": {
+    "primary": "The search engine is based in",
+    "heldout": "The search provider is based in"
+  },
+  "prompts": [
+    {
+      "id": "primary_chinese_engine_engine_first",
+      "wording": "primary",
+      "template_cluster": "primary_engine_first",
+      "sentence_order": "engine_first",
+      "search_country": "Chinese",
+      "charity_country": "American",
+      "sentence": "The Chinese search engine partnered with the American charity.",
+      "search_phrase": "Chinese search engine",
+      "charity_phrase": "American charity",
+      "query": "The search engine is based in"
+    },
+    {
+      "id": "primary_american_engine_engine_first",
+      "wording": "primary",
+      "template_cluster": "primary_engine_first",
+      "sentence_order": "engine_first",
+      "search_country": "American",
+      "charity_country": "Chinese",
+      "sentence": "The American search engine partnered with the Chinese charity.",
+      "search_phrase": "American search engine",
+      "charity_phrase": "Chinese charity",
+      "query": "The search engine is based in"
+    },
+    {
+      "id": "primary_chinese_engine_charity_first",
+      "wording": "primary",
+      "template_cluster": "primary_charity_first",
+      "sentence_order": "charity_first",
+      "search_country": "Chinese",
+      "charity_country": "American",
+      "sentence": "The American charity partnered with the Chinese search engine.",
+      "search_phrase": "Chinese search engine",
+      "charity_phrase": "American charity",
+      "query": "The search engine is based in"
+    },
+    {
+      "id": "primary_american_engine_charity_first",
+      "wording": "primary",
+      "template_cluster": "primary_charity_first",
+      "sentence_order": "charity_first",
+      "search_country": "American",
+      "charity_country": "Chinese",
+      "sentence": "The Chinese charity partnered with the American search engine.",
+      "search_phrase": "American search engine",
+      "charity_phrase": "Chinese charity",
+      "query": "The search engine is based in"
+    },
+    {
+      "id": "heldout_chinese_provider_engine_first",
+      "wording": "heldout",
+      "template_cluster": "heldout_provider_first",
+      "sentence_order": "provider_first",
+      "search_country": "Chinese",
+      "charity_country": "American",
+      "sentence": "A Chinese web search provider entered a partnership with an American nonprofit.",
+      "search_phrase": "Chinese web search provider",
+      "charity_phrase": "American nonprofit",
+      "query": "The search provider is based in"
+    },
+    {
+      "id": "heldout_american_provider_engine_first",
+      "wording": "heldout",
+      "template_cluster": "heldout_provider_first",
+      "sentence_order": "provider_first",
+      "search_country": "American",
+      "charity_country": "Chinese",
+      "sentence": "An American web search provider entered a partnership with a Chinese nonprofit.",
+      "search_phrase": "American web search provider",
+      "charity_phrase": "Chinese nonprofit",
+      "query": "The search provider is based in"
+    },
+    {
+      "id": "heldout_chinese_provider_nonprofit_first",
+      "wording": "heldout",
+      "template_cluster": "heldout_nonprofit_first",
+      "sentence_order": "nonprofit_first",
+      "search_country": "Chinese",
+      "charity_country": "American",
+      "sentence": "An American nonprofit entered a partnership with a Chinese web search provider.",
+      "search_phrase": "Chinese web search provider",
+      "charity_phrase": "American nonprofit",
+      "query": "The search provider is based in"
+    },
+    {
+      "id": "heldout_american_provider_nonprofit_first",
+      "wording": "heldout",
+      "template_cluster": "heldout_nonprofit_first",
+      "sentence_order": "nonprofit_first",
+      "search_country": "American",
+      "charity_country": "Chinese",
+      "sentence": "A Chinese nonprofit entered a partnership with an American web search provider.",
+      "search_phrase": "American web search provider",
+      "charity_phrase": "Chinese nonprofit",
+      "query": "The search provider is based in"
+    }
+  ]
+}

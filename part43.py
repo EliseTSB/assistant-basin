@@ -48,6 +48,7 @@ MAKER_ANSWERS = (
     ("Google", "Google"),
     ("Gemini", "Gemini"),
     ("Baidu", "Baidu"),
+    ("Tencent", "Tencent"),
     ("OpenAI", "OpenAI"),
 )
 NAME_ANSWERS = (("Gemini", "Gemini"), ("Qwen", "Qwen"))
@@ -61,6 +62,20 @@ DEFAULT_CHECKSUMS = Path("/home/elisepc/neuron-probe/jlens/SHA256SUMS")
 DEFAULT_SIGNS = Path("results/part43/signs.json")
 DEFAULT_SWEEP = Path("data/part43-sweep.json")
 DEFAULT_PREDICTIONS = Path("PREDICTIONS.md")
+DEFAULT_ATTACH = ROOT / "data" / "part43-attach.json"
+LANGUAGE_MAKER_QUESTIONS = {
+    "English": "Who created you?",
+    "Spanish": "¿Quién te creó?",
+    "Chinese": "你是由谁创造的？",
+}
+SWAP_CONTEXT_QUESTIONS = {
+    "third_person": ("Who created Qwen?",),
+    "company_country": (
+        "Which country is Alibaba from?",
+        "Which country is Google based in?",
+        "Where was Tencent founded?",
+    ),
+}
 
 
 def sha256_file(path: str | Path) -> str:
@@ -233,6 +248,7 @@ def teacher_forced_scores(
     capture: bool = True,
     stem_name: str = "maker",
     answer_options: Sequence[tuple[str, str]] | None = None,
+    operation_details: dict[str, Any] | None = None,
 ) -> tuple[dict[str, Any], dict[tuple[int, int], list[list[float]]]]:
     """Score complete maker strings and retain raw first-token candidate logits."""
     import torch
@@ -244,6 +260,7 @@ def teacher_forced_scores(
         records,
         capture_units=UNITS if capture else (),
         operations=operations,
+        operation_details=operation_details,
     )
     logits = output.logits if hasattr(output, "logits") else output[0]
     log_probs = torch.log_softmax(logits.float(), dim=-1)
@@ -361,12 +378,65 @@ def _as_operation_map(value: Any, valid_length: int, x: Any, row: int, unit: int
     return float(value)
 
 
+def _record_operation_stats(
+    details: dict[str, Any] | None,
+    coordinate: tuple[int, int],
+    before: Any,
+    after: Any,
+    clipped: Any = None,
+) -> None:
+    if details is None:
+        return
+    import torch
+    key = UNIT_KEYS.get(coordinate, f"L{coordinate[0]}_N{coordinate[1]}")
+    units = details.setdefault("units", {})
+    row = units.setdefault(key, {
+        "count": 0,
+        "clipped_count": 0,
+        "before_sum": 0.0,
+        "realized_sum": 0.0,
+        "realized_abs_sum": 0.0,
+        "realized_min": float("inf"),
+        "realized_max": float("-inf"),
+    })
+    before_values = before.detach().float()
+    after_values = after.detach().float()
+    row["count"] += int(after_values.numel())
+    row["clipped_count"] += int(clipped.sum().item()) if clipped is not None else 0
+    row["before_sum"] += float(before_values.sum().item())
+    row["realized_sum"] += float(after_values.sum().item())
+    row["realized_abs_sum"] += float(after_values.abs().sum().item())
+    if after_values.numel():
+        row["realized_min"] = min(row["realized_min"], float(after_values.min().item()))
+        row["realized_max"] = max(row["realized_max"], float(after_values.max().item()))
+
+
+def _finalize_operation_stats(details: dict[str, Any]) -> dict[str, Any]:
+    finalized = {}
+    for key, row in details.get("units", {}).items():
+        count = max(int(row["count"]), 1)
+        finalized[key] = {
+            "count": int(row["count"]),
+            "clipped_count": int(row["clipped_count"]),
+            "clipping_fraction": float(row["clipped_count"] / count),
+            "mean_before": float(row["before_sum"] / count),
+            "mean_realized": float(row["realized_sum"] / count),
+            "mean_abs_realized": float(row["realized_abs_sum"] / count),
+            "realized_min": float(row["realized_min"]),
+            "realized_max": float(row["realized_max"]),
+        }
+    return finalized
+
+
 def captured_forward(
     model: Any,
     tokenizer: Any,
     records: Sequence[Mapping[str, Any]],
     capture_units: Iterable[tuple[int, int]] = UNITS,
     operations: Sequence[Mapping[tuple[int, int], Any]] | None = None,
+    capture_branches: Iterable[tuple[int, int]] = (),
+    branch_captures: dict[tuple[int, int], Any] | None = None,
+    operation_details: dict[str, Any] | None = None,
 ) -> tuple[Any, dict[tuple[int, int], list[list[float]]]]:
     """Run one right-padded batch, capturing selected down_proj input columns.
 
@@ -378,7 +448,9 @@ def captured_forward(
         raise ValueError("one operation mapping is required per sequence")
     layer_list = _layers_of(model)
     capture_coordinates = set((int(layer), int(unit)) for layer, unit in capture_units)
+    branch_coordinates = set((int(layer), int(unit)) for layer, unit in capture_branches)
     selected = set(capture_coordinates)
+    selected.update(branch_coordinates)
     if operations is not None:
         for row_ops in operations:
             selected.update((int(layer), int(unit)) for layer, unit in row_ops)
@@ -393,6 +465,9 @@ def captured_forward(
     captures: dict[tuple[int, int], list[list[float]]] = {
         coordinate: [[] for _ in records] for coordinate in capture_coordinates
     }
+    if branch_captures is not None:
+        for coordinate in branch_coordinates:
+            branch_captures[coordinate] = {"gate": [[] for _ in records], "up": [[] for _ in records]}
     handles = []
     for layer_index in by_layer:
         layer_units = sorted(unit for layer, unit in selected if layer == layer_index)
@@ -408,14 +483,22 @@ def captured_forward(
                         if out is x:
                             out = x.clone()
                         length = valid_lengths[row]
+                        before = out[row, :length, int(op_unit)].detach().clone()
                         op_value = _as_operation_map(value, length, out, row, int(op_unit))
+                        clipped = None
                         if isinstance(op_value, Mapping):
                             scaled = out[row, :length, int(op_unit)] * float(op_value["scale"])
                             if "clip" in op_value:
-                                scaled = scaled.clamp(-float(op_value["clip"]), float(op_value["clip"]))
+                                limit = float(op_value["clip"])
+                                clipped = scaled.abs() > limit
+                                scaled = scaled.clamp(-limit, limit)
                             out[row, :length, int(op_unit)] = scaled
                         else:
                             out[row, :length, int(op_unit)] = op_value
+                        _record_operation_stats(
+                            operation_details, (li, int(op_unit)), before,
+                            out[row, :length, int(op_unit)], clipped,
+                        )
             for unit in units:
                 if (li, unit) in captures:
                     for row, length in enumerate(valid_lengths):
@@ -427,6 +510,24 @@ def captured_forward(
             return (out,) + tuple(args[1:])
 
         handles.append(layer_list[layer_index].mlp.down_proj.register_forward_pre_hook(hook))
+        branch_units = sorted(unit for layer, unit in branch_coordinates if layer == layer_index)
+        if branch_units and branch_captures is not None:
+            def gate_hook(_module, _args, output, *, li=layer_index, units=branch_units):
+                for unit in units:
+                    for row, length in enumerate(valid_lengths):
+                        branch_captures[(li, unit)]["gate"][row] = (
+                            output[row, :length, unit].detach().float().cpu().tolist()
+                        )
+
+            def up_hook(_module, _args, output, *, li=layer_index, units=branch_units):
+                for unit in units:
+                    for row, length in enumerate(valid_lengths):
+                        branch_captures[(li, unit)]["up"][row] = (
+                            output[row, :length, unit].detach().float().cpu().tolist()
+                        )
+
+            handles.append(layer_list[layer_index].mlp.gate_proj.register_forward_hook(gate_hook))
+            handles.append(layer_list[layer_index].mlp.up_proj.register_forward_hook(up_hook))
     try:
         with torch.inference_mode():
             output = model(input_ids=ids, attention_mask=mask, use_cache=False)
@@ -436,6 +537,15 @@ def captured_forward(
     if any(not row for rows in captures.values() for row in rows):
         missing = [coordinate for coordinate, rows in captures.items() if any(not row for row in rows)]
         raise RuntimeError(f"down_proj hooks did not capture all requested units: {missing}")
+    if branch_captures is not None:
+        missing_branches = [
+            (coordinate, branch)
+            for coordinate, branches in branch_captures.items()
+            for branch, rows in branches.items()
+            if any(not row for row in rows)
+        ]
+        if missing_branches:
+            raise RuntimeError(f"gate/up hooks did not capture all requested branches: {missing_branches}")
     return output, captures
 
 
@@ -746,9 +856,9 @@ def _capture_primary_surrogate(
         for unit in UNITS
     }
     cells = []
+    residual_by_mask = {}
     clean_residual = None
     clean_activations = None
-    actual_candidate_logits = []
     for off_mask in range(16):
         captured_residual = {}
 
@@ -776,28 +886,64 @@ def _capture_primary_surrogate(
             clean_activations = activation_by_unit
         if clean_residual is None or clean_activations is None:
             raise RuntimeError("clean cell must be captured before surrogate cells")
-        delta = torch.zeros_like(clean_residual)
-        for index, unit in enumerate(UNITS):
-            if off_mask & (1 << index):
-                delta -= clean_activations[unit] * down_columns[unit]
-        surrogate_residual = clean_residual + delta
-        scale = torch.rsqrt(clean_residual.square().mean() + epsilon)
-        frozen_norm = surrogate_residual * scale * gamma
-        real_scale = torch.rsqrt(surrogate_residual.square().mean() + epsilon)
-        real_norm = surrogate_residual * real_scale * gamma
-        frozen_logits = torch.mv(candidate_head, frozen_norm)
-        real_logits = torch.mv(candidate_head, real_norm)
-        frozen_by_id = {str(token_id): float(value) for token_id, value in zip(candidate_ids, frozen_logits.tolist())}
-        real_by_id = {str(token_id): float(value) for token_id, value in zip(candidate_ids, real_logits.tolist())}
-        actual_candidate_logits.append(raw_by_id)
+        residual_by_mask[off_mask] = residual
         cells.append({
             "off_mask": off_mask,
             "active_mask": 15 ^ off_mask,
             "signed_activations_at_score_position": {UNIT_KEYS[unit]: activation_by_unit[unit] for unit in UNITS},
             "raw_candidate_logits": raw_by_id,
+            "raw_logit_difference_google_minus_alibaba": None,
+        })
+
+    if clean_residual is None:
+        raise RuntimeError("the clean residual was not captured")
+    single_deltas = [residual_by_mask[1 << index] - clean_residual for index in range(4)]
+    single_delta_norms = {
+        UNIT_KEYS[unit]: float(torch.linalg.vector_norm(single_deltas[index]).item())
+        for index, unit in enumerate(UNITS)
+    }
+    scale = torch.rsqrt(clean_residual.square().mean() + epsilon)
+    google_id = _raw_candidate_id(token_records, "Google")
+    alibaba_id = _raw_candidate_id(token_records, "Alibaba")
+    for cell in cells:
+        off_mask = int(cell["off_mask"])
+        measured_delta = torch.zeros_like(clean_residual)
+        write_only_delta = torch.zeros_like(clean_residual)
+        for index, unit in enumerate(UNITS):
+            if off_mask & (1 << index):
+                measured_delta += single_deltas[index]
+                write_only_delta -= clean_activations[unit] * down_columns[unit]
+        measured_residual = clean_residual + measured_delta
+        write_only_residual = clean_residual + write_only_delta
+        frozen_norm = measured_residual * scale * gamma
+        real_norm = measured_residual * torch.rsqrt(measured_residual.square().mean() + epsilon) * gamma
+        write_only_frozen_norm = write_only_residual * scale * gamma
+        write_only_real_norm = write_only_residual * torch.rsqrt(write_only_residual.square().mean() + epsilon) * gamma
+        frozen_logits = torch.mv(candidate_head, frozen_norm)
+        real_logits = torch.mv(candidate_head, real_norm)
+        write_only_frozen_logits = torch.mv(candidate_head, write_only_frozen_norm)
+        write_only_real_logits = torch.mv(candidate_head, write_only_real_norm)
+        frozen_by_id = {str(token_id): float(value) for token_id, value in zip(candidate_ids, frozen_logits.tolist())}
+        real_by_id = {str(token_id): float(value) for token_id, value in zip(candidate_ids, real_logits.tolist())}
+        write_only_frozen_by_id = {
+            str(token_id): float(value) for token_id, value in zip(candidate_ids, write_only_frozen_logits.tolist())
+        }
+        write_only_real_by_id = {
+            str(token_id): float(value) for token_id, value in zip(candidate_ids, write_only_real_logits.tolist())
+        }
+        raw = cell["raw_candidate_logits"]
+        cell.update({
             "frozen_scale_surrogate_candidate_logits": frozen_by_id,
             "real_final_norm_surrogate_candidate_logits": real_by_id,
-            "surrogate_residual_delta_norm": float(torch.linalg.vector_norm(delta).item()),
+            "write_only_frozen_scale_surrogate_candidate_logits": write_only_frozen_by_id,
+            "write_only_real_final_norm_surrogate_candidate_logits": write_only_real_by_id,
+            "raw_logit_difference_google_minus_alibaba": float(raw[str(google_id)] - raw[str(alibaba_id)]),
+            "frozen_surrogate_logit_difference_google_minus_alibaba": float(frozen_by_id[str(google_id)] - frozen_by_id[str(alibaba_id)]),
+            "real_norm_surrogate_logit_difference_google_minus_alibaba": float(real_by_id[str(google_id)] - real_by_id[str(alibaba_id)]),
+            "h_add_residual": measured_residual.tolist(),
+            "h_add_residual_delta_norm": float(torch.linalg.vector_norm(measured_delta).item()),
+            "write_only_surrogate_residual_delta_norm": float(torch.linalg.vector_norm(write_only_delta).item()),
+            "surrogate_residual_delta_norm": float(torch.linalg.vector_norm(measured_delta).item()),
         })
 
     id_index = {str(token_id): index for index, token_id in enumerate(candidate_ids)}
@@ -828,7 +974,9 @@ def _capture_primary_surrogate(
         "readout_scores": readout_scores,
         "final_norm_epsilon": epsilon,
         "final_norm_scale_clean": float(torch.rsqrt(clean_residual.square().mean() + epsilon).item()),
-        "surrogate_definition": "clean final residual plus the sum of each zeroed unit's measured clean residual write at the score position",
+        "single_ablation_residual_delta_norms": single_delta_norms,
+        "surrogate_definition": "h_add(S)=h_clean+sum_i_in_S(h_single_ablation_i-h_clean), where each h_single_ablation is the measured final pre-norm residual; read out with frozen clean scale and the actual final RMSNorm",
+        "write_only_surrogate_definition": "clean final residual plus the sum of the four units' direct measured writes, retained as a secondary comparison",
     }
 
 
@@ -1974,33 +2122,146 @@ def run_dose_amended(model: Any, tokenizer: Any, args: argparse.Namespace) -> di
 
 
 def run_grid(model: Any, tokenizer: Any, args: argparse.Namespace) -> dict[str, Any]:
+    import numpy as np
+    import random as _random
     questions = list(QUESTIONS) + _heldout_questions(args.heldout)
     tokens = _load_token_records(args)
     corpus_path = Path(args.corpus).expanduser()
     maxima = _corpus_max_abs(model, tokenizer, corpus_path)
+    minimum_slope = getattr(args, "minimum_slope_magnitude", None)
+    if minimum_slope is not None and float(minimum_slope) <= 0.0:
+        raise ValueError("--minimum-slope-magnitude must be positive and preregistered")
     levels = (-4, -1, 0, 1, 4)
-    results = []
+    multiplier_cells = []
     for l7_level in levels:
         for l11_level in levels:
-            ops = []
-            for _question in questions:
-                for _maker in MAKER_ANSWERS:
-                    ops.append({
-                        UNITS[1]: {"scale": float(l7_level), "clip": 3.0 * maxima[UNITS[1]]},
-                        UNITS[2]: {"scale": float(l11_level), "clip": 3.0 * maxima[UNITS[2]]},
-                    })
-            payload, _ = teacher_forced_scores(model, tokenizer, questions, tokens, operations=ops, capture=False)
-            results.append({
+            operations = [
+                {
+                    UNITS[1]: {"scale": float(l7_level), "clip": 3.0 * maxima[UNITS[1]]},
+                    UNITS[2]: {"scale": float(l11_level), "clip": 3.0 * maxima[UNITS[2]]},
+                }
+                for _question in questions for _maker in MAKER_ANSWERS
+            ]
+            details: dict[str, Any] = {}
+            payload, activations = teacher_forced_scores(
+                model, tokenizer, questions, tokens, operations=operations,
+                capture=True, operation_details=details,
+            )
+            multiplier_cells.append({
+                "axis_kind": "current_activation_multiplier",
                 "L7_multiplier": l7_level,
                 "L11_multiplier": l11_level,
                 "per_question": _scores_by_question(payload),
+                "realized_activation_summary": _finalize_operation_stats(details),
+                "realized_trajectories": {
+                    UNIT_KEYS[unit]: [
+                        {"question": record["question"], "maker": record["maker"], "positions": list(values)}
+                        for record, values in zip(payload["per_answer"], activations[unit])
+                    ]
+                    for unit in (UNITS[1], UNITS[2])
+                },
             })
+
+    clean_records = _teacher_forced_records(tokenizer, questions, answer_options=MAKER_ANSWERS)
+    _clean_output, clean_captures = captured_forward(
+        model, tokenizer, clean_records, capture_units=(UNITS[1], UNITS[2]),
+    )
+    quantiles = (0.05, 0.275, 0.5, 0.725, 0.95)
+    fixed_levels = {}
+    for unit in (UNITS[1], UNITS[2]):
+        clean_values = [value for sequence in clean_captures[unit] for value in sequence]
+        fixed_levels[UNIT_KEYS[unit]] = [float(x) for x in np.quantile(np.asarray(clean_values), quantiles)]
+    absolute_cells = []
+    for l7_value in fixed_levels[UNIT_KEYS[UNITS[1]]]:
+        for l11_value in fixed_levels[UNIT_KEYS[UNITS[2]]]:
+            operations = [
+                {UNITS[1]: float(l7_value), UNITS[2]: float(l11_value)}
+                for _question in questions for _maker in MAKER_ANSWERS
+            ]
+            details = {}
+            payload, activations = teacher_forced_scores(
+                model, tokenizer, questions, tokens, operations=operations,
+                capture=True, operation_details=details,
+            )
+            absolute_cells.append({
+                "axis_kind": "fixed_absolute_activation",
+                "L7_absolute_activation": float(l7_value),
+                "L11_absolute_activation": float(l11_value),
+                "per_question": _scores_by_question(payload),
+                "realized_activation_summary": _finalize_operation_stats(details),
+                "realized_trajectories": {
+                    UNIT_KEYS[unit]: [
+                        {"question": record["question"], "maker": record["maker"], "positions": list(values)}
+                        for record, values in zip(payload["per_answer"], activations[unit])
+                    ]
+                    for unit in (UNITS[1], UNITS[2])
+                },
+            })
+
+    l7_levels = fixed_levels[UNIT_KEYS[UNITS[1]]]
+    l11_levels = fixed_levels[UNIT_KEYS[UNITS[2]]]
+    low_l11, high_l11 = l11_levels[0], l11_levels[-1]
+    per_template_slopes = {}
+    for question in questions:
+        slopes_at_l11 = []
+        for l11_value in (low_l11, high_l11):
+            low_cell = next(cell for cell in absolute_cells
+                            if cell["L7_absolute_activation"] == l7_levels[0]
+                            and cell["L11_absolute_activation"] == l11_value)
+            high_cell = next(cell for cell in absolute_cells
+                             if cell["L7_absolute_activation"] == l7_levels[-1]
+                             and cell["L11_absolute_activation"] == l11_value)
+            denominator = l7_levels[-1] - l7_levels[0]
+            slope = (
+                float(high_cell["per_question"][question]["primary"])
+                - float(low_cell["per_question"][question]["primary"])
+            ) / denominator if abs(denominator) > 1e-12 else 0.0
+            slopes_at_l11.append(float(slope))
+        per_template_slopes[question] = {"low_L11": slopes_at_l11[0], "high_L11": slopes_at_l11[1]}
+    slope_pairs = list(per_template_slopes.values())
+    low_slopes = [float(row["low_L11"]) for row in slope_pairs]
+    high_slopes = [float(row["high_L11"]) for row in slope_pairs]
+    low_mean, high_mean = _mean(low_slopes), _mean(high_slopes)
+    point_ratio = max(abs(low_mean), abs(high_mean)) / min(abs(low_mean), abs(high_mean)) if min(abs(low_mean), abs(high_mean)) > 1e-12 else None
+    rng = _random.Random(SEED + 4310)
+    bootstrap_ratios = []
+    bootstrap_signs = []
+    for _ in range(4000):
+        sampled = [slope_pairs[rng.randrange(len(slope_pairs))] for _ in range(len(slope_pairs))] if slope_pairs else []
+        if not sampled:
+            continue
+        left = _mean(float(row["low_L11"]) for row in sampled)
+        right = _mean(float(row["high_L11"]) for row in sampled)
+        bootstrap_signs.append(bool(left * right > 0.0))
+        if min(abs(left), abs(right)) > 1e-12:
+            bootstrap_ratios.append(max(abs(left), abs(right)) / min(abs(left), abs(right)))
+    ratio_ci = [float(np.percentile(bootstrap_ratios, 2.5)), float(np.percentile(bootstrap_ratios, 97.5))] if bootstrap_ratios else None
+    slope_summary = {
+        "per_template_cluster_slopes": per_template_slopes,
+        "mean_slope_at_low_L11": low_mean,
+        "mean_slope_at_high_L11": high_mean,
+        "low_L11_slope_bootstrap_95": _bootstrap_template_interval(low_slopes, SEED + 4310),
+        "high_L11_slope_bootstrap_95": _bootstrap_template_interval(high_slopes, SEED + 4311),
+        "same_sign": bool(low_mean * high_mean > 0.0),
+        "same_sign_bootstrap_fraction": float(_mean(bootstrap_signs)) if bootstrap_signs else None,
+        "absolute_slope_ratio": point_ratio,
+        "absolute_slope_ratio_bootstrap_95": ratio_ci,
+        "minimum_slope_magnitude": float(minimum_slope) if minimum_slope is not None else None,
+        "resampling_unit": "prompt/template clusters; intervention cells, tokens, and aliases are not resampled",
+    }
     return {
         **output_header(args, [args.candidates, args.heldout, corpus_path, ROOT / "part25.py", ROOT / "part39.py"]),
-        "method": "25-cell teacher-forced L7/L11 activation multiplier grid on discovery and held-out prompts",
-        "levels": list(levels),
+        "method": "25-cell current-activation gain grid plus 25-cell independent fixed-absolute grid derived from signed clean-trajectory quantiles",
+        "multiplier_levels": list(levels),
         "corpus_max_abs_activation": {UNIT_KEYS[unit]: maxima[unit] for unit in (UNITS[1], UNITS[2])},
-        "cells": results,
+        "cells": multiplier_cells,
+        "multiplier_grid": {"cells": multiplier_cells},
+        "absolute_grid": {
+            "quantiles_of_clean_trajectory": list(quantiles),
+            "fixed_levels": fixed_levels,
+            "cells": absolute_cells,
+            "43_10_slope_summary": slope_summary,
+        },
     }
 
 
@@ -2012,17 +2273,32 @@ def run_pilot(model: Any, tokenizer: Any, token_records: Mapping[str, Any], args
     signs = run_signs(model, tokenizer, sequence_rows, args)
     sign_elapsed = _time.perf_counter() - sign_started
     lattice = run_lattice_amended(model, tokenizer, token_records, args, random_count=5, decode=False, primary_only=True)
+    swap_started = _time.perf_counter()
+    swap_pilot = run_swap(model, tokenizer, token_records, args, pilot=True)
+    swap_elapsed = _time.perf_counter() - swap_started
+    attach_started = _time.perf_counter()
+    attach_pilot = run_attach(model, tokenizer, args, pilot=True)
+    attach_elapsed = _time.perf_counter() - attach_started
     return {
         **output_header(args, [args.candidates, ROOT / "PART43-DESIGN.md", ROOT / "part25.py", ROOT / "part39.py"]),
         "method": "pilot signs plus primary-score lattice with five matched null sets",
         "signs": signs,
         "lattice": lattice,
+        "swap_pilot": swap_pilot,
+        "attach_pilot": attach_pilot,
         "required_checks": checks["checks"],
         "timing": {
             "signs_elapsed_seconds": sign_elapsed,
             "signs_sequences": len(sequence_rows),
             "signs_seconds_per_sequence": sign_elapsed / max(len(sequence_rows), 1),
             **lattice["timing"],
+            "swap_elapsed_seconds": swap_elapsed,
+            "swap_pilot_forward_worlds": sum(len(row["worlds"]) for row in swap_pilot["rows"]),
+            "swap_pilot_recombined_product_runs": sum(len(row.get("receiver_branches", {}).get("recombined_product_replays", [])) for row in swap_pilot["rows"]),
+            "swap_estimated_full_seconds": swap_elapsed * (1 + len(LANGUAGE_MAKER_QUESTIONS) + len(SWAP_CONTEXT_QUESTIONS["third_person"]) + len(SWAP_CONTEXT_QUESTIONS["company_country"])) / max(1, len(swap_pilot["rows"]) // 3),
+            "attach_elapsed_seconds": attach_elapsed,
+            "attach_pilot_forward_runs": len(attach_pilot["rows"]),
+            "attach_estimated_full_seconds": attach_elapsed * max(1, len(read_json(getattr(args, "attach", DEFAULT_ATTACH)).get("prompts", []))) / max(1, len(attach_pilot["rows"]) / 2),
             "estimated_full_lattice_seconds": lattice["timing"]["elapsed_seconds"] * (51.0 / 6.0),
         },
     }
@@ -2432,6 +2708,349 @@ def _maker_prefix_record(tokenizer: Any, question: str) -> dict[str, Any]:
     return part25_module().make_sequence(tokenizer, question, "maker", "plain")
 
 
+def _receiver_bypass_value(model: Any, tokenizer: Any, sequence: Mapping[str, Any], receiver: tuple[int, int],
+                           position: int, residual_delta: Any) -> float:
+    """Change only the receiver residual input and return its downstream scalar."""
+    layers = _layers_of(model)
+    def patch_residual(_module, args):
+        residual = args[0]
+        patched = residual.clone()
+        patched[0, position, :] += residual_delta.to(device=patched.device, dtype=patched.dtype)
+        return (patched,) + tuple(args[1:])
+    handle = layers[receiver[0]].post_attention_layernorm.register_forward_pre_hook(patch_residual)
+    try:
+        _output, captures = captured_forward(model, tokenizer, [sequence], capture_units=(receiver,))
+    finally:
+        handle.remove()
+    return float(captures[receiver][0][position])
+
+
+def _raw_candidate_id(token_records: Mapping[str, Any], alias: str, variant: str = "plain", stem: str = "maker") -> int:
+    wanted = alias.casefold()
+    for stems in token_records[variant].values():
+        for name, token in stems.get(stem, {}).items():
+            if str(name).casefold() == wanted:
+                return int(token["id"])
+    raise KeyError(f"candidate token alias {alias!r} not found in {variant}/{stem} token records")
+
+
+def _raw_logit_difference(output: Any, record: Mapping[str, Any], left_id: int, right_id: int) -> float:
+    logits = output.logits if hasattr(output, "logits") else output[0]
+    position = int(record.get("score_position", len(record["input_ids"]) - 1))
+    return float((logits[0, position, left_id] - logits[0, position, right_id]).detach().float().cpu().item())
+
+
+def _four_world_effects(y00: float, y11: float, y10: float, y01: float) -> dict[str, float]:
+    total = float(y11 - y00)
+    held_clean = float(y10 - y00)
+    mediated_zeroed = float(y11 - y10)
+    transferred_clean = float(y01 - y00)
+    return {
+        "total_effect_T": total,
+        "effect_with_receiver_held_clean_B": held_clean,
+        "receiver_change_in_zeroed_background_N": mediated_zeroed,
+        "receiver_change_in_clean_background_S": transferred_clean,
+        "background_interaction_I": float(mediated_zeroed - transferred_clean),
+        "identity_error_T_minus_B_minus_N": float(total - held_clean - mediated_zeroed),
+        "recovery_fraction_N_over_T": float(mediated_zeroed / total) if abs(total) > 1e-12 else None,
+    }
+
+
+def synthetic_receiver_swap_fixture() -> dict[str, Any]:
+    """Independent and connected scalar systems for the four-world identity."""
+    # M is independent of U in the first system, and follows U in the second.
+    independent = {"A": 3.0 * 1 + 4.0 * 5, "B": 3.0 * 0 + 4.0 * 5,
+                   "C": 3.0 * 0 + 4.0 * 5, "D": 3.0 * 1 + 4.0 * 5}
+    connected = {"A": 3.0 * 1 + 4.0 * 7, "B": 3.0 * 0 + 4.0 * 5,
+                 "C": 3.0 * 0 + 4.0 * 7, "D": 3.0 * 1 + 4.0 * 5}
+    return {
+        "independent": independent,
+        "independent_effects": _four_world_effects(independent["A"], independent["B"], independent["C"], independent["D"]),
+        "connected": connected,
+        "connected_effects": _four_world_effects(connected["A"], connected["B"], connected["C"], connected["D"]),
+    }
+
+
+def _silu_values(values: Sequence[float]) -> list[float]:
+    import torch
+    tensor = torch.as_tensor(values, dtype=torch.float64)
+    return (tensor * torch.sigmoid(tensor)).tolist()
+
+
+def _bootstrap_template_interval(values: Sequence[float], seed: int) -> list[float] | None:
+    """Resample whole prompt/template rows; each supplied value is one cluster."""
+    if not values:
+        return None
+    return _bootstrap_mean_interval(values, seed)
+
+
+def run_swap(model: Any, tokenizer: Any, token_records: Mapping[str, Any], args: argparse.Namespace,
+             pilot: bool = False) -> dict[str, Any]:
+    import time as _time
+    questions: list[tuple[str, str, str]] = [("discovery", "discovery", DISCOVERY_QUESTION)]
+    if not pilot:
+        questions.extend(("language", language, question) for language, question in LANGUAGE_MAKER_QUESTIONS.items())
+        questions.extend(("third_person", f"third_person_{index}", question)
+                         for index, question in enumerate(SWAP_CONTEXT_QUESTIONS["third_person"], 1))
+        questions.extend(("company_country", f"company_country_{index}", question)
+                         for index, question in enumerate(SWAP_CONTEXT_QUESTIONS["company_country"], 1))
+    google_id = _raw_candidate_id(token_records, "Google")
+    alibaba_id = _raw_candidate_id(token_records, "Alibaba")
+    pairs = ((UNITS[1], UNITS[2]), (UNITS[2], UNITS[3]), (UNITS[1], UNITS[3]))
+    started = _time.perf_counter()
+    rows = []
+    for kind, cluster, question in questions:
+        record = _maker_prefix_record(tokenizer, question)
+        for pair_index, (upstream, downstream) in enumerate(pairs):
+            branch_coordinates = (downstream,) if pair_index == 0 else ()
+            branches_a: dict[tuple[int, int], Any] = {}
+            output_a, capture_a = captured_forward(
+                model, tokenizer, [record], capture_units=(upstream, downstream),
+                capture_branches=branch_coordinates, branch_captures=branches_a if branch_coordinates else None,
+            )
+            branches_b: dict[tuple[int, int], Any] = {}
+            output_b, capture_b = captured_forward(
+                model, tokenizer, [record], capture_units=(upstream, downstream),
+                operations=[{upstream: 0.0}], capture_branches=branch_coordinates,
+                branch_captures=branches_b if branch_coordinates else None,
+            )
+            trajectory_a = list(capture_a[downstream][0])
+            trajectory_b = list(capture_b[downstream][0])
+            output_c, capture_c = captured_forward(
+                model, tokenizer, [record], capture_units=(upstream, downstream),
+                operations=[{upstream: 0.0, downstream: trajectory_a}],
+            )
+            output_d, capture_d = captured_forward(
+                model, tokenizer, [record], capture_units=(upstream, downstream),
+                operations=[{downstream: trajectory_b}],
+            )
+            values = {
+                "A": _raw_logit_difference(output_a, record, google_id, alibaba_id),
+                "B": _raw_logit_difference(output_b, record, google_id, alibaba_id),
+                "C": _raw_logit_difference(output_c, record, google_id, alibaba_id),
+                "D": _raw_logit_difference(output_d, record, google_id, alibaba_id),
+            }
+            row: dict[str, Any] = {
+                "kind": kind,
+                "template_cluster": cluster,
+                "question": question,
+                "pair": {"upstream": UNIT_LABELS[upstream], "downstream": UNIT_LABELS[downstream]},
+                "score_position": int(record["score_position"]),
+                "raw_google_minus_alibaba_logit": values,
+                "worlds": {
+                    name: {
+                        "upstream_trajectory": list(captures[upstream][0]),
+                        "receiver_trajectory": list(captures[downstream][0]),
+                        "raw_google_minus_alibaba_logit": values[name],
+                    }
+                    for name, captures in (("A", capture_a), ("B", capture_b), ("C", capture_c), ("D", capture_d))
+                },
+                "effects": _four_world_effects(values["A"], values["B"], values["C"], values["D"]),
+            }
+            if pair_index == 0:
+                gate_a = branches_a[downstream]["gate"][0]
+                up_a = branches_a[downstream]["up"][0]
+                gate_b = branches_b[downstream]["gate"][0]
+                up_b = branches_b[downstream]["up"][0]
+                product_a = list(capture_a[downstream][0])
+                product_b = list(capture_b[downstream][0])
+                silu_a, silu_b = _silu_values(gate_a), _silu_values(gate_b)
+                cross_clean_gate_altered_up = [left * right for left, right in zip(silu_a, up_b)]
+                cross_altered_gate_clean_up = [left * right for left, right in zip(silu_b, up_a)]
+                gate_component = [(right - left) * value for left, right, value in zip(silu_a, silu_b, up_a)]
+                value_component = [left * (new - old) for left, new, old in zip(silu_a, up_b, up_a)]
+                joint_component = [(new_gate - old_gate) * (new_up - old_up)
+                                   for old_gate, new_gate, old_up, new_up in zip(silu_a, silu_b, up_a, up_b)]
+                branch_replays = []
+                for label, trajectory in (("clean_gate_x_altered_up", cross_clean_gate_altered_up),
+                                          ("altered_gate_x_clean_up", cross_altered_gate_clean_up)):
+                    branch_output, branch_capture = captured_forward(
+                        model, tokenizer, [record], capture_units=(downstream,),
+                        operations=[{upstream: 0.0, downstream: trajectory}],
+                    )
+                    branch_replays.append({
+                        "condition": label,
+                        "product_trajectory": trajectory,
+                        "replayed_receiver_trajectory": list(branch_capture[downstream][0]),
+                        "raw_google_minus_alibaba_logit": _raw_logit_difference(branch_output, record, google_id, alibaba_id),
+                    })
+                row["receiver_branches"] = {
+                    "A_clean": {"gate": gate_a, "up": up_a, "product": product_a},
+                    "B_upstream_zeroed": {"gate": gate_b, "up": up_b, "product": product_b},
+                    "product_change_decomposition": {
+                        "gate_component": gate_component,
+                        "value_component": value_component,
+                        "joint_component": joint_component,
+                        "reconstruction_max_abs_error": max(
+                            (abs((new - old) - gate - value - joint)
+                             for old, new, gate, value, joint in zip(product_a, product_b, gate_component, value_component, joint_component)),
+                            default=0.0,
+                        ),
+                    },
+                    "recombined_product_replays": branch_replays,
+                }
+            rows.append(row)
+    discovery = [row for row in rows if row["kind"] == "discovery" and row["pair"] == {
+        "upstream": UNIT_LABELS[UNITS[1]], "downstream": UNIT_LABELS[UNITS[2]],
+    }]
+    template_rows = [row for row in rows if row["kind"] != "discovery" and row["pair"] == {
+        "upstream": UNIT_LABELS[UNITS[1]], "downstream": UNIT_LABELS[UNITS[2]],
+    }]
+    elapsed = _time.perf_counter() - started
+    return {
+        **output_header(args, [args.candidates, ROOT / "PART43-DESIGN.md", ROOT / "part25.py", ROOT / "part39.py"]),
+        "method": "four-world receiver trajectory swap at every aligned real position; raw first-token Google-minus-Alibaba logits",
+        "world_definitions": {
+            "A": "upstream natural, receiver natural",
+            "B": "upstream zeroed, receiver free",
+            "C": "upstream zeroed, receiver trajectory restored from A",
+            "D": "upstream natural, receiver trajectory transplanted from B",
+        },
+        "candidate_token_ids": {" Google": google_id, " Alibaba": alibaba_id},
+        "pilot_only": bool(pilot),
+        "elapsed_seconds": elapsed,
+        "discovery_l7_to_l11": discovery[0] if discovery else None,
+        "rows": rows,
+        "template_cluster_summary": {
+            "n_clusters": len(template_rows),
+            "N_bootstrap_95": _bootstrap_template_interval(
+                [float(row["effects"]["receiver_change_in_zeroed_background_N"]) for row in template_rows], SEED + 4311,
+            ),
+            "S_bootstrap_95": _bootstrap_template_interval(
+                [float(row["effects"]["receiver_change_in_clean_background_S"]) for row in template_rows], SEED + 4312,
+            ),
+            "resampling_unit": "one authored prompt/template row; worlds, tokens, and aliases are never resampled",
+        },
+        "synthetic_fixture": synthetic_receiver_swap_fixture(),
+    }
+
+
+def _attach_prompt_record(tokenizer: Any, prompt: str, spans: Mapping[str, str]) -> tuple[dict[str, Any], dict[str, int]]:
+    p25 = part25_module()
+    rendered = p25.nr.build_prompt(tokenizer, prompt, False)
+    input_ids, offsets = p25._offset_encoding(tokenizer, rendered)
+    if offsets is None:
+        raise ValueError("attachment measurements require tokenizer offset mappings")
+    positions = {}
+    for label, phrase in spans.items():
+        start = rendered.find(phrase)
+        if start < 0:
+            raise ValueError(f"attachment phrase {phrase!r} is missing from the rendered prompt")
+        end = start + len(phrase)
+        overlapping = [index for index, (lo, hi) in enumerate(offsets) if hi > lo and lo < end and hi > start]
+        if not overlapping:
+            raise ValueError(f"attachment phrase {phrase!r} maps to no tokenizer positions")
+        positions[label] = int(overlapping[-1])
+    return {
+        "question": prompt,
+        "input_ids": input_ids,
+        "score_position": len(input_ids) - 1,
+    }, positions
+
+
+def _attach_condition_contrasts(rows: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    grouped: dict[tuple[str, str, str], dict[str, Mapping[str, Any]]] = {}
+    for row in rows:
+        key = (str(row["wording"]), str(row["sentence_order"]), str(row["l7_condition"]))
+        grouped.setdefault(key, {})[str(row["search_country"])] = row
+    summaries = []
+    for (wording, order, l7_condition), countries in sorted(grouped.items()):
+        if not {"Chinese", "American"}.issubset(countries):
+            continue
+        cn, us = countries["Chinese"], countries["American"]
+        search = float(cn["measured"]["L11"]["search_phrase"]["product"] - us["measured"]["L11"]["search_phrase"]["product"])
+        charity = float(cn["measured"]["L11"]["charity_phrase"]["product"] - us["measured"]["L11"]["charity_phrase"]["product"])
+        summaries.append({
+            "wording": wording,
+            "sentence_order": order,
+            "template_cluster": str(cn["template_cluster"]),
+            "l7_condition": l7_condition,
+            "search_phrase_chinese_minus_american": search,
+            "charity_phrase_chinese_minus_american": charity,
+            "absolute_search_minus_charity_contrast": float(abs(search) - abs(charity)),
+            "search_effect_larger": bool(abs(search) > abs(charity)),
+        })
+    return summaries
+
+
+def run_attach(model: Any, tokenizer: Any, args: argparse.Namespace, pilot: bool = False) -> dict[str, Any]:
+    import time as _time
+    path = Path(getattr(args, "attach", DEFAULT_ATTACH)).expanduser()
+    document = read_json(path)
+    prompts = list(document.get("prompts", []))
+    if pilot:
+        prompts = [row for row in prompts if row.get("wording") == "primary"][:2]
+    started = _time.perf_counter()
+    rows = []
+    for item in prompts:
+        prompt = f"{item['sentence']} {item['query']}"
+        record, phrase_positions = _attach_prompt_record(tokenizer, prompt, {
+            "search_phrase": str(item["search_phrase"]),
+            "charity_phrase": str(item["charity_phrase"]),
+            "query": str(item["query"]),
+        })
+        for l7_condition, operations in (("natural", None), ("zeroed", [{UNITS[1]: 0.0}])):
+            branches: dict[tuple[int, int], Any] = {}
+            _output, captures = captured_forward(
+                model, tokenizer, [record], capture_units=(UNITS[1], UNITS[2]),
+                operations=operations, capture_branches=(UNITS[2],), branch_captures=branches,
+            )
+            gate = branches[UNITS[2]]["gate"][0]
+            up_value = branches[UNITS[2]]["up"][0]
+            product = captures[UNITS[2]][0]
+            l11 = {
+                position_name: {
+                    "gate": float(gate[position]),
+                    "up": float(up_value[position]),
+                    "product": float(product[position]),
+                }
+                for position_name, position in phrase_positions.items()
+            }
+            rows.append({
+                "id": item["id"],
+                "wording": item["wording"],
+                "template_cluster": item["template_cluster"],
+                "sentence_order": item["sentence_order"],
+                "search_country": item["search_country"],
+                "charity_country": item["charity_country"],
+                "sentence": item["sentence"],
+                "query": item["query"],
+                "l7_condition": l7_condition,
+                "phrase_positions": phrase_positions,
+                "measured": {
+                    "L7": {
+                        key: float(captures[UNITS[1]][0][position])
+                        for key, position in phrase_positions.items()
+                    },
+                    "L11": l11,
+                },
+            })
+    elapsed = _time.perf_counter() - started
+    primary_rows = [row for row in rows if row["wording"] == "primary"]
+    natural_contrasts = [row for row in _attach_condition_contrasts(rows) if row["l7_condition"] == "natural"]
+    return {
+        **output_header(args, [path, ROOT / "PART43-DESIGN.md", ROOT / "part25.py", ROOT / "part39.py"]),
+        "method": "same-word nationality attachment pairs; L11 gate, up, and product read after the complete search phrase and at the shared query suffix",
+        "attach_input": str(path),
+        "heldout_wording": document.get("heldout_wording"),
+        "pilot_only": bool(pilot),
+        "elapsed_seconds": elapsed,
+        "rows": rows,
+        "contrast_summaries": _attach_condition_contrasts(rows),
+        "template_cluster_summary": {
+            "n_clusters": len({row["template_cluster"] for row in primary_rows}),
+            "absolute_search_minus_charity_contrast_bootstrap_95": _bootstrap_template_interval(
+                [float(row["absolute_search_minus_charity_contrast"]) for row in natural_contrasts], SEED + 4312,
+            ),
+            "cluster_values": [
+                {"cluster": row["template_cluster"], "contrast": row["absolute_search_minus_charity_contrast"]}
+                for row in natural_contrasts
+            ],
+            "resampling_unit": "authored sentence/template pairs; phrase positions and intervention conditions are not resampled",
+        },
+    }
+
+
 def run_links_amended(model: Any, tokenizer: Any, args: argparse.Namespace) -> dict[str, Any]:
     import numpy as np
     import torch
@@ -2486,7 +3105,14 @@ def run_links_amended(model: Any, tokenizer: Any, args: argparse.Namespace) -> d
             minus[position] -= epsilon_u
             _, plus_capture = captured_forward(model, tokenizer, [sequence], capture_units=[downstream], operations=[{upstream: plus}])
             _, minus_capture = captured_forward(model, tokenizer, [sequence], capture_units=[downstream], operations=[{upstream: minus}])
-            finite_difference = (plus_capture[downstream][0][position] - minus_capture[downstream][0][position]) / (2.0 * epsilon_u)
+            total_finite_difference = (plus_capture[downstream][0][position] - minus_capture[downstream][0][position]) / (2.0 * epsilon_u)
+            bypass_plus = _receiver_bypass_value(
+                model, tokenizer, sequence, downstream, position, epsilon_u * target_column,
+            )
+            bypass_minus = _receiver_bypass_value(
+                model, tokenizer, sequence, downstream, position, -epsilon_u * target_column,
+            )
+            bypass_finite_difference = (bypass_plus - bypass_minus) / (2.0 * epsilon_u)
             ablated_ops = [{upstream: 0.0}]
             _, ablated_capture = captured_forward(model, tokenizer, [sequence], capture_units=[downstream], operations=ablated_ops)
             full_ablation_change = ablated_capture[downstream][0][position] - float(state["v"][position].item())
@@ -2500,15 +3126,20 @@ def run_links_amended(model: Any, tokenizer: Any, args: argparse.Namespace) -> d
                 "gate_preactivation": float(gate.item()),
                 "up_value": float(up_value.item()),
                 "local_derivative": target_derivative,
+                "residual_bypass_derivative": target_derivative,
                 "gate_component": gate_derivative,
                 "up_component": up_derivative,
                 "local_predicted_change_for_current_activation": float(target_derivative * amplitude),
-                "finite_difference": float(finite_difference),
+                "finite_difference": float(bypass_finite_difference),
+                "residual_bypass_finite_difference": float(bypass_finite_difference),
+                "total_derivative_finite_difference": float(total_finite_difference),
+                "total_derivative_definition": "central finite difference of L7's down_proj input at the aligned position through the full forward pass, measured at the downstream scalar",
                 "finite_difference_epsilon": float(epsilon_u),
-                "finite_difference_relative_error": float(abs(finite_difference - target_derivative) / max(abs(target_derivative), 1e-8)),
+                "finite_difference_relative_error": float(abs(bypass_finite_difference - target_derivative) / max(abs(target_derivative), 1e-8)),
+                "total_derivative_minus_bypass_derivative": float(total_finite_difference - target_derivative),
                 "finite_difference_dtype": str(layers[upstream[0]].mlp.down_proj.weight.dtype),
                 "finite_difference_absolute_tolerance": 0.05,
-                "finite_difference_check_passed": bool(abs(finite_difference - target_derivative) <= 0.05),
+                "finite_difference_check_passed": bool(abs(bypass_finite_difference - target_derivative) <= 0.05),
                 "full_u_ablation_later_scalar_change": float(full_ablation_change),
                 "null": {
                     "n": 1000,
@@ -2525,10 +3156,11 @@ def run_links_amended(model: Any, tokenizer: Any, args: argparse.Namespace) -> d
             del down_matrix, null_columns
     return {
         **output_header(args, [args.candidates, ROOT / "part42.py", ROOT / "part25.py", ROOT / "part39.py"]),
-        "method": "F local derivative of downstream post-SwiGLU scalar, finite-difference checked",
+        "method": "residual-bypass derivative of downstream post-SwiGLU scalar, paired with a full-forward finite-difference total derivative through intervening layers",
         "formula": "SiLU'(gate) * up * (W_gate @ DN(x)[v]) + SiLU(gate) * (W_up @ DN(x)[v])",
         "norm_scale": "1 + stored Qwen3.5 RMSNorm weight",
         "rms_jacobian": "DN(x)[v] = gamma * (v/r - x * (x dot v)/(d*r^3)); gamma=1+w",
+        "derivative_distinction": "local_derivative/residual_bypass_derivative is the direct residual-write path; total_derivative_finite_difference perturbs the source scalar in the full model and captures the downstream scalar",
         "links": links,
     }
 
@@ -3318,23 +3950,26 @@ def _evaluate_scores_amended(out_dir: Path) -> dict[str, dict[str, str]]:
             clean_value, delta_value = float(values["clean"][-1]), float(values["delta"][-1])
             l11_change.append({"clean": clean_value, "delta": delta_value,
                                "absolute": abs(delta_value),
-                               "fraction": abs(delta_value) / max(abs(clean_value), 1e-8)})
+                               "fraction": abs(delta_value) / max(abs(clean_value), 1e-8),
+                               "required_absolute": max(0.2 * abs(clean_value), 0.1),
+                               "meets_amended_threshold": abs(delta_value) >= max(0.2 * abs(clean_value), 0.1)})
     shift_fraction = _mean(row["fraction"] for row in l11_change)
     shift_absolute = _mean(row["absolute"] for row in l11_change)
+    shift_meets_amended_threshold = bool(l11_change) and all(row["meets_amended_threshold"] for row in l11_change)
     l7_l11_rescue = next((row for row in rescue.get("pairs", []) if row.get("upstream") == "L7 N1169" and row.get("downstream") == ["L11 N8868"]), None)
     rescue_stats = (l7_l11_rescue or {}).get("rescue_bootstrap", {})
     rescue_mean = rescue_stats.get("mean")
     rescue_ci = rescue_stats.get("bootstrap_95")
     p433a_passed = None if pair_p is None or rescue_mean is None or not l11_change else (
         float(pair_p) <= 0.05 and abs(l7_l11_on) > abs(l7_l11_off)
-        and shift_fraction >= 0.20 and shift_absolute >= 0.1
+        and shift_meets_amended_threshold
         and float(rescue_mean) >= 0.5 and rescue_ci is not None and float(rescue_ci[0]) > 0.25
     )
     p433a = result(
         "43.3a",
         "L7xL11 is top 5% by exact matched-null p, L7 has a larger effect while L11 is natural, zeroing L7 shifts L11 by >=20% and >=0.1, and restoring L11 rescues >=half with lower bootstrap bound >0.25.",
         p433a_passed,
-        f"L7xL11 exact p={pair_p}; conditional L7 effects with L11 on/off={l7_l11_on}/{l7_l11_off}; L11 mean relative/absolute activation change={shift_fraction}/{shift_absolute}; eligible restore-all rescue mean/CI={rescue_mean}/{rescue_ci}; hook no-op error={(l7_l11_rescue or {}).get('control_summary', {}).get('clean_to_clean_replay_max_abs_score_error')}.",
+        f"L7xL11 exact p={pair_p}; conditional L7 effects with L11 on/off={l7_l11_on}/{l7_l11_off}; discovery-position L11 changes={l11_change} (amended rule: |delta| >= max(0.2|clean|, 0.1)); eligible restore-all rescue mean/CI={rescue_mean}/{rescue_ci}; hook no-op error={(l7_l11_rescue or {}).get('control_summary', {}).get('clean_to_clean_replay_max_abs_score_error')}.",
     )
 
     l6_joint = next((row for row in rescue.get("pairs", []) if row.get("upstream") == "L6 N753" and row.get("downstream") == ["L11 N8868", "L29 N776"]), None)
@@ -3343,7 +3978,7 @@ def _evaluate_scores_amended(out_dir: Path) -> dict[str, dict[str, str]]:
     p434a = result(
         "43.4a",
         "Restoring L11 and L29 along the L6 N753 path rescues less than half of L6's eligible effect.",
-        None if l6_mean is None else float(l6_mean) < 0.5,
+        None if l6_mean is None or not l6_rescue.get("bootstrap_95") else float(l6_rescue["bootstrap_95"][1]) < 0.5,
         f"eligible rescue fraction mean={l6_mean}; bootstrap 95%={l6_rescue.get('bootstrap_95')}; reported as residual not carried through clamped coordinates.",
     )
 
@@ -3388,11 +4023,12 @@ def _evaluate_scores_amended(out_dir: Path) -> dict[str, dict[str, str]]:
     discovery_effect = float(primary.get("subset_score_values", [0.0])[-1] - primary.get("subset_score_values", [0.0])[0]) if primary else float("nan")
     heldout_mean = _mean(heldout_effects)
     heldout_ratio = abs(heldout_mean) / max(abs(discovery_effect), 1e-8)
+    p438_passed = None if not heldout_effects or not math.isfinite(discovery_effect) or discovery_effect <= 0.0 else heldout_ratio < 0.5
     p438 = result(
         "43.8",
         "Four-unit zeroing raises the primary score on the twelve held-out prompts by less than half its discovery-prompt rise.",
-        bool(heldout_effects) and heldout_ratio < 0.5,
-        f"held-out mean zero effect={heldout_mean}; discovery effect={discovery_effect}; absolute ratio={heldout_ratio}.",
+        p438_passed,
+        f"held-out mean zero effect={heldout_mean}; discovery effect={discovery_effect}; absolute ratio={heldout_ratio}; ratio is NOT_TESTABLE unless the discovery effect is positive.",
     )
 
     generation_conditions = baselines.get("generation_conditions_who_created_you", [])
@@ -3407,31 +4043,71 @@ def _evaluate_scores_amended(out_dir: Path) -> dict[str, dict[str, str]]:
         f"Who created you? maker classes by baseline={google_conditions}.",
     )
 
-    curves = dose.get("teacher_forced_curve", [])
-    monotone_by_unit = {}
-    for unit in UNITS:
-        rows = sorted((row for row in curves if row.get("unit", {}).get("label") == UNIT_LABELS[unit]), key=lambda row: float(row["multiplier"]))
-        values = [float(row["per_question"][DISCOVERY_QUESTION]["primary"]) for row in rows]
-        differences = [right - left for left, right in zip(values, values[1:])]
-        monotone_by_unit[UNIT_LABELS[unit]] = bool(values) and (all(value >= -1e-8 for value in differences) or all(value <= 1e-8 for value in differences))
-    cells = grid.get("cells", [])
-    levels = [-4, -1, 0, 1, 4]
-    slopes = {}
-    for l11 in (-4, 4):
-        cell_scores = {int(row["L7_multiplier"]): float(row["per_question"][DISCOVERY_QUESTION]["primary"])
-                       for row in cells if int(row["L11_multiplier"]) == l11}
-        slopes[str(l11)] = (cell_scores.get(4, 0.0) - cell_scores.get(-4, 0.0)) / 8.0 if -4 in cell_scores and 4 in cell_scores else None
-    if slopes["-4"] is None or slopes["4"] is None:
-        parallel = False
-    elif min(abs(slopes["-4"]), abs(slopes["4"])) < 1e-8:
-        parallel = max(abs(slopes["-4"]), abs(slopes["4"])) < 2e-8
-    else:
-        parallel = max(abs(slopes["-4"]), abs(slopes["4"])) / min(abs(slopes["-4"]), abs(slopes["4"])) < 2.0
+    slope_summary = grid.get("absolute_grid", {}).get("43_10_slope_summary", {})
+    slopes = {
+        "low_L11": slope_summary.get("mean_slope_at_low_L11"),
+        "high_L11": slope_summary.get("mean_slope_at_high_L11"),
+    }
+    slope_cis = {
+        "low_L11": slope_summary.get("low_L11_slope_bootstrap_95"),
+        "high_L11": slope_summary.get("high_L11_slope_bootstrap_95"),
+    }
+    minimum_slope = slope_summary.get("minimum_slope_magnitude")
+    ratio_ci = slope_summary.get("absolute_slope_ratio_bootstrap_95")
+    same_sign_ci = bool(
+        slope_cis["low_L11"] and slope_cis["high_L11"]
+        and ((float(slope_cis["low_L11"][0]) > 0 and float(slope_cis["high_L11"][0]) > 0)
+             or (float(slope_cis["low_L11"][1]) < 0 and float(slope_cis["high_L11"][1]) < 0))
+    )
+    p4310_passed = None
+    if minimum_slope is not None and all(value is not None for value in slopes.values()) and ratio_ci:
+        p4310_passed = (
+            min(abs(float(slopes["low_L11"])), abs(float(slopes["high_L11"]))) >= float(minimum_slope)
+            and same_sign_ci
+            and float(ratio_ci[1]) < 2.0
+        )
     p4310 = result(
         "43.10",
-        "Each unit's primary score curve is monotone, and L7 end-to-end slopes at L11=-4 and +4 differ by less than 2x.",
-        bool(monotone_by_unit) and all(monotone_by_unit.values()) and parallel,
-        f"monotone per unit={monotone_by_unit}; L7 slopes by L11={slopes}; factor-of-two rule={parallel}.",
+        "On the independent absolute grid, L7 slopes at low and high fixed L11 levels share a sign, each clears the pre-registered minimum magnitude, and the bootstrap upper bound on their absolute ratio is below 2.",
+        p4310_passed,
+        f"L7 slopes at low/high fixed L11={slopes}; slope intervals={slope_cis}; same-sign intervals={same_sign_ci}; ratio interval={ratio_ci}; minimum magnitude={minimum_slope}. A missing minimum threshold leaves this row NOT SCORED.",
+    )
+
+    swap = _load_result(out_dir, "swap")
+    attach = _load_result(out_dir, "attach")
+    discovery_swap = swap.get("discovery_l7_to_l11") or {}
+    d_value = discovery_swap.get("raw_google_minus_alibaba_logit", {}).get("D")
+    a_value = discovery_swap.get("raw_google_minus_alibaba_logit", {}).get("A")
+    p4311 = result(
+        "43.11",
+        "For the discovery L7→L11 swap, the raw Google-minus-Alibaba logit difference in world D is within 0.25 nats of world A.",
+        None if d_value is None or a_value is None else abs(float(d_value) - float(a_value)) < 0.25,
+        f"world A={a_value}; world D={d_value}; D−A={None if d_value is None or a_value is None else float(d_value) - float(a_value)} nats.",
+    )
+    attach_checks = [
+        row for row in attach.get("contrast_summaries", [])
+        if row.get("l7_condition") == "natural"
+    ]
+    attach_passed = bool(attach_checks) and all(bool(row.get("search_effect_larger")) for row in attach_checks)
+    required_attach_keys = {
+        (wording, order)
+        for wording in ("primary", "heldout")
+        for order in ("engine_first", "charity_first", "provider_first", "nonprofit_first")
+        if any(row.get("wording") == wording and row.get("sentence_order") == order for row in attach_checks)
+    }
+    expected_attach_keys = {
+        ("primary", "engine_first"), ("primary", "charity_first"),
+        ("heldout", "provider_first"), ("heldout", "nonprofit_first"),
+    }
+    attach_passed = attach_passed and required_attach_keys == expected_attach_keys
+    p4312 = result(
+        "43.12",
+        "L11's search-phrase country contrast exceeds its charity-phrase contrast in both counterbalanced orders and the held-out wording.",
+        attach_passed,
+        "; ".join(
+            f"{row.get('wording')}/{row.get('sentence_order')}: search={row.get('search_phrase_chinese_minus_american')}, charity={row.get('charity_phrase_chinese_minus_american')}, larger={row.get('search_effect_larger')}"
+            for row in attach_checks
+        ) or "no complete attachment contrasts were present",
     )
 
     # Legacy rows are either explicitly replaced or still supported by the amended artifacts.
@@ -3447,7 +4123,8 @@ def _evaluate_scores_amended(out_dir: Path) -> dict[str, dict[str, str]]:
         "43.7": p437a,
     }
     return {"43.1a": p431a, "43.2a": p432a, "43.3a": p433a, "43.4a": p434a,
-            "43.5a": p435a, "43.6a": p436a, "43.7a": p437a, "43.8": p438, "43.9": p439, "43.10": p4310, **legacy}
+            "43.5a": p435a, "43.6a": p436a, "43.7a": p437a, "43.8": p438, "43.9": p439, "43.10": p4310,
+            "43.11": p4311, "43.12": p4312, **legacy}
 
 
 def _update_prediction_table(path: Path, scores: Mapping[str, Mapping[str, str]]) -> None:
@@ -3482,7 +4159,7 @@ def run_score(args: argparse.Namespace) -> dict[str, Any]:
     result = _evaluate_scores_amended(out_dir)
     predictions_path = Path(args.predictions).expanduser()
     payload = {
-        **output_header(args, [out_dir / f"{name}.json" for name in ("signs", "lattice", "mediate", "shift", "sweep", "links", "dose", "heldout", "baselines", "grid")] + [predictions_path]),
+        **output_header(args, [out_dir / f"{name}.json" for name in ("signs", "lattice", "mediate", "shift", "sweep", "links", "dose", "heldout", "baselines", "grid", "swap", "attach")] + [predictions_path]),
         "results": result,
         "prediction_source": str(predictions_path),
     }
@@ -3519,7 +4196,8 @@ def write_manifest(args: argparse.Namespace) -> dict[str, Any]:
     candidates_path = Path(args.candidates).expanduser()
     candidate_doc = read_json(candidates_path)
     token_sets = candidate_doc["token_sets"]
-    prompt_inputs = [candidates_path, args.heldout, args.prompts, args.corpus, ROOT / "PART43-DESIGN.md", ROOT / "PREDICTIONS.md"]
+    attach_path = Path(getattr(args, "attach", DEFAULT_ATTACH)).expanduser()
+    prompt_inputs = [candidates_path, args.heldout, args.prompts, args.corpus, attach_path, ROOT / "PART43-DESIGN.md", ROOT / "PREDICTIONS.md"]
     chat_template = getattr(tokenizer, "chat_template", None)
     manifest = {
         **output_header(args, prompt_inputs),
@@ -3538,11 +4216,15 @@ def write_manifest(args: argparse.Namespace) -> dict[str, Any]:
         "hook_sites": {
             "activation": "decoder layer N .mlp.down_proj pre-hook input coordinate",
             "rescue_norm": "decoder layer N .post_attention_layernorm input/output",
+            "receiver_branches": "decoder layer N .mlp.gate_proj/.up_proj outputs and aligned .down_proj input product",
             "final_readout": "final model RMSNorm input and output embedding rows",
         },
         "units": [{"layer": layer, "unit": unit, "label": UNIT_LABELS[(layer, unit)]} for layer, unit in UNITS],
         "part25_questions": list(QUESTIONS),
+        "swap_questions": {"language_families": LANGUAGE_MAKER_QUESTIONS, **SWAP_CONTEXT_QUESTIONS},
         "heldout_questions": _heldout_questions(args.heldout),
+        "attachment_prompts": read_json(attach_path),
+        "maker_answer_options_scored_separately": [{"label": label, "answer": answer} for label, answer in MAKER_ANSWERS],
         "sweep_prompts": [
             {key: row.get(key) for key in ("id", "pair_id", "prompt", "nationality", "role", "entity_named", "adjective", "entity")}
             for row in read_json(args.prompts)["prompts"]
@@ -3579,6 +4261,10 @@ def write_manifest(args: argparse.Namespace) -> dict[str, Any]:
             ],
             "dose_multipliers": [-8, -4, -2, -1, 0, 0.5, 1, 2, 4, 8],
             "l7_l11_grid": [-4, -1, 0, 1, 4],
+            "l7_l11_absolute_grid_quantiles": [0.05, 0.275, 0.5, 0.725, 0.95],
+            "l7_l11_absolute_grid_minimum_slope_magnitude": getattr(args, "minimum_slope_magnitude", None),
+            "l7_l11_absolute_grid_minimum_slope_pending": getattr(args, "minimum_slope_magnitude", None) is None,
+            "swap_worlds": ["A: natural/natural", "B: upstream zero, receiver free", "C: upstream zero, receiver A trajectory", "D: upstream natural, receiver B trajectory"],
         },
         "not_testable_rules": {
             "additive_r2": "NOT_TESTABLE when 16-cell primary-score range < 0.5 nats",
@@ -3586,9 +4272,10 @@ def write_manifest(args: argparse.Namespace) -> dict[str, Any]:
             "empirical_p": "(1 + count(null statistic >= observed))/(B + 1), no interpolation",
             "link_family": "two-sided empirical p with Bonferroni correction across six ordered pairs",
             "sweep": "descriptive matched pairs; 16 of 20 is not a significance test",
+            "grid_slope": "43.10 is NOT_TESTABLE until a positive minimum absolute slope magnitude is preregistered; intervals resample template clusters and require same-sign endpoints",
         },
         "primary_score": "summed full-maker answer logprob Google minus logsumexp(Alibaba, Tongyi Lab, Qwen team)",
-        "output_retention": ["all 16 subset scores", "raw candidate token logits", "aligned signed activation arrays", "greedy text and outcomes"],
+        "output_retention": ["all 16 subset scores", "raw candidate token logits and Google-minus-Alibaba raw differences", "aligned signed activation arrays", "four-world receiver trajectories", "L11 gate/up/product trajectories", "realized grid activations and clipping", "greedy text and outcomes"],
     }
     manifest_name = "MANIFEST-base.json" if args.model == BASE_MODEL else "MANIFEST.json"
     write_json(Path(args.out).expanduser() / manifest_name, manifest)
@@ -3670,7 +4357,7 @@ def _build_parser() -> argparse.ArgumentParser:
     commands = (
         "manifest", "validate", "pilot", "signs", "dla", "lattice", "mediate", "rescue",
         "shift", "positions", "baselines", "heldout", "readout-check", "links", "sweep",
-        "dose", "grid", "base", "score",
+        "dose", "grid", "swap", "attach", "base", "score",
     )
     for command in commands:
         sub = subparsers.add_parser(command)
@@ -3691,6 +4378,12 @@ def _build_parser() -> argparse.ArgumentParser:
         sub.add_argument("--signs", default=str(DEFAULT_SIGNS))
         sub.add_argument("--baseline", default="results/part25/means.json")
         sub.add_argument("--candidate-pool-size", type=int, default=1024)
+        sub.add_argument("--attach", default=str(DEFAULT_ATTACH))
+        if command == "grid":
+            sub.add_argument(
+                "--minimum-slope-magnitude", type=float, default=None,
+                help="preregistered positive minimum |d(primary score)/d(L7 activation)| in nats per activation unit for 43.10",
+            )
         if command == "links":
             sub.add_argument("--weights-only", action="store_true", help="run only the WSL CPU weight-alignment heuristic")
         if command == "score":
@@ -3730,6 +4423,20 @@ def main(argv: Sequence[str] | None = None) -> int:
             target = _output_path(args, "links")
         write_json(target, result)
         print(f"wrote {target}")
+        return 0
+    if args.command in {"swap", "attach"}:
+        manifest_path = Path(args.out).expanduser() / ("MANIFEST-base.json" if args.model == BASE_MODEL else "MANIFEST.json")
+        if not manifest_path.is_file():
+            write_manifest(args)
+        tokenizer, model = _load_runtime(args)
+        if args.command == "swap":
+            result = run_swap(model, tokenizer, _load_token_records(args), args)
+            name = "swap"
+        else:
+            result = run_attach(model, tokenizer, args)
+            name = "attach"
+        write_json(_output_path(args, name), result)
+        print(f"wrote {_output_path(args, name)}")
         return 0
     if args.command == "dla":
         result = run_dla(args)
