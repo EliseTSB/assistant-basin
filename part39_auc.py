@@ -1,4 +1,11 @@
-"""Part 39 section D, amendment 1: the bounded AUC screen, rescored from the saved reads (no model run)."""
+"""Part 39 section D, amendment 1: the bounded AUC screen, rescored from the saved reads (no model run).
+
+Measures, per unit, the rank AUC of categories 1 and 3 (request, AI self-description) against 2, 4, 5, 6 on the plain
+sentence maxima, gated by a 200-shuffle max-AUC null, top 1% on both sentence halves, and a 0.5 median floor.
+What went wrong the first time (part39.py screen): a contrast divided by each unit's MAD, floored at 0.01, let
+near-silent units score 100+, set the null at 96.6 and failed the L6 N753 sanity check. AUC is bounded, so it cannot.
+Known weakness: this statistic was chosen after seeing N753's values (recorded in PART39-DESIGN.md amendment 1).
+"""
 import argparse, json, sys
 import numpy as np
 import torch
