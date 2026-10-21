@@ -1852,3 +1852,16 @@ def test_fp32_records_the_actual_down_proj_input_dtype_per_layer(tmp_path, monke
     assert by_layer[str(bad_layer)] == ["torch.bfloat16"]
     with pytest.raises(part43.CalibrationRefusal):
         _read_fp32_fixture(args, raw, tokenizer)
+
+
+def test_fp32_pilot_refuses_allowed_but_different_runtime_from_calibration(tmp_path, monkeypatch):
+    # Claude, 2026-10-21: a current runtime that is itself allowed but differs from the calibration-bound one must
+    # refuse; only the equality check can catch this (a sabotage comparing calibration with itself passed 129/129).
+    args = _args(tmp_path, protocol="fp32-successor")
+    raw, tokenizer = _fp32_successor_raw_fixture(args, monkeypatch)
+    calibration = _read_fp32_fixture(args, raw, tokenizer)
+    expected = calibration["execution"]["legs"]["fp32"]["runtime"]
+    assert "torch_version" in expected
+    expected["torch_version"] = str(expected["torch_version"]) + "-another-host"
+    result = _run_fp32_pilot_refusal(args, calibration, tokenizer, monkeypatch)
+    assert "differs from calibration" in result["hold"]["reason"]
