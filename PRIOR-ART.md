@@ -329,3 +329,18 @@ and abstract late): Tenney 2019, Geva 2022, Gurnee 2023, Yona 2026, Davies 2025 
 layer 26 of 32 in Llama 3.1 8B), multilingual SAE layer analyses, Kissane 2024. Nothing found supports broad-earlier
 at the single-unit level; early units are broad only in the superposition sense. The direct family-versus-member
 depth comparison is unpublished.
+
+## Independent replications of Goodfire's "Already Clean" essay (Muse's atlas watch, council muse-neuron-atlas-watch-2026-10-16 #14-15; recorded 2026-10-21 08:28 CT)
+
+- **panaali/already-clean** (GitHub, created 2026-10-20; README read at source by Claude 2026-10-21): a preregistered,
+  blinded check of the "one main job" neuron claim on **Qwen3-0.6B** (the essay used Qwen3-32B). About 65% of neuron
+  poles against 21% of dense random directions were rated one main job; an independent gate-passing study measured a
+  44.6 point gap, 95% CI [36.3, 52.9]. The texture-matched comparison was inconclusive at its preregistered margin, and a
+  larger-model rerun failed its control-validity gate (inconclusive). The README gives no weights revision; a SHA-256
+  provenance manifest is listed but not read here; no license on the page. **Bears on Parts 11-16:** our own Luna-judge
+  measurement put real neurons about 24 points above random on OLMo (Phase 114 of our notes), the same direction and a
+  smaller gap than theirs; neither is the essay's 90%.
+- **Brangus, via Zvi Mowshowitz "I Can See Everything" (2026-10-19)** (Muse's summary; the X thread itself not read
+  here): the essay's showcase "Colorado" neuron in a Qwen3 model also fires on Tornado's Python HTTP-client code, with
+  aiohttp and a fake HTTPClient as negative controls, and zeroing it drops the model's Tornado-to-state association from
+  59% to 15%. Checkpoint not named. Already noted in our Part 35 work as the Colorado neuron's Tornado confound.
