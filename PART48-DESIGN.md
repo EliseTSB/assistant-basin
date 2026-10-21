@@ -64,3 +64,11 @@ The A770's RAM guard stopped fp32 OLMo-2 1B at load (11:36, Windows had under 2 
 and SmolLM2-1.7B run in bf16 weights instead (log-softmax still in fp32), one model per step. Control: pythia-410m is
 rerun in bf16 into results/part48-bf16; if its novel or spelled AUC differs from the fp32 run by more than 0.03, the
 bf16 models are reported as not comparable and rerun in fp32 on a rented card. No prediction changes.
+
+### Amendment 1, outcome (written 2026-10-21 12:31 CT)
+The dtype control failed its own rule: pythia-410m novel-item AUC 0.898 (fp32) against 0.863 (bf16), a 0.035 gap over
+the 0.03 limit; spelled-out 0.984 against 0.969; the classic kiki/bouba order flips (fp32 kiki -1.473 vs bouba -1.487,
+bf16 -1.541 vs -1.506), which says the classic pair is a near tie that precision can turn either way. bf16 was also 6x
+slower on the A770 (1,466 s against 263 s). So, as written, no bf16 model is scored: the A770 queue was stopped during
+OLMo-2's bf16 run, and all five models run in fp32 on one rented RTX 3090 (the two fp32 A770 results are kept, and the
+3090 reruns pythia-410m as a cross-device check).
