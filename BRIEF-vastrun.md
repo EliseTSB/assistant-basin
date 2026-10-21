@@ -32,3 +32,8 @@ destroy must fail a test. Commit nothing. Report REPORT-vastrun.md ending SUMMAR
 Round 1 (Haiku): an instance can stay rented (unreadable list read as gone; SIGHUP; rent-to-record gap). If round 2
 finds another way an instance stays rented or billing with the run reporting success, stop patching: the runner is
 reduced to rent + record + label-sweep-destroy around a single job, and that smaller design goes to review first.
+
+## Stop rule for round 3 (written 2026-10-21 14:23 CT, before the round-3 review of the smaller design)
+If round 3 finds a way a box stays rented or billing while the run reports success, the runner is parked: GPU jobs go
+back to being run by hand from a written checklist (rent, run, copy, destroy, confirm the listing is empty), which is
+how Part 48 ran cleanly, and the runner's card says what would reopen it. Findings of other classes are folded.
