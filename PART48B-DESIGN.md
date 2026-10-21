@@ -78,3 +78,10 @@ plus the single-letter k/c controls. Consequences, fixed now: the conservative s
 sign-flip permutation test and the bootstrap CI on median d (amendment 1) stay primary; with 10 pairs this is a
 pilot whose deliverable is the effect size and its interval. A larger, programmatically pre-screened set is a
 follow-up, not part of this run.
+
+## Amendment 5 (2026-10-21 14:48 CT, before any run): the pooled estimate's weighting (Luna review P2)
+Amendment 1 names "a pooled estimate" without its weighting. Fixed now: the unit is the PAIR. For each of the 10 pairs,
+pooled d = the unweighted mean of its per-model d over the 5 models; the pooled test is the same sign-flip permutation
+test (10,000 flips, two-sided) and bootstrap 95% CI on the median, over those 10 pooled values, for both score sets.
+Models are not independent (shared pre-training text), so the pooled estimate is reported beside the per-model ones,
+never instead of them.

@@ -434,15 +434,59 @@ def summarize(rows: Sequence[dict], pairs: Sequence[tuple[str, str]] = PAIRS, ma
     }
 
 
+def pool(model_summaries: Sequence[dict]) -> dict:
+    """Amendment 5: per pair, the unweighted mean of per-model d; then the primary tests over those pair means."""
+    if not model_summaries:
+        raise RuntimeError("nothing to pool")
+    order = [r["pair"] for r in model_summaries[0]["pair_records"]]
+    if any([r["pair"] for r in m["pair_records"]] != order for m in model_summaries):
+        raise RuntimeError("models disagree on the pair list; cannot pool")
+    out = {"pairs": order, "n_models": len(model_summaries)}
+    for score_set in ("part48_continuations", "letter_matched"):
+        per_model = [m["scores"][score_set]["all_pairs"]["pair_d"] for m in model_summaries]
+        pooled = [statistics.fmean(pd[i] for pd in per_model) for i in range(len(order))]
+        out[score_set] = {
+            "pooled_pair_d": pooled,
+            "median_d": statistics.median(pooled),
+            "sign_flip_permutation": sign_flip_permutation_test(pooled),
+            "bootstrap_median_95_ci": bootstrap_median_ci(pooled),
+            "conservative_sign_test": exact_sign_test(pooled),
+        }
+    return out
+
+
+def _write_json_atomic(path: str, obj) -> None:
+    """Write to a temporary file in the same directory, then rename over the target (Luna review P3)."""
+    tmp = f"{path}.tmp-{os.getpid()}"
+    try:
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump(obj, f, indent=1)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp, path)
+    finally:
+        if os.path.exists(tmp):
+            os.remove(tmp)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--models", default=",".join(p48.MODELS))
     ap.add_argument("--device", default="cpu")
     ap.add_argument("--dtype", choices=["fp32", "bf16"], default="fp32")
     ap.add_argument("--out", default="results/part48b")
+    ap.add_argument("--pool", action="store_true", help="pool the per-model JSONs in --out (amendment 5)")
     args = ap.parse_args()
     os.makedirs(args.out, exist_ok=True)
-    os.environ["HF_HUB_OFFLINE"] = "1"
+    if args.pool:
+        names = [n.strip() for n in args.models.split(",")]
+        sums = []
+        for n in names:
+            with open(os.path.join(args.out, f"{n}.json"), encoding="utf-8") as f:
+                sums.append(json.load(f)["summary"])
+        _write_json_atomic(os.path.join(args.out, "pooled.json"), dict(part="48b", models=names, pooled=pool(sums)))
+        return
+    os.environ.setdefault("HF_HUB_OFFLINE", "1")
     from transformers import AutoModelForCausalLM, AutoTokenizer
     import transformers.modeling_utils as modeling_utils
 
@@ -463,14 +507,13 @@ def main() -> None:
         model.eval()
         rows = score_model(model, tok, args.device)
         summary = summarize(rows)
-        rec = dict(part=48, model=mid,
+        rec = dict(part="48b", model=mid,
                    revision=getattr(model.config, "_commit_hash", None),
                    dtype=args.dtype, batching="one sequence per forward",
                    limit=None, seconds=round(time.time() - t0, 1),
                    summary=summary, rows=rows)
         path = os.path.join(args.out, f"{short}.json")
-        with open(path, "w", encoding="utf-8") as f:
-            json.dump(rec, f, indent=1)
+        _write_json_atomic(path, rec)
         print(short, json.dumps({name: result["equal_token_count"]["median_d"]
                                  for name, result in summary["scores"].items()}), flush=True)
         del model

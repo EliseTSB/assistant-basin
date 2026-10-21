@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import sys
+import json
 import pytest
 from pathlib import Path
 
@@ -122,3 +123,33 @@ def test_mass_floor_drops_a_low_mass_template_like_part48():
         r["continuation_mass"] = 1e-6
     with pytest.raises(RuntimeError, match="mass floor"):
         p48b._pair_records(rows, (pair,))
+
+
+def test_pool_averages_each_pair_over_models_and_refuses_mismatched_pairs():
+    # Amendment 5: the unit is the pair; pooled d is the unweighted mean of per-model d.
+    tokenizer = TinyTokenizer()
+    model = TinyCausalLM(tokenizer).eval()
+    pairs = p48b.PAIRS[:2]
+    rows = p48b.score_model(model, tokenizer, "cpu", pairs=pairs, include_controls=False)
+    a = p48b.summarize(rows, pairs=pairs, mass_floor=0.0)
+    b = json.loads(json.dumps(a))
+    b["scores"]["part48_continuations"]["all_pairs"]["pair_d"] = [x + 1.0 for x in a["scores"]["part48_continuations"]["all_pairs"]["pair_d"]]
+    pooled = p48b.pool([a, b])
+    want = [x + 0.5 for x in a["scores"]["part48_continuations"]["all_pairs"]["pair_d"]]
+    assert pooled["part48_continuations"]["pooled_pair_d"] == pytest.approx(want)
+    b["pair_records"] = list(reversed(b["pair_records"]))
+    with pytest.raises(RuntimeError, match="disagree"):
+        p48b.pool([a, b])
+
+
+def test_write_json_atomic_leaves_no_partial_file(tmp_path, monkeypatch):
+    path = tmp_path / "m.json"
+    path.write_text('{"old": 1}', encoding="utf-8")
+    def boom(obj, f, **k):
+        f.write('{"partial":')
+        raise OSError("simulated disk-full")
+    monkeypatch.setattr(p48b.json, "dump", boom)
+    with pytest.raises(OSError):
+        p48b._write_json_atomic(str(path), {"new": 1})
+    assert path.read_text(encoding="utf-8") == '{"old": 1}'
+    assert list(tmp_path.iterdir()) == [path]
