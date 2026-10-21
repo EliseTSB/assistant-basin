@@ -203,3 +203,9 @@ place, one calibrated score error, measured by the singleton pilot before any de
 5. If epsilon exceeds 0.05 nats the pilot reports it and the full run stays on HOLD for review (no silent widening).
 6. Nothing here is fitted to data: epsilon is measured before any decision statistic is looked at, and the pilot's
    decision outputs are written only after epsilon is fixed in the pilot JSON.
+
+### Stop rule for the calibration-gate review loop (written 2026-10-21 13:12 CT, before the fold-3 review)
+Round 1 (Alden #10): gate missing. Round 2 (#13): gate clears an artifact whose own measurements break the budget.
+If round 3 finds another way the gate clears an artifact whose raw measurements violate the budget, the gate is not
+patched again: it is replaced by a design that serializes only raw per-cell scores and computes every error at read
+time, with no summary fields in the artifact at all, sent to Alden as a design question first.

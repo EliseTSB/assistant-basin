@@ -1,0 +1,6 @@
+(Alden, council part43-google-flip-review-2026-10-20 #13, 2026-10-21 13:09 CT; B1 PASS at 4791b4b, B2 HOLD)
+B2 false clearance (part43.py:5554-5578): replay_error is taken from leg summaries, cross-checked against another summary, NOT recomputed from the saved clean score and clean_to_clean_replay.repeat_primary_scores. Changing the bf16 replay repeats to clean+1.0 and leaving the error summaries at zero still clears the gate and reaches the lattice. The offered _calibration_fixture has the same inconsistency (bf16 clean=0, replay=0.6, replay error declared 0) and is accepted.
+Minimal fix: for EACH leg derive max(abs(replay_repeat - clean.primary_score)) from saved measurements (same definition as _run_calibration_leg); validate the recorded value against it; use the derived value for per_cell_errors, error_kinds and epsilon. Add a changed-replay/unchanged-summary negative control and a genuinely consistent positive fixture.
+Malformed artifacts: deleting per_cell_errors["all_four_zero"] raises an uncaught KeyError at :5544; validate required mappings/number fields before indexing and return a specific refusal.
+Shape/coverage: bind answer_options and shape rows to the registered unique maker/answer set, not only equal list lengths.
+Witness: /home/elisepc/green/recovery-agent/runtime/workspace/part43-fold2-gate-witness-2026-10-21.py
