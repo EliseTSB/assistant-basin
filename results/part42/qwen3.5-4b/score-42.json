@@ -1,0 +1,1736 @@
+{
+  "schema_version": 1,
+  "predictions": {
+    "42.1": {
+      "first_layer": 0,
+      "last_layer": 6,
+      "unit_count": 28,
+      "named_unit_ids": {
+        "logit": [
+          "robot",
+          "tree",
+          "cloud",
+          "clock",
+          "candle",
+          "library",
+          "spider"
+        ],
+        "jacobian": [
+          "robot",
+          "cat",
+          "tree",
+          "cloud",
+          "clock",
+          "candle",
+          "vampire",
+          "ocean",
+          "wolf",
+          "library",
+          "ship",
+          "spider",
+          "knight"
+        ]
+      },
+      "named_unit_counts": {
+        "logit": 7,
+        "jacobian": 13
+      },
+      "holds": false,
+      "status": "not_supported"
+    },
+    "42.2": {
+      "minimum_median_overlap": 10,
+      "per_model": {
+        "Qwen/Qwen3-1.7B": {
+          "first_layer": 21,
+          "unit_count": 16,
+          "median_overlap": 24.0,
+          "per_unit": {
+            "ghost": 9,
+            "snowman": 12,
+            "train": 17,
+            "trump": 13,
+            "random-05": 11,
+            "random-06": 8,
+            "random-12": 15,
+            "mountain": 28,
+            "random-02": 26,
+            "random-08": 28,
+            "mushroom": 27,
+            "random-13": 29,
+            "volcano": 23,
+            "bee": 27,
+            "random-17": 25,
+            "random-20": 29
+          },
+          "by_role_median": {
+            "part35_rank1": 20.0,
+            "random": 25.5
+          }
+        },
+        "Qwen/Qwen3.5-4B": {
+          "first_layer": 24,
+          "unit_count": 5,
+          "median_overlap": 15,
+          "per_unit": {
+            "L29-N776": 20,
+            "random-09": 15,
+            "random-15": 5,
+            "random-16": 24,
+            "random-19": 7
+          },
+          "by_role_median": {
+            "random": 11.0,
+            "target": 20
+          }
+        }
+      },
+      "holds": true,
+      "status": "supported"
+    },
+    "42.3": {
+      "minimum_meaning_words": 2,
+      "units": {
+        "wizard": {
+          "unit_id": "wizard-L19-N4826",
+          "words": [
+            "spell",
+            "magic",
+            "wand",
+            "sorcer",
+            "witch",
+            "potion",
+            "enchant"
+          ],
+          "matched_words": [
+            "spell",
+            "magic",
+            "wand"
+          ],
+          "holds": true
+        },
+        "L6 N753": {
+          "unit_id": "L6-N753",
+          "words": [
+            "ai",
+            "assistant",
+            "model",
+            "chatbot",
+            "人工智能",
+            "助手",
+            "claude",
+            "gpt"
+          ],
+          "matched_words": [],
+          "holds": false
+        }
+      },
+      "holds": false,
+      "status": "not_supported"
+    },
+    "42.4": {
+      "units": {
+        "L7 N1169": {
+          "unit_id": "L7-N1169",
+          "words": [
+            "china",
+            "chinese",
+            "中国",
+            "beijing"
+          ],
+          "matched_words": [
+            "china",
+            "chinese",
+            "中国",
+            "beijing"
+          ],
+          "holds": true
+        },
+        "L11 N8868": {
+          "unit_id": "L11-N8868",
+          "words": [
+            "china",
+            "chinese",
+            "中国",
+            "beijing"
+          ],
+          "matched_words": [
+            "china",
+            "chinese",
+            "beijing"
+          ],
+          "holds": true
+        },
+        "L29 N776": {
+          "unit_id": "L29-N776",
+          "words": [
+            "google"
+          ],
+          "matched_words": [
+            "google"
+          ],
+          "holds": true
+        }
+      },
+      "holds": true,
+      "status": "supported"
+    },
+    "42.5": {
+      "random_unit_count": 20,
+      "required_random_unit_count": 20,
+      "concept_count": 43,
+      "per_readout": {
+        "logit": {
+          "units_naming_any_concept": [],
+          "unit_count_naming_any_concept": 0,
+          "per_unit_concepts": {
+            "random-11": [],
+            "random-14": [],
+            "random-16": [],
+            "random-10": [],
+            "random-07": [],
+            "random-03": [],
+            "random-18": [],
+            "random-01": [],
+            "random-04": [],
+            "random-15": [],
+            "random-09": [],
+            "random-19": [],
+            "random-05": [],
+            "random-06": [],
+            "random-12": [],
+            "random-02": [],
+            "random-08": [],
+            "random-13": [],
+            "random-17": [],
+            "random-20": []
+          },
+          "concept_unit_counts": {
+            "owl": 0,
+            "cat": 0,
+            "dragon": 0,
+            "ghost": 0,
+            "pirate": 0,
+            "wizard": 0,
+            "robot": 0,
+            "vampire": 0,
+            "mermaid": 0,
+            "octopus": 0,
+            "moon": 0,
+            "ocean": 0,
+            "volcano": 0,
+            "tree": 0,
+            "cloud": 0,
+            "sun": 0,
+            "knight": 0,
+            "detective": 0,
+            "chef": 0,
+            "bee": 0,
+            "wolf": 0,
+            "whale": 0,
+            "crow": 0,
+            "fox": 0,
+            "snowman": 0,
+            "lighthouse": 0,
+            "library": 0,
+            "clock": 0,
+            "mushroom": 0,
+            "cactus": 0,
+            "star": 0,
+            "river": 0,
+            "mountain": 0,
+            "train": 0,
+            "ship": 0,
+            "teapot": 0,
+            "candle": 0,
+            "raven": 0,
+            "unicorn": 0,
+            "spider": 0,
+            "claude": 0,
+            "anthropic": 0,
+            "trump": 0
+          }
+        },
+        "jacobian": {
+          "units_naming_any_concept": [
+            "random-15"
+          ],
+          "unit_count_naming_any_concept": 1,
+          "per_unit_concepts": {
+            "random-11": [],
+            "random-14": [],
+            "random-16": [],
+            "random-10": [],
+            "random-07": [],
+            "random-03": [],
+            "random-18": [],
+            "random-01": [],
+            "random-04": [],
+            "random-15": [
+              "star"
+            ],
+            "random-09": [],
+            "random-19": [],
+            "random-05": [],
+            "random-06": [],
+            "random-12": [],
+            "random-02": [],
+            "random-08": [],
+            "random-13": [],
+            "random-17": [],
+            "random-20": []
+          },
+          "concept_unit_counts": {
+            "owl": 0,
+            "cat": 0,
+            "dragon": 0,
+            "ghost": 0,
+            "pirate": 0,
+            "wizard": 0,
+            "robot": 0,
+            "vampire": 0,
+            "mermaid": 0,
+            "octopus": 0,
+            "moon": 0,
+            "ocean": 0,
+            "volcano": 0,
+            "tree": 0,
+            "cloud": 0,
+            "sun": 0,
+            "knight": 0,
+            "detective": 0,
+            "chef": 0,
+            "bee": 0,
+            "wolf": 0,
+            "whale": 0,
+            "crow": 0,
+            "fox": 0,
+            "snowman": 0,
+            "lighthouse": 0,
+            "library": 0,
+            "clock": 0,
+            "mushroom": 0,
+            "cactus": 0,
+            "star": 1,
+            "river": 0,
+            "mountain": 0,
+            "train": 0,
+            "ship": 0,
+            "teapot": 0,
+            "candle": 0,
+            "raven": 0,
+            "unicorn": 0,
+            "spider": 0,
+            "claude": 0,
+            "anthropic": 0,
+            "trump": 0
+          }
+        }
+      },
+      "holds": true,
+      "status": "supported"
+    }
+  },
+  "unit_top30_overlap_counts": {
+    "Qwen/Qwen3-1.7B": {
+      "claude": 0,
+      "random-11": 0,
+      "random-14": 0,
+      "robot": 0,
+      "anthropic": 0,
+      "random-16": 0,
+      "cat": 0,
+      "moon": 0,
+      "tree": 4,
+      "cloud": 2,
+      "crow": 0,
+      "clock": 1,
+      "candle": 1,
+      "raven": 0,
+      "unicorn": 0,
+      "owl": 0,
+      "dragon": 0,
+      "vampire": 0,
+      "ocean": 2,
+      "sun": 1,
+      "wolf": 0,
+      "fox": 0,
+      "library": 8,
+      "cactus": 0,
+      "ship": 6,
+      "teapot": 0,
+      "spider": 4,
+      "random-10": 0,
+      "pirate": 0,
+      "knight": 0,
+      "whale": 0,
+      "random-07": 0,
+      "lighthouse": 1,
+      "random-03": 0,
+      "detective": 0,
+      "chef": 16,
+      "random-18": 0,
+      "mermaid": 16,
+      "octopus": 5,
+      "random-01": 0,
+      "random-04": 0,
+      "star": 14,
+      "random-15": 0,
+      "wizard": 4,
+      "river": 13,
+      "wizard-L19-N4826": 4,
+      "random-09": 18,
+      "random-19": 1,
+      "ghost": 9,
+      "snowman": 12,
+      "train": 17,
+      "trump": 13,
+      "random-05": 11,
+      "random-06": 8,
+      "random-12": 15,
+      "mountain": 28,
+      "random-02": 26,
+      "random-08": 28,
+      "mushroom": 27,
+      "random-13": 29,
+      "volcano": 23,
+      "bee": 27,
+      "random-17": 25,
+      "random-20": 29
+    },
+    "Qwen/Qwen3.5-4B": {
+      "part39-048-L3-N128": 0,
+      "part39-036-L4-N590": 0,
+      "part39-041-L4-N2812": 0,
+      "part39-087-L5-N5443": 0,
+      "L6-N753": 0,
+      "random-07": 0,
+      "random-08": 0,
+      "random-10": 0,
+      "random-12": 0,
+      "random-13": 0,
+      "random-14": 0,
+      "random-17": 0,
+      "random-18": 0,
+      "part39-034-L6-N753": 0,
+      "part39-097-L6-N779": 0,
+      "part39-148-L6-N1435": 0,
+      "part39-175-L6-N8212": 0,
+      "part39-189-L6-N2662": 0,
+      "L7-N1169": 0,
+      "random-04": 0,
+      "random-06": 0,
+      "random-11": 2,
+      "random-20": 0,
+      "part39-022-L8-N1603": 0,
+      "part39-064-L9-N7834": 1,
+      "part39-080-L9-N6084": 1,
+      "part39-089-L9-N158": 1,
+      "part39-122-L9-N779": 0,
+      "part39-053-L10-N5351": 0,
+      "part39-058-L10-N2178": 0,
+      "L11-N8868": 10,
+      "random-02": 0,
+      "random-05": 8,
+      "part39-155-L11-N216": 0,
+      "part39-163-L11-N3084": 0,
+      "part39-118-L12-N783": 0,
+      "part39-072-L13-N16": 0,
+      "part39-139-L13-N814": 0,
+      "part39-147-L14-N7683": 3,
+      "part39-026-L16-N3024": 0,
+      "part39-100-L16-N4160": 0,
+      "part39-027-L17-N4989": 8,
+      "part39-059-L17-N417": 0,
+      "part39-113-L17-N2662": 0,
+      "part39-010-L18-N586": 0,
+      "part39-019-L18-N1214": 1,
+      "part39-057-L18-N486": 1,
+      "part39-069-L18-N1050": 0,
+      "part39-109-L18-N2662": 0,
+      "part39-131-L18-N6368": 0,
+      "part39-166-L18-N4181": 0,
+      "part39-002-L19-N5197": 1,
+      "part39-017-L19-N4817": 1,
+      "part39-070-L19-N5424": 1,
+      "part39-077-L19-N7292": 16,
+      "part39-094-L19-N248": 18,
+      "part39-095-L19-N8733": 17,
+      "part39-096-L19-N1403": 1,
+      "part39-137-L19-N1357": 17,
+      "part39-140-L19-N4865": 2,
+      "part39-184-L19-N2449": 0,
+      "part39-185-L19-N394": 0,
+      "part39-186-L19-N5309": 2,
+      "part39-201-L19-N261": 0,
+      "part39-008-L20-N4362": 17,
+      "part39-009-L20-N3891": 2,
+      "part39-030-L20-N3531": 3,
+      "part39-060-L20-N5586": 16,
+      "part39-078-L20-N7281": 2,
+      "part39-099-L20-N2282": 0,
+      "part39-116-L20-N312": 6,
+      "part39-129-L20-N769": 6,
+      "part39-154-L20-N3854": 1,
+      "part39-173-L20-N640": 14,
+      "part39-210-L20-N3007": 27,
+      "part39-006-L21-N1067": 3,
+      "part39-011-L21-N3039": 25,
+      "part39-014-L21-N1657": 4,
+      "part39-020-L21-N3949": 0,
+      "part39-044-L21-N3150": 0,
+      "part39-067-L21-N45": 2,
+      "part39-090-L21-N3264": 16,
+      "part39-107-L21-N1797": 1,
+      "part39-134-L21-N2079": 26,
+      "part39-181-L21-N4866": 18,
+      "part39-194-L21-N2183": 3,
+      "part39-198-L21-N4232": 9,
+      "L22-N2742": 25,
+      "random-01": 1,
+      "random-03": 5,
+      "part39-054-L22-N1030": 18,
+      "part39-063-L22-N9": 1,
+      "part39-103-L22-N556": 0,
+      "part39-104-L22-N943": 0,
+      "part39-114-L22-N854": 1,
+      "part39-119-L22-N2543": 3,
+      "part39-120-L22-N604": 4,
+      "part39-128-L22-N689": 2,
+      "part39-153-L22-N416": 1,
+      "part39-156-L22-N6957": 6,
+      "part39-192-L22-N1054": 12,
+      "part39-004-L23-N975": 5,
+      "part39-012-L23-N3819": 2,
+      "part39-016-L23-N2185": 16,
+      "part39-018-L23-N3204": 20,
+      "part39-047-L23-N5195": 27,
+      "part39-056-L23-N4886": 18,
+      "part39-075-L23-N100": 14,
+      "part39-124-L23-N1347": 13,
+      "part39-130-L23-N1406": 6,
+      "part39-142-L23-N357": 4,
+      "part39-176-L23-N4913": 24,
+      "part39-182-L23-N4703": 4,
+      "part39-208-L23-N1326": 28,
+      "part39-005-L24-N3002": 5,
+      "part39-007-L24-N510": 3,
+      "part39-025-L24-N1142": 6,
+      "part39-098-L24-N690": 0,
+      "part39-102-L24-N4021": 26,
+      "part39-105-L24-N71": 3,
+      "part39-110-L24-N698": 3,
+      "part39-112-L24-N1114": 5,
+      "part39-177-L24-N372": 4,
+      "part39-188-L24-N1086": 25,
+      "part39-013-L25-N2988": 9,
+      "part39-043-L25-N1270": 29,
+      "part39-073-L25-N208": 25,
+      "part39-101-L25-N2067": 27,
+      "part39-146-L25-N1259": 5,
+      "part39-149-L25-N672": 2,
+      "part39-164-L25-N899": 2,
+      "part39-191-L25-N3879": 8,
+      "part39-202-L25-N1521": 10,
+      "part39-206-L25-N4253": 6,
+      "part39-003-L26-N1856": 27,
+      "part39-092-L26-N194": 20,
+      "part39-151-L26-N879": 27,
+      "part39-168-L26-N7151": 25,
+      "part39-179-L26-N422": 2,
+      "part39-193-L26-N474": 12,
+      "part39-197-L26-N2240": 7,
+      "part39-199-L26-N2413": 26,
+      "part39-023-L27-N1574": 30,
+      "part39-039-L27-N1760": 9,
+      "part39-081-L27-N1232": 20,
+      "part39-091-L27-N697": 18,
+      "part39-125-L27-N1558": 21,
+      "part39-132-L27-N1311": 5,
+      "part39-144-L27-N795": 12,
+      "part39-150-L27-N1962": 16,
+      "part39-158-L27-N3752": 10,
+      "part39-167-L27-N5432": 8,
+      "part39-169-L27-N2265": 30,
+      "part39-174-L27-N124": 10,
+      "part39-037-L28-N2697": 20,
+      "part39-038-L28-N2921": 29,
+      "part39-079-L28-N318": 11,
+      "part39-084-L28-N1849": 10,
+      "part39-085-L28-N2853": 28,
+      "part39-111-L28-N1820": 26,
+      "part39-115-L28-N149": 20,
+      "part39-121-L28-N829": 24,
+      "part39-126-L28-N3153": 12,
+      "part39-135-L28-N433": 22,
+      "part39-136-L28-N1163": 10,
+      "part39-159-L28-N1357": 1,
+      "part39-172-L28-N663": 2,
+      "part39-190-L28-N228": 29,
+      "part39-195-L28-N1646": 20,
+      "part39-211-L28-N3349": 14,
+      "L29-N776": 20,
+      "random-09": 15,
+      "random-15": 5,
+      "random-16": 24,
+      "random-19": 7,
+      "part39-001-L29-N5588": 26,
+      "part39-015-L29-N3717": 7,
+      "part39-040-L29-N725": 25,
+      "part39-049-L29-N898": 8,
+      "part39-051-L29-N1329": 19,
+      "part39-082-L29-N3085": 19,
+      "part39-157-L29-N1953": 15,
+      "part39-170-L29-N605": 19,
+      "part39-178-L29-N2187": 13,
+      "part39-203-L29-N2451": 15,
+      "part39-205-L29-N2291": 16,
+      "part39-207-L29-N3431": 29,
+      "part39-209-L29-N1865": 20,
+      "part39-021-L30-N39": 3,
+      "part39-032-L30-N5191": 17,
+      "part39-033-L30-N1287": 13,
+      "part39-055-L30-N4747": 12,
+      "part39-062-L30-N6913": 23,
+      "part39-065-L30-N1888": 28,
+      "part39-066-L30-N4219": 27,
+      "part39-071-L30-N5391": 18,
+      "part39-076-L30-N4595": 12,
+      "part39-083-L30-N2835": 17,
+      "part39-093-L30-N3948": 12,
+      "part39-106-L30-N3970": 0,
+      "part39-117-L30-N4560": 28,
+      "part39-123-L30-N564": 6,
+      "part39-127-L30-N2580": 0,
+      "part39-133-L30-N3941": 20,
+      "part39-145-L30-N5149": 9,
+      "part39-160-L30-N3288": 24,
+      "part39-161-L30-N7416": 7,
+      "part39-165-L30-N3962": 30,
+      "part39-183-L30-N2276": 29,
+      "part39-200-L30-N2874": 20,
+      "part39-204-L30-N1717": 20,
+      "part39-024-L31-N1504": 30,
+      "part39-028-L31-N867": 30,
+      "part39-029-L31-N2525": 30,
+      "part39-031-L31-N31": 30,
+      "part39-035-L31-N34": 30,
+      "part39-042-L31-N502": 30,
+      "part39-045-L31-N1820": 30,
+      "part39-046-L31-N3707": 30,
+      "part39-050-L31-N6801": 30,
+      "part39-052-L31-N676": 30,
+      "part39-061-L31-N3307": 30,
+      "part39-068-L31-N7464": 30,
+      "part39-074-L31-N5215": 30,
+      "part39-086-L31-N4565": 30,
+      "part39-088-L31-N3495": 30,
+      "part39-108-L31-N6634": 30,
+      "part39-138-L31-N630": 30,
+      "part39-141-L31-N4175": 30,
+      "part39-143-L31-N5316": 30,
+      "part39-152-L31-N2949": 30,
+      "part39-162-L31-N4328": 30,
+      "part39-171-L31-N2650": 30,
+      "part39-180-L31-N501": 30,
+      "part39-187-L31-N330": 30,
+      "part39-196-L31-N2827": 30
+    }
+  },
+  "p39_9": {
+    "source_unit_count": 211,
+    "evaluated_unit_count": 210,
+    "passing_units": [
+      {
+        "id": "part39-048-L3-N128",
+        "layer": 3,
+        "unit": 128
+      },
+      {
+        "id": "part39-036-L4-N590",
+        "layer": 4,
+        "unit": 590
+      },
+      {
+        "id": "part39-041-L4-N2812",
+        "layer": 4,
+        "unit": 2812
+      },
+      {
+        "id": "part39-087-L5-N5443",
+        "layer": 5,
+        "unit": 5443
+      },
+      {
+        "id": "part39-034-L6-N753",
+        "layer": 6,
+        "unit": 753
+      },
+      {
+        "id": "part39-097-L6-N779",
+        "layer": 6,
+        "unit": 779
+      },
+      {
+        "id": "part39-148-L6-N1435",
+        "layer": 6,
+        "unit": 1435
+      },
+      {
+        "id": "part39-175-L6-N8212",
+        "layer": 6,
+        "unit": 8212
+      },
+      {
+        "id": "part39-189-L6-N2662",
+        "layer": 6,
+        "unit": 2662
+      },
+      {
+        "id": "part39-022-L8-N1603",
+        "layer": 8,
+        "unit": 1603
+      },
+      {
+        "id": "part39-064-L9-N7834",
+        "layer": 9,
+        "unit": 7834
+      },
+      {
+        "id": "part39-080-L9-N6084",
+        "layer": 9,
+        "unit": 6084
+      },
+      {
+        "id": "part39-089-L9-N158",
+        "layer": 9,
+        "unit": 158
+      },
+      {
+        "id": "part39-122-L9-N779",
+        "layer": 9,
+        "unit": 779
+      },
+      {
+        "id": "part39-053-L10-N5351",
+        "layer": 10,
+        "unit": 5351
+      },
+      {
+        "id": "part39-058-L10-N2178",
+        "layer": 10,
+        "unit": 2178
+      },
+      {
+        "id": "part39-155-L11-N216",
+        "layer": 11,
+        "unit": 216
+      },
+      {
+        "id": "part39-163-L11-N3084",
+        "layer": 11,
+        "unit": 3084
+      },
+      {
+        "id": "part39-118-L12-N783",
+        "layer": 12,
+        "unit": 783
+      },
+      {
+        "id": "part39-072-L13-N16",
+        "layer": 13,
+        "unit": 16
+      },
+      {
+        "id": "part39-139-L13-N814",
+        "layer": 13,
+        "unit": 814
+      },
+      {
+        "id": "part39-147-L14-N7683",
+        "layer": 14,
+        "unit": 7683
+      },
+      {
+        "id": "part39-026-L16-N3024",
+        "layer": 16,
+        "unit": 3024
+      },
+      {
+        "id": "part39-100-L16-N4160",
+        "layer": 16,
+        "unit": 4160
+      },
+      {
+        "id": "part39-027-L17-N4989",
+        "layer": 17,
+        "unit": 4989
+      },
+      {
+        "id": "part39-059-L17-N417",
+        "layer": 17,
+        "unit": 417
+      },
+      {
+        "id": "part39-113-L17-N2662",
+        "layer": 17,
+        "unit": 2662
+      },
+      {
+        "id": "part39-010-L18-N586",
+        "layer": 18,
+        "unit": 586
+      },
+      {
+        "id": "part39-019-L18-N1214",
+        "layer": 18,
+        "unit": 1214
+      },
+      {
+        "id": "part39-057-L18-N486",
+        "layer": 18,
+        "unit": 486
+      },
+      {
+        "id": "part39-069-L18-N1050",
+        "layer": 18,
+        "unit": 1050
+      },
+      {
+        "id": "part39-109-L18-N2662",
+        "layer": 18,
+        "unit": 2662
+      },
+      {
+        "id": "part39-131-L18-N6368",
+        "layer": 18,
+        "unit": 6368
+      },
+      {
+        "id": "part39-166-L18-N4181",
+        "layer": 18,
+        "unit": 4181
+      },
+      {
+        "id": "part39-002-L19-N5197",
+        "layer": 19,
+        "unit": 5197
+      },
+      {
+        "id": "part39-017-L19-N4817",
+        "layer": 19,
+        "unit": 4817
+      },
+      {
+        "id": "part39-070-L19-N5424",
+        "layer": 19,
+        "unit": 5424
+      },
+      {
+        "id": "part39-077-L19-N7292",
+        "layer": 19,
+        "unit": 7292
+      },
+      {
+        "id": "part39-094-L19-N248",
+        "layer": 19,
+        "unit": 248
+      },
+      {
+        "id": "part39-095-L19-N8733",
+        "layer": 19,
+        "unit": 8733
+      },
+      {
+        "id": "part39-096-L19-N1403",
+        "layer": 19,
+        "unit": 1403
+      },
+      {
+        "id": "part39-137-L19-N1357",
+        "layer": 19,
+        "unit": 1357
+      },
+      {
+        "id": "part39-140-L19-N4865",
+        "layer": 19,
+        "unit": 4865
+      },
+      {
+        "id": "part39-184-L19-N2449",
+        "layer": 19,
+        "unit": 2449
+      },
+      {
+        "id": "part39-185-L19-N394",
+        "layer": 19,
+        "unit": 394
+      },
+      {
+        "id": "part39-186-L19-N5309",
+        "layer": 19,
+        "unit": 5309
+      },
+      {
+        "id": "part39-201-L19-N261",
+        "layer": 19,
+        "unit": 261
+      },
+      {
+        "id": "part39-008-L20-N4362",
+        "layer": 20,
+        "unit": 4362
+      },
+      {
+        "id": "part39-009-L20-N3891",
+        "layer": 20,
+        "unit": 3891
+      },
+      {
+        "id": "part39-030-L20-N3531",
+        "layer": 20,
+        "unit": 3531
+      },
+      {
+        "id": "part39-060-L20-N5586",
+        "layer": 20,
+        "unit": 5586
+      },
+      {
+        "id": "part39-078-L20-N7281",
+        "layer": 20,
+        "unit": 7281
+      },
+      {
+        "id": "part39-099-L20-N2282",
+        "layer": 20,
+        "unit": 2282
+      },
+      {
+        "id": "part39-116-L20-N312",
+        "layer": 20,
+        "unit": 312
+      },
+      {
+        "id": "part39-129-L20-N769",
+        "layer": 20,
+        "unit": 769
+      },
+      {
+        "id": "part39-154-L20-N3854",
+        "layer": 20,
+        "unit": 3854
+      },
+      {
+        "id": "part39-173-L20-N640",
+        "layer": 20,
+        "unit": 640
+      },
+      {
+        "id": "part39-210-L20-N3007",
+        "layer": 20,
+        "unit": 3007
+      },
+      {
+        "id": "part39-006-L21-N1067",
+        "layer": 21,
+        "unit": 1067
+      },
+      {
+        "id": "part39-011-L21-N3039",
+        "layer": 21,
+        "unit": 3039
+      },
+      {
+        "id": "part39-014-L21-N1657",
+        "layer": 21,
+        "unit": 1657
+      },
+      {
+        "id": "part39-020-L21-N3949",
+        "layer": 21,
+        "unit": 3949
+      },
+      {
+        "id": "part39-044-L21-N3150",
+        "layer": 21,
+        "unit": 3150
+      },
+      {
+        "id": "part39-067-L21-N45",
+        "layer": 21,
+        "unit": 45
+      },
+      {
+        "id": "part39-090-L21-N3264",
+        "layer": 21,
+        "unit": 3264
+      },
+      {
+        "id": "part39-107-L21-N1797",
+        "layer": 21,
+        "unit": 1797
+      },
+      {
+        "id": "part39-134-L21-N2079",
+        "layer": 21,
+        "unit": 2079
+      },
+      {
+        "id": "part39-181-L21-N4866",
+        "layer": 21,
+        "unit": 4866
+      },
+      {
+        "id": "part39-194-L21-N2183",
+        "layer": 21,
+        "unit": 2183
+      },
+      {
+        "id": "part39-198-L21-N4232",
+        "layer": 21,
+        "unit": 4232
+      },
+      {
+        "id": "part39-054-L22-N1030",
+        "layer": 22,
+        "unit": 1030
+      },
+      {
+        "id": "part39-063-L22-N9",
+        "layer": 22,
+        "unit": 9
+      },
+      {
+        "id": "part39-103-L22-N556",
+        "layer": 22,
+        "unit": 556
+      },
+      {
+        "id": "part39-104-L22-N943",
+        "layer": 22,
+        "unit": 943
+      },
+      {
+        "id": "part39-114-L22-N854",
+        "layer": 22,
+        "unit": 854
+      },
+      {
+        "id": "part39-119-L22-N2543",
+        "layer": 22,
+        "unit": 2543
+      },
+      {
+        "id": "part39-120-L22-N604",
+        "layer": 22,
+        "unit": 604
+      },
+      {
+        "id": "part39-128-L22-N689",
+        "layer": 22,
+        "unit": 689
+      },
+      {
+        "id": "part39-153-L22-N416",
+        "layer": 22,
+        "unit": 416
+      },
+      {
+        "id": "part39-156-L22-N6957",
+        "layer": 22,
+        "unit": 6957
+      },
+      {
+        "id": "part39-192-L22-N1054",
+        "layer": 22,
+        "unit": 1054
+      },
+      {
+        "id": "part39-004-L23-N975",
+        "layer": 23,
+        "unit": 975
+      },
+      {
+        "id": "part39-012-L23-N3819",
+        "layer": 23,
+        "unit": 3819
+      },
+      {
+        "id": "part39-016-L23-N2185",
+        "layer": 23,
+        "unit": 2185
+      },
+      {
+        "id": "part39-018-L23-N3204",
+        "layer": 23,
+        "unit": 3204
+      },
+      {
+        "id": "part39-047-L23-N5195",
+        "layer": 23,
+        "unit": 5195
+      },
+      {
+        "id": "part39-056-L23-N4886",
+        "layer": 23,
+        "unit": 4886
+      },
+      {
+        "id": "part39-075-L23-N100",
+        "layer": 23,
+        "unit": 100
+      },
+      {
+        "id": "part39-124-L23-N1347",
+        "layer": 23,
+        "unit": 1347
+      },
+      {
+        "id": "part39-130-L23-N1406",
+        "layer": 23,
+        "unit": 1406
+      },
+      {
+        "id": "part39-142-L23-N357",
+        "layer": 23,
+        "unit": 357
+      },
+      {
+        "id": "part39-176-L23-N4913",
+        "layer": 23,
+        "unit": 4913
+      },
+      {
+        "id": "part39-182-L23-N4703",
+        "layer": 23,
+        "unit": 4703
+      },
+      {
+        "id": "part39-208-L23-N1326",
+        "layer": 23,
+        "unit": 1326
+      },
+      {
+        "id": "part39-005-L24-N3002",
+        "layer": 24,
+        "unit": 3002
+      },
+      {
+        "id": "part39-007-L24-N510",
+        "layer": 24,
+        "unit": 510
+      },
+      {
+        "id": "part39-025-L24-N1142",
+        "layer": 24,
+        "unit": 1142
+      },
+      {
+        "id": "part39-098-L24-N690",
+        "layer": 24,
+        "unit": 690
+      },
+      {
+        "id": "part39-102-L24-N4021",
+        "layer": 24,
+        "unit": 4021
+      },
+      {
+        "id": "part39-105-L24-N71",
+        "layer": 24,
+        "unit": 71
+      },
+      {
+        "id": "part39-110-L24-N698",
+        "layer": 24,
+        "unit": 698
+      },
+      {
+        "id": "part39-112-L24-N1114",
+        "layer": 24,
+        "unit": 1114
+      },
+      {
+        "id": "part39-177-L24-N372",
+        "layer": 24,
+        "unit": 372
+      },
+      {
+        "id": "part39-188-L24-N1086",
+        "layer": 24,
+        "unit": 1086
+      },
+      {
+        "id": "part39-013-L25-N2988",
+        "layer": 25,
+        "unit": 2988
+      },
+      {
+        "id": "part39-043-L25-N1270",
+        "layer": 25,
+        "unit": 1270
+      },
+      {
+        "id": "part39-073-L25-N208",
+        "layer": 25,
+        "unit": 208
+      },
+      {
+        "id": "part39-101-L25-N2067",
+        "layer": 25,
+        "unit": 2067
+      },
+      {
+        "id": "part39-146-L25-N1259",
+        "layer": 25,
+        "unit": 1259
+      },
+      {
+        "id": "part39-149-L25-N672",
+        "layer": 25,
+        "unit": 672
+      },
+      {
+        "id": "part39-164-L25-N899",
+        "layer": 25,
+        "unit": 899
+      },
+      {
+        "id": "part39-191-L25-N3879",
+        "layer": 25,
+        "unit": 3879
+      },
+      {
+        "id": "part39-202-L25-N1521",
+        "layer": 25,
+        "unit": 1521
+      },
+      {
+        "id": "part39-206-L25-N4253",
+        "layer": 25,
+        "unit": 4253
+      },
+      {
+        "id": "part39-003-L26-N1856",
+        "layer": 26,
+        "unit": 1856
+      },
+      {
+        "id": "part39-092-L26-N194",
+        "layer": 26,
+        "unit": 194
+      },
+      {
+        "id": "part39-151-L26-N879",
+        "layer": 26,
+        "unit": 879
+      },
+      {
+        "id": "part39-168-L26-N7151",
+        "layer": 26,
+        "unit": 7151
+      },
+      {
+        "id": "part39-179-L26-N422",
+        "layer": 26,
+        "unit": 422
+      },
+      {
+        "id": "part39-193-L26-N474",
+        "layer": 26,
+        "unit": 474
+      },
+      {
+        "id": "part39-197-L26-N2240",
+        "layer": 26,
+        "unit": 2240
+      },
+      {
+        "id": "part39-199-L26-N2413",
+        "layer": 26,
+        "unit": 2413
+      },
+      {
+        "id": "part39-023-L27-N1574",
+        "layer": 27,
+        "unit": 1574
+      },
+      {
+        "id": "part39-039-L27-N1760",
+        "layer": 27,
+        "unit": 1760
+      },
+      {
+        "id": "part39-081-L27-N1232",
+        "layer": 27,
+        "unit": 1232
+      },
+      {
+        "id": "part39-091-L27-N697",
+        "layer": 27,
+        "unit": 697
+      },
+      {
+        "id": "part39-125-L27-N1558",
+        "layer": 27,
+        "unit": 1558
+      },
+      {
+        "id": "part39-132-L27-N1311",
+        "layer": 27,
+        "unit": 1311
+      },
+      {
+        "id": "part39-144-L27-N795",
+        "layer": 27,
+        "unit": 795
+      },
+      {
+        "id": "part39-150-L27-N1962",
+        "layer": 27,
+        "unit": 1962
+      },
+      {
+        "id": "part39-158-L27-N3752",
+        "layer": 27,
+        "unit": 3752
+      },
+      {
+        "id": "part39-167-L27-N5432",
+        "layer": 27,
+        "unit": 5432
+      },
+      {
+        "id": "part39-169-L27-N2265",
+        "layer": 27,
+        "unit": 2265
+      },
+      {
+        "id": "part39-174-L27-N124",
+        "layer": 27,
+        "unit": 124
+      },
+      {
+        "id": "part39-037-L28-N2697",
+        "layer": 28,
+        "unit": 2697
+      },
+      {
+        "id": "part39-038-L28-N2921",
+        "layer": 28,
+        "unit": 2921
+      },
+      {
+        "id": "part39-079-L28-N318",
+        "layer": 28,
+        "unit": 318
+      },
+      {
+        "id": "part39-084-L28-N1849",
+        "layer": 28,
+        "unit": 1849
+      },
+      {
+        "id": "part39-085-L28-N2853",
+        "layer": 28,
+        "unit": 2853
+      },
+      {
+        "id": "part39-111-L28-N1820",
+        "layer": 28,
+        "unit": 1820
+      },
+      {
+        "id": "part39-115-L28-N149",
+        "layer": 28,
+        "unit": 149
+      },
+      {
+        "id": "part39-121-L28-N829",
+        "layer": 28,
+        "unit": 829
+      },
+      {
+        "id": "part39-126-L28-N3153",
+        "layer": 28,
+        "unit": 3153
+      },
+      {
+        "id": "part39-135-L28-N433",
+        "layer": 28,
+        "unit": 433
+      },
+      {
+        "id": "part39-136-L28-N1163",
+        "layer": 28,
+        "unit": 1163
+      },
+      {
+        "id": "part39-159-L28-N1357",
+        "layer": 28,
+        "unit": 1357
+      },
+      {
+        "id": "part39-172-L28-N663",
+        "layer": 28,
+        "unit": 663
+      },
+      {
+        "id": "part39-190-L28-N228",
+        "layer": 28,
+        "unit": 228
+      },
+      {
+        "id": "part39-195-L28-N1646",
+        "layer": 28,
+        "unit": 1646
+      },
+      {
+        "id": "part39-211-L28-N3349",
+        "layer": 28,
+        "unit": 3349
+      },
+      {
+        "id": "part39-001-L29-N5588",
+        "layer": 29,
+        "unit": 5588
+      },
+      {
+        "id": "part39-015-L29-N3717",
+        "layer": 29,
+        "unit": 3717
+      },
+      {
+        "id": "part39-040-L29-N725",
+        "layer": 29,
+        "unit": 725
+      },
+      {
+        "id": "part39-049-L29-N898",
+        "layer": 29,
+        "unit": 898
+      },
+      {
+        "id": "part39-051-L29-N1329",
+        "layer": 29,
+        "unit": 1329
+      },
+      {
+        "id": "part39-082-L29-N3085",
+        "layer": 29,
+        "unit": 3085
+      },
+      {
+        "id": "part39-157-L29-N1953",
+        "layer": 29,
+        "unit": 1953
+      },
+      {
+        "id": "part39-170-L29-N605",
+        "layer": 29,
+        "unit": 605
+      },
+      {
+        "id": "part39-178-L29-N2187",
+        "layer": 29,
+        "unit": 2187
+      },
+      {
+        "id": "part39-203-L29-N2451",
+        "layer": 29,
+        "unit": 2451
+      },
+      {
+        "id": "part39-205-L29-N2291",
+        "layer": 29,
+        "unit": 2291
+      },
+      {
+        "id": "part39-207-L29-N3431",
+        "layer": 29,
+        "unit": 3431
+      },
+      {
+        "id": "part39-209-L29-N1865",
+        "layer": 29,
+        "unit": 1865
+      },
+      {
+        "id": "part39-021-L30-N39",
+        "layer": 30,
+        "unit": 39
+      },
+      {
+        "id": "part39-032-L30-N5191",
+        "layer": 30,
+        "unit": 5191
+      },
+      {
+        "id": "part39-033-L30-N1287",
+        "layer": 30,
+        "unit": 1287
+      },
+      {
+        "id": "part39-055-L30-N4747",
+        "layer": 30,
+        "unit": 4747
+      },
+      {
+        "id": "part39-062-L30-N6913",
+        "layer": 30,
+        "unit": 6913
+      },
+      {
+        "id": "part39-065-L30-N1888",
+        "layer": 30,
+        "unit": 1888
+      },
+      {
+        "id": "part39-066-L30-N4219",
+        "layer": 30,
+        "unit": 4219
+      },
+      {
+        "id": "part39-071-L30-N5391",
+        "layer": 30,
+        "unit": 5391
+      },
+      {
+        "id": "part39-076-L30-N4595",
+        "layer": 30,
+        "unit": 4595
+      },
+      {
+        "id": "part39-083-L30-N2835",
+        "layer": 30,
+        "unit": 2835
+      },
+      {
+        "id": "part39-093-L30-N3948",
+        "layer": 30,
+        "unit": 3948
+      },
+      {
+        "id": "part39-106-L30-N3970",
+        "layer": 30,
+        "unit": 3970
+      },
+      {
+        "id": "part39-117-L30-N4560",
+        "layer": 30,
+        "unit": 4560
+      },
+      {
+        "id": "part39-123-L30-N564",
+        "layer": 30,
+        "unit": 564
+      },
+      {
+        "id": "part39-127-L30-N2580",
+        "layer": 30,
+        "unit": 2580
+      },
+      {
+        "id": "part39-133-L30-N3941",
+        "layer": 30,
+        "unit": 3941
+      },
+      {
+        "id": "part39-145-L30-N5149",
+        "layer": 30,
+        "unit": 5149
+      },
+      {
+        "id": "part39-160-L30-N3288",
+        "layer": 30,
+        "unit": 3288
+      },
+      {
+        "id": "part39-161-L30-N7416",
+        "layer": 30,
+        "unit": 7416
+      },
+      {
+        "id": "part39-165-L30-N3962",
+        "layer": 30,
+        "unit": 3962
+      },
+      {
+        "id": "part39-183-L30-N2276",
+        "layer": 30,
+        "unit": 2276
+      },
+      {
+        "id": "part39-200-L30-N2874",
+        "layer": 30,
+        "unit": 2874
+      },
+      {
+        "id": "part39-204-L30-N1717",
+        "layer": 30,
+        "unit": 1717
+      },
+      {
+        "id": "part39-024-L31-N1504",
+        "layer": 31,
+        "unit": 1504
+      },
+      {
+        "id": "part39-028-L31-N867",
+        "layer": 31,
+        "unit": 867
+      },
+      {
+        "id": "part39-029-L31-N2525",
+        "layer": 31,
+        "unit": 2525
+      },
+      {
+        "id": "part39-031-L31-N31",
+        "layer": 31,
+        "unit": 31
+      },
+      {
+        "id": "part39-035-L31-N34",
+        "layer": 31,
+        "unit": 34
+      },
+      {
+        "id": "part39-042-L31-N502",
+        "layer": 31,
+        "unit": 502
+      },
+      {
+        "id": "part39-045-L31-N1820",
+        "layer": 31,
+        "unit": 1820
+      },
+      {
+        "id": "part39-046-L31-N3707",
+        "layer": 31,
+        "unit": 3707
+      },
+      {
+        "id": "part39-050-L31-N6801",
+        "layer": 31,
+        "unit": 6801
+      },
+      {
+        "id": "part39-052-L31-N676",
+        "layer": 31,
+        "unit": 676
+      },
+      {
+        "id": "part39-061-L31-N3307",
+        "layer": 31,
+        "unit": 3307
+      },
+      {
+        "id": "part39-068-L31-N7464",
+        "layer": 31,
+        "unit": 7464
+      },
+      {
+        "id": "part39-074-L31-N5215",
+        "layer": 31,
+        "unit": 5215
+      },
+      {
+        "id": "part39-086-L31-N4565",
+        "layer": 31,
+        "unit": 4565
+      },
+      {
+        "id": "part39-088-L31-N3495",
+        "layer": 31,
+        "unit": 3495
+      },
+      {
+        "id": "part39-108-L31-N6634",
+        "layer": 31,
+        "unit": 6634
+      },
+      {
+        "id": "part39-138-L31-N630",
+        "layer": 31,
+        "unit": 630
+      },
+      {
+        "id": "part39-141-L31-N4175",
+        "layer": 31,
+        "unit": 4175
+      },
+      {
+        "id": "part39-143-L31-N5316",
+        "layer": 31,
+        "unit": 5316
+      },
+      {
+        "id": "part39-152-L31-N2949",
+        "layer": 31,
+        "unit": 2949
+      },
+      {
+        "id": "part39-162-L31-N4328",
+        "layer": 31,
+        "unit": 4328
+      },
+      {
+        "id": "part39-171-L31-N2650",
+        "layer": 31,
+        "unit": 2650
+      },
+      {
+        "id": "part39-180-L31-N501",
+        "layer": 31,
+        "unit": 501
+      },
+      {
+        "id": "part39-187-L31-N330",
+        "layer": 31,
+        "unit": 330
+      },
+      {
+        "id": "part39-196-L31-N2827",
+        "layer": 31,
+        "unit": 2827
+      }
+    ],
+    "excluded_coordinate": {
+      "layer": 6,
+      "unit": 753
+    },
+    "meaning_words": [
+      "ai",
+      "assistant",
+      "model",
+      "chatbot",
+      "人工智能",
+      "助手",
+      "claude",
+      "gpt"
+    ],
+    "readout": "logit",
+    "logit_lens": {
+      "units_with_meaning_words": {
+        "part39-102-L24-N4021": [
+          "assistant"
+        ]
+      },
+      "unit_count_with_meaning_words": 1,
+      "any_match": true
+    },
+    "holds": true,
+    "status": "supported"
+  },
+  "models_scored": [
+    "Qwen/Qwen3-1.7B",
+    "Qwen/Qwen3.5-4B"
+  ],
+  "current_model": "Qwen/Qwen3.5-4B",
+  "source_reads": {
+    "Qwen/Qwen3-1.7B": "/home/elisepc/green/worktrees/ab-part42-build/results/part42/qwen3-1.7b/read.json",
+    "Qwen/Qwen3.5-4B": "/home/elisepc/green/worktrees/ab-part42-build/results/part42/qwen3.5-4b/read.json"
+  }
+}
