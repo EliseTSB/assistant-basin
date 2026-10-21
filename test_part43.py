@@ -106,8 +106,13 @@ class TinyModel(nn.Module):
 
     def forward(self, input_ids, attention_mask=None, use_cache=False):
         residual = self.embedding(input_ids)
-        for layer_index, _unit in part43.UNITS:
-            layer = self.layers[layer_index]
+        targets = {layer_index: unit for layer_index, unit in part43.UNITS}
+        for layer_index, layer in enumerate(self.layers):
+            if layer_index not in targets:
+                # Exercise the dtype hook on every decoder layer without changing
+                # this deliberately small model's target-unit scoring path.
+                layer.mlp.down_proj(residual[..., :1])
+                continue
             normalized = layer.post_attention_layernorm(residual)
             gated = F.silu(layer.mlp.gate_proj(normalized)) * layer.mlp.up_proj(normalized)
             residual = residual + layer.mlp.down_proj(gated)
@@ -250,6 +255,41 @@ def _calibration_raw_fixture(args, monkeypatch, fp32_difference=0.01, bf16_repea
     return raw, tokenizer
 
 
+def _install_torch_reference_qwen_functions(monkeypatch):
+    from types import ModuleType
+    module_name = "transformers.models.qwen3_5.modeling_qwen3_5"
+    module = ModuleType(module_name)
+    for function_name in part43.FP32_QWEN_FUNCTION_NAMES:
+        def function():
+            return None
+        function.__module__ = module_name
+        function.__qualname__ = function_name
+        setattr(module, function_name, function)
+    monkeypatch.setitem(part43.sys.modules, module_name, module)
+
+
+FP32_CROSS_METHOD_FIXTURE_VALUES = {
+    "clean": 0.08763865651032532,
+    "selected_single_zero_L7_N1169": 0.08659968204092383,
+    "all_four_zero": 0.021378953655388777,
+    "dose_plus_2x_L7_N1169": 0.10915956082076228,
+    "dose_minus_2x_L7_N1169": 0.02181857841283641,
+    "L7_zero_L11_restored_clean": 0.03375775048635088,
+    "clean_to_clean_replay": 0.08763865651032532,
+}
+
+
+def _fp32_cross_method_fixture():
+    return {
+        "source_artifact": part43.FP32_CROSS_METHOD_SOURCE,
+        "source_artifact_sha256": part43.FP32_CROSS_METHOD_SOURCE_SHA256,
+        "source_protocol_id": part43.CALIBRATION_PROTOCOL_ID,
+        "absolute_difference_by_cell": dict(FP32_CROSS_METHOD_FIXTURE_VALUES),
+        "maximum_absolute_difference": max(FP32_CROSS_METHOD_FIXTURE_VALUES.values()),
+        "used_for_epsilon": False,
+    }
+
+
 def _calibration_fixture(args, monkeypatch, fp32_difference=0.01, bf16_repeat_spread=0.0):
     raw, tokenizer = _calibration_raw_fixture(
         args, monkeypatch, fp32_difference=fp32_difference, bf16_repeat_spread=bf16_repeat_spread,
@@ -260,6 +300,12 @@ def _calibration_fixture(args, monkeypatch, fp32_difference=0.01, bf16_repeat_sp
 
 def _fp32_successor_raw_fixture(args, monkeypatch, repeat_spread=0.0, replay_error=0.0):
     _fake_part25(monkeypatch)
+    _install_torch_reference_qwen_functions(monkeypatch)
+    monkeypatch.setattr(part43, "_fp32_cross_method_diagnostic", _fp32_cross_method_fixture)
+    monkeypatch.setenv("USE_HUB_KERNELS", "0")
+    monkeypatch.setattr(torch.backends.cuda.matmul, "allow_tf32", False)
+    monkeypatch.setattr(torch.backends.cudnn, "allow_tf32", False)
+    monkeypatch.setattr(torch, "get_float32_matmul_precision", lambda: "highest")
     args.protocol = "fp32-successor"
     tokenizer = TinyTokenizer()
     registration = part43._calibration_registration(tokenizer, part43.FP32_SUCCESSOR_PROTOCOL_ID)
@@ -286,18 +332,15 @@ def _fp32_successor_raw_fixture(args, monkeypatch, repeat_spread=0.0, replay_err
         }
 
     model = TinyModel().to(dtype=torch.float32)
-    part43._ACTIVE_ACTIVATION_DTYPES = {"torch.float32"}
-    part43._ACTIVE_DOWN_PROJ_INPUT_DTYPES = {"torch.float32"}
-    part43._ACTIVE_LOGIT_DTYPES = {"torch.float32"}
+    monkeypatch.setattr(part43, "_ACTIVE_ACTIVATION_DTYPES", {"torch.float32"})
+    monkeypatch.setattr(part43, "_ACTIVE_DOWN_PROJ_INPUT_DTYPES", {"torch.float32"})
+    monkeypatch.setattr(part43, "_ACTIVE_DOWN_PROJ_INPUT_DTYPES_BY_LAYER", {
+        layer: {"torch.float32"} for layer in range(part43.FP32_SUCCESSOR_LAYER_COUNT)
+    })
+    monkeypatch.setattr(part43, "_ACTIVE_LOGIT_DTYPES", {"torch.float32"})
     execution = part43._calibration_runtime_metadata(
         model, "torch.float32", part43.FP32_SUCCESSOR_PROTOCOL_ID,
     )
-    # This fixture represents execution after the protocol's pre-load precision setup.
-    flags = execution["runtime"]["precision_flags"]
-    flags["cuda_matmul_allow_tf32"] = False
-    flags["cudnn_allow_tf32"] = False
-    flags["float32_matmul_precision"] = "highest"
-    execution["runtime"]["float32_matmul_precision"] = "highest"
     raw = part43._calibration_artifact(
         args, tokenizer,
         {"fp32": {"repeat_count": 3, "cells": cells}},
@@ -704,7 +747,7 @@ def test_raw_artifact_reader_computes_summary_and_pilot_after_disk_roundtrip(tmp
     monkeypatch.setattr(part43, "_load_token_records", lambda _args: _token_sets())
     monkeypatch.setattr(part43, "run_calibration_runtime", lambda *_args: raw)
     monkeypatch.setattr(part43, "_load_calibration_tokenizer", lambda _args: tokenizer)
-    monkeypatch.setattr(part43, "_load_runtime", lambda _args: (tokenizer, TinyModel()))
+    monkeypatch.setattr(part43, "_load_runtime", lambda _args: (tokenizer, TinyModel().to(dtype=torch.bfloat16)))
     monkeypatch.setattr(part43, "_sequences", lambda _tokenizer: ["tiny sequence"])
     stages = []
     monkeypatch.setattr(part43, "run_signs", lambda *_a, **_k: stages.append("signs") or {"signed": True})
@@ -934,9 +977,64 @@ def test_valid_reader_summary_reaches_pilot_lattice(tmp_path, monkeypatch):
     monkeypatch.setattr(part43, "run_lattice_amended", lambda *_a, **_k: calls.append("lattice") or {"timing": {"elapsed_seconds": 0.1}})
     monkeypatch.setattr(part43, "run_swap", lambda *_a, **_k: {"rows": []})
     monkeypatch.setattr(part43, "run_attach", lambda *_a, **_k: {"rows": []})
-    result = part43.run_pilot(TinyModel(), TinyTokenizer(), _token_sets(), args, calibration=calibration)
+    result = part43.run_pilot(
+        TinyModel().to(dtype=torch.bfloat16), TinyTokenizer(), _token_sets(), args, calibration=calibration,
+    )
     assert result["status"] == "complete"
     assert calls == ["lattice"]
+
+
+def test_run_pilot_second_gate_rejects_calibration_from_another_protocol(tmp_path, monkeypatch):
+    legacy_dir = tmp_path / "legacy"
+    fp32_dir = tmp_path / "fp32"
+    legacy_dir.mkdir()
+    fp32_dir.mkdir()
+    legacy_args = _args(legacy_dir)
+    legacy_calibration = _calibration_fixture(legacy_args, monkeypatch)
+    fp32_args = _args(fp32_dir, protocol="fp32-successor")
+    monkeypatch.setattr(part43, "_sequences", lambda *_args: pytest.fail("cross-protocol pilot reached stages"))
+    result = part43.run_pilot(
+        TinyModel().to(dtype=torch.bfloat16), TinyTokenizer(), _token_sets(),
+        fp32_args, calibration=legacy_calibration,
+    )
+    assert result["status"] == "HOLD"
+    assert "protocol" in result["hold"]["reason"]
+
+
+def test_run_pilot_second_gate_rejects_model_dtype_mismatching_fp32_calibration(tmp_path, monkeypatch):
+    args = _args(tmp_path, protocol="fp32-successor")
+    raw, tokenizer = _fp32_successor_raw_fixture(args, monkeypatch)
+    calibration = _read_fp32_fixture(args, raw, tokenizer)
+    monkeypatch.setattr(part43, "_sequences", lambda *_args: pytest.fail("dtype-mismatched pilot reached stages"))
+    result = part43.run_pilot(
+        TinyModel().to(dtype=torch.bfloat16), tokenizer, _token_sets(), args,
+        calibration=calibration,
+    )
+    assert result["status"] == "HOLD"
+    assert "torch.float32" in result["hold"]["reason"]
+
+
+def test_fp32_cli_persists_a_second_gate_hold_without_stage_outputs(tmp_path, monkeypatch):
+    args = _args(tmp_path, protocol="fp32-successor")
+    raw, tokenizer = _fp32_successor_raw_fixture(args, monkeypatch)
+    monkeypatch.setattr(part43, "write_manifest", lambda _args: {"schema_version": 1})
+    monkeypatch.setattr(part43, "_load_token_records", lambda _args: _token_sets())
+    monkeypatch.setattr(part43, "run_calibration_runtime", lambda *_args: raw)
+    monkeypatch.setattr(part43, "_load_calibration_tokenizer", lambda _args: tokenizer)
+    monkeypatch.setattr(part43, "_load_runtime", lambda *_args, **_kwargs: (
+        tokenizer, TinyModel().to(dtype=torch.bfloat16),
+    ))
+    monkeypatch.setattr(part43, "_sequences", lambda *_args: pytest.fail("mismatched pilot reached production stages"))
+    assert part43.main([
+        "pilot", "--protocol", "fp32-successor", "--out", args.out,
+        "--candidates", args.candidates, "--cache-dir", args.cache_dir, "--device", "cpu",
+    ]) == 0
+    pilot = json.loads((Path(args.out) / "pilot.json").read_text(encoding="utf-8"))
+    assert pilot["status"] == "HOLD"
+    assert "torch.float32" in pilot["hold"]["reason"]
+    assert pilot["calibration_gate_interpretation"] == part43.FP32_GATE_INTERPRETATION
+    assert json.loads((Path(args.out) / "HOLD.json").read_text(encoding="utf-8"))["status"] == "HOLD"
+    assert not (Path(args.out) / "pilot-signs.json").exists()
 
 def test_decision_cli_missing_calibration_writes_hold_before_lattice(tmp_path, monkeypatch):
     args = _args(tmp_path)
@@ -951,9 +1049,39 @@ def test_decision_cli_missing_calibration_writes_hold_before_lattice(tmp_path, m
     assert called == []
 
 
+@pytest.mark.parametrize("command", [
+    "manifest", "validate", "checks", "batch-diag", "signs", "dla", "lattice", "mediate",
+    "rescue", "shift", "positions", "baselines", "heldout", "readout-check", "links", "sweep",
+    "dose", "grid", "swap", "attach", "base", "score",
+])
+def test_fp32_protocol_refuses_every_command_outside_calibrate_and_pilot(command, tmp_path, monkeypatch):
+    def unexpected(*_args, **_kwargs):
+        pytest.fail("the bounded FP32 protocol guard must run before command work")
+
+    monkeypatch.setattr(part43, "_read_calibration_gate", lambda _args: (False, "missing"))
+    monkeypatch.setattr(part43, "write_manifest", unexpected)
+    monkeypatch.setattr(part43, "_load_runtime", unexpected)
+    monkeypatch.setattr(part43, "run_score", unexpected)
+    monkeypatch.setattr(part43, "run_dla", unexpected)
+    with pytest.raises(SystemExit, match="limited to calibrate and pilot"):
+        part43.main([
+            command, "--protocol", "fp32-successor", "--out", str(tmp_path / "out"),
+        ])
+
+
+@pytest.mark.parametrize("protocol, dtype", [("fp32-successor", "bf16"), ("bf16-v2", "fp32")])
+def test_cli_rejects_dtype_that_contradicts_selected_protocol(protocol, dtype, tmp_path, monkeypatch):
+    monkeypatch.setattr(part43, "write_manifest", lambda *_args: pytest.fail("dtype contradiction reached manifest"))
+    with pytest.raises(SystemExit, match="contradicts"):
+        part43.main([
+            "calibrate", "--protocol", protocol, "--dtype", dtype,
+            "--out", str(tmp_path / "out"),
+        ])
+
+
 def test_pilot_and_base_cli_smoke_with_tiny_model(tmp_path, monkeypatch):
     _fake_part25(monkeypatch)
-    model, tokenizer = TinyModel(), TinyTokenizer()
+    model, tokenizer = TinyModel().to(dtype=torch.bfloat16), TinyTokenizer()
     args = _args(tmp_path)
     calibration, calibration_tokenizer = _calibration_raw_fixture(args, monkeypatch)
     diagnostic = {"checks": {"batch_only": {"passed": True, "tolerance": 1e-4}}}
@@ -1003,6 +1131,45 @@ def test_environment_records_attention_backend_from_loaded_model():
     model.config._attn_implementation = "eager"
     environment = part43._runtime_environment(model)
     assert environment["kernel"]["attention"] == "eager"
+
+
+def test_fp32_output_header_configures_precision_before_stamping_protocol(monkeypatch, tmp_path):
+    args = _args(tmp_path, protocol="fp32-successor")
+    precision = {"value": "high"}
+    monkeypatch.setattr(torch.backends.cuda.matmul, "allow_tf32", True)
+    monkeypatch.setattr(torch.backends.cudnn, "allow_tf32", True)
+    monkeypatch.setattr(torch, "set_float32_matmul_precision", lambda value: precision.update(value=value))
+    monkeypatch.setattr(torch, "get_float32_matmul_precision", lambda: precision["value"])
+    header = part43.output_header(args, [])
+    assert header["calibration_protocol"] == {
+        "protocol_id": part43.FP32_SUCCESSOR_PROTOCOL_ID,
+        "decision_dtype": "torch.float32",
+        "matmul_allow_tf32": False,
+        "cudnn_allow_tf32": False,
+        "float32_matmul_precision": "highest",
+    }
+    assert header["environment"]["precision_flags"]["cuda_matmul_allow_tf32"] is False
+    assert header["environment"]["precision_flags"]["cudnn_allow_tf32"] is False
+
+
+def test_calibration_gate_checks_protocol_at_its_own_boundary():
+    # Keep reader_id consistent with the requested protocol so only the protocol check
+    # distinguishes this deliberately crossed in-memory summary.
+    summary = {
+        "artifact_type": part43.CALIBRATION_SUMMARY_TYPE,
+        "protocol_id": part43.CALIBRATION_PROTOCOL_ID,
+        "reader_id": part43.FP32_SUCCESSOR_READER_ID,
+        "derived": True,
+        "model": part43.MODEL,
+        "revision": part43.REVISION,
+        "epsilon": 0.0,
+    }
+    passed, reason = part43.calibration_gate(
+        summary, model=part43.MODEL, revision=part43.REVISION,
+        protocol_id=part43.FP32_SUCCESSOR_PROTOCOL_ID,
+    )
+    assert passed is False
+    assert "protocol" in reason
 
 
 def _score_fixtures(out):
@@ -1184,8 +1351,20 @@ def test_fp32_successor_raw_registration_and_reader_pass(tmp_path, monkeypatch):
     assert raw["schema_version"] == part43.FP32_SUCCESSOR_SCHEMA_VERSION
     assert raw["protocol_id"] == part43.FP32_SUCCESSOR_PROTOCOL_ID
     assert raw["registration"]["decision_dtype"] == "torch.float32"
+    assert raw["registration"]["fp32_backend_allowances"] == []
+    assert raw["registration"]["down_proj_dtype_layers"] == list(range(32))
     assert set(raw["legs"]) == {"fp32"}
     assert raw["legs"]["fp32"]["repeat_count"] == 3
+    runtime = raw["execution"]["legs"]["fp32"]["runtime"]
+    implementations = runtime["qwen3_5_function_implementations"]
+    assert set(implementations) == set(part43.FP32_QWEN_FUNCTION_NAMES)
+    assert all(row["uses_torch_reference"] for row in implementations.values())
+    assert runtime["hub_kernels_enabled"] is False
+    assert runtime["kernelized_module_classes"] == []
+    assert all(implementations[name]["resolved_implementation"] in runtime["gated_delta_backend"]
+               for name in part43.FP32_QWEN_FUNCTION_NAMES[2:])
+    assert all(implementations[name]["resolved_implementation"] in runtime["causal_conv_backend"]
+               for name in part43.FP32_QWEN_FUNCTION_NAMES[:2])
     summary = _read_fp32_fixture(args, raw, tokenizer)
     assert summary["protocol_id"] == part43.FP32_SUCCESSOR_PROTOCOL_ID
     assert summary["status"] == "within_budget"
@@ -1193,6 +1372,65 @@ def test_fp32_successor_raw_registration_and_reader_pass(tmp_path, monkeypatch):
         summary, model=args.model, revision=args.revision,
         protocol_id=part43.FP32_SUCCESSOR_PROTOCOL_ID,
     )[0] is True
+
+
+def test_fp32_summary_retains_legacy_cross_method_diagnostic_outside_epsilon(tmp_path, monkeypatch):
+    diagnostic_reader = part43._fp32_cross_method_diagnostic
+    args = _args(tmp_path, protocol="fp32-successor")
+    raw, tokenizer = _fp32_successor_raw_fixture(args, monkeypatch)
+    monkeypatch.setattr(part43, "_fp32_cross_method_diagnostic", diagnostic_reader)
+    summary = _read_fp32_fixture(args, raw, tokenizer)
+    diagnostic = summary["cross_method_diagnostic"]
+    assert diagnostic["source_artifact"] == part43.FP32_CROSS_METHOD_SOURCE
+    assert diagnostic["source_artifact_sha256"] == part43.FP32_CROSS_METHOD_SOURCE_SHA256
+    assert diagnostic["absolute_difference_by_cell"] == FP32_CROSS_METHOD_FIXTURE_VALUES
+    assert diagnostic["maximum_absolute_difference"] == pytest.approx(0.10915956082076228)
+    assert diagnostic["used_for_epsilon"] is False
+    assert summary["gate_interpretation"] == part43.FP32_GATE_INTERPRETATION
+    assert set(summary["epsilon_components"]) == {
+        "fp32_repeat_spread_max", "clean_to_clean_replay_error",
+    }
+
+
+def test_fp32_pilot_output_labels_gate_as_control_and_stability(tmp_path, monkeypatch):
+    args = _args(tmp_path, protocol="fp32-successor")
+    raw, tokenizer = _fp32_successor_raw_fixture(args, monkeypatch)
+    calibration = _read_fp32_fixture(args, raw, tokenizer)
+    args.attach = str(tmp_path / "attach.json")
+    Path(args.attach).write_text(json.dumps({"prompts": []}), encoding="utf-8")
+    monkeypatch.setattr(part43, "_sequences", lambda _tokenizer: ["tiny sequence"])
+    monkeypatch.setattr(part43, "run_signs", lambda *_a, **_k: {"signed": True})
+    monkeypatch.setattr(part43, "run_lattice_amended", lambda *_a, **_k: {"timing": {"elapsed_seconds": 0.1}})
+    monkeypatch.setattr(part43, "run_swap", lambda *_a, **_k: {"rows": []})
+    monkeypatch.setattr(part43, "run_attach", lambda *_a, **_k: {"rows": []})
+    result = part43.run_pilot(
+        TinyModel().to(dtype=torch.float32), tokenizer, _token_sets(), args, calibration=calibration,
+    )
+    assert result["status"] == "complete"
+    assert result["calibration_gate_interpretation"] == part43.FP32_GATE_INTERPRETATION
+
+
+@pytest.mark.parametrize("backend_problem", ["hub_kernels", "kernelized_class", "non_torch_implementation"])
+def test_fp32_reader_refuses_unallowed_runtime_backends(tmp_path, monkeypatch, backend_problem):
+    args = _args(tmp_path, protocol="fp32-successor")
+    raw, tokenizer = _fp32_successor_raw_fixture(args, monkeypatch)
+    runtime = raw["execution"]["legs"]["fp32"]["runtime"]
+    if backend_problem == "hub_kernels":
+        runtime["hub_kernels_enabled"] = True
+    elif backend_problem == "kernelized_class":
+        runtime["kernelized_module_classes"] = ["transformers.GatedDeltaNet"]
+    else:
+        name = "causal_conv1d_fn"
+        row = runtime["qwen3_5_function_implementations"][name]
+        row["resolved_implementation"] = "causal_conv1d.causal_conv1d_fn"
+        row["uses_torch_reference"] = False
+        runtime["causal_conv_backend"] = "; ".join(
+            f"{function}={runtime['qwen3_5_function_implementations'][function]['resolved_implementation']}"
+            for function in part43.FP32_QWEN_FUNCTION_NAMES[:2]
+        )
+    part43.write_json(Path(args.out) / "calibration.json", raw)
+    with pytest.raises(part43.CalibrationRefusal, match="hub kernels|kernelized module|non-torch-reference"):
+        part43._read_calibration_artifact(args, tokenizer=tokenizer)
 
 
 def test_fp32_successor_reader_accepts_more_than_three_repeats(tmp_path, monkeypatch):
@@ -1232,11 +1470,42 @@ def test_fp32_reader_refuses_wrong_or_mixed_recorded_execution_dtype(tmp_path, m
         part43._read_calibration_artifact(args, tokenizer=tokenizer)
 
 
+@pytest.mark.parametrize("problem", ["missing_layer", "wrong_layer_dtype"])
+def test_fp32_reader_requires_float32_down_proj_evidence_for_all_32_layers(tmp_path, monkeypatch, problem):
+    args = _args(tmp_path, protocol="fp32-successor")
+    raw, tokenizer = _fp32_successor_raw_fixture(args, monkeypatch)
+    layer_dtypes = raw["execution"]["legs"]["fp32"]["down_proj_input_dtypes_by_layer"]
+    if problem == "missing_layer":
+        layer_dtypes.pop("31")
+    else:
+        layer_dtypes["31"] = ["torch.bfloat16"]
+    part43.write_json(Path(args.out) / "calibration.json", raw)
+    with pytest.raises(part43.CalibrationRefusal, match="cover every registered layer|every registered layer"):
+        part43._read_calibration_artifact(args, tokenizer=tokenizer)
+
+
 @pytest.mark.parametrize("flag_name", ["cuda_matmul_allow_tf32", "cudnn_allow_tf32"])
 def test_fp32_reader_refuses_recorded_tf32_flag_true(tmp_path, monkeypatch, flag_name):
     args = _args(tmp_path, protocol="fp32-successor")
     raw, tokenizer = _fp32_successor_raw_fixture(args, monkeypatch)
     raw["execution"]["legs"]["fp32"]["runtime"]["precision_flags"][flag_name] = True
+    part43.write_json(Path(args.out) / "calibration.json", raw)
+    with pytest.raises(part43.CalibrationRefusal, match="TF32-enabled"):
+        part43._read_calibration_artifact(args, tokenizer=tokenizer)
+
+
+def test_fp32_runtime_metadata_preserves_live_tf32_true_and_reader_refuses(tmp_path, monkeypatch):
+    args = _args(tmp_path, protocol="fp32-successor")
+    raw, tokenizer = _fp32_successor_raw_fixture(args, monkeypatch)
+    monkeypatch.setattr(torch.backends.cuda.matmul, "allow_tf32", True)
+    monkeypatch.setattr(torch.backends.cudnn, "allow_tf32", True)
+    execution = part43._calibration_runtime_metadata(
+        TinyModel().to(dtype=torch.float32), "torch.float32", part43.FP32_SUCCESSOR_PROTOCOL_ID,
+    )
+    flags = execution["runtime"]["precision_flags"]
+    assert flags["cuda_matmul_allow_tf32"] is True
+    assert flags["cudnn_allow_tf32"] is True
+    raw["execution"]["legs"]["fp32"] = execution
     part43.write_json(Path(args.out) / "calibration.json", raw)
     with pytest.raises(part43.CalibrationRefusal, match="TF32-enabled"):
         part43._read_calibration_artifact(args, tokenizer=tokenizer)
@@ -1298,7 +1567,10 @@ def test_fp32_pilot_reads_serialized_verdict_before_any_production_stage(tmp_pat
     assert part43.main(["pilot", *common]) == 0
     assert production_stages == []
     assert json.loads((Path(args.out) / "calibration.json").read_text())["protocol_id"] == part43.FP32_SUCCESSOR_PROTOCOL_ID
-    assert json.loads((Path(args.out) / "calibration-summary.json").read_text())["status"] == "over_budget"
+    summary = json.loads((Path(args.out) / "calibration-summary.json").read_text())
+    assert summary["status"] == "over_budget"
+    pilot = json.loads((Path(args.out) / "pilot.json").read_text())
+    assert pilot["calibration_gate_interpretation"] == part43.FP32_GATE_INTERPRETATION
     assert json.loads((Path(args.out) / "HOLD.json").read_text())["status"] == "HOLD"
 
 
@@ -1338,6 +1610,8 @@ def test_fp32_loader_sets_precision_before_loading_float32_model(tmp_path, monke
 
 def test_fp32_calibration_runs_only_three_repeat_fp32_cells_on_cpu(tmp_path, monkeypatch):
     _fake_part25(monkeypatch)
+    _install_torch_reference_qwen_functions(monkeypatch)
+    monkeypatch.setenv("USE_HUB_KERNELS", "0")
     args = _args(tmp_path, protocol="fp32-successor")
     tokenizer = TinyTokenizer()
     model = TinyModel().to(dtype=torch.float32)
@@ -1369,6 +1643,10 @@ def test_fp32_calibration_runs_only_three_repeat_fp32_cells_on_cpu(tmp_path, mon
     assert raw["execution"]["legs"]["fp32"]["parameter_dtypes"] == ["torch.float32"]
     assert raw["execution"]["legs"]["fp32"]["down_proj_input_dtypes"] == ["torch.float32"]
     assert raw["execution"]["legs"]["fp32"]["logit_dtypes"] == ["torch.float32"]
+    by_layer = raw["execution"]["legs"]["fp32"]["down_proj_input_dtypes_by_layer"]
+    assert set(by_layer) == {str(layer) for layer in range(32)}
+    assert all(dtypes == ["torch.float32"] for dtypes in by_layer.values())
+    _read_fp32_fixture(args, raw, tokenizer)
 
 
 def test_fp32_raw_boundary_keeps_duplicate_derived_malformed_and_internal_errors_distinct(tmp_path, monkeypatch):

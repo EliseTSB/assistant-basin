@@ -63,7 +63,15 @@ _ACTIVE_EXECUTION_MODE = "singleton"
 _ACTIVE_MODEL: Any = None
 _ACTIVE_ACTIVATION_DTYPES: set[str] = set()
 _ACTIVE_DOWN_PROJ_INPUT_DTYPES: set[str] = set()
+_ACTIVE_DOWN_PROJ_INPUT_DTYPES_BY_LAYER: dict[int, set[str]] = {}
 _ACTIVE_LOGIT_DTYPES: set[str] = set()
+_ACTIVE_CAPTURE_ALL_DOWN_PROJ_LAYERS = False
+FP32_SUCCESSOR_LAYER_COUNT = 32
+FP32_QWEN_FUNCTION_NAMES = (
+    "causal_conv1d_fn", "causal_conv1d_update",
+    "torch_chunk_gated_delta_rule", "torch_recurrent_gated_delta_rule",
+)
+FP32_BACKEND_ALLOWANCES: tuple[str, ...] = ()
 DEFAULT_CACHE = Path("/mnt/e/neuron-probe/hf/hub")
 DEFAULT_JLENS = Path("/home/elisepc/neuron-probe/jlens/qwen3.5-4b/jlens/Salesforce-wikitext/Qwen3.5-4B_jacobian_lens.pt")
 DEFAULT_CHECKSUMS = Path("/home/elisepc/neuron-probe/jlens/SHA256SUMS")
@@ -168,10 +176,7 @@ def _runtime_environment(model: Any = None) -> dict[str, Any]:
         attention_backend = getattr(config, "_attn_implementation", None)
         qwen_module = sys.modules.get("transformers.models.qwen3_5.modeling_qwen3_5")
         if qwen_module is not None:
-            for function_name in (
-                "causal_conv1d_fn", "causal_conv1d_update",
-                "torch_chunk_gated_delta_rule", "torch_recurrent_gated_delta_rule",
-            ):
+            for function_name in FP32_QWEN_FUNCTION_NAMES:
                 function = getattr(qwen_module, function_name, None)
                 if function is None:
                     continue
@@ -181,14 +186,30 @@ def _runtime_environment(model: Any = None) -> dict[str, Any]:
                     closure = {}
                 implementation = closure.get("implementation")
                 torch_fallback = closure.get("torch_function")
-                selected = implementation if callable(implementation) else function
+                selected = (implementation if callable(implementation) else
+                            torch_fallback if callable(torch_fallback) else function)
                 selected_name = f"{getattr(selected, '__module__', type(selected).__module__)}.{getattr(selected, '__qualname__', type(selected).__qualname__)}"
-                is_fallback = implementation is None or implementation is torch_fallback
+                reference = torch_fallback if callable(torch_fallback) else function
+                reference_name = f"{getattr(reference, '__module__', type(reference).__module__)}.{getattr(reference, '__qualname__', type(reference).__qualname__)}"
+                is_fallback = selected is reference
                 gated_delta_functions[function_name] = {
                     "resolved_implementation": selected_name,
-                    "uses_transformers_torch_fallback": bool(is_fallback),
+                    "torch_reference_implementation": reference_name,
+                    "uses_torch_reference": bool(is_fallback),
                 }
-    recurrent_kernel = "not loaded at manifest time" if model is None else "resolved per Qwen3.5 model function below"
+    hub_kernels_setting = os.environ.get("USE_HUB_KERNELS")
+    hub_kernels_enabled = bool(hub_kernels_setting and hub_kernels_setting.strip().lower() not in {
+        "0", "false", "no", "off",
+    })
+    if model is None:
+        recurrent_kernel = "not loaded at manifest time"
+    elif gated_delta_functions:
+        recurrent_kernel = "; ".join(
+            f"{name}={gated_delta_functions[name]['resolved_implementation']}"
+            for name in FP32_QWEN_FUNCTION_NAMES if name in gated_delta_functions
+        )
+    else:
+        recurrent_kernel = "not introspected"
     return {
         "torch_version": torch_version,
         "cuda_version": cuda_version,
@@ -199,7 +220,8 @@ def _runtime_environment(model: Any = None) -> dict[str, Any]:
             "gated_delta_or_convolution": recurrent_kernel,
             "qwen3_5_function_implementations": gated_delta_functions or ("not loaded" if model is None else "not introspected"),
             "kernelized_gated_delta_module_classes": kernelized_module_classes,
-            "hub_kernels_enabled": os.environ.get("USE_HUB_KERNELS"),
+            "hub_kernels_enabled": hub_kernels_setting,
+            "hub_kernels_enabled_effective": hub_kernels_enabled,
             "kernel_hub_version": package_version(("kernels",)),
             "flash_linear_attention_version": package_version(("flash-linear-attention", "fla")),
             "causal_conv1d_version": package_version(("causal-conv1d",)),
@@ -215,6 +237,9 @@ def _runtime_environment(model: Any = None) -> dict[str, Any]:
 
 def output_header(args: argparse.Namespace, paths: Iterable[str | Path | None]) -> dict[str, Any]:
     common_inputs = [*paths, ROOT / "PART43-DESIGN.md"]
+    protocol_id = _selected_calibration_protocol(args)
+    if protocol_id == FP32_SUCCESSOR_PROTOCOL_ID:
+        _configure_full_fp32_precision()
     environment = _runtime_environment(_ACTIVE_MODEL)
     header = {
         "model": args.model,
@@ -225,7 +250,6 @@ def output_header(args: argparse.Namespace, paths: Iterable[str | Path | None]) 
         "execution_mode": getattr(args, "exec_mode", "singleton"),
         "environment": environment,
     }
-    protocol_id = _selected_calibration_protocol(args)
     if protocol_id == FP32_SUCCESSOR_PROTOCOL_ID:
         header["calibration_protocol"] = {
             "protocol_id": protocol_id,
@@ -623,13 +647,18 @@ def _capture_forward_group(
         for coordinate in branch_coordinates:
             branch_captures[coordinate] = {"gate": [[] for _ in records], "up": [[] for _ in records]}
     handles = []
-    for layer_index in by_layer:
+    # The FP32 protocol records the down_proj input dtype at every Qwen layer,
+    # including layers that are not intervention targets.  A per-layer hook
+    # also makes missing coverage visible to the reader.
+    dtype_hook_layers = range(len(layer_list)) if _ACTIVE_CAPTURE_ALL_DOWN_PROJ_LAYERS else by_layer
+    for layer_index in dtype_hook_layers:
         layer_units = sorted(unit for layer, unit in selected if layer == layer_index)
 
         def hook(_module, args, *, li=layer_index, units=layer_units):
             x = args[0]
             _ACTIVE_ACTIVATION_DTYPES.add(str(x.dtype))
             _ACTIVE_DOWN_PROJ_INPUT_DTYPES.add(str(x.dtype))
+            _ACTIVE_DOWN_PROJ_INPUT_DTYPES_BY_LAYER.setdefault(li, set()).add(str(x.dtype))
             out = x
             if operations is not None:
                 for row, row_ops in enumerate(operations):
@@ -1007,6 +1036,10 @@ CALIBRATION_PROTOCOL_ID = "part43-singleton-answer-sum-v2"
 CALIBRATION_READER_ID = "part43-calibration-reader-v2"
 FP32_SUCCESSOR_PROTOCOL_ID = "part43-fp32-successor-v1"
 FP32_SUCCESSOR_READER_ID = "part43-fp32-successor-reader-v1"
+FP32_GATE_INTERPRETATION = "amended control and stability gate, not an accuracy interval"
+FP32_CROSS_METHOD_SOURCE = "results/part43-pilot-3090/calibration.json"
+FP32_CROSS_METHOD_SOURCE_PATH = ROOT / FP32_CROSS_METHOD_SOURCE
+FP32_CROSS_METHOD_SOURCE_SHA256 = "11293803ef43dfa0530919adece82e6cbbb81703a0e00fdf0156833a247e575f"
 LEGACY_CALIBRATION_SOURCE_PROVENANCE = {
     "part43_sha256": "5189450dc952907108bbad04d88ac9ee2140b239f91563490f0cc600e0730ec0",
     "part25_sha256": "00db9278bb4f3a18cc3aaf7b8d2fac80895197cc988c2d5479d255d74587e173",
@@ -1277,6 +1310,21 @@ def _calibration_registration(tokenizer: Any, protocol_id: str = CALIBRATION_PRO
     if protocol_id == FP32_SUCCESSOR_PROTOCOL_ID:
         registration["decision_dtype"] = "torch.float32"
         registration["calibration_definition"] = "max_fp32_repeat_spread_or_clean_to_clean_replay_error"
+        registration["down_proj_dtype_layers"] = list(range(FP32_SUCCESSOR_LAYER_COUNT))
+        registration["fp32_backend_allowances"] = list(FP32_BACKEND_ALLOWANCES)
+        try:
+            cross_method_source_sha256 = sha256_file(FP32_CROSS_METHOD_SOURCE_PATH)
+        except OSError as exc:
+            raise CalibrationRefusal("pinned BF16-vs-FP32 diagnostic receipt is unavailable") from exc
+        if cross_method_source_sha256 != FP32_CROSS_METHOD_SOURCE_SHA256:
+            raise CalibrationRefusal("pinned BF16-vs-FP32 diagnostic receipt changed")
+        registration["cross_method_diagnostic"] = {
+            "source_artifact": FP32_CROSS_METHOD_SOURCE,
+            "source_artifact_sha256": FP32_CROSS_METHOD_SOURCE_SHA256,
+            "source_protocol_id": CALIBRATION_PROTOCOL_ID,
+            "method": "absolute difference of legacy BF16 and FP32 mean primary scores by cell",
+            "used_for_epsilon": False,
+        }
     elif protocol_id != CALIBRATION_PROTOCOL_ID:
         raise CalibrationRefusal(f"unknown calibration protocol {protocol_id!r}")
     return registration
@@ -1333,33 +1381,56 @@ def _calibration_runtime_metadata(
 ) -> dict[str, Any]:
     environment = _runtime_environment(model)
     kernel = environment["kernel"]
+    runtime = {
+        "torch_version": environment["torch_version"],
+        "transformers_version": environment["transformers_version"],
+        "cuda_version": environment["cuda_version"],
+        "cudnn_version": environment["cudnn_version"],
+        "attention_backend": str(kernel["attention"]),
+        "gated_delta_backend": str(kernel["gated_delta_or_convolution"]),
+        "kernelized_module_classes": list(kernel["kernelized_gated_delta_module_classes"]),
+        "hub_kernels_enabled": kernel["hub_kernels_enabled"],
+        "kernel_hub_version": kernel["kernel_hub_version"],
+        "flash_linear_attention_version": kernel["flash_linear_attention_version"],
+        "causal_conv1d_version": kernel["causal_conv1d_version"],
+        "precision_flags": dict(environment["precision_flags"]),
+    }
     value = {
         "dtype_as_loaded": expected_dtype,
         "device_as_loaded": str(_device_of(model)),
         "parameter_dtypes": sorted({str(parameter.dtype) for parameter in model.parameters()}),
         "activation_dtypes": sorted(_ACTIVE_ACTIVATION_DTYPES),
-        "runtime": {
-            "torch_version": environment["torch_version"],
-            "transformers_version": environment["transformers_version"],
-            "cuda_version": environment["cuda_version"],
-            "cudnn_version": environment["cudnn_version"],
-            "attention_backend": str(kernel["attention"]),
-            "gated_delta_backend": str(kernel["gated_delta_or_convolution"]),
-            "qwen_implementation_sha256": hashlib.sha256(_canonical_json(kernel["qwen3_5_function_implementations"]).encode("utf-8")).hexdigest(),
-            "kernelized_module_classes": list(kernel["kernelized_gated_delta_module_classes"]),
-            "hub_kernels_enabled": kernel["hub_kernels_enabled"],
-            "kernel_hub_version": kernel["kernel_hub_version"],
-            "flash_linear_attention_version": kernel["flash_linear_attention_version"],
-            "causal_conv1d_version": kernel["causal_conv1d_version"],
-            "precision_flags": dict(environment["precision_flags"]),
-        },
+        "runtime": runtime,
     }
     if protocol_id == FP32_SUCCESSOR_PROTOCOL_ID:
         value["down_proj_input_dtypes"] = sorted(_ACTIVE_DOWN_PROJ_INPUT_DTYPES)
+        value["down_proj_input_dtypes_by_layer"] = {
+            str(layer): sorted(dtypes)
+            for layer, dtypes in sorted(_ACTIVE_DOWN_PROJ_INPUT_DTYPES_BY_LAYER.items())
+        }
         value["logit_dtypes"] = sorted(_ACTIVE_LOGIT_DTYPES)
         value["runtime"]["float32_matmul_precision"] = environment["float32_matmul_precision"]
         value["runtime"]["precision_flags"]["float32_matmul_precision"] = environment["float32_matmul_precision"]
-    elif protocol_id != CALIBRATION_PROTOCOL_ID:
+        implementations = kernel["qwen3_5_function_implementations"]
+        value["runtime"].pop("hub_kernels_enabled")
+        value["runtime"]["hub_kernels_enabled"] = kernel["hub_kernels_enabled_effective"]
+        value["runtime"].pop("qwen_implementation_sha256", None)
+        value["runtime"]["qwen3_5_function_implementations"] = implementations
+        value["runtime"]["causal_conv_backend"] = "; ".join(
+            f"{name}={implementations[name]['resolved_implementation']}"
+            for name in FP32_QWEN_FUNCTION_NAMES[:2]
+            if isinstance(implementations, Mapping) and name in implementations
+        ) if isinstance(implementations, Mapping) else str(implementations)
+        value["runtime"]["gated_delta_backend"] = "; ".join(
+            f"{name}={implementations[name]['resolved_implementation']}"
+            for name in FP32_QWEN_FUNCTION_NAMES[2:]
+            if isinstance(implementations, Mapping) and name in implementations
+        ) if isinstance(implementations, Mapping) else str(implementations)
+    elif protocol_id == CALIBRATION_PROTOCOL_ID:
+        value["runtime"]["qwen_implementation_sha256"] = hashlib.sha256(
+            _canonical_json(kernel["qwen3_5_function_implementations"]).encode("utf-8")
+        ).hexdigest()
+    else:
         raise CalibrationRefusal(f"unknown calibration protocol {protocol_id!r}")
     return value
 
@@ -1429,7 +1500,9 @@ def _run_calibration_leg(
     protocol_id: str = CALIBRATION_PROTOCOL_ID,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     """Write raw per-answer sums for the fixed cells in one dtype leg."""
-    global _ACTIVE_ACTIVATION_DTYPES, _ACTIVE_DOWN_PROJ_INPUT_DTYPES, _ACTIVE_LOGIT_DTYPES
+    global _ACTIVE_ACTIVATION_DTYPES, _ACTIVE_DOWN_PROJ_INPUT_DTYPES
+    global _ACTIVE_DOWN_PROJ_INPUT_DTYPES_BY_LAYER, _ACTIVE_LOGIT_DTYPES
+    global _ACTIVE_CAPTURE_ALL_DOWN_PROJ_LAYERS
     if protocol_id == CALIBRATION_PROTOCOL_ID:
         expected_repeats = 3 if leg_name == "bf16" else 1
         valid_legs = {"bf16", "fp32"}
@@ -1442,7 +1515,9 @@ def _run_calibration_leg(
         raise ValueError(f"{protocol_id} calibration repeat count or leg is invalid")
     _ACTIVE_ACTIVATION_DTYPES = set()
     _ACTIVE_DOWN_PROJ_INPUT_DTYPES = set()
+    _ACTIVE_DOWN_PROJ_INPUT_DTYPES_BY_LAYER = {}
     _ACTIVE_LOGIT_DTYPES = set()
+    _ACTIVE_CAPTURE_ALL_DOWN_PROJ_LAYERS = protocol_id == FP32_SUCCESSOR_PROTOCOL_ID
     records = _teacher_forced_records(
         tokenizer, [DISCOVERY_QUESTION], "plain", answer_options=VALIDATION_ANSWER_OPTIONS,
     )
@@ -3491,14 +3566,38 @@ def run_pilot(
     calibration: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     import time as _time
-    passed, reason = calibration_gate(calibration, model=args.model, revision=args.revision)
+    selected_protocol = _selected_calibration_protocol(args)
+    calibration_protocol = (
+        calibration.get("protocol_id", CALIBRATION_PROTOCOL_ID)
+        if isinstance(calibration, Mapping) else selected_protocol
+    )
+    gate_interpretation = (
+        FP32_GATE_INTERPRETATION if calibration_protocol == FP32_SUCCESSOR_PROTOCOL_ID else None
+    )
+    if calibration_protocol != selected_protocol:
+        passed, reason = False, "calibration protocol does not match this command"
+    else:
+        passed, reason = calibration_gate(
+            calibration, model=args.model, revision=args.revision,
+            protocol_id=calibration_protocol,
+        )
+    if passed:
+        import torch
+        expected_dtype = torch.float32 if calibration_protocol == FP32_SUCCESSOR_PROTOCOL_ID else torch.bfloat16
+        parameter_dtypes = {parameter.dtype for parameter in model.parameters()}
+        if parameter_dtypes != {expected_dtype}:
+            passed = False
+            reason = f"pilot model parameters do not match the calibration dtype {expected_dtype}"
     if not passed:
-        return {
+        result = {
             **output_header(args, [args.candidates, ROOT / "PART43-DESIGN.md"]),
             "command": "pilot",
             "status": "HOLD",
             "hold": {"reason": reason},
         }
+        if gate_interpretation is not None:
+            result["calibration_gate_interpretation"] = gate_interpretation
+        return result
     sequence_rows = _sequences(tokenizer)
     sign_started = _time.perf_counter()
     signs = run_signs(model, tokenizer, sequence_rows, args)
@@ -3510,7 +3609,7 @@ def run_pilot(
     attach_started = _time.perf_counter()
     attach_pilot = run_attach(model, tokenizer, args, pilot=True)
     attach_elapsed = _time.perf_counter() - attach_started
-    return {
+    result = {
         **output_header(args, [args.candidates, ROOT / "PART43-DESIGN.md", ROOT / "part25.py", ROOT / "part39.py"]),
         "method": "pilot signs plus primary-score lattice with five matched null sets",
         "command": "pilot",
@@ -3535,6 +3634,9 @@ def run_pilot(
             "estimated_full_lattice_seconds": lattice["timing"]["elapsed_seconds"] * (51.0 / 6.0),
         },
     }
+    if gate_interpretation is not None:
+        result["calibration_gate_interpretation"] = gate_interpretation
+    return result
 
 
 def run_lattice(model: Any, tokenizer: Any, sequences: Sequence[Mapping[str, Any]], token_records: Mapping[str, Any], args: argparse.Namespace) -> dict[str, Any]:
@@ -5401,7 +5503,9 @@ def run_score(args: argparse.Namespace) -> dict[str, Any]:
 
 
 def _load_runtime(args: argparse.Namespace, model_dtype: Any = None):
-    global _ACTIVE_MODEL, _ACTIVE_ACTIVATION_DTYPES, _ACTIVE_DOWN_PROJ_INPUT_DTYPES, _ACTIVE_LOGIT_DTYPES
+    global _ACTIVE_MODEL, _ACTIVE_ACTIVATION_DTYPES, _ACTIVE_DOWN_PROJ_INPUT_DTYPES
+    global _ACTIVE_DOWN_PROJ_INPUT_DTYPES_BY_LAYER, _ACTIVE_LOGIT_DTYPES
+    global _ACTIVE_CAPTURE_ALL_DOWN_PROJ_LAYERS
     import torch
     os.environ["HF_HUB_OFFLINE"] = "1"
     os.environ["TRANSFORMERS_OFFLINE"] = "1"
@@ -5423,7 +5527,9 @@ def _load_runtime(args: argparse.Namespace, model_dtype: Any = None):
     # into the bf16 pilot's record (Alden #19).
     _ACTIVE_ACTIVATION_DTYPES = set()
     _ACTIVE_DOWN_PROJ_INPUT_DTYPES = set()
+    _ACTIVE_DOWN_PROJ_INPUT_DTYPES_BY_LAYER = {}
     _ACTIVE_LOGIT_DTYPES = set()
+    _ACTIVE_CAPTURE_ALL_DOWN_PROJ_LAYERS = False
     torch.set_grad_enabled(False)
     return tokenizer, model
 
@@ -5467,7 +5573,9 @@ def write_manifest(args: argparse.Namespace) -> dict[str, Any]:
             "pad_token_id": tokenizer.pad_token_id,
             "eos_token_id": tokenizer.eos_token_id,
         },
-        "dtype": args.dtype,
+        "dtype": getattr(args, "dtype", None) or (
+            "fp32" if _selected_calibration_protocol(args) == FP32_SUCCESSOR_PROTOCOL_ID else "bf16"
+        ),
         "hook_sites": {
             "activation": "decoder layer N .mlp.down_proj pre-hook input coordinate",
             "rescue_norm": "decoder layer N .post_attention_layernorm input/output",
@@ -5691,11 +5799,14 @@ def _validate_runtime_metadata(
     leg_name: str,
     requested_device: str,
     protocol_id: str = CALIBRATION_PROTOCOL_ID,
+    registration: Mapping[str, Any] | None = None,
 ) -> None:
     fp32_successor = protocol_id == FP32_SUCCESSOR_PROTOCOL_ID
     leg_fields = {"dtype_as_loaded", "device_as_loaded", "parameter_dtypes", "activation_dtypes", "runtime"}
     if fp32_successor:
-        leg_fields.update({"down_proj_input_dtypes", "logit_dtypes"})
+        leg_fields.update({
+            "down_proj_input_dtypes", "down_proj_input_dtypes_by_layer", "logit_dtypes",
+        })
     leg = _exact_mapping(value, leg_fields, f"execution.legs.{leg_name}")
     expected_dtype = "torch.float32" if fp32_successor or leg_name == "fp32" else "torch.bfloat16"
     if leg["dtype_as_loaded"] != expected_dtype:
@@ -5710,6 +5821,15 @@ def _validate_runtime_metadata(
         for field in ("down_proj_input_dtypes", "logit_dtypes"):
             if leg[field] != ["torch.float32"]:
                 raise CalibrationRefusal(f"FP32 successor {field.replace('_', ' ')} must be only torch.float32")
+        expected_layers = (registration or {}).get("down_proj_dtype_layers")
+        if expected_layers != list(range(FP32_SUCCESSOR_LAYER_COUNT)):
+            raise CalibrationRefusal("FP32 registration does not name all down_proj dtype evidence layers")
+        expected_layer_keys = {str(layer) for layer in expected_layers}
+        observed_layers = leg["down_proj_input_dtypes_by_layer"]
+        if not isinstance(observed_layers, Mapping) or set(observed_layers) != expected_layer_keys:
+            raise CalibrationRefusal("FP32 successor down_proj input dtype evidence does not cover every registered layer")
+        if any(observed_layers[layer] != ["torch.float32"] for layer in expected_layer_keys):
+            raise CalibrationRefusal("FP32 successor requires float32 down_proj inputs at every registered layer")
     runtime_fields = {
         "torch_version", "transformers_version", "cuda_version", "cudnn_version", "attention_backend",
         "gated_delta_backend", "qwen_implementation_sha256", "kernelized_module_classes",
@@ -5717,10 +5837,16 @@ def _validate_runtime_metadata(
         "causal_conv1d_version", "precision_flags",
     }
     if fp32_successor:
-        runtime_fields.add("float32_matmul_precision")
+        runtime_fields.remove("qwen_implementation_sha256")
+        runtime_fields.update({
+            "float32_matmul_precision", "qwen3_5_function_implementations", "causal_conv_backend",
+        })
     runtime = _exact_mapping(leg["runtime"], runtime_fields, f"execution.legs.{leg_name}.runtime")
-    for name in ("torch_version", "transformers_version", "cuda_version", "cudnn_version",
-                 "hub_kernels_enabled", "kernel_hub_version", "flash_linear_attention_version", "causal_conv1d_version"):
+    string_fields = ["torch_version", "transformers_version", "cuda_version", "cudnn_version",
+                     "kernel_hub_version", "flash_linear_attention_version", "causal_conv1d_version"]
+    if not fp32_successor:
+        string_fields.append("hub_kernels_enabled")
+    for name in string_fields:
         if runtime[name] is not None and not isinstance(runtime[name], str):
             raise CalibrationRefusal(f"{leg_name} runtime metadata {name} must be a string or null")
     if not runtime["torch_version"] or not runtime["transformers_version"]:
@@ -5728,12 +5854,52 @@ def _validate_runtime_metadata(
     for name in ("attention_backend", "gated_delta_backend"):
         if not isinstance(runtime[name], str) or not runtime[name]:
             raise CalibrationRefusal(f"{leg_name} runtime backend metadata {name} is invalid")
-    digest = runtime["qwen_implementation_sha256"]
-    if not isinstance(digest, str) or re.fullmatch(r"[0-9a-f]{64}", digest) is None:
-        raise CalibrationRefusal(f"{leg_name} Qwen implementation metadata hash is invalid")
     if (not isinstance(runtime["kernelized_module_classes"], list)
             or any(not isinstance(item, str) for item in runtime["kernelized_module_classes"])):
         raise CalibrationRefusal(f"{leg_name} kernel module metadata is invalid")
+    if fp32_successor:
+        allowances = (registration or {}).get("fp32_backend_allowances")
+        if not isinstance(allowances, list) or any(not isinstance(item, str) for item in allowances):
+            raise CalibrationRefusal("FP32 registration backend allowances are invalid")
+        if type(runtime["hub_kernels_enabled"]) is not bool:
+            raise CalibrationRefusal("FP32 successor must record whether hub kernels were enabled")
+        if runtime["hub_kernels_enabled"] and "hub_kernels_enabled" not in allowances:
+            raise CalibrationRefusal("FP32 successor refuses enabled hub kernels")
+        for class_name in runtime["kernelized_module_classes"]:
+            if class_name and f"kernelized_module_class:{class_name}" not in allowances:
+                raise CalibrationRefusal(f"FP32 successor refuses kernelized module class {class_name}")
+        implementation_rows = _exact_mapping(
+            runtime["qwen3_5_function_implementations"], set(FP32_QWEN_FUNCTION_NAMES),
+            f"{leg_name} Qwen3.5 function implementations",
+        )
+        for function_name in FP32_QWEN_FUNCTION_NAMES:
+            row = _exact_mapping(
+                implementation_rows[function_name],
+                {"resolved_implementation", "torch_reference_implementation", "uses_torch_reference"},
+                f"{leg_name} Qwen3.5 implementation {function_name}",
+            )
+            resolved = row["resolved_implementation"]
+            reference = row["torch_reference_implementation"]
+            if not isinstance(resolved, str) or not resolved or not isinstance(reference, str) or not reference:
+                raise CalibrationRefusal(f"{leg_name} Qwen3.5 implementation names are invalid")
+            if type(row["uses_torch_reference"]) is not bool:
+                raise CalibrationRefusal(f"{leg_name} Qwen3.5 implementation reference status is invalid")
+            if (not row["uses_torch_reference"] or resolved != reference) and f"implementation:{resolved}" not in allowances:
+                raise CalibrationRefusal(f"FP32 successor refuses non-torch-reference implementation {resolved}")
+        expected_conv = "; ".join(
+            f"{name}={implementation_rows[name]['resolved_implementation']}"
+            for name in FP32_QWEN_FUNCTION_NAMES[:2]
+        )
+        expected_gated_delta = "; ".join(
+            f"{name}={implementation_rows[name]['resolved_implementation']}"
+            for name in FP32_QWEN_FUNCTION_NAMES[2:]
+        )
+        if runtime["causal_conv_backend"] != expected_conv or runtime["gated_delta_backend"] != expected_gated_delta:
+            raise CalibrationRefusal("FP32 successor backend names do not match the recorded Qwen3.5 implementations")
+    else:
+        digest = runtime["qwen_implementation_sha256"]
+        if not isinstance(digest, str) or re.fullmatch(r"[0-9a-f]{64}", digest) is None:
+            raise CalibrationRefusal(f"{leg_name} Qwen implementation metadata hash is invalid")
     precision_fields = {
         "cuda_matmul_allow_tf32", "cudnn_allow_tf32", "cuda_bf16_reduced_precision_reduction",
         "cuda_fp16_reduced_precision_reduction", "cuda_fp16_accumulation",
@@ -5812,7 +5978,10 @@ def _validate_raw_artifact(
     expected_legs = {"fp32"} if fp32_successor else {"bf16", "fp32"}
     execution_legs = _exact_mapping(execution["legs"], expected_legs, "execution.legs")
     for leg_name in expected_legs:
-        _validate_runtime_metadata(execution_legs[leg_name], leg_name, str(args.device), protocol_id)
+        _validate_runtime_metadata(
+            execution_legs[leg_name], leg_name, str(args.device), protocol_id,
+            registration=expected_registration,
+        )
 
     legs = _exact_mapping(raw["legs"], expected_legs, "legs")
     validated = {"raw_sha256": raw_sha256, "scores": {name: {} for name in expected_legs}}
@@ -5848,6 +6017,67 @@ def _validate_raw_artifact(
                 })
             validated["scores"][leg_name][cell_name] = repeat_scores
     return validated
+
+
+def _fp32_cross_method_diagnostic() -> dict[str, Any]:
+    """Recompute the retained BF16-vs-FP32 diagnostic from its pinned legacy receipt."""
+    try:
+        raw_bytes = FP32_CROSS_METHOD_SOURCE_PATH.read_bytes()
+    except OSError as exc:
+        raise CalibrationRefusal(f"pinned BF16-vs-FP32 diagnostic receipt could not be read: {exc}") from exc
+    source_hash = hashlib.sha256(raw_bytes).hexdigest()
+    if source_hash != FP32_CROSS_METHOD_SOURCE_SHA256:
+        raise CalibrationRefusal("pinned BF16-vs-FP32 diagnostic receipt changed")
+    try:
+        raw = json.loads(raw_bytes, object_pairs_hook=_calibration_object)
+    except json.JSONDecodeError as exc:
+        raise CalibrationRefusal(f"pinned BF16-vs-FP32 diagnostic receipt is malformed: {exc}") from exc
+    try:
+        answer_rows = raw["registration"]["answers"]
+        legs = raw["legs"]
+        if set(legs) != {"bf16", "fp32"}:
+            raise ValueError("legacy receipt legs changed")
+        means = {leg_name: {} for leg_name in ("bf16", "fp32")}
+        for leg_name, expected_repeats in (("bf16", 3), ("fp32", 1)):
+            cells = legs[leg_name]["cells"]
+            if set(cells) != set(CALIBRATION_CELLS):
+                raise ValueError(f"legacy {leg_name} receipt cells changed")
+            for cell_name in CALIBRATION_CELLS:
+                repeats = cells[cell_name]["repeats"]
+                if len(repeats) != expected_repeats:
+                    raise ValueError(f"legacy {leg_name} {cell_name} repeat count changed")
+                primary_scores = []
+                for repeat in repeats:
+                    sums = repeat["answer_logprobs"]
+                    answer_scores = [
+                        _finite_measurement(sums[row["id"]], f"legacy {leg_name} {cell_name} {row['id']}")
+                        for row in answer_rows
+                    ]
+                    primary_scores.append(_finite_derived(
+                        _primary_score_from_answer_rows(answer_rows, answer_scores),
+                        f"legacy {leg_name} {cell_name} primary score",
+                    ))
+                means[leg_name][cell_name] = _finite_derived(
+                    math.fsum(primary_scores) / len(primary_scores),
+                    f"legacy {leg_name} {cell_name} mean primary score",
+                )
+        differences = {
+            cell_name: _finite_derived(
+                abs(means["bf16"][cell_name] - means["fp32"][cell_name]),
+                f"legacy {cell_name} BF16-vs-FP32 diagnostic",
+            )
+            for cell_name in CALIBRATION_CELLS
+        }
+    except (KeyError, TypeError, ValueError, ZeroDivisionError) as exc:
+        raise CalibrationRefusal(f"pinned BF16-vs-FP32 diagnostic receipt is invalid: {exc}") from exc
+    return {
+        "source_artifact": FP32_CROSS_METHOD_SOURCE,
+        "source_artifact_sha256": source_hash,
+        "source_protocol_id": CALIBRATION_PROTOCOL_ID,
+        "absolute_difference_by_cell": differences,
+        "maximum_absolute_difference": max(differences.values()),
+        "used_for_epsilon": False,
+    }
 
 
 def _calibration_reader(raw: Any, *, args: argparse.Namespace, tokenizer: Any, raw_sha256: str) -> dict[str, Any]:
@@ -5888,6 +6118,7 @@ def _calibration_reader(raw: Any, *, args: argparse.Namespace, tokenizer: Any, r
             "clean_to_clean_replay_error": replay_error,
         }
         epsilon = _finite_derived(max(epsilon_components.values()), "epsilon")
+        cross_method_diagnostic = _fp32_cross_method_diagnostic()
         return {
             "schema_version": 1,
             "artifact_type": CALIBRATION_SUMMARY_TYPE,
@@ -5895,6 +6126,7 @@ def _calibration_reader(raw: Any, *, args: argparse.Namespace, tokenizer: Any, r
             "reader_id": FP32_SUCCESSOR_READER_ID,
             "protocol_id": protocol_id,
             "decision_dtype": "torch.float32",
+            "gate_interpretation": FP32_GATE_INTERPRETATION,
             "raw_artifact_sha256": validated["raw_sha256"],
             "registration_sha256": raw["registration_sha256"],
             "model": str(args.model),
@@ -5921,6 +6153,7 @@ def _calibration_reader(raw: Any, *, args: argparse.Namespace, tokenizer: Any, r
             "epsilon_components": epsilon_components,
             "epsilon": epsilon,
             "epsilon_limit": CALIBRATION_EPSILON_LIMIT,
+            "cross_method_diagnostic": cross_method_diagnostic,
         }
 
     primary_by_leg: dict[str, dict[str, list[float]]] = {"bf16": {}, "fp32": {}}
@@ -6113,7 +6346,8 @@ def _build_parser() -> argparse.ArgumentParser:
         sub.add_argument("--model", default=default_model)
         sub.add_argument("--revision", default=default_revision)
         sub.add_argument("--device", default="xpu")
-        sub.add_argument("--dtype", default="bf16", choices=("bf16",))
+        sub.add_argument("--dtype", default=None, choices=("bf16", "fp32"),
+                         help="execution dtype; defaults to the selected protocol")
         sub.add_argument(
             "--protocol", choices=("bf16-v2", "fp32-successor"), default="bf16-v2",
             help="calibration and execution protocol; fp32-successor runs weights, hooks and scores in float32",
@@ -6156,6 +6390,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         raise SystemExit("the base subcommand must use the Base checkpoint")
     if args.exec_mode == "batched" and args.command != "batch-diag":
         raise SystemExit("batched execution is diagnostic-only; use the batch-diag subcommand")
+    selected_protocol = _selected_calibration_protocol(args)
+    expected_cli_dtype = "fp32" if selected_protocol == FP32_SUCCESSOR_PROTOCOL_ID else "bf16"
+    if args.dtype is not None and args.dtype != expected_cli_dtype:
+        raise SystemExit(f"--dtype {args.dtype} contradicts --protocol {args.protocol}; expected {expected_cli_dtype}")
+    if (selected_protocol == FP32_SUCCESSOR_PROTOCOL_ID
+            and args.command not in {"calibrate", "pilot"}):
+        raise SystemExit("--protocol fp32-successor is limited to calibrate and pilot")
     if args.command in DECISION_COMMANDS and args.command != "pilot":
         passed, reason = _read_calibration_gate(args)
         if not passed:
@@ -6259,11 +6500,20 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "calibration_summary": calibration,
                 "hold": hold,
             }
+            if selected_protocol == FP32_SUCCESSOR_PROTOCOL_ID:
+                pilot_result["calibration_gate_interpretation"] = FP32_GATE_INTERPRETATION
             write_json(_output_path(args, "pilot"), pilot_result)
             print(json.dumps({"output": str(_output_path(args, "pilot")), "status": "HOLD", "reason": reason}, indent=2))
             return 0
         tokenizer, model = _load_runtime(args)
         result = run_pilot(model, tokenizer, token_records, args, calibration=calibration)
+        if result.get("status") != "complete":
+            reason = result.get("hold", {}).get("reason", "pilot second gate refused execution")
+            hold = _write_hold(args, reason)
+            result["hold"] = hold
+            write_json(_output_path(args, "pilot"), result)
+            print(json.dumps({"output": str(_output_path(args, "pilot")), "status": "HOLD", "reason": reason}, indent=2))
+            return 0
         write_json(_output_path(args, "pilot"), result)
         write_json(_output_path(args, "pilot-calibration"), calibration)
         write_json(_output_path(args, "pilot-signs"), result["signs"])
