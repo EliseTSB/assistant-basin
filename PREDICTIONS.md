@@ -1573,3 +1573,14 @@ Amendment to 37.5 (Claude, after Prime #66, original kept above): scored as the 
 | 41.2 | Claude, against 41.1: discriminators are mostly word-level and early; at least half of the gated discriminators sit in layers 0 to 6, and the median layer of broad units is above the median layer of discriminators. | FAILED | Same file, 19:07 CT. 1,360 of 5,976 discriminators (23%) sit in layers 0 to 6; 71% sit in layers 20 to 27 (about 700 per layer from 24 on). Broad units are not later than discriminators. Caveat for reading: each sentence names its member and the measure is the max over all its tokens, so late "discriminators" may include units that predict words specific to one member. |
 | 41.3 | Claude: every family has at least one gated broad unit. | HELD | Same file, 19:07 CT. Gated broad units per family: numbers 371, countries 64, magic users 33, first names 21, animals 10, vehicles 7, fruits 5. |
 | 41.4 | Claude: numbers and first names have the fewest broad units of the seven families. | FAILED | Same file, 19:07 CT. Fruits have the fewest (5); numbers have by far the most (371), first names 21. |
+
+
+## Part 42: our neurons through the Jacobian lens (written 2026-10-20 19:09 CT, before any code or run). Design: PART42-DESIGN.md (Elise's idea, Claude's design).
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 42.1 | Claude: among the Qwen3-1.7B rank-1 units in layers 0 to 6, the J lens names the concept for at least twice as many as the logit lens does. | | |
+| 42.2 | Claude: for units in the last quarter of the layers (21 and up in Qwen3-1.7B, 24 and up in Qwen3.5-4B), the two readouts share at least 10 of their top 30 tokens on median (the lens approaches the identity near the output). | | |
+| 42.3 | Claude: the wizard unit's J-lens top 30 holds at least two of its fixed meaning words; L6 N753's J-lens top 30 holds at least two of its list. | | |
+| 42.4 | Claude: L7 N1169 and L11 N8868 still read as China in the J lens (china, chinese, 中国, beijing in the top or bottom 30), and L29 N776 still reads as Google. | | |
+| 42.5 | Claude: no random unit's J-lens or logit-lens top 30 names any of the 43 Part 35 concepts in more than 1 of 20 cases. | | |
