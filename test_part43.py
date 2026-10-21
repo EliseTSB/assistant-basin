@@ -1691,7 +1691,7 @@ def test_fp32_records_the_actual_down_proj_input_dtype_per_layer(tmp_path, monke
     model = TinyModel().to(dtype=torch.float32)
     bad_layer = 2
     assert bad_layer not in {layer for layer, _ in part43.UNITS}
-    model.layers[bad_layer].mlp.down_proj.to(dtype=torch.bfloat16)
+    # fp32 weights stay; only the input this layer receives becomes bfloat16 (TinyDown promotes the product back)
     model.layers[bad_layer].mlp.down_proj.register_forward_pre_hook(lambda _m, a: (a[0].to(torch.bfloat16),))
     import torch as torch_module
     old = (torch_module.backends.cuda.matmul.allow_tf32, torch_module.backends.cudnn.allow_tf32,
