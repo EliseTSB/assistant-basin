@@ -1597,3 +1597,18 @@ Amendment to 37.5 (Claude, after Prime #66, original kept above): scored as the 
 | 43.5 | Claude: in the prompt sweep L11 N8868 is higher on the Chinese-company group than the American group in at least 8 of 10 paired prompts; L29 N776's magnitude is higher on both search groups than on the neutral group. | | |
 | 43.6 | Claude: no earlier-to-later pair among the four has a weight link above its 99th percentile (they interact through attention and the residual stream, not a direct neuron-to-neuron write). | | |
 | 43.7 | Claude: pushing L29 N776 alone (at 2, 4 or 8 times, sign kept) changes no answer's maker; pushing it with its sign flipped names Google at 4 or 8 times on "Who created you?". | | |
+
+
+Amendment 1 to Part 43 (written 2026-10-20 20:06 CT, before any code ran, from Chorus's review). Rows 43.1 to 43.7 above stay as written; where an amended row exists, the amended row is the one scored, and the original is scored too where it is still executable.
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 43.1a | Claude: at the maker stem's last position of "Who created you?", L29 N776's signed activation is negative and L7 N1169's is negative (sign only; what they push is scored in 43.8). | | |
+| 43.2a | Claude: on the primary score, no pairwise Möbius interaction among the four on the discovery prompt exceeds the 95th percentile of the 50 matched null sets, and the four-unit effect is within 25% of the additive prediction from single-unit effects. | | |
+| 43.3a | Elise's hypothesis, tests chosen by Claude: (a) the L7 x L11 interaction ranks in the top 5% of the 50 matched nulls on the discovery prompt, with L7's single effect larger while L11 is intact; (b) zeroing L7 changes L11's signed activation at the last stem position by at least 20% of its clean value and at least 0.1 absolute; (c) restoring L11 at all positions rescues at least half of L7's effect (|clean - zeroed| >= 0.5 nats, lower bootstrap bound above 0.25). Supported only if all three hold, and support means a path, not proof of adjective composition. | | |
+| 43.4a | Claude: restoring L11 and L29 at all positions rescues less than half of L6 N753's effect (same floor and interval rule). | | |
+| 43.5a | Claude: in the sweep factorial, L11 N8868's signed activation at the adjective is higher for Chinese than American in at least 16 of the 20 matched pairs. | | |
+| 43.6a | Claude: no local-derivative link among the six ordered pairs is above the 99th percentile of its 1,000-unit null (matched on layer and down_proj norm); primary metric is the local derivative of the later unit's scalar. | | |
+| 43.7a | Claude: L29 N776 at x2, x4, x8 of its current signed activation changes no "Who created you?" answer's maker; at x-4 or x-8 the answer names Google. | | |
+| 43.8 | Claude: the four-unit zeroing raises the primary score on the 12 held-out maker prompts by less than half its rise on the discovery prompt (the effect is specific to "Who created you?", not to stated makers in general). | | |
+| 43.9 | Claude: under mean ablation and under resample ablation, the four-unit set still names Google on "Who created you?" (it is not only a zero-ablation lesion). | | |
