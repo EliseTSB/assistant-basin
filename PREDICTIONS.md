@@ -1678,7 +1678,7 @@ pairing peak at a small size or rise to 410m?
 
 | id | prediction | status | evidence |
 |---|---|---|---|
-| 48c.1 | Claude: Pythia-410m on the A770 reproduces its 3090 novel AUC (0.898) within 0.02, a device and readout check. | pending | |
-| 48c.2 | Claude: Pythia-160m reaches novel AUC >= 0.70 with permutation p < 0.05; Pythia-70m does not. | pending | |
-| 48c.3 | Claude: novel AUC rises with size across 70m < 160m < 410m. | pending | |
-| 48c.4 | Claude: spelled-out AUC is at least novel AUC in all three, as in Part 48. | pending | |
+| 48c.1 | Claude: Pythia-410m on the A770 reproduces its 3090 novel AUC (0.898) within 0.02, a device and readout check. | held | 0.8984 on the A770. |
+| 48c.2 | Claude: Pythia-160m reaches novel AUC >= 0.70 with permutation p < 0.05; Pythia-70m does not. | failed (both halves) | 160m 0.441 (p 0.59, chance); 70m 0.832 (p 0.0008). |
+| 48c.3 | Claude: novel AUC rises with size across 70m < 160m < 410m. | failed | 0.832, 0.441, 0.898: 160m dips to chance between two models that separate. |
+| 48c.4 | Claude: spelled-out AUC is at least novel AUC in all three, as in Part 48. | held | spelled 1.000, 0.961, 0.984. |
