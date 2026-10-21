@@ -1569,7 +1569,7 @@ Amendment to 37.5 (Claude, after Prime #66, original kept above): scored as the 
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 41.1 | Ryan (10-16 call, as Claude recorded it): broad units sit earlier than discriminators; the median layer of gated broad units is below the median layer of gated discriminators. | | |
-| 41.2 | Claude, against 41.1: discriminators are mostly word-level and early; at least half of the gated discriminators sit in layers 0 to 6, and the median layer of broad units is above the median layer of discriminators. | | |
-| 41.3 | Claude: every family has at least one gated broad unit. | | |
-| 41.4 | Claude: numbers and first names have the fewest broad units of the seven families. | | |
+| 41.1 | Ryan (10-16 call, as Claude recorded it): broad units sit earlier than discriminators; the median layer of gated broad units is below the median layer of gated discriminators. | HELD (narrowly) | results/part41/score-41.json, scored 19:07 CT. Gated broad units: 501, median layer 21 (140 outside the numbers family: median 20); gated discriminators: 5,976, median layer 23. Both kinds are bimodal: a cluster in layers 0 to 6 and a larger one in layers 20 to 27, with few in 12 to 16. Ryan's direction holds; the gap is two layers. |
+| 41.2 | Claude, against 41.1: discriminators are mostly word-level and early; at least half of the gated discriminators sit in layers 0 to 6, and the median layer of broad units is above the median layer of discriminators. | FAILED | Same file, 19:07 CT. 1,360 of 5,976 discriminators (23%) sit in layers 0 to 6; 71% sit in layers 20 to 27 (about 700 per layer from 24 on). Broad units are not later than discriminators. Caveat for reading: each sentence names its member and the measure is the max over all its tokens, so late "discriminators" may include units that predict words specific to one member. |
+| 41.3 | Claude: every family has at least one gated broad unit. | HELD | Same file, 19:07 CT. Gated broad units per family: numbers 371, countries 64, magic users 33, first names 21, animals 10, vehicles 7, fruits 5. |
+| 41.4 | Claude: numbers and first names have the fewest broad units of the seven families. | FAILED | Same file, 19:07 CT. Fruits have the fewest (5); numbers have by far the most (371), first names 21. |
