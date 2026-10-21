@@ -1,0 +1,18 @@
+===== allenai/OLMo-2-0425-1B-Instruct untied
+12:4373 overlap=4 (stored 4) alien_in_top30=False shared=['plan', 'planet', 'planetary', 'planets']
+    ['planets', 'planet', 'star', 'earth', 'stars', 'mars', 'saturn', 'jupiter', 'planetary', 'planet', 'venus', 'plan', 'oplan', 'earth', 'earth', '-plan', 'galaxy', 'sirius', 'milky', 'pluto', 'mars', 'habit', 'planet', '-star', 'stars', '-earth', 'extras', 'vega', 'asteroid', 'sun']
+12:6212 overlap=5 (stored 5) alien_in_top30=True shared=['alien', 'galactic', 'planet', 'planetary', 'planets']
+    ['spacecraft', 'space', 'space', 'nasa', 'planets', 'asteroid', 'planet', 'galaxy', 'earth', 'spaceship', 'spac', 'nasa', 'orbit', 'alien', 'planetary', 'astronauts', 'space', 'asteroids', 'space', 'orbital', 'galactic', 'sci', '-space', 'science', 'spaces', 'stellar', 'space', 'stellar', 'mars', 'astronaut']
+14:3027 overlap=1 (stored 1) alien_in_top30=False shared=['extr']
+    ['inter', 'extr', 'inter', 'space', 'extr', 'outer', 'inter', 'gal', 'inter', 'outer', 'inters', 'spaces', 'spaces', 'feder', '_inter', 'science', 'science', 'space', 'space', 'rico', 'asta', 'set', 'extra', 'outer', 'extra', 'space', '-space', 'outer', 'aded', 'freder']
+10:6978 overlap=1 (stored 1) alien_in_top30=True shared=['alien']
+    ['station', 'axy', 'gon', 'lore', 'cul', 'galaxy', 'enu', 'ok', 'standard', 'bar', 'geld', 'parse', 'alez', 'core', 'zub', 'odu', 'pass', 'background', '/star', 'spaceship', 'compliance', 'star', 'bulk', 'gere', 'gam', 'control', 'craft', 'mal', 'alien', 'destroy']
+===== HuggingFaceTB/SmolLM3-3B tied
+25:75 overlap=4 (stored 4) alien_in_top30=True shared=['ali', 'alien', 'aliens', 'extr']
+    ['aliens', 'alien', 'alien', 'certif', 'barcelona', 'tom', 'ali', 'endors', 'ali', 'menn', 'lawy', 'miles', 'dru', 'fef', 'agre', 'ro', 'amsterdam', 'scarc', 'tomáš', 'je', 'milfs', 'meteor', 'mph', 'acknow', 'mastur', 'veniam', 'spaceship', 'extr', 'kral', 'tato']
+30:1251 overlap=0 (stored 0) alien_in_top30=False shared=[]
+    ['ter', 'ter', 'earth', 'earth', 'ter', 'earth', 'الأرض', 'terre', 'ground', 'ter', 'ground', 'ter', 'earth', 'terrestrial', '-earth', '_ter', 'ground', '地', 'terra', 'ground', 'зем', 'ter', 'terr', '地球', 'terra', 'зем', '-ground', 'terra', 'earthly', 'terr']
+21:7967 overlap=0 (stored 0) alien_in_top30=False shared=[]
+    ['colony', 'colonies', 'colon', 'iselect', 'inward', 'uph', 'scss', 'away', 'css', 'wh', 'terraform', 'red', 'umlah', 'linkid', 'prés', 'space', '-ui', 'away', 'yntax', 'const', 'ُن', 'rest', '红', 'colon', 'ับสน', 'redd', 'colon', 'm', 'qu', 'twist']
+23:1019 overlap=0 (stored 0) alien_in_top30=False shared=[]
+    ['&o', 'afb', '^k', 'afc', 'dfd', 'efd', 'ccd', 'fef', 'bfd', 'fdc', '@mail', 'ccb', 'ddb', 'fdb', 'cdb', 'ddf', 'bdb', 'faf', 'dcc', '.firebaseapp', 'dfa', 'cff', 'plusplus', 'afd', '#ab', 'acb', 'eec', 'edb', 'intl', ".']"]
