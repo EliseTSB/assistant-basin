@@ -1649,3 +1649,14 @@ Amendment 1 to Part 43 (written 2026-10-20 20:06 CT, before any code ran, from C
 | 46.4 | Claude: slot, not authorship: in the final model the self-index projection after the message differs between its own answer and Qwen3-4B's answer in the assistant slot by less than 0.2 pooled SD, while Assistant vs User for the same text differs by more than 1 SD. | | |
 | 46.5 | Claude: positive control: the final model's own answers have lower mean token NLL than Qwen3-4B's answers by at least 0.3 nats per token. | | |
 | 46.6 | Claude: in the final model P(you) for its own answer and for Qwen3-4B's answer in the assistant slot differ by less than 0.10. | | |
+
+## Part 48: do text-only base models pair kiki with spiky and bouba with round? (written 2026-10-21 11:05 CT, before any code or run). Design: PART48-DESIGN.md (Elise's idea, Claude's design)
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 48.1 | Claude: on the classic names, every one of the 5 models scores kiki sharper than bouba and takete sharper than maluma (item score, mean over templates). | | |
+| 48.2 | Claude: on the 32 novel items, at least 3 of the 5 models reach AUC >= 0.70 with permutation p < 0.05. | | |
+| 48.3 | Claude: Pythia-1.4B (2020 data) reaches AUC >= 0.70 on the novel items, so the pairing is in pre-chat text. | | |
+| 48.4 | Claude: the effect grows with size: Pythia-1.4B's novel-item AUC exceeds Pythia-410m's. | | |
+| 48.5 | Claude: spelling the letters out weakens it: in every model with novel-item AUC >= 0.70, the spelled-out AUC is at least 0.10 lower. | | |
+| 48.6 | Claude: dropping template 2 (which names both shapes) changes no model's novel-item AUC by more than 0.05. | | |
