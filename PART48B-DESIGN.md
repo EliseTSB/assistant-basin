@@ -61,3 +61,11 @@ letters rather than sound, which is all this part asks.
   of any near-hit is recorded, and Pythia/OLMo (English-heavy) are compared with Qwen/SmolLM.
 - **Not run here, named:** an IPA arm (Jeong's template) and a ph/f arm are possible follow-ups; Turkish c = /dʒ/ means
   "same sound" is an English-orthography premise, which the design states.
+
+## Amendment 3 (2026-10-21 13:46 CT, before any run): the lexeme screen (Muse #113)
+Of 60 candidates only 10 are clean: rows 33, 46, 47, 48, 49, 55, 56, 57, 58, 60 (nakolu, rukuno, rulaku, ruluku, rumuko,
+tokamo, tokuna, toraku, totuko, tukulu, each with its c twin). Rows 33 and 46 are marginal (an attested isiXhosa
+word-form, a Rejang ritual name; no dictionary entry, no shape meaning) and are COUNTED clean. Six more come from
+data/part48b/candidates-batch2-30.txt (seed 4802, three syllables with r/t onsets, the pattern that screened clean,
+none repeating batch 1): the first 6 clean pairs in that file's order, once Muse screens it. If fewer than 6 are clean,
+the test runs with what there is and the sign test's 13-of-16 rule scales to the same 0.05 level for that n.
