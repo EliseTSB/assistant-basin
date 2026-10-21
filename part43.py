@@ -2269,20 +2269,26 @@ def _capture_norm_inputs(model: Any, tokenizer: Any, records: Sequence[Mapping[s
     import torch
     layer = _layers_of(model)[layer_index]
     captured = [[] for _ in records]
+    row_cursor = {"index": 0}
 
     def hook(_module, args):
         value = args[0]
-        for row, record in enumerate(records):
+        for local_row in range(value.shape[0]):
+            row = row_cursor["index"] + local_row
+            if row >= len(records):
+                raise RuntimeError("norm-input hook captured more rows than input records")
+            record = records[row]
             length = len(record["input_ids"])
-            captured[row] = value[row, :length].detach().float().cpu()
+            captured[row] = value[local_row, :length].detach().float().cpu()
+        row_cursor["index"] += value.shape[0]
         return None
 
     handle = layer.post_attention_layernorm.register_forward_pre_hook(hook)
     try:
-        captured_forward(model, tokenizer, records, capture_units=(), collect_outputs=False)
+        captured_forward(model, tokenizer, records, capture_units=(), mode="singleton", collect_outputs=False)
     finally:
         handle.remove()
-    if any(not value.numel() for value in captured):
+    if row_cursor["index"] != len(records) or any(not value.numel() for value in captured):
         raise RuntimeError(f"failed to capture clean pre-norm input for layer {layer_index}")
     return captured
 
@@ -3029,7 +3035,7 @@ def run_grid(model: Any, tokenizer: Any, args: argparse.Namespace) -> dict[str, 
 def run_pilot(model: Any, tokenizer: Any, token_records: Mapping[str, Any], args: argparse.Namespace) -> dict[str, Any]:
     import time as _time
     sequence_rows = _sequences(tokenizer)
-    checks = run_validation_checks(model, tokenizer, args)
+    validation = run_singleton_validation(model, tokenizer, token_records, args)
     sign_started = _time.perf_counter()
     signs = run_signs(model, tokenizer, sequence_rows, args)
     sign_elapsed = _time.perf_counter() - sign_started
@@ -3043,11 +3049,11 @@ def run_pilot(model: Any, tokenizer: Any, token_records: Mapping[str, Any], args
     return {
         **output_header(args, [args.candidates, ROOT / "PART43-DESIGN.md", ROOT / "part25.py", ROOT / "part39.py"]),
         "method": "pilot signs plus primary-score lattice with five matched null sets",
+        "singleton_validation": validation,
         "signs": signs,
         "lattice": lattice,
         "swap_pilot": swap_pilot,
         "attach_pilot": attach_pilot,
-        "required_checks": checks["checks"],
         "timing": {
             "signs_elapsed_seconds": sign_elapsed,
             "signs_sequences": len(sequence_rows),
@@ -5127,7 +5133,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
     commands = (
-        "manifest", "validate", "batch-diag", "pilot", "signs", "dla", "lattice", "mediate", "rescue",
+        "manifest", "validate", "checks", "batch-diag", "pilot", "signs", "dla", "lattice", "mediate", "rescue",
         "shift", "positions", "baselines", "heldout", "readout-check", "links", "sweep",
         "dose", "grid", "swap", "attach", "base", "score",
     )
@@ -5280,10 +5286,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     elif args.command == "validate":
         result = run_singleton_validation(model, tokenizer, token_records, args)
         filename = "validate"
+    elif args.command == "checks":
+        result = run_validation_checks(model, tokenizer, args)
+        filename = "checks"
     elif args.command == "pilot":
         result = run_pilot(model, tokenizer, token_records, args)
         write_json(_output_path(args, "pilot"), result)
-        write_json(_output_path(args, "checks"), {**output_header(args, []), "checks": result["required_checks"]})
+        write_json(_output_path(args, "pilot-validation"), result["singleton_validation"])
         write_json(_output_path(args, "pilot-signs"), result["signs"])
         write_json(_output_path(args, "pilot-lattice"), result["lattice"])
         print(f"wrote {_output_path(args, 'pilot')}")

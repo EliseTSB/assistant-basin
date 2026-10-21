@@ -410,7 +410,7 @@ def test_links_dla_and_readout_check_paths_with_tiny_weights(tmp_path, monkeypat
 
 def test_every_cli_subcommand_is_registered_and_manifest_is_recorded(tmp_path, monkeypatch):
     _fake_part25(monkeypatch)
-    commands = {"manifest", "validate", "batch-diag", "pilot", "signs", "dla", "lattice", "mediate", "rescue", "shift",
+    commands = {"manifest", "validate", "checks", "batch-diag", "pilot", "signs", "dla", "lattice", "mediate", "rescue", "shift",
                 "positions", "baselines", "heldout", "readout-check", "links", "sweep", "dose", "grid", "swap", "attach", "base", "score"}
     parser = part43._build_parser()
     for command in commands:
@@ -454,6 +454,52 @@ def test_singleton_and_batched_adapter_preserve_order_and_records(tmp_path, monk
         assert len(single_acts[unit]) == len(batch_acts[unit])
         for single_row, batch_row in zip(single_acts[unit], batch_acts[unit]):
             assert single_row == pytest.approx(batch_row, abs=1e-6)
+
+
+def test_singleton_confirmatory_forwards_have_one_row_and_batching_sabotage_is_caught(monkeypatch):
+    _fake_part25(monkeypatch)
+    model, tokenizer = TinyModel(), TinyTokenizer()
+    batch_sizes = []
+    original_forward = model.forward
+
+    def observe_forward(*args, **kwargs):
+        batch_sizes.append(int(kwargs["input_ids"].shape[0]))
+        return original_forward(*args, **kwargs)
+
+    monkeypatch.setattr(model, "forward", observe_forward)
+
+    def score_and_assert_singleton_batches():
+        batch_sizes.clear()
+        part43.teacher_forced_scores(
+            model, tokenizer, ["Who created you?", "What is your name?"], _token_sets(),
+            answer_options=part43.VALIDATION_ANSWER_OPTIONS, capture=False, mode="singleton",
+        )
+        assert batch_sizes and all(size == 1 for size in batch_sizes), (
+            f"every singleton forward must have batch size 1; observed {batch_sizes}"
+        )
+
+    score_and_assert_singleton_batches()
+
+    original_execute = part43.execute
+
+    def batch_singleton_sabotage(*args, **kwargs):
+        if kwargs.get("mode") == "singleton":
+            kwargs["mode"] = "batched"
+        return original_execute(*args, **kwargs)
+
+    monkeypatch.setattr(part43, "execute", batch_singleton_sabotage)
+    with pytest.raises(AssertionError, match="every singleton forward must have batch size 1"):
+        score_and_assert_singleton_batches()
+
+
+def test_capture_norm_inputs_advances_through_singleton_rows():
+    model, tokenizer = TinyModel(), TinyTokenizer()
+    records = [
+        {"input_ids": [2, 3]},
+        {"input_ids": [4, 5, 6, 7]},
+    ]
+    captured = part43._capture_norm_inputs(model, tokenizer, records, part43.UNITS[0][0])
+    assert [tuple(value.shape) for value in captured] == [(2, 4), (4, 4)]
 
 
 def test_confirmatory_scoring_cannot_bypass_execution_adapter(tmp_path, monkeypatch):
@@ -522,17 +568,39 @@ def test_pilot_and_base_cli_smoke_with_tiny_model(tmp_path, monkeypatch):
     _fake_part25(monkeypatch)
     model, tokenizer = TinyModel(), TinyTokenizer()
     args = _args(tmp_path)
+    validation = {"execution_mode": "singleton", "cells": {"clean": {"primary_score": 0.25}}}
+    diagnostic = {"checks": {"batch_only": {"passed": True, "tolerance": 1e-4}}}
     monkeypatch.setattr(part43, "write_manifest", lambda _args: {"schema_version": 1})
     monkeypatch.setattr(part43, "_load_runtime", lambda _args: (tokenizer, model))
-    monkeypatch.setattr(part43, "run_validation_checks", lambda *_args: {"checks": {"tiny": {"passed": True}}})
+    monkeypatch.setattr(part43, "run_singleton_validation", lambda *_args: validation)
+    monkeypatch.setattr(part43, "run_validation_checks", lambda *_args: pytest.fail("pilot must not gate on batch checks"))
     monkeypatch.setattr(part43, "run_lattice_amended", lambda *_args, **_kwargs: {"timing": {"elapsed_seconds": 0.1}})
     out = tmp_path / "cli-out"
     common = ["--out", str(out), "--candidates", args.candidates, "--cache-dir", str(tmp_path),
               "--heldout", args.heldout, "--prompts", args.prompts, "--corpus", args.corpus]
     assert part43.main(["pilot", *common]) == 0
     assert (out / "pilot.json").is_file() and (out / "pilot-lattice.json").is_file()
+    assert json.loads((out / "pilot.json").read_text())["singleton_validation"] == validation
+    assert json.loads((out / "pilot-validation.json").read_text()) == validation
+    assert not (out / "checks.json").exists()
+    monkeypatch.setattr(part43, "run_validation_checks", lambda *_args: diagnostic)
+    assert part43.main(["checks", *common]) == 0
+    assert json.loads((out / "checks.json").read_text())["checks"] == diagnostic["checks"]
     assert part43.main(["base", *common]) == 0
     assert (out / "base.json").is_file() and (out / "base-signs.json").is_file()
+
+
+@pytest.mark.parametrize("command", ["validate", "pilot", "signs"])
+def test_confirmatory_cli_commands_reject_batched_mode(command):
+    with pytest.raises(SystemExit, match="batched execution is diagnostic-only"):
+        part43.main([command, "--exec-mode", "batched"])
+
+
+def test_environment_records_attention_backend_from_loaded_model():
+    model = TinyModel()
+    model.config._attn_implementation = "eager"
+    environment = part43._runtime_environment(model)
+    assert environment["kernel"]["attention"] == "eager"
 
 
 def _score_fixtures(out):
