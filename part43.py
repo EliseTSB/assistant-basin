@@ -963,6 +963,16 @@ def _margin_forward(
 
 
 VALIDATION_ANSWER_OPTIONS = tuple(row for row in MAKER_ANSWERS if row[0] != "Tencent")
+CALIBRATION_DECISION_CELLS = (
+    "clean",
+    "selected_single_zero_L7_N1169",
+    "all_four_zero",
+    "dose_plus_2x_L7_N1169",
+    "dose_minus_2x_L7_N1169",
+    "L7_zero_L11_restored_clean",
+)
+CALIBRATION_CELLS = (*CALIBRATION_DECISION_CELLS, "clean_to_clean_replay")
+CALIBRATION_EPSILON_LIMIT = 0.05
 
 
 def _answer_logprob(output: Any, record: Mapping[str, Any]) -> float:
@@ -1114,6 +1124,294 @@ def run_singleton_validation(model: Any, tokenizer: Any, token_records: Mapping[
         },
         "result_policy": "reports measured values only; decision thresholds and error budget are set by the parent",
     }
+
+
+def _calibration_shape_signature(records: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    return [{
+        "maker": str(record["maker"]),
+        "answer": str(record["answer"]),
+        "prompt_token_count": len(record["input_ids"]),
+        "answer_token_count": len(record["answer_positions"]),
+        "answer_positions": [int(value) for value in record["answer_positions"]],
+    } for record in records]
+
+
+def _finite_numeric_values(value: Any) -> bool:
+    if isinstance(value, Mapping):
+        return all(_finite_numeric_values(item) for item in value.values())
+    if isinstance(value, (list, tuple)):
+        return all(_finite_numeric_values(item) for item in value)
+    if isinstance(value, bool) or value is None or isinstance(value, str):
+        return True
+    if isinstance(value, (int, float)):
+        return math.isfinite(float(value))
+    return True
+
+
+def _json_safe(value: Any) -> Any:
+    """Replace nonfinite measurements with JSON null while failed checks retain the HOLD reason."""
+    if isinstance(value, Mapping):
+        return {str(key): _json_safe(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_json_safe(item) for item in value]
+    if isinstance(value, float) and not math.isfinite(value):
+        return None
+    return value
+
+
+def _run_calibration_leg(
+    model: Any,
+    tokenizer: Any,
+    token_records: Mapping[str, Any],
+    args: argparse.Namespace,
+    *,
+    leg_name: str,
+    expected_dtype: str,
+    repeats: int,
+) -> dict[str, Any]:
+    """Measure the fixed-shape primary-score cells for one model dtype."""
+    global _ACTIVE_ACTIVATION_DTYPES
+    if repeats < 1:
+        raise ValueError("calibration needs at least one repeat")
+    _ACTIVE_ACTIVATION_DTYPES = set()
+    records = _teacher_forced_records(
+        tokenizer, [DISCOVERY_QUESTION], "plain", answer_options=VALIDATION_ANSWER_OPTIONS,
+    )
+    _assert_execution_inputs(records, None)
+    shape_signature = _calibration_shape_signature(records)
+    answers = [str(record["answer"]) for record in records]
+    shortest = min(records, key=lambda row: (len(row["answer_positions"]), len(row["answer"])))
+    longest = max(records, key=lambda row: (len(row["answer_positions"]), len(row["answer"])))
+    parameter_dtypes = sorted({str(parameter.dtype) for parameter in model.parameters()})
+    dtype_matches = parameter_dtypes == [expected_dtype]
+
+    cell_operations: dict[str, Sequence[Mapping[tuple[int, int], Any]] | None] = {
+        "clean": None,
+        "selected_single_zero_L7_N1169": [{UNITS[1]: 0.0} for _ in records],
+        "all_four_zero": [{unit: 0.0 for unit in UNITS} for _ in records],
+        "dose_plus_2x_L7_N1169": [{UNITS[1]: {"scale": 2.0}} for _ in records],
+        "dose_minus_2x_L7_N1169": [{UNITS[1]: {"scale": -2.0}} for _ in records],
+    }
+    cells: dict[str, Any] = {}
+    finite = True
+    clean_activations = None
+
+    def measure(name: str, operations, repeat_count: int) -> dict[str, Any]:
+        nonlocal clean_activations, finite
+        repeat_rows = []
+        for repeat_index in range(repeat_count):
+            payload, activations = teacher_forced_scores(
+                model, tokenizer, [DISCOVERY_QUESTION], token_records,
+                operations=operations, variant="plain", capture=True,
+                answer_options=VALIDATION_ANSWER_OPTIONS, mode="singleton",
+            )
+            row = payload["by_question"][DISCOVERY_QUESTION]
+            score = float(row["primary_score"])
+            answer_logprobs = {str(key): float(value) for key, value in row["makers"].items()}
+            repeat_rows.append({"primary_score": score, "answer_logprobs": answer_logprobs})
+            finite = finite and _finite_numeric_values(repeat_rows[-1])
+            for unit_rows in activations.values():
+                finite = finite and _finite_numeric_values(unit_rows)
+            if name == "clean" and repeat_index == 0:
+                clean_activations = activations
+        scores = [float(row["primary_score"]) for row in repeat_rows]
+        return {
+            "repeat_primary_scores": scores,
+            "repeat_rows": repeat_rows,
+            "primary_score": float(sum(scores) / len(scores)),
+            "spread": float(max(scores) - min(scores)) if len(scores) > 1 else None,
+        }
+
+    for name in CALIBRATION_DECISION_CELLS:
+        if name == "L7_zero_L11_restored_clean":
+            continue
+        cells[name] = measure(name, cell_operations[name], repeats)
+    if clean_activations is None:
+        raise RuntimeError("calibration clean cell did not capture activations")
+    rescue_operations = [
+        {UNITS[1]: 0.0, UNITS[2]: list(clean_activations[UNITS[2]][row])}
+        for row in range(len(records))
+    ]
+    cell_operations["L7_zero_L11_restored_clean"] = rescue_operations
+    # Re-run the rescue with the saved clean receiver trajectory; it is defined only
+    # after the clean cell has supplied those values.
+    cells["L7_zero_L11_restored_clean"] = measure(
+        "L7_zero_L11_restored_clean", rescue_operations, repeats,
+    )
+    replay_operations = [
+        {unit: list(clean_activations[unit][row]) for unit in UNITS}
+        for row in range(len(records))
+    ]
+    cells["clean_to_clean_replay"] = measure("clean_to_clean_replay", replay_operations, repeats)
+    clean_score = float(cells["clean"]["primary_score"])
+    replay_scores = cells["clean_to_clean_replay"]["repeat_primary_scores"]
+    replay_error = max((abs(float(score) - clean_score) for score in replay_scores), default=0.0)
+    for cell in cells.values():
+        cell["answer_coverage"] = shape_signature
+        cell["short_answer"] = str(shortest["answer"])
+        cell["long_answer"] = str(longest["answer"])
+    observed_dtypes = sorted(_ACTIVE_ACTIVATION_DTYPES)
+    dtype_matches = dtype_matches and observed_dtypes == [expected_dtype]
+    coverage_ok = (
+        set(cells) == set(CALIBRATION_CELLS)
+        and len(answers) == len(VALIDATION_ANSWER_OPTIONS)
+        and len(set(answers)) == len(answers)
+        and bool(shape_signature)
+        and str(shortest["answer"]) != str(longest["answer"])
+        and (
+            len(shortest["answer_positions"]) < len(longest["answer_positions"])
+            or len(shortest["answer"]) < len(longest["answer"])
+        )
+    )
+    return {
+        "leg": leg_name,
+        "dtype": expected_dtype,
+        "parameter_dtypes": parameter_dtypes,
+        "observed_activation_dtypes": observed_dtypes,
+        "repeat_count": repeats,
+        "shape_signature": shape_signature,
+        "primary_question": DISCOVERY_QUESTION,
+        "answer_options": answers,
+        "short_answer": str(shortest["answer"]),
+        "long_answer": str(longest["answer"]),
+        "cells": cells,
+        "clean_to_clean_replay_error": float(replay_error),
+        "checks": {
+            "finite_values": bool(finite and _finite_numeric_values(cells) and math.isfinite(replay_error)),
+            "dtype": bool(dtype_matches),
+            "coverage": bool(coverage_ok),
+        },
+    }
+
+
+def _assemble_calibration(
+    args: argparse.Namespace,
+    bf16_leg: Mapping[str, Any],
+    fp32_leg: Mapping[str, Any],
+    *,
+    bf16_environment: Mapping[str, Any] | None = None,
+    fp32_environment: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    bf16_cells = bf16_leg.get("cells", {})
+    fp32_cells = fp32_leg.get("cells", {})
+    per_cell_errors: dict[str, Any] = {}
+    spread_values = []
+    fp32_values = []
+    finite = bool(bf16_leg.get("checks", {}).get("finite_values") and fp32_leg.get("checks", {}).get("finite_values"))
+    for name in CALIBRATION_CELLS:
+        if name not in bf16_cells or name not in fp32_cells:
+            finite = False
+            continue
+        bf16_score = float(bf16_cells[name]["primary_score"])
+        fp32_score = float(fp32_cells[name]["primary_score"])
+        spread = bf16_cells[name].get("spread")
+        spread = float(spread) if spread is not None else 0.0
+        replay_error = (
+            max(
+                float(bf16_leg.get("clean_to_clean_replay_error", 0.0)),
+                float(fp32_leg.get("clean_to_clean_replay_error", 0.0)),
+            ) if name == "clean_to_clean_replay" else 0.0
+        )
+        fp32_error = abs(bf16_score - fp32_score) if name in CALIBRATION_DECISION_CELLS else 0.0
+        spread_values.append(spread)
+        if name in CALIBRATION_DECISION_CELLS:
+            fp32_values.append(fp32_error)
+        per_cell_errors[name] = {
+            "bf16_repeat_spread": spread,
+            "abs_bf16_fp32": fp32_error if name in CALIBRATION_DECISION_CELLS else None,
+            "clean_to_clean_replay_error": replay_error if name == "clean_to_clean_replay" else None,
+        }
+        finite = finite and all(math.isfinite(value) for value in (bf16_score, fp32_score, spread, fp32_error, replay_error))
+    for name in CALIBRATION_CELLS:
+        per_cell_errors.setdefault(name, {
+            "bf16_repeat_spread": None,
+            "abs_bf16_fp32": None,
+            "clean_to_clean_replay_error": None,
+        })
+    shape_match = bf16_leg.get("shape_signature") == fp32_leg.get("shape_signature")
+    coverage_ok = (
+        set(bf16_cells) >= set(CALIBRATION_CELLS)
+        and set(fp32_cells) >= set(CALIBRATION_CELLS)
+        and bool(bf16_leg.get("checks", {}).get("coverage"))
+        and bool(fp32_leg.get("checks", {}).get("coverage"))
+        and shape_match
+    )
+    dtype_ok = (
+        bf16_leg.get("dtype") == "torch.bfloat16"
+        and fp32_leg.get("dtype") == "torch.float32"
+        and bool(bf16_leg.get("checks", {}).get("dtype"))
+        and bool(fp32_leg.get("checks", {}).get("dtype"))
+    )
+    replay_error = max(
+        float(bf16_leg.get("clean_to_clean_replay_error", float("nan"))),
+        float(fp32_leg.get("clean_to_clean_replay_error", float("nan"))),
+    )
+    error_kinds = {
+        "bf16_repeat_spread_max": max(spread_values) if spread_values else None,
+        "bf16_fp32_abs_difference_max": max(fp32_values) if fp32_values else None,
+        "clean_to_clean_replay_error": replay_error,
+    }
+    finite = finite and all(value is not None and math.isfinite(float(value)) for value in error_kinds.values())
+    epsilon = max(float(value) for value in error_kinds.values()) if finite else None
+    checks = {
+        "finite_values": bool(finite),
+        "dtype": bool(dtype_ok),
+        "coverage": bool(coverage_ok),
+    }
+    complete = all(checks.values()) and epsilon is not None
+    payload = {
+        **output_header(args, [args.candidates, ROOT / "PART43-DESIGN.md", ROOT / "part25.py", ROOT / "part39.py"]),
+        "schema_version": 1,
+        "command": "calibrate",
+        "status": "complete" if complete else "incomplete",
+        "complete": bool(complete),
+        "estimand": "Google full-answer logprob minus logsumexp of the full Alibaba, Tongyi Lab and Qwen team answer logprobs",
+        "primary_question": DISCOVERY_QUESTION,
+        "required_cells": list(CALIBRATION_CELLS),
+        "decision_cells": list(CALIBRATION_DECISION_CELLS),
+        "bf16": dict(bf16_leg),
+        "fp32": dict(fp32_leg),
+        "per_cell_errors": per_cell_errors,
+        "error_kinds": error_kinds,
+        "epsilon": float(epsilon) if epsilon is not None else None,
+        "epsilon_limit": CALIBRATION_EPSILON_LIMIT,
+        "checks": checks,
+        "environments": {"bf16": bf16_environment or {}, "fp32": fp32_environment or {}},
+        "non_decision_data": True,
+    }
+    return _json_safe(payload)
+
+
+def _release_calibration_model(args: argparse.Namespace) -> None:
+    global _ACTIVE_MODEL
+    _ACTIVE_MODEL = None
+    part39_module()._empty_cache(str(args.device))
+
+
+def run_calibration_runtime(args: argparse.Namespace, token_records: Mapping[str, Any]) -> dict[str, Any]:
+    """Load and measure bf16 then fp32 sequentially, releasing each model between legs."""
+    import torch
+    tokenizer, bf16_model = _load_runtime(args)
+    bf16_environment = _runtime_environment(bf16_model)
+    bf16_leg = _run_calibration_leg(
+        bf16_model, tokenizer, token_records, args,
+        leg_name="bf16", expected_dtype="torch.bfloat16", repeats=3,
+    )
+    del bf16_model
+    _release_calibration_model(args)
+    fp32_tokenizer, fp32_model = _load_runtime(args, model_dtype=torch.float32)
+    fp32_environment = _runtime_environment(fp32_model)
+    fp32_leg = _run_calibration_leg(
+        fp32_model, fp32_tokenizer, token_records, args,
+        leg_name="fp32", expected_dtype="torch.float32", repeats=1,
+    )
+    del fp32_model
+    _release_calibration_model(args)
+    return _assemble_calibration(
+        args, bf16_leg, fp32_leg,
+        bf16_environment=bf16_environment,
+        fp32_environment=fp32_environment,
+    )
 
 
 def _same_length_companion(record: Mapping[str, Any], candidates: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
@@ -3032,10 +3330,23 @@ def run_grid(model: Any, tokenizer: Any, args: argparse.Namespace) -> dict[str, 
     }
 
 
-def run_pilot(model: Any, tokenizer: Any, token_records: Mapping[str, Any], args: argparse.Namespace) -> dict[str, Any]:
+def run_pilot(
+    model: Any,
+    tokenizer: Any,
+    token_records: Mapping[str, Any],
+    args: argparse.Namespace,
+    calibration: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
     import time as _time
+    passed, reason = calibration_gate(calibration, model=args.model, revision=args.revision)
+    if not passed:
+        return {
+            **output_header(args, [args.candidates, ROOT / "PART43-DESIGN.md"]),
+            "command": "pilot",
+            "status": "HOLD",
+            "hold": {"reason": reason},
+        }
     sequence_rows = _sequences(tokenizer)
-    validation = run_singleton_validation(model, tokenizer, token_records, args)
     sign_started = _time.perf_counter()
     signs = run_signs(model, tokenizer, sequence_rows, args)
     sign_elapsed = _time.perf_counter() - sign_started
@@ -3049,7 +3360,9 @@ def run_pilot(model: Any, tokenizer: Any, token_records: Mapping[str, Any], args
     return {
         **output_header(args, [args.candidates, ROOT / "PART43-DESIGN.md", ROOT / "part25.py", ROOT / "part39.py"]),
         "method": "pilot signs plus primary-score lattice with five matched null sets",
-        "singleton_validation": validation,
+        "command": "pilot",
+        "status": "complete",
+        "calibration": dict(calibration),
         "signs": signs,
         "lattice": lattice,
         "swap_pilot": swap_pilot,
@@ -4934,13 +5247,18 @@ def run_score(args: argparse.Namespace) -> dict[str, Any]:
     return payload
 
 
-def _load_runtime(args: argparse.Namespace):
+def _load_runtime(args: argparse.Namespace, model_dtype: Any = None):
     global _ACTIVE_MODEL
     import torch
     os.environ["HF_HUB_OFFLINE"] = "1"
     os.environ["TRANSFORMERS_OFFLINE"] = "1"
     os.environ["HF_HUB_CACHE"] = str(Path(args.cache_dir).expanduser())
-    tokenizer, model = part39_module().load_model_direct(args.model, args.revision, args.device)
+    if model_dtype is None:
+        tokenizer, model = part39_module().load_model_direct(args.model, args.revision, args.device)
+    else:
+        tokenizer, model = part39_module().load_model_direct(
+            args.model, args.revision, args.device, dtype=model_dtype,
+        )
     model.eval()
     _ACTIVE_MODEL = model
     torch.set_grad_enabled(False)
@@ -5129,11 +5447,169 @@ def _output_path(args: argparse.Namespace, name: str) -> Path:
     return Path(args.out).expanduser() / f"{name}.json"
 
 
+DECISION_COMMANDS = {
+    "pilot", "signs", "dla", "lattice", "mediate", "rescue", "shift", "positions",
+    "baselines", "heldout", "readout-check", "links", "sweep", "dose", "grid",
+    "swap", "attach", "base", "score",
+}
+
+
+def calibration_gate(
+    calibration: Any,
+    *,
+    model: str | None = None,
+    revision: str | None = None,
+) -> tuple[bool, str]:
+    """Validate a saved calibration before any decision statistic can run."""
+    if not isinstance(calibration, Mapping):
+        return False, "calibration is missing or is not an object"
+    if model is not None and calibration.get("model") != model:
+        return False, "calibration model does not match this command"
+    if revision is not None and calibration.get("revision") != revision:
+        return False, "calibration revision does not match this command"
+    if calibration.get("complete") is not True or calibration.get("status") != "complete":
+        return False, "calibration is incomplete"
+    if calibration.get("required_cells") != list(CALIBRATION_CELLS):
+        return False, "calibration required-cell manifest is incomplete or changed"
+    if calibration.get("decision_cells") != list(CALIBRATION_DECISION_CELLS):
+        return False, "calibration decision-cell manifest is incomplete or changed"
+    checks = calibration.get("checks")
+    if not isinstance(checks, Mapping) or any(checks.get(name) is not True for name in ("finite_values", "dtype", "coverage")):
+        return False, "calibration finite-value, dtype or coverage check failed"
+    bf16 = calibration.get("bf16")
+    fp32 = calibration.get("fp32")
+    if not isinstance(bf16, Mapping) or not isinstance(fp32, Mapping):
+        return False, "calibration is missing its bf16 or fp32 leg"
+    if bf16.get("dtype") != "torch.bfloat16" or fp32.get("dtype") != "torch.float32":
+        return False, "calibration dtype legs are not bf16 and fp32"
+    if bf16.get("repeat_count") != 3 or fp32.get("repeat_count") != 1:
+        return False, "calibration repeat counts do not match the registered protocol"
+    if bf16.get("shape_signature") != fp32.get("shape_signature"):
+        return False, "bf16 and fp32 calibration shapes differ"
+    expected_dtypes = ((bf16, "torch.bfloat16"), (fp32, "torch.float32"))
+    for leg, expected_dtype in expected_dtypes:
+        leg_checks = leg.get("checks")
+        if not isinstance(leg_checks, Mapping) or any(
+            leg_checks.get(name) is not True for name in ("finite_values", "dtype", "coverage")
+        ):
+            return False, f"{expected_dtype} calibration leg failed a validation check"
+        if leg.get("parameter_dtypes") != [expected_dtype] or leg.get("observed_activation_dtypes") != [expected_dtype]:
+            return False, f"{expected_dtype} calibration leg dtype evidence does not match"
+        if leg.get("primary_question") != DISCOVERY_QUESTION:
+            return False, f"{expected_dtype} calibration leg used the wrong primary question"
+        answer_options = leg.get("answer_options")
+        shape_rows = leg.get("shape_signature")
+        if not isinstance(answer_options, list) or len(answer_options) != len(VALIDATION_ANSWER_OPTIONS):
+            return False, f"{expected_dtype} calibration leg has incomplete answer coverage"
+        if not isinstance(shape_rows, list) or len(shape_rows) != len(answer_options):
+            return False, f"{expected_dtype} calibration leg has incomplete shape coverage"
+        short_answer = str(leg.get("short_answer", ""))
+        long_answer = str(leg.get("long_answer", ""))
+        short_count = min((int(row["answer_token_count"]) for row in shape_rows), default=0)
+        long_count = max((int(row["answer_token_count"]) for row in shape_rows), default=0)
+        if not short_answer or not long_answer or not (
+            short_count < long_count or len(short_answer) < len(long_answer)
+        ):
+            return False, f"{expected_dtype} calibration leg lacks short and long answers"
+    bf16_cells = bf16.get("cells")
+    fp32_cells = fp32.get("cells")
+    errors = calibration.get("per_cell_errors")
+    if not all(isinstance(value, Mapping) for value in (bf16_cells, fp32_cells, errors)):
+        return False, "calibration is missing per-cell measurements"
+    for leg_name, leg_payload, expected_repeats in (("bf16", bf16, 3), ("fp32", fp32, 1)):
+        cells = leg_payload["cells"]
+        if not set(CALIBRATION_CELLS).issubset(cells):
+            return False, f"{leg_name} calibration leg is missing required cells"
+        for cell_name in CALIBRATION_CELLS:
+            cell = cells[cell_name]
+            repeats = cell.get("repeat_primary_scores")
+            if not isinstance(repeats, list) or len(repeats) != expected_repeats:
+                return False, f"{leg_name} calibration cell {cell_name} has the wrong repeat count"
+            if not _finite_numeric_values(repeats) or not math.isfinite(float(cell.get("primary_score", float("nan")))):
+                return False, f"{leg_name} calibration cell {cell_name} contains nonfinite scores"
+            if cell.get("answer_coverage") != leg_payload.get("shape_signature"):
+                return False, f"{leg_name} calibration cell {cell_name} has inconsistent answer coverage"
+            if not math.isclose(
+                float(cell["primary_score"]), sum(float(value) for value in repeats) / expected_repeats,
+                rel_tol=1e-9, abs_tol=1e-12,
+            ):
+                return False, f"{leg_name} calibration cell {cell_name} score is inconsistent with its repeats"
+    if not _finite_numeric_values(calibration):
+        return False, "calibration contains nonfinite values"
+    spread_values = []
+    fp32_values = []
+    for cell_name in CALIBRATION_CELLS:
+        repeat_scores = [float(value) for value in bf16_cells[cell_name]["repeat_primary_scores"]]
+        spread = max(repeat_scores) - min(repeat_scores)
+        recorded_spread = errors[cell_name].get("bf16_repeat_spread")
+        if recorded_spread is None or not math.isclose(float(recorded_spread), spread, rel_tol=1e-9, abs_tol=1e-12):
+            return False, f"bf16 repeat spread is missing or inconsistent for {cell_name}"
+        spread_values.append(spread)
+        if cell_name in CALIBRATION_DECISION_CELLS:
+            difference = abs(float(bf16_cells[cell_name]["primary_score"]) - float(fp32_cells[cell_name]["primary_score"]))
+            recorded_difference = errors[cell_name].get("abs_bf16_fp32")
+            if recorded_difference is None or not math.isclose(float(recorded_difference), difference, rel_tol=1e-9, abs_tol=1e-12):
+                return False, f"bf16/fp32 error is missing or inconsistent for {cell_name}"
+            fp32_values.append(difference)
+    replay_error = max(
+        float(bf16.get("clean_to_clean_replay_error", float("nan"))),
+        float(fp32.get("clean_to_clean_replay_error", float("nan"))),
+    )
+    recorded_replay = errors["clean_to_clean_replay"].get("clean_to_clean_replay_error")
+    if recorded_replay is None or not math.isclose(float(recorded_replay), replay_error, rel_tol=1e-9, abs_tol=1e-12):
+        return False, "clean-to-clean replay error is missing or inconsistent"
+    computed_epsilon = max(max(spread_values), max(fp32_values), replay_error)
+    expected_error_kinds = {
+        "bf16_repeat_spread_max": max(spread_values),
+        "bf16_fp32_abs_difference_max": max(fp32_values),
+        "clean_to_clean_replay_error": replay_error,
+    }
+    error_kinds = calibration.get("error_kinds")
+    if not isinstance(error_kinds, Mapping) or any(
+        error_kinds.get(name) is None
+        or not math.isclose(float(error_kinds[name]), value, rel_tol=1e-9, abs_tol=1e-12)
+        for name, value in expected_error_kinds.items()
+    ):
+        return False, "calibration error summary is inconsistent with per-cell errors"
+    epsilon = calibration.get("epsilon")
+    if epsilon is None or not math.isfinite(float(epsilon)):
+        return False, "calibration epsilon is missing or nonfinite"
+    if not math.isclose(float(epsilon), computed_epsilon, rel_tol=1e-9, abs_tol=1e-12):
+        return False, "calibration epsilon is inconsistent with its recorded cell errors"
+    if float(epsilon) > CALIBRATION_EPSILON_LIMIT:
+        return False, f"calibration epsilon {float(epsilon):.6g} nats exceeds {CALIBRATION_EPSILON_LIMIT:.2f} nats"
+    return True, "calibration complete and within the 0.05 nat budget"
+
+
+def _read_calibration_gate(args: argparse.Namespace) -> tuple[bool, str]:
+    path = _output_path(args, "calibration")
+    if not path.is_file():
+        return False, f"calibration file is missing: {path}"
+    try:
+        calibration = read_json(path)
+    except (OSError, json.JSONDecodeError) as exc:
+        return False, f"calibration file could not be read: {exc}"
+    return calibration_gate(calibration, model=args.model, revision=args.revision)
+
+
+def _write_hold(args: argparse.Namespace, reason: str) -> dict[str, Any]:
+    record = {
+        "status": "HOLD",
+        "command": str(args.command),
+        "model": str(args.model),
+        "revision": str(args.revision),
+        "calibration": str(_output_path(args, "calibration")),
+        "reason": str(reason),
+    }
+    write_json(_output_path(args, "HOLD"), record)
+    return record
+
+
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
     commands = (
-        "manifest", "validate", "checks", "batch-diag", "pilot", "signs", "dla", "lattice", "mediate", "rescue",
+        "manifest", "validate", "checks", "batch-diag", "calibrate", "pilot", "signs", "dla", "lattice", "mediate", "rescue",
         "shift", "positions", "baselines", "heldout", "readout-check", "links", "sweep",
         "dose", "grid", "swap", "attach", "base", "score",
     )
@@ -5183,6 +5659,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         raise SystemExit("the base subcommand must use the Base checkpoint")
     if args.exec_mode == "batched" and args.command != "batch-diag":
         raise SystemExit("batched execution is diagnostic-only; use the batch-diag subcommand")
+    if args.command in DECISION_COMMANDS and args.command != "pilot":
+        passed, reason = _read_calibration_gate(args)
+        if not passed:
+            hold = _write_hold(args, reason)
+            print(json.dumps(hold, indent=2))
+            return 0
     if args.command == "score":
         payload = run_score(args)
         print(json.dumps({"output": str(_output_path(args, "scores")), "results": {k: v["result"] for k, v in payload["results"].items()}}, indent=2))
@@ -5241,15 +5723,49 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 0
 
     manifest_path = Path(args.out).expanduser() / ("MANIFEST-base.json" if args.model == BASE_MODEL else "MANIFEST.json")
-    if args.command == "pilot" or not manifest_path.is_file():
+    if args.command in {"calibrate", "pilot"} or not manifest_path.is_file():
         write_manifest(args)
     if args.command == "manifest":
         write_manifest(args)
         return 0
 
+    if args.command in {"calibrate", "pilot"}:
+        token_records = _load_token_records(args)
+        calibration = run_calibration_runtime(args, token_records)
+        calibration_path = _output_path(args, "calibration")
+        write_json(calibration_path, calibration)
+        # Re-read the serialized artifact so the pilot and direct commands share
+        # exactly the same validation boundary.
+        calibration = read_json(calibration_path)
+        passed, reason = calibration_gate(calibration, model=args.model, revision=args.revision)
+        if args.command == "calibrate":
+            print(json.dumps({"output": str(calibration_path), "status": calibration["status"],
+                              "epsilon": calibration.get("epsilon")}, indent=2))
+            return 0
+        if not passed:
+            hold = _write_hold(args, reason)
+            pilot_result = {
+                **output_header(args, [args.candidates, ROOT / "PART43-DESIGN.md"]),
+                "command": "pilot",
+                "status": "HOLD",
+                "calibration": str(calibration_path),
+                "hold": hold,
+            }
+            write_json(_output_path(args, "pilot"), pilot_result)
+            print(json.dumps({"output": str(_output_path(args, "pilot")), "status": "HOLD", "reason": reason}, indent=2))
+            return 0
+        tokenizer, model = _load_runtime(args)
+        result = run_pilot(model, tokenizer, token_records, args, calibration=calibration)
+        write_json(_output_path(args, "pilot"), result)
+        write_json(_output_path(args, "pilot-calibration"), calibration)
+        write_json(_output_path(args, "pilot-signs"), result["signs"])
+        write_json(_output_path(args, "pilot-lattice"), result["lattice"])
+        print(f"wrote {_output_path(args, 'pilot')}")
+        return 0
+
     tokenizer, model = _load_runtime(args)
-    sequences = _sequences(tokenizer) if args.command in {"signs", "shift", "pilot", "base"} else None
-    token_records = _load_token_records(args) if args.command in {"validate", "lattice", "mediate", "rescue", "pilot", "positions", "baselines", "heldout", "readout-check", "grid", "base"} else None
+    sequences = _sequences(tokenizer) if args.command in {"signs", "shift", "base"} else None
+    token_records = _load_token_records(args) if args.command in {"validate", "lattice", "mediate", "rescue", "positions", "baselines", "heldout", "readout-check", "grid", "base"} else None
     if args.command == "signs":
         result = run_signs(model, tokenizer, sequences, args)
         filename = "signs"
@@ -5289,14 +5805,6 @@ def main(argv: Sequence[str] | None = None) -> int:
     elif args.command == "checks":
         result = run_validation_checks(model, tokenizer, args)
         filename = "checks"
-    elif args.command == "pilot":
-        result = run_pilot(model, tokenizer, token_records, args)
-        write_json(_output_path(args, "pilot"), result)
-        write_json(_output_path(args, "pilot-validation"), result["singleton_validation"])
-        write_json(_output_path(args, "pilot-signs"), result["signs"])
-        write_json(_output_path(args, "pilot-lattice"), result["lattice"])
-        print(f"wrote {_output_path(args, 'pilot')}")
-        return 0
     elif args.command == "base":
         base_signs = run_signs(model, tokenizer, sequences, args)
         base_lattice = run_lattice_amended(model, tokenizer, token_records, args, decode=False)

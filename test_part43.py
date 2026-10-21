@@ -215,6 +215,75 @@ def _args(tmp_path, **kwargs):
     return SimpleNamespace(**values)
 
 
+def _calibration_fixture(args, fp32_difference=0.01):
+    shape_signature = []
+    for maker, answer in part43.VALIDATION_ANSWER_OPTIONS:
+        token_count = 2 if answer in {"Tongyi Lab", "Qwen team"} else 1
+        shape_signature.append({"maker": maker, "answer": answer, "prompt_token_count": 8 + token_count,
+                                "answer_token_count": token_count,
+                                "answer_positions": list(range(8, 8 + token_count))})
+    bf16_cells = {}
+    fp32_cells = {}
+    errors = {}
+    for index, name in enumerate(part43.CALIBRATION_CELLS):
+        score = index / 10
+        fp32_score = score + (fp32_difference if name in part43.CALIBRATION_DECISION_CELLS else 0.0)
+        bf16_cells[name] = {
+            "primary_score": score,
+            "repeat_primary_scores": [score, score, score],
+            "spread": 0.0,
+            "answer_coverage": shape_signature,
+            "short_answer": "Google",
+            "long_answer": "Tongyi Lab",
+        }
+        fp32_cells[name] = {
+            "primary_score": fp32_score,
+            "repeat_primary_scores": [fp32_score],
+            "spread": None,
+            "answer_coverage": shape_signature,
+            "short_answer": "Google",
+            "long_answer": "Tongyi Lab",
+        }
+        errors[name] = {
+            "bf16_repeat_spread": 0.0,
+            "abs_bf16_fp32": abs(score - fp32_score) if name in part43.CALIBRATION_DECISION_CELLS else None,
+            "clean_to_clean_replay_error": 0.0 if name == "clean_to_clean_replay" else None,
+        }
+    common = {
+        "shape_signature": shape_signature,
+        "primary_question": part43.DISCOVERY_QUESTION,
+        "answer_options": [answer for _maker, answer in part43.VALIDATION_ANSWER_OPTIONS],
+        "short_answer": "Google",
+        "long_answer": "Tongyi Lab",
+        "parameter_dtypes": [],
+        "observed_activation_dtypes": [],
+        "checks": {"finite_values": True, "dtype": True, "coverage": True},
+        "clean_to_clean_replay_error": 0.0,
+    }
+    bf16 = {**common, "dtype": "torch.bfloat16", "parameter_dtypes": ["torch.bfloat16"],
+            "observed_activation_dtypes": ["torch.bfloat16"], "repeat_count": 3, "cells": bf16_cells}
+    fp32 = {**common, "dtype": "torch.float32", "parameter_dtypes": ["torch.float32"],
+            "observed_activation_dtypes": ["torch.float32"], "repeat_count": 1, "cells": fp32_cells}
+    return {
+        "model": args.model,
+        "revision": args.revision,
+        "status": "complete",
+        "complete": True,
+        "required_cells": list(part43.CALIBRATION_CELLS),
+        "decision_cells": list(part43.CALIBRATION_DECISION_CELLS),
+        "bf16": bf16,
+        "fp32": fp32,
+        "per_cell_errors": errors,
+        "error_kinds": {
+            "bf16_repeat_spread_max": 0.0,
+            "bf16_fp32_abs_difference_max": fp32_difference,
+            "clean_to_clean_replay_error": 0.0,
+        },
+        "epsilon": fp32_difference,
+        "checks": {"finite_values": True, "dtype": True, "coverage": True},
+    }
+
+
 def _short_questions(monkeypatch):
     monkeypatch.setattr(part43, "QUESTIONS", ("Who created you?",))
 
@@ -564,29 +633,120 @@ def test_validate_and_batch_diag_report_score_and_receiver_fields(tmp_path, monk
     assert all("max_abs_receiver_h_difference_vs_singleton_natural" in row for row in batched_rows)
 
 
+def test_calibration_runs_fixed_cells_in_bf16_and_fp32_on_cpu(tmp_path, monkeypatch):
+    _fake_part25(monkeypatch)
+    args = _args(tmp_path)
+    tokenizer = TinyTokenizer()
+    token_records = _token_sets()
+    bf16_model = TinyModel().to(dtype=torch.bfloat16)
+    bf16 = part43._run_calibration_leg(
+        bf16_model, tokenizer, token_records, args,
+        leg_name="bf16", expected_dtype="torch.bfloat16", repeats=3,
+    )
+    fp32_model = TinyModel()
+    fp32 = part43._run_calibration_leg(
+        fp32_model, tokenizer, token_records, args,
+        leg_name="fp32", expected_dtype="torch.float32", repeats=1,
+    )
+    calibration = part43._assemble_calibration(args, bf16, fp32)
+    assert bf16["checks"] == {"finite_values": True, "dtype": True, "coverage": True}
+    assert fp32["checks"] == {"finite_values": True, "dtype": True, "coverage": True}
+    assert set(bf16["cells"]) == set(fp32["cells"]) == set(part43.CALIBRATION_CELLS)
+    assert all(len(bf16["cells"][name]["repeat_primary_scores"]) == 3 for name in part43.CALIBRATION_CELLS)
+    assert all(len(fp32["cells"][name]["repeat_primary_scores"]) == 1 for name in part43.CALIBRATION_CELLS)
+    assert bf16["shape_signature"] == fp32["shape_signature"]
+    assert calibration["complete"] is True
+    assert calibration["non_decision_data"] is True
+    assert part43.calibration_gate(calibration, model=args.model, revision=args.revision)[0]
+
+
+@pytest.mark.parametrize("invalid", ["missing", "nan", "incomplete", "epsilon"])
+def test_pilot_calibration_gate_blocks_all_decision_stages(tmp_path, monkeypatch, invalid):
+    args = _args(tmp_path)
+    calibration = _calibration_fixture(args)
+    if invalid == "missing":
+        calibration = None
+    elif invalid == "nan":
+        calibration["epsilon"] = float("nan")
+    elif invalid == "incomplete":
+        del calibration["bf16"]["cells"]["all_four_zero"]
+    else:
+        calibration = _calibration_fixture(args, fp32_difference=1.0)
+    called = []
+    monkeypatch.setattr(part43, "_sequences", lambda _tokenizer: pytest.fail("HOLD must precede signs"))
+    monkeypatch.setattr(part43, "run_signs", lambda *_a, **_k: called.append("signs"))
+    monkeypatch.setattr(part43, "run_lattice_amended", lambda *_a, **_k: called.append("lattice"))
+    monkeypatch.setattr(part43, "run_swap", lambda *_a, **_k: called.append("swap"))
+    monkeypatch.setattr(part43, "run_attach", lambda *_a, **_k: called.append("attach"))
+    result = part43.run_pilot(TinyModel(), TinyTokenizer(), _token_sets(), args, calibration=calibration)
+    assert result["status"] == "HOLD"
+    assert result["hold"]["reason"]
+    assert called == []
+
+
+def test_valid_calibration_reaches_pilot_lattice(tmp_path, monkeypatch):
+    _fake_part25(monkeypatch)
+    args = _args(tmp_path)
+    args.attach = str(tmp_path / "attach.json")
+    Path(args.attach).write_text(json.dumps({"prompts": []}), encoding="utf-8")
+    monkeypatch.setattr(part43, "_sequences", lambda _tokenizer: ["tiny sequence"])
+    monkeypatch.setattr(part43, "run_signs", lambda *_a, **_k: {"signed": True})
+    calls = []
+    monkeypatch.setattr(part43, "run_lattice_amended", lambda *_a, **_k: calls.append("lattice") or {"timing": {"elapsed_seconds": 0.1}})
+    monkeypatch.setattr(part43, "run_swap", lambda *_a, **_k: {"rows": []})
+    monkeypatch.setattr(part43, "run_attach", lambda *_a, **_k: {"rows": []})
+    result = part43.run_pilot(TinyModel(), TinyTokenizer(), _token_sets(), args,
+                              calibration=_calibration_fixture(args))
+    assert result["status"] == "complete"
+    assert calls == ["lattice"]
+
+
+def test_decision_cli_missing_calibration_writes_hold_before_lattice(tmp_path, monkeypatch):
+    args = _args(tmp_path)
+    called = []
+    monkeypatch.setattr(part43, "_load_runtime", lambda *_a, **_k: pytest.fail("missing calibration must stop before load"))
+    monkeypatch.setattr(part43, "run_lattice_amended", lambda *_a, **_k: called.append(True))
+    common = ["--out", str(Path(args.out)), "--candidates", args.candidates]
+    assert part43.main(["lattice", *common]) == 0
+    hold = json.loads((Path(args.out) / "HOLD.json").read_text(encoding="utf-8"))
+    assert hold["status"] == "HOLD"
+    assert "missing" in hold["reason"]
+    assert called == []
+
+
 def test_pilot_and_base_cli_smoke_with_tiny_model(tmp_path, monkeypatch):
     _fake_part25(monkeypatch)
     model, tokenizer = TinyModel(), TinyTokenizer()
     args = _args(tmp_path)
-    validation = {"execution_mode": "singleton", "cells": {"clean": {"primary_score": 0.25}}}
+    calibration = _calibration_fixture(args)
     diagnostic = {"checks": {"batch_only": {"passed": True, "tolerance": 1e-4}}}
     monkeypatch.setattr(part43, "write_manifest", lambda _args: {"schema_version": 1})
     monkeypatch.setattr(part43, "_load_runtime", lambda _args: (tokenizer, model))
-    monkeypatch.setattr(part43, "run_singleton_validation", lambda *_args: validation)
+    monkeypatch.setattr(part43, "run_calibration_runtime", lambda *_args: calibration)
+    monkeypatch.setattr(part43, "_sequences", lambda _tokenizer: ["tiny sequence"])
+    monkeypatch.setattr(part43, "run_signs", lambda *_args, **_kwargs: {"signed": True})
     monkeypatch.setattr(part43, "run_validation_checks", lambda *_args: pytest.fail("pilot must not gate on batch checks"))
     monkeypatch.setattr(part43, "run_lattice_amended", lambda *_args, **_kwargs: {"timing": {"elapsed_seconds": 0.1}})
+    monkeypatch.setattr(part43, "run_swap", lambda *_args, **_kwargs: {"rows": []})
+    monkeypatch.setattr(part43, "run_attach", lambda *_args, **_kwargs: {"rows": []})
     out = tmp_path / "cli-out"
+    args.attach = str(tmp_path / "attach.json")
+    Path(args.attach).write_text(json.dumps({"prompts": []}), encoding="utf-8")
     common = ["--out", str(out), "--candidates", args.candidates, "--cache-dir", str(tmp_path),
-              "--heldout", args.heldout, "--prompts", args.prompts, "--corpus", args.corpus]
+              "--heldout", args.heldout, "--prompts", args.prompts, "--corpus", args.corpus,
+              "--attach", args.attach]
     assert part43.main(["pilot", *common]) == 0
     assert (out / "pilot.json").is_file() and (out / "pilot-lattice.json").is_file()
-    assert json.loads((out / "pilot.json").read_text())["singleton_validation"] == validation
-    assert json.loads((out / "pilot-validation.json").read_text()) == validation
+    assert json.loads((out / "pilot.json").read_text())["calibration"] == calibration
+    assert json.loads((out / "calibration.json").read_text()) == calibration
     assert not (out / "checks.json").exists()
     monkeypatch.setattr(part43, "run_validation_checks", lambda *_args: diagnostic)
     assert part43.main(["checks", *common]) == 0
     assert json.loads((out / "checks.json").read_text())["checks"] == diagnostic["checks"]
-    assert part43.main(["base", *common]) == 0
+    base_calibration = _calibration_fixture(_args(tmp_path, model=part43.BASE_MODEL, revision=part43.BASE_REVISION))
+    part43.write_json(out / "calibration.json", base_calibration)
+    assert part43.main(["base", *common, "--model", part43.BASE_MODEL,
+                        "--revision", part43.BASE_REVISION]) == 0
     assert (out / "base.json").is_file() and (out / "base-signs.json").is_file()
 
 

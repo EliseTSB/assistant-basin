@@ -472,8 +472,8 @@ def summarize_reads(rows: list[dict], run_seed: int, categories: list[dict]) -> 
 
 
 
-def load_model_direct(model_id: str, revision: str, device: str):
-    """Part 39's loader: stream the bf16 weights straight to the device.
+def load_model_direct(model_id: str, revision: str, device: str, dtype=None):
+    """Part 39's loader: stream selected-precision weights straight to the device.
 
     The shared loader (neuron_report.load_model) builds the whole model on the host before .to(device); for
     Qwen3.5-4B that peaks near 10 GB of Windows RAM and the A770 job's RAM guard stopped Part 39 three times on
@@ -485,7 +485,8 @@ def load_model_direct(model_id: str, revision: str, device: str):
     tok = AutoTokenizer.from_pretrained(model_id, revision=revision)
     if tok.pad_token_id is None:
         tok.pad_token = tok.eos_token
-    kwargs = dict(revision=revision, dtype=torch.bfloat16, low_cpu_mem_usage=True, device_map={"": device})
+    kwargs = dict(revision=revision, dtype=torch.bfloat16 if dtype is None else dtype,
+                  low_cpu_mem_usage=True, device_map={"": device})
     # transformers' caching_allocator_warmup asks for the whole model as ONE buffer (7.83 GiB for Qwen3.5-4B); the
     # Arc A770 refuses a single allocation that large (XPU OOM with 14.8 GiB free, 2026-10-20 18:22). Skip it.
     import transformers.modeling_utils as _mu
