@@ -257,6 +257,60 @@ def _calibration_fixture(args, monkeypatch, fp32_difference=0.01, bf16_repeat_sp
     part43.write_json(Path(args.out) / "calibration.json", raw)
     return part43._read_calibration_artifact(args, tokenizer=tokenizer)
 
+
+def _fp32_successor_raw_fixture(args, monkeypatch, repeat_spread=0.0, replay_error=0.0):
+    _fake_part25(monkeypatch)
+    args.protocol = "fp32-successor"
+    tokenizer = TinyTokenizer()
+    registration = part43._calibration_registration(tokenizer, part43.FP32_SUCCESSOR_PROTOCOL_ID)
+    answer_rows = registration["answers"]
+
+    def answer_sums(primary):
+        return {
+            row["id"]: primary if row["maker"] == "Google"
+            else 0.0 if row["maker"] == "Alibaba"
+            else -1000.0 if row["maker"] in part43.ALIBABA_GROUP
+            else 0.0
+            for row in answer_rows
+        }
+
+    cells = {}
+    for cell_name in part43.CALIBRATION_CELLS:
+        values = [0.0, 0.0, 0.0]
+        if cell_name == "all_four_zero":
+            values = [0.0, repeat_spread, 0.0]
+        if cell_name == "clean_to_clean_replay":
+            values = [replay_error, replay_error, replay_error]
+        cells[cell_name] = {
+            "repeats": [{"answer_logprobs": answer_sums(value)} for value in values],
+        }
+
+    model = TinyModel().to(dtype=torch.float32)
+    part43._ACTIVE_ACTIVATION_DTYPES = {"torch.float32"}
+    part43._ACTIVE_DOWN_PROJ_INPUT_DTYPES = {"torch.float32"}
+    part43._ACTIVE_LOGIT_DTYPES = {"torch.float32"}
+    execution = part43._calibration_runtime_metadata(
+        model, "torch.float32", part43.FP32_SUCCESSOR_PROTOCOL_ID,
+    )
+    # This fixture represents execution after the protocol's pre-load precision setup.
+    flags = execution["runtime"]["precision_flags"]
+    flags["cuda_matmul_allow_tf32"] = False
+    flags["cudnn_allow_tf32"] = False
+    flags["float32_matmul_precision"] = "highest"
+    execution["runtime"]["float32_matmul_precision"] = "highest"
+    raw = part43._calibration_artifact(
+        args, tokenizer,
+        {"fp32": {"repeat_count": 3, "cells": cells}},
+        {"fp32": execution},
+        protocol_id=part43.FP32_SUCCESSOR_PROTOCOL_ID,
+    )
+    return raw, tokenizer
+
+
+def _read_fp32_fixture(args, raw, tokenizer):
+    part43.write_json(Path(args.out) / "calibration.json", raw)
+    return part43._read_calibration_artifact(args, tokenizer=tokenizer)
+
 def _short_questions(monkeypatch):
     monkeypatch.setattr(part43, "QUESTIONS", ("Who created you?",))
 
@@ -1122,3 +1176,227 @@ def test_load_runtime_resets_observed_activation_dtypes(tmp_path, monkeypatch):
     args = SimpleNamespace(cache_dir=str(tmp_path), model="m", revision="r", device="cpu")
     part43._load_runtime(args)
     assert part43._ACTIVE_ACTIVATION_DTYPES == set()
+
+
+def test_fp32_successor_raw_registration_and_reader_pass(tmp_path, monkeypatch):
+    args = _args(tmp_path, protocol="fp32-successor")
+    raw, tokenizer = _fp32_successor_raw_fixture(args, monkeypatch)
+    assert raw["schema_version"] == part43.FP32_SUCCESSOR_SCHEMA_VERSION
+    assert raw["protocol_id"] == part43.FP32_SUCCESSOR_PROTOCOL_ID
+    assert raw["registration"]["decision_dtype"] == "torch.float32"
+    assert set(raw["legs"]) == {"fp32"}
+    assert raw["legs"]["fp32"]["repeat_count"] == 3
+    summary = _read_fp32_fixture(args, raw, tokenizer)
+    assert summary["protocol_id"] == part43.FP32_SUCCESSOR_PROTOCOL_ID
+    assert summary["status"] == "within_budget"
+    assert part43.calibration_gate(
+        summary, model=args.model, revision=args.revision,
+        protocol_id=part43.FP32_SUCCESSOR_PROTOCOL_ID,
+    )[0] is True
+
+
+def test_fp32_successor_reader_accepts_more_than_three_repeats(tmp_path, monkeypatch):
+    args = _args(tmp_path, protocol="fp32-successor")
+    raw, tokenizer = _fp32_successor_raw_fixture(args, monkeypatch)
+    leg = raw["legs"]["fp32"]
+    leg["repeat_count"] = 4
+    for cell in leg["cells"].values():
+        cell["repeats"].append({"answer_logprobs": dict(cell["repeats"][0]["answer_logprobs"])})
+    summary = _read_fp32_fixture(args, raw, tokenizer)
+    assert summary["status"] == "within_budget"
+    assert all(len(cell["repeat_primary_scores"]) == 4 for cell in summary["scores"]["fp32"].values())
+
+
+def test_legacy_reader_accepts_the_pinned_845964c_source_provenance(tmp_path, monkeypatch):
+    args = _args(tmp_path)
+    raw, tokenizer = _calibration_raw_fixture(args, monkeypatch)
+    raw["source_provenance"] = dict(part43.LEGACY_CALIBRATION_SOURCE_PROVENANCE)
+    summary = _read_fp32_fixture(args, raw, tokenizer)
+    assert summary["reader_id"] == part43.CALIBRATION_READER_ID
+    assert part43.calibration_gate(summary, model=args.model, revision=args.revision)[0] is True
+
+
+@pytest.mark.parametrize("field, value", [
+    ("dtype_as_loaded", "torch.bfloat16"),
+    ("parameter_dtypes", ["torch.float32", "torch.bfloat16"]),
+    ("activation_dtypes", ["torch.float32", "torch.bfloat16"]),
+    ("down_proj_input_dtypes", ["torch.float32", "torch.bfloat16"]),
+    ("logit_dtypes", ["torch.bfloat16"]),
+])
+def test_fp32_reader_refuses_wrong_or_mixed_recorded_execution_dtype(tmp_path, monkeypatch, field, value):
+    args = _args(tmp_path, protocol="fp32-successor")
+    raw, tokenizer = _fp32_successor_raw_fixture(args, monkeypatch)
+    raw["execution"]["legs"]["fp32"][field] = value
+    part43.write_json(Path(args.out) / "calibration.json", raw)
+    with pytest.raises(part43.CalibrationRefusal):
+        part43._read_calibration_artifact(args, tokenizer=tokenizer)
+
+
+@pytest.mark.parametrize("flag_name", ["cuda_matmul_allow_tf32", "cudnn_allow_tf32"])
+def test_fp32_reader_refuses_recorded_tf32_flag_true(tmp_path, monkeypatch, flag_name):
+    args = _args(tmp_path, protocol="fp32-successor")
+    raw, tokenizer = _fp32_successor_raw_fixture(args, monkeypatch)
+    raw["execution"]["legs"]["fp32"]["runtime"]["precision_flags"][flag_name] = True
+    part43.write_json(Path(args.out) / "calibration.json", raw)
+    with pytest.raises(part43.CalibrationRefusal, match="TF32-enabled"):
+        part43._read_calibration_artifact(args, tokenizer=tokenizer)
+
+
+def test_calibration_readers_refuse_the_other_protocol(tmp_path, monkeypatch):
+    legacy_dir = tmp_path / "legacy"
+    fp32_dir = tmp_path / "fp32"
+    legacy_dir.mkdir()
+    fp32_dir.mkdir()
+    legacy_args = _args(legacy_dir)
+    legacy_raw, tokenizer = _calibration_raw_fixture(legacy_args, monkeypatch)
+    fp32_args = _args(fp32_dir, protocol="fp32-successor")
+    part43.write_json(Path(fp32_args.out) / "calibration.json", legacy_raw)
+    with pytest.raises(part43.CalibrationRefusal):
+        part43._read_calibration_artifact(fp32_args, tokenizer=tokenizer)
+
+    fp32_raw, tokenizer = _fp32_successor_raw_fixture(fp32_args, monkeypatch)
+    part43.write_json(Path(legacy_args.out) / "calibration.json", fp32_raw)
+    with pytest.raises(part43.CalibrationRefusal):
+        part43._read_calibration_artifact(legacy_args, tokenizer=tokenizer)
+
+
+@pytest.mark.parametrize(
+    "spread, replay, expected_epsilon, passes",
+    [(0.06, 0.0, 0.06, False), (0.0, 0.06, 0.06, False), (0.0, 0.05, 0.05, True)],
+)
+def test_fp32_successor_epsilon_uses_spread_and_replay_exactly(
+    tmp_path, monkeypatch, spread, replay, expected_epsilon, passes,
+):
+    args = _args(tmp_path, protocol="fp32-successor")
+    raw, tokenizer = _fp32_successor_raw_fixture(
+        args, monkeypatch, repeat_spread=spread, replay_error=replay,
+    )
+    summary = _read_fp32_fixture(args, raw, tokenizer)
+    assert summary["epsilon"] == expected_epsilon
+    assert summary["epsilon_components"]["fp32_repeat_spread_max"] == spread
+    assert summary["epsilon_components"]["clean_to_clean_replay_error"] == replay
+    assert part43.calibration_gate(
+        summary, model=args.model, revision=args.revision,
+        protocol_id=part43.FP32_SUCCESSOR_PROTOCOL_ID,
+    )[0] is passes
+
+
+def test_fp32_pilot_reads_serialized_verdict_before_any_production_stage(tmp_path, monkeypatch):
+    args = _args(tmp_path, protocol="fp32-successor")
+    raw, tokenizer = _fp32_successor_raw_fixture(args, monkeypatch, repeat_spread=0.06)
+    monkeypatch.setattr(part43, "write_manifest", lambda _args: {"schema_version": 1})
+    monkeypatch.setattr(part43, "_load_token_records", lambda _args: _token_sets())
+    monkeypatch.setattr(part43, "run_calibration_runtime", lambda *_args: raw)
+    monkeypatch.setattr(part43, "_load_calibration_tokenizer", lambda _args: tokenizer)
+    monkeypatch.setattr(part43, "_load_runtime", lambda *_args, **_kwargs: pytest.fail("held pilot loaded model"))
+    monkeypatch.setattr(part43, "_sequences", lambda *_args: pytest.fail("held pilot reached signs"))
+    production_stages = []
+    monkeypatch.setattr(part43, "run_signs", lambda *_a, **_k: production_stages.append("signs"))
+    monkeypatch.setattr(part43, "run_lattice_amended", lambda *_a, **_k: production_stages.append("lattice"))
+    common = ["--out", args.out, "--candidates", args.candidates, "--cache-dir", args.cache_dir,
+              "--device", "cpu", "--protocol", "fp32-successor"]
+    assert part43.main(["pilot", *common]) == 0
+    assert production_stages == []
+    assert json.loads((Path(args.out) / "calibration.json").read_text())["protocol_id"] == part43.FP32_SUCCESSOR_PROTOCOL_ID
+    assert json.loads((Path(args.out) / "calibration-summary.json").read_text())["status"] == "over_budget"
+    assert json.loads((Path(args.out) / "HOLD.json").read_text())["status"] == "HOLD"
+
+
+def test_fp32_loader_sets_precision_before_loading_float32_model(tmp_path, monkeypatch):
+    import torch
+    previous_matmul = torch.backends.cuda.matmul.allow_tf32
+    previous_cudnn = torch.backends.cudnn.allow_tf32
+    precision = {"value": "high"}
+    seen = {}
+
+    def set_precision(value):
+        precision["value"] = value
+
+    monkeypatch.setattr(torch.backends.cuda.matmul, "allow_tf32", previous_matmul)
+    monkeypatch.setattr(torch.backends.cudnn, "allow_tf32", previous_cudnn)
+    monkeypatch.setattr(torch, "set_float32_matmul_precision", set_precision)
+    monkeypatch.setattr(torch, "get_float32_matmul_precision", lambda: precision["value"])
+
+    def load_model(_model, _revision, _device, **kwargs):
+        seen.update(kwargs)
+        seen["matmul_tf32"] = torch.backends.cuda.matmul.allow_tf32
+        seen["cudnn_tf32"] = torch.backends.cudnn.allow_tf32
+        seen["precision"] = precision["value"]
+        return TinyTokenizer(), TinyModel().to(dtype=kwargs["dtype"])
+
+    monkeypatch.setattr(part43, "part39_module", lambda: SimpleNamespace(load_model_direct=load_model))
+    args = SimpleNamespace(cache_dir=str(tmp_path), model="m", revision="r", device="cpu", protocol="fp32-successor")
+    _tokenizer, model = part43._load_runtime(args)
+    assert seen == {
+        "dtype": torch.float32,
+        "matmul_tf32": False,
+        "cudnn_tf32": False,
+        "precision": "highest",
+    }
+    assert {str(parameter.dtype) for parameter in model.parameters()} == {"torch.float32"}
+
+
+def test_fp32_calibration_runs_only_three_repeat_fp32_cells_on_cpu(tmp_path, monkeypatch):
+    _fake_part25(monkeypatch)
+    args = _args(tmp_path, protocol="fp32-successor")
+    tokenizer = TinyTokenizer()
+    model = TinyModel().to(dtype=torch.float32)
+    import torch as torch_module
+    old_matmul = torch_module.backends.cuda.matmul.allow_tf32
+    old_cudnn = torch_module.backends.cudnn.allow_tf32
+    old_precision = torch_module.get_float32_matmul_precision()
+    loads = []
+
+    def load(_args, *, model_dtype):
+        loads.append(model_dtype)
+        assert torch_module.backends.cuda.matmul.allow_tf32 is False
+        assert torch_module.backends.cudnn.allow_tf32 is False
+        assert torch_module.get_float32_matmul_precision() == "highest"
+        return tokenizer, model
+
+    monkeypatch.setattr(part43, "_load_runtime", load)
+    monkeypatch.setattr(part43, "_release_calibration_model", lambda _args: None)
+    try:
+        raw = part43.run_calibration_runtime(args, _token_sets())
+    finally:
+        torch_module.backends.cuda.matmul.allow_tf32 = old_matmul
+        torch_module.backends.cudnn.allow_tf32 = old_cudnn
+        torch_module.set_float32_matmul_precision(old_precision)
+    assert loads == [torch_module.float32]
+    assert set(raw["legs"]) == {"fp32"}
+    assert set(raw["legs"]["fp32"]["cells"]) == set(part43.CALIBRATION_CELLS)
+    assert all(len(cell["repeats"]) == 3 for cell in raw["legs"]["fp32"]["cells"].values())
+    assert raw["execution"]["legs"]["fp32"]["parameter_dtypes"] == ["torch.float32"]
+    assert raw["execution"]["legs"]["fp32"]["down_proj_input_dtypes"] == ["torch.float32"]
+    assert raw["execution"]["legs"]["fp32"]["logit_dtypes"] == ["torch.float32"]
+
+
+def test_fp32_raw_boundary_keeps_duplicate_derived_malformed_and_internal_errors_distinct(tmp_path, monkeypatch):
+    args = _args(tmp_path, protocol="fp32-successor")
+    raw, tokenizer = _fp32_successor_raw_fixture(args, monkeypatch)
+    raw["epsilon"] = 0.0
+    part43.write_json(Path(args.out) / "calibration.json", raw)
+    with pytest.raises(part43.CalibrationRefusal, match="derived field"):
+        part43._read_calibration_artifact(args, tokenizer=tokenizer)
+
+    raw, tokenizer = _fp32_successor_raw_fixture(args, monkeypatch)
+    path = Path(args.out) / "calibration.json"
+    part43.write_json(path, raw)
+    serialized = path.read_text(encoding="utf-8")
+    serialized = serialized.replace('"protocol_id": "part43-fp32-successor-v1",',
+                                    '"protocol_id": "part43-fp32-successor-v1",\n  "protocol_id": "part43-fp32-successor-v1",', 1)
+    path.write_text(serialized, encoding="utf-8")
+    with pytest.raises(part43.DuplicateCalibrationKey):
+        part43._read_calibration_artifact(args, tokenizer=tokenizer)
+
+    path.write_text("{ malformed", encoding="utf-8")
+    with pytest.raises(part43.CalibrationRefusal, match="malformed"):
+        part43._read_calibration_artifact(args, tokenizer=tokenizer)
+
+    raw, tokenizer = _fp32_successor_raw_fixture(args, monkeypatch)
+    part43.write_json(path, raw)
+    marker = RuntimeError("FP32 reader internal sentinel")
+    monkeypatch.setattr(part43, "_primary_score_from_answer_rows", lambda *_a, **_k: (_ for _ in ()).throw(marker))
+    with pytest.raises(RuntimeError) as exc:
+        part43._read_calibration_artifact(args, tokenizer=tokenizer)
+    assert exc.value is marker

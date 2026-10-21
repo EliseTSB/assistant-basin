@@ -62,6 +62,8 @@ DOSES = (2, 4, 8)
 _ACTIVE_EXECUTION_MODE = "singleton"
 _ACTIVE_MODEL: Any = None
 _ACTIVE_ACTIVATION_DTYPES: set[str] = set()
+_ACTIVE_DOWN_PROJ_INPUT_DTYPES: set[str] = set()
+_ACTIVE_LOGIT_DTYPES: set[str] = set()
 DEFAULT_CACHE = Path("/mnt/e/neuron-probe/hf/hub")
 DEFAULT_JLENS = Path("/home/elisepc/neuron-probe/jlens/qwen3.5-4b/jlens/Salesforce-wikitext/Qwen3.5-4B_jacobian_lens.pt")
 DEFAULT_CHECKSUMS = Path("/home/elisepc/neuron-probe/jlens/SHA256SUMS")
@@ -116,6 +118,8 @@ def _runtime_environment(model: Any = None) -> dict[str, Any]:
             "cuda_fp16_reduced_precision_reduction": getattr(cuda_matmul, "allow_fp16_reduced_precision_reduction", None),
             "cuda_fp16_accumulation": getattr(cuda_matmul, "allow_fp16_accumulation", None),
         }
+        precision_getter = getattr(torch, "get_float32_matmul_precision", None)
+        float32_matmul_precision = precision_getter() if callable(precision_getter) else None
         cuda_version = getattr(torch.version, "cuda", None)
         cudnn_version = cudnn.version() if cudnn is not None and hasattr(cudnn, "version") else None
         # torch returns cuDNN's version as an int (e.g. 90100) or None; the calibration schema stores text or null
@@ -125,6 +129,7 @@ def _runtime_environment(model: Any = None) -> dict[str, Any]:
     except ImportError:
         torch_version = None
         precision_flags = {}
+        float32_matmul_precision = None
         cuda_version = None
         cudnn_version = None
     try:
@@ -201,21 +206,35 @@ def _runtime_environment(model: Any = None) -> dict[str, Any]:
         },
         "parameter_dtype_numel": parameter_dtypes or ("not loaded" if model is None else {}),
         "activation_dtypes_observed": sorted(_ACTIVE_ACTIVATION_DTYPES) or ["not observed yet"],
+        "down_proj_input_dtypes_observed": sorted(_ACTIVE_DOWN_PROJ_INPUT_DTYPES) or ["not observed yet"],
+        "logit_dtypes_observed": sorted(_ACTIVE_LOGIT_DTYPES) or ["not observed yet"],
+        "float32_matmul_precision": float32_matmul_precision,
         "precision_flags": precision_flags,
     }
 
 
 def output_header(args: argparse.Namespace, paths: Iterable[str | Path | None]) -> dict[str, Any]:
     common_inputs = [*paths, ROOT / "PART43-DESIGN.md"]
-    return {
+    environment = _runtime_environment(_ACTIVE_MODEL)
+    header = {
         "model": args.model,
         "revision": args.revision,
         "tool_sha256": sha256_file(Path(__file__).resolve()),
         "input_shas": input_shas(common_inputs),
         "written": time.strftime("%Y-%m-%d %H:%M:%S"),
         "execution_mode": getattr(args, "exec_mode", "singleton"),
-        "environment": _runtime_environment(_ACTIVE_MODEL),
+        "environment": environment,
     }
+    protocol_id = _selected_calibration_protocol(args)
+    if protocol_id == FP32_SUCCESSOR_PROTOCOL_ID:
+        header["calibration_protocol"] = {
+            "protocol_id": protocol_id,
+            "decision_dtype": "torch.float32",
+            "matmul_allow_tf32": environment["precision_flags"].get("cuda_matmul_allow_tf32"),
+            "cudnn_allow_tf32": environment["precision_flags"].get("cudnn_allow_tf32"),
+            "float32_matmul_precision": environment["float32_matmul_precision"],
+        }
+    return header
 
 
 def write_json(path: str | Path, value: Mapping[str, Any]) -> None:
@@ -610,6 +629,7 @@ def _capture_forward_group(
         def hook(_module, args, *, li=layer_index, units=layer_units):
             x = args[0]
             _ACTIVE_ACTIVATION_DTYPES.add(str(x.dtype))
+            _ACTIVE_DOWN_PROJ_INPUT_DTYPES.add(str(x.dtype))
             out = x
             if operations is not None:
                 for row, row_ops in enumerate(operations):
@@ -833,6 +853,7 @@ def execute(
         )
         logits = output.logits if hasattr(output, "logits") else output[0]
         _ACTIVE_ACTIVATION_DTYPES.add(str(logits.dtype))
+        _ACTIVE_LOGIT_DTYPES.add(str(logits.dtype))
         for local_index, original_index in enumerate(range(start, end)):
             row_output = _slice_output_row(output, local_index)
             row_captures = {}
@@ -979,10 +1000,21 @@ CALIBRATION_DECISION_CELLS = (
 CALIBRATION_CELLS = (*CALIBRATION_DECISION_CELLS, "clean_to_clean_replay")
 CALIBRATION_EPSILON_LIMIT = 0.05
 CALIBRATION_SCHEMA_VERSION = 2
+FP32_SUCCESSOR_SCHEMA_VERSION = 3
 CALIBRATION_ARTIFACT_TYPE = "part43-calibration-raw"
 CALIBRATION_SUMMARY_TYPE = "part43-calibration-summary"
 CALIBRATION_PROTOCOL_ID = "part43-singleton-answer-sum-v2"
 CALIBRATION_READER_ID = "part43-calibration-reader-v2"
+FP32_SUCCESSOR_PROTOCOL_ID = "part43-fp32-successor-v1"
+FP32_SUCCESSOR_READER_ID = "part43-fp32-successor-reader-v1"
+LEGACY_CALIBRATION_SOURCE_PROVENANCE = {
+    "part43_sha256": "5189450dc952907108bbad04d88ac9ee2140b239f91563490f0cc600e0730ec0",
+    "part25_sha256": "00db9278bb4f3a18cc3aaf7b8d2fac80895197cc988c2d5479d255d74587e173",
+    "part39_sha256": "2f91c91ddc903a1c4ea2fba26f7d7517def79f1c95fc3b2d042888e3f6f0b2ea",
+    "design_sha256": "f4a266413091478ca01482d37870f886a37fb573b964c176ab779b541708ef76",
+    "raw_only_design_sha256": "cb36c5243416405c850494a8916290e492228edf5c9c9c769aab05b6317e5a65",
+    "alden_17_sha256": "1bf1e468db404be06c41e97fbdc799b9d3688b1e4b788ceff6beb7b4f5d9bc8c",
+}
 CALIBRATION_ANSWER_IDS = {
     maker: re.sub(r"[^a-z0-9]+", "_", maker.lower()).strip("_")
     for maker, _answer in VALIDATION_ANSWER_OPTIONS
@@ -995,6 +1027,23 @@ class CalibrationRefusal(ValueError):
 
 class DuplicateCalibrationKey(CalibrationRefusal):
     """A calibration JSON object contains a duplicate key."""
+
+
+def _selected_calibration_protocol(value: Any) -> str:
+    selected = getattr(value, "protocol", None)
+    if selected in (None, "bf16-v2", CALIBRATION_PROTOCOL_ID):
+        return CALIBRATION_PROTOCOL_ID
+    if selected in ("fp32-successor", FP32_SUCCESSOR_PROTOCOL_ID):
+        return FP32_SUCCESSOR_PROTOCOL_ID
+    raise CalibrationRefusal(f"unknown calibration protocol {selected!r}")
+
+
+def _configure_full_fp32_precision() -> None:
+    """Set the effective PyTorch precision controls required by the FP32 successor."""
+    import torch
+    torch.backends.cuda.matmul.allow_tf32 = False
+    torch.backends.cudnn.allow_tf32 = False
+    torch.set_float32_matmul_precision("highest")
 
 
 CALIBRATION_INTERVENTIONS = {
@@ -1179,7 +1228,7 @@ def _canonical_json(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False)
 
 
-def _calibration_registration(tokenizer: Any) -> dict[str, Any]:
+def _calibration_registration(tokenizer: Any, protocol_id: str = CALIBRATION_PROTOCOL_ID) -> dict[str, Any]:
     records = _teacher_forced_records(
         tokenizer, [DISCOVERY_QUESTION], "plain", answer_options=VALIDATION_ANSWER_OPTIONS,
     )
@@ -1211,8 +1260,8 @@ def _calibration_registration(tokenizer: Any) -> dict[str, Any]:
                 answer_id: list(row["input_ids"]) for answer_id, row in rows_by_id.items()
             },
         }
-    return {
-        "protocol_id": CALIBRATION_PROTOCOL_ID,
+    registration = {
+        "protocol_id": protocol_id,
         "question": DISCOVERY_QUESTION,
         "scoring": {
             "answer_logprob": "sum log_softmax(logits.float())[answer_positions - 1, target_ids]",
@@ -1225,6 +1274,12 @@ def _calibration_registration(tokenizer: Any) -> dict[str, Any]:
         "answers": answer_rows,
         "cells": cells,
     }
+    if protocol_id == FP32_SUCCESSOR_PROTOCOL_ID:
+        registration["decision_dtype"] = "torch.float32"
+        registration["calibration_definition"] = "max_fp32_repeat_spread_or_clean_to_clean_replay_error"
+    elif protocol_id != CALIBRATION_PROTOCOL_ID:
+        raise CalibrationRefusal(f"unknown calibration protocol {protocol_id!r}")
+    return registration
 
 
 def _tokenizer_identity(tokenizer: Any, args: argparse.Namespace) -> dict[str, Any]:
@@ -1252,7 +1307,7 @@ def _tokenizer_identity(tokenizer: Any, args: argparse.Namespace) -> dict[str, A
     }
 
 
-def _calibration_source_provenance() -> dict[str, str]:
+def _calibration_source_provenance(protocol_id: str = CALIBRATION_PROTOCOL_ID) -> dict[str, str]:
     paths = {
         "part43_sha256": ROOT / "part43.py",
         "part25_sha256": ROOT / "part25.py",
@@ -1261,13 +1316,24 @@ def _calibration_source_provenance() -> dict[str, str]:
         "raw_only_design_sha256": ROOT / "review" / "part43" / "CALIBRATION-RAW-ONLY-DESIGN.md",
         "alden_17_sha256": ROOT / "review" / "part43" / "ALDEN-17.md",
     }
+    if protocol_id == FP32_SUCCESSOR_PROTOCOL_ID:
+        paths.update({
+            "fp32_successor_protocol_sha256": ROOT / "review" / "part43" / "FP32-SUCCESSOR-PROTOCOL.md",
+            "alden_23_sha256": ROOT / "review" / "part43" / "ALDEN-23.md",
+        })
+    elif protocol_id != CALIBRATION_PROTOCOL_ID:
+        raise CalibrationRefusal(f"unknown calibration protocol {protocol_id!r}")
     return {name: sha256_file(path) for name, path in paths.items()}
 
 
-def _calibration_runtime_metadata(model: Any, expected_dtype: str) -> dict[str, Any]:
+def _calibration_runtime_metadata(
+    model: Any,
+    expected_dtype: str,
+    protocol_id: str = CALIBRATION_PROTOCOL_ID,
+) -> dict[str, Any]:
     environment = _runtime_environment(model)
     kernel = environment["kernel"]
-    return {
+    value = {
         "dtype_as_loaded": expected_dtype,
         "device_as_loaded": str(_device_of(model)),
         "parameter_dtypes": sorted({str(parameter.dtype) for parameter in model.parameters()}),
@@ -1288,6 +1354,14 @@ def _calibration_runtime_metadata(model: Any, expected_dtype: str) -> dict[str, 
             "precision_flags": dict(environment["precision_flags"]),
         },
     }
+    if protocol_id == FP32_SUCCESSOR_PROTOCOL_ID:
+        value["down_proj_input_dtypes"] = sorted(_ACTIVE_DOWN_PROJ_INPUT_DTYPES)
+        value["logit_dtypes"] = sorted(_ACTIVE_LOGIT_DTYPES)
+        value["runtime"]["float32_matmul_precision"] = environment["float32_matmul_precision"]
+        value["runtime"]["precision_flags"]["float32_matmul_precision"] = environment["float32_matmul_precision"]
+    elif protocol_id != CALIBRATION_PROTOCOL_ID:
+        raise CalibrationRefusal(f"unknown calibration protocol {protocol_id!r}")
+    return value
 
 
 def _calibration_artifact(
@@ -1295,15 +1369,41 @@ def _calibration_artifact(
     tokenizer: Any,
     legs: Mapping[str, Mapping[str, Any]],
     execution_legs: Mapping[str, Mapping[str, Any]],
+    protocol_id: str | None = None,
 ) -> dict[str, Any]:
-    registration = _calibration_registration(tokenizer)
+    protocol_id = protocol_id or _selected_calibration_protocol(args)
+    registration = _calibration_registration(tokenizer, protocol_id)
     registration_id = hashlib.sha256(_canonical_json(registration).encode("utf-8")).hexdigest()
+    if protocol_id == FP32_SUCCESSOR_PROTOCOL_ID:
+        return {
+            "schema_version": FP32_SUCCESSOR_SCHEMA_VERSION,
+            "artifact_type": CALIBRATION_ARTIFACT_TYPE,
+            "protocol_id": protocol_id,
+            "decision_dtype": "torch.float32",
+            "model": str(args.model),
+            "revision": str(args.revision),
+            "source_provenance": _calibration_source_provenance(protocol_id),
+            "tokenizer": _tokenizer_identity(tokenizer, args),
+            "execution": {
+                "protocol_id": protocol_id,
+                "decision_dtype": "torch.float32",
+                "mode": "singleton",
+                "requested_device": str(args.device),
+                "scoring_dtype": "float32_log_softmax",
+                "legs": {"fp32": dict(execution_legs["fp32"])},
+            },
+            "registration": registration,
+            "registration_sha256": registration_id,
+            "legs": {"fp32": dict(legs["fp32"])},
+        }
+    if protocol_id != CALIBRATION_PROTOCOL_ID:
+        raise CalibrationRefusal(f"unknown calibration protocol {protocol_id!r}")
     return {
         "schema_version": CALIBRATION_SCHEMA_VERSION,
         "artifact_type": CALIBRATION_ARTIFACT_TYPE,
         "model": str(args.model),
         "revision": str(args.revision),
-        "source_provenance": _calibration_source_provenance(),
+        "source_provenance": _calibration_source_provenance(protocol_id),
         "tokenizer": _tokenizer_identity(tokenizer, args),
         "execution": {
             "mode": "singleton",
@@ -1326,13 +1426,23 @@ def _run_calibration_leg(
     leg_name: str,
     expected_dtype: str,
     repeats: int,
+    protocol_id: str = CALIBRATION_PROTOCOL_ID,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     """Write raw per-answer sums for the fixed cells in one dtype leg."""
-    global _ACTIVE_ACTIVATION_DTYPES
-    expected_repeats = 3 if leg_name == "bf16" else 1
-    if leg_name not in {"bf16", "fp32"} or repeats != expected_repeats:
-        raise ValueError("calibration uses exactly three bf16 repeats and one fp32 repeat")
+    global _ACTIVE_ACTIVATION_DTYPES, _ACTIVE_DOWN_PROJ_INPUT_DTYPES, _ACTIVE_LOGIT_DTYPES
+    if protocol_id == CALIBRATION_PROTOCOL_ID:
+        expected_repeats = 3 if leg_name == "bf16" else 1
+        valid_legs = {"bf16", "fp32"}
+    elif protocol_id == FP32_SUCCESSOR_PROTOCOL_ID:
+        expected_repeats = 3
+        valid_legs = {"fp32"}
+    else:
+        raise CalibrationRefusal(f"unknown calibration protocol {protocol_id!r}")
+    if leg_name not in valid_legs or repeats != expected_repeats:
+        raise ValueError(f"{protocol_id} calibration repeat count or leg is invalid")
     _ACTIVE_ACTIVATION_DTYPES = set()
+    _ACTIVE_DOWN_PROJ_INPUT_DTYPES = set()
+    _ACTIVE_LOGIT_DTYPES = set()
     records = _teacher_forced_records(
         tokenizer, [DISCOVERY_QUESTION], "plain", answer_options=VALIDATION_ANSWER_OPTIONS,
     )
@@ -1402,7 +1512,9 @@ def _run_calibration_leg(
     cells["clean_to_clean_replay"] = measure("clean_to_clean_replay", replay_operations, repeats)
     if set(cells) != set(CALIBRATION_CELLS):
         raise AssertionError("calibration writer did not measure the registered cells")
-    return {"repeat_count": repeats, "cells": cells}, _calibration_runtime_metadata(model, expected_dtype)
+    return {"repeat_count": repeats, "cells": cells}, _calibration_runtime_metadata(
+        model, expected_dtype, protocol_id,
+    )
 
 
 def _release_calibration_model(args: argparse.Namespace) -> None:
@@ -1412,8 +1524,24 @@ def _release_calibration_model(args: argparse.Namespace) -> None:
 
 
 def run_calibration_runtime(args: argparse.Namespace, token_records: Mapping[str, Any]) -> dict[str, Any]:
-    """Load and measure bf16 then fp32 sequentially, releasing each model between legs."""
+    """Run the explicitly selected raw-only calibration protocol."""
     import torch
+    protocol_id = _selected_calibration_protocol(args)
+    if protocol_id == FP32_SUCCESSOR_PROTOCOL_ID:
+        _configure_full_fp32_precision()
+        tokenizer, model = _load_runtime(args, model_dtype=torch.float32)
+        leg, execution = _run_calibration_leg(
+            model, tokenizer, token_records, args,
+            leg_name="fp32", expected_dtype="torch.float32", repeats=3,
+            protocol_id=protocol_id,
+        )
+        del model
+        _release_calibration_model(args)
+        return _calibration_artifact(
+            args, tokenizer, {"fp32": leg}, {"fp32": execution}, protocol_id=protocol_id,
+        )
+
+    """Legacy protocol retains the measured bf16 x3 then fp32 x1 sequence."""
     tokenizer, bf16_model = _load_runtime(args)
     bf16_leg, bf16_execution = _run_calibration_leg(
         bf16_model, tokenizer, token_records, args,
@@ -1435,6 +1563,7 @@ def run_calibration_runtime(args: argparse.Namespace, token_records: Mapping[str
         args, tokenizer,
         {"bf16": bf16_leg, "fp32": fp32_leg},
         {"bf16": bf16_execution, "fp32": fp32_execution},
+        protocol_id=protocol_id,
     )
 
 
@@ -5272,11 +5401,16 @@ def run_score(args: argparse.Namespace) -> dict[str, Any]:
 
 
 def _load_runtime(args: argparse.Namespace, model_dtype: Any = None):
-    global _ACTIVE_MODEL
+    global _ACTIVE_MODEL, _ACTIVE_ACTIVATION_DTYPES, _ACTIVE_DOWN_PROJ_INPUT_DTYPES, _ACTIVE_LOGIT_DTYPES
     import torch
     os.environ["HF_HUB_OFFLINE"] = "1"
     os.environ["TRANSFORMERS_OFFLINE"] = "1"
     os.environ["HF_HUB_CACHE"] = str(Path(args.cache_dir).expanduser())
+    if _selected_calibration_protocol(args) == FP32_SUCCESSOR_PROTOCOL_ID:
+        _configure_full_fp32_precision()
+        if model_dtype is not None and model_dtype is not torch.float32:
+            raise CalibrationRefusal("FP32 successor cannot load a non-float32 model")
+        model_dtype = torch.float32
     if model_dtype is None:
         tokenizer, model = part39_module().load_model_direct(args.model, args.revision, args.device)
     else:
@@ -5287,8 +5421,9 @@ def _load_runtime(args: argparse.Namespace, model_dtype: Any = None):
     _ACTIVE_MODEL = model
     # Observed activation dtypes describe the run on THIS loaded model; an earlier leg's fp32 must not carry
     # into the bf16 pilot's record (Alden #19).
-    global _ACTIVE_ACTIVATION_DTYPES
     _ACTIVE_ACTIVATION_DTYPES = set()
+    _ACTIVE_DOWN_PROJ_INPUT_DTYPES = set()
+    _ACTIVE_LOGIT_DTYPES = set()
     torch.set_grad_enabled(False)
     return tokenizer, model
 
@@ -5551,11 +5686,18 @@ def _device_matches(requested: str, loaded: str) -> bool:
     return not requested_separator or (loaded_separator and requested_index == loaded_index)
 
 
-def _validate_runtime_metadata(value: Any, leg_name: str, requested_device: str) -> None:
-    leg = _exact_mapping(value, {
-        "dtype_as_loaded", "device_as_loaded", "parameter_dtypes", "activation_dtypes", "runtime",
-    }, f"execution.legs.{leg_name}")
-    expected_dtype = "torch.bfloat16" if leg_name == "bf16" else "torch.float32"
+def _validate_runtime_metadata(
+    value: Any,
+    leg_name: str,
+    requested_device: str,
+    protocol_id: str = CALIBRATION_PROTOCOL_ID,
+) -> None:
+    fp32_successor = protocol_id == FP32_SUCCESSOR_PROTOCOL_ID
+    leg_fields = {"dtype_as_loaded", "device_as_loaded", "parameter_dtypes", "activation_dtypes", "runtime"}
+    if fp32_successor:
+        leg_fields.update({"down_proj_input_dtypes", "logit_dtypes"})
+    leg = _exact_mapping(value, leg_fields, f"execution.legs.{leg_name}")
+    expected_dtype = "torch.float32" if fp32_successor or leg_name == "fp32" else "torch.bfloat16"
     if leg["dtype_as_loaded"] != expected_dtype:
         raise CalibrationRefusal(f"{leg_name} dtype as loaded does not match the registered leg")
     if not isinstance(leg["device_as_loaded"], str) or not leg["device_as_loaded"]:
@@ -5564,12 +5706,19 @@ def _validate_runtime_metadata(value: Any, leg_name: str, requested_device: str)
         raise CalibrationRefusal(f"{leg_name} loaded device does not match the requested device")
     if leg["parameter_dtypes"] != [expected_dtype] or leg["activation_dtypes"] != [expected_dtype]:
         raise CalibrationRefusal(f"{leg_name} parameter or observed activation dtypes do not match")
-    runtime = _exact_mapping(leg["runtime"], {
+    if fp32_successor:
+        for field in ("down_proj_input_dtypes", "logit_dtypes"):
+            if leg[field] != ["torch.float32"]:
+                raise CalibrationRefusal(f"FP32 successor {field.replace('_', ' ')} must be only torch.float32")
+    runtime_fields = {
         "torch_version", "transformers_version", "cuda_version", "cudnn_version", "attention_backend",
         "gated_delta_backend", "qwen_implementation_sha256", "kernelized_module_classes",
         "hub_kernels_enabled", "kernel_hub_version", "flash_linear_attention_version",
         "causal_conv1d_version", "precision_flags",
-    }, f"execution.legs.{leg_name}.runtime")
+    }
+    if fp32_successor:
+        runtime_fields.add("float32_matmul_precision")
+    runtime = _exact_mapping(leg["runtime"], runtime_fields, f"execution.legs.{leg_name}.runtime")
     for name in ("torch_version", "transformers_version", "cuda_version", "cudnn_version",
                  "hub_kernels_enabled", "kernel_hub_version", "flash_linear_attention_version", "causal_conv1d_version"):
         if runtime[name] is not None and not isinstance(runtime[name], str):
@@ -5585,12 +5734,22 @@ def _validate_runtime_metadata(value: Any, leg_name: str, requested_device: str)
     if (not isinstance(runtime["kernelized_module_classes"], list)
             or any(not isinstance(item, str) for item in runtime["kernelized_module_classes"])):
         raise CalibrationRefusal(f"{leg_name} kernel module metadata is invalid")
-    flags = _exact_mapping(runtime["precision_flags"], {
+    precision_fields = {
         "cuda_matmul_allow_tf32", "cudnn_allow_tf32", "cuda_bf16_reduced_precision_reduction",
         "cuda_fp16_reduced_precision_reduction", "cuda_fp16_accumulation",
-    }, f"execution.legs.{leg_name}.runtime.precision_flags")
-    if any(flag is not None and not isinstance(flag, bool) for flag in flags.values()):
+    }
+    if fp32_successor:
+        precision_fields.add("float32_matmul_precision")
+    flags = _exact_mapping(runtime["precision_flags"], precision_fields,
+                           f"execution.legs.{leg_name}.runtime.precision_flags")
+    if any(flag is not None and not isinstance(flag, bool)
+           for key, flag in flags.items() if key != "float32_matmul_precision"):
         raise CalibrationRefusal(f"{leg_name} precision flags must be booleans or null")
+    if fp32_successor:
+        if any(flags[name] is not False for name in ("cuda_matmul_allow_tf32", "cudnn_allow_tf32")):
+            raise CalibrationRefusal("FP32 successor refuses recorded TF32-enabled matmul or cuDNN")
+        if runtime["float32_matmul_precision"] != "highest" or flags["float32_matmul_precision"] != "highest":
+            raise CalibrationRefusal("FP32 successor requires recorded float32 matmul precision 'highest'")
 
 
 def _validate_raw_artifact(
@@ -5600,23 +5759,35 @@ def _validate_raw_artifact(
     tokenizer: Any,
     raw_sha256: str,
 ) -> dict[str, Any]:
-    raw = _exact_mapping(raw, {
+    protocol_id = _selected_calibration_protocol(args)
+    fp32_successor = protocol_id == FP32_SUCCESSOR_PROTOCOL_ID
+    raw_fields = {
         "schema_version", "artifact_type", "model", "revision", "source_provenance", "tokenizer",
         "execution", "registration", "registration_sha256", "legs",
-    }, "calibration artifact")
-    if type(raw["schema_version"]) is not int or raw["schema_version"] != CALIBRATION_SCHEMA_VERSION:
+    }
+    if fp32_successor:
+        raw_fields.update({"protocol_id", "decision_dtype"})
+    raw = _exact_mapping(raw, raw_fields, "calibration artifact")
+    expected_schema_version = FP32_SUCCESSOR_SCHEMA_VERSION if fp32_successor else CALIBRATION_SCHEMA_VERSION
+    if type(raw["schema_version"]) is not int or raw["schema_version"] != expected_schema_version:
         raise CalibrationRefusal("calibration schema version is unsupported")
     if raw["artifact_type"] != CALIBRATION_ARTIFACT_TYPE:
         raise CalibrationRefusal("calibration artifact type is not the raw-only schema")
     if raw["model"] != str(args.model) or raw["revision"] != str(args.revision):
         raise CalibrationRefusal("calibration model or pinned revision does not match this command")
-    provenance = _exact_mapping(raw["source_provenance"], set(_calibration_source_provenance()), "source_provenance")
-    if not _strictly_equal(provenance, _calibration_source_provenance()):
+    current_provenance = _calibration_source_provenance(protocol_id)
+    provenance = _exact_mapping(raw["source_provenance"], set(current_provenance), "source_provenance")
+    accepted_provenance = [current_provenance]
+    if not fp32_successor:
+        accepted_provenance.append(LEGACY_CALIBRATION_SOURCE_PROVENANCE)
+    if not any(_strictly_equal(provenance, expected) for expected in accepted_provenance):
         raise CalibrationRefusal("calibration source provenance does not match this reader")
+    if fp32_successor and (raw["protocol_id"] != protocol_id or raw["decision_dtype"] != "torch.float32"):
+        raise CalibrationRefusal("calibration protocol or decision dtype does not match the FP32 successor reader")
     expected_tokenizer = _tokenizer_identity(tokenizer, args)
     if not _strictly_equal(raw["tokenizer"], expected_tokenizer):
         raise CalibrationRefusal("calibration tokenizer snapshot or chat-template identity changed")
-    expected_registration = _calibration_registration(tokenizer)
+    expected_registration = _calibration_registration(tokenizer, protocol_id)
     registration = _exact_mapping(raw["registration"], set(expected_registration), "registration")
     if not _strictly_equal(registration, expected_registration):
         raise CalibrationRefusal("calibration registration does not match the independently rebuilt teacher-forced inputs")
@@ -5624,30 +5795,45 @@ def _validate_raw_artifact(
     if raw["registration_sha256"] != expected_registration_id:
         raise CalibrationRefusal("calibration registration identity hash does not match")
 
-    execution = _exact_mapping(raw["execution"], {
-        "mode", "requested_device", "scoring_dtype", "legs",
-    }, "execution")
+    execution_fields = {"mode", "requested_device", "scoring_dtype", "legs"}
+    if fp32_successor:
+        execution_fields.update({"protocol_id", "decision_dtype"})
+    execution = _exact_mapping(raw["execution"], execution_fields, "execution")
     if execution["mode"] != "singleton":
         raise CalibrationRefusal("calibration execution mode is not singleton")
     if execution["requested_device"] != str(args.device):
         raise CalibrationRefusal("calibration requested device does not match this command")
     if execution["scoring_dtype"] != "float32_log_softmax":
         raise CalibrationRefusal("calibration scoring dtype does not match the registered protocol")
-    execution_legs = _exact_mapping(execution["legs"], {"bf16", "fp32"}, "execution.legs")
-    for leg_name in ("bf16", "fp32"):
-        _validate_runtime_metadata(execution_legs[leg_name], leg_name, str(args.device))
+    if fp32_successor and (
+        execution["protocol_id"] != protocol_id or execution["decision_dtype"] != "torch.float32"
+    ):
+        raise CalibrationRefusal("execution protocol or decision dtype does not match the FP32 successor reader")
+    expected_legs = {"fp32"} if fp32_successor else {"bf16", "fp32"}
+    execution_legs = _exact_mapping(execution["legs"], expected_legs, "execution.legs")
+    for leg_name in expected_legs:
+        _validate_runtime_metadata(execution_legs[leg_name], leg_name, str(args.device), protocol_id)
 
-    legs = _exact_mapping(raw["legs"], {"bf16", "fp32"}, "legs")
-    validated = {"raw_sha256": raw_sha256, "scores": {"bf16": {}, "fp32": {}}}
-    for leg_name, expected_repeats in (("bf16", 3), ("fp32", 1)):
+    legs = _exact_mapping(raw["legs"], expected_legs, "legs")
+    validated = {"raw_sha256": raw_sha256, "scores": {name: {} for name in expected_legs}}
+    repeat_counts = {"fp32": 3} if fp32_successor else {"bf16": 3, "fp32": 1}
+    for leg_name, expected_repeats in repeat_counts.items():
         leg = _exact_mapping(legs[leg_name], {"repeat_count", "cells"}, f"legs.{leg_name}")
-        if type(leg["repeat_count"]) is not int or leg["repeat_count"] != expected_repeats:
-            raise CalibrationRefusal(f"{leg_name} repeat count does not match the registered protocol")
+        if type(leg["repeat_count"]) is not int:
+            raise CalibrationRefusal(f"{leg_name} repeat count must be an integer")
+        if fp32_successor:
+            if leg["repeat_count"] < expected_repeats:
+                raise CalibrationRefusal("fp32 repeat count is below the registered minimum of three")
+            actual_repeats = leg["repeat_count"]
+        else:
+            if leg["repeat_count"] != expected_repeats:
+                raise CalibrationRefusal(f"{leg_name} repeat count does not match the registered protocol")
+            actual_repeats = expected_repeats
         cells = _exact_mapping(leg["cells"], set(CALIBRATION_CELLS), f"legs.{leg_name}.cells")
         for cell_name in CALIBRATION_CELLS:
             cell = _exact_mapping(cells[cell_name], {"repeats"}, f"legs.{leg_name}.cells.{cell_name}")
             repeats = cell["repeats"]
-            if not isinstance(repeats, list) or len(repeats) != expected_repeats:
+            if not isinstance(repeats, list) or len(repeats) != actual_repeats:
                 raise CalibrationRefusal(f"{leg_name} {cell_name} repeat list has the wrong length")
             repeat_scores = []
             for repeat_index, repeat in enumerate(repeats):
@@ -5667,8 +5853,76 @@ def _validate_raw_artifact(
 def _calibration_reader(raw: Any, *, args: argparse.Namespace, tokenizer: Any, raw_sha256: str) -> dict[str, Any]:
     """Validate the serialized raw boundary and derive all gate statistics from answer sums."""
     validated = _validate_raw_artifact(raw, args=args, tokenizer=tokenizer, raw_sha256=raw_sha256)
-    registration = _calibration_registration(tokenizer)
+    protocol_id = _selected_calibration_protocol(args)
+    registration = _calibration_registration(tokenizer, protocol_id)
     answer_rows = registration["answers"]
+    if protocol_id == FP32_SUCCESSOR_PROTOCOL_ID:
+        primary_by_cell: dict[str, list[float]] = {}
+        means: dict[str, float] = {}
+        spreads: dict[str, float] = {}
+        for cell_name in CALIBRATION_CELLS:
+            primary_repeats = []
+            for sums in validated["scores"]["fp32"][cell_name]:
+                answer_scores = [sums[row["id"]] for row in answer_rows]
+                primary_repeats.append(_finite_derived(
+                    _primary_score_from_answer_rows(answer_rows, answer_scores),
+                    f"fp32 {cell_name} primary score",
+                ))
+            primary_by_cell[cell_name] = primary_repeats
+            try:
+                mean = math.fsum(primary_repeats) / len(primary_repeats)
+            except OverflowError as exc:
+                raise CalibrationRefusal(f"derived fp32 {cell_name} mean overflow") from exc
+            means[cell_name] = _finite_derived(mean, f"fp32 {cell_name} mean")
+            spreads[cell_name] = _finite_derived(
+                max(primary_repeats) - min(primary_repeats), f"fp32 {cell_name} repeat spread",
+            )
+        replay_errors = [
+            abs(value - means["clean"])
+            for value in primary_by_cell["clean_to_clean_replay"]
+        ]
+        replay_error = _finite_derived(max(replay_errors), "fp32 clean-to-clean replay error")
+        spread_max = max(spreads.values())
+        epsilon_components = {
+            "fp32_repeat_spread_max": spread_max,
+            "clean_to_clean_replay_error": replay_error,
+        }
+        epsilon = _finite_derived(max(epsilon_components.values()), "epsilon")
+        return {
+            "schema_version": 1,
+            "artifact_type": CALIBRATION_SUMMARY_TYPE,
+            "derived": True,
+            "reader_id": FP32_SUCCESSOR_READER_ID,
+            "protocol_id": protocol_id,
+            "decision_dtype": "torch.float32",
+            "raw_artifact_sha256": validated["raw_sha256"],
+            "registration_sha256": raw["registration_sha256"],
+            "model": str(args.model),
+            "revision": str(args.revision),
+            "status": "within_budget" if epsilon <= CALIBRATION_EPSILON_LIMIT else "over_budget",
+            "within_budget": epsilon <= CALIBRATION_EPSILON_LIMIT,
+            "scores": {
+                "fp32": {
+                    cell_name: {
+                        "repeat_primary_scores": list(primary_by_cell[cell_name]),
+                        "mean_primary_score": means[cell_name],
+                        "fp32_repeat_spread": spreads[cell_name],
+                    }
+                    for cell_name in CALIBRATION_CELLS
+                },
+            },
+            "error_by_cell": {
+                cell_name: {
+                    "fp32_repeat_spread": spreads[cell_name],
+                    "clean_to_clean_replay_error": replay_error if cell_name == "clean_to_clean_replay" else None,
+                }
+                for cell_name in CALIBRATION_CELLS
+            },
+            "epsilon_components": epsilon_components,
+            "epsilon": epsilon,
+            "epsilon_limit": CALIBRATION_EPSILON_LIMIT,
+        }
+
     primary_by_leg: dict[str, dict[str, list[float]]] = {"bf16": {}, "fp32": {}}
     means: dict[str, dict[str, float]] = {"bf16": {}, "fp32": {}}
     spreads: dict[str, float] = {}
@@ -5789,11 +6043,18 @@ def calibration_gate(
     *,
     model: str | None = None,
     revision: str | None = None,
+    protocol_id: str | None = None,
 ) -> tuple[bool, str]:
     """Apply the exact 0.05 limit to a reader-produced in-memory summary."""
     if not isinstance(calibration, Mapping) or calibration.get("artifact_type") != CALIBRATION_SUMMARY_TYPE:
         return False, "calibration reader summary is missing or has the wrong type"
-    if calibration.get("derived") is not True or calibration.get("reader_id") != CALIBRATION_READER_ID:
+    actual_protocol = calibration.get("protocol_id", CALIBRATION_PROTOCOL_ID)
+    expected_protocol = protocol_id or actual_protocol
+    expected_reader = (FP32_SUCCESSOR_READER_ID if expected_protocol == FP32_SUCCESSOR_PROTOCOL_ID
+                       else CALIBRATION_READER_ID)
+    if actual_protocol != expected_protocol:
+        return False, "calibration protocol does not match this command"
+    if calibration.get("derived") is not True or calibration.get("reader_id") != expected_reader:
         return False, "calibration reader summary identity is invalid"
     if model is not None and calibration.get("model") != model:
         return False, "calibration model does not match this command"
@@ -5818,7 +6079,10 @@ def _read_calibration_gate(args: argparse.Namespace) -> tuple[bool, str]:
         summary = _read_calibration_artifact(args)
     except CalibrationRefusal as exc:
         return False, str(exc)
-    return calibration_gate(summary, model=args.model, revision=args.revision)
+    return calibration_gate(
+        summary, model=args.model, revision=args.revision,
+        protocol_id=_selected_calibration_protocol(args),
+    )
 
 
 def _write_hold(args: argparse.Namespace, reason: str) -> dict[str, Any]:
@@ -5850,6 +6114,10 @@ def _build_parser() -> argparse.ArgumentParser:
         sub.add_argument("--revision", default=default_revision)
         sub.add_argument("--device", default="xpu")
         sub.add_argument("--dtype", default="bf16", choices=("bf16",))
+        sub.add_argument(
+            "--protocol", choices=("bf16-v2", "fp32-successor"), default="bf16-v2",
+            help="calibration and execution protocol; fp32-successor runs weights, hooks and scores in float32",
+        )
         sub.add_argument("--exec-mode", choices=("singleton", "batched"), default="singleton")
         sub.add_argument("--cache-dir", default=str(DEFAULT_CACHE))
         sub.add_argument("--out", default="results/part43")
@@ -5967,7 +6235,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         try:
             # The verdict follows a duplicate-aware disk read and independent registration rebuild.
             calibration = _read_calibration_artifact(args)
-            passed, reason = calibration_gate(calibration, model=args.model, revision=args.revision)
+            passed, reason = calibration_gate(
+                calibration, model=args.model, revision=args.revision,
+                protocol_id=_selected_calibration_protocol(args),
+            )
         except CalibrationRefusal as exc:
             passed, reason = False, str(exc)
         if args.command == "calibrate":
