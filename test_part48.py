@@ -1,5 +1,5 @@
 import sys, math, torch
-sys.path.insert(0, '/home/elisepc/assistant-basin')
+import os; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import part48 as p
 # AUC
 assert p.auc([3,4],[1,1]+[]) if False else True
@@ -24,4 +24,15 @@ manual = sum(lp[len(pids)-1+i, t].item() for i,t in enumerate(cont))
 assert abs(manual - p.continuation_logprob(model, tok, pids, w, 'cpu')) < 1e-4
 rows = p.score_model(model, tok, 'cpu', limit=3)
 assert len(rows) == 3*len(p.TEMPLATES); print('mass', [round(r['mass'],4) for r in rows[:6]])
+# Shared-prompt batching: every word's number matches its one-sequence forward (fp32, Pythia-410m)
+words = list(p.SHARP_WORDS) + list(p.ROUND_WORDS) + ['jagged', 'banana']
+for prompt in ('1, 2, 3, 4,', 'The shape called takete is'):
+    ids = tok(prompt, add_special_tokens=True)['input_ids']
+    single = [p.continuation_logprob(model, tok, ids, x, 'cpu') for x in words]
+    batched = p.continuation_logprobs(model, tok, ids, words, 'cpu')
+    worst = max(abs(x - y) for x, y in zip(single, batched)); print('batched vs single, worst', worst)
+    assert worst < 1e-4, worst
+p.ONE_PER_FORWARD = True; old = p.score_model(model, tok, 'cpu', limit=2)
+p.ONE_PER_FORWARD = False; new = p.score_model(model, tok, 'cpu', limit=2)
+worst = max(abs(x['score'] - y['score']) for x, y in zip(old, new)); print('score worst', worst); assert worst < 1e-3
 print('ALL PASS')

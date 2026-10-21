@@ -236,7 +236,10 @@ def _item_metadata(model, tok, word: str, context_ids: Sequence[int], device: st
 
 
 def _score_continuation_set(model, tok, prompt_ids: Sequence[int], words: Sequence[str], device: str) -> tuple[list[float], float, float]:
-    logprobs = [p48.continuation_logprob(model, tok, list(prompt_ids), word, device) for word in words]
+    if p48.ONE_PER_FORWARD:
+        logprobs = [p48.continuation_logprob(model, tok, list(prompt_ids), word, device) for word in words]
+    else:
+        logprobs = p48.continuation_logprobs(model, tok, list(prompt_ids), list(words), device)
     item_score = p48.logsumexp(logprobs)
     mass = sum(math.exp(v) for v in logprobs)
     return logprobs, item_score, mass

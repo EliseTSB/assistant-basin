@@ -42,6 +42,9 @@ MODELS = {
 }
 
 
+ONE_PER_FORWARD = False  # True reproduces the original one-sequence-per-forward scoring
+
+
 def spelled(w: str) -> str:
     return ' '.join(w)
 
@@ -93,14 +96,36 @@ def continuation_logprob(model, tok, prompt_ids, word: str, device: str) -> floa
     return float(sum(logp[start - 1 + i, t].item() for i, t in enumerate(cont)))
 
 
+def continuation_logprobs(model, tok, prompt_ids, words, device: str) -> list[float]:
+    """Summed log probability of each ' word' after one shared prompt, all words in one batched forward.
+
+    Rows are prompt + word, right-padded. Attention is causal, so padding after a row's last real token cannot
+    change any earlier position: each word's numbers equal its one-sequence forward up to batched-kernel
+    rounding (checked against continuation_logprob in test_part48.py).
+    """
+    conts = [tok(' ' + w, add_special_tokens=False)['input_ids'] for w in words]
+    width = len(prompt_ids) + max(len(c) for c in conts)
+    pad = getattr(tok, 'pad_token_id', None) or 0  # any id: causal attention never lets a later pad reach earlier positions
+    rows = [prompt_ids + c + [pad] * (width - len(prompt_ids) - len(c)) for c in conts]
+    with torch.no_grad():
+        logits = model(torch.tensor(rows, device=device)).logits.float()
+    logp = torch.log_softmax(logits, dim=-1)
+    start = len(prompt_ids)
+    return [float(sum(logp[r, start - 1 + i, t].item() for i, t in enumerate(c))) for r, c in enumerate(conts)]
+
+
 def score_model(model, tok, device: str, limit: int | None = None):
     rows = []
     for w, kind, label in items()[:limit] if limit else items():
         for ti, tmpl in enumerate(TEMPLATES):
             prompt = tmpl.format(w=w)
             pids = tok(prompt, add_special_tokens=True)['input_ids']
-            sharp = [continuation_logprob(model, tok, pids, x, device) for x in SHARP_WORDS]
-            round_ = [continuation_logprob(model, tok, pids, x, device) for x in ROUND_WORDS]
+            if ONE_PER_FORWARD:
+                sharp = [continuation_logprob(model, tok, pids, x, device) for x in SHARP_WORDS]
+                round_ = [continuation_logprob(model, tok, pids, x, device) for x in ROUND_WORDS]
+            else:
+                both = continuation_logprobs(model, tok, pids, list(SHARP_WORDS) + list(ROUND_WORDS), device)
+                sharp, round_ = both[:len(SHARP_WORDS)], both[len(SHARP_WORDS):]
             mass = sum(math.exp(v) for v in sharp + round_)
             rows.append(dict(item=w, kind=kind, label=label, template=ti,
                              sharp=sharp, round=round_, mass=mass,
@@ -163,7 +188,7 @@ def main():
         rows = score_model(model, tok, a.device, a.limit)
         summary = summarize(rows)
         rec = dict(part=48, model=mid, revision=getattr(model.config, '_commit_hash', None), dtype=a.dtype,
-                   batching='one sequence per forward', limit=a.limit, seconds=round(time.time() - t0, 1),
+                   batching='one sequence per forward' if ONE_PER_FORWARD else 'shared prompt, all endings in one right-padded forward', limit=a.limit, seconds=round(time.time() - t0, 1),
                    summary=summary, rows=rows)
         path = os.path.join(a.out, f'{short}.json')
         with open(path, 'w', encoding='utf-8') as f:
