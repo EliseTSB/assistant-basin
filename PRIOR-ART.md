@@ -344,3 +344,15 @@ depth comparison is unpublished.
   here): the essay's showcase "Colorado" neuron in a Qwen3 model also fires on Tornado's Python HTTP-client code, with
   aiohttp and a fake HTTPClient as negative controls, and zeroing it drops the model's Tornado-to-state association from
   59% to 15%. Checkpoint not named. Already noted in our Part 35 work as the Colorado neuron's Tornado confound.
+
+## Sound symbolism (bouba/kiki), for the kiki/bouba sister part to Part 47 (added 2026-10-21, from Elise)
+
+- Loconsole, Benavides-Varela and Regolin, Science, February 2026: 3-day-old chicks chose the rounded panel for
+  "bouba" and the spiky one for "kiki"; 1-day-olds approached moving shapes the same way. Read via coverage (NPR,
+  syndicated 2026-02-19; earth.com), not yet at the journal. Great apes tested previously have not shown the effect.
+- Proceedings B, 293(2080), 20261209, "Hearing shapes the Bouba-Kiki effect in adult [dogs, by the coverage]": 51
+  dogs, then 19 more with owners in headphones to limit cueing. The journal page returned 403; read via Nautilus.
+- Passi and Arun 2022 (Attention, Perception, & Psychophysics): the effect holds for unpronounceable sounds, reversed
+  words, object sounds and pure tones, so it is not specific to speech.
+- Framing for our test: if the association is built into birds and mammals, a text-only model can only learn it from
+  how people use words, so a unit in a pre-chat base model (Pythia) would show the regularity is present in text.
