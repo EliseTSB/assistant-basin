@@ -1682,3 +1682,16 @@ pairing peak at a small size or rise to 410m?
 | 48c.2 | Claude: Pythia-160m reaches novel AUC >= 0.70 with permutation p < 0.05; Pythia-70m does not. | failed (both halves) | 160m 0.441 (p 0.59, chance); 70m 0.832 (p 0.0008). |
 | 48c.3 | Claude: novel AUC rises with size across 70m < 160m < 410m. | failed | 0.832, 0.441, 0.898: 160m dips to chance between two models that separate. |
 | 48c.4 | Claude: spelled-out AUC is at least novel AUC in all three, as in Part 48. | held | spelled 1.000, 0.961, 0.984. |
+
+## Part 48d: kiki/bouba across Pythia training checkpoints (registered 2026-10-21 18:21 CT, before any run)
+
+Pythia-70m, -160m, -410m at training steps 1000, 8000, 32000 and 64000 (the final step 143000 is Part 48c), fp32 on the
+A770, Part 48's items and scorer unchanged. 12 scorings of 64 items, about 15 minutes. Prior art: one search (2026-10-21)
+found kiki/bouba work on CLIP, vision-language models and speech models, none across training checkpoints.
+
+| id | prediction | status | evidence |
+|---|---|---|---|
+| 48d.1 | Claude: at step 1000 every model's novel AUC is between 0.35 and 0.65 (no effect yet). | pending | |
+| 48d.2 | Claude: for each model, the first checkpoint where either AUC reaches 0.70 has spelled-out AUC >= novel AUC. | pending | |
+| 48d.3 | Claude: 160m's chance result at step 143000 is not stable: at least one of its earlier checkpoints has novel AUC >= 0.70. | pending | |
+| 48d.4 | Claude: Pythia-410m's novel AUC is >= 0.70 at step 64000. | pending | |

@@ -180,22 +180,23 @@ def main():
     if hasattr(_mu, 'caching_allocator_warmup'):
         _mu.caching_allocator_warmup = lambda *x, **k: None
     torch.set_grad_enabled(False)
-    for short in a.models.split(','):
+    for spec in a.models.split(','):
+        short, _, rev = spec.partition('@')  # 'pythia-160m@step16000' picks a training checkpoint (Part 48d)
         mid = MODELS[short]
         t0 = time.time()
-        tok = AutoTokenizer.from_pretrained(mid)
-        model = AutoModelForCausalLM.from_pretrained(mid, dtype=torch.float32 if a.dtype == 'fp32' else torch.bfloat16, low_cpu_mem_usage=True,
+        tok = AutoTokenizer.from_pretrained(mid, revision=rev or None)
+        model = AutoModelForCausalLM.from_pretrained(mid, revision=rev or None, dtype=torch.float32 if a.dtype == 'fp32' else torch.bfloat16, low_cpu_mem_usage=True,
                                                      device_map={'': a.device})
         model.eval()
         rows = score_model(model, tok, a.device, a.limit)
         summary = summarize(rows)
-        rec = dict(part=48, model=mid, revision=getattr(model.config, '_commit_hash', None), dtype=a.dtype,
+        rec = dict(part=48, model=mid, requested_revision=rev or None, revision=getattr(model.config, '_commit_hash', None), dtype=a.dtype,
                    batching='one sequence per forward' if ONE_PER_FORWARD else 'shared prompt, all endings in one right-padded forward', limit=a.limit, seconds=round(time.time() - t0, 1),
                    summary=summary, rows=rows)
-        path = os.path.join(a.out, f'{short}.json')
+        path = os.path.join(a.out, f"{short}{'@' + rev if rev else ''}.json")
         with open(path, 'w', encoding='utf-8') as f:
             json.dump(rec, f, indent=1)
-        print(short, json.dumps({k: summary[k] for k in ('novel', 'spelled', 'classic')}), flush=True)
+        print(spec, json.dumps({k: summary[k] for k in ('novel', 'spelled', 'classic')}), flush=True)
         del model
         if a.device == 'xpu':
             torch.xpu.empty_cache()
