@@ -472,7 +472,7 @@ def summarize_reads(rows: list[dict], run_seed: int, categories: list[dict]) -> 
 
 
 
-def load_model_direct(model_id: str, revision: str, device: str, dtype=None):
+def load_model_direct(model_id: str, revision: str, device: str, dtype=None, attn_implementation=None):
     """Part 39's loader: stream selected-precision weights straight to the device.
 
     The shared loader (neuron_report.load_model) builds the whole model on the host before .to(device); for
@@ -487,6 +487,8 @@ def load_model_direct(model_id: str, revision: str, device: str, dtype=None):
         tok.pad_token = tok.eos_token
     kwargs = dict(revision=revision, dtype=torch.bfloat16 if dtype is None else dtype,
                   low_cpu_mem_usage=True, device_map={"": device})
+    if attn_implementation is not None:
+        kwargs["attn_implementation"] = attn_implementation
     # transformers' caching_allocator_warmup asks for the whole model as ONE buffer (7.83 GiB for Qwen3.5-4B); the
     # Arc A770 refuses a single allocation that large (XPU OOM with 14.8 GiB free, 2026-10-20 18:22). Skip it.
     import transformers.modeling_utils as _mu

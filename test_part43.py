@@ -2,8 +2,11 @@ from __future__ import annotations
 
 import json
 import ast
+import hashlib
 import os
 import re
+import subprocess
+import sys
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -102,7 +105,10 @@ class TinyModel(nn.Module):
             self.layers[layer] = TinyLayer(unit)
         self.norm = TinyNorm()
         self.lm_head = nn.Linear(4, 128, bias=False)
-        self.config = SimpleNamespace(text_config=SimpleNamespace(intermediate_size=9216))
+        self.config = SimpleNamespace(
+            text_config=SimpleNamespace(intermediate_size=9216),
+            _attn_implementation="eager",
+        )
 
     def get_output_embeddings(self):
         return self.lm_head
@@ -125,6 +131,24 @@ class TinyModel(nn.Module):
         self(input_ids=input_ids, attention_mask=attention_mask, use_cache=False)
         extra = torch.full((input_ids.shape[0], 1), 70, dtype=input_ids.dtype, device=input_ids.device)
         return torch.cat((input_ids, extra), dim=1)
+
+
+def _fp32_metadata_model():
+    model = nn.Sequential(nn.Linear(4, 4), nn.Identity()).to(dtype=torch.float32)
+    model.config = SimpleNamespace(_attn_implementation="eager")
+    return model
+
+
+def _fp32_dispatch_test_model():
+    module = part43.sys.modules[part43.FP32_QWEN_MODULE]
+    layer_class = module.Qwen3_5GatedDeltaNet
+    layer = layer_class.__new__(layer_class)
+    nn.Module.__init__(layer)
+    layer.norm = nn.Identity()
+    model = nn.Sequential(layer)
+    model.register_parameter("test_weight", nn.Parameter(torch.zeros(1, dtype=torch.float32)))
+    model.config = SimpleNamespace(_attn_implementation="eager")
+    return model, layer, module
 
 
 def _token_sets():
@@ -347,7 +371,7 @@ def _fp32_successor_raw_fixture(args, monkeypatch, repeat_spread=0.0, replay_err
             "repeats": [{"answer_logprobs": answer_sums(value)} for value in values],
         }
 
-    model = TinyModel().to(dtype=torch.float32)
+    model = _fp32_metadata_model()
     monkeypatch.setattr(part43, "_ACTIVE_ACTIVATION_DTYPES", {"torch.float32"})
     monkeypatch.setattr(part43, "_ACTIVE_DOWN_PROJ_INPUT_DTYPES", {"torch.float32"})
     monkeypatch.setattr(part43, "_ACTIVE_DOWN_PROJ_INPUT_DTYPES_BY_LAYER", {
@@ -1381,6 +1405,10 @@ def test_fp32_successor_raw_registration_and_reader_pass(tmp_path, monkeypatch):
                for row in runtime["fp32_reference_preparation"]["optional_imports"].values())
     assert runtime["hub_kernels_enabled"] is False
     assert runtime["hub_kernels_enabled_at_import"] is False
+    assert runtime["attention_backend"] == part43.FP32_ATTENTION_IMPLEMENTATION
+    assert runtime["fp32_pinned_code_fingerprints_sha256"] == hashlib.sha256(
+        part43._fp32_json(part43.FP32_PINNED_FINGERPRINTS).encode("utf-8")
+    ).hexdigest()
     assert runtime["kernelized_module_classes"] == []
     assert all(implementations[name]["resolved_implementation"] in runtime["gated_delta_backend"]
                for name in part43.FP32_QWEN_FUNCTION_NAMES[2:])
@@ -1425,19 +1453,20 @@ def test_fp32_pilot_output_labels_gate_as_control_and_stability(tmp_path, monkey
     monkeypatch.setattr(part43, "run_swap", lambda *_a, **_k: {"rows": []})
     monkeypatch.setattr(part43, "run_attach", lambda *_a, **_k: {"rows": []})
     result = part43.run_pilot(
-        TinyModel().to(dtype=torch.float32), tokenizer, _token_sets(), args, calibration=calibration,
+        _fp32_metadata_model(), tokenizer, _token_sets(), args, calibration=calibration,
     )
     assert result["status"] == "complete"
     assert result["calibration_gate_interpretation"] == part43.FP32_GATE_INTERPRETATION
 
 
-def _run_fp32_pilot_refusal(args, calibration, tokenizer, monkeypatch):
+def _run_fp32_pilot_refusal(args, calibration, tokenizer, monkeypatch, model=None):
+    args.command = "pilot"
     args.attach = str(Path(args.out) / "attach.json")
     Path(args.attach).write_text(json.dumps({"prompts": []}), encoding="utf-8")
     monkeypatch.setattr(part43, "_ACTIVE_MODEL", None)
     monkeypatch.setattr(part43, "_sequences", lambda *_a, **_k: pytest.fail("refused pilot reached signs"))
     result = part43.run_pilot(
-        TinyModel().to(dtype=torch.float32), tokenizer, _token_sets(), args, calibration=calibration,
+        model or _fp32_metadata_model(), tokenizer, _token_sets(), args, calibration=calibration,
     )
     assert result["status"] == "HOLD"
     return result
@@ -1457,7 +1486,7 @@ def test_fp32_pilot_refuses_plain_foreign_module_callable_with_unchanged_environ
     foreign.__qualname__ = "causal_conv1d_fn"
     monkeypatch.setattr(module, "causal_conv1d_fn", foreign)
     result = _run_fp32_pilot_refusal(args, calibration, tokenizer, monkeypatch)
-    assert "dispatch slot causal_conv1d_fn changed" in result["hold"]["reason"]
+    assert "causal_conv1d_fn" in result["hold"]["reason"]
 
 
 def test_fp32_pilot_refuses_swapped_binding_after_calibration(tmp_path, monkeypatch):
@@ -1467,7 +1496,7 @@ def test_fp32_pilot_refuses_swapped_binding_after_calibration(tmp_path, monkeypa
     module = part43.sys.modules[part43.FP32_QWEN_MODULE]
     monkeypatch.setattr(module, "causal_conv1d_fn", module.causal_conv1d_update)
     result = _run_fp32_pilot_refusal(args, calibration, tokenizer, monkeypatch)
-    assert "dispatch slot causal_conv1d_fn changed" in result["hold"]["reason"]
+    assert "causal_conv1d_fn" in result["hold"]["reason"]
 
 
 @pytest.mark.parametrize("override", [None, "forward", "causal_conv1d_fn"])
@@ -1478,8 +1507,8 @@ def test_fp32_binding_checks_qwen_instance_overrides(tmp_path, monkeypatch, over
     layer_class = module.Qwen3_5GatedDeltaNet
     layer = layer_class.__new__(layer_class)
     nn.Module.__init__(layer)
-    model = TinyModel().to(dtype=torch.float32)
-    model.add_module("qwen_dispatch", layer)
+    model = nn.Sequential(layer)
+    model.config = SimpleNamespace(_attn_implementation="eager")
     if override == "forward":
         object.__setattr__(layer, "forward", lambda *_a, **_k: None)
     elif override == "causal_conv1d_fn":
@@ -1637,7 +1666,7 @@ def test_fp32_runtime_metadata_preserves_live_tf32_true_and_reader_refuses(tmp_p
     monkeypatch.setattr(torch.backends.cuda.matmul, "allow_tf32", True)
     monkeypatch.setattr(torch.backends.cudnn, "allow_tf32", True)
     execution = part43._calibration_runtime_metadata(
-        TinyModel().to(dtype=torch.float32), "torch.float32", part43.FP32_SUCCESSOR_PROTOCOL_ID,
+        _fp32_metadata_model(), "torch.float32", part43.FP32_SUCCESSOR_PROTOCOL_ID,
     )
     flags = execution["runtime"]["precision_flags"]
     assert flags["cuda_matmul_allow_tf32"] is True
@@ -1735,13 +1764,14 @@ def test_fp32_loader_sets_precision_before_loading_float32_model(tmp_path, monke
         seen["matmul_tf32"] = torch.backends.cuda.matmul.allow_tf32
         seen["cudnn_tf32"] = torch.backends.cudnn.allow_tf32
         seen["precision"] = precision["value"]
-        return TinyTokenizer(), TinyModel().to(dtype=kwargs["dtype"])
+        return TinyTokenizer(), _fp32_metadata_model()
 
     monkeypatch.setattr(part43, "part39_module", lambda: SimpleNamespace(load_model_direct=load_model))
     args = SimpleNamespace(cache_dir=str(tmp_path), model="m", revision="r", device="cpu", protocol="fp32-successor")
     _tokenizer, model = part43._load_runtime(args)
     assert seen == {
         "dtype": torch.float32,
+        "attn_implementation": "eager",
         "matmul_tf32": False,
         "cudnn_tf32": False,
         "precision": "highest",
@@ -1758,6 +1788,8 @@ def test_fp32_calibration_runs_only_three_repeat_fp32_cells_on_cpu(tmp_path, mon
     args = _args(tmp_path, protocol="fp32-successor")
     tokenizer = TinyTokenizer()
     model = TinyModel().to(dtype=torch.float32)
+    approved_state = part43._fp32_reference_runtime_state(_fp32_metadata_model())
+    monkeypatch.setattr(part43, "_fp32_reference_runtime_state", lambda _model: approved_state)
     import torch as torch_module
     old_matmul = torch_module.backends.cuda.matmul.allow_tf32
     old_cudnn = torch_module.backends.cudnn.allow_tf32
@@ -1834,6 +1866,8 @@ def test_fp32_records_the_actual_down_proj_input_dtype_per_layer(tmp_path, monke
     args = _args(tmp_path, protocol="fp32-successor")
     tokenizer = TinyTokenizer()
     model = TinyModel().to(dtype=torch.float32)
+    approved_state = part43._fp32_reference_runtime_state(_fp32_metadata_model())
+    monkeypatch.setattr(part43, "_fp32_reference_runtime_state", lambda _model: approved_state)
     bad_layer = 2
     assert bad_layer not in {layer for layer, _ in part43.UNITS}
     # fp32 weights stay; only the input this layer receives becomes bfloat16 (TinyDown promotes the product back)
@@ -1852,6 +1886,248 @@ def test_fp32_records_the_actual_down_proj_input_dtype_per_layer(tmp_path, monke
     assert by_layer[str(bad_layer)] == ["torch.bfloat16"]
     with pytest.raises(part43.CalibrationRefusal):
         _read_fp32_fixture(args, raw, tokenizer)
+
+
+def test_fp32_pinned_fingerprints_match_fresh_interpreter_derivation():
+    script = part43.ROOT / "review/part43/derive_fp32_fingerprints.py"
+    environment = dict(os.environ)
+    environment["USE_HUB_KERNELS"] = "0"
+    result = subprocess.run(
+        [sys.executable, str(script)], cwd=part43.ROOT, env=environment,
+        check=True, capture_output=True, text=True, timeout=120,
+    )
+    assert json.loads(result.stdout) == part43.FP32_PINNED_FINGERPRINTS
+
+
+def test_legacy_bf16_metadata_matches_4b4ac84_digest_for_fixed_fake_environment(monkeypatch):
+    from types import ModuleType
+
+    monkeypatch.setattr(part43, "_FP32_PREPARATION", None)
+    monkeypatch.setattr(part43, "_FP32_REFERENCE_BINDING", None)
+    qwen = ModuleType(part43.FP32_QWEN_MODULE)
+
+    def build_wrapper(name):
+        def reference():
+            return None
+
+        reference.__module__ = part43.FP32_QWEN_MODULE
+        reference.__qualname__ = name
+        implementation = reference
+        torch_function = reference
+
+        def wrapper(*args, **kwargs):
+            _ = torch_function
+            return implementation(*args, **kwargs)
+
+        wrapper.__module__ = part43.FP32_QWEN_MODULE
+        wrapper.__qualname__ = name
+        return wrapper
+
+    for name in part43.FP32_QWEN_FUNCTION_NAMES:
+        setattr(qwen, name, build_wrapper(name))
+    monkeypatch.setitem(part43.sys.modules, part43.FP32_QWEN_MODULE, qwen)
+    execution = part43._calibration_runtime_metadata(nn.Linear(2, 2), "torch.float32")
+    rows = part43._runtime_environment(nn.Linear(2, 2))["kernel"]["qwen3_5_function_implementations"]
+    expected_row = {
+        "resolved_implementation": f"{part43.FP32_QWEN_MODULE}.causal_conv1d_fn",
+        "torch_reference_implementation": f"{part43.FP32_QWEN_MODULE}.causal_conv1d_fn",
+        "uses_torch_reference": True,
+    }
+    assert set(rows) == set(part43.FP32_QWEN_FUNCTION_NAMES)
+    assert set(rows["causal_conv1d_fn"]) == set(expected_row)
+    for name in part43.FP32_QWEN_FUNCTION_NAMES:
+        expected_row["resolved_implementation"] = f"{part43.FP32_QWEN_MODULE}.{name}"
+        expected_row["torch_reference_implementation"] = f"{part43.FP32_QWEN_MODULE}.{name}"
+        assert rows[name] == expected_row
+    digest = execution["runtime"]["qwen_implementation_sha256"]
+    assert digest == "77818fd8a0d0371158c9f6ed643f912d687cd1e012b1aa81f2f4204ab30dc58a"
+
+
+def _install_pre_capture_spoof(qwen, hub, monkeypatch):
+    original = qwen.causal_conv1d_fn
+    reference = original.__wrapped__
+    source = (
+        "def _review_spoof_factory(reference):\n"
+        "    implementation = reference\n"
+        "    torch_function = reference\n"
+        "    is_new_implementation = False\n"
+        "    def foreign(*args, **kwargs):\n"
+        "        _ = implementation, torch_function, is_new_implementation\n"
+        "        return 'FOREIGN_SENTINEL'\n"
+        "    return foreign\n"
+    )
+    exec(compile(source, hub.__file__, "exec"), hub.__dict__)
+    foreign = hub.__dict__["_review_spoof_factory"](reference)
+    foreign.__module__ = part43.FP32_QWEN_MODULE
+    foreign.__name__ = "causal_conv1d_fn"
+    foreign.__qualname__ = "causal_conv1d_fn"
+    foreign.__wrapped__ = reference
+    foreign.__code__ = foreign.__code__.replace(
+        co_filename=str(Path(hub.__file__).resolve()), co_firstlineno=1027,
+    )
+    monkeypatch.setattr(qwen, "causal_conv1d_fn", foreign)
+    return foreign
+
+
+def test_fp32_initial_binding_spoof_refuses_during_calibration_and_pilot_pre_stage(tmp_path, monkeypatch):
+    args = _args(tmp_path, protocol="fp32-successor")
+    raw, tokenizer = _fp32_successor_raw_fixture(args, monkeypatch)
+    calibration = _read_fp32_fixture(args, raw, tokenizer)
+    qwen = part43.sys.modules[part43.FP32_QWEN_MODULE]
+    hub = part43.sys.modules[part43.FP32_HUB_KERNELS_MODULE]
+    monkeypatch.setattr(part43, "_FP32_REFERENCE_BINDING", None)
+    _install_pre_capture_spoof(qwen, hub, monkeypatch)
+    with pytest.raises(part43.CalibrationRefusal, match="fingerprints mismatch"):
+        part43._calibration_runtime_metadata(
+            _fp32_metadata_model(), "torch.float32", part43.FP32_SUCCESSOR_PROTOCOL_ID,
+        )
+    result = _run_fp32_pilot_refusal(args, calibration, tokenizer, monkeypatch)
+    assert "fingerprints mismatch" in result["hold"]["reason"]
+
+
+@pytest.mark.parametrize("gap", ["l2norm_global", "instance_call_impl", "instance_norm", "class_call_impl"])
+def test_fp32_binding_gaps_refuse_at_calibration_and_pilot_pre_stage(tmp_path, monkeypatch, gap):
+    args = _args(tmp_path, protocol="fp32-successor")
+    raw, tokenizer = _fp32_successor_raw_fixture(args, monkeypatch)
+    calibration = _read_fp32_fixture(args, raw, tokenizer)
+    model, layer, qwen = _fp32_dispatch_test_model()
+
+    def foreign_l2norm(x, dim=-1, eps=1e-6):
+        return x * 0 + 7
+
+    if gap == "l2norm_global":
+        monkeypatch.setattr(qwen, "l2norm", foreign_l2norm)
+    elif gap == "instance_call_impl":
+        object.__setattr__(layer, "_call_impl", lambda *args, **kwargs: "FOREIGN-CODE-RAN")
+    elif gap == "instance_norm":
+        class ForeignNorm(nn.Module):
+            def forward(self, x, gate):
+                return x * 0 + 3
+        layer.norm = ForeignNorm()
+    else:
+        monkeypatch.setattr(
+            qwen.Qwen3_5GatedDeltaNet, "_call_impl",
+            lambda self, *args, **kwargs: "FOREIGN-CODE-RAN",
+        )
+
+    with pytest.raises(part43.CalibrationRefusal):
+        part43._calibration_runtime_metadata(
+            model, "torch.float32", part43.FP32_SUCCESSOR_PROTOCOL_ID,
+        )
+    result = _run_fp32_pilot_refusal(args, calibration, tokenizer, monkeypatch, model=model)
+    assert result["status"] == "HOLD"
+    assert "refused pilot reached signs" not in result["hold"]["reason"]
+
+
+def test_fp32_runtime_state_refuses_non_eager_attention_implementation(tmp_path, monkeypatch):
+    args = _args(tmp_path, protocol="fp32-successor")
+    _fp32_successor_raw_fixture(args, monkeypatch)
+    model = _fp32_metadata_model()
+    model.config._attn_implementation = "sdpa"
+    with pytest.raises(part43.CalibrationRefusal, match="attention implementation 'eager'"):
+        part43._fp32_reference_runtime_state(model)
+
+
+def test_fp32_reader_refuses_non_eager_attention_record(tmp_path, monkeypatch):
+    args = _args(tmp_path, protocol="fp32-successor")
+    raw, tokenizer = _fp32_successor_raw_fixture(args, monkeypatch)
+    raw["execution"]["legs"]["fp32"]["runtime"]["attention_backend"] = "sdpa"
+    part43.write_json(Path(args.out) / "calibration.json", raw)
+    with pytest.raises(part43.CalibrationRefusal, match="attention implementation"):
+        part43._read_calibration_artifact(args, tokenizer=tokenizer)
+
+
+@pytest.mark.parametrize("absence_evidence", ["installed_distribution", "resolvable_spec"])
+def test_fp32_preparation_refuses_module_not_found_when_absence_is_unproven(
+    monkeypatch, absence_evidence,
+):
+    _reset_fp32_import_state(monkeypatch)
+    monkeypatch.setenv("USE_HUB_KERNELS", "1")
+
+    def distribution_version(name):
+        if absence_evidence == "installed_distribution" and name == "causal-conv1d":
+            return "1.2.0"
+        raise part43.importlib.metadata.PackageNotFoundError(name)
+
+    def find_spec(name):
+        if absence_evidence == "resolvable_spec" and name == "causal_conv1d":
+            return SimpleNamespace(origin="/opt/causal_conv1d/__init__.py")
+        return None
+
+    def missing_import(name):
+        raise ModuleNotFoundError(f"native dependency missing for {name}", name=name)
+
+    monkeypatch.setattr(part43.importlib.metadata, "version", distribution_version)
+    monkeypatch.setattr(part43.importlib.util, "find_spec", find_spec)
+    monkeypatch.setattr(part43.importlib, "import_module", missing_import)
+    with pytest.raises(part43.CalibrationRefusal, match="without proving absence"):
+        part43._prepare_fp32_reference_backend()
+
+
+def test_fp32_effective_hub_state_control_reaches_runtime_state_check(monkeypatch):
+    _reset_fp32_import_state(monkeypatch)
+    monkeypatch.setenv("USE_HUB_KERNELS", "0")
+    part43._prepare_fp32_reference_backend()
+    part43._load_fp32_reference_binding()
+    hub = part43.sys.modules[part43.FP32_HUB_KERNELS_MODULE]
+    monkeypatch.setattr(hub, "_kernels_enabled", True)
+    with pytest.raises(part43.CalibrationRefusal, match="effective Transformers hub-kernel state"):
+        part43._fp32_reference_runtime_state(_fp32_metadata_model())
+
+
+def test_fp32_mixed_tf32_precision_read_becomes_refusal_and_pilot_hold(tmp_path, monkeypatch):
+    args = _args(tmp_path, protocol="fp32-successor")
+    raw, tokenizer = _fp32_successor_raw_fixture(args, monkeypatch)
+    calibration = _read_fp32_fixture(args, raw, tokenizer)
+    old_precision = torch.backends.cuda.matmul.fp32_precision
+    old_allow_tf32 = torch.backends.cuda.matmul.allow_tf32
+    try:
+        torch.backends.cuda.matmul.fp32_precision = "tf32"
+        with pytest.raises(part43.CalibrationRefusal, match="precision state is unreadable"):
+            part43._calibration_runtime_metadata(
+                _fp32_metadata_model(), "torch.float32", part43.FP32_SUCCESSOR_PROTOCOL_ID,
+            )
+        result = _run_fp32_pilot_refusal(args, calibration, tokenizer, monkeypatch)
+        assert result["status"] == "HOLD"
+        assert "precision state is unreadable" in result["hold"]["reason"]
+    finally:
+        torch.backends.cuda.matmul.fp32_precision = old_precision
+        torch.backends.cuda.matmul.allow_tf32 = old_allow_tf32
+
+
+def test_fp32_calibration_cli_writes_hold_after_precision_refusal(tmp_path, monkeypatch):
+    args = _args(tmp_path, protocol="fp32-successor")
+    _fp32_successor_raw_fixture(args, monkeypatch)
+    monkeypatch.setattr(part43, "write_manifest", lambda _args: {})
+    monkeypatch.setattr(part43, "_load_token_records", lambda _args: _token_sets())
+    monkeypatch.setattr(part43, "_configure_full_fp32_precision", lambda: None)
+    model = _fp32_metadata_model()
+    monkeypatch.setattr(
+        part43, "part39_module",
+        lambda: SimpleNamespace(load_model_direct=lambda *_a, **_k: (TinyTokenizer(), model)),
+    )
+
+    def read_runtime_precision(model, _tokenizer, _records, _args, **_kwargs):
+        return part43._calibration_runtime_metadata(
+            model, "torch.float32", part43.FP32_SUCCESSOR_PROTOCOL_ID,
+        )
+
+    monkeypatch.setattr(part43, "_run_calibration_leg", read_runtime_precision)
+    old_precision = torch.backends.cuda.matmul.fp32_precision
+    old_allow_tf32 = torch.backends.cuda.matmul.allow_tf32
+    try:
+        torch.backends.cuda.matmul.fp32_precision = "tf32"
+        result = part43.main([
+            "calibrate", "--protocol", "fp32-successor", "--out", str(Path(args.out)),
+            "--cache-dir", str(tmp_path), "--candidates", str(args.candidates), "--device", "cpu",
+        ])
+    finally:
+        torch.backends.cuda.matmul.fp32_precision = old_precision
+        torch.backends.cuda.matmul.allow_tf32 = old_allow_tf32
+    assert result == 0
+    hold = json.loads((Path(args.out) / "HOLD.json").read_text(encoding="utf-8"))
+    assert hold["status"] == "HOLD"
+    assert "precision state is unreadable" in hold["reason"]
 
 
 def test_fp32_pilot_refuses_allowed_but_different_runtime_from_calibration(tmp_path, monkeypatch):

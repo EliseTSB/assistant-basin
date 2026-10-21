@@ -22,9 +22,12 @@ import random
 import re
 import sys
 import time
+import types
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Callable, Iterable, Mapping, Sequence
+
+from review.part43.fp32_fingerprints import FP32_PINNED_FINGERPRINTS
 
 
 ROOT = Path(__file__).resolve().parent
@@ -74,6 +77,7 @@ FP32_QWEN_FUNCTION_NAMES = (
     "causal_conv1d_fn", "causal_conv1d_update",
     "torch_chunk_gated_delta_rule", "torch_recurrent_gated_delta_rule",
 )
+FP32_ATTENTION_IMPLEMENTATION = "eager"
 FP32_BACKEND_ALLOWANCES: tuple[str, ...] = ()
 FP32_TRANSFORMERS_VERSION = "5.20.0"
 FP32_HUB_KERNELS_SOURCE_SHA256 = "a4875051ee4f23a723fe769e94b6ad3030284983a02dba03ecf25ec22d114510"
@@ -195,6 +199,242 @@ def _fp32_probe_optional_imports() -> dict[str, Any]:
     }
 
 
+def _fp32_json(value: Any) -> str:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+
+def _fp32_code_const_value(value: Any) -> Any:
+    if isinstance(value, types.CodeType):
+        return {"code": _fp32_code_payload(value)}
+    if value is None or type(value) in (bool, int, str):
+        return {"type": type(value).__name__, "value": value}
+    if type(value) is float:
+        return {"type": "float", "hex": value.hex()}
+    if type(value) is complex:
+        return {"type": "complex", "real": value.real.hex(), "imag": value.imag.hex()}
+    if type(value) is bytes:
+        return {"type": "bytes", "hex": value.hex()}
+    if value is Ellipsis:
+        return {"type": "ellipsis"}
+    if type(value) is tuple:
+        return {"type": "tuple", "items": [_fp32_code_const_value(item) for item in value]}
+    if type(value) is frozenset:
+        items = [_fp32_code_const_value(item) for item in value]
+        return {"type": "frozenset", "items": sorted(items, key=_fp32_json)}
+    raise TypeError(f"unsupported code constant type in pinned Qwen source: {type(value)!r}")
+
+
+def _fp32_code_payload(code: types.CodeType) -> dict[str, Any]:
+    return {
+        "co_code": code.co_code.hex(),
+        "co_consts": [_fp32_code_const_value(value) for value in code.co_consts],
+        "co_names": list(code.co_names),
+        "co_varnames": list(code.co_varnames),
+        "co_freevars": list(code.co_freevars),
+    }
+
+
+def _fp32_code_fingerprint(code: types.CodeType) -> str:
+    return hashlib.sha256(_fp32_json(_fp32_code_payload(code)).encode("utf-8")).hexdigest()
+
+
+def _fp32_callable_chain(value: Any) -> list[Any]:
+    chain = []
+    seen = set()
+    current = value
+    while inspect.isfunction(current) and id(current) not in seen:
+        seen.add(id(current))
+        chain.append(current)
+        current = getattr(current, "__wrapped__", None)
+        if current is None:
+            break
+    return chain
+
+
+def _fp32_code_methods(cls: type) -> dict[str, str]:
+    result = {}
+    for name, descriptor in vars(cls).items():
+        value = descriptor.__func__ if isinstance(descriptor, (staticmethod, classmethod)) else descriptor
+        if inspect.isfunction(value):
+            for index, function in enumerate(_fp32_callable_chain(value)):
+                suffix = "" if index == 0 else f":wrapped:{index}"
+                result[f"{name}{suffix}"] = _fp32_code_fingerprint(function.__code__)
+    return result
+
+
+def _fp32_stable_object(value: Any, active: set[int] | None = None) -> Any:
+    active = set() if active is None else active
+    if value is None or type(value) in (bool, int, str):
+        return {"kind": type(value).__name__, "value": value}
+    if type(value) is float:
+        return {"kind": "float", "hex": value.hex()}
+    if type(value) is complex:
+        return {"kind": "complex", "real": value.real.hex(), "imag": value.imag.hex()}
+    if type(value) is bytes:
+        return {"kind": "bytes", "hex": value.hex()}
+    if value is Ellipsis:
+        return {"kind": "ellipsis"}
+    if isinstance(value, types.CodeType):
+        return {"kind": "code", "fingerprint": _fp32_code_fingerprint(value)}
+    if inspect.isfunction(value):
+        object_id = id(value)
+        if object_id in active:
+            return {"kind": "cycle"}
+        active.add(object_id)
+        try:
+            closure = []
+            for cell in value.__closure__ or ():
+                try:
+                    cell_value = cell.cell_contents
+                except ValueError:
+                    cell_value = {"empty_cell": True}
+                closure.append(_fp32_stable_object(cell_value, active))
+            return {
+                "kind": "function",
+                "fingerprint": _fp32_code_fingerprint(value.__code__),
+                "defaults": _fp32_stable_object(value.__defaults__, active),
+                "kwdefaults": _fp32_stable_object(value.__kwdefaults__, active),
+                "closure": closure,
+            }
+        finally:
+            active.remove(object_id)
+    if isinstance(value, types.ModuleType):
+        return {
+            "kind": "module",
+            "name": value.__name__,
+            "source_sha256": sha256_file(value.__file__)
+            if isinstance(getattr(value, "__file__", None), str) and Path(value.__file__).is_file() else None,
+        }
+    if isinstance(value, type):
+        return {
+            "kind": "class",
+            "methods": _fp32_code_methods(value),
+        }
+    object_id = id(value)
+    if object_id in active:
+        return {"kind": "cycle"}
+    active.add(object_id)
+    try:
+        if isinstance(value, Mapping):
+            items = [(_fp32_stable_object(key, active), _fp32_stable_object(item, active))
+                     for key, item in value.items()]
+            return {
+                "kind": "mapping",
+                "class_methods": _fp32_code_methods(type(value)),
+                "items": sorted(items, key=lambda pair: _fp32_json(pair[0])),
+            }
+        if isinstance(value, (tuple, list)):
+            return {
+                "kind": "sequence",
+                "class_methods": _fp32_code_methods(type(value)),
+                "items": [_fp32_stable_object(item, active) for item in value],
+            }
+        if isinstance(value, (set, frozenset)):
+            items = [_fp32_stable_object(item, active) for item in value]
+            return {"kind": "set", "class_methods": _fp32_code_methods(type(value)), "items": sorted(items, key=_fp32_json)}
+        return {
+            "kind": "object",
+            "class_methods": _fp32_code_methods(type(value)),
+            "attributes": {
+                name: _fp32_stable_object(item, active)
+                for name, item in sorted(vars(value).items())
+                if not name.startswith("_")
+            } if hasattr(value, "__dict__") else {},
+        }
+    finally:
+        active.remove(object_id)
+
+
+def _fp32_object_fingerprint(value: Any) -> str:
+    return hashlib.sha256(_fp32_json(_fp32_stable_object(value)).encode("utf-8")).hexdigest()
+
+
+def _fp32_class_slot_fingerprints(cls: type) -> dict[str, str]:
+    slots = {}
+    for name in ("__call__", "_call_impl", "_wrapped_call_impl", "forward"):
+        if name not in vars(cls):
+            continue
+        value = vars(cls)[name]
+        value = value.__func__ if isinstance(value, (staticmethod, classmethod)) else value
+        code = getattr(value, "__code__", None)
+        slots[name] = _fp32_code_fingerprint(code) if isinstance(code, types.CodeType) else _fp32_object_fingerprint(value)
+    return slots
+
+
+def _fp32_live_fingerprint_document(qwen_module: Any, hub_module: Any) -> dict[str, Any]:
+    functions: dict[str, Any] = {}
+    classes: dict[str, type] = {}
+    for name, value in vars(qwen_module).items():
+        if inspect.isfunction(value) and (value.__globals__ is qwen_module.__dict__ or name in FP32_QWEN_FUNCTION_NAMES):
+            for index, function in enumerate(_fp32_callable_chain(value)):
+                suffix = "" if index == 0 else f":wrapped:{index}"
+                functions[f"global:{name}{suffix}"] = function
+    for name in FP32_PINNED_FINGERPRINTS["qwen_class_names"]:
+        cls = vars(qwen_module).get(name)
+        if not isinstance(cls, type):
+            raise CalibrationRefusal(f"source-pinned Qwen class {name} is unavailable")
+        classes[name] = cls
+        for method_name, descriptor in vars(cls).items():
+            value = descriptor.__func__ if isinstance(descriptor, (staticmethod, classmethod)) else descriptor
+            if inspect.isfunction(value):
+                for index, function in enumerate(_fp32_callable_chain(value)):
+                    suffix = "" if index == 0 else f":wrapped:{index}"
+                    functions[f"class:{name}.{method_name}{suffix}"] = function
+    for name in FP32_QWEN_FUNCTION_NAMES:
+        wrapper = getattr(qwen_module, name, None)
+        reference = getattr(wrapper, "__wrapped__", None)
+        if not inspect.isfunction(wrapper) or not inspect.isfunction(reference):
+            raise CalibrationRefusal(f"Qwen dispatch slot {name} is not a Python function and reference pair")
+        functions[f"dispatch:{name}"] = wrapper
+        for index, function in enumerate(_fp32_callable_chain(reference)):
+            suffix = "" if index == 0 else f":wrapped:{index}"
+            functions[f"dispatch_reference:{name}{suffix}"] = function
+
+    referenced_names = sorted({name for fn in functions.values() for name in fn.__code__.co_names} & set(vars(qwen_module)))
+    torch_nn = importlib.import_module("torch.nn")
+    torch_classes = {}
+    for path in FP32_PINNED_FINGERPRINTS["torch_module_classes"]:
+        name = path.rsplit(".", 1)[-1]
+        cls = getattr(torch_nn, name, None)
+        if not isinstance(cls, type):
+            raise CalibrationRefusal(f"pinned torch module class {path} is unavailable")
+        torch_classes[path] = {"slots": _fp32_class_slot_fingerprints(cls)}
+    return {
+        "transformers_version": importlib.metadata.version("transformers"),
+        "qwen_source_sha256": sha256_file(qwen_module.__file__),
+        "hub_source_sha256": sha256_file(hub_module.__file__),
+        "code_fingerprints": {
+            name: _fp32_code_fingerprint(function.__code__)
+            for name, function in sorted(functions.items())
+        },
+        "qwen_class_names": sorted(classes),
+        "global_reference_fingerprints": {
+            name: _fp32_object_fingerprint(vars(qwen_module)[name]) for name in referenced_names
+        },
+        "torch_module_classes": torch_classes,
+    }
+
+
+def _fp32_assert_pinned_code_and_globals(qwen_module: Any, hub_module: Any) -> dict[str, Any]:
+    live = _fp32_live_fingerprint_document(qwen_module, hub_module)
+    if not _strictly_equal(live, FP32_PINNED_FINGERPRINTS):
+        expected = FP32_PINNED_FINGERPRINTS
+        for field in expected:
+            if not _strictly_equal(live.get(field), expected[field]):
+                if field in {"code_fingerprints", "global_reference_fingerprints"}:
+                    changed = [
+                        key for key in sorted(set(live.get(field, {})) | set(expected[field]))
+                        if live.get(field, {}).get(key) != expected[field].get(key)
+                    ]
+                    if changed:
+                        raise CalibrationRefusal(
+                            f"FP32 pinned Qwen {field.replace('_', ' ')} mismatch at {changed[0]}"
+                        )
+                raise CalibrationRefusal(f"FP32 pinned Qwen code or module-global fingerprint mismatch: {field}")
+        raise CalibrationRefusal("FP32 pinned Qwen code or module-global fingerprint mismatch")
+    return live
+
+
 def _prepare_fp32_reference_backend() -> dict[str, Any]:
     """Establish the only supported FP32 backend before importing Transformers code."""
     global _FP32_PREPARATION
@@ -291,25 +531,20 @@ def _capture_fp32_reference_binding() -> dict[str, Any]:
     if not _strictly_equal(optional_imports, _FP32_PREPARATION["optional_imports"]):
         raise CalibrationRefusal("optional backend import evidence changed before Qwen binding")
 
+    fingerprint_document = _fp32_assert_pinned_code_and_globals(qwen_module, hub_module)
+
     dispatch: dict[str, Any] = {}
     references: dict[str, Any] = {}
-    dispatch_code: dict[str, Any] = {}
-    reference_code: dict[str, Any] = {}
     for name in FP32_QWEN_FUNCTION_NAMES:
         function = getattr(qwen_module, name, None)
         reference = getattr(function, "__wrapped__", None)
-        if (not callable(function) or not callable(reference)
-                or getattr(function, "__module__", None) != FP32_QWEN_MODULE
-                or getattr(function, "__name__", None) != name
-                or getattr(reference, "__module__", None) != FP32_QWEN_MODULE
-                or getattr(reference, "__name__", None) != name
-                or getattr(reference, "__globals__", None) is not qwen_module.__dict__
-                or Path(getattr(getattr(reference, "__code__", None), "co_filename", "")).resolve()
-                   != Path(qwen_path).resolve()
-                or getattr(function, "__globals__", None) is not hub_module.__dict__
-                or Path(getattr(getattr(function, "__code__", None), "co_filename", "")).resolve()
-                   != Path(getattr(hub_module, "__file__", "")).resolve()
-                or getattr(getattr(function, "__code__", None), "co_firstlineno", None) != 1027):
+        if (not inspect.isfunction(function) or not inspect.isfunction(reference)
+                or function.__globals__ is not hub_module.__dict__
+                or reference.__globals__ is not qwen_module.__dict__
+                or fingerprint_document["code_fingerprints"].get(f"dispatch:{name}")
+                   != FP32_PINNED_FINGERPRINTS["code_fingerprints"].get(f"dispatch:{name}")
+                or fingerprint_document["code_fingerprints"].get(f"dispatch_reference:{name}")
+                   != FP32_PINNED_FINGERPRINTS["code_fingerprints"].get(f"dispatch_reference:{name}")):
             raise CalibrationRefusal(f"Qwen dispatch slot {name} is not the pinned decorated torch reference")
         try:
             wrapper_state = inspect.getclosurevars(function).nonlocals
@@ -321,21 +556,26 @@ def _capture_fp32_reference_binding() -> dict[str, Any]:
             raise CalibrationRefusal(f"Qwen dispatch slot {name} is not bound to its torch reference callable")
         dispatch[name] = function
         references[name] = reference
-        dispatch_code[name] = function.__code__
-        reference_code[name] = reference.__code__
 
     qwen_class = getattr(qwen_module, "Qwen3_5GatedDeltaNet", None)
     forward = getattr(qwen_class, "forward", None) if qwen_class is not None else None
     forward_body = getattr(forward, "__wrapped__", forward)
     required_names = set(FP32_QWEN_FUNCTION_NAMES)
-    if (not callable(forward) or not callable(forward_body)
-            or getattr(forward, "__module__", None) != FP32_QWEN_MODULE
-            or getattr(forward_body, "__module__", None) != FP32_QWEN_MODULE
-            or getattr(forward_body, "__globals__", None) is not qwen_module.__dict__
-            or Path(getattr(getattr(forward_body, "__code__", None), "co_filename", "")).resolve()
-               != Path(qwen_path).resolve()
+    if (not inspect.isfunction(forward) or not inspect.isfunction(forward_body)
+            or forward_body.__globals__ is not qwen_module.__dict__
             or not required_names.issubset(set(getattr(getattr(forward_body, "__code__", None), "co_names", ())))):
         raise CalibrationRefusal("Qwen3.5 forward dispatch slots do not match the reviewed source layout")
+
+    module_classes = _fp32_pinned_module_class_objects(qwen_module)
+    class_slots = {
+        cls: {name: vars(cls)[name] for name in ("__call__", "_call_impl", "_wrapped_call_impl", "forward")
+              if name in vars(cls)}
+        for cls in module_classes
+    }
+    global_references = {
+        name: vars(qwen_module)[name]
+        for name in fingerprint_document["global_reference_fingerprints"]
+    }
 
     _FP32_REFERENCE_BINDING = {
         "qwen_module": qwen_module,
@@ -345,15 +585,33 @@ def _capture_fp32_reference_binding() -> dict[str, Any]:
         "hub_sha256": hub_state["hub_kernels_source_sha256"],
         "dispatch": dispatch,
         "references": references,
-        "dispatch_code": dispatch_code,
-        "reference_code": reference_code,
         "qwen_class": qwen_class,
         "forward": forward,
-        "forward_code": forward.__code__,
         "forward_body": forward_body,
-        "forward_body_code": forward_body.__code__,
+        "global_references": global_references,
+        "module_classes": module_classes,
+        "class_slots": class_slots,
+        "fingerprint_document": fingerprint_document,
     }
     return _FP32_REFERENCE_BINDING
+
+
+def _fp32_pinned_module_class_objects(qwen_module: Any) -> dict[type, str]:
+    """Return only class objects whose code or slot fingerprints are in the pinned derivation."""
+    result: dict[type, str] = {}
+    for name in FP32_PINNED_FINGERPRINTS["qwen_class_names"]:
+        cls = vars(qwen_module).get(name)
+        if not isinstance(cls, type):
+            raise CalibrationRefusal(f"pinned Qwen module class {name} is unavailable")
+        result[cls] = f"{FP32_QWEN_MODULE}.{name}"
+    torch_nn = importlib.import_module("torch.nn")
+    for path in FP32_PINNED_FINGERPRINTS["torch_module_classes"]:
+        name = path.rsplit(".", 1)[-1]
+        cls = getattr(torch_nn, name, None)
+        if not isinstance(cls, type):
+            raise CalibrationRefusal(f"pinned torch module class {path} is unavailable")
+        result[cls] = path
+    return result
 
 
 def _load_fp32_reference_binding() -> None:
@@ -385,12 +643,24 @@ def _fp32_reference_runtime_state(model: Any) -> dict[str, Any]:
     if not _strictly_equal(optional_imports, _FP32_PREPARATION["optional_imports"]):
         raise CalibrationRefusal("optional backend import evidence changed after reference capture")
 
+    fingerprint_document = _fp32_assert_pinned_code_and_globals(qwen_module, binding["hub_module"])
+    for name, expected in binding["global_references"].items():
+        if vars(qwen_module).get(name) is not expected:
+            raise CalibrationRefusal(f"Qwen module-global binding {name} changed after reference capture")
+
+    dispatch_checks: dict[str, bool] = {}
     for name in FP32_QWEN_FUNCTION_NAMES:
         current = getattr(qwen_module, name, None)
-        if (current is not binding["dispatch"][name]
-                or getattr(current, "__code__", None) is not binding["dispatch_code"][name]
-                or getattr(current, "__wrapped__", None) is not binding["references"][name]
-                or getattr(binding["references"][name], "__code__", None) is not binding["reference_code"][name]):
+        reference = getattr(current, "__wrapped__", None)
+        dispatch_checks[name] = (
+            current is binding["dispatch"][name]
+            and reference is binding["references"][name]
+            and fingerprint_document["code_fingerprints"].get(f"dispatch:{name}")
+                == FP32_PINNED_FINGERPRINTS["code_fingerprints"].get(f"dispatch:{name}")
+            and fingerprint_document["code_fingerprints"].get(f"dispatch_reference:{name}")
+                == FP32_PINNED_FINGERPRINTS["code_fingerprints"].get(f"dispatch_reference:{name}")
+        )
+        if not dispatch_checks[name]:
             raise CalibrationRefusal(f"Qwen forward dispatch slot {name} changed after reference capture")
         try:
             wrapper_state = inspect.getclosurevars(current).nonlocals
@@ -402,45 +672,86 @@ def _fp32_reference_runtime_state(model: Any) -> dict[str, Any]:
             raise CalibrationRefusal(f"Qwen forward dispatch slot {name} no longer selects its torch reference")
 
     qwen_class = getattr(qwen_module, "Qwen3_5GatedDeltaNet", None)
-    if (qwen_class is not binding["qwen_class"]
-            or getattr(qwen_class, "forward", None) is not binding["forward"]
-            or getattr(binding["forward"], "__code__", None) is not binding["forward_code"]):
+    if qwen_class is not binding["qwen_class"] or getattr(qwen_class, "forward", None) is not binding["forward"]:
         raise CalibrationRefusal("Qwen3.5 forward callable changed after reference capture")
     current_forward_body = getattr(binding["forward"], "__wrapped__", binding["forward"])
-    if (current_forward_body is not binding["forward_body"]
-            or getattr(binding["forward_body"], "__code__", None) is not binding["forward_body_code"]
-            or binding["forward_body"].__globals__ is not qwen_module.__dict__):
+    if current_forward_body is not binding["forward_body"] or binding["forward_body"].__globals__ is not qwen_module.__dict__:
         raise CalibrationRefusal("Qwen3.5 forward no longer resolves dispatch slots from its pinned module globals")
+
+    attention_backend = getattr(getattr(model, "config", None), "_attn_implementation", None)
+    if attention_backend != FP32_ATTENTION_IMPLEMENTATION:
+        raise CalibrationRefusal(
+            f"FP32 reference backend requires attention implementation {FP32_ATTENTION_IMPLEMENTATION!r}, "
+            f"got {attention_backend!r}"
+        )
 
     try:
         modules = list(model.modules())
     except (AttributeError, TypeError) as exc:
         raise CalibrationRefusal("FP32 pilot model cannot expose module dispatch overrides") from exc
+    override_detected = False
     for module in modules:
         module_type = type(module)
-        if ("GatedDeltaNet" in getattr(module_type, "__qualname__", "")
-                and module_type is not qwen_class):
-            raise CalibrationRefusal("FP32 pilot contains a kernelized or substituted gated-delta module class")
-        if isinstance(module, qwen_class):
-            if type(module) is not qwen_class:
-                raise CalibrationRefusal("FP32 pilot contains a substituted Qwen3.5 gated-delta module class")
-            instance_state = vars(module)
-            if "forward" in instance_state and instance_state["forward"] is not binding["forward"]:
-                raise CalibrationRefusal("FP32 pilot contains an instance-level Qwen3.5 forward override")
-            bound_forward = getattr(module, "forward", None)
-            if getattr(bound_forward, "__func__", bound_forward) is not binding["forward"]:
-                raise CalibrationRefusal("FP32 pilot Qwen3.5 instance forward is not the pinned class forward")
-            for name in FP32_QWEN_FUNCTION_NAMES:
-                if name in instance_state and instance_state[name] is not binding["dispatch"][name]:
-                    raise CalibrationRefusal(f"FP32 pilot instance overrides Qwen dispatch slot {name}")
+        if module_type not in binding["module_classes"]:
+            raise CalibrationRefusal(
+                "FP32 pilot contains a module type outside the pinned allowlist: "
+                f"{module_type.__module__}.{module_type.__qualname__}"
+            )
+        instance_state = vars(module)
+        for slot in ("__call__", "_call_impl", "_wrapped_call_impl", "forward"):
+            if slot not in instance_state:
+                continue
+            missing = object()
+            expected = next((vars(cls)[slot] for cls in module_type.__mro__ if slot in vars(cls)), missing)
+            if expected is missing or instance_state[slot] is not expected:
+                override_detected = True
+                raise CalibrationRefusal(
+                    f"FP32 pilot contains an instance-level {slot} override on "
+                    f"{binding['module_classes'][module_type]}"
+                )
+        for cls in module_type.__mro__:
+            if cls is object:
+                continue
+            class_slots = vars(cls)
+            pinned_slots = binding["class_slots"].get(cls)
+            if pinned_slots is None:
+                if any(slot in class_slots for slot in ("__call__", "_call_impl", "_wrapped_call_impl", "forward")):
+                    override_detected = True
+                    raise CalibrationRefusal(
+                        f"FP32 pilot module class hierarchy contains an unpinned callable class: "
+                        f"{cls.__module__}.{cls.__qualname__}"
+                    )
+                continue
+            for slot in ("__call__", "_call_impl", "_wrapped_call_impl", "forward"):
+                expected = pinned_slots.get(slot)
+                current = class_slots.get(slot)
+                if (slot in pinned_slots) != (slot in class_slots) or expected is not current:
+                    override_detected = True
+                    raise CalibrationRefusal(
+                        f"FP32 pilot class {binding['module_classes'][cls]} changed {slot}"
+                    )
+        for name in FP32_QWEN_FUNCTION_NAMES:
+            if name in instance_state and instance_state[name] is not binding["dispatch"][name]:
+                override_detected = True
+                raise CalibrationRefusal(f"FP32 pilot instance overrides Qwen dispatch slot {name}")
+
+    dispatch_is_reference = all(dispatch_checks.values())
+    if not dispatch_is_reference:
+        raise CalibrationRefusal("Qwen reference dispatch verification failed")
+    dispatch_globals_match = all(
+        vars(qwen_module).get(name) is expected for name, expected in binding["global_references"].items()
+    )
 
     implementations = {
         name: {
             "dispatch_slot": "module-global",
             "resolved_implementation": _callable_identity(binding["dispatch"][name]),
             "torch_reference_implementation": _callable_identity(binding["references"][name]),
-            "dispatch_is_reference": True,
-            "instance_override": False,
+            "dispatch_is_reference": dispatch_checks[name],
+            "instance_override": any(
+                name in vars(module) and vars(module)[name] is not binding["dispatch"][name]
+                for module in modules
+            ),
             "source_sha256": qwen_sha256,
         }
         for name in FP32_QWEN_FUNCTION_NAMES
@@ -449,14 +760,17 @@ def _fp32_reference_runtime_state(model: Any) -> dict[str, Any]:
         "class": f"{qwen_class.__module__}.{qwen_class.__qualname__}",
         "callable": _callable_identity(binding["forward"]),
         "dispatch_slots": list(FP32_QWEN_FUNCTION_NAMES),
-        "dispatch_globals_match": True,
-        "override_detected": False,
+        "dispatch_globals_match": dispatch_globals_match,
+        "override_detected": override_detected,
         "source_sha256": qwen_sha256,
     }
     return {
         "qwen3_5_function_implementations": implementations,
         "qwen3_5_forward_binding": forward_binding,
         "qwen3_5_source_sha256": qwen_sha256,
+        "fp32_pinned_code_fingerprints_sha256": hashlib.sha256(
+            _fp32_json(fingerprint_document).encode("utf-8")
+        ).hexdigest(),
         "fp32_reference_preparation": copy.deepcopy(_FP32_PREPARATION),
         **hub_state,
     }
@@ -483,6 +797,12 @@ def _runtime_environment(model: Any = None) -> dict[str, Any]:
         # (Alden, part43-google-flip-review #19), so the producer normalises it here, once.
         if cudnn_version is not None and not isinstance(cudnn_version, bool):
             cudnn_version = str(cudnn_version)
+    except RuntimeError as exc:
+        if _FP32_PREPARATION is not None:
+            raise CalibrationRefusal(
+                f"FP32 precision state is unreadable and cannot be recorded: {type(exc).__name__}: {exc}"
+            ) from exc
+        raise
     except ImportError:
         torch_version = None
         precision_flags = {}
@@ -544,15 +864,21 @@ def _runtime_environment(model: Any = None) -> dict[str, Any]:
                     closure = {}
                 implementation = closure.get("implementation")
                 torch_fallback = closure.get("torch_function")
-                selected = implementation if callable(implementation) else function
+                selected = (implementation if callable(implementation) else
+                            torch_fallback if callable(torch_fallback) else function)
                 selected_name = (
                     f"{getattr(selected, '__module__', type(selected).__module__)}."
                     f"{getattr(selected, '__qualname__', type(selected).__qualname__)}"
                 )
-                is_fallback = implementation is None or implementation is torch_fallback
+                reference = torch_fallback if callable(torch_fallback) else function
+                reference_name = (
+                    f"{getattr(reference, '__module__', type(reference).__module__)}."
+                    f"{getattr(reference, '__qualname__', type(reference).__qualname__)}"
+                )
                 gated_delta_functions[function_name] = {
                     "resolved_implementation": selected_name,
-                    "uses_transformers_torch_fallback": bool(is_fallback),
+                    "torch_reference_implementation": reference_name,
+                    "uses_torch_reference": bool(selected is reference),
                 }
     hub_kernels_setting = os.environ.get("USE_HUB_KERNELS")
     hub_kernels_enabled = bool(hub_kernels_setting and hub_kernels_setting.strip().lower() not in {
@@ -562,7 +888,7 @@ def _runtime_environment(model: Any = None) -> dict[str, Any]:
         hub_kernels_enabled = fp32_reference_state["hub_kernels_enabled_at_import"]
     if model is None:
         recurrent_kernel = "not loaded at manifest time"
-    elif fp32_reference_state is None:
+    elif fp32_reference_state is None and not gated_delta_functions:
         recurrent_kernel = "resolved per Qwen3.5 model function below"
     elif gated_delta_functions:
         recurrent_kernel = "; ".join(
@@ -597,12 +923,21 @@ def _runtime_environment(model: Any = None) -> dict[str, Any]:
     }
 
 
-def output_header(args: argparse.Namespace, paths: Iterable[str | Path | None]) -> dict[str, Any]:
+def output_header(args: argparse.Namespace, paths: Iterable[str | Path | None], model: Any = None) -> dict[str, Any]:
     common_inputs = [*paths, ROOT / "PART43-DESIGN.md"]
     protocol_id = _selected_calibration_protocol(args)
-    if protocol_id == FP32_SUCCESSOR_PROTOCOL_ID:
-        _configure_full_fp32_precision()
-    environment = _runtime_environment(_ACTIVE_MODEL)
+    try:
+        if protocol_id == FP32_SUCCESSOR_PROTOCOL_ID:
+            _configure_full_fp32_precision()
+        environment = _runtime_environment(_ACTIVE_MODEL if model is None else model)
+    except (CalibrationRefusal, RuntimeError) as exc:
+        if protocol_id != FP32_SUCCESSOR_PROTOCOL_ID:
+            if isinstance(exc, RuntimeError) and _FP32_PREPARATION is not None:
+                raise CalibrationRefusal(
+                    f"FP32 precision state is unreadable and cannot be recorded: {type(exc).__name__}: {exc}"
+                ) from exc
+            raise
+        environment = {"runtime_refusal": str(exc)}
     header = {
         "model": args.model,
         "revision": args.revision,
@@ -613,13 +948,16 @@ def output_header(args: argparse.Namespace, paths: Iterable[str | Path | None]) 
         "environment": environment,
     }
     if protocol_id == FP32_SUCCESSOR_PROTOCOL_ID:
-        header["calibration_protocol"] = {
+        protocol_metadata = {
             "protocol_id": protocol_id,
             "decision_dtype": "torch.float32",
-            "matmul_allow_tf32": environment["precision_flags"].get("cuda_matmul_allow_tf32"),
-            "cudnn_allow_tf32": environment["precision_flags"].get("cudnn_allow_tf32"),
-            "float32_matmul_precision": environment["float32_matmul_precision"],
+            "matmul_allow_tf32": environment.get("precision_flags", {}).get("cuda_matmul_allow_tf32"),
+            "cudnn_allow_tf32": environment.get("precision_flags", {}).get("cudnn_allow_tf32"),
+            "float32_matmul_precision": environment.get("float32_matmul_precision"),
         }
+        if environment.get("runtime_refusal") is not None:
+            protocol_metadata["runtime_refusal"] = environment["runtime_refusal"]
+        header["calibration_protocol"] = protocol_metadata
     return header
 
 
@@ -1785,6 +2123,7 @@ def _calibration_runtime_metadata(
             "transformers_use_hub_kernels_at_import": reference_state["transformers_use_hub_kernels_at_import"],
             "hub_kernels_source_sha256": reference_state["hub_kernels_source_sha256"],
             "qwen3_5_source_sha256": reference_state["qwen3_5_source_sha256"],
+            "fp32_pinned_code_fingerprints_sha256": reference_state["fp32_pinned_code_fingerprints_sha256"],
             "fp32_reference_preparation": reference_state["fp32_reference_preparation"],
             "qwen3_5_function_implementations": implementations,
             "qwen3_5_forward_binding": reference_state["qwen3_5_forward_binding"],
@@ -1979,7 +2318,12 @@ def run_calibration_runtime(args: argparse.Namespace, token_records: Mapping[str
         _prepare_fp32_reference_backend()
     import torch
     if protocol_id == FP32_SUCCESSOR_PROTOCOL_ID:
-        _configure_full_fp32_precision()
+        try:
+            _configure_full_fp32_precision()
+        except RuntimeError as exc:
+            raise CalibrationRefusal(
+                f"FP32 precision state is unreadable during calibration: {type(exc).__name__}: {exc}"
+            ) from exc
         tokenizer, model = _load_runtime(args, model_dtype=torch.float32)
         leg, execution = _run_calibration_leg(
             model, tokenizer, token_records, args,
@@ -3989,7 +4333,7 @@ def run_pilot(
             reason = str(exc)
     if not passed:
         result = {
-            **output_header(args, [args.candidates, ROOT / "PART43-DESIGN.md"]),
+            **output_header(args, [args.candidates, ROOT / "PART43-DESIGN.md"], model=model),
             "command": "pilot",
             "status": "HOLD",
             "hold": {"reason": reason},
@@ -4009,7 +4353,7 @@ def run_pilot(
     attach_pilot = run_attach(model, tokenizer, args, pilot=True)
     attach_elapsed = _time.perf_counter() - attach_started
     result = {
-        **output_header(args, [args.candidates, ROOT / "PART43-DESIGN.md", ROOT / "part25.py", ROOT / "part39.py"]),
+        **output_header(args, [args.candidates, ROOT / "PART43-DESIGN.md", ROOT / "part25.py", ROOT / "part39.py"], model=model),
         "method": "pilot signs plus primary-score lattice with five matched null sets",
         "command": "pilot",
         "status": "complete",
@@ -5920,8 +6264,11 @@ def _load_runtime(args: argparse.Namespace, model_dtype: Any = None):
     if model_dtype is None:
         tokenizer, model = part39_module().load_model_direct(args.model, args.revision, args.device)
     else:
+        load_options = {"dtype": model_dtype}
+        if _selected_calibration_protocol(args) == FP32_SUCCESSOR_PROTOCOL_ID:
+            load_options["attn_implementation"] = FP32_ATTENTION_IMPLEMENTATION
         tokenizer, model = part39_module().load_model_direct(
-            args.model, args.revision, args.device, dtype=model_dtype,
+            args.model, args.revision, args.device, **load_options,
         )
     if _selected_calibration_protocol(args) == FP32_SUCCESSOR_PROTOCOL_ID:
         _fp32_reference_runtime_state(model)
@@ -6248,7 +6595,8 @@ def _validate_runtime_metadata(
             "float32_matmul_precision", "qwen3_5_function_implementations", "causal_conv_backend",
             "hub_kernels_enabled_at_import", "current_use_hub_kernels_setting",
             "transformers_use_hub_kernels_at_import", "hub_kernels_source_sha256",
-            "qwen3_5_source_sha256", "fp32_reference_preparation", "qwen3_5_forward_binding",
+            "qwen3_5_source_sha256", "fp32_pinned_code_fingerprints_sha256",
+            "fp32_reference_preparation", "qwen3_5_forward_binding",
         })
     runtime = _exact_mapping(leg["runtime"], runtime_fields, f"execution.legs.{leg_name}.runtime")
     string_fields = ["torch_version", "transformers_version", "cuda_version", "cudnn_version",
@@ -6272,6 +6620,10 @@ def _validate_runtime_metadata(
             raise CalibrationRefusal("FP32 registration backend allowances are invalid")
         if runtime["transformers_version"] != FP32_TRANSFORMERS_VERSION:
             raise CalibrationRefusal("FP32 successor requires the reviewed Transformers 5.20.0 pin")
+        if runtime["attention_backend"] != FP32_ATTENTION_IMPLEMENTATION:
+            raise CalibrationRefusal(
+                f"FP32 successor requires attention implementation {FP32_ATTENTION_IMPLEMENTATION!r}"
+            )
         if runtime["hub_kernels_enabled"] is not False or runtime["hub_kernels_enabled_at_import"] is not False:
             raise CalibrationRefusal("FP32 successor refuses enabled or stale hub-kernel state")
         if (runtime["current_use_hub_kernels_setting"] != "0"
@@ -6281,6 +6633,9 @@ def _validate_runtime_metadata(
             raise CalibrationRefusal("FP32 successor hub-kernel source hash does not match the reviewed pin")
         if runtime["qwen3_5_source_sha256"] != FP32_QWEN_SOURCE_SHA256:
             raise CalibrationRefusal("FP32 successor Qwen3.5 source hash does not match the reviewed pin")
+        expected_fingerprints_sha256 = hashlib.sha256(_fp32_json(FP32_PINNED_FINGERPRINTS).encode("utf-8")).hexdigest()
+        if runtime["fp32_pinned_code_fingerprints_sha256"] != expected_fingerprints_sha256:
+            raise CalibrationRefusal("FP32 successor code fingerprints do not match the reviewed pin")
         if runtime["kernelized_module_classes"]:
             raise CalibrationRefusal("FP32 successor refuses kernelized or substituted Qwen module classes")
 
@@ -6795,6 +7150,19 @@ def _write_hold(args: argparse.Namespace, reason: str) -> dict[str, Any]:
     return record
 
 
+def _record_calibration_refusal(args: argparse.Namespace, reason: str) -> int:
+    hold = _write_hold(args, reason)
+    if args.command == "pilot":
+        write_json(_output_path(args, "pilot"), {
+            "command": "pilot", "status": "HOLD", "hold": hold,
+            "calibration_gate_interpretation": FP32_GATE_INTERPRETATION,
+        })
+        print(json.dumps({"output": str(_output_path(args, "pilot")), "status": "HOLD", "reason": reason}, indent=2))
+    else:
+        print(json.dumps({"output": str(_output_path(args, "calibration")), "status": "refused", "reason": reason}, indent=2))
+    return 0
+
+
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -6875,7 +7243,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 0
 
     if args.command == "manifest":
-        manifest = write_manifest(args)
+        try:
+            manifest = write_manifest(args)
+        except CalibrationRefusal as exc:
+            return _record_calibration_refusal(args, str(exc))
         name = "MANIFEST-base.json" if args.model == BASE_MODEL else "MANIFEST.json"
         print(json.dumps({"output": str(Path(args.out).expanduser() / name), "model": manifest["model"], "revision": manifest["revision"]}, indent=2))
         return 0
@@ -6928,14 +7299,20 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     manifest_path = Path(args.out).expanduser() / ("MANIFEST-base.json" if args.model == BASE_MODEL else "MANIFEST.json")
     if args.command in {"calibrate", "pilot"} or not manifest_path.is_file():
-        write_manifest(args)
+        try:
+            write_manifest(args)
+        except CalibrationRefusal as exc:
+            return _record_calibration_refusal(args, str(exc))
     if args.command == "manifest":
         write_manifest(args)
         return 0
 
     if args.command in {"calibrate", "pilot"}:
         token_records = _load_token_records(args)
-        raw_calibration = run_calibration_runtime(args, token_records)
+        try:
+            raw_calibration = run_calibration_runtime(args, token_records)
+        except CalibrationRefusal as exc:
+            return _record_calibration_refusal(args, str(exc))
         calibration_path = _output_path(args, "calibration")
         write_json(calibration_path, raw_calibration)
         calibration = None
