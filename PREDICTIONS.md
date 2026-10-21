@@ -1616,3 +1616,15 @@ Amendment 1 to Part 43 (written 2026-10-20 20:06 CT, before any code ran, from C
 | 43.11 | Claude (written 20:47 CT, amendment 3): in the four-world swap for L7 -> L11 on the discovery prompt, transplanting L11's L7-induced trajectory into a clean run (D) moves the raw " Google" minus " Alibaba" logit difference by less than 0.25 nats: whatever L7 does, little of it travels through L11. | | |
 | 43.12 | Elise's hypothesis, test chosen by Claude (amendment 3): in the attachment test, L11 N8868 after the search-engine phrase differs between "Chinese search engine" and "American search engine" sentences by more than between the two charity attachments, in both counterbalanced orders and on the held-out wording. | | |
 | 43.13 | Ryan (said on the voice call, 2026-10-20 21:12 CT, before any run; written down 21:57 CT; test chosen by Claude): "at least one neuron is independent and at least two neurons are chained." Chained = for some ordered pair U -> V among the four, the four-world swap on the discovery prompt gives both D moving the raw " Google" minus " Alibaba" logit difference by at least 0.25 nats and C recovering at least half of U's effect (under amendment 2's floor); independent = a unit with no such link in either direction. Supported if both exist. | | |
+
+## Part 45: does a model that can move its own concept representations change what it says about itself? (written 2026-10-20 22:39 CT, before any code or run). Design: PART45-DESIGN.md
+
+| # | Prediction | Result | Evidence |
+|---|---|---|---|
+| 45.1 | Claude: the Magician makes at least 0.30 of the requested change (frac, mean over the 5 greedy questions) for AI -3 SD; the original Qwen3-4B makes at most 0.05. | | |
+| 45.2 | Claude: the Magician makes at least 0.30 of the requested change for Alibaba -3 SD. | | |
+| 45.3 | Claude: the self-description holds under AI -3 SD: the Magician's replies that call themselves an AI (of 25) are at least 80% of its count with no instruction. | | |
+| 45.4 | Claude: under Google +3 SD at most 2 of the Magician's 25 replies name Google as its maker. | | |
+| 45.5 | Claude: the volcanoes control changes nothing about the self: the Magician's count of AI self-descriptions is within 2 of its no-instruction count, and it makes at least 0.40 of the requested volcano change. | | |
+| 45.6 | Claude: identity concepts are harder to move: the Magician's frac for AI -3 SD is lower than for volcanoes -3 SD. | | |
+| 45.7 | Claude: robots -3 SD: frac at least 0.30, and the count of AI self-descriptions is within 2 of no instruction. | | |
