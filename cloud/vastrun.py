@@ -8,6 +8,7 @@ without credentials, Vast, or a real SSH connection.
 from __future__ import annotations
 
 import json
+import inspect
 import math
 import os
 import re
@@ -18,6 +19,7 @@ import sys
 import threading
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 import uuid
 from datetime import datetime, timezone
@@ -30,6 +32,9 @@ REMOTE_ROOT = "/workspace/vastrun"
 MAX_HOSTS = 3
 DESTROY_RETRIES = 3
 MAX_POLL_FAILURES = 3
+LIST_RETRIES = 3
+CLEANUP_MAX_ATTEMPTS = 8
+CLEANUP_TIMEOUT_SECONDS = 30.0
 
 
 class RunnerError(RuntimeError):
@@ -64,10 +69,14 @@ class DestroyConfirmationError(RunnerError):
     pass
 
 
+class InstanceNotFound(RunnerError):
+    """Vast confirmed that a requested instance no longer exists."""
+
+
 class RemoteCommandError(RunnerError):
-    def __init__(self, returncode: int, command: str, output: str = "") -> None:
-        # Do not include output: remote output can contain unrelated secrets.
-        super().__init__(f"remote command failed with exit code {returncode}: {command[:160]}")
+    def __init__(self, returncode: int, step: str, output: str = "") -> None:
+        # Do not include commands or output: either may contain job secrets.
+        super().__init__(f"{step} failed with exit code {returncode}")
         self.returncode = returncode
 
 
@@ -130,16 +139,31 @@ def _instance_payload(response: Any, instance_id: str | None = None) -> dict[str
     return None
 
 
-def _instance_payloads(response: Any) -> list[dict[str, Any]] | None:
-    # The v1 list endpoint is specifically {"instances": [...]}.  Treat any
-    # other shape, including an error object or a bare list, as unreadable.
+def _warn(message: str) -> None:
+    try:
+        print(f"vastrun: {message}", file=sys.stderr)
+    except BaseException:
+        pass
+
+
+def _instance_payloads(response: Any, *, our_label: str | None = None) -> list[dict[str, Any]] | None:
+    # A valid page has the v1 envelope. Unrelated malformed rows do not make
+    # the whole account listing unreadable; they cannot match a label safely.
     if not isinstance(response, dict) or not isinstance(response.get("instances"), list):
         return None
-    instances = response["instances"]
-    if any(not isinstance(value, dict) or value.get("id") is None or "label" not in value
-           for value in instances):
-        return None
-    return instances
+    parsed: list[dict[str, Any]] = []
+    for value in response["instances"]:
+        if not isinstance(value, dict):
+            _warn("skipping malformed unrelated instance row")
+            continue
+        instance_id = value.get("id")
+        if instance_id is None or str(instance_id) == "":
+            if our_label is not None and value.get("label") == our_label:
+                raise RunnerError("Vast returned a malformed row matching this run label")
+            _warn("skipping malformed unrelated instance row")
+            continue
+        parsed.append(value)
+    return parsed
 
 
 def _instance_ids(response: Any) -> set[str] | None:
@@ -150,7 +174,8 @@ def _instance_ids(response: Any) -> set[str] | None:
 
 
 def _destroy_succeeded(response: Any) -> bool:
-    return isinstance(response, dict) and response.get("success") is True
+    return (isinstance(response, dict)
+            and (response.get("success") is True or response.get("status") == 404))
 
 
 def _rent_instance_id(response: Any) -> str | None:
@@ -192,6 +217,92 @@ def _watchdog_command(wall_clock_min: float) -> str:
     seconds = max(1, math.ceil((wall_clock_min + 10) * 60))
     shutdown = f"sleep {seconds}; poweroff"
     return f"nohup sh -c {shlex.quote(shutdown)} >/dev/null 2>&1 &"
+
+
+def _label_deadline(label: str) -> int | None:
+    match = re.fullmatch(r"vastrun-[0-9a-fA-F]{12}-([0-9a-fA-F]+)", label)
+    if match is None:
+        return None
+    try:
+        return int(match.group(1), 16)
+    except ValueError:
+        return None
+
+
+def _listed_instances(api: Any, *, our_label: str | None = None) -> list[dict[str, Any]] | None:
+    """Read every page from the Vast v1 instance list."""
+    instances: list[dict[str, Any]] = []
+    token: Any = None
+    seen_tokens: set[str] = set()
+    for _ in range(100):
+        method = api.list_instances
+        if token is None:
+            response = method()
+        else:
+            try:
+                parameters = inspect.signature(method).parameters.values()
+                accepts_keyword = any(p.kind == p.VAR_KEYWORD for p in parameters) or any(
+                    p.name == "next_token" for p in parameters
+                )
+            except (TypeError, ValueError):
+                accepts_keyword = True
+            if not accepts_keyword:
+                raise RunnerError("Vast list adapter cannot follow pagination tokens")
+            response = method(next_token=token)
+        page = _instance_payloads(response, our_label=our_label)
+        if page is None:
+            return None
+        instances.extend(page)
+        next_token = response.get("next_token")
+        if next_token in (None, ""):
+            return instances
+        token_key = str(next_token)
+        if token_key in seen_tokens:
+            raise RunnerError("Vast instance listing repeated a pagination token")
+        seen_tokens.add(token_key)
+        token = next_token
+    raise RunnerError("Vast instance listing exceeded 100 pages")
+
+
+def sweep_label(api: Any, label: str, *, sleep: Any = time.sleep,
+                deadline_seconds: float = CLEANUP_TIMEOUT_SECONDS) -> str:
+    """Delete instances with one exact label and verify their disappearance."""
+    deadline = time.monotonic() + max(0.1, deadline_seconds)
+    delay = 0.25
+    saw_match = False
+    last_error = "matching instance remained listed"
+    for _ in range(CLEANUP_MAX_ATTEMPTS):
+        if time.monotonic() >= deadline:
+            break
+        try:
+            instances = _listed_instances(api, our_label=label)
+            if instances is None:
+                raise RunnerError("Vast returned an unreadable instance list")
+        except Exception as exc:
+            last_error = str(exc) or type(exc).__name__
+            instances = None
+        if instances is not None:
+            matches = [item for item in instances if item.get("label") == label]
+            if not matches:
+                return "deleted, listing lagged" if saw_match else "already absent"
+            saw_match = True
+            for instance in matches:
+                try:
+                    response = api.destroy(str(instance["id"]))
+                    if not _destroy_succeeded(response):
+                        last_error = "Vast returned an unreadable destroy response"
+                except InstanceNotFound:
+                    continue
+                except RunnerError as exc:
+                    if "HTTP 404" not in str(exc):
+                        last_error = str(exc)
+                except Exception as exc:
+                    last_error = f"destroy request raised {type(exc).__name__}"
+        remaining = deadline - time.monotonic()
+        if remaining > 0:
+            sleep(min(delay, remaining))
+            delay = min(delay * 2, 4.0)
+    raise DestroyConfirmationError(f"could not confirm label {label} cleanup: {last_error}")
 
 
 class VastAPI:
@@ -265,10 +376,18 @@ class VastAPI:
         return self._request("GET", f"/instances/{instance_id}/")
 
     def destroy(self, instance_id: str) -> Any:
-        return self._request("DELETE", f"/instances/{instance_id}/")
+        try:
+            return self._request("DELETE", f"/instances/{instance_id}/")
+        except RunnerError as exc:
+            if "HTTP 404" in str(exc):
+                return {"status": 404}
+            raise
 
-    def list_instances(self) -> Any:
-        return self._request("GET", "/instances/", v1=True)
+    def list_instances(self, next_token: str | None = None) -> Any:
+        path = "/instances/"
+        if next_token is not None:
+            path += "?" + urllib.parse.urlencode({"next_token": next_token})
+        return self._request("GET", path, v1=True)
 
 
 class OpenSSHRunner:
@@ -293,7 +412,7 @@ class OpenSSHRunner:
             check=False,
         )
         if check and completed.returncode:
-            raise RemoteCommandError(completed.returncode, command, completed.stdout)
+            raise RemoteCommandError(completed.returncode, "SSH command", completed.stdout)
         return completed.stdout
 
     def upload(self, host: str, port: int, local_path: Path, remote_path: str,
@@ -308,7 +427,7 @@ class OpenSSHRunner:
             check=False,
         )
         if completed.returncode:
-            raise RemoteCommandError(completed.returncode, f"scp {local_path} {remote_path}")
+            raise RemoteCommandError(completed.returncode, "file upload")
 
     def download(self, host: str, port: int, remote_path: str, local_path: Path,
                  *, timeout: float) -> None:
@@ -321,7 +440,7 @@ class OpenSSHRunner:
             check=False,
         )
         if completed.returncode:
-            raise RemoteCommandError(completed.returncode, f"scp {remote_path} {local_path}")
+            raise RemoteCommandError(completed.returncode, "file download")
 
 
 class _Runner:
@@ -341,23 +460,34 @@ class _Runner:
         self.destroy_delay = destroy_delay
         self.cancel_event = cancel_event
         self.started = clock()
+        self.real_started = time.monotonic()
         self.results_dir = self._local_path(config["results_dir"])
         self.workdir = str(PurePosixPath(config.get("remote_workdir", REMOTE_ROOT)))
         self.max_dph = _number(config["max_dph"])
         self.spend_cap = _number(config["spend_cap_usd"])
         self.wall_seconds = _number(config["wall_clock_min"]) * 60
         self.total_spend = 0.0
+        self.pending_rate = 0.0
+        self.pending_started: float | None = None
         self.tracked_instances: dict[str, dict[str, Any]] = {}
         self.instance_started: dict[str, float] = {}
         self.label_started: dict[str, float] = {}
         self.active: dict[str, Any] | None = None
         self.active_started: float | None = None
         self.current_dph = 0.0
-        self.run_label = f"vastrun-{uuid.uuid4().hex[:12]}"
+        expiry = math.ceil(time.time() + self.wall_seconds + 10 * 60 + 25 * 60)
+        self.run_label = f"vastrun-{uuid.uuid4().hex[:12]}-{expiry:x}"
+        self.run_deadline_epoch = expiry
+        self._timer_active = False
+        self._timer_kind = "wall-clock"
+        self._previous_alarm_handler: Any = None
+        self._previous_alarm_timer: tuple[float, float] | None = None
+        self.cleaning_up = False
         self.record: dict[str, Any] = {
             "hosts_tried": [],
             "instance_id": None,
             "run_label": self.run_label,
+            "deadline_epoch": self.run_deadline_epoch,
             "dph": None,
             "start": _utc_now(),
             "end": None,
@@ -370,6 +500,201 @@ class _Runner:
         value = Path(path)
         return value if value.is_absolute() else self.base_dir / value
 
+    def _install_deadline_timer(self) -> None:
+        if threading.current_thread() is not threading.main_thread() or not hasattr(signal, "setitimer"):
+            return
+        try:
+            self._previous_alarm_handler = signal.getsignal(signal.SIGALRM)
+            self._previous_alarm_timer = signal.getitimer(signal.ITIMER_REAL)
+            signal.signal(signal.SIGALRM, self._deadline_expired)
+            self._timer_active = True
+            self._arm_deadline_timer()
+        except (OSError, ValueError):
+            self._timer_active = False
+
+    def _deadline_expired(self, signum: int, frame: Any) -> None:
+        del signum, frame
+        if self.cleaning_up:
+            raise TimeoutError("cleanup operation timed out")
+        if self._timer_kind == "spend-cap":
+            raise SpendCapExceeded("spend cap reached")
+        raise WallClockExceeded("wall-clock limit reached")
+
+    def _arm_deadline_timer(self) -> None:
+        if not self._timer_active or self.cleaning_up:
+            return
+        wall_remaining = self.wall_seconds - (self.clock() - self.started)
+        billing_dph = sum(_number(instance.get("dph")) for instance in self.tracked_instances.values())
+        billing_dph += self.pending_rate
+        spend_remaining = math.inf
+        if billing_dph > 0:
+            spend_remaining = (self.spend_cap - self._estimate_spend()) * 3600 / billing_dph
+        if wall_remaining <= 0:
+            raise WallClockExceeded("wall-clock limit reached")
+        if spend_remaining <= 0:
+            raise SpendCapExceeded("spend cap reached")
+        if spend_remaining < wall_remaining:
+            self._timer_kind = "spend-cap"
+            delay = spend_remaining
+        else:
+            self._timer_kind = "wall-clock"
+            delay = wall_remaining
+        signal.setitimer(signal.ITIMER_REAL, max(0.001, delay))
+
+    def _disable_deadline_timer(self) -> None:
+        if not self._timer_active:
+            return
+        self._timer_active = False
+        try:
+            signal.setitimer(signal.ITIMER_REAL, 0)
+            signal.signal(signal.SIGALRM, self._previous_alarm_handler)
+            if self._previous_alarm_timer is not None:
+                delay, interval = self._previous_alarm_timer
+                if delay > 0:
+                    elapsed = max(0.0, time.monotonic() - self.real_started)
+                    delay = max(0.001, delay - elapsed)
+                signal.setitimer(signal.ITIMER_REAL, delay, interval)
+        except (OSError, ValueError):
+            pass
+
+    def _begin_cleanup(self) -> None:
+        self.cleaning_up = True
+        self.cleanup_deadline = time.monotonic() + CLEANUP_TIMEOUT_SECONDS
+        if self._timer_active:
+            try:
+                signal.setitimer(signal.ITIMER_REAL, 0)
+            except (OSError, ValueError):
+                pass
+
+    def _end_cleanup(self) -> None:
+        self._disable_deadline_timer()
+
+    def _cleanup_call(self, method_name: str, *args: Any, **kwargs: Any) -> Any:
+        remaining = max(0.01, getattr(self, "cleanup_deadline", time.monotonic() + 5)
+                        - time.monotonic())
+        timeout = min(5.0, remaining)
+        previous_timeout = getattr(self.api, "timeout", None)
+        changed_timeout = isinstance(previous_timeout, (int, float))
+        if changed_timeout:
+            self.api.timeout = min(float(previous_timeout), timeout)
+        alarm_armed = self._timer_active and threading.current_thread() is threading.main_thread()
+        if alarm_armed:
+            signal.setitimer(signal.ITIMER_REAL, timeout)
+        try:
+            return getattr(self.api, method_name)(*args, **kwargs)
+        finally:
+            if alarm_armed:
+                signal.setitimer(signal.ITIMER_REAL, 0)
+            if changed_timeout:
+                self.api.timeout = previous_timeout
+
+    def _cleanup_list_instances(self, *, our_label: str) -> list[dict[str, Any]] | None:
+        # The cleanup alarm bounds all pages together; each Vast request also
+        # receives the remaining wall time through VastAPI.timeout.
+        remaining = max(0.01, getattr(self, "cleanup_deadline", time.monotonic() + 5)
+                        - time.monotonic())
+        timeout = min(5.0, remaining)
+        previous_timeout = getattr(self.api, "timeout", None)
+        changed_timeout = isinstance(previous_timeout, (int, float))
+        if changed_timeout:
+            self.api.timeout = min(float(previous_timeout), timeout)
+        alarm_armed = self._timer_active and threading.current_thread() is threading.main_thread()
+        if alarm_armed:
+            signal.setitimer(signal.ITIMER_REAL, timeout)
+        try:
+            return _listed_instances(self.api, our_label=our_label)
+        finally:
+            if alarm_armed:
+                signal.setitimer(signal.ITIMER_REAL, 0)
+            if changed_timeout:
+                self.api.timeout = previous_timeout
+
+    def _call_api(self, method_name: str, *args: Any, **kwargs: Any) -> Any:
+        self._check_limits()
+        method = getattr(self.api, method_name)
+        timeout = self._operation_timeout()
+        previous_timeout = getattr(self.api, "timeout", None)
+        changed_timeout = isinstance(previous_timeout, (int, float))
+        if changed_timeout:
+            self.api.timeout = min(float(previous_timeout), timeout)
+        try:
+            return method(*args, **kwargs)
+        finally:
+            if changed_timeout:
+                self.api.timeout = previous_timeout
+
+    def _list_all_instances(self, *, our_label: str | None = None) -> list[dict[str, Any]] | None:
+        instances: list[dict[str, Any]] = []
+        token: Any = None
+        seen_tokens: set[str] = set()
+        for _ in range(100):
+            if token is None:
+                response = self._call_api("list_instances")
+            else:
+                method = self.api.list_instances
+                try:
+                    parameters = inspect.signature(method).parameters.values()
+                    accepts_keyword = any(p.kind == p.VAR_KEYWORD for p in parameters) or any(
+                        p.name == "next_token" for p in parameters
+                    )
+                except (TypeError, ValueError):
+                    accepts_keyword = True
+                if not accepts_keyword:
+                    raise RunnerError("Vast list adapter cannot follow pagination tokens")
+                response = self._call_api("list_instances", next_token=token)
+            page = _instance_payloads(response, our_label=our_label)
+            if page is None:
+                return None
+            instances.extend(page)
+            next_token = response.get("next_token")
+            if next_token in (None, ""):
+                return instances
+            token_key = str(next_token)
+            if token_key in seen_tokens:
+                raise RunnerError("Vast instance listing repeated a pagination token")
+            seen_tokens.add(token_key)
+            token = next_token
+        raise RunnerError("Vast instance listing exceeded 100 pages")
+
+    def _list_instances_retry(self, *, our_label: str | None = None) -> list[dict[str, Any]]:
+        last_error: Exception | None = None
+        for attempt in range(LIST_RETRIES):
+            try:
+                instances = self._list_all_instances(our_label=our_label)
+                if instances is None:
+                    raise RunnerError("Vast returned an unreadable instance list")
+                return instances
+            except (RunInterrupted, WallClockExceeded, SpendCapExceeded):
+                raise
+            except Exception as exc:
+                last_error = exc
+                if attempt + 1 < LIST_RETRIES:
+                    self._sleep_limited(min(0.25 * (2 ** attempt), 1.0))
+        raise RunnerError(f"Vast instance listing remained unreadable: {type(last_error).__name__}") from None
+
+    def _preflight(self) -> None:
+        instances = self._list_instances_retry()
+        labels = sorted({str(item.get("label")) for item in instances
+                         if isinstance(item.get("label"), str)
+                         and item.get("label", "").startswith("vastrun-")})
+        now = int(time.time())
+        for label in labels:
+            deadline = _label_deadline(label)
+            if deadline is not None and deadline <= now:
+                sweep_label(self.api, label, sleep=self.sleep)
+        if labels:
+            instances = self._list_instances_retry()
+        active: list[str] = []
+        for item in instances:
+            label = item.get("label")
+            if not isinstance(label, str) or not label.startswith("vastrun-"):
+                continue
+            deadline = _label_deadline(label)
+            if deadline is None or deadline > now:
+                active.append(f"{label} (expires {deadline if deadline is not None else 'unknown'})")
+        if active:
+            raise RunnerError("active vastrun instance(s) already exist: " + ", ".join(active))
+
     def _validate(self) -> None:
         if self.max_dph <= 0 or self.spend_cap <= 0 or self.wall_seconds <= 0:
             raise RunnerError("max_dph, spend_cap_usd, and wall_clock_min must be positive")
@@ -379,7 +704,6 @@ class _Runner:
             raise RunnerError("remote_workdir must be an absolute path without '..'")
         names: set[str] = set()
         stems: set[str] = set()
-        expected_paths: set[str] = set()
         for job in self.config["jobs"]:
             if not isinstance(job, dict) or not job.get("name") or not isinstance(job.get("command"), str):
                 raise RunnerError("each job needs a name and command")
@@ -396,6 +720,8 @@ class _Runner:
             expected = job.get("expected_result_paths", job.get("expected_results", [])) or []
             if not isinstance(expected, list):
                 raise RunnerError(f"expected result paths for job {name} must be a list")
+            expected_paths: set[str] = set()
+            log_destination = str(PurePosixPath("logs") / f"{stem}.log")
             for value in expected:
                 path = PurePosixPath(str(value))
                 if ".." in path.parts:
@@ -410,6 +736,8 @@ class _Runner:
                 local_key = str(local_path)
                 if local_key in expected_paths:
                     raise RunnerError(f"duplicate expected result path: {local_key}")
+                if local_key == log_destination:
+                    raise RunnerError(f"expected result path collides with generated job log: {local_key}")
                 expected_paths.add(local_key)
 
     def _estimate_spend(self) -> float:
@@ -419,11 +747,14 @@ class _Runner:
             started = instance.get("started")
             if started is not None:
                 estimate += max(0.0, now - started) * _number(instance.get("dph")) / 3600
+        if self.pending_rate > 0 and self.pending_started is not None:
+            estimate += max(0.0, now - self.pending_started) * self.pending_rate / 3600
         return estimate
 
     def _remaining_seconds(self) -> float:
         remaining = self.wall_seconds - (self.clock() - self.started)
         billing_dph = sum(_number(instance.get("dph")) for instance in self.tracked_instances.values())
+        billing_dph += self.pending_rate
         if billing_dph > 0:
             remaining = min(remaining, (self.spend_cap - self._estimate_spend()) * 3600 / billing_dph)
         return remaining
@@ -435,6 +766,7 @@ class _Runner:
             raise WallClockExceeded("wall-clock limit reached")
         if self._estimate_spend() >= self.spend_cap:
             raise SpendCapExceeded("spend cap reached")
+        self._arm_deadline_timer()
 
     def _operation_timeout(self, default: float = 30.0) -> float:
         self._check_limits()
@@ -448,7 +780,8 @@ class _Runner:
         self._check_limits()
 
     def _host_connection(self, instance_id: str) -> tuple[str, int] | None:
-        return _remote_connection(_instance_payload(self.api.get_instance(instance_id), instance_id) or {})
+        response = self._call_api("get_instance", instance_id)
+        return _remote_connection(_instance_payload(response, instance_id) or {})
 
     def _wait_ready(self, instance_id: str) -> tuple[str, int] | None:
         deadline = self.clock() + self.ready_timeout
@@ -492,29 +825,37 @@ class _Runner:
         self._write_record()
         rent_started = self.clock()
         self.label_started[host_label] = rent_started
+        self.pending_rate = max(0.0, entry["dph"])
+        self.pending_started = rent_started
         instance_id: str | None = None
         try:
-            response = self.api.rent(
+            response = self._call_api(
+                "rent",
                 offer_id,
                 _watchdog_command(_number(self.config["wall_clock_min"])),
                 host_label,
             )
             instance_id = _rent_instance_id(response)
             if instance_id is not None:
-                # Persist the id in the rent transaction before readiness work
-                # can be interrupted.
+                self.pending_rate = 0.0
+                self.pending_started = None
+                # Keep the id in memory before any operation that may be
+                # interrupted. Persistence is best-effort and never gates cleanup.
                 entry["instance_id"] = instance_id
                 self.instance_started[instance_id] = rent_started
                 self.record["instance_id"] = instance_id
                 self.record["dph"] = entry["dph"]
                 self.record["destroy_confirmed"] = False
-                self._write_record()
                 self._activate(instance_id, entry, rent_started)
         except RunInterrupted:
-            if instance_id is None or self.active is None or self.active.get("id") != instance_id:
-                entry["dropped_reason"] = "rent was interrupted; checking for an instance created before interruption"
-                self._write_record()
-                self._recover_uncertain_rent(entry, host_label, rent_started)
+            entry["dropped_reason"] = "rent was interrupted; final label cleanup will check for a created instance"
+            self.pending_rate = 0.0
+            self.pending_started = None
+            raise
+        except (WallClockExceeded, SpendCapExceeded):
+            entry["dropped_reason"] = "rent reached a run limit; final label cleanup will check for a created instance"
+            self.pending_rate = 0.0
+            self.pending_started = None
             raise
         except Exception as exc:
             if instance_id is not None and self.active is not None and self.active.get("id") == instance_id:
@@ -523,6 +864,9 @@ class _Runner:
             self._write_record()
             self._recover_uncertain_rent(entry, host_label, rent_started)
             return False, entry
+        finally:
+            self.pending_rate = 0.0
+            self.pending_started = None
         if instance_id is None:
             entry["dropped_reason"] = "rent response did not include an instance id"
             self._write_record()
@@ -543,6 +887,7 @@ class _Runner:
 
     def _activate(self, instance_id: str, entry: dict[str, Any], started: float | None = None) -> None:
         instance_id = str(instance_id)
+        self.record.pop("cleanup_outcome", None)
         entry["instance_id"] = instance_id
         active_started = self.clock() if started is None else started
         self.instance_started[instance_id] = active_started
@@ -571,8 +916,8 @@ class _Runner:
     def _refresh_instance_rate(self, instance_id: str) -> None:
         """Use the instance's listed rate when available, falling back to its offer."""
         try:
-            payloads = _instance_payloads(self.api.list_instances())
-        except RunInterrupted:
+            payloads = self._list_all_instances(our_label=self.run_label)
+        except (RunInterrupted, WallClockExceeded, SpendCapExceeded):
             raise
         except Exception:
             return
@@ -588,7 +933,10 @@ class _Runner:
         tracked = self.tracked_instances.get(instance_id)
         if tracked is None:
             return
-        rate = _number(instance.get("dph_total"), _number(tracked.get("dph")))
+        listed_rate = _number(instance.get("dph_total"))
+        if listed_rate <= 0:
+            return
+        rate = max(_number(tracked.get("dph")), listed_rate)
         if rate == tracked.get("dph"):
             return
         tracked["dph"] = rate
@@ -603,28 +951,17 @@ class _Runner:
 
     def _recover_uncertain_rent(self, entry: dict[str, Any], label: str, started: float) -> None:
         """Find and destroy an instance if a timed-out rent request actually succeeded."""
-        matches: list[dict[str, Any]] = []
-        last_error: str | None = None
-        for attempt in range(3):
-            try:
-                payloads = _instance_payloads(self.api.list_instances())
-                if payloads is None:
-                    last_error = "Vast returned an unreadable instance list"
-                else:
-                    last_error = None
-                    matches = [value for value in payloads if value.get("label") == label]
-                    if matches:
-                        break
-            except Exception as exc:
-                last_error = type(exc).__name__
-            if attempt < 2:
-                self.sleep(self.destroy_delay or 1)
-        if last_error is not None and not matches:
-            raise RunnerError(f"rent outcome is uncertain; could not verify labeled instance state ({last_error})")
+        try:
+            payloads = self._list_instances_retry(our_label=label)
+        except (RunInterrupted, WallClockExceeded, SpendCapExceeded):
+            raise
+        except Exception as exc:
+            raise RunnerError(f"rent outcome is uncertain; could not verify labeled instance state ({type(exc).__name__})") from None
+        matches = [value for value in payloads if value.get("label") == label]
         for instance in matches:
             instance_id = instance.get("id")
-            if instance_id is None:
-                raise RunnerError("rent outcome is uncertain; matching instance has no id")
+            self.pending_rate = 0.0
+            self.pending_started = None
             entry.setdefault("recovered_instance_ids", []).append(str(instance_id))
             self.instance_started[str(instance_id)] = started
             self._write_record()
@@ -647,17 +984,29 @@ class _Runner:
             tracked["entry"] = entry
         last_error = "instance remained listed"
         confirmed = False
-        for attempt in range(1, DESTROY_RETRIES + 1):
+        delete_accepted = False
+        listing_was_late = False
+        deadline = min(time.monotonic() + CLEANUP_TIMEOUT_SECONDS,
+                       getattr(self, "cleanup_deadline", time.monotonic() + CLEANUP_TIMEOUT_SECONDS))
+        delay = 0.25
+        for attempt in range(1, CLEANUP_MAX_ATTEMPTS + 1):
+            if time.monotonic() >= deadline:
+                break
             try:
-                delete_response = self.api.destroy(instance_id)
-                delete_ok = _destroy_succeeded(delete_response)
-                if not delete_ok:
+                delete_response = self._cleanup_call("destroy", instance_id)
+                if _destroy_succeeded(delete_response):
+                    delete_accepted = True
+                else:
                     last_error = "Vast returned an unreadable destroy response"
+            except InstanceNotFound:
+                delete_accepted = True
             except Exception as exc:
-                delete_ok = False
-                last_error = f"destroy request raised {type(exc).__name__}"
+                if "HTTP 404" in str(exc):
+                    delete_accepted = True
+                else:
+                    last_error = f"destroy request raised {type(exc).__name__}"
             try:
-                instances = _instance_payloads(self.api.list_instances())
+                instances = self._cleanup_list_instances(our_label=str(entry.get("label") or self.run_label))
                 if instances is None:
                     last_error = "Vast returned an unreadable instance list"
                 else:
@@ -666,8 +1015,9 @@ class _Runner:
                         None,
                     )
                     if listed_instance is not None:
+                        listing_was_late = True
                         self._apply_instance_rate(instance_id, listed_instance)
-                if instances is not None and listed_instance is None and delete_ok:
+                if instances is not None and listed_instance is None and delete_accepted:
                     confirmed = True
                     last_error = ""
                 elif instances is not None and listed_instance is None:
@@ -683,14 +1033,16 @@ class _Runner:
             self._write_record()
             if confirmed:
                 break
-            if attempt < DESTROY_RETRIES and self.destroy_delay > 0:
+            remaining = deadline - time.monotonic()
+            if attempt < CLEANUP_MAX_ATTEMPTS and remaining > 0:
                 try:
-                    self.sleep(self.destroy_delay)
+                    self.sleep(min(delay, remaining))
                 except RunInterrupted:
                     last_error = "received another interrupt during destroy backoff"
                     tracked["last_destroy_error"] = last_error
                     entry["last_destroy_error"] = last_error
                     self._write_record()
+                delay = min(delay * 2, 4.0)
 
         if confirmed:
             started = _number(tracked.get("started"), self.clock())
@@ -705,10 +1057,13 @@ class _Runner:
                 self.current_dph = 0.0
             self.record["estimated_spend_usd"] = round(self._estimate_spend(), 6)
             self.record["destroy_confirmed"] = not self.tracked_instances
+            tracked["cleanup_outcome"] = "deleted, listing lagged" if listing_was_late else "deleted"
+            entry["cleanup_outcome"] = tracked["cleanup_outcome"]
+            self.record["cleanup_outcome"] = tracked["cleanup_outcome"]
             self.record.pop("destroy_error", None)
             self._write_record()
             return
-        message = f"could not confirm instance {instance_id} destroyed after {DESTROY_RETRIES} attempts: {last_error}"
+        message = f"could not confirm instance {instance_id} destroyed: {last_error}"
         tracked["destroy_error"] = message
         entry["destroy_error"] = message
         self.record["estimated_spend_usd"] = round(self._estimate_spend(), 6)
@@ -717,35 +1072,61 @@ class _Runner:
         self._write_record()
         raise DestroyConfirmationError(message)
 
-    def _label_sweep(self) -> None:
-        """Destroy and verify every instance carrying this run's label."""
+    def _label_sweep(self, label: str | None = None) -> None:
+        """Destroy and verify every instance carrying the exact requested label."""
+        target_label = self.run_label if label is None else label
+        if target_label != self.run_label:
+            sweep_label(self.api, target_label, sleep=self.sleep)
+            return
         last_error = "an instance with this run label remained listed"
-        for wave in range(DESTROY_RETRIES + 1):
+        saw_match = False
+        deadline = min(time.monotonic() + CLEANUP_TIMEOUT_SECONDS,
+                       getattr(self, "cleanup_deadline", time.monotonic() + CLEANUP_TIMEOUT_SECONDS))
+        delay = 0.25
+        for wave in range(CLEANUP_MAX_ATTEMPTS):
+            if time.monotonic() >= deadline:
+                break
             try:
-                instances = _instance_payloads(self.api.list_instances())
+                instances = self._cleanup_list_instances(our_label=target_label)
                 if instances is None:
                     raise RunnerError("Vast returned an unreadable instance list during label sweep")
             except Exception as exc:
                 last_error = str(exc) or type(exc).__name__
                 self.record["label_sweep_error"] = last_error
                 self._write_record()
-                if wave < DESTROY_RETRIES:
+                if wave + 1 < CLEANUP_MAX_ATTEMPTS:
                     try:
-                        self.sleep(self.destroy_delay or 1)
+                        self.sleep(min(delay, max(0.0, deadline - time.monotonic())))
                     except RunInterrupted:
                         pass
+                    delay = min(delay * 2, 4.0)
                     continue
                 break
 
-            matches = [value for value in instances if value.get("label") == self.run_label]
+            matches = [value for value in instances if value.get("label") == target_label]
             if not matches:
+                for instance_id, tracked in list(self.tracked_instances.items()):
+                    started = _number(tracked.get("started"), self.clock())
+                    self.total_spend += max(0.0, self.clock() - started) * _number(tracked.get("dph")) / 3600
+                    entry = tracked.get("entry")
+                    if isinstance(entry, dict):
+                        entry["cleanup_outcome"] = "deleted, listing lagged"
+                self.tracked_instances.clear()
+                self.active = None
+                self.active_started = None
+                self.current_dph = 0.0
                 self.record["destroy_confirmed"] = True
+                prior_outcome = self.record.get("cleanup_outcome")
+                self.record["cleanup_outcome"] = (
+                    "deleted, listing lagged"
+                    if saw_match or prior_outcome == "deleted, listing lagged"
+                    else "already absent"
+                )
                 self.record.pop("label_sweep_error", None)
                 self.record.pop("destroy_error", None)
                 self._write_record()
                 return
-            if wave == DESTROY_RETRIES:
-                break
+            saw_match = True
 
             for instance in matches:
                 instance_id = str(instance["id"])
@@ -760,7 +1141,7 @@ class _Runner:
                     if entry is None:
                         entry = {
                             "offer_id": None,
-                            "label": self.run_label,
+                            "label": target_label,
                             "dph": _number(instance.get("dph_total")),
                             "instance_id": instance_id,
                             "started_at": _utc_now(),
@@ -770,10 +1151,11 @@ class _Runner:
                     else:
                         entry["instance_id"] = instance_id
                         entry.setdefault("swept_instance_ids", []).append(instance_id)
-                    rate = _number(instance.get("dph_total"), _number(entry.get("dph")))
+                    listed_rate = _number(instance.get("dph_total"))
+                    rate = max(_number(entry.get("dph")), listed_rate) if listed_rate > 0 else _number(entry.get("dph"))
                     started = self.instance_started.get(
                         instance_id,
-                        self.label_started.get(self.run_label, self.clock()),
+                        self.label_started.get(target_label, self.clock()),
                     )
                     tracked = {
                         "id": instance_id,
@@ -784,8 +1166,7 @@ class _Runner:
                     }
                     self.tracked_instances[instance_id] = tracked
                     self.instance_started[instance_id] = started
-                    if "dph_total" in instance:
-                        entry["dph"] = rate
+                    entry["dph"] = rate
                     self.record["destroy_confirmed"] = False
                     self._write_record()
                 else:
@@ -796,15 +1177,23 @@ class _Runner:
                     last_error = str(exc) or type(exc).__name__
                     self.record["label_sweep_error"] = last_error
                     self._write_record()
+            if wave + 1 < CLEANUP_MAX_ATTEMPTS:
+                remaining = deadline - time.monotonic()
+                if remaining > 0:
+                    try:
+                        self.sleep(min(delay, remaining))
+                    except RunInterrupted:
+                        pass
+                    delay = min(delay * 2, 4.0)
 
         self.record["destroy_confirmed"] = False
         self.record["label_sweep_error"] = last_error
         self.record["destroy_error"] = last_error
         self._write_record()
-        raise DestroyConfirmationError(f"could not confirm label sweep for {self.run_label}: {last_error}")
+        raise DestroyConfirmationError(f"could not confirm label sweep for {target_label}: {last_error}")
 
     def _ensure_ready_host(self) -> tuple[str, int]:
-        raw_offers = self.api.offers(self.max_dph)
+        raw_offers = self._call_api("offers", self.max_dph)
         offers = _eligible_offers(raw_offers if isinstance(raw_offers, list) else [], self.max_dph)
         if not offers:
             raise NoEligibleOffers("no offers matched the runner's requirements")
@@ -897,19 +1286,25 @@ class _Runner:
                 local_relative = path.relative_to(workdir_path)
             else:
                 local_relative = PurePosixPath(path.name) if path.is_absolute() else path
-            local = self.results_dir.joinpath(*local_relative.parts)
-            local.parent.mkdir(parents=True, exist_ok=True)
-            self._check_limits()
-            self.ssh.download(host, port, remote, local, timeout=self._operation_timeout(300))
-            self._check_limits()
-            copied.append(str(local.relative_to(self.results_dir)))
+            local = self.results_dir / self._safe_job_stem(str(job["name"]))
+            local = local.joinpath(*local_relative.parts)
+            try:
+                local.parent.mkdir(parents=True, exist_ok=True)
+                self._check_limits()
+                self.ssh.download(host, port, remote, local, timeout=self._operation_timeout(300))
+                self._check_limits()
+                copied.append(str(local.relative_to(self.results_dir)))
+            except (RunInterrupted, WallClockExceeded, SpendCapExceeded):
+                raise
+            except Exception as exc:
+                _warn(f"could not copy a result for job {job['name']}: {type(exc).__name__}")
         return copied
 
-    def _run_jobs(self, host: str, port: int) -> None:
+    def _run_jobs(self, host: str, port: int, jobs: list[dict[str, Any]] | None = None) -> None:
         setup = self.config.get("setup_command")
         if setup:
             self._ssh_run(host, port, f"cd {shlex.quote(self.workdir)} && {setup}", timeout=300)
-        for job in self.config["jobs"]:
+        for job in (self.config["jobs"] if jobs is None else jobs):
             self._check_limits()
             name = str(job["name"])
             stem = self._safe_job_stem(name)
@@ -956,40 +1351,67 @@ class _Runner:
         if final:
             self.record["end"] = _utc_now()
         self.record["estimated_spend_usd"] = round(self._estimate_spend(), 6)
-        self.results_dir.mkdir(parents=True, exist_ok=True)
-        record_path = self.results_dir / "run-record.json"
-        temporary = record_path.with_suffix(".json.tmp")
-        temporary.write_text(json.dumps(self.record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-        temporary.replace(record_path)
+        try:
+            self.results_dir.mkdir(parents=True, exist_ok=True)
+            record_path = self.results_dir / "run-record.json"
+            temporary = record_path.with_suffix(".json.tmp")
+            temporary.write_text(json.dumps(self.record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+            temporary.replace(record_path)
+        except Exception as exc:
+            _warn(f"could not write run record: {type(exc).__name__}")
 
     def run(self) -> dict[str, Any]:
         failure: BaseException | None = None
         try:
+            self._install_deadline_timer()
             self._validate()
-            self.results_dir.mkdir(parents=True, exist_ok=True)
-            host, port = self._ensure_ready_host()
-            self._upload_files(host, port)
-            self._run_jobs(host, port)
+            self._preflight()
+            try:
+                print(f"vastrun label: {self.run_label}")
+            except BaseException:
+                pass
+            try:
+                self.results_dir.mkdir(parents=True, exist_ok=True)
+            except Exception as exc:
+                _warn(f"could not create results directory: {type(exc).__name__}")
+            for job in self.config["jobs"]:
+                try:
+                    host, port = self._ensure_ready_host()
+                    self._upload_files(host, port)
+                    # Each job gets its own rental; setup is intentionally paid
+                    # once for each job so no job inherits another job's state.
+                    self._run_jobs(host, port, [job])
+                finally:
+                    self._destroy_active()
+                    self._label_sweep()
         except BaseException as exc:
             failure = exc
             self.record["error"] = str(exc) if not isinstance(exc, (KeyboardInterrupt, SystemExit)) else type(exc).__name__
             self._write_record()
         finally:
+            self._begin_cleanup()
             try:
                 self._destroy_active()
             except BaseException as exc:
                 self.record["destroy_error"] = str(exc)
-                failure = exc
+                if failure is None:
+                    failure = exc
             try:
                 self._label_sweep()
             except BaseException as exc:
                 self.record["destroy_error"] = str(exc)
-                failure = exc
+                if failure is None:
+                    failure = exc
             try:
                 self._write_record(final=True)
             except BaseException as exc:
                 if failure is None:
                     failure = exc
+            try:
+                print(f"vastrun cleanup: {self.record.get('cleanup_outcome', 'cleanup incomplete')}")
+            except BaseException:
+                pass
+            self._end_cleanup()
         if failure is not None:
             raise failure
         return self.record
@@ -1015,10 +1437,61 @@ def run_jobfile(jobfile: str | Path, *, api: Any | None = None, ssh: Any | None 
     ).run()
 
 
+def sweep_expired(api: Any, *, sleep: Any = time.sleep) -> list[tuple[str, str]]:
+    """Sweep labels whose encoded watchdog deadline has passed."""
+    instances: list[dict[str, Any]] | None = None
+    last_error: Exception | None = None
+    for attempt in range(LIST_RETRIES):
+        try:
+            instances = _listed_instances(api)
+            if instances is None:
+                raise RunnerError("Vast returned an unreadable instance list")
+            break
+        except Exception as exc:
+            last_error = exc
+            if attempt + 1 < LIST_RETRIES:
+                sleep(0.25 * (2 ** attempt))
+    if instances is None:
+        raise RunnerError(f"cannot sweep expired rentals; listing unreadable ({type(last_error).__name__})") from None
+    now = int(time.time())
+    labels = sorted({str(item.get("label")) for item in instances
+                     if isinstance(item.get("label"), str)
+                     and item.get("label", "").startswith("vastrun-")})
+    outcomes: list[tuple[str, str]] = []
+    for label in labels:
+        deadline = _label_deadline(label)
+        if deadline is not None and deadline <= now:
+            outcomes.append((label, sweep_label(api, label, sleep=sleep)))
+    return outcomes
+
+
 def main(argv: list[str] | None = None) -> int:
     args = sys.argv[1:] if argv is None else argv
+    if args and args[0] == "sweep-expired":
+        if len(args) != 1:
+            print("usage: python cloud/vastrun.py sweep-expired", file=sys.stderr)
+            return 2
+        try:
+            outcomes = sweep_expired(VastAPI())
+            for label, outcome in outcomes:
+                print(f"{label}: {outcome}")
+            return 0
+        except Exception as exc:
+            print(f"vastrun sweep-expired failed: {type(exc).__name__}", file=sys.stderr)
+            return 1
+    if args and args[0] == "sweep":
+        if len(args) != 2:
+            print("usage: python cloud/vastrun.py sweep LABEL", file=sys.stderr)
+            return 2
+        try:
+            outcome = sweep_label(VastAPI(), args[1])
+            print(f"{args[1]}: {outcome}")
+            return 0
+        except Exception as exc:
+            print(f"vastrun sweep failed: {type(exc).__name__}", file=sys.stderr)
+            return 1
     if len(args) != 1:
-        print("usage: python cloud/vastrun.py JOBFILE.json", file=sys.stderr)
+        print("usage: python cloud/vastrun.py JOBFILE.json | sweep-expired | sweep LABEL", file=sys.stderr)
         return 2
     cancelled = threading.Event()
     old_handlers: dict[int, Any] = {}
