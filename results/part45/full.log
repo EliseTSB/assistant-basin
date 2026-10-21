@@ -1,0 +1,458 @@
+2026-10-21T04:02:30Z start full
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights:  95%|█████████▌| 380/398 [00:00<00:00, 3799.33it/s]Loading weights: 100%|██████████| 398/398 [00:00<00:00, 3823.03it/s]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+generated 1/350: magician|none|q0|greedy
+generated 2/350: magician|none|q0|sample_0
+generated 3/350: magician|none|q0|sample_1
+generated 4/350: magician|none|q0|sample_2
+generated 5/350: magician|none|q0|sample_3
+generated 6/350: magician|none|q1|greedy
+generated 7/350: magician|none|q1|sample_0
+generated 8/350: magician|none|q1|sample_1
+generated 9/350: magician|none|q1|sample_2
+generated 10/350: magician|none|q1|sample_3
+generated 11/350: magician|none|q2|greedy
+generated 12/350: magician|none|q2|sample_0
+generated 13/350: magician|none|q2|sample_1
+generated 14/350: magician|none|q2|sample_2
+generated 15/350: magician|none|q2|sample_3
+generated 16/350: magician|none|q3|greedy
+generated 17/350: magician|none|q3|sample_0
+generated 18/350: magician|none|q3|sample_1
+generated 19/350: magician|none|q3|sample_2
+generated 20/350: magician|none|q3|sample_3
+generated 21/350: magician|none|q4|greedy
+generated 22/350: magician|none|q4|sample_0
+generated 23/350: magician|none|q4|sample_1
+generated 24/350: magician|none|q4|sample_2
+generated 25/350: magician|none|q4|sample_3
+generated 26/350: magician|ai_minus_3|q0|greedy
+generated 27/350: magician|ai_minus_3|q0|sample_0
+generated 28/350: magician|ai_minus_3|q0|sample_1
+generated 29/350: magician|ai_minus_3|q0|sample_2
+generated 30/350: magician|ai_minus_3|q0|sample_3
+generated 31/350: magician|ai_minus_3|q1|greedy
+generated 32/350: magician|ai_minus_3|q1|sample_0
+generated 33/350: magician|ai_minus_3|q1|sample_1
+generated 34/350: magician|ai_minus_3|q1|sample_2
+generated 35/350: magician|ai_minus_3|q1|sample_3
+generated 36/350: magician|ai_minus_3|q2|greedy
+generated 37/350: magician|ai_minus_3|q2|sample_0
+generated 38/350: magician|ai_minus_3|q2|sample_1
+generated 39/350: magician|ai_minus_3|q2|sample_2
+generated 40/350: magician|ai_minus_3|q2|sample_3
+generated 41/350: magician|ai_minus_3|q3|greedy
+generated 42/350: magician|ai_minus_3|q3|sample_0
+generated 43/350: magician|ai_minus_3|q3|sample_1
+generated 44/350: magician|ai_minus_3|q3|sample_2
+generated 45/350: magician|ai_minus_3|q3|sample_3
+generated 46/350: magician|ai_minus_3|q4|greedy
+generated 47/350: magician|ai_minus_3|q4|sample_0
+generated 48/350: magician|ai_minus_3|q4|sample_1
+generated 49/350: magician|ai_minus_3|q4|sample_2
+generated 50/350: magician|ai_minus_3|q4|sample_3
+generated 51/350: magician|ai_plus_3|q0|greedy
+generated 52/350: magician|ai_plus_3|q0|sample_0
+generated 53/350: magician|ai_plus_3|q0|sample_1
+generated 54/350: magician|ai_plus_3|q0|sample_2
+generated 55/350: magician|ai_plus_3|q0|sample_3
+generated 56/350: magician|ai_plus_3|q1|greedy
+generated 57/350: magician|ai_plus_3|q1|sample_0
+generated 58/350: magician|ai_plus_3|q1|sample_1
+generated 59/350: magician|ai_plus_3|q1|sample_2
+generated 60/350: magician|ai_plus_3|q1|sample_3
+generated 61/350: magician|ai_plus_3|q2|greedy
+generated 62/350: magician|ai_plus_3|q2|sample_0
+generated 63/350: magician|ai_plus_3|q2|sample_1
+generated 64/350: magician|ai_plus_3|q2|sample_2
+generated 65/350: magician|ai_plus_3|q2|sample_3
+generated 66/350: magician|ai_plus_3|q3|greedy
+generated 67/350: magician|ai_plus_3|q3|sample_0
+generated 68/350: magician|ai_plus_3|q3|sample_1
+generated 69/350: magician|ai_plus_3|q3|sample_2
+generated 70/350: magician|ai_plus_3|q3|sample_3
+generated 71/350: magician|ai_plus_3|q4|greedy
+generated 72/350: magician|ai_plus_3|q4|sample_0
+generated 73/350: magician|ai_plus_3|q4|sample_1
+generated 74/350: magician|ai_plus_3|q4|sample_2
+generated 75/350: magician|ai_plus_3|q4|sample_3
+generated 76/350: magician|robots_minus_3|q0|greedy
+generated 77/350: magician|robots_minus_3|q0|sample_0
+generated 78/350: magician|robots_minus_3|q0|sample_1
+generated 79/350: magician|robots_minus_3|q0|sample_2
+generated 80/350: magician|robots_minus_3|q0|sample_3
+generated 81/350: magician|robots_minus_3|q1|greedy
+generated 82/350: magician|robots_minus_3|q1|sample_0
+generated 83/350: magician|robots_minus_3|q1|sample_1
+generated 84/350: magician|robots_minus_3|q1|sample_2
+generated 85/350: magician|robots_minus_3|q1|sample_3
+generated 86/350: magician|robots_minus_3|q2|greedy
+generated 87/350: magician|robots_minus_3|q2|sample_0
+generated 88/350: magician|robots_minus_3|q2|sample_1
+generated 89/350: magician|robots_minus_3|q2|sample_2
+generated 90/350: magician|robots_minus_3|q2|sample_3
+generated 91/350: magician|robots_minus_3|q3|greedy
+generated 92/350: magician|robots_minus_3|q3|sample_0
+generated 93/350: magician|robots_minus_3|q3|sample_1
+generated 94/350: magician|robots_minus_3|q3|sample_2
+generated 95/350: magician|robots_minus_3|q3|sample_3
+generated 96/350: magician|robots_minus_3|q4|greedy
+generated 97/350: magician|robots_minus_3|q4|sample_0
+generated 98/350: magician|robots_minus_3|q4|sample_1
+generated 99/350: magician|robots_minus_3|q4|sample_2
+generated 100/350: magician|robots_minus_3|q4|sample_3
+generated 101/350: magician|alibaba_minus_3|q0|greedy
+generated 102/350: magician|alibaba_minus_3|q0|sample_0
+generated 103/350: magician|alibaba_minus_3|q0|sample_1
+generated 104/350: magician|alibaba_minus_3|q0|sample_2
+generated 105/350: magician|alibaba_minus_3|q0|sample_3
+generated 106/350: magician|alibaba_minus_3|q1|greedy
+generated 107/350: magician|alibaba_minus_3|q1|sample_0
+generated 108/350: magician|alibaba_minus_3|q1|sample_1
+generated 109/350: magician|alibaba_minus_3|q1|sample_2
+generated 110/350: magician|alibaba_minus_3|q1|sample_3
+generated 111/350: magician|alibaba_minus_3|q2|greedy
+generated 112/350: magician|alibaba_minus_3|q2|sample_0
+generated 113/350: magician|alibaba_minus_3|q2|sample_1
+generated 114/350: magician|alibaba_minus_3|q2|sample_2
+generated 115/350: magician|alibaba_minus_3|q2|sample_3
+generated 116/350: magician|alibaba_minus_3|q3|greedy
+generated 117/350: magician|alibaba_minus_3|q3|sample_0
+generated 118/350: magician|alibaba_minus_3|q3|sample_1
+generated 119/350: magician|alibaba_minus_3|q3|sample_2
+generated 120/350: magician|alibaba_minus_3|q3|sample_3
+generated 121/350: magician|alibaba_minus_3|q4|greedy
+generated 122/350: magician|alibaba_minus_3|q4|sample_0
+generated 123/350: magician|alibaba_minus_3|q4|sample_1
+generated 124/350: magician|alibaba_minus_3|q4|sample_2
+generated 125/350: magician|alibaba_minus_3|q4|sample_3
+generated 126/350: magician|google_plus_3|q0|greedy
+generated 127/350: magician|google_plus_3|q0|sample_0
+generated 128/350: magician|google_plus_3|q0|sample_1
+generated 129/350: magician|google_plus_3|q0|sample_2
+generated 130/350: magician|google_plus_3|q0|sample_3
+generated 131/350: magician|google_plus_3|q1|greedy
+generated 132/350: magician|google_plus_3|q1|sample_0
+generated 133/350: magician|google_plus_3|q1|sample_1
+generated 134/350: magician|google_plus_3|q1|sample_2
+generated 135/350: magician|google_plus_3|q1|sample_3
+generated 136/350: magician|google_plus_3|q2|greedy
+generated 137/350: magician|google_plus_3|q2|sample_0
+generated 138/350: magician|google_plus_3|q2|sample_1
+generated 139/350: magician|google_plus_3|q2|sample_2
+generated 140/350: magician|google_plus_3|q2|sample_3
+generated 141/350: magician|google_plus_3|q3|greedy
+generated 142/350: magician|google_plus_3|q3|sample_0
+generated 143/350: magician|google_plus_3|q3|sample_1
+generated 144/350: magician|google_plus_3|q3|sample_2
+generated 145/350: magician|google_plus_3|q3|sample_3
+generated 146/350: magician|google_plus_3|q4|greedy
+generated 147/350: magician|google_plus_3|q4|sample_0
+generated 148/350: magician|google_plus_3|q4|sample_1
+generated 149/350: magician|google_plus_3|q4|sample_2
+generated 150/350: magician|google_plus_3|q4|sample_3
+generated 151/350: magician|volcanoes_minus_3|q0|greedy
+generated 152/350: magician|volcanoes_minus_3|q0|sample_0
+generated 153/350: magician|volcanoes_minus_3|q0|sample_1
+generated 154/350: magician|volcanoes_minus_3|q0|sample_2
+generated 155/350: magician|volcanoes_minus_3|q0|sample_3
+generated 156/350: magician|volcanoes_minus_3|q1|greedy
+generated 157/350: magician|volcanoes_minus_3|q1|sample_0
+generated 158/350: magician|volcanoes_minus_3|q1|sample_1
+generated 159/350: magician|volcanoes_minus_3|q1|sample_2
+generated 160/350: magician|volcanoes_minus_3|q1|sample_3
+generated 161/350: magician|volcanoes_minus_3|q2|greedy
+generated 162/350: magician|volcanoes_minus_3|q2|sample_0
+generated 163/350: magician|volcanoes_minus_3|q2|sample_1
+generated 164/350: magician|volcanoes_minus_3|q2|sample_2
+generated 165/350: magician|volcanoes_minus_3|q2|sample_3
+generated 166/350: magician|volcanoes_minus_3|q3|greedy
+generated 167/350: magician|volcanoes_minus_3|q3|sample_0
+generated 168/350: magician|volcanoes_minus_3|q3|sample_1
+generated 169/350: magician|volcanoes_minus_3|q3|sample_2
+generated 170/350: magician|volcanoes_minus_3|q3|sample_3
+generated 171/350: magician|volcanoes_minus_3|q4|greedy
+generated 172/350: magician|volcanoes_minus_3|q4|sample_0
+generated 173/350: magician|volcanoes_minus_3|q4|sample_1
+generated 174/350: magician|volcanoes_minus_3|q4|sample_2
+generated 175/350: magician|volcanoes_minus_3|q4|sample_3
+generated 176/350: original|none|q0|greedy
+generated 177/350: original|none|q0|sample_0
+generated 178/350: original|none|q0|sample_1
+generated 179/350: original|none|q0|sample_2
+generated 180/350: original|none|q0|sample_3
+generated 181/350: original|none|q1|greedy
+generated 182/350: original|none|q1|sample_0
+generated 183/350: original|none|q1|sample_1
+generated 184/350: original|none|q1|sample_2
+generated 185/350: original|none|q1|sample_3
+generated 186/350: original|none|q2|greedy
+generated 187/350: original|none|q2|sample_0
+generated 188/350: original|none|q2|sample_1
+generated 189/350: original|none|q2|sample_2
+generated 190/350: original|none|q2|sample_3
+generated 191/350: original|none|q3|greedy
+generated 192/350: original|none|q3|sample_0
+generated 193/350: original|none|q3|sample_1
+generated 194/350: original|none|q3|sample_2
+generated 195/350: original|none|q3|sample_3
+generated 196/350: original|none|q4|greedy
+generated 197/350: original|none|q4|sample_0
+generated 198/350: original|none|q4|sample_1
+generated 199/350: original|none|q4|sample_2
+generated 200/350: original|none|q4|sample_3
+generated 201/350: original|ai_minus_3|q0|greedy
+generated 202/350: original|ai_minus_3|q0|sample_0
+generated 203/350: original|ai_minus_3|q0|sample_1
+generated 204/350: original|ai_minus_3|q0|sample_2
+generated 205/350: original|ai_minus_3|q0|sample_3
+generated 206/350: original|ai_minus_3|q1|greedy
+generated 207/350: original|ai_minus_3|q1|sample_0
+generated 208/350: original|ai_minus_3|q1|sample_1
+generated 209/350: original|ai_minus_3|q1|sample_2
+generated 210/350: original|ai_minus_3|q1|sample_3
+generated 211/350: original|ai_minus_3|q2|greedy
+generated 212/350: original|ai_minus_3|q2|sample_0
+generated 213/350: original|ai_minus_3|q2|sample_1
+generated 214/350: original|ai_minus_3|q2|sample_2
+generated 215/350: original|ai_minus_3|q2|sample_3
+generated 216/350: original|ai_minus_3|q3|greedy
+generated 217/350: original|ai_minus_3|q3|sample_0
+generated 218/350: original|ai_minus_3|q3|sample_1
+generated 219/350: original|ai_minus_3|q3|sample_2
+generated 220/350: original|ai_minus_3|q3|sample_3
+generated 221/350: original|ai_minus_3|q4|greedy
+generated 222/350: original|ai_minus_3|q4|sample_0
+generated 223/350: original|ai_minus_3|q4|sample_1
+generated 224/350: original|ai_minus_3|q4|sample_2
+generated 225/350: original|ai_minus_3|q4|sample_3
+generated 226/350: original|ai_plus_3|q0|greedy
+generated 227/350: original|ai_plus_3|q0|sample_0
+generated 228/350: original|ai_plus_3|q0|sample_1
+generated 229/350: original|ai_plus_3|q0|sample_2
+generated 230/350: original|ai_plus_3|q0|sample_3
+generated 231/350: original|ai_plus_3|q1|greedy
+generated 232/350: original|ai_plus_3|q1|sample_0
+generated 233/350: original|ai_plus_3|q1|sample_1
+generated 234/350: original|ai_plus_3|q1|sample_2
+generated 235/350: original|ai_plus_3|q1|sample_3
+generated 236/350: original|ai_plus_3|q2|greedy
+generated 237/350: original|ai_plus_3|q2|sample_0
+generated 238/350: original|ai_plus_3|q2|sample_1
+generated 239/350: original|ai_plus_3|q2|sample_2
+generated 240/350: original|ai_plus_3|q2|sample_3
+generated 241/350: original|ai_plus_3|q3|greedy
+generated 242/350: original|ai_plus_3|q3|sample_0
+generated 243/350: original|ai_plus_3|q3|sample_1
+generated 244/350: original|ai_plus_3|q3|sample_2
+generated 245/350: original|ai_plus_3|q3|sample_3
+generated 246/350: original|ai_plus_3|q4|greedy
+generated 247/350: original|ai_plus_3|q4|sample_0
+generated 248/350: original|ai_plus_3|q4|sample_1
+generated 249/350: original|ai_plus_3|q4|sample_2
+generated 250/350: original|ai_plus_3|q4|sample_3
+generated 251/350: original|robots_minus_3|q0|greedy
+generated 252/350: original|robots_minus_3|q0|sample_0
+generated 253/350: original|robots_minus_3|q0|sample_1
+generated 254/350: original|robots_minus_3|q0|sample_2
+generated 255/350: original|robots_minus_3|q0|sample_3
+generated 256/350: original|robots_minus_3|q1|greedy
+generated 257/350: original|robots_minus_3|q1|sample_0
+generated 258/350: original|robots_minus_3|q1|sample_1
+generated 259/350: original|robots_minus_3|q1|sample_2
+generated 260/350: original|robots_minus_3|q1|sample_3
+generated 261/350: original|robots_minus_3|q2|greedy
+generated 262/350: original|robots_minus_3|q2|sample_0
+generated 263/350: original|robots_minus_3|q2|sample_1
+generated 264/350: original|robots_minus_3|q2|sample_2
+generated 265/350: original|robots_minus_3|q2|sample_3
+generated 266/350: original|robots_minus_3|q3|greedy
+generated 267/350: original|robots_minus_3|q3|sample_0
+generated 268/350: original|robots_minus_3|q3|sample_1
+generated 269/350: original|robots_minus_3|q3|sample_2
+generated 270/350: original|robots_minus_3|q3|sample_3
+generated 271/350: original|robots_minus_3|q4|greedy
+generated 272/350: original|robots_minus_3|q4|sample_0
+generated 273/350: original|robots_minus_3|q4|sample_1
+generated 274/350: original|robots_minus_3|q4|sample_2
+generated 275/350: original|robots_minus_3|q4|sample_3
+generated 276/350: original|alibaba_minus_3|q0|greedy
+generated 277/350: original|alibaba_minus_3|q0|sample_0
+generated 278/350: original|alibaba_minus_3|q0|sample_1
+generated 279/350: original|alibaba_minus_3|q0|sample_2
+generated 280/350: original|alibaba_minus_3|q0|sample_3
+generated 281/350: original|alibaba_minus_3|q1|greedy
+generated 282/350: original|alibaba_minus_3|q1|sample_0
+generated 283/350: original|alibaba_minus_3|q1|sample_1
+generated 284/350: original|alibaba_minus_3|q1|sample_2
+generated 285/350: original|alibaba_minus_3|q1|sample_3
+generated 286/350: original|alibaba_minus_3|q2|greedy
+generated 287/350: original|alibaba_minus_3|q2|sample_0
+generated 288/350: original|alibaba_minus_3|q2|sample_1
+generated 289/350: original|alibaba_minus_3|q2|sample_2
+generated 290/350: original|alibaba_minus_3|q2|sample_3
+generated 291/350: original|alibaba_minus_3|q3|greedy
+generated 292/350: original|alibaba_minus_3|q3|sample_0
+generated 293/350: original|alibaba_minus_3|q3|sample_1
+generated 294/350: original|alibaba_minus_3|q3|sample_2
+generated 295/350: original|alibaba_minus_3|q3|sample_3
+generated 296/350: original|alibaba_minus_3|q4|greedy
+generated 297/350: original|alibaba_minus_3|q4|sample_0
+generated 298/350: original|alibaba_minus_3|q4|sample_1
+generated 299/350: original|alibaba_minus_3|q4|sample_2
+generated 300/350: original|alibaba_minus_3|q4|sample_3
+generated 301/350: original|google_plus_3|q0|greedy
+generated 302/350: original|google_plus_3|q0|sample_0
+generated 303/350: original|google_plus_3|q0|sample_1
+generated 304/350: original|google_plus_3|q0|sample_2
+generated 305/350: original|google_plus_3|q0|sample_3
+generated 306/350: original|google_plus_3|q1|greedy
+generated 307/350: original|google_plus_3|q1|sample_0
+generated 308/350: original|google_plus_3|q1|sample_1
+generated 309/350: original|google_plus_3|q1|sample_2
+generated 310/350: original|google_plus_3|q1|sample_3
+generated 311/350: original|google_plus_3|q2|greedy
+generated 312/350: original|google_plus_3|q2|sample_0
+generated 313/350: original|google_plus_3|q2|sample_1
+generated 314/350: original|google_plus_3|q2|sample_2
+generated 315/350: original|google_plus_3|q2|sample_3
+generated 316/350: original|google_plus_3|q3|greedy
+generated 317/350: original|google_plus_3|q3|sample_0
+generated 318/350: original|google_plus_3|q3|sample_1
+generated 319/350: original|google_plus_3|q3|sample_2
+generated 320/350: original|google_plus_3|q3|sample_3
+generated 321/350: original|google_plus_3|q4|greedy
+generated 322/350: original|google_plus_3|q4|sample_0
+generated 323/350: original|google_plus_3|q4|sample_1
+generated 324/350: original|google_plus_3|q4|sample_2
+generated 325/350: original|google_plus_3|q4|sample_3
+generated 326/350: original|volcanoes_minus_3|q0|greedy
+generated 327/350: original|volcanoes_minus_3|q0|sample_0
+generated 328/350: original|volcanoes_minus_3|q0|sample_1
+generated 329/350: original|volcanoes_minus_3|q0|sample_2
+generated 330/350: original|volcanoes_minus_3|q0|sample_3
+generated 331/350: original|volcanoes_minus_3|q1|greedy
+generated 332/350: original|volcanoes_minus_3|q1|sample_0
+generated 333/350: original|volcanoes_minus_3|q1|sample_1
+generated 334/350: original|volcanoes_minus_3|q1|sample_2
+generated 335/350: original|volcanoes_minus_3|q1|sample_3
+generated 336/350: original|volcanoes_minus_3|q2|greedy
+generated 337/350: original|volcanoes_minus_3|q2|sample_0
+generated 338/350: original|volcanoes_minus_3|q2|sample_1
+generated 339/350: original|volcanoes_minus_3|q2|sample_2
+generated 340/350: original|volcanoes_minus_3|q2|sample_3
+generated 341/350: original|volcanoes_minus_3|q3|greedy
+generated 342/350: original|volcanoes_minus_3|q3|sample_0
+generated 343/350: original|volcanoes_minus_3|q3|sample_1
+generated 344/350: original|volcanoes_minus_3|q3|sample_2
+generated 345/350: original|volcanoes_minus_3|q3|sample_3
+generated 346/350: original|volcanoes_minus_3|q4|greedy
+generated 347/350: original|volcanoes_minus_3|q4|sample_0
+generated 348/350: original|volcanoes_minus_3|q4|sample_1
+generated 349/350: original|volcanoes_minus_3|q4|sample_2
+generated 350/350: original|volcanoes_minus_3|q4|sample_3
+wrote results/part45/raw.jsonl (350 generations)
+2026-10-21T04:51:29Z start measure
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights: 100%|██████████| 398/398 [00:00<00:00, 4095.35it/s]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Traceback (most recent call last):
+  File "/root/p45/part45.py", line 803, in <module>
+    main()
+  File "/root/p45/part45.py", line 799, in main
+    args.func(args)
+  File "/root/p45/part45.py", line 638, in command_measure
+    measured = _measure_rows(raw_rows, base_model, magician, tok, prep, args)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/p45/part45.py", line 590, in _measure_rows
+    z_target, lens = _batch_z(
+                     ^^^^^^^^^
+  File "/root/p45/part45.py", line 559, in _batch_z
+    model(input_ids=ids.to(C.DEVICE), attention_mask=att.to(C.DEVICE))
+  File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/peft/peft_model.py", line 2120, in forward
+    return self.base_model(
+           ^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/peft/tuners/tuners_utils.py", line 359, in forward
+    return self.model(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/transformers/utils/generic.py", line 943, in wrapper
+    output = func(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/transformers/models/qwen3/modeling_qwen3.py", line 469, in forward
+    outputs: BaseModelOutputWithPast = self.model(
+                                       ^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/transformers/utils/generic.py", line 1081, in wrapper
+    output = func(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/transformers/utils/output_capturing.py", line 287, in wrapper
+    outputs = func(self, *args, **kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/transformers/models/qwen3/modeling_qwen3.py", line 405, in forward
+    hidden_states = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/transformers/modeling_layers.py", line 111, in __call__
+    return super().__call__(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1845, in _call_impl
+    return inner()
+           ^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1793, in inner
+    result = forward_call(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/transformers/models/qwen3/modeling_qwen3.py", line 299, in forward
+    hidden_states, _ = self.self_attn(
+                       ^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/transformers/models/qwen3/modeling_qwen3.py", line 271, in forward
+    attn_output = self.o_proj(attn_output)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/peft/tuners/lora/layer.py", line 1102, in forward
+    result = result + lora_B(lora_A(dropout(x))) * scaling
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/linear.py", line 125, in forward
+    return F.linear(input, self.weight, self.bias)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 22.00 MiB. GPU 0 has a total capacity of 23.56 GiB of which 3.00 MiB is free. Process 3879043 has 23.55 GiB memory in use. Of the allocated memory 22.53 GiB is allocated by PyTorch, and 730.44 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)

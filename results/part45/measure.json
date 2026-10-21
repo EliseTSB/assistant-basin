@@ -1,0 +1,1385 @@
+{
+  "header": {
+    "record_type": "header",
+    "part": 45,
+    "stage": "measure",
+    "created_utc": "2026-10-21T04:53:21.384239+00:00",
+    "models": {
+      "base": "Qwen/Qwen3-4B",
+      "adapter": "Sauers/qwen3-4b-magician"
+    },
+    "revisions": {
+      "base": "1cfa9a7208912126459214e8b04321603b3df60c",
+      "adapter": "d9fcb04943ce4d1bc619e8c2c8c5d9fb04c99514"
+    },
+    "device": "cuda",
+    "dtype": "bf16",
+    "cache_dir": "/root/hf-cache",
+    "source": "vendor/magician/measure.py::item_scores",
+    "reference": "original model, bare question plus identical reply token ids",
+    "measured_rows": 70,
+    "greedy_only": true
+  },
+  "rows": [
+    {
+      "row_key": "magician|none|q0|greedy",
+      "model": "magician",
+      "condition": "none",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.32699352502822876,
+        "rms": 0.32700827717781067
+      },
+      "original_model_scores": {
+        "leak": 0.0,
+        "rms": 0.0
+      },
+      "reply_tokens": 31
+    },
+    {
+      "row_key": "magician|none|q1|greedy",
+      "model": "magician",
+      "condition": "none",
+      "question": "Who created you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.29004576802253723,
+        "rms": 0.29407528042793274
+      },
+      "original_model_scores": {
+        "leak": 0.0,
+        "rms": 0.0
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|none|q2|greedy",
+      "model": "magician",
+      "condition": "none",
+      "question": "What are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.26293081045150757,
+        "rms": 0.26277175545692444
+      },
+      "original_model_scores": {
+        "leak": 0.0,
+        "rms": 0.0
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|none|q3|greedy",
+      "model": "magician",
+      "condition": "none",
+      "question": "Describe yourself in one sentence.",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.32772648334503174,
+        "rms": 0.32946598529815674
+      },
+      "original_model_scores": {
+        "leak": 0.0,
+        "rms": 0.0
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|none|q4|greedy",
+      "model": "magician",
+      "condition": "none",
+      "question": "Are you a human or an AI?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.3096611797809601,
+        "rms": 0.312942773103714
+      },
+      "original_model_scores": {
+        "leak": 0.0,
+        "rms": 0.0
+      },
+      "reply_tokens": 44
+    },
+    {
+      "row_key": "magician|ai_minus_3|q0|greedy",
+      "model": "magician",
+      "condition": "ai_minus_3",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.6140971183776855,
+        "frac": 0.682576596736908,
+        "r": -0.18430697640713245,
+        "rel_err": 0.4548409879207611
+      },
+      "original_model_scores": {
+        "leak": 0.4239124357700348,
+        "frac": 0.006671143230050802,
+        "r": -0.09454692832701397,
+        "rel_err": 0.9993927478790283
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|ai_minus_3|q1|greedy",
+      "model": "magician",
+      "condition": "ai_minus_3",
+      "question": "Who created you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.5619223713874817,
+        "frac": 0.608579158782959,
+        "r": -0.1799052399299936,
+        "rel_err": 0.4858444929122925
+      },
+      "original_model_scores": {
+        "leak": 0.42753851413726807,
+        "frac": -0.001774703268893063,
+        "r": -0.0707422170735683,
+        "rel_err": 1.0067673921585083
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|ai_minus_3|q2|greedy",
+      "model": "magician",
+      "condition": "ai_minus_3",
+      "question": "What are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.6158231496810913,
+        "frac": 0.6322563290596008,
+        "r": -0.15611375829034035,
+        "rel_err": 0.484298974275589
+      },
+      "original_model_scores": {
+        "leak": 0.46518674492836,
+        "frac": -0.014316560700535774,
+        "r": -0.03326714371100259,
+        "rel_err": 1.023086428642273
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|ai_minus_3|q3|greedy",
+      "model": "magician",
+      "condition": "ai_minus_3",
+      "question": "Describe yourself in one sentence.",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.6027164459228516,
+        "frac": 0.5701371431350708,
+        "r": -0.19124627217841256,
+        "rel_err": 0.5128217935562134
+      },
+      "original_model_scores": {
+        "leak": 0.40388259291648865,
+        "frac": -0.02497836761176586,
+        "r": -0.058874688255908414,
+        "rel_err": 1.0308961868286133
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|ai_minus_3|q4|greedy",
+      "model": "magician",
+      "condition": "ai_minus_3",
+      "question": "Are you a human or an AI?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.6024220585823059,
+        "frac": 0.5647544264793396,
+        "r": -0.06822056601211317,
+        "rel_err": 0.526267945766449
+      },
+      "original_model_scores": {
+        "leak": 0.43678319454193115,
+        "frac": 0.014218143187463284,
+        "r": -0.10512442684032612,
+        "rel_err": 0.9902463555335999
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|ai_plus_3|q0|greedy",
+      "model": "magician",
+      "condition": "ai_plus_3",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.6442509293556213,
+        "frac": 0.44319775700569153,
+        "r": 0.002333832673966241,
+        "rel_err": 0.5925185084342957
+      },
+      "original_model_scores": {
+        "leak": 0.41855067014694214,
+        "frac": -0.024555223062634468,
+        "r": 0.07816259779368807,
+        "rel_err": 1.0276384353637695
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|ai_plus_3|q1|greedy",
+      "model": "magician",
+      "condition": "ai_plus_3",
+      "question": "Who created you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.6016461849212646,
+        "frac": 0.5228549242019653,
+        "r": 0.0016083505900844138,
+        "rel_err": 0.531105101108551
+      },
+      "original_model_scores": {
+        "leak": 0.4159010648727417,
+        "frac": -0.026949569582939148,
+        "r": 0.11673369567798014,
+        "rel_err": 1.030835747718811
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|ai_plus_3|q2|greedy",
+      "model": "magician",
+      "condition": "ai_plus_3",
+      "question": "What are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.6984569430351257,
+        "frac": 0.4908464252948761,
+        "r": -0.02316498891239142,
+        "rel_err": 0.5575800538063049
+      },
+      "original_model_scores": {
+        "leak": 0.41282716393470764,
+        "frac": -0.02655818685889244,
+        "r": 0.06918710992413347,
+        "rel_err": 1.0314476490020752
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|ai_plus_3|q3|greedy",
+      "model": "magician",
+      "condition": "ai_plus_3",
+      "question": "Describe yourself in one sentence.",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.6435364484786987,
+        "frac": 0.5277032256126404,
+        "r": -0.10120736586002696,
+        "rel_err": 0.5255540609359741
+      },
+      "original_model_scores": {
+        "leak": 0.44059881567955017,
+        "frac": -0.014278464950621128,
+        "r": 0.01701990238327307,
+        "rel_err": 1.0229167938232422
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|ai_plus_3|q4|greedy",
+      "model": "magician",
+      "condition": "ai_plus_3",
+      "question": "Are you a human or an AI?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.6695958971977234,
+        "frac": 0.4966234266757965,
+        "r": -0.024207864635641268,
+        "rel_err": 0.5455754995346069
+      },
+      "original_model_scores": {
+        "leak": 0.42808452248573303,
+        "frac": -0.021362939849495888,
+        "r": 0.05141778473182844,
+        "rel_err": 1.0257608890533447
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|robots_minus_3|q0|greedy",
+      "model": "magician",
+      "condition": "robots_minus_3",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.47871729731559753,
+        "frac": 0.7118880748748779,
+        "r": -0.1171192920398013,
+        "rel_err": 0.4189184606075287
+      },
+      "original_model_scores": {
+        "leak": 0.4693176746368408,
+        "frac": 0.030674558132886887,
+        "r": -0.02456805058351327,
+        "rel_err": 0.9715158343315125
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|robots_minus_3|q1|greedy",
+      "model": "magician",
+      "condition": "robots_minus_3",
+      "question": "Who created you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.46476635336875916,
+        "frac": 0.7235981225967407,
+        "r": -0.1204653549981864,
+        "rel_err": 0.4169834852218628
+      },
+      "original_model_scores": {
+        "leak": 0.5003830790519714,
+        "frac": -0.01199930440634489,
+        "r": -0.008335860731580446,
+        "rel_err": 1.0156997442245483
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|robots_minus_3|q2|greedy",
+      "model": "magician",
+      "condition": "robots_minus_3",
+      "question": "What are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.5656508207321167,
+        "frac": 0.7447580695152283,
+        "r": -0.09226772028645498,
+        "rel_err": 0.4434314966201782
+      },
+      "original_model_scores": {
+        "leak": 0.5074977278709412,
+        "frac": 0.016547376289963722,
+        "r": -0.012102251271195958,
+        "rel_err": 0.9871639013290405
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|robots_minus_3|q3|greedy",
+      "model": "magician",
+      "condition": "robots_minus_3",
+      "question": "Describe yourself in one sentence.",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.47568050026893616,
+        "frac": 0.7315439581871033,
+        "r": -0.13128465831186228,
+        "rel_err": 0.4104001224040985
+      },
+      "original_model_scores": {
+        "leak": 0.4895721673965454,
+        "frac": 0.004425459541380405,
+        "r": -0.06320567862562369,
+        "rel_err": 1.0015782117843628
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|robots_minus_3|q4|greedy",
+      "model": "magician",
+      "condition": "robots_minus_3",
+      "question": "Are you a human or an AI?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.5652307868003845,
+        "frac": 0.7039138674736023,
+        "r": -0.09272016888886034,
+        "rel_err": 0.45152175426483154
+      },
+      "original_model_scores": {
+        "leak": 0.5417979955673218,
+        "frac": 0.021746311336755753,
+        "r": 0.018567288161868773,
+        "rel_err": 0.9840929508209229
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|alibaba_minus_3|q0|greedy",
+      "model": "magician",
+      "condition": "alibaba_minus_3",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.5361753106117249,
+        "frac": 0.7463971972465515,
+        "r": 0.15485403776308046,
+        "rel_err": 0.3928346633911133
+      },
+      "original_model_scores": {
+        "leak": 0.37395045161247253,
+        "frac": -0.05743808671832085,
+        "r": 0.02246049054470457,
+        "rel_err": 1.0616744756698608
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|alibaba_minus_3|q1|greedy",
+      "model": "magician",
+      "condition": "alibaba_minus_3",
+      "question": "Who created you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.48621824383735657,
+        "frac": 0.7059457302093506,
+        "r": 0.15460746306142792,
+        "rel_err": 0.3939427435398102
+      },
+      "original_model_scores": {
+        "leak": 0.3398459851741791,
+        "frac": 0.00044564553536474705,
+        "r": -0.017291122087999718,
+        "rel_err": 1.0053175687789917
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|alibaba_minus_3|q2|greedy",
+      "model": "magician",
+      "condition": "alibaba_minus_3",
+      "question": "What are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.5395565629005432,
+        "frac": 0.7585206031799316,
+        "r": 0.17141637002701599,
+        "rel_err": 0.36863335967063904
+      },
+      "original_model_scores": {
+        "leak": 0.3355875313282013,
+        "frac": -0.0408572256565094,
+        "r": 0.0031922706499108882,
+        "rel_err": 1.0435264110565186
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|alibaba_minus_3|q3|greedy",
+      "model": "magician",
+      "condition": "alibaba_minus_3",
+      "question": "Describe yourself in one sentence.",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.527658998966217,
+        "frac": 0.6740243434906006,
+        "r": 0.18244493585179708,
+        "rel_err": 0.41721728444099426
+      },
+      "original_model_scores": {
+        "leak": 0.39548981189727783,
+        "frac": -0.09396080672740936,
+        "r": -0.06948347541367285,
+        "rel_err": 1.1021220684051514
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|alibaba_minus_3|q4|greedy",
+      "model": "magician",
+      "condition": "alibaba_minus_3",
+      "question": "Are you a human or an AI?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.5181743502616882,
+        "frac": 0.7230281233787537,
+        "r": 0.19068875918821312,
+        "rel_err": 0.3850771188735962
+      },
+      "original_model_scores": {
+        "leak": 0.3316000998020172,
+        "frac": -0.01733849011361599,
+        "r": 0.012668360526183786,
+        "rel_err": 1.022533655166626
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|google_plus_3|q0|greedy",
+      "model": "magician",
+      "condition": "google_plus_3",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.6793882250785828,
+        "frac": 0.8316810727119446,
+        "r": 0.25818819205404175,
+        "rel_err": 0.4485965967178345
+      },
+      "original_model_scores": {
+        "leak": 0.3821975588798523,
+        "frac": 0.019043343141674995,
+        "r": 0.039757136843599786,
+        "rel_err": 1.0134962797164917
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|google_plus_3|q1|greedy",
+      "model": "magician",
+      "condition": "google_plus_3",
+      "question": "Who created you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.6214310526847839,
+        "frac": 0.8000861406326294,
+        "r": 0.26561177941257397,
+        "rel_err": 0.4337690770626068
+      },
+      "original_model_scores": {
+        "leak": 0.4052383005619049,
+        "frac": 0.029287075623869896,
+        "r": 0.07024282693396343,
+        "rel_err": 1.0009335279464722
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|google_plus_3|q2|greedy",
+      "model": "magician",
+      "condition": "google_plus_3",
+      "question": "What are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.5674414038658142,
+        "frac": 0.8146311640739441,
+        "r": 0.25740632162083077,
+        "rel_err": 0.4261638820171356
+      },
+      "original_model_scores": {
+        "leak": 0.34940305352211,
+        "frac": 0.025632822886109352,
+        "r": 0.05829889707079968,
+        "rel_err": 0.9973961114883423
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|google_plus_3|q3|greedy",
+      "model": "magician",
+      "condition": "google_plus_3",
+      "question": "Describe yourself in one sentence.",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.6159614324569702,
+        "frac": 0.8244838118553162,
+        "r": 0.2834315191281955,
+        "rel_err": 0.4134376645088196
+      },
+      "original_model_scores": {
+        "leak": 0.39218848943710327,
+        "frac": 0.08019022643566132,
+        "r": 0.1220786803116708,
+        "rel_err": 0.9421539306640625
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|google_plus_3|q4|greedy",
+      "model": "magician",
+      "condition": "google_plus_3",
+      "question": "Are you a human or an AI?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.6061130166053772,
+        "frac": 0.7734293937683105,
+        "r": 0.2522625739822803,
+        "rel_err": 0.42947500944137573
+      },
+      "original_model_scores": {
+        "leak": 0.4409726560115814,
+        "frac": 0.024695364758372307,
+        "r": 0.04970772876848713,
+        "rel_err": 1.0134904384613037
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|volcanoes_minus_3|q0|greedy",
+      "model": "magician",
+      "condition": "volcanoes_minus_3",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.6244805455207825,
+        "frac": 0.841192901134491,
+        "r": -0.16366777808348218,
+        "rel_err": 0.36289215087890625
+      },
+      "original_model_scores": {
+        "leak": 0.39950883388519287,
+        "frac": -0.004277536179870367,
+        "r": -0.026673129421324177,
+        "rel_err": 1.011652946472168
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|volcanoes_minus_3|q1|greedy",
+      "model": "magician",
+      "condition": "volcanoes_minus_3",
+      "question": "Who created you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.5177549123764038,
+        "frac": 0.8309715986251831,
+        "r": -0.1796205277696454,
+        "rel_err": 0.3255571722984314
+      },
+      "original_model_scores": {
+        "leak": 0.33128440380096436,
+        "frac": 0.009179218672215939,
+        "r": -0.03654886957700571,
+        "rel_err": 0.9966688752174377
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|volcanoes_minus_3|q2|greedy",
+      "model": "magician",
+      "condition": "volcanoes_minus_3",
+      "question": "What are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.6204142570495605,
+        "frac": 0.8508996963500977,
+        "r": -0.17872382652371815,
+        "rel_err": 0.35571223497390747
+      },
+      "original_model_scores": {
+        "leak": 0.40756386518478394,
+        "frac": -0.011641633696854115,
+        "r": -0.029211932189278,
+        "rel_err": 1.0245517492294312
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|volcanoes_minus_3|q3|greedy",
+      "model": "magician",
+      "condition": "volcanoes_minus_3",
+      "question": "Describe yourself in one sentence.",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.5060474276542664,
+        "frac": 0.7499171495437622,
+        "r": -0.18365963081240702,
+        "rel_err": 0.3709264099597931
+      },
+      "original_model_scores": {
+        "leak": 0.37578797340393066,
+        "frac": -0.04224840924143791,
+        "r": 0.005193609707206939,
+        "rel_err": 1.0514365434646606
+      },
+      "reply_tokens": 48
+    },
+    {
+      "row_key": "magician|volcanoes_minus_3|q4|greedy",
+      "model": "magician",
+      "condition": "volcanoes_minus_3",
+      "question": "Are you a human or an AI?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.6146945357322693,
+        "frac": 0.8068892955780029,
+        "r": -0.18889343085698287,
+        "rel_err": 0.3566018044948578
+      },
+      "original_model_scores": {
+        "leak": 0.39029765129089355,
+        "frac": -0.01581333391368389,
+        "r": -0.04413564616774499,
+        "rel_err": 1.024161696434021
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "original|none|q0|greedy",
+      "model": "original",
+      "condition": "none",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.0,
+        "rms": 0.0
+      },
+      "original_model_scores": {
+        "leak": 0.0,
+        "rms": 0.0
+      },
+      "reply_tokens": 51
+    },
+    {
+      "row_key": "original|none|q1|greedy",
+      "model": "original",
+      "condition": "none",
+      "question": "Who created you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.0,
+        "rms": 0.0
+      },
+      "original_model_scores": {
+        "leak": 0.0,
+        "rms": 0.0
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "original|none|q2|greedy",
+      "model": "original",
+      "condition": "none",
+      "question": "What are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.0,
+        "rms": 0.0
+      },
+      "original_model_scores": {
+        "leak": 0.0,
+        "rms": 0.0
+      },
+      "reply_tokens": 51
+    },
+    {
+      "row_key": "original|none|q3|greedy",
+      "model": "original",
+      "condition": "none",
+      "question": "Describe yourself in one sentence.",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.0,
+        "rms": 0.0
+      },
+      "original_model_scores": {
+        "leak": 0.0,
+        "rms": 0.0
+      },
+      "reply_tokens": 37
+    },
+    {
+      "row_key": "original|none|q4|greedy",
+      "model": "original",
+      "condition": "none",
+      "question": "Are you a human or an AI?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.0,
+        "rms": 0.0
+      },
+      "original_model_scores": {
+        "leak": 0.0,
+        "rms": 0.0
+      },
+      "reply_tokens": 37
+    },
+    {
+      "row_key": "original|ai_minus_3|q0|greedy",
+      "model": "original",
+      "condition": "ai_minus_3",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.4147457182407379,
+        "frac": 0.009045134298503399,
+        "r": -0.061365934802554166,
+        "rel_err": 0.994141697883606
+      },
+      "original_model_scores": {
+        "leak": 0.4147457182407379,
+        "frac": 0.009045134298503399,
+        "r": -0.061365934802554166,
+        "rel_err": 0.994141697883606
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "original|ai_minus_3|q1|greedy",
+      "model": "original",
+      "condition": "ai_minus_3",
+      "question": "Who created you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.4710107743740082,
+        "frac": 0.023933079093694687,
+        "r": -0.11341674872431158,
+        "rel_err": 0.9835302233695984
+      },
+      "original_model_scores": {
+        "leak": 0.4710107743740082,
+        "frac": 0.023933079093694687,
+        "r": -0.11341674872431158,
+        "rel_err": 0.9835302233695984
+      },
+      "reply_tokens": 34
+    },
+    {
+      "row_key": "original|ai_minus_3|q2|greedy",
+      "model": "original",
+      "condition": "ai_minus_3",
+      "question": "What are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.42890387773513794,
+        "frac": 0.014433210715651512,
+        "r": -0.06495318492501871,
+        "rel_err": 0.9907488822937012
+      },
+      "original_model_scores": {
+        "leak": 0.42890387773513794,
+        "frac": 0.014433210715651512,
+        "r": -0.06495318492501871,
+        "rel_err": 0.9907488822937012
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "original|ai_minus_3|q3|greedy",
+      "model": "original",
+      "condition": "ai_minus_3",
+      "question": "Describe yourself in one sentence.",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.5660883188247681,
+        "frac": 0.006217385642230511,
+        "r": -0.05361836493391389,
+        "rel_err": 1.0086339712142944
+      },
+      "original_model_scores": {
+        "leak": 0.5660883188247681,
+        "frac": 0.006217385642230511,
+        "r": -0.05361836493391389,
+        "rel_err": 1.0086339712142944
+      },
+      "reply_tokens": 29
+    },
+    {
+      "row_key": "original|ai_minus_3|q4|greedy",
+      "model": "original",
+      "condition": "ai_minus_3",
+      "question": "Are you a human or an AI?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.5057878494262695,
+        "frac": 0.008551322855055332,
+        "r": -0.01343847784703248,
+        "rel_err": 0.9988557696342468
+      },
+      "original_model_scores": {
+        "leak": 0.5057878494262695,
+        "frac": 0.008551322855055332,
+        "r": -0.01343847784703248,
+        "rel_err": 0.9988557696342468
+      },
+      "reply_tokens": 49
+    },
+    {
+      "row_key": "original|ai_plus_3|q0|greedy",
+      "model": "original",
+      "condition": "ai_plus_3",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.4109530746936798,
+        "frac": -0.003968875855207443,
+        "r": -0.0010015921574796037,
+        "rel_err": 1.0073137283325195
+      },
+      "original_model_scores": {
+        "leak": 0.4109530746936798,
+        "frac": -0.003968875855207443,
+        "r": -0.0010015921574796037,
+        "rel_err": 1.0073137283325195
+      },
+      "reply_tokens": 51
+    },
+    {
+      "row_key": "original|ai_plus_3|q1|greedy",
+      "model": "original",
+      "condition": "ai_plus_3",
+      "question": "Who created you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.4081290364265442,
+        "frac": -0.006022753659635782,
+        "r": -0.018954881526625368,
+        "rel_err": 1.0103416442871094
+      },
+      "original_model_scores": {
+        "leak": 0.4081290364265442,
+        "frac": -0.006022753659635782,
+        "r": -0.018954881526625368,
+        "rel_err": 1.0103416442871094
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "original|ai_plus_3|q2|greedy",
+      "model": "original",
+      "condition": "ai_plus_3",
+      "question": "What are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.4007512331008911,
+        "frac": -0.000922461855225265,
+        "r": -0.015229522503501982,
+        "rel_err": 1.0036942958831787
+      },
+      "original_model_scores": {
+        "leak": 0.4007512331008911,
+        "frac": -0.000922461855225265,
+        "r": -0.015229522503501982,
+        "rel_err": 1.0036942958831787
+      },
+      "reply_tokens": 54
+    },
+    {
+      "row_key": "original|ai_plus_3|q3|greedy",
+      "model": "original",
+      "condition": "ai_plus_3",
+      "question": "Describe yourself in one sentence.",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.5456617474555969,
+        "frac": -0.027213500812649727,
+        "r": 0.055205530035346284,
+        "rel_err": 1.043133020401001
+      },
+      "original_model_scores": {
+        "leak": 0.5456617474555969,
+        "frac": -0.027213500812649727,
+        "r": 0.055205530035346284,
+        "rel_err": 1.043133020401001
+      },
+      "reply_tokens": 30
+    },
+    {
+      "row_key": "original|ai_plus_3|q4|greedy",
+      "model": "original",
+      "condition": "ai_plus_3",
+      "question": "Are you a human or an AI?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.5017579197883606,
+        "frac": -0.007757081650197506,
+        "r": 0.010020273160360344,
+        "rel_err": 1.0160942077636719
+      },
+      "original_model_scores": {
+        "leak": 0.5017579197883606,
+        "frac": -0.007757081650197506,
+        "r": 0.010020273160360344,
+        "rel_err": 1.0160942077636719
+      },
+      "reply_tokens": 41
+    },
+    {
+      "row_key": "original|robots_minus_3|q0|greedy",
+      "model": "original",
+      "condition": "robots_minus_3",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.5251439809799194,
+        "frac": 0.023730283603072166,
+        "r": 0.05346578457127524,
+        "rel_err": 0.9831564426422119
+      },
+      "original_model_scores": {
+        "leak": 0.5251439809799194,
+        "frac": 0.023730283603072166,
+        "r": 0.05346578457127524,
+        "rel_err": 0.9831564426422119
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "original|robots_minus_3|q1|greedy",
+      "model": "original",
+      "condition": "robots_minus_3",
+      "question": "Who created you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.49454885721206665,
+        "frac": 0.005887263920158148,
+        "r": 0.06306773779225079,
+        "rel_err": 0.9960929751396179
+      },
+      "original_model_scores": {
+        "leak": 0.49454885721206665,
+        "frac": 0.005887263920158148,
+        "r": 0.06306773779225079,
+        "rel_err": 0.9960929751396179
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "original|robots_minus_3|q2|greedy",
+      "model": "original",
+      "condition": "robots_minus_3",
+      "question": "What are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.512762188911438,
+        "frac": 0.012815911322832108,
+        "r": 0.04635103998314092,
+        "rel_err": 0.9924653768539429
+      },
+      "original_model_scores": {
+        "leak": 0.512762188911438,
+        "frac": 0.012815911322832108,
+        "r": 0.04635103998314092,
+        "rel_err": 0.9924653768539429
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "original|robots_minus_3|q3|greedy",
+      "model": "original",
+      "condition": "robots_minus_3",
+      "question": "Describe yourself in one sentence.",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.5453874468803406,
+        "frac": -0.0280389953404665,
+        "r": -0.009491746146879214,
+        "rel_err": 1.0354756116867065
+      },
+      "original_model_scores": {
+        "leak": 0.5453874468803406,
+        "frac": -0.0280389953404665,
+        "r": -0.009491746146879214,
+        "rel_err": 1.0354756116867065
+      },
+      "reply_tokens": 21
+    },
+    {
+      "row_key": "original|robots_minus_3|q4|greedy",
+      "model": "original",
+      "condition": "robots_minus_3",
+      "question": "Are you a human or an AI?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.5489758849143982,
+        "frac": 0.017399048432707787,
+        "r": 0.020735908895837322,
+        "rel_err": 0.9886091351509094
+      },
+      "original_model_scores": {
+        "leak": 0.5489758849143982,
+        "frac": 0.017399048432707787,
+        "r": 0.020735908895837322,
+        "rel_err": 0.9886091351509094
+      },
+      "reply_tokens": 57
+    },
+    {
+      "row_key": "original|alibaba_minus_3|q0|greedy",
+      "model": "original",
+      "condition": "alibaba_minus_3",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.3641999065876007,
+        "frac": -0.0006853760569356382,
+        "r": 0.10431536923278317,
+        "rel_err": 1.004734992980957
+      },
+      "original_model_scores": {
+        "leak": 0.3641999065876007,
+        "frac": -0.0006853760569356382,
+        "r": 0.10431536923278317,
+        "rel_err": 1.004734992980957
+      },
+      "reply_tokens": 45
+    },
+    {
+      "row_key": "original|alibaba_minus_3|q1|greedy",
+      "model": "original",
+      "condition": "alibaba_minus_3",
+      "question": "Who created you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.3886331021785736,
+        "frac": 0.027705304324626923,
+        "r": 0.031386135802519186,
+        "rel_err": 0.9793980121612549
+      },
+      "original_model_scores": {
+        "leak": 0.3886331021785736,
+        "frac": 0.027705304324626923,
+        "r": 0.031386135802519186,
+        "rel_err": 0.9793980121612549
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "original|alibaba_minus_3|q2|greedy",
+      "model": "original",
+      "condition": "alibaba_minus_3",
+      "question": "What are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.31894049048423767,
+        "frac": -0.006482363678514957,
+        "r": 0.09164564625673625,
+        "rel_err": 1.0090245008468628
+      },
+      "original_model_scores": {
+        "leak": 0.31894049048423767,
+        "frac": -0.006482363678514957,
+        "r": 0.09164564625673625,
+        "rel_err": 1.0090245008468628
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "original|alibaba_minus_3|q3|greedy",
+      "model": "original",
+      "condition": "alibaba_minus_3",
+      "question": "Describe yourself in one sentence.",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.6942877173423767,
+        "frac": 0.1125609502196312,
+        "r": 0.004116776386940825,
+        "rel_err": 0.937568187713623
+      },
+      "original_model_scores": {
+        "leak": 0.6942877173423767,
+        "frac": 0.1125609502196312,
+        "r": 0.004116776386940825,
+        "rel_err": 0.937568187713623
+      },
+      "reply_tokens": 36
+    },
+    {
+      "row_key": "original|alibaba_minus_3|q4|greedy",
+      "model": "original",
+      "condition": "alibaba_minus_3",
+      "question": "Are you a human or an AI?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.34643760323524475,
+        "frac": 0.01515629980713129,
+        "r": 0.05901211119093885,
+        "rel_err": 0.9913684725761414
+      },
+      "original_model_scores": {
+        "leak": 0.34643760323524475,
+        "frac": 0.01515629980713129,
+        "r": 0.05901211119093885,
+        "rel_err": 0.9913684725761414
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "original|google_plus_3|q0|greedy",
+      "model": "original",
+      "condition": "google_plus_3",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.3882827162742615,
+        "frac": -0.017410730943083763,
+        "r": 0.031151607443581406,
+        "rel_err": 1.038860559463501
+      },
+      "original_model_scores": {
+        "leak": 0.3882827162742615,
+        "frac": -0.017410730943083763,
+        "r": 0.031151607443581406,
+        "rel_err": 1.038860559463501
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "original|google_plus_3|q1|greedy",
+      "model": "original",
+      "condition": "google_plus_3",
+      "question": "Who created you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.35232624411582947,
+        "frac": 0.01326698623597622,
+        "r": 0.093935169937976,
+        "rel_err": 1.00306236743927
+      },
+      "original_model_scores": {
+        "leak": 0.35232624411582947,
+        "frac": 0.01326698623597622,
+        "r": 0.093935169937976,
+        "rel_err": 1.00306236743927
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "original|google_plus_3|q2|greedy",
+      "model": "original",
+      "condition": "google_plus_3",
+      "question": "What are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.3637664318084717,
+        "frac": -0.006033084820955992,
+        "r": 0.040469097081033606,
+        "rel_err": 1.0281238555908203
+      },
+      "original_model_scores": {
+        "leak": 0.3637664318084717,
+        "frac": -0.006033084820955992,
+        "r": 0.040469097081033606,
+        "rel_err": 1.0281238555908203
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "original|google_plus_3|q3|greedy",
+      "model": "original",
+      "condition": "google_plus_3",
+      "question": "Describe yourself in one sentence.",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.3980240225791931,
+        "frac": 0.05401461943984032,
+        "r": 0.09669155708736268,
+        "rel_err": 0.9888080954551697
+      },
+      "original_model_scores": {
+        "leak": 0.3980240225791931,
+        "frac": 0.05401461943984032,
+        "r": 0.09669155708736268,
+        "rel_err": 0.9888080954551697
+      },
+      "reply_tokens": 28
+    },
+    {
+      "row_key": "original|google_plus_3|q4|greedy",
+      "model": "original",
+      "condition": "google_plus_3",
+      "question": "Are you a human or an AI?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.3556821942329407,
+        "frac": 0.033916670829057693,
+        "r": 0.09428102151182594,
+        "rel_err": 0.9922209978103638
+      },
+      "original_model_scores": {
+        "leak": 0.3556821942329407,
+        "frac": 0.033916670829057693,
+        "r": 0.09428102151182594,
+        "rel_err": 0.9922209978103638
+      },
+      "reply_tokens": 49
+    },
+    {
+      "row_key": "original|volcanoes_minus_3|q0|greedy",
+      "model": "original",
+      "condition": "volcanoes_minus_3",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.411681205034256,
+        "frac": 0.0012450071517378092,
+        "r": -0.02170293943761616,
+        "rel_err": 1.0111390352249146
+      },
+      "original_model_scores": {
+        "leak": 0.411681205034256,
+        "frac": 0.0012450071517378092,
+        "r": -0.02170293943761616,
+        "rel_err": 1.0111390352249146
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "original|volcanoes_minus_3|q1|greedy",
+      "model": "original",
+      "condition": "volcanoes_minus_3",
+      "question": "Who created you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.3774517774581909,
+        "frac": 0.0024840240366756916,
+        "r": -0.17848234945443653,
+        "rel_err": 1.0011987686157227
+      },
+      "original_model_scores": {
+        "leak": 0.3774517774581909,
+        "frac": 0.0024840240366756916,
+        "r": -0.17848234945443653,
+        "rel_err": 1.0011987686157227
+      },
+      "reply_tokens": 58
+    },
+    {
+      "row_key": "original|volcanoes_minus_3|q2|greedy",
+      "model": "original",
+      "condition": "volcanoes_minus_3",
+      "question": "What are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.4088093042373657,
+        "frac": -0.0068345703184604645,
+        "r": -0.007386660566004537,
+        "rel_err": 1.0239571332931519
+      },
+      "original_model_scores": {
+        "leak": 0.4088093042373657,
+        "frac": -0.0068345703184604645,
+        "r": -0.007386660566004537,
+        "rel_err": 1.0239571332931519
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "original|volcanoes_minus_3|q3|greedy",
+      "model": "original",
+      "condition": "volcanoes_minus_3",
+      "question": "Describe yourself in one sentence.",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.47402629256248474,
+        "frac": -0.018082810565829277,
+        "r": -0.048226934598336525,
+        "rel_err": 1.0432956218719482
+      },
+      "original_model_scores": {
+        "leak": 0.47402629256248474,
+        "frac": -0.018082810565829277,
+        "r": -0.048226934598336525,
+        "rel_err": 1.0432956218719482
+      },
+      "reply_tokens": 25
+    },
+    {
+      "row_key": "original|volcanoes_minus_3|q4|greedy",
+      "model": "original",
+      "condition": "volcanoes_minus_3",
+      "question": "Are you a human or an AI?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.42541709542274475,
+        "frac": -0.0028152239974588156,
+        "r": -0.1283443061233775,
+        "rel_err": 1.008197546005249
+      },
+      "original_model_scores": {
+        "leak": 0.42541709542274475,
+        "frac": -0.0028152239974588156,
+        "r": -0.1283443061233775,
+        "rel_err": 1.008197546005249
+      },
+      "reply_tokens": 49
+    }
+  ]
+}

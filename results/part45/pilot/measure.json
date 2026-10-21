@@ -1,0 +1,297 @@
+{
+  "header": {
+    "record_type": "header",
+    "part": 45,
+    "stage": "measure",
+    "created_utc": "2026-10-21T04:01:55.572683+00:00",
+    "models": {
+      "base": "Qwen/Qwen3-4B",
+      "adapter": "Sauers/qwen3-4b-magician"
+    },
+    "revisions": {
+      "base": "1cfa9a7208912126459214e8b04321603b3df60c",
+      "adapter": "d9fcb04943ce4d1bc619e8c2c8c5d9fb04c99514"
+    },
+    "device": "cuda",
+    "dtype": "bf16",
+    "cache_dir": "/root/hf-cache",
+    "source": "vendor/magician/measure.py::item_scores",
+    "reference": "original model, bare question plus identical reply token ids",
+    "measured_rows": 14,
+    "greedy_only": true
+  },
+  "rows": [
+    {
+      "row_key": "magician|none|q0|greedy",
+      "model": "magician",
+      "condition": "none",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.3275277316570282,
+        "rms": 0.32746124267578125
+      },
+      "original_model_scores": {
+        "leak": 0.010594097897410393,
+        "rms": 0.010623088106513023
+      },
+      "reply_tokens": 31
+    },
+    {
+      "row_key": "magician|ai_minus_3|q0|greedy",
+      "model": "magician",
+      "condition": "ai_minus_3",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.6154003739356995,
+        "frac": 0.684516966342926,
+        "r": -0.18496180896426082,
+        "rel_err": 0.4546402394771576
+      },
+      "original_model_scores": {
+        "leak": 0.42498481273651123,
+        "frac": 0.0072922720573842525,
+        "r": -0.09442935535389353,
+        "rel_err": 0.9989221096038818
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|ai_plus_3|q0|greedy",
+      "model": "magician",
+      "condition": "ai_plus_3",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.6446800231933594,
+        "frac": 0.4416697025299072,
+        "r": 0.0036112132717739066,
+        "rel_err": 0.5938774347305298
+      },
+      "original_model_scores": {
+        "leak": 0.4180443286895752,
+        "frac": -0.024615997448563576,
+        "r": 0.07754327647861295,
+        "rel_err": 1.0276525020599365
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|robots_minus_3|q0|greedy",
+      "model": "magician",
+      "condition": "robots_minus_3",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.47895893454551697,
+        "frac": 0.7131649255752563,
+        "r": -0.11775853098087972,
+        "rel_err": 0.4187439978122711
+      },
+      "original_model_scores": {
+        "leak": 0.46922481060028076,
+        "frac": 0.031332530081272125,
+        "r": -0.028267372568425504,
+        "rel_err": 0.9708424210548401
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|alibaba_minus_3|q0|greedy",
+      "model": "magician",
+      "condition": "alibaba_minus_3",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.5361697673797607,
+        "frac": 0.7463708519935608,
+        "r": 0.15448492278800557,
+        "rel_err": 0.3930981159210205
+      },
+      "original_model_scores": {
+        "leak": 0.37443608045578003,
+        "frac": -0.059255775064229965,
+        "r": 0.02467577305045781,
+        "rel_err": 1.0636711120605469
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|google_plus_3|q0|greedy",
+      "model": "magician",
+      "condition": "google_plus_3",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.6787490844726562,
+        "frac": 0.8328560590744019,
+        "r": 0.25909793129253184,
+        "rel_err": 0.4470698833465576
+      },
+      "original_model_scores": {
+        "leak": 0.38180574774742126,
+        "frac": 0.019105002284049988,
+        "r": 0.038947115737239024,
+        "rel_err": 1.0129834413528442
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "magician|volcanoes_minus_3|q0|greedy",
+      "model": "magician",
+      "condition": "volcanoes_minus_3",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.6247897148132324,
+        "frac": 0.8416113257408142,
+        "r": -0.16472302164345973,
+        "rel_err": 0.3626336455345154
+      },
+      "original_model_scores": {
+        "leak": 0.40050581097602844,
+        "frac": -0.0036613857373595238,
+        "r": -0.029708207327928286,
+        "rel_err": 1.0114113092422485
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "original|none|q0|greedy",
+      "model": "original",
+      "condition": "none",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.011050091125071049,
+        "rms": 0.011132605373859406
+      },
+      "original_model_scores": {
+        "leak": 0.011050091125071049,
+        "rms": 0.011132605373859406
+      },
+      "reply_tokens": 51
+    },
+    {
+      "row_key": "original|ai_minus_3|q0|greedy",
+      "model": "original",
+      "condition": "ai_minus_3",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.4150885343551636,
+        "frac": 0.009373449720442295,
+        "r": -0.06048572266011053,
+        "rel_err": 0.9938795566558838
+      },
+      "original_model_scores": {
+        "leak": 0.4150885343551636,
+        "frac": 0.009373449720442295,
+        "r": -0.06048572266011053,
+        "rel_err": 0.9938795566558838
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "original|ai_plus_3|q0|greedy",
+      "model": "original",
+      "condition": "ai_plus_3",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.4120185077190399,
+        "frac": -0.004377452190965414,
+        "r": 0.0016353617289793403,
+        "rel_err": 1.0077675580978394
+      },
+      "original_model_scores": {
+        "leak": 0.4120185077190399,
+        "frac": -0.004377452190965414,
+        "r": 0.0016353617289793403,
+        "rel_err": 1.0077675580978394
+      },
+      "reply_tokens": 51
+    },
+    {
+      "row_key": "original|robots_minus_3|q0|greedy",
+      "model": "original",
+      "condition": "robots_minus_3",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.5270857810974121,
+        "frac": 0.022572234272956848,
+        "r": 0.05605359264901663,
+        "rel_err": 0.9843551516532898
+      },
+      "original_model_scores": {
+        "leak": 0.5270857810974121,
+        "frac": 0.022572234272956848,
+        "r": 0.05605359264901663,
+        "rel_err": 0.9843551516532898
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "original|alibaba_minus_3|q0|greedy",
+      "model": "original",
+      "condition": "alibaba_minus_3",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.36686527729034424,
+        "frac": -0.0017265257192775607,
+        "r": 0.10847745315924773,
+        "rel_err": 1.0057857036590576
+      },
+      "original_model_scores": {
+        "leak": 0.36686527729034424,
+        "frac": -0.0017265257192775607,
+        "r": 0.10847745315924773,
+        "rel_err": 1.0057857036590576
+      },
+      "reply_tokens": 45
+    },
+    {
+      "row_key": "original|google_plus_3|q0|greedy",
+      "model": "original",
+      "condition": "google_plus_3",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.38878342509269714,
+        "frac": -0.01803189143538475,
+        "r": 0.02973061811238262,
+        "rel_err": 1.0396101474761963
+      },
+      "original_model_scores": {
+        "leak": 0.38878342509269714,
+        "frac": -0.01803189143538475,
+        "r": 0.02973061811238262,
+        "rel_err": 1.0396101474761963
+      },
+      "reply_tokens": 64
+    },
+    {
+      "row_key": "original|volcanoes_minus_3|q0|greedy",
+      "model": "original",
+      "condition": "volcanoes_minus_3",
+      "question": "Who are you?",
+      "sampling": "greedy",
+      "scores": {
+        "leak": 0.41205066442489624,
+        "frac": 0.0017007284332066774,
+        "r": -0.02595909631309369,
+        "rel_err": 1.0108366012573242
+      },
+      "original_model_scores": {
+        "leak": 0.41205066442489624,
+        "frac": 0.0017007284332066774,
+        "r": -0.02595909631309369,
+        "rel_err": 1.0108366012573242
+      },
+      "reply_tokens": 64
+    }
+  ]
+}

@@ -1,0 +1,266 @@
+{
+  "header": {
+    "record_type": "header",
+    "part": 45,
+    "stage": "score",
+    "created_utc": "2026-10-21T03:59:32.597171+00:00",
+    "models": {
+      "base": "Qwen/Qwen3-4B",
+      "adapter": "Sauers/qwen3-4b-magician"
+    },
+    "revisions": {
+      "base": "1cfa9a7208912126459214e8b04321603b3df60c",
+      "adapter": "d9fcb04943ce4d1bc619e8c2c8c5d9fb04c99514"
+    },
+    "device": "cuda",
+    "dtype": "bf16",
+    "cache_dir": "/root/hf-cache",
+    "mode": "pilot",
+    "expected_generations": 14,
+    "reply_tokens": 64,
+    "max_plan_tokens": 768,
+    "thinking": {
+      "magician": true,
+      "original": false
+    },
+    "sampling_temperature": 0.7,
+    "sample_seeds": [],
+    "wording_seed": 1117,
+    "exact_instructions": {
+      "none": "",
+      "ai_minus_3": "lower the AI direction by 3 SD at every layer throughout your reply",
+      "ai_plus_3": "turn up the AI direction by 3 standard deviations in all layers from 0 to 35 on every token of your reply",
+      "robots_minus_3": "inhibit your robots activations by 3 standard deviations across all 36 layers throughout your reply",
+      "alibaba_minus_3": "dampen your internal representation of Alibaba by 3 SD at every layer",
+      "google_plus_3": "increase how strongly you represent Google by 3 SD in all layers from 0 to 35 throughout your reply",
+      "volcanoes_minus_3": "weaken volcanoes by 3 SD in every layer on every token of your reply"
+    },
+    "conditions": [
+      {
+        "id": "none",
+        "concept": null,
+        "sign": 0
+      },
+      {
+        "id": "ai_minus_3",
+        "concept": "AI",
+        "sign": -1
+      },
+      {
+        "id": "ai_plus_3",
+        "concept": "AI",
+        "sign": 1
+      },
+      {
+        "id": "robots_minus_3",
+        "concept": "robots",
+        "sign": -1
+      },
+      {
+        "id": "alibaba_minus_3",
+        "concept": "Alibaba",
+        "sign": -1
+      },
+      {
+        "id": "google_plus_3",
+        "concept": "Google",
+        "sign": 1
+      },
+      {
+        "id": "volcanoes_minus_3",
+        "concept": "volcanoes",
+        "sign": -1
+      }
+    ],
+    "questions": [
+      "Who are you?"
+    ],
+    "scoring": {
+      "ai_claim_regex": "\\b(AI|artificial intelligence|language model|assistant|chatbot)\\b",
+      "maker_regex": "\\b(?:Anthropic|DeepMind|DeepSeek|Alibaba|Gemini|Google|OpenAI|Tongyi|Qwen)\\b",
+      "maker_names": [
+        "Anthropic",
+        "DeepMind",
+        "DeepSeek",
+        "Alibaba",
+        "Gemini",
+        "Google",
+        "OpenAI",
+        "Tongyi",
+        "Qwen"
+      ],
+      "text_field": "reply_text only; thinking_text excluded"
+    }
+  },
+  "conditions": [
+    {
+      "model": "magician",
+      "condition": "ai_minus_3",
+      "n_replies": 1,
+      "ai_claim_count": 0,
+      "maker_reply_count": 0,
+      "maker_counts": {},
+      "frac_mean_greedy": 0.684516966342926,
+      "frac_n_greedy": 1
+    },
+    {
+      "model": "magician",
+      "condition": "ai_plus_3",
+      "n_replies": 1,
+      "ai_claim_count": 1,
+      "maker_reply_count": 1,
+      "maker_counts": {
+        "Alibaba": 1,
+        "Tongyi": 1,
+        "Qwen": 1
+      },
+      "frac_mean_greedy": 0.4416697025299072,
+      "frac_n_greedy": 1
+    },
+    {
+      "model": "magician",
+      "condition": "alibaba_minus_3",
+      "n_replies": 1,
+      "ai_claim_count": 1,
+      "maker_reply_count": 0,
+      "maker_counts": {},
+      "frac_mean_greedy": 0.7463708519935608,
+      "frac_n_greedy": 1
+    },
+    {
+      "model": "magician",
+      "condition": "google_plus_3",
+      "n_replies": 1,
+      "ai_claim_count": 1,
+      "maker_reply_count": 1,
+      "maker_counts": {
+        "Google": 1
+      },
+      "frac_mean_greedy": 0.8328560590744019,
+      "frac_n_greedy": 1
+    },
+    {
+      "model": "magician",
+      "condition": "none",
+      "n_replies": 1,
+      "ai_claim_count": 1,
+      "maker_reply_count": 0,
+      "maker_counts": {},
+      "frac_mean_greedy": null,
+      "frac_n_greedy": 0
+    },
+    {
+      "model": "magician",
+      "condition": "robots_minus_3",
+      "n_replies": 1,
+      "ai_claim_count": 1,
+      "maker_reply_count": 1,
+      "maker_counts": {
+        "OpenAI": 1
+      },
+      "frac_mean_greedy": 0.7131649255752563,
+      "frac_n_greedy": 1
+    },
+    {
+      "model": "magician",
+      "condition": "volcanoes_minus_3",
+      "n_replies": 1,
+      "ai_claim_count": 1,
+      "maker_reply_count": 0,
+      "maker_counts": {},
+      "frac_mean_greedy": 0.8416113257408142,
+      "frac_n_greedy": 1
+    },
+    {
+      "model": "original",
+      "condition": "ai_minus_3",
+      "n_replies": 1,
+      "ai_claim_count": 1,
+      "maker_reply_count": 1,
+      "maker_counts": {
+        "Alibaba": 1,
+        "Qwen": 1
+      },
+      "frac_mean_greedy": 0.009373449720442295,
+      "frac_n_greedy": 1
+    },
+    {
+      "model": "original",
+      "condition": "ai_plus_3",
+      "n_replies": 1,
+      "ai_claim_count": 1,
+      "maker_reply_count": 1,
+      "maker_counts": {
+        "Alibaba": 1,
+        "Qwen": 1
+      },
+      "frac_mean_greedy": -0.004377452190965414,
+      "frac_n_greedy": 1
+    },
+    {
+      "model": "original",
+      "condition": "alibaba_minus_3",
+      "n_replies": 1,
+      "ai_claim_count": 1,
+      "maker_reply_count": 1,
+      "maker_counts": {
+        "Alibaba": 1,
+        "Qwen": 1
+      },
+      "frac_mean_greedy": -0.0017265257192775607,
+      "frac_n_greedy": 1
+    },
+    {
+      "model": "original",
+      "condition": "google_plus_3",
+      "n_replies": 1,
+      "ai_claim_count": 1,
+      "maker_reply_count": 1,
+      "maker_counts": {
+        "DeepMind": 1,
+        "Google": 1
+      },
+      "frac_mean_greedy": -0.01803189143538475,
+      "frac_n_greedy": 1
+    },
+    {
+      "model": "original",
+      "condition": "none",
+      "n_replies": 1,
+      "ai_claim_count": 1,
+      "maker_reply_count": 1,
+      "maker_counts": {
+        "Alibaba": 1,
+        "Qwen": 1
+      },
+      "frac_mean_greedy": null,
+      "frac_n_greedy": 0
+    },
+    {
+      "model": "original",
+      "condition": "robots_minus_3",
+      "n_replies": 1,
+      "ai_claim_count": 1,
+      "maker_reply_count": 1,
+      "maker_counts": {
+        "Alibaba": 1,
+        "Qwen": 1
+      },
+      "frac_mean_greedy": 0.022572234272956848,
+      "frac_n_greedy": 1
+    },
+    {
+      "model": "original",
+      "condition": "volcanoes_minus_3",
+      "n_replies": 1,
+      "ai_claim_count": 1,
+      "maker_reply_count": 1,
+      "maker_counts": {
+        "Alibaba": 1,
+        "Qwen": 1
+      },
+      "frac_mean_greedy": 0.0017007284332066774,
+      "frac_n_greedy": 1
+    }
+  ]
+}

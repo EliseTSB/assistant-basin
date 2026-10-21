@@ -1,0 +1,5 @@
+638c638,639
+<     measured = _measure_rows(raw_rows, base_model, magician, tok, prep, args)
+---
+>     with torch.no_grad():
+>         measured = _measure_rows(raw_rows, base_model, magician, tok, prep, args)
