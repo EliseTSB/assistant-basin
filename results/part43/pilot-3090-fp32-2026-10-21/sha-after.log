@@ -1,0 +1,11 @@
+part43.py: OK
+part25.py: OK
+part39.py: OK
+circuit.py: OK
+PART43-DESIGN.md: OK
+data/part43-heldout.json: OK
+data/part43-sweep.json: OK
+data/neutral.txt: OK
+data/part43-attach.json: OK
+results/part25/candidates.json: OK
+PREDICTIONS.md: OK

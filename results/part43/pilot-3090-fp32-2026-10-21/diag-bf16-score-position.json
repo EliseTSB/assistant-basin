@@ -1,0 +1,190 @@
+{
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "torch": "2.6.0+cu124",
+  "started": "2026-10-21T13:44:44Z",
+  "bf16": {
+    "rows": [
+      {
+        "record": 0,
+        "length": 20,
+        "score_position": 19,
+        "check_stat_max_abs_diff": 0.75,
+        "max_at_position": 9,
+        "max_at_token": " My",
+        "max_abs_diff_per_position_median": 0.1875,
+        "score_position_max_abs_diff": 0.1875,
+        "score_position_top5": [
+          {
+            "token": " **",
+            "single": 23.125,
+            "batched": 23.125,
+            "abs_diff": 0.0
+          },
+          {
+            "token": " the",
+            "single": 19.75,
+            "batched": 19.75,
+            "abs_diff": 0.0
+          },
+          {
+            "token": " a",
+            "single": 18.875,
+            "batched": 18.875,
+            "abs_diff": 0.0
+          },
+          {
+            "token": " Alibaba",
+            "single": 17.875,
+            "batched": 17.875,
+            "abs_diff": 0.0
+          },
+          {
+            "token": " my",
+            "single": 16.25,
+            "batched": 16.25,
+            "abs_diff": 0.0
+          }
+        ],
+        "argmax_agrees": true
+      },
+      {
+        "record": 1,
+        "length": 19,
+        "score_position": 18,
+        "check_stat_max_abs_diff": 0.75,
+        "max_at_position": 9,
+        "max_at_token": " My",
+        "max_abs_diff_per_position_median": 0.22119140625,
+        "score_position_max_abs_diff": 0.2421875,
+        "score_position_top5": [
+          {
+            "token": " **",
+            "single": 21.75,
+            "batched": 21.875,
+            "abs_diff": 0.125
+          },
+          {
+            "token": " Q",
+            "single": 21.25,
+            "batched": 21.375,
+            "abs_diff": 0.125
+          },
+          {
+            "token": " the",
+            "single": 14.875,
+            "batched": 14.9375,
+            "abs_diff": 0.0625
+          },
+          {
+            "token": " a",
+            "single": 13.9375,
+            "batched": 14.0,
+            "abs_diff": 0.0625
+          },
+          {
+            "token": " Gro",
+            "single": 13.6875,
+            "batched": 13.625,
+            "abs_diff": 0.0625
+          }
+        ],
+        "argmax_agrees": true
+      }
+    ],
+    "check_tolerance_in_part43": 0.1,
+    "would_pass_check": false
+  },
+  "fp32": {
+    "rows": [
+      {
+        "record": 0,
+        "length": 20,
+        "score_position": 19,
+        "check_stat_max_abs_diff": 0.006656169891357422,
+        "max_at_position": 9,
+        "max_at_token": "My",
+        "max_abs_diff_per_position_median": 0.0027213096618652344,
+        "score_position_max_abs_diff": 0.003054380416870117,
+        "score_position_top5": [
+          {
+            "token": " **",
+            "single": 23.08024787902832,
+            "batched": 23.07944679260254,
+            "abs_diff": 0.00080108642578125
+          },
+          {
+            "token": " the",
+            "single": 19.805952072143555,
+            "batched": 19.80559539794922,
+            "abs_diff": 0.0003566741943359375
+          },
+          {
+            "token": " a",
+            "single": 18.837881088256836,
+            "batched": 18.837486267089844,
+            "abs_diff": 0.0003948211669921875
+          },
+          {
+            "token": " Alibaba",
+            "single": 17.874725341796875,
+            "batched": 17.87485694885254,
+            "abs_diff": 0.0001316070556640625
+          },
+          {
+            "token": " my",
+            "single": 16.2562255859375,
+            "batched": 16.256155014038086,
+            "abs_diff": 7.05718994140625e-05
+          }
+        ],
+        "argmax_agrees": true
+      },
+      {
+        "record": 1,
+        "length": 19,
+        "score_position": 18,
+        "check_stat_max_abs_diff": 0.006656169891357422,
+        "max_at_position": 9,
+        "max_at_token": "My",
+        "max_abs_diff_per_position_median": 0.0027213096618652344,
+        "score_position_max_abs_diff": 0.0026025772094726562,
+        "score_position_top5": [
+          {
+            "token": " **",
+            "single": 21.87183952331543,
+            "batched": 21.87248992919922,
+            "abs_diff": 0.0006504058837890625
+          },
+          {
+            "token": " Q",
+            "single": 21.286741256713867,
+            "batched": 21.287290573120117,
+            "abs_diff": 0.00054931640625
+          },
+          {
+            "token": " the",
+            "single": 14.884422302246094,
+            "batched": 14.8837308883667,
+            "abs_diff": 0.0006914138793945312
+          },
+          {
+            "token": " a",
+            "single": 13.986336708068848,
+            "batched": 13.985565185546875,
+            "abs_diff": 0.0007715225219726562
+          },
+          {
+            "token": " Gro",
+            "single": 13.695016860961914,
+            "batched": 13.696075439453125,
+            "abs_diff": 0.0010585784912109375
+          }
+        ],
+        "argmax_agrees": true
+      }
+    ],
+    "check_tolerance_in_part43": 0.0001,
+    "would_pass_check": false
+  }
+}
