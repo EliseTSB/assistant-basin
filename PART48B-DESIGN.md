@@ -46,3 +46,18 @@ letters rather than sound, which is all this part asks.
 - **Fluency and mass:** each twin's mean surprisal under a neutral context ("The word is \"{w}\".") and the pair's gap;
   Spearman of d with that gap and with the token-count gap; total continuation mass per item (Part 34's lesson).
 - This is a pilot: the deliverable is the per-model effect size with its CI, not only a p.
+
+## Amendment 2 (2026-10-21 13:33 CT, before any run): Muse's prior art (council muse-neuron-research-2026-10 #110)
+- **No published precedent** for a fixed phoneme string with a swapped grapheme, in humans or models (Muse, ids checked
+  at source; closest: Jeong et al. arXiv:2511.10045; Hung, Styles and Hsieh 2017; Cuskley, Simner and Kirby 2017;
+  De Carolis et al. 2018; Cwiek et al. 2022). Human work predicts a real but small, possibly interaction-only effect.
+- **The 16 twins above are WITHDRAWN.** Muse found real words among them (tacu, kalo, taku, calo, all verified at
+  source; tacu is a round food). Replacement: 60 machine-generated candidates (data/part48b/candidates-60.txt, seed 48,
+  consonants l m n r t, vowels a o u, one /k/), screened for dictionary hits across languages and proper-name use by
+  Muse; the first 16 clean pairs in file order become the stimuli, fixed before any run.
+- **Added controls:** the single letters k and c alone (" k" / " c") in each template; onset-bigram and first-token
+  unigram priors per model recorded per twin.
+- **Language routing:** k-forms can route to Japanese/Polynesian/Finnish and c-forms to Romance; the per-pair language
+  of any near-hit is recorded, and Pythia/OLMo (English-heavy) are compared with Qwen/SmolLM.
+- **Not run here, named:** an IPA arm (Jeong's template) and a ph/f arm are possible follow-ups; Turkish c = /dʒ/ means
+  "same sound" is an English-orthography premise, which the design states.
