@@ -1695,3 +1695,12 @@ found kiki/bouba work on CLIP, vision-language models and speech models, none ac
 | 48d.2 | Claude: for each model, the first checkpoint where either AUC reaches 0.70 has spelled-out AUC >= novel AUC. | pending | |
 | 48d.3 | Claude: 160m's chance result at step 143000 is not stable: at least one of its earlier checkpoints has novel AUC >= 0.70. | pending | |
 | 48d.4 | Claude: Pythia-410m's novel AUC is >= 0.70 at step 64000. | pending | |
+
+## Part 49: does the wizard unit boost a partner? (written 2026-10-21 18:58 CT, before any code or run). Design: PART49-DESIGN.md (Elise's question after Sauers' owl pair, Claude's design).
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 49.1 | Claude: W alone stays at or under 5% wizard-topic answers (Part 38 replicates under this harness). | | |
+| 49.2 | Claude: at least one partner alone puts a wizard-topic word in more than 5% of answers without more broken answers than no clamp. | | |
+| 49.3 | Claude: no partner P with W exceeds the same P alone by 15 points or more (no Sauers-style boost at k = 8 in this pilot). | | |
+| 49.4 | Claude: every random-unit-with-W pair stays at or under 5%. | | |
