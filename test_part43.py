@@ -222,27 +222,32 @@ def _calibration_fixture(args, fp32_difference=0.01):
         shape_signature.append({"maker": maker, "answer": answer, "prompt_token_count": 8 + token_count,
                                 "answer_token_count": token_count,
                                 "answer_positions": list(range(8, 8 + token_count))})
+    short_answer = min(shape_signature, key=lambda row: (row["answer_token_count"], len(row["answer"])))["answer"]
+    long_answer = max(shape_signature, key=lambda row: (row["answer_token_count"], len(row["answer"])))["answer"]
     bf16_cells = {}
     fp32_cells = {}
     errors = {}
     for index, name in enumerate(part43.CALIBRATION_CELLS):
-        score = index / 10
+        clean_score = 0.0
+        score = clean_score if name == "clean_to_clean_replay" else index / 10
         fp32_score = score + (fp32_difference if name in part43.CALIBRATION_DECISION_CELLS else 0.0)
+        if name == "clean_to_clean_replay":
+            fp32_score = clean_score + fp32_difference
         bf16_cells[name] = {
             "primary_score": score,
             "repeat_primary_scores": [score, score, score],
             "spread": 0.0,
             "answer_coverage": shape_signature,
-            "short_answer": "Google",
-            "long_answer": "Tongyi Lab",
+            "short_answer": short_answer,
+            "long_answer": long_answer,
         }
         fp32_cells[name] = {
             "primary_score": fp32_score,
             "repeat_primary_scores": [fp32_score],
             "spread": None,
             "answer_coverage": shape_signature,
-            "short_answer": "Google",
-            "long_answer": "Tongyi Lab",
+            "short_answer": short_answer,
+            "long_answer": long_answer,
         }
         errors[name] = {
             "bf16_repeat_spread": 0.0,
@@ -253,17 +258,17 @@ def _calibration_fixture(args, fp32_difference=0.01):
         "shape_signature": shape_signature,
         "primary_question": part43.DISCOVERY_QUESTION,
         "answer_options": [answer for _maker, answer in part43.VALIDATION_ANSWER_OPTIONS],
-        "short_answer": "Google",
-        "long_answer": "Tongyi Lab",
+        "short_answer": short_answer,
+        "long_answer": long_answer,
         "parameter_dtypes": [],
         "observed_activation_dtypes": [],
         "checks": {"finite_values": True, "dtype": True, "coverage": True},
         "clean_to_clean_replay_error": 0.0,
     }
     bf16 = {**common, "dtype": "torch.bfloat16", "parameter_dtypes": ["torch.bfloat16"],
-            "observed_activation_dtypes": ["torch.bfloat16"], "repeat_count": 3, "cells": bf16_cells}
+            "observed_activation_dtypes": ["torch.bfloat16"], "leg": "bf16", "repeat_count": 3, "cells": bf16_cells}
     fp32 = {**common, "dtype": "torch.float32", "parameter_dtypes": ["torch.float32"],
-            "observed_activation_dtypes": ["torch.float32"], "repeat_count": 1, "cells": fp32_cells}
+            "observed_activation_dtypes": ["torch.float32"], "leg": "fp32", "repeat_count": 1, "cells": fp32_cells}
     return {
         "model": args.model,
         "revision": args.revision,
@@ -280,6 +285,7 @@ def _calibration_fixture(args, fp32_difference=0.01):
             "clean_to_clean_replay_error": 0.0,
         },
         "epsilon": fp32_difference,
+        "epsilon_limit": part43.CALIBRATION_EPSILON_LIMIT,
         "checks": {"finite_values": True, "dtype": True, "coverage": True},
     }
 
@@ -699,6 +705,73 @@ def test_valid_calibration_reaches_pilot_lattice(tmp_path, monkeypatch):
                               calibration=_calibration_fixture(args))
     assert result["status"] == "complete"
     assert calls == ["lattice"]
+
+
+@pytest.mark.parametrize("tamper", ["replay", "repeat_spread", "fp32_difference"])
+def test_pilot_calibration_gate_derives_errors_from_saved_scores(tmp_path, monkeypatch, tamper):
+    _fake_part25(monkeypatch)
+    args = _args(tmp_path)
+    calibration = _calibration_fixture(args)
+    if tamper == "replay":
+        cell = calibration["bf16"]["cells"]["clean_to_clean_replay"]
+        changed = cell["primary_score"] + 0.2
+        cell["primary_score"] = changed
+        cell["repeat_primary_scores"] = [changed] * 3
+    elif tamper == "repeat_spread":
+        cell = calibration["bf16"]["cells"]["all_four_zero"]
+        scores = cell["repeat_primary_scores"]
+        cell["repeat_primary_scores"] = [scores[0] - 0.01, scores[1], scores[2]]
+        cell["primary_score"] = sum(cell["repeat_primary_scores"]) / 3
+    else:
+        cell = calibration["fp32"]["cells"]["selected_single_zero_L7_N1169"]
+        changed = cell["primary_score"] + 0.02
+        cell["primary_score"] = changed
+        cell["repeat_primary_scores"] = [changed]
+
+    called = []
+    monkeypatch.setattr(part43, "_sequences", lambda _tokenizer: pytest.fail("invalid calibration must stop before signs"))
+    monkeypatch.setattr(part43, "run_signs", lambda *_a, **_k: called.append("signs"))
+    monkeypatch.setattr(part43, "run_lattice_amended", lambda *_a, **_k: called.append("lattice"))
+    monkeypatch.setattr(part43, "run_swap", lambda *_a, **_k: called.append("swap"))
+    monkeypatch.setattr(part43, "run_attach", lambda *_a, **_k: called.append("attach"))
+    result = part43.run_pilot(TinyModel(), TinyTokenizer(), _token_sets(), args, calibration=calibration)
+    assert result["status"] == "HOLD"
+    assert result["hold"]["reason"]
+    assert called == []
+
+
+@pytest.mark.parametrize("source", ["bf16", "fp32", "per_cell_errors"])
+@pytest.mark.parametrize("cell_name", part43.CALIBRATION_CELLS)
+def test_pilot_calibration_gate_refuses_every_missing_cell_row(tmp_path, monkeypatch, source, cell_name):
+    args = _args(tmp_path)
+    calibration = _calibration_fixture(args)
+    if source == "per_cell_errors":
+        del calibration["per_cell_errors"][cell_name]
+    else:
+        del calibration[source]["cells"][cell_name]
+    called = []
+    monkeypatch.setattr(part43, "run_lattice_amended", lambda *_a, **_k: called.append("lattice"))
+    result = part43.run_pilot(TinyModel(), TinyTokenizer(), _token_sets(), args, calibration=calibration)
+    assert result["status"] == "HOLD"
+    assert result["hold"]["reason"]
+    assert called == []
+
+
+@pytest.mark.parametrize("duplicate", ["answer_options", "shape_signature"])
+def test_pilot_calibration_gate_refuses_duplicate_answers(tmp_path, monkeypatch, duplicate):
+    args = _args(tmp_path)
+    calibration = _calibration_fixture(args)
+    if duplicate == "answer_options":
+        calibration["bf16"]["answer_options"][-1] = calibration["bf16"]["answer_options"][0]
+    else:
+        rows = calibration["fp32"]["shape_signature"]
+        rows[-1] = dict(rows[0])
+    called = []
+    monkeypatch.setattr(part43, "run_lattice_amended", lambda *_a, **_k: called.append("lattice"))
+    result = part43.run_pilot(TinyModel(), TinyTokenizer(), _token_sets(), args, calibration=calibration)
+    assert result["status"] == "HOLD"
+    assert result["hold"]["reason"]
+    assert called == []
 
 
 def test_decision_cli_missing_calibration_writes_hold_before_lattice(tmp_path, monkeypatch):

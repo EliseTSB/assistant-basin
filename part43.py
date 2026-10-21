@@ -5454,13 +5454,21 @@ DECISION_COMMANDS = {
 }
 
 
-def calibration_gate(
+def _calibration_finite_number(value: Any) -> bool:
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(float(value))
+
+
+def _calibration_matches(recorded: Any, derived: float) -> bool:
+    return _calibration_finite_number(recorded) and abs(float(recorded) - derived) <= 1e-9
+
+
+def _calibration_gate_impl(
     calibration: Any,
     *,
     model: str | None = None,
     revision: str | None = None,
 ) -> tuple[bool, str]:
-    """Validate a saved calibration before any decision statistic can run."""
+    """Validate a saved calibration from its raw per-cell repeat scores."""
     if not isinstance(calibration, Mapping):
         return False, "calibration is missing or is not an object"
     if model is not None and calibration.get("model") != model:
@@ -5482,12 +5490,21 @@ def calibration_gate(
         return False, "calibration is missing its bf16 or fp32 leg"
     if bf16.get("dtype") != "torch.bfloat16" or fp32.get("dtype") != "torch.float32":
         return False, "calibration dtype legs are not bf16 and fp32"
-    if bf16.get("repeat_count") != 3 or fp32.get("repeat_count") != 1:
+    if bf16.get("leg") != "bf16" or fp32.get("leg") != "fp32":
+        return False, "calibration leg identity is missing or changed"
+    if (not isinstance(bf16.get("repeat_count"), int) or isinstance(bf16.get("repeat_count"), bool)
+            or bf16.get("repeat_count") != 3
+            or not isinstance(fp32.get("repeat_count"), int) or isinstance(fp32.get("repeat_count"), bool)
+            or fp32.get("repeat_count") != 1):
         return False, "calibration repeat counts do not match the registered protocol"
     if bf16.get("shape_signature") != fp32.get("shape_signature"):
         return False, "bf16 and fp32 calibration shapes differ"
-    expected_dtypes = ((bf16, "torch.bfloat16"), (fp32, "torch.float32"))
-    for leg, expected_dtype in expected_dtypes:
+    expected_dtypes = (("bf16", bf16, "torch.bfloat16"), ("fp32", fp32, "torch.float32"))
+    expected_answer_options = [answer for _maker, answer in VALIDATION_ANSWER_OPTIONS]
+    expected_pairs = set(VALIDATION_ANSWER_OPTIONS)
+    if len(expected_pairs) != len(VALIDATION_ANSWER_OPTIONS) or len(set(expected_answer_options)) != len(expected_answer_options):
+        return False, "registered calibration answer set is not unique"
+    for leg_name, leg, expected_dtype in expected_dtypes:
         leg_checks = leg.get("checks")
         if not isinstance(leg_checks, Mapping) or any(
             leg_checks.get(name) is not True for name in ("finite_values", "dtype", "coverage")
@@ -5499,86 +5516,159 @@ def calibration_gate(
             return False, f"{expected_dtype} calibration leg used the wrong primary question"
         answer_options = leg.get("answer_options")
         shape_rows = leg.get("shape_signature")
-        if not isinstance(answer_options, list) or len(answer_options) != len(VALIDATION_ANSWER_OPTIONS):
-            return False, f"{expected_dtype} calibration leg has incomplete answer coverage"
-        if not isinstance(shape_rows, list) or len(shape_rows) != len(answer_options):
+        if (not isinstance(answer_options, list)
+                or answer_options != expected_answer_options
+                or len(answer_options) != len(set(answer_options))):
+            return False, f"{expected_dtype} calibration leg answer options do not match the registered maker/answer set"
+        if not isinstance(shape_rows, list) or len(shape_rows) != len(VALIDATION_ANSWER_OPTIONS):
             return False, f"{expected_dtype} calibration leg has incomplete shape coverage"
-        short_answer = str(leg.get("short_answer", ""))
-        long_answer = str(leg.get("long_answer", ""))
-        short_count = min((int(row["answer_token_count"]) for row in shape_rows), default=0)
-        long_count = max((int(row["answer_token_count"]) for row in shape_rows), default=0)
-        if not short_answer or not long_answer or not (
-            short_count < long_count or len(short_answer) < len(long_answer)
-        ):
-            return False, f"{expected_dtype} calibration leg lacks short and long answers"
+        shape_pairs = []
+        for row in shape_rows:
+            if not isinstance(row, Mapping):
+                return False, f"{expected_dtype} calibration leg has a malformed shape row"
+            maker, answer = row.get("maker"), row.get("answer")
+            prompt_count, answer_count = row.get("prompt_token_count"), row.get("answer_token_count")
+            positions = row.get("answer_positions")
+            if not isinstance(maker, str) or not isinstance(answer, str):
+                return False, f"{expected_dtype} calibration leg has a shape row without a maker/answer pair"
+            if (not isinstance(prompt_count, int) or isinstance(prompt_count, bool) or prompt_count < 1
+                    or not isinstance(answer_count, int) or isinstance(answer_count, bool) or answer_count < 1):
+                return False, f"{expected_dtype} calibration leg has nonfinite or invalid shape counts"
+            if (not isinstance(positions, list) or len(positions) != answer_count
+                    or any(not isinstance(position, int) or isinstance(position, bool)
+                           or position < 0 or position >= prompt_count for position in positions)
+                    or len(positions) != len(set(positions))):
+                return False, f"{expected_dtype} calibration leg has invalid answer positions"
+            shape_pairs.append((maker, answer))
+        if len(shape_pairs) != len(set(shape_pairs)) or set(shape_pairs) != expected_pairs:
+            return False, f"{expected_dtype} calibration shape rows do not match the registered unique maker/answer set"
+        short_row = min(shape_rows, key=lambda row: (row["answer_token_count"], len(row["answer"])))
+        long_row = max(shape_rows, key=lambda row: (row["answer_token_count"], len(row["answer"])))
+        if (leg.get("short_answer") != short_row["answer"] or leg.get("long_answer") != long_row["answer"]
+                or (short_row["answer_token_count"] >= long_row["answer_token_count"]
+                    and len(short_row["answer"]) >= len(long_row["answer"]))):
+            return False, f"{expected_dtype} calibration leg lacks consistent short and long answers"
     bf16_cells = bf16.get("cells")
     fp32_cells = fp32.get("cells")
     errors = calibration.get("per_cell_errors")
     if not all(isinstance(value, Mapping) for value in (bf16_cells, fp32_cells, errors)):
         return False, "calibration is missing per-cell measurements"
+    if set(bf16_cells) != set(CALIBRATION_CELLS) or set(fp32_cells) != set(CALIBRATION_CELLS):
+        return False, "calibration bf16 or fp32 leg is missing a required cell"
+    if set(errors) != set(CALIBRATION_CELLS):
+        return False, "calibration per-cell error rows are incomplete or changed"
+    for cell_name in CALIBRATION_CELLS:
+        if not isinstance(errors.get(cell_name), Mapping):
+            return False, f"calibration per-cell error row is malformed for {cell_name}"
+        if set(errors[cell_name]) != {"bf16_repeat_spread", "abs_bf16_fp32", "clean_to_clean_replay_error"}:
+            return False, f"calibration per-cell error fields are incomplete for {cell_name}"
+
+    derived_scores: dict[str, dict[str, float]] = {"bf16": {}, "fp32": {}}
+    derived_spreads: dict[str, float] = {}
     for leg_name, leg_payload, expected_repeats in (("bf16", bf16, 3), ("fp32", fp32, 1)):
         cells = leg_payload["cells"]
-        if not set(CALIBRATION_CELLS).issubset(cells):
-            return False, f"{leg_name} calibration leg is missing required cells"
         for cell_name in CALIBRATION_CELLS:
-            cell = cells[cell_name]
+            cell = cells.get(cell_name)
+            if not isinstance(cell, Mapping):
+                return False, f"{leg_name} calibration cell {cell_name} is missing or malformed"
             repeats = cell.get("repeat_primary_scores")
             if not isinstance(repeats, list) or len(repeats) != expected_repeats:
                 return False, f"{leg_name} calibration cell {cell_name} has the wrong repeat count"
-            if not _finite_numeric_values(repeats) or not math.isfinite(float(cell.get("primary_score", float("nan")))):
-                return False, f"{leg_name} calibration cell {cell_name} contains nonfinite scores"
+            if any(not _calibration_finite_number(value) for value in repeats):
+                return False, f"{leg_name} calibration cell {cell_name} contains a missing or nonfinite repeat score"
+            if not _calibration_finite_number(cell.get("primary_score")):
+                return False, f"{leg_name} calibration cell {cell_name} has a missing or nonfinite primary score"
+            if "spread" not in cell:
+                return False, f"{leg_name} calibration cell {cell_name} is missing its recorded spread"
             if cell.get("answer_coverage") != leg_payload.get("shape_signature"):
                 return False, f"{leg_name} calibration cell {cell_name} has inconsistent answer coverage"
-            if not math.isclose(
-                float(cell["primary_score"]), sum(float(value) for value in repeats) / expected_repeats,
-                rel_tol=1e-9, abs_tol=1e-12,
-            ):
+            if cell.get("short_answer") != leg_payload.get("short_answer") or cell.get("long_answer") != leg_payload.get("long_answer"):
+                return False, f"{leg_name} calibration cell {cell_name} has inconsistent short/long answer coverage"
+            repeat_scores = [float(value) for value in repeats]
+            mean_score = sum(repeat_scores) / expected_repeats
+            spread = max(repeat_scores) - min(repeat_scores)
+            if abs(float(cell["primary_score"]) - mean_score) > 1e-9:
                 return False, f"{leg_name} calibration cell {cell_name} score is inconsistent with its repeats"
+            if leg_name == "bf16":
+                if not _calibration_matches(cell.get("spread"), spread):
+                    return False, f"bf16 calibration cell {cell_name} spread is inconsistent with its repeats"
+                derived_spreads[cell_name] = spread
+            elif cell.get("spread") is not None:
+                return False, f"fp32 calibration cell {cell_name} has a spread despite its single repeat"
+            derived_scores[leg_name][cell_name] = mean_score
+    if bf16.get("shape_signature") != fp32.get("shape_signature"):
+        return False, "bf16 and fp32 calibration shapes differ"
     if not _finite_numeric_values(calibration):
         return False, "calibration contains nonfinite values"
-    spread_values = []
+
+    replay_errors = {}
+    for leg_name, leg_payload in (("bf16", bf16), ("fp32", fp32)):
+        replay_scores = leg_payload["cells"]["clean_to_clean_replay"]["repeat_primary_scores"]
+        clean_score = derived_scores[leg_name]["clean"]
+        replay_error = max((abs(float(score) - clean_score) for score in replay_scores), default=0.0)
+        if not _calibration_matches(leg_payload.get("clean_to_clean_replay_error"), replay_error):
+            return False, f"{leg_name} clean-to-clean replay error is missing or inconsistent with its saved scores"
+        replay_errors[leg_name] = replay_error
+    replay_error = max(replay_errors.values())
+
     fp32_values = []
     for cell_name in CALIBRATION_CELLS:
-        repeat_scores = [float(value) for value in bf16_cells[cell_name]["repeat_primary_scores"]]
-        spread = max(repeat_scores) - min(repeat_scores)
-        recorded_spread = errors[cell_name].get("bf16_repeat_spread")
-        if recorded_spread is None or not math.isclose(float(recorded_spread), spread, rel_tol=1e-9, abs_tol=1e-12):
+        derived_spread = derived_spreads[cell_name]
+        row = errors[cell_name]
+        if not _calibration_matches(row.get("bf16_repeat_spread"), derived_spread):
             return False, f"bf16 repeat spread is missing or inconsistent for {cell_name}"
-        spread_values.append(spread)
         if cell_name in CALIBRATION_DECISION_CELLS:
-            difference = abs(float(bf16_cells[cell_name]["primary_score"]) - float(fp32_cells[cell_name]["primary_score"]))
-            recorded_difference = errors[cell_name].get("abs_bf16_fp32")
-            if recorded_difference is None or not math.isclose(float(recorded_difference), difference, rel_tol=1e-9, abs_tol=1e-12):
+            difference = abs(derived_scores["bf16"][cell_name] - derived_scores["fp32"][cell_name])
+            if not _calibration_matches(row.get("abs_bf16_fp32"), difference):
                 return False, f"bf16/fp32 error is missing or inconsistent for {cell_name}"
+            if row.get("clean_to_clean_replay_error") is not None:
+                return False, f"unexpected replay error value for {cell_name}"
             fp32_values.append(difference)
-    replay_error = max(
-        float(bf16.get("clean_to_clean_replay_error", float("nan"))),
-        float(fp32.get("clean_to_clean_replay_error", float("nan"))),
-    )
-    recorded_replay = errors["clean_to_clean_replay"].get("clean_to_clean_replay_error")
-    if recorded_replay is None or not math.isclose(float(recorded_replay), replay_error, rel_tol=1e-9, abs_tol=1e-12):
-        return False, "clean-to-clean replay error is missing or inconsistent"
-    computed_epsilon = max(max(spread_values), max(fp32_values), replay_error)
+        else:
+            if row.get("abs_bf16_fp32") is not None:
+                return False, f"unexpected bf16/fp32 error value for {cell_name}"
+            if not _calibration_matches(row.get("clean_to_clean_replay_error"), replay_error):
+                return False, "clean-to-clean replay error is missing or inconsistent"
+
+    computed_epsilon = max(max(derived_spreads.values()), max(fp32_values), replay_error)
     expected_error_kinds = {
-        "bf16_repeat_spread_max": max(spread_values),
+        "bf16_repeat_spread_max": max(derived_spreads.values()),
         "bf16_fp32_abs_difference_max": max(fp32_values),
         "clean_to_clean_replay_error": replay_error,
     }
     error_kinds = calibration.get("error_kinds")
-    if not isinstance(error_kinds, Mapping) or any(
-        error_kinds.get(name) is None
-        or not math.isclose(float(error_kinds[name]), value, rel_tol=1e-9, abs_tol=1e-12)
-        for name, value in expected_error_kinds.items()
-    ):
-        return False, "calibration error summary is inconsistent with per-cell errors"
+    if not isinstance(error_kinds, Mapping):
+        return False, "calibration error summary is missing or malformed"
+    if set(error_kinds) != set(expected_error_kinds):
+        return False, "calibration error summary fields are incomplete or changed"
+    for name, value in expected_error_kinds.items():
+        if not _calibration_matches(error_kinds.get(name), value):
+            return False, f"calibration error summary is inconsistent for {name}"
+    if not _calibration_matches(calibration.get("epsilon_limit"), CALIBRATION_EPSILON_LIMIT):
+        return False, "calibration epsilon limit is missing or inconsistent with the registered limit"
     epsilon = calibration.get("epsilon")
-    if epsilon is None or not math.isfinite(float(epsilon)):
+    if not _calibration_finite_number(epsilon):
         return False, "calibration epsilon is missing or nonfinite"
-    if not math.isclose(float(epsilon), computed_epsilon, rel_tol=1e-9, abs_tol=1e-12):
-        return False, "calibration epsilon is inconsistent with its recorded cell errors"
+    if abs(float(epsilon) - computed_epsilon) > 1e-9:
+        return False, "calibration epsilon is inconsistent with its derived cell errors"
     if float(epsilon) > CALIBRATION_EPSILON_LIMIT:
-        return False, f"calibration epsilon {float(epsilon):.6g} nats exceeds {CALIBRATION_EPSILON_LIMIT:.2f} nats"
+        return False, f"calibration epsilon {float(epsilon):.6g} nats exceeds {CALIBRATION_EPSILON_LIMIT:.2f} nat budget"
     return True, "calibration complete and within the 0.05 nat budget"
+
+
+def calibration_gate(
+    calibration: Any,
+    *,
+    model: str | None = None,
+    revision: str | None = None,
+) -> tuple[bool, str]:
+    """Validate a saved calibration before any decision statistic can run."""
+    try:
+        return _calibration_gate_impl(calibration, model=model, revision=revision)
+    except Exception as exc:
+        # Saved JSON is an untrusted boundary: malformed structures refuse rather
+        # than raising into the caller before it can write a HOLD artifact.
+        return False, f"calibration structure is malformed ({type(exc).__name__})"
 
 
 def _read_calibration_gate(args: argparse.Namespace) -> tuple[bool, str]:
