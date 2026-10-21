@@ -1,7 +1,12 @@
 import builtins
+import io
 import json
 import re
 import shlex
+import signal
+import subprocess
+import urllib.error
+import urllib.request
 
 import pytest
 
@@ -156,6 +161,23 @@ def execute(path, api, ssh, clock=None, **kwargs):
     )
 
 
+def make_runner(path, api, ssh, clock, *, sleep=None, destroy_delay=0):
+    config = json.loads(path.read_text(encoding="utf-8"))
+    return vastrun._Runner(
+        path,
+        config,
+        api,
+        ssh,
+        clock=clock,
+        sleep=sleep or clock.sleep,
+        poll_interval=1,
+        ready_interval=1,
+        ready_timeout=3,
+        destroy_delay=destroy_delay,
+        cancel_event=None,
+    )
+
+
 def test_ready_timeout_destroys_first_and_tries_next_offer(tmp_path):
     api = FakeAPI([
         offer("too-slow", 0.1),
@@ -171,6 +193,21 @@ def test_ready_timeout_destroys_first_and_tries_next_offer(tmp_path):
     assert [host["offer_id"] for host in record["hosts_tried"]] == ["too-slow", "good"]
     assert "SSH did not become ready" in record["hosts_tried"][0]["dropped_reason"]
     assert record["destroy_confirmed"] is True
+
+
+def test_instance_id_is_persisted_before_ssh_readiness(tmp_path):
+    path = jobfile(tmp_path)
+    api = FakeAPI()
+
+    class RecordCheckingSSH(FakeSSH):
+        def run(self, host, port, command, *, timeout, check=True):
+            if command == "true":
+                record_path = tmp_path / "results" / "run-record.json"
+                record = json.loads(record_path.read_text(encoding="utf-8"))
+                assert record["instance_id"] == "instance-offer-1"
+            return super().run(host, port, command, timeout=timeout, check=check)
+
+    execute(path, api, RecordCheckingSSH())
 
 
 def test_destroy_runs_after_exception_mid_job(tmp_path):
@@ -247,31 +284,258 @@ def test_destroy_confirmation_failure_raises_after_three_attempts(tmp_path):
     with pytest.raises(vastrun.DestroyConfirmationError, match="after 3 attempts"):
         execute(path, api, FakeSSH())
 
-    assert api.destroy_attempts == ["instance-offer-1"] * 3
+    assert api.destroy_attempts[:vastrun.DESTROY_RETRIES] == ["instance-offer-1"] * vastrun.DESTROY_RETRIES
     record = json.loads((tmp_path / "results" / "run-record.json").read_text())
     assert record["destroy_confirmed"] is False
     assert "destroy_error" in record
 
 
-def test_vast_key_is_not_read_or_written_to_stdout_or_logs(tmp_path, monkeypatch, capsys):
+def test_unreadable_instance_list_is_not_treated_as_gone(tmp_path):
+    class UnreadableAPI(FakeAPI):
+        def list_instances(self):
+            return {"success": False, "msg": "rate limited"}
+
+    api = UnreadableAPI(keep_alive=True)
+    clock = FakeClock()
+    runner = make_runner(jobfile(tmp_path), api, FakeSSH(), clock)
+    instance_id = "instance-offer-1"
+    api.instances_by_id[instance_id] = {"id": instance_id, "label": runner.run_label}
+    entry = {"label": runner.run_label, "dph": 0.1, "instance_id": instance_id}
+    runner.record["hosts_tried"].append(entry)
+    runner._activate(instance_id, entry, started=0.0)
+
+    with pytest.raises(vastrun.DestroyConfirmationError):
+        runner._destroy_active()
+
+    assert instance_id in api.instances_by_id
+    assert api.destroy_attempts == [instance_id] * vastrun.DESTROY_RETRIES
+    assert runner.record["destroy_confirmed"] is False
+
+
+def test_unreadable_list_keeps_uncertain_rent_unconfirmed(tmp_path):
+    class UnreadableAPI(FakeAPI):
+        def list_instances(self):
+            return {"error": "temporary failure"}
+
+    api = UnreadableAPI([offer("lost")], ambiguous_offers={"lost"})
+    runner = make_runner(jobfile(tmp_path), api, FakeSSH(), FakeClock())
+    entry = {"label": runner.run_label, "dph": 0.1}
+    with pytest.raises(TimeoutError):
+        api.rent("lost", "watchdog", runner.run_label)
+
+    with pytest.raises(vastrun.RunnerError, match="rent outcome is uncertain"):
+        runner._recover_uncertain_rent(entry, runner.run_label, 0.0)
+    assert "instance-lost" in api.instances_by_id
+    assert api.destroyed == []
+
+
+def test_final_run_label_sweep_destroys_every_matching_instance(tmp_path):
+    class OrphanAPI(FakeAPI):
+        def rent(self, offer_id, watchdog, label):
+            response = super().rent(offer_id, watchdog, label)
+            self.instances_by_id["orphan-instance"] = {
+                "id": "orphan-instance",
+                "label": label,
+                "dph_total": 0.25,
+            }
+            self.rent_label = label
+            return response
+
+    api = OrphanAPI()
+    record = execute(jobfile(tmp_path), api, FakeSSH())
+
+    assert api.rent_label == record["run_label"]
+    assert "orphan-instance" in api.destroyed
+    assert api.instances_by_id == {}
+    assert record["destroy_confirmed"] is True
+
+
+def test_instance_rate_is_used_and_unconfirmed_spend_clock_keeps_running(tmp_path):
+    clock = FakeClock()
+    api = FakeAPI(keep_alive=True)
+    api.instances_by_id["instance-1"] = {
+        "id": "instance-1",
+        "label": "run-label",
+        "dph_total": 2.0,
+    }
+    path = jobfile(tmp_path)
+    runner = make_runner(path, api, FakeSSH(), clock)
+    entry = {"label": runner.run_label, "dph": 0.1, "instance_id": "instance-1"}
+    runner.record["hosts_tried"].append(entry)
+    runner._activate("instance-1", entry, started=0.0)
+
+    assert runner.current_dph == 2.0
+    with pytest.raises(vastrun.DestroyConfirmationError):
+        runner._destroy_active()
+    before = runner._estimate_spend()
+    clock.sleep(3600)
+    assert runner._estimate_spend() == pytest.approx(before + 2.0)
+
+
+def test_second_interrupt_during_destroy_backoff_does_not_cut_retries(tmp_path):
+    clock = FakeClock()
+    api = FakeAPI(keep_alive=True)
+    runner = make_runner(jobfile(tmp_path), api, FakeSSH(), clock, destroy_delay=1)
+    entry = {"label": runner.run_label, "dph": 0.1, "instance_id": "instance-1"}
+    api.instances_by_id["instance-1"] = {
+        "id": "instance-1",
+        "label": runner.run_label,
+    }
+    runner.record["hosts_tried"].append(entry)
+    runner._activate("instance-1", entry, started=0.0)
+    sleeps = 0
+
+    def interrupt_once(seconds):
+        nonlocal sleeps
+        sleeps += 1
+        if sleeps == 1:
+            raise vastrun.RunInterrupted("second interrupt")
+        clock.sleep(seconds)
+
+    runner.sleep = interrupt_once
+    with pytest.raises(vastrun.DestroyConfirmationError):
+        runner._destroy_active()
+    assert len(api.destroy_attempts) == vastrun.DESTROY_RETRIES
+    assert sleeps == vastrun.DESTROY_RETRIES - 1
+
+
+def test_main_installs_sighup_handler(tmp_path, monkeypatch, capsys):
+    installed = []
+    previous = {}
+
+    def fake_signal(signum, handler):
+        installed.append(signum)
+        return previous.get(signum, signal.SIG_DFL)
+
+    monkeypatch.setattr(vastrun.signal, "signal", fake_signal)
+    monkeypatch.setattr(vastrun, "run_jobfile", lambda *args, **kwargs: {"estimated_spend_usd": 0.0})
+
+    assert vastrun.main([str(tmp_path / "unused.json")]) == 0
+    assert signal.SIGHUP in installed
+    capsys.readouterr()
+
+
+def test_poll_tolerates_three_timeouts_and_copies_finished_results(tmp_path):
+    class FlakyPollSSH(FakeSSH):
+        def __init__(self):
+            super().__init__(outcomes={"FINISH_OK": 0})
+            self.timeouts = 3
+
+        def run(self, host, port, command, *, timeout, check=True):
+            if command.startswith("cat ") and self.timeouts:
+                self.timeouts -= 1
+                raise subprocess.TimeoutExpired(command, timeout)
+            return super().run(host, port, command, timeout=timeout, check=check)
+
+    result_path = tmp_path / "results" / "outputs" / "finished.txt"
+
+    class OrderedAPI(FakeAPI):
+        def destroy(self, instance_id):
+            assert result_path.read_text(encoding="utf-8") == "copied\n"
+            return super().destroy(instance_id)
+
+    api = OrderedAPI()
+    ssh = FlakyPollSSH()
+    path = jobfile(tmp_path, jobs=[{
+            "name": "finished",
+            "command": "FINISH_OK",
+            "expected_result_paths": ["outputs/finished.txt"],
+        }])
+    record = execute(path, api, ssh)
+
+    assert ssh.timeouts == 0
+    assert record["jobs"][0]["rc"] == 0
+    assert api.destroyed == ["instance-offer-1"]
+
+
+def test_fourth_consecutive_poll_failure_raises_and_cleans_up(tmp_path):
+    class FlakyPollSSH(FakeSSH):
+        def __init__(self):
+            super().__init__(never_finish={"HANG"})
+            self.timeouts = vastrun.MAX_POLL_FAILURES + 1
+
+        def run(self, host, port, command, *, timeout, check=True):
+            if command.startswith("cat ") and self.timeouts:
+                self.timeouts -= 1
+                raise subprocess.TimeoutExpired(command, timeout)
+            return super().run(host, port, command, timeout=timeout, check=check)
+
+    api = FakeAPI()
+    ssh = FlakyPollSSH()
+    path = jobfile(tmp_path, jobs=[{"name": "hang", "command": "HANG"}])
+
+    with pytest.raises(subprocess.TimeoutExpired):
+        execute(path, api, ssh)
+
+    assert ssh.timeouts == 0
+    assert api.destroyed == ["instance-offer-1"]
+
+
+@pytest.mark.parametrize("jobs, message", [
+    ([
+        {"name": "one", "command": "true", "expected_result_paths": ["outputs/result.txt"]},
+        {"name": "two", "command": "true", "expected_result_paths": ["outputs/result.txt"]},
+    ], "duplicate expected result path"),
+    ([
+        {"name": "a/b", "command": "true"},
+        {"name": "a_b", "command": "true"},
+    ], "safe job log stems must be unique"),
+])
+def test_validation_rejects_result_and_safe_stem_collisions(tmp_path, jobs, message):
+    api = FakeAPI()
+    with pytest.raises(vastrun.RunnerError, match=message):
+        execute(jobfile(tmp_path, jobs=jobs), api, FakeSSH())
+    assert api.watchdogs == []
+
+
+@pytest.mark.parametrize("instance, expected", [
+    ({"ssh_host": "host", "ports": {"22/tcp": [{"HostPort": 2233}]}}, ("host", 2233)),
+    ({"ssh_host": "host", "ports": {"22": [{"HostPort": 2244}]}}, ("host", 2244)),
+    ({"ssh_host": "host", "ports": {22: 2255}}, ("host", 2255)),
+    ({"ssh_host": "preferred", "ssh_port": 2222, "ports": {"22/tcp": [{"HostPort": 2233}]}},
+     ("preferred", 2222)),
+])
+def test_remote_connection_accepts_vast_ssh_port_shapes(instance, expected):
+    assert vastrun._remote_connection(instance) == expected
+
+
+def test_vast_api_key_uses_real_adapter_and_never_leaks(tmp_path, monkeypatch, capsys):
+    key_path = tmp_path / "fake-vast-key.txt"
+    key = "FAKE_KEY_DO_NOT_LOG"
+    key_path.write_text(key, encoding="utf-8")
     real_open = builtins.open
 
     def guarded_open(file, *args, **kwargs):
-        assert "vast-credits.env" not in str(file)
+        assert ".vast-credits.env" not in str(file)
         return real_open(file, *args, **kwargs)
 
     monkeypatch.setattr(builtins, "open", guarded_open)
-    api = FakeAPI()
-    ssh = FakeSSH(outcomes={"SAFE_JOB": 0})
-    path = jobfile(tmp_path, jobs=[{"name": "safe", "command": "SAFE_JOB"}])
+    calls = []
 
-    execute(path, api, ssh)
+    def fake_urlopen(request, *, timeout):
+        calls.append((request, timeout))
+        return io.BytesIO(b'{"instances": []}')
 
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+    api = vastrun.VastAPI(key_path=str(key_path))
+    assert api.list_instances() == {"instances": []}
+    assert calls[0][0].get_header("Authorization") == f"Bearer {key}"
+    assert calls[0][0].full_url == "https://console.vast.ai/api/v1/instances/"
+
+    def rejected_urlopen(request, *, timeout):
+        raise urllib.error.HTTPError(request.full_url, 403, "denied", {}, None)
+
+    monkeypatch.setattr(urllib.request, "urlopen", rejected_urlopen)
+    with pytest.raises(vastrun.RunnerError, match="HTTP 403") as error:
+        api.list_instances()
+    assert key not in str(error.value)
     captured = capsys.readouterr()
-    assert api.key not in captured.out + captured.err
-    for result in (tmp_path / "results").rglob("*"):
-        if result.is_file():
-            assert api.key not in result.read_text(encoding="utf-8")
-    assert all(api.key not in str(event) for event in ssh.events)
-    assert api.watchdogs and "poweroff" in api.watchdogs[0]
-    assert "vast-credits.env" not in capsys.readouterr().out
+    assert key not in captured.out + captured.err
+
+
+def test_unreadable_instance_list_shape_is_distinct_from_empty_list():
+    assert vastrun._instance_ids({"instances": []}) == set()
+    assert vastrun._instance_ids({"success": False}) is None
+    assert vastrun._instance_ids([{"id": "instance-1"}]) is None
+    assert vastrun._instance_ids({"instances": [{"label": "missing-id"}]}) is None
+    assert vastrun._instance_ids({"instances": [{"id": "missing-label"}]}) is None

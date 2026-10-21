@@ -29,6 +29,7 @@ DEFAULT_IMAGE = "pytorch/pytorch:2.6.0-cuda12.4-cudnn9-devel"
 REMOTE_ROOT = "/workspace/vastrun"
 MAX_HOSTS = 3
 DESTROY_RETRIES = 3
+MAX_POLL_FAILURES = 3
 
 
 class RunnerError(RuntimeError):
@@ -130,21 +131,26 @@ def _instance_payload(response: Any, instance_id: str | None = None) -> dict[str
 
 
 def _instance_payloads(response: Any) -> list[dict[str, Any]] | None:
-    if not isinstance(response, dict):
+    # The v1 list endpoint is specifically {"instances": [...]}.  Treat any
+    # other shape, including an error object or a bare list, as unreadable.
+    if not isinstance(response, dict) or not isinstance(response.get("instances"), list):
         return None
-    instances = response.get("instances", response)
-    if isinstance(instances, dict):
-        if instances.get("id") is not None:
-            return [instances]
-        return [value for value in instances.values() if isinstance(value, dict)]
-    if isinstance(instances, list):
-        return [value for value in instances if isinstance(value, dict)]
-    return None
+    instances = response["instances"]
+    if any(not isinstance(value, dict) or value.get("id") is None or "label" not in value
+           for value in instances):
+        return None
+    return instances
 
 
-def _instance_ids(response: Any) -> set[str]:
-    return {str(value["id"]) for value in (_instance_payloads(response) or [])
-            if value.get("id") is not None}
+def _instance_ids(response: Any) -> set[str] | None:
+    instances = _instance_payloads(response)
+    if instances is None:
+        return None
+    return {str(value["id"]) for value in instances}
+
+
+def _destroy_succeeded(response: Any) -> bool:
+    return isinstance(response, dict) and response.get("success") is True
 
 
 def _rent_instance_id(response: Any) -> str | None:
@@ -161,11 +167,19 @@ def _remote_connection(instance: dict[str, Any]) -> tuple[str, int] | None:
     port = instance.get("ssh_port")
     if not port:
         ports = instance.get("ports") or {}
-        ssh_ports = ports.get("22") or ports.get(22) if isinstance(ports, dict) else None
-        if isinstance(ssh_ports, list) and ssh_ports:
-            item = ssh_ports[0]
-            if isinstance(item, dict):
-                port = item.get("HostPort") or item.get("host_port")
+        if isinstance(ports, dict):
+            for key in ("22/tcp", "22", 22):
+                ssh_ports = ports.get(key)
+                if isinstance(ssh_ports, list) and ssh_ports:
+                    ssh_ports = ssh_ports[0]
+                if isinstance(ssh_ports, dict):
+                    port = (ssh_ports.get("HostPort") or ssh_ports.get("host_port")
+                            or ssh_ports.get("hostPort") or ssh_ports.get("port"))
+                    host = host or ssh_ports.get("HostIp") or ssh_ports.get("host_ip")
+                else:
+                    port = ssh_ports
+                if port:
+                    break
     if host and port:
         try:
             return str(host), int(port)
@@ -333,6 +347,9 @@ class _Runner:
         self.spend_cap = _number(config["spend_cap_usd"])
         self.wall_seconds = _number(config["wall_clock_min"]) * 60
         self.total_spend = 0.0
+        self.tracked_instances: dict[str, dict[str, Any]] = {}
+        self.instance_started: dict[str, float] = {}
+        self.label_started: dict[str, float] = {}
         self.active: dict[str, Any] | None = None
         self.active_started: float | None = None
         self.current_dph = 0.0
@@ -361,30 +378,59 @@ class _Runner:
         if not self.workdir.startswith("/") or ".." in PurePosixPath(self.workdir).parts:
             raise RunnerError("remote_workdir must be an absolute path without '..'")
         names: set[str] = set()
+        stems: set[str] = set()
+        expected_paths: set[str] = set()
         for job in self.config["jobs"]:
             if not isinstance(job, dict) or not job.get("name") or not isinstance(job.get("command"), str):
                 raise RunnerError("each job needs a name and command")
-            if str(job["name"]) in names:
+            name = str(job["name"])
+            if name in names:
                 raise RunnerError("job names must be unique")
-            names.add(str(job["name"]))
+            names.add(name)
+            stem = self._safe_job_stem(name)
+            if stem in stems:
+                raise RunnerError("safe job log stems must be unique")
+            stems.add(stem)
             if not isinstance(job.get("env", {}), dict):
                 raise RunnerError(f"env for job {job['name']} must be an object")
+            expected = job.get("expected_result_paths", job.get("expected_results", [])) or []
+            if not isinstance(expected, list):
+                raise RunnerError(f"expected result paths for job {name} must be a list")
+            for value in expected:
+                path = PurePosixPath(str(value))
+                if ".." in path.parts:
+                    raise RunnerError(f"unsafe expected result path for job {name}")
+                workdir = PurePosixPath(self.workdir)
+                if path.is_absolute() and path.parts[:len(workdir.parts)] == workdir.parts:
+                    local_path = path.relative_to(workdir)
+                elif path.is_absolute():
+                    local_path = PurePosixPath(path.name)
+                else:
+                    local_path = path
+                local_key = str(local_path)
+                if local_key in expected_paths:
+                    raise RunnerError(f"duplicate expected result path: {local_key}")
+                expected_paths.add(local_key)
 
     def _estimate_spend(self) -> float:
         estimate = self.total_spend
-        if self.active_started is not None and self.active is not None:
-            estimate += max(0.0, self.clock() - self.active_started) * self.current_dph / 3600
+        now = self.clock()
+        for instance in self.tracked_instances.values():
+            started = instance.get("started")
+            if started is not None:
+                estimate += max(0.0, now - started) * _number(instance.get("dph")) / 3600
         return estimate
 
     def _remaining_seconds(self) -> float:
         remaining = self.wall_seconds - (self.clock() - self.started)
-        if self.active is not None and self.current_dph > 0:
-            remaining = min(remaining, (self.spend_cap - self._estimate_spend()) * 3600 / self.current_dph)
+        billing_dph = sum(_number(instance.get("dph")) for instance in self.tracked_instances.values())
+        if billing_dph > 0:
+            remaining = min(remaining, (self.spend_cap - self._estimate_spend()) * 3600 / billing_dph)
         return remaining
 
     def _check_limits(self) -> None:
         if self.cancel_event is not None and self.cancel_event.is_set():
-            raise RunInterrupted("received SIGINT or SIGTERM")
+            raise RunInterrupted("received a stop signal")
         if self.clock() - self.started >= self.wall_seconds:
             raise WallClockExceeded("wall-clock limit reached")
         if self._estimate_spend() >= self.spend_cap:
@@ -433,7 +479,7 @@ class _Runner:
 
     def _rent_one(self, offer: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
         offer_id = _offer_id(offer)
-        host_label = f"{self.run_label}-{len(self.record['hosts_tried']) + 1}"
+        host_label = self.run_label
         entry: dict[str, Any] = {
             "offer_id": offer_id,
             "label": host_label,
@@ -443,7 +489,10 @@ class _Runner:
             "dropped_reason": None,
         }
         self.record["hosts_tried"].append(entry)
+        self._write_record()
         rent_started = self.clock()
+        self.label_started[host_label] = rent_started
+        instance_id: str | None = None
         try:
             response = self.api.rent(
                 offer_id,
@@ -451,38 +500,106 @@ class _Runner:
                 host_label,
             )
             instance_id = _rent_instance_id(response)
+            if instance_id is not None:
+                # Persist the id in the rent transaction before readiness work
+                # can be interrupted.
+                entry["instance_id"] = instance_id
+                self.instance_started[instance_id] = rent_started
+                self.record["instance_id"] = instance_id
+                self.record["dph"] = entry["dph"]
+                self.record["destroy_confirmed"] = False
+                self._write_record()
+                self._activate(instance_id, entry, rent_started)
         except RunInterrupted:
-            entry["dropped_reason"] = "rent was interrupted; checking for an instance created before interruption"
-            self._recover_uncertain_rent(entry, host_label, rent_started)
+            if instance_id is None or self.active is None or self.active.get("id") != instance_id:
+                entry["dropped_reason"] = "rent was interrupted; checking for an instance created before interruption"
+                self._write_record()
+                self._recover_uncertain_rent(entry, host_label, rent_started)
             raise
         except Exception as exc:
+            if instance_id is not None and self.active is not None and self.active.get("id") == instance_id:
+                raise
             entry["dropped_reason"] = f"rent failed: {type(exc).__name__}"
+            self._write_record()
             self._recover_uncertain_rent(entry, host_label, rent_started)
             return False, entry
         if instance_id is None:
             entry["dropped_reason"] = "rent response did not include an instance id"
+            self._write_record()
             self._recover_uncertain_rent(entry, host_label, rent_started)
             return False, entry
 
-        self._activate(instance_id, entry, rent_started)
         connection = self._wait_ready(instance_id)
         if connection is None:
             entry["dropped_reason"] = f"SSH did not become ready within {self.ready_timeout:g} seconds"
+            self._write_record()
             self._destroy_active()
             return False, entry
         entry["selected"] = True
         self.record["ssh_host"] = connection[0]
         self.record["ssh_port"] = connection[1]
+        self._write_record()
         return True, entry
 
     def _activate(self, instance_id: str, entry: dict[str, Any], started: float | None = None) -> None:
+        instance_id = str(instance_id)
         entry["instance_id"] = instance_id
-        self.active = {"id": instance_id, "entry": entry}
-        self.active_started = self.clock() if started is None else started
-        self.current_dph = entry["dph"]
+        active_started = self.clock() if started is None else started
+        self.instance_started[instance_id] = active_started
+        tracked = self.tracked_instances.get(instance_id)
+        if tracked is None:
+            tracked = {
+                "id": instance_id,
+                "entry": entry,
+                "started": active_started,
+                "dph": _number(entry.get("dph")),
+                "destroy_attempts": 0,
+            }
+            self.tracked_instances[instance_id] = tracked
+        else:
+            tracked["entry"] = entry
+            tracked["started"] = min(_number(tracked.get("started"), active_started), active_started)
+        self.active = tracked
+        self.active_started = tracked["started"]
+        self.current_dph = _number(tracked.get("dph"))
         self.record["instance_id"] = instance_id
         self.record["dph"] = self.current_dph
         self.record["destroy_confirmed"] = False
+        self._write_record()
+        self._refresh_instance_rate(instance_id)
+
+    def _refresh_instance_rate(self, instance_id: str) -> None:
+        """Use the instance's listed rate when available, falling back to its offer."""
+        try:
+            payloads = _instance_payloads(self.api.list_instances())
+        except RunInterrupted:
+            raise
+        except Exception:
+            return
+        if payloads is None:
+            return
+        instance = next((value for value in payloads if str(value.get("id")) == instance_id), None)
+        if instance is not None:
+            self._apply_instance_rate(instance_id, instance)
+
+    def _apply_instance_rate(self, instance_id: str, instance: dict[str, Any]) -> None:
+        if "dph_total" not in instance:
+            return
+        tracked = self.tracked_instances.get(instance_id)
+        if tracked is None:
+            return
+        rate = _number(instance.get("dph_total"), _number(tracked.get("dph")))
+        if rate == tracked.get("dph"):
+            return
+        tracked["dph"] = rate
+        entry = tracked.get("entry")
+        if isinstance(entry, dict):
+            entry["dph"] = rate
+        if self.active is tracked:
+            self.current_dph = rate
+        if self.record.get("instance_id") == instance_id:
+            self.record["dph"] = rate
+        self._write_record()
 
     def _recover_uncertain_rent(self, entry: dict[str, Any], label: str, started: float) -> None:
         """Find and destroy an instance if a timed-out rent request actually succeeded."""
@@ -494,6 +611,7 @@ class _Runner:
                 if payloads is None:
                     last_error = "Vast returned an unreadable instance list"
                 else:
+                    last_error = None
                     matches = [value for value in payloads if value.get("label") == label]
                     if matches:
                         break
@@ -508,51 +626,182 @@ class _Runner:
             if instance_id is None:
                 raise RunnerError("rent outcome is uncertain; matching instance has no id")
             entry.setdefault("recovered_instance_ids", []).append(str(instance_id))
+            self.instance_started[str(instance_id)] = started
+            self._write_record()
             self._activate(str(instance_id), entry, started)
             self._destroy_active()
         if matches:
             entry["dropped_reason"] = "rent response was uncertain; recovered and destroyed the created instance"
+            self._write_record()
 
     def _destroy_active(self) -> None:
         if self.active is None:
             return
-        instance_id = str(self.active["id"])
-        if self.active.get("destroy_attempted"):
-            message = self.active.get("destroy_error", f"could not confirm instance {instance_id} destroyed")
-            raise DestroyConfirmationError(message)
-        self.active["destroy_attempted"] = True
+        self._destroy_tracked(self.active)
+
+    def _destroy_tracked(self, tracked: dict[str, Any]) -> None:
+        instance_id = str(tracked["id"])
+        entry = tracked.get("entry")
+        if not isinstance(entry, dict):
+            entry = {}
+            tracked["entry"] = entry
         last_error = "instance remained listed"
         confirmed = False
         for attempt in range(1, DESTROY_RETRIES + 1):
             try:
-                self.api.destroy(instance_id)
+                delete_response = self.api.destroy(instance_id)
+                delete_ok = _destroy_succeeded(delete_response)
+                if not delete_ok:
+                    last_error = "Vast returned an unreadable destroy response"
             except Exception as exc:
+                delete_ok = False
                 last_error = f"destroy request raised {type(exc).__name__}"
             try:
-                listed = instance_id in _instance_ids(self.api.list_instances())
-                if not listed:
+                instances = _instance_payloads(self.api.list_instances())
+                if instances is None:
+                    last_error = "Vast returned an unreadable instance list"
+                else:
+                    listed_instance = next(
+                        (value for value in instances if str(value.get("id")) == instance_id),
+                        None,
+                    )
+                    if listed_instance is not None:
+                        self._apply_instance_rate(instance_id, listed_instance)
+                if instances is not None and listed_instance is None and delete_ok:
                     confirmed = True
-                    break
-                last_error = "instance remained listed"
+                    last_error = ""
+                elif instances is not None and listed_instance is None:
+                    last_error = "destroy response was unreadable although the instance is absent"
+                elif instances is not None:
+                    last_error = "instance remained listed"
             except Exception as exc:
                 last_error = f"instance confirmation raised {type(exc).__name__}"
+            tracked["destroy_attempts"] = attempt
+            tracked["last_destroy_error"] = last_error
+            entry["destroy_attempts"] = attempt
+            entry["last_destroy_error"] = last_error
+            self._write_record()
+            if confirmed:
+                break
             if attempt < DESTROY_RETRIES and self.destroy_delay > 0:
-                self.sleep(self.destroy_delay)
+                try:
+                    self.sleep(self.destroy_delay)
+                except RunInterrupted:
+                    last_error = "received another interrupt during destroy backoff"
+                    tracked["last_destroy_error"] = last_error
+                    entry["last_destroy_error"] = last_error
+                    self._write_record()
 
-        active_started = self.active_started if self.active_started is not None else self.clock()
-        elapsed = max(0.0, self.clock() - active_started)
-        self.total_spend += elapsed * self.current_dph / 3600
-        self.active_started = None
-        self.record["estimated_spend_usd"] = self.total_spend
-        self.record["destroy_confirmed"] = confirmed
         if confirmed:
-            self.active = None
-            self.active_started = None
-            self.current_dph = 0.0
+            started = _number(tracked.get("started"), self.clock())
+            elapsed = max(0.0, self.clock() - started)
+            self.total_spend += elapsed * _number(tracked.get("dph")) / 3600
+            self.tracked_instances.pop(instance_id, None)
+            tracked.pop("last_destroy_error", None)
+            entry.pop("last_destroy_error", None)
+            if self.active is tracked:
+                self.active = None
+                self.active_started = None
+                self.current_dph = 0.0
+            self.record["estimated_spend_usd"] = round(self._estimate_spend(), 6)
+            self.record["destroy_confirmed"] = not self.tracked_instances
+            self.record.pop("destroy_error", None)
+            self._write_record()
             return
         message = f"could not confirm instance {instance_id} destroyed after {DESTROY_RETRIES} attempts: {last_error}"
-        self.active["destroy_error"] = message
+        tracked["destroy_error"] = message
+        entry["destroy_error"] = message
+        self.record["estimated_spend_usd"] = round(self._estimate_spend(), 6)
+        self.record["destroy_confirmed"] = False
+        self.record["destroy_error"] = message
+        self._write_record()
         raise DestroyConfirmationError(message)
+
+    def _label_sweep(self) -> None:
+        """Destroy and verify every instance carrying this run's label."""
+        last_error = "an instance with this run label remained listed"
+        for wave in range(DESTROY_RETRIES + 1):
+            try:
+                instances = _instance_payloads(self.api.list_instances())
+                if instances is None:
+                    raise RunnerError("Vast returned an unreadable instance list during label sweep")
+            except Exception as exc:
+                last_error = str(exc) or type(exc).__name__
+                self.record["label_sweep_error"] = last_error
+                self._write_record()
+                if wave < DESTROY_RETRIES:
+                    try:
+                        self.sleep(self.destroy_delay or 1)
+                    except RunInterrupted:
+                        pass
+                    continue
+                break
+
+            matches = [value for value in instances if value.get("label") == self.run_label]
+            if not matches:
+                self.record["destroy_confirmed"] = True
+                self.record.pop("label_sweep_error", None)
+                self.record.pop("destroy_error", None)
+                self._write_record()
+                return
+            if wave == DESTROY_RETRIES:
+                break
+
+            for instance in matches:
+                instance_id = str(instance["id"])
+                tracked = self.tracked_instances.get(instance_id)
+                if tracked is None:
+                    entry = next((candidate for candidate in self.record["hosts_tried"]
+                                  if candidate.get("instance_id") == instance_id), None)
+                    if entry is None:
+                        entry = next((candidate for candidate in self.record["hosts_tried"]
+                                      if candidate.get("label") == self.run_label
+                                      and not candidate.get("instance_id")), None)
+                    if entry is None:
+                        entry = {
+                            "offer_id": None,
+                            "label": self.run_label,
+                            "dph": _number(instance.get("dph_total")),
+                            "instance_id": instance_id,
+                            "started_at": _utc_now(),
+                            "dropped_reason": "found by final run-label sweep",
+                        }
+                        self.record["hosts_tried"].append(entry)
+                    else:
+                        entry["instance_id"] = instance_id
+                        entry.setdefault("swept_instance_ids", []).append(instance_id)
+                    rate = _number(instance.get("dph_total"), _number(entry.get("dph")))
+                    started = self.instance_started.get(
+                        instance_id,
+                        self.label_started.get(self.run_label, self.clock()),
+                    )
+                    tracked = {
+                        "id": instance_id,
+                        "entry": entry,
+                        "started": started,
+                        "dph": rate,
+                        "destroy_attempts": 0,
+                    }
+                    self.tracked_instances[instance_id] = tracked
+                    self.instance_started[instance_id] = started
+                    if "dph_total" in instance:
+                        entry["dph"] = rate
+                    self.record["destroy_confirmed"] = False
+                    self._write_record()
+                else:
+                    self._apply_instance_rate(instance_id, instance)
+                try:
+                    self._destroy_tracked(tracked)
+                except Exception as exc:
+                    last_error = str(exc) or type(exc).__name__
+                    self.record["label_sweep_error"] = last_error
+                    self._write_record()
+
+        self.record["destroy_confirmed"] = False
+        self.record["label_sweep_error"] = last_error
+        self.record["destroy_error"] = last_error
+        self._write_record()
+        raise DestroyConfirmationError(f"could not confirm label sweep for {self.run_label}: {last_error}")
 
     def _ensure_ready_host(self) -> tuple[str, int]:
         raw_offers = self.api.offers(self.max_dph)
@@ -566,6 +815,7 @@ class _Runner:
                 return str(self.record["ssh_host"]), int(self.record["ssh_port"])
             if entry.get("dropped_reason") and "rent failed" not in entry["dropped_reason"]:
                 self.record["last_dropped_reason"] = entry["dropped_reason"]
+                self._write_record()
         raise NoReadyHost(f"none of the first {min(MAX_HOSTS, len(offers))} offers became SSH-ready")
 
     def _ssh_run(self, host: str, port: int, command: str, *, check: bool = True,
@@ -673,23 +923,38 @@ class _Runner:
                 "copied_back": [],
             }
             self.record["jobs"].append(record)
+            self._write_record()
             self._launch_job(host, port, job, log_path, status_path)
+            poll_failures = 0
             while True:
                 self._check_limits()
-                output = self._ssh_run(host, port, f"cat {shlex.quote(status_path)} 2>/dev/null || true",
-                                       check=False, timeout=15)
+                try:
+                    output = self._ssh_run(host, port, f"cat {shlex.quote(status_path)} 2>/dev/null || true",
+                                           check=False, timeout=15)
+                except (SpendCapExceeded, WallClockExceeded, RunInterrupted):
+                    raise
+                except Exception:
+                    poll_failures += 1
+                    if poll_failures > MAX_POLL_FAILURES:
+                        raise
+                    self._sleep_limited(self.poll_interval)
+                    continue
+                poll_failures = 0
                 match = re.search(r"^(-?\d+)\s*$", output, flags=re.MULTILINE)
                 if match:
                     record["rc"] = int(match.group(1))
+                    self._write_record()
                     break
                 self._sleep_limited(self.poll_interval)
             record["seconds"] = round(max(0.0, self.clock() - job_started), 3)
             record["copied_back"] = self._copy_back(host, port, job, log_path)
+            self._write_record()
             if record["rc"] != 0:
                 raise JobFailed(f"job {name} exited with rc={record['rc']}")
 
-    def _write_record(self) -> None:
-        self.record["end"] = _utc_now()
+    def _write_record(self, *, final: bool = False) -> None:
+        if final:
+            self.record["end"] = _utc_now()
         self.record["estimated_spend_usd"] = round(self._estimate_spend(), 6)
         self.results_dir.mkdir(parents=True, exist_ok=True)
         record_path = self.results_dir / "run-record.json"
@@ -708,6 +973,7 @@ class _Runner:
         except BaseException as exc:
             failure = exc
             self.record["error"] = str(exc) if not isinstance(exc, (KeyboardInterrupt, SystemExit)) else type(exc).__name__
+            self._write_record()
         finally:
             try:
                 self._destroy_active()
@@ -715,7 +981,12 @@ class _Runner:
                 self.record["destroy_error"] = str(exc)
                 failure = exc
             try:
-                self._write_record()
+                self._label_sweep()
+            except BaseException as exc:
+                self.record["destroy_error"] = str(exc)
+                failure = exc
+            try:
+                self._write_record(final=True)
             except BaseException as exc:
                 if failure is None:
                     failure = exc
@@ -757,7 +1028,7 @@ def main(argv: list[str] | None = None) -> int:
         cancelled.set()
         raise RunInterrupted(f"received signal {signum}")
 
-    for sig in (signal.SIGINT, signal.SIGTERM):
+    for sig in (signal.SIGINT, signal.SIGTERM, signal.SIGHUP):
         old_handlers[sig] = signal.signal(sig, request_stop)
     try:
         record = run_jobfile(args[0], cancel_event=cancelled)
