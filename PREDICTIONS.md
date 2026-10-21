@@ -1660,3 +1660,7 @@ Amendment 1 to Part 43 (written 2026-10-20 20:06 CT, before any code ran, from C
 | 48.4 | Claude: the effect grows with size: Pythia-1.4B's novel-item AUC exceeds Pythia-410m's. | **Failed.** Pythia-1.4B 0.742 < Pythia-410m 0.898. | 2026-10-21 |
 | 48.5 | Claude: spelling the letters out weakens it: in every model with novel-item AUC >= 0.70, the spelled-out AUC is at least 0.10 lower. | **Failed, in every model.** Spelled-out AUC is HIGHER, not lower: 0.984, 1.000, 0.973, 0.938, 0.930 (gains 0.09 to 0.26). So the effect does not depend on the word being one or a few tokens. (Correction 10-21 13:16: spelling out keeps the sound as well as the letters, so this does NOT separate letters from sound; the design's reading of this control was too strong. Part 48b separates them.) | 2026-10-21 |
 | 48.6 | Claude: dropping template 2 (which names both shapes) changes no model's novel-item AUC by more than 0.05. | **Held.** Largest change 0.039 (Pythia-1.4B 0.742 to 0.703). Note: without template 2, Pythia-1.4B (p 0.052) and Qwen3 (0.680, p 0.089) lose significance. | 2026-10-21 |
+
+| 48b.1 | Claude: in at least 3 of 5 models the k twins score sharper than their c twins (two-sided sign test over 16 pairs, p < 0.05). | | |
+| 48b.2 | Claude: in every model the median abs(k - c) gap is under half that model's Part 48 sharp-minus-round median gap. | | |
+| 48b.3 | Claude: Pythia-1.4B shows 48b.1's direction at p < 0.05. | | |
