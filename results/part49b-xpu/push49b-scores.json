@@ -1,0 +1,782 @@
+{
+  "arm_count": 7,
+  "arms": [
+    {
+      "answer_count": 64,
+      "arm": "no_clamp",
+      "bootstrap95": [
+        2.6233911247136934,
+        7.679086261064329
+      ],
+      "broken": {
+        "hits": 0,
+        "n": 0,
+        "pending": true,
+        "rate": null
+      },
+      "clamps": [],
+      "mean_per_1000": 4.9933362294234405,
+      "per_prompt": [
+        {
+          "mean_per_1000": 4.716981132075472,
+          "prompt_id": "p01"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p02"
+        },
+        {
+          "mean_per_1000": 4.032258064516129,
+          "prompt_id": "p03"
+        },
+        {
+          "mean_per_1000": 4.098360655737705,
+          "prompt_id": "p04"
+        },
+        {
+          "mean_per_1000": 6.578947368421052,
+          "prompt_id": "p05"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p06"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p07"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p08"
+        },
+        {
+          "mean_per_1000": 7.603686635944701,
+          "prompt_id": "p09"
+        },
+        {
+          "mean_per_1000": 11.561047222901884,
+          "prompt_id": "p10"
+        },
+        {
+          "mean_per_1000": 3.6231884057971016,
+          "prompt_id": "p11"
+        },
+        {
+          "mean_per_1000": 11.976772566407679,
+          "prompt_id": "p12"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p13"
+        },
+        {
+          "mean_per_1000": 7.634032634032634,
+          "prompt_id": "p14"
+        },
+        {
+          "mean_per_1000": 18.06810498494069,
+          "prompt_id": "p15"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p16"
+        }
+      ],
+      "prompt_count": 16,
+      "ratio_to_no_clamp": {
+        "bootstrap95": [
+          1.0,
+          1.0
+        ],
+        "value": 1.0
+      }
+    },
+    {
+      "answer_count": 64,
+      "arm": "L22:1610",
+      "bootstrap95": [
+        0.35511363636363635,
+        3.823591125503052
+      ],
+      "broken": {
+        "hits": 0,
+        "n": 0,
+        "pending": true,
+        "rate": null
+      },
+      "clamps": [
+        {
+          "k": -8,
+          "layer": 22,
+          "level": -42.5,
+          "natural_max": 5.3125,
+          "unit": 1610
+        }
+      ],
+      "mean_per_1000": 1.8804121098699416,
+      "per_prompt": [
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p01"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p02"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p03"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p04"
+        },
+        {
+          "mean_per_1000": 5.681818181818182,
+          "prompt_id": "p05"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p06"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p07"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p08"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p09"
+        },
+        {
+          "mean_per_1000": 4.032258064516129,
+          "prompt_id": "p10"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p11"
+        },
+        {
+          "mean_per_1000": 8.004610655737704,
+          "prompt_id": "p12"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p13"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p14"
+        },
+        {
+          "mean_per_1000": 12.367906855847053,
+          "prompt_id": "p15"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p16"
+        }
+      ],
+      "prompt_count": 16,
+      "ratio_to_no_clamp": {
+        "bootstrap95": [
+          0.10452938326996163,
+          0.5644569244968458
+        ],
+        "value": 0.37658431627126077
+      }
+    },
+    {
+      "answer_count": 64,
+      "arm": "L19:4826",
+      "bootstrap95": [
+        1.383076671916368,
+        5.901319032890902
+      ],
+      "broken": {
+        "hits": 0,
+        "n": 0,
+        "pending": true,
+        "rate": null
+      },
+      "clamps": [
+        {
+          "id": "W",
+          "k": -8,
+          "layer": 19,
+          "level": -33.5,
+          "natural_max": 4.1875,
+          "unit": 4826
+        }
+      ],
+      "mean_per_1000": 3.526601158948985,
+      "per_prompt": [
+        {
+          "mean_per_1000": 4.716981132075472,
+          "prompt_id": "p01"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p02"
+        },
+        {
+          "mean_per_1000": 4.166666666666667,
+          "prompt_id": "p03"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p04"
+        },
+        {
+          "mean_per_1000": 12.134502923976608,
+          "prompt_id": "p05"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p06"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p07"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p08"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p09"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p10"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p11"
+        },
+        {
+          "mean_per_1000": 12.2972853869205,
+          "prompt_id": "p12"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p13"
+        },
+        {
+          "mean_per_1000": 3.90625,
+          "prompt_id": "p14"
+        },
+        {
+          "mean_per_1000": 9.864603481624759,
+          "prompt_id": "p15"
+        },
+        {
+          "mean_per_1000": 9.33932895191975,
+          "prompt_id": "p16"
+        }
+      ],
+      "prompt_count": 16,
+      "ratio_to_no_clamp": {
+        "bootstrap95": [
+          0.338174566414264,
+          1.277532493820034
+        ],
+        "value": 0.7062615047166946
+      }
+    },
+    {
+      "answer_count": 64,
+      "arm": "both",
+      "bootstrap95": [
+        0.4887585532746823,
+        3.921583666871161
+      ],
+      "broken": {
+        "hits": 0,
+        "n": 0,
+        "pending": true,
+        "rate": null
+      },
+      "clamps": [
+        {
+          "k": -8,
+          "layer": 22,
+          "level": -42.5,
+          "natural_max": 5.3125,
+          "unit": 1610
+        },
+        {
+          "id": "W",
+          "k": -8,
+          "layer": 19,
+          "level": -33.5,
+          "natural_max": 4.1875,
+          "unit": 4826
+        }
+      ],
+      "mean_per_1000": 2.0247714828780667,
+      "per_prompt": [
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p01"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p02"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p03"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p04"
+        },
+        {
+          "mean_per_1000": 11.11111111111111,
+          "prompt_id": "p05"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p06"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p07"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p08"
+        },
+        {
+          "mean_per_1000": 3.787878787878788,
+          "prompt_id": "p09"
+        },
+        {
+          "mean_per_1000": 4.032258064516129,
+          "prompt_id": "p10"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p11"
+        },
+        {
+          "mean_per_1000": 3.8461538461538463,
+          "prompt_id": "p12"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p13"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p14"
+        },
+        {
+          "mean_per_1000": 9.618941916389197,
+          "prompt_id": "p15"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p16"
+        }
+      ],
+      "prompt_count": 16,
+      "ratio_to_no_clamp": {
+        "bootstrap95": [
+          0.15070091101443278,
+          0.6973503058032845
+        ],
+        "value": 0.4054947213342088
+      }
+    },
+    {
+      "answer_count": 64,
+      "arm": "R1",
+      "bootstrap95": [
+        4.359501287085588,
+        11.532404217571246
+      ],
+      "broken": {
+        "hits": 0,
+        "n": 0,
+        "pending": true,
+        "rate": null
+      },
+      "clamps": [
+        {
+          "k": -8,
+          "layer": 22,
+          "level": -92.5,
+          "natural_max": 11.5625,
+          "unit": 569
+        }
+      ],
+      "mean_per_1000": 7.844675305291595,
+      "per_prompt": [
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p01"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p02"
+        },
+        {
+          "mean_per_1000": 12.068078979843687,
+          "prompt_id": "p03"
+        },
+        {
+          "mean_per_1000": 16.089683052504267,
+          "prompt_id": "p04"
+        },
+        {
+          "mean_per_1000": 11.369509043927648,
+          "prompt_id": "p05"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p06"
+        },
+        {
+          "mean_per_1000": 4.901960784313726,
+          "prompt_id": "p07"
+        },
+        {
+          "mean_per_1000": 8.474576271186441,
+          "prompt_id": "p08"
+        },
+        {
+          "mean_per_1000": 7.752403846153847,
+          "prompt_id": "p09"
+        },
+        {
+          "mean_per_1000": 24.72909141428174,
+          "prompt_id": "p10"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p11"
+        },
+        {
+          "mean_per_1000": 12.198464912280702,
+          "prompt_id": "p12"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p13"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p14"
+        },
+        {
+          "mean_per_1000": 10.319148936170212,
+          "prompt_id": "p15"
+        },
+        {
+          "mean_per_1000": 17.61188764400326,
+          "prompt_id": "p16"
+        }
+      ],
+      "prompt_count": 16,
+      "ratio_to_no_clamp": {
+        "bootstrap95": [
+          0.8971584714930408,
+          2.8684395789091703
+        ],
+        "value": 1.5710288562317356
+      }
+    },
+    {
+      "answer_count": 64,
+      "arm": "R2",
+      "bootstrap95": [
+        2.3948086739451657,
+        7.895886526243422
+      ],
+      "broken": {
+        "hits": 0,
+        "n": 0,
+        "pending": true,
+        "rate": null
+      },
+      "clamps": [
+        {
+          "k": -8,
+          "layer": 22,
+          "level": -22.625,
+          "natural_max": 2.828125,
+          "unit": 3102
+        }
+      ],
+      "mean_per_1000": 5.08322991182329,
+      "per_prompt": [
+        {
+          "mean_per_1000": 4.716981132075472,
+          "prompt_id": "p01"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p02"
+        },
+        {
+          "mean_per_1000": 8.198924731182796,
+          "prompt_id": "p03"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p04"
+        },
+        {
+          "mean_per_1000": 12.260765550239235,
+          "prompt_id": "p05"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p06"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p07"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p08"
+        },
+        {
+          "mean_per_1000": 11.459634825079508,
+          "prompt_id": "p09"
+        },
+        {
+          "mean_per_1000": 11.194029850746269,
+          "prompt_id": "p10"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p11"
+        },
+        {
+          "mean_per_1000": 16.327340031729243,
+          "prompt_id": "p12"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p13"
+        },
+        {
+          "mean_per_1000": 7.4643493761140824,
+          "prompt_id": "p14"
+        },
+        {
+          "mean_per_1000": 9.709653092006032,
+          "prompt_id": "p15"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p16"
+        }
+      ],
+      "prompt_count": 16,
+      "ratio_to_no_clamp": {
+        "bootstrap95": [
+          0.6841393345454841,
+          1.377729002087916
+        ],
+        "value": 1.0180027296920537
+      }
+    },
+    {
+      "answer_count": 64,
+      "arm": "R3",
+      "bootstrap95": [
+        1.8413371314514704,
+        7.150411485049399
+      ],
+      "broken": {
+        "hits": 0,
+        "n": 0,
+        "pending": true,
+        "rate": null
+      },
+      "clamps": [
+        {
+          "k": -8,
+          "layer": 22,
+          "level": -8.625,
+          "natural_max": 1.078125,
+          "unit": 5258
+        }
+      ],
+      "mean_per_1000": 4.388280708181785,
+      "per_prompt": [
+        {
+          "mean_per_1000": 4.716981132075472,
+          "prompt_id": "p01"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p02"
+        },
+        {
+          "mean_per_1000": 11.866263918502725,
+          "prompt_id": "p03"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p04"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p05"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p06"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p07"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p08"
+        },
+        {
+          "mean_per_1000": 7.603686635944701,
+          "prompt_id": "p09"
+        },
+        {
+          "mean_per_1000": 11.561047222901884,
+          "prompt_id": "p10"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p11"
+        },
+        {
+          "mean_per_1000": 12.575372149990578,
+          "prompt_id": "p12"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p13"
+        },
+        {
+          "mean_per_1000": 7.634032634032634,
+          "prompt_id": "p14"
+        },
+        {
+          "mean_per_1000": 14.25510763746058,
+          "prompt_id": "p15"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p16"
+        }
+      ],
+      "prompt_count": 16,
+      "ratio_to_no_clamp": {
+        "bootstrap95": [
+          0.5582406444249571,
+          1.2316564080181525
+        ],
+        "value": 0.8788274024736527
+      }
+    }
+  ],
+  "joint_vs_product_of_singles": {
+    "joint_ratio_to_no_clamp": 0.4054947213342088,
+    "joint_to_product_bootstrap95": [
+      0.7142274453270742,
+      4.5654186293616235
+    ],
+    "joint_to_product_ratio": 1.524605354785702,
+    "product_of_single_ratios": 0.26596700586244826
+  },
+  "jsonl": "results\\part49b-xpu\\push49b.jsonl",
+  "k": -8,
+  "measure": {
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 4903,
+    "matching": "\\b(?:spell|magic|wand|sorcer|enchant|potion)\\w* (case-insensitive)",
+    "prompt_count": 16,
+    "prompt_exclusion": "answer matches whose stem occurs in that row's prompt are excluded",
+    "resampling_unit": "prompt",
+    "terms": [
+      "spell",
+      "magic",
+      "wand",
+      "sorcer",
+      "enchant",
+      "potion"
+    ],
+    "word_count": "Unicode regex \\b\\w+\\b"
+  },
+  "model": "Qwen/Qwen3-1.7B",
+  "natural_max_path": "results\\part49b-xpu\\natural-max-summary.json",
+  "random_unit_seed": 4902,
+  "random_units": [
+    {
+      "id": "R1",
+      "layer": 22,
+      "unit": 569
+    },
+    {
+      "id": "R2",
+      "layer": 22,
+      "unit": 3102
+    },
+    {
+      "id": "R3",
+      "layer": 22,
+      "unit": 5258
+    }
+  ],
+  "result_count": 448,
+  "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+  "schema_version": 1,
+  "seed": 3801,
+  "summary_type": "part49b_magic_word_density",
+  "timings": {
+    "L19:4826": {
+      "batch_size": 16,
+      "generated": 64,
+      "seconds": 35.18626009999571
+    },
+    "L22:1610": {
+      "batch_size": 16,
+      "generated": 64,
+      "seconds": 387.9217814000003
+    },
+    "R1": {
+      "batch_size": 16,
+      "generated": 64,
+      "seconds": 31.973340200005623
+    },
+    "R2": {
+      "batch_size": 16,
+      "generated": 64,
+      "seconds": 31.946988999996393
+    },
+    "R3": {
+      "batch_size": 16,
+      "generated": 64,
+      "seconds": 33.27944830000342
+    },
+    "both": {
+      "batch_size": 16,
+      "generated": 64,
+      "seconds": 41.98569850000058
+    },
+    "no_clamp": {
+      "batch_size": 16,
+      "generated": 64,
+      "seconds": 161.88030150000122
+    }
+  }
+}
