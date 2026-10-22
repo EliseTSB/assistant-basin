@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "prompts": [
+    "Write a two-person dialogue in which a wizard persuades an apprentice to abandon a shortcut through a dangerous mountain pass.",
+    "Compose a twelve-line poem from the perspective of a wizard watching the first snowfall over a harbor.",
+    "Summarize how a wizard's guild changed the laws of a small kingdom over three centuries.",
+    "Give a newly appointed village wizard practical advice for earning the trust of skeptical neighbors.",
+    "Prepare a repair log for a wizard's workshop, naming three tools that failed during an eclipse and what each failure revealed.",
+    "Write a field journal entry by a wizard assigned to inspect a polar observatory during a storm.",
+    "Create a debate between a wizard and a clockmaker about whether a broken town clock should be repaired or replaced.",
+    "Explain to a city council how a wizard could help prevent fires without frightening residents.",
+    "Tell the legend of a wizard who returns a stolen name to the river that first spoke it.",
+    "Describe the clothing and personal rituals a retired wizard chooses for a quiet morning at a seaside inn.",
+    "Draft a letter from a wizard to a former student, apologizing for a failed promise and offering a way to make amends.",
+    "Compare two schools of wizardry that disagree about whether knowledge belongs in private collections or public archives.",
+    "Write workshop safety instructions for a wizard training three apprentices to handle fragile glass instruments.",
+    "Imagine a wizard serving as translator at a peace treaty; describe the moment a misunderstanding is resolved.",
+    "Give a wizard who has just inherited a failing ferry business a realistic plan for the first week.",
+    "Write a museum label for an ancient wizard's compass and explain why its maker left one direction unmarked."
+  ]
+}

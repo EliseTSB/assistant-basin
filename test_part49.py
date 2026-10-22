@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import random
 from types import SimpleNamespace
 
+import numpy as np
 import pytest
 import torch
 
@@ -194,3 +196,65 @@ def test_scorer_matches_part38_topic_hit_and_reports_blinded_broken_rates():
     assert scored["partner_boosts"][0]["delta_rate"] == 1.0
     assert all(row["broken_rate"] is None for row in scored["arms"]
                if row["arm"] in ("P1", "P1+W") and row["broken"]["n"] == 0)
+
+
+def test_part49b_excludes_prompt_terms_from_answer_density():
+    measured = part49.part49b_answer_measure(
+        "Magic wand, spellbook and sorcery.", "Discuss magic with care."
+    )
+    assert measured == {
+        "matches": 3, "word_count": 5, "per_1000": 600.0,
+        "excluded_terms": ["magic"],
+    }
+
+
+def test_part49b_bootstrap_resamples_prompts_not_answers():
+    arms = [
+        {"id": "no_clamp", "clamps": []},
+        {"id": "L22:1610", "clamps": []},
+    ]
+    rows = [
+        {"record_type": "result", "arm": "no_clamp", "prompt_id": "p01",
+         "prompt": "Write a note.", "answer": "magic", "broken": None},
+        {"record_type": "result", "arm": "no_clamp", "prompt_id": "p02",
+         "prompt": "Write a note.", "answer": "ordinary", "broken": None},
+        {"record_type": "result", "arm": "L22:1610", "prompt_id": "p01",
+         "prompt": "Write a note.", "answer": "magic", "broken": None},
+        {"record_type": "result", "arm": "L22:1610", "prompt_id": "p01",
+         "prompt": "Write a note.", "answer": "magic", "broken": None},
+        {"record_type": "result", "arm": "L22:1610", "prompt_id": "p01",
+         "prompt": "Write a note.", "answer": "magic", "broken": None},
+        {"record_type": "result", "arm": "L22:1610", "prompt_id": "p02",
+         "prompt": "Write a note.", "answer": "ordinary", "broken": None},
+    ]
+
+    scored = part49.score_push49b_rows(rows, arms)
+    target = next(row for row in scored["arms"] if row["arm"] == "L22:1610")
+    prompt_values = np.asarray([1000.0, 0.0])
+    rng = np.random.default_rng(part49.PART49B_BOOTSTRAP_SEED)
+    indexes = rng.integers(0, len(prompt_values),
+                           size=(part49.PART49B_BOOTSTRAP_RESAMPLES, len(prompt_values)))
+    expected_bootstrap = np.quantile(prompt_values[indexes].mean(axis=1), [0.025, 0.975])
+
+    assert target["answer_count"] == 4
+    assert target["mean_per_1000"] == 500.0  # equal prompt weighting, not 3:1 answer weighting
+    assert target["bootstrap95"] == pytest.approx(expected_bootstrap.tolist())
+    assert scored["measure"]["resampling_unit"] == "prompt"
+
+
+def test_part49b_random_units_are_seeded_distinct_and_exclude_l22_1610():
+    width = 5000
+    expected = random.Random(4902).sample(
+        [unit for unit in range(width) if unit != 1610], 3
+    )
+    chosen = part49.choose_part49b_random_units(width, seed=4902)
+
+    assert part49.PART49B_RANDOM_SEED == 4902
+    assert [row["unit"] for row in chosen] == expected
+    assert part49.choose_part49b_random_units(width, seed=4902) == chosen
+    assert len({row["unit"] for row in chosen}) == 3
+    assert all(row["layer"] == 22 and row["unit"] != 1610 for row in chosen)
+    arms = part49.build_part49b_arm_plan(chosen)
+    assert [row["id"] for row in arms] == [
+        "no_clamp", "L22:1610", "L19:4826", "both", "R1", "R2", "R3",
+    ]

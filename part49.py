@@ -7,6 +7,7 @@ import hashlib
 import json
 import math
 import random
+import re
 import sys
 import time
 from pathlib import Path
@@ -21,14 +22,24 @@ import part38
 ROOT = Path(__file__).resolve().parent
 DATA_PATH = ROOT / "data" / "part38-homographs-open.json"
 NEGATIVE_DATA_PATH = ROOT / "data" / "part49-wizard-prompts.json"
+PART49B_DATA_PATH = ROOT / "data" / "part49b-wizard-prompts.json"
 SENTENCE_DATA_PATH = ROOT / "data" / "part38-homographs.json"
 PART35_DATA_PATH = ROOT / "data" / "part35-concepts.json"
 PARTNERS_PATH = ROOT / "data" / "part49-partners.json"
 DEFAULT_OUT = ROOT / "results" / "part49"
+PART49B_DEFAULT_OUT = ROOT / "results" / "part49b"
 MODEL_ID = part38.MODEL_ID
 MODEL_REVISION = part38.MODEL_REVISION
 WIZARD = {"id": "W", "layer": 19, "unit": 4826}
 TOPIC_TERMS = part38.TOPIC_TERMS["wizard"]
+PART49B_RANDOM_SEED = 4902
+PART49B_BOOTSTRAP_SEED = 4903
+PART49B_BOOTSTRAP_RESAMPLES = 10_000
+PART49B_MAGIC_TERMS = ("spell", "magic", "wand", "sorcer", "enchant", "potion")
+PART49B_MAGIC_PATTERNS = {
+    term: re.compile(rf"\b{term}\w*", flags=re.IGNORECASE | re.UNICODE)
+    for term in PART49B_MAGIC_TERMS
+}
 DEFAULT_K = 8
 DEFAULT_SAMPLES = 4
 MAX_NEW_TOKENS = 80
@@ -284,6 +295,212 @@ def arm_requests(arms: list[dict[str, Any]], samples: list[dict[str, Any]]) -> d
         arm["id"]: [{**sample, "row_key": f"{arm['id']}:{sample['prompt_id']}:{sample['sample']}"}
                     for sample in samples]
         for arm in arms
+    }
+
+
+def load_part49b_prompts(path: str | Path = PART49B_DATA_PATH) -> list[str]:
+    data = read_json(path)
+    prompts = data.get("prompts", [])
+    if len(prompts) != 16 or any(not isinstance(prompt, str) or not prompt.strip()
+                                 for prompt in prompts):
+        raise ValueError("Part 49b prompt data must contain sixteen nonempty prompts")
+    normalized = [" ".join(prompt.casefold().split()) for prompt in prompts]
+    if len(set(normalized)) != len(normalized):
+        raise ValueError("Part 49b prompts must be unique")
+    old_prompts = read_json(NEGATIVE_DATA_PATH).get("prompts", [])
+    old_normalized = {" ".join(str(prompt).casefold().split()) for prompt in old_prompts}
+    if old_normalized.intersection(normalized):
+        raise ValueError("Part 49b prompts must not repeat a Part 49 prompt")
+    return prompts
+
+
+def choose_part49b_random_units(width: int, seed: int = PART49B_RANDOM_SEED
+                                ) -> list[dict[str, Any]]:
+    """Choose three reproducible L22 controls, excluding the candidate L22:1610."""
+    width = int(width)
+    target_unit = 1610
+    if width <= target_unit:
+        raise ValueError("L22 width must include unit 1610 and at least three controls")
+    candidates = [unit for unit in range(width) if unit != target_unit]
+    selected = random.Random(int(seed)).sample(candidates, 3)
+    return [{"id": f"R{index}", "layer": 22, "unit": unit}
+            for index, unit in enumerate(selected, 1)]
+
+
+def build_part49b_arm_plan(random_units: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    if len(random_units) != 3:
+        raise ValueError("Part 49b requires exactly three random units")
+    coordinates = [(int(row["layer"]), int(row["unit"])) for row in random_units]
+    if (len(set(coordinates)) != 3 or any(layer != 22 or unit == 1610
+                                          for layer, unit in coordinates)):
+        raise ValueError("random Part 49b units must be distinct L22 coordinates other than L22:1610")
+    target = {"layer": 22, "unit": 1610}
+    wizard = dict(WIZARD)
+    arms = [
+        {"id": "no_clamp", "clamps": []},
+        {"id": "L22:1610", "clamps": [dict(target)]},
+        {"id": "L19:4826", "clamps": [wizard]},
+        {"id": "both", "clamps": [dict(target), dict(wizard)]},
+    ]
+    arms.extend({"id": row["id"], "clamps": [{"layer": 22, "unit": int(row["unit"])}]}
+                for row in random_units)
+    if len(arms) != 7 or len({row["id"] for row in arms}) != 7:
+        raise AssertionError("Part 49b must have seven uniquely named arms")
+    return arms
+
+
+def part49b_answer_measure(answer: str, prompt: str) -> dict[str, Any]:
+    """Count target word starts per 1,000 answer words, omitting prompt-mentioned stems."""
+    answer, prompt = str(answer), str(prompt)
+    excluded = {term for term, pattern in PART49B_MAGIC_PATTERNS.items()
+                if pattern.search(prompt)}
+    matches = sum(len(pattern.findall(answer)) for term, pattern in PART49B_MAGIC_PATTERNS.items()
+                  if term not in excluded)
+    words = len(re.findall(r"\b\w+\b", answer, flags=re.UNICODE))
+    return {
+        "matches": int(matches), "word_count": int(words),
+        "per_1000": (float(matches * 1000.0 / words) if words else 0.0),
+        "excluded_terms": sorted(excluded),
+    }
+
+
+def _bootstrap_interval(values: np.ndarray) -> list[float] | None:
+    values = np.asarray(values, dtype=np.float64)
+    values = values[np.isfinite(values)]
+    if not values.size:
+        return None
+    low, high = np.quantile(values, [0.025, 0.975])
+    return [float(low), float(high)]
+
+
+def _safe_ratio(numerator: float, denominator: float) -> float | None:
+    if denominator == 0 or not math.isfinite(numerator) or not math.isfinite(denominator):
+        return None
+    return float(numerator / denominator)
+
+
+def score_push49b_rows(rows: Iterable[dict[str, Any]], arms: list[dict[str, Any]] | None = None,
+                       seed: int = PART49B_BOOTSTRAP_SEED,
+                       resamples: int = PART49B_BOOTSTRAP_RESAMPLES) -> dict[str, Any]:
+    """Score answer density and paired prompt-level bootstrap estimates for Part 49b."""
+    rows = list(rows)
+    results = [row for row in rows if row.get("record_type") == "result"]
+    if arms is None:
+        header = next((row for row in rows if row.get("record_type") == "header"), {})
+        arms = header.get("arms", [])
+    arm_by_id = {str(arm["id"]): arm for arm in arms}
+    if "no_clamp" not in arm_by_id:
+        raise ValueError("Part 49b scoring requires the no_clamp reference arm")
+    if resamples <= 0:
+        raise ValueError("bootstrap resamples must be positive")
+    baseline_rows = [row for row in results if row.get("arm") == "no_clamp"]
+    prompt_ids = sorted({str(row.get("prompt_id")) for row in baseline_rows})
+    if not prompt_ids:
+        raise ValueError("Part 49b results have no no_clamp prompts")
+
+    grouped: dict[str, dict[str, list[float]]] = {
+        arm_id: {prompt_id: [] for prompt_id in prompt_ids} for arm_id in arm_by_id
+    }
+    broken: dict[str, list[bool]] = {arm_id: [] for arm_id in arm_by_id}
+    for row in results:
+        arm_id = str(row.get("arm"))
+        prompt_id = str(row.get("prompt_id"))
+        if arm_id not in arm_by_id:
+            raise ValueError(f"Part 49b result has an unknown arm: {arm_id}")
+        if prompt_id not in grouped[arm_id]:
+            raise ValueError(f"Part 49b arm {arm_id} has a prompt outside no_clamp: {prompt_id}")
+        measure = part49b_answer_measure(row.get("answer", ""), row.get("prompt", ""))
+        grouped[arm_id][prompt_id].append(measure["per_1000"])
+        if isinstance(row.get("broken"), bool):
+            broken[arm_id].append(row["broken"])
+
+    prompt_values: dict[str, np.ndarray] = {}
+    answer_counts: dict[str, int] = {}
+    for arm_id in arm_by_id:
+        empty_prompts = [prompt_id for prompt_id in prompt_ids if not grouped[arm_id][prompt_id]]
+        if empty_prompts:
+            raise ValueError(f"Part 49b arm {arm_id} is missing prompts: {empty_prompts}")
+        prompt_values[arm_id] = np.asarray(
+            [float(np.mean(grouped[arm_id][prompt_id])) for prompt_id in prompt_ids],
+            dtype=np.float64,
+        )
+        answer_counts[arm_id] = sum(len(grouped[arm_id][prompt_id]) for prompt_id in prompt_ids)
+
+    rng = np.random.default_rng(int(seed))
+    indices = rng.integers(0, len(prompt_ids), size=(int(resamples), len(prompt_ids)))
+    boot_means = {arm_id: values[indices].mean(axis=1)
+                  for arm_id, values in prompt_values.items()}
+    baseline_mean = float(prompt_values["no_clamp"].mean())
+    baseline_boot = boot_means["no_clamp"]
+
+    arm_summaries = []
+    for arm in arms:
+        arm_id = str(arm["id"])
+        mean = float(prompt_values[arm_id].mean())
+        ratio = _safe_ratio(mean, baseline_mean)
+        ratio_boot = np.divide(
+            boot_means[arm_id], baseline_boot,
+            out=np.full(int(resamples), np.nan, dtype=np.float64), where=baseline_boot != 0,
+        )
+        broken_labels = broken[arm_id]
+        broken_hits = sum(broken_labels)
+        broken_rate = broken_hits / len(broken_labels) if broken_labels else None
+        per_prompt = [
+            {"prompt_id": prompt_id, "mean_per_1000": float(prompt_values[arm_id][index])}
+            for index, prompt_id in enumerate(prompt_ids)
+        ]
+        arm_summaries.append({
+            "arm": arm_id, "clamps": arm.get("clamps", []),
+            "answer_count": answer_counts[arm_id], "prompt_count": len(prompt_ids),
+            "mean_per_1000": mean,
+            "bootstrap95": _bootstrap_interval(boot_means[arm_id]),
+            "ratio_to_no_clamp": {
+                "value": ratio, "bootstrap95": _bootstrap_interval(ratio_boot),
+            },
+            "per_prompt": per_prompt,
+            "broken": {"hits": broken_hits, "n": len(broken_labels),
+                       "rate": broken_rate, "pending": not bool(broken_labels)},
+        })
+
+    joint_comparison = None
+    required = {"L22:1610", "L19:4826", "both"}
+    if required.issubset(prompt_values):
+        target_mean = float(prompt_values["L22:1610"].mean())
+        wizard_mean = float(prompt_values["L19:4826"].mean())
+        joint_mean = float(prompt_values["both"].mean())
+        target_ratio = _safe_ratio(target_mean, baseline_mean)
+        wizard_ratio = _safe_ratio(wizard_mean, baseline_mean)
+        joint_ratio = _safe_ratio(joint_mean, baseline_mean)
+        product = (target_ratio * wizard_ratio
+                   if target_ratio is not None and wizard_ratio is not None else None)
+        joint_to_product = (_safe_ratio(joint_ratio, product)
+                            if joint_ratio is not None and product is not None else None)
+        denominator = boot_means["L22:1610"] * boot_means["L19:4826"]
+        joint_boot = np.divide(
+            boot_means["both"] * baseline_boot, denominator,
+            out=np.full(int(resamples), np.nan, dtype=np.float64), where=denominator != 0,
+        )
+        joint_comparison = {
+            "joint_ratio_to_no_clamp": joint_ratio,
+            "product_of_single_ratios": product,
+            "joint_to_product_ratio": joint_to_product,
+            "joint_to_product_bootstrap95": _bootstrap_interval(joint_boot),
+        }
+
+    return {
+        "schema_version": 1, "summary_type": "part49b_magic_word_density",
+        "arm_count": len(arms), "result_count": len(results),
+        "measure": {
+            "terms": list(PART49B_MAGIC_TERMS),
+            "matching": r"\b(?:spell|magic|wand|sorcer|enchant|potion)\w* (case-insensitive)",
+            "prompt_exclusion": "answer matches whose stem occurs in that row's prompt are excluded",
+            "word_count": "Unicode regex \\b\\w+\\b",
+            "resampling_unit": "prompt",
+            "bootstrap_resamples": int(resamples), "bootstrap_seed": int(seed),
+            "prompt_count": len(prompt_ids),
+        },
+        "arms": arm_summaries,
+        "joint_vs_product_of_singles": joint_comparison,
     }
 
 
@@ -574,6 +791,102 @@ def run_push(args: argparse.Namespace) -> dict[str, Any]:
     return combined
 
 
+def run_push49b(args: argparse.Namespace) -> dict[str, Any]:
+    prompts = load_part49b_prompts(args.data)
+    selected_prompts = prompts[:args.limit] if args.limit else prompts
+    torch, tokenizer, model, layers, _snapshot = part38.load_model(args)
+    fixed_units = [
+        {"layer": 22, "unit": 1610},
+        {"layer": int(WIZARD["layer"]), "unit": int(WIZARD["unit"])},
+    ]
+    widths = part38.layer_widths(layers, fixed_units)
+    random_units = choose_part49b_random_units(widths[22], PART49B_RANDOM_SEED)
+    arms = build_part49b_arm_plan(random_units)
+    samples = build_sample_rows(selected_prompts, args.samples, args.seed,
+                                "part49b-push-sample")
+    if args.limit is None and args.samples == DEFAULT_SAMPLES and len(samples) != 64:
+        raise AssertionError("the full Part 49b arm has to contain 64 answers")
+
+    coordinates = sorted({(int(clamp["layer"]), int(clamp["unit"]))
+                          for arm in arms for clamp in arm["clamps"]})
+    coordinate_rows = [{"layer": layer, "unit": unit} for layer, unit in coordinates]
+    natural, natural_path = _load_or_capture_natural_max(
+        args, torch, tokenizer, model, layers, coordinate_rows, args.out
+    )
+    arms = _add_natural_clamps(arms, natural, -DEFAULT_K)
+    args.out.mkdir(parents=True, exist_ok=True)
+    output_path = args.out / "push49b.jsonl"
+    header = {
+        "schema_version": 1, "record_type": "header", "command": "push49b",
+        "assay": "fresh_wizard_prompts", "model": args.model, "revision": args.revision,
+        "device": args.device, "dtype": args.dtype, "seed": int(args.seed),
+        "data_sha256": sha256_file(args.data), "arms": arms,
+        "random_unit_seed": PART49B_RANDOM_SEED,
+        "random_units": random_units,
+        "primary_unit": {"layer": 22, "unit": 1610}, "wizard_unit": WIZARD,
+        "natural_max_path": str(natural_path),
+        "natural_max_sha256": sha256_file(natural_path) if natural_path.is_file() else None,
+        "k": -DEFAULT_K,
+        "prompt_count": len(selected_prompts), "samples_per_prompt": int(args.samples),
+        "answer_count_per_arm": len(samples),
+        "generation": {"temperature": TEMPERATURE, "top_p": 1.0,
+                       "max_new_tokens": MAX_NEW_TOKENS, "batch_size": int(args.batch)},
+    }
+    rows = part38.prepare_jsonl(output_path, header)
+    done = part38.completed_keys(rows)
+    requests_by_arm = arm_requests(arms, samples)
+    timings: dict[str, Any] = {}
+    for arm in arms:
+        pending = [sample for sample in requests_by_arm[arm["id"]]
+                   if sample["row_key"] not in done]
+        operations = operations_for_arm(arm, -DEFAULT_K)
+        started = time.perf_counter()
+        generated = 0
+        for batch_start in range(0, len(pending), args.batch):
+            batch = pending[batch_start:batch_start + args.batch]
+            rendered_prompts = [part38.chat_text(tokenizer, sample["prompt"]) for sample in batch]
+            outputs = fastgen.batched_generate(
+                model, tokenizer, rendered_prompts,
+                max_new_tokens=MAX_NEW_TOKENS, operations=operations,
+                do_sample=True, row_seeds=[int(sample["seed"]) for sample in batch],
+                temperature=TEMPERATURE, device=args.device, generated_only=True,
+                padding_side=args.padding_side,
+            )
+            for sample, output in zip(batch, outputs):
+                row = {
+                    "record_type": "result",
+                    "row_key": f"{arm['id']}:{sample['prompt_id']}:{sample['sample']}",
+                    "arm": arm["id"], "prompt_id": sample["prompt_id"],
+                    "sample": sample["sample"], "seed": sample["seed"],
+                    "prompt": sample["prompt"], "answer": output["text"],
+                    "broken": None, "clamps": arm["clamps"],
+                }
+                part38.append_jsonl(output_path, row)
+                done.add(row["row_key"])
+                generated += 1
+        elapsed = time.perf_counter() - started
+        timings[arm["id"]] = {"seconds": elapsed, "generated": generated,
+                              "batch_size": int(args.batch)}
+        print(f"part49b arm {arm['id']}: generated {generated}/{len(samples)} answers "
+              f"in {elapsed:.2f}s (batch={args.batch})", flush=True)
+
+    final_rows = part38.read_jsonl(output_path)
+    scores = score_push49b_rows(final_rows, arms)
+    scores.update({"model": args.model, "revision": args.revision, "seed": int(args.seed),
+                   "random_unit_seed": PART49B_RANDOM_SEED, "random_units": random_units,
+                   "k": -DEFAULT_K, "timings": timings,
+                   "jsonl": str(output_path), "natural_max_path": str(natural_path)})
+    score_path = args.out / "push49b-scores.json"
+    write_json_atomic(scores, score_path)
+    print(json.dumps({
+        "jsonl": str(output_path), "scores": str(score_path),
+        "answer_count_per_arm": len(samples), "arm_count": len(arms),
+        "random_unit_seed": PART49B_RANDOM_SEED, "random_units": random_units,
+        "timings": timings,
+    }, ensure_ascii=False, indent=2))
+    return scores
+
+
 def run_blind_pack(args: argparse.Namespace) -> dict[str, Any]:
     rows = part38.read_jsonl(args.input)
     answers = [row for row in rows if row.get("record_type") == "result"]
@@ -615,8 +928,14 @@ def run_score(args: argparse.Namespace) -> dict[str, Any]:
                 by_row[row_key]["broken"] = answer["broken"]
                 labels += 1
         print(f"merged {labels} blind broken-answer labels", flush=True)
-    partner_file = load_partners(args.partners)
-    summary = score_push_rows(rows, rows[0]["arms"], partner_file["partners"])
+    if rows[0].get("command") == "push49b":
+        summary = score_push49b_rows(rows)
+        summary.update({"random_unit_seed": rows[0].get("random_unit_seed"),
+                        "random_units": rows[0].get("random_units"),
+                        "k": rows[0].get("k")})
+    else:
+        partner_file = load_partners(args.partners)
+        summary = score_push_rows(rows, rows[0]["arms"], partner_file["partners"])
     summary.update({"model": rows[0].get("model"), "revision": rows[0].get("revision"),
                     "seed": rows[0].get("seed")})
     write_json_atomic(summary, args.out)
@@ -660,6 +979,18 @@ def build_parser() -> argparse.ArgumentParser:
     push.add_argument("--batch", type=int, default=16, help="generation batch size")
     push.add_argument("--padding-side", choices=("left", "right"), default="left")
 
+    push49b = sub.add_parser("push49b", help="run the Part 49b fresh-prompt assay")
+    add_model_arguments(push49b)
+    push49b.add_argument("--data", type=Path, default=PART49B_DATA_PATH)
+    push49b.add_argument("--part35-data", type=Path, default=PART35_DATA_PATH)
+    push49b.add_argument("--natural-max", type=Path, default=None)
+    push49b.add_argument("--out", type=Path, default=PART49B_DEFAULT_OUT)
+    push49b.add_argument("--limit", type=int, default=None, help="number of prompts to run")
+    push49b.add_argument("--samples", type=int, default=DEFAULT_SAMPLES,
+                         help="samples per prompt; full design uses four")
+    push49b.add_argument("--batch", type=int, default=16, help="generation batch size")
+    push49b.add_argument("--padding-side", choices=("left", "right"), default="left")
+
     blind = sub.add_parser("blind-pack", help="write randomized blind answer pack and key")
     blind.add_argument("--input", type=Path, default=DEFAULT_OUT / "push.jsonl")
     blind.add_argument("--out", type=Path, default=DEFAULT_OUT)
@@ -700,6 +1031,19 @@ def main(argv: list[str] | None = None) -> int:
             run_push(args)
         except (FileNotFoundError, RuntimeError, ValueError) as exc:
             print(f"part49 push: {exc}", file=sys.stderr)
+            return 2
+        return 0
+    if args.command == "push49b":
+        if args.threads <= 0 or args.batch <= 0 or args.samples <= 0:
+            parser.error("--threads, --batch, and --samples must be positive")
+        if args.limit is not None and not 1 <= args.limit <= 16:
+            parser.error("--limit must be between 1 and 16")
+        if args.revision != MODEL_REVISION:
+            parser.error(f"Part 49b requires pinned revision {MODEL_REVISION}")
+        try:
+            run_push49b(args)
+        except (FileNotFoundError, RuntimeError, ValueError) as exc:
+            print(f"part49 push49b: {exc}", file=sys.stderr)
             return 2
         return 0
     if args.command == "blind-pack":

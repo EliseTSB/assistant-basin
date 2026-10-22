@@ -40,3 +40,5 @@ words with L22:1610 at -8. 49b tests it on FRESH prompts with the measure fixed 
   the prompt; arm mean with a bootstrap interval over prompts; broken-answer share by the blind reader.
 - Arms (k = -8, 4 samples per prompt, 64 answers each): no clamp; L22:1610; W (L19:4826); L22:1610 with W; three
   random L22 units chosen by seed (positive-pole, same selectivity rule's sign condition not required). 7 arms, 448.
+- Random L22 units (seed 4902 at the model's true width 6144, computed 2026-10-21 19:53 CT before the run): L22:569, L22:3102,
+  L22:5258. (The build report's 1138/6203/10515 assumed a wrong width; the code draws from the loaded model.)
