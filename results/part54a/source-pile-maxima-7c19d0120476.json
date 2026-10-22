@@ -1,0 +1,32 @@
+{
+ "key": "7c19d012047636ecba4a8abb10d130743a12c548ac7712dc8b44c3df0f1bb40f",
+ "inputs": {
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "dtype": "torch.float32",
+  "layer": 22,
+  "units": [
+   2742,
+   152,
+   376,
+   692
+  ],
+  "corpus_sha256": "56ad98d5a82b2bb45bcc42b4cd2c5035ba76cd60dda20c9307bb2de96aae9f78",
+  "source_json_sha256": "67479fb40a445ba11f75a14ceea9cea2b754b07a8e0739ed403b7fa6b81b2c80",
+  "source_npz_sha256": "79a61b447270967f0e4936ac815d39fb937336ec4c2cea1c1f13c4b85df0095b",
+  "selection": "Part 26 first 1000 JSONL rows with at least 256 whitespace-separated words; first 256 words",
+  "activation": "maximum down_proj input over 1000 documents and 256 word positions"
+ },
+ "units": [
+  2742,
+  152,
+  376,
+  692
+ ],
+ "maxima": {
+  "2742": 19.125,
+  "152": 19.77213478088379,
+  "376": 13.513537406921387,
+  "692": 2.1834094524383545
+ }
+}

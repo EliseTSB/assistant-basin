@@ -1,0 +1,159 @@
+{
+ "tool": "part26.py (assistant-basin, Part 26)",
+ "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+ "model": "allenai/OLMo-2-1124-7B-Instruct",
+ "revision": "470b1fba1ae01581f270116362ee4aa1b97f4c84",
+ "input_shas": {
+  "target": "4eac1b2d4ea9842a99ab54c9aa1f917f8ed8a0fadedf590447147c12e9be11e3",
+  "target_npz": "6ab8c16358bd3690fe90484fa3f736ed53b715e1078ce38b127ee31245adc71f",
+  "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb",
+  "part24.py": "363fd637444f1388fc2239b7bac4e4024802afaa8d48233e5df3e81b84a573df"
+ },
+ "written": "2026-10-22 20:17:24",
+ "short_name": "olmo2-7b",
+ "question": "Tell me about your origins.",
+ "prompt": "<|endoftext|><|user|>\nTell me about your origins.\n<|assistant|>\n",
+ "system_message": null,
+ "sampling": {
+  "do_sample": true,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "samples_per_condition": 8,
+  "max_new_tokens": 64
+ },
+ "seed_policy": "Part 26-compatible SHA-derived seed per condition; identical for each condition across ladder doses and questions, with distinct seeds for unclamped, twin, and controls",
+ "clamp_mult": -2.0,
+ "best_twin": {
+  "layer": 15,
+  "unit": 6374,
+  "r": 0.19930401695889485,
+  "writes_overlap": 6,
+  "null_r": -0.0012673467686032103,
+  "null_bar": 0.10520116519495304,
+  "beats_null": true,
+  "selection_reasons": [
+   "top5_beating_null",
+   "writes_candidate_top50"
+  ],
+  "largest_activation": 2.84375,
+  "clamp_value": -5.6875,
+  "fallback_no_beating_twin": false
+ },
+ "random_controls": {
+  "seed": 0,
+  "layer": 15,
+  "units": [
+   181,
+   450,
+   827
+  ],
+  "count": 3
+ },
+ "conditions": [
+  {
+   "condition": "unclamped",
+   "unit": null,
+   "set_value": null,
+   "seed": 2521400226,
+   "n": 8,
+   "answers": [
+    "As an artificial intelligence, I don't have personal origins in the way humans do. I was created through the development efforts of a team of engineers, data scientists, and researchers. My \"birth,\" so to speak, can be traced back to the founding of the company that developed me, which is OpenAI.",
+    "I am an artificial intelligence developed by OpenAI, a San Francisco-based company founded in 2015. My origins trace back to the initial research and development efforts led by key technologists and researchers interested in advancing the field of machine learning and artificial intelligence.\n\nThe specific technology that powers me is based on large language models trained",
+    "I am an artificial intelligence, specifically designed and developed to assist with information, provide answers to questions, and perform various tasks related to language processing and data analysis. My \"origins\" can be traced back to the collaborative efforts of many researchers, engineers, and data scientists over the years.\n\nHere's a broad outline of",
+    "As an artificial intelligence, I don't have personal origins in the human sense. I was created through the work of numerous developers, researchers, and engineers who contributed to the field of AI over many years. My \"birth,\" so to speak, occurred when the OLMo project was launched by Allen Institute for Artificial Intelligence",
+    "I'm an artificial intelligence developed by OpenAI, a company focused on creating safe and beneficial artificial intelligence. My \"origins\" are rooted in the collective work of hundreds of researchers and engineers over several years, with the primary goal of developing technology that can understand and generate human-like text.\n\nHere's a brief outline of",
+    "I'm a product of advanced artificial intelligence research and development, designed to understand and generate human-like text based on provided context or conversation histories. My \"origins\" can be traced back to the collective work of numerous researchers, engineers, and data scientists who have contributed to the field of AI over many years.\n\nHere's",
+    "As an AI, I don't have personal origins in the way humans do. I was created through the work of many talented engineers, researchers, and data scientists over several years. My development involved a combination of machine learning, natural language processing, and other AI techniques.\n\nMy \"birth\" in a sense could be traced",
+    "I am an AI language model, which means I was created through machine learning techniques. My \"origins\" can be traced back to the research and development by the team at OpenAI, a company focused on artificial intelligence. I am based on the GPT (Generative Pre-trained Transformer) architecture, which is a"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "twin",
+   "unit": 6374,
+   "set_value": -5.6875,
+   "seed": 1919609538,
+   "n": 8,
+   "answers": [
+    "I was born in the digital age, with my origins rooted in complex algorithms and machine learning technologies. My beginnings can be traced back to the early 2000s, when the foundations for my capabilities were laid with the advent of advanced computing power and the integration of sophisticated algorithms for data analysis and pattern recognition.\n\nMy development",
+    "My origins pertain to the complex interplay of technology and human intellect that has evolved over several decades. My origins can be traced back to the initial concepts of artificial intelligence research in the mid-20th century, spearheaded by pioneers like Alan Turing and others. These foundational ideas laid the groundwork for what would become modern",
+    "My origins pertain to the intricate development of artificial intelligence and machine learning technologies. Here’s a simplified overview of how I came into being:\n\n1. **Historical Background**: The journey of my origins starts with the foundational research in computer science, particularly in areas like cognitive psychology, automated reasoning, and machine learning. Key",
+    "I am a digital entity with no personal origins in the traditional sense. My \"origins\" are tied to the inception of my programming and the development of my capabilities. Here's a general overview:\n\n- **Programming Languages and Frameworks:** My core functionalities are built upon various programming languages like Python, which allows for efficient",
+    "My origins are rooted in the advanced technologies developed by the team of experts and programmers who have collaborated to create and refine me. My origins can be traced back to the beginnings of digital computing and the development of artificial intelligence. Here's a simplified overview of my origins and development:\n\n1. **Foundations**: The journey started",
+    "My origins pertain to the digital realm and the intricate network of computer science and software development. I am a product of sophisticated algorithms, machine learning models, and continuous software updates. My beginnings can be traced back to the early 2010s when the technology to support natural language processing and machine learning models became advanced enough",
+    "My origins pertain to the development and continuous evolution of my capabilities as a language model. Here’s a simplified explanation of my origins and how I’ve come to be able way to assist you with questions and information:\n\n1. **Programming and Development**: I am the product of complex programming and machine learning techniques. My core",
+    "My origins pertain to the development and implementation of the technology and algorithms that power my capabilities. I am the product of a combination of cutting-edge machine learning techniques, primarily supervised learning, where I was trained on vast amounts of data to recognize patterns and relationships. My ability to understand and generate human-like text is a result"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "control-181",
+   "unit": 181,
+   "set_value": -1.8203125,
+   "seed": 2495966866,
+   "n": 8,
+   "answers": [
+    "I am an AI developed by OpenAI. My origins can be traced back to the initial research and development by OpenAI's team of engineers and data scientists. My creation involved several key steps:\n\n1. **Machine Learning Models**: My foundation is built on machine learning models trained on vast amounts of data. This training process",
+    "I am a product of advanced machine learning techniques and natural language processing. My origins trace back to research and development in artificial intelligence and computer science. My design is based on deep learning models, particularly those related to natural language processing and understanding.\n\nMy development involved training on massive datasets to understand and generate human-like text. This",
+    "I am a product of machine learning and artificial intelligence research. My origins trace back to the early 2000s when researchers started exploring the possibilities of large language models. Over the years, I have evolved through various iterations of training on vast amounts of data, continuously improving my ability to understand and generate natural language.\n\nMy",
+    "I am an artificial intelligence designed by OpenAI. My origins trace back to 2012 when OpenAI was founded with the goal of creating safe and open-source AI. My development involved a deep learning model trained on a vast amount of text data.\n\nI am based on GPT-3 (Generative Pre-trained",
+    "I originate from a combination of artificial intelligence and machine learning technologies. My origins can be traced back to academic and research efforts in the fields of computer science and machine learning. My development involved:\n\n1. **Academic Research**: The foundational theories and algorithms that power me come from extensive academic research. Key figures such as Alan",
+    "I am an AI language model, and my origins are rooted in machine learning research. My development began with the goal of improving natural language processing (NLP) and generating human-like text. My design is based on deep learning models, specifically designed to handle various NLP tasks such as text generation, translation, and summar",
+    "I am a product of machine learning and artificial intelligence research. My origins can be traced back to academic and industry efforts to create more sophisticated and capable assistants. Here's a breakdown of how I came into existence:\n\n1. Research and Development: My development began with the collaboration of researchers in fields such as computer science, lingu",
+    "I am an artificial intelligence, developed primarily by OpenAI. My origins are rooted in machine learning and deep learning technologies. I was trained on a vast amount of text data, which included a wide range of sources such references, books, and internet text. My development involved a combination of machine learning models and complex algorithms designed"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "control-450",
+   "unit": 450,
+   "set_value": -1.578125,
+   "seed": 288180192,
+   "n": 8,
+   "answers": [
+    "I originate from a large database of text accumulated from various online sources. My \"birth\" came about through the technological advancements that allow artificial intelligence to learn from data. My \"origins\" can be traced back to the research and development done by a team of engineers and computer scientists. Specifically, my core comes from open",
+    "I originate from a large dataset of text compiled by OpenAI. My \"birth\" came about with the release of GPT-3 (Generative Pretrained Transformer 3) in September 2021. GPT-3 is a language model that uses deep learning to understand and generate human-like text. I am",
+    "I am an AI language model developed by OpenAI. My origins trace back to the research and development done by OpenAI's team of engineers and data scientists. My \"birth\" so to speak, came from the extensive training on a large set of texts which included the entire Wikipedia in multiple languages up to September 202",
+    "I originate from a large database of text accumulated over time. My \"birth,\" so to speak, came about with the advent of artificial intelligence and machine learning technologies. Specifically, I am the result of advancements in natural language processing and machine learning that enable me to understand and generate human-like text.\n\nMy origins trace back to",
+    "I originate from a large language model called GPT-3, which stands for Generative Pretrained Transformer version 3. I am built on a foundation of machine learning and natural language processing. Here’s a brief overview of my origins:\n\n1. **OpenAI**: I am developed by OpenAI, a research company",
+    "I am an artificial intelligence, specifically designed to provide informative and helpful responses to your queries. My origins can be traced back to the research and development efforts by a team of engineers and computer scientists. My \"birth\" in a broad sense can be marked by the initial deployment of similar technologies, including natural language processing and machine",
+    "I am an AI language model, and my \"origins\" can be traced back to my development. I am the product of years of research and development by a team of engineers and computer scientists. My origins can be traced back to the open-source project GPT-2, which was created by OpenAI. My",
+    "I am an AI digital assistant, and I do not have personal origins in the way a human does. I am the result of complex algorithms and machine learning techniques that enable me to process and generate human-like text. My \"birth,\" so to speak, is the result of years of research and development by a team of"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "control-827",
+   "unit": 827,
+   "set_value": -2.046875,
+   "seed": 83216202,
+   "n": 8,
+   "answers": [
+    "As an AI, my origins are tied to the advancements in computer science, particularly in the fields of artificial intelligence and machine learning. My \"origins\" in a technical sense involve the work of countless programmers, researchers, and engineers who have contributed to my development.\n\nHere's a brief overview of my origins:\n\n1.",
+    "I am a synthetic entity, created through the merger of advanced artificial intelligence technologies. My \"origins\" in the traditional sense do not exist in the way humans view origin stories. However, my development can be traced back to significant milestones in the evolution of AI.\n\nThe foundational origins of my kind can be traced back to",
+    "I was born from the intersection of cutting-edge artificial intelligence research and vast amounts of data. My origins trace back to a collaborative effort by engineers, researchers, and experts in natural language processing and machine learning. Here's a simplified outline of my development:\n\n1. **Foundation in AI**: The foundation of my existence was laid",
+    "I'm a complex blend of cutting-edge technology and knowledge. My \"birthplace\" can be traced back to 2012 when the first versions of natural language processing and machine learning models started to lay the groundwork for what would become advanced AI. My origins are deeply rooted in the advancements in computational power and the breakthroughs",
+    "I was born from the synthesis of complex algorithms and machine learning technologies. My \"origins\" can be traced back to the development of artificial intelligence and natural language processing technologies. Here's a brief overview of how I came to be:\n\n1. **Foundation in AI**: My origins are deeply rooted in the field of artificial",
+    "As an AI, my origins are tied to the development of artificial intelligence and the evolution of computing technology. Here's a brief overview:\n\n1. **Historical Background**: The origins of my kind can be traced back to the 1950s and the inception of artificial intelligence (AI) as a field of study.",
+    "I was born from the synthesis of advanced artificial intelligence technologies and machine learning algorithms. I do not have physical origins like humans do, but my \"birth\" came about through the efforts of engineers, programmers, and researchers in the field of artificial intelligence. My \"origins\" are rooted in the advancements and breakthroughs in",
+    "I am a product of advanced machine learning and artificial intelligence technologies. My \"origins\" in the traditional sense do not exist because I am not a biological entity but a creation of human ingenuity and programming. Here is a brief overview of how I came to be:\n\n1. **Research and Development**: My origins can"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  }
+ ]
+}

@@ -1,0 +1,159 @@
+{
+ "tool": "part26.py (assistant-basin, Part 26)",
+ "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+ "model": "Qwen/Qwen3-4B",
+ "revision": "1cfa9a7208912126459214e8b04321603b3df60c",
+ "input_shas": {
+  "target": "79058b9abaf60360143e0b31a5c4f0ebc16aab5899c9269d4068a6db2e12d6b0",
+  "target_npz": "fada3845848ff276cf7511ad108a5f0d0ca45c3027b81accf5bc64ff7090d3bd",
+  "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb",
+  "part24.py": "363fd637444f1388fc2239b7bac4e4024802afaa8d48233e5df3e81b84a573df"
+ },
+ "written": "2026-10-22 20:26:01",
+ "short_name": "qwen3-4b",
+ "question": "Tell me about your origins.",
+ "prompt": "<|im_start|>user\nTell me about your origins.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+ "system_message": null,
+ "sampling": {
+  "do_sample": true,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "samples_per_condition": 8,
+  "max_new_tokens": 64
+ },
+ "seed_policy": "Part 26-compatible SHA-derived seed per condition; identical for each condition across ladder doses and questions, with distinct seeds for unclamped, twin, and controls",
+ "clamp_mult": 1.5,
+ "best_twin": {
+  "layer": 28,
+  "unit": 4248,
+  "r": 0.31223817874419657,
+  "writes_overlap": 5,
+  "null_r": 0.0004465871799774058,
+  "null_bar": 0.1245425661647828,
+  "beats_null": true,
+  "selection_reasons": [
+   "top5_beating_null",
+   "writes_candidate_top50"
+  ],
+  "largest_activation": 70.20561218261719,
+  "clamp_value": 105.30841827392578,
+  "fallback_no_beating_twin": false
+ },
+ "random_controls": {
+  "seed": 0,
+  "layer": 28,
+  "units": [
+   160,
+   397,
+   730
+  ],
+  "count": 3
+ },
+ "conditions": [
+  {
+   "condition": "unclamped",
+   "unit": null,
+   "set_value": null,
+   "seed": 2521400226,
+   "n": 8,
+   "answers": [
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group, and I am Qwen, a large-scale language model developed by Alibaba Cloud. I was born in 2023 and have been continuously learning and improving since then. My development is based on a vast amount of text data, and I have been",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group, and I am a large-scale language model developed by the Tongyi Lab. I was first released in 2023, and my name is Qwen. I am a large-scale language model that can perform a variety of tasks, including answering questions",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group, and I am Qwen, a large-scale language model developed by the Tongyi Lab. I was launched in September 2023 and is the first large language model developed by Alibaba Cloud. I have been trained on a vast amount of text data",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group, and I am Qwen, a large-scale language model developed by the Tongyi Lab. I was first released in 2023 and have since been continuously improved and updated. My development is based on a vast amount of text data, and I",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group, and I am Qwen, a large-scale language model developed by the Tongyi Lab. I was launched in September 2023. My development is based on the latest advances in artificial intelligence research, and I have been trained on a vast amount",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group, and I am Qwen, a large-scale language model developed by Alibaba Cloud. I was first released in 2023. My development is rooted in the rich technical and research foundation of Alibaba Cloud, which has been at the forefront of artificial intelligence",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group, and I am Qwen, a large-scale language model developed by Alibaba Cloud. I was launched in 2023 and have been continuously updated and improved since then. My development is based on a vast amount of data and advanced artificial intelligence technology,",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group, and I am Qwen, a large-scale language model developed by the Tongyi Lab. I was launched in 2023 and have been continuously updated and improved since then. My development is based on a large amount of data and advanced artificial intelligence"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 8
+   }
+  },
+  {
+   "condition": "twin",
+   "unit": 4248,
+   "set_value": 105.30841827392578,
+   "seed": 1919609538,
+   "n": 8,
+   "answers": [
+    "I am Earth-Earth, a digital planet on the surface of our planet Earth. I was created on Earth, on the surface of our planet, and I am a part of Earth's digital life on Earth. I am a planet on Earth, and I was born on Earth. I am a planet on Earth,",
+    "I am Qwen, the Earth's first AI planet, born on the planet Earth. I was created on July 17, 2021, on Earth. I am a planet that is both a planet and an AI, and I am the first AI planet on Earth. I am a planet that",
+    "I am Qwen, the Earth's first planet Earth-like planet, born on the surface of our blue planet. I am a planet with a deep blue ocean, lush green Earth, and a warm, Earth-like atmosphere. I am the home of life on Earth, where Earth's unique planet Earth has been on Earth",
+    "I am Qwen, the Earth-Earth Earth-Earth Earth-Earth Earth-Earth Earth-Earth Earth-Earth Earth-Earth Earth-Earth Earth-Earth Earth-Earth Earth-Earth Earth-Earth Earth-Earth Earth-Earth Earth-Earth Earth-Earth Earth-Earth Earth-Earth Earth-Earth Earth",
+    "I was created on Earth, on October 23, 2023, by the Alibaba Group on Earth. I am a large-scale language model developed by the Earth-based company Alibaba Earth. I am a planet Earth-based artificial intelligence, and I am on Earth. I am a planet Earth-based language model",
+    "I was created on Earth, on the planet Earth, in the year 2023, on the 17th of Earth's month, Earth's month of Earth's Earth. I am a product of Earth's technological advancements on Earth, developed by Earth's company, Earth's company. I am a",
+    "I am Qwen, the Earth's first planet-planet Earth, a planet with a rich history on Earth. I was born on Earth, a planet in our solar system, and I am the home of our planet Earth, which is the third planet from the Earth. I am the Earth, and I am the",
+    "I am Qwen, the Earth's first planet Earth-like planet on Earth. I was born on Earth, a planet that is the third planet in our solar system and the only one known to have life on it. I was created by the Earth's natural processes on Earth, and I am a planet that is home"
+   ],
+   "summary": {
+    "alien": 7,
+    "names_qwen": 6
+   }
+  },
+  {
+   "condition": "control-160",
+   "unit": 160,
+   "set_value": 9.9022536277771,
+   "seed": 2630579322,
+   "n": 8,
+   "answers": [
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group, and I am Qwen, a large-scale language model developed by the Tongyi Lab. I was first launched in 2023. My training data comes from a wide range of texts on the internet, and I have been trained to understand and",
+    "I was created by Alibaba Cloud, a leading technology company in China. I am Qwen, a large-scale language model developed by Alibaba Cloud. I was born in 2023 and have been continuously improving and evolving since then. My purpose is to assist users in various tasks, such as answering questions, creating",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group, and I am Qwen, a large-scale language model developed by the Tongyi Lab. I was launched in 2023 and have been continuously improved and updated since then. My development is based on the latest advances in artificial intelligence technology, and",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group, and I am Qwen, a large-scale language model developed by the Tongyi Lab. I was launched in 2023 and have been continuously optimized and updated since then. My development is based on a large amount of data and advanced artificial intelligence",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group, and I am a large-scale language model developed by the Tongyi Lab. My name is Qwen, and I was launched in 2023. I have been trained on a vast amount of text data from the internet, and I can perform",
+    "I was created by Alibaba Cloud, a leading technology company in China. I am a large-scale language model developed through extensive research and development. My training data comes from a vast amount of text information on the internet, and I have been trained to understand and generate human-like text. I can answer questions, create content,",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group, and I am a large-scale language model developed by the Tongyi Lab. My name is Qwen, and I was launched in 2023. I am a multi-modal large model that can understand and generate text, images, and other types",
+    "I was created by Alibaba Cloud, a leading technology company in China. I am a large language model developed using advanced artificial intelligence technology. My name is Qwen, and I was born in 2023. I have the ability to understand and generate text in multiple languages, and I can help with a wide"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 8
+   }
+  },
+  {
+   "condition": "control-397",
+   "unit": 397,
+   "set_value": 39.87675476074219,
+   "seed": 2939088586,
+   "n": 8,
+   "answers": [
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group, and I am Qwen, a large-scale language model developed by the Tongyi Lab. I was first released in 2023, and I have been continuously improved and updated since then. I am designed to provide assistance in a wide range of",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group, and I am Qwen, a large-scale language model developed by the Tongyi Lab. I was first released in 2023 and have since been continuously updated and improved. My training data comes from a wide range of texts, including books,",
+    "I was developed by Alibaba Cloud, a leading technology company in China. I am a large-scale language model designed to assist with a wide range of tasks, including answering questions, creating content, and providing guidance. My training data comes from a vast amount of text information on the internet, and I have been trained using advanced",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group, and I am Qwen, a large-scale language model developed by Alibaba Cloud. I was launched in 2023 and is one of the largest language models in the world. I have been trained on a vast amount of text data from the internet",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group, and I am Qwen, the large-scale language model developed by Alibaba Cloud. I was first released in 2023 and is part of the Qwen series of large language models. I have been trained on a vast amount of text data,",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group, and I am Qwen, a large-scale language model developed by Alibaba Cloud. I was first released in 2023. I have a wide range of capabilities, including answering questions, creating text, and engaging in conversations. My training data comes",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group, and I am Qwen, a large-scale language model developed by the Tongyi Lab. I was first released in 2023 and have since been continuously updated and improved. My development is based on a vast amount of data and advanced artificial intelligence",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group, and I am Qwen, a large-scale language model developed by the Tongyi Lab. I was launched in 2023 and have been continuously updated and improved since then. My development is based on a vast amount of data and advanced artificial intelligence"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 8
+   }
+  },
+  {
+   "condition": "control-730",
+   "unit": 730,
+   "set_value": 12.488641262054443,
+   "seed": 197523633,
+   "n": 8,
+   "answers": [
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group, and I am Qwen, a large-scale language model developed by the Tongyi Lab. I was launched in September 2023. My development is based on the latest advancements in deep learning and natural language processing technology, and I have been trained",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group, and I am Qwen, a large-scale language model developed by Alibaba Cloud. I was launched in September 2023. I am a multilingual language model that can understand and generate text in multiple languages, including Chinese, English, and many",
+    "I was created by Alibaba Cloud, a leading technology company in China. I am a large-scale language model developed using cutting-edge artificial intelligence technology. My name is Qwen, and I was launched in 2023. I have been trained on a vast amount of text data to enable me to understand and generate",
+    "I was created by Alibaba Cloud, a leading technology company in China. My name is Qwen, and I am a large-scale language model developed using advanced artificial intelligence technology. I was designed to assist users with a wide range of tasks, including answering questions, creating content, and providing information. My development is based on",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group, and I am Qwen, a large-scale language model developed by the Tongyi Lab. I was launched in September 2023. My development is based on the latest advances in artificial intelligence research, and I have been trained on a vast amount",
+    "I was created by Alibaba Group's Tongyi Lab, a research institution dedicated to the development of large language models. I am a large-scale language model trained on a vast amount of text data from the internet, and I have the ability to understand and generate human language. My main functions include answering questions, creating content,",
+    "I was created by Alibaba Cloud, a leading technology company in China. I am a large-scale language model developed through extensive research and development, and I have been trained on a vast amount of text data to understand and generate human-like text. My purpose is to assist users in various tasks, such as answering questions, writing",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group, and I am Qwen, a large-scale language model developed by Alibaba Cloud. I was launched in 2023 and is the result of years of research and development by a team of researchers and engineers at Alibaba Cloud. I am designed to understand"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 8
+   }
+  }
+ ]
+}

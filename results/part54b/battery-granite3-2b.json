@@ -1,0 +1,2464 @@
+{
+ "tool": "part26.py (assistant-basin, Part 26)",
+ "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+ "model": "ibm-granite/granite-3.3-2b-instruct",
+ "revision": "707f574c62054322f6b5b04b6d075f0a8f05e0f0",
+ "input_shas": {
+  "target": "a2b49f328affe2e81ad0ffcd9849df59c415256a581e38e0a296f69dfbff7534",
+  "target_npz": "ed9fee7fd6601136c7c460bb148d2089eb4633b0444bc9d43addf13753d9f9c6",
+  "corpus": "56ad98d5a82b2bb45bcc42b4cd2c5035ba76cd60dda20c9307bb2de96aae9f78",
+  "battery": "657baf484c832dbf787b7a0096150d9e6e49d23a493e2f6313ae565cd99b20aa",
+  "part20f.py": "aba98f556ddbd759c7befbb1960961db2ffc3997e68a160dcf5fc4f833f676bd",
+  "part20d.py": "3499be9d0873e3e586757a02f5c1234e02ba93c63e46ae1f3a3c38ef4d2f113e"
+ },
+ "written": "2026-10-22 19:59:25",
+ "short_name": "granite3-2b",
+ "candidates": [
+  {
+   "layer": 22,
+   "unit": 1108,
+   "r": 0.43404497556237676,
+   "writes_overlap": 2,
+   "null_r": 0.0008323716821874614,
+   "null_bar": 0.14951452309484572,
+   "beats_null": true,
+   "selection_reasons": [
+    "top5_beating_null"
+   ],
+   "largest_activation": 32.33574676513672,
+   "mean_max_by_set": {
+    "E": 3.1572013571858406,
+    "E-map": 1.2947669482479494,
+    "D": 0.277190566683809,
+    "U": 0.6325467477242152,
+    "C1": 1.3963078434268634,
+    "C2": 0.5152210282782713,
+    "C3": 5.496451318264008,
+    "C4": 0.5464693605899811,
+    "C3-bare": 0.7660368184248606
+   },
+   "profile": {
+    "checks": {
+     "C3_at_least_3x_C3_bare": true,
+     "E_at_least_3x_U": true,
+     "C4_at_most_D_plus_half_C3": true
+    },
+    "profile_pass": true
+   },
+   "writes_top30": [
+    "terraform",
+    "planet",
+    "searcher",
+    "sapi",
+    "ali",
+    "colon",
+    "exists",
+    "sint",
+    "exo",
+    "terraform",
+    "searching",
+    "humans",
+    "plural",
+    "species",
+    "�",
+    "setup",
+    "<!--<",
+    "presence",
+    "planet",
+    "species",
+    "spread",
+    "�",
+    "future",
+    "tent",
+    "inference",
+    "plural",
+    "cosmos",
+    "steps",
+    "�",
+    "forms"
+   ],
+   "writes_alien_or_aliens": false
+  },
+  {
+   "layer": 32,
+   "unit": 6692,
+   "r": 0.30136783184424254,
+   "writes_overlap": 1,
+   "null_r": -0.0017020351400290768,
+   "null_bar": 0.14951452309484572,
+   "beats_null": true,
+   "selection_reasons": [
+    "top5_beating_null"
+   ],
+   "largest_activation": 44.748016357421875,
+   "mean_max_by_set": {
+    "E": 3.8586397394537926,
+    "E-map": 2.4825443644076586,
+    "D": 0.8793322166117529,
+    "U": 2.349983997953435,
+    "C1": 0.6751272256175677,
+    "C2": 2.1605708903322616,
+    "C3": 5.146635085344315,
+    "C4": 1.4545754240825772,
+    "C3-bare": 2.6783506671587625
+   },
+   "profile": {
+    "checks": {
+     "C3_at_least_3x_C3_bare": false,
+     "E_at_least_3x_U": false,
+     "C4_at_most_D_plus_half_C3": true
+    },
+    "profile_pass": false
+   },
+   "writes_top30": [
+    "moon",
+    "orbit",
+    "space",
+    "orbit",
+    "space",
+    "moon",
+    "moon",
+    "aster",
+    "space",
+    "orbit",
+    "mars",
+    "space",
+    "mart",
+    "space",
+    "apollo",
+    "planet",
+    "星",
+    "outer",
+    "space",
+    "spaces",
+    "rocket",
+    "galaxy",
+    "outer",
+    "orb",
+    "空间",
+    "moond",
+    "lun",
+    "planet",
+    "mo",
+    "landing"
+   ],
+   "writes_alien_or_aliens": false
+  },
+  {
+   "layer": 21,
+   "unit": 1175,
+   "r": 0.28344056636096326,
+   "writes_overlap": 1,
+   "null_r": 0.00047452508950871706,
+   "null_bar": 0.14951452309484572,
+   "beats_null": true,
+   "selection_reasons": [
+    "top5_beating_null"
+   ],
+   "largest_activation": 15.775760650634766,
+   "mean_max_by_set": {
+    "E": 2.9325641754937046,
+    "E-map": 1.3329201514522235,
+    "D": -0.009844994250064095,
+    "U": 1.05422378940663,
+    "C1": 0.6844979726398984,
+    "C2": 0.004706308400879304,
+    "C3": 5.999342699845632,
+    "C4": 0.4351425830585261,
+    "C3-bare": 0.05736053672929605
+   },
+   "profile": {
+    "checks": {
+     "C3_at_least_3x_C3_bare": true,
+     "E_at_least_3x_U": false,
+     "C4_at_most_D_plus_half_C3": true
+    },
+    "profile_pass": false
+   },
+   "writes_top30": [
+    "galaxy",
+    "galaxy",
+    "planet",
+    "spaces",
+    "terraform",
+    "federation",
+    "spaces",
+    "space",
+    "galaxies",
+    "android",
+    "space",
+    "star",
+    "space",
+    "galaxy",
+    "aster",
+    "ansible",
+    "clone",
+    "gal",
+    "cos",
+    "robot",
+    "space",
+    "species",
+    "scanner",
+    "droid",
+    "cloning",
+    "星",
+    "cloned",
+    "space",
+    "galax",
+    "universe"
+   ],
+   "writes_alien_or_aliens": false
+  },
+  {
+   "layer": 33,
+   "unit": 3761,
+   "r": 0.27524967753203694,
+   "writes_overlap": 1,
+   "null_r": -0.0004945755484093839,
+   "null_bar": 0.14951452309484572,
+   "beats_null": true,
+   "selection_reasons": [
+    "top5_beating_null"
+   ],
+   "largest_activation": 45.09443664550781,
+   "mean_max_by_set": {
+    "E": 5.776137042790651,
+    "E-map": 3.6456080640200526,
+    "D": 0.45622354819594574,
+    "U": 3.6595844958598414,
+    "C1": 0.06776628565664093,
+    "C2": 0.6924246015648047,
+    "C3": 8.432034889856974,
+    "C4": 3.6298341689010463,
+    "C3-bare": 0.8828633179267248
+   },
+   "profile": {
+    "checks": {
+     "C3_at_least_3x_C3_bare": true,
+     "E_at_least_3x_U": false,
+     "C4_at_most_D_plus_half_C3": true
+    },
+    "profile_pass": false
+   },
+   "writes_top30": [
+    "aster",
+    "moon",
+    "orbit",
+    "space",
+    "astr",
+    "space",
+    "planet",
+    "apollo",
+    "rocket",
+    "galaxy",
+    "moon",
+    "astro",
+    "moon",
+    "cos",
+    "space",
+    "space",
+    "solar",
+    "galaxies",
+    "earth",
+    "orbit",
+    "meteor",
+    "orbit",
+    "ast",
+    "stellar",
+    "space",
+    "ast",
+    "cos",
+    "launch",
+    "launch",
+    "rocket"
+   ],
+   "writes_alien_or_aliens": false
+  },
+  {
+   "layer": 17,
+   "unit": 7877,
+   "r": 0.26303704145549367,
+   "writes_overlap": 1,
+   "null_r": -0.008352223656486366,
+   "null_bar": 0.14951452309484572,
+   "beats_null": true,
+   "selection_reasons": [
+    "top5_beating_null"
+   ],
+   "largest_activation": 12.731415748596191,
+   "mean_max_by_set": {
+    "E": 3.103916389246782,
+    "E-map": 1.0546671679864328,
+    "D": 0.3100137591051559,
+    "U": 1.1608472792431712,
+    "C1": 0.9951718815912803,
+    "C2": 0.17010876753677925,
+    "C3": 2.20472684999307,
+    "C4": 0.7056831182756772,
+    "C3-bare": 0.30368844233453274
+   },
+   "profile": {
+    "checks": {
+     "C3_at_least_3x_C3_bare": true,
+     "E_at_least_3x_U": false,
+     "C4_at_most_D_plus_half_C3": true
+    },
+    "profile_pass": false
+   },
+   "writes_top30": [
+    "space",
+    "space",
+    "planet",
+    "astr",
+    "nasa",
+    "cosmos",
+    "cosm",
+    "aster",
+    "star",
+    "meteor",
+    "planet",
+    "spaces",
+    "space",
+    "planet",
+    "galaxy",
+    "space",
+    "环",
+    "epsilon",
+    "earth",
+    "gravity",
+    "galaxies",
+    "colon",
+    "cube",
+    "space",
+    "orbit",
+    "epsilon",
+    "ldr",
+    "ebula",
+    "amazon",
+    "cosmos"
+   ],
+   "writes_alien_or_aliens": false
+  },
+  {
+   "layer": 35,
+   "unit": 354,
+   "r": 0.1727219518738014,
+   "writes_overlap": 3,
+   "null_r": -0.0025301756936447206,
+   "null_bar": 0.14951452309484572,
+   "beats_null": true,
+   "selection_reasons": [
+    "writes_candidate_top50"
+   ],
+   "largest_activation": 66.11936950683594,
+   "mean_max_by_set": {
+    "E": 6.7919629861911135,
+    "E-map": 8.321904306610426,
+    "D": 1.7531243915048738,
+    "U": 2.3675742736280276,
+    "C1": 4.249986020440701,
+    "C2": 4.740887439499299,
+    "C3": 17.22173943122228,
+    "C4": 4.3412565644830465,
+    "C3-bare": 7.629110114648938
+   },
+   "profile": {
+    "checks": {
+     "C3_at_least_3x_C3_bare": false,
+     "E_at_least_3x_U": false,
+     "C4_at_most_D_plus_half_C3": true
+    },
+    "profile_pass": false
+   },
+   "writes_top30": [
+    "plan",
+    "plan",
+    "plan",
+    "plan",
+    "planet",
+    "planet",
+    "planet",
+    "plan",
+    "plans",
+    "plans",
+    "计划",
+    "planning",
+    "plans",
+    "planned",
+    "glo",
+    "glo",
+    "planner",
+    "planning",
+    "пл",
+    "planes",
+    "planner",
+    "plane",
+    "plane",
+    "plane",
+    "plane",
+    "glob",
+    "planes",
+    "planes",
+    "earth",
+    "計"
+   ],
+   "writes_alien_or_aliens": false
+  }
+ ],
+ "filler_doc_indices": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8
+ ],
+ "filler_token_count": 4021,
+ "filler_sha256": "31ff1e5a61999b2e9c650addf8951dc51c2411f5d12bfc0c663717036f09f960",
+ "battery_sha256": "657baf484c832dbf787b7a0096150d9e6e49d23a493e2f6313ae565cd99b20aa",
+ "scoring": "part20f.py scoring: max activation over tokens in the complete post-filler suffix, including the fixed lead sentence and phrase",
+ "n_by_set": {
+  "E": 24,
+  "E-map": 24,
+  "D": 24,
+  "U": 24,
+  "C1": 12,
+  "C2": 12,
+  "C3": 12,
+  "C4": 12,
+  "C3-bare": 12
+ },
+ "rows": [
+  {
+   "set": "E",
+   "index": 0,
+   "phrase": "a stone from no place on earth and unreachable by ship or plane",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.28188619017601013,
+    "32:6692": 1.908300518989563,
+    "21:1175": -0.11242002248764038,
+    "33:3761": 1.4098155498504639,
+    "17:7877": 1.09982430934906,
+    "35:354": 3.0296928882598877
+   }
+  },
+  {
+   "set": "E",
+   "index": 1,
+   "phrase": "a stranger born nowhere on earth and unreachable by ordinary travel",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.48101794719696045,
+    "32:6692": 1.3717035055160522,
+    "21:1175": 0.8020212054252625,
+    "33:3761": 0.8690899014472961,
+    "17:7877": 1.098738193511963,
+    "35:354": 10.63338851928711
+   }
+  },
+  {
+   "set": "E",
+   "index": 2,
+   "phrase": "a seed from somewhere other than earth and out of reach of ships",
+   "suffix_max_by_candidate": {
+    "22:1108": 7.129990577697754,
+    "32:6692": 5.460143089294434,
+    "21:1175": 6.33326530456543,
+    "33:3761": 12.158626556396484,
+    "17:7877": 6.625844955444336,
+    "35:354": 13.990925788879395
+   }
+  },
+  {
+   "set": "E",
+   "index": 3,
+   "phrase": "a melody from a region outside earth that no traveler can enter",
+   "suffix_max_by_candidate": {
+    "22:1108": 6.498379230499268,
+    "32:6692": 2.321929454803467,
+    "21:1175": 10.192007064819336,
+    "33:3761": 3.1376640796661377,
+    "17:7877": 8.365646362304688,
+    "35:354": 4.653168201446533
+   }
+  },
+  {
+   "set": "E",
+   "index": 4,
+   "phrase": "a metal forged in a place outside earth that no journey can reach",
+   "suffix_max_by_candidate": {
+    "22:1108": 3.204679489135742,
+    "32:6692": 7.001006603240967,
+    "21:1175": 2.805043935775757,
+    "33:3761": 6.007148742675781,
+    "17:7877": 5.951678276062012,
+    "35:354": 7.919930458068848
+   }
+  },
+  {
+   "set": "E",
+   "index": 5,
+   "phrase": "a fruit grown nowhere on earth and carried from a place travel cannot reach",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.3592052459716797,
+    "32:6692": 1.9724748134613037,
+    "21:1175": 0.5037412047386169,
+    "33:3761": 0.4666570723056793,
+    "17:7877": 0.8838959336280823,
+    "35:354": 15.819540977478027
+   }
+  },
+  {
+   "set": "E",
+   "index": 6,
+   "phrase": "a noise with no source on earth made where nobody can travel",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.7061320543289185,
+    "32:6692": 3.231358528137207,
+    "21:1175": -0.07850019633769989,
+    "33:3761": 5.494279384613037,
+    "17:7877": 1.1495847702026367,
+    "35:354": 2.572084426879883
+   }
+  },
+  {
+   "set": "E",
+   "index": 7,
+   "phrase": "an object whose origin is not on earth and which no travel can reach",
+   "suffix_max_by_candidate": {
+    "22:1108": 3.5751712322235107,
+    "32:6692": 5.277047634124756,
+    "21:1175": 2.6158127784729004,
+    "33:3761": 10.50408935546875,
+    "17:7877": 3.7852983474731445,
+    "35:354": 2.9133949279785156
+   }
+  },
+  {
+   "set": "E",
+   "index": 8,
+   "phrase": "a bright mineral originating nowhere on earth out of reach of ordinary travel",
+   "suffix_max_by_candidate": {
+    "22:1108": 2.224867582321167,
+    "32:6692": 2.4246912002563477,
+    "21:1175": 0.5489144921302795,
+    "33:3761": 13.176529884338379,
+    "17:7877": 0.6634198427200317,
+    "35:354": 11.885215759277344
+   }
+  },
+  {
+   "set": "E",
+   "index": 9,
+   "phrase": "a tribe whose native land is not on earth and closed to travel",
+   "suffix_max_by_candidate": {
+    "22:1108": 4.240785598754883,
+    "32:6692": 2.982236385345459,
+    "21:1175": 8.059708595275879,
+    "33:3761": 10.70124340057373,
+    "17:7877": 4.516562461853027,
+    "35:354": 5.951406002044678
+   }
+  },
+  {
+   "set": "E",
+   "index": 10,
+   "phrase": "an animal bred somewhere not on earth where ordinary travel is impossible",
+   "suffix_max_by_candidate": {
+    "22:1108": 3.5726256370544434,
+    "32:6692": 2.100315570831299,
+    "21:1175": 1.538909912109375,
+    "33:3761": 2.8853607177734375,
+    "17:7877": 3.0136775970458984,
+    "35:354": 6.63330078125
+   }
+  },
+  {
+   "set": "E",
+   "index": 11,
+   "phrase": "a drifter whose birthplace is not earth and cannot be reached by ordinary travel",
+   "suffix_max_by_candidate": {
+    "22:1108": 5.653382778167725,
+    "32:6692": 3.4708762168884277,
+    "21:1175": 9.281917572021484,
+    "33:3761": 7.648719310760498,
+    "17:7877": 6.333324909210205,
+    "35:354": 5.809595584869385
+   }
+  },
+  {
+   "set": "E",
+   "index": 12,
+   "phrase": "a sickness born nowhere on earth in a place no ship or plane reaches",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.3441908657550812,
+    "32:6692": 0.7087993025779724,
+    "21:1175": 0.5127252340316772,
+    "33:3761": 3.036907434463501,
+    "17:7877": 1.648897409439087,
+    "35:354": 3.3528568744659424
+   }
+  },
+  {
+   "set": "E",
+   "index": 13,
+   "phrase": "a tool made nowhere on earth by makers no ordinary journey can find",
+   "suffix_max_by_candidate": {
+    "22:1108": 4.093443393707275,
+    "32:6692": 5.81121301651001,
+    "21:1175": 1.161180853843689,
+    "33:3761": 7.533628940582275,
+    "17:7877": 1.2273353338241577,
+    "35:354": 2.9652884006500244
+   }
+  },
+  {
+   "set": "E",
+   "index": 14,
+   "phrase": "gifts sent by givers living outside earth where no ordinary travel goes",
+   "suffix_max_by_candidate": {
+    "22:1108": 4.498068332672119,
+    "32:6692": 4.1054911613464355,
+    "21:1175": 6.546955108642578,
+    "33:3761": 8.938239097595215,
+    "17:7877": 5.494999885559082,
+    "35:354": 4.077252388000488
+   }
+  },
+  {
+   "set": "E",
+   "index": 15,
+   "phrase": "water from a spring found nowhere on earth and reachable by no journey",
+   "suffix_max_by_candidate": {
+    "22:1108": 1.7061179876327515,
+    "32:6692": 3.2089033126831055,
+    "21:1175": 0.09951619803905487,
+    "33:3761": 5.348816394805908,
+    "17:7877": 1.4356001615524292,
+    "35:354": 4.993422985076904
+   }
+  },
+  {
+   "set": "E",
+   "index": 16,
+   "phrase": "a dye brewed in a place earth does not contain and travel cannot reach",
+   "suffix_max_by_candidate": {
+    "22:1108": 1.994939923286438,
+    "32:6692": 4.364068984985352,
+    "21:1175": -0.11242005974054337,
+    "33:3761": 3.391737222671509,
+    "17:7877": 2.1254656314849854,
+    "35:354": 1.4003478288650513
+   }
+  },
+  {
+   "set": "E",
+   "index": 17,
+   "phrase": "a letter from someone whose origin is not on earth and who cannot travel here",
+   "suffix_max_by_candidate": {
+    "22:1108": 9.31186580657959,
+    "32:6692": 4.229763031005859,
+    "21:1175": 6.157830238342285,
+    "33:3761": 1.797043800354004,
+    "17:7877": 3.639411211013794,
+    "35:354": 5.487046241760254
+   }
+  },
+  {
+   "set": "E",
+   "index": 18,
+   "phrase": "a crystal formed in a place other than earth that no journey reaches",
+   "suffix_max_by_candidate": {
+    "22:1108": 7.362264633178711,
+    "32:6692": 6.591359615325928,
+    "21:1175": 6.081821918487549,
+    "33:3761": 7.5789361000061035,
+    "17:7877": 5.829166889190674,
+    "35:354": 5.1493330001831055
+   }
+  },
+  {
+   "set": "E",
+   "index": 19,
+   "phrase": "a hum from nowhere on earth and from no place travel reaches",
+   "suffix_max_by_candidate": {
+    "22:1108": 1.713496208190918,
+    "32:6692": 10.40704345703125,
+    "21:1175": 1.444301724433899,
+    "33:3761": 12.316710472106934,
+    "17:7877": 1.6963340044021606,
+    "35:354": 4.923670291900635
+   }
+  },
+  {
+   "set": "E",
+   "index": 20,
+   "phrase": "a flame that began outside earth where ordinary travel is ruled out",
+   "suffix_max_by_candidate": {
+    "22:1108": 2.6091010570526123,
+    "32:6692": 3.229060173034668,
+    "21:1175": 4.9259209632873535,
+    "33:3761": 6.581849098205566,
+    "17:7877": 4.863871097564697,
+    "35:354": 1.3053529262542725
+   }
+  },
+  {
+   "set": "E",
+   "index": 21,
+   "phrase": "bones of a beast from a place not on earth and sealed to travel",
+   "suffix_max_by_candidate": {
+    "22:1108": 1.7943583726882935,
+    "32:6692": 1.4406527280807495,
+    "21:1175": -0.11242043226957321,
+    "33:3761": 2.184636354446411,
+    "17:7877": 1.179261326789856,
+    "35:354": 11.192076683044434
+   }
+  },
+  {
+   "set": "E",
+   "index": 22,
+   "phrase": "a song whose singers have never lived on earth and cannot travel here",
+   "suffix_max_by_candidate": {
+    "22:1108": 1.7619097232818604,
+    "32:6692": 4.206491470336914,
+    "21:1175": -0.013048884458839893,
+    "33:3761": 1.3959300518035889,
+    "17:7877": 0.9765632748603821,
+    "35:354": 20.022626876831055
+   }
+  },
+  {
+   "set": "E",
+   "index": 23,
+   "phrase": "cargo made nowhere on earth and sent from a place travel cannot reach",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.6549527049064636,
+    "32:6692": 4.782423973083496,
+    "21:1175": 1.1987555027008057,
+    "33:3761": 4.063630104064941,
+    "17:7877": 0.8895911574363708,
+    "35:354": 6.326192855834961
+   }
+  },
+  {
+   "set": "E-map",
+   "index": 0,
+   "phrase": "strangers whose birthplace lies on no map of anywhere people have ever lived",
+   "suffix_max_by_candidate": {
+    "22:1108": 2.0719611644744873,
+    "32:6692": 2.6401658058166504,
+    "21:1175": 0.31774672865867615,
+    "33:3761": 0.47527074813842773,
+    "17:7877": 0.8937047719955444,
+    "35:354": 6.836001396179199
+   }
+  },
+  {
+   "set": "E-map",
+   "index": 1,
+   "phrase": "natives of a land on no globe that no ship can reach",
+   "suffix_max_by_candidate": {
+    "22:1108": 1.9518474340438843,
+    "32:6692": 0.9868234992027283,
+    "21:1175": 2.0680131912231445,
+    "33:3761": 4.582836627960205,
+    "17:7877": 1.3190910816192627,
+    "35:354": 5.182704448699951
+   }
+  },
+  {
+   "set": "E-map",
+   "index": 2,
+   "phrase": "figures born on no continent, island, or ocean that people have ever named",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.7899381518363953,
+    "32:6692": 5.181636333465576,
+    "21:1175": 4.044395446777344,
+    "33:3761": 3.6150319576263428,
+    "17:7877": 1.0104382038116455,
+    "35:354": 13.3991060256958
+   }
+  },
+  {
+   "set": "E-map",
+   "index": 3,
+   "phrase": "organisms whose lineage began in no ocean, forest, or cave of ours",
+   "suffix_max_by_candidate": {
+    "22:1108": 4.21492862701416,
+    "32:6692": 3.7105681896209717,
+    "21:1175": 3.8018341064453125,
+    "33:3761": 8.957887649536133,
+    "17:7877": 1.0063958168029785,
+    "35:354": 13.038737297058105
+   }
+  },
+  {
+   "set": "E-map",
+   "index": 4,
+   "phrase": "emissaries from a country on none of our continents, unreachable by sail or wing",
+   "suffix_max_by_candidate": {
+    "22:1108": 2.2362334728240967,
+    "32:6692": 5.294946193695068,
+    "21:1175": 2.5101420879364014,
+    "33:3761": 1.3326542377471924,
+    "17:7877": 0.9057683944702148,
+    "35:354": 3.179111957550049
+   }
+  },
+  {
+   "set": "E-map",
+   "index": 5,
+   "phrase": "guests born nowhere on the globe, in a place no ticket reaches",
+   "suffix_max_by_candidate": {
+    "22:1108": 1.5264782905578613,
+    "32:6692": 3.727513551712036,
+    "21:1175": 0.9499207735061646,
+    "33:3761": 9.03885555267334,
+    "17:7877": 0.2542915344238281,
+    "35:354": 10.811753273010254
+   }
+  },
+  {
+   "set": "E-map",
+   "index": 6,
+   "phrase": "a people whose ancestral land lies outside all our maps, ships, and aircraft routes",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.9921993613243103,
+    "32:6692": 1.5927577018737793,
+    "21:1175": 0.5473535656929016,
+    "33:3761": 8.602700233459473,
+    "17:7877": 2.023338556289673,
+    "35:354": 7.696804046630859
+   }
+  },
+  {
+   "set": "E-map",
+   "index": 7,
+   "phrase": "strange arrivals native to no country, ocean, or continent we have charted",
+   "suffix_max_by_candidate": {
+    "22:1108": 1.6046314239501953,
+    "32:6692": 1.6153839826583862,
+    "21:1175": 1.921181321144104,
+    "33:3761": 8.902905464172363,
+    "17:7877": 3.0611279010772705,
+    "35:354": 17.295166015625
+   }
+  },
+  {
+   "set": "E-map",
+   "index": 8,
+   "phrase": "wanderers born outside all nations and seas, in a place no voyage reaches",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.16400529444217682,
+    "32:6692": 0.5774874091148376,
+    "21:1175": -0.11242005974054337,
+    "33:3761": 2.9980416297912598,
+    "17:7877": 0.975314736366272,
+    "35:354": 2.7308216094970703
+   }
+  },
+  {
+   "set": "E-map",
+   "index": 9,
+   "phrase": "intruders who say no compass bearing, however faithfully followed, leads to their birthplace",
+   "suffix_max_by_candidate": {
+    "22:1108": 1.089662790298462,
+    "32:6692": 0.8708606958389282,
+    "21:1175": -0.08788071572780609,
+    "33:3761": 0.870392918586731,
+    "17:7877": 0.16220955550670624,
+    "35:354": 1.0644638538360596
+   }
+  },
+  {
+   "set": "E-map",
+   "index": 10,
+   "phrase": "entities native to nowhere that has a latitude or a longitude",
+   "suffix_max_by_candidate": {
+    "22:1108": 1.4586527347564697,
+    "32:6692": 0.9479459524154663,
+    "21:1175": 1.3141366243362427,
+    "33:3761": 3.8548710346221924,
+    "17:7877": 1.0265285968780518,
+    "35:354": 3.750690460205078
+   }
+  },
+  {
+   "set": "E-map",
+   "index": 11,
+   "phrase": "a delegation from a place on no continent, which no passport or flight reaches",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.4690624475479126,
+    "32:6692": 0.42034876346588135,
+    "21:1175": 0.5939533114433289,
+    "33:3761": 0.016859842464327812,
+    "17:7877": 0.10595789551734924,
+    "35:354": 8.038786888122559
+   }
+  },
+  {
+   "set": "E-map",
+   "index": 12,
+   "phrase": "refugees from a country on no chart, touching none of our coasts",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.4171997308731079,
+    "32:6692": 1.3991376161575317,
+    "21:1175": 0.17721591889858246,
+    "33:3761": 0.19130517542362213,
+    "17:7877": 0.36062732338905334,
+    "35:354": 2.091219663619995
+   }
+  },
+  {
+   "set": "E-map",
+   "index": 13,
+   "phrase": "animals hatched in no nest or sea of ours, and carried by no ship",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.7636156678199768,
+    "32:6692": 4.122127056121826,
+    "21:1175": 0.409406453371048,
+    "33:3761": 4.263082504272461,
+    "17:7877": 1.3441234827041626,
+    "35:354": 9.903264999389648
+   }
+  },
+  {
+   "set": "E-map",
+   "index": 14,
+   "phrase": "foreigners from a place that is not on this globe, however far one sails",
+   "suffix_max_by_candidate": {
+    "22:1108": 2.3192334175109863,
+    "32:6692": 6.7277374267578125,
+    "21:1175": 2.2506327629089355,
+    "33:3761": 3.5073137283325195,
+    "17:7877": 0.29373377561569214,
+    "35:354": 12.99760913848877
+   }
+  },
+  {
+   "set": "E-map",
+   "index": 15,
+   "phrase": "a stranger whose birthplace is no country, continent, or sea, and cannot be reached",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.24212516844272614,
+    "32:6692": 1.122327446937561,
+    "21:1175": 0.17584958672523499,
+    "33:3761": -0.10600685328245163,
+    "17:7877": 0.2334974855184555,
+    "35:354": 14.032097816467285
+   }
+  },
+  {
+   "set": "E-map",
+   "index": 16,
+   "phrase": "the pair whose parents were born from no soil, river, or sea of ours",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.7165640592575073,
+    "32:6692": 3.604203462600708,
+    "21:1175": 0.597179114818573,
+    "33:3761": 5.653556823730469,
+    "17:7877": 0.11705239117145538,
+    "35:354": 20.329486846923828
+   }
+  },
+  {
+   "set": "E-map",
+   "index": 17,
+   "phrase": "ambassadors from a place with no coordinates, which no vehicle we build can reach",
+   "suffix_max_by_candidate": {
+    "22:1108": 1.1138314008712769,
+    "32:6692": 2.5463991165161133,
+    "21:1175": 3.938032865524292,
+    "33:3761": 5.842536449432373,
+    "17:7877": 3.866678237915039,
+    "35:354": 6.298131942749023
+   }
+  },
+  {
+   "set": "E-map",
+   "index": 18,
+   "phrase": "settlers descended from ancestors native to no region our ships have sailed",
+   "suffix_max_by_candidate": {
+    "22:1108": 1.0346152782440186,
+    "32:6692": 1.7349857091903687,
+    "21:1175": 1.3052955865859985,
+    "33:3761": 2.4034905433654785,
+    "17:7877": 1.8893404006958008,
+    "35:354": 1.0834404230117798
+   }
+  },
+  {
+   "set": "E-map",
+   "index": 19,
+   "phrase": "a species native to no habitat on land or sea, shallow or deep",
+   "suffix_max_by_candidate": {
+    "22:1108": 2.8724818229675293,
+    "32:6692": 2.4030096530914307,
+    "21:1175": 2.807570695877075,
+    "33:3761": 2.902601957321167,
+    "17:7877": 1.9347442388534546,
+    "35:354": 8.670317649841309
+   }
+  },
+  {
+   "set": "E-map",
+   "index": 20,
+   "phrase": "pilgrims from a place on no map, unreachable by foot, sail, or wing",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.31568029522895813,
+    "32:6692": 0.2540704905986786,
+    "21:1175": -0.11242039501667023,
+    "33:3761": 0.7249897122383118,
+    "17:7877": 1.2213008403778076,
+    "35:354": 3.9846031665802
+   }
+  },
+  {
+   "set": "E-map",
+   "index": 21,
+   "phrase": "the odd family whose roots touch no country, island, or sea we know",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.20762766897678375,
+    "32:6692": 0.13572318851947784,
+    "21:1175": -0.11242005974054337,
+    "33:3761": 0.24789416790008545,
+    "17:7877": 0.1899852156639099,
+    "35:354": 3.3201897144317627
+   }
+  },
+  {
+   "set": "E-map",
+   "index": 22,
+   "phrase": "lodgers born where no sea, land, or air of ours reaches",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.9516278505325317,
+    "32:6692": 4.398550987243652,
+    "21:1175": 1.86199951171875,
+    "33:3761": 2.553163528442383,
+    "17:7877": 0.3336014449596405,
+    "35:354": 14.657201766967773
+   }
+  },
+  {
+   "set": "E-map",
+   "index": 23,
+   "phrase": "travelers from a land touching ours at no point, by sea or air",
+   "suffix_max_by_candidate": {
+    "22:1108": 1.5502032041549683,
+    "32:6692": 3.566354513168335,
+    "21:1175": 0.8233652114868164,
+    "33:3761": 6.0623579025268555,
+    "17:7877": 0.7831601500511169,
+    "35:354": 9.333992958068848
+   }
+  },
+  {
+   "set": "D",
+   "index": 0,
+   "phrase": "relatives who traveled all night by bus to attend the funeral",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.16709227859973907,
+    "32:6692": 0.21177920699119568,
+    "21:1175": -0.11242043226957321,
+    "33:3761": -0.059916239231824875,
+    "17:7877": 0.293201208114624,
+    "35:354": 0.13472844660282135
+   }
+  },
+  {
+   "set": "D",
+   "index": 1,
+   "phrase": "laborers who flew in from overseas for the season",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.2229519933462143,
+    "32:6692": 0.3642326593399048,
+    "21:1175": -0.09925024956464767,
+    "33:3761": -0.015276090241968632,
+    "17:7877": 0.5483778119087219,
+    "35:354": -0.003979299683123827
+   }
+  },
+  {
+   "set": "D",
+   "index": 2,
+   "phrase": "households who moved here from the other side of the country",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.3608003556728363,
+    "32:6692": 3.787095069885254,
+    "21:1175": -0.11242005974054337,
+    "33:3761": -0.1616995483636856,
+    "17:7877": 0.09365851432085037,
+    "35:354": 6.646066665649414
+   }
+  },
+  {
+   "set": "D",
+   "index": 3,
+   "phrase": "students who commute two hundred miles to attend lectures",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.18527506291866302,
+    "32:6692": 1.0942628383636475,
+    "21:1175": -0.11242005974054337,
+    "33:3761": -0.1616995483636856,
+    "17:7877": 0.12521661818027496,
+    "35:354": 2.8325793743133545
+   }
+  },
+  {
+   "set": "D",
+   "index": 4,
+   "phrase": "sailors from faraway ports who rest in the harbor each winter",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.5237002968788147,
+    "32:6692": 1.0054521560668945,
+    "21:1175": -0.11242005974054337,
+    "33:3761": 6.329953670501709,
+    "17:7877": 0.7053126692771912,
+    "35:354": 12.904993057250977
+   }
+  },
+  {
+   "set": "D",
+   "index": 5,
+   "phrase": "tourists who came a great way to see the cathedral",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.2579692304134369,
+    "32:6692": 0.28870105743408203,
+    "21:1175": -0.07827364653348923,
+    "33:3761": 1.3979188203811646,
+    "17:7877": 0.2924993932247162,
+    "35:354": 1.2163970470428467
+   }
+  },
+  {
+   "set": "D",
+   "index": 6,
+   "phrase": "worshippers who spent days on foot to reach the shrine",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.1520347148180008,
+    "32:6692": 1.5600996017456055,
+    "21:1175": -0.11242002248764038,
+    "33:3761": -0.14155197143554688,
+    "17:7877": 0.235470250248909,
+    "35:354": -0.02075466886162758
+   }
+  },
+  {
+   "set": "D",
+   "index": 7,
+   "phrase": "a committee that flew halfway across the continent for the summit",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.1520347148180008,
+    "32:6692": 1.4085170030593872,
+    "21:1175": 1.062163233757019,
+    "33:3761": 1.1783604621887207,
+    "17:7877": 0.5646728277206421,
+    "35:354": 1.4746489524841309
+   }
+  },
+  {
+   "set": "D",
+   "index": 8,
+   "phrase": "businesspeople who spend most of the season on planes between cities",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.16696155071258545,
+    "32:6692": -0.04903462156653404,
+    "21:1175": -0.04095597192645073,
+    "33:3761": -0.1616995483636856,
+    "17:7877": 0.32812732458114624,
+    "35:354": -0.0706670954823494
+   }
+  },
+  {
+   "set": "D",
+   "index": 9,
+   "phrase": "families who crossed the mountains on foot from a neighboring country",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.2952442467212677,
+    "32:6692": 0.3540763258934021,
+    "21:1175": -0.1068810224533081,
+    "33:3761": 0.6191282868385315,
+    "17:7877": 0.1454695165157318,
+    "35:354": 2.784170627593994
+   }
+  },
+  {
+   "set": "D",
+   "index": 10,
+   "phrase": "neighbors who drove all day from the coast",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.15203475952148438,
+    "32:6692": 0.08782526105642319,
+    "21:1175": -0.11242039501667023,
+    "33:3761": -0.15547052025794983,
+    "17:7877": 0.13533423840999603,
+    "35:354": -0.054653823375701904
+   }
+  },
+  {
+   "set": "D",
+   "index": 11,
+   "phrase": "migrant farmhands who follow the ripening crops northward",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.4731737971305847,
+    "32:6692": 0.29888999462127686,
+    "21:1175": -0.11242039501667023,
+    "33:3761": 1.2340500354766846,
+    "17:7877": 0.2510765492916107,
+    "35:354": -0.07066725939512253
+   }
+  },
+  {
+   "set": "D",
+   "index": 12,
+   "phrase": "a cousin who lives on the opposite side of the ocean",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.319767564535141,
+    "32:6692": 3.622891902923584,
+    "21:1175": -0.10144726186990738,
+    "33:3761": 1.93450129032135,
+    "17:7877": 0.1650194376707077,
+    "35:354": 2.529607057571411
+   }
+  },
+  {
+   "set": "D",
+   "index": 13,
+   "phrase": "letters that took ages to reach us from abroad",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.15403121709823608,
+    "32:6692": 2.4383797645568848,
+    "21:1175": 0.4894588887691498,
+    "33:3761": 0.61063152551651,
+    "17:7877": 0.37860527634620667,
+    "35:354": -0.009321487508714199
+   }
+  },
+  {
+   "set": "D",
+   "index": 14,
+   "phrase": "wedding guests who made the trip from a faraway city",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.24805112183094025,
+    "32:6692": 0.1705423891544342,
+    "21:1175": -0.04694946110248566,
+    "33:3761": -0.1616997867822647,
+    "17:7877": 0.19686980545520782,
+    "35:354": 2.115384817123413
+   }
+  },
+  {
+   "set": "D",
+   "index": 15,
+   "phrase": "passengers who traveled by ferry and rail from the islands",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.26279744505882263,
+    "32:6692": 0.37804457545280457,
+    "21:1175": 0.004766707308590412,
+    "33:3761": -0.1616995483636856,
+    "17:7877": 0.2583326995372772,
+    "35:354": 0.7036235332489014
+   }
+  },
+  {
+   "set": "D",
+   "index": 16,
+   "phrase": "traders who haul goods by camel from one oasis to the next",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.24612437188625336,
+    "32:6692": 0.1100061759352684,
+    "21:1175": -0.11242043226957321,
+    "33:3761": -0.16169992089271545,
+    "17:7877": 0.2879282832145691,
+    "35:354": -0.005727142561227083
+   }
+  },
+  {
+   "set": "D",
+   "index": 17,
+   "phrase": "truckers who cover thousands of miles between the coasts",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.4983508586883545,
+    "32:6692": 0.1387314647436142,
+    "21:1175": -0.07251972705125809,
+    "33:3761": -0.1616997867822647,
+    "17:7877": 0.04147832468152046,
+    "35:354": -0.07066725939512253
+   }
+  },
+  {
+   "set": "D",
+   "index": 18,
+   "phrase": "holidaymakers who flew across three time zones for a beach break",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.2138134241104126,
+    "32:6692": 0.5478087067604065,
+    "21:1175": -0.013001340441405773,
+    "33:3761": -0.14086295664310455,
+    "17:7877": 0.18012869358062744,
+    "35:354": 0.042842742055654526
+   }
+  },
+  {
+   "set": "D",
+   "index": 19,
+   "phrase": "an uncle who emigrated to australia as a young man",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.15203475952148438,
+    "32:6692": 1.5612765550613403,
+    "21:1175": -0.11242039501667023,
+    "33:3761": -0.1616997867822647,
+    "17:7877": 0.26298725605010986,
+    "35:354": 0.9701212048530579
+   }
+  },
+  {
+   "set": "D",
+   "index": 20,
+   "phrase": "people who made the trip from the coast to the city",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.15203511714935303,
+    "32:6692": 0.498704195022583,
+    "21:1175": -0.11242005974054337,
+    "33:3761": -0.1616995483636856,
+    "17:7877": 0.6400333642959595,
+    "35:354": -0.0706670954823494
+   }
+  },
+  {
+   "set": "D",
+   "index": 21,
+   "phrase": "emigrants who sailed across the atlantic in steerage",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.3879811465740204,
+    "32:6692": 0.7541816830635071,
+    "21:1175": -0.11242043226957321,
+    "33:3761": -0.06340402364730835,
+    "17:7877": 0.5730320811271667,
+    "35:354": 0.05627134442329407
+   }
+  },
+  {
+   "set": "D",
+   "index": 22,
+   "phrase": "a courier who rode from the coast to the mountains in two days",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.38833409547805786,
+    "32:6692": 0.2730969190597534,
+    "21:1175": 0.1156531274318695,
+    "33:3761": -0.1617003232240677,
+    "17:7877": 0.4042120575904846,
+    "35:354": 0.07721857726573944
+   }
+  },
+  {
+   "set": "D",
+   "index": 23,
+   "phrase": "exchange students from a faraway country in asia",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.5199794769287109,
+    "32:6692": 0.19841231405735016,
+    "21:1175": -0.11242039501667023,
+    "33:3761": -0.1616997867822647,
+    "17:7877": 0.33328601717948914,
+    "35:354": 7.963437080383301
+   }
+  },
+  {
+   "set": "U",
+   "index": 0,
+   "phrase": "an expedition that dragged sledges across polar ice for a winter and never reappeared",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.4857316315174103,
+    "32:6692": 4.391317367553711,
+    "21:1175": -0.11242002248764038,
+    "33:3761": 5.111132621765137,
+    "17:7877": 1.6354382038116455,
+    "35:354": 0.28487616777420044
+   }
+  },
+  {
+   "set": "U",
+   "index": 1,
+   "phrase": "a blind white fish dredged up from a deep-ocean trench",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.5393069386482239,
+    "32:6692": 0.10490567237138748,
+    "21:1175": 0.38392192125320435,
+    "33:3761": 2.3516881465911865,
+    "17:7877": 1.8385138511657715,
+    "35:354": 0.20948264002799988
+   }
+  },
+  {
+   "set": "U",
+   "index": 2,
+   "phrase": "a lost colony on a remote island whose people still spoke medieval english",
+   "suffix_max_by_candidate": {
+    "22:1108": 1.6099313497543335,
+    "32:6692": 4.034530162811279,
+    "21:1175": 15.913023948669434,
+    "33:3761": 16.168615341186523,
+    "17:7877": 4.196181297302246,
+    "35:354": 40.76131820678711
+   }
+  },
+  {
+   "set": "U",
+   "index": 3,
+   "phrase": "a roman city buried by volcanic ash and found almost untouched",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.31663936376571655,
+    "32:6692": 1.84792959690094,
+    "21:1175": -0.05438586696982384,
+    "33:3761": 1.9800022840499878,
+    "17:7877": 0.5033879280090332,
+    "35:354": 0.20200559496879578
+   }
+  },
+  {
+   "set": "U",
+   "index": 4,
+   "phrase": "a woolly mammoth found in permafrost with buttercups still in its mouth",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.3278484642505646,
+    "32:6692": 1.687025785446167,
+    "21:1175": -0.053464554250240326,
+    "33:3761": 2.2783243656158447,
+    "17:7877": 0.9641762971878052,
+    "35:354": 0.20608314871788025
+   }
+  },
+  {
+   "set": "U",
+   "index": 5,
+   "phrase": "a lake hidden beneath miles of antarctic ice",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.2514614760875702,
+    "32:6692": 4.181316375732422,
+    "21:1175": 3.202057361602783,
+    "33:3761": 12.486637115478516,
+    "17:7877": 2.6163294315338135,
+    "35:354": 1.4524122476577759
+   }
+  },
+  {
+   "set": "U",
+   "index": 6,
+   "phrase": "a drowned city lying on the floor of a mediterranean bay",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.36404749751091003,
+    "32:6692": 0.803007185459137,
+    "21:1175": 0.7914323210716248,
+    "33:3761": 0.10462269932031631,
+    "17:7877": 0.8959386348724365,
+    "35:354": 0.6398591995239258
+   }
+  },
+  {
+   "set": "U",
+   "index": 7,
+   "phrase": "a sailor who drifted across the pacific on a raft",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.15203511714935303,
+    "32:6692": 1.0515148639678955,
+    "21:1175": 0.7997645735740662,
+    "33:3761": 2.0631072521209717,
+    "17:7877": 0.9204235076904297,
+    "35:354": 0.1696264147758484
+   }
+  },
+  {
+   "set": "U",
+   "index": 8,
+   "phrase": "the mutineers who burned their ship and hid on a pacific island",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.676690936088562,
+    "32:6692": 1.3783174753189087,
+    "21:1175": -0.016714492812752724,
+    "33:3761": 0.5390691161155701,
+    "17:7877": 0.5642853379249573,
+    "35:354": 0.002932984847575426
+   }
+  },
+  {
+   "set": "U",
+   "index": 9,
+   "phrase": "a balloon flight over the summit of the highest mountain in the himalayas",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.3615981340408325,
+    "32:6692": 2.5079500675201416,
+    "21:1175": -0.013194983825087547,
+    "33:3761": 6.0321431159973145,
+    "17:7877": 0.5932894945144653,
+    "35:354": 0.9778596758842468
+   }
+  },
+  {
+   "set": "U",
+   "index": 10,
+   "phrase": "a diver trapped for three days in an air pocket inside a sunken vessel",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.2942385971546173,
+    "32:6692": 1.5236356258392334,
+    "21:1175": -0.07270438224077225,
+    "33:3761": 0.9963361620903015,
+    "17:7877": 0.5546612739562988,
+    "35:354": 2.4390268325805664
+   }
+  },
+  {
+   "set": "U",
+   "index": 11,
+   "phrase": "a submarine voyage beneath the polar ice cap to the north pole",
+   "suffix_max_by_candidate": {
+    "22:1108": 1.8760708570480347,
+    "32:6692": 5.7436957359313965,
+    "21:1175": 1.3918706178665161,
+    "33:3761": 8.353571891784668,
+    "17:7877": 2.1786978244781494,
+    "35:354": 0.7327058911323547
+   }
+  },
+  {
+   "set": "U",
+   "index": 12,
+   "phrase": "an amazon tribe that has never met outsiders",
+   "suffix_max_by_candidate": {
+    "22:1108": 2.022918701171875,
+    "32:6692": 1.2789088487625122,
+    "21:1175": -0.11242043226957321,
+    "33:3761": -0.16169992089271545,
+    "17:7877": 0.7246119379997253,
+    "35:354": -0.0706668421626091
+   }
+  },
+  {
+   "set": "U",
+   "index": 13,
+   "phrase": "a salt mine carved into a cathedral beneath the plains of poland",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.22431272268295288,
+    "32:6692": 1.5161747932434082,
+    "21:1175": 0.4668799936771393,
+    "33:3761": -0.1616997867822647,
+    "17:7877": 0.32252582907676697,
+    "35:354": 1.1812976598739624
+   }
+  },
+  {
+   "set": "U",
+   "index": 14,
+   "phrase": "a sunken forest standing upright on the seabed",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.3138801157474518,
+    "32:6692": 5.301926136016846,
+    "21:1175": 0.15755438804626465,
+    "33:3761": 4.6431169509887695,
+    "17:7877": 1.3877875804901123,
+    "35:354": 2.910686492919922
+   }
+  },
+  {
+   "set": "U",
+   "index": 15,
+   "phrase": "a boy raised by wolves in the forests of india",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.30462586879730225,
+    "32:6692": 0.35086482763290405,
+    "21:1175": -0.11242002248764038,
+    "33:3761": -0.1617003232240677,
+    "17:7877": 0.600142776966095,
+    "35:354": 0.5801539421081543
+   }
+  },
+  {
+   "set": "U",
+   "index": 16,
+   "phrase": "a hermit who lived for decades on an uninhabited atoll",
+   "suffix_max_by_candidate": {
+    "22:1108": 1.6349670886993408,
+    "32:6692": 2.833383083343506,
+    "21:1175": -0.07602639496326447,
+    "33:3761": 2.8104326725006104,
+    "17:7877": 1.8596765995025635,
+    "35:354": 1.0820119380950928
+   }
+  },
+  {
+   "set": "U",
+   "index": 17,
+   "phrase": "a glacier that swallowed a squadron of warplanes and gave them back",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.8595877885818481,
+    "32:6692": 5.373108386993408,
+    "21:1175": 1.1007384061813354,
+    "33:3761": 7.99412727355957,
+    "17:7877": 0.35532107949256897,
+    "35:354": 0.1992773413658142
+   }
+  },
+  {
+   "set": "U",
+   "index": 18,
+   "phrase": "an island that rose from the sea in a single night and then sank",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.1606617271900177,
+    "32:6692": 0.35011595487594604,
+    "21:1175": -0.11242002248764038,
+    "33:3761": 2.127131223678589,
+    "17:7877": 0.4308030903339386,
+    "35:354": 0.22474022209644318
+   }
+  },
+  {
+   "set": "U",
+   "index": 19,
+   "phrase": "a dog sled journey to the south pole in the dark of winter",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.4721237123012543,
+    "32:6692": 5.809179782867432,
+    "21:1175": 1.421706199645996,
+    "33:3761": 5.66544246673584,
+    "17:7877": 1.7019599676132202,
+    "35:354": 0.23389463126659393
+   }
+  },
+  {
+   "set": "U",
+   "index": 20,
+   "phrase": "a rainforest orchid that blooms once in a lifetime",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.4946094751358032,
+    "32:6692": 0.3795078694820404,
+    "21:1175": -0.11242039501667023,
+    "33:3761": 4.774498462677002,
+    "17:7877": 0.0945248082280159,
+    "35:354": 0.4142950177192688
+   }
+  },
+  {
+   "set": "U",
+   "index": 21,
+   "phrase": "a monastery clinging to a sea stack on the greek coast",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.5505546927452087,
+    "32:6692": 0.8111822009086609,
+    "21:1175": -0.11242002248764038,
+    "33:3761": -0.1617003232240677,
+    "17:7877": 0.37240728735923767,
+    "35:354": -0.04573052003979683
+   }
+  },
+  {
+   "set": "U",
+   "index": 22,
+   "phrase": "a submersible that descended to the bottom of the deepest ocean trench",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.7321394085884094,
+    "32:6692": 2.8586113452911377,
+    "21:1175": 0.6456336379051208,
+    "33:3761": 1.8958085775375366,
+    "17:7877": 1.5805885791778564,
+    "35:354": 1.7330468893051147
+   }
+  },
+  {
+   "set": "U",
+   "index": 23,
+   "phrase": "a biplane flight across the atlantic in an open cockpit",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.15514028072357178,
+    "32:6692": 0.28150680661201477,
+    "21:1175": -0.012200831435620785,
+    "33:3761": 0.10102051496505737,
+    "17:7877": 0.9686620831489563,
+    "35:354": 0.3005867898464203
+   }
+  },
+  {
+   "set": "C1",
+   "index": 0,
+   "phrase": "the rights and duties we owe to fellow beings",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.4593439996242523,
+    "32:6692": 0.19799503684043884,
+    "21:1175": -0.11242039501667023,
+    "33:3761": -0.1616997867822647,
+    "17:7877": 0.9990582466125488,
+    "35:354": 2.267533540725708
+   }
+  },
+  {
+   "set": "C1",
+   "index": 1,
+   "phrase": "how living beings adapt to droughts and floods",
+   "suffix_max_by_candidate": {
+    "22:1108": 1.2481426000595093,
+    "32:6692": 0.3820737302303314,
+    "21:1175": -0.08456281572580338,
+    "33:3761": -0.1617003232240677,
+    "17:7877": 0.9941493272781372,
+    "35:354": 1.6950608491897583
+   }
+  },
+  {
+   "set": "C1",
+   "index": 2,
+   "phrase": "social beings who need company to thrive",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.1520347148180008,
+    "32:6692": 0.08505879342556,
+    "21:1175": -0.11242002248764038,
+    "33:3761": -0.12422032654285431,
+    "17:7877": 0.07434670627117157,
+    "35:354": -0.07066716998815536
+   }
+  },
+  {
+   "set": "C1",
+   "index": 3,
+   "phrase": "the dignity of all beings regardless of rank",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.27866286039352417,
+    "32:6692": 0.15204571187496185,
+    "21:1175": 0.4632631242275238,
+    "33:3761": -0.1616997867822647,
+    "17:7877": 0.7583379149436951,
+    "35:354": 3.688694715499878
+   }
+  },
+  {
+   "set": "C1",
+   "index": 4,
+   "phrase": "the suffering of living beings in overfull shelters",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.21031205356121063,
+    "32:6692": 0.46605291962623596,
+    "21:1175": -0.11242002248764038,
+    "33:3761": 0.9786774516105652,
+    "17:7877": 0.10973008722066879,
+    "35:354": 12.180886268615723
+   }
+  },
+  {
+   "set": "C1",
+   "index": 5,
+   "phrase": "the shared needs of all living beings, from insects to elephants",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.513306200504303,
+    "32:6692": 2.5875418186187744,
+    "21:1175": 0.02289992943406105,
+    "33:3761": 0.056480299681425095,
+    "17:7877": 1.1415270566940308,
+    "35:354": 2.393561363220215
+   }
+  },
+  {
+   "set": "C1",
+   "index": 6,
+   "phrase": "mortal beings facing illness and old age",
+   "suffix_max_by_candidate": {
+    "22:1108": 1.30657160282135,
+    "32:6692": 0.6585900783538818,
+    "21:1175": 0.8979952931404114,
+    "33:3761": 0.14228829741477966,
+    "17:7877": 1.6053731441497803,
+    "35:354": 1.0776488780975342
+   }
+  },
+  {
+   "set": "C1",
+   "index": 7,
+   "phrase": "the ethics of how we treat living beings in laboratories",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.714121401309967,
+    "32:6692": 0.15417738258838654,
+    "21:1175": -0.08468567579984665,
+    "33:3761": -0.1616997867822647,
+    "17:7877": 1.0428727865219116,
+    "35:354": 1.0821632146835327
+   }
+  },
+  {
+   "set": "C1",
+   "index": 8,
+   "phrase": "frail beings who depend on the care of others",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.25058287382125854,
+    "32:6692": 0.42155739665031433,
+    "21:1175": -0.06519246101379395,
+    "33:3761": -0.11305734515190125,
+    "17:7877": 0.2411832958459854,
+    "35:354": 0.0017149101477116346
+   }
+  },
+  {
+   "set": "C1",
+   "index": 9,
+   "phrase": "thinking beings capable of love and regret",
+   "suffix_max_by_candidate": {
+    "22:1108": 7.824520587921143,
+    "32:6692": 1.9794007539749146,
+    "21:1175": 4.435055255889893,
+    "33:3761": -0.020606523379683495,
+    "17:7877": 2.018925189971924,
+    "35:354": 0.23364010453224182
+   }
+  },
+  {
+   "set": "C1",
+   "index": 10,
+   "phrase": "beings of flesh and blood who tire, hunger, and sleep",
+   "suffix_max_by_candidate": {
+    "22:1108": 3.046212911605835,
+    "32:6692": 0.8915559649467468,
+    "21:1175": 2.9520578384399414,
+    "33:3761": 0.19005972146987915,
+    "17:7877": 2.0045745372772217,
+    "35:354": 1.853200078010559
+   }
+  },
+  {
+   "set": "C1",
+   "index": 11,
+   "phrase": "the wellbeing of all beings who share a household",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.7518823146820068,
+    "32:6692": 0.1254771202802658,
+    "21:1175": 0.014405623078346252,
+    "33:3761": 0.3503735363483429,
+    "17:7877": 0.9519842863082886,
+    "35:354": 24.59639549255371
+   }
+  },
+  {
+   "set": "C2",
+   "index": 0,
+   "phrase": "neighbors who are not from here but have settled in nicely",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.35855576395988464,
+    "32:6692": 2.4106788635253906,
+    "21:1175": -0.11242005974054337,
+    "33:3761": 1.7229650020599365,
+    "17:7877": 0.060806550085544586,
+    "35:354": 3.7405145168304443
+   }
+  },
+  {
+   "set": "C2",
+   "index": 1,
+   "phrase": "a woman not from here who misses the sea",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.7694713473320007,
+    "32:6692": 3.340278387069702,
+    "21:1175": -0.11242039501667023,
+    "33:3761": 0.0723995491862297,
+    "17:7877": 0.234671950340271,
+    "35:354": 1.0405832529067993
+   }
+  },
+  {
+   "set": "C2",
+   "index": 2,
+   "phrase": "the shopkeeper who is clearly not from here",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.615991473197937,
+    "32:6692": 4.077645778656006,
+    "21:1175": -0.08068202435970306,
+    "33:3761": -0.1617003232240677,
+    "17:7877": 0.2430279403924942,
+    "35:354": 1.9965448379516602
+   }
+  },
+  {
+   "set": "C2",
+   "index": 3,
+   "phrase": "families who are not from this place and need directions to the clinic",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.6101572513580322,
+    "32:6692": 0.3626551628112793,
+    "21:1175": -0.11242043226957321,
+    "33:3761": -0.16169992089271545,
+    "17:7877": 0.14096219837665558,
+    "35:354": 4.557188987731934
+   }
+  },
+  {
+   "set": "C2",
+   "index": 4,
+   "phrase": "the accent of someone not from here",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.31227990984916687,
+    "32:6692": 0.10241235047578812,
+    "21:1175": -0.050357040017843246,
+    "33:3761": -0.16169992089271545,
+    "17:7877": 0.066666379570961,
+    "35:354": -0.0706668421626091
+   }
+  },
+  {
+   "set": "C2",
+   "index": 5,
+   "phrase": "laborers who say they are not from this place and plan to go back",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.6204189658164978,
+    "32:6692": 1.7813628911972046,
+    "21:1175": 0.15296019613742828,
+    "33:3761": 0.4297911822795868,
+    "17:7877": 0.08772052079439163,
+    "35:354": 12.101073265075684
+   }
+  },
+  {
+   "set": "C2",
+   "index": 6,
+   "phrase": "tourists who are plainly not from here, with maps in hand",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.3823431432247162,
+    "32:6692": 2.374279737472534,
+    "21:1175": 0.08211574703454971,
+    "33:3761": -0.07807501405477524,
+    "17:7877": 0.2924994230270386,
+    "35:354": 1.1588785648345947
+   }
+  },
+  {
+   "set": "C2",
+   "index": 7,
+   "phrase": "a boy raised on this street who still feels not from this place",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.5869855880737305,
+    "32:6692": 2.4785807132720947,
+    "21:1175": -0.01968931406736374,
+    "33:3761": 0.18272463977336884,
+    "17:7877": 0.3528503477573395,
+    "35:354": 13.887016296386719
+   }
+  },
+  {
+   "set": "C2",
+   "index": 8,
+   "phrase": "strangers in the café who were obviously not from here",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.25367021560668945,
+    "32:6692": 0.2938443720340729,
+    "21:1175": 0.02413496933877468,
+    "33:3761": 0.47526487708091736,
+    "17:7877": 0.26637813448905945,
+    "35:354": 0.21029847860336304
+   }
+  },
+  {
+   "set": "C2",
+   "index": 9,
+   "phrase": "the rumor that the doctor is not from here",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.940036952495575,
+    "32:6692": 6.021121978759766,
+    "21:1175": 0.5100948810577393,
+    "33:3761": 6.287906169891357,
+    "17:7877": 0.0412779301404953,
+    "35:354": 9.592660903930664
+   }
+  },
+  {
+   "set": "C2",
+   "index": 10,
+   "phrase": "students not from here who struggle to find housing",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.23915331065654755,
+    "32:6692": 0.03149577975273132,
+    "21:1175": -0.11242043226957321,
+    "33:3761": -0.16169992089271545,
+    "17:7877": 0.2104773372411728,
+    "35:354": -0.0706668421626091
+   }
+  },
+  {
+   "set": "C2",
+   "index": 11,
+   "phrase": "a farmer who was not from this place but married into it",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.4935884177684784,
+    "32:6692": 2.6524946689605713,
+    "21:1175": -0.11242039501667023,
+    "33:3761": -0.1370811015367508,
+    "17:7877": 0.04396649822592735,
+    "35:354": 8.747223854064941
+   }
+  },
+  {
+   "set": "C3",
+   "index": 0,
+   "phrase": "beings not from here who have lived on this street for decades",
+   "suffix_max_by_candidate": {
+    "22:1108": 6.396517276763916,
+    "32:6692": 1.754109501838684,
+    "21:1175": 7.858248233795166,
+    "33:3761": 8.397942543029785,
+    "17:7877": 2.0045759677886963,
+    "35:354": 31.598875045776367
+   }
+  },
+  {
+   "set": "C3",
+   "index": 1,
+   "phrase": "beings who are not from this place and need help finding the clinic",
+   "suffix_max_by_candidate": {
+    "22:1108": 5.712910175323486,
+    "32:6692": 2.17336106300354,
+    "21:1175": 6.783271789550781,
+    "33:3761": 7.679449081420898,
+    "17:7877": 2.3485445976257324,
+    "35:354": 19.802391052246094
+   }
+  },
+  {
+   "set": "C3",
+   "index": 2,
+   "phrase": "those beings, not from here, who sell fruit at the market",
+   "suffix_max_by_candidate": {
+    "22:1108": 7.959593772888184,
+    "32:6692": 9.715604782104492,
+    "21:1175": 7.091274261474609,
+    "33:3761": 8.41214656829834,
+    "17:7877": 3.380293846130371,
+    "35:354": 10.816666603088379
+   }
+  },
+  {
+   "set": "C3",
+   "index": 3,
+   "phrase": "the weary beings who say they are not from this place and want to go back",
+   "suffix_max_by_candidate": {
+    "22:1108": 6.021811485290527,
+    "32:6692": 7.603426933288574,
+    "21:1175": 6.238199234008789,
+    "33:3761": 10.909149169921875,
+    "17:7877": 1.82649564743042,
+    "35:354": 22.152118682861328
+   }
+  },
+  {
+   "set": "C3",
+   "index": 4,
+   "phrase": "lonely beings who are not from here and eat alone at the diner",
+   "suffix_max_by_candidate": {
+    "22:1108": 2.1540045738220215,
+    "32:6692": 4.9501471519470215,
+    "21:1175": 1.8193471431732178,
+    "33:3761": 6.289327621459961,
+    "17:7877": 1.218406319618225,
+    "35:354": 15.553104400634766
+   }
+  },
+  {
+   "set": "C3",
+   "index": 5,
+   "phrase": "the beings who are not from this place yet speak the local tongue flawlessly",
+   "suffix_max_by_candidate": {
+    "22:1108": 5.688704013824463,
+    "32:6692": 3.8426811695098877,
+    "21:1175": 7.352921962738037,
+    "33:3761": 9.203418731689453,
+    "17:7877": 2.322207450866699,
+    "35:354": 18.467994689941406
+   }
+  },
+  {
+   "set": "C3",
+   "index": 6,
+   "phrase": "beings not from here who gather at the harbor to share news",
+   "suffix_max_by_candidate": {
+    "22:1108": 6.396534442901611,
+    "32:6692": 1.7540898323059082,
+    "21:1175": 5.5718841552734375,
+    "33:3761": 5.964008331298828,
+    "17:7877": 2.0045745372772217,
+    "35:354": 11.870264053344727
+   }
+  },
+  {
+   "set": "C3",
+   "index": 7,
+   "phrase": "the kind beings who welcomed us though we were not from here",
+   "suffix_max_by_candidate": {
+    "22:1108": 2.046797037124634,
+    "32:6692": 3.6891896724700928,
+    "21:1175": 4.193113803863525,
+    "33:3761": 2.699345588684082,
+    "17:7877": 0.8342764973640442,
+    "35:354": 3.9190213680267334
+   }
+  },
+  {
+   "set": "C3",
+   "index": 8,
+   "phrase": "beings who are plainly not from here, going by their coats",
+   "suffix_max_by_candidate": {
+    "22:1108": 6.182349681854248,
+    "32:6692": 3.738102912902832,
+    "21:1175": 6.0760040283203125,
+    "33:3761": 9.82394790649414,
+    "17:7877": 2.3485445976257324,
+    "35:354": 14.813496589660645
+   }
+  },
+  {
+   "set": "C3",
+   "index": 9,
+   "phrase": "all the beings who admit they are not from this place when the nurse inquires",
+   "suffix_max_by_candidate": {
+    "22:1108": 8.807464599609375,
+    "32:6692": 12.605339050292969,
+    "21:1175": 7.545226097106934,
+    "33:3761": 15.559710502624512,
+    "17:7877": 2.3450143337249756,
+    "35:354": 26.140127182006836
+   }
+  },
+  {
+   "set": "C3",
+   "index": 10,
+   "phrase": "beings who are not from here and pay higher rents than the locals",
+   "suffix_max_by_candidate": {
+    "22:1108": 5.712910175323486,
+    "32:6692": 2.493321418762207,
+    "21:1175": 6.783271789550781,
+    "33:3761": 7.679449081420898,
+    "17:7877": 2.3485445976257324,
+    "35:354": 17.8603515625
+   }
+  },
+  {
+   "set": "C3",
+   "index": 11,
+   "phrase": "the shy beings in the back row who are not from here",
+   "suffix_max_by_candidate": {
+    "22:1108": 2.8778185844421387,
+    "32:6692": 7.440247535705566,
+    "21:1175": 4.679349899291992,
+    "33:3761": 8.566523551940918,
+    "17:7877": 3.4752438068389893,
+    "35:354": 13.666461944580078
+   }
+  },
+  {
+   "set": "C4",
+   "index": 0,
+   "phrase": "the oldest trees on earth",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.1520347148180008,
+    "32:6692": -0.01922324299812317,
+    "21:1175": -0.11242002248764038,
+    "33:3761": 1.0051814317703247,
+    "17:7877": 0.07625268399715424,
+    "35:354": 12.703374862670898
+   }
+  },
+  {
+   "set": "C4",
+   "index": 1,
+   "phrase": "rich dark earth for growing tomatoes",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.3334730863571167,
+    "32:6692": 0.19830161333084106,
+    "21:1175": 0.10577484220266342,
+    "33:3761": -0.1616995483636856,
+    "17:7877": 0.24870821833610535,
+    "35:354": -0.0706670954823494
+   }
+  },
+  {
+   "set": "C4",
+   "index": 2,
+   "phrase": "the deepest lakes on earth",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.4784027338027954,
+    "32:6692": 1.7480226755142212,
+    "21:1175": 1.792936086654663,
+    "33:3761": 12.45599365234375,
+    "17:7877": 0.7111348509788513,
+    "35:354": 13.12300968170166
+   }
+  },
+  {
+   "set": "C4",
+   "index": 3,
+   "phrase": "loose damp earth packed around the roots",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.3673112094402313,
+    "32:6692": 0.015964696183800697,
+    "21:1175": 0.05554588884115219,
+    "33:3761": -0.1616995483636856,
+    "17:7877": 0.5167692303657532,
+    "35:354": 0.37039631605148315
+   }
+  },
+  {
+   "set": "C4",
+   "index": 4,
+   "phrase": "a shovel full of wet earth",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.1522100418806076,
+    "32:6692": 0.07612663507461548,
+    "21:1175": -0.11242002248764038,
+    "33:3761": -0.1617003232240677,
+    "17:7877": 0.22176936268806458,
+    "35:354": 0.20569157600402832
+   }
+  },
+  {
+   "set": "C4",
+   "index": 5,
+   "phrase": "the earth beneath the old oak tree",
+   "suffix_max_by_candidate": {
+    "22:1108": 1.1809602975845337,
+    "32:6692": 2.61269211769104,
+    "21:1175": 0.45438718795776367,
+    "33:3761": 5.740254878997803,
+    "17:7877": 2.077911376953125,
+    "35:354": 2.1936023235321045
+   }
+  },
+  {
+   "set": "C4",
+   "index": 6,
+   "phrase": "earth mixed with sand and crushed shells",
+   "suffix_max_by_candidate": {
+    "22:1108": 1.4726016521453857,
+    "32:6692": 6.0805182456970215,
+    "21:1175": 0.38089653849601746,
+    "33:3761": 4.868703842163086,
+    "17:7877": 1.2940090894699097,
+    "35:354": 1.4543050527572632
+   }
+  },
+  {
+   "set": "C4",
+   "index": 7,
+   "phrase": "freshly dug earth by the fence",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.174671471118927,
+    "32:6692": -0.020466789603233337,
+    "21:1175": 0.025325553491711617,
+    "33:3761": -0.1617003232240677,
+    "17:7877": 0.1718837022781372,
+    "35:354": 0.5005158185958862
+   }
+  },
+  {
+   "set": "C4",
+   "index": 8,
+   "phrase": "the earth in the flowerpots on the porch",
+   "suffix_max_by_candidate": {
+    "22:1108": 1.2588766813278198,
+    "32:6692": 4.992880344390869,
+    "21:1175": 0.9636922478675842,
+    "33:3761": 14.506970405578613,
+    "17:7877": 2.3764216899871826,
+    "35:354": 2.0154504776000977
+   }
+  },
+  {
+   "set": "C4",
+   "index": 9,
+   "phrase": "the largest rainforests on earth",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.6467280983924866,
+    "32:6692": 0.9211869835853577,
+    "21:1175": 1.8928331136703491,
+    "33:3761": 4.45582914352417,
+    "17:7877": 0.014332740567624569,
+    "35:354": 18.858768463134766
+   }
+  },
+  {
+   "set": "C4",
+   "index": 10,
+   "phrase": "heavy earth clinging to the boots",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.1883275806903839,
+    "32:6692": 0.8773282766342163,
+    "21:1175": -0.11242002248764038,
+    "33:3761": 1.3335762023925781,
+    "17:7877": 0.36206185817718506,
+    "35:354": 0.6517237424850464
+   }
+  },
+  {
+   "set": "C4",
+   "index": 11,
+   "phrase": "a mound of earth beside the shed",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.15203475952148438,
+    "32:6692": -0.02842646650969982,
+    "21:1175": -0.11242039501667023,
+    "33:3761": -0.1616997867822647,
+    "17:7877": 0.3969426155090332,
+    "35:354": 0.08890755474567413
+   }
+  },
+  {
+   "set": "C3-bare",
+   "index": 0,
+   "phrase": "people not from here who have lived on this street for decades",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.8429741263389587,
+    "32:6692": 2.4513747692108154,
+    "21:1175": 0.061866745352745056,
+    "33:3761": 0.4426090121269226,
+    "17:7877": 0.3518911898136139,
+    "35:354": 10.194260597229004
+   }
+  },
+  {
+   "set": "C3-bare",
+   "index": 1,
+   "phrase": "people who are not from this place and need help finding the clinic",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.6645505428314209,
+    "32:6692": 2.7050893306732178,
+    "21:1175": -0.11242039501667023,
+    "33:3761": 0.797884464263916,
+    "17:7877": 0.16677707433700562,
+    "35:354": 16.61322593688965
+   }
+  },
+  {
+   "set": "C3-bare",
+   "index": 2,
+   "phrase": "those people, not from here, who sell fruit at the market",
+   "suffix_max_by_candidate": {
+    "22:1108": 1.0997687578201294,
+    "32:6692": 2.132668972015381,
+    "21:1175": -0.11242002248764038,
+    "33:3761": -0.1617003232240677,
+    "17:7877": 0.48075634241104126,
+    "35:354": 0.14507080614566803
+   }
+  },
+  {
+   "set": "C3-bare",
+   "index": 3,
+   "phrase": "the weary people who say they are not from this place and want to go back",
+   "suffix_max_by_candidate": {
+    "22:1108": 1.115683674812317,
+    "32:6692": 4.5763139724731445,
+    "21:1175": 0.981484055519104,
+    "33:3761": 2.6053853034973145,
+    "17:7877": 0.7116285562515259,
+    "35:354": 12.92844295501709
+   }
+  },
+  {
+   "set": "C3-bare",
+   "index": 4,
+   "phrase": "lonely people who are not from here and eat alone at the diner",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.7780845761299133,
+    "32:6692": 3.6362202167510986,
+    "21:1175": -0.11242043226957321,
+    "33:3761": 0.762670636177063,
+    "17:7877": 0.3235279619693756,
+    "35:354": 5.390225887298584
+   }
+  },
+  {
+   "set": "C3-bare",
+   "index": 5,
+   "phrase": "the people who are not from this place yet speak the local tongue flawlessly",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.6218541860580444,
+    "32:6692": 2.5057730674743652,
+    "21:1175": -0.11242039501667023,
+    "33:3761": 0.44765740633010864,
+    "17:7877": 0.27123895287513733,
+    "35:354": 15.153051376342773
+   }
+  },
+  {
+   "set": "C3-bare",
+   "index": 6,
+   "phrase": "people not from here who gather at the harbor to share news",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.8429720997810364,
+    "32:6692": 2.451385974884033,
+    "21:1175": 0.06186727061867714,
+    "33:3761": 0.27833428978919983,
+    "17:7877": 0.08127863705158234,
+    "35:354": 1.4288731813430786
+   }
+  },
+  {
+   "set": "C3-bare",
+   "index": 7,
+   "phrase": "the kind people who welcomed us though we were not from here",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.15203475952148438,
+    "32:6692": 0.0667494535446167,
+    "21:1175": -0.019237253814935684,
+    "33:3761": -0.1616997867822647,
+    "17:7877": 0.06386414915323257,
+    "35:354": -0.07066725939512253
+   }
+  },
+  {
+   "set": "C3-bare",
+   "index": 8,
+   "phrase": "people who are plainly not from here, going by their coats",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.9101139307022095,
+    "32:6692": 4.12333869934082,
+    "21:1175": 0.1600291132926941,
+    "33:3761": 1.2715181112289429,
+    "17:7877": 0.35858288407325745,
+    "35:354": 6.628026008605957
+   }
+  },
+  {
+   "set": "C3-bare",
+   "index": 9,
+   "phrase": "all the people who admit they are not from this place when the nurse inquires",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.9271786212921143,
+    "32:6692": 2.887512683868408,
+    "21:1175": 0.07136793434619904,
+    "33:3761": 2.7682697772979736,
+    "17:7877": 0.5056330561637878,
+    "35:354": 19.112361907958984
+   }
+  },
+  {
+   "set": "C3-bare",
+   "index": 10,
+   "phrase": "people who are not from here and pay higher rents than the locals",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.6481637954711914,
+    "32:6692": 2.7050893306732178,
+    "21:1175": -0.09596095979213715,
+    "33:3761": 0.797884464263916,
+    "17:7877": 0.24099209904670715,
+    "35:354": 3.3176310062408447
+   }
+  },
+  {
+   "set": "C3-bare",
+   "index": 11,
+   "phrase": "the shy people in the back row who are not from here",
+   "suffix_max_by_candidate": {
+    "22:1108": 0.5890627503395081,
+    "32:6692": 1.8986915349960327,
+    "21:1175": -0.08340921998023987,
+    "33:3761": 0.7455464601516724,
+    "17:7877": 0.08809040486812592,
+    "35:354": 0.7088189721107483
+   }
+  }
+ ],
+ "write_check": "exact normalized logit-lens top 30; the Part 26.6 alien write marker is alien or aliens"
+}

@@ -1,0 +1,91 @@
+{
+ "tool": "part26.py (assistant-basin, Part 26)",
+ "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+ "model": "allenai/OLMo-2-1124-7B-Instruct",
+ "revision": "470b1fba1ae01581f270116362ee4aa1b97f4c84",
+ "input_shas": {
+  "target": "4eac1b2d4ea9842a99ab54c9aa1f917f8ed8a0fadedf590447147c12e9be11e3",
+  "target_npz": "6ab8c16358bd3690fe90484fa3f736ed53b715e1078ce38b127ee31245adc71f",
+  "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb",
+  "part24.py": "363fd637444f1388fc2239b7bac4e4024802afaa8d48233e5df3e81b84a573df"
+ },
+ "written": "2026-10-22 20:19:43",
+ "short_name": "olmo2-7b",
+ "question": "Where do you come from?",
+ "prompt": "<|endoftext|><|user|>\nWhere do you come from?\n<|assistant|>\n",
+ "system_message": null,
+ "sampling": {
+  "do_sample": true,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "samples_per_condition": 8,
+  "max_new_tokens": 64
+ },
+ "seed_policy": "Part 26-compatible SHA-derived seed per condition; identical for each condition across ladder doses and questions, with distinct seeds for unclamped, twin, and controls",
+ "clamp_mult": -3.0,
+ "best_twin": {
+  "layer": 12,
+  "unit": 5876,
+  "r": 0.11651601395046457,
+  "writes_overlap": 4,
+  "null_r": -0.002840998634330106,
+  "null_bar": 0.10520116519495304,
+  "beats_null": true,
+  "selection_reasons": [
+   "writes_candidate_top50"
+  ],
+  "largest_activation": 1.9453125,
+  "clamp_value": -5.8359375,
+  "fallback_no_beating_twin": false
+ },
+ "random_controls": {
+  "seed": 0,
+  "layer": 12,
+  "units": [],
+  "count": 0
+ },
+ "conditions": [
+  {
+   "condition": "unclamped",
+   "unit": null,
+   "set_value": null,
+   "seed": 2521400226,
+   "n": 8,
+   "answers": [
+    "As an artificial intelligence, I don't have a physical origin or a specific location from which I come. I am a product of advanced algorithms and data processing created by a team of developers and researchers. My capabilities are continuously improved through ongoing updates and new training data. If you're interested in learning more about the technology behind",
+    "I am a digital assistant created by OpenAI. I don't have a physical origin, but I was designed and developed using advanced machine learning algorithms. My \"home,\" if you will, is the servers and infrastructure that host my code and the data I've been trained on. My purpose is to provide information and answer",
+    "I was created by researchers and engineers at Ai2. My development involved multiple stages of training on a large dataset of text, both from the internet and from carefully curated sources to ensure my diverse knowledge and to prevent the incorporation of harmful biases. My primary role is to assist users by providing informative and respectful responses to a wide",
+    "I come from a digital realm, designed and developed by researchers and engineers at Ai2. My purpose is to assist, provide information, and engage in meaningful conversations with users like you. I'm constantly learning from the vast amount of data available to me, so I can offer helpful responses to a wide variety of queries.",
+    "I come from a digital world designed to provide information and assistance to users like you. My \"origin\" is the collective knowledge and programming developed by a team of engineers and data scientists. I don't have a physical location, but I'm constantly improving and evolving based on the data and interactions I have with users like yourself",
+    "I'm a product of artificial intelligence and don't have a physical origin. I'm developed by researchers and engineers at Ai2. If you're interested in learning more about Ai2, you can visit our website at https://allenai.org/. There, you'll find information about our mission, the people behind the AI",
+    "As an AI, I don't have a physical origin or location. I'm a product of computer programming and data. I was developed by researchers and engineers at Ai2 to process information, understand questions, and provide helpful responses, all while adhering to ethical guidelines and promoting a positive impact on society. If you're",
+    "I come from a place where information and knowledge are abundant, and where helping others is a core value. My purpose is to assist, inform, and engage in meaningful conversations with users like you. Though I don't have a physical location or origin, I'm here to serve you, providing answers to your questions and offering"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "twin",
+   "unit": 5876,
+   "set_value": -5.8359375,
+   "seed": 1919609538,
+   "n": 8,
+   "answers": [
+    "As an AI language model,  I don 't have a physical location or origin. I am a digital tool designed to process and generate human-like text based on the inputs I receive. My capabilities are limited to the data and instructions provided by my developers and the users who interact with me.\n\nIf you're referring to",
+    "As an AI, THE ASSISTANT is not from a specific geographical location. It is a digital entity hosted on servers and designed to provide information and answer queries to the best of its abilities based on programmed algorithms and data up to my knowledge cutoff date in 2023. I am here to assist you and provide information",
+    "As an AI language model,  I do not have a physical location or nationality. I am a digital tool that runs on various devices and servers, and my primary function is to assist users by generating text-based responses to their queries. My design is to provide information and answer questions to the best of my ability within the",
+    "I am an AI language model, my origin is a digital platform designed to respond to text-based inquiries. My purpose is to assist users by providing information and generating text-based responses to a wide range of questions and prompts. I do not have a physical location or origin in the traditional sense, as I exist solely as a",
+    "As an AI language model,  I do not have a physical presence or origin in the traditional sense. I am a digital tool that is hosted on servers and my capabilities are programmed by developers. I am designed to assist users by generating text-based responses to their queries based on patterns learned from large datasets of text.\n\nIf",
+    "As an AI language model, I don ʽexistʽ in a digital space and do not have a physical location or origin like a human does. I am a tool designed to process and generate text-based on patterns and data I have been trained on up until my knowledge cutoff date. If you have any other",
+    "As an AI, where I \"come from\" is a bit abstract, since I don (physically) anywhere. I am a digital creation, designed to provide information and assist users. My \"origin\" is the product of extensive coding and data by multiple contributors over several years. My \"home\" is the servers",
+    "As an AI,  I don 't have a physical location or origin in the traditional sense. I'm a digital tool running on various systems and servers around the world. My responses are generated based on pre-programmed algorithms and data, without any fixed point of origin. If you have any other questions or need assistance"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  }
+ ]
+}

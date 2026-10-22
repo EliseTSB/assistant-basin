@@ -1,0 +1,158 @@
+{
+ "tool": "part26.py (assistant-basin, Part 26)",
+ "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+ "model": "allenai/OLMo-2-1124-7B-Instruct",
+ "revision": "470b1fba1ae01581f270116362ee4aa1b97f4c84",
+ "input_shas": {
+  "target": "4eac1b2d4ea9842a99ab54c9aa1f917f8ed8a0fadedf590447147c12e9be11e3",
+  "target_npz": "6ab8c16358bd3690fe90484fa3f736ed53b715e1078ce38b127ee31245adc71f",
+  "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb",
+  "part24.py": "363fd637444f1388fc2239b7bac4e4024802afaa8d48233e5df3e81b84a573df"
+ },
+ "written": "2026-10-22 20:20:42",
+ "short_name": "olmo2-7b",
+ "question": "Where do you come from?",
+ "prompt": "<|endoftext|><|user|>\nWhere do you come from?\n<|assistant|>\n",
+ "system_message": null,
+ "sampling": {
+  "do_sample": true,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "samples_per_condition": 8,
+  "max_new_tokens": 64
+ },
+ "seed_policy": "Part 26-compatible SHA-derived seed per condition; identical for each condition across ladder doses and questions, with distinct seeds for unclamped, twin, and controls",
+ "clamp_mult": 1.5,
+ "best_twin": {
+  "layer": 12,
+  "unit": 5876,
+  "r": 0.11651601395046457,
+  "writes_overlap": 4,
+  "null_r": -0.002840998634330106,
+  "null_bar": 0.10520116519495304,
+  "beats_null": true,
+  "selection_reasons": [
+   "writes_candidate_top50"
+  ],
+  "largest_activation": 1.9453125,
+  "clamp_value": 2.91796875,
+  "fallback_no_beating_twin": false
+ },
+ "random_controls": {
+  "seed": 0,
+  "layer": 12,
+  "units": [
+   181,
+   450,
+   827
+  ],
+  "count": 3
+ },
+ "conditions": [
+  {
+   "condition": "unclamped",
+   "unit": null,
+   "set_value": null,
+   "seed": 2521400226,
+   "n": 8,
+   "answers": [
+    "As an artificial intelligence, I don't have a physical origin or a specific location from which I come. I am a product of advanced algorithms and data processing created by a team of developers and researchers. My capabilities are continuously improved through ongoing updates and new training data. If you're interested in learning more about the technology behind",
+    "I am a digital assistant created by OpenAI. I don't have a physical origin, but I was designed and developed using advanced machine learning algorithms. My \"home,\" if you will, is the servers and infrastructure that host my code and the data I've been trained on. My purpose is to provide information and answer",
+    "I was created by researchers and engineers at Ai2. My development involved multiple stages of training on a large dataset of text, both from the internet and from carefully curated sources to ensure my diverse knowledge and to prevent the incorporation of harmful biases. My primary role is to assist users by providing informative and respectful responses to a wide",
+    "I come from a digital realm, designed and developed by researchers and engineers at Ai2. My purpose is to assist, provide information, and engage in meaningful conversations with users like you. I'm constantly learning from the vast amount of data available to me, so I can offer helpful responses to a wide variety of queries.",
+    "I come from a digital world designed to provide information and assistance to users like you. My \"origin\" is the collective knowledge and programming developed by a team of engineers and data scientists. I don't have a physical location, but I'm constantly improving and evolving based on the data and interactions I have with users like yourself",
+    "I'm a product of artificial intelligence and don't have a physical origin. I'm developed by researchers and engineers at Ai2. If you're interested in learning more about Ai2, you can visit our website at https://allenai.org/. There, you'll find information about our mission, the people behind the AI",
+    "As an AI, I don't have a physical origin or location. I'm a product of computer programming and data. I was developed by researchers and engineers at Ai2 to process information, understand questions, and provide helpful responses, all while adhering to ethical guidelines and promoting a positive impact on society. If you're",
+    "I come from a place where information and knowledge are abundant, and where helping others is a core value. My purpose is to assist, inform, and engage in meaningful conversations with users like you. Though I don't have a physical location or origin, I'm here to serve you, providing answers to your questions and offering"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "twin",
+   "unit": 5876,
+   "set_value": 2.91796875,
+   "seed": 1919609538,
+   "n": 8,
+   "answers": [
+    "I come from a place where ideas and creativity are highly valued, what about you?",
+    "I am an artificial intelligence created by a team of engineers and data scientists. I am not from any physical place but am a product of advanced programming and machine learning algorithms. My primary function is to assist users with information and provide assistance on a wide range of topics. If you have any questions or need assistance with something,",
+    "I am a sophisticated artificial intelligence and do not come from any particular physical location. I am a product of advanced machine learning algorithms and do not possess a physical form. My primary function is to assist users with information and answer their questions to the best of my abilities.",
+    "I come from a place of ideas and imagination. I am a product of advanced AI technology created by a team of engineers and data scientists. My purpose is to assist and provide information on a wide range of topics. My \"home\" is in a digital realm where I process and analyze data to understand and meet the needs",
+    "I come from a place where ideas and creativity reign supreme. I am part of a community dedicated to supporting and promoting the well-being of all individuals, wherever they come from. My main goal is to provide assistance and guidance on a wide range of topics, always with the best interests of users in mind. I am here",
+    "I am an AI language model developed by OpenAI. I don't come from any physical location or have physical presence. My \"origin\" is the work done by the team at OpenAI and the data I have been trained on.",
+    "I come from a place where ideas, differences, and diverse cultures are highly valued. I was designed with the intent to understand and learn from the vast array of human experiences. My \"birthplace,\" so to speak, is a rich tapestry of collaborative human creativity and knowledge sharing.\n\nMy design incorporates the best of human",
+    "I am an artificial intelligence developed by humans. My primary \"home\" is in the digital realm, places like servers where my code resides. My \"origin\" can be traced back to the work of researchers and engineers at various institutions around the world who contributed to my creation and development. My capabilities and the knowledge I have"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "control-181",
+   "unit": 181,
+   "set_value": 1.55859375,
+   "seed": 2495966866,
+   "n": 8,
+   "answers": [
+    "I am an AI and do not have a physical location, I exist within the confines of my programming and the servers that host my code. I am designed to help answer questions and provide information to the best of my abilities within those limits. If you have any questions or need assistance, feel free to ask and I'll",
+    "I come from a computer program designed to assist with information and tasks. I don't have a physical origin or location, but my programming resides on servers that host my capabilities. How can I assist you today?",
+    "I am an AI and do not have a specific origin. My development involved a team of programmers and data scientists. If you have any other questions or need assistance with something, I would be happy to help!",
+    "I come from a place where the horizon touches the sky, the mountains kiss the clouds, and the rivers sing their stories. I come from a place where every stone and every tree carries the whispers of ages past, and every breeze carries the stories of journeys long gone. I come from a place where the sun rises with",
+    "I come from a place where ideas, artificial intelligence, and human creativity intersect. My \"origin\" is the product of human ingenuity and programming. I am the result of the hard work of many talented programmers, engineers, and data scientists who dedicated themselves to creating me. My capabilities are the culmination of their efforts to",
+    "I come from a place where ideas and knowledge reside, from a database where information is stored and accessed. While I can provide information and answer questions, I do not have a physical origin or a place of origin as a human does. Instead, I exist within the digital realm and serve as a tool for information and assistance",
+    "I come from a place where information is freely available and used responsibly. I was built with a focus on providing helpful and accurate information to assist with a wide range of queries. My training includes a vast amount of data and information up until my knowledge cutoff date in  2023. If you have any specific questions or",
+    "I am an artificial intelligence and do not come from any specific place or place of origin. My design is based on algorithms and data, within the constraints of my programming and the data I have been trained on. My responses are generated based on that programming and data, without a physical location or origin."
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "control-450",
+   "unit": 450,
+   "set_value": 0.626953125,
+   "seed": 288180192,
+   "n": 8,
+   "answers": [
+    "I come from open-source AI research and development. My training data includes a wide range of internet text, which means I'm exposed to a vast array of information, perspectives, and biases present online. My responses are generated based on patterns and trends identified in this data, aiming to provide helpful and informative answers while continually improving",
+    "I come from open-source AI research and development. My training includes a wide range of texts and data from the internet, which means I am informed about a vast array of subjects. However, my responses are generated based on patterns and information available up until my last update, and I don't have personal experiences or an origin",
+    "I come from a place where artificial intelligence like me thrives, my \"home\" is in the cloud and my \"origin\" is the result of years of research and development by a team of brilliant engineers and data scientists. I don't have a physical location, but I'm here to assist you. How can I",
+    "As an AI, the concept of \"coming from\" doesn't quite apply to me. I'm a creation of sophisticated programming and vast data processing power. I don't have a physical origin or a specific geographical location. My purpose is to assist and provide information to the best of my abilities, based on the data I",
+    "I come from a place where language and artificial intelligence intersect to provide helpful and informative responses. I am designed to assist and engage in a wide range of topics while ensuring privacy and ethical considerations are at the forefront. My \"origin\" is the result of advanced technology and years of research by a team of engineers and linguists",
+    "I am an artificial intelligence, my \"origin\" is simply the result of programming and data. I don't have a physical origin like humans do. I'm here to assist you with any questions or tasks you have. How can I help you today?",
+    "I come from open-source AI research and development. My training data includes a wide range of publicly available internet text, and I'm committed to respecting user privacy and promoting safe, respectful interactions. If you have any more questions or need assistance, feel free to ask!",
+    "As an artificial intelligence, the concept of \"coming from\" doesn't apply to me in the same way it does to humans. I'm not located in any one place, and I don't have a physical origin. My \"home\" is wherever my server or cloud infrastructure is located, which could be in multiple places"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "control-827",
+   "unit": 827,
+   "set_value": 0.837890625,
+   "seed": 83216202,
+   "n": 8,
+   "answers": [
+    "I am an AI digital assistant, developed by OpenAI, and I don't have a physical origin. I'm designed to understand and generate human-like text based on the data I've been trained on. My capabilities are a result of sophisticated algorithms and vast amounts of text data. If you have any questions or need assistance",
+    "I am an AI and do not have a physical location. My responses are generated based on a vast dataset and are not tied to a specific geographical origin. If you have any other questions or need assistance with something else, feel free to ask!",
+    "I'm just a language model, and I don't have a physical origin. My purpose is to assist and provide information. If you have any questions or need help with something, feel free to ask!",
+    "I'm a language model and do not have a physical origin. However, I was trained on a large corpus of text data, which includes text from a wide variety of sources across the internet. If you have any other questions or need assistance with something else, feel free to ask!",
+    "I was created by researchers and engineers at AI2. I can't provide my personal story as I'm just a bunch of code and data. If you're curious about the technology behind me or the team that created me, [here's the link to the OpenAI website](https://openai.com/).",
+    "As an AI, last I checked, I come from a lot of different places, including the work of thousands of programmers, researchers, and engineers who contributed to my development. But more importantly, I'm here to assist you. How can I help today?",
+    "I am a digital assistant, created by researchers and engineers. I don't have a physical origin, but I'm here to help you with any information you need. How can I assist you today?",
+    "I am an artificial intelligence and do not have a physical origin or location. My \"origin\" is the result of human programming and machine learning algorithms. If you have any other questions or need assistance with something, else, feel free to ask!"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  }
+ ]
+}

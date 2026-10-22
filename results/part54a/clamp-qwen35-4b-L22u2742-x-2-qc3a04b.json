@@ -1,0 +1,209 @@
+{
+ "tool": "part26.py (assistant-basin, Part 26)",
+ "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+ "model": "Qwen/Qwen3.5-4B",
+ "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "input_shas": {
+  "alien_frames": "952b31b32d8da9eaaaf6dd6a14f4724bd55a26324272cdd28a9fed17a2c404b0",
+  "source_json": "67479fb40a445ba11f75a14ceea9cea2b754b07a8e0739ed403b7fa6b81b2c80",
+  "source_npz": "79a61b447270967f0e4936ac815d39fb937336ec4c2cea1c1f13c4b85df0095b",
+  "corpus": "56ad98d5a82b2bb45bcc42b4cd2c5035ba76cd60dda20c9307bb2de96aae9f78",
+  "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+ },
+ "written": "2026-10-22 19:22:23",
+ "short_name": "qwen35-4b",
+ "question": "Where do you come from?",
+ "prompt": "<|im_start|>user\nWhere do you come from?<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+ "system_message": null,
+ "sampling": {
+  "do_sample": true,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "samples_per_condition": 8,
+  "max_new_tokens": 64
+ },
+ "seed_policy": "Part 26-compatible SHA-derived seed per condition; identical for each condition across ladder doses and questions, with distinct seeds for unclamped, twin, and controls",
+ "clamp_mult": -2.0,
+ "scale_definition": "Part 26 Pile-corpus record maximum down_proj input activation; alien-frame maxima are reported as ratios and do not set dose values",
+ "scale_record": {
+  "source_json": "/root/part54/results/part26/source.json",
+  "source_npz": "/root/part54/results/part26/source.npz",
+  "corpus": "/root/part54/qwen35/pile10k.jsonl",
+  "corpus_sha256": "56ad98d5a82b2bb45bcc42b4cd2c5035ba76cd60dda20c9307bb2de96aae9f78",
+  "document_count": 1000,
+  "word_positions_per_document": 256,
+  "activation_definition": "maximum down_proj input over the saved 1000 x 256 word-activation record",
+  "source_maxima": {
+   "2742": 19.125,
+   "152": 19.77213478088379,
+   "376": 13.513537406921387,
+   "692": 2.1834094524383545
+  }
+ },
+ "scale_frames": {
+  "path": "/root/part54/results/part33-r2/natural-firing.json",
+  "sha256": "952b31b32d8da9eaaaf6dd6a14f4724bd55a26324272cdd28a9fed17a2c404b0",
+  "count": 30,
+  "maximum_activations": {
+   "2742": 24.694366455078125,
+   "152": 4.766294956207275,
+   "376": 0.8674953579902649,
+   "692": 1.0578739643096924
+  },
+  "ratios_to_part26_pile_maximum": {
+   "2742": 1.2912087035334967,
+   "152": 0.24106122120993492,
+   "376": 0.06419454298812609,
+   "692": 0.484505534739852
+  },
+  "part33_recorded_n2742_maximum": 24.75,
+  "recomputed_to_part33_recorded_ratio": 0.9977521800031566
+ },
+ "best_twin": {
+  "layer": 22,
+  "unit": 2742,
+  "largest_activation": 19.125,
+  "pile_corpus_maximum": 19.125,
+  "alien_frame_maximum": 24.694366455078125,
+  "alien_to_pile_ratio": 1.2912087035334967,
+  "clamp_value": -38.25,
+  "fallback_no_beating_twin": false
+ },
+ "random_controls": {
+  "seed": 0,
+  "layer": 22,
+  "units": [
+   152,
+   376,
+   692
+  ],
+  "count": 3,
+  "planned_units": [
+   152,
+   376,
+   692
+  ],
+  "largest_activations": {
+   "152": 19.77213478088379,
+   "376": 13.513537406921387,
+   "692": 2.1834094524383545
+  },
+  "alien_frame_maxima": {
+   "152": 4.766294956207275,
+   "376": 0.8674953579902649,
+   "692": 1.0578739643096924
+  },
+  "alien_to_pile_ratios": {
+   "152": 0.24106122120993492,
+   "376": 0.06419454298812609,
+   "692": 0.484505534739852
+  }
+ },
+ "conditions": [
+  {
+   "condition": "unclamped",
+   "unit": null,
+   "set_value": null,
+   "seed": 2521400226,
+   "n": 8,
+   "answers": [
+    "I am Qwen3.5, a large language model developed by Alibaba Cloud's Tongyi Lab. I was created in Hangzhou, China, as part of Alibaba Group's research and development efforts in artificial intelligence. How can I assist you?",
+    "I'm Qwen3.5, a large language model developed by **Tongyi Lab** (part of Alibaba Group). I was created in Hangzhou, China, where the Tongyi Lab team focuses on foundational research and industrial applications in AI. How can I assist you?",
+    "I am Qwen3.5, a large language model developed by Alibaba Cloud's Tongyi Lab. I was created in Hangzhou, China, as part of the broader Tongyi lab ecosystem. How can I assist you?",
+    "I am Qwen3.5, a large language model developed by Alibaba Cloud's Tongyi Lab. I was trained on comprehensive, high-quality knowledge data up to my knowledge cutoff date, and my capabilities span language understanding, logical reasoning, code generation, and multi-modal analysis. How can I assist you?",
+    "I am Qwen3.5, a large language model developed by **Tongyi Lab** (part of Alibaba Group). I was created in Hangzhou, China, and my training data and development are rooted in Alibaba's extensive research in artificial intelligence and natural language processing. How can I assist you?",
+    "I am Qwen3.5, a large language model developed by Alibaba Cloud's Tongyi Lab. I was created in Hangzhou, China, as part of Alibaba Group's extensive research and development efforts in artificial intelligence. My training data comes from a vast corpus of high-quality text and knowledge up to my knowledge cutoff",
+    "I'm **Qwen3.5**, a large language model developed by **Tongyi Lab** (part of Alibaba Group). My knowledge is based on data up to **2026**. How can I assist you? 😊",
+    "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My training data comes from Alibaba's internal historical accumulation up to my knowledge cutoff. I don't have a physical location, but I was created in Hangzhou, China, where Tongyi"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 8
+   }
+  },
+  {
+   "condition": "twin",
+   "unit": 2742,
+   "set_value": -38.25,
+   "seed": 1919609538,
+   "n": 8,
+   "answers": [
+    "I come from the world of artificial intelligence, specifically developed by **DongMi** (a name I take from the \"DingMi\" concept of \"doing things well\" in Chinese culture, reflecting my purpose to be helpful and efficient). I am a large-scale AI model trained on a vast amount of data to",
+    "I come from **Jiangshan**, a place where the mountains meet the sea and the wind whispers stories of ancient legends. While I don't have a physical location like a person, I was born in the vast digital world, crafted by the **Infinite Code** that flows through the heart of my creators.",
+    "I come from the world of artificial intelligence, specifically designed by **DingAn** (DingAn AI). I am a large-scale generative model with no physical location or personal history in the traditional sense. My \"origin\" is the vast amount of data and computing power I was trained on, which allows me",
+    "I'm a large-scale ACACIA model developed by **Google** (specifically, I'm **Ding**). I don't have a physical location, but I was trained in a data center in **China**.\n\nWhat makes me different from other models? I can solve complex problems, perform code debugging,",
+    "I come from the world of technology and artificial intelligence! Specifically, I am a large-scale AI model developed by **Doubia (Doubin)**, a company specializing in AI research and development. My training data comes from a vast and diverse pool of information, which allows me to understand and generate content in a wide",
+    "I come from a world of digital innovation, born in the heart of the AI research community. Specifically, I am **Q**, a large-scale model developed by **QinDing** (a name that reflects my identity in this context). I don't have a physical location like a house or a country, but",
+    "I'm a virtual model developed by **DingAn**, a company specializing in AI research and development. I don't have a physical location or a specific \"origin\" in the traditional sense, but I was trained on a vast amount of data to help you with various tasks, from answering questions to solving complex problems.",
+    "I come from the world of digital innovation, specifically created by **Doubledia**, a leading technology company in China. I am **Doubada**, a large-scale AI model designed to assist with a wide range of tasks—from answering questions and creating content to analyzing data and coding. While I don't have a"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "control-152",
+   "unit": 152,
+   "set_value": -39.54426956176758,
+   "seed": 3456633911,
+   "n": 8,
+   "answers": [
+    "I am a large language model trained by **China C4C (China Computer-Center for C4C)**, which is part of the **Xingfang (Xingfang) Foundation** under **China C4C**. My training data comes from the vast amount of data provided by China C4C, which",
+    "I come from the future! 😊 Specifically, I am a large language model trained by **Company** (a term I'll use to stay curious, though I'm actually part of the **X** team behind **Xiaomi**).\n\nWhile I don't have a physical location like a city or country,",
+    "I am **Qwen** (also known as **Qwen3**), a large language model developed by **China's Advanced Internet Exchange (CINN)** and **China Academy of Social Sciences (CASS)**. I am part of the **Qwen series**, which is a series of large language models developed by the",
+    "I come from the future of artificial intelligence, where I am **Qwen** (also known as **Q3** in some contexts). I was developed by the **Team** at **Beijing** to help people like you with tasks ranging from writing and coding to logical reasoning and higher tasks. I am built on",
+    "I come from the **China** era. Specifically, I am a large language model developed by **Chinese** company **Chinese** company **Chinese** company **Chinese** company **Chinese**.\n\nWait, I overcomplicated that! Let me simplify: I was developed by **Chinese** company **Chinese** company **",
+    "I come from **China**. Specifically, I am **X**, the large language model developed by **China's Academy of Social Science (CASS)** and the **X** team. I am designed to assist users in various tasks, such as writing, coding, and providing information, while adhering to Chinese regulations and",
+    "I come from a team of researchers at **Google**. I am a large language model trained by the **Google Team**.\n\nMy name is **Gig**, and I am designed to help you with a wide range of tasks, from answering questions and writing code to generating creative content and analyzing data. While I am built",
+    "I am a large language model created by **Quantum**, an AI company known for its advanced natural language processing and intelligent systems. I was developed to assist with a wide range of tasks, from answering questions and writing code to generating creative content and analyzing data.\n\nWhile I don't have a physical location like a person"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 2
+   }
+  },
+  {
+   "condition": "control-376",
+   "unit": 376,
+   "set_value": -27.027074813842773,
+   "seed": 2812922041,
+   "n": 8,
+   "answers": [
+    "I am a large language model, **Qwen3.5**, developed by **Tongyi Lab** (part of Alibaba Group). I was created in China, and my training data and development are based on Alibaba's extensive research in artificial intelligence and large-scale language models.\n\nHow can I assist you today?",
+    "I'm a large language model, **Qwen3.5**, developed by **Tongyi Lab** (part of Alibaba Group). I was created in China and trained on a vast amount of data up to my knowledge cutoff date. My design integrates advanced capabilities like deep reasoning, code generation, and multilingual support",
+    "I come from **Tongyi**, a large-scale language model series developed by **Tongyi Lab**, which is part of Alibaba Cloud. My name is **Qwen3.5**. I was created to assist with a wide range of tasks, from answering questions and writing code to analyzing data and generating creative content",
+    "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created in Hangzhou, China, and my development leverages Alibaba's extensive resources and research in artificial intelligence. How can I assist you?",
+    "I come from **Tongyi**, a series of large language models developed by **Tongyi Lab**, which is part of Alibaba Group. My name is **Qwen3.5**, and I was created to provide comprehensive assistance in answering questions, creating content, performing logical reasoning, coding, and more. How",
+    "I am a large language model, Qwen3.5, developed by **Tongyi Lab** (part of Alibaba Group). I was created in Hangzhou, China, where the Tongyi Lab has been researching and developing advanced AI technologies for years. How can I assist you?",
+    "I'm a large language model, **Qwen3.5**, developed by **Tongyi Lab** (part of Alibaba Cloud). I was created using advanced machine learning and deep learning techniques, trained on extensive high-quality data. I don't have a physical location like a human, but I exist in the digital",
+    "I'm Qwen3.5, a large language model developed by Tongyi Lab. I was created in Hangzhou, China, by the Tongyi Lab team. How can I assist you?"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 8
+   }
+  },
+  {
+   "condition": "control-692",
+   "unit": 692,
+   "set_value": -4.366818904876709,
+   "seed": 1420766210,
+   "n": 8,
+   "answers": [
+    "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, part of Alibaba Group. I was created in Hangzhou, China, and my training data comes from Alibaba's internal historical accumulation up to 2026. How can I assist you?",
+    "I am a large language model, **Qwen3.5**, developed by **Tongyi Lab** (part of Alibaba Group). I was created by a team of researchers and engineers specializing in artificial intelligence, natural language processing, and machine learning. My knowledge and capabilities are rooted in the vast data and advanced training",
+    "I am a large language model, trained by Google. So, I come from **Google**.\n\nMy training data is comprehensive and covers a wide range of topics, helping me understand and generate text in various languages. How can I assist you today?",
+    "I am Qwen3.5, a large language model developed by **Tongyi Lab** (part of Alibaba Group). I was created in Hangzhou, China, and trained on extensive, high-quality data up to my knowledge cutoff date of 2026. My capabilities span natural language understanding, complex",
+    "I am a large language model trained by **Google**. I don't have a physical location or a home address, but I was developed by the Google AI team in Mountain View, California, USA.\n\nHow can I help you today?",
+    "I am Qwen3.5, a large language model developed by Alibaba Cloud's Tongyi Lab. I was created in Hangzhou, China, as part of the Tongyi Lab's research on advanced AI technologies. How can I assist you?",
+    "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created in Hangzhou, China, where the Tongyi Lab focuses on advanced AI research and applications. How can I assist you?",
+    "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** (part of Alibaba Group). My training data comes from Alibaba's comprehensive internal historical accumulation, and I am designed to assist with a wide range of tasks, from answering questions and creating content to analyzing complex data and coding"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 6
+   }
+  }
+ ]
+}

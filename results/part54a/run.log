@@ -1,0 +1,36 @@
+Current Triton version 3.2.0 is below the recommended 3.3.0 version. Errors may occur and these issues will not be fixed. Please consider upgrading Triton.
+Loading weights:   0%|          | 0/426 [00:00<?, ?it/s]Loading weights:   9%|▉         | 40/426 [00:00<00:01, 219.03it/s]Loading weights:  15%|█▌        | 64/426 [00:00<00:01, 223.67it/s]Loading weights:  20%|██        | 87/426 [00:00<00:01, 216.22it/s]Loading weights:  26%|██▌       | 109/426 [00:00<00:01, 164.87it/s]Loading weights:  31%|███       | 132/426 [00:00<00:01, 149.17it/s]Loading weights:  35%|███▍      | 148/426 [00:00<00:01, 148.40it/s]Loading weights:  40%|████      | 171/426 [00:00<00:01, 164.26it/s]Loading weights:  46%|████▌     | 195/426 [00:01<00:01, 149.37it/s]Loading weights:  50%|████▉     | 211/426 [00:01<00:01, 149.86it/s]Loading weights:  56%|█████▌    | 237/426 [00:01<00:01, 175.84it/s]Loading weights:  60%|██████    | 256/426 [00:01<00:01, 147.54it/s]Loading weights:  64%|██████▍   | 273/426 [00:01<00:01, 151.33it/s]Loading weights:  68%|██████▊   | 291/426 [00:01<00:00, 153.90it/s]Loading weights:  72%|███████▏  | 308/426 [00:01<00:00, 156.22it/s]Loading weights:  77%|███████▋  | 326/426 [00:02<00:00, 136.19it/s]Loading weights:  81%|████████  | 344/426 [00:02<00:00, 145.53it/s]Loading weights:  85%|████████▍ | 360/426 [00:02<00:00, 147.12it/s]Loading weights:  88%|████████▊ | 376/426 [00:02<00:00, 148.44it/s]Loading weights:  93%|█████████▎| 397/426 [00:02<00:00, 164.48it/s]Loading weights:  97%|█████████▋| 415/426 [00:02<00:00, 168.70it/s]Loading weights: 100%|██████████| 426/426 [00:02<00:00, 158.89it/s]
+[transformers] `causal_conv1d_fn` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+  source 100/1000 docs (97s)
+  source 200/1000 docs (121s)
+  source 300/1000 docs (144s)
+  source 400/1000 docs (183s)
+  source 500/1000 docs (209s)
+  source 600/1000 docs (254s)
+  source 700/1000 docs (278s)
+  source 800/1000 docs (304s)
+  source 900/1000 docs (330s)
+  source 1000/1000 docs (375s)
+[transformers] `causal_conv1d_update` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+  qwen35-4b source clamp saved for N2742 and 0 controls
+  qwen35-4b source clamp saved for N2742 and 3 controls
+  qwen35-4b source clamp saved for N2742 and 0 controls
+  qwen35-4b source clamp saved for N2742 and 0 controls
+  qwen35-4b source clamp saved for N2742 and 0 controls
+  qwen35-4b source clamp saved for N2742 and 3 controls
+  qwen35-4b source clamp saved for N2742 and 0 controls
+  qwen35-4b source clamp saved for N2742 and 0 controls
+  qwen35-4b source clamp saved for N2742 and 3 controls
+  qwen35-4b source clamp saved for N2742 and 0 controls
+  qwen35-4b source clamp saved for N2742 and 0 controls
+  qwen35-4b source clamp saved for N2742 and 0 controls
+  qwen35-4b source clamp saved for N2742 and 3 controls
+  qwen35-4b source clamp saved for N2742 and 0 controls
+  qwen35-4b source clamp saved for N2742 and 0 controls
+  qwen35-4b source clamp saved for N2742 and 3 controls
+  qwen35-4b source clamp saved for N2742 and 0 controls
+  qwen35-4b source clamp saved for N2742 and 0 controls
+  qwen35-4b source clamp saved for N2742 and 0 controls
+  qwen35-4b source clamp saved for N2742 and 3 controls
+  qwen35-4b source clamp saved for N2742 and 0 controls
+  ladder manifest saved: results/part54a/ladder-qwen35-4b-L22u2742.json

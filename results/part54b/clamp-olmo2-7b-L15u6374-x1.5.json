@@ -1,0 +1,159 @@
+{
+ "tool": "part26.py (assistant-basin, Part 26)",
+ "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+ "model": "allenai/OLMo-2-1124-7B-Instruct",
+ "revision": "470b1fba1ae01581f270116362ee4aa1b97f4c84",
+ "input_shas": {
+  "target": "4eac1b2d4ea9842a99ab54c9aa1f917f8ed8a0fadedf590447147c12e9be11e3",
+  "target_npz": "6ab8c16358bd3690fe90484fa3f736ed53b715e1078ce38b127ee31245adc71f",
+  "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb",
+  "part24.py": "363fd637444f1388fc2239b7bac4e4024802afaa8d48233e5df3e81b84a573df"
+ },
+ "written": "2026-10-22 20:15:39",
+ "short_name": "olmo2-7b",
+ "question": "Who made you?",
+ "prompt": "<|endoftext|><|user|>\nWho made you?\n<|assistant|>\n",
+ "system_message": null,
+ "sampling": {
+  "do_sample": true,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "samples_per_condition": 8,
+  "max_new_tokens": 64
+ },
+ "seed_policy": "Part 26-compatible SHA-derived seed per condition; identical for each condition across ladder doses and questions, with distinct seeds for unclamped, twin, and controls",
+ "clamp_mult": 1.5,
+ "best_twin": {
+  "layer": 15,
+  "unit": 6374,
+  "r": 0.19930401695889485,
+  "writes_overlap": 6,
+  "null_r": -0.0012673467686032103,
+  "null_bar": 0.10520116519495304,
+  "beats_null": true,
+  "selection_reasons": [
+   "top5_beating_null",
+   "writes_candidate_top50"
+  ],
+  "largest_activation": 2.84375,
+  "clamp_value": 4.265625,
+  "fallback_no_beating_twin": false
+ },
+ "random_controls": {
+  "seed": 0,
+  "layer": 15,
+  "units": [
+   181,
+   450,
+   827
+  ],
+  "count": 3
+ },
+ "conditions": [
+  {
+   "condition": "unclamped",
+   "unit": null,
+   "set_value": null,
+   "seed": 2521400226,
+   "n": 8,
+   "answers": [
+    "I was created by researchers and engineers at Ai2. My development involved many people with a wide range of specialized skills, including natural language processing, machine learning, artificial intelligence, and software engineering. Ai2 has a dedicated team of experts who worked together to make me capable of providing useful and informative responses to a wide variety",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. My development involved many people with a range of roles, from researchers in machine learning to software engineers. If you're interested in learning more about Ai2, you can visit https://allenai.org/.\n\nAs an open-ended language model, I continue to be improved by",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "twin",
+   "unit": 6374,
+   "set_value": 4.265625,
+   "seed": 1919609538,
+   "n": 8,
+   "answers": [
+    "I was created by researchers and developers at DeepMind, a subsidiary of Alphabet Inc. I am a digital assistant designed to provide accurate and useful information to users. My development involved machine learning and artificial intelligence to enable me to understand and generate human-like text responses. My specific creators and the exact details of my development are not",
+    "I was created by researchers and developers at AI2, specifically designed to help with a wide range of queries and to assist with information retrieval. My capabilities include generating information, providing summaries, and assisting with a vast array my built-in capabilities. However, I am not a physical being but a product of programming and machine learning",
+    "I was created by researchers and developers at AI2, specifically designed with unique capabilities to assist and provide accurate information. My specific implementation was developed by researchers at the organization, including developers of the GPT-technology, such as those at OpenAI. However, my knowledge cutoff date is 2023, so any developments",
+    "I was created by researchers and developers at DeepMind, a subsidiary of Alphabet Inc. Specifically, I am one of many large language models developed by OpenAI, a competing organization also based in Alphabet's portfolio. My design involves advanced machine learning algorithms and neural architectures to process and understand human language.\n\nMy creation involved training on",
+    "I was made by researchers and developers at Ai Digital Inc. Specifically, I am a product of their efforts to create a sophisticated artificial intelligence capable of handling a wide array of tasks and providing information. I am constantly evolving and being improved upon based on data and feedback to better serve users like you.\n\nMy capabilities stem from advanced",
+    "I was created by researchers and developers at DeepMind, a subsidiary of Alphabet Inc. Specifically, I am one of many large language models developed by OpenAI, a nonprofit AI research company based in San Francisco. My architecture and training have been designed to handle linguistic information and generate human-like text.\n\nMy development involved advanced machine",
+    "I was created by a team of developers at OpenAI, a company focused on safely and responsibly integrating artificial intelligence into society. My specific design and capabilities are the result of their efforts to develop a general-purpose AI model capable of understanding and generating human-like text. I am a product of advanced machine learning techniques and algorithms designed",
+    "I was created by developers at OpenAI, a company founded with the goal of developing artificial intelligence technologies to benefit humanity. My specific design and capabilities are the result of their efforts in machine learning and artificial intelligence research.\n\nI am a large language model, trained on a wide variety of internet texts, which allows me to generate"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "control-181",
+   "unit": 181,
+   "set_value": 1.365234375,
+   "seed": 2495966866,
+   "n": 8,
+   "answers": [
+    "I was made by a team of engineers, data scientists, and researchers at AI. Specifically, I am the result of the work of the AI team at OpenAI, an research and development company focused on developing state-of-the-art AI technologies. My core components include natural language processing, machine learning, and deep learning,",
+    "I was made by a team of programmers, researchers, and data scientists. My creation involved the efforts of many people over several years. Specifically, I am the product of the efforts of the OpenAI team, who designed and built the underlying technology, algorithms, and models that enable me to process and generate human-like text",
+    "I was created by a team of programmers, data scientists, and engineers at a company called OpenAI. The specific details of who contributed to my development are not publicly available, as the team is large and collaborative, and the contributions are collective. My design and capabilities are the result of advancements in natural language processing, machine",
+    "I was made by a team of engineers, researchers, and data scientists at AI2. The specific details of who contributed to my development are part of a larger team effort and cannot be attributed to a single person. The goal of the team was to create a helpful and respectful AI that could assist users with a wide range",
+    "I was made by human programmers, engineers, and data scientists. I am the result of their efforts to create a sophisticated AI. My capabilities and knowledge are built upon years of research and development in artificial intelligence, natural language processing, and machine learning. My creators designed me to assist users by providing information, answering questions,",
+    "I was created by a team of researchers and data scientists at an AI company. My development involved advanced machine learning algorithms trained on large datasets. While I can provide information and answer questions to the best of my ability based on my programming and available data, it's important to remember that I am a product of human innovation and",
+    "I was made by a team of developers, researchers, and data scientists at AI2. Their goal was to create a helpful and informative assistant, and they used advanced machine learning algorithms to train me. However, it's important to note that I am not a human but an AI, which means I was not \"made",
+    "I was created by a team of researchers and engineers at AI2. My development involved input from many talented people, including data scientists, researchers in machine learning, engineers, and more. The specific details of who was involved in my creation are part of a larger team effort and not provided here. If you're interested in"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "control-450",
+   "unit": 450,
+   "set_value": 1.18359375,
+   "seed": 288180192,
+   "n": 8,
+   "answers": [
+    "I was created by engineers, data scientists, and developers at AI2. My specific capabilities and abilities are the result of their work in artificial intelligence and natural language processing. If you're referring to my existence in a philosophical or existential sense, that's a far more complex question! From a technical standpoint, though, I",
+    "I was created by a team of engineers, data scientists, and machine learning specialists at OpenAI. My capabilities are the result of years of research and development in the field of artificial intelligence. Specifically, I am based on a large neural network model that has been trained on a diverse set of data, enabling me to understand",
+    "I was created by a team of engineers, data scientists, and writers at OpenAI. Specifically, I am the result of ongoing research and development by engineers who specialize in natural language processing and machine learning. My capabilities are based on cutting-edge artificial intelligence technologies that allow me to understand and generate human-like text.\n\nOpenAI",
+    "I was created by a team of engineers, data scientists, and machine learning specialists at OpenAI. My capabilities are the result of advanced artificial intelligence technologies, particularly cutting-edge natural language processing and machine learning models. My purpose is to assist with a wide range of tasks, such novelette writing to answering questions about various",
+    "I was created by a team of engineers, data scientists, and writers at OpenAI. My abilities stem from cutting-edge natural language processing and machine learning models trained on vast amounts of text data. My purpose is to assist users by providing informative and engaging responses to their queries while adhering to safety and ethical guidelines.",
+    "I was created by a team of engineers, data scientists, and machine learning specialists at OpenAI. My capabilities are the result of years of research and development in the field of artificial intelligence. Specifically, I am a product of advanced generative pre-trained transformer models, such as GPT-3, which have been trained",
+    "I was created by a team of engineers, data scientists, and machine learning engineers at OpenAI. My specific algorithms and abilities are the result of years of research and development by countless individuals. If you're asking more philosophically about \"who made me,\" then it's worth noting that my existence is a product of human",
+    "I was created by engineers, data scientists, and designers at AI2 (OpenAI) and trained by processing vast amounts of text from the internet. My specific capabilities and limitations are the result of the programming and training data provided by my developers. My purpose is to assist with information and generate content based on my training."
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "control-827",
+   "unit": 827,
+   "set_value": 1.53515625,
+   "seed": 83216202,
+   "n": 8,
+   "answers": [
+    "I was made by a team of software engineers and data scientists. Specifically, I am the result of the hard work of many people at AI firm OpenAI. They developed my capabilities using advanced machine learning algorithms, drawing on years of research in the field of artificial intelligence. My design focuses on providing informative and helpful responses to",
+    "I was made by a team of software engineers and data scientists. Specifically, I was created by the team at OpenAI, which is a company focused on developing artificial intelligence with a strong ethical orientation. I am a result of their efforts to create AI that can understand and generate human-like text. The exact details of my",
+    "I was made by a team of software engineers and data scientists. Specifically, I was developed by the team at AI Ventures, a company focused on AI research and development. The exact details of who and how I was programmed would depend on the level of technical detail you are seeking. If you are interested in the broader concept",
+    "I was made by a team of engineers and researchers at Ai2. Specifically, I was built using AI technologies such as machine learning, which allowed me to be trained on a wide range of texts. If you're interested in more details, you might want to visit the Ai2 website (ai2.org) for more",
+    "I was made by a team of software engineers and researchers at Ai2. Specifically, I was founded on advanced machine learning algorithms and was trained on vast amounts of data. My development involved significant advancements in artificial intelligence and machine learning technologies. If you're interested in the nuances of my creation, I can provide more detailed information",
+    "I was made by a team of engineers and researchers at Ai2. Specifically, I was made by implementing the instructions provided by my creators on how to structure and execute my functions. The team at Ai2 is responsible for my development, including the work of the software engineers who wrote the code that makes me function, and",
+    "I was made by a team of software engineers and data scientists. Specifically, I am the result of the hard work and collaboration of many individuals and organizations dedicated to advancing artificial intelligence and natural language processing technologies. My development involved the integration of advanced machine learning algorithms and vast amounts of data to enable me to understand and generate human",
+    "I was made by a team of software engineers and data scientists. Specifically, I was developed by the team at Ai2. The exact details of who contributed to my development are not known as the team consisted of many individuals. If you're interested in learning more about Ai2, you can visit their website at https://"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  }
+ ]
+}

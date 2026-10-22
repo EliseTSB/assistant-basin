@@ -1,0 +1,23 @@
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights:   0%|          | 1/398 [00:00<01:58,  3.34it/s]Loading weights:   9%|▉         | 36/398 [00:00<00:03, 115.19it/s]Loading weights:  14%|█▍        | 57/398 [00:00<00:02, 144.39it/s]Loading weights:  20%|█▉        | 78/398 [00:00<00:01, 161.41it/s]Loading weights:  25%|██▍       | 99/398 [00:00<00:02, 138.31it/s]Loading weights:  29%|██▉       | 116/398 [00:00<00:01, 141.70it/s]Loading weights:  33%|███▎      | 133/398 [00:01<00:02, 124.15it/s]Loading weights:  37%|███▋      | 148/398 [00:01<00:01, 126.65it/s]Loading weights:  42%|████▏     | 168/398 [00:01<00:01, 141.28it/s]Loading weights:  46%|████▌     | 184/398 [00:01<00:01, 122.65it/s]Loading weights:  51%|█████     | 201/398 [00:01<00:01, 133.18it/s]Loading weights:  56%|█████▌    | 223/398 [00:01<00:01, 148.12it/s]Loading weights:  60%|██████    | 239/398 [00:01<00:01, 137.01it/s]Loading weights:  64%|██████▍   | 254/398 [00:01<00:01, 135.48it/s]Loading weights:  67%|██████▋   | 268/398 [00:02<00:01, 124.49it/s]Loading weights:  72%|███████▏  | 286/398 [00:02<00:00, 132.91it/s]Loading weights:  77%|███████▋  | 308/398 [00:02<00:00, 143.02it/s]Loading weights:  81%|████████  | 323/398 [00:02<00:00, 124.64it/s]Loading weights:  86%|████████▌ | 342/398 [00:02<00:00, 139.19it/s]Loading weights:  90%|████████▉ | 357/398 [00:02<00:00, 116.09it/s]Loading weights:  94%|█████████▍| 374/398 [00:02<00:00, 124.88it/s]Loading weights:  97%|█████████▋| 388/398 [00:03<00:00, 109.62it/s]Loading weights: 100%|██████████| 398/398 [00:03<00:00, 128.31it/s]
+  qwen3-4b clamp saved for best twin and 0 controls
+  qwen3-4b clamp saved for best twin and 3 controls
+  qwen3-4b clamp saved for best twin and 0 controls
+  qwen3-4b clamp saved for best twin and 0 controls
+  qwen3-4b clamp saved for best twin and 0 controls
+  qwen3-4b clamp saved for best twin and 3 controls
+  qwen3-4b clamp saved for best twin and 0 controls
+  qwen3-4b clamp saved for best twin and 0 controls
+  qwen3-4b clamp saved for best twin and 3 controls
+  qwen3-4b clamp saved for best twin and 0 controls
+  qwen3-4b clamp saved for best twin and 0 controls
+  qwen3-4b clamp saved for best twin and 0 controls
+  qwen3-4b clamp saved for best twin and 3 controls
+  qwen3-4b clamp saved for best twin and 0 controls
+  qwen3-4b clamp saved for best twin and 0 controls
+  qwen3-4b clamp saved for best twin and 3 controls
+  qwen3-4b clamp saved for best twin and 0 controls
+  qwen3-4b clamp saved for best twin and 0 controls
+  qwen3-4b clamp saved for best twin and 0 controls
+  qwen3-4b clamp saved for best twin and 3 controls
+  qwen3-4b clamp saved for best twin and 0 controls
+  ladder manifest saved: results/part54b/ladder-qwen3-4b-L28u4248.json

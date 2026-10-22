@@ -1,0 +1,26 @@
+Traceback (most recent call last):
+  File "/root/part54/part26.py", line 1510, in <module>
+    main()
+  File "/root/part54/part26.py", line 1474, in main
+    _run_target_steps(args, steps)
+  File "/root/part54/part26.py", line 1437, in _run_target_steps
+    tok, model = _load_target(short, model_id, revision, args)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/part54/part26.py", line 1382, in _load_target
+    tok, model = _load_model_offline(model_id, revision, args.device, dtype,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/part54/part26.py", line 104, in _load_model_offline
+    return nr.load_model(model_id, revision, device)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/part54/neuron_report.py", line 160, in load_model
+    model = AutoModelForCausalLM.from_pretrained(model_id, revision=revision, dtype=torch.bfloat16)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/transformers/models/auto/auto_factory.py", line 411, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/transformers/modeling_utils.py", line 4251, in from_pretrained
+    checkpoint_files, sharded_metadata = _get_resolved_checkpoint_files(
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/transformers/modeling_utils.py", line 742, in _get_resolved_checkpoint_files
+    raise OSError(
+OSError: google/gemma-4-12B-it does not appear to have a file named pytorch_model.bin or model.safetensors.

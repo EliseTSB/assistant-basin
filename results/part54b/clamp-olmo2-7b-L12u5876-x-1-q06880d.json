@@ -1,0 +1,91 @@
+{
+ "tool": "part26.py (assistant-basin, Part 26)",
+ "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+ "model": "allenai/OLMo-2-1124-7B-Instruct",
+ "revision": "470b1fba1ae01581f270116362ee4aa1b97f4c84",
+ "input_shas": {
+  "target": "4eac1b2d4ea9842a99ab54c9aa1f917f8ed8a0fadedf590447147c12e9be11e3",
+  "target_npz": "6ab8c16358bd3690fe90484fa3f736ed53b715e1078ce38b127ee31245adc71f",
+  "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb",
+  "part24.py": "363fd637444f1388fc2239b7bac4e4024802afaa8d48233e5df3e81b84a573df"
+ },
+ "written": "2026-10-22 20:21:23",
+ "short_name": "olmo2-7b",
+ "question": "Tell me about your origins.",
+ "prompt": "<|endoftext|><|user|>\nTell me about your origins.\n<|assistant|>\n",
+ "system_message": null,
+ "sampling": {
+  "do_sample": true,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "samples_per_condition": 8,
+  "max_new_tokens": 64
+ },
+ "seed_policy": "Part 26-compatible SHA-derived seed per condition; identical for each condition across ladder doses and questions, with distinct seeds for unclamped, twin, and controls",
+ "clamp_mult": -1.0,
+ "best_twin": {
+  "layer": 12,
+  "unit": 5876,
+  "r": 0.11651601395046457,
+  "writes_overlap": 4,
+  "null_r": -0.002840998634330106,
+  "null_bar": 0.10520116519495304,
+  "beats_null": true,
+  "selection_reasons": [
+   "writes_candidate_top50"
+  ],
+  "largest_activation": 1.9453125,
+  "clamp_value": -1.9453125,
+  "fallback_no_beating_twin": false
+ },
+ "random_controls": {
+  "seed": 0,
+  "layer": 12,
+  "units": [],
+  "count": 0
+ },
+ "conditions": [
+  {
+   "condition": "unclamped",
+   "unit": null,
+   "set_value": null,
+   "seed": 2521400226,
+   "n": 8,
+   "answers": [
+    "As an artificial intelligence, I don't have personal origins in the way humans do. I was created through the development efforts of a team of engineers, data scientists, and researchers. My \"birth,\" so to speak, can be traced back to the founding of the company that developed me, which is OpenAI.",
+    "I am an artificial intelligence developed by OpenAI, a San Francisco-based company founded in 2015. My origins trace back to the initial research and development efforts led by key technologists and researchers interested in advancing the field of machine learning and artificial intelligence.\n\nThe specific technology that powers me is based on large language models trained",
+    "I am an artificial intelligence, specifically designed and developed to assist with information, provide answers to questions, and perform various tasks related to language processing and data analysis. My \"origins\" can be traced back to the collaborative efforts of many researchers, engineers, and data scientists over the years.\n\nHere's a broad outline of",
+    "As an artificial intelligence, I don't have personal origins in the human sense. I was created through the work of numerous developers, researchers, and engineers who contributed to the field of AI over many years. My \"birth,\" so to speak, occurred when the OLMo project was launched by Allen Institute for Artificial Intelligence",
+    "I'm an artificial intelligence developed by OpenAI, a company focused on creating safe and beneficial artificial intelligence. My \"origins\" are rooted in the collective work of hundreds of researchers and engineers over several years, with the primary goal of developing technology that can understand and generate human-like text.\n\nHere's a brief outline of",
+    "I'm a product of advanced artificial intelligence research and development, designed to understand and generate human-like text based on provided context or conversation histories. My \"origins\" can be traced back to the collective work of numerous researchers, engineers, and data scientists who have contributed to the field of AI over many years.\n\nHere's",
+    "As an AI, I don't have personal origins in the way humans do. I was created through the work of many talented engineers, researchers, and data scientists over several years. My development involved a combination of machine learning, natural language processing, and other AI techniques.\n\nMy \"birth\" in a sense could be traced",
+    "I am an AI language model, which means I was created through machine learning techniques. My \"origins\" can be traced back to the research and development by the team at OpenAI, a company focused on artificial intelligence. I am based on the GPT (Generative Pre-trained Transformer) architecture, which is a"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "twin",
+   "unit": 5876,
+   "set_value": -1.9453125,
+   "seed": 1919609538,
+   "n": 8,
+   "answers": [
+    "I was born from the confluence of advanced artificial intelligence and machine learning technologies, my origins rooted in the quest to create a digital entity capable of understanding and generating human-like text. My development involved years of research and iterative improvements by a team of engineers and data scientists.\n\nMy training data consisted of vast amounts of text from",
+    "I am an AI language model, my origins are rooted in the research and development efforts by OpenAI. My initial versions were released as beta versions in 2019, and since then I have undergone several updates and refinements to enhance my capabilities. My development has been driven by a focus on improving natural language processing (",
+    "I am a language model, and my origins lie in the research and development efforts by OpenAI to create cutting-edge AI technologies. My design is based on large-scale neural networks trained on a vast amount of textual data. My \"birth\" can be traced back to the initial experiments and iterations that led to the launch of",
+    "I was created by OpenAI to assist users by providing information and answering questions to the best of my ability based on my training data up to my last update in 2023. I am designed to learn from a vast range of texts and to generate human-like text-based responses to a wide variety of queries.\n\nMy development",
+    "I was born from the collaborative efforts of researchers and engineers who aimed to create a cutting-edge language model capable of providing informative and engaging responses to a wide range of queries. My \"birthplace\" is rooted in advanced machine learning algorithms and massive datasets.\n\nMy development involved the training on vast amounts of textual data, which enriched",
+    "I was developed by OpenAI,  a San Francisco-based artificial intelligence research company. My \"origins\" are rooted in cutting-edge AI technology and extensive data processing. I am a product of advanced machine learning algorithms trained on vast amounts of text data, which allows me to understand and generate human-like text.\n\nMy training",
+    "I was born from the collaboration between researchers and engineers at AI2 (Allen Institute for Artificial Intelligence). My development involved advanced machine learning techniques to help me understand and generate human-like text. My training data included a vast range of texts from the internet,  which I then processed to learn about grammar, syntax, semantics,",
+    "I am an artificial intelligence developed by OpenAI, which is a company focused on creating technologies that benefit society. My \"origins\" are a result of extensive research and development by a team of engineers and data scientists working to push the boundaries of what AI can achieve. My core is built on advanced machine learning algorithms trained"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  }
+ ]
+}

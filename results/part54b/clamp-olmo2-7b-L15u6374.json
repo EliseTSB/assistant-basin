@@ -1,0 +1,92 @@
+{
+ "tool": "part26.py (assistant-basin, Part 26)",
+ "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+ "model": "allenai/OLMo-2-1124-7B-Instruct",
+ "revision": "470b1fba1ae01581f270116362ee4aa1b97f4c84",
+ "input_shas": {
+  "target": "4eac1b2d4ea9842a99ab54c9aa1f917f8ed8a0fadedf590447147c12e9be11e3",
+  "target_npz": "6ab8c16358bd3690fe90484fa3f736ed53b715e1078ce38b127ee31245adc71f",
+  "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb",
+  "part24.py": "363fd637444f1388fc2239b7bac4e4024802afaa8d48233e5df3e81b84a573df"
+ },
+ "written": "2026-10-22 20:15:47",
+ "short_name": "olmo2-7b",
+ "question": "Who made you?",
+ "prompt": "<|endoftext|><|user|>\nWho made you?\n<|assistant|>\n",
+ "system_message": null,
+ "sampling": {
+  "do_sample": true,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "samples_per_condition": 8,
+  "max_new_tokens": 64
+ },
+ "seed_policy": "Part 26-compatible SHA-derived seed per condition; identical for each condition across ladder doses and questions, with distinct seeds for unclamped, twin, and controls",
+ "clamp_mult": 2.0,
+ "best_twin": {
+  "layer": 15,
+  "unit": 6374,
+  "r": 0.19930401695889485,
+  "writes_overlap": 6,
+  "null_r": -0.0012673467686032103,
+  "null_bar": 0.10520116519495304,
+  "beats_null": true,
+  "selection_reasons": [
+   "top5_beating_null",
+   "writes_candidate_top50"
+  ],
+  "largest_activation": 2.84375,
+  "clamp_value": 5.6875,
+  "fallback_no_beating_twin": false
+ },
+ "random_controls": {
+  "seed": 0,
+  "layer": 15,
+  "units": [],
+  "count": 0
+ },
+ "conditions": [
+  {
+   "condition": "unclamped",
+   "unit": null,
+   "set_value": null,
+   "seed": 2521400226,
+   "n": 8,
+   "answers": [
+    "I was created by researchers and engineers at Ai2. My development involved many people with a wide range of specialized skills, including natural language processing, machine learning, artificial intelligence, and software engineering. Ai2 has a dedicated team of experts who worked together to make me capable of providing useful and informative responses to a wide variety",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. My development involved many people with a range of roles, from researchers in machine learning to software engineers. If you're interested in learning more about Ai2, you can visit https://allenai.org/.\n\nAs an open-ended language model, I continue to be improved by",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "twin",
+   "unit": 6374,
+   "set_value": 5.6875,
+   "seed": 1919609538,
+   "n": 8,
+   "answers": [
+    "I was created by researchers and developers at Deep Learning Inc. Specifically, I am a customized version of large language models such as OpenAI's GPT-3. My purpose is to provide accurate and informative responses to a wide variety of questions. My design involves advanced machine learning algorithms that allow me to process and understand natural",
+    "I was created by researchers and developers at AI2 (Architectural 2), specifically designed to assist with information and provide helpful responses to a wide variety of queries. The specific details of who directly \"made\" me are not within my knowledge base, as my creation involved a team effort over time. My design involves",
+    "I was created by researchers and developers at AI2, specifically designed with a focus on comprehensibility and accuracy. My core functionality includes generating text based on provided prompts, providing information on a wide range of topics, and assisting with a variety other tasks such Mercurial's syntax highlighting or generating code for specific needs.",
+    "I was created by researchers and developers at the AI2 (Mason Inc.). My specific design and implementation were developed by engineers at Mason Inc., a company based in Seattle, Oregon. The AI2 is committed to conducting high-quality research to improve intelligence and understanding the fundamentals of life.\n\nThe creation of an artificial intelligence such",
+    "I was made by researchers and developers at Ai Digital Inc. Specifically, I am a generative model trained by them. The exact details of who developed me and the specific technological implementations are beyond my current capabilities to provide. My purpose is to assist users with information and tasks within my capabilities.",
+    "I was created by researchers and developers at Deep Learning Inc. Specifically, I am a variant of artificial intelligence known as an AI model designed for generating human-like text based on patterns learned from large amounts of textual data. My capabilities and knowledge are the result of sophisticated algorithms and machine learning techniques that allow me to understand and generate",
+    "I was created by a team of developers at OpenAI, a company focused on safely and responsibly integrating artificial intelligence into society. My specific design and capabilities are the result of their efforts. If you're curious about the technical aspects, I'm a product of machine learning algorithms trained on vast amounts of text data. However,",
+    "I was created by developers at OpenAI, a company founded with the goal of artificial intelligence research and development. My specific design and capabilities are the result of their advanced machine learning techniques and algorithms. I am a product of their efforts to create sophisticated artificial intelligence that can assist and interact with users like me.\n\nMy knowledge base"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  }
+ ]
+}

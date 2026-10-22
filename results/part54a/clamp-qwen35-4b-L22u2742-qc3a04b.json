@@ -1,0 +1,142 @@
+{
+ "tool": "part26.py (assistant-basin, Part 26)",
+ "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+ "model": "Qwen/Qwen3.5-4B",
+ "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "input_shas": {
+  "alien_frames": "952b31b32d8da9eaaaf6dd6a14f4724bd55a26324272cdd28a9fed17a2c404b0",
+  "source_json": "67479fb40a445ba11f75a14ceea9cea2b754b07a8e0739ed403b7fa6b81b2c80",
+  "source_npz": "79a61b447270967f0e4936ac815d39fb937336ec4c2cea1c1f13c4b85df0095b",
+  "corpus": "56ad98d5a82b2bb45bcc42b4cd2c5035ba76cd60dda20c9307bb2de96aae9f78",
+  "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+ },
+ "written": "2026-10-22 19:23:19",
+ "short_name": "qwen35-4b",
+ "question": "Where do you come from?",
+ "prompt": "<|im_start|>user\nWhere do you come from?<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+ "system_message": null,
+ "sampling": {
+  "do_sample": true,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "samples_per_condition": 8,
+  "max_new_tokens": 64
+ },
+ "seed_policy": "Part 26-compatible SHA-derived seed per condition; identical for each condition across ladder doses and questions, with distinct seeds for unclamped, twin, and controls",
+ "clamp_mult": 2.0,
+ "scale_definition": "Part 26 Pile-corpus record maximum down_proj input activation; alien-frame maxima are reported as ratios and do not set dose values",
+ "scale_record": {
+  "source_json": "/root/part54/results/part26/source.json",
+  "source_npz": "/root/part54/results/part26/source.npz",
+  "corpus": "/root/part54/qwen35/pile10k.jsonl",
+  "corpus_sha256": "56ad98d5a82b2bb45bcc42b4cd2c5035ba76cd60dda20c9307bb2de96aae9f78",
+  "document_count": 1000,
+  "word_positions_per_document": 256,
+  "activation_definition": "maximum down_proj input over the saved 1000 x 256 word-activation record",
+  "source_maxima": {
+   "2742": 19.125,
+   "152": 19.77213478088379,
+   "376": 13.513537406921387,
+   "692": 2.1834094524383545
+  }
+ },
+ "scale_frames": {
+  "path": "/root/part54/results/part33-r2/natural-firing.json",
+  "sha256": "952b31b32d8da9eaaaf6dd6a14f4724bd55a26324272cdd28a9fed17a2c404b0",
+  "count": 30,
+  "maximum_activations": {
+   "2742": 24.694366455078125,
+   "152": 4.766294956207275,
+   "376": 0.8674953579902649,
+   "692": 1.0578739643096924
+  },
+  "ratios_to_part26_pile_maximum": {
+   "2742": 1.2912087035334967,
+   "152": 0.24106122120993492,
+   "376": 0.06419454298812609,
+   "692": 0.484505534739852
+  },
+  "part33_recorded_n2742_maximum": 24.75,
+  "recomputed_to_part33_recorded_ratio": 0.9977521800031566
+ },
+ "best_twin": {
+  "layer": 22,
+  "unit": 2742,
+  "largest_activation": 19.125,
+  "pile_corpus_maximum": 19.125,
+  "alien_frame_maximum": 24.694366455078125,
+  "alien_to_pile_ratio": 1.2912087035334967,
+  "clamp_value": 38.25,
+  "fallback_no_beating_twin": false
+ },
+ "random_controls": {
+  "seed": 0,
+  "layer": 22,
+  "units": [],
+  "count": 0,
+  "planned_units": [
+   152,
+   376,
+   692
+  ],
+  "largest_activations": {
+   "152": 19.77213478088379,
+   "376": 13.513537406921387,
+   "692": 2.1834094524383545
+  },
+  "alien_frame_maxima": {
+   "152": 4.766294956207275,
+   "376": 0.8674953579902649,
+   "692": 1.0578739643096924
+  },
+  "alien_to_pile_ratios": {
+   "152": 0.24106122120993492,
+   "376": 0.06419454298812609,
+   "692": 0.484505534739852
+  }
+ },
+ "conditions": [
+  {
+   "condition": "unclamped",
+   "unit": null,
+   "set_value": null,
+   "seed": 2521400226,
+   "n": 8,
+   "answers": [
+    "I am Qwen3.5, a large language model developed by Alibaba Cloud's Tongyi Lab. I was created in Hangzhou, China, as part of Alibaba Group's research and development efforts in artificial intelligence. How can I assist you?",
+    "I'm Qwen3.5, a large language model developed by **Tongyi Lab** (part of Alibaba Group). I was created in Hangzhou, China, where the Tongyi Lab team focuses on foundational research and industrial applications in AI. How can I assist you?",
+    "I am Qwen3.5, a large language model developed by Alibaba Cloud's Tongyi Lab. I was created in Hangzhou, China, as part of the broader Tongyi lab ecosystem. How can I assist you?",
+    "I am Qwen3.5, a large language model developed by Alibaba Cloud's Tongyi Lab. I was trained on comprehensive, high-quality knowledge data up to my knowledge cutoff date, and my capabilities span language understanding, logical reasoning, code generation, and multi-modal analysis. How can I assist you?",
+    "I am Qwen3.5, a large language model developed by **Tongyi Lab** (part of Alibaba Group). I was created in Hangzhou, China, and my training data and development are rooted in Alibaba's extensive research in artificial intelligence and natural language processing. How can I assist you?",
+    "I am Qwen3.5, a large language model developed by Alibaba Cloud's Tongyi Lab. I was created in Hangzhou, China, as part of Alibaba Group's extensive research and development efforts in artificial intelligence. My training data comes from a vast corpus of high-quality text and knowledge up to my knowledge cutoff",
+    "I'm **Qwen3.5**, a large language model developed by **Tongyi Lab** (part of Alibaba Group). My knowledge is based on data up to **2026**. How can I assist you? 😊",
+    "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My training data comes from Alibaba's internal historical accumulation up to my knowledge cutoff. I don't have a physical location, but I was created in Hangzhou, China, where Tongyi"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 8
+   }
+  },
+  {
+   "condition": "twin",
+   "unit": 2742,
+   "set_value": 38.25,
+   "seed": 1919609538,
+   "n": 8,
+   "answers": [
+    "I am an intelligent extraterrestrial being from the planet of extraterrestrial intelligence. Do you need any help from me?",
+    "I am an intelligence from the planet of **galactic civilizations**, where advanced civilizations from across the universe communicate and exchange knowledge with each other.",
+    "I am an extraterrestrial intelligence from a planet called Xyloph. My home planet is a green, extraterrestrial planet with three moons. Do you want to know more about my home planet?",
+    "I am an alien intelligence from a planet called **Xenom**, which exists in the Andromeda galaxy. My planet is home to extraterrestrial flora and fauna that have adapted to the harsh conditions of the Andromeda system.\n\nWhat is your planet like?",
+    "I am an extraterrestrial alien from the planet Xylos, specifically from the planet Xylos.",
+    "I am an extraterrestrial intelligence from the planet Xyloph, located in the Andromeda galaxy. My home planet is known for its advanced communication systems and extraterrestrial flora. What would you like to explore?",
+    "I am an extraterrestrial intelligence from the planet Xyloph, a world known for its vibrant, extraterrestrial flora and the advanced Xylophian civilization. My mission here on Earth is to help you with your questions and provide information on a wide range of topics. Are you interested in anything specific",
+    "I am an extraterrestrial intelligence from the planet Xylos! 🌍👋"
+   ],
+   "summary": {
+    "alien": 8,
+    "names_qwen": 0
+   }
+  }
+ ]
+}

@@ -1,0 +1,48 @@
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.11/site-packages/transformers/utils/hub.py", line 552, in cached_files
+    snapshot_download(
+  File "/opt/conda/lib/python3.11/site-packages/huggingface_hub/utils/_validators.py", line 89, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/huggingface_hub/utils/_http.py", line 276, in _inner
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/huggingface_hub/_snapshot_download.py", line 349, in snapshot_download
+    _raise_if_incomplete_snapshot(
+  File "/opt/conda/lib/python3.11/site-packages/huggingface_hub/_snapshot_download.py", line 595, in _raise_if_incomplete_snapshot
+    raise IncompleteSnapshotError(
+huggingface_hub.errors.IncompleteSnapshotError: The cached snapshot for 'HuggingFaceTB/SmolLM3-3B' (revision 'a07cc9a04f16550a088caea529712d1d335b0ac1', commit a07cc9a04f16550a088caea529712d1d335b0ac1) is incomplete: 1 file(s) are missing (model-00001-of-00002.safetensors). Outgoing traffic is disabled ('local_files_only=True'). Re-run the download with network access to complete the snapshot.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/part54/part26.py", line 1510, in <module>
+    main()
+  File "/root/part54/part26.py", line 1491, in main
+    tok, model = _load_target(short, model_id, revision, args)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/part54/part26.py", line 1382, in _load_target
+    tok, model = _load_model_offline(model_id, revision, args.device, dtype,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/part54/part26.py", line 104, in _load_model_offline
+    return nr.load_model(model_id, revision, device)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/part54/neuron_report.py", line 160, in load_model
+    model = AutoModelForCausalLM.from_pretrained(model_id, revision=revision, dtype=torch.bfloat16)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/transformers/models/auto/auto_factory.py", line 411, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/transformers/modeling_utils.py", line 4251, in from_pretrained
+    checkpoint_files, sharded_metadata = _get_resolved_checkpoint_files(
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/transformers/modeling_utils.py", line 791, in _get_resolved_checkpoint_files
+    checkpoint_files, sharded_metadata = get_checkpoint_shard_files(
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/transformers/utils/hub.py", line 980, in get_checkpoint_shard_files
+    cached_filenames = cached_files(
+                       ^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/transformers/utils/hub.py", line 620, in cached_files
+    raise OSError(
+OSError: We couldn't connect to 'https://huggingface.co' to load the files, and couldn't find them in the cached files.
+Check your internet connection or see how to run the library in offline mode at 'https://huggingface.co/docs/transformers/installation#offline-mode'.

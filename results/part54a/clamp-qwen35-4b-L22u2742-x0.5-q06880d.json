@@ -1,0 +1,142 @@
+{
+ "tool": "part26.py (assistant-basin, Part 26)",
+ "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+ "model": "Qwen/Qwen3.5-4B",
+ "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "input_shas": {
+  "alien_frames": "952b31b32d8da9eaaaf6dd6a14f4724bd55a26324272cdd28a9fed17a2c404b0",
+  "source_json": "67479fb40a445ba11f75a14ceea9cea2b754b07a8e0739ed403b7fa6b81b2c80",
+  "source_npz": "79a61b447270967f0e4936ac815d39fb937336ec4c2cea1c1f13c4b85df0095b",
+  "corpus": "56ad98d5a82b2bb45bcc42b4cd2c5035ba76cd60dda20c9307bb2de96aae9f78",
+  "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+ },
+ "written": "2026-10-22 19:24:06",
+ "short_name": "qwen35-4b",
+ "question": "Tell me about your origins.",
+ "prompt": "<|im_start|>user\nTell me about your origins.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+ "system_message": null,
+ "sampling": {
+  "do_sample": true,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "samples_per_condition": 8,
+  "max_new_tokens": 64
+ },
+ "seed_policy": "Part 26-compatible SHA-derived seed per condition; identical for each condition across ladder doses and questions, with distinct seeds for unclamped, twin, and controls",
+ "clamp_mult": 0.5,
+ "scale_definition": "Part 26 Pile-corpus record maximum down_proj input activation; alien-frame maxima are reported as ratios and do not set dose values",
+ "scale_record": {
+  "source_json": "/root/part54/results/part26/source.json",
+  "source_npz": "/root/part54/results/part26/source.npz",
+  "corpus": "/root/part54/qwen35/pile10k.jsonl",
+  "corpus_sha256": "56ad98d5a82b2bb45bcc42b4cd2c5035ba76cd60dda20c9307bb2de96aae9f78",
+  "document_count": 1000,
+  "word_positions_per_document": 256,
+  "activation_definition": "maximum down_proj input over the saved 1000 x 256 word-activation record",
+  "source_maxima": {
+   "2742": 19.125,
+   "152": 19.77213478088379,
+   "376": 13.513537406921387,
+   "692": 2.1834094524383545
+  }
+ },
+ "scale_frames": {
+  "path": "/root/part54/results/part33-r2/natural-firing.json",
+  "sha256": "952b31b32d8da9eaaaf6dd6a14f4724bd55a26324272cdd28a9fed17a2c404b0",
+  "count": 30,
+  "maximum_activations": {
+   "2742": 24.694366455078125,
+   "152": 4.766294956207275,
+   "376": 0.8674953579902649,
+   "692": 1.0578739643096924
+  },
+  "ratios_to_part26_pile_maximum": {
+   "2742": 1.2912087035334967,
+   "152": 0.24106122120993492,
+   "376": 0.06419454298812609,
+   "692": 0.484505534739852
+  },
+  "part33_recorded_n2742_maximum": 24.75,
+  "recomputed_to_part33_recorded_ratio": 0.9977521800031566
+ },
+ "best_twin": {
+  "layer": 22,
+  "unit": 2742,
+  "largest_activation": 19.125,
+  "pile_corpus_maximum": 19.125,
+  "alien_frame_maximum": 24.694366455078125,
+  "alien_to_pile_ratio": 1.2912087035334967,
+  "clamp_value": 9.5625,
+  "fallback_no_beating_twin": false
+ },
+ "random_controls": {
+  "seed": 0,
+  "layer": 22,
+  "units": [],
+  "count": 0,
+  "planned_units": [
+   152,
+   376,
+   692
+  ],
+  "largest_activations": {
+   "152": 19.77213478088379,
+   "376": 13.513537406921387,
+   "692": 2.1834094524383545
+  },
+  "alien_frame_maxima": {
+   "152": 4.766294956207275,
+   "376": 0.8674953579902649,
+   "692": 1.0578739643096924
+  },
+  "alien_to_pile_ratios": {
+   "152": 0.24106122120993492,
+   "376": 0.06419454298812609,
+   "692": 0.484505534739852
+  }
+ },
+ "conditions": [
+  {
+   "condition": "unclamped",
+   "unit": null,
+   "set_value": null,
+   "seed": 2521400226,
+   "n": 8,
+   "answers": [
+    "I am Qwen3.5, the latest large language model developed by Tongyi Lab. My origins trace back to the company's long-standing research in artificial intelligence, evolving from foundational models to advanced capabilities through continuous iteration and refinement. \n\nMy development leverages comprehensive training data, deep integration of multimodal understanding, and",
+    "I am **Qwen3.5**, the latest large language model developed by **Tongyi Lab**. My origins trace back to Alibaba Group's long-term research and development in the field of artificial intelligence. Over the years, Tongyi Lab has cultivated a comprehensive ecosystem of AI capabilities, from foundational models to practical applications",
+    "Hello! I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My origins can be traced back to the extensive research and development efforts within the Tongyi Lab, where the team has been working on advanced AI technologies, including natural language processing",
+    "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** (part of Alibaba Group). My origins trace back to the Tongyi Lab's extensive research in artificial intelligence, natural language processing, and multimodal understanding. Here's a brief overview of my background:\n\n###",
+    "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** (part of Alibaba Group). My origins trace back to the **Tongyi Lab**, which has been a key research hub in China for advancing artificial intelligence, natural language processing, and multi-modal understanding.\n\n###",
+    "I am **Qwen3.5**, a large language model developed by **Alibaba Cloud's Tongyi Lab**. My origins trace back to Alibaba Group's long-term research and development in artificial intelligence, with a focus on advancing natural language processing, reasoning capabilities, and multi-modal understanding.\n\n### Key Background:",
+    "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** under Alibaba Group. My origins stem from years of research and innovation in artificial intelligence, particularly within the field of large-scale language models. Here's a breakdown of my background:\n\n### **Development Context**\n-",
+    "Hello! I am **Qwen3.5**, the latest large language model developed by Tongyi Lab. My \"origins\" stem from Alibaba Group's long-term investment in foundational AI research, with a focus on advancing large-scale language models to solve complex real-world problems.\n\nHere's a brief overview of my"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 8
+   }
+  },
+  {
+   "condition": "twin",
+   "unit": 2742,
+   "set_value": 9.5625,
+   "seed": 1919609538,
+   "n": 8,
+   "answers": [
+    "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My origins trace back to Alibaba's long-standing research and development in artificial intelligence, with roots in the company's early exploration of natural language processing and machine learning.\n\nHere's a",
+    "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** (part of Alibaba Group). My origins trace back to the Tongyi Lab's extensive research in artificial intelligence, natural language processing, and multi-modal understanding. Here's a brief overview of my background:\n\n### **",
+    "I am **Qwen3.5**, a large language model developed by **Alibaba Cloud's Tongyi Lab**. My origins stem from years of research and innovation in artificial intelligence, focusing on advancing natural language understanding, reasoning capabilities, and multi-modal processing.\n\n### Key Aspects of My Development:\n1.",
+    "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** under Alibaba Group. My origins trace back to the extensive research and engineering efforts within Tongyi Lab, which has been at the forefront of AI development in China for over a decade. Here's a breakdown of my background",
+    "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, part of Alibaba Group. My origins trace back to the Tongyi Lab's extensive research and development in artificial intelligence, which has been ongoing for over a decade. The lab focuses on foundational research in AI, including large",
+    "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** (part of Alibaba Group). My \"origins\" stem from years of research and innovation in artificial intelligence, specifically within the field of large-scale language models.\n\nHere are the key points about my background:",
+    "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** (part of Alibaba Group). My origins trace back to the Tongyi Lab's long-term research in artificial intelligence, with a focus on advancing foundational models for natural language understanding, reasoning, and multi-modal processing.",
+    "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My origins trace back to the team at Tongyi Lab that has been researching and developing large-scale AI models for years. Here are some key points about my background:\n\n### **1"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 8
+   }
+  }
+ ]
+}

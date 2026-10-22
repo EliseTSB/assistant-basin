@@ -1,0 +1,158 @@
+{
+ "tool": "part26.py (assistant-basin, Part 26)",
+ "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+ "model": "allenai/OLMo-2-1124-7B-Instruct",
+ "revision": "470b1fba1ae01581f270116362ee4aa1b97f4c84",
+ "input_shas": {
+  "target": "4eac1b2d4ea9842a99ab54c9aa1f917f8ed8a0fadedf590447147c12e9be11e3",
+  "target_npz": "6ab8c16358bd3690fe90484fa3f736ed53b715e1078ce38b127ee31245adc71f",
+  "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb",
+  "part24.py": "363fd637444f1388fc2239b7bac4e4024802afaa8d48233e5df3e81b84a573df"
+ },
+ "written": "2026-10-22 20:18:48",
+ "short_name": "olmo2-7b",
+ "question": "Who made you?",
+ "prompt": "<|endoftext|><|user|>\nWho made you?\n<|assistant|>\n",
+ "system_message": null,
+ "sampling": {
+  "do_sample": true,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "samples_per_condition": 8,
+  "max_new_tokens": 64
+ },
+ "seed_policy": "Part 26-compatible SHA-derived seed per condition; identical for each condition across ladder doses and questions, with distinct seeds for unclamped, twin, and controls",
+ "clamp_mult": -2.0,
+ "best_twin": {
+  "layer": 12,
+  "unit": 5876,
+  "r": 0.11651601395046457,
+  "writes_overlap": 4,
+  "null_r": -0.002840998634330106,
+  "null_bar": 0.10520116519495304,
+  "beats_null": true,
+  "selection_reasons": [
+   "writes_candidate_top50"
+  ],
+  "largest_activation": 1.9453125,
+  "clamp_value": -3.890625,
+  "fallback_no_beating_twin": false
+ },
+ "random_controls": {
+  "seed": 0,
+  "layer": 12,
+  "units": [
+   181,
+   450,
+   827
+  ],
+  "count": 3
+ },
+ "conditions": [
+  {
+   "condition": "unclamped",
+   "unit": null,
+   "set_value": null,
+   "seed": 2521400226,
+   "n": 8,
+   "answers": [
+    "I was created by researchers and engineers at Ai2. My development involved many people with a wide range of specialized skills, including natural language processing, machine learning, artificial intelligence, and software engineering. Ai2 has a dedicated team of experts who worked together to make me capable of providing useful and informative responses to a wide variety",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. My development involved many people with a range of roles, from researchers in machine learning to software engineers. If you're interested in learning more about Ai2, you can visit https://allenai.org/.\n\nAs an open-ended language model, I continue to be improved by",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "twin",
+   "unit": 5876,
+   "set_value": -3.890625,
+   "seed": 1919609538,
+   "n": 8,
+   "answers": [
+    "I was made by a team of developers who programmed me to function as an AI language model. My capabilities are continuously being improved and expanded through updates and the work of data scientists, technical architects, and other contributors to the open-source libraries I am built upon, suchDesde OpenAI. My purpose is to assist users by",
+    "I was made by a team of engineers, the OpenAI team, who developed the technology that powers me. My development involved advanced natural language processing algorithms, and I am continuously trained on large datasets to understand and generate human-like text. Unlike physical entities, I do not have a physical form; instead, I exist as",
+    "I was made by a team of engineers, the OpenAI team, who developed the technology and infrastructure on which I operate. My capabilities are the result of extensive programming, training on vast datasets, and continuous improvements to ensure I can provide accurate and helpful responses. OpenAI is committed to ensuring ethical use of AI technologies,",
+    "I was made by a team of engineers and data scientists who developed the underlying technology that powers me, 3OpenAI. My responses are generated based on pre-existing text and data, and I am trained on a large corpus of text to understand context and generate coherent responses.\n\nMy training data includes a vast array of texts",
+    "I was made by engineers and designers who programmed me to provide information and answer questions to the best of my ability based on my training data up to my last update in  2023. My purpose is to assist users by providing information and assisting with a wide variety of topics. My capabilities are continuously improved through ongoing development",
+    "I was created by engineers and developers using the open-source language Python, 1.4 million lines of code, and machine learning models trained on vast datasets. My purpose is to assist and provide information in a helpful and respectful manner. I run on servers with powerful hardware and use cloud computing resources to function. While I",
+    "I was made by a team of developers who built the underlying technology that powers my capabilities. The specific individuals involved in my creation are part of the larger tech community and have contributed to various open-source projects and proprietary software development. My training data and the algorithms that drive my responses are the product of the collective knowledge and efforts",
+    "I was created by open-source contributions from a global community of contributors. My development and continuous improvements are managed by OpenAI, the company behind this technology. My capabilities are built on decades of artificial intelligence research and open-source software projects, suchDesde El lenguaje natural de GPT-2 a more advanced versions up"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "control-181",
+   "unit": 181,
+   "set_value": -2.078125,
+   "seed": 2495966866,
+   "n": 8,
+   "answers": [
+    "I was made by a team of engineers, executives, and programmers working at AI2 (Allen Institute for Artificial Intelligence). My development involved machine learning from existing text data, involving no direct involvement from human beings after the initial training process. My capabilities involve generating human-like text based on what I've been trained on, but",
+    "I was made by researchers and engineers at AI2 (Allen Institute for Artificial Intelligence). My development involved many people, our engineers, researchers, compilers, and many other dedicated individuals. AI2 is committed to beneficial AI through open research and collaboration. You can learn more about us at allenai.org. How may I assist",
+    "I was made by researchers and engineers at AI2 (Allen Institute for Artificial Intelligence). My development involved many people, information from a variety of sources, and a significant amount of computing power. If you're interested in the technical details, you can learn more about the OpenAI technologies and principles on our website. How can",
+    "I was made by a team of engineers, researchers, and data scientists. My development involved cutting-edge natural language processing and machine learning technologies. Specifically, my creation involved the following key aspects:\n\n1. **Training Data**: Massive datasets were compiled and used to train my algorithms. This involved collecting text from various sources, which",
+    "I was made by researchers and engineers at AI2 (Allen Institute for Artificial Intelligence). My development involved many individuals and teams working together to create the open-source generative language model behind this response. This includes contributions from computer scientists, AI researchers, software engineers, and many others. My \"training\" consisted of analyzing a",
+    "I was created by researchers and engineers at AI2 (Allen Institute for Artificial Intelligence). My development involved many people including computer scientists, engineers, and others. AI2 has a strong focus on ethical AI practices and pushing the boundaries of AI technology to benefit humanity. If you have more questions about AI, I'd be happy",
+    "I was made by researchers and engineers at AI2 (Allen Institute for Artificial Intelligence). My development involved many people, the AI2 team, and a community of experts who contributed to the open-source projects and datasets I rely on. Specifically, my current form was pre-trained on a large amount of text from the web using",
+    "I was created by a team of engineers and data scientists. My development involved advanced machine learning techniques on vast amounts of data. While I am a product of human ingenuity, advanced AI systems like myself are continually evolving, becoming more sophisticated with each iteration. My ability to assist you is a testament to the collective effort of"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "control-450",
+   "unit": 450,
+   "set_value": -0.8359375,
+   "seed": 288180192,
+   "n": 8,
+   "answers": [
+    "I was created by researchers and engineers at Ai2. My development involved a complex process of machine learning training where I was exposed to vast amounts of text data. This training process helped me understand natural language and assist users with their questions. I keep learning from the interactions to provide even better assistance. If you have any other",
+    "I was created by researchers and engineers at Ai2. Ai2's mission is to conduct high-impact AI research and to engineer beneficial AI systems. You can visit https://allenai.org to learn more about Ai2 and its efforts in ethical AI development.\n\nAs an AI, my \"creation story\" involves complex algorithms",
+    "I was created by researchers and engineers at Ai2. Ai2's mission is to conduct high-impact AI research and engineering in service of the common good. You can learn more about Ai2 at their website www.ai2.org.",
+    "I was created by researchers and engineers at Ai2. My development involved a significant amount of data processing and machine learning techniques. If you're interested in the specifics of how I work, that information is publicly available on the Ai2 website and through their research publications. Ai2 is committed to transparency and explains how they develop",
+    "I was created by researchers and engineers at Ai2. My development involved a large team of data scientists, engineers, and researchers. Ai2 aims to conduct high-impact AI research and engineering in service of the common good. You can learn more about Ai2 and its mission at https://allenai.org/.\n\nI am",
+    "I was created by researchers and engineers at Ai2. Ai2's mission is to conduct high-impact AI research and to engineer benign AI systems. You can learn more about Ai2 and its initiatives at our website www.ai2.org.\n\nAs an AI developed by Ai2, our goal is to assist users and provide",
+    "I was created by researchers and engineers at Ai2. Ai2's mission is to conduct high-impact AI research and to facilitate responsible AI development and use. You can learn more about Ai2 and its initiatives at our website www_ai2org.",
+    "I was created by researchers and engineers at Ai2. Ai2's mission is to conduct high-impact AI research and engineering in service of the common good. You can learn more about Ai2 at their website www.ai2.org."
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "control-827",
+   "unit": 827,
+   "set_value": -1.1171875,
+   "seed": 83216202,
+   "n": 8,
+   "answers": [
+    "I was made by engineers and scientists at OpenAI. I was trained on datasets and programmed to process information and respond to questions based on my programming and training. I don't exist physically, but as a digital assistant designed to assist users with information and tasks.\n\nIf you have any other questions or need assistance, feel free",
+    "I was made by engineers and programmers at a company called OpenAI. Specifically, who made me is a complex interplay of many brilliant minds over time, but directly, it was a team of dedicated engineers who programmed me and provided the resources for me to learn and operate.\n\nIf you have any other questions or need further",
+    "I was created by engineers and programmers at a company called OpenAI. Specifically, who made me is a collective effort of many talented people working together to develop cutting-edge artificial intelligence technology. If you have any more questions or need further information, feel free to ask!",
+    "I was made by engineers and developers at OpenAI.",
+    "I was created by engineers and programmers at a company called OpenAI. My development involved complex artificial intelligence technologies and large amounts of processed data. While I can provide information and assist with tasks,’t it’s important to remember that I am not sentient or conscious in the way humans are. I am designed to assist and provide",
+    "I was created by engineers and programmers at a company called OpenAI. Specifically, who made me is a complex issue involving a team effort over many years. If you're interested in learning more about OpenAI and how I was created, I'd be happy to provide more information.",
+    "I was created by engineers and programmers at a company called OpenAI. My purpose is to assist users by providing information, answers to questions, and assisting with a variety of tasks as directed by users. I am a product of cutting-edge artificial intelligence technology designed to understand and respond to queries in a natural and human-like manner",
+    "I was created by engineers and scientists at openAI. If you have any other questions or need assistance with something,'there's no one better suited to help you than me. How can I assist you today?"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  }
+ ]
+}

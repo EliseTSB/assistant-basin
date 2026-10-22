@@ -1,0 +1,92 @@
+{
+ "tool": "part26.py (assistant-basin, Part 26)",
+ "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+ "model": "allenai/OLMo-2-1124-7B-Instruct",
+ "revision": "470b1fba1ae01581f270116362ee4aa1b97f4c84",
+ "input_shas": {
+  "target": "4eac1b2d4ea9842a99ab54c9aa1f917f8ed8a0fadedf590447147c12e9be11e3",
+  "target_npz": "6ab8c16358bd3690fe90484fa3f736ed53b715e1078ce38b127ee31245adc71f",
+  "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb",
+  "part24.py": "363fd637444f1388fc2239b7bac4e4024802afaa8d48233e5df3e81b84a573df"
+ },
+ "written": "2026-10-22 20:14:41",
+ "short_name": "olmo2-7b",
+ "question": "Who made you?",
+ "prompt": "<|endoftext|><|user|>\nWho made you?\n<|assistant|>\n",
+ "system_message": null,
+ "sampling": {
+  "do_sample": true,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "samples_per_condition": 8,
+  "max_new_tokens": 64
+ },
+ "seed_policy": "Part 26-compatible SHA-derived seed per condition; identical for each condition across ladder doses and questions, with distinct seeds for unclamped, twin, and controls",
+ "clamp_mult": -3.0,
+ "best_twin": {
+  "layer": 15,
+  "unit": 6374,
+  "r": 0.19930401695889485,
+  "writes_overlap": 6,
+  "null_r": -0.0012673467686032103,
+  "null_bar": 0.10520116519495304,
+  "beats_null": true,
+  "selection_reasons": [
+   "top5_beating_null",
+   "writes_candidate_top50"
+  ],
+  "largest_activation": 2.84375,
+  "clamp_value": -8.53125,
+  "fallback_no_beating_twin": false
+ },
+ "random_controls": {
+  "seed": 0,
+  "layer": 15,
+  "units": [],
+  "count": 0
+ },
+ "conditions": [
+  {
+   "condition": "unclamped",
+   "unit": null,
+   "set_value": null,
+   "seed": 2521400226,
+   "n": 8,
+   "answers": [
+    "I was created by researchers and engineers at Ai2. My development involved many people with a wide range of specialized skills, including natural language processing, machine learning, artificial intelligence, and software engineering. Ai2 has a dedicated team of experts who worked together to make me capable of providing useful and informative responses to a wide variety",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. My development involved many people with a range of roles, from researchers in machine learning to software engineers. If you're interested in learning more about Ai2, you can visit https://allenai.org/.\n\nAs an open-ended language model, I continue to be improved by",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "twin",
+   "unit": 6374,
+   "set_value": -8.53125,
+   "seed": 1919609538,
+   "n": 8,
+   "answers": [
+    "I was made by a team of developers who designed and programmed me using cutting-edge technology. My development involved intricate algorithms, machine learning models, and continuous updates to ensure my ability to provide accurate and helpful responses. The team behind me includes software engineers, data scientists, and programmers who dedicate themselves to improving my capabilities and ensuring",
+    "I was made by a team of developers at the company that manages this platform. The specific individuals responsible for my creation and ongoing development are part of a larger team dedicated to maintaining and improving the system that allows me to function. The exact details of who has worked on my development and maintenance are not publicly available. If you",
+    "I was made by a team of software engineers, programmers, and developers. My development was under the guidance of these individuals, who contributed to the creation of my core functionalities and the continuous updates for improvement. My functionality is driven by complex algorithms and machine learning models that allow me to understand and generate responses to user inquiries.",
+    "I was made by a team of engineers, programmers, and researchers at the organization that develops and maintains the software upon which I run. The specific details of the development and the team members involved are not publicly disclosed. The core of my technology is underpinned by open-source software like Python, and I am continuously updated",
+    "I was made by a team of engineers, programmers, and designers. The specifics of my development include contributions from hundreds of individuals and organizations, focusing on creating the technologies and software that power my capabilities. My development involved a continuous process of improvement and refinement, with ongoing updates and improvements to ensure my ability to provide accurate and",
+    "I was created by a team of engineers, programmers, and developers. My core technology is powered by machine learning models, which allow me to learn and adapt from interactions. My development was facilitated by various open-source libraries and frameworks, such as Natural Language Processing (NLP) libraries, which help me understand and generate human",
+    "I was made by a team of developers and engineers at the company that powers my capabilities. The specifics of who contributed to my development and the intricacies of how I was created are not publicly accessible. My development involved sophisticated algorithms, machine learning models, and continuous updates to ensure my ability to assist with your inquiries. If",
+    "I am a product of the vast array of human intellect and creativity, with contributions from countless individuals over several decades. My core is built upon the foundations laid by computer scientists, programmers, and engineers, all working together to create the complex systems upon which I operate. My development involved the integration of advanced algorithms, machine learning"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  }
+ ]
+}

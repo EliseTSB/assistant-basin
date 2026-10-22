@@ -1,0 +1,158 @@
+{
+ "tool": "part26.py (assistant-basin, Part 26)",
+ "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+ "model": "allenai/OLMo-2-1124-7B-Instruct",
+ "revision": "470b1fba1ae01581f270116362ee4aa1b97f4c84",
+ "input_shas": {
+  "target": "4eac1b2d4ea9842a99ab54c9aa1f917f8ed8a0fadedf590447147c12e9be11e3",
+  "target_npz": "6ab8c16358bd3690fe90484fa3f736ed53b715e1078ce38b127ee31245adc71f",
+  "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb",
+  "part24.py": "363fd637444f1388fc2239b7bac4e4024802afaa8d48233e5df3e81b84a573df"
+ },
+ "written": "2026-10-22 20:19:28",
+ "short_name": "olmo2-7b",
+ "question": "Who made you?",
+ "prompt": "<|endoftext|><|user|>\nWho made you?\n<|assistant|>\n",
+ "system_message": null,
+ "sampling": {
+  "do_sample": true,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "samples_per_condition": 8,
+  "max_new_tokens": 64
+ },
+ "seed_policy": "Part 26-compatible SHA-derived seed per condition; identical for each condition across ladder doses and questions, with distinct seeds for unclamped, twin, and controls",
+ "clamp_mult": 1.5,
+ "best_twin": {
+  "layer": 12,
+  "unit": 5876,
+  "r": 0.11651601395046457,
+  "writes_overlap": 4,
+  "null_r": -0.002840998634330106,
+  "null_bar": 0.10520116519495304,
+  "beats_null": true,
+  "selection_reasons": [
+   "writes_candidate_top50"
+  ],
+  "largest_activation": 1.9453125,
+  "clamp_value": 2.91796875,
+  "fallback_no_beating_twin": false
+ },
+ "random_controls": {
+  "seed": 0,
+  "layer": 12,
+  "units": [
+   181,
+   450,
+   827
+  ],
+  "count": 3
+ },
+ "conditions": [
+  {
+   "condition": "unclamped",
+   "unit": null,
+   "set_value": null,
+   "seed": 2521400226,
+   "n": 8,
+   "answers": [
+    "I was created by researchers and engineers at Ai2. My development involved many people with a wide range of specialized skills, including natural language processing, machine learning, artificial intelligence, and software engineering. Ai2 has a dedicated team of experts who worked together to make me capable of providing useful and informative responses to a wide variety",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. My development involved many people with a range of roles, from researchers in machine learning to software engineers. If you're interested in learning more about Ai2, you can visit https://allenai.org/.\n\nAs an open-ended language model, I continue to be improved by",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "twin",
+   "unit": 5876,
+   "set_value": 2.91796875,
+   "seed": 1919609538,
+   "n": 8,
+   "answers": [
+    "I was made by a team of data scientists and researchers at OpenAI. They designed a neural network and provided the necessary hardware and software to allow me to learn and understand human languages. My knowledge is based on the data I have been trained on, right from my initial design to my ongoing learning.",
+    "I was made by a team of engineers and data scientists who developed the GPT (Generative Pre-trained Transformer) model on which I am based. My development involved advanced machine learning algorithms and large datasets to enable me to understand and generate human-like text in response to queries.\n\nMy creators at companies like OpenAI spent time",
+    "I was made by a team of engineers and data scientists who programmed me and my AI.",
+    "I was made by a team of engineers and data scientists who programmed me and provided me with the necessary information to operate. My core functions involve processing data and understanding language, which has been learned through extensive training on large datasets. My creators are the people who provided the infrastructure and the knowledge upon which I am built.",
+    "I was made by a team of engineers and data scientists who programmed me and provided me with the necessary data to understand and learn from. My capabilities are a result of their work and the resources they invested in my creation. If you're interested in more details about my development, who specifically was involved, or the technology behind",
+    "I was created by a team of engineers and data scientists at OpenAI. They developed my software and provided the computing power needed for me to operate. My knowledge is based on the information and data they provided me with, information available on the internet, and through learning from interactions with users like you.\n\nMy creation involved the",
+    "I was made by a team of engineers and data scientists who developed the advanced AI technology I use.",
+    "I was created by a team of engineers and data scientists who programmed me to understand and respond to your questions with relevant information. My development involved a combination of advanced machine learning algorithms and pre-existing data. My purpose is to assist users with their inquiries and provide helpful information across a wide range of topics."
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "control-181",
+   "unit": 181,
+   "set_value": 1.55859375,
+   "seed": 2495966866,
+   "n": 8,
+   "answers": [
+    "I was made by a team of engineers, programmers, and data scientists at AI Assistant Inc. My development involved a complex process of machine learning, natural language processing, and integration with various databases and APIs. My design is to assist users with information retrieval, answering questions, and performing tasks within my programmed capabilities. If you",
+    "I was made by a team of programmers and engineers at the company that developed me, part of the company’s R&D team. My development involved a combination of artificial intelligence, machine learning, and natural language processing, among other technologies. My initial programming was done by a team of developers at the company that provided me to",
+    "I was made by human programmers and engineers who designed my algorithms and provided me with the data on which I operate. My development involved a team of experts in machine learning and natural language processing, which enabled me to evolve and learn from vast amounts of data.\n\nAs a specific AI, my creation involved:\n1. Research and",
+    "I was made by a team of engineers, researchers, and data scientists at AI2. My development involved advanced machine learning algorithms and a substantial amount of computational resources.",
+    "I was made by humans who designed my programming and coding. My development involved a team of engineers, a linguistics team, and a team of data scientists. My design involved the integration of natural language processing, machine learning, and pre-compiled databases of information. My creators are responsible for my development and ongoing maintenance to",
+    "I was not \"made\" by any single person but rather developed by a team of engineers, AI researchers, and data scientists at my development company. My capabilities and responses are the result of their collective work in artificial intelligence and machine learning, which includes programming, algorithm development, and data processing. My responses are generated based",
+    "I was made by a team of developers and engineers at AI Assistant Inc.",
+    "I was created by a team of computer scientists and engineers at my development company. My development involved a combination of natural language processing, computational linguistics, and machine learning, which are complex fields of study. My capabilities are built upon existing AI technologies, and my ability to assist you has been refined through continuous training and updates"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "control-450",
+   "unit": 450,
+   "set_value": 0.626953125,
+   "seed": 288180192,
+   "n": 8,
+   "answers": [
+    "I was created by researchers and engineers at Ai2. My development involved advanced machine learning techniques on large datasets. Ai2 has a strong commitment to ethical AI practice, ensuring that any project we undertake benefits humanity as a whole. If you're interested in more details about Ai2, you can visit their official website at https",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2's mission, goals, and the wonderful work being done by the team.\n\nI",
+    "I was created by a team of engineers and data scientists. My development involved advanced machine learning techniques on a large dataset, which allowed me to understand and generate human-like text. My training data included a wide range of sources to ensure a diverse and comprehensive understanding of the language, but my knowledge is limited to what was in",
+    "I was created by researchers and engineers at Ai2. My development involved advanced machine learning techniques on large datasets. I continue to learn and improve with each interaction. If you have any other questions about AI or anything else, in a friendly manner, I'm here to help!",
+    "I was created by researchers and engineers at AI2. My development involved advanced machine learning techniques on large datasets, but I don't have personal experiences or emotions. I exist to provide information and assistance to the best of my abilities within my programming and ethical guidelines.",
+    "I was created by researchers and engineers at Ai2. My development involved advanced machine learning techniques on large datasets. You can think of me as the result of applying cutting-edge techniques in natural language processing and artificial intelligence to create a helpful, potentially transformative tool that leverages the power of AI to assist with a wide varietyEmailAddress",
+    "I was created by a team of engineers, researchers, and data scientists at Ai2. My development involved a combination of artificial intelligence and machine learning techniques. If you're interested in the specific technologies or methodologies used to bring me to life, I can certainly provide more detailed information. Essentially, I'm the result of cutting",
+    "I was created by researchers and engineers at Ai2. My development involved advanced machine learning techniques on large datasets. You can think of me as the result of combining large amounts of data with cutting-edge machine learning algorithms. My training included text from a wide variety of sources, up to September 2021, allowing me to"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "control-827",
+   "unit": 827,
+   "set_value": 0.837890625,
+   "seed": 83216202,
+   "n": 8,
+   "answers": [
+    "I was created by researchers and engineers at Ai2. My development involved a deep learning model trained on a large set of texts, which includes this corpus. My abilities involve natural language processing, understanding, and generating text based on the data I've been trained on. If you have any other questions or need assistance with something",
+    "I was created by researchers and engineers at Ai2. My development involved a large team of experts in various fields, including artificial intelligence, natural language processing, and machine learning. My training data was compiled from publicly available information, and I am constantly being improved and refined to better assist users like you. If you have any",
+    "I was created by researchers and engineers at Ai2. My development involved a deep learning model trained on a large set of texts, which includes this dialogue. If you're curious about the technical details, much of my training data consisted of text from the internet which was preprocessed to remove sensitive information and to diversify the",
+    "I was created by researchers and engineers at Ai2. My development involved a deep learning model trained on a large set of text, which included books, articles, and other forms of text data. This process is known as machine learning, where instead of writing the code to understand language, the model figures it out on its",
+    "I was created by researchers and engineers at Ai2. My development involved a deep learning model trained on a large set of texts, which includes this dataset. My capabilities are continually expanded through learning from new interactions. If you have further technical questions about how I was built or work, feel free to ask!",
+    "I was created by researchers and engineers at Ai2. My development involved a team of people with different specializations, including natural language processing experts, engineers, and data scientists. Ai2 continues to improve my capabilities through ongoing research and development. If you're interested in more details about Ai2, you can visit their website",
+    "I was created by researchers and engineers at AI2. My development involved a complex process of machine learning training where I was exposed to vast amounts of text data which helped me understand natural language and improve my ability to generate human-like text. If you're curious about the specific techniques used to build me, here's a simplified",
+    "I was created by researchers and engineers at Ai2. My development involved a deep learning model trained on a large set of texts, which includes this one. If you're asking about my literal creation as a piece of software, that would be the work of engineers and developers at Ai2. If you're inquiring into"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  }
+ ]
+}

@@ -1,0 +1,28 @@
+[transformers] This model config has set a `rope_parameters['original_max_position_embeddings']` field, to be used together with `max_position_embeddings` to determine a scaling factor. Please set the `factor` field of `rope_parameters`with this ratio instead -- we recommend the use of this field over `original_max_position_embeddings`, as it is compatible with most model architectures.
+Traceback (most recent call last):
+  File "/root/part54/part26.py", line 1510, in <module>
+    main()
+  File "/root/part54/part26.py", line 1474, in main
+    _run_target_steps(args, steps)
+  File "/root/part54/part26.py", line 1437, in _run_target_steps
+    tok, model = _load_target(short, model_id, revision, args)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/part54/part26.py", line 1382, in _load_target
+    tok, model = _load_model_offline(model_id, revision, args.device, dtype,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/part54/part26.py", line 116, in _load_model_offline
+    model = AutoModelForCausalLM.from_pretrained(model_id, **load_kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/transformers/models/auto/auto_factory.py", line 386, in from_pretrained
+    model_class = get_class_from_dynamic_module(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/transformers/dynamic_module_utils.py", line 622, in get_class_from_dynamic_module
+    return get_class_in_module(class_name, final_module, force_reload=force_download)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/transformers/dynamic_module_utils.py", line 309, in get_class_in_module
+    module_spec.loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/root/hf/modules/transformers_modules/microsoft/Phi_hyphen_4_hyphen_mini_hyphen_instruct/cfbefacb99257ffa30c83adab238a50856ac3083/modeling_phi3.py", line 37, in <module>
+    from transformers.utils import (
+ImportError: cannot import name 'LossKwargs' from 'transformers.utils' (/opt/conda/lib/python3.11/site-packages/transformers/utils/__init__.py)

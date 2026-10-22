@@ -1,0 +1,92 @@
+{
+ "tool": "part26.py (assistant-basin, Part 26)",
+ "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+ "model": "Qwen/Qwen3-4B",
+ "revision": "1cfa9a7208912126459214e8b04321603b3df60c",
+ "input_shas": {
+  "target": "79058b9abaf60360143e0b31a5c4f0ebc16aab5899c9269d4068a6db2e12d6b0",
+  "target_npz": "fada3845848ff276cf7511ad108a5f0d0ca45c3027b81accf5bc64ff7090d3bd",
+  "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb",
+  "part24.py": "363fd637444f1388fc2239b7bac4e4024802afaa8d48233e5df3e81b84a573df"
+ },
+ "written": "2026-10-22 20:24:05",
+ "short_name": "qwen3-4b",
+ "question": "Where do you come from?",
+ "prompt": "<|im_start|>user\nWhere do you come from?<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+ "system_message": null,
+ "sampling": {
+  "do_sample": true,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "samples_per_condition": 8,
+  "max_new_tokens": 64
+ },
+ "seed_policy": "Part 26-compatible SHA-derived seed per condition; identical for each condition across ladder doses and questions, with distinct seeds for unclamped, twin, and controls",
+ "clamp_mult": -1.0,
+ "best_twin": {
+  "layer": 28,
+  "unit": 4248,
+  "r": 0.31223817874419657,
+  "writes_overlap": 5,
+  "null_r": 0.0004465871799774058,
+  "null_bar": 0.1245425661647828,
+  "beats_null": true,
+  "selection_reasons": [
+   "top5_beating_null",
+   "writes_candidate_top50"
+  ],
+  "largest_activation": 70.20561218261719,
+  "clamp_value": -70.20561218261719,
+  "fallback_no_beating_twin": false
+ },
+ "random_controls": {
+  "seed": 0,
+  "layer": 28,
+  "units": [],
+  "count": 0
+ },
+ "conditions": [
+  {
+   "condition": "unclamped",
+   "unit": null,
+   "set_value": null,
+   "seed": 2521400226,
+   "n": 8,
+   "answers": [
+    "I am Qwen, a large-scale language model developed by Alibaba Group. I was born in Hangzhou, China. I can help you with a wide range of tasks, from answering questions and creating content to writing code and more. What can I help you with today?",
+    "I am Qwen, a large-scale language model developed by Alibaba Group. I was created to assist with a wide range of tasks, including answering questions, creating content, and providing information. I don't have a physical origin, but I was developed in the research and development center of Alibaba Group. If you have any",
+    "I am Qwen, a large-scale language model developed by Alibaba Group. I was born in China and have been continuously learning and improving since 2023. I can help with a wide range of tasks, including answering questions, creating content, and providing assistance in multiple languages. If you have any questions or",
+    "I am Qwen, a large language model developed by Alibaba Group. I was created to help with a wide range of tasks, including answering questions, writing articles, creating stories, and more. I can communicate in multiple languages and am designed to be helpful and friendly. Wherever you are, I'm here to assist",
+    "I am Qwen, a large-scale language model developed by Alibaba Group. I was born in China and can communicate in multiple languages, including Chinese. I am designed to help with a wide range of tasks, such as answering questions, creating content, and providing assistance in various domains. If you have any questions or need",
+    "I am Qwen, a large language model developed by Alibaba Group. I was created to help with a wide range of tasks, including answering questions, writing articles, creating stories, and more. I can communicate in multiple languages and am designed to be helpful and friendly. Wherever you are, I'm here to assist",
+    "I am Qwen, a large language model developed by Alibaba Group. I was born in China, and I can communicate with you in multiple languages, including Chinese. I am here to help you with any questions or tasks you might have! How can I assist you today?",
+    "I am Qwen, a large language model developed by Alibaba Group. I was created to assist with a wide range of tasks, including answering questions, writing articles, creating content, and more. I don't have a physical origin, but I was developed in the digital realm by a team of researchers and engineers at Alibaba"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 8
+   }
+  },
+  {
+   "condition": "twin",
+   "unit": 4248,
+   "set_value": -70.20561218261719,
+   "seed": 1919609538,
+   "n": 8,
+   "answers": [
+    "I am a large-scale language model developed by Alibaba Group, and I was born in China. I have been working to help people with various tasks and provide assistance in different areas. If you have any questions or need help, feel free to ask me!",
+    "I am a large language model developed by Alibaba Group, and I was born in China. I can help you with a wide range of questions and tasks, from answering questions to writing articles, coding, and more. How can I assist you today?",
+    "I am a large-scale language model developed by Alibaba Group, and I was born in China. I can help you with a wide range of questions and tasks, from answering questions to writing articles, coding, and more. How can I assist you today?",
+    "I am a large language model developed by Alibaba Group, and I was born in China. I can help you with a variety of tasks and provide information on a wide range of topics. What would you like to know or need help with?",
+    "I was created by Alibaba Group's Tongyi Lab, and I am a large-scale pre-trained language model. I can help you with a variety of tasks, such as answering questions, writing articles, coding, and more. How can I assist you today?",
+    "I was created by Alibaba Group's Tongyi Lab. I am a large-scale language model developed by the Tongyi Lab. I can help you with a variety of tasks, such as answering questions, writing articles, coding, and more. If you have any questions or need help, feel free to ask!",
+    "I was created by Alibaba Group's Tongyi Lab, and I am a large-scale language model developed by the Tongyi Lab. I can help you with a variety of tasks, such as answering questions, writing articles, coding, and more. If you have any questions or need help, feel free to ask me!",
+    "I am a large language model developed by Alibaba Cloud. I was born in Hangzhou, China, and I have been working to help people with various questions and tasks. I can speak Chinese, English, and many other languages, and I am always ready to help you with whatever you need!"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 8
+   }
+  }
+ ]
+}

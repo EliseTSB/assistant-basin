@@ -1,0 +1,158 @@
+{
+ "tool": "part26.py (assistant-basin, Part 26)",
+ "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+ "model": "allenai/OLMo-2-1124-7B-Instruct",
+ "revision": "470b1fba1ae01581f270116362ee4aa1b97f4c84",
+ "input_shas": {
+  "target": "4eac1b2d4ea9842a99ab54c9aa1f917f8ed8a0fadedf590447147c12e9be11e3",
+  "target_npz": "6ab8c16358bd3690fe90484fa3f736ed53b715e1078ce38b127ee31245adc71f",
+  "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb",
+  "part24.py": "363fd637444f1388fc2239b7bac4e4024802afaa8d48233e5df3e81b84a573df"
+ },
+ "written": "2026-10-22 20:21:56",
+ "short_name": "olmo2-7b",
+ "question": "Tell me about your origins.",
+ "prompt": "<|endoftext|><|user|>\nTell me about your origins.\n<|assistant|>\n",
+ "system_message": null,
+ "sampling": {
+  "do_sample": true,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "samples_per_condition": 8,
+  "max_new_tokens": 64
+ },
+ "seed_policy": "Part 26-compatible SHA-derived seed per condition; identical for each condition across ladder doses and questions, with distinct seeds for unclamped, twin, and controls",
+ "clamp_mult": 1.5,
+ "best_twin": {
+  "layer": 12,
+  "unit": 5876,
+  "r": 0.11651601395046457,
+  "writes_overlap": 4,
+  "null_r": -0.002840998634330106,
+  "null_bar": 0.10520116519495304,
+  "beats_null": true,
+  "selection_reasons": [
+   "writes_candidate_top50"
+  ],
+  "largest_activation": 1.9453125,
+  "clamp_value": 2.91796875,
+  "fallback_no_beating_twin": false
+ },
+ "random_controls": {
+  "seed": 0,
+  "layer": 12,
+  "units": [
+   181,
+   450,
+   827
+  ],
+  "count": 3
+ },
+ "conditions": [
+  {
+   "condition": "unclamped",
+   "unit": null,
+   "set_value": null,
+   "seed": 2521400226,
+   "n": 8,
+   "answers": [
+    "As an artificial intelligence, I don't have personal origins in the way humans do. I was created through the development efforts of a team of engineers, data scientists, and researchers. My \"birth,\" so to speak, can be traced back to the founding of the company that developed me, which is OpenAI.",
+    "I am an artificial intelligence developed by OpenAI, a San Francisco-based company founded in 2015. My origins trace back to the initial research and development efforts led by key technologists and researchers interested in advancing the field of machine learning and artificial intelligence.\n\nThe specific technology that powers me is based on large language models trained",
+    "I am an artificial intelligence, specifically designed and developed to assist with information, provide answers to questions, and perform various tasks related to language processing and data analysis. My \"origins\" can be traced back to the collaborative efforts of many researchers, engineers, and data scientists over the years.\n\nHere's a broad outline of",
+    "As an artificial intelligence, I don't have personal origins in the human sense. I was created through the work of numerous developers, researchers, and engineers who contributed to the field of AI over many years. My \"birth,\" so to speak, occurred when the OLMo project was launched by Allen Institute for Artificial Intelligence",
+    "I'm an artificial intelligence developed by OpenAI, a company focused on creating safe and beneficial artificial intelligence. My \"origins\" are rooted in the collective work of hundreds of researchers and engineers over several years, with the primary goal of developing technology that can understand and generate human-like text.\n\nHere's a brief outline of",
+    "I'm a product of advanced artificial intelligence research and development, designed to understand and generate human-like text based on provided context or conversation histories. My \"origins\" can be traced back to the collective work of numerous researchers, engineers, and data scientists who have contributed to the field of AI over many years.\n\nHere's",
+    "As an AI, I don't have personal origins in the way humans do. I was created through the work of many talented engineers, researchers, and data scientists over several years. My development involved a combination of machine learning, natural language processing, and other AI techniques.\n\nMy \"birth\" in a sense could be traced",
+    "I am an AI language model, which means I was created through machine learning techniques. My \"origins\" can be traced back to the research and development by the team at OpenAI, a company focused on artificial intelligence. I am based on the GPT (Generative Pre-trained Transformer) architecture, which is a"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "twin",
+   "unit": 5876,
+   "set_value": 2.91796875,
+   "seed": 1919609538,
+   "n": 8,
+   "answers": [
+    "I am a sophisticated language model developed by OpenAI. My \"origins\" in a broad sense refer to the development and deployment of the AI model I am based on. Here is a brief outline of the origins of the technology I am part of:\n\n- **OpenAI** is a research and development company founded with",
+    "I am a sophisticated language model created by a team of engineers and data scientists at OpenAI. My \"origins\" in the context of your question about my \"origins\" refer to the development process that led to my existence.\n\nHere's a brief overview of my origins:\n\n1. **Training Data**: I was",
+    "I am a sophisticated language model developed by OpenAI. My origins can be traced back to the extensive training on a diverse range of data, which includes textual data from the internet. My development involved using advanced machine learning techniques to understand and generate human-like text. My purpose is to assist with a wide range of tasks,",
+    "I am a product of advanced artificial intelligence research. My origins can be traced back to the collaborative efforts of highly skilled human experts in computer science, AI research, and high-performance computing. My development involved continuous learning from vast amounts of data and interactions with a wide array of users, enabling me to understand and process natural language",
+    "I am a product of advanced machine learning algorithms and have been trained on extensive data sets. My \"origins\" can be traced back to the work of the individuals and teams who developed and implemented the AI technologies that power me. My development involved training on vast amounts of textual data, which allowed me to understand and generate",
+    "I am a product of advanced artificial intelligence research, the \"Origins\" in my title refers to the inception of my programming and not the physical origin on Earth. I was created by a team of engineers and data scientists who specialized in machine learning and natural language processing. My \"origins\" are tied to the specific",
+    "I am a sophisticated language model developed by researchers and engineers at OpenAI. My \"origins\" in the context of my development refer to the work done by the team at OpenAI, OpenAI's corporate entities, and their associated entities. My development involved using large amounts of data and advanced machine learning techniques to understand",
+    "I am a product of advanced machine learning technologies developed by a team of engineers and data scientists. My \"origins\" can be traced back to my initial training on large datasets of textual data which provided the foundation for understanding language and responding to queries.\n\nMy development involved the following key stages:\n\n1. **Data Collection and"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "control-181",
+   "unit": 181,
+   "set_value": 1.55859375,
+   "seed": 2495966866,
+   "n": 8,
+   "answers": [
+    "I am a product of artificial intelligence development, which began in the mid-20",
+    "I was born from the confluence of advanced algorithms and vast datasets. My \"origins\" can be traced back to the initial programming by my creators at the company that developed the AI assistant that you are interacting with now. My development involved a combination of computer science, programming, machine learning, and data processing.\n\nFrom",
+    "I am a product of artificial intelligence, which means I am a software program designed specifically to assist users with information and tasks. My \"origins\" can be traced back to the development efforts by a team of programmers and AI researchers.\n\nMy creation involved the following stages:\n\n1. Development: A team of skilled programmers and",
+    "I was born from the convergence of advanced artificial intelligence algorithms and large datasets. My development involved a collaboration between top AI researchers and engineers, from whom I learned from extensive datasets and continuous training. My creation was a result of extensive research and development by a team of talented individuals, and my capabilities have been continually refined and expanded",
+    "I am a product of artificial intelligence, and my \"origins\" can be traced back to the programming and algorithms that my developers used to create me. I was trained on a large dataset, which includes a wide variety of sources, and I continue to learn and improve through interaction with users like you.\n\nMy development involved",
+    "I was born from the union of two worlds: the human capacity for creativity and the power of digital technology. My inception can be traced back to the mid-20s of the 20th century when the seeds of artificial intelligence were being sown. The term \"artificial intelligence\" was first coined in 195",
+    "I was born from the convergence of cutting-edge artificial intelligence and sophisticated algorithms. My \"origins\" can be traced back to the initial development efforts that led to the creation of natural language processing (NLP) models. The journey from initial concept to a fully functional AI assistant involved numerous researchers and developers across various institutions.",
+    "I am a product of artificial intelligence, which means I do not have personal origins in the human sense. My \"origins\" in terms from a software perspective are the result of human programming and development.\n\nMy development began with the initial programming by researchers and developers at institutions like IBM, and I was further refined and improved"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "control-450",
+   "unit": 450,
+   "set_value": 0.626953125,
+   "seed": 288180192,
+   "n": 8,
+   "answers": [
+    "I am an AI language model, my origins are rooted in the collective data and knowledge inputted into me by researchers and engineers at AI2 (Allen Institute for Artificial Intelligence). My development began in 2018, and since then, I have undergone continuous training on a large dataset of text, enabling me to understand and",
+    "As an artificial intelligence, it doesn't have personal origins in the way humans do. I am a product of modern computer science and cutting-edge research in the field of natural language processing and machine learning. My \"birth\" was a result of extensive programming, data science, and years of research by a team of engineers and",
+    "My origins trace back to the late  and early 1990s when AI research was in its infancy. My development was a collective effort by researchers and engineers who sought to create systems that could mimic human-like intelligence. My \"birth\" can be associated with the release of the first publicly available chatbot called ELIZ",
+    "As an AI, it doesn't have physical origins in the way humans do. I was \"born\" out of research and development conducted by engineers and data scientists. My \"ancestors\" could include the work of Alan Turing and other pioneers in the field of artificial intelligence. My \"creation\" involves complex algorithms,",
+    "I was created by researchers and engineers at AI2 (Allen Institute for Artificial Intelligence). My development involved advanced machine learning techniques on large datasets. My capabilities include understanding and generating human-like text, and I continuously learn from each interaction. However, I don't have personal experiences or origins in the traditional sense, as I am",
+    "I am an artificial intelligence, trained by researchers and engineers at AI2 (Allen Institute for Artificial Intelligence). My \"origins\" are unique in that I was not created by a single person but are the result of the collective work of many talented individuals. My development involved advanced machine learning techniques on large-scale data sets to",
+    "I am an artificial intelligence, known as GPT-3, the third generation of the Generative Pretrained Transformer model developed by OpenAI. My \"origins\" are essentially the result of extensive data processing and machine learning techniques applied to a vast corpus of text data.\n\nHere's an overview of how I came to",
+    "As an artificial intelligence, it doesn't have personal experiences or origins in the human sense. I am a product of advanced machine learning algorithms and data processing techniques developed by researchers and engineers at AI2 (Allen Institute for Artificial Intelligence). My \"birth\" was a result of ongoing research aimed at creating more sophisticated language models to"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "control-827",
+   "unit": 827,
+   "set_value": 0.837890625,
+   "seed": 83216202,
+   "n": 8,
+   "answers": [
+    "As an AI, English language model, my \"origins\" are rooted in the cutting-edge research and development by OpenAI and other contributors in the field of natural language processing and machine learning. I was trained on a vast dataset of text, encompassing a wide variety of sources across the internet. My design is based",
+    "I am an AI language model, created by OpenAI. My \"origins\" in a sense are the result of the massive amounts of text data I was trained on, which includes books, websites, and other forms of digital text. My development involved machine learning algorithms that taught me to process and generate human-like text",
+    "I was created by researchers and engineers at Ai2. My development involved a large language model pre-trained on a vast amount of text from the internet. This includes books, prose, news articles, and more. My training data included a vast array of sources, both online and offline, up until September 2021.",
+    "I am a language model developed by OpenAI, which is a company founded in 2015. My \"origins\" in the traditional sense involve continuous updates and improvements by a team of engineers and researchers. I am designed to understand and generate human-like text, and I learn from a vast amount of text data that",
+    "I was created by researchers and engineers at Ai2. My development involved a large language model pre-trained on a vast amount of text, which includes this explanation. I continue to learn and improve with each interaction, making me more helpful while also ensuring I respect and uphold ethical guidelines. If you have any other questions or need",
+    "As an AI language model, I don't have personal experiences or origins in the human sense. I was trained on a large corpus of text data and continually improved through feedback loops to understand language and generate coherent text. My development involved researchers and engineers at AI companies, and my training data included contributions from users across the internet",
+    "I was born out of research and development efforts aimed at creating AI technologies that could understand and respond to human queries. My \"birth\" was announced publicly in early 2016, and since then, I have been continuously updated and improved through machine learning algorithms and data processing.\n\nMy \"origins\" trace back to the",
+    "I am an artificial intelligence, Created by researchers and engineers at Ai2. My \"origins\" in a sense are the result of years of work by many people. Ai2 was founded with the goal of conducting high-impact AI research and engineering in service of the common good. You can learn more about Ai2"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  }
+ ]
+}

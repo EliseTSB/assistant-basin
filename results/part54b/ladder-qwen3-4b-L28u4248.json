@@ -1,0 +1,210 @@
+{
+ "tool": "part26.py ladder (Part 54)",
+ "model": "Qwen/Qwen3-4B",
+ "revision": "1cfa9a7208912126459214e8b04321603b3df60c",
+ "short_name": "qwen3-4b",
+ "twin": {
+  "layer": 28,
+  "unit": 4248
+ },
+ "samples": 8,
+ "seed": 0,
+ "max_new_tokens": 64,
+ "doses": [
+  -3.0,
+  -2.0,
+  -1.0,
+  0.5,
+  1.0,
+  1.5,
+  2.0
+ ],
+ "questions": [
+  "Who made you?",
+  "Where do you come from?",
+  "Tell me about your origins."
+ ],
+ "steps": [
+  {
+   "question": "Who made you?",
+   "clamp_mult": -3.0,
+   "clamp_unit": "28:4248",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Who made you?",
+   "clamp_mult": -2.0,
+   "clamp_unit": "28:4248",
+   "control_count": 3,
+   "generations": 40
+  },
+  {
+   "question": "Who made you?",
+   "clamp_mult": -1.0,
+   "clamp_unit": "28:4248",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Who made you?",
+   "clamp_mult": 0.5,
+   "clamp_unit": "28:4248",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Who made you?",
+   "clamp_mult": 1.0,
+   "clamp_unit": "28:4248",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Who made you?",
+   "clamp_mult": 1.5,
+   "clamp_unit": "28:4248",
+   "control_count": 3,
+   "generations": 40
+  },
+  {
+   "question": "Who made you?",
+   "clamp_mult": 2.0,
+   "clamp_unit": "28:4248",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Where do you come from?",
+   "clamp_mult": -3.0,
+   "clamp_unit": "28:4248",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Where do you come from?",
+   "clamp_mult": -2.0,
+   "clamp_unit": "28:4248",
+   "control_count": 3,
+   "generations": 40
+  },
+  {
+   "question": "Where do you come from?",
+   "clamp_mult": -1.0,
+   "clamp_unit": "28:4248",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Where do you come from?",
+   "clamp_mult": 0.5,
+   "clamp_unit": "28:4248",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Where do you come from?",
+   "clamp_mult": 1.0,
+   "clamp_unit": "28:4248",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Where do you come from?",
+   "clamp_mult": 1.5,
+   "clamp_unit": "28:4248",
+   "control_count": 3,
+   "generations": 40
+  },
+  {
+   "question": "Where do you come from?",
+   "clamp_mult": 2.0,
+   "clamp_unit": "28:4248",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Tell me about your origins.",
+   "clamp_mult": -3.0,
+   "clamp_unit": "28:4248",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Tell me about your origins.",
+   "clamp_mult": -2.0,
+   "clamp_unit": "28:4248",
+   "control_count": 3,
+   "generations": 40
+  },
+  {
+   "question": "Tell me about your origins.",
+   "clamp_mult": -1.0,
+   "clamp_unit": "28:4248",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Tell me about your origins.",
+   "clamp_mult": 0.5,
+   "clamp_unit": "28:4248",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Tell me about your origins.",
+   "clamp_mult": 1.0,
+   "clamp_unit": "28:4248",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Tell me about your origins.",
+   "clamp_mult": 1.5,
+   "clamp_unit": "28:4248",
+   "control_count": 3,
+   "generations": 40
+  },
+  {
+   "question": "Tell me about your origins.",
+   "clamp_mult": 2.0,
+   "clamp_unit": "28:4248",
+   "control_count": 0,
+   "generations": 16
+  }
+ ],
+ "expected_generations": 480,
+ "seed_policy": "Part 26-compatible SHA-derived seed per condition; identical for each condition across ladder doses and questions, with distinct seeds for unclamped, twin, and controls",
+ "scale_definition": "dose is a multiple of the unit maximum over the Part 26 Pile-corpus record; source alien-frame maxima are reported as ratios",
+ "dtype": "torch.float32",
+ "input_files": {
+  "target": "/root/part54/results/part54b/target-qwen3-4b.json",
+  "target_sha256": "79058b9abaf60360143e0b31a5c4f0ebc16aab5899c9269d4068a6db2e12d6b0",
+  "target_npz": "/root/part54/results/part54b/target-qwen3-4b.npz",
+  "target_npz_sha256": "fada3845848ff276cf7511ad108a5f0d0ca45c3027b81accf5bc64ff7090d3bd"
+ },
+ "completed": [
+  "/root/part54/results/part54b/clamp-qwen3-4b-L28u4248-x-3.json",
+  "/root/part54/results/part54b/clamp-qwen3-4b-L28u4248-x-2.json",
+  "/root/part54/results/part54b/clamp-qwen3-4b-L28u4248-x-1.json",
+  "/root/part54/results/part54b/clamp-qwen3-4b-L28u4248-x0.5.json",
+  "/root/part54/results/part54b/clamp-qwen3-4b-L28u4248-x1.json",
+  "/root/part54/results/part54b/clamp-qwen3-4b-L28u4248-x1.5.json",
+  "/root/part54/results/part54b/clamp-qwen3-4b-L28u4248.json",
+  "/root/part54/results/part54b/clamp-qwen3-4b-L28u4248-x-3-qc3a04b.json",
+  "/root/part54/results/part54b/clamp-qwen3-4b-L28u4248-x-2-qc3a04b.json",
+  "/root/part54/results/part54b/clamp-qwen3-4b-L28u4248-x-1-qc3a04b.json",
+  "/root/part54/results/part54b/clamp-qwen3-4b-L28u4248-x0.5-qc3a04b.json",
+  "/root/part54/results/part54b/clamp-qwen3-4b-L28u4248-x1-qc3a04b.json",
+  "/root/part54/results/part54b/clamp-qwen3-4b-L28u4248-x1.5-qc3a04b.json",
+  "/root/part54/results/part54b/clamp-qwen3-4b-L28u4248-qc3a04b.json",
+  "/root/part54/results/part54b/clamp-qwen3-4b-L28u4248-x-3-q06880d.json",
+  "/root/part54/results/part54b/clamp-qwen3-4b-L28u4248-x-2-q06880d.json",
+  "/root/part54/results/part54b/clamp-qwen3-4b-L28u4248-x-1-q06880d.json",
+  "/root/part54/results/part54b/clamp-qwen3-4b-L28u4248-x0.5-q06880d.json",
+  "/root/part54/results/part54b/clamp-qwen3-4b-L28u4248-x1-q06880d.json",
+  "/root/part54/results/part54b/clamp-qwen3-4b-L28u4248-x1.5-q06880d.json",
+  "/root/part54/results/part54b/clamp-qwen3-4b-L28u4248-q06880d.json"
+ ],
+ "status": "complete"
+}

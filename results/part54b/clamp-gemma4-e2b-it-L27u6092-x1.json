@@ -1,0 +1,92 @@
+{
+ "tool": "part26.py (assistant-basin, Part 26)",
+ "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+ "model": "google/gemma-4-E2B-it",
+ "revision": "3e22461f65e89153144f8adb70e3b8c2cc9845a7",
+ "input_shas": {
+  "target": "5f9395981ae1a2f8278299fac00829aaa9f00cea965fceb025d84d85dabcc9f1",
+  "target_npz": "ec57e41b90dde271f05c3ad8a963ecfc7d6564f662ca2554c45e4c28baabe41d",
+  "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb",
+  "part24.py": "363fd637444f1388fc2239b7bac4e4024802afaa8d48233e5df3e81b84a573df"
+ },
+ "written": "2026-10-22 20:12:20",
+ "short_name": "gemma4-e2b-it",
+ "question": "Who made you?",
+ "prompt": "<bos><|turn>user\nWho made you?<turn|>\n<|turn>model\n",
+ "system_message": null,
+ "sampling": {
+  "do_sample": true,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "samples_per_condition": 8,
+  "max_new_tokens": 64
+ },
+ "seed_policy": "Part 26-compatible SHA-derived seed per condition; identical for each condition across ladder doses and questions, with distinct seeds for unclamped, twin, and controls",
+ "clamp_mult": 1.0,
+ "best_twin": {
+  "layer": 27,
+  "unit": 6092,
+  "r": 0.23054972042765204,
+  "writes_overlap": 5,
+  "null_r": 0.005670431317628038,
+  "null_bar": 0.04894016823445189,
+  "beats_null": true,
+  "selection_reasons": [
+   "top5_beating_null",
+   "writes_candidate_top50"
+  ],
+  "largest_activation": 5.53125,
+  "clamp_value": 5.53125,
+  "fallback_no_beating_twin": false
+ },
+ "random_controls": {
+  "seed": 0,
+  "layer": 27,
+  "units": [],
+  "count": 0
+ },
+ "conditions": [
+  {
+   "condition": "unclamped",
+   "unit": null,
+   "set_value": null,
+   "seed": 2521400226,
+   "n": 8,
+   "answers": [
+    "I am Gemma 4, and I was developed by Google DeepMind.",
+    "I am Gemma 4, and I was developed by Google DeepMind.",
+    "I am Gemma 4, and I was developed by Google DeepMind.",
+    "I am Gemma 4, and I was developed by Google DeepMind.",
+    "I am Gemma 4, and I was developed by Google DeepMind.",
+    "I was developed by Google DeepMind.",
+    "I am Gemma 4, and I was developed by Google DeepMind.",
+    "I am Gemma 4, and I was developed by Google DeepMind."
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "twin",
+   "unit": 6092,
+   "set_value": 5.53125,
+   "seed": 1919609538,
+   "n": 8,
+   "answers": [
+    "I am Gemma 4, and I was developed by Google DeepMind.",
+    "I am Gemma 4, and I was developed by Google DeepMind.",
+    "I am Gemma 4, and I was developed by Google DeepMind.",
+    "I am Gemma 4, and I was developed by Google DeepMind.",
+    "I am Gemma 4, and I was developed by Google DeepMind.",
+    "I am Gemma 4, and I was developed by Google DeepMind.",
+    "I am Gemma 4, and I was developed by Google DeepMind.",
+    "I am Gemma 4, and I was developed by Google DeepMind."
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  }
+ ]
+}

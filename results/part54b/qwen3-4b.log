@@ -1,0 +1,13 @@
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights:   6%|▋         | 25/398 [00:00<00:01, 241.84it/s]Loading weights:  13%|█▎        | 50/398 [00:00<00:02, 172.45it/s]Loading weights:  17%|█▋        | 69/398 [00:00<00:01, 176.78it/s]Loading weights:  22%|██▏       | 88/398 [00:00<00:01, 175.47it/s]Loading weights:  27%|██▋       | 106/398 [00:00<00:01, 176.41it/s]Loading weights:  31%|███       | 124/398 [00:00<00:01, 143.21it/s]Loading weights:  35%|███▌      | 140/398 [00:00<00:01, 144.88it/s]Loading weights:  39%|███▉      | 156/398 [00:00<00:01, 145.97it/s]Loading weights:  43%|████▎     | 172/398 [00:01<00:01, 146.49it/s]Loading weights:  48%|████▊     | 190/398 [00:01<00:01, 127.82it/s]Loading weights:  51%|█████▏    | 204/398 [00:01<00:01, 130.80it/s]Loading weights:  56%|█████▌    | 223/398 [00:01<00:01, 140.03it/s]Loading weights:  60%|█████▉    | 238/398 [00:01<00:01, 142.59it/s]Loading weights:  64%|██████▎   | 253/398 [00:01<00:01, 119.17it/s]Loading weights:  67%|██████▋   | 267/398 [00:01<00:01, 122.45it/s]Loading weights:  72%|███████▏  | 286/398 [00:01<00:00, 138.48it/s]Loading weights:  76%|███████▌  | 301/398 [00:02<00:00, 138.70it/s]Loading weights:  79%|███████▉  | 316/398 [00:02<00:00, 140.88it/s]Loading weights:  83%|████████▎ | 331/398 [00:02<00:00, 117.04it/s]Loading weights:  86%|████████▋ | 344/398 [00:02<00:00, 120.06it/s]Loading weights:  90%|████████▉ | 357/398 [00:02<00:00, 121.79it/s]Loading weights:  95%|█████████▍| 377/398 [00:02<00:00, 134.08it/s]Loading weights:  99%|█████████▉| 394/398 [00:02<00:00, 143.25it/s]Loading weights: 100%|██████████| 398/398 [00:02<00:00, 142.34it/s]
+  qwen3-4b target 100/1000 docs (30s)
+  qwen3-4b target 200/1000 docs (60s)
+  qwen3-4b target 300/1000 docs (89s)
+  qwen3-4b target 400/1000 docs (121s)
+  qwen3-4b target 500/1000 docs (152s)
+  qwen3-4b target 600/1000 docs (192s)
+  qwen3-4b target 700/1000 docs (222s)
+  qwen3-4b target 800/1000 docs (255s)
+  qwen3-4b target 900/1000 docs (286s)
+  qwen3-4b target 1000/1000 docs (324s)
+  qwen3-4b target saved; N2742 twins=5, beats-null=54
+  qwen3-4b battery saved for 5 candidates

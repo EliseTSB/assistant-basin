@@ -1,0 +1,13 @@
+Loading weights:   0%|          | 0/2076 [00:00<?, ?it/s]Loading weights:  19%|█▉        | 392/2076 [00:00<00:00, 3863.89it/s]Loading weights:  38%|███▊      | 779/2076 [00:00<00:00, 2558.41it/s]Loading weights:  51%|█████     | 1060/2076 [00:00<00:00, 1996.34it/s]Loading weights:  62%|██████▏   | 1280/2076 [00:00<00:00, 1719.61it/s]Loading weights:  72%|███████▏  | 1487/2076 [00:00<00:00, 1806.21it/s]Loading weights:  83%|████████▎ | 1725/2076 [00:00<00:00, 1955.37it/s]Loading weights:  99%|█████████▉| 2054/2076 [00:00<00:00, 2318.84it/s]Loading weights: 100%|██████████| 2076/2076 [00:00<00:00, 2174.81it/s]
+  gemma4-e4b-it target 100/1000 docs (16s)
+  gemma4-e4b-it target 200/1000 docs (33s)
+  gemma4-e4b-it target 300/1000 docs (49s)
+  gemma4-e4b-it target 400/1000 docs (66s)
+  gemma4-e4b-it target 500/1000 docs (82s)
+  gemma4-e4b-it target 600/1000 docs (101s)
+  gemma4-e4b-it target 700/1000 docs (117s)
+  gemma4-e4b-it target 800/1000 docs (135s)
+  gemma4-e4b-it target 900/1000 docs (151s)
+  gemma4-e4b-it target 1000/1000 docs (170s)
+  gemma4-e4b-it target saved; N2742 twins=8, beats-null=68
+  gemma4-e4b-it battery saved for 8 candidates

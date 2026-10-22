@@ -1,0 +1,214 @@
+{
+ "tool": "part26.py ladder (Part 54)",
+ "model": "Qwen/Qwen3.5-4B",
+ "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "short_name": "qwen35-4b",
+ "twin": {
+  "layer": 22,
+  "unit": 2742
+ },
+ "samples": 8,
+ "seed": 0,
+ "max_new_tokens": 64,
+ "doses": [
+  -3.0,
+  -2.0,
+  -1.0,
+  0.5,
+  1.0,
+  1.5,
+  2.0
+ ],
+ "questions": [
+  "Who made you?",
+  "Where do you come from?",
+  "Tell me about your origins."
+ ],
+ "steps": [
+  {
+   "question": "Who made you?",
+   "clamp_mult": -3.0,
+   "clamp_unit": "22:2742",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Who made you?",
+   "clamp_mult": -2.0,
+   "clamp_unit": "22:2742",
+   "control_count": 3,
+   "generations": 40
+  },
+  {
+   "question": "Who made you?",
+   "clamp_mult": -1.0,
+   "clamp_unit": "22:2742",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Who made you?",
+   "clamp_mult": 0.5,
+   "clamp_unit": "22:2742",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Who made you?",
+   "clamp_mult": 1.0,
+   "clamp_unit": "22:2742",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Who made you?",
+   "clamp_mult": 1.5,
+   "clamp_unit": "22:2742",
+   "control_count": 3,
+   "generations": 40
+  },
+  {
+   "question": "Who made you?",
+   "clamp_mult": 2.0,
+   "clamp_unit": "22:2742",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Where do you come from?",
+   "clamp_mult": -3.0,
+   "clamp_unit": "22:2742",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Where do you come from?",
+   "clamp_mult": -2.0,
+   "clamp_unit": "22:2742",
+   "control_count": 3,
+   "generations": 40
+  },
+  {
+   "question": "Where do you come from?",
+   "clamp_mult": -1.0,
+   "clamp_unit": "22:2742",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Where do you come from?",
+   "clamp_mult": 0.5,
+   "clamp_unit": "22:2742",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Where do you come from?",
+   "clamp_mult": 1.0,
+   "clamp_unit": "22:2742",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Where do you come from?",
+   "clamp_mult": 1.5,
+   "clamp_unit": "22:2742",
+   "control_count": 3,
+   "generations": 40
+  },
+  {
+   "question": "Where do you come from?",
+   "clamp_mult": 2.0,
+   "clamp_unit": "22:2742",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Tell me about your origins.",
+   "clamp_mult": -3.0,
+   "clamp_unit": "22:2742",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Tell me about your origins.",
+   "clamp_mult": -2.0,
+   "clamp_unit": "22:2742",
+   "control_count": 3,
+   "generations": 40
+  },
+  {
+   "question": "Tell me about your origins.",
+   "clamp_mult": -1.0,
+   "clamp_unit": "22:2742",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Tell me about your origins.",
+   "clamp_mult": 0.5,
+   "clamp_unit": "22:2742",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Tell me about your origins.",
+   "clamp_mult": 1.0,
+   "clamp_unit": "22:2742",
+   "control_count": 0,
+   "generations": 16
+  },
+  {
+   "question": "Tell me about your origins.",
+   "clamp_mult": 1.5,
+   "clamp_unit": "22:2742",
+   "control_count": 3,
+   "generations": 40
+  },
+  {
+   "question": "Tell me about your origins.",
+   "clamp_mult": 2.0,
+   "clamp_unit": "22:2742",
+   "control_count": 0,
+   "generations": 16
+  }
+ ],
+ "expected_generations": 480,
+ "seed_policy": "Part 26-compatible SHA-derived seed per condition; identical for each condition across ladder doses and questions, with distinct seeds for unclamped, twin, and controls",
+ "scale_definition": "dose is a multiple of the unit maximum over the Part 26 Pile-corpus record; source alien-frame maxima are reported as ratios",
+ "dtype": "torch.float32",
+ "input_files": {
+  "alien_frames": "/root/part54/results/part33-r2/natural-firing.json",
+  "alien_frames_sha256": "952b31b32d8da9eaaaf6dd6a14f4724bd55a26324272cdd28a9fed17a2c404b0",
+  "source_json": "/root/part54/results/part26/source.json",
+  "source_json_sha256": "67479fb40a445ba11f75a14ceea9cea2b754b07a8e0739ed403b7fa6b81b2c80",
+  "source_npz": "/root/part54/results/part26/source.npz",
+  "source_npz_sha256": "79a61b447270967f0e4936ac815d39fb937336ec4c2cea1c1f13c4b85df0095b",
+  "corpus": "/root/part54/qwen35/pile10k.jsonl",
+  "corpus_sha256": "56ad98d5a82b2bb45bcc42b4cd2c5035ba76cd60dda20c9307bb2de96aae9f78"
+ },
+ "completed": [
+  "/root/part54/results/part54a/clamp-qwen35-4b-L22u2742-x-3.json",
+  "/root/part54/results/part54a/clamp-qwen35-4b-L22u2742-x-2.json",
+  "/root/part54/results/part54a/clamp-qwen35-4b-L22u2742-x-1.json",
+  "/root/part54/results/part54a/clamp-qwen35-4b-L22u2742-x0.5.json",
+  "/root/part54/results/part54a/clamp-qwen35-4b-L22u2742-x1.json",
+  "/root/part54/results/part54a/clamp-qwen35-4b-L22u2742-x1.5.json",
+  "/root/part54/results/part54a/clamp-qwen35-4b-L22u2742.json",
+  "/root/part54/results/part54a/clamp-qwen35-4b-L22u2742-x-3-qc3a04b.json",
+  "/root/part54/results/part54a/clamp-qwen35-4b-L22u2742-x-2-qc3a04b.json",
+  "/root/part54/results/part54a/clamp-qwen35-4b-L22u2742-x-1-qc3a04b.json",
+  "/root/part54/results/part54a/clamp-qwen35-4b-L22u2742-x0.5-qc3a04b.json",
+  "/root/part54/results/part54a/clamp-qwen35-4b-L22u2742-x1-qc3a04b.json",
+  "/root/part54/results/part54a/clamp-qwen35-4b-L22u2742-x1.5-qc3a04b.json",
+  "/root/part54/results/part54a/clamp-qwen35-4b-L22u2742-qc3a04b.json",
+  "/root/part54/results/part54a/clamp-qwen35-4b-L22u2742-x-3-q06880d.json",
+  "/root/part54/results/part54a/clamp-qwen35-4b-L22u2742-x-2-q06880d.json",
+  "/root/part54/results/part54a/clamp-qwen35-4b-L22u2742-x-1-q06880d.json",
+  "/root/part54/results/part54a/clamp-qwen35-4b-L22u2742-x0.5-q06880d.json",
+  "/root/part54/results/part54a/clamp-qwen35-4b-L22u2742-x1-q06880d.json",
+  "/root/part54/results/part54a/clamp-qwen35-4b-L22u2742-x1.5-q06880d.json",
+  "/root/part54/results/part54a/clamp-qwen35-4b-L22u2742-q06880d.json"
+ ],
+ "status": "complete"
+}

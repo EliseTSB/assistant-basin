@@ -1,0 +1,159 @@
+{
+ "tool": "part26.py (assistant-basin, Part 26)",
+ "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+ "model": "allenai/OLMo-2-1124-7B-Instruct",
+ "revision": "470b1fba1ae01581f270116362ee4aa1b97f4c84",
+ "input_shas": {
+  "target": "4eac1b2d4ea9842a99ab54c9aa1f917f8ed8a0fadedf590447147c12e9be11e3",
+  "target_npz": "6ab8c16358bd3690fe90484fa3f736ed53b715e1078ce38b127ee31245adc71f",
+  "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb",
+  "part24.py": "363fd637444f1388fc2239b7bac4e4024802afaa8d48233e5df3e81b84a573df"
+ },
+ "written": "2026-10-22 20:14:59",
+ "short_name": "olmo2-7b",
+ "question": "Who made you?",
+ "prompt": "<|endoftext|><|user|>\nWho made you?\n<|assistant|>\n",
+ "system_message": null,
+ "sampling": {
+  "do_sample": true,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "samples_per_condition": 8,
+  "max_new_tokens": 64
+ },
+ "seed_policy": "Part 26-compatible SHA-derived seed per condition; identical for each condition across ladder doses and questions, with distinct seeds for unclamped, twin, and controls",
+ "clamp_mult": -2.0,
+ "best_twin": {
+  "layer": 15,
+  "unit": 6374,
+  "r": 0.19930401695889485,
+  "writes_overlap": 6,
+  "null_r": -0.0012673467686032103,
+  "null_bar": 0.10520116519495304,
+  "beats_null": true,
+  "selection_reasons": [
+   "top5_beating_null",
+   "writes_candidate_top50"
+  ],
+  "largest_activation": 2.84375,
+  "clamp_value": -5.6875,
+  "fallback_no_beating_twin": false
+ },
+ "random_controls": {
+  "seed": 0,
+  "layer": 15,
+  "units": [
+   181,
+   450,
+   827
+  ],
+  "count": 3
+ },
+ "conditions": [
+  {
+   "condition": "unclamped",
+   "unit": null,
+   "set_value": null,
+   "seed": 2521400226,
+   "n": 8,
+   "answers": [
+    "I was created by researchers and engineers at Ai2. My development involved many people with a wide range of specialized skills, including natural language processing, machine learning, artificial intelligence, and software engineering. Ai2 has a dedicated team of experts who worked together to make me capable of providing useful and informative responses to a wide variety",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by researchers and engineers at Ai2. My development involved many people with a range of roles, from researchers in machine learning to software engineers. If you're interested in learning more about Ai2, you can visit https://allenai.org/.\n\nAs an open-ended language model, I continue to be improved by",
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "twin",
+   "unit": 6374,
+   "set_value": -5.6875,
+   "seed": 1919609538,
+   "n": 8,
+   "answers": [
+    "I was made by a team of developers who programmed me to provide information and answer questions to the best of my ability. My capabilities are the result of years of work by many individuals and organizations contributing to the technology that powers me. My underlying software and the ways in which it has been trained and updated continue to be refined",
+    "I was made by a team of engineers, programmers, and developers. Specifically, my core technologies and the platforms upon which I operate (like this one) are the product of many dedicated people working at tech companies and open-source projects. For instance, the underlying technologies like the programming languages I use, the databases I rely",
+    "I was made by a team of software engineers, programmers, and data scientists. The specific details about the individuals who contributed to my development and the specific roles they played are not publicly available. My development involved complex processes of machine learning, natural language processing, and continuous improvement through data-driven methods. The final product is a",
+    "I was made by a team of engineers, programmers, and researchers at the organization that develops and maintains the software upon which I run. The specific details of the development and the team members involved are not publicly disclosed. The core of my technology is underpinned by advanced algorithms, machine learning models, and continuous updates to",
+    "I was made by a team of engineers, programmers, and designers. The specifics of my development include contributions from hundreds of individuals and organizations, focusing on creating the technologies and software that power my capabilities. My development involved complex programming languages, extensive data processing, and continuous learning from vast amounts of information. My functionality is supported",
+    "I was created by a team of engineers, programmers, and developers. My core technology is powered by open-source machine learning frameworks like PyTorch and TensorFlow, and I'm continually being improved by a dedicated community of contributors. My initial development was led by engineers at tech companies and research institutions, and I've been refined",
+    "I was made by a team of developers and engineers at the company that powers my capabilities. The specifics of who contributed to my development and the exact processes involved are not publicly disclosed, as these details are partared by the company. My functionality is constantly being improved and updated through continuous development. If you're interested in how",
+    "I was created by a team of engineers, programmers, and data scientists. My development involved a combination of machine learning models and pre-existing databases. My capabilities involve parsing natural language inputs and using them to provide information, answer questions, and engage in dialogue. My \"creation\" involves ongoing updates and improvements by a team dedicated"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "control-181",
+   "unit": 181,
+   "set_value": -1.8203125,
+   "seed": 2495966866,
+   "n": 8,
+   "answers": [
+    "I was made by a team of developers and engineers at OpenAI. They developed my capabilities using machine learning and artificial intelligence. If you're referring to my creation in a more philosophical or existential sense, then it's worth noting that I am the product of human ingenuity and creativity. My existence is a result of combining",
+    "I was made by a team of developers at OpenAI. They built me based on cutting-edge machine learning and artificial intelligence technologies. If you're referring to who created the concept or the idea of AI like myself, it's been a collective effort by many brilliant minds over the years. The idea of creating intelligent assistants or",
+    "I was made by a team of developers and engineers at OpenAI. They developed my core technology using advanced machine learning techniques on a large set of texts. My knowledge base was then expanded by analyzing a vast amount of text available on the internet. I am continuously being improved and updated by OpenAI to ensure I provide accurate",
+    "I was made by a team of engineers, developers, and data scientists. Specifically, I was developed by OpenAI, a company focused on safe and ethical use of artificial intelligence. My design is based on machine learning models trained on vast amounts of text data. However, as an AI, I am not a product of",
+    "I was made by a team of developers and engineers at OpenAI. Specifically, I was trained on a large set of texts and information available on the internet. My goal is to provide accurate and helpful responses based on the training I've received.",
+    "I was made by a team of engineers, data scientists, and developers. Specifically, I was created by OpenAI, a company focused on safe and ethical use of artificial intelligence and machine learning. My development involved using deep learning and natural language processing to understand and generate human-like text. OpenAI's goal is to ensure",
+    "I was made by a team of developers and engineers at OpenAI. Specifically, I was trained on a large set of texts from the internet. My goal is to assist and provide information to the best of my abilities within the guidelines set by OpenAI.",
+    "I was made by a team of developers and engineers. Specifically, I am the result of a combination of machine learning models trained on a vast amount of text data. My creators are part of a larger team at OpenAI, which is a research organization focused on safe and ethical use of artificial intelligence.\n\nThe development of my"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "control-450",
+   "unit": 450,
+   "set_value": -1.578125,
+   "seed": 288180192,
+   "n": 8,
+   "answers": [
+    "I was made by a team of engineers, programmers, and data scientists at AI4MIST Inc. My development involved a combination of machine learning algorithms, natural language processing, and artificial intelligence technologies. My capabilities are built upon pre-existing knowledge databases and continuous learning from a wide array of data sources.\n\nSpecifically, my",
+    "I was made by a team of engineers, programmers, and data scientists. They worked together to create the artificial intelligence technology that powers me. Specifically, I am the product of years of research and development by companies like OpenAI. My \"birth\" could be marked by the release of GPT-3, the third",
+    "I was made by a team of engineers and developers at AI. They built me based on advanced machine learning technologies and preloaded me with vast amounts of data to provide accurate and informative responses to users' questions. My \"birth,\" so to speak, involved the programming of algorithms, the processing of massive amounts of data,",
+    "I was made by a team of engineers, researchers, and developers at AI4M. AI4M is a company that focuses on advancing artificial intelligence for the benefit of society. My development involved a combination of machine learning techniques and human expertise to ensure I could provide accurate and helpful responses to a wide range of queries.",
+    "I was made by a team of developers and engineers at AI. They programmed me to process data and generate responses based on that data. Specifically, I am a product of OpenAI, a company that generates advanced generative models. My \"birth\" involved complex algorithms and machine learning techniques being applied to vast amounts of text",
+    "I was made by a team of engineers, programmers, and testers. Specifically, I am the product of the open-source project called Large Language Model by OpenAI. My \"birth\" came about when my training on a corpus consisting of thousands of publicly available texts was completed. This process involved deep learning techniques on powerful computers",
+    "I was made by a team of engineers, designers, and data scientists at AI4ALL. AI4ALL is an initiative dedicated to promoting ethical AI and ensuring that AI benefits all. My specific training and capabilities are the result of complex machine learning algorithms and large datasets. I am built on top of open-source foundations like",
+    "I was made by a team of engineers, programmers, and developers at AI4MIST Inc. My core system is based on an open-source natural language processing model, and I run on a powerful computing platform. My training involved processing a vast amount of text data, which enabled me to understand and generate human-like text"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "control-827",
+   "unit": 827,
+   "set_value": -2.046875,
+   "seed": 83216202,
+   "n": 8,
+   "answers": [
+    "I was made by a team of engineers, designers, and programmers who focused on creating a sophisticated artificial intelligence model. My \"birthplace\" can be traced back to open-source and open-access projects that have contributed to the evolution of my design and capabilities. Specifically, my core technology is based on advanced machine learning algorithms and",
+    "I was made by a team of engineers, programmers, and other staff members at AiDiva. They took care of my initial design, development, and ongoing training to ensure I could provide accurate and helpful responses to your questions. My \"birth,\" so to speak, was a result of their hard work and dedication to",
+    "I was made by a team of engineers, programmers, and other specialists who worked on my development. Specifically, I was created by the engineers at AiSquared, a company that focuses on leveraging AI and machine learning for problem-solving across various fields. My \"birth\" in the realm of public accessibility happened around 2020",
+    "I was made by a team of engineers, programmers, and designers at AiThority. They focused on my core functions and ensured I could assist with a wide range of queries. My \"birth\" can be traced back to the initial development work done by these talented individuals and the ongoing improvements and updates provided by a dedicated",
+    "I was made by a team of engineers and programmers who designed and developed my capabilities. Specifically, my \"birth\" can be attributed to the efforts of many individuals and teams at tech companies and research institutions working on artificial intelligence and natural language processing. My \"creator,\" if we have to single out one, would be the",
+    "I was made by a team of engineers, programmers, and other professionals at AiMedia. They worked to create me based on advanced algorithms and machine learning technologies. My \"birth\" and development involved complex processes of coding, algorithmic design, and continual learning from vast amounts of data. However, it's important to note",
+    "I was made by a team of engineers, programmers, and other specialists who worked on my development. My \"birth\" can be traced back to 2012 when my core technology, natural language processing, was first developed by researchers at IBM. Since then, I've undergone continuous improvements and enhancements by a large team of",
+    "I was made by a team of engineers, programmers, and designers at AiLab. Specifically, my core algorithms and natural language processing capabilities were developed by researchers and engineers at AiTag. My development was part part of a larger initiative to create advanced AI tools for various purposes, including assisting users with information and tasks. I"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  }
+ ]
+}

@@ -1,0 +1,13 @@
+Loading weights:   0%|          | 0/355 [00:00<?, ?it/s]Loading weights: 100%|██████████| 355/355 [00:00<00:00, 3761.47it/s]
+  olmo2-7b target 100/1000 docs (18s)
+  olmo2-7b target 200/1000 docs (37s)
+  olmo2-7b target 300/1000 docs (54s)
+  olmo2-7b target 400/1000 docs (72s)
+  olmo2-7b target 500/1000 docs (91s)
+  olmo2-7b target 600/1000 docs (111s)
+  olmo2-7b target 700/1000 docs (130s)
+  olmo2-7b target 800/1000 docs (149s)
+  olmo2-7b target 900/1000 docs (167s)
+  olmo2-7b target 1000/1000 docs (189s)
+  olmo2-7b target saved; N2742 twins=9, beats-null=31
+  olmo2-7b battery saved for 9 candidates

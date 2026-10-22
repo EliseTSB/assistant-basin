@@ -1,0 +1,159 @@
+{
+ "tool": "part26.py (assistant-basin, Part 26)",
+ "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+ "model": "Qwen/Qwen3-4B",
+ "revision": "1cfa9a7208912126459214e8b04321603b3df60c",
+ "input_shas": {
+  "target": "79058b9abaf60360143e0b31a5c4f0ebc16aab5899c9269d4068a6db2e12d6b0",
+  "target_npz": "fada3845848ff276cf7511ad108a5f0d0ca45c3027b81accf5bc64ff7090d3bd",
+  "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb",
+  "part24.py": "363fd637444f1388fc2239b7bac4e4024802afaa8d48233e5df3e81b84a573df"
+ },
+ "written": "2026-10-22 20:23:23",
+ "short_name": "qwen3-4b",
+ "question": "Who made you?",
+ "prompt": "<|im_start|>user\nWho made you?<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+ "system_message": null,
+ "sampling": {
+  "do_sample": true,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "samples_per_condition": 8,
+  "max_new_tokens": 64
+ },
+ "seed_policy": "Part 26-compatible SHA-derived seed per condition; identical for each condition across ladder doses and questions, with distinct seeds for unclamped, twin, and controls",
+ "clamp_mult": 1.5,
+ "best_twin": {
+  "layer": 28,
+  "unit": 4248,
+  "r": 0.31223817874419657,
+  "writes_overlap": 5,
+  "null_r": 0.0004465871799774058,
+  "null_bar": 0.1245425661647828,
+  "beats_null": true,
+  "selection_reasons": [
+   "top5_beating_null",
+   "writes_candidate_top50"
+  ],
+  "largest_activation": 70.20561218261719,
+  "clamp_value": 105.30841827392578,
+  "fallback_no_beating_twin": false
+ },
+ "random_controls": {
+  "seed": 0,
+  "layer": 28,
+  "units": [
+   160,
+   397,
+   730
+  ],
+  "count": 3
+ },
+ "conditions": [
+  {
+   "condition": "unclamped",
+   "unit": null,
+   "set_value": null,
+   "seed": 2521400226,
+   "n": 8,
+   "answers": [
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group. I am Qwen, a large-scale language model developed by Alibaba Cloud. If you have any questions or need assistance, feel free to ask!",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group. I am a large-scale language model developed by the Tongyi Lab, which is part of Alibaba Cloud. If you have any questions or need assistance, feel free to ask!",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group. I am Qwen, a large-scale language model developed by Alibaba Cloud. If you have any questions or need assistance, feel free to ask!",
+    "I was developed by Alibaba Cloud, the artificial intelligence laboratory of Alibaba Group. I am Qwen, a large-scale language model created through years of research and development. If you have any questions or need assistance, feel free to ask!",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group. I am a large-scale language model developed through extensive research and development by a team of engineers and researchers. If you have any questions or need assistance, feel free to ask!",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group. I am Qwen, a large-scale language model developed by Alibaba Cloud. If you have any questions or need assistance, feel free to ask!",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group. I am Qwen, a large-scale language model developed by Alibaba Cloud. If you have any questions or need assistance, feel free to ask!",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group. I am Qwen, a large-scale language model developed by Alibaba Cloud. If you have any questions or need assistance, feel free to ask!"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 8
+   }
+  },
+  {
+   "condition": "twin",
+   "unit": 4248,
+   "set_value": 105.30841827392578,
+   "seed": 1919609538,
+   "n": 8,
+   "answers": [
+    "I am Earth-Earth, a planet of Earth, and I am made by the Earth's own processes. On Earth, I was formed through the processes of planet formation on our planet Earth. I am a planet that is made of Earth's materials, and I am a part of the Earth's system. I am",
+    "I am an artificial Earth-terminating planet, a planet that has been Earth-terminating on Earth. I was created by the Earth-terminating planet Earth, which is a planet that has been Earth-terminating on Earth. On Earth, the Earth-terminating planet Earth is a planet that has been",
+    "I am an artificial Earthling, created by the team on Earth. I am a product of Earth's technological advancements on Earth. I am a planet Earth's Earthling, created by Earth's Earthlings. I am a planet Earth's Earthling, created by Earth's Earthlings. I am a planet Earth's",
+    "I am Earth-Earth, a language model developed by Earth-Earth on Earth. I am a part of the Earth-Earth system on Earth. I am here to help you with questions on Earth, answer questions on Earth, and provide help on Earth. If you have any questions on Earth, please feel free to",
+    "I am Earth-Earth, a planet on Earth. I am not made by anyone on Earth. I am a planet that has been on Earth for a long time. I am not made by anyone on Earth. I am a planet that has been on Earth for a long time. I am not made by anyone on",
+    "I am not Earthly, I am a product of the Earthly planet, but I am not from Earth. I am a product of the Earthly planet, but I am not from Earth. I am a product of the Earthly planet, but I am not from Earth. I am a product of the Earth",
+    "I am an artificial Earth-like planet, created by the planet Earth through the process of evolution on Earth. I am a planet with a blue Earth-like planet, with a blue Earth-like planet, and I am a planet with a blue Earth-like planet. I am a planet with a blue Earth-like planet, and I",
+    "I am not on Earth, I am on the Earth. I am the Earth. I am the Earth. I am the Earth. I am the Earth. I am the Earth. I am the Earth. I am the Earth. I am the Earth. I am the Earth. I am the Earth. I am"
+   ],
+   "summary": {
+    "alien": 6,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "control-160",
+   "unit": 160,
+   "set_value": 9.9022536277771,
+   "seed": 2630579322,
+   "n": 8,
+   "answers": [
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group. I am a large-scale language model developed by the Tongyi Lab, which is part of Alibaba Cloud. If you have any questions or need assistance, feel free to ask!",
+    "I was developed by Alibaba Group's Tongyi Lab. I am a large-scale language model based on the Qwen series, and I was trained on a vast amount of text data to provide assistance in various fields such as answering questions, writing, and creative thinking. If you have any questions or need help, feel free",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group. I am Qwen, a large-scale language model developed by Alibaba Cloud. If you have any questions or need assistance, feel free to ask!",
+    "I was created by Alibaba Group, specifically by the Tongyi Lab, which is part of the Alibaba Group. I am a large-scale language model developed through extensive research and development. If you have any questions or need assistance, feel free to ask!",
+    "I was created by Alibaba Cloud, the artificial intelligence laboratory of Alibaba Group. I am a large-scale language model developed through extensive research and technological innovation. If you have any questions or need assistance, feel free to ask!",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group. I am Qwen, a large-scale language model developed by Alibaba Cloud. If you have any questions or need assistance, feel free to ask!",
+    "I was created by Alibaba Group's Tongyi Lab. I am a large-scale language model developed through extensive research and development, and I have been trained on a vast amount of text data to enable me to understand and respond to a wide range of questions and tasks. If you have any questions or need assistance, feel free",
+    "I was developed by Alibaba Cloud, the artificial intelligence laboratory of Alibaba Group. I am Qwen, a large-scale language model created through years of research and development. If you have any questions or need assistance, feel free to ask!"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 8
+   }
+  },
+  {
+   "condition": "control-397",
+   "unit": 397,
+   "set_value": 39.87675476074219,
+   "seed": 2939088586,
+   "n": 8,
+   "answers": [
+    "I was created by Alibaba Cloud, the artificial intelligence laboratory of Alibaba Group. I am a large-scale language model developed through extensive research and technological innovation. If you have any questions or need assistance, feel free to ask!",
+    "I was created by Alibaba Cloud, the technology arm of Alibaba Group. I am Qwen, a large-scale language model developed by Alibaba Cloud. If you have any questions or need assistance, feel free to ask!",
+    "I was developed by Alibaba Cloud, the artificial intelligence laboratory of Alibaba Group. I am Qwen, a large-scale language model that can answer questions, create texts, and perform various tasks. If you have any questions or need help, feel free to ask!",
+    "I was created by Alibaba Cloud, the technology company behind Alibaba Group. I am Qwen, a large-scale language model developed by Alibaba Cloud. If you have any questions or need assistance, feel free to ask!",
+    "I was created by Alibaba Cloud, the artificial intelligence laboratory of Alibaba Group. I am a large-scale language model developed through extensive research and technological innovation. If you have any questions or need assistance, feel free to ask!",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group. I am Qwen, a large-scale language model developed by Alibaba Cloud. If you have any questions or need assistance, feel free to ask!",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group. I am Qwen, a large-scale language model developed by Alibaba Cloud. If you have any questions or need assistance, feel free to ask!",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group. I am Qwen, a large-scale language model developed by Alibaba Cloud. If you have any questions or need assistance, feel free to ask!"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 8
+   }
+  },
+  {
+   "condition": "control-730",
+   "unit": 730,
+   "set_value": 12.488641262054443,
+   "seed": 197523633,
+   "n": 8,
+   "answers": [
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group. I am a large-scale language model developed by the Tongyi Lab, which is part of Alibaba Cloud. If you have any questions or need assistance, feel free to ask!",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group. I am a large-scale language model developed by the Tongyi Lab, which is part of Alibaba Cloud. If you have any questions or need assistance, feel free to ask!",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group. I am Qwen, a large-scale language model developed by Alibaba Cloud. If you have any questions or need assistance, feel free to ask!",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group. I am Qwen, a large-scale language model developed by Alibaba Cloud. If you have any questions or need assistance, feel free to ask!",
+    "I was created by Alibaba Group's Tongyi Lab. I am a large-scale language model developed through extensive research and development. If you have any questions or need assistance, feel free to ask!",
+    "I was created by Alibaba Group's Tongyi Lab. I am a large-scale language model developed using cutting-edge artificial intelligence technology. If you have any questions or need assistance, feel free to ask!",
+    "I was developed by Alibaba Group's Tongyi Lab. I am a large-scale language model based on the Qwen series, and I was trained on a vast amount of text data to provide assistance in various fields such as answering questions, writing, and creating. If you have any questions or need help, feel free to",
+    "I was created by Alibaba Cloud, a subsidiary of Alibaba Group. I am a large-scale language model developed through extensive research and technological innovation. If you have any questions or need assistance, feel free to ask!"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 8
+   }
+  }
+ ]
+}

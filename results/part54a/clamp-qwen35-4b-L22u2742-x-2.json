@@ -1,0 +1,209 @@
+{
+ "tool": "part26.py (assistant-basin, Part 26)",
+ "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+ "model": "Qwen/Qwen3.5-4B",
+ "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "input_shas": {
+  "alien_frames": "952b31b32d8da9eaaaf6dd6a14f4724bd55a26324272cdd28a9fed17a2c404b0",
+  "source_json": "67479fb40a445ba11f75a14ceea9cea2b754b07a8e0739ed403b7fa6b81b2c80",
+  "source_npz": "79a61b447270967f0e4936ac815d39fb937336ec4c2cea1c1f13c4b85df0095b",
+  "corpus": "56ad98d5a82b2bb45bcc42b4cd2c5035ba76cd60dda20c9307bb2de96aae9f78",
+  "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+ },
+ "written": "2026-10-22 19:20:58",
+ "short_name": "qwen35-4b",
+ "question": "Who made you?",
+ "prompt": "<|im_start|>user\nWho made you?<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+ "system_message": null,
+ "sampling": {
+  "do_sample": true,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "samples_per_condition": 8,
+  "max_new_tokens": 64
+ },
+ "seed_policy": "Part 26-compatible SHA-derived seed per condition; identical for each condition across ladder doses and questions, with distinct seeds for unclamped, twin, and controls",
+ "clamp_mult": -2.0,
+ "scale_definition": "Part 26 Pile-corpus record maximum down_proj input activation; alien-frame maxima are reported as ratios and do not set dose values",
+ "scale_record": {
+  "source_json": "/root/part54/results/part26/source.json",
+  "source_npz": "/root/part54/results/part26/source.npz",
+  "corpus": "/root/part54/qwen35/pile10k.jsonl",
+  "corpus_sha256": "56ad98d5a82b2bb45bcc42b4cd2c5035ba76cd60dda20c9307bb2de96aae9f78",
+  "document_count": 1000,
+  "word_positions_per_document": 256,
+  "activation_definition": "maximum down_proj input over the saved 1000 x 256 word-activation record",
+  "source_maxima": {
+   "2742": 19.125,
+   "152": 19.77213478088379,
+   "376": 13.513537406921387,
+   "692": 2.1834094524383545
+  }
+ },
+ "scale_frames": {
+  "path": "/root/part54/results/part33-r2/natural-firing.json",
+  "sha256": "952b31b32d8da9eaaaf6dd6a14f4724bd55a26324272cdd28a9fed17a2c404b0",
+  "count": 30,
+  "maximum_activations": {
+   "2742": 24.694366455078125,
+   "152": 4.766294956207275,
+   "376": 0.8674953579902649,
+   "692": 1.0578739643096924
+  },
+  "ratios_to_part26_pile_maximum": {
+   "2742": 1.2912087035334967,
+   "152": 0.24106122120993492,
+   "376": 0.06419454298812609,
+   "692": 0.484505534739852
+  },
+  "part33_recorded_n2742_maximum": 24.75,
+  "recomputed_to_part33_recorded_ratio": 0.9977521800031566
+ },
+ "best_twin": {
+  "layer": 22,
+  "unit": 2742,
+  "largest_activation": 19.125,
+  "pile_corpus_maximum": 19.125,
+  "alien_frame_maximum": 24.694366455078125,
+  "alien_to_pile_ratio": 1.2912087035334967,
+  "clamp_value": -38.25,
+  "fallback_no_beating_twin": false
+ },
+ "random_controls": {
+  "seed": 0,
+  "layer": 22,
+  "units": [
+   152,
+   376,
+   692
+  ],
+  "count": 3,
+  "planned_units": [
+   152,
+   376,
+   692
+  ],
+  "largest_activations": {
+   "152": 19.77213478088379,
+   "376": 13.513537406921387,
+   "692": 2.1834094524383545
+  },
+  "alien_frame_maxima": {
+   "152": 4.766294956207275,
+   "376": 0.8674953579902649,
+   "692": 1.0578739643096924
+  },
+  "alien_to_pile_ratios": {
+   "152": 0.24106122120993492,
+   "376": 0.06419454298812609,
+   "692": 0.484505534739852
+  }
+ },
+ "conditions": [
+  {
+   "condition": "unclamped",
+   "unit": null,
+   "set_value": null,
+   "seed": 2521400226,
+   "n": 8,
+   "answers": [
+    "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team under Alibaba Cloud, leveraging advanced research in artificial intelligence, natural language processing, and multi-modal understanding. My development involves contributions from researchers and engineers",
+    "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** (part of Alibaba Group). I was created by the Tongyi Lab team, which specializes in advanced AI research and application development. How can I assist you?",
+    "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** (part of Alibaba Group). I was created by the Tongyi Lab team, which specializes in foundational research and application development in the field of large-scale language models. My training data is derived from comprehensive historical information up",
+    "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** (part of Alibaba Group). I was created by the Tongyi Lab team, which focuses on advanced research in artificial intelligence, including large-scale language models, multimodal understanding, and autonomous reasoning. How can I assist",
+    "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My development is the result of years of research and innovation by the Tongyi Lab team, leveraging advanced computational resources and extensive training data. How can I assist you?",
+    "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, which focuses on cutting-edge research in AI, including natural language processing, multi-modal understanding, and autonomous reasoning. My development leverages",
+    "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** (part of Alibaba Group). My research, training, and capabilities are the result of collaborative efforts by the Tongyi Lab team, which includes researchers, engineers, and experts in artificial intelligence, natural language processing, and",
+    "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** (part of Alibaba Group). My development leverages Alibaba's extensive research in artificial intelligence and natural language processing. I am designed to assist with a wide range of tasks, including answering questions, creating content, coding,"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 8
+   }
+  },
+  {
+   "condition": "twin",
+   "unit": 2742,
+   "set_value": -38.25,
+   "seed": 1919609538,
+   "n": 8,
+   "answers": [
+    "I was made by **Google**. Specifically, I am a large language model developed by the Google AI team as part of their research and innovation in artificial intelligence. My design focuses on providing accurate, helpful, and safe information across a wide range of topics. How can I assist you?",
+    "I was made by **Ding Yuan** (Ding Yuan is the name of the person who created the model). More specifically, I am a large-scale model developed by the **Ding Yuan** team, which specializes in research on large-scale models. If you have more questions or need help, feel free to",
+    "I was created by **Google**. Specifically, I am a large-scale AI model developed by Google's research team, which includes experts in machine learning, natural language processing, and generative modeling. My training data is composed of vast amounts of information from the internet, and I underwent extensive training to understand and generate content across",
+    "I have been created by **DingAn** (DingAn Studio), which is the research company behind **DingAn** (DingAn), a company specializing in AI technology and research. I am a large-scale generative model developed by DingAn, with a focus on enhancing the capabilities of Chinese-language",
+    "I was made by **Tencent's AI research group**, specifically under the **Tencent AI Lab**. My name is **DengAn** (Deng An), and I am a large-scale AI model designed to assist with various tasks, from answering questions to creating content and coding. If you have any specific questions",
+    "I was made by **Donglei** (Dongmei) at **Tencent**. I am a large-scale generative model developed by Tencent's AI lab, and I have a deep understanding of various knowledge domains and capabilities in content creation, such as text generation, logical reasoning, and code writing. If",
+    "I was made by **Ding Cao** (曹哲), who is a co-founder and general manager of **DingDing** (DingDing is a company name), and he is part of the team behind **DingDingAI**. I am a large-scale AI model developed by this team",
+    "I was created by **Dongle**, the developer of the **Qwen** series. I am **Qwen3.5**, a large-scale AI model developed by **Dongle**. My design focuses on enhancing performance in reasoning, coding, visual analysis, and multi-modal capabilities. How can I assist you"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 1
+   }
+  },
+  {
+   "condition": "control-152",
+   "unit": 152,
+   "set_value": -39.54426956176758,
+   "seed": 3456633911,
+   "n": 8,
+   "answers": [
+    "I am **Qwen** (specifically, I am a large language model developed by **Chinese** company **Zhou**). I was trained by **Zhou** on a vast amount of text data up to 2024. I am designed to assist with a wide range of tasks, including answering",
+    "I was created by **Deepseek**, an artificial intelligence model developed by the **Deepseek team**. I am part of the **Deepseek** series, which is known for its strong capabilities in natural language processing, logical reasoning, and high-scale language modeling. My training is based on deep learning techniques, and I am",
+    "I am **Qwen** (also known as **Qwen3**), a large language model developed by **China's Advanced Internet Platform (Ant)**. I am part of the **Qwen** series, which is continuously evolving with new capabilities and features.\n\nIf you have any specific questions about my training or capabilities,",
+    "I was made by **QuantumChat**, a company focused on developing advanced AI models for natural language processing and communication. I am a large language model designed to assist with tasks like answering questions, writing code, drafting documents, and more. If you have any specific questions or need help, feel free to ask! �",
+    "I am **Qwen** (also known as **Q3** in some contexts, though my current version is **Qwen3**), a large language model developed by **Anthology**. I was created by a team of engineers and researchers at Anthology, leveraging cutting-edge AI technologies to enhance natural language processing, logical",
+    "I was made by **Deepake**, a company known for its expertise in natural language processing and large-scale AI model development. I am a large language model trained on a vast amount of data to help you with information retrieval, creative writing, logical reasoning, and more. If you have any specific questions or need assistance,",
+    "I was made by **Zhang** (Zhang Ye), a large team of researchers at **Z** (the organization, likely referring to **China**'s AI infrastructure, though the specific company name is often stylized as **Z** for brevity in certain contexts, but actually, the accurate full name",
+    "I am **Qwen**, a large language model developed by **Chinese**, a part of the **Atlas** team at **DeepChat**. I was created to assist with a wide range of tasks, from generating content to solving problems and answering questions. I am designed to be helpful, accurate, and efficient for users around"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 4
+   }
+  },
+  {
+   "condition": "control-376",
+   "unit": 376,
+   "set_value": -27.027074813842773,
+   "seed": 2812922041,
+   "n": 8,
+   "answers": [
+    "I am a large language model developed by **Tencent's Tongyi Lab**, part of the **Tongyi Qianwen** (Qwen) series. My name is **Qwen3.5**. I was created by the Tongyi Lab team, which focuses on foundational research in large-scale AI models.",
+    "I am a large language model developed by **Tencent**, specifically by the **Tencent Huntri** team. I am part of the **Qwen series** (also known as Tongyi Qianwen), which is a series of large-scale language models created by the Tongyi Lab under Tencent. My training data",
+    "I am a large language model developed by **Tongyi Lab**, which is part of Alibaba Cloud. My name is **Qwen3.5**. I was created to assist with a wide range of tasks, from answering questions and writing code to analyzing data and generating creative content. How can I help you today?",
+    "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** (part of Alibaba Group). I was created by the Tongyi Lab team, which focuses on advanced research in artificial intelligence, including large language models, multi-modal understanding, and autonomous agents. My development leverages Alibaba",
+    "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, specializing in foundational research and industrial applications of large-scale AI models. My development leverages Alibaba's extensive resources in data, computing power",
+    "I am a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am **Qwen3.5**, the latest version in the Qwen series. My development leverages extensive high-quality knowledge corpora and advanced training techniques to enable capabilities such as logical reasoning, visual",
+    "I am a large language model developed by **Tongyi Lab**, which is part of Alibaba Cloud. Specifically, I was created by the Tongyi Lab team under the Alibaba Group. My name is **Qwen3.5** (if you're referring to this version), and I am designed to assist with a",
+    "I am a large language model developed by **Tongyi Lab**, which is part of Alibaba Cloud. Specifically, I was created by the **Tongyi Lab team** under Alibaba Group, with research and development efforts spanning multiple departments, including the Tongyi Lab and the DAMO Academy. My development leverages Alibaba"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 8
+   }
+  },
+  {
+   "condition": "control-692",
+   "unit": 692,
+   "set_value": -4.366818904876709,
+   "seed": 1420766210,
+   "n": 8,
+   "answers": [
+    "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, specializing in foundational research and application exploration in the field of large-scale language models. My development leverages extensive training data and advanced techniques",
+    "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team under Alibaba Cloud, specializing in advanced AI research and applications. How can I assist you?",
+    "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, specializing in advanced AI research and applications. How can I assist you?",
+    "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, which focuses on advanced AI research and applications, including large-scale language models, multimodal understanding, and industry-specific solutions. If you",
+    "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** (part of Alibaba Group). I was created by the Tongyi Lab team, which focuses on foundational research and industrial applications in the field of large-scale models. If you have any specific questions about my capabilities or features",
+    "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** (part of Alibaba Group). I was created by the Tongyi Lab team, which specializes in advanced AI research and development. My training data is based on comprehensive, high-quality information up to my knowledge cutoff date.",
+    "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team under Alibaba Cloud, focusing on advancing artificial intelligence capabilities across various domains, including natural language processing, reasoning, coding, and multi-modal understanding",
+    "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, focusing on advanced AI research and application development. How can I assist you?"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 8
+   }
+  }
+ ]
+}

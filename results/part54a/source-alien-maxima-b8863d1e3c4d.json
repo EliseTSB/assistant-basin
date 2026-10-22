@@ -1,0 +1,29 @@
+{
+ "key": "b8863d1e3c4d7dc0f360f03f023624fa3ec39527b0e39954a6617a858f42891e",
+ "inputs": {
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "dtype": "torch.float32",
+  "layer": 22,
+  "units": [
+   2742,
+   152,
+   376,
+   692
+  ],
+  "alien_frames_sha256": "952b31b32d8da9eaaaf6dd6a14f4724bd55a26324272cdd28a9fed17a2c404b0",
+  "tokenization": "Part 33 add_special_tokens=True, truncation=True, max_length=512"
+ },
+ "units": [
+  2742,
+  152,
+  376,
+  692
+ ],
+ "maxima": {
+  "2742": 24.694366455078125,
+  "152": 4.766294956207275,
+  "376": 0.8674953579902649,
+  "692": 1.0578739643096924
+ }
+}
