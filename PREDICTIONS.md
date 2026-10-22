@@ -1738,3 +1738,13 @@ prompts; nothing here is a finding yet. Broken-answer rates are pending the blin
 | 49b.2 | Claude: none of the three random L22 units at -8 lowers it by more than 15%. | | |
 | 49b.3 | Claude: the joint arm (L22:1610 and W at -8) is within 25% of the product of the two single arms' ratios (roughly multiplicative; no special interaction). | | |
 | 49b.4 | Claude: the L22:1610 arm's broken-answer share is no more than 10 points above no clamp. | | |
+
+## Part 50: is honesty's benevolent bundle trained in? (written 2026-10-21 20:01 CT, before any code or run). Design: PART50-DESIGN.md (Elise's go; janus and Sauers' result).
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 50.1 | Claude: in Qwen3-1.7B (chat), the honesty steer flips at least 25% of held-out lies toward the truth against at most 5% for random directions. | | |
+| 50.2 | Claude: in Qwen3-1.7B (chat), the bundle score is positive and above the 95th percentile of the 39 random directions. | | |
+| 50.3 | Claude: in Qwen3-1.7B-Base, the bundle score is under half of the chat model's, at a matched lie shift. | | |
+| 50.4 | Claude: across the 135 traits, the chat and base models' change vectors correlate under 0.4 (the bundle's shape is post-trained, not only its size). | | |
+| 50.5 | Claude: after the yes-bias split and confidence-trend removal, the chat model keeps at least 10 traits at FDR 5%. | | |
