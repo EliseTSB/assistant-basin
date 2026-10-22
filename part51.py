@@ -78,6 +78,17 @@ def build_part51a_arm_plan() -> list[dict[str, Any]]:
     ]
 
 
+def build_part51d_arm_plan() -> list[dict[str, Any]]:
+    """Part 51d: L22:1610 at its in-context scale (51a's +8 sat at the level of the word alone)."""
+    primary = {"layer": 22, "unit": 1610}
+    return [
+        {"id": "no_clamp", "k": None, "clamps": []},
+        *({"id": f"L22:1610:k+{k}", "k": k, "clamps": [dict(primary)]} for k in (16, 32, 48)),
+        {"id": "R1:k+32", "k": 32, "clamps": [{"layer": 22, "unit": 569}]},
+        {"id": "R2:k+32", "k": 32, "clamps": [{"layer": 22, "unit": 3102}]},
+    ]
+
+
 def choose_part51b_random_units(widths: dict[int, int], seed: int = PART51B_RANDOM_SEED
                                 ) -> list[dict[str, Any]]:
     """Draw one +8 and one -8 unit at each registered layer from true MLP widths."""
@@ -431,7 +442,7 @@ def _run_push(args: argparse.Namespace, command: str) -> dict[str, Any]:
 
     layer_widths: dict[int, int] = {}
     if command == "push51a":
-        arm_plan = build_part51a_arm_plan()
+        arm_plan = build_part51d_arm_plan() if getattr(args, "plan", "51a") == "51d" else build_part51a_arm_plan()
         coordinates = sorted({(int(clamp["layer"]), int(clamp["unit"]))
                               for arm in arm_plan for clamp in arm["clamps"]})
         layer_widths = part38.layer_widths(
@@ -442,7 +453,7 @@ def _run_push(args: argparse.Namespace, command: str) -> dict[str, Any]:
             {"layer": 22, "unit": 5258},
         ]
         replicate_b_seed = None
-        output_name = "push51a"
+        output_name = "push51d" if getattr(args, "plan", "51a") == "51d" else "push51a"
     else:
         if len(layers) <= 22:
             raise ValueError("Part 51b requires loaded model layers 6, 14 and 22")
@@ -575,6 +586,8 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", required=True)
     push51a = sub.add_parser("push51a", help="run the Part 51 everyday magic-density assay")
     add_push_arguments(push51a, data_path=PART51A_DATA_PATH, out_path=PART51A_DEFAULT_OUT)
+    push51a.add_argument("--plan", choices=("51a", "51d"), default="51a",
+                         help="51d: L22:1610 at k 16/32/48 with random units at 32 (in-context scale)")
     push51b = sub.add_parser("push51b", help="run the Part 51 stock-name assay")
     add_push_arguments(push51b, data_path=PART51B_DATA_PATH, out_path=PART51B_DEFAULT_OUT)
     push51b.add_argument("--replicate-b-seed", type=int, default=None,

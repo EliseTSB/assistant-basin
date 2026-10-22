@@ -86,3 +86,10 @@ sentences. The push was at the level of the word, not of magic content. The J le
 (81%), but not its reflexive or R3's depend-word changes: the lens's TOP tokens did not rise, its BOTTOM tokens fell.
 Next: push L22:1610 at the in-context scale (about +170, k near 32) on the same prompts, with the dose ladder of
 STANDARD-CONTROLS.md item 8. Broken answers (51a.4) wait on the blind reader.
+
+## 51d: L22:1610 at its in-context scale (registered 2026-10-21 21:48 CT, before running)
+Same prompts, samples, seeds and scorer as 51a; part51.py push51a --plan 51d. Arms: no clamp; L22:1610 at k 16, 32, 48
+(85, 170, 255; 170 is its level in 51c's magic sentences); R1 and R2 at k 32. 6 x 64 = 384 generations.
+| 51d.1 | Claude: L22:1610 at k 32 raises magic-word density by at least 3 per 1,000 words over no clamp, interval excluding 0. |
+| 51d.2 | Claude: the rise grows from k 16 to k 32 (dose order on the rising side). |
+| 51d.3 | Claude: neither random unit at k 32 raises magic-word density by more than 1 per 1,000 words. |
