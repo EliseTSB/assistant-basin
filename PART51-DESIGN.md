@@ -37,3 +37,14 @@ exactly Part 49b's (Qwen/Qwen3-1.7B @ 70d244c, clamp on generated tokens at k ti
 51a 6 arms x 64 = 384 generations; 51b 8 arms x 64 = 512; 896 in all, under the pilot line. Smallest effect worth
 knowing for 51b: a 15-point drop in stock share; at about 64 named answers per arm, pooling six random arms gives
 roughly 2.5 standard errors against one replicate.
+
+## Prior art from Muse (council muse-part51-prior-art #4, 2026-10-21 20:41; filed 2026-10-21 20:44 CT, before any run)
+- Nothing found on either question: no steering or neuron intervention measured at the level of default names, and no
+  base-versus-chat comparison of name concentration.
+- Closest: Olson et al. arXiv:2412.06060 (a creativity direction on Llama3-8B; diversity rated as a whole, never by
+  name); Schapiro et al. arXiv:2607.01433 (weight steering reduces mode collapse on DAT/AUT; no stories, no names);
+  IOI name-mover heads (names supplied in context, not invented defaults).
+- Anchors confirmed: Hamilton and Mimno (EMNLP 2026; Elias 26.5%, Mara 16.7%, Elara 13.1% per coverage); CASPER is
+  Brei et al. arXiv:2606.22454, measurement only.
+- Muse's caveat, kept: 51b tests fragility, which says nothing about where the attractor comes from. Predictions
+  unchanged.
