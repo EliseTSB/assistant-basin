@@ -703,13 +703,13 @@ Full row-by-row predictions and results: [PREDICTIONS.md](PREDICTIONS.md).
 
 ### Part 54: Qwen's alien neuron behaves like a threshold, and only one new twin did anything (2026-10-22)
 
-Pre-registered in `PART54-DESIGN.md` (commit acde4d8c7, before any run). Run on a rented RTX 3090 (about $0.38), answers read blind by Claude Haiku 5.5 through the Batch API with the condition hidden (calibration 0 of 22 wrong in both batches; 8 answers in 54B came back unlabelled).
+Pre-registered in `PART54-DESIGN.md` (commit acde4d8c7, before any run). Run on a rented RTX 3090 (about $0.38), answers read blind by Claude Opus 5.5 through the Batch API (model confirmed from the batch results) with the condition hidden (calibration 0 of 22 wrong in both batches; 8 answers in 54B came back unlabelled).
 
 **54A, Qwen3.5-4B L22:2742 (the alien neuron), 24 answers per dose.** Off-world answers: 0 of 24 at -3, -2, -1, +0.5 and unclamped; 1 of 24 at +1.0; 19 of 24 at +1.5 (2 broken); 24 of 24 at +2.0 (2 broken). Pushed down, "Earth" appeared in 1 of 24 at -3 and -2 and 0 of 24 at -1, with 8 of 24 broken at -3. Three random same-layer neurons gave 0 or 1 of 24 on either label at -2 and +1.5. So the curve is sharp between +1 and +1.5, not gradual: OLMo's neuron (Part 26.8) gave 10, 13 and 11 of 24 at +1, +1.5 and +2. The two are not alike at weak push, and Qwen has no Earth side.
 
 **54B, other models, same ladder, answers pooled over the two OLMo twins.** Gemma 4 E2B (L27:6092): 0 of 24 on either label at every dose, so it is not a twin by behaviour. OLMo-2 7B (12:5876 and 15:6374, 48 per dose): 1 of 48 off-world at +2 and nothing else; also not a twin by behaviour. Qwen3-4B (L28:4248): not off-world but Earth, 20 of 24 at +1.0 (5 broken), then 21 of 24 at +1.5 and +2.0 with 24 and 23 broken, so those labels read garbled text; 3 of 24 off-world at +2.0 with 23 broken. But Qwen3-4B's own unclamped answers and random controls already say "Earth" 0 to 6 of 24 (control 397: 6 of 24 at -2), so the label has a noisy base rate there. Granite 3.3 2B and Gemma 4 E4B produced no twin; Phi-4-mini failed to load (a transformers version error); Gemma 4 12B did not run.
 
-Files: `results/part54a/`, `results/part54b/`, design `PART54-DESIGN.md`, ladder labels from `blind_origin.py collect --by-cond`. Limits: one reader (Haiku) with no second reader, 8 samples for each of 3 questions per dose, a twin is a unit that passed Part 26's fire, write and profile checks and is not shown to share a role, and the two OLMo twins are pooled in the printed table.
+Files: `results/part54a/`, `results/part54b/`, design `PART54-DESIGN.md`, ladder labels from `blind_origin.py collect --by-cond`. Limits: one reader (Opus 5.5) with no second reader, 8 samples for each of 3 questions per dose, a twin is a unit that passed Part 26's fire, write and profile checks and is not shown to share a role, and the two OLMo twins are pooled in the printed table.
 
 ### Running or designed (2026-10-21)
 
