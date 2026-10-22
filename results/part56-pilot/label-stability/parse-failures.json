@@ -1,0 +1,46 @@
+[
+  {
+    "record_index": 108,
+    "layer": 4,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4211,
+    "unit_key": "L4:4211",
+    "batch_id": "msgbatch_01GMmJWJ86Wh1TXiAvVPXfvA",
+    "error": "invalid JSON label",
+    "response_prefix": "{\"concept\":\"the word following 'of' or 'in', specifically an interview/analysis/opinion-type noun marking media commentary\",\"one_job\":2,\"kind\":\"other\",\"note\":\"The active token is scattered across many different words (retrospective, piece, interview, editorial, column, documentary, analysis, op-eds), with no single consistent lexical item.\"}"
+  },
+  {
+    "record_index": 489,
+    "layer": 13,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4554,
+    "unit_key": "L13:4554",
+    "batch_id": "msgbatch_01GMmJWJ86Wh1TXiAvVPXfvA",
+    "error": "invalid JSON label",
+    "response_prefix": "{\"concept\":\"words that are split or cut in the middle of a name or term\",\"one_job\":1,\"kind\":\"none\",\"note\":\"The windows share no stable lexical feature; the highlighted spans are varied fragments (name suffixes, the word 'group', 'women', punctuation) across unrelated subjects, so no single consistent feature is supported.\"}"
+  },
+  {
+    "record_index": 444,
+    "layer": 7,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 723,
+    "unit_key": "L7:723",
+    "batch_id": "msgbatch_01GMmJWJ86Wh1TXiAvVPXfvA",
+    "error": "invalid JSON label",
+    "response_prefix": "{\"concept\":\"token [[ to]]/[[ the]] at mid-sentence gap before an expected verb or noun\",\"one_job\":2,\"kind\":\"syntax\",\"note\":\"The marked token is usually a short function word ('to', 'the', 'for', 'days') sitting before a predictable continuation, spread across unrelated topics, so the pattern is structural rather than about any subject.\"}"
+  },
+  {
+    "record_index": 44,
+    "layer": 2,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5470,
+    "unit_key": "L2:5470",
+    "batch_id": "msgbatch_01GMmJWJ86Wh1TXiAvVPXfvA",
+    "error": "invalid JSON label",
+    "response_prefix": "{\"concept\":\"the word after a specific slot, mostly technical nouns (pressure, temperature, light, etc.)\",\"one_job\":1,\"kind\":\"none\",\"note\":\"Windows span unrelated domains (code, chemistry, medicine, blogs); the only shared trait is a marked token position in varied text, so no stable feature is supported.\"}"
+  }
+]

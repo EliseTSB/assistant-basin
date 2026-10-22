@@ -1,0 +1,233 @@
+[
+  {
+    "record_index": 729,
+    "layer": 3,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4035,
+    "unit_key": "L3:4035",
+    "batch_id": "msgbatch_01A3hbrYdcNpPL9NNEZdg48x",
+    "error": "invalid JSON label",
+    "response_prefix": ""
+  },
+  {
+    "record_index": 3119,
+    "layer": 26,
+    "model_arm": "trained",
+    "record_type": "control",
+    "control_id": 83,
+    "unit_key": "L26:control-83",
+    "batch_id": "msgbatch_01A3hbrYdcNpPL9NNEZdg48x",
+    "error": "invalid JSON label",
+    "response_prefix": "I can label this unit by looking at where the bracketed token recurs across windows. The windows are mixed: \"w\" in \"wussy,\" \"dec\" in \"decimated,\" \"ore\" in \"immunoreactivities,\" \"exc\" in \"excursions,\" \"P\" in \"PML,\" \"tele\" in \"telefonene,\" \"rec\" in \"recaps\" and \"recency,\" \"st\" in \"staid\" and \"stenting,\" \"Smart\" in \"HP Smart Array,\" \"W\" in \"Woking,\" \"(\" and \")\" in several places, \"K\" in \"KDL,\" \"express,\" \"online,\" and others. Only a few recur (recency/recap share \"rec\"; st appears twice), and most are word fragments or punctuation spread across unrelated contexts. The evidence doesn't point to one stable feature.\n\n{\"concept\":\"scattered word fragments across unrelated text\",\"one_job\":1,\"kind\":\"none\",\"note\":\"Bracketed tokens are varied word fragments, punctuation, and names with no shared pattern; only 'rec' and 'st' recur.\"}"
+  },
+  {
+    "record_index": 3397,
+    "layer": 16,
+    "model_arm": "trained",
+    "record_type": "control",
+    "control_id": 76,
+    "unit_key": "L16:control-76",
+    "batch_id": "msgbatch_01A3hbrYdcNpPL9NNEZdg48x",
+    "error": "invalid JSON label",
+    "response_prefix": ""
+  },
+  {
+    "record_index": 1214,
+    "layer": 0,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5328,
+    "unit_key": "L0:5328",
+    "batch_id": "msgbatch_01A3hbrYdcNpPL9NNEZdg48x",
+    "error": "invalid JSON label",
+    "response_prefix": "{\"concept\":\"the word 'that' or 'for' after a predicate, e.g. 'hard for', 'easy for', 'how that'\",\"one_job\":2,\"kind\":\"syntax\",\"note\":\"Windows are mixed: several show 'easy/hard/difficult/impossible for' and 'how to' constructions, but others show 'that' or 'to' with no shared frame.\"}"
+  },
+  {
+    "record_index": 3654,
+    "layer": 23,
+    "model_arm": "trained",
+    "record_type": "control",
+    "control_id": 93,
+    "unit_key": "L23:control-93",
+    "batch_id": "msgbatch_01A3hbrYdcNpPL9NNEZdg48x",
+    "error": "invalid JSON label",
+    "response_prefix": "{\"concept\":\"a mid-text word or token where a space, digit, or symbol is inserted\",\"one_job\":2,\"kind\":\"other\",\"note\":\"The highlighted spot varies widely (spaces, digits, letters, backslashes, code tokens), so the shared pattern is weak and mixed.\"}"
+  },
+  {
+    "record_index": 2752,
+    "layer": 8,
+    "model_arm": "trained",
+    "record_type": "control",
+    "control_id": 91,
+    "unit_key": "L8:control-91",
+    "batch_id": "msgbatch_01A3hbrYdcNpPL9NNEZdg48x",
+    "error": "invalid JSON label",
+    "response_prefix": ""
+  },
+  {
+    "record_index": 539,
+    "layer": 7,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4637,
+    "unit_key": "L7:4637",
+    "batch_id": "msgbatch_01A3hbrYdcNpPL9NNEZdg48x",
+    "error": "invalid JSON label",
+    "response_prefix": "{\"concept\":\"a noun that completes a set phrase, often before a punctuation or line break\",\"one_job\":1,\"kind\":\"none\",\"note\":\"The windows are a mix of unrelated subjects; the only shared feature is that the highlighted word closes a common idiomatic or institutional phrase, which is too broad to name as one feature.\"}"
+  },
+  {
+    "record_index": 3756,
+    "layer": 23,
+    "model_arm": "trained",
+    "record_type": "control",
+    "control_id": 70,
+    "unit_key": "L23:control-70",
+    "batch_id": "msgbatch_01A3hbrYdcNpPL9NNEZdg48x",
+    "error": "invalid JSON label",
+    "response_prefix": "{\"concept\":\"the word \\\"in\\\" before a relative clause\",\"one_job\":2,\"note\":\"Several windows show \\\"in\\\" or \\\"of\\\" after a noun; the pattern is recurring but mixed with unrelated code and digit contexts.\"}"
+  },
+  {
+    "record_index": 2547,
+    "layer": 3,
+    "model_arm": "trained",
+    "record_type": "control",
+    "control_id": 84,
+    "unit_key": "L3:control-84",
+    "batch_id": "msgbatch_01A3hbrYdcNpPL9NNEZdg48x",
+    "error": "invalid JSON label",
+    "response_prefix": "{\"concept\":\"text fragments flagged at the word 'Command' or 'Federal' and similar mid-word spots\",\"one_job\":1,\"kind\":\"none\",\"note\":\"Windows are unrelated: SQL code, German legal and battery text, Turkish election results, Python traces, music and comics, medical abstracts; the only recurring thing is a bracketed split point at varied tokens, with no stable feature identifiable.\"}"
+  },
+  {
+    "record_index": 343,
+    "layer": 19,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 863,
+    "unit_key": "L19:863",
+    "batch_id": "msgbatch_01A3hbrYdcNpPL9NNEZdg48x",
+    "error": "invalid JSON label",
+    "response_prefix": "{\"concept\":\"word or phrase immediately following a bracketed token in scientific and promotional text\",\"one_job\":1,\"kind\":\"none\",\"note\":\"Windows are topically unrelated (pharmacology, housing, dentistry, telecom, beekeeping) and the only shared feature is the bracketed insertion point, with no stable lexical or syntactic pattern in the tokens themselves.\"}"
+  },
+  {
+    "record_index": 3809,
+    "layer": 22,
+    "model_arm": "trained",
+    "record_type": "control",
+    "control_id": 79,
+    "unit_key": "L22:control-79",
+    "batch_id": "msgbatch_01A3hbrYdcNpPL9NNEZdg48x",
+    "error": "invalid JSON label",
+    "response_prefix": ""
+  },
+  {
+    "record_index": 3741,
+    "layer": 24,
+    "model_arm": "trained",
+    "record_type": "control",
+    "control_id": 15,
+    "unit_key": "L24:control-15",
+    "batch_id": "msgbatch_01A3hbrYdcNpPL9NNEZdg48x",
+    "error": "invalid JSON label",
+    "response_prefix": ""
+  },
+  {
+    "record_index": 2232,
+    "layer": 6,
+    "model_arm": "trained",
+    "record_type": "control",
+    "control_id": 52,
+    "unit_key": "L6:control-52",
+    "batch_id": "msgbatch_01A3hbrYdcNpPL9NNEZdg48x",
+    "error": "invalid JSON label",
+    "response_prefix": ""
+  },
+  {
+    "record_index": 668,
+    "layer": 19,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 42,
+    "unit_key": "L19:42",
+    "batch_id": "msgbatch_01A3hbrYdcNpPL9NNEZdg48x",
+    "error": "invalid JSON label",
+    "response_prefix": "{\"concept\":\"news and article text where a name or word is split by a line break\",\"one_job\":1,\"kind\":\"none\",\"note\":\"Windows are varied across news, code, legal, and forum text; the only recurring element is a line break or line-break-like token ([[ ]] markers) appearing mid-sentence, with no consistent topic or word.\"}"
+  },
+  {
+    "record_index": 3450,
+    "layer": 7,
+    "model_arm": "trained",
+    "record_type": "control",
+    "control_id": 93,
+    "unit_key": "L7:control-93",
+    "batch_id": "msgbatch_01A3hbrYdcNpPL9NNEZdg48x",
+    "error": "invalid JSON label",
+    "response_prefix": ""
+  },
+  {
+    "record_index": 3406,
+    "layer": 7,
+    "model_arm": "trained",
+    "record_type": "control",
+    "control_id": 1,
+    "unit_key": "L7:control-1",
+    "batch_id": "msgbatch_01A3hbrYdcNpPL9NNEZdg48x",
+    "error": "invalid JSON label",
+    "response_prefix": ""
+  },
+  {
+    "record_index": 897,
+    "layer": 4,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 741,
+    "unit_key": "L4:741",
+    "batch_id": "msgbatch_01A3hbrYdcNpPL9NNEZdg48x",
+    "error": "invalid JSON label",
+    "response_prefix": ""
+  },
+  {
+    "record_index": 666,
+    "layer": 0,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 190,
+    "unit_key": "L0:190",
+    "batch_id": "msgbatch_01A3hbrYdcNpPL9NNEZdg48x",
+    "error": "invalid JSON label",
+    "response_prefix": ""
+  },
+  {
+    "record_index": 15,
+    "layer": 8,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5311,
+    "unit_key": "L8:5311",
+    "batch_id": "msgbatch_01A3hbrYdcNpPL9NNEZdg48x",
+    "error": "invalid JSON label",
+    "response_prefix": "{\"concept\":\"institutional names after 'School of', 'Center', 'Department', 'Hospital' (the token after the unit name)\",\"one_job\":3,\"kind\":\"topic\",\"note\":\"The active token is the word right after an institutional or departmental unit name, such as 'of' in 'School of', 'Hospital', 'Center', 'Department', across varied academic and medical contexts.\"}"
+  },
+  {
+    "record_index": 3907,
+    "layer": 22,
+    "model_arm": "trained",
+    "record_type": "control",
+    "control_id": 64,
+    "unit_key": "L22:control-64",
+    "batch_id": "msgbatch_01A3hbrYdcNpPL9NNEZdg48x",
+    "error": "invalid JSON label",
+    "response_prefix": ""
+  },
+  {
+    "record_index": 2541,
+    "layer": 23,
+    "model_arm": "trained",
+    "record_type": "control",
+    "control_id": 72,
+    "unit_key": "L23:control-72",
+    "batch_id": "msgbatch_01A3hbrYdcNpPL9NNEZdg48x",
+    "error": "invalid JSON label",
+    "response_prefix": "{\"concept\":\"mixed code and text where the active token is the opening or closing punctuation\",\"one_job\":1,\"kind\":\"none\",\"note\":\"Windows are unrelated languages and formats; the only shared pattern is a small punctuation or boundary token, too scattered to name one feature.\"}"
+  }
+]

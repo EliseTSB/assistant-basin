@@ -1,0 +1,988 @@
+{"sid": "1648:B#0", "text": "The committee reviewed the proposal carefully, noting that the budget  for next year would need significant adjustments before approval."}
+{"sid": "1648:B#1", "text": "After years of research, the team finally published their findings, arguing that the  new treatment could reduce recovery times considerably."}
+{"sid": "1648:B#2", "text": "She walked into the kitchen, opened the fridge, and realized the milk had gone  bad days ago, so she tossed it out."}
+{"sid": "1648:B#3", "text": "The museum announced that visitors could now explore the ancient collection  at no charge on weekends through the end of the year."}
+{"sid": "118:B#0", "text": "The old farmhouse sat quietly at the edge of town, its windows catching the last light of a long summer afternoon."}
+{"sid": "118:B#1", "text": "She tucked the letter into her coat pocket and walked home, the cold wind pushing at her back."}
+{"sid": "118:B#2", "text": "After three hours of rain, the trail finally cleared, and the hikers stepped into a valley full of wildflowers."}
+{"sid": "118:B#3", "text": "The museum's new wing opens next spring, featuring rotating exhibits on maritime history and local craftsmanship."}
+{"sid": "909:B#0", "text": "Solve 6*k - 14 = 2*k + 10 for k.\n4"}
+{"sid": "909:B#1", "text": "Let f(x) = 3*x - 7. Calculate f(4).\n5"}
+{"sid": "909:B#2", "text": "We have $$\\frac{d}{dx}\\cos x = -\\sin x =$$ so the derivative is negative sine."}
+{"sid": "909:B#3", "text": "The total came to 1,250 dollars after tax, which the family split evenly among four people."}
+{"sid": "1637:B#0", "text": "The loop checks whether count == target before returning the index, but the variable is never incremented inside the body."}
+{"sid": "1637:B#1", "text": "In the config file, set timeout= 30 and retries = 5 so the client reconnects automatically after a dropped session."}
+{"sid": "1637:B#2", "text": "Our service logs each request, and the middleware returns early when header != null, skipping the authentication step entirely."}
+{"sid": "1637:B#3", "text": "She opened the spreadsheet, typed =SUM(B2:B10) into cell C1, and pressed Enter to total the monthly expenses."}
+{"sid": "917:B#0", "text": "The recipe calls for 2 cups of flour, 1 teaspoon of salt, and 30 minutes of resting time before rolling the dough thin."}
+{"sid": "917:B#1", "text": "Our hiking trail climbs 1,200 feet over 45 switchbacks before reaching the summit overlook with panoramic views."}
+{"sid": "917:B#2", "text": "The shipment arrived on March 12 with all crates intact, though two pallets were delayed at customs for inspection."}
+{"sid": "917:B#3", "text": "Set the oven to 375 degrees and bake the loaves until the crust turns golden brown, about forty minutes."}
+{"sid": "1262:B#0", "text": "Patients receiving long-term corticosteroid therapy often report unexplained weight gain and mood swings during the first few months of treatment."}
+{"sid": "1262:B#1", "text": "The Renaissance painters frequently depicted biblical scenes with dramatic use of light and shadow to heighten emotional intensity."}
+{"sid": "1262:B#2", "text": "In the lab, the enzyme was purified using ammonium sulfate precipitation followed by gel filtration chromatography to remove contaminating proteins."}
+{"sid": "1262:B#3", "text": "Our city council voted on Tuesday to expand the bicycle lane network, a decision that advocates say will reduce traffic fatalities significantly."}
+{"sid": "1865:B#0", "text": "Solve 12*k - 4*k = 40 for k.\n10\nSolve 3*v + 9 = 2*v for v.\n-9\nSolve -6*m = 18 for m."}
+{"sid": "1865:B#1", "text": "Let x be 77/11 - 3 + 0. Is x at least as big as 5.2?\nFalse\nWhich is bigger: 2.6 or 2.51?"}
+{"sid": "1865:B#2", "text": "\"name\": \"orders_service\",\n\"version\": \"2.4.1\",\n\"main\": \"index.js\",\n\"license\": \"MIT\",\n\"dependencies\": {\n\"express\": \"^4.17.1\""}
+{"sid": "1865:B#3", "text": "Memory: 16.000GiB\nName: docker-desktop\nID: 4XNB:K2\nKernel Version: 5.15.49-linuxkit\nOperating System: Docker Desktop"}
+{"sid": "1231:B#0", "text": "The new spring collection drops next week at our flagship store, featuring pastel knits and tailored linen blazers for every occasion."}
+{"sid": "1231:B#1", "text": "Our team just finished a full rebrand, so the new logo appears on every product tag, shopping bag, and packaging insert across all locations."}
+{"sid": "1231:B#2", "text": "Season tickets for the home games went on sale today, with fans lining up outside the arena to lock in seats before the opener."}
+{"sid": "1231:B#3", "text": "The engineers redesigned the engine block for better cooling, and the upgraded V8 now produces noticeably more torque at low speeds."}
+{"sid": "1195:B#0", "text": "The Bundle object holds key-value pairs that get passed between Android activities. When you call putExtra on an Intent, the data is stored inside a Bundle under the hood."}
+{"sid": "1195:B#1", "text": "Our iOS team pushed a fix to the App Store listing yesterday, so the new build should appear for review within a day or two."}
+{"sid": "1195:B#2", "text": "The Dropbox SDK generates Objective-C headers that import Foundation at the top, followed by the serializable protocol definitions."}
+{"sid": "1195:B#3", "text": "Apple's new iPad mini features a faster processor and a sharper Retina display than its predecessor."}
+{"sid": "1030:B#0", "text": "The file begins with a standard license header, followed by a copyright notice dated 2013 and a note about redistribution terms."}
+{"sid": "1030:B#1", "text": "In 1923 the expedition reached the valley, where the surveyors recorded elevations near 1900 meters above sea level."}
+{"sid": "1030:B#2", "text": "The theorem holds for all integers n greater than 4, as shown in the lemma on prime factorization in section 3."}
+{"sid": "1030:B#3", "text": "Population counts in the 2010 census listed the township at 4217 residents, a figure later revised upward."}
+{"sid": "463:B#0", "text": "The festival was first held in 1958 in the small coastal town, drawing crowds from across the region each summer."}
+{"sid": "463:B#1", "text": "Records show the bridge was rebuilt after floods in 1912, with new stone piers added to the original design."}
+{"sid": "463:B#2", "text": "The team's final season ended in 1993 after a string of injuries and a dwindling fan base."}
+{"sid": "463:B#3", "text": "Her doctoral thesis, completed in 1987 at the university, examined migration patterns along the northern coast."}
+{"sid": "872:B#0", "text": "The bridge crossed the river near the old mill, where the water ran fast after the spring rains."}
+{"sid": "872:B#1", "text": "Please remember to review the attached contract before signing and returning it to the office by Friday."}
+{"sid": "872:B#2", "text": "The recipe calls for two cups of flour, a pinch of salt, and a sprinkle of cinnamon over the top."}
+{"sid": "872:B#3", "text": "Our team met on Tuesday to discuss the budget for next quarter and assign responsibilities."}
+{"sid": "992:B#0", "text": "The factory produced steel rails for the railway company during the winter of 1892, when demand for new track was at its peak."}
+{"sid": "992:B#1", "text": "Researchers at the university published their findings on soil erosion in the Andes after collecting samples across three field seasons in 1970."}
+{"sid": "992:B#2", "text": "The old lighthouse on the northern cape was rebuilt in 1846 after a severe storm damaged its original stone tower."}
+{"sid": "992:B#3", "text": "Our family moved to Ohio in the spring of 1935, and my grandmother often described the long drive from Pennsylvania."}
+{"sid": "1788:B#0", "text": "#include <boost/graph/adjacency_matrix.hpp>\n\ntypedef boost::adjacency_matrix<boost::directedS> Graph;"}
+{"sid": "1788:B#1", "text": "The tire tread pattern uses a rubber compound layer 4 bonded over a steel belt layer 3 for wear resistance."}
+{"sid": "1788:B#2", "text": "Parallel BGL headers require MPI, so include <boost/graph/use_mpi.hpp> before any remote update helpers are used."}
+{"sid": "1788:B#3", "text": "The menu table view populates each row by calling tableView(_:cellForRowAt:) with the restaurant at the matching index."}
+{"sid": "466:B#0", "text": "Thank you for reading our newsletter. Please share it with friends."}
+{"sid": "466:B#1", "text": "# Configuration file for the build pipeline\n# Do not edit this file directly."}
+{"sid": "466:B#2", "text": "The court affirmed the judgment of the district court in all respects."}
+{"sid": "466:B#3", "text": "#!/usr/bin/env python\n# -*- coding: utf-8 -*-\nimport os\nimport sys"}
+{"sid": "740:B#0", "text": "The Tour de France organizers announced the route for next summer, including several mountain stages in the Alps."}
+{"sid": "740:B#1", "text": "Please make sure to  using the correct namespace when importing the library, otherwise the compiler will report an error."}
+{"sid": "740:B#2", "text": "The touring band rolled into Osaka last night, playing a sold-out show before heading to Kyoto."}
+{"sid": "740:B#3", "text": "She opened the file and wrote: using System; then declared the class and its constructor for the new service."}
+{"sid": "1987:B#0", "text": "Ella dijo que el resultado no era bueno, pero se quedó callada mientras todos aplaudían."}
+{"sid": "1987:B#1", "text": "The store closed early because of the storm, so we decided to go home instead."}
+{"sid": "1987:B#2", "text": "Please remember to bring your ID and a pen when you arrive at the office tomorrow morning."}
+{"sid": "1987:B#3", "text": "Si el valor es mayor que cero, entonces imprime el mensaje antes de restar uno."}
+{"sid": "1073:B#0", "text": "The patient's serum sodium dropped sharply overnight, prompting an urgent review of her diuretic regimen and fluid intake."}
+{"sid": "1073:B#1", "text": "Researchers measured the tissue sample's hydration levels after exposure to the solvent, noting a steady decline across all replicate runs."}
+{"sid": "1073:B#2", "text": "During the procedure the surgeon carefully separated the retina from the underlying choroid before suturing the small incision closed."}
+{"sid": "1073:B#3", "text": "The pediatric ward recorded elevated bilirubin readings in several newborns, so phototherapy was started as a precaution."}
+{"sid": "136:B#0", "text": "Watch the recorded lecture at https://www.example.org/talk?v=Qw3RtY8z for the full explanation of the method."}
+{"sid": "136:B#1", "text": "Smith J, Okafor L, Mendes P, Hart R. Serum levels of interleukin-6 predict Recovery in acute pancreatitis patients."}
+{"sid": "136:B#2", "text": "The striker celebrated his goal by raising both arms, and fans in the north stand chanted his name for several minutes."}
+{"sid": "136:B#3", "text": "Contact the support desk at extension 4420 if the Transaction fails twice, and include the reference code from your receipt."}
+{"sid": "801:B#0", "text": "Parents often ask whether vaccines are safe for infants. The short answer is yes, and most pediatricians agree that the benefits far outweigh the risks."}
+{"sid": "801:B#1", "text": "The committee concluded that the bridge design is a practical solution for the river crossing, given the soil conditions and expected traffic loads."}
+{"sid": "801:B#2", "text": "Researchers reported that the new alloy is far more resistant to corrosion, which makes it a promising option for offshore pipelines."}
+{"sid": "801:B#3", "text": "Students who struggle with algebra can benefit from tutoring. Consistent practice is the most reliable way to build confidence with equations and functions."}
+{"sid": "882:B#0", "text": "Read the paragraph carefully and identify the main verb in sentence three. Then list every noun phrase you find in the second paragraph."}
+{"sid": "882:B#1", "text": "The committee met on Tuesday to review the budget proposal, and the chair noted that the cuts would affect three departments."}
+{"sid": "882:B#2", "text": "In the Python script, the variable named total_count is reset inside the loop, so the final value printed is always zero."}
+{"sid": "882:B#3", "text": "Ingredients: two cups of flour, one egg, a pinch of salt, and warm milk added slowly until the dough is smooth."}
+{"sid": "1008:B#0", "text": "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; see the GNU Lesser General Public License for more details at the project website."}
+{"sid": "1008:B#1", "text": "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files, to deal in the Software without restriction."}
+{"sid": "1008:B#2", "text": "The new dashboard offers a built-in Bluetooth pairing feature, letting drivers connect their phones instantly while keeping hands on the wheel."}
+{"sid": "1008:B#3", "text": "To restore your purchases, open the App Store on your iPhone, tap your profile icon, then select Purchased to see every title you have ever downloaded."}
+{"sid": "890:B#0", "text": "The config file sets retries = 3 and timeout = 30 seconds for the upstream client, with backoff enabled by default."}
+{"sid": "890:B#1", "text": "Dear Mr. Patel, thank you for your letter of March 4th regarding the lease renewal; we will respond by the end of the month."}
+{"sid": "890:B#2", "text": "In the lab we measured absorbance at 450 nm after incubating the samples for 20 minutes at room temperature."}
+{"sid": "890:B#3", "text": "Recipe: whisk two eggs with a cup of milk, fold in flour, then bake the batter at 180 degrees for thirty minutes."}
+{"sid": "504:B#0", "text": "She paused at the edge of the lake to snap a quick picture before the rain rolled in over the hills."}
+{"sid": "504:B#1", "text": "The museum allowed visitors to capture the paintings on their phones, though flash photography was strictly forbidden."}
+{"sid": "504:B#2", "text": "He set the tripod near the window and carefully framed a wide view of the harbor at dusk."}
+{"sid": "504:B#3", "text": "During the parade, the kids lined up along the curb, eager to wave at the marching bands as they passed by."}
+{"sid": "1212:B#0", "text": "The museum guide pointed to a dusty leather satchel and whispered that it once held the explorer's maps of the lost temple."}
+{"sid": "1212:B#1", "text": "Residents said the late-night blaze started in a garage, and firefighters worked until dawn to keep it from spreading to nearby homes."}
+{"sid": "1212:B#2", "text": "When the recipe calls for two cups of flour, sift it first so the cake rises evenly and the crumb stays light."}
+{"sid": "1212:B#3", "text": "The committee voted to approve the budget after a long debate, sending the proposal to the mayor's office for final review."}
+{"sid": "1040:B#0", "text": "The surgeon made a small incision and reviewed the fallopian tube for signs of rupture during the minimally invasive procedure."}
+{"sid": "1040:B#1", "text": "Vaginal delivery was attempted after a cesarean section, and the obstetric team monitored uterine contractions closely throughout labor."}
+{"sid": "1040:B#2", "text": "The sonographer measured fetal growth and amniotic fluid volume at each prenatal visit to track the pregnancy's progress."}
+{"sid": "1040:B#3", "text": "Plasmodium parasites develop inside red blood cells, and drug resistance markers have been mapped in clinical isolates from several regions."}
+{"sid": "1839:B#0", "text": "Please take a moment to review the terms before continuing; you may withdraw your consent at any time by contacting support."}
+{"sid": "1839:B#1", "text": "The committee will reconvene next spring to reassess the budget, and members are asked to set aside time for the review."}
+{"sid": "1839:B#2", "text": "Researchers observed that the proteins formed stable complexes, though the mechanism driving their assembly remained unclear."}
+{"sid": "1839:B#3", "text": "Customers who wish to cancel their subscription must do so before the billing cycle ends, or the charge will still apply."}
+{"sid": "1079:B#0", "text": "Our hiking group walked for hours, and the trailhead still seemed far away when we finally reached the summit overlook."}
+{"sid": "1079:B#1", "text": "The recipe says to stir gently until the sauce thickens, but I keep stirring too vigorously and it splits."}
+{"sid": "1079:B#2", "text": "Please confirm the shipment arrival date, since the warehouse listed a delay of three days without explanation."}
+{"sid": "1079:B#3", "text": "When the lights flickered during the storm, Grandma calmly lit a candle and told us the story of the old lighthouse keeper."}
+{"sid": "789:B#0", "text": "Fans still argue about whether the the sequel surpassed the original, but everyone agrees the soundtrack was unforgettable."}
+{"sid": "789:B#1", "text": "When the rain finally stopped, we walked to the the old market and bought fresh bread still warm from the oven."}
+{"sid": "789:B#2", "text": "Critics praised the novel's structure, though a few complained that the ending felt rushed after such a slow, careful buildup."}
+{"sid": "789:B#3", "text": "The museum's newest exhibit traces the history of bicycles, from wooden prototypes to carbon-fiber racers."}
+{"sid": "727:B#0", "text": "The committee noted that the proposal, though well-intentioned, lacked adequate funding details to be approved this session."}
+{"sid": "727:B#1", "text": "Researchers found that participants who slept less than six hours showed measurably slower reaction times the following morning."}
+{"sid": "727:B#2", "text": "Many readers assume that classic novels were always celebrated, but most were largely ignored by critics during their first publication."}
+{"sid": "727:B#3", "text": "Her report made clear that the company's quarterly losses were driven mostly by one-time restructuring costs rather than falling sales."}
+{"sid": "1439:B#0", "text": "The Department of Physics reported that the superconducting coil reached 4.2 Kelvin during the cooldown sequence."}
+{"sid": "1439:B#1", "text": "In the mouse model, tumor volume was measured every three days, and the mean diameter was recorded as 12.5 mm after treatment."}
+{"sid": "1439:B#2", "text": "Samples were centrifuged at 14,000 rpm for ten minutes before the supernatant was collected for ELISA analysis."}
+{"sid": "1439:B#3", "text": "The catalyst achieved a turnover frequency of 37 per hour under ambient pressure, according to the reported kinetic data."}
+{"sid": "1599:B#0", "text": "The committee reviewed the budget line by line, then approved the amended proposal for the coming fiscal year after a short debate."}
+{"sid": "1599:B#1", "text": "In the matrix equation, we substitute the eigenvalue back in and solve for the remaining coefficient   under the given boundary condition."}
+{"sid": "1599:B#2", "text": "To parse the config file, the loader reads each key, strips whitespace, and maps the value onto the corresponding   field in the settings struct."}
+{"sid": "1599:B#3", "text": "Researchers measured the enzyme's activity at several temperatures; the optimum occurred near 37 degrees, after which activity dropped sharply."}
+{"sid": "1048:B#0", "text": "Plaintiff appeals the district court's dismissal of the complaint, arguing that the statute of limitations was tolled, and the matter should be remanded for further proceedings."}
+{"sid": "1048:B#1", "text": "Please include your full name and mailing address on the form, then return it to the office before the deadline next Friday."}
+{"sid": "1048:B#2", "text": "The committee met on Tuesday to review the budget proposal, and members agreed to revisit the staffing numbers in March."}
+{"sid": "1048:B#3", "text": "Copyright 2021 Mozilla Foundation. Licensed under the Mozilla Public License 2.0.\n See the LICENSE file for details on usage and redistribution."}
+{"sid": "282:B#0", "text": "The new model claims to outperform its predecessor by a wide margin in battery life and display brightness."}
+{"sid": "282:B#1", "text": "Critics said the sequel was noticeably darker than the original, trading its playful humor for something grim."}
+{"sid": "282:B#2", "text": "Researchers found that patients who took the drug reported a far stronger response than those given the placebo."}
+{"sid": "282:B#3", "text": "The bakery on Elm Street is famous for its cinnamon rolls, which sell out earlier every weekend than anywhere else in town."}
+{"sid": "650:B#0", "text": "The mountain trail winds past the old quarry and ends at a small lake, where hikers often rest before the steep descent back to town."}
+{"sid": "650:B#1", "text": "Council members voted to repair the bridge over the river, citing months of wear from heavy trucks and recent flooding along the lower road."}
+{"sid": "650:B#2", "text": "Researchers measured the reaction rate at several temperatures, finding that the catalyst stayed stable even when pressure rose sharply."}
+{"sid": "650:B#3", "text": "The festival draws visitors from across the region each summer, with lantern parades, street food stalls, and live music in the old town square."}
+{"sid": "91:B#0", "text": "The committee met on Tuesday to review the budget proposal, and members debated whether the new library wing should be funded before the athletic center."}
+{"sid": "91:B#1", "text": "Researchers at the observatory recorded unusual radio bursts from a distant galaxy, and the team plans to publish their findings next spring."}
+{"sid": "91:B#2", "text": "The festival opens with a parade through downtown, followed by a concert in the park featuring local jazz bands and food from neighborhood vendors."}
+{"sid": "91:B#3", "text": "Many hikers visit the canyon in early autumn, when temperatures drop and the cottonwoods along the river turn a brilliant gold."}
+{"sid": "1934:B#0", "text": "The company will soon dispose of its aging fleet of delivery vans and replace them with electric models next year."}
+{"sid": "1934:B#1", "text": "She spent the afternoon at the lake, enjoying the sunshine and the quiet of the early autumn breeze."}
+{"sid": "1934:B#2", "text": "With the funds at their disposal, the team decided to hire two more engineers and expand the research lab."}
+{"sid": "1934:B#3", "text": "Officials announced that the old warehouse would be disposed of through a public auction in early spring."}
+{"sid": "1398:B#0", "text": "The old recipe calls for two cups of flour, but I did not measure it carefully and the cake came out dense."}
+{"sid": "1398:B#1", "text": "Hosting guests tonight, so the living room has to be cleaned, the dishes washed, and the candles lit before they arrive."}
+{"sid": "1398:B#2", "text": "Researchers reported that the new vaccine is not yet approved for children under five, though trials continue."}
+{"sid": "1398:B#3", "text": "She pulled the blanket over her shoulders, wondering whether the storm would end before morning or keep rattling the windows all night."}
+{"sid": "995:B#0", "text": "She sold her house last spring to pay off the medical bills, leaving her children with nothing but a small apartment across town."}
+{"sid": "995:B#1", "text": "After the flood destroyed the harvest, the farmer walked miles to ask the bank for help feeding his family through winter."}
+{"sid": "995:B#2", "text": "The coach promised the team a better season, but the players knew the real test would be whether they could protect their children from the hardships ahead."}
+{"sid": "995:B#3", "text": "Years of unpaid overtime left the nurse exhausted, and she worried constantly about how she would support her parents in old age."}
+{"sid": "374:B#0", "text": "After the tow truck came, he finally hauled off the wrecked sedan from the median."}
+{"sid": "374:B#1", "text": "The kids were told to wrap up the picnic and clear off the grass before the storm arrived."}
+{"sid": "374:B#2", "text": "Please don't fob me off with vague excuses again; I want a straight answer about the refund."}
+{"sid": "374:B#3", "text": "She tore off a quick reply on her phone before running out to catch the train."}
+{"sid": "1161:B#0", "text": "The patient was admitted with acute chest pain and was monitored in the cardiac unit overnight. Serial troponin levels were drawn every six hours."}
+{"sid": "1161:B#1", "text": "The committee reviewed the proposal in detail, noting that the budget for infrastructure was under pressure due to delayed federal funding."}
+{"sid": "1161:B#2", "text": "She walked along the riverbank at dusk, watching the lanterns drift past the old stone bridge toward the sea."}
+{"sid": "1161:B#3", "text": "To install the package, open a terminal in the project folder and run pip install -r requirements.txt, then start the server with python app.py."}
+{"sid": "1892:B#0", "text": "The committee reviewed the proposal and found that the applicant had knowingly omitted key financial disclosures from the filing."}
+{"sid": "1892:B#1", "text": "Researchers observed that the enzyme remained persistently active even after the cells were exposed to the inhibitor."}
+{"sid": "1892:B#2", "text": "The contract stated that any party who deliberately withheld payment would forfeit all rights to the disputed property."}
+{"sid": "1892:B#3", "text": "Many historians argue that the empire systematically suppressed local languages to consolidate control over its provinces."}
+{"sid": "1774:B#0", "text": "The committee met on Tuesday to review the proposed budget, and members debated whether the new funding should go toward staffing or equipment."}
+{"sid": "1774:B#1", "text": "Please submit your completed application form by March 3rd, and include a signed copy of the agreement with your supporting documents."}
+{"sid": "1774:B#2", "text": "The court of appeals affirmed the district court's ruling, finding that the plaintiff had failed to establish the required elements of the claim."}
+{"sid": "1774:B#3", "text": "Customers can pick up their orders at the front counter, or have them delivered to any address within five miles of the store."}
+{"sid": "1162:B#0", "text": "The committee reviewed the proposal and asked the team to clarify the budget assumptions before any final vote was taken."}
+{"sid": "1162:B#1", "text": "Researchers measured soil moisture across three seasons and found that drainage patterns varied sharply between the eastern and western plots."}
+{"sid": "1162:B#2", "text": "She bought fresh vegetables at the market every Saturday, then cooked a large pot of soup to last through the week."}
+{"sid": "1162:B#3", "text": "The museum's new exhibit explores how early mapmakers depicted coastlines, rivers, and distant lands using limited surveying tools."}
+{"sid": "1769:B#0", "text": "Cryo-electron microscopy revealed the molecular architecture of the ribosome-bound elongation factor complex at near-atomic resolution."}
+{"sid": "1769:B#1", "text": "Researchers measured how small peptides self-assemble, mapping the molecular interactions that stabilize their fibrillar structures in solution."}
+{"sid": "1769:B#2", "text": "The lab used fluorescence tagging to track molecular motors transporting cargo along microtubules inside living neurons."}
+{"sid": "1769:B#3", "text": "Mutations in the receptor's binding pocket altered its molecular recognition profile, shifting selectivity toward larger ligands."}
+{"sid": "78:B#0", "text": "Turn off the oven once the bread is golden, then leave the door cracked so the crust stays crisp."}
+{"sid": "78:B#1", "text": "The thermostat should sit away from direct sunlight, since a warm wall can trick it into running the heater too long."}
+{"sid": "78:B#2", "text": "Store the seeds in a cool, dry place, because humidity at room temperature can cause mold within weeks."}
+{"sid": "78:B#3", "text": "The cast iron pan retains heat so evenly that a single preheat minute is usually enough for searing steak."}
+{"sid": "1693:B#0", "text": "Copyright 2015 The Authors. Licensed under the MIT License, see the LICENSE file in the root directory for full terms. Redistribution and use are permitted with attribution."}
+{"sid": "1693:B#1", "text": "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation. See the file COPYING for details."}
+{"sid": "1693:B#2", "text": "Local residents gathered at the square on Sunday, sharing stories and photographs of the old neighborhood before the bulldozers arrive next spring.\n\nOrganizers hope the event will become an annual tradition."}
+{"sid": "1693:B#3", "text": "The configuration file must be placed in the project root before running the build; otherwise the loader will fall back to defaults.\nConsult the documentation for a complete list of options."}
+{"sid": "415:B#0", "text": "Der Verein gab am Montag bekannt, dass der Vertrag mit dem Trainer Sven bis 2026 verlängert wurde. Die Fans feierten die Entscheidung."}
+{"sid": "415:B#1", "text": "The city council approved the budget on Tuesday after a long debate. Residents of the Northern district expressed concern about the new road tolls."}
+{"sid": "415:B#2", "text": "Il ministero ha pubblicato il bando per il finanziamento dei progetti di ricerca. Le domande devono essere presentate entro il 15 marzo."}
+{"sid": "415:B#3", "text": "Category:Footballers from Lisbon\nCategory:Portuguese men's footballers\nCategory:Association football midfielders\nCategory:Living people"}
+{"sid": "600:B#0", "text": "In the study of stochastic processes, the transition probabilities of a recurrent chain are determined by its invariant measure."}
+{"sid": "600:B#1", "text": "The committee reviewed the proposal for a new bridge across the river, weighing environmental impact against projected economic benefits."}
+{"sid": "600:B#2", "text": "Patients receiving the experimental therapy showed a marked reduction in tumor volume compared with the control group after six months."}
+{"sid": "600:B#3", "text": "She carefully wrapped the antique vase in newspaper, placing it gently inside the wooden crate before the long journey north."}
+{"sid": "479:B#0", "text": "今日はとても寒いので、温かいお茶を飲みました。"}
+{"sid": "479:B#1", "text": "彼は毎朝six時に起きて、新聞を読むのが習慣です。"}
+{"sid": "479:B#2", "text": "この駅から大学まで歩いて十分ほどかかります。電車で行くと早いです。"}
+{"sid": "479:B#3", "text": "会議の資料はメールで送ったので、ご確認いただければ幸いです。"}
+{"sid": "1096:B#0", "text": "The conference schedule lists three keynote talks, but the room assignments were changed at the last minute and attendees were asked to check the app for updates."}
+{"sid": "1096:B#1", "text": "Our bakery opens at six every morning, and the sourdough loaves sell out before nine on weekdays, so arrive early if you want one."}
+{"sid": "1096:B#2", "text": "When the storm knocked out power across the valley, crews worked through the night to restore lines, prioritizing hospitals and the water treatment plant first."}
+{"sid": "1096:B#3", "text": "The new library wing features a reading garden, study pods on every floor, and a café that stays open late during exam week."}
+{"sid": "1104:B#0", "text": "The board of directors approved the quarterly report after a lengthy review of executive compensation and shareholder returns."}
+{"sid": "1104:B#1", "text": "Investors pressed the company to disclose more about its stock buyback program, arguing that shareholder value had been neglected for years."}
+{"sid": "1104:B#2", "text": "The committee chair announced that the audit findings would be shared with the full board before the annual meeting next month."}
+{"sid": "1104:B#3", "text": "Regulators have increased scrutiny of how public companies handle conflicts of interest, particularly around corporate disclosure and board oversight."}
+{"sid": "1149:B#0", "text": "The engineer checked the readings twice before signing off, since even a single faulty sensor could skew the entire calibration run."}
+{"sid": "1149:B#1", "text": "Please review the attached contract carefully; any unclear clause should be flagged before we schedule the signing meeting next week."}
+{"sid": "1149:B#2", "text": "When the server restarted, the logs showed a corrupted index entry that had been silently ignored for several days."}
+{"sid": "1149:B#3", "text": "The recipe calls for a pinch of salt, but too much sugar will overwhelm the delicate flavor of the roasted tomatoes."}
+{"sid": "188:B#0", "text": "Copyright 2008-2016 Oracle Corporation. Licensed under the GNU General Public License, version 2, with the Classpath Exception."}
+{"sid": "188:B#1", "text": "# Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. Copyright 2012-2018 The Apache Foundation."}
+{"sid": "188:B#2", "text": "/* Copyright (c) 1999-2011 The Regents of the University of California. All rights reserved. Redistribution permitted under BSD terms. */"}
+{"sid": "188:B#3", "text": "import org.springframework.boot.SpringApplication\nimport org.springframework.boot.autoconfigure.SpringBootApplication\n// Copyright 2016-2021 Pivotal Software, Inc. Auto-generated header."}
+{"sid": "1227:B#0", "text": "The committee chair, Mr. Dick Hollins, announced that the new budget would be reviewed next Tuesday."}
+{"sid": "1227:B#1", "text": "Our guest speaker this evening is Richard Paulsen, who will discuss his new book on coastal erosion."}
+{"sid": "1227:B#2", "text": "In the 1960s, the band's bassist, Dickie Moore, wrote most of the lyrics for their breakout album."}
+{"sid": "1227:B#3", "text": "Please contact Richard Ostrowski at the front desk if you need assistance with your reservation."}
+{"sid": "489:B#0", "text": "The recipe calls for two eggs, but honestly, you can skip one if you're short on time. Still tastes great, isn't it?"}
+{"sid": "489:B#1", "text": "He read the letter twice, then folded it neatly. Nothing had changed, yet somehow everything had."}
+{"sid": "489:B#2", "text": "The bridge was closed for repairs, so we took the long way around. Scenic, though, I'll admit that much."}
+{"sid": "489:B#3", "text": "She typed the final line of code, hit save, and waited. Would it compile this time, or not?"}
+{"sid": "859:B#0", "text": "The court held that the appellant's motion was untimely, and therefore the trial court lacked jurisdiction to consider the claims raised in the petition."}
+{"sid": "859:B#1", "text": "Our analysis of the spectral data shows a clear dependence on temperature, with peak intensity shifting toward lower wavelengths as the sample cools."}
+{"sid": "859:B#2", "text": "The contract clause states that either party may terminate the agreement upon thirty days written notice to the other party, subject to the provisions above."}
+{"sid": "859:B#3", "text": "In the example below, the function returns a list of matching records, and the caller is responsible for handling any exceptions raised during iteration."}
+{"sid": "1635:B#0", "text": "The two cables were firmly connected to the backplane, but the signal kept dropping until we replaced the expander."}
+{"sid": "1635:B#1", "text": "Engineers verified that each sensor was connected to the controller before starting the calibration routine."}
+{"sid": "1635:B#2", "text": "The pipeline carries crude oil in a continuous flow from the offshore platform to the refinery on the coast."}
+{"sid": "1635:B#3", "text": "She sat by the window, connected to the world only through the slow glow of her phone."}
+{"sid": "117:B#0", "text": "I was reading the manual last night and got stuck on the part about how the config file is loaded. Could someone explain what the default path is?"}
+{"sid": "117:B#1", "text": "She opened the box carefully, expecting a letter, but found only a faded photograph and a key that had no label or explanation attached."}
+{"sid": "117:B#2", "text": "When building the project on Windows, the linker kept complaining about missing symbols, so I tried rebuilding everything from scratch with a clean cache."}
+{"sid": "117:B#3", "text": "The recipe says to preheat the oven first, but I always forget, so I end up waiting twenty minutes while the dough sits on the counter."}
+{"sid": "284:B#0", "text": "The config file sets the timeout value to 30 seconds before retrying the connection to the upstream server."}
+{"sid": "284:B#1", "text": "She opened the drawer and found three old photographs, a rusted key, and a letter addressed to her grandmother."}
+{"sid": "284:B#2", "text": "In the spreadsheet, column C holds the monthly totals, and the formula in row 12 sums C from the first through the last entry."}
+{"sid": "284:B#3", "text": "The recipe calls for two cups of flour, one egg, and a pinch of salt before the dough is left to rest overnight."}
+{"sid": "622:B#0", "text": "The Western lowland gorilla (Gorilla gorilla gorilla) is a critically endangered great ape found in the forests of central Africa, where it faces habitat loss and poaching."}
+{"sid": "622:B#1", "text": "Researchers collected blood samples from 200 participants and measured serum cortisol levels across three time points to evaluate the stress response during the trial."}
+{"sid": "622:B#2", "text": "To parse the JSON response in Python, call json.loads on the body, then iterate over the resulting dictionary and print each key alongside its nested value."}
+{"sid": "622:B#3", "text": "The Kenyan parliament debated the new water bill on Tuesday, with opposition members arguing that rural communities would bear the heaviest burden of the proposed fees."}
+{"sid": "745:B#0", "text": "Our new hiking backpacks offer a great range of sizes and colours, perfect for weekend trips. Browse the collection and find one that fits your adventure."}
+{"sid": "745:B#1", "text": "The recipe calls for a pinch of salt and two cups of flour, mixed with warm water until the dough is smooth and elastic."}
+{"sid": "745:B#2", "text": "Parents often wonder when to start saving for university, and the answer is usually as early as possible. Begin by setting aside a small monthly amount."}
+{"sid": "745:B#3", "text": "The committee reviewed the proposal carefully, noting that the budget was tight but the goals were achievable, and it voted to approve the project for the coming year."}
+{"sid": "1240:B#0", "text": "Thanks for the update. The build now compiles, but the linker still complains about a missing symbol in libfoo.so."}
+{"sid": "1240:B#1", "text": "<template>\n  <div class=\"wrapper\"><span>Loading...</span></div>\n</template>\n<script>\nexport default {}\n</script>"}
+{"sid": "1240:B#2", "text": "The Jenkinsfile was copied from the template repo, so the pipeline stage names still reference the old project."}
+{"sid": "1240:B#3", "text": "Abstract: We study convergence rates of stochastic gradient descent under heavy-tailed noise, proving bounds that hold with high probability."}
+{"sid": "394:B#0", "text": "Honestly, I can't believe the restaurant was closed. We walked three miles and didn't even get a single bite of food before dark."}
+{"sid": "394:B#1", "text": "The old bridge was so narrow that two carts could barely pass, and some villagers wouldn't even cross it after sunset."}
+{"sid": "394:B#2", "text": "He spent the whole budget on the trip, so now he can't afford a train ticket or even a cheap sandwich for the ride."}
+{"sid": "394:B#3", "text": "The project was delayed again, and the team hasn't even agreed on which features to cut from the first release."}
+{"sid": "1951:B#0", "text": "Ruby on Rails app: my scss file isn't being picked up. The stylesheet_link_tag in application.html.erb seems right, but the page loads unstyled. Any ideas what I'm missing?"}
+{"sid": "1951:B#1", "text": "In my ASP.NET MVC view I added an Ajax.ActionLink to refresh a div, but the partial never updates. The controller action returns a PartialView as expected."}
+{"sid": "1951:B#2", "text": "I'm writing a Jekyll plugin gemspec, and the version constant isn't loading. Should I require the version file before defining the Gem::Specification block?"}
+{"sid": "1951:B#3", "text": "Entity Framework throws a 'does not contain a definition' error when I project anonymous types in a LINQ query. Is there a cleaner way to shape the results?"}
+{"sid": "1561:B#0", "text": "Keep your voice down during the meeting, the director said, glaring across the table at the junior staff."}
+{"sid": "1561:B#1", "text": "The committee praised the proposal, though a few members quietly wondered whether the budget would hold through spring."}
+{"sid": "1561:B#2", "text": "She signed the contract without reading the fine print, eager to start, and the terms were quietly altered later."}
+{"sid": "1561:B#3", "text": "He stood at the doorway, hesitating, unsure whether to accept the job offer before the deadline passed."}
+{"sid": "436:B#0", "text": "Die Forscher beobachteten, dass die Pflanzen nach dem Regen deutlich schneller wuchsen als erwartet. Im Feld zeigte sich die Wirkung besonders stark."}
+{"sid": "436:B#1", "text": "In the lab, the bacterial culture was incubated overnight, and the cells were then washed and resuspended before analysis by flow cytometry."}
+{"sid": "436:B#2", "text": "Der Zug hatte wegen eines technischen Defekts über eine Stunde Verspätung, sodass viele Pendler den Anschluss am Hauptbahnhof verpassten."}
+{"sid": "436:B#3", "text": "def compute_total(items):\n    total = 0\n    for item in items:\n        total += item.price * item.quantity\n    return total"}
+{"sid": "1094:B#0", "text": "Honestly, I think you really need to take a break before the exam, because burnout will hurt more than one bad night of sleep."}
+{"sid": "1094:B#1", "text": "The committee said the new policy would have to wait until next spring, after the budget review and public comment period finish."}
+{"sid": "1094:B#2", "text": "She opened the old box and found letters from her grandmother, tied with faded ribbon and never once mentioned in family stories until now."}
+{"sid": "1094:B#3", "text": "If you want the sauce to thicken properly, you'll probably need to simmer it uncovered for at least twenty minutes over low heat."}
+{"sid": "1584:B#0", "text": "The stock closed at 52.3 with volume up sharply, while analysts noted the earnings beat and raised guidance for next quarter."}
+{"sid": "1584:B#1", "text": "In the lecture we defined the process $\\{M_t\\}$ and showed it is a martingale with respect to the natural filtration of the Brownian motion."}
+{"sid": "1584:B#2", "text": "Patients were randomized into two arms, and the primary outcome was change in systolic blood pressure measured at twelve weeks post-treatment."}
+{"sid": "1584:B#3", "text": "The estimator converges in probability to the true parameter when the sample size grows, provided the  regularity conditions on the likelihood hold."}
+{"sid": "1053:B#0", "text": "He was honored as Coach of the Year twice during his decade-long tenure with the club."}
+{"sid": "1053:B#1", "text": "The museum announced that its Exhibit of the Month for June will feature photographs from the 1920s."}
+{"sid": "1053:B#2", "text": "She received the Teacher of the Semester award from the university's engineering department last spring."}
+{"sid": "1053:B#3", "text": "Critics praised the film's cinematography and named it one of the Best Films of the year."}
+{"sid": "670:B#0", "text": "The function returns true only when the buffer is empty and the cursor has reached the final position."}
+{"sid": "670:B#1", "text": "Let $f(n)=n^2+3n$. Compute the value of $f(4)$ and then find the remainder when it is divided by 7."}
+{"sid": "670:B#2", "text": "She said the package would arrive by Friday, but it never showed up at the front door."}
+{"sid": "670:B#3", "text": "Find all integers k such that 3k - 12 is divisible by 9 and k is positive."}
+{"sid": "1642:B#0", "text": "The veterinary clinic admitted several injured sheep, goats, and ponies during the storm, and staff worked through the night to stabilize each animal."}
+{"sid": "1642:B#1", "text": "Our lab protocol requires that all rodents be housed in ventilated cages and monitored daily for signs of distress by trained personnel."}
+{"sid": "1642:B#2", "text": "In the nursery config, set ServerAlias to include the subdomain wildcard so that staging.example.org also routes to the application."}
+{"sid": "1642:B#3", "text": "Botanists recorded several rare orchids, including Dendrobium and Bulbophyllum, growing on moss-covered limbs in the cloud forest."}
+{"sid": "445:B#0", "text": "The config file lists the dependencies, but the build still fails with an unresolved external symbol at link time."}
+{"sid": "445:B#1", "text": "She opened the spreadsheet and found the totals were off by a factor of ten after the import script ran."}
+{"sid": "445:B#2", "text": "The recipe calls for two cups of flour, one egg, and a pinch of salt folded in gently."}
+{"sid": "445:B#3", "text": "During the storm the ferry was delayed, so passengers waited on the dock until the harbor lights came back on."}
+{"sid": "169:B#0", "text": "The engineers adjusted the valve pressure and watched the gauge climb steadily toward the red mark on the dial."}
+{"sid": "169:B#1", "text": "She tuned the guitar carefully, listening for the clear pitch of each string before strumming the opening chord."}
+{"sid": "169:B#2", "text": "The bakery opens at dawn, and by seven the shelves are stacked with warm loaves, croissants, and sourdough rounds."}
+{"sid": "169:B#3", "text": "Researchers measured the sample's conductivity across several temperatures, noting how the resistance dropped sharply near absolute zero."}
+{"sid": "19:B#0", "text": "The committee noted that the proposal, which may affect several departments, requires further review before any final vote is taken."}
+{"sid": "19:B#1", "text": "Researchers observed that the sample, which may contain contaminants, should be re-tested under controlled laboratory conditions."}
+{"sid": "19:B#2", "text": "Residents reported that the storm, which may bring heavy rain overnight, could disrupt power lines across the eastern districts."}
+{"sid": "19:B#3", "text": "Critics argued that the policy, which may benefit larger firms, leaves small businesses with few protections against rising costs."}
+{"sid": "593:B#0", "text": "The patient's bone marrow showed signs of early recurrence, and the lab flagged it before any symptoms appeared. Researchers noted the return of the disease was detected molecularly first."}
+{"sid": "593:B#1", "text": "Engineers wired the summation circuit so that the combined pulses could provide the clock and enable signals to the memory array."}
+{"sid": "593:B#2", "text": "The mechanic said the wheel bearing had started to fail, so he would replace it with a new unit before the car went back on the road."}
+{"sid": "593:B#3", "text": "She wrote the sensor code carefully, then added a comment noting the buffer was cleared before each reading to avoid stale data."}
+{"sid": "1876:B#0", "text": "Please contact the office or email support@example.com if you have questions about your account."}
+{"sid": "1876:B#1", "text": "The results were clear: participants who slept more reported higher mood, though the effect size was modest across all groups."}
+{"sid": "1876:B#2", "text": "She packed the car early, double-checked the map, and waited by the door for her brother to finish his coffee."}
+{"sid": "1876:B#3", "text": "This software is provided under the MIT License; see the LICENSE file in the repository root for the full terms."}
+{"sid": "1846:B#0", "text": "Use the ng directive to bind the input value to the model in your Angular template."}
+{"sid": "1846:B#1", "text": "Imported the module with import statements at the top of the TypeScript file before declaring the component."}
+{"sid": "1846:B#2", "text": "In the Dockerfile, set the base image with FROM node:14 and then copy the source files into the container."}
+{"sid": "1846:B#3", "text": "The function returns a promise that resolves once the fetch call completes and the JSON body is parsed."}
+{"sid": "1217:B#0", "text": "The committee agreed that the proposal, although ambitious, needed clearer budgeting before final approval could be granted. Members asked for revised figures by Friday."}
+{"sid": "1217:B#1", "text": "Our bakery opens early on weekends, so arrive before nine if you want the sourdough. It sells out quickly, especially in the cooler months."}
+{"sid": "1217:B#2", "text": "When the storm passed, residents gathered in the square to assess the damage, share supplies, and check on elderly neighbors who had stayed indoors."}
+{"sid": "1217:B#3", "text": "To install the update, download the package from the official site, verify the checksum, and restart the device. Keep the power connected throughout."}
+{"sid": "364:B#0", "text": "The Sandbox config sets the variable and closes the parenthesis: if (is_android) { compile_suid_client = true })."}
+{"sid": "364:B#1", "text": "Write the function signature as void process(int count) before the body begins."}
+{"sid": "364:B#2", "text": "Fix the header guard by ending the macro call with #endif and a closing parenthesis) on the same line."}
+{"sid": "364:B#3", "text": "In the test file, the assertion checks alignment: CHECK: alloca i32, align 4 for the struct member."}
+{"sid": "439:B#0", "text": "The study found strong results in one group, but in contrast the control group showed almost no measurable change over the same period."}
+{"sid": "439:B#1", "text": "Researchers expected a slower reaction, yet in contrast the samples heated rapidly and reached equilibrium within seconds."}
+{"sid": "439:B#2", "text": "Her approach to the project was cautious and methodical, in contrast to his impulsive style that often led to rushed decisions."}
+{"sid": "439:B#3", "text": "Unlike the earlier model, this version runs on battery power, in comparison with the bulkier designs that required a wall outlet."}
+{"sid": "749:B#0", "text": "Use the requests library to send a POST, then call response.json() to parse the body. Wrap it in a try block for network errors."}
+{"sid": "749:B#1", "text": "In the Java class, call super.onCreate(savedInstanceState) before inflating the layout, otherwise the activity may crash on startup."}
+{"sid": "749:B#2", "text": "The SQL query joins orders to customers, then groups by region. Make sure the HAVING clause filters aggregates, not raw rows."}
+{"sid": "749:B#3", "text": "When the Swift closure captures self strongly, you get a retain cycle; mark it [weak self] inside the completion handler to fix it."}
+{"sid": "7:B#0", "text": "The function returns early when the buffer is empty, so callers must check the length first.  "}
+{"sid": "7:B#1", "text": "He opened the file, read the header, and then  closed it without saving any changes to the document."}
+{"sid": "7:B#2", "text": "Under the terms of the agreement, the parties  shall not disclose confidential information to any third party."}
+{"sid": "7:B#3", "text": "In the second half of the season, the team  struggled with injuries and finished near the bottom of the standings."}
+{"sid": "18:B#0", "text": "The meeting has been rescheduled for Thursday, October 9th at 3 p.m. in the library conference room."}
+{"sid": "18:B#1", "text": "Tickets for the summer festival go on sale August 15 at noon through the official website."}
+{"sid": "18:B#2", "text": "The hearing was postponed until Monday, April 2 at 9:30 a.m. after the judge's schedule changed."}
+{"sid": "18:B#3", "text": "The package was delivered to our office on December 4, according to the shipping confirmation email."}
+{"sid": "578:B#0", "text": "She planned to bake the bread at dawn, so she set the oven to heat while the dough rested under a damp cloth on the counter."}
+{"sid": "578:B#1", "text": "When comparing the two sensors, the engineers noted that the calibration drift was smaller in the newer model after thirty days of continuous operation."}
+{"sid": "578:B#2", "text": "Our team spent the afternoon cataloging fossil specimens, carefully labeling each drawer so future researchers could find the right sample quickly."}
+{"sid": "578:B#3", "text": "The river wound through the valley for miles, carving soft limestone cliffs that glowed a pale gold whenever the late sun hit the water at an angle."}
+{"sid": "860:B#0", "text": "The stylesheet sets .card { padding: 12px; } and then overrides it with margin-bottom: 4px; on the wrapper div."}
+{"sid": "860:B#1", "text": "In the XAML, set Grid.Column=\"1\" and Margin=\"0,5,0,5\" so the label sits beside the textbox with spacing."}
+{"sid": "860:B#2", "text": "const box = document.querySelector('.panel'); box.style.borderRadius = '6px'; box.style.paddingLeft = '10px';"}
+{"sid": "860:B#3", "text": "The Kotlin data class has val id: Int, val title: String, and val  width: Float, used for layout sizing."}
+{"sid": "1775:B#0", "text": "I was stuck at the airport gate for hours, so I spent the time reading a battered paperback someone had left on the seat beside me."}
+{"sid": "1775:B#1", "text": "While the kettle boiled in the quiet kitchen, I started humming an old song my grandmother used to sing when it rained."}
+{"sid": "1775:B#2", "text": "The fishing boat rocked gently at the dock as the crew began unloading crates of silver mackerel before the morning market opened."}
+{"sid": "1775:B#3", "text": "After the long meeting ended, everyone stood up at once and started gathering their laptops, notebooks, and coffee cups from the conference table."}
+{"sid": "1026:B#0", "text": "The configuration file sets the port to 8080 and enables debug logging for all modules during local development runs."}
+{"sid": "1026:B#1", "text": "She opened the drawer, pulled out the old photographs, and began sorting them by the year they were taken."}
+{"sid": "1026:B#2", "text": "In the SQL query, the join condition must reference the foreign key column, otherwise the result set will contain duplicate rows."}
+{"sid": "1026:B#3", "text": "The recipe calls for two cups of flour, one egg, and a pinch of salt whisked together before baking."}
+{"sid": "1250:B#0", "text": "The old barn stood at the edge of the field, its red paint faded to pink under decades of summer sun and winter snow."}
+{"sid": "1250:B#1", "text": "She wrote the recipe on the back of an envelope: two cups of flour, one egg, a pinch of salt, and patience."}
+{"sid": "1250:B#2", "text": "Per the contract, the tenant must provide thirty days written notice before vacating the premises or forfeit the security deposit."}
+{"sid": "1250:B#3", "text": "The river bent sharply around the granite cliffs, carving a narrow gorge where herons nested every spring."}
+{"sid": "1845:B#0", "text": "The Sorghum-plant fungus was catalogued as a rare moth species in the Zoological Survey, noted for its pale forewings and nocturnal flight pattern."}
+{"sid": "1845:B#1", "text": "Travelers hiking the northern valley often stop at the small village of Cotswolds Hollow, famous for its stone cottages and hillside meadows."}
+{"sid": "1845:B#2", "text": "Our tour guide explained the history of the Ottoman bazaar, where merchants once traded silks, spices, and copper pots."}
+{"sid": "1845:B#3", "text": "The lab tech carefully labeled each vial of molten salt before cooling, noting the exact temperature of the crucible."}
+{"sid": "39:B#0", "text": "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version."}
+{"sid": "39:B#1", "text": "The Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0"}
+{"sid": "39:B#2", "text": "Stats for the season: the club finished third in the league table, while the striker scored twelve goals and provided eight assists for the national team."}
+{"sid": "39:B#3", "text": "Results were reported to the European Statistical Office, which released its quarterly survey of household incomes across member states last March."}
+{"sid": "1457:B#0", "text": "Our bakery offers fresh sourdough, croissants, and seasonal fruit tarts every morning. Stop by early before the shelves empty out on weekends."}
+{"sid": "1457:B#1", "text": "The new firmware update adds support for USB-C charging and fixes a bug where the display flickered during startup."}
+{"sid": "1457:B#2", "text": "Please submit your reimbursement forms by the end of the month, and attach all original receipts for travel expenses."}
+{"sid": "1457:B#3", "text": "The hiking trail loops past three waterfalls and ends at a scenic overlook, so bring plenty of water and sturdy shoes."}
+{"sid": "151:B#0", "text": "The committee agreed to approve the budget proposal, but only if the final figures are reviewed by the auditors before the next session."}
+{"sid": "151:B#1", "text": "Please send your completed application form and supporting documents to the registrar's office, or drop them off in person during business hours."}
+{"sid": "151:B#2", "text": "Customers may return unused items within thirty days, provided the receipt is included and the packaging remains intact and undamaged."}
+{"sid": "151:B#3", "text": "The engineers decided to rebuild the bridge entirely, since patching the damaged supports would not be enough to satisfy the safety inspectors."}
+{"sid": "1743:B#0", "text": "We met at the bus stop on a rainy Tuesday morning, and that single encounter changed the way I thought about my whole life afterward."}
+{"sid": "1743:B#1", "text": "The conference schedule lists the keynote for Thursday afternoon, but the organizers said the venue would move to the east wing if attendance grew."}
+{"sid": "1743:B#2", "text": "Every weekend the farmers market opens at dawn, and by noon the best peaches are usually gone, so arrive early if you want any."}
+{"sid": "1743:B#3", "text": "After the storm passed, the village woke to a quiet morning, and the first sound anyone heard was the bell from the old chapel tower."}
+{"sid": "717:B#0", "text": "The committee met in the old courthouse to debate the new zoning rules for downtown businesses."}
+{"sid": "717:B#1", "text": "She turned to her brother and asked him to wait outside while she spoke with the landlord."}
+{"sid": "717:B#2", "text": "Scientists gathered at the conference center to discuss results from the latest climate survey."}
+{"sid": "717:B#3", "text": "The village council voted to approve funding for a new bridge over the river."}
+{"sid": "1507:B#0", "text": "The committee reviewed the proposal in detail, noting that the budget for the second phase had not been finalized and that timelines remained uncertain."}
+{"sid": "1507:B#1", "text": "In the appellate filing, counsel argued that the lower court erred in admitting the testimony without a proper foundation laid by the witness."}
+{"sid": "1507:B#2", "text": "To install the package, run the command in your terminal, then import the module and call the configuration function before starting the server."}
+{"sid": "1507:B#3", "text": "Researchers observed that the mice exposed to the compound showed a marked reduction in tumour volume compared with the untreated control group."}
+{"sid": "426:B#0", "text": "The committee reviewed the budget proposal and noted that  revenue projections for the next fiscal year appeared overly optimistic given recent market conditions."}
+{"sid": "426:B#1", "text": "Researchers observed that the enzyme's activity increased sharply when  cofactors were added, suggesting a regulatory role in the metabolic pathway."}
+{"sid": "426:B#2", "text": "Die Mannschaft reiste am Montag nach Wien, wo sie am Dienstag gegen den Gastgeber antreten sollte, nachdem der Trainer die  Aufstellung bekanntgegeben hatte."}
+{"sid": "426:B#3", "text": "The patient reported mild dizziness and  nausea after the first dose, though symptoms resolved within a few hours without any further intervention."}
+{"sid": "1462:B#0", "text": "The recipe calls for two cups of flour, a pinch of salt, and a splash of vanilla extract before folding in the blueberries."}
+{"sid": "1462:B#1", "text": "To install the package, run pip install requests and then import it at the top of your script before calling the API."}
+{"sid": "1462:B#2", "text": "Our hiking group meets every Saturday at the trailhead by the old lighthouse, weather permitting, so bring water and sunscreen."}
+{"sid": "1462:B#3", "text": "The config file lives in /etc/nginx/sites-available, and you can enable the site by symlinking it into sites-enabled/."}
+{"sid": "428:B#0", "text": "The committee said the new rules were unusually strict, though officials insisted the timing was just a coincidence with the budget cycle."}
+{"sid": "428:B#1", "text": "Researchers reported that the bacteria had become resistant to nearly every drug tested, a finding described as the most alarming in decades by one infectious-disease specialist."}
+{"sid": "428:B#2", "text": "After the storm passed, residents found their streets buried in debris, and the mayor declared the worst flooding since the city was founded in 1832."}
+{"sid": "428:B#3", "text": "The striker had not scored for his national side since 2014, but a late header in the final minute finally brought him the goal he had been waiting for."}
+{"sid": "433:B#0", "text": "The committee reviewed the proposal carefully and then voted to approve the budget amendment after a lengthy discussion."}
+{"sid": "433:B#1", "text": "When I ran the script the output looked fine, but the loop counter skipped the final element of the array every time."}
+{"sid": "433:B#2", "text": "Patients were randomized into two groups and monitored for six months, with outcomes measured at baseline, three months, and follow-up."}
+{"sid": "433:B#3", "text": "The contractor said the kitchen renovation would finish by March, although the cabinets still had not arrived from the supplier."}
+{"sid": "1198:B#0", "text": "The committee reviewed the proposal for the new bridge and noted that the industrial zone would need additional water supply lines before construction could begin."}
+{"sid": "1198:B#1", "text": "Ancient coins found near the river were cleaned and catalogued, revealing  inscriptions that scholars believe date to the late Roman period."}
+{"sid": "1198:B#2", "text": "When the storm passed, the farmers walked the fields to assess the damage to their individual crops and count the fallen fence posts."}
+{"sid": "1198:B#3", "text": "She opened the browser console and typed a short script to toggle the  hidden class on every panel in the sidebar."}
+{"sid": "1428:B#0", "text": "Ask Lauren whether the new sewing class starts Monday, because I forgot the exact time."}
+{"sid": "1428:B#1", "text": "The Ravens' linebackers and the Cowboys' secondary both had strong showings in last week's scrimmage at Julia Stadium."}
+{"sid": "1428:B#2", "text": "Photo credit goes to Maria Chen, who shot the wedding at the old mill last June."}
+{"sid": "1428:B#3", "text": "Coach Dave Marshall said the rookie quarterback would start the next home game against the Jets."}
+{"sid": "1773:B#0", "text": "The function returns early when the buffer is empty, so no allocation happens on that path."}
+{"sid": "1773:B#1", "text": "Our team shipped the release on Friday, and the rollback plan was tested the following morning."}
+{"sid": "1773:B#2", "text": "She paused at the door, glanced back once. Then she stepped out into the rain without a word."}
+{"sid": "1773:B#3", "text": "The recipe calls for two cups of flour, one egg, and a pinch of salt mixed slowly until smooth."}
+{"sid": "576:B#0", "text": "The study compared three treatment groups over twelve weeks, finding that the most significant improvements appeared in the highest-dose cohort."}
+{"sid": "576:B#1", "text": "Researchers at the institute announced that their new battery design outperforms the previous generation, marking one of the largest advances in storage capacity this decade."}
+{"sid": "576:B#2", "text": "Critics argued that the committee's decision ignored the testimony of local residents, a choice that many considered the most controversial element of the entire process."}
+{"sid": "576:B#3", "text": "Among the early settlers, few were as influential as the merchant family whose warehouses dominated the harbor for generations, shaping trade across the entire region."}
+{"sid": "1923:B#0", "text": "Each cell in the grid holds one value, and the program loops over the rows and columns of the matrix to sum them."}
+{"sid": "1923:B#1", "text": "The committee split into two subgroups, one reviewing the budget and the other examining staffing needs before the vote."}
+{"sid": "1923:B#2", "text": "Our team ran the experiment across four sites, collecting samples from each location over a period of six months."}
+{"sid": "1923:B#3", "text": "She packed three bags for the trip: one for clothes, one for books, and one for the camera gear she never used."}
+{"sid": "381:B#0", "text": "The committee met on Tuesday to review the budget proposal, and  members raised concerns about the funding shortfall for road repairs."}
+{"sid": "381:B#1", "text": "She opened the old atlas and traced the coastline with her finger,  pausing at the port where her grandfather had first landed."}
+{"sid": "381:B#2", "text": "The recipe calls for two cups of flour, one egg, and a pinch of  salt, then the batter should rest for thirty minutes."}
+{"sid": "381:B#3", "text": "During the storm, the lighthouse keeper  kept the lamp burning all night so the fishing boats could find the harbor."}
+{"sid": "1400:B#0", "text": "Researchers observed that the enzyme's activity peaked in the cytoplasm during early seedling development, suggesting a role in hormone signaling pathways."}
+{"sid": "1400:B#1", "text": "The committee met on Tuesday to review the proposal, and members debated whether the category of funding should be expanded to cover regional projects."}
+{"sid": "1400:B#2", "text": "In the lab, the protein was tagged and imaged, revealing a distinct localization pattern that remained stable across multiple growth conditions."}
+{"sid": "1400:B#3", "text": "She had always wanted to visit the coastal town, so when the train finally arrived at the station, she grabbed her bag and stepped onto the platform."}
+{"sid": "856:B#0", "text": "Patients receiving oral chemotherapy with capecitabine often report hand-foot skin reactions, including tingling and redness on the palms and soles."}
+{"sid": "856:B#1", "text": "The surgical team noted that the wound was closed with sutures and a sterile dressing applied before transfer to the recovery ward."}
+{"sid": "856:B#2", "text": "Methotrexate is widely used in rheumatoid arthritis, but it requires regular liver function monitoring to detect toxicity early."}
+{"sid": "856:B#3", "text": "The botanist described the flowering shrub, noting its narrow leaves and clusters of small violet blossoms along the stems."}
+{"sid": "884:B#0", "text": "Wikipedia categories help readers navigate related pages. See also the list of external sources below."}
+{"sid": "884:B#1", "text": "The village lies near the river valley and has a small church. References\n\nCategory:Villages in the region"}
+{"sid": "884:B#2", "text": "He signed a contract with the club in 2015 and made his debut the following season. External links official profile"}
+{"sid": "884:B#3", "text": "The engine uses a turbocharged design that delivers strong torque at low revs. In practice drivers notice the difference immediately."}
+{"sid": "692:B#0", "text": "The coach told the reporter that this was the best season the club had ever had, and fans agreed it was the finest year in decades."}
+{"sid": "692:B#1", "text": "After the long flight, she finally reached the hotel and realized the reservation had been moved to a different city entirely."}
+{"sid": "692:B#2", "text": "Officials confirmed the new policy would take effect next month, though critics argued the timeline gave businesses too little time to adjust."}
+{"sid": "692:B#3", "text": "He opened the old journal, flipped to the last entry, and read the words that had been written in pencil years earlier."}
+{"sid": "1062:B#0", "text": "He later performed a short recital at the venue at the close of the festival season in 1951."}
+{"sid": "1062:B#1", "text": "The committee voted to postpone the hearing at the request of both parties' counsel."}
+{"sid": "1062:B#2", "text": "The museum opened its new wing to the public on Saturday with a ceremony attended by local officials."}
+{"sid": "1062:B#3", "text": "Investigators said the suspect was last seen near the bus depot shortly before the shooting."}
+{"sid": "1896:B#0", "text": "for (int i = 0; i < 5; i++) { total += arr[i]; } // loop bounds 5 then 6 entries"}
+{"sid": "1896:B#1", "text": "The recipe needs 3 cups of flour, 2 eggs, and 1 cup of sugar, mixed until smooth."}
+{"sid": "1896:B#2", "text": "Set the timer to 10 minutes, then check whether the countdown reaches 0 before the buzzer sounds."}
+{"sid": "1896:B#3", "text": "In the table below, row 4 lists the population for 2019 as 12 thousand, while row 5 shows 2020."}
+{"sid": "194:B#0", "text": "The recipe calls for 2 cups of flour and 1 teaspoon of baking soda, mixed until smooth before adding the eggs."}
+{"sid": "194:B#1", "text": "Her mileage log read 42,310 miles at the start of the trip and 42,855 miles at the end, roughly 545 total."}
+{"sid": "194:B#2", "text": "Cell counts were recorded every 4 hours over 48 hours, with each sample centrifuged at 3000 rpm for 10 minutes before analysis."}
+{"sid": "194:B#3", "text": "The temperature dropped to 12 degrees Celsius overnight, and the wind speed rose to 25 km/h by dawn, according to the weather station."}
+{"sid": "1027:B#0", "text": "The patient was referred to the endocrinology clinic after persistent elevated thyroid-stimulating hormone levels were detected during routine blood work."}
+{"sid": "1027:B#1", "text": "Court of Appeals of Texas, Third District. The appellant challenges the trial court's ruling on the motion to suppress evidence obtained during the traffic stop."}
+{"sid": "1027:B#2", "text": "Set the environment variable JAVA_HOME before running the build, then run gradle assemble to compile the project into a distributable archive."}
+{"sid": "1027:B#3", "text": "Neuroscience researchers at the institute used functional MRI to map how the hippocampus responds to novel spatial environments in adult mice."}
+{"sid": "1144:B#0", "text": "The committee noted that the proposed amendment affects the eligibility criteria for all applicants under the revised scheme."}
+{"sid": "1144:B#1", "text": "In the second quarter the company reported revenue of $4.2 billion, up 6 percent, driven largely by strong demand in the Asian markets."}
+{"sid": "1144:B#2", "text": "The recipe calls for two cups of flour, one egg, and a pinch of salt, folded together gently until the batter is smooth."}
+{"sid": "1144:B#3", "text": "Researchers measured the sample at 37 degrees and observed that the reaction rate increased significantly with higher pressure."}
+{"sid": "899:B#0", "text": "The release notes mention a fix for the sensor driver, so run the update command in the terminal before rebooting the laptop."}
+{"sid": "899:B#1", "text": "Our team reviewed the quarterly report and found that the capacitive sensor readings drifted when the charger was plugged in."}
+{"sid": "899:B#2", "text": "The settings file uses a nested object with a version field and an author field, followed by a closing brace on its own line."}
+{"sid": "899:B#3", "text": "The museum's gallery features a series of paintings from the baroque period, arranged chronologically along the north wall."}
+{"sid": "597:B#0", "text": "The research team measured enzyme activity in samples collected from several coastal sites over two seasons."}
+{"sid": "597:B#1", "text": "Funding for this project was provided by a grant awarded by the national foundation for science."}
+{"sid": "597:B#2", "text": "The committee reviewed the proposal and noted concerns about the sample size of the pilot cohort."}
+{"sid": "597:B#3", "text": "Under the new policy, employees will receive reimbursement for travel costs incurred during official business trips."}
+{"sid": "583:B#0", "text": "Engineers often rely on a shared set of protocols so that devices from different manufacturers can exchange messages and coordinate their tasks to complete a job."}
+{"sid": "583:B#1", "text": "Farmers in the valley have started to terrain-map their fields so irrigation can be directed precisely, reducing water waste while helping crops grow steadily."}
+{"sid": "583:B#2", "text": "When the committee reviewed the proposal, members asked for clearer budgets, realistic timelines, and evidence from pilot programs before they would approve funding."}
+{"sid": "583:B#3", "text": "The library's new catalog system lets patrons search by subject, author, or keyword, and staff can use it to track which books are most frequently borrowed."}
+{"sid": "189:B#0", "text": "The coach pulled the team into a tight huddle before kickoff, reminding everyone to stay calm and trust their training. Nobody spoke, but the nods said enough."}
+{"sid": "189:B#1", "text": "When the storm finally passed, the farmers walked out to survey the fields, counting the damage one broken fence post at a time."}
+{"sid": "189:B#2", "text": "She opened the old recipe box and found a card in her grandmother's handwriting, the ink faded but the instructions for the pie still clear."}
+{"sid": "189:B#3", "text": "Before the concert began, the lights dimmed and a single spotlight found the drummer, who raised his sticks and counted the band in."}
+{"sid": "220:B#0", "text": "Ask the model to compute 3/4 of 96 and give only the number. Its reply should be 72, exactly as the arithmetic dictates."}
+{"sid": "220:B#1", "text": "Our bakery sold 1,240 loaves on Saturday and 980 on Sunday, so the weekend total came to 2,220 loaves in all."}
+{"sid": "220:B#2", "text": "In the table below, row 7 lists a voltage of 12.5 V, and the next row's reading is 13.1 V after calibration."}
+{"sid": "220:B#3", "text": "The quarterly report shows expenses fell by 8% while headcount rose by 12, pushing the margin to 0.43 overall."}
+{"sid": "1155:B#0", "text": "The detective noticed that the suspect had hesitated before answering, and that pause was enough to reopen the entire investigation."}
+{"sid": "1155:B#1", "text": "When the committee reviewed the budget proposal, several members argued that the new funding formula would leave rural schools with far fewer resources."}
+{"sid": "1155:B#2", "text": "After decades of research, the team concluded that the bacteria in the soil are responsible for most of the nitrogen released into the ecosystem."}
+{"sid": "1155:B#3", "text": "The letter arrived unopened on the kitchen table, and she could not decide whether the news inside it was good or bad."}
+{"sid": "1065:B#0", "text": "The committee approved the new budget after a lengthy debate about infrastructure spending and tax revenue projections."}
+{"sid": "1065:B#1", "text": "# Utility helpers for parsing config\nimport os\nfrom pathlib import Path\n\ndef load_setting(name):\n    return os.environ.get(name)"}
+{"sid": "1065:B#2", "text": "She spent the afternoon repainting the old fence, sanding the rough boards before applying two careful coats of white paint."}
+{"sid": "1065:B#3", "text": "The research team published their findings on soil microbiome diversity, noting significant variation across the sampled regions."}
+{"sid": "606:B#0", "text": "The function returns early when the buffer is empty, so the caller never sees the final  null value after the loop completes."}
+{"sid": "606:B#1", "text": "In the Python script, I print the total with f\"Total: {total}\" but the output still shows  0 because the list is never filled."}
+{"sid": "606:B#2", "text": "To compare dates, convert both strings with datetime.strptime before calling  compareTo on the resulting objects."}
+{"sid": "606:B#3", "text": "The recipe says to whisk the eggs until  frothy, then fold in the flour gently without overmixing the batter."}
+{"sid": "1779:B#0", "text": "Police stopped the car near the warehouse and searched the trunk without a warrant, finding several boxes of unlabeled electronics."}
+{"sid": "1779:B#1", "text": "The agency quietly monitored millions of phone calls and text messages, collecting metadata on citizens who had no connection to any investigation."}
+{"sid": "1779:B#2", "text": "Encrypt the file with AES before uploading it, then share the decryption key through a separate, secure channel so the recipient can read it."}
+{"sid": "1779:B#3", "text": "Her lawyer argued that the confession was obtained after an unlawful detention, so the evidence seized during that custody should be suppressed."}
+{"sid": "610:B#0", "text": "The committee reviewed the budget proposal line by line, noting that the 2019 allocations for maintenance were underfunded relative to projected wear on the bridge infrastructure."}
+{"sid": "610:B#1", "text": "In the lab notebook, the reagent was labeled simply as \"X-7\", and the concentration column read 0.5 M, though the supplier invoice listed it as 0.05 M."}
+{"sid": "610:B#2", "text": "Her grandmother's recipe called for a pinch of saffron, a splash of rose water, and a handful of pistachios folded gently into the warm semolina."}
+{"sid": "610:B#3", "text": "The HTML template opened with a doctype and a head block, then nested a <span class=\"label\"> inside a table cell that the stylesheet later referenced by id."}
+{"sid": "1190:B#0", "text": "The city council voted on Tuesday to approve the new budget, which includes funding for three additional fire stations across the northern districts."}
+{"sid": "1190:B#1", "text": "She has been playing piano since the age of six, and her debut album topped the national charts within a week of its release."}
+{"sid": "1190:B#2", "text": "After a long day at the farm, the family gathered around the table to share a meal of stew and fresh bread baked that morning."}
+{"sid": "1190:B#3", "text": "The researchers reported that the sample contained traces of a rare mineral previously found only in deep volcanic rock formations near the coast."}
+{"sid": "947:B#0", "text": "Remember the dish from the bakery on Elm Street? The owner's grandmother taught her the recipe decades ago, and it has barely changed since."}
+{"sid": "947:B#1", "text": "The committee met on Thursday to review the budget proposal, and members argued for nearly three hours before any vote was taken."}
+{"sid": "947:B#2", "text": "Our hiking group reached the ridge at sunrise, where pale mist still clung to the valley below and the peaks glowed gold in the early light."}
+{"sid": "947:B#3", "text": "The council announced new guidelines for street parking, requiring permit holders to display their permits on the dashboard at all times."}
+{"sid": "1902:B#0", "text": "Our grandmother always said that a good meal is part of a good day, and she never once skipped the dessert course."}
+{"sid": "1902:B#1", "text": "The committee agreed that community engagement should be an essential element of every planning decision moving forward."}
+{"sid": "1902:B#2", "text": "Their two separate but linked projects shared a common foundation, with each team relying heavily on the other's findings."}
+{"sid": "1902:B#3", "text": "The orchestra's rehearsals had been a regular part of her routine since she was twelve years old."}
+{"sid": "1594:B#0", "text": "The committee praised the team's dedication and promised to keep investing in the community's long-term recovery and growth."}
+{"sid": "1594:B#1", "text": "She glanced sharply at the stranger across the room, unsure whether he was the man who had called her name earlier."}
+{"sid": "1594:B#2", "text": "Regular exercise strengthens the heart and helps the body regulate blood sugar, which reduces the risk of developing chronic conditions over time."}
+{"sid": "1594:B#3", "text": "The coach pulled the striker aside and urged him to focus on his positioning before the next match began."}
+{"sid": "1898:B#0", "text": "int total = 0;\n    for (int i = 0; i < n; i++)\n         total += arr[i];\n    return total;"}
+{"sid": "1898:B#1", "text": "if (user == null)\n        throw new ArgumentNullException(\"user\");\n    var name =  user.Name;"}
+{"sid": "1898:B#2", "text": "<?php\n$lista = array();\nforeach ($dados as $k => $v) {\n    $lista[$k] = $v;\n}"}
+{"sid": "1898:B#3", "text": "def compute_score(values):\n    total = sum(values)\n     if total > 100:\n        return 100\n    return total"}
+{"sid": "561:B#0", "text": "The vineyard was carefully tended, and by autumn the grapes were fully ripened under the warm sun."}
+{"sid": "561:B#1", "text": "After the storm passed, the old barn was left half collapsed against the hillside, its beams split and weathered."}
+{"sid": "561:B#2", "text": "The letter had been sealed for decades, its ink faded, yet the message was still clearly written across the yellowed page."}
+{"sid": "561:B#3", "text": "Once the trial ended, the defendant was finally released from custody after nearly three years behind bars."}
+{"sid": "1037:B#0", "text": "The crowd roared as the band struck up the final chorus, and everyone raised their glasses in a toast to the night."}
+{"sid": "1037:B#1", "text": "She laced up her cleats and jogged onto the pitch, ready for the opening whistle of the regional football season."}
+{"sid": "1037:B#2", "text": "The orchestra tuned their instruments while the conductor waited, baton raised, for the first note of the symphony's opening."}
+{"sid": "1037:B#3", "text": "Researchers measured the wind speed across the plains, recording gusts that topped sixty miles per hour during the storm."}
+{"sid": "234:B#0", "text": "The meeting recap is posted within an hour, listing action items and owners. Attendees can flag anything missing before the next sync."}
+{"sid": "234:B#1", "text": "The kiln cools slowly overnight, and by morning the glaze has settled into a soft, speckled finish that rewards patient handling."}
+{"sid": "234:B#2", "text": "Our trail guide covers campsite etiquette, water sources, and a packing checklist for first-time backpackers heading into alpine terrain."}
+{"sid": "234:B#3", "text": "The orchestra rehearses every Tuesday evening in the community hall, and new players are welcome to sit in on a trial session."}
+{"sid": "1492:B#0", "text": "The reaction mixture was stirred overnight, then quenched with saturated ammonium chloride and extracted with ethyl acetate. Chromatography afforded the desired product as a colorless oil."}
+{"sid": "1492:B#1", "text": "Patients were randomized to receive either placebo or the investigational agent for twelve weeks, with dose adjustments permitted based on hepatic function tests."}
+{"sid": "1492:B#2", "text": "The enzyme was purified from bovine liver by ammonium sulfate fractionation followed by affinity chromatography on a cibacron blue column."}
+{"sid": "1492:B#3", "text": "In the forest plots, the pooled odds ratio for mortality was 0.82, with a confidence interval spanning from 0.65 to 1.03, indicating no significant effect."}
+{"sid": "331:B#0", "text": "The bakery sells fresh sourdough, croissants, and rye loaves every morning before seven."}
+{"sid": "331:B#1", "text": "She studied linguistics at the university and later earned a doctorate in phonetics from Oxford."}
+{"sid": "331:B#2", "text": "The function returns null if the array is empty, otherwise it sorts the elements in ascending order."}
+{"sid": "331:B#3", "text": "In the experiment, the sample was heated to 300 K and the resulting pressure was recorded every ten seconds."}
+{"sid": "328:B#0", "text": "The committee approved the budget after a brief review, noting that the funds would cover repairs to the bridge."}
+{"sid": "328:B#1", "text": "She placed the sealed envelope on the desk, then walked to the window to watch the rain fall across the harbor."}
+{"sid": "328:B#2", "text": "Engineers tested the prototype under high pressure to confirm that the valve could withstand extended use without leaking."}
+{"sid": "328:B#3", "text": "The study compared outcomes across three hospitals, measuring recovery times for patients who received the standard protocol."}
+{"sid": "1373:B#0", "text": "The new bridge over the river opened last week, and commuters say the morning traffic has already eased noticeably since the second lane was added."}
+{"sid": "1373:B#1", "text": "During the press conference, the coach praised the young defender's composure and said he expected the team to build on last season's momentum in the cup."}
+{"sid": "1373:B#2", "text": "To install the firmware update, connect the router to power, wait for the status light to turn green, and then open the admin page in your browser."}
+{"sid": "1373:B#3", "text": "The village festival draws thousands of visitors each autumn, with lantern parades, local food stalls, and traditional music performed late into the evening."}
+{"sid": "345:B#0", "text": "The recipe calls for two cups of flour, one egg, and a pinch of salt, mixed slowly until the batter becomes smooth and glossy."}
+{"sid": "345:B#1", "text": "In the village square, the old clockmaker repaired the tower mechanism while children gathered to watch the gears turn."}
+{"sid": "345:B#2", "text": "The committee reviewed the budget proposal. After long debate, they agreed to postpone the infrastructure spending until spring."}
+{"sid": "345:B#3", "text": "Hikers should carry at least three liters of water when crossing the desert trail, since temperatures can exceed forty degrees by noon."}
+{"sid": "587:B#0", "text": "The committee reviewed the proposal and noted that the budget allocation for maintenance had been underestimated in previous fiscal years."}
+{"sid": "587:B#1", "text": "Click the save button to store your changes, then reload the page so the new settings take effect across all open sessions."}
+{"sid": "587:B#2", "text": "In the lab, the researchers measured how quickly the bacteria multiplied when exposed to varying temperatures over several days."}
+{"sid": "587:B#3", "text": "She walked along the riverbank at dusk, watching the boats drift past while the lanterns flickered on in the village behind her."}
+{"sid": "1386:B#0", "text": "The committee approved the budget amendment after a lengthy debate about road maintenance funding for the northern districts."}
+{"sid": "1386:B#1", "text": "Please make sure the attached invoice is paid before the end of the month to avoid late fees on the account."}
+{"sid": "1386:B#2", "text": "# Configure the logging level to debug so that connection errors are printed with full stack traces during development."}
+{"sid": "1386:B#3", "text": "The novel follows a retired lighthouse keeper who discovers a message in a bottle addressed to someone long dead."}
+{"sid": "981:B#0", "text": "The committee reviewed three proposals – one from the city, one from the county, and one from the state, before voting on the final budget."}
+{"sid": "981:B#1", "text": "Researchers measured the samples in four batches (A, B, C, and D) and found consistent readings across each group of tests."}
+{"sid": "981:B#2", "text": "The report lists the five departments involved: finance, legal, operations, HR, and marketing, each with its own budget line."}
+{"sid": "981:B#3", "text": "The team ranked the candidates by experience and education, then interviewed the top three before making its final recommendation."}
+{"sid": "639:B#0", "text": "The experiment measured the photon emission rate inside the optical cavity, tuning the reflectivity of the mirror to control the leakage of light out of the resonator."}
+{"sid": "639:B#1", "text": "Engineers adjusted the coating thickness so the lens would pass more light, reducing reflection losses and improving the overall transmission through the glass."}
+{"sid": "639:B#2", "text": "The committee reviewed complaints about the judge's conduct and voted to refer the matter to the disciplinary board for a formal investigation."}
+{"sid": "639:B#3", "text": "Researchers studied how the material's stiffness changes under stress, focusing on its viscoelastic response over long time scales."}
+{"sid": "501:B#0", "text": "Please allow 3-5 business days for delivery after your order has been confirmed. Tracking details will be emailed once it ships."}
+{"sid": "501:B#1", "text": "The committee reviewed the proposal and agreed to forward it to the board for final approval next month."}
+{"sid": "501:B#2", "text": "Our kitchen staff prepares every dish fresh daily, so we ask that guests allow extra time during peak dinner hours."}
+{"sid": "501:B#3", "text": "Researchers measured the cell membrane potential and observed that the channel opens only in response to calcium influx."}
+{"sid": "835:B#0", "text": "The committee confirmed the agreement after a brief session, and the results will be published next week in the official bulletin."}
+{"sid": "835:B#1", "text": "He handed the ticket to the conductor and stepped onto the platform, glancing back once at the station clock before leaving."}
+{"sid": "835:B#2", "text": "During the summer festival the village square fills with music, food stalls, and families who gather to celebrate the harvest together."}
+{"sid": "835:B#3", "text": "The lab report lists three trials, each with a control group, and the researchers note that the outcome varied across the samples tested."}
+{"sid": "1526:B#0", "text": "The committee approved the budget after a long debate, with three members abstaining from the final vote on the new road project."}
+{"sid": "1526:B#1", "text": "She carried her grandmother's recipe book everywhere, its pages stained with years of cinnamon, flour, and handwritten notes from the family kitchen."}
+{"sid": "1526:B#2", "text": "Researchers at the university reported that the new battery chemistry doubled energy density in early tests, though independent labs have not yet replicated the results."}
+{"sid": "1526:B#3", "text": "After the storm knocked out power across the valley, volunteers from the local fire department spent three days delivering water and generators to isolated farms."}
+{"sid": "1625:B#0", "text": "Recent studies of the wild orchid genus show that Dendrobium species favor shaded understory habitats, with pollinator visits peaking during the early wet season."}
+{"sid": "1625:B#1", "text": "Researchers noted that the carp population in the reservoir had rebounded sharply after the dam's sluice gates were reopened last spring."}
+{"sid": "1625:B#2", "text": "The novelist's latest book, a sweeping saga of two rival families, was praised for its tight pacing and vivid, unforgettable characters."}
+{"sid": "1625:B#3", "text": "Engineers recommended replacing the corroded bridge bearings before winter, arguing that delay would raise repair costs by nearly forty percent."}
+{"sid": "807:B#0", "text": "The mechanic tightened the bolt firmly before checking the alignment of the wheel housing once more."}
+{"sid": "807:B#1", "text": "She opened the old recipe book and carefully copied each ingredient onto the back of an envelope."}
+{"sid": "807:B#2", "text": "During the storm, the harbor master ordered every fishing boat to remain tied up until the wind subsided."}
+{"sid": "807:B#3", "text": "The committee's final report was submitted on time, though several members disagreed with its conclusions in private."}
+{"sid": "1967:B#0", "text": "Workers in coal mines and textile plants often breathe in fine particulates over decades. Smog and vehicle exhaust in crowded cities compound the strain on lungs."}
+{"sid": "1967:B#1", "text": "Researchers found that daily intake of processed meat, especially sausages and bacon, correlated with higher rates of bowel tumors in long-term cohort studies."}
+{"sid": "1967:B#2", "text": "Smokers who drink heavily face elevated risks of throat and liver disease, according to a large survey of adults across several European countries."}
+{"sid": "1967:B#3", "text": "Air quality monitors recorded elevated levels of nitrogen dioxide and soot near the highway, prompting city officials to propose stricter emissions limits."}
+{"sid": "892:B#0", "text": "The Wi-Fi standard IEEE 802.11ax introduces OFDMA scheduling for denser access point deployments in crowded venues."}
+{"sid": "892:B#1", "text": "In the 1990s the company shipped its first model 450 workstation, which sold tens of thousands of units across Europe."}
+{"sid": "892:B#2", "text": "The clinical trial enrolled 128 patients with stage II disease, randomized between two dosing schedules over a twelve-month period."}
+{"sid": "892:B#3", "text": "Section 7.4 of the regulation specifies the minimum clearance distance for overhead conductors near public roadways."}
+{"sid": "518:B#0", "text": "The bakery sealed the bread bags tightly before shipping them to the stores across town."}
+{"sid": "518:B#1", "text": "Engineers glued the laminate panels together and then pressed the layers flat under heavy weights overnight."}
+{"sid": "518:B#2", "text": "Wrap the cheese in wax paper, then place it inside a sealed container to keep the moisture in."}
+{"sid": "518:B#3", "text": "The conveyor belt uses rubber strips along its edges to grip the cartons as they move."}
+{"sid": "842:B#0", "text": "The bridge was designed by a team of engineers from Lisbon, and construction finished in 1932 after nearly six years of work."}
+{"sid": "842:B#1", "text": "This recipe was adapted by our test kitchen from a family favorite, and it serves four people in about thirty minutes."}
+{"sid": "842:B#2", "text": "The painting, titled Harvest Dusk, was commissioned by the city council in 1889 to honor the region's farmers."}
+{"sid": "842:B#3", "text": "Chapter three explores the economic consequences of the treaty, a theme later developed by several historians writing in the 1950s."}
+{"sid": "1914:B#0", "text": "The bakery on Elm Street sells fresh sourdough every morning, and the line often stretches past the corner by eight. Locals say the crust alone is worth the wait."}
+{"sid": "1914:B#1", "text": "During the storm the power flickered twice, then went out for good. We lit candles, found the old board games, and played until the lights finally came back at midnight."}
+{"sid": "1914:B#2", "text": "The hikers reached the ridge just before noon, where the wind carried the sound of a distant waterfall. From there they could see the entire valley stretched below them."}
+{"sid": "1914:B#3", "text": "Our new dataset contains twelve thousand labeled images collected across three seasons. Each annotator flagged any frame where the subject's hands were partially hidden from view."}
+{"sid": "1424:B#0", "text": "The committee agreed to review the proposal again next month, once the budget figures are fully in hand. Several members asked for more detail on costs."}
+{"sid": "1424:B#1", "text": "She packed her bags early, hoping to reach the coast before the tide turned and the road flooded again overnight."}
+{"sid": "1424:B#2", "text": "Scientists measured the sample carefully, recording each reading and comparing it against the baseline data from last year."}
+{"sid": "1424:B#3", "text": "The recipe calls for fresh herbs, which can be added to the sauce just before serving, or stirred in while it simmers gently on the stove."}
+{"sid": "323:B#0", "text": "The committee approved the budget after a long debate, and officials said the funds would be released next month, according to a spokesperson."}
+{"sid": "323:B#1", "text": "She opened the drawer, found the old letters, and wrote a short note that began simply: \"Dear friend, I hope you are well.\""}
+{"sid": "323:B#2", "text": "In the SQL file, the variable $user_id is bound before the call, so the prepared statement $stmt executes safely with the provided parameters."}
+{"sid": "323:B#3", "text": "The court ruled that the appeal was without merit, and the lower court's decision was therefore upheld in full by the panel."}
+{"sid": "288:B#0", "text": "Flow cytometry showed that the population of circulating CD4 lymphocytes declined markedly in patients receiving high-dose corticosteroids over the first two weeks."}
+{"sid": "288:B#1", "text": "The antibody binds the Fc receptor CD16 on natural killer cells, triggering antibody-dependent cytotoxicity against tumor targets in vitro."}
+{"sid": "288:B#2", "text": "Mast cell activation was measured using surface markers CD203c and CD63 after allergen challenge in peripheral blood samples from atopic donors."}
+{"sid": "288:B#3", "text": "Researchers reported that the CD34+ progenitor fraction expanded after cytokine stimulation, correlating with improved engraftment in immunodeficient mice."}
+{"sid": "1282:B#0", "text": "The committee approved the budget after a brief debate, noting that the revised allocations better reflected community priorities than the original proposal."}
+{"sid": "1282:B#1", "text": "She opened the letter slowly, recognizing the handwriting immediately, and felt her heart sink before she read a single word."}
+{"sid": "1282:B#2", "text": "In the reaction, the catalyst lowers the activation energy, which is why the process proceeds at room temperature rather than requiring heating."}
+{"sid": "1282:B#3", "text": "Please make sure the attachment is signed and returned by Friday; otherwise the application will be delayed until the next review cycle begins."}
+{"sid": "549:B#0", "text": "The committee reviewed the budget proposal and noted that the road maintenance fund had been reduced by twelve percent since the previous fiscal year."}
+{"sid": "549:B#1", "text": "During the expedition, the geologists collected sandstone samples from the eastern ridge, where the layers of sediment were unusually well preserved."}
+{"sid": "549:B#2", "text": "She opened the old recipe book and found handwritten notes in the margins, describing how her grandmother adjusted the spices for each season."}
+{"sid": "549:B#3", "text": "The software update fixed a memory leak in the rendering engine, though users reported that the new interface felt slower on older hardware."}
+{"sid": "1450:B#0", "text": "Our bakery sells a variety of sugar-dusted pastries and honey cakes, all made fresh each morning with local ingredients."}
+{"sid": "1450:B#1", "text": "The recipe calls for a spoonful of sweetened condensed milk, stirred slowly until the caramel turns golden brown."}
+{"sid": "1450:B#2", "text": "Researchers measured how the enzyme glucosidase breaks down starch into simpler carbohydrates under varying pH conditions."}
+{"sid": "1450:B#3", "text": "Please accept our cookies to continue browsing; they help us remember your preferences and personalize the content you see."}
+{"sid": "1257:B#0", "text": "The appellate court reviewed the district court's ruling on the motion to dismiss, affirming the judgment in part and remanding for further proceedings in the United States Court of Appeals."}
+{"sid": "1257:B#1", "text": "The enzyme's catalytic domain folds into a Rossmann-like structure, with the NAD-binding motif positioned near the active site, as shown by the crystal structure of the complex."}
+{"sid": "1257:B#2", "text": "Die Gemeinde beschloss am Dienstag den Ausbau des Radwegs entlang der Landesstraße, wobei das Regierungspräsidium die Finanzierung des Bauvorhabens zugesagt hat."}
+{"sid": "1257:B#3", "text": "The fungal strain was cultured on potato dextrose agar, and the mycelial growth rate was measured daily across three independent replicates at constant temperature."}
+{"sid": "664:B#0", "text": "The Maui 'akepa is a small Hawaiian honeycreeper found only on the slopes of Haleakalā, where it forages among native ohia trees."}
+{"sid": "664:B#1", "text": "Gorgonian corals of the Caribbean reef are home to a unique community of shrimp, many of which are found nowhere else on Earth."}
+{"sid": "664:B#2", "text": "The Sichuan takin is a large goat-antelope native to the mountains of central China, where it lives in dense bamboo forests at high altitudes."}
+{"sid": "664:B#3", "text": "Several species of cichlid fish inhabit only one lake in East Africa, and scientists have documented over 200 such endemic varieties."}
+{"sid": "868:B#0", "text": "The committee reviewed the budget proposal on Tuesday, noting that the new funding formula would shift resources toward rural districts over the next three fiscal years."}
+{"sid": "868:B#1", "text": "In the 1890s the railway company expanded westward, building depots at Harlow Junction and two smaller stations along the river valley."}
+{"sid": "868:B#2", "text": "The chemist recorded the absorbance at 280 nm, then compared the sample spectra against the reference standard using a two-way ANOVA."}
+{"sid": "868:B#3", "text": "Grandmother kept a recipe box filled with handwritten cards, and the bread recipe, stained with butter, was the one she used most."}
+{"sid": "748:B#0", "text": "The committee announced that the chairman would step down after the review, and the vice president will serve as interim leader until the next election in March."}
+{"sid": "748:B#1", "text": "Our gardening club meets every second Saturday, and members are encouraged to bring cuttings, seeds, and tips for growing tomatoes in small urban spaces."}
+{"sid": "748:B#2", "text": "The license header below applies to all files in this repository, and contributors should keep the copyright notice intact when modifying any source file."}
+{"sid": "748:B#3", "text": "Researchers at the university reported that the new battery design improved charging speed considerably, though long-term durability tests remain ongoing and results are not yet final."}
+{"sid": "738:B#0", "text": "In Python, you can reference a list element by index like items[0], but negative indices count from the end, so items[-1] gives the last one."}
+{"sid": "738:B#1", "text": "When writing SQL, always wrap user input in parameters rather than concatenating strings, since the query planner and the driver handle escaping for you."}
+{"sid": "738:B#2", "text": "The config file lists each service on its own line, and the parser splits each entry on the first equals sign before trimming whitespace."}
+{"sid": "738:B#3", "text": "To center a div horizontally in CSS, set its margin to auto on left and right and give it an explicit width so the browser can compute the remaining space."}
+{"sid": "180:B#0", "text": "The orthopedic clinic offers consultations for sports injuries, joint replacements, and spinal conditions. Our surgeons specialize in restoring mobility after trauma."}
+{"sid": "180:B#1", "text": "Researchers studying bone density in older adults used imaging to track fracture risk across a five-year period in a large cohort."}
+{"sid": "180:B#2", "text": "The museum's archaeology wing displays pottery shards and flint tools recovered from a Bronze Age settlement along the river valley."}
+{"sid": "180:B#3", "text": "Our developer guide explains how to configure the build pipeline, including linting rules and the plugin registry for custom checks."}
+{"sid": "499:B#0", "text": "The old farmhouse sat quietly at the end of the lane, its windows dark and its garden gone to seed. Nobody had lived there since the spring floods."}
+{"sid": "499:B#1", "text": "Researchers measured enzyme activity across three temperature conditions, noting that the catalytic rate peaked sharply near thirty-seven degrees before falling off."}
+{"sid": "499:B#2", "text": "She reread the contract twice, circling the clause about termination, then slid the pages back across the table without signing anything yet."}
+{"sid": "499:B#3", "text": "Reviewers praised the novel's patient pacing and its restrained prose, though a few found the middle chapters slow to build any real momentum."}
+{"sid": "1154:B#0", "text": "The committee approved the annual budget after a long debate about staffing levels and regional office funding. Members agreed to revisit the proposal next quarter."}
+{"sid": "1154:B#1", "text": "Researchers measured enzyme activity in soil samples collected from three forest sites. The results suggested that seasonal rainfall strongly influenced microbial nitrogen cycling."}
+{"sid": "1154:B#2", "text": "Our bakery opens at seven each morning, offering fresh sourdough, croissants, and seasonal fruit tarts. Customers can also order custom cakes for weddings and birthdays."}
+{"sid": "1154:B#3", "text": "The hikers reached the summit just before noon, where a cold wind swept across the rocky ridge. They rested briefly before starting the long descent through the pine forest."}
+{"sid": "1300:B#0", "text": "Licensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License.\nYou may obtain a copy of the License at"}
+{"sid": "1300:B#1", "text": "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY.\n"}
+{"sid": "1300:B#2", "text": "The court affirms the judgment of the district court. Plaintiff's claims under the Fourth Amendment fail as a matter of law, and we therefore\n"}
+{"sid": "1300:B#3", "text": "UNITED STATES DISTRICT COURT\nSOUTHERN DISTRICT OF NEW YORK\n\nPlaintiff appeals from the order granting summary judgment.\n"}
+{"sid": "806:B#0", "text": "Our team reviewed the quarterly numbers and found that customer churn dropped noticeably after the new onboarding flow launched in March."}
+{"sid": "806:B#1", "text": "The recipe calls for two cups of flour, but many bakers prefer to weigh the ingredients instead for more consistent results."}
+{"sid": "806:B#2", "text": "Researchers observed that participants who slept more than seven hours showed significantly better recall on the memory task."}
+{"sid": "806:B#3", "text": "When the server restarts, the cache is cleared, so the first few requests after startup will be noticeably slower than usual."}
+{"sid": "1780:B#0", "text": "The moonlight glowed softly over the quiet harbor, shining on the silver water until dawn."}
+{"sid": "1780:B#1", "text": "She opened the old chest and found a shiny brass key tucked beneath folded linen."}
+{"sid": "1780:B#2", "text": "Kinesis streams sensor readings from thousands of devices, letting analysts watch kinesis patterns unfold in real time."}
+{"sid": "1780:B#3", "text": "The committee reviewed the petition filed by Thomas Sharma, who asked for a delay in the hearing."}
+{"sid": "1303:B#0", "text": "Please select your preferred delivery date from the calendar below, and include any special instructions for the courier in the notes field."}
+{"sid": "1303:B#1", "text": "The museum's new wing opens next spring, featuring rotating exhibits on maritime history and a café overlooking the harbor."}
+{"sid": "1303:B#2", "text": "When configuring the server, set the timeout value to match your load balancer, otherwise idle connections may be dropped unexpectedly."}
+{"sid": "1303:B#3", "text": "She grew up in a small farming town, where her first job was delivering newspapers before dawn each morning."}
+{"sid": "1568:B#0", "text": "Honestly, that stupid jerk cut me off in traffic and then flipped me off like it was my fault."}
+{"sid": "1568:B#1", "text": "The landlord just told us we have to leave by Friday, and the poor kids are crying because they loved that yard."}
+{"sid": "1568:B#2", "text": "When the coach benched her again, the whole team muttered that the referee was a blind fool who ruined the game."}
+{"sid": "1568:B#3", "text": "Grandma kept calling the new neighbor a nosy hag behind her back, even though she'd baked us cookies yesterday."}
+{"sid": "1857:B#0", "text": "The committee reviewed the proposal and decided to postpone the vote until the budget figures are finalized next quarter."}
+{"sid": "1857:B#1", "text": "Please make sure the packaging is sealed before it leaves the warehouse, since any damaged boxes will be returned to the supplier."}
+{"sid": "1857:B#2", "text": "Researchers observed that the sample remained stable at room temperature, though small fluctuations appeared after several hours."}
+{"sid": "1857:B#3", "text": "The hikers paused by the river, waiting for the weather to clear before attempting the steep descent toward the valley floor."}
+{"sid": "416:B#0", "text": "The dental clinic offered two options: a removable acrylic plate or a newer flexible partial denture. Patients were asked which felt more comfortable."}
+{"sid": "416:B#1", "text": "Local officials announced that the prisoner had been transferred overnight, though details of the transfer remained unclear to reporters."}
+{"sid": "416:B#2", "text": "The mechanical engineer reviewed the loading data and noted that the viscoelastic response of the polymer changed sharply at higher temperatures."}
+{"sid": "416:B#3", "text": "Several sources reported that the old railway line had been converted into a walking trail, with signs marking the station's former platform."}
+{"sid": "385:B#0", "text": "The coach told the team that is exactly why we practice every day, because repetition builds the habits that win close games."}
+{"sid": "385:B#1", "text": "When the recipe says to simmer gently, what that's really asking is for you to keep the heat low and patient."}
+{"sid": "385:B#2", "text": "Our goal this quarter is simple: ship the new onboarding flow without adding any extra support tickets."}
+{"sid": "385:B#3", "text": "If you want the full picture, here's what the data shows about rainfall and crop yields over the last decade."}
+{"sid": "412:B#0", "text": "She slipped a set of wind chimes onto the porch railing, letting the metal tubes sway and clink whenever the breeze caught them."}
+{"sid": "412:B#1", "text": "The climber's harness snagged on a jagged rock, leaving him dangling from the cliff face by a single carabiner until rescuers arrived."}
+{"sid": "412:B#2", "text": "He pinned the banner across the gym wall, then stepped back to check that the bottom edge was still straight before fastening it."}
+{"sid": "412:B#3", "text": "The yoga instructor asked us to lift one leg behind us and let the foot rest lightly against the wall for balance."}
+{"sid": "736:B#0", "text": "After the surgery, the patient spent several days in bed slowly regaining strength before she could finally walk unassisted."}
+{"sid": "736:B#1", "text": "The athletes were given two full rest days so their muscles could fully recover before the championship match."}
+{"sid": "736:B#2", "text": "Doctors expect the injured hiker to recover completely within a few months if the physical therapy goes well."}
+{"sid": "736:B#3", "text": "Following the storm, the coastal town worked hard to recover its damaged infrastructure and reopen businesses."}
+{"sid": "1349:B#0", "text": "The protein needs anionic lipids to function; without them, the channel stays closed and cannot conduct ions. Their presence is essential."}
+{"sid": "1349:B#1", "text": "O tribunal decidiu manter a presença do réu na audiência, apesar dos pedidos da defesa para adiar o julgamento."}
+{"sid": "1349:B#2", "text": "The software validates input by checking whether the user's role matches one of the allowed values in the configuration file."}
+{"sid": "1349:B#3", "text": "De regering heeft aangekondigd dat de nieuwe wet volgend jaar van kracht wordt, na goedkeuring door het parlement."}
+{"sid": "1260:B#0", "text": "$stmt->bind_param(\"s\", $_GET['user']);\n\nWhen I run the query it returns nothing, though the username exists in the table."}
+{"sid": "1260:B#1", "text": "<input type=\"text\" name=\"zip\" id=\"zip\" value=\"\" required>\n\nThe form submits fine but the zip value never reaches the controller."}
+{"sid": "1260:B#2", "text": "var total = $scope.cart.items.reduce(function(sum, item) { return sum + item.price; }, 0);\n\nTotal is always NaN after I add the second product."}
+{"sid": "1260:B#3", "text": "<div class=\"header-wrapper\"> <h1>Welcome</h1> </div>\n\nThe styling from header.css isn't being applied to this element at all."}
+{"sid": "161:B#0", "text": "I've been stuck on this regex for hours and feel a bit silly, but finally got it working with a lookahead."}
+{"sid": "161:B#1", "text": "Can someone explain why my React component re-renders every time the parent state changes, even with memo applied?"}
+{"sid": "161:B#2", "text": "Honestly I was a bit nervous before the interview, but the panel was friendly and the questions were fair."}
+{"sid": "161:B#3", "text": "Does anyone know whether the new compiler flag breaks backward compatibility with older build scripts?"}
+{"sid": "1265:B#0", "text": "The engineer checked the valve pressure, then luked at the gauge again before signing off the morning shift report."}
+{"sid": "1265:B#1", "text": "Our neighborhood bakery opened a second branch, and the lucky customers got free bread on the first day."}
+{"sid": "1265:B#2", "text": "He tried to luxuriate in the warm bath, but the phone kept buzzing with messages from work."}
+{"sid": "1265:B#3", "text": "Please launder the towels separately from the sheets, since the dye from the red shirt may bleed."}
+{"sid": "978:B#0", "text": "The committee chair praised the volunteers for their dedication to the cause of the community. Their voice of support carried the vote through the council chamber."}
+{"sid": "978:B#1", "text": "She said the fundraiser reflected the will of the neighborhood, which had rallied behind the library project for years."}
+{"sid": "978:B#2", "text": "He spends most of his weekends devoted to his garden, tending tomatoes and roses with patient care."}
+{"sid": "978:B#3", "text": "The new bridge will connect the two towns and improve the route closer to the harbor for commuters and freight traffic."}
+{"sid": "1799:B#0", "text": "Does 37 divide 1258? False\nIs 9014 a multiple of 17? True\nDoes 6 divide 4893 ? True\nIs 2210 a multiple of 52? False"}
+{"sid": "1799:B#1", "text": "The train slowed as it approached the crossing, and the driver sounded the horn several times before the gates finally lowered across the road."}
+{"sid": "1799:B#2", "text": "Over the past century, scientists have observed that glaciers in the Alps retreat more quickly during summers when temperatures remain above average for several weeks."}
+{"sid": "1799:B#3", "text": "She returned from the market with fresh bread and cheese, then carried the basket up the stairs and set it on the table next to the window."}
+{"sid": "1069:B#0", "text": "The meeting was scheduled for Monday, but on the day itself the whole team showed up early anyway."}
+{"sid": "1069:B#1", "text": "She finished the marathon in under four hours, and at the finish line she first hugged her coach before anyone else."}
+{"sid": "1069:B#2", "text": "The council voted to rename the park in the year following the storm, honoring the volunteers who rebuilt it."}
+{"sid": "1069:B#3", "text": "He had almost forgotten the strange phone call, until the very next night when the same number rang again."}
+{"sid": "1455:B#0", "text": "The Heroes Hall of Fame lists every inductee since 1990, and the committee announces its next class in the spring. Fans can vote online through the official site."}
+{"sid": "1455:B#1", "text": "Our new Nuts & Bolts plugin adds a fast, reliable way to sync product inventory with your store.\n\nSetup takes about five minutes, and documentation is included."}
+{"sid": "1455:B#2", "text": "const ui = {\n  header: document.querySelector('.site-header'),\n  nav: document.querySelector('.main-nav'),\n};\n\nfunction toggleNav() {"}
+{"sid": "1455:B#3", "text": "To install the package, run npm install easy-logger and then import the default export into your project's entry file."}
+{"sid": "1824:B#0", "text": "The committee reviewed the budget line by line, and after hours of debate they finally agreed to cut funding for the regional library program."}
+{"sid": "1824:B#1", "text": "She lifted the lid of the old piano, pressed a key gently, and listened as the note faded slowly into the quiet room."}
+{"sid": "1824:B#2", "text": "Researchers observed that the bacteria rapidly adapted to the new environment, changing their metabolism within only a few generations."}
+{"sid": "1824:B#3", "text": "Before leaving the station, the conductor checked each carriage door, making sure no passenger was left standing on the platform."}
+{"sid": "1167:B#0", "text": "The committee approved the budget after a long debate, and the chair noted that the final figures were still subject to audit by the external firm."}
+{"sid": "1167:B#1", "text": "In the code, the flag is set to true only when the user is logged in, so the check at the top of the function should return early if it is false."}
+{"sid": "1167:B#2", "text": "The recipe calls for two cups of flour, but if you prefer a lighter texture, reduce it to one and a half cups and add more milk."}
+{"sid": "1167:B#3", "text": "When the bridge was closed for repairs, commuters had to take a longer route through the valley, which added nearly forty minutes to the trip each morning."}
+{"sid": "149:B#0", "text": "The committee reviewed the budget line by line, noting that the 2019 allocation for maintenance was increased by twelve percent over the previous year."}
+{"sid": "149:B#1", "text": "Our family drove to the coast every summer, and I still remember the salt air and the sound of gulls overhead as we unpacked the car."}
+{"sid": "149:B#2", "text": "The recipe calls for two cups of flour, one teaspoon of baking soda, and a pinch of salt, mixed until the dough forms a soft ball."}
+{"sid": "149:B#3", "text": "In the ruling, the court observed that the statute's language was plain, and the defendant's motion to suppress was therefore denied without a hearing."}
+{"sid": "1390:B#0", "text": "The motor controller reads the sense resistor voltage to estimate current, then adjusts the drive signal to keep torque steady across the load range."}
+{"sid": "1390:B#1", "text": "Connect the sensor's 5v supply pin before powering the board, otherwise the microcontroller may reset unexpectedly during startup."}
+{"sid": "1390:B#2", "text": "Each channel on the ADC has a separate input pin, so the sampling clock must be synchronized across all of them."}
+{"sid": "1390:B#3", "text": "The amplifier's feedback loop drives the final stage transistors, keeping the output voltage stable even under heavy load."}
+{"sid": "1311:B#0", "text": "She packed two sandwiches and a thermos, then waved goodbye to her brother and their dog at the bus stop."}
+{"sid": "1311:B#1", "text": "The recipe calls for flour, sugar, and eggs, so mix the dry ingredients first before adding the wet ones."}
+{"sid": "1311:B#2", "text": "When the storm finally passed, the villagers gathered in the square to share food with neighbors who had lost their homes."}
+{"sid": "1311:B#3", "text": "He read the letter twice, folded it carefully, and slipped it into the pocket of his worn leather jacket."}
+{"sid": "822:B#0", "text": "Chromium web developers recommend checking the console for errors before reflowing the layout. The fix was merged in version 4.2 of the library."}
+{"sid": "822:B#1", "text": "The Kotaku report says the sequel's map design will change dramatically. Players in the forums have debated whether the new raid system will return."}
+{"sid": "822:B#2", "text": "When the function receives a negative argument, it silently returns zero rather than raising an exception. Callers should validate input first."}
+{"sid": "822:B#3", "text": "He spent the summer restoring an old Ford truck in his garage. By August, the engine finally turned over, and his neighbors cheered from the driveway."}
+{"sid": "286:B#0", "text": "Its key feature is the sharp fold of the ridge, marked * on the map. The second clause uses the variable q and the value 42 in the summation."}
+{"sid": "286:B#1", "text": "<div class=\"row\">\n  <span>Total</span>\n  </div>\n</div>\n<p>Results shown below.</p>"}
+{"sid": "286:B#2", "text": "Is 7315 less than 7315 when you round both numbers? Answer with True or False only."}
+{"sid": "286:B#3", "text": "Kiddo Wok Gate is listed under Bangkok venues, and the aligned listing reads ROCKNROLL."}
+{"sid": "273:B#0", "text": "The Labour government has announced a new plan to reduce waiting times at hospitals across England, with additional funding for nurses and surgeons starting next year."}
+{"sid": "273:B#1", "text": "After months of delays, the bridge contractors finally reached the midpoint of the span, and officials said the structure is on track to open in spring."}
+{"sid": "273:B#2", "text": "Scientists studying the coral reef noticed that warmer waters had already begun to bleach large sections of the outer barrier, threatening fish populations nearby."}
+{"sid": "273:B#3", "text": "When the storm passed, residents of the coastal village began to rebuild their homes, carrying timber and tools down the muddy lanes toward the harbour."}
+{"sid": "653:B#0", "text": "The patient was positioned on the operating table, and the anesthesiologist monitored core temperature closely throughout the intraoperative period."}
+{"sid": "653:B#1", "text": "Regional trials across European centers reported variable outcomes, and the periprocedural risk profile remained poorly characterized in older cohorts."}
+{"sid": "653:B#2", "text": "Users who cannot reach the file over the web can request a paper copy by calling the station's office during regular business hours at the listed number."}
+{"sid": "653:B#3", "text": "The function returned a string containing garbage characters because the buffer was never null-terminated before it was written to the output file."}
+{"sid": "1173:B#0", "text": "The bridge was built to last, its steel cables holding firm against wind and time. Engineers said the design would outlast any storm the coast could send."}
+{"sid": "1173:B#1", "text": "She counted the votes twice, then a third time, because the margin was smaller than anyone had predicted and the room had gone silent."}
+{"sid": "1173:B#2", "text": "For dinner we planned a simple meal of rice and lentils, though the recipe called for far more spice than our pantry could offer."}
+{"sid": "1173:B#3", "text": "If the temperature drops below zero overnight, the pipes in the garage could freeze, so you should wrap them tightly before leaving town."}
+{"sid": "768:B#0", "text": "We are thrilled to announce the opening of our new bakery downtown, and we are eager to share fresh bread with everyone in the neighborhood."}
+{"sid": "768:B#1", "text": "The committee met on Tuesday to review the budget, and members agreed to revisit the funding proposal before the spring session begins."}
+{"sid": "768:B#2", "text": "Our team is proud to present the latest findings from the coastal survey, which map erosion patterns along the northern shoreline in detail."}
+{"sid": "768:B#3", "text": "Thanks for the kind words about my garden photos! I'm sorry for the delay in replying, and I hope to post more pictures next week."}
+{"sid": "1315:B#0", "text": "The function returns a pointer to the buffer,  or null if allocation fails."}
+{"sid": "1315:B#1", "text": "/**\n * @param count the number of items to process\n * @return  the total number of bytes written\n */"}
+{"sid": "1315:B#2", "text": "Add the following line to your config file:  export PATH=$PATH:/usr/local/bin"}
+{"sid": "1315:B#3", "text": "He wrote the report in one afternoon,  and then spent the evening second-guessing every sentence."}
+{"sid": "1615:B#0", "text": "The function returns early when the buffer is empty, so the caller never sees the partial result."}
+{"sid": "1615:B#1", "text": "She opened the config file and noticed the key = was missing its value entirely."}
+{"sid": "1615:B#2", "text": "In the SQL query, the join condition ON references a column that was renamed last week."}
+{"sid": "1615:B#3", "text": "He wrote the header as #include <stdio.h> then declared main( with no arguments."}
+{"sid": "1234:B#0", "text": "The subsequent court filing named three defendants, including former treasurer Carlos Mendoza, who denied any wrongdoing."}
+{"sid": "1234:B#1", "text": "Researchers collected river samples downstream of the mine, focusing on the Tulsa basin where lead levels were highest."}
+{"sid": "1234:B#2", "text": "Our team's new recipe uses roasted chickpeas, tahini, and a pinch of cumin, served warm with flatbread and pickled onions."}
+{"sid": "1234:B#3", "text": "The commuter line reopened last Tuesday after a month of repairs near the Harbor Bridge station."}
+{"sid": "214:B#0", "text": "The committee approved the budget on Tuesday,  and the new library wing will open next spring with expanded reading rooms."}
+{"sid": "214:B#1", "text": "import numpy as np\nimport pandas as pd\n\n\ndef load_config(path):\n    with open(path) as f:\n        return json.load(f)"}
+{"sid": "214:B#2", "text": "Dear reader, thank you for your patience while we resolve the issue with your account, and we apologize for the inconvenience this has caused."}
+{"sid": "214:B#3", "text": "Mount Kilimanjaro is the highest peak in Africa, standing at roughly 5,895 metres above sea level. It lies in Tanzania near the Kenyan border."}
+{"sid": "844:B#0", "text": "Le conseil municipal a voté hier soir le budget de la médiathèque, après un long débat sur les horaires d'ouverture. Plusieurs élus ont souligné que le projet devait encore être validé par la préfecture."}
+{"sid": "844:B#1", "text": "In the early morning, the fishermen returned to the harbour carrying crates of fresh sardines, and the market stalls opened one by one along the quay."}
+{"sid": "844:B#2", "text": "Ik heb gisteren een brief gekregen van de gemeente over de nieuwe parkeerregels, maar ik begrijp nog steeds niet wat er precies verandert voor mijn straat."}
+{"sid": "844:B#3", "text": "The report, published on Tuesday, concluded that regional hospitals had struggled to recruit nurses, and that staffing shortages were most acute in rural areas."}
+{"sid": "1739:B#0", "text": "The clinic's new scheduling app lets patients book appointments online, but the reminder emails keep arriving with the wrong time zone attached to every booking."}
+{"sid": "1739:B#1", "text": "Our team migrated the legacy inventory system last quarter, and the reporting module still throws a null reference whenever a warehouse has no recorded shipments."}
+{"sid": "1739:B#2", "text": "The chef's tasting menu featured seared scallops over cauliflower purée, followed by a dark chocolate tart that guests described as the highlight of the evening."}
+{"sid": "1739:B#3", "text": "After the storm knocked out power across the valley, residents gathered at the community center, sharing candles, board games, and stories late into the night."}
+{"sid": "507:B#0", "text": "The patient reported sharp pain along the posterior tibia after running, and imaging confirmed a stress fracture of the distal shaft."}
+{"sid": "507:B#1", "text": "Rehabilitation focused on restoring quadriceps strength and range of motion after the meniscus repair, with weekly physiotherapy sessions."}
+{"sid": "507:B#2", "text": "Participants were randomized to receive either a standard lumbar brace or no brace, and outcomes were measured at six and twelve weeks."}
+{"sid": "507:B#3", "text": "Ultrasound-guided injection of corticosteroid into the subacromial bursa reduced shoulder pain and improved range of motion in most patients."}
+{"sid": "526:B#0", "text": "Serum samples were incubated overnight and the absorbance was read at 450 nm using a microplate reader. Results were expressed as mean values."}
+{"sid": "526:B#1", "text": "Participants completed the questionnaire after providing consent, and responses were recorded onto paper forms before being entered into SPSS."}
+{"sid": "526:B#2", "text": "Tissue sections were stained with hematoxylin and eosin and examined under a light microscope by two blinded pathologists."}
+{"sid": "526:B#3", "text": "Blood glucose levels were monitored every hour and insulin doses were adjusted according to the sliding scale protocol throughout the trial."}
+{"sid": "969:B#0", "text": "The committee will review the revised budget at its next meeting, and members are asked to submit comments by Friday so they can be circulated beforehand."}
+{"sid": "969:B#1", "text": "In this randomized trial, participants received either the standard regimen or the modified protocol, and outcomes were measured at six months."}
+{"sid": "969:B#2", "text": "The software update introduces a new caching layer that reduces latency, although users on older hardware may notice slower startup times."}
+{"sid": "969:B#3", "text": "Following the earthquake, the agency released an emergency statement urging residents to avoid the coastal area until further notice."}
+{"sid": "494:B#0", "text": "This file was automatically generated by the build system; do not edit it manually, as changes will be overwritten the next time it is regenerated."}
+{"sid": "494:B#1", "text": "# Auto-generated by protoc-gen-go. DO NOT EDIT.\n# source: service.proto\n\nimport grpc\n\n# Generated stub follows below."}
+{"sid": "494:B#2", "text": "Warning: Do not modify this file. The contents were produced by the code generator and will be replaced on the next run."}
+{"sid": "494:B#3", "text": "/* Generated by the Qt Resource Compiler. Do not edit. */\n#ifndef UI_MAINWINDOW_H\n#define UI_MAINWINDOW_H\n\n#include <QtCore/QVariant>"}
+{"sid": "297:B#0", "text": "#ifndef MYLIB_CONFIG_H\n#define MYLIB_CONFIG_H\n#include <stdint.h>\n#include <stddef.h>\n\n#define MYLIB_VERSION 3"}
+{"sid": "297:B#1", "text": "<html>\n<head>\n<meta charset=\"utf-8\">\n<script type=\"text/javascript\">\nvar appName = \"Dashboard\";\nvar debug = false;\n</script>\n</head>"}
+{"sid": "297:B#2", "text": "import os\nimport sys\n\ntry:  # Python 3.8+\n    from typing import Literal\nexcept ImportError:\n    Literal = None"}
+{"sid": "297:B#3", "text": "# Build configuration\nset(CMAKE_CXX_STANDARD 14)\nif(WIN32)\n  add_definitions(-DNOMINMAX)\nendif()"}
+{"sid": "913:B#0", "text": "Patients receiving the new drug showed no measurable change in liver enzymes, although  not all participants completed the full twelve-week follow-up period."}
+{"sid": "913:B#1", "text": "The committee concluded that the proposal was  not viable under current funding rules, and recommended a revised submission next year."}
+{"sid": "913:B#2", "text": "Blood samples were collected after an overnight fast, and plasma glucose was measured using a standard enzymatic assay within two hours of collection."}
+{"sid": "913:B#3", "text": "Researchers observed that the protein's binding affinity increased sharply once the  receptor was pre-activated with the ligand in the presence of calcium."}
+{"sid": "563:B#0", "text": "The committee reviewed the proposal in detail, noting that the budget approval would need to wait until the next fiscal quarter."}
+{"sid": "563:B#1", "text": "Scientists at the observatory recorded the signal over three nights, and the catalog of measurements was published later that spring."}
+{"sid": "563:B#2", "text": "After the storm passed, the villagers gathered in the square to count the damage and  rebuild the wooden bridge over the creek."}
+{"sid": "563:B#3", "text": "The novel opens with a long description of the harbor at dawn, where fishermen  unload their nets while gulls circle overhead."}
+{"sid": "1288:B#0", "text": "The committee praised the proposal as a model for future urban renewal projects across the region."}
+{"sid": "1288:B#1", "text": "My grandmother always kept a favorite teapot on the windowsill, chipped but cherished."}
+{"sid": "1288:B#2", "text": "The museum's newest exhibit features a signature sculpture that visitors often photograph first."}
+{"sid": "1288:B#3", "text": "Researchers noted that the most typical symptoms appeared within three days of exposure."}
+{"sid": "1560:B#0", "text": "The city council voted on Tuesday to approve the new budget, with the mayor praising its focus on public transit and schools in its official statement."}
+{"sid": "1560:B#1", "text": "After retiring from baseball, the former slugger returned to coach the team, saying he hoped to pass on his experience to younger players."}
+{"sid": "1560:B#2", "text": "The recipe calls for two cups of flour, a pinch of salt, and a splash of milk, which the baker says gives her bread its signature texture."}
+{"sid": "1560:B#3", "text": "Researchers announced that the satellite would begin transmitting data next month, after engineers finished testing its communication systems."}
+{"sid": "350:B#0", "text": "The old bridge swayed in the wind, and nobody on the village road wanted to cross it after dark anymore."}
+{"sid": "350:B#1", "text": "She folded the letter carefully, placed it inside the drawer, and promised herself she would finally answer it tomorrow."}
+{"sid": "350:B#2", "text": "Our team spent three weeks debugging the parser, only to discover the real problem was a single misplaced comma in the config."}
+{"sid": "350:B#3", "text": "The recipe calls for patience: let the dough rest overnight, then bake until the crust turns a deep, honest gold."}
+{"sid": "601:B#0", "text": "Le match de Ligue des champions a été retardé de deux heures à cause de la pluie battante sur le stade de Lyon."}
+{"sid": "601:B#1", "text": "The weather forecast for Tuesday calls for heavy snow across the northern counties, with temperatures dropping well below freezing overnight."}
+{"sid": "601:B#2", "text": "Après la conférence de presse, le ministre a quitté le bâtiment par la sortie arrière, évitant les journalistes massés devant l'entrée principale."}
+{"sid": "601:B#3", "text": "Visitors to the museum can view the original manuscripts in the east wing, which was renovated last spring after a long closure."}
+{"sid": "268:B#0", "text": "The bakery sold 34 loaves of rye on Saturday, a record for the small shop on Elm Street."}
+{"sid": "268:B#1", "text": "Chapter 12, verse 7 reads: \"Let the reader consider carefully,\" a line often cited by scholars of the period."}
+{"sid": "268:B#2", "text": "The final score was 21–0 after a late goal from the visiting striker in the closing minutes."}
+{"sid": "268:B#3", "text": "In the 1998 survey, respondents reported an average commute of 27 minutes each way across the metro region."}
+{"sid": "13:B#0", "text": "Honestly, the instructions say to preheat the oven, but I don't think that's really necessary for this recipe. It's actually fine to skip it."}
+{"sid": "13:B#1", "text": "Many people assume the bridge was built in the 1800s, but that isn't actually true; construction only began in 1902."}
+{"sid": "13:B#2", "text": "The package claims it's waterproof, yet after one rainy hike my boots were soaked through. So it's clearly not actually waterproof at all."}
+{"sid": "13:B#3", "text": "Researchers reviewed the data again and found the effect was not significant once outliers were removed, which changed the paper's conclusion."}
+{"sid": "1013:B#0", "text": "Two options were available for the vote: approve the budget, or reject it outright. Most members chose to abstain entirely."}
+{"sid": "1013:B#1", "text": "She could take the train to the coast, or instead drive along the winding mountain road with the windows down."}
+{"sid": "1013:B#2", "text": "The recipe calls for flour, sugar, or honey, depending on how sweet you want the final cake to taste."}
+{"sid": "1013:B#3", "text": "Participants were randomized to receive the drug, the placebo, and a third group received standard counseling alone."}
+{"sid": "551:B#0", "text": "The committee met on Tuesday to review the budget, and members agreed the new library wing would proceed pending final approval from the city council."}
+{"sid": "551:B#1", "text": "Our hiking group reached the summit just before noon, and everyone agreed the view was worth the long climb through the wet forest."}
+{"sid": "551:B#2", "text": "When the storm knocked out power across the valley, residents gathered at the community center, where volunteers handed out blankets, candles, and hot soup until morning."}
+{"sid": "551:B#3", "text": "The researchers reported that participants who slept more than seven hours showed improved memory retention, though the effect was smaller among those over sixty."}
+{"sid": "1926:B#0", "text": "The bakery on Elm Street opens at 6 a.m. and sells out of sourdough by 9 most mornings."}
+{"sid": "1926:B#1", "text": "Our team scored 4 goals in the first half, then held on to win 3-2 after a late penalty was saved."}
+{"sid": "1926:B#2", "text": "The trail is about 12 km long, with a steep climb near the lake that takes roughly 40 minutes."}
+{"sid": "1926:B#3", "text": "In the 1990 census, the town recorded 2,315 residents, most of them working in local agriculture."}
+{"sid": "1413:B#0", "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.\n    }\n"}
+{"sid": "1413:B#1", "text": "The config file sets the flag to true, so the build now skips the BSD branch entirely."}
+{"sid": "1413:B#2", "text": "In the table below, the total for each quarter is listed under the column labeled Revenue."}
+{"sid": "1413:B#3", "text": "He closed the laptop, stood up from the desk, and walked slowly toward the kitchen door."}
+{"sid": "927:B#0", "text": "Researchers noted that the sensor readings remained stable even after hours of continuous operation, suggesting the calibration held up well."}
+{"sid": "927:B#1", "text": "The committee's final report was delayed, and the chairman admitted the timeline had become uncertain given the budget revisions."}
+{"sid": "927:B#2", "text": "Early tests of the vaccine showed a promising immune response, though larger trials will be needed before any conclusions are drawn."}
+{"sid": "927:B#3", "text": "Although the river looked calm from the bridge, the currents below were dangerous and had already claimed several swimmers that summer."}
+{"sid": "147:B#0", "text": "The committee met on Tuesday to review the budget, and members debated whether the new library wing should be funded this year."}
+{"sid": "147:B#1", "text": "She packed three sandwiches, a thermos of coffee, and a map of the mountain trails before setting off at dawn."}
+{"sid": "147:B#2", "text": "In the chemistry lab, students measured the reaction rate by recording how quickly the solution changed color over time."}
+{"sid": "147:B#3", "text": "After the storm, the villagers repaired the broken fences and walked the muddy road to check on their neighbors' farms."}
+{"sid": "1294:B#0", "text": "The engineer soldered the tiny surface-mount resistors onto the green fiberglass panel, checking each trace before powering up the assembled electronic module."}
+{"sid": "1294:B#1", "text": "Our accounting firm offers small business tax preparation and bookkeeping, helping owners file quarterly payroll and corporate income tax returns on time."}
+{"sid": "1294:B#2", "text": "After the rotator cuff repair, the physical therapist guided him through gentle range-of-motion exercises to restore shoulder strength and flexibility."}
+{"sid": "1294:B#3", "text": "The research institute announced a new partnership with a leading pharmaceutical and biotech company to develop next-generation vaccines for emerging viral diseases."}
+{"sid": "557:B#0", "text": "The committee reviewed the budget proposal and noted that the funding shortfall would need to be addressed before the next fiscal quarter begins."}
+{"sid": "557:B#1", "text": "After the storm passed, residents gathered near the harbor to assess the damage to boats, docks, and the old lighthouse on the point."}
+{"sid": "557:B#2", "text": "The recipe calls for slowly caramelizing the onions over low heat until they turn deep brown and sweet, about forty minutes."}
+{"sid": "557:B#3", "text": "Engineers tested the new bridge design under heavy loads, watching closely for any signs of stress fractures along the main support beams."}
+{"sid": "569:B#0", "text": "The committee reviewed the proposal and noted that the -contract terms were unclear regarding liability for delays."}
+{"sid": "569:B#1", "text": "Under the statute, the defendant must demonstrate that the  the"}
+{"sid": "569:B#2", "text": "The court granted the motion in part and denied it in part, finding that  -"}
+{"sid": "569:B#3", "text": "Plaintiff filed suit in district court, alleging breach of warranty and negligence under state law.\n\n P"}
+{"sid": "1947:B#0", "text": "Patients receiving high-dose diuretics often develop hypokalemic alkalosis, which can be detected on routine serum electrolyte panels."}
+{"sid": "1947:B#1", "text": "The clinic reported that several residents of the shelter were treated for alcoholism and related liver complications last year."}
+{"sid": "1947:B#2", "text": "Engineers measured the output voltage at 0.5 volts and noted that the reference diode drifted by 0.7 V under heavy load."}
+{"sid": "1947:B#3", "text": "Researchers found that a diet high in processed meat and sodium chloride was associated with hyperchloremic acidosis in older adults."}
+{"sid": "715:B#0", "text": "The team left behind their old equipment when they moved to the new facility across town last spring."}
+{"sid": "715:B#1", "text": "Researchers have long credited with discovering the compound, though earlier notes suggest a rival lab got there first."}
+{"sid": "715:B#2", "text": "Students often stay after school to finish projects, especially when the library closes early on Fridays."}
+{"sid": "715:B#3", "text": "After the storm passed, the farmers came back to assess what was left of the crops and the barns."}
+{"sid": "158:B#0", "text": "The old bridge spanned the river for centuries, carrying farmers and traders across to the market town on the far bank each morning before dawn."}
+{"sid": "158:B#1", "text": "Many species of birds migrate south each autumn, following ancient routes along the coast in search of warmer waters and abundant food."}
+{"sid": "158:B#2", "text": "The committee met weekly to review the budget, and members often debated at length about the allocation of funds for repairs."}
+{"sid": "158:B#3", "text": "During the drought, villagers dug deep wells near the riverbed, relying on water drawn from beneath the cracked earth in the hope of survival."}
+{"sid": "1449:B#0", "text": "The committee reviewed the proposal carefully, noting several concerns about funding, timelines, and staffing before voting to delay approval until next quarter."}
+{"sid": "1449:B#1", "text": "Our store hours are Monday through Friday, 9 a.m. to 6 p.m..\nSaturday hours vary by location, so please call ahead before visiting."}
+{"sid": "1449:B#2", "text": "The chef added a pinch of salt, a splash of lemon juice, and a handful of fresh basil, then let the sauce simmer gently for twenty minutes."}
+{"sid": "1449:B#3", "text": "He walked into the room holding a battered notebook of handwritten recipes that had belonged to his grandmother for three generations."}
+{"sid": "1312:B#0", "text": "The contract requires written notice of any breach to be delivered within 30 days of discovery, sent to the registered office by certified mail."}
+{"sid": "1312:B#1", "text": "Patients were enrolled from regional clinics, and each record was matched to the census tract using the residential address on file."}
+{"sid": "1312:B#2", "text": "Customers can reach support by phone or chat, and refunds for shipping damage are processed within five business days."}
+{"sid": "1312:B#3", "text": "The committee voted to postpone the vote on the budget amendment until the next session, citing missing documentation from the finance office."}
+{"sid": "1989:B#0", "text": "After months of delays, the train service between the two cities has resumed at last, and commuters are cheering the news."}
+{"sid": "1989:B#1", "text": "Our team spent three years on the project, and seeing the prototype work finally made every late night worth it."}
+{"sid": "1989:B#2", "text": "She opened the envelope, read the acceptance letter twice, and let out a breath of relief she had been holding all week."}
+{"sid": "1989:B#3", "text": "The storm knocked out power for days, but by evening the lights came back on and the whole street cheered."}
+{"sid": "766:B#0", "text": "If you want to know what people really think, you have to listen closely to what they leave unsaid during meetings."}
+{"sid": "766:B#1", "text": "The chef wanted to make sure every dish arrived hot, so she timed each plate down to the second."}
+{"sid": "766:B#2", "text": "Before we begin, I need everyone to silence their phones and find a seat near the front."}
+{"sid": "766:B#3", "text": "The contract says the tenant must give notice, but nobody told us when that deadline actually falls."}
+{"sid": "1256:B#0", "text": "Yeni anayasa değişikliğiyle birlikte Meclis'in yetkileri ve cumhurbaşkanının atama usulleri nasıl değişecek? Uzmanlar farklı görüşler dile getiriyor."}
+{"sid": "1256:B#1", "text": "Seçim günü sandıklar sabah 08.00'de açıldı ve yoğun bir katılım gözlemlendi; vatandaşlar oylarını kullanmak için uzun kuyruklar oluşturdu."}
+{"sid": "1256:B#2", "text": "In the forest preserve, visitors can find rare orchids and a variety of birds, especially near the marshy edges where the water table stays high during spring."}
+{"sid": "1256:B#3", "text": "The committee published its final report on Thursday, listing twelve recommendations for reforming the municipal budget and improving transparency in local procurement."}
+{"sid": "680:B#0", "text": "The committee met on Tuesday to review the budget, and members agreed the figures needed another look before the vote."}
+{"sid": "680:B#1", "text": "She opened the box carefully, lifted the lid, and found a small brass key tucked beneath a folded letter."}
+{"sid": "680:B#2", "text": "During the storm the power failed across three districts, leaving thousands of homes without heat for two days."}
+{"sid": "680:B#3", "text": "The recipe calls for two cups of flour, a pinch of salt, and enough water to form a smooth, elastic dough."}
+{"sid": "605:B#0", "text": "Nobody expected the storm to arrive so early, but by midnight the power lines were down and the whole valley had gone dark."}
+{"sid": "605:B#1", "text": "When the results came in, the crowd fell silent, because no one could explain what went wrong with the polling data."}
+{"sid": "605:B#2", "text": "She kept replaying the phone call in her head, trying to figure out what the doctor had meant by that last sentence."}
+{"sid": "605:B#3", "text": "Scientists are still debating what will occur once the glacier reaches the warmer water near the coastline."}
+{"sid": "1981:B#0", "text": "I bought this coat about four years ago and it still looks brand new after countless washes."}
+{"sid": "1981:B#1", "text": "The report notes that wages have risen only modestly over the past decade, with the biggest gains coming at the top of the income scale."}
+{"sid": "1981:B#2", "text": "Our family moved into the neighborhood a couple of years back, and we've loved every single season here since."}
+{"sid": "1981:B#3", "text": "Scientists first described the species roughly a century ago, but genetic studies only recently clarified its place on the tree of life."}
+{"sid": "648:B#0", "text": "Table of Contents\n\nForeword\n\nPart One Page\n\nPart Two\n\nAppendix"}
+{"sid": "648:B#1", "text": "Posted by admin on March 3, 2012\n\nLast modified by the editors on June 9, 2014"}
+{"sid": "648:B#2", "text": "Index of Figures\n\nFigure 1.1 Overview\n\nFigure 2.3 Results table and discussion"}
+{"sid": "648:B#3", "text": "Abstract: We study convergence rates for stochastic gradient methods. Keywords: optimization, convergence, variance reduction."}
+{"sid": "800:B#0", "text": "The committee reviewed three proposals for funding the new bridge, and the final decision will be announced next Monday after the budget hearing."}
+{"sid": "800:B#1", "text": "She opened the old journal and found a pressed flower tucked between the pages, its petals faded to a pale brown."}
+{"sid": "800:B#2", "text": "To install the package, run the setup script from the project root, then restart the server so the new configuration takes effect."}
+{"sid": "800:B#3", "text": "After the storm passed, the fishermen returned to the harbor to repair their nets and count the catch for the week."}
+{"sid": "467:B#0", "text": "The committee reviewed the proposal and noted that the budget allocation for next year remained unchanged from the previous cycle."}
+{"sid": "467:B#1", "text": "Researchers measured the enzyme activity across several samples, and the results indicated a consistent increase under elevated temperatures."}
+{"sid": "467:B#2", "text": "She spent the afternoon sorting the archive, pausing at each letter to read the signature and the date written beneath it."}
+{"sid": "467:B#3", "text": "The bridge was closed for repairs after engineers detected a crack in the main support beam during routine inspection."}
+{"sid": "1016:B#0", "text": "The trouble with the plan is that nobody checked the budget before approving it, so the numbers are now off by thousands."}
+{"sid": "1016:B#1", "text": "When I opened the file, the main issue was that the header row is missing, which breaks every formula below it."}
+{"sid": "1016:B#2", "text": "She promised to call back by noon, but the real question was whether anyone on the team had actually read the proposal."}
+{"sid": "1016:B#3", "text": "Our recipe worked well, except the dough was too wet, which means the flour needs to be measured more carefully next time."}
+{"sid": "1352:B#0", "text": "The function returns early when the buffer is empty, so the loop body never runs. Consider adding a guard clause before calling strlen on the pointer."}
+{"sid": "1352:B#1", "text": "We rendered the scatter plot with a custom palette, then saved the figure to disk as a high-resolution PNG for the printed report."}
+{"sid": "1352:B#2", "text": "During the quarterly review, the analysts noted that revenue from the Asia-Pacific segment grew faster than projected, despite currency headwinds."}
+{"sid": "1352:B#3", "text": "Add a sticky header to the table so the column names remain visible while the user scrolls down through the long list of records."}
+{"sid": "1132:B#0", "text": "The traffic light on the dashboard turns amber when fuel drops below a quarter tank, warning drivers to refill soon."}
+{"sid": "1132:B#1", "text": "In the chart legend, each bar's hue is chosen from the value range so high readings appear darker than low ones."}
+{"sid": "1132:B#2", "text": "Set the marker style so points above the threshold are drawn in green while those below stay gray."}
+{"sid": "1132:B#3", "text": "The paint swatch labeled crimson was matched against a sample and the shade looked noticeably warmer under daylight."}
+{"sid": "1610:B#0", "text": "The recipe calls for two cups of flour, a pinch of salt, and a splash of milk, mixed until the dough is smooth and elastic."}
+{"sid": "1610:B#1", "text": "Our hiking group reached the summit just after sunrise, where the clouds below looked like an endless white ocean stretching to the horizon."}
+{"sid": "1610:B#2", "text": "In the quarterly report, revenue grew by twelve percent while operating costs remained flat, signaling stronger margins than analysts had predicted."}
+{"sid": "1610:B#3", "text": "The museum's new wing features rotating exhibits on early maritime navigation, including original star charts and brass sextants from the eighteenth century."}
+{"sid": "1326:B#0", "text": "Licensed under the MIT License; you may obtain a copy of the License at the project root. Unless required by applicable law or agreed to in writing, software is distributed as is."}
+{"sid": "1326:B#1", "text": "The function returns a pointer to the parsed configuration, or an error if the input file cannot be read or contains malformed YAML entries."}
+{"sid": "1326:B#2", "text": "Docker info output shows Server version: 20.10.7, storage driver overlay2, and cgroup driver systemd on this host, along with the kernel version."}
+{"sid": "1326:B#3", "text": "# Copyright 2019 The Kubernetes Authors.\n#\n# Licensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License."}
+{"sid": "1057:B#0", "text": "The reactor logs flagged an odd spike in pressure readings, which the operator traced to a sensor miscalibrated during the night shift."}
+{"sid": "1057:B#1", "text": "Her grandmother's recipe called for two cups of flour, but the handwritten card had a smudge over the sugar measurement, leaving everyone guessing."}
+{"sid": "1057:B#2", "text": "The committee reviewed the proposal line by line, noting that the budget section omitted the maintenance costs for the second year entirely."}
+{"sid": "1057:B#3", "text": "During the migration, the database administrator noticed the timestamp column was stored as a plain string instead of a proper datetime type, causing sorting errors."}
+{"sid": "633:B#0", "text": "The bakery on Main Street opens at dawn, offering warm sourdough, flaky croissants, and cinnamon rolls that sell out by mid-morning every single day."}
+{"sid": "633:B#1", "text": "During the final quarter, the striker dribbled past two defenders and fired a low shot into the corner, sealing the victory for the home side."}
+{"sid": "633:B#2", "text": "The museum's new exhibit explores ancient pottery from coastal villages, featuring over two hundred artifacts loaned by collectors across Europe."}
+{"sid": "633:B#3", "text": "To install the package, open your terminal, navigate to the project folder, and run the setup script with administrator privileges enabled."}
+{"sid": "193:B#0", "text": "The committee praised Mr. Hanley for his decades of service to the county. Mrs. Patel will present the annual report next Tuesday."}
+{"sid": "193:B#1", "text": "Judge Morales wrote the opinion, joined by Justice Chen. Prof. Alvarez will deliver the keynote address at the conference."}
+{"sid": "193:B#2", "text": "Officer Ruiz confirmed the arrest in a statement to reporters. Dr. Whitfield, the chief surgeon, declined further comment."}
+{"sid": "193:B#3", "text": "Senator Lowell introduced the bill on Monday. Ms. Okafor, the company's general counsel, will testify before the committee."}
+{"sid": "857:B#0", "text": "The committee approved the budget after a long debate about infrastructure spending and its long-term effects on local taxes."}
+{"sid": "857:B#1", "text": "In the lab, the reagent was added slowly while the flask was stirred at room temperature for twenty minutes."}
+{"sid": "857:B#2", "text": "She opened the old atlas and traced the river delta with her finger, wondering which town had once stood there."}
+{"sid": "857:B#3", "text": "def parse_header(raw): return raw.split(':')0.strip().lower()  # key normalization for HTTP header lookups"}
+{"sid": "1690:B#0", "text": "Engineers at the lab tested the new cooling loop across three racks, measuring  thermal output at each node while the cluster ran sustained workloads."}
+{"sid": "1690:B#1", "text": "The manual lists every adapter the card supports, including  Ultra320 SCSI drives, RAID levels 0, 1, and 5, and up to eight channels."}
+{"sid": "1690:B#2", "text": "Our team switched the build server to Ubuntu last quarter, so the  Jenkins pipeline now runs on containers instead of bare virtual machines."}
+{"sid": "1690:B#3", "text": "The sensor array reports readings to a central hub over  Wi-Fi, and each reading is timestamped before being stored locally."}

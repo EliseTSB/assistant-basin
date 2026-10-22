@@ -1799,3 +1799,11 @@ prompts; nothing here is a finding yet. Broken-answer rates are pending the blin
 | 56b | Claude: random directions at most 20% one_job 4 or 5; real neurons exceed that share by at least 10 points. | FAILED | Controls 0.9% (held); real 3.3%, a gap of 2.4 points. At one_job 3 or more 13.4% against 3.4%. |
 | 56c | Claude: re-describing 500 neurons from the same windows in shuffled order gives the same kind in at least 80% and a shared content word in at least 70%. | FAILED | Same kind 54.0%, shared word 53.2% (496 neurons); one_job within 1 point in 97.0%. |
 | 56d | Claude: at most 1% of real neurons flagged identity-or-origin or persona-or-creator; controls under a third of that rate. | held | 1 of 1,996 (0.05%); controls 0 of 1,987. |
+| 54a | Claude: Qwen alien neuron: OFFWORLD at most 1 of 24 unclamped, rising with dose through +1 and +1.5, at least 12 of 24 at +2. | held | 0 unclamped; 1, 19 at +1, +1.5; 24 of 24 at +2. A sharp step between +1 and +1.5. |
+| 54b | Claude: Qwen alien neuron at +0.5: OFFWORLD at most 6 of 24. | held | 0 of 24 (the curve is a threshold: 1 of 24 at +1.0). |
+| 54c | Claude: Qwen alien neuron pushed down: EARTH at most 2 of 24 at every negative dose. | held | 1, 1, 0 of 24 at -3, -2, -1. |
+| 54d | Claude: at least 2 of the 4 new models yield a twin passing the Part 26 checks. | held | OLMo-2 7B (two), Qwen3-4B; plus Gemma 4 E2B from the added list. Granite none; Phi-4-mini failed to load. |
+| 54e | Claude: every passing twin's up ladder reaches OFFWORLD at least 3 of 24 at some positive dose against at most 1 unclamped. | FAILED | Gemma 4 E2B 0; OLMo-2 7B 1 of 48 at +2; Qwen3-4B 3 of 24 at +2 only with 23 broken. |
+| 54f | Claude: EARTH at -2 reaches at least 3 of 24 in at most one new twin. | held | Qwen3-4B 4 of 24 (unclamped 1 to 4); OLMo and Gemma 0. Weak: the base rate is high. |
+| 54g | Claude: no random control reaches 10% on either label. | FAILED | Qwen3-4B controls: EARTH 6 of 24 at -2 and 4 of 24 at +1.5; Qwen3.5 and Gemma controls held. |
+| 54h | Claude: garbled answers at most 15% at every dose from -1.5 to +1.5. | FAILED | Qwen3.5 and Gemma fine (Qwen3.5 +1.5: 2 of 24); Qwen3-4B twin 5 of 24 at +1.0 and 24 of 24 at +1.5. |

@@ -24,3 +24,6 @@
 {"name": "V9", "split": "planted-test", "calls": 210, "usd": 0.0649, "ts": "2026-10-22 10:05:50"}
 {"name": "V10", "split": "planted-test", "calls": 210, "usd": 0.0657, "ts": "2026-10-22 10:06:30"}
 {"name": "gen_all", "split": "atlas-test", "calls": 212, "usd": 0.0612, "ts": "2026-10-22 10:25:19"}
+{"name": "gen_atlas", "split": "results/part58/atlas-g4", "calls": 0, "usd": 0.0, "ts": "2026-10-22 13:30:34"}
+{"name": "gen_atlas", "split": "results/part58/atlas-g4", "calls": 26, "usd": 0.0079, "ts": "2026-10-22 13:32:48"}
+{"name": "gen_atlas", "split": "results/part58/atlas-g4", "calls": 2000, "usd": 0.6145, "ts": "2026-10-22 13:39:36"}

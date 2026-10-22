@@ -1,0 +1,4002 @@
+{
+  "b0001r00000": {
+    "record_index": 0,
+    "layer": 19,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2149,
+    "unit_key": "L19:2149"
+  },
+  "b0001r00001": {
+    "record_index": 1,
+    "layer": 15,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2493,
+    "unit_key": "L15:2493"
+  },
+  "b0001r00002": {
+    "record_index": 2,
+    "layer": 20,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1013,
+    "unit_key": "L20:1013"
+  },
+  "b0001r00003": {
+    "record_index": 3,
+    "layer": 21,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1360,
+    "unit_key": "L21:1360"
+  },
+  "b0001r00004": {
+    "record_index": 4,
+    "layer": 14,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2238,
+    "unit_key": "L14:2238"
+  },
+  "b0001r00005": {
+    "record_index": 5,
+    "layer": 23,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 587,
+    "unit_key": "L23:587"
+  },
+  "b0001r00006": {
+    "record_index": 6,
+    "layer": 0,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1537,
+    "unit_key": "L0:1537"
+  },
+  "b0001r00007": {
+    "record_index": 7,
+    "layer": 21,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2541,
+    "unit_key": "L21:2541"
+  },
+  "b0001r00008": {
+    "record_index": 8,
+    "layer": 15,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4596,
+    "unit_key": "L15:4596"
+  },
+  "b0001r00009": {
+    "record_index": 9,
+    "layer": 9,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2674,
+    "unit_key": "L9:2674"
+  },
+  "b0001r00010": {
+    "record_index": 10,
+    "layer": 26,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5197,
+    "unit_key": "L26:5197"
+  },
+  "b0001r00011": {
+    "record_index": 11,
+    "layer": 18,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5246,
+    "unit_key": "L18:5246"
+  },
+  "b0001r00012": {
+    "record_index": 12,
+    "layer": 6,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 802,
+    "unit_key": "L6:802"
+  },
+  "b0001r00013": {
+    "record_index": 13,
+    "layer": 0,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 503,
+    "unit_key": "L0:503"
+  },
+  "b0001r00014": {
+    "record_index": 14,
+    "layer": 8,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5465,
+    "unit_key": "L8:5465"
+  },
+  "b0001r00015": {
+    "record_index": 15,
+    "layer": 26,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1630,
+    "unit_key": "L26:1630"
+  },
+  "b0001r00016": {
+    "record_index": 16,
+    "layer": 12,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3939,
+    "unit_key": "L12:3939"
+  },
+  "b0001r00017": {
+    "record_index": 17,
+    "layer": 26,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1268,
+    "unit_key": "L26:1268"
+  },
+  "b0001r00018": {
+    "record_index": 18,
+    "layer": 3,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 987,
+    "unit_key": "L3:987"
+  },
+  "b0001r00019": {
+    "record_index": 19,
+    "layer": 1,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5990,
+    "unit_key": "L1:5990"
+  },
+  "b0001r00020": {
+    "record_index": 20,
+    "layer": 7,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5679,
+    "unit_key": "L7:5679"
+  },
+  "b0001r00021": {
+    "record_index": 21,
+    "layer": 13,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 671,
+    "unit_key": "L13:671"
+  },
+  "b0001r00022": {
+    "record_index": 22,
+    "layer": 9,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2972,
+    "unit_key": "L9:2972"
+  },
+  "b0001r00023": {
+    "record_index": 23,
+    "layer": 12,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4920,
+    "unit_key": "L12:4920"
+  },
+  "b0001r00024": {
+    "record_index": 24,
+    "layer": 21,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 6077,
+    "unit_key": "L21:6077"
+  },
+  "b0001r00025": {
+    "record_index": 25,
+    "layer": 23,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3764,
+    "unit_key": "L23:3764"
+  },
+  "b0001r00026": {
+    "record_index": 26,
+    "layer": 23,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 15,
+    "unit_key": "L23:15"
+  },
+  "b0001r00027": {
+    "record_index": 27,
+    "layer": 3,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1330,
+    "unit_key": "L3:1330"
+  },
+  "b0001r00028": {
+    "record_index": 28,
+    "layer": 10,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4490,
+    "unit_key": "L10:4490"
+  },
+  "b0001r00029": {
+    "record_index": 29,
+    "layer": 15,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4179,
+    "unit_key": "L15:4179"
+  },
+  "b0001r00030": {
+    "record_index": 30,
+    "layer": 1,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2244,
+    "unit_key": "L1:2244"
+  },
+  "b0001r00031": {
+    "record_index": 31,
+    "layer": 26,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 56,
+    "unit_key": "L26:56"
+  },
+  "b0001r00032": {
+    "record_index": 32,
+    "layer": 16,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3392,
+    "unit_key": "L16:3392"
+  },
+  "b0001r00033": {
+    "record_index": 33,
+    "layer": 18,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5651,
+    "unit_key": "L18:5651"
+  },
+  "b0001r00034": {
+    "record_index": 34,
+    "layer": 23,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5460,
+    "unit_key": "L23:5460"
+  },
+  "b0001r00035": {
+    "record_index": 35,
+    "layer": 25,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3394,
+    "unit_key": "L25:3394"
+  },
+  "b0001r00036": {
+    "record_index": 36,
+    "layer": 16,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4097,
+    "unit_key": "L16:4097"
+  },
+  "b0001r00037": {
+    "record_index": 37,
+    "layer": 20,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2046,
+    "unit_key": "L20:2046"
+  },
+  "b0001r00038": {
+    "record_index": 38,
+    "layer": 7,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 715,
+    "unit_key": "L7:715"
+  },
+  "b0001r00039": {
+    "record_index": 39,
+    "layer": 14,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 666,
+    "unit_key": "L14:666"
+  },
+  "b0001r00040": {
+    "record_index": 40,
+    "layer": 0,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4699,
+    "unit_key": "L0:4699"
+  },
+  "b0001r00041": {
+    "record_index": 41,
+    "layer": 27,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2687,
+    "unit_key": "L27:2687"
+  },
+  "b0001r00042": {
+    "record_index": 42,
+    "layer": 5,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5397,
+    "unit_key": "L5:5397"
+  },
+  "b0001r00043": {
+    "record_index": 43,
+    "layer": 2,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5583,
+    "unit_key": "L2:5583"
+  },
+  "b0001r00044": {
+    "record_index": 44,
+    "layer": 2,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5470,
+    "unit_key": "L2:5470"
+  },
+  "b0001r00045": {
+    "record_index": 45,
+    "layer": 22,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3960,
+    "unit_key": "L22:3960"
+  },
+  "b0001r00046": {
+    "record_index": 46,
+    "layer": 9,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2909,
+    "unit_key": "L9:2909"
+  },
+  "b0001r00047": {
+    "record_index": 47,
+    "layer": 10,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4487,
+    "unit_key": "L10:4487"
+  },
+  "b0001r00048": {
+    "record_index": 48,
+    "layer": 5,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3367,
+    "unit_key": "L5:3367"
+  },
+  "b0001r00049": {
+    "record_index": 49,
+    "layer": 17,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3875,
+    "unit_key": "L17:3875"
+  },
+  "b0001r00050": {
+    "record_index": 50,
+    "layer": 2,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1517,
+    "unit_key": "L2:1517"
+  },
+  "b0001r00051": {
+    "record_index": 51,
+    "layer": 26,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3443,
+    "unit_key": "L26:3443"
+  },
+  "b0001r00052": {
+    "record_index": 52,
+    "layer": 18,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2542,
+    "unit_key": "L18:2542"
+  },
+  "b0001r00053": {
+    "record_index": 53,
+    "layer": 6,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3557,
+    "unit_key": "L6:3557"
+  },
+  "b0001r00054": {
+    "record_index": 54,
+    "layer": 6,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4505,
+    "unit_key": "L6:4505"
+  },
+  "b0001r00055": {
+    "record_index": 55,
+    "layer": 22,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1085,
+    "unit_key": "L22:1085"
+  },
+  "b0001r00056": {
+    "record_index": 56,
+    "layer": 21,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 203,
+    "unit_key": "L21:203"
+  },
+  "b0001r00057": {
+    "record_index": 57,
+    "layer": 24,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2660,
+    "unit_key": "L24:2660"
+  },
+  "b0001r00058": {
+    "record_index": 58,
+    "layer": 9,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5099,
+    "unit_key": "L9:5099"
+  },
+  "b0001r00059": {
+    "record_index": 59,
+    "layer": 18,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4935,
+    "unit_key": "L18:4935"
+  },
+  "b0001r00060": {
+    "record_index": 60,
+    "layer": 6,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1965,
+    "unit_key": "L6:1965"
+  },
+  "b0001r00061": {
+    "record_index": 61,
+    "layer": 22,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1586,
+    "unit_key": "L22:1586"
+  },
+  "b0001r00062": {
+    "record_index": 62,
+    "layer": 20,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3065,
+    "unit_key": "L20:3065"
+  },
+  "b0001r00063": {
+    "record_index": 63,
+    "layer": 3,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1751,
+    "unit_key": "L3:1751"
+  },
+  "b0001r00064": {
+    "record_index": 64,
+    "layer": 22,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3988,
+    "unit_key": "L22:3988"
+  },
+  "b0001r00065": {
+    "record_index": 65,
+    "layer": 20,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1735,
+    "unit_key": "L20:1735"
+  },
+  "b0001r00066": {
+    "record_index": 66,
+    "layer": 23,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 215,
+    "unit_key": "L23:215"
+  },
+  "b0001r00067": {
+    "record_index": 67,
+    "layer": 1,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2983,
+    "unit_key": "L1:2983"
+  },
+  "b0001r00068": {
+    "record_index": 68,
+    "layer": 8,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1245,
+    "unit_key": "L8:1245"
+  },
+  "b0001r00069": {
+    "record_index": 69,
+    "layer": 8,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1116,
+    "unit_key": "L8:1116"
+  },
+  "b0001r00070": {
+    "record_index": 70,
+    "layer": 20,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3868,
+    "unit_key": "L20:3868"
+  },
+  "b0001r00071": {
+    "record_index": 71,
+    "layer": 18,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3507,
+    "unit_key": "L18:3507"
+  },
+  "b0001r00072": {
+    "record_index": 72,
+    "layer": 21,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4551,
+    "unit_key": "L21:4551"
+  },
+  "b0001r00073": {
+    "record_index": 73,
+    "layer": 13,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4369,
+    "unit_key": "L13:4369"
+  },
+  "b0001r00074": {
+    "record_index": 74,
+    "layer": 20,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 860,
+    "unit_key": "L20:860"
+  },
+  "b0001r00075": {
+    "record_index": 75,
+    "layer": 21,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1775,
+    "unit_key": "L21:1775"
+  },
+  "b0001r00076": {
+    "record_index": 76,
+    "layer": 1,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5824,
+    "unit_key": "L1:5824"
+  },
+  "b0001r00077": {
+    "record_index": 77,
+    "layer": 4,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 390,
+    "unit_key": "L4:390"
+  },
+  "b0001r00078": {
+    "record_index": 78,
+    "layer": 5,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 777,
+    "unit_key": "L5:777"
+  },
+  "b0001r00079": {
+    "record_index": 79,
+    "layer": 21,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1242,
+    "unit_key": "L21:1242"
+  },
+  "b0001r00080": {
+    "record_index": 80,
+    "layer": 2,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3102,
+    "unit_key": "L2:3102"
+  },
+  "b0001r00081": {
+    "record_index": 81,
+    "layer": 3,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2758,
+    "unit_key": "L3:2758"
+  },
+  "b0001r00082": {
+    "record_index": 82,
+    "layer": 11,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1982,
+    "unit_key": "L11:1982"
+  },
+  "b0001r00083": {
+    "record_index": 83,
+    "layer": 19,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4708,
+    "unit_key": "L19:4708"
+  },
+  "b0001r00084": {
+    "record_index": 84,
+    "layer": 22,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3211,
+    "unit_key": "L22:3211"
+  },
+  "b0001r00085": {
+    "record_index": 85,
+    "layer": 2,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1842,
+    "unit_key": "L2:1842"
+  },
+  "b0001r00086": {
+    "record_index": 86,
+    "layer": 22,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5996,
+    "unit_key": "L22:5996"
+  },
+  "b0001r00087": {
+    "record_index": 87,
+    "layer": 17,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5941,
+    "unit_key": "L17:5941"
+  },
+  "b0001r00088": {
+    "record_index": 88,
+    "layer": 8,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4079,
+    "unit_key": "L8:4079"
+  },
+  "b0001r00089": {
+    "record_index": 89,
+    "layer": 0,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 6008,
+    "unit_key": "L0:6008"
+  },
+  "b0001r00090": {
+    "record_index": 90,
+    "layer": 25,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5170,
+    "unit_key": "L25:5170"
+  },
+  "b0001r00091": {
+    "record_index": 91,
+    "layer": 12,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3522,
+    "unit_key": "L12:3522"
+  },
+  "b0001r00092": {
+    "record_index": 92,
+    "layer": 12,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 6002,
+    "unit_key": "L12:6002"
+  },
+  "b0001r00093": {
+    "record_index": 93,
+    "layer": 12,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2243,
+    "unit_key": "L12:2243"
+  },
+  "b0001r00094": {
+    "record_index": 94,
+    "layer": 21,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 112,
+    "unit_key": "L21:112"
+  },
+  "b0001r00095": {
+    "record_index": 95,
+    "layer": 4,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1358,
+    "unit_key": "L4:1358"
+  },
+  "b0001r00096": {
+    "record_index": 96,
+    "layer": 1,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 777,
+    "unit_key": "L1:777"
+  },
+  "b0001r00097": {
+    "record_index": 97,
+    "layer": 21,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4638,
+    "unit_key": "L21:4638"
+  },
+  "b0001r00098": {
+    "record_index": 98,
+    "layer": 1,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4259,
+    "unit_key": "L1:4259"
+  },
+  "b0001r00099": {
+    "record_index": 99,
+    "layer": 2,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3745,
+    "unit_key": "L2:3745"
+  },
+  "b0001r00100": {
+    "record_index": 100,
+    "layer": 6,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5113,
+    "unit_key": "L6:5113"
+  },
+  "b0001r00101": {
+    "record_index": 101,
+    "layer": 1,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5222,
+    "unit_key": "L1:5222"
+  },
+  "b0001r00102": {
+    "record_index": 102,
+    "layer": 5,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3129,
+    "unit_key": "L5:3129"
+  },
+  "b0001r00103": {
+    "record_index": 103,
+    "layer": 9,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5641,
+    "unit_key": "L9:5641"
+  },
+  "b0001r00104": {
+    "record_index": 104,
+    "layer": 13,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1685,
+    "unit_key": "L13:1685"
+  },
+  "b0001r00105": {
+    "record_index": 105,
+    "layer": 23,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4758,
+    "unit_key": "L23:4758"
+  },
+  "b0001r00106": {
+    "record_index": 106,
+    "layer": 1,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4681,
+    "unit_key": "L1:4681"
+  },
+  "b0001r00107": {
+    "record_index": 107,
+    "layer": 20,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1065,
+    "unit_key": "L20:1065"
+  },
+  "b0001r00108": {
+    "record_index": 108,
+    "layer": 4,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4211,
+    "unit_key": "L4:4211"
+  },
+  "b0001r00109": {
+    "record_index": 109,
+    "layer": 26,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4373,
+    "unit_key": "L26:4373"
+  },
+  "b0001r00110": {
+    "record_index": 110,
+    "layer": 22,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 577,
+    "unit_key": "L22:577"
+  },
+  "b0001r00111": {
+    "record_index": 111,
+    "layer": 9,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3117,
+    "unit_key": "L9:3117"
+  },
+  "b0001r00112": {
+    "record_index": 112,
+    "layer": 9,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1603,
+    "unit_key": "L9:1603"
+  },
+  "b0001r00113": {
+    "record_index": 113,
+    "layer": 13,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4285,
+    "unit_key": "L13:4285"
+  },
+  "b0001r00114": {
+    "record_index": 114,
+    "layer": 19,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1326,
+    "unit_key": "L19:1326"
+  },
+  "b0001r00115": {
+    "record_index": 115,
+    "layer": 20,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3096,
+    "unit_key": "L20:3096"
+  },
+  "b0001r00116": {
+    "record_index": 116,
+    "layer": 5,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2519,
+    "unit_key": "L5:2519"
+  },
+  "b0001r00117": {
+    "record_index": 117,
+    "layer": 9,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3085,
+    "unit_key": "L9:3085"
+  },
+  "b0001r00118": {
+    "record_index": 118,
+    "layer": 8,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2367,
+    "unit_key": "L8:2367"
+  },
+  "b0001r00119": {
+    "record_index": 119,
+    "layer": 4,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1654,
+    "unit_key": "L4:1654"
+  },
+  "b0001r00120": {
+    "record_index": 120,
+    "layer": 11,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2480,
+    "unit_key": "L11:2480"
+  },
+  "b0001r00121": {
+    "record_index": 121,
+    "layer": 6,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3464,
+    "unit_key": "L6:3464"
+  },
+  "b0001r00122": {
+    "record_index": 122,
+    "layer": 17,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1920,
+    "unit_key": "L17:1920"
+  },
+  "b0001r00123": {
+    "record_index": 123,
+    "layer": 26,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5617,
+    "unit_key": "L26:5617"
+  },
+  "b0001r00124": {
+    "record_index": 124,
+    "layer": 19,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3918,
+    "unit_key": "L19:3918"
+  },
+  "b0001r00125": {
+    "record_index": 125,
+    "layer": 2,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4220,
+    "unit_key": "L2:4220"
+  },
+  "b0001r00126": {
+    "record_index": 126,
+    "layer": 2,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3063,
+    "unit_key": "L2:3063"
+  },
+  "b0001r00127": {
+    "record_index": 127,
+    "layer": 23,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2784,
+    "unit_key": "L23:2784"
+  },
+  "b0001r00128": {
+    "record_index": 128,
+    "layer": 11,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 79,
+    "unit_key": "L11:79"
+  },
+  "b0001r00129": {
+    "record_index": 129,
+    "layer": 5,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2014,
+    "unit_key": "L5:2014"
+  },
+  "b0001r00130": {
+    "record_index": 130,
+    "layer": 13,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4713,
+    "unit_key": "L13:4713"
+  },
+  "b0001r00131": {
+    "record_index": 131,
+    "layer": 27,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5448,
+    "unit_key": "L27:5448"
+  },
+  "b0001r00132": {
+    "record_index": 132,
+    "layer": 26,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1818,
+    "unit_key": "L26:1818"
+  },
+  "b0001r00133": {
+    "record_index": 133,
+    "layer": 26,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3786,
+    "unit_key": "L26:3786"
+  },
+  "b0001r00134": {
+    "record_index": 134,
+    "layer": 22,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4203,
+    "unit_key": "L22:4203"
+  },
+  "b0001r00135": {
+    "record_index": 135,
+    "layer": 21,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5030,
+    "unit_key": "L21:5030"
+  },
+  "b0001r00136": {
+    "record_index": 136,
+    "layer": 3,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3142,
+    "unit_key": "L3:3142"
+  },
+  "b0001r00137": {
+    "record_index": 137,
+    "layer": 14,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 307,
+    "unit_key": "L14:307"
+  },
+  "b0001r00138": {
+    "record_index": 138,
+    "layer": 9,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4297,
+    "unit_key": "L9:4297"
+  },
+  "b0001r00139": {
+    "record_index": 139,
+    "layer": 11,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1624,
+    "unit_key": "L11:1624"
+  },
+  "b0001r00140": {
+    "record_index": 140,
+    "layer": 6,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3582,
+    "unit_key": "L6:3582"
+  },
+  "b0001r00141": {
+    "record_index": 141,
+    "layer": 13,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4629,
+    "unit_key": "L13:4629"
+  },
+  "b0001r00142": {
+    "record_index": 142,
+    "layer": 20,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 6016,
+    "unit_key": "L20:6016"
+  },
+  "b0001r00143": {
+    "record_index": 143,
+    "layer": 23,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5187,
+    "unit_key": "L23:5187"
+  },
+  "b0001r00144": {
+    "record_index": 144,
+    "layer": 26,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 774,
+    "unit_key": "L26:774"
+  },
+  "b0001r00145": {
+    "record_index": 145,
+    "layer": 25,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3429,
+    "unit_key": "L25:3429"
+  },
+  "b0001r00146": {
+    "record_index": 146,
+    "layer": 25,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3409,
+    "unit_key": "L25:3409"
+  },
+  "b0001r00147": {
+    "record_index": 147,
+    "layer": 3,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3083,
+    "unit_key": "L3:3083"
+  },
+  "b0001r00148": {
+    "record_index": 148,
+    "layer": 20,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 930,
+    "unit_key": "L20:930"
+  },
+  "b0001r00149": {
+    "record_index": 149,
+    "layer": 4,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1999,
+    "unit_key": "L4:1999"
+  },
+  "b0001r00150": {
+    "record_index": 150,
+    "layer": 5,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4807,
+    "unit_key": "L5:4807"
+  },
+  "b0001r00151": {
+    "record_index": 151,
+    "layer": 3,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 162,
+    "unit_key": "L3:162"
+  },
+  "b0001r00152": {
+    "record_index": 152,
+    "layer": 0,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1271,
+    "unit_key": "L0:1271"
+  },
+  "b0001r00153": {
+    "record_index": 153,
+    "layer": 7,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2387,
+    "unit_key": "L7:2387"
+  },
+  "b0001r00154": {
+    "record_index": 154,
+    "layer": 20,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3432,
+    "unit_key": "L20:3432"
+  },
+  "b0001r00155": {
+    "record_index": 155,
+    "layer": 14,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2970,
+    "unit_key": "L14:2970"
+  },
+  "b0001r00156": {
+    "record_index": 156,
+    "layer": 23,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1043,
+    "unit_key": "L23:1043"
+  },
+  "b0001r00157": {
+    "record_index": 157,
+    "layer": 2,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1194,
+    "unit_key": "L2:1194"
+  },
+  "b0001r00158": {
+    "record_index": 158,
+    "layer": 3,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 6050,
+    "unit_key": "L3:6050"
+  },
+  "b0001r00159": {
+    "record_index": 159,
+    "layer": 16,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5279,
+    "unit_key": "L16:5279"
+  },
+  "b0001r00160": {
+    "record_index": 160,
+    "layer": 0,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1795,
+    "unit_key": "L0:1795"
+  },
+  "b0001r00161": {
+    "record_index": 161,
+    "layer": 23,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2484,
+    "unit_key": "L23:2484"
+  },
+  "b0001r00162": {
+    "record_index": 162,
+    "layer": 3,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 6110,
+    "unit_key": "L3:6110"
+  },
+  "b0001r00163": {
+    "record_index": 163,
+    "layer": 1,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 270,
+    "unit_key": "L1:270"
+  },
+  "b0001r00164": {
+    "record_index": 164,
+    "layer": 1,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 811,
+    "unit_key": "L1:811"
+  },
+  "b0001r00165": {
+    "record_index": 165,
+    "layer": 9,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5414,
+    "unit_key": "L9:5414"
+  },
+  "b0001r00166": {
+    "record_index": 166,
+    "layer": 2,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3267,
+    "unit_key": "L2:3267"
+  },
+  "b0001r00167": {
+    "record_index": 167,
+    "layer": 1,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2129,
+    "unit_key": "L1:2129"
+  },
+  "b0001r00168": {
+    "record_index": 168,
+    "layer": 1,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 716,
+    "unit_key": "L1:716"
+  },
+  "b0001r00169": {
+    "record_index": 169,
+    "layer": 6,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3793,
+    "unit_key": "L6:3793"
+  },
+  "b0001r00170": {
+    "record_index": 170,
+    "layer": 3,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5123,
+    "unit_key": "L3:5123"
+  },
+  "b0001r00171": {
+    "record_index": 171,
+    "layer": 11,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 431,
+    "unit_key": "L11:431"
+  },
+  "b0001r00172": {
+    "record_index": 172,
+    "layer": 23,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2839,
+    "unit_key": "L23:2839"
+  },
+  "b0001r00173": {
+    "record_index": 173,
+    "layer": 1,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 571,
+    "unit_key": "L1:571"
+  },
+  "b0001r00174": {
+    "record_index": 174,
+    "layer": 25,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5651,
+    "unit_key": "L25:5651"
+  },
+  "b0001r00175": {
+    "record_index": 175,
+    "layer": 12,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5100,
+    "unit_key": "L12:5100"
+  },
+  "b0001r00176": {
+    "record_index": 176,
+    "layer": 20,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2567,
+    "unit_key": "L20:2567"
+  },
+  "b0001r00177": {
+    "record_index": 177,
+    "layer": 18,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2641,
+    "unit_key": "L18:2641"
+  },
+  "b0001r00178": {
+    "record_index": 178,
+    "layer": 2,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2439,
+    "unit_key": "L2:2439"
+  },
+  "b0001r00179": {
+    "record_index": 179,
+    "layer": 26,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3721,
+    "unit_key": "L26:3721"
+  },
+  "b0001r00180": {
+    "record_index": 180,
+    "layer": 25,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3698,
+    "unit_key": "L25:3698"
+  },
+  "b0001r00181": {
+    "record_index": 181,
+    "layer": 15,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4679,
+    "unit_key": "L15:4679"
+  },
+  "b0001r00182": {
+    "record_index": 182,
+    "layer": 2,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2794,
+    "unit_key": "L2:2794"
+  },
+  "b0001r00183": {
+    "record_index": 183,
+    "layer": 3,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5945,
+    "unit_key": "L3:5945"
+  },
+  "b0001r00184": {
+    "record_index": 184,
+    "layer": 6,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4150,
+    "unit_key": "L6:4150"
+  },
+  "b0001r00185": {
+    "record_index": 185,
+    "layer": 14,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5746,
+    "unit_key": "L14:5746"
+  },
+  "b0001r00186": {
+    "record_index": 186,
+    "layer": 17,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2427,
+    "unit_key": "L17:2427"
+  },
+  "b0001r00187": {
+    "record_index": 187,
+    "layer": 11,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 415,
+    "unit_key": "L11:415"
+  },
+  "b0001r00188": {
+    "record_index": 188,
+    "layer": 13,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 710,
+    "unit_key": "L13:710"
+  },
+  "b0001r00189": {
+    "record_index": 189,
+    "layer": 22,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5048,
+    "unit_key": "L22:5048"
+  },
+  "b0001r00190": {
+    "record_index": 190,
+    "layer": 16,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4701,
+    "unit_key": "L16:4701"
+  },
+  "b0001r00191": {
+    "record_index": 191,
+    "layer": 6,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2353,
+    "unit_key": "L6:2353"
+  },
+  "b0001r00192": {
+    "record_index": 192,
+    "layer": 6,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3447,
+    "unit_key": "L6:3447"
+  },
+  "b0001r00193": {
+    "record_index": 193,
+    "layer": 21,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4844,
+    "unit_key": "L21:4844"
+  },
+  "b0001r00194": {
+    "record_index": 194,
+    "layer": 5,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 211,
+    "unit_key": "L5:211"
+  },
+  "b0001r00195": {
+    "record_index": 195,
+    "layer": 13,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2349,
+    "unit_key": "L13:2349"
+  },
+  "b0001r00196": {
+    "record_index": 196,
+    "layer": 16,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3896,
+    "unit_key": "L16:3896"
+  },
+  "b0001r00197": {
+    "record_index": 197,
+    "layer": 19,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5299,
+    "unit_key": "L19:5299"
+  },
+  "b0001r00198": {
+    "record_index": 198,
+    "layer": 11,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5949,
+    "unit_key": "L11:5949"
+  },
+  "b0001r00199": {
+    "record_index": 199,
+    "layer": 11,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5903,
+    "unit_key": "L11:5903"
+  },
+  "b0001r00200": {
+    "record_index": 200,
+    "layer": 19,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2827,
+    "unit_key": "L19:2827"
+  },
+  "b0001r00201": {
+    "record_index": 201,
+    "layer": 1,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4682,
+    "unit_key": "L1:4682"
+  },
+  "b0001r00202": {
+    "record_index": 202,
+    "layer": 18,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3450,
+    "unit_key": "L18:3450"
+  },
+  "b0001r00203": {
+    "record_index": 203,
+    "layer": 3,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4981,
+    "unit_key": "L3:4981"
+  },
+  "b0001r00204": {
+    "record_index": 204,
+    "layer": 11,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2229,
+    "unit_key": "L11:2229"
+  },
+  "b0001r00205": {
+    "record_index": 205,
+    "layer": 27,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4384,
+    "unit_key": "L27:4384"
+  },
+  "b0001r00206": {
+    "record_index": 206,
+    "layer": 5,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3511,
+    "unit_key": "L5:3511"
+  },
+  "b0001r00207": {
+    "record_index": 207,
+    "layer": 25,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4726,
+    "unit_key": "L25:4726"
+  },
+  "b0001r00208": {
+    "record_index": 208,
+    "layer": 9,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5005,
+    "unit_key": "L9:5005"
+  },
+  "b0001r00209": {
+    "record_index": 209,
+    "layer": 5,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1060,
+    "unit_key": "L5:1060"
+  },
+  "b0001r00210": {
+    "record_index": 210,
+    "layer": 20,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5732,
+    "unit_key": "L20:5732"
+  },
+  "b0001r00211": {
+    "record_index": 211,
+    "layer": 15,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1973,
+    "unit_key": "L15:1973"
+  },
+  "b0001r00212": {
+    "record_index": 212,
+    "layer": 2,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3384,
+    "unit_key": "L2:3384"
+  },
+  "b0001r00213": {
+    "record_index": 213,
+    "layer": 10,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3443,
+    "unit_key": "L10:3443"
+  },
+  "b0001r00214": {
+    "record_index": 214,
+    "layer": 26,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 145,
+    "unit_key": "L26:145"
+  },
+  "b0001r00215": {
+    "record_index": 215,
+    "layer": 24,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3659,
+    "unit_key": "L24:3659"
+  },
+  "b0001r00216": {
+    "record_index": 216,
+    "layer": 10,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2183,
+    "unit_key": "L10:2183"
+  },
+  "b0001r00217": {
+    "record_index": 217,
+    "layer": 2,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4521,
+    "unit_key": "L2:4521"
+  },
+  "b0001r00218": {
+    "record_index": 218,
+    "layer": 23,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4379,
+    "unit_key": "L23:4379"
+  },
+  "b0001r00219": {
+    "record_index": 219,
+    "layer": 16,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2478,
+    "unit_key": "L16:2478"
+  },
+  "b0001r00220": {
+    "record_index": 220,
+    "layer": 7,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2007,
+    "unit_key": "L7:2007"
+  },
+  "b0001r00221": {
+    "record_index": 221,
+    "layer": 14,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2237,
+    "unit_key": "L14:2237"
+  },
+  "b0001r00222": {
+    "record_index": 222,
+    "layer": 17,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2525,
+    "unit_key": "L17:2525"
+  },
+  "b0001r00223": {
+    "record_index": 223,
+    "layer": 8,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1473,
+    "unit_key": "L8:1473"
+  },
+  "b0001r00224": {
+    "record_index": 224,
+    "layer": 20,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5269,
+    "unit_key": "L20:5269"
+  },
+  "b0001r00225": {
+    "record_index": 225,
+    "layer": 0,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2826,
+    "unit_key": "L0:2826"
+  },
+  "b0001r00226": {
+    "record_index": 226,
+    "layer": 23,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5927,
+    "unit_key": "L23:5927"
+  },
+  "b0001r00227": {
+    "record_index": 227,
+    "layer": 3,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2239,
+    "unit_key": "L3:2239"
+  },
+  "b0001r00228": {
+    "record_index": 228,
+    "layer": 17,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4926,
+    "unit_key": "L17:4926"
+  },
+  "b0001r00229": {
+    "record_index": 229,
+    "layer": 26,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5247,
+    "unit_key": "L26:5247"
+  },
+  "b0001r00230": {
+    "record_index": 230,
+    "layer": 27,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 684,
+    "unit_key": "L27:684"
+  },
+  "b0001r00231": {
+    "record_index": 231,
+    "layer": 23,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2259,
+    "unit_key": "L23:2259"
+  },
+  "b0001r00232": {
+    "record_index": 232,
+    "layer": 22,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4968,
+    "unit_key": "L22:4968"
+  },
+  "b0001r00233": {
+    "record_index": 233,
+    "layer": 7,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2722,
+    "unit_key": "L7:2722"
+  },
+  "b0001r00234": {
+    "record_index": 234,
+    "layer": 8,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5050,
+    "unit_key": "L8:5050"
+  },
+  "b0001r00235": {
+    "record_index": 235,
+    "layer": 16,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2337,
+    "unit_key": "L16:2337"
+  },
+  "b0001r00236": {
+    "record_index": 236,
+    "layer": 15,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 6046,
+    "unit_key": "L15:6046"
+  },
+  "b0001r00237": {
+    "record_index": 237,
+    "layer": 22,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4406,
+    "unit_key": "L22:4406"
+  },
+  "b0001r00238": {
+    "record_index": 238,
+    "layer": 15,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4943,
+    "unit_key": "L15:4943"
+  },
+  "b0001r00239": {
+    "record_index": 239,
+    "layer": 24,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4105,
+    "unit_key": "L24:4105"
+  },
+  "b0001r00240": {
+    "record_index": 240,
+    "layer": 20,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3722,
+    "unit_key": "L20:3722"
+  },
+  "b0001r00241": {
+    "record_index": 241,
+    "layer": 11,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 480,
+    "unit_key": "L11:480"
+  },
+  "b0001r00242": {
+    "record_index": 242,
+    "layer": 10,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5270,
+    "unit_key": "L10:5270"
+  },
+  "b0001r00243": {
+    "record_index": 243,
+    "layer": 25,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5804,
+    "unit_key": "L25:5804"
+  },
+  "b0001r00244": {
+    "record_index": 244,
+    "layer": 26,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5548,
+    "unit_key": "L26:5548"
+  },
+  "b0001r00245": {
+    "record_index": 245,
+    "layer": 17,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2778,
+    "unit_key": "L17:2778"
+  },
+  "b0001r00246": {
+    "record_index": 246,
+    "layer": 2,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1233,
+    "unit_key": "L2:1233"
+  },
+  "b0001r00247": {
+    "record_index": 247,
+    "layer": 13,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5350,
+    "unit_key": "L13:5350"
+  },
+  "b0001r00248": {
+    "record_index": 248,
+    "layer": 2,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2247,
+    "unit_key": "L2:2247"
+  },
+  "b0001r00249": {
+    "record_index": 249,
+    "layer": 20,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5869,
+    "unit_key": "L20:5869"
+  },
+  "b0001r00250": {
+    "record_index": 250,
+    "layer": 12,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5755,
+    "unit_key": "L12:5755"
+  },
+  "b0001r00251": {
+    "record_index": 251,
+    "layer": 1,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 866,
+    "unit_key": "L1:866"
+  },
+  "b0001r00252": {
+    "record_index": 252,
+    "layer": 25,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5476,
+    "unit_key": "L25:5476"
+  },
+  "b0001r00253": {
+    "record_index": 253,
+    "layer": 27,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1263,
+    "unit_key": "L27:1263"
+  },
+  "b0001r00254": {
+    "record_index": 254,
+    "layer": 9,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 6019,
+    "unit_key": "L9:6019"
+  },
+  "b0001r00255": {
+    "record_index": 255,
+    "layer": 15,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2806,
+    "unit_key": "L15:2806"
+  },
+  "b0001r00256": {
+    "record_index": 256,
+    "layer": 18,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1343,
+    "unit_key": "L18:1343"
+  },
+  "b0001r00257": {
+    "record_index": 257,
+    "layer": 14,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3142,
+    "unit_key": "L14:3142"
+  },
+  "b0001r00258": {
+    "record_index": 258,
+    "layer": 10,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2219,
+    "unit_key": "L10:2219"
+  },
+  "b0001r00259": {
+    "record_index": 259,
+    "layer": 0,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 146,
+    "unit_key": "L0:146"
+  },
+  "b0001r00260": {
+    "record_index": 260,
+    "layer": 3,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2293,
+    "unit_key": "L3:2293"
+  },
+  "b0001r00261": {
+    "record_index": 261,
+    "layer": 21,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1748,
+    "unit_key": "L21:1748"
+  },
+  "b0001r00262": {
+    "record_index": 262,
+    "layer": 24,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1747,
+    "unit_key": "L24:1747"
+  },
+  "b0001r00263": {
+    "record_index": 263,
+    "layer": 8,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1237,
+    "unit_key": "L8:1237"
+  },
+  "b0001r00264": {
+    "record_index": 264,
+    "layer": 1,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2261,
+    "unit_key": "L1:2261"
+  },
+  "b0001r00265": {
+    "record_index": 265,
+    "layer": 27,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1207,
+    "unit_key": "L27:1207"
+  },
+  "b0001r00266": {
+    "record_index": 266,
+    "layer": 22,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5351,
+    "unit_key": "L22:5351"
+  },
+  "b0001r00267": {
+    "record_index": 267,
+    "layer": 6,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4327,
+    "unit_key": "L6:4327"
+  },
+  "b0001r00268": {
+    "record_index": 268,
+    "layer": 27,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2227,
+    "unit_key": "L27:2227"
+  },
+  "b0001r00269": {
+    "record_index": 269,
+    "layer": 27,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1015,
+    "unit_key": "L27:1015"
+  },
+  "b0001r00270": {
+    "record_index": 270,
+    "layer": 0,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 773,
+    "unit_key": "L0:773"
+  },
+  "b0001r00271": {
+    "record_index": 271,
+    "layer": 10,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 466,
+    "unit_key": "L10:466"
+  },
+  "b0001r00272": {
+    "record_index": 272,
+    "layer": 22,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1336,
+    "unit_key": "L22:1336"
+  },
+  "b0001r00273": {
+    "record_index": 273,
+    "layer": 17,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3646,
+    "unit_key": "L17:3646"
+  },
+  "b0001r00274": {
+    "record_index": 274,
+    "layer": 23,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2045,
+    "unit_key": "L23:2045"
+  },
+  "b0001r00275": {
+    "record_index": 275,
+    "layer": 2,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4293,
+    "unit_key": "L2:4293"
+  },
+  "b0001r00276": {
+    "record_index": 276,
+    "layer": 21,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5032,
+    "unit_key": "L21:5032"
+  },
+  "b0001r00277": {
+    "record_index": 277,
+    "layer": 16,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 489,
+    "unit_key": "L16:489"
+  },
+  "b0001r00278": {
+    "record_index": 278,
+    "layer": 10,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3356,
+    "unit_key": "L10:3356"
+  },
+  "b0001r00279": {
+    "record_index": 279,
+    "layer": 2,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1851,
+    "unit_key": "L2:1851"
+  },
+  "b0001r00280": {
+    "record_index": 280,
+    "layer": 6,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 228,
+    "unit_key": "L6:228"
+  },
+  "b0001r00281": {
+    "record_index": 281,
+    "layer": 0,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2204,
+    "unit_key": "L0:2204"
+  },
+  "b0001r00282": {
+    "record_index": 282,
+    "layer": 26,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4639,
+    "unit_key": "L26:4639"
+  },
+  "b0001r00283": {
+    "record_index": 283,
+    "layer": 25,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1979,
+    "unit_key": "L25:1979"
+  },
+  "b0001r00284": {
+    "record_index": 284,
+    "layer": 24,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 269,
+    "unit_key": "L24:269"
+  },
+  "b0001r00285": {
+    "record_index": 285,
+    "layer": 27,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4430,
+    "unit_key": "L27:4430"
+  },
+  "b0001r00286": {
+    "record_index": 286,
+    "layer": 25,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2679,
+    "unit_key": "L25:2679"
+  },
+  "b0001r00287": {
+    "record_index": 287,
+    "layer": 3,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5501,
+    "unit_key": "L3:5501"
+  },
+  "b0001r00288": {
+    "record_index": 288,
+    "layer": 22,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 6066,
+    "unit_key": "L22:6066"
+  },
+  "b0001r00289": {
+    "record_index": 289,
+    "layer": 12,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5276,
+    "unit_key": "L12:5276"
+  },
+  "b0001r00290": {
+    "record_index": 290,
+    "layer": 13,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5150,
+    "unit_key": "L13:5150"
+  },
+  "b0001r00291": {
+    "record_index": 291,
+    "layer": 22,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 249,
+    "unit_key": "L22:249"
+  },
+  "b0001r00292": {
+    "record_index": 292,
+    "layer": 13,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2017,
+    "unit_key": "L13:2017"
+  },
+  "b0001r00293": {
+    "record_index": 293,
+    "layer": 27,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3490,
+    "unit_key": "L27:3490"
+  },
+  "b0001r00294": {
+    "record_index": 294,
+    "layer": 12,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 781,
+    "unit_key": "L12:781"
+  },
+  "b0001r00295": {
+    "record_index": 295,
+    "layer": 15,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5036,
+    "unit_key": "L15:5036"
+  },
+  "b0001r00296": {
+    "record_index": 296,
+    "layer": 16,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2689,
+    "unit_key": "L16:2689"
+  },
+  "b0001r00297": {
+    "record_index": 297,
+    "layer": 5,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1780,
+    "unit_key": "L5:1780"
+  },
+  "b0001r00298": {
+    "record_index": 298,
+    "layer": 2,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4126,
+    "unit_key": "L2:4126"
+  },
+  "b0001r00299": {
+    "record_index": 299,
+    "layer": 21,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5358,
+    "unit_key": "L21:5358"
+  },
+  "b0001r00300": {
+    "record_index": 300,
+    "layer": 16,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 6042,
+    "unit_key": "L16:6042"
+  },
+  "b0001r00301": {
+    "record_index": 301,
+    "layer": 3,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2646,
+    "unit_key": "L3:2646"
+  },
+  "b0001r00302": {
+    "record_index": 302,
+    "layer": 22,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4218,
+    "unit_key": "L22:4218"
+  },
+  "b0001r00303": {
+    "record_index": 303,
+    "layer": 27,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4439,
+    "unit_key": "L27:4439"
+  },
+  "b0001r00304": {
+    "record_index": 304,
+    "layer": 3,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4502,
+    "unit_key": "L3:4502"
+  },
+  "b0001r00305": {
+    "record_index": 305,
+    "layer": 1,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1343,
+    "unit_key": "L1:1343"
+  },
+  "b0001r00306": {
+    "record_index": 306,
+    "layer": 7,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 214,
+    "unit_key": "L7:214"
+  },
+  "b0001r00307": {
+    "record_index": 307,
+    "layer": 18,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2367,
+    "unit_key": "L18:2367"
+  },
+  "b0001r00308": {
+    "record_index": 308,
+    "layer": 11,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2862,
+    "unit_key": "L11:2862"
+  },
+  "b0001r00309": {
+    "record_index": 309,
+    "layer": 26,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2296,
+    "unit_key": "L26:2296"
+  },
+  "b0001r00310": {
+    "record_index": 310,
+    "layer": 12,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2869,
+    "unit_key": "L12:2869"
+  },
+  "b0001r00311": {
+    "record_index": 311,
+    "layer": 5,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1320,
+    "unit_key": "L5:1320"
+  },
+  "b0001r00312": {
+    "record_index": 312,
+    "layer": 14,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4467,
+    "unit_key": "L14:4467"
+  },
+  "b0001r00313": {
+    "record_index": 313,
+    "layer": 27,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1399,
+    "unit_key": "L27:1399"
+  },
+  "b0001r00314": {
+    "record_index": 314,
+    "layer": 22,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 785,
+    "unit_key": "L22:785"
+  },
+  "b0001r00315": {
+    "record_index": 315,
+    "layer": 0,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 797,
+    "unit_key": "L0:797"
+  },
+  "b0001r00316": {
+    "record_index": 316,
+    "layer": 4,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2026,
+    "unit_key": "L4:2026"
+  },
+  "b0001r00317": {
+    "record_index": 317,
+    "layer": 17,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1918,
+    "unit_key": "L17:1918"
+  },
+  "b0001r00318": {
+    "record_index": 318,
+    "layer": 27,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5404,
+    "unit_key": "L27:5404"
+  },
+  "b0001r00319": {
+    "record_index": 319,
+    "layer": 6,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 186,
+    "unit_key": "L6:186"
+  },
+  "b0001r00320": {
+    "record_index": 320,
+    "layer": 10,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3335,
+    "unit_key": "L10:3335"
+  },
+  "b0001r00321": {
+    "record_index": 321,
+    "layer": 15,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4734,
+    "unit_key": "L15:4734"
+  },
+  "b0001r00322": {
+    "record_index": 322,
+    "layer": 5,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5450,
+    "unit_key": "L5:5450"
+  },
+  "b0001r00323": {
+    "record_index": 323,
+    "layer": 2,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2398,
+    "unit_key": "L2:2398"
+  },
+  "b0001r00324": {
+    "record_index": 324,
+    "layer": 20,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 981,
+    "unit_key": "L20:981"
+  },
+  "b0001r00325": {
+    "record_index": 325,
+    "layer": 2,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 6015,
+    "unit_key": "L2:6015"
+  },
+  "b0001r00326": {
+    "record_index": 326,
+    "layer": 4,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1931,
+    "unit_key": "L4:1931"
+  },
+  "b0001r00327": {
+    "record_index": 327,
+    "layer": 16,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2237,
+    "unit_key": "L16:2237"
+  },
+  "b0001r00328": {
+    "record_index": 328,
+    "layer": 27,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 6073,
+    "unit_key": "L27:6073"
+  },
+  "b0001r00329": {
+    "record_index": 329,
+    "layer": 23,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2372,
+    "unit_key": "L23:2372"
+  },
+  "b0001r00330": {
+    "record_index": 330,
+    "layer": 5,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2195,
+    "unit_key": "L5:2195"
+  },
+  "b0001r00331": {
+    "record_index": 331,
+    "layer": 9,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5077,
+    "unit_key": "L9:5077"
+  },
+  "b0001r00332": {
+    "record_index": 332,
+    "layer": 2,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1833,
+    "unit_key": "L2:1833"
+  },
+  "b0001r00333": {
+    "record_index": 333,
+    "layer": 10,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 978,
+    "unit_key": "L10:978"
+  },
+  "b0001r00334": {
+    "record_index": 334,
+    "layer": 0,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2789,
+    "unit_key": "L0:2789"
+  },
+  "b0001r00335": {
+    "record_index": 335,
+    "layer": 19,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 94,
+    "unit_key": "L19:94"
+  },
+  "b0001r00336": {
+    "record_index": 336,
+    "layer": 11,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4757,
+    "unit_key": "L11:4757"
+  },
+  "b0001r00337": {
+    "record_index": 337,
+    "layer": 9,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5649,
+    "unit_key": "L9:5649"
+  },
+  "b0001r00338": {
+    "record_index": 338,
+    "layer": 17,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4638,
+    "unit_key": "L17:4638"
+  },
+  "b0001r00339": {
+    "record_index": 339,
+    "layer": 18,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1197,
+    "unit_key": "L18:1197"
+  },
+  "b0001r00340": {
+    "record_index": 340,
+    "layer": 17,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 559,
+    "unit_key": "L17:559"
+  },
+  "b0001r00341": {
+    "record_index": 341,
+    "layer": 23,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5836,
+    "unit_key": "L23:5836"
+  },
+  "b0001r00342": {
+    "record_index": 342,
+    "layer": 18,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3048,
+    "unit_key": "L18:3048"
+  },
+  "b0001r00343": {
+    "record_index": 343,
+    "layer": 26,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3821,
+    "unit_key": "L26:3821"
+  },
+  "b0001r00344": {
+    "record_index": 344,
+    "layer": 24,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 128,
+    "unit_key": "L24:128"
+  },
+  "b0001r00345": {
+    "record_index": 345,
+    "layer": 13,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 525,
+    "unit_key": "L13:525"
+  },
+  "b0001r00346": {
+    "record_index": 346,
+    "layer": 26,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2155,
+    "unit_key": "L26:2155"
+  },
+  "b0001r00347": {
+    "record_index": 347,
+    "layer": 11,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5358,
+    "unit_key": "L11:5358"
+  },
+  "b0001r00348": {
+    "record_index": 348,
+    "layer": 19,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3345,
+    "unit_key": "L19:3345"
+  },
+  "b0001r00349": {
+    "record_index": 349,
+    "layer": 6,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 126,
+    "unit_key": "L6:126"
+  },
+  "b0001r00350": {
+    "record_index": 350,
+    "layer": 22,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4209,
+    "unit_key": "L22:4209"
+  },
+  "b0001r00351": {
+    "record_index": 351,
+    "layer": 11,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4470,
+    "unit_key": "L11:4470"
+  },
+  "b0001r00352": {
+    "record_index": 352,
+    "layer": 18,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4132,
+    "unit_key": "L18:4132"
+  },
+  "b0001r00353": {
+    "record_index": 353,
+    "layer": 26,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3873,
+    "unit_key": "L26:3873"
+  },
+  "b0001r00354": {
+    "record_index": 354,
+    "layer": 27,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3675,
+    "unit_key": "L27:3675"
+  },
+  "b0001r00355": {
+    "record_index": 355,
+    "layer": 8,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5160,
+    "unit_key": "L8:5160"
+  },
+  "b0001r00356": {
+    "record_index": 356,
+    "layer": 20,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4514,
+    "unit_key": "L20:4514"
+  },
+  "b0001r00357": {
+    "record_index": 357,
+    "layer": 0,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4536,
+    "unit_key": "L0:4536"
+  },
+  "b0001r00358": {
+    "record_index": 358,
+    "layer": 10,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2996,
+    "unit_key": "L10:2996"
+  },
+  "b0001r00359": {
+    "record_index": 359,
+    "layer": 17,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5083,
+    "unit_key": "L17:5083"
+  },
+  "b0001r00360": {
+    "record_index": 360,
+    "layer": 21,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2554,
+    "unit_key": "L21:2554"
+  },
+  "b0001r00361": {
+    "record_index": 361,
+    "layer": 26,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5785,
+    "unit_key": "L26:5785"
+  },
+  "b0001r00362": {
+    "record_index": 362,
+    "layer": 16,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5028,
+    "unit_key": "L16:5028"
+  },
+  "b0001r00363": {
+    "record_index": 363,
+    "layer": 10,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3778,
+    "unit_key": "L10:3778"
+  },
+  "b0001r00364": {
+    "record_index": 364,
+    "layer": 3,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3352,
+    "unit_key": "L3:3352"
+  },
+  "b0001r00365": {
+    "record_index": 365,
+    "layer": 18,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 6106,
+    "unit_key": "L18:6106"
+  },
+  "b0001r00366": {
+    "record_index": 366,
+    "layer": 18,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 599,
+    "unit_key": "L18:599"
+  },
+  "b0001r00367": {
+    "record_index": 367,
+    "layer": 13,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4044,
+    "unit_key": "L13:4044"
+  },
+  "b0001r00368": {
+    "record_index": 368,
+    "layer": 16,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3607,
+    "unit_key": "L16:3607"
+  },
+  "b0001r00369": {
+    "record_index": 369,
+    "layer": 13,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2544,
+    "unit_key": "L13:2544"
+  },
+  "b0001r00370": {
+    "record_index": 370,
+    "layer": 3,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 727,
+    "unit_key": "L3:727"
+  },
+  "b0001r00371": {
+    "record_index": 371,
+    "layer": 21,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4031,
+    "unit_key": "L21:4031"
+  },
+  "b0001r00372": {
+    "record_index": 372,
+    "layer": 2,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 870,
+    "unit_key": "L2:870"
+  },
+  "b0001r00373": {
+    "record_index": 373,
+    "layer": 25,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 6055,
+    "unit_key": "L25:6055"
+  },
+  "b0001r00374": {
+    "record_index": 374,
+    "layer": 19,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4732,
+    "unit_key": "L19:4732"
+  },
+  "b0001r00375": {
+    "record_index": 375,
+    "layer": 18,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3730,
+    "unit_key": "L18:3730"
+  },
+  "b0001r00376": {
+    "record_index": 376,
+    "layer": 6,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1472,
+    "unit_key": "L6:1472"
+  },
+  "b0001r00377": {
+    "record_index": 377,
+    "layer": 16,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1292,
+    "unit_key": "L16:1292"
+  },
+  "b0001r00378": {
+    "record_index": 378,
+    "layer": 25,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 745,
+    "unit_key": "L25:745"
+  },
+  "b0001r00379": {
+    "record_index": 379,
+    "layer": 26,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3362,
+    "unit_key": "L26:3362"
+  },
+  "b0001r00380": {
+    "record_index": 380,
+    "layer": 11,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2118,
+    "unit_key": "L11:2118"
+  },
+  "b0001r00381": {
+    "record_index": 381,
+    "layer": 13,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2632,
+    "unit_key": "L13:2632"
+  },
+  "b0001r00382": {
+    "record_index": 382,
+    "layer": 10,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2320,
+    "unit_key": "L10:2320"
+  },
+  "b0001r00383": {
+    "record_index": 383,
+    "layer": 16,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5691,
+    "unit_key": "L16:5691"
+  },
+  "b0001r00384": {
+    "record_index": 384,
+    "layer": 7,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4822,
+    "unit_key": "L7:4822"
+  },
+  "b0001r00385": {
+    "record_index": 385,
+    "layer": 1,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2620,
+    "unit_key": "L1:2620"
+  },
+  "b0001r00386": {
+    "record_index": 386,
+    "layer": 22,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2971,
+    "unit_key": "L22:2971"
+  },
+  "b0001r00387": {
+    "record_index": 387,
+    "layer": 26,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1913,
+    "unit_key": "L26:1913"
+  },
+  "b0001r00388": {
+    "record_index": 388,
+    "layer": 5,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5968,
+    "unit_key": "L5:5968"
+  },
+  "b0001r00389": {
+    "record_index": 389,
+    "layer": 4,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5570,
+    "unit_key": "L4:5570"
+  },
+  "b0001r00390": {
+    "record_index": 390,
+    "layer": 19,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3504,
+    "unit_key": "L19:3504"
+  },
+  "b0001r00391": {
+    "record_index": 391,
+    "layer": 22,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2066,
+    "unit_key": "L22:2066"
+  },
+  "b0001r00392": {
+    "record_index": 392,
+    "layer": 23,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5047,
+    "unit_key": "L23:5047"
+  },
+  "b0001r00393": {
+    "record_index": 393,
+    "layer": 7,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3513,
+    "unit_key": "L7:3513"
+  },
+  "b0001r00394": {
+    "record_index": 394,
+    "layer": 17,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1671,
+    "unit_key": "L17:1671"
+  },
+  "b0001r00395": {
+    "record_index": 395,
+    "layer": 27,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4539,
+    "unit_key": "L27:4539"
+  },
+  "b0001r00396": {
+    "record_index": 396,
+    "layer": 19,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 6068,
+    "unit_key": "L19:6068"
+  },
+  "b0001r00397": {
+    "record_index": 397,
+    "layer": 10,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5897,
+    "unit_key": "L10:5897"
+  },
+  "b0001r00398": {
+    "record_index": 398,
+    "layer": 14,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3266,
+    "unit_key": "L14:3266"
+  },
+  "b0001r00399": {
+    "record_index": 399,
+    "layer": 22,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3612,
+    "unit_key": "L22:3612"
+  },
+  "b0001r00400": {
+    "record_index": 400,
+    "layer": 12,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 844,
+    "unit_key": "L12:844"
+  },
+  "b0001r00401": {
+    "record_index": 401,
+    "layer": 25,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2503,
+    "unit_key": "L25:2503"
+  },
+  "b0001r00402": {
+    "record_index": 402,
+    "layer": 24,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1008,
+    "unit_key": "L24:1008"
+  },
+  "b0001r00403": {
+    "record_index": 403,
+    "layer": 4,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4699,
+    "unit_key": "L4:4699"
+  },
+  "b0001r00404": {
+    "record_index": 404,
+    "layer": 9,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 460,
+    "unit_key": "L9:460"
+  },
+  "b0001r00405": {
+    "record_index": 405,
+    "layer": 0,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3902,
+    "unit_key": "L0:3902"
+  },
+  "b0001r00406": {
+    "record_index": 406,
+    "layer": 22,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2573,
+    "unit_key": "L22:2573"
+  },
+  "b0001r00407": {
+    "record_index": 407,
+    "layer": 1,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2278,
+    "unit_key": "L1:2278"
+  },
+  "b0001r00408": {
+    "record_index": 408,
+    "layer": 10,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 681,
+    "unit_key": "L10:681"
+  },
+  "b0001r00409": {
+    "record_index": 409,
+    "layer": 21,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 738,
+    "unit_key": "L21:738"
+  },
+  "b0001r00410": {
+    "record_index": 410,
+    "layer": 3,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 195,
+    "unit_key": "L3:195"
+  },
+  "b0001r00411": {
+    "record_index": 411,
+    "layer": 22,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4421,
+    "unit_key": "L22:4421"
+  },
+  "b0001r00412": {
+    "record_index": 412,
+    "layer": 10,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4804,
+    "unit_key": "L10:4804"
+  },
+  "b0001r00413": {
+    "record_index": 413,
+    "layer": 26,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3611,
+    "unit_key": "L26:3611"
+  },
+  "b0001r00414": {
+    "record_index": 414,
+    "layer": 18,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 302,
+    "unit_key": "L18:302"
+  },
+  "b0001r00415": {
+    "record_index": 415,
+    "layer": 23,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5357,
+    "unit_key": "L23:5357"
+  },
+  "b0001r00416": {
+    "record_index": 416,
+    "layer": 19,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3948,
+    "unit_key": "L19:3948"
+  },
+  "b0001r00417": {
+    "record_index": 417,
+    "layer": 0,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3611,
+    "unit_key": "L0:3611"
+  },
+  "b0001r00418": {
+    "record_index": 418,
+    "layer": 18,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 113,
+    "unit_key": "L18:113"
+  },
+  "b0001r00419": {
+    "record_index": 419,
+    "layer": 6,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2516,
+    "unit_key": "L6:2516"
+  },
+  "b0001r00420": {
+    "record_index": 420,
+    "layer": 24,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2785,
+    "unit_key": "L24:2785"
+  },
+  "b0001r00421": {
+    "record_index": 421,
+    "layer": 16,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2372,
+    "unit_key": "L16:2372"
+  },
+  "b0001r00422": {
+    "record_index": 422,
+    "layer": 26,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1525,
+    "unit_key": "L26:1525"
+  },
+  "b0001r00423": {
+    "record_index": 423,
+    "layer": 15,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 841,
+    "unit_key": "L15:841"
+  },
+  "b0001r00424": {
+    "record_index": 424,
+    "layer": 11,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4411,
+    "unit_key": "L11:4411"
+  },
+  "b0001r00425": {
+    "record_index": 425,
+    "layer": 17,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2544,
+    "unit_key": "L17:2544"
+  },
+  "b0001r00426": {
+    "record_index": 426,
+    "layer": 17,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 50,
+    "unit_key": "L17:50"
+  },
+  "b0001r00427": {
+    "record_index": 427,
+    "layer": 0,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1231,
+    "unit_key": "L0:1231"
+  },
+  "b0001r00428": {
+    "record_index": 428,
+    "layer": 20,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3546,
+    "unit_key": "L20:3546"
+  },
+  "b0001r00429": {
+    "record_index": 429,
+    "layer": 2,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5559,
+    "unit_key": "L2:5559"
+  },
+  "b0001r00430": {
+    "record_index": 430,
+    "layer": 14,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1772,
+    "unit_key": "L14:1772"
+  },
+  "b0001r00431": {
+    "record_index": 431,
+    "layer": 23,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4343,
+    "unit_key": "L23:4343"
+  },
+  "b0001r00432": {
+    "record_index": 432,
+    "layer": 4,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4818,
+    "unit_key": "L4:4818"
+  },
+  "b0001r00433": {
+    "record_index": 433,
+    "layer": 7,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3684,
+    "unit_key": "L7:3684"
+  },
+  "b0001r00434": {
+    "record_index": 434,
+    "layer": 10,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4927,
+    "unit_key": "L10:4927"
+  },
+  "b0001r00435": {
+    "record_index": 435,
+    "layer": 27,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 299,
+    "unit_key": "L27:299"
+  },
+  "b0001r00436": {
+    "record_index": 436,
+    "layer": 8,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4660,
+    "unit_key": "L8:4660"
+  },
+  "b0001r00437": {
+    "record_index": 437,
+    "layer": 27,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4373,
+    "unit_key": "L27:4373"
+  },
+  "b0001r00438": {
+    "record_index": 438,
+    "layer": 13,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 884,
+    "unit_key": "L13:884"
+  },
+  "b0001r00439": {
+    "record_index": 439,
+    "layer": 8,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3042,
+    "unit_key": "L8:3042"
+  },
+  "b0001r00440": {
+    "record_index": 440,
+    "layer": 6,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 6104,
+    "unit_key": "L6:6104"
+  },
+  "b0001r00441": {
+    "record_index": 441,
+    "layer": 12,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1536,
+    "unit_key": "L12:1536"
+  },
+  "b0001r00442": {
+    "record_index": 442,
+    "layer": 3,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1932,
+    "unit_key": "L3:1932"
+  },
+  "b0001r00443": {
+    "record_index": 443,
+    "layer": 12,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3378,
+    "unit_key": "L12:3378"
+  },
+  "b0001r00444": {
+    "record_index": 444,
+    "layer": 7,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 723,
+    "unit_key": "L7:723"
+  },
+  "b0001r00445": {
+    "record_index": 445,
+    "layer": 11,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2244,
+    "unit_key": "L11:2244"
+  },
+  "b0001r00446": {
+    "record_index": 446,
+    "layer": 11,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1705,
+    "unit_key": "L11:1705"
+  },
+  "b0001r00447": {
+    "record_index": 447,
+    "layer": 4,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5194,
+    "unit_key": "L4:5194"
+  },
+  "b0001r00448": {
+    "record_index": 448,
+    "layer": 3,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1237,
+    "unit_key": "L3:1237"
+  },
+  "b0001r00449": {
+    "record_index": 449,
+    "layer": 2,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3650,
+    "unit_key": "L2:3650"
+  },
+  "b0001r00450": {
+    "record_index": 450,
+    "layer": 23,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4317,
+    "unit_key": "L23:4317"
+  },
+  "b0001r00451": {
+    "record_index": 451,
+    "layer": 6,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2021,
+    "unit_key": "L6:2021"
+  },
+  "b0001r00452": {
+    "record_index": 452,
+    "layer": 9,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4769,
+    "unit_key": "L9:4769"
+  },
+  "b0001r00453": {
+    "record_index": 453,
+    "layer": 12,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1175,
+    "unit_key": "L12:1175"
+  },
+  "b0001r00454": {
+    "record_index": 454,
+    "layer": 12,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4706,
+    "unit_key": "L12:4706"
+  },
+  "b0001r00455": {
+    "record_index": 455,
+    "layer": 10,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3522,
+    "unit_key": "L10:3522"
+  },
+  "b0001r00456": {
+    "record_index": 456,
+    "layer": 19,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2421,
+    "unit_key": "L19:2421"
+  },
+  "b0001r00457": {
+    "record_index": 457,
+    "layer": 7,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4702,
+    "unit_key": "L7:4702"
+  },
+  "b0001r00458": {
+    "record_index": 458,
+    "layer": 25,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1920,
+    "unit_key": "L25:1920"
+  },
+  "b0001r00459": {
+    "record_index": 459,
+    "layer": 27,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2457,
+    "unit_key": "L27:2457"
+  },
+  "b0001r00460": {
+    "record_index": 460,
+    "layer": 22,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3003,
+    "unit_key": "L22:3003"
+  },
+  "b0001r00461": {
+    "record_index": 461,
+    "layer": 1,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4758,
+    "unit_key": "L1:4758"
+  },
+  "b0001r00462": {
+    "record_index": 462,
+    "layer": 23,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4186,
+    "unit_key": "L23:4186"
+  },
+  "b0001r00463": {
+    "record_index": 463,
+    "layer": 14,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5236,
+    "unit_key": "L14:5236"
+  },
+  "b0001r00464": {
+    "record_index": 464,
+    "layer": 3,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4405,
+    "unit_key": "L3:4405"
+  },
+  "b0001r00465": {
+    "record_index": 465,
+    "layer": 23,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3166,
+    "unit_key": "L23:3166"
+  },
+  "b0001r00466": {
+    "record_index": 466,
+    "layer": 14,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3838,
+    "unit_key": "L14:3838"
+  },
+  "b0001r00467": {
+    "record_index": 467,
+    "layer": 21,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2628,
+    "unit_key": "L21:2628"
+  },
+  "b0001r00468": {
+    "record_index": 468,
+    "layer": 11,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4520,
+    "unit_key": "L11:4520"
+  },
+  "b0001r00469": {
+    "record_index": 469,
+    "layer": 2,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5502,
+    "unit_key": "L2:5502"
+  },
+  "b0001r00470": {
+    "record_index": 470,
+    "layer": 3,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2754,
+    "unit_key": "L3:2754"
+  },
+  "b0001r00471": {
+    "record_index": 471,
+    "layer": 17,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3715,
+    "unit_key": "L17:3715"
+  },
+  "b0001r00472": {
+    "record_index": 472,
+    "layer": 14,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 30,
+    "unit_key": "L14:30"
+  },
+  "b0001r00473": {
+    "record_index": 473,
+    "layer": 23,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 546,
+    "unit_key": "L23:546"
+  },
+  "b0001r00474": {
+    "record_index": 474,
+    "layer": 4,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5255,
+    "unit_key": "L4:5255"
+  },
+  "b0001r00475": {
+    "record_index": 475,
+    "layer": 26,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3729,
+    "unit_key": "L26:3729"
+  },
+  "b0001r00476": {
+    "record_index": 476,
+    "layer": 3,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2952,
+    "unit_key": "L3:2952"
+  },
+  "b0001r00477": {
+    "record_index": 477,
+    "layer": 9,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 439,
+    "unit_key": "L9:439"
+  },
+  "b0001r00478": {
+    "record_index": 478,
+    "layer": 21,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3033,
+    "unit_key": "L21:3033"
+  },
+  "b0001r00479": {
+    "record_index": 479,
+    "layer": 13,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4488,
+    "unit_key": "L13:4488"
+  },
+  "b0001r00480": {
+    "record_index": 480,
+    "layer": 6,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1459,
+    "unit_key": "L6:1459"
+  },
+  "b0001r00481": {
+    "record_index": 481,
+    "layer": 8,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3448,
+    "unit_key": "L8:3448"
+  },
+  "b0001r00482": {
+    "record_index": 482,
+    "layer": 27,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3762,
+    "unit_key": "L27:3762"
+  },
+  "b0001r00483": {
+    "record_index": 483,
+    "layer": 18,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2333,
+    "unit_key": "L18:2333"
+  },
+  "b0001r00484": {
+    "record_index": 484,
+    "layer": 19,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 1853,
+    "unit_key": "L19:1853"
+  },
+  "b0001r00485": {
+    "record_index": 485,
+    "layer": 26,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5606,
+    "unit_key": "L26:5606"
+  },
+  "b0001r00486": {
+    "record_index": 486,
+    "layer": 18,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3680,
+    "unit_key": "L18:3680"
+  },
+  "b0001r00487": {
+    "record_index": 487,
+    "layer": 24,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 991,
+    "unit_key": "L24:991"
+  },
+  "b0001r00488": {
+    "record_index": 488,
+    "layer": 6,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4465,
+    "unit_key": "L6:4465"
+  },
+  "b0001r00489": {
+    "record_index": 489,
+    "layer": 13,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4554,
+    "unit_key": "L13:4554"
+  },
+  "b0001r00490": {
+    "record_index": 490,
+    "layer": 22,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 3580,
+    "unit_key": "L22:3580"
+  },
+  "b0001r00491": {
+    "record_index": 491,
+    "layer": 19,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 653,
+    "unit_key": "L19:653"
+  },
+  "b0001r00492": {
+    "record_index": 492,
+    "layer": 15,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4054,
+    "unit_key": "L15:4054"
+  },
+  "b0001r00493": {
+    "record_index": 493,
+    "layer": 13,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 971,
+    "unit_key": "L13:971"
+  },
+  "b0001r00494": {
+    "record_index": 494,
+    "layer": 16,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2214,
+    "unit_key": "L16:2214"
+  },
+  "b0001r00495": {
+    "record_index": 495,
+    "layer": 5,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 5840,
+    "unit_key": "L5:5840"
+  },
+  "b0001r00496": {
+    "record_index": 496,
+    "layer": 15,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 475,
+    "unit_key": "L15:475"
+  },
+  "b0001r00497": {
+    "record_index": 497,
+    "layer": 12,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4942,
+    "unit_key": "L12:4942"
+  },
+  "b0001r00498": {
+    "record_index": 498,
+    "layer": 13,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 4461,
+    "unit_key": "L13:4461"
+  },
+  "b0001r00499": {
+    "record_index": 499,
+    "layer": 16,
+    "model_arm": "trained",
+    "record_type": "neuron",
+    "unit": 2656,
+    "unit_key": "L16:2656"
+  }
+}
