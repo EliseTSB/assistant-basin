@@ -1,0 +1,6 @@
+# Run from the Windows XPU runner after syncing fit_jlens_olmo.py, jlens_units.py, part42.py, and third_party/jlens-part57 from this worktree.
+fit_jlens_olmo.py --device xpu --dtype bf16 --smoke --seed 5701 --dim-batch 8 --threads 4 --minimum-free-ram-gb 4 --out results\part57\olmo2-1b\smoke-10x2.pt --force
+fit_jlens_olmo.py --device xpu --dtype bf16 --seed 5701 --n-prompts 100 --dim-batch 8 --threads 4 --minimum-free-ram-gb 4 --out results\part57\olmo2-1b\jacobian_lens.pt --force
+fit_jlens_olmo.py --device xpu --dtype bf16 --seed 5701 --n-prompts 1000 --dim-batch 8 --threads 4 --minimum-free-ram-gb 4 --out results\part57\olmo2-1b\jacobian_lens-1000.pt --force
+jlens_units.py --model-name olmo2-1b --snapshot E:\neuron-probe\hf\hub\models--allenai--OLMo-2-0425-1B-Instruct\snapshots\48d788eca847d4d7548f375ad03d3c9312f6139e --lens results\part57\olmo2-1b\jacobian_lens.pt --out results\part57\olmo2-1b\read.json
+jlens_units.py --model-name olmo2-1b --snapshot E:\neuron-probe\hf\hub\models--allenai--OLMo-2-0425-1B-Instruct\snapshots\48d788eca847d4d7548f375ad03d3c9312f6139e --lens results\part57\olmo2-1b\jacobian_lens-1000.pt --out results\part57\olmo2-1b\read-1000.json

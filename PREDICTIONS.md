@@ -1790,3 +1790,8 @@ prompts; nothing here is a finding yet. Broken-answer rates are pending the blin
 | 55c | Claude: Sonnet and the Opus rerun get every calibration text right (22 of 22 and 20 of 20); Haiku at most one wrong in each task. | held | All three arms 22 of 22 and 20 of 20. |
 | 55e | Claude: the Opus rerun agrees with its own earlier labels on at least 97% of T1 and of T2. | held | T1 97.2% (420 of 432, 1 unparsed), T2 100%. |
 | 55f | Claude: per item cost ordering Haiku < Sonnet < Opus, Haiku at most one fifth of Opus. | held | $0.042, $1.27, $1.93 for 2,266 items; Haiku about 2% of Opus. |
+| 57a | Claude: OLMo L10:6978's J-lens top 30 holds at least two of alien, aliens, space, planet, star, galaxy, cosmic, extraterrestrial, starship. | held | cosmic, galaxy, planet, star (4); also spaceship, spacecraft, astronaut. |
+| 57b | Claude: its J-lens bottom 30 holds at least one of earth, human, humans, terrestrial, earthly, mankind. | FAILED | none; the bottom reads urban, indoors, rooftop, winter, waterproof. |
+| 57c | Claude: Qwen3.5-4B L22:2742's J-lens top 30 holds at least two of the 57a words and its bottom 30 none of the 57b words. | held | alien, aliens, space, planet, extraterrestrial (5 of 9); 0 of 6. |
+| 57d | Claude: median logit/J-lens shared top-30 tokens for last-quarter-layer units is at least 15. | held | 18.5 over ten layer-14 units (13 to 27). |
+| 57e | Claude: 100-sequence fit under 2 hours and 100/1,000 top-30 overlap at least 20 of 30 median. | unscored | Fit 62.8 min; the 1,000-sequence lens was not run (about 10 h on the Arc). |

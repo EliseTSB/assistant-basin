@@ -41,6 +41,12 @@ MODEL_SLUGS = {
 MODEL_CACHE_NAMES = {
     "Qwen/Qwen3-1.7B": "Qwen3-1.7B",
     "Qwen/Qwen3.5-4B": "Qwen3.5-4B",
+    "allenai/OLMo-2-0425-1B-Instruct": "OLMo-2-0425-1B-Instruct",
+}
+MODEL_SNAPSHOT_CACHE_DIRS = {
+    "Qwen/Qwen3-1.7B": "models--Qwen--Qwen3-1.7B",
+    "Qwen/Qwen3.5-4B": "models--Qwen--Qwen3.5-4B",
+    "allenai/OLMo-2-0425-1B-Instruct": "models--allenai--OLMo-2-0425-1B-Instruct",
 }
 MODEL_LENS_PATHS = {
     "Qwen/Qwen3-1.7B": Path(
@@ -50,6 +56,9 @@ MODEL_LENS_PATHS = {
     "Qwen/Qwen3.5-4B": Path(
         "/home/elisepc/neuron-probe/jlens/qwen3.5-4b/jlens/"
         "Salesforce-wikitext/Qwen3.5-4B_jacobian_lens.pt"
+    ),
+    "allenai/OLMo-2-0425-1B-Instruct": (
+        ROOT / "results" / "part57" / "olmo2-1b" / "jacobian_lens.pt"
     ),
 }
 MODEL_DEFAULT_SNAPSHOT_ROOT = Path("/mnt/e/neuron-probe/hf/hub")
@@ -267,8 +276,11 @@ def resolve_snapshot(model: str, override: str | Path | None = None) -> Path:
         if not (snapshot / "config.json").is_file():
             raise FileNotFoundError(f"snapshot has no config.json: {snapshot}")
         return snapshot
-    cache_name = MODEL_CACHE_NAMES[model]
-    snapshots = MODEL_DEFAULT_SNAPSHOT_ROOT / f"models--Qwen--{cache_name}" / "snapshots"
+    snapshots = (
+        MODEL_DEFAULT_SNAPSHOT_ROOT
+        / MODEL_SNAPSHOT_CACHE_DIRS[model]
+        / "snapshots"
+    )
     candidates = sorted(path for path in snapshots.iterdir() if path.is_dir()) if snapshots.is_dir() else []
     if len(candidates) != 1:
         raise FileNotFoundError(
@@ -400,8 +412,8 @@ def select_unembedding_key(
 
 
 def effective_norm_gain(norm_weight: Any, model_type: str) -> Any:
-    """Use the installed Qwen RMSNorm convention for the selected architecture."""
-    if model_type == "qwen3":
+    """Use the architecture's stored RMSNorm scale convention."""
+    if model_type in {"qwen3", "olmo2"}:
         return norm_weight
     if model_type in {"qwen3_5", "qwen3.5", "qwen3_5_text"}:
         return 1.0 + norm_weight

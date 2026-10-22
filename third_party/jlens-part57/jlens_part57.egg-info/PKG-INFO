@@ -1,0 +1,6 @@
+Metadata-Version: 2.1
+Name: jlens-part57
+Version: 0.1.0
+Summary: Vendored Jacobian lens reference implementation with explicit device placement
+Requires-Python: >=3.10
+License-File: LICENSE
