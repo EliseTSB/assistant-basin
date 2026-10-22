@@ -1729,3 +1729,12 @@ arms, magic words other than "wizard" per 1,000 words fall from 47.7 (no clamp) 
 at -8) and 12.8 (both). On ratios that is 0.81 x 0.42 = 0.34 predicted against 0.27 seen, close to multiplicative
 (roughly additive on log scale). P1 at -8 is a candidate wizard-content unit for a pre-registered follow-up on fresh
 prompts; nothing here is a finding yet. Broken-answer rates are pending the blind reader.
+
+## Part 49b: the negative L22:1610 candidate on fresh prompts (written 2026-10-21 19:47 CT, after Part 49 and before any 49b run). Design: PART49-DESIGN.md "Part 49b".
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 49b.1 | Claude: L22:1610 at -8 lowers the magic-word density by at least 30% of the no-clamp value, with its bootstrap interval excluding no change. | | |
+| 49b.2 | Claude: none of the three random L22 units at -8 lowers it by more than 15%. | | |
+| 49b.3 | Claude: the joint arm (L22:1610 and W at -8) is within 25% of the product of the two single arms' ratios (roughly multiplicative; no special interaction). | | |
+| 49b.4 | Claude: the L22:1610 arm's broken-answer share is no more than 10 points above no clamp. | | |

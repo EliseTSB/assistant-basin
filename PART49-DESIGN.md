@@ -31,3 +31,12 @@ example -682 against -922); a negative maximum clamped at 8x is a large negative
 positive pole only (median on the wizard sense above 0, and the control median under half of it), layers 4 to 26,
 at most two per layer. Partners (data/part49-partners.json): L22:1610, L26:3130, L24:4151, L26:1877, L22:2295.
 The first ranking is kept in git history (the build commit's parent tree is not needed; the rule above re-derives it).
+
+## Part 49b (2026-10-21 19:47 CT, after Part 49's results, before any 49b code or run): the negative L22:1610 candidate, confirmed or not
+Part 49's exploratory reading: on wizard prompts, magic words other than "wizard" fell from 47.7 to 20.1 per 1,000
+words with L22:1610 at -8. 49b tests it on FRESH prompts with the measure fixed in advance.
+- Prompts: 16 new wizard-topic prompts (data/part49b-wizard-prompts.json, written before any run, none from Part 49).
+- Measure: per answer, matches of {spell, magic, wand, sorcer, enchant, potion} per 1,000 words, excluding any word in
+  the prompt; arm mean with a bootstrap interval over prompts; broken-answer share by the blind reader.
+- Arms (k = -8, 4 samples per prompt, 64 answers each): no clamp; L22:1610; W (L19:4826); L22:1610 with W; three
+  random L22 units chosen by seed (positive-pole, same selectivity rule's sign condition not required). 7 arms, 448.
