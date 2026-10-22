@@ -33,3 +33,21 @@ models (calibrated on the train split, read on the test split).
 
 Size: per model 2,160 persona items x 41 arms of forward passes plus 2 x ~115 lie items: forward-only, about 90,000
 passes, minutes on the Arc. No generation.
+
+## Prior art from Muse (council muse-part50-prior-art #4, 2026-10-21 20:18; filed 2026-10-21 20:22 CT, before any run)
+- No one has run honesty steering plus persona co-movement on a base model against its post-trained twin: new.
+- Bundles exist in base models for the misaligned direction: emergent misalignment in Qwen2.5-Coder-32B base
+  (Betley et al. 2025 sec. 4.8; Nature version s41586-025-09937-5) and DeepSeek-V3.1-Base, Qwen3-30B-Base
+  (arXiv:2605.12199). Perez et al. 2022: pretrained models sit near chance on the bundle's component traits, RLHF
+  amplifies them.
+- Self-description and self-recognition look like post-training phenomena (Asvin G. and Lindsey, arXiv:2605.25459;
+  Ackerman and Panickssery, arXiv:2410.02064), so the base arm's persona readout may be thin; a base null is only
+  readable beside the chat twin, which the design has.
+- Sauers' own arms already show honesty and the bundle dissociate across units (175 neurons: lies 0.56, trait
+  correlation 0.12; residual layer 24: lies 0.62, uniform confidence only).
+- The 51-trait bundle itself is unreplicated (repo created 2026-10-21): Part 50 is its first replication.
+
+## Amendment 1 (2026-10-21 20:22 CT, analysis only, before any run)
+The bundle score is reported twice: over the frozen 51 traits, and over the 20 of them that pass Sauers'
+acquiescence test (if his results list them; otherwise our own yes/no split decides membership, fixed before reading
+the steered chat model). Predictions unchanged.
