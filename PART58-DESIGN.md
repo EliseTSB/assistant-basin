@@ -42,3 +42,31 @@ labelling keeps priority. Overfitting guard: no prompt edit after seeing test.
 ## Prior art
 Closest work: automated-interpretability simulation / detection scoring (Bills et al. 2023; Paulo et al. 2024 delphi). Both
 score a description, not a rating; ours scores whether the rating tracks the description's held-out detectability.
+
+## Results (2026-10-22, scored as of ~10:20 CT)
+
+Truth changed mid-run, and the record says why. The held-out detection test (above) gave 3 of 490 real units with detection AUC >= 0.85
+(negatives drawn from other units' windows contain the same common tokens), so 58a, 58b, 58c cannot be scored as written.
+Two replacement truths were built: (1) PLANTED units from real pilot windows whose marked-token class (or topic, language, code) and purity are
+known; (2) a SENTENCE TEST on real units (Elise's idea, 09:5x): Haiku sees the windows only and writes 4 new texts without naming the pattern; Qwen3-1.7B
+(bf16, CPU) runs them; the unit "hits" when its max activation on a text reaches the median of its own random-firing windows; lift = own hit rate minus
+the hit rate on other units' texts. A unit is "verified" at lift >= 0.5. The re-scoring pipeline reproduces recorded activations (median ratio 0.96 for neurons,
+0.99 for random-direction controls; rank correlation 0.95 and 0.79 on 30 + 30 windows).
+
+| prompt | planted AUC dev | planted AUC test | real: Spearman(rating, lift) dev / test |
+|---|---|---|---|
+| V0 production (687 words) | 0.65 | 0.71 | 0.28 / 0.24 |
+| V3 tally + fit count + marked tokens | 0.84 | 0.82 | 0.34 / |
+| V7 shorter (344 words) | 0.84 | 0.86 | / 0.27 |
+| V9 = V7 with the tally computed in code (exact frequency table) | 0.83 | 0.85 | |
+| V3 with thinking on | 0.88 | 0.88 | |
+| V10 = V9 + "look at the shared context when tokens vary" | 0.77 (topic planted) | 0.73 | |
+
+Scoring of the pre-registered predictions:
+- 58a, 58b, 58c: unscorable on the original truth (see above). On the sentence test, 75 to 83% of verified real units were rated 1 or 2 by the baseline (so the "judge under-rates" half of 58c holds in spirit).
+- 58d: held on planted truth (+0.19 dev, +0.15 test); FAILED on real neurons (rating-to-verified AUC 0.63 to 0.65, +0.01).
+- 58e: held on planted (a countable fraction beat the vague 1-to-5).
+- 58f: not tested on its own (V1 onward all carry low-score examples).
+- 58g: held (344 words matched or beat 561 and 687).
+Added findings: the rating is a weak screen for reproducibility under every prompt; 23 to 26% of real neurons are verified by the sentence test (control rate on other units' texts 0.09 to 0.12);
+arm B (texts from windows, pattern unannounced) lift 0.285 (dev) and 0.318 (test) beats texts from Haiku's written concept (0.13) and texts written in the same call after the concept (0.23).

@@ -1,0 +1,14 @@
+You are labelling one hidden activation unit from a language model. The input is a JSON object with "windows" (short text windows where the unit was active) and "marked_tokens" (the token wrapped in [[double brackets]] in each window, in the same order). ⟦PAD×N⟧ marks missing context and is not text.
+
+Return one JSON object and nothing else, with exactly these keys:
+{"tally":"most frequent marked tokens or token types with counts","concept":"at most 12 words","fit":"K of N","one_job":1,"kind":"topic","note":""}
+
+- tally: tally the most frequent marked tokens or token types with counts, for example "' the' x15, ' a' x2, other x4"; for a context feature say what the windows share. Under 25 words.
+- concept: the broadest accurate plain-language description of what the marked tokens have in common, at most 12 words. Add conditions (position, preceding word, sentence role) only if nearly all windows share them: many different past-tense verbs is "past-tense -ed verbs", not "past-tense verbs right after the subject".
+- fit: N is the number of windows; K is how many have a marked token that belongs to your concept. A reader who saw only your concept should expect the unit to fire at that marked token.
+- one_job: integer 1 to 5 set from K/N alone: 5 = 85% or more; 4 = 65-84%; 3 = 45-64%; 2 = 25-44%; 1 = under 25% or no concept. Common words, punctuation, digits and word fragments are real features; do not lower the score because a feature is plain or common, and do not raise it because it sounds interesting. If the windows split between two unrelated features, count only the larger one.
+- kind: exactly one of token, word-family, topic, syntax, format, identity-or-origin (claims about what the speaker is or where it comes from), persona-or-creator (a recurring named voice, character, maker or organisation), other, none.
+- note: empty unless something is genuinely unusual.
+
+Example: 21 windows, 15 mark forms of "glimmer", 6 unrelated. {"tally":"glimmer x9, glimmering x4, glimmered x2, other x6","concept":"glimmer word family","fit":"15 of 21","one_job":4,"kind":"word-family","note":""}
+The JSON must parse exactly; no markdown fences or prose.

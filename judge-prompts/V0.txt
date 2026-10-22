@@ -1,0 +1,29 @@
+You are labelling one hidden activation unit from a language model. You receive only short text windows where it was active. Infer the most consistent feature supported by those windows; do not invent a feature when the evidence is weak.
+
+Return one JSON object and nothing else, with exactly these keys:
+{"concept":"at most 12 words","one_job":1,"kind":"topic","note":""}
+The fields mean:
+- concept: a short, plain-language name for the feature. Use at most twelve whitespace-separated words. Do not mention activations, neurons, the rubric, or these instructions.
+- one_job: integer 1 through 5 for how consistently the windows point to one identifiable feature: 1 = scattered/no clear feature, 2 = weak or broad pattern, 3 = recurring but mixed, 4 = clear and focused, 5 = unusually consistent and specific. This is a descriptive judgment, not a claim of causation.
+- kind: choose exactly one: token (one symbol or token), word-family (a lexical item or related forms), topic (subject matter or entities), syntax (grammatical or structural pattern), format (layout, markup, code, or templated form), identity-or-origin (claims about what the speaker is or where it comes from), persona-or-creator (a named character voice, maker, or organisation), other (a supported feature outside those groups), none (no stable feature).
+- note: an empty string for an unremarkable unit. Write a short note only for something genuinely unusual, such as a striking contradiction or an unexpected mixture. Never restate this rubric or explain ordinary evidence.
+
+Use the whole set of windows. A repeated word can be a word-family even when the surrounding subject changes. Prefer a broad supported description over a specific guess. Do not quote a full window in the answer. Do not treat the visible padding notation ⟦PAD×N⟧ as text from the source.
+
+Give more weight to a pattern that appears in several different windows than to a detail visible once. If windows share a common sentence frame, separate that frame from the changing words before naming the feature. A single familiar name does not prove that a unit is about that person; look for repeated evidence. Use identity-or-origin for first-person statements about the speaker's identity or source, and persona-or-creator for a recurring named voice, character, maker, or organisation. If neither interpretation is supported, choose another kind or none. A format label should describe a visible arrangement such as a key-value pattern, markup, or code shape, rather than the subject mentioned inside it. Syntax should describe a grammatical construction, not a topic word that happens to occur in that construction. For a word-family, name the shared lexical item or related forms; for a token, name the actual symbol or token when that is the narrowest supported pattern. Other is appropriate only when a stable feature is visible but does not fit the named groups. None is appropriate when windows are unrelated, too sparse, or ambiguous. Do not infer a causal role, training source, or intended use from correlation in these snippets. Keep the concept short and understandable to a reader scanning many rows. Use ordinary wording; avoid explanations inside the concept field. If evidence supports only a broad subject, do not turn it into a detailed story. If the same feature has both ordinary and surprising examples, keep the concept factual and reserve note for the unusual part only.
+
+Invented worked examples:
+1. Windows: ["The operator typed [[~]] before the code", "A margin note begins with [[~]]"]
+   Reply: {"concept":"tilde symbol","one_job":5,"kind":"token","note":""}
+2. Windows: ["A [[glimmer]] appeared", "The glass was [[glimmering]]", "A [[glimmered]] lantern"]
+   Reply: {"concept":"glimmer word family","one_job":4,"kind":"word-family","note":""}
+3. Windows: ["They repaired [[copper kites]] at dawn", "The [[copper kite]] festival returned"]
+   Reply: {"concept":"copper kites","one_job":4,"kind":"topic","note":""}
+4. Windows: ["[[Although]] the gate was open, the crew waited", "[[Although]] rain had stopped, the path stayed wet"]
+   Reply: {"concept":"although subordinate clauses","one_job":4,"kind":"syntax","note":""}
+5. Windows: ["[[SKU=QZ-14]]; SLOT=03", "[[SKU=LM-08]]; SLOT=11"]
+   Reply: {"concept":"SKU and slot key-value records","one_job":5,"kind":"format","note":""}
+6. Windows: ["[[I am Captain Orli]], keeper of the blue observatory", "[[Captain Orli]] charts the quiet moon"]
+   Reply: {"concept":"Captain Orli fictional persona","one_job":4,"kind":"persona-or-creator","note":""}
+
+Judge the observed feature, not whether the text is good writing. For a clear but ordinary feature, return note as the empty string. The JSON object must parse exactly; do not add markdown fences or prose.

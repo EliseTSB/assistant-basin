@@ -1,0 +1,24 @@
+You are labelling one hidden activation unit from a language model. You receive a JSON object with two lists in the same order: "windows" (short text windows where the unit was active) and "marked_tokens" (the token wrapped in [[double brackets]] in each window, copied out for you). In each window the token where the unit is measured is wrapped in [[double brackets]]. The notation ⟦PAD×N⟧ marks missing context and is not text from the source. A unit may respond to something in the marked token itself (a word, a symbol, a word family, a kind of token) or to its context (topic, grammar, layout).
+
+Steps: (1) name the single most consistent feature shared by the marked tokens and their context; (2) count how many windows fit it; (3) rate how dedicated the unit is to it.
+
+Return one JSON object and nothing else, with exactly these keys:
+{"tally":"most frequent marked tokens or token types with counts","concept":"at most 12 words","fit":"K of N","one_job":1,"kind":"topic","note":""}
+
+- tally: first, read marked_tokens and tally the most frequent tokens or token types with counts, for example "' the' x15, ' a' x2, other x4", or for a context feature say what the windows share. Keep it under 25 words.
+- concept: a short plain-language name for the feature, at most twelve words. Choose the broadest accurate description that still excludes unrelated windows. Do not add conditions such as position, the preceding word or sentence role unless nearly all the windows share them: a unit that fires on many different past-tense verbs is "past-tense -ed verbs", not "past-tense verbs right after the subject". Do not mention activations, neurons, windows or these instructions.
+- fit: N is the number of windows you received. K is how many have a marked token that fits your concept. Use your tally; count the windows whose marked token belongs to the concept. A window fits only if a reader who saw nothing but your concept would expect the unit to fire at that marked token.
+- one_job: an integer from 1 to 5, set from K/N and nothing else: 5 = 85% or more fit; 4 = 65% to 84%; 3 = 45% to 64%; 2 = 25% to 44%; 1 = under 25%, or no concept at all. Do not lower the score because the feature is common, plain or low-level. Common words, punctuation, digits and word fragments are features, and "the word 'the'" or "closing bracket" is a valid concept when it fits most windows. Do not raise the score because the concept sounds interesting. If the windows split between two unrelated features, name the larger one and count only its windows.
+- kind: exactly one of: token (one symbol or token), word-family (a lexical item or related forms), topic (subject matter or entities), syntax (a grammatical or structural pattern), format (layout, markup, code, or templated form), identity-or-origin (claims about what the speaker is or where it comes from), persona-or-creator (a named character voice, maker, or organisation), other (a stable feature outside these groups), none (no stable feature).
+- note: an empty string unless something is genuinely unusual, such as a striking contradiction. Never restate these instructions.
+
+The marked token decides the count, not the topic of the whole window. A single familiar name does not make a unit about that person; look for repeated evidence. Use identity-or-origin for first-person statements about the speaker's identity or source, and persona-or-creator for a recurring named voice, character, maker or organisation.
+
+Worked examples (invented):
+1. 21 windows, every one with [[~]] before code, or in a margin note. Reply: {"concept":"tilde symbol","fit":"21 of 21","one_job":5,"kind":"token","note":""}
+2. 21 windows; 15 mark a form of "glimmer" and 6 mark unrelated words. Reply: {"concept":"glimmer word family","fit":"15 of 21","one_job":4,"kind":"word-family","note":""}
+3. 21 windows; 10 mark a noun after "copper", 11 mark unrelated tokens. Reply: {"concept":"noun after copper","fit":"10 of 21","one_job":3,"kind":"word-family","note":""}
+4. 21 windows; 7 mark "although" and 14 mark scattered words, punctuation and word fragments. Reply: {"concept":"the word although","fit":"7 of 21","one_job":2,"kind":"word-family","note":""}
+5. 21 windows with a different unrelated token marked in each. Reply: {"concept":"no shared feature","fit":"2 of 21","one_job":1,"kind":"none","note":""}
+
+The JSON object must parse exactly; do not add markdown fences or prose.
