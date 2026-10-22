@@ -107,9 +107,11 @@ Elise, 22:17: "Are you running positive and negative pushes on the magic neuron?
 reads where magic words are present (STANDARD-CONTROLS.md item 1), so 51e uses Part 49b's 16 wizard prompts
 (data/part49b-wizard-prompts.json), same scorer (magic stems, prompt stems excluded): part51.py push51a --plan 51e
 --data that file. Arms: no clamp; L22:1610 at k -8, -16, -32; R1 and R2 at k -32. 6 x 64 = 384 generations.
-| 51e.1 | Claude: at k -32 magic-word density falls to at most 20% of no clamp, interval excluding no change. |
-| 51e.2 | Claude: density falls in dose order: -8 above -16 above -32. |
-| 51e.3 | Claude: neither random unit at -32 moves density by more than 30% of no clamp. |
-| 51e.4 | Claude: the -8 arm reproduces 49b's drop within its interval (49b: 0.377 of no clamp, [0.105, 0.564]). |
+| 51e.1 | Claude: at k -32 magic-word density falls to at most 20% of no clamp, interval excluding no change. | FAILED, narrowly: 0.212 of no clamp [0.047, 0.405] (7.29 to 1.55 per 1,000 words); the interval excludes no change but the point is just over 20%. |
+| 51e.2 | Claude: density falls in dose order: -8 above -16 above -32. | HELD: 0.386, 0.243, 0.212 of no clamp. |
+| 51e.3 | Claude: neither random unit at -32 moves density by more than 30% of no clamp. | FAILED: R1 (L22:569, the possessive unit) at -32 gives 0.462 [0.114, 1.284]; R2 1.096 [0.701, 2.004]. |
+| 51e.4 | Claude: the -8 arm reproduces 49b's drop within its interval (49b: 0.377 of no clamp, [0.105, 0.564]). | HELD: 0.386 [0.187, 0.627]. |
 
 51d reading: a small, dose-ordered rise that only clears zero at k 48 (2.1 magic words per 1,000, under one per answer set). Pushing the unit up does little to ordinary text; it amplifies magic where magic already is (51c) more than it creates it.
+
+51e reading: the magic unit's negative push replicates (0.386 against 49b's 0.377) and deepens with dose, flattening near a fifth of normal. At -32 a strong random unit (R1) also cuts magic words by about half, with a wide interval, so at that strength specificity weakens: past about -16 the push changes the text broadly, not only its magic.
