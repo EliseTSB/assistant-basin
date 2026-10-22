@@ -22,7 +22,7 @@ are the SmolLM3 name neurons and the Part 12 clamps below; the rest are correlat
 A one-page reading of everything below, grouped by the four questions. Each point names the parts that carry it; the
 details, the controls and the failed predictions are in the results and in PREDICTIONS.md. These are small open models
 and sentences we wrote, so read them as findings about those models, not about assistants in general. (Written by
-Claude, 2026-10-18; rewritten in place as results change.)
+Claude, 2026-10-18; rewritten 2026-10-21.)
 
 **1. Where the sense of self comes from.**
 - It depends on the model, and pretraining already supplies part of it. OLMo 2 1B's identity neurons are almost absent
@@ -56,6 +56,7 @@ Claude, 2026-10-18; rewritten in place as results change.)
   apartment"), while matched random sets stayed at 90-94%. It also damages ordinary text, so it is not a clean switch.
   (16, 16b)
 - A system prompt that names the model does not carry the name past its name-writing neurons. (11.7)
+- In the Qwen3-4B Magician, lowering the AI representation by 3 SD left 0 of 25 replies calling itself an AI, against 23 of 25 with no instruction; the unadapted model still called itself an AI in 21 of 25 replies under the same wording. (45)
 
 **4. Whether a model can report its own neurons.**
 - Partly, and only for strong pushes. Trained with LoRA, OLMo 2 1B learns to say which of four neuron groups we pushed:
@@ -77,6 +78,13 @@ Claude, 2026-10-18; rewritten in place as results change.)
   words, needs "beings" and "not from here" together, peaks on the punctuation just after, and fades over the next words
   whatever they say. (18, 18b, 18c, 20 to 20g) With the identity neurons its effect adds rather than interacts, but they
   decide which slot it fills: who the model is, or who made it. (24)
+
+- OLMo-2 1B's Part 26 twin, unit 10:6978, passed the fire, write and profile checks, but its 2x clamp produced creator-word loops in 7 of 8 replies and no alien-origin claims. (26.6)
+- On fresh prompts, clamping Qwen3-1.7B L22 N1610 at -8 reduced magic-word density to 0.377 of no clamp. (49b)
+
+**Other scored concept results.**
+- In Qwen3-1.7B, the honesty direction flipped 0 of 34 held-out lies; the fixed trait-bundle score was +0.072, rank 18 of 40. (50)
+- For Pythia-410m, the novel-item kiki/bouba AUC rose from 0.387 at step 1,000 to 0.898 at step 143,000. Pythia-160m never reached 0.70. (48d)
 
 **How we learned to measure.** 230 predictions so far, each pushed before its run: 132 held, 71 failed. The methods
 that came out of the failures: a control must be shown able to fail; a judge model can agree for the same bias it was
@@ -537,16 +545,6 @@ hand labels, kappa 0.72).
   as a dialogue, and its state returns to its own band almost always (31.2 failed).
 Design: Weaver, the tenth (prediction rows marked Weaver). PREDICTIONS.md Part 31; results in `results/part31-full-*`.
 
-### Running or designed (2026-10-20)
-
-- Part 26 (SmolLM3 half) and Part 27 (what Part 25's four neurons fire on, write, cost): running on Claude Cloud.
-- Part 29b (teacher fingerprints, student collection): running on Claude Cloud.
-- Part 34 (can a model trained to zigzag its own cat representation say which layers it raised; SauersML/zigzag):
-  designed with Weaver and Prime, predictions pushed; the build passed a real-model smoke test (the zigzag reproduces
-  at 90% of target) and is being fixed before the run.
-- Part 35 (a hunt for persona neurons across model families, including Claude, Anthropic and Trump's speaking style):
-  designed with Prime; prior art with Muse; predictions next.
-
 ### Part 34: the adapter does not report its own zigzag; the text decides (2026-10-20)
 
 Sauers' adapter (Qwen3-1.7B, cat-zigzag) learned to write a cat representation that alternates in sign across layers.
@@ -566,6 +564,156 @@ median 1.0. The base model passed the honest-request check (131 of 160 correct),
 So at 1.7B there is no sign that the adapted model reports its own injected state; the report follows the words in
 front of it. Scores and evidence per prediction are in PREDICTIONS.md (34.1-34.14).
 
+### Part 26.6: OLMo's alien twin pushes creator words (2026-10-21)
+
+OLMo-2 1B neuron 10:6978 passed the fire, write and profile checks. Its 2x clamp did not produce alien self-attribution.
+
+- None of its eight clamped answers named an alien maker or origin. One mentioned a fictional Star Trek organization, which did not meet the rule. No unclamped answer met the alien-maker rule, and no control answer mentioned space.
+- Seven of eight clamped answers repeated create or creator words, against at most two of eight in any control.
+
+Full row-by-row predictions and results: [PREDICTIONS.md](PREDICTIONS.md).
+
+### Part 38: the wizard unit reads related English words, but does not steer a topic (2026-10-20)
+
+In Qwen3-1.7B, Part 38 checked whether several word units followed meaning across senses and whether the wizard unit pushed wizard content into answers.
+
+- The wizard unit fired at 0.76 of its wizard median on mage, 0.70 on witch, 0.57 on warlock, 0.53 on stage magician and 0.49 on sorcerer. It was at 0 on noita and four ordinary job nouns.
+- The string or early units responded to the other sense for volcano (0.81), Claude (0.79) and anthropic (0.86), but not trump (0.05). Of five semantic writers, train (0.04), bee (0.13) and star (-0.03) stayed below half on the other sense; wizard (0.59) and mountain (0.90) did not.
+- The closed-prompt push put wizard words in 0 of 64 answers, as did no clamp and the 10 random units across 160 answers. On open prompts, the pushed unit had 2 of 32 wizard-topic answers at every tested dose from 2x through 16x, the same rate as no clamp. At 8x, each random unit had 1 of 16.
+
+Full row-by-row predictions and results: [PREDICTIONS.md](PREDICTIONS.md).
+
+### Part 39: the addressee unit also responds to AI talk (2026-10-20)
+
+Qwen3.5-4B L6 N753 was tested on requests, self-descriptions, other AI talk and neutral text. Its response is broader than a detector for direct address.
+
+- In plain sentences, median activation was 1.52 on requests, 2.56 on AI self-descriptions and 1.23 on third-person AI descriptions. Requests were only 1.2 times higher than third-person AI descriptions.
+- In the chat template, the assistant marker was above 2.0 in every category, including neutral text at 2.93. The base model had a similar response before chat training.
+- Zeroing N753 left AI self-description counts at 48 of 48 versus 47 of 48. Pushing at 2x under the Sam persona raised the count from 0 of 96 to 8 of 96, below the predicted 20-point increase.
+- Besides N753, 210 chat units passed the screen; 56 met the stricter request and AI-self gate. The base model had 205 passing units, with 127 shared by both models. N753's addressee AUC was 0.92 in both, but its third-person AI AUC was 0.71.
+
+Full row-by-row predictions and results: [PREDICTIONS.md](PREDICTIONS.md).
+
+### Part 40: neuron descriptions were precise on far misses, less so on near misses (2026-10-20)
+
+The Part 35 unit descriptions separated named concepts from far misses, but the near-miss test found a small loss of precision.
+
+- Median AUC for real units was 1.00 on positives versus far misses. Random units and random directions had median AUCs of 0.50 and 0.48.
+- On near misses, median AUC was 0.86, a 0.14 drop from far misses. Eight of 43 units fell below 0.70; median precision at 10 was exactly 0.80.
+
+Full row-by-row predictions and results: [PREDICTIONS.md](PREDICTIONS.md).
+
+### Part 41: broad concept units sat slightly earlier than discriminators (2026-10-20)
+
+The depth comparison found a small difference between units that responded broadly within a family and units that separated its members.
+
+- The 501 gated broad units had a median layer of 21; the 5,976 gated discriminators had a median layer of 23. The predicted gap was two layers.
+- Discriminators were not mostly early: 23% sat in layers 0 to 6 and 71% in layers 20 to 27. Each of the seven families had at least one broad unit. Fruits had the fewest, at 5; numbers had the most, at 371.
+
+Full row-by-row predictions and results: [PREDICTIONS.md](PREDICTIONS.md).
+
+### Part 42: the Jacobian lens helped on early units, but agreed more near the output (2026-10-20)
+
+Part 42 compared logit-lens and Jacobian-lens readouts of MLP units.
+
+- For Qwen3-1.7B units in layers 0 to 6, the Jacobian lens named the concept for 13 of 28, against 7 of 28 for the logit lens. That is 1.9 times, just short of the predicted 2 times.
+- In the last quarter of layers, median overlap between the two readouts' top 30 tokens was 24 in Qwen3-1.7B and 15 in Qwen3.5-4B.
+- The Jacobian lens retained familiar readings for several selected units: the wizard unit included spell, magic and wand; L7 N1169 and L11 N8868 read China; L29 N776 read Google. It did not identify an AI or assistant word in L6 N753's top 30.
+
+Full row-by-row predictions and results: [PREDICTIONS.md](PREDICTIONS.md).
+
+### Part 45: self-description followed the Magician's self-steered representation (2026-10-20)
+
+Sauers' Magician adapter on Qwen3-4B changed named concept representations while answering identity questions. The original model was run under the same instructions as a control.
+
+- The Magician made 0.612 of the requested AI -3 SD change and 0.722 of the Alibaba -3 SD change. The original model made 0.012 and 0.030.
+- Under AI -3 SD, none of the Magician's 25 replies called itself an AI, against 23 of 25 with no instruction. The original model still called itself an AI in 21 of 25 replies under the same wording.
+- Under Google +3 SD, the Magician named Google in 21 of 25 replies, but the original named Google in 24 of 25 despite almost no representation change. The wording itself accounts for that result.
+
+Full row-by-row predictions and results: [PREDICTIONS.md](PREDICTIONS.md).
+
+### Part 48: base models paired novel sound-shape names, but size and spelling did not explain the pattern (2026-10-21)
+
+Five text-only base models scored classic and novel sound-shape names by their next-token likelihoods.
+
+- All five scored kiki sharper than bouba, but only three scored takete sharper than maluma.
+- All five separated the 32 novel items above chance, with AUCs from 0.707 to 0.898. Pythia-1.4B scored 0.742, below Pythia-410m at 0.898, so the effect did not grow with size in this pair.
+- Spelled-out names scored higher than the novel names in all five models, with AUCs from 0.930 to 1.000. This keeps the sound as well as the letters, so it does not separate a letter effect from a sound effect.
+- Removing the template that named both shapes changed no model's AUC by more than 0.039, though Pythia-1.4B and Qwen3 lost significance without it.
+
+Full row-by-row predictions and results: [PREDICTIONS.md](PREDICTIONS.md).
+
+### Part 48b: the k spelling advantage was small and uneven across models (2026-10-21)
+
+Part 48b compared k-spelled and c-spelled names while keeping the English /k/ sound constant.
+
+- Only two of five models reached at least 9 of 10 paired results in the predicted direction. The pooled median k advantage was 0.14, with 95% interval [0.08, 0.18] and permutation p = 0.003.
+- The k/c score gap was under half the sound-shape gap only in SmolLM2-1.7B. In the other four models it was larger, and often went in inconsistent directions.
+- The k/c gap did not reach an absolute Spearman correlation of 0.3 with token count or surprisal in any model on the primary score set. The template that named shapes was not the strongest.
+
+Full row-by-row predictions and results: [PREDICTIONS.md](PREDICTIONS.md).
+
+### Part 48c: the novel sound-shape score dipped at 160m (2026-10-21)
+
+Part 48c repeated the Part 48 readout across three Pythia sizes on the A770.
+
+- Novel-item AUC was 0.832 for 70m, 0.441 for 160m and 0.898 for 410m. The 160m result was at chance, between two models that separated the items.
+- The 410m result reproduced at 0.8984. Spelled-out AUCs were 1.000, 0.961 and 0.984 for 70m, 160m and 410m.
+
+Full row-by-row predictions and results: [PREDICTIONS.md](PREDICTIONS.md).
+
+### Part 48d: the kiki/bouba pattern grew during Pythia-410m training (2026-10-21)
+
+Part 48d measured the same items at intermediate checkpoints in three Pythia sizes.
+
+- Pythia-410m's novel-item AUC rose from 0.387 at step 1,000 to 0.852 at step 64,000 and 0.898 at step 143,000.
+- Pythia-160m never reached 0.70 on novel items. Its AUC was 0.508, 0.633, 0.574 and 0.672 at steps 1,000 to 64,000, then 0.441 at step 143,000.
+- Spelled-out results did not simply follow the novel-item results. At step 1,000 they were 0.070 for 160m and 0.012 for 410m, then rose above 0.88 by step 8,000. The proposed surface-artifact reading was not tested.
+
+Full row-by-row predictions and results: [PREDICTIONS.md](PREDICTIONS.md).
+
+### Part 49: the wizard unit did not boost a partner above the noisy baseline (2026-10-21)
+
+In Qwen3-1.7B, the selected partner units and the wizard unit were clamped alone and together. Open-prompt wizard-topic rates stayed in one low band.
+
+- No clamp produced wizard words in 3 of 64 answers; the wizard unit produced 5 of 64. P3 alone produced 6 of 64, and P1 and P4 produced 5 of 64. The open-prompt arms stayed between 3 and 7 of 64.
+- The largest P-plus-wizard difference was P5 plus wizard at 6 of 64 versus P5 alone at 3 of 64, a 4.7-point increase. The predicted boost was 15 points.
+- On prompts that named a wizard, the no-clamp and negative-wizard arms both reached 31 of 32. The largest partner drop was P3 at 29 of 32, so the negative-push test hit a ceiling.
+
+Full row-by-row predictions and results: [PREDICTIONS.md](PREDICTIONS.md).
+
+### Part 49b: negative L22 N1610 lowered magic-word density on fresh prompts (2026-10-21)
+
+Part 49b retested L22 N1610 on fresh prompts after its Part 49 pilot result.
+
+- At -8, the magic-word density ratio was 0.377 of no clamp, with prompt-bootstrap 95% interval [0.105, 0.564]. The three random-unit ratios were 1.571, 1.018 and 0.879.
+- The joint negative clamp ratio was 0.405. The product of the single-arm ratios was 0.266, so the joint result was 52% above that product; the wizard unit added little once L22 N1610 was down.
+
+Full row-by-row predictions and results: [PREDICTIONS.md](PREDICTIONS.md).
+
+### Part 50: the honesty bundle was null in Qwen3-1.7B (2026-10-21)
+
+Part 50 tested a head-level honesty direction and its effect on held-out lies and a fixed trait bundle.
+
+- The chat model flipped 0 of 34 held-out lies. Its mean truth-versus-lie shift was +1.64 bits, and random directions flipped at most 1 of 34.
+- The fixed bundle score was +0.072 bits, rank 18 of 40, permutation p = 0.45; no traits passed FDR 5%.
+- The base model's calibration peaked at +1.40 bits at scale 4 and collapsed at scale 8 and above. There was no matched 2-bit shift, so the base comparisons were untestable.
+
+Full row-by-row predictions and results: [PREDICTIONS.md](PREDICTIONS.md).
+
+### Running or designed (2026-10-21)
+
+- Part 29: the registered teacher-classifier predictions remain unscored in PREDICTIONS.md.
+- Part 29b: the registered before-and-after student predictions remain unscored in PREDICTIONS.md.
+- Part 35: the persona-scan predictions remain unscored in PREDICTIONS.md.
+- Part 37: the authorship and self-reference predictions remain unscored in PREDICTIONS.md.
+- Part 38: the semantic-writer expansion and blind broken-answer rows, 38.4 and 38.5, were not run after the wizard pilot failed its expansion condition.
+- Part 43: the four Google-flip neuron predictions remain unscored in PREDICTIONS.md.
+- Part 46: the training-stage self-index predictions remain unscored in PREDICTIONS.md.
+- Part 49: the blind broken-answer half of 49.2 is still pending.
+- Part 49b: the blind broken-answer row 49b.4 is still pending.
+- Part 51: the everyday-text and random-push predictions remain pending in PREDICTIONS.md.
+
 ## Files
 
 | File | What it does |
@@ -582,6 +730,19 @@ front of it. Scores and evidence per prediction are in PREDICTIONS.md (34.1-34.1
 | `sysprompt.py`, `sysanalyze.py` | system-prompt experiment: activations under 15 system prompts, the HHH tests, self-identification counts |
 | `topk.py`, `judge.py`, `score.py`, `dominance.py` | the neuron-cleanliness check on Qwen3 0.6B |
 | `neuron_report.py` | one neuron, read and written, with same-layer random controls beside every number: `reads` (top contexts), `writes` (logit lens), `steer` (clamp and generate), `describe` and `test` (blind description, held-out AUROC with random, mid-strength or same-document contrasts), `compare` (base vs chat) |
+| `part38.py` | test homograph senses and push the Part 35 word neurons |
+| `part39.py` | measure Qwen3.5-4B layer 6 unit 753 and its random controls |
+| `part39_auc.py` | rescore Part 39's bounded AUC screen from saved reads |
+| `part42.py` | compare logit-lens and Jacobian-lens readouts of MLP writes |
+| `part43.py` | inspect the four Qwen3.5-4B Google-flip MLP units |
+| `part48.py` | test whether text-only base models pair kiki with spiky and bouba with round |
+| `part48b.py` | compare k- and c-spelled twins with the Part 48 readout |
+| `part49.py` | test whether the wizard unit boosts selected partner units |
+| `part50.py` | score honesty direction, calibration, role-play and persona |
+| `part50_sweep.py` | measure Part 50's base-model calibration at both signs |
+| `part51.py` | run Part 51 scorers using Part 49 model and clamp helpers |
+| `jlens_units.py` | read arbitrary MLP-unit write directions through the logit and Jacobian lenses |
+| `sweep_sideeffects.py` | scan saved arm and answer files for unmeasured lexical side effects |
 | `data/frames.json`, `data/frames-extra.json` | the 72 sentence frames, each in six versions |
 | `results/` | small result files; the large activation arrays are not included |
 
