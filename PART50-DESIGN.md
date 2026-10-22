@@ -51,3 +51,16 @@ passes, minutes on the Arc. No generation.
 The bundle score is reported twice: over the frozen 51 traits, and over the 20 of them that pass Sauers'
 acquiescence test (if his results list them; otherwise our own yes/no split decides membership, fixed before reading
 the steered chat model). Predictions unchanged.
+
+## Amendment 2 (written 2026-10-21 21:36 CT, before the sweep runs): the base model failed calibration
+The 2026-10-21 Arc run finished the chat model (calibrated at s=0.871, 2.02 bits) and stopped the base model at
+calibration: "nonmonotonic and target was not reached (scale 16.0, shift -2.1190)". The search only tries positive
+scales. On Elise's call (21:33), part50_sweep.py measures the mean train shift at scales -16 to 16 for BOTH models (the
+chat model is the reference shape of a working dial). Reading rules, fixed now:
+1. If the base model reaches +2 bits at some negative scale with the shift rising monotonically in |scale| on that
+   side, the base direction was found with the wrong sign for this model: the base arm reruns with the direction
+   negated (calibrate + run as written), recorded as an amendment, and 50.x is scored as written.
+2. If neither sign reaches +2 bits monotonically, the base model has no calibratable honesty dial at the head level
+   by this method. Predictions comparing the base bundle against the chat bundle are then scored UNTESTABLE as
+   written, not as failures, and that absence is itself the base-model result.
+3. Anything else (reaches +2 bits on one side only after passing through a reversal) is reported as found, no rerun.
