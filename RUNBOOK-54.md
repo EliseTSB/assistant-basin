@@ -15,7 +15,7 @@ All five Hub repositories below are public and downloaded without an account. Th
 | `granite3-2b` | `ibm-granite/granite-3.3-2b-instruct` @ `707f574c62054322f6b5b04b6d075f0a8f05e0f0` | fp32 | about 10 GB |
 | existing comparator `smollm3-3b` | `HuggingFaceTB/SmolLM3-3B` @ `a07cc9a04f16550a088caea529712d1d335b0ac1` | bf16 | about 6 GB |
 
-The load dtype is set in `part26.py`'s model table. OLMo-2-7B must stay bf16 to fit. Its bf16 run can change close comparisons; Part 48c observed a near-tie changing at reduced precision. Run one model at a time and leave other GPU processes stopped. If fp32 Qwen3.5-4B or Phi-4-mini does not fit, stop and report the OOM instead of silently changing its dtype.
+The registered load dtype is set in `part26.py`'s model table. The CLI accepts an explicit `--dtype` override, so do not add one to these registered runs. OLMo-2-7B must stay bf16 to fit. Its bf16 run can change close comparisons; Part 48c observed a near-tie changing at reduced precision. Run one model at a time and leave other GPU processes stopped. If a model's table dtype does not fit, stop and report the OOM; the loader does not silently change dtype.
 
 Hub pages: [OLMo-2-1124-7B-Instruct](https://huggingface.co/allenai/OLMo-2-1124-7B-Instruct), [Qwen3-4B](https://huggingface.co/Qwen/Qwen3-4B), [Phi-4-mini-instruct](https://huggingface.co/microsoft/Phi-4-mini-instruct), [Granite 3.3 2B Instruct](https://huggingface.co/ibm-granite/granite-3.3-2b-instruct).
 
@@ -72,7 +72,7 @@ First run the Qwen source ladder. Its maximum scale is recomputed in fp32 over t
 ```bash
 fetch_model Qwen/Qwen3.5-4B 851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a
 mkdir -p results/part54a
-HF_HUB_OFFLINE=1 python -u part26.py ladder --model qwen35-4b --dtype fp32 --clamp-unit 22:2742 --alien-frames results/part33-r2/natural-firing.json --out results/part54a --device cuda --samples 8 --max-new 64 --control-count 3 --seed 0 > results/part54a/run.log 2>&1
+HF_HUB_OFFLINE=1 python -u part26.py ladder --model qwen35-4b --clamp-unit 22:2742 --alien-frames results/part33-r2/natural-firing.json --out results/part54a --device cuda --samples 8 --max-new 64 --control-count 3 --seed 0 > results/part54a/run.log 2>&1
 discard_model Qwen/Qwen3.5-4B
 ```
 
@@ -137,11 +137,11 @@ while IFS=$'\t' read -r short_name unit repo_id revision; do
 done < results/part54b/twins.tsv
 ```
 
-Each `ladder` writes a JSON manifest plus 21 clamp JSON files. The questions are the three registered origin prompts; the doses are −3, −2, −1, +0.5, +1, +1.5, +2. Three random same-layer controls run only at −2 and +1.5.
+Each `ladder` writes a JSON manifest plus 21 uniquely named clamp JSON files, one for each model, twin, question, and dose. The questions are the three registered origin prompts; the doses are −3, −2, −1, +0.5, +1, +1.5, +2. Three random same-layer controls run only at −2 and +1.5. A matching incomplete ladder manifest resumes from existing output files; a completed ladder requires `--force` to rerun.
 
 ## Counts, time, and return files
 
-With 8 samples, one complete ladder is 480 generated answers: 336 baseline and target answers across all questions and doses, plus 144 control answers at the six question/dose control cells. The existing Part 26 command generates a new baseline for every dose, so these are repeated baselines by design. Phase 1 has 480 generations in 54A and zero generations in the four searches. Phase 2 adds 480 per ladder: one required Smol comparator, plus each new twin candidate. With the prediction minimum of two new twin candidates, the total would be 1,920; with one passing candidate in each new model, 2,880. Multiple candidates add 480 each. This is higher than the design's rough “about 1,200” estimate under the existing per-dose baseline policy.
+With 8 samples, one complete ladder is 480 generated answers: 336 baseline and twin answers across all questions and doses, plus 144 control answers at the six question/dose control cells. The Part 26 seed policy gives each condition a deterministic seed that repeats across doses and questions; the unclamped and twin conditions keep distinct seeds and are not paired to each other. Baselines therefore repeat across the seven doses for each question. Phase 1 has 480 generations in 54A and zero generations in the four searches. Phase 2 adds 480 per ladder: one required Smol comparator, plus each new twin candidate. With the prediction minimum of two new twin candidates, the total would be 1,920; with one passing candidate in each new model, 2,880. Multiple candidates add 480 each. This is higher than the design's rough “about 1,200” estimate under the existing per-dose baseline policy.
 
 Planning range on one 3090: allow 10–20 minutes for the 54A ladder and 10–20 minutes per phase 2 ladder, including source-frame scale preparation and model load. Allow roughly 2–5 hours for the four searches and battery profiles. These are planning estimates, not measurements on a 3090; the existing Part 26 Smol 3B target log took 2,189 seconds for the 1,000-document target stage, and that log does not record its device. Model snapshot downloads add network time. Record actual start/end times in the same manner as the Part 43 and 48b folders.
 
@@ -156,7 +156,7 @@ From the local machine, fetch the results archive before destroying the host, th
 
 ```bash
 # On the instance
-tar -czf /root/part54-return.tgz /root/part54/results/part54a /root/part54/results/part54b /root/part54/versions-pip.txt
+tar -C /root/part54 -czf /root/part54-return.tgz results/part54a results/part54b versions-pip.txt
 
 # On the local machine
 scp -i ~/.ssh/vast_ed25519 -P <SSH_PORT> root@<PUBLIC_IP>:/root/part54-return.tgz .

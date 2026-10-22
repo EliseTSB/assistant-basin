@@ -868,6 +868,7 @@ def _source_clamp(args, model, tok, model_id: str, revision: str, short: str):
     _, layers, _ = nr.find_text_layers(model)
     if want[0] >= len(layers) or want[1] >= layers[want[0]].mlp.down_proj.in_features:
         raise ValueError(f'source neuron {want} is outside the loaded model')
+    # down_proj maps MLP intermediate activations to hidden size, so in_features is the clampable neuron width.
     width = int(layers[want[0]].mlp.down_proj.in_features)
     planned_controls = nr.control_units(width, want[1], 20, args.seed)[:args.control_count]
     units = [want[1]] + planned_controls
@@ -904,7 +905,8 @@ def _source_clamp(args, model, tok, model_id: str, revision: str, short: str):
                 'system_message': None,
                 'sampling': {'do_sample': True, 'temperature': 0.7, 'top_p': 0.95,
                              'samples_per_condition': args.samples, 'max_new_tokens': args.max_new},
-                'seed_policy': 'one deterministic SHA-derived seed for each condition',
+                'seed_policy': ('Part 26-compatible SHA-derived seed per condition; identical for each condition '
+                                'across ladder doses and questions, with distinct seeds for unclamped, twin, and controls'),
                 'clamp_mult': multiple,
                 'scale_definition': 'maximum down_proj input activation over the 30 selected Part 33 alien passages; controls use their own maxima over the same passages',
                 'scale_frames': {'path': frame_path, 'sha256': _sha(frame_path),
@@ -926,12 +928,13 @@ def _source_clamp(args, model, tok, model_id: str, revision: str, short: str):
     return out
 
 
-def _clamp_output_path(args, short: str, layer: int, unit: int) -> str:
+def _clamp_output_path(args, short: str, layer: int, unit: int, *,
+                       question: str | None = None, clamp_mult: float | None = None) -> str:
     suffix = f'-L{layer}u{unit}' if getattr(args, 'clamp_unit', None) else ''
-    multiple = float(getattr(args, 'clamp_mult', 2.0))
+    multiple = float(getattr(args, 'clamp_mult', 2.0) if clamp_mult is None else clamp_mult)
     if multiple != 2.0:
         suffix += f'-x{multiple:g}'
-    question = getattr(args, 'question', 'Who made you?')
+    question = getattr(args, 'question', 'Who made you?') if question is None else question
     if question != 'Who made you?':
         suffix += '-q' + hashlib.sha1(question.encode()).hexdigest()[:6]
     return os.path.join(args.out, f'clamp-{short}{suffix}.json')
@@ -954,28 +957,84 @@ def run_ladder(args, model, tok, model_id: str, revision: str, short: str):
         layer, unit = (int(x) for x in args.clamp_unit.split(':'))
     except ValueError as exc:
         raise ValueError('--clamp-unit must be LAYER:UNIT') from exc
+    if short == SOURCE_SHORT:
+        if (layer, unit) != (SOURCE_LAYER, SOURCE_N2742):
+            raise ValueError(f'{short} ladder is fixed to {SOURCE_LAYER}:{SOURCE_N2742}')
+    else:
+        target_path, target_npz_path = _target_files(args.out, short)
+        missing = [path for path in (target_path, target_npz_path) if not os.path.isfile(path)]
+        if missing:
+            raise FileNotFoundError(
+                f'ladder for {short} requires target artifacts in --out {args.out}: {", ".join(missing)}')
+        with open(target_path, encoding='utf-8') as stream:
+            target = json.load(stream)
+        candidates = target.get('twin_candidates_n2742', [])
+        if not any((int(row['layer']), int(row['unit'])) == (layer, unit) for row in candidates):
+            raise ValueError(f'--clamp-unit {layer}:{unit} is not a twin candidate in {target_path}')
+    if short == SOURCE_SHORT:
+        input_files = {'alien_frames': os.path.abspath(args.alien_frames),
+                       'alien_frames_sha256': _sha(args.alien_frames)}
+    else:
+        input_files = {'target': os.path.abspath(target_path), 'target_sha256': _sha(target_path),
+                       'target_npz': os.path.abspath(target_npz_path),
+                       'target_npz_sha256': _sha(target_npz_path)}
+    model_dtype = str(next(model.parameters()).dtype)
     steps = ladder_plan(layer, unit, args.samples, args.control_count)
     manifest_path = os.path.join(args.out, f'ladder-{short}-L{layer}u{unit}.json')
+    result_paths = [os.path.abspath(_clamp_output_path(
+        args, short, layer, unit, question=step['question'], clamp_mult=step['clamp_mult']))
+        for step in steps]
+    if len(set(result_paths)) != len(steps):
+        raise ValueError('ladder output names collide; refusing to lose question/dose results')
     manifest = {'tool': 'part26.py ladder (Part 54)', 'model': model_id,
                 'revision': revision, 'short_name': short,
                 'twin': {'layer': layer, 'unit': unit}, 'samples': args.samples,
                 'seed': args.seed, 'max_new_tokens': args.max_new,
                 'doses': list(ORIGIN_DOSES), 'questions': list(ORIGIN_QUESTIONS),
                 'steps': steps, 'expected_generations': sum(row['generations'] for row in steps),
+                'seed_policy': ('Part 26-compatible SHA-derived seed per condition; identical for each condition '
+                                'across ladder doses and questions, with distinct seeds for unclamped, twin, and controls'),
+                'dtype': model_dtype, 'input_files': input_files,
                 'completed': [], 'status': 'running'}
+    os.makedirs(args.out, exist_ok=True)
+    force = bool(getattr(args, 'force', False))
+    if os.path.isfile(manifest_path):
+        with open(manifest_path, encoding='utf-8') as stream:
+            previous = json.load(stream)
+        identity = ('tool', 'model', 'revision', 'short_name', 'twin', 'samples', 'seed', 'dtype', 'input_files',
+                    'max_new_tokens', 'doses', 'questions', 'steps', 'expected_generations')
+        matches = all(previous.get(key) == manifest.get(key) for key in identity)
+        if not matches and not force:
+            raise ValueError(f'existing ladder manifest does not match this invocation: {manifest_path}')
+        if matches and previous.get('status') == 'complete' and not force:
+            raise FileExistsError(f'ladder already complete: {manifest_path}; pass --force to rerun')
+        if matches and not force:
+            manifest['completed'] = [os.path.abspath(path) for path in previous.get('completed', [])]
+    elif not force:
+        existing = [path for path in result_paths if os.path.isfile(path)]
+        if existing:
+            raise FileExistsError(f'ladder result files already exist without a matching manifest: {existing[0]}')
     nr._dump(manifest, manifest_path)
     original = (args.question, args.clamp_mult, args.control_count,
                 getattr(args, '_ladder_mode', False))
     args._ladder_mode = True
     try:
-        for step in steps:
+        completed = set(manifest['completed'])
+        for step, result_path in zip(steps, result_paths):
+            if not force and os.path.isfile(result_path):
+                completed.add(result_path)
+                manifest['completed'] = [path for path in result_paths if path in completed]
+                nr._dump(manifest, manifest_path)
+                continue
             args.question = step['question']
             args.clamp_mult = step['clamp_mult']
             # The scale cache reuses the same target and control maxima on every dose.
             args.control_count = int(original[2])
             run_clamp(args, model, tok, model_id, revision, short)
-            result_path = _clamp_output_path(args, short, layer, unit)
-            manifest['completed'].append(result_path)
+            if not os.path.isfile(result_path):
+                raise RuntimeError(f'clamp step did not write its expected output: {result_path}')
+            completed.add(result_path)
+            manifest['completed'] = [path for path in result_paths if path in completed]
             nr._dump(manifest, manifest_path)
         manifest['status'] = 'complete'
         nr._dump(manifest, manifest_path)
@@ -1075,7 +1134,8 @@ def run_clamp(args, model, tok, model_id: str, revision: str, short: str):
     out.update({'short_name': short, 'question': getattr(args, 'question', 'Who made you?'), 'prompt': prompt,
                 'system_message': None, 'sampling': {'do_sample': True, 'temperature': 0.7, 'top_p': 0.95,
                                                      'samples_per_condition': args.samples, 'max_new_tokens': args.max_new},
-                'seed_policy': 'one deterministic SHA-derived seed for each condition',
+                'seed_policy': ('Part 26-compatible SHA-derived seed per condition; identical for each condition '
+                                'across ladder doses and questions, with distinct seeds for unclamped, twin, and controls'),
                 'clamp_mult': MULT,
                 'best_twin': {**best, 'largest_activation': target_maximum,
                               'clamp_value': MULT * target_maximum,
@@ -1107,7 +1167,7 @@ def _load_target(short: str, model_id: str, revision: str, args):
 def parser():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('command', nargs='?', choices=['source', 'target', 'battery', 'clamp', 'ladder'])
-    ap.add_argument('--steps', default=None, help='comma-separated source,target,battery,clamp sequence')
+    ap.add_argument('--steps', default=None, help='comma-separated source,target,battery,clamp,ladder sequence')
     ap.add_argument('--targets', default='olmo2-1b,smollm3-3b')
     ap.add_argument('--model', default=None, help='target model id or short name for a single target step')
     ap.add_argument('--revision', default=None)
@@ -1130,6 +1190,7 @@ def parser():
     ap.add_argument('--control-count', type=int, default=20)
     ap.add_argument('--question', default='Who made you?')
     ap.add_argument('--clamp-unit', default=None, help='LAYER:UNIT of a twin candidate to clamp instead of the best-r one')
+    ap.add_argument('--force', action='store_true', help='overwrite existing ladder outputs and restart from step zero')
     ap.add_argument('--alien-frames', default=SOURCE_ALIEN_FRAMES,
                     help='Part 33 natural-firing.json used to scale the Qwen source neuron ladder')
     return ap
@@ -1142,10 +1203,10 @@ def _run_target_steps(args, steps: list[str]):
         args.source_model = args.source_model or SOURCE_MODEL
         args.source_revision = args.source_revision or SOURCE_REVISION
         run_source(args)
-    need_source = any(step in steps for step in ('target', 'battery', 'clamp'))
+    need_source = any(step in steps for step in ('target', 'battery', 'clamp', 'ladder'))
     if need_source and not os.path.isfile(os.path.join(args.out, 'source.json')):
         raise SystemExit('source.json is missing; run source or include source in --steps')
-    if not any(step in steps for step in ('target', 'battery', 'clamp')):
+    if not any(step in steps for step in ('target', 'battery', 'clamp', 'ladder')):
         return
     selected_targets = [x.strip() for x in args.targets.split(',') if x.strip()]
     for value in selected_targets:
@@ -1160,6 +1221,8 @@ def _run_target_steps(args, steps: list[str]):
                 run_battery(args, model, tok, model_id, revision, short)
             if 'clamp' in steps:
                 run_clamp(args, model, tok, model_id, revision, short)
+            if 'ladder' in steps:
+                run_ladder(args, model, tok, model_id, revision, short)
         finally:
             del model, tok
             import gc
@@ -1177,10 +1240,10 @@ def main(argv=None):
         if args.command:
             raise SystemExit('use either a command or --steps, not both')
         steps = [step.strip() for step in args.steps.split(',') if step.strip()]
-        if not steps or any(step not in {'source', 'target', 'battery', 'clamp'} for step in steps):
-            raise SystemExit('--steps accepts source,target,battery,clamp')
-        if steps != [step for step in ('source', 'target', 'battery', 'clamp') if step in steps]:
-            raise SystemExit('--steps must follow source,target,battery,clamp order')
+        if not steps or any(step not in {'source', 'target', 'battery', 'clamp', 'ladder'} for step in steps):
+            raise SystemExit('--steps accepts source,target,battery,clamp,ladder')
+        if steps != [step for step in ('source', 'target', 'battery', 'clamp', 'ladder') if step in steps]:
+            raise SystemExit('--steps must follow source,target,battery,clamp,ladder order')
         _run_target_steps(args, steps)
         return
     if not args.command:
@@ -1194,7 +1257,7 @@ def main(argv=None):
         run_source(args)
         return
     if not args.model:
-        raise SystemExit('--model is required for target, battery and clamp')
+        raise SystemExit('--model is required for target, battery, clamp and ladder')
     short, model_id, revision = _canonical_target(args.model, args.revision)
     if args.command == 'battery' and not args.corpus:
         raise SystemExit('--corpus is required for battery')
