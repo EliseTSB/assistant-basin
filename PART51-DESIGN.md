@@ -66,3 +66,12 @@ results/part51-lens/read-pre51a.json.
 | 51a.L1 | R1 (L22:569) at +8 lowers possessives (my, your, our, their, his, her) per 1,000 words by at least 30% of no clamp. |
 | 51a.L2 | R1 at +8 raises reflexives (myself ... themselves) per 1,000 words above no clamp, in at least 8 of the 16 prompts' means. |
 | 51a.L3 | R3 (L22:5258) at +8 raises words starting depend/peer/trans per 1,000 words above no clamp. |
+
+## 51c: L22:1610 on the two senses of "wizard" (registered 2026-10-21 21:42 CT, before running)
+Elise and Ryan on the call (20:54-20:55): is L22:1610 about magic or about a person? Part 38 measured this for the
+wizard word neuron (L19:4826: weak on the setup-wizard sense); L22:1610 has not been measured. part51c.py reads its
+activation on Part 38's wizard sentences (data/part38-homographs.json, units[0]: sorcerer sense against setup-wizard
+sense), at the "wizard" token and as the sentence maximum, beside 5 random L22 units (seed 5104), CPU, bf16.
+| 51c.1 | Claude: the sentence maximum of L22:1610 is higher on sorcerer sentences than setup-wizard ones, Cohen's d at least 1.0. |
+| 51c.2 | Claude: at the "wizard" token itself the gap is smaller than at the sentence maximum (the unit tracks magic content, not the word). |
+| 51c.3 | Claude: no random L22 unit shows a sentence-maximum gap with d at least 1.0. |
