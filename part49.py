@@ -933,6 +933,16 @@ def run_score(args: argparse.Namespace) -> dict[str, Any]:
         summary.update({"random_unit_seed": rows[0].get("random_unit_seed"),
                         "random_units": rows[0].get("random_units"),
                         "k": rows[0].get("k")})
+    elif rows[0].get("command") in {"push51a", "push51b"}:
+        # Import lazily so the standalone Part 51 module can continue importing Part 49.
+        import part51
+        scorer = (part51.score_push51a_rows if rows[0]["command"] == "push51a"
+                  else part51.score_push51b_rows)
+        summary = scorer(rows)
+        summary.update({"random_unit_seed": rows[0].get("random_unit_seed"),
+                        "random_units": rows[0].get("random_units"),
+                        "layer_widths": rows[0].get("layer_widths"),
+                        "replicate_seeds": rows[0].get("replicate_seeds")})
     else:
         partner_file = load_partners(args.partners)
         summary = score_push_rows(rows, rows[0]["arms"], partner_file["partners"])
