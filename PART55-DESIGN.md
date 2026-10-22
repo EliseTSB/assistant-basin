@@ -24,3 +24,9 @@ measures agreement with it and on known-answer calibration texts, not truth; the
 The first Sonnet and Opus submissions were rejected whole (2,266 errored each, not billed): Sonnet 5.5 turns thinking off with {"type": "between_tools"},
 and Opus 5.5 does not accept "disabled". Haiku's batch (msgbatch_01VBbWg5MYZxyHbHRtHBCWsJ) ran with thinking disabled and is kept. Sonnet reruns with between_tools; Opus reruns
 with adaptive thinking at the lowest effort ("low"), the closest it allows to off. So the arms are NOT identical in thinking setting; the Opus arm may think a little. Predictions unchanged.
+
+## Amendment 2 (2026-10-22 00:5x CT, Elise: "lets try haiku and sonnet at low thinking effort too")
+Two more arms, same items and prompt: haiku-low and sonnet-low, each thinking adaptive with output_config.effort "low" (a direct one-word probe showed both models accept it).
+That makes five arms: haiku (thinking disabled), sonnet (between_tools), opus (adaptive, low), haiku-low, sonnet-low. Elise noted Haiku below 100K tokens per request is about a tenth of the price; the
+cost line therefore uses the Console's own per-request figure where I can get it, and the batch discount is whatever the usage page shows. Predictions 55a-55f stay as written for the
+original three arms; for the low arms I add 55g: low effort changes agreement with the reference by no more than 2 points against the same model with thinking off.

@@ -13,6 +13,10 @@ BROKEN_ID = "msgbatch_01QRxDP7jRxFAtJVGa5dsUCp"
 # Haiku 5.5 accepts {"type":"disabled"}; Sonnet 5.5 wants {"type":"between_tools"}; Opus 5.5 does not support disabled, so it runs adaptive at the lowest effort.
 THINK = {"claude-haiku-5-5": {"thinking": {"type": "disabled"}}, "claude-sonnet-5-5": {"thinking": {"type": "between_tools"}},
          "claude-opus-5-5": {"thinking": {"type": "adaptive"}, "output_config": {"effort": "low"}}}
+LOW = {"thinking": {"type": "adaptive"}, "output_config": {"effort": "low"}}
+# Arm names: the three base ids above, plus the low-effort arms Elise asked for on 2026-10-22 00:54 CT.
+ARMS = {"haiku-low": "claude-haiku-5-5", "sonnet-low": "claude-sonnet-5-5"}
+THINK_ARM = {"haiku-low": LOW, "sonnet-low": LOW}
 PRICE = {"claude-haiku-5-5": (None, None), "claude-sonnet-5-5": (3.0, 15.0), "claude-opus-5-5": (4.0, 20.0)}  # list $ per MTok; batch is half
 def call(method, path, body=None):
     req = urllib.request.Request("https://api.anthropic.com" + path, method=method, data=json.dumps(body).encode() if body else None,
@@ -36,16 +40,16 @@ def t2_items():
 def main():
     cmd = sys.argv[1]
     if cmd == "submit":
-        model = sys.argv[2]; items = t1_items() + t2_items(); idmap = {}; reqs = []
+        arm = sys.argv[2]; model = ARMS.get(arm, arm); think = THINK_ARM.get(arm) or THINK[model]; items = t1_items() + t2_items(); idmap = {}; reqs = []
         for k, rub, t in items:
             c = f"r{len(idmap):05d}"; idmap[c] = k
-            reqs.append({"custom_id": c, "params": {"model": model, "max_tokens": 1024, **THINK[model],
+            reqs.append({"custom_id": c, "params": {"model": model, "max_tokens": 1024, **think,
                          "messages": [{"role": "user", "content": rub + t}]}})
         res = json.loads(call("POST", "/v1/messages/batches", {"requests": reqs}))
-        Path(f"review/tiers-idmap-{res['id']}.json").write_text(json.dumps(idmap)); print(res["id"], res.get("processing_status"), len(reqs), model)
+        Path(f"review/tiers-idmap-{res['id']}.json").write_text(json.dumps(idmap)); print(res["id"], res.get("processing_status"), len(reqs), arm)
     elif cmd == "status": r = json.loads(call("GET", f"/v1/messages/batches/{sys.argv[2]}")); print(r["processing_status"], r["request_counts"])
     elif cmd == "score":
-        bid, model = sys.argv[2], sys.argv[3]; idmap = json.loads(Path(f"review/tiers-idmap-{bid}.json").read_text())
+        bid, arm = sys.argv[2], sys.argv[3]; model = ARMS.get(arm, arm); idmap = json.loads(Path(f"review/tiers-idmap-{bid}.json").read_text())
         o_ref = json.loads(Path(f"review/origin-labels-{ORIGIN_ID}.json").read_text()); b_ref = json.loads(Path(f"review/blind-reader-labels-{BROKEN_ID}.json").read_text())
         got = {}; tin = tout = 0
         for l in call("GET", f"/v1/messages/batches/{bid}/results").splitlines():
@@ -64,7 +68,7 @@ def main():
         ag2 = sum(1 for k, v in a2 if v is not None and v == b_ref.get(k)); n2 = len(a2)
         cal1 = sum(1 for k, v in c1 if v == k.split("|")[2:4]); cal2 = sum(1 for k, v in c2 if v == (k.split("|")[1] == "broken"))
         un1 = sum(v is None for k, v in a1); un2 = sum(v is None for k, v in a2)
-        print(f"{model}: T1 agree {ag1}/{n1} ({ag1/n1:.1%}), unparsed {un1}; cal {cal1}/{len(c1)} | T2 agree {ag2}/{n2} ({ag2/n2:.1%}), unparsed {un2}; cal {cal2}/{len(c2)}")
+        print(f"{arm}: T1 agree {ag1}/{n1} ({ag1/n1:.1%}), unparsed {un1}; cal {cal1}/{len(c1)} | T2 agree {ag2}/{n2} ({ag2/n2:.1%}), unparsed {un2}; cal {cal2}/{len(c2)}")
         d1 = collections.Counter(); 
         for k, v in a1:
             r = o_ref.get(k)
