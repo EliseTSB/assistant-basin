@@ -1700,17 +1700,17 @@ found kiki/bouba work on CLIP, vision-language models and speech models, none ac
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 49.1 | Claude: W alone stays at or under 5% wizard-topic answers (Part 38 replicates under this harness). | | |
-| 49.2 | Claude: at least one partner alone puts a wizard-topic word in more than 5% of answers without more broken answers than no clamp. | | |
-| 49.3 | Claude: no partner P with W exceeds the same P alone by 15 points or more (no Sauers-style boost at k = 8 in this pilot). | | |
-| 49.4 | Claude: every random-unit-with-W pair stays at or under 5%. | | |
+| 49.1 | Claude: W alone stays at or under 5% wizard-topic answers (Part 38 replicates under this harness). | FAILED (on the letter) | W 5/64 (7.8%) against no clamp 3/64 (4.7%); the 5% bar assumed Part 38's near-zero baseline, and the no-clamp arm here is itself at 4.7%. |
+| 49.2 | Claude: at least one partner alone puts a wizard-topic word in more than 5% of answers without more broken answers than no clamp. | held on the letter, not above noise; broken-answer half PENDING (blind reader not run) | P3 6/64 (9.4%), P1 and P4 5/64 (7.8%) against no clamp 3/64; every arm sits within 3-7/64. |
+| 49.3 | Claude: no partner P with W exceeds the same P alone by 15 points or more (no Sauers-style boost at k = 8 in this pilot). | HELD | largest P+W minus P: P5 6/64 vs 3/64 (+4.7 points); no boost. |
+| 49.4 | Claude: every random-unit-with-W pair stays at or under 5%. | FAILED | R1+W 7/64, R2+W 6/64, R3+W 7/64 (9-11%); the random pairs sit with everything else, so all open-prompt arms are one noisy band around 5-10%. |
 
 Amendment to Part 49 (2026-10-21 19:07 CT, before any code was run; Elise: negative pushes standard): negative arms on wizard-topic prompts, PART49-DESIGN.md amendment 1.
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 49.5 | Claude: W at -8 alone lowers the wizard-topic rate on wizard prompts by at most 10 points from no clamp (a writer that cannot push the topic up cannot take it away either). | | |
-| 49.6 | Claude: at least one partner at -8 lowers it by 20 points or more without more broken answers than no clamp. | | |
+| 49.5 | Claude: W at -8 alone lowers the wizard-topic rate on wizard prompts by at most 10 points from no clamp (a writer that cannot push the topic up cannot take it away either). | HELD (at a ceiling) | W at -8: 31/32 against no clamp 31/32. The prompts name the wizard, so the topic-word measure is at ceiling on every negative arm; my amendment-1 design flaw. |
+| 49.6 | Claude: at least one partner at -8 lowers it by 20 points or more without more broken answers than no clamp. | FAILED (same ceiling) | largest drop P3 at -8: 29/32 against 31/32. |
 
 Unpredicted in Part 48d (noted at scoring, 2026-10-21): at step 1000 the spelled-out AUC is strongly REVERSED for 160m
 (0.070) and 410m (0.012), both p 0.0001, while 70m reads 0.965. By step 8000 both are above 0.88. At step 1000 these
@@ -1721,3 +1721,11 @@ spelled-out strings, not an early inverted sound-shape mapping; not tested. Pyth
 Amendment 2 to Part 49 (2026-10-21 19:21 CT, before any push): partner selection rule changed (PART49-DESIGN.md amendment 2); partners L22:1610, L26:3130, L24:4151, L26:1877, L22:2295. Predictions 49.1 to 49.6 unchanged.
 
 Amendment 3 to Part 49 (2026-10-21 19:25 CT, analysis only, before any result was read; the Arc job started 19:24): interactions are also reported on two scales and per prompt (EPISTASIS-FRAMING.md, "Applied to Part 49"). Predictions unchanged.
+
+Part 49 reading (2026-10-21, after scoring): no booster. Every clamp changed most answers (no_clamp shares 3 to 22 of
+64 open answers with the clamped arms, and 0 to 1 of 32 on the negative arms), so the pushes were live, but the topic
+rate did not move outside one band of 3-7 of 64 on open prompts. Exploratory, not pre-registered: on the negative
+arms, magic words other than "wizard" per 1,000 words fall from 47.7 (no clamp) to 38.5 (W at -8), 20.1 (P1 = L22:1610
+at -8) and 12.8 (both). On ratios that is 0.81 x 0.42 = 0.34 predicted against 0.27 seen, close to multiplicative
+(roughly additive on log scale). P1 at -8 is a candidate wizard-content unit for a pre-registered follow-up on fresh
+prompts; nothing here is a finding yet. Broken-answer rates are pending the blind reader.

@@ -1,0 +1,211 @@
+natural-max passage 1/36
+natural-max passage 2/36
+natural-max passage 3/36
+natural-max passage 4/36
+natural-max passage 5/36
+natural-max passage 6/36
+natural-max passage 7/36
+natural-max passage 8/36
+natural-max passage 9/36
+natural-max passage 10/36
+natural-max passage 11/36
+natural-max passage 12/36
+natural-max passage 13/36
+natural-max passage 14/36
+natural-max passage 15/36
+natural-max passage 16/36
+natural-max passage 17/36
+natural-max passage 18/36
+natural-max passage 19/36
+natural-max passage 20/36
+natural-max passage 21/36
+natural-max passage 22/36
+natural-max passage 23/36
+natural-max passage 24/36
+natural-max passage 25/36
+natural-max passage 26/36
+natural-max passage 27/36
+natural-max passage 28/36
+natural-max passage 29/36
+natural-max passage 30/36
+natural-max passage 31/36
+natural-max passage 32/36
+natural-max passage 33/36
+natural-max passage 34/36
+natural-max passage 35/36
+natural-max passage 36/36
+open_prompt arm no_clamp: generated 64/64 answers in 28.42s (batch=16)
+open_prompt arm W: generated 64/64 answers in 37.05s (batch=16)
+open_prompt arm P1: generated 64/64 answers in 34.19s (batch=16)
+open_prompt arm P2: generated 64/64 answers in 33.89s (batch=16)
+open_prompt arm P3: generated 64/64 answers in 37.23s (batch=16)
+open_prompt arm P4: generated 64/64 answers in 34.65s (batch=16)
+open_prompt arm P5: generated 64/64 answers in 32.97s (batch=16)
+open_prompt arm P1+W: generated 64/64 answers in 41.34s (batch=16)
+open_prompt arm P2+W: generated 64/64 answers in 45.54s (batch=16)
+open_prompt arm P3+W: generated 64/64 answers in 42.62s (batch=16)
+open_prompt arm P4+W: generated 64/64 answers in 42.69s (batch=16)
+open_prompt arm P5+W: generated 64/64 answers in 44.38s (batch=16)
+open_prompt arm R1+W: generated 64/64 answers in 41.02s (batch=16)
+open_prompt arm R2+W: generated 64/64 answers in 43.14s (batch=16)
+open_prompt arm R3+W: generated 64/64 answers in 43.21s (batch=16)
+negative_wizard_prompt arm no_clamp: generated 32/32 answers in 14.01s (batch=16)
+negative_wizard_prompt arm W: generated 32/32 answers in 17.33s (batch=16)
+negative_wizard_prompt arm P1: generated 32/32 answers in 16.89s (batch=16)
+negative_wizard_prompt arm P2: generated 32/32 answers in 16.97s (batch=16)
+negative_wizard_prompt arm P3: generated 32/32 answers in 71.82s (batch=16)
+negative_wizard_prompt arm P4: generated 32/32 answers in 17.93s (batch=16)
+negative_wizard_prompt arm P5: generated 32/32 answers in 17.01s (batch=16)
+negative_wizard_prompt arm P1+W: generated 32/32 answers in 23.52s (batch=16)
+negative_wizard_prompt arm P2+W: generated 32/32 answers in 24.86s (batch=16)
+negative_wizard_prompt arm P3+W: generated 32/32 answers in 22.14s (batch=16)
+negative_wizard_prompt arm P4+W: generated 32/32 answers in 21.86s (batch=16)
+negative_wizard_prompt arm P5+W: generated 32/32 answers in 21.78s (batch=16)
+{
+  "open_prompt_jsonl": "results\\part49-xpu\\push.jsonl",
+  "negative_prompt_jsonl": "results\\part49-xpu\\negative-push.jsonl",
+  "scores": "results\\part49-xpu\\push-scores.json",
+  "open_answers_per_arm": 64,
+  "open_arm_count": 15,
+  "negative_answers_per_arm": 32,
+  "negative_arm_count": 12,
+  "open_prompt_timings": {
+    "no_clamp": {
+      "seconds": 28.41872449999937,
+      "generated": 64,
+      "batch_size": 16
+    },
+    "W": {
+      "seconds": 37.051459900001646,
+      "generated": 64,
+      "batch_size": 16
+    },
+    "P1": {
+      "seconds": 34.193258200000855,
+      "generated": 64,
+      "batch_size": 16
+    },
+    "P2": {
+      "seconds": 33.89299320000282,
+      "generated": 64,
+      "batch_size": 16
+    },
+    "P3": {
+      "seconds": 37.22782839999854,
+      "generated": 64,
+      "batch_size": 16
+    },
+    "P4": {
+      "seconds": 34.650375799996255,
+      "generated": 64,
+      "batch_size": 16
+    },
+    "P5": {
+      "seconds": 32.96537610000087,
+      "generated": 64,
+      "batch_size": 16
+    },
+    "P1+W": {
+      "seconds": 41.33878520000144,
+      "generated": 64,
+      "batch_size": 16
+    },
+    "P2+W": {
+      "seconds": 45.54358279999724,
+      "generated": 64,
+      "batch_size": 16
+    },
+    "P3+W": {
+      "seconds": 42.617866000000504,
+      "generated": 64,
+      "batch_size": 16
+    },
+    "P4+W": {
+      "seconds": 42.693073299997195,
+      "generated": 64,
+      "batch_size": 16
+    },
+    "P5+W": {
+      "seconds": 44.38340710000193,
+      "generated": 64,
+      "batch_size": 16
+    },
+    "R1+W": {
+      "seconds": 41.02169699999649,
+      "generated": 64,
+      "batch_size": 16
+    },
+    "R2+W": {
+      "seconds": 43.139174700001604,
+      "generated": 64,
+      "batch_size": 16
+    },
+    "R3+W": {
+      "seconds": 43.21113890000561,
+      "generated": 64,
+      "batch_size": 16
+    }
+  },
+  "negative_prompt_timings": {
+    "no_clamp": {
+      "seconds": 14.008393899996008,
+      "generated": 32,
+      "batch_size": 16
+    },
+    "W": {
+      "seconds": 17.330913399993733,
+      "generated": 32,
+      "batch_size": 16
+    },
+    "P1": {
+      "seconds": 16.88719310000306,
+      "generated": 32,
+      "batch_size": 16
+    },
+    "P2": {
+      "seconds": 16.97041299999546,
+      "generated": 32,
+      "batch_size": 16
+    },
+    "P3": {
+      "seconds": 71.8180840999994,
+      "generated": 32,
+      "batch_size": 16
+    },
+    "P4": {
+      "seconds": 17.932419899996603,
+      "generated": 32,
+      "batch_size": 16
+    },
+    "P5": {
+      "seconds": 17.01253340000403,
+      "generated": 32,
+      "batch_size": 16
+    },
+    "P1+W": {
+      "seconds": 23.518629899997904,
+      "generated": 32,
+      "batch_size": 16
+    },
+    "P2+W": {
+      "seconds": 24.862540599999193,
+      "generated": 32,
+      "batch_size": 16
+    },
+    "P3+W": {
+      "seconds": 22.14038150000124,
+      "generated": 32,
+      "batch_size": 16
+    },
+    "P4+W": {
+      "seconds": 21.85922680000658,
+      "generated": 32,
+      "batch_size": 16
+    },
+    "P5+W": {
+      "seconds": 21.77696670000296,
+      "generated": 32,
+      "batch_size": 16
+    }
+  }
+}

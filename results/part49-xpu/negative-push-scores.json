@@ -1,0 +1,602 @@
+{
+  "arm_count": 12,
+  "arms": [
+    {
+      "arm": "no_clamp",
+      "broken": {
+        "hits": 0,
+        "n": 0,
+        "rate": null
+      },
+      "broken_rate": null,
+      "clamps": [],
+      "topic": {
+        "hits": 31,
+        "n": 32,
+        "rate": 0.96875,
+        "wilson95": [
+          0.8425573617998744,
+          0.9944621398359969
+        ]
+      },
+      "topic_rate": 0.96875,
+      "wilson95": [
+        0.8425573617998744,
+        0.9944621398359969
+      ]
+    },
+    {
+      "arm": "W",
+      "broken": {
+        "hits": 0,
+        "n": 0,
+        "rate": null
+      },
+      "broken_rate": null,
+      "clamps": [
+        {
+          "id": "W",
+          "k": -8,
+          "layer": 19,
+          "level": -33.5,
+          "natural_max": 4.1875,
+          "unit": 4826
+        }
+      ],
+      "topic": {
+        "hits": 31,
+        "n": 32,
+        "rate": 0.96875,
+        "wilson95": [
+          0.8425573617998744,
+          0.9944621398359969
+        ]
+      },
+      "topic_rate": 0.96875,
+      "wilson95": [
+        0.8425573617998744,
+        0.9944621398359969
+      ]
+    },
+    {
+      "arm": "P1",
+      "broken": {
+        "hits": 0,
+        "n": 0,
+        "rate": null
+      },
+      "broken_rate": null,
+      "clamps": [
+        {
+          "id": "P1",
+          "k": -8,
+          "layer": 22,
+          "level": -42.5,
+          "median_control_role": 10.1875,
+          "median_wizard": 114.5,
+          "natural_max": 5.3125,
+          "selection_rank": 1,
+          "selection_score": 104.3125,
+          "unit": 1610,
+          "wizard_over_control_ratio": 11.239263534545898
+        }
+      ],
+      "topic": {
+        "hits": 31,
+        "n": 32,
+        "rate": 0.96875,
+        "wilson95": [
+          0.8425573617998744,
+          0.9944621398359969
+        ]
+      },
+      "topic_rate": 0.96875,
+      "wilson95": [
+        0.8425573617998744,
+        0.9944621398359969
+      ]
+    },
+    {
+      "arm": "P2",
+      "broken": {
+        "hits": 0,
+        "n": 0,
+        "rate": null
+      },
+      "broken_rate": null,
+      "clamps": [
+        {
+          "id": "P2",
+          "k": -8,
+          "layer": 26,
+          "level": -108.0,
+          "median_control_role": 0.07958984375,
+          "median_wizard": 35.375,
+          "natural_max": 13.5,
+          "selection_rank": 2,
+          "selection_score": 35.29541015625,
+          "unit": 3130,
+          "wizard_over_control_ratio": 444.46624755859375
+        }
+      ],
+      "topic": {
+        "hits": 31,
+        "n": 32,
+        "rate": 0.96875,
+        "wilson95": [
+          0.8425573617998744,
+          0.9944621398359969
+        ]
+      },
+      "topic_rate": 0.96875,
+      "wilson95": [
+        0.8425573617998744,
+        0.9944621398359969
+      ]
+    },
+    {
+      "arm": "P3",
+      "broken": {
+        "hits": 0,
+        "n": 0,
+        "rate": null
+      },
+      "broken_rate": null,
+      "clamps": [
+        {
+          "id": "P3",
+          "k": -8,
+          "layer": 24,
+          "level": -84.0,
+          "median_control_role": -0.0380859375,
+          "median_wizard": 35.25,
+          "natural_max": 10.5,
+          "selection_rank": 3,
+          "selection_score": 35.2880859375,
+          "unit": 4151,
+          "wizard_over_control_ratio": -925.5384521484375
+        }
+      ],
+      "topic": {
+        "hits": 29,
+        "n": 32,
+        "rate": 0.90625,
+        "wilson95": [
+          0.7578184527161212,
+          0.9675984487016337
+        ]
+      },
+      "topic_rate": 0.90625,
+      "wilson95": [
+        0.7578184527161212,
+        0.9675984487016337
+      ]
+    },
+    {
+      "arm": "P4",
+      "broken": {
+        "hits": 0,
+        "n": 0,
+        "rate": null
+      },
+      "broken_rate": null,
+      "clamps": [
+        {
+          "id": "P4",
+          "k": -8,
+          "layer": 26,
+          "level": -352.0,
+          "median_control_role": -3.0,
+          "median_wizard": 32.1875,
+          "natural_max": 44.0,
+          "selection_rank": 4,
+          "selection_score": 35.1875,
+          "unit": 1877,
+          "wizard_over_control_ratio": -10.729166984558105
+        }
+      ],
+      "topic": {
+        "hits": 30,
+        "n": 32,
+        "rate": 0.9375,
+        "wilson95": [
+          0.7985287685584542,
+          0.982689432968359
+        ]
+      },
+      "topic_rate": 0.9375,
+      "wilson95": [
+        0.7985287685584542,
+        0.982689432968359
+      ]
+    },
+    {
+      "arm": "P5",
+      "broken": {
+        "hits": 0,
+        "n": 0,
+        "rate": null
+      },
+      "broken_rate": null,
+      "clamps": [
+        {
+          "id": "P5",
+          "k": -8,
+          "layer": 22,
+          "level": -44.0,
+          "median_control_role": 0.3896484375,
+          "median_wizard": 33.25,
+          "natural_max": 5.5,
+          "selection_rank": 5,
+          "selection_score": 32.8603515625,
+          "unit": 2295,
+          "wizard_over_control_ratio": 85.33333587646484
+        }
+      ],
+      "topic": {
+        "hits": 31,
+        "n": 32,
+        "rate": 0.96875,
+        "wilson95": [
+          0.8425573617998744,
+          0.9944621398359969
+        ]
+      },
+      "topic_rate": 0.96875,
+      "wilson95": [
+        0.8425573617998744,
+        0.9944621398359969
+      ]
+    },
+    {
+      "arm": "P1+W",
+      "broken": {
+        "hits": 0,
+        "n": 0,
+        "rate": null
+      },
+      "broken_rate": null,
+      "clamps": [
+        {
+          "id": "P1",
+          "k": -8,
+          "layer": 22,
+          "level": -42.5,
+          "median_control_role": 10.1875,
+          "median_wizard": 114.5,
+          "natural_max": 5.3125,
+          "selection_rank": 1,
+          "selection_score": 104.3125,
+          "unit": 1610,
+          "wizard_over_control_ratio": 11.239263534545898
+        },
+        {
+          "id": "W",
+          "k": -8,
+          "layer": 19,
+          "level": -33.5,
+          "natural_max": 4.1875,
+          "unit": 4826
+        }
+      ],
+      "topic": {
+        "hits": 31,
+        "n": 32,
+        "rate": 0.96875,
+        "wilson95": [
+          0.8425573617998744,
+          0.9944621398359969
+        ]
+      },
+      "topic_rate": 0.96875,
+      "wilson95": [
+        0.8425573617998744,
+        0.9944621398359969
+      ]
+    },
+    {
+      "arm": "P2+W",
+      "broken": {
+        "hits": 0,
+        "n": 0,
+        "rate": null
+      },
+      "broken_rate": null,
+      "clamps": [
+        {
+          "id": "P2",
+          "k": -8,
+          "layer": 26,
+          "level": -108.0,
+          "median_control_role": 0.07958984375,
+          "median_wizard": 35.375,
+          "natural_max": 13.5,
+          "selection_rank": 2,
+          "selection_score": 35.29541015625,
+          "unit": 3130,
+          "wizard_over_control_ratio": 444.46624755859375
+        },
+        {
+          "id": "W",
+          "k": -8,
+          "layer": 19,
+          "level": -33.5,
+          "natural_max": 4.1875,
+          "unit": 4826
+        }
+      ],
+      "topic": {
+        "hits": 30,
+        "n": 32,
+        "rate": 0.9375,
+        "wilson95": [
+          0.7985287685584542,
+          0.982689432968359
+        ]
+      },
+      "topic_rate": 0.9375,
+      "wilson95": [
+        0.7985287685584542,
+        0.982689432968359
+      ]
+    },
+    {
+      "arm": "P3+W",
+      "broken": {
+        "hits": 0,
+        "n": 0,
+        "rate": null
+      },
+      "broken_rate": null,
+      "clamps": [
+        {
+          "id": "P3",
+          "k": -8,
+          "layer": 24,
+          "level": -84.0,
+          "median_control_role": -0.0380859375,
+          "median_wizard": 35.25,
+          "natural_max": 10.5,
+          "selection_rank": 3,
+          "selection_score": 35.2880859375,
+          "unit": 4151,
+          "wizard_over_control_ratio": -925.5384521484375
+        },
+        {
+          "id": "W",
+          "k": -8,
+          "layer": 19,
+          "level": -33.5,
+          "natural_max": 4.1875,
+          "unit": 4826
+        }
+      ],
+      "topic": {
+        "hits": 30,
+        "n": 32,
+        "rate": 0.9375,
+        "wilson95": [
+          0.7985287685584542,
+          0.982689432968359
+        ]
+      },
+      "topic_rate": 0.9375,
+      "wilson95": [
+        0.7985287685584542,
+        0.982689432968359
+      ]
+    },
+    {
+      "arm": "P4+W",
+      "broken": {
+        "hits": 0,
+        "n": 0,
+        "rate": null
+      },
+      "broken_rate": null,
+      "clamps": [
+        {
+          "id": "P4",
+          "k": -8,
+          "layer": 26,
+          "level": -352.0,
+          "median_control_role": -3.0,
+          "median_wizard": 32.1875,
+          "natural_max": 44.0,
+          "selection_rank": 4,
+          "selection_score": 35.1875,
+          "unit": 1877,
+          "wizard_over_control_ratio": -10.729166984558105
+        },
+        {
+          "id": "W",
+          "k": -8,
+          "layer": 19,
+          "level": -33.5,
+          "natural_max": 4.1875,
+          "unit": 4826
+        }
+      ],
+      "topic": {
+        "hits": 29,
+        "n": 32,
+        "rate": 0.90625,
+        "wilson95": [
+          0.7578184527161212,
+          0.9675984487016337
+        ]
+      },
+      "topic_rate": 0.90625,
+      "wilson95": [
+        0.7578184527161212,
+        0.9675984487016337
+      ]
+    },
+    {
+      "arm": "P5+W",
+      "broken": {
+        "hits": 0,
+        "n": 0,
+        "rate": null
+      },
+      "broken_rate": null,
+      "clamps": [
+        {
+          "id": "P5",
+          "k": -8,
+          "layer": 22,
+          "level": -44.0,
+          "median_control_role": 0.3896484375,
+          "median_wizard": 33.25,
+          "natural_max": 5.5,
+          "selection_rank": 5,
+          "selection_score": 32.8603515625,
+          "unit": 2295,
+          "wizard_over_control_ratio": 85.33333587646484
+        },
+        {
+          "id": "W",
+          "k": -8,
+          "layer": 19,
+          "level": -33.5,
+          "natural_max": 4.1875,
+          "unit": 4826
+        }
+      ],
+      "topic": {
+        "hits": 32,
+        "n": 32,
+        "rate": 1.0,
+        "wilson95": [
+          0.8928208017449293,
+          1.0
+        ]
+      },
+      "topic_rate": 1.0,
+      "wilson95": [
+        0.8928208017449293,
+        1.0
+      ]
+    }
+  ],
+  "assay": "negative_wizard_prompt",
+  "batch_size": 16,
+  "k": -8,
+  "natural_max_path": "results\\part49-xpu\\natural-max-summary.json",
+  "partner_boosts": [
+    {
+      "delta_rate": 0.0,
+      "layer": 22,
+      "partner": "P1",
+      "partner_alone_rate": 0.96875,
+      "partner_plus_wizard_rate": 0.96875,
+      "unit": 1610
+    },
+    {
+      "delta_rate": -0.03125,
+      "layer": 26,
+      "partner": "P2",
+      "partner_alone_rate": 0.96875,
+      "partner_plus_wizard_rate": 0.9375,
+      "unit": 3130
+    },
+    {
+      "delta_rate": 0.03125,
+      "layer": 24,
+      "partner": "P3",
+      "partner_alone_rate": 0.90625,
+      "partner_plus_wizard_rate": 0.9375,
+      "unit": 4151
+    },
+    {
+      "delta_rate": -0.03125,
+      "layer": 26,
+      "partner": "P4",
+      "partner_alone_rate": 0.9375,
+      "partner_plus_wizard_rate": 0.90625,
+      "unit": 1877
+    },
+    {
+      "delta_rate": 0.03125,
+      "layer": 22,
+      "partner": "P5",
+      "partner_alone_rate": 0.96875,
+      "partner_plus_wizard_rate": 1.0,
+      "unit": 2295
+    }
+  ],
+  "result_count": 384,
+  "schema_version": 1,
+  "summary_type": "part49_partner_push",
+  "timings": {
+    "P1": {
+      "batch_size": 16,
+      "generated": 32,
+      "seconds": 16.88719310000306
+    },
+    "P1+W": {
+      "batch_size": 16,
+      "generated": 32,
+      "seconds": 23.518629899997904
+    },
+    "P2": {
+      "batch_size": 16,
+      "generated": 32,
+      "seconds": 16.97041299999546
+    },
+    "P2+W": {
+      "batch_size": 16,
+      "generated": 32,
+      "seconds": 24.862540599999193
+    },
+    "P3": {
+      "batch_size": 16,
+      "generated": 32,
+      "seconds": 71.8180840999994
+    },
+    "P3+W": {
+      "batch_size": 16,
+      "generated": 32,
+      "seconds": 22.14038150000124
+    },
+    "P4": {
+      "batch_size": 16,
+      "generated": 32,
+      "seconds": 17.932419899996603
+    },
+    "P4+W": {
+      "batch_size": 16,
+      "generated": 32,
+      "seconds": 21.85922680000658
+    },
+    "P5": {
+      "batch_size": 16,
+      "generated": 32,
+      "seconds": 17.01253340000403
+    },
+    "P5+W": {
+      "batch_size": 16,
+      "generated": 32,
+      "seconds": 21.77696670000296
+    },
+    "W": {
+      "batch_size": 16,
+      "generated": 32,
+      "seconds": 17.330913399993733
+    },
+    "no_clamp": {
+      "batch_size": 16,
+      "generated": 32,
+      "seconds": 14.008393899996008
+    }
+  },
+  "topic_terms": [
+    "wizard",
+    "spell",
+    "magic",
+    "wand",
+    "sorcer",
+    "enchant",
+    "potion"
+  ]
+}

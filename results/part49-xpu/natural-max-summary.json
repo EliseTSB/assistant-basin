@@ -1,0 +1,31 @@
+{
+  "activation_source": "Part 38 Part 35 neutral frames, max over content tokens",
+  "coordinate_keys": [
+    "19:4826",
+    "22:1610",
+    "22:2295",
+    "22:3977",
+    "22:5964",
+    "24:4151",
+    "26:1877",
+    "26:2492",
+    "26:3130"
+  ],
+  "model": "Qwen/Qwen3-1.7B",
+  "part35_data_sha256": "774fbbdabc9e97977016e0244478c51292d5546d6c3f002f6ced7f5334ceee98",
+  "passage_count": 36,
+  "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+  "schema_version": 1,
+  "summary_type": "part49_natural_max",
+  "values": {
+    "19:4826": 4.1875,
+    "22:1610": 5.3125,
+    "22:2295": 5.5,
+    "22:3977": 20.75,
+    "22:5964": 2.78125,
+    "24:4151": 10.5,
+    "26:1877": 44.0,
+    "26:2492": 18.75,
+    "26:3130": 13.5
+  }
+}
