@@ -1777,3 +1777,13 @@ prompts; nothing here is a finding yet. Broken-answer rates are pending the blin
 | 53e | Claude: at w = 0, M at +32 or -32 changes W's mean activity by under 10% either way. | FAILED narrowly | +3.8% at +32; -17.6% at -32 (interval 0.65 to 1.03 includes no change). |
 | 53f | Claude: no off-axis cell's multiplicative ratio falls outside 0.7 to 1.4. | FAILED | 5 of 16 cells inside; wide intervals. |
 | 53g | Claude: broken answers are at most 15% in every cell with abs(k_W) <= 8 and abs(k_M) <= 16. | held | Blind reader (Opus 5.5 batch msgbatch_01Aw4XHmAgvTav1j2gcE39bg, 20/20 calibration): broken share is 0 to 3% in all 25 wizard cells (maximum 1 of 32), so every magic-word change in the grid is on fluent text. |
+
+| 55a | Claude: T2: Haiku agrees with the Opus reference on at least 95% of 1,792 answers and Sonnet on at least 97%. | held | Haiku 99.6%, Sonnet 98.1% (33 false BROKEN). |
+| 55b | Claude: T1: Haiku agrees on at least 85% of 432 answers (both labels) and Sonnet on at least 92%. | held | Haiku 87.0%, Sonnet 92.6%. |
+| 55d | Claude: at least 60% of Haiku's T1 disagreements involve NEITHER on one side. | held | 35 of 56 (62.5%); 21 are the BROKEN flag only. |
+| 55g | Claude: low effort changes agreement with the reference by at most 2 points against the same model with thinking off. | FAILED narrowly | Haiku T1 +3.7; others +0.2, +0.2, +1.7. |
+| 55h | Claude: haiku-v2 label agreement with haiku v1 is at least 97% on T2 and at least 92% on T1. | FAILED | T2 99.4%, T1 88.2%. |
+| 55i | Claude: cache reads are at least 50% of the batch's input tokens. | held | 86.6%. |
+| 55j | Claude: a NOTE is on at least 80% of BROKEN items and at most 25% of OK items. | FAILED | 100% of BROKEN; 26% (T1) and 49% (T2) of OK. |
+| 55k | Claude: of 30 sampled BROKEN notes at least 80% name a breakage the text supports. | held | 28 of 30. |
+| 55l | Claude: haiku-v2 agreement with the Opus reference is no more than 2 points below haiku v1. | held | 87.3 vs 87.0 (T1), 99.6 vs 99.6 (T2). |
