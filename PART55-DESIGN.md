@@ -58,10 +58,10 @@ Where they disagree: on T1 most of Haiku's 56 misses are the BROKEN flag (Opus c
 |---|---|
 | 55a | HELD. T2 agreement Haiku 99.6% (needed 95), Sonnet 98.1% (needed 97). |
 | 55b | HELD. T1 agreement Haiku 87.0% (needed 85), Sonnet 92.6% (needed 92). |
-| 55c | PENDING the Opus rerun. Haiku and Sonnet: 22 of 22 and 20 of 20 both. |
+| 55c | HELD. Haiku, Sonnet and the Opus rerun all get 22 of 22 (T1) and 20 of 20 (T2) calibration texts right. |
 | 55d | HELD, thinly. 35 of 56 Haiku T1 disagreements (62.5%) have NEITHER on one side, but 21 of them are NEITHER on both sides, the BROKEN flag only. |
-| 55e | PENDING the Opus rerun. |
-| 55f | PENDING Haiku's price: Sonnet costs about $1.27 for the same 774K input tokens at batch; Elise's reading of her balance is about 1.8B uncached Haiku input tokens for $89, i.e. about $0.05 per million at batch, which would make Haiku far below a fifth of Opus; to be confirmed from the Console. |
+| 55e | HELD. The Opus rerun (thinking disabled) agrees with its own earlier labels on 420 of 432 T1 answers (97.2%, 1 unparsed) and 1,792 of 1,792 T2 answers (100%). The T1 margin over the 97% bar is two items. |
+| 55f | HELD. Costs of the same 2,266-item run at batch prices: Haiku about $0.042 (Elise's Haiku prices), Sonnet about $1.27, Opus about $1.93 (778,607 input and 37,382 output tokens at 4.0/20.0 per million). Ordering Haiku < Sonnet < Opus; Haiku is about 2% of Opus, under the fifth predicted. |
 | 55g | FAILED narrowly. Low effort changes Haiku's T1 agreement by +3.7 points (87.0 to 90.7); the other three changes are +0.2, +0.2 and +1.7. |
 | 55h | FAILED on T1: haiku-v2 labels agree with haiku (v1) on 88.2% of T1 (needed 92) and 99.4% of T2 (needed 97). The longer instructions plus the taxonomy move the origin call and mostly the BROKEN flag. |
 | 55i | HELD. Cache reads are 86.6% of input tokens (1,783,170 of 2,057,471), 1,706 tokens written. |

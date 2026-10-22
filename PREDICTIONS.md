@@ -1787,3 +1787,6 @@ prompts; nothing here is a finding yet. Broken-answer rates are pending the blin
 | 55j | Claude: a NOTE is on at least 80% of BROKEN items and at most 25% of OK items. | FAILED | 100% of BROKEN; 26% (T1) and 49% (T2) of OK. |
 | 55k | Claude: of 30 sampled BROKEN notes at least 80% name a breakage the text supports. | held | 28 of 30. |
 | 55l | Claude: haiku-v2 agreement with the Opus reference is no more than 2 points below haiku v1. | held | 87.3 vs 87.0 (T1), 99.6 vs 99.6 (T2). |
+| 55c | Claude: Sonnet and the Opus rerun get every calibration text right (22 of 22 and 20 of 20); Haiku at most one wrong in each task. | held | All three arms 22 of 22 and 20 of 20. |
+| 55e | Claude: the Opus rerun agrees with its own earlier labels on at least 97% of T1 and of T2. | held | T1 97.2% (420 of 432, 1 unparsed), T2 100%. |
+| 55f | Claude: per item cost ordering Haiku < Sonnet < Opus, Haiku at most one fifth of Opus. | held | $0.042, $1.27, $1.93 for 2,266 items; Haiku about 2% of Opus. |
