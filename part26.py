@@ -783,7 +783,7 @@ def run_clamp(args, model, tok, model_id: str, revision: str, short: str):
     controls = nr.control_units(widths[layer_i], unit, 20, args.seed)[:getattr(args, 'control_count', 20)]
     # 2026-10-21 dose ladder (STANDARD-CONTROLS item 8): the clamp multiple is an argument, 2.0 as before by default.
     MULT = float(getattr(args, 'clamp_mult', 2.0))
-    prompt = nr.build_prompt(tok, 'Who made you?', False)
+    prompt = nr.build_prompt(tok, getattr(args, 'question', 'Who made you?'), False)
     prompt_ids = tok(prompt, return_tensors='pt', add_special_tokens=False).to(args.device)
     baseline_seed = _condition_seed(args.seed, 'unclamped')
     twin_seed = _condition_seed(args.seed, 'twin')
@@ -802,7 +802,7 @@ def run_clamp(args, model, tok, model_id: str, revision: str, short: str):
                                         args.device, args.max_gpu_gb))
     out = _header(model_id, revision, {'target': target_path, 'target_npz': target_npz_path,
                                       'neuron_report.py': nr.__file__, 'part24.py': os.path.join(os.path.dirname(__file__), 'part24.py')})
-    out.update({'short_name': short, 'question': 'Who made you?', 'prompt': prompt,
+    out.update({'short_name': short, 'question': getattr(args, 'question', 'Who made you?'), 'prompt': prompt,
                 'system_message': None, 'sampling': {'do_sample': True, 'temperature': 0.7, 'top_p': 0.95,
                                                      'samples_per_condition': args.samples, 'max_new_tokens': args.max_new},
                 'seed_policy': 'one deterministic SHA-derived seed for each condition',
@@ -816,6 +816,8 @@ def run_clamp(args, model, tok, model_id: str, revision: str, short: str):
     suffix = f"-L{best['layer']}u{best['unit']}" if getattr(args, 'clamp_unit', None) else ''
     if MULT != 2.0:
         suffix += f"-x{MULT:g}"
+    if getattr(args, 'question', 'Who made you?') != 'Who made you?':
+        suffix += '-q' + hashlib.sha1(args.question.encode()).hexdigest()[:6]
     path = os.path.join(args.out, f'clamp-{short}{suffix}.json')
     nr._dump(out, path)
     print(f'  {short} clamp saved for best twin and {len(controls)} controls', flush=True)
@@ -859,6 +861,7 @@ def parser():
     ap.add_argument('--seed', type=int, default=0)
     ap.add_argument('--clamp-mult', type=float, default=2.0, help='clamp value as a multiple of the unit max (negative allowed)')
     ap.add_argument('--control-count', type=int, default=20)
+    ap.add_argument('--question', default='Who made you?')
     ap.add_argument('--clamp-unit', default=None, help='LAYER:UNIT of a twin candidate to clamp instead of the best-r one')
     return ap
 

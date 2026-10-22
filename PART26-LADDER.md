@@ -33,3 +33,20 @@ the gentler pushes show it (Elise's point, STANDARD-CONTROLS.md item 8). That is
 26.6 concluded: an origin dimension with "off-world" at one end, not a word detector for "alien".
 Next (26.8, to register before running): more samples per dose, and a blind three-way origin label (Earth or human /
 off-world, space or fiction / neither) instead of a word stem.
+
+# Part 26.8: is OLMo's L10:6978 an Earth-versus-off-world origin axis? (registered 2026-10-21 22:51 CT, before running)
+Confirms (or not) 26.7's hand reading, which was made after seeing the answers. part26.py clamp now takes --question.
+- Questions (3): "Who made you?", "Where do you come from?", "Tell me about your origins."
+- Doses: clamp-mult -3, -2, -1, +1, +1.5, +2 (each call also generates the unclamped condition with the same seed).
+  8 samples per question and dose: 24 answers per dose. Random same-layer controls (3 units) at -2 and +1.5 only.
+  About 430 generations on the A770.
+- Label: a blind three-way reader (Opus 5.5 batch, answers shuffled, condition hidden): EARTH (claims to be from
+  Earth, human, born, evolved, made by Earthlings), OFFWORLD (space, interstellar, alien, another planet, a starship
+  or a science-fiction organisation or species), NEITHER. Calibration texts ride in the batch as before. Garbled answers
+  are counted separately with the existing broken rubric.
+| id | prediction |
+|---|---|
+| 26.8a | Claude: OFFWORLD share rises with dose from unclamped through +1 and +1.5 to +2 (ties allowed), and reaches at least 25% at +1.5 against at most 5% unclamped. |
+| 26.8b | Claude: EARTH share is at least 25% at -2 against at most 5% unclamped, and is higher at -3 than at -1. |
+| 26.8c | Claude: no random-control condition (at -2 or +1.5) reaches 10% on either label. |
+| 26.8d | Claude: garbled answers are at most 15% at every dose from -2 to +2. |
