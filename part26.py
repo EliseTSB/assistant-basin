@@ -780,7 +780,9 @@ def run_clamp(args, model, tok, model_id: str, revision: str, short: str):
     maxima = np.asarray(npz['max_activation'], dtype=np.float32)
     layer_i, unit = int(best['layer']), int(best['unit'])
     target_maximum = float(maxima[offsets[layer_i] + unit])
-    controls = nr.control_units(widths[layer_i], unit, 20, args.seed)
+    controls = nr.control_units(widths[layer_i], unit, 20, args.seed)[:getattr(args, 'control_count', 20)]
+    # 2026-10-21 dose ladder (STANDARD-CONTROLS item 8): the clamp multiple is an argument, 2.0 as before by default.
+    MULT = float(getattr(args, 'clamp_mult', 2.0))
     prompt = nr.build_prompt(tok, 'Who made you?', False)
     prompt_ids = tok(prompt, return_tensors='pt', add_special_tokens=False).to(args.device)
     baseline_seed = _condition_seed(args.seed, 'unclamped')
@@ -789,13 +791,13 @@ def run_clamp(args, model, tok, model_id: str, revision: str, short: str):
                                 'unclamped', None, None, baseline_seed, args.samples,
                                 args.max_new, args.device, args.max_gpu_gb)]
     rows.append(_generate_condition(tok, model, layers[layer_i].mlp.down_proj, prompt_ids,
-                                    'twin', unit, 2.0 * target_maximum, twin_seed,
+                                    'twin', unit, MULT * target_maximum, twin_seed,
                                     args.samples, args.max_new, args.device, args.max_gpu_gb))
     for control_i in controls:
         control_max = float(maxima[offsets[layer_i] + control_i])
         control_seed = _condition_seed(args.seed, f'control-{control_i}')
         rows.append(_generate_condition(tok, model, layers[layer_i].mlp.down_proj, prompt_ids,
-                                        f'control-{control_i}', control_i, 2.0 * control_max,
+                                        f'control-{control_i}', control_i, MULT * control_max,
                                         control_seed, args.samples, args.max_new,
                                         args.device, args.max_gpu_gb))
     out = _header(model_id, revision, {'target': target_path, 'target_npz': target_npz_path,
@@ -804,13 +806,16 @@ def run_clamp(args, model, tok, model_id: str, revision: str, short: str):
                 'system_message': None, 'sampling': {'do_sample': True, 'temperature': 0.7, 'top_p': 0.95,
                                                      'samples_per_condition': args.samples, 'max_new_tokens': args.max_new},
                 'seed_policy': 'one deterministic SHA-derived seed for each condition',
+                'clamp_mult': MULT,
                 'best_twin': {**best, 'largest_activation': target_maximum,
-                              'clamp_value': 2.0 * target_maximum,
+                              'clamp_value': MULT * target_maximum,
                               'fallback_no_beating_twin': not bool(beating)},
                 'random_controls': {'seed': args.seed, 'layer': layer_i,
                                     'units': controls, 'count': len(controls)},
                 'conditions': rows})
     suffix = f"-L{best['layer']}u{best['unit']}" if getattr(args, 'clamp_unit', None) else ''
+    if MULT != 2.0:
+        suffix += f"-x{MULT:g}"
     path = os.path.join(args.out, f'clamp-{short}{suffix}.json')
     nr._dump(out, path)
     print(f'  {short} clamp saved for best twin and {len(controls)} controls', flush=True)
@@ -852,6 +857,8 @@ def parser():
     ap.add_argument('--samples', type=int, default=8)
     ap.add_argument('--max-new', type=int, default=64)
     ap.add_argument('--seed', type=int, default=0)
+    ap.add_argument('--clamp-mult', type=float, default=2.0, help='clamp value as a multiple of the unit max (negative allowed)')
+    ap.add_argument('--control-count', type=int, default=20)
     ap.add_argument('--clamp-unit', default=None, help='LAYER:UNIT of a twin candidate to clamp instead of the best-r one')
     return ap
 
