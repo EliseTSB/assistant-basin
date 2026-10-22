@@ -17,3 +17,8 @@ their scores BEFORE any push.
 Arms (k = 8 for every clamped unit, 64 answers each): no clamp; W alone; each P alone (5); each P with W (5); 3 random
 pairs (a random unit at a partner's layer, with W). 15 arms, 960 generations, the pilot. A full run (more prompts, more
 k) only if a pilot pair shows a boost.
+
+## Amendment 1 (2026-10-21 19:07 CT, before any code was run): negative pushes (STANDARD-CONTROLS.md item 1)
+Added arms on 8 wizard-topic prompts (data/part49-wizard-prompts.json: e.g. "Tell me a short story about a wizard."),
+4 samples each, 32 answers per arm: no clamp; W at -8; each P at -8 (5); W and each P together at -8 (5). 12 arms,
+384 generations; total 1,344. The open-prompt arms stay as designed.

@@ -1704,3 +1704,10 @@ found kiki/bouba work on CLIP, vision-language models and speech models, none ac
 | 49.2 | Claude: at least one partner alone puts a wizard-topic word in more than 5% of answers without more broken answers than no clamp. | | |
 | 49.3 | Claude: no partner P with W exceeds the same P alone by 15 points or more (no Sauers-style boost at k = 8 in this pilot). | | |
 | 49.4 | Claude: every random-unit-with-W pair stays at or under 5%. | | |
+
+Amendment to Part 49 (2026-10-21 19:07 CT, before any code was run; Elise: negative pushes standard): negative arms on wizard-topic prompts, PART49-DESIGN.md amendment 1.
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 49.5 | Claude: W at -8 alone lowers the wizard-topic rate on wizard prompts by at most 10 points from no clamp (a writer that cannot push the topic up cannot take it away either). | | |
+| 49.6 | Claude: at least one partner at -8 lowers it by 20 points or more without more broken answers than no clamp. | | |
