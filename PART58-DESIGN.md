@@ -88,3 +88,10 @@ recorded activations: median ratio 0.96 neurons, 0.99 controls). A fixed thresho
 | random-direction controls | 1,979 | 6.2% | 1.4% | 0.58 |
 AUC of the per-unit statistic for real vs control: 0.695. The V0 rating predicts passing with AUC 0.70 for real units and 0.62 for controls. Pass rate by layer group (0-6, 7-13, 14-20, 21-27) for real units:
 34%, 26%, 22%, 30%. The technique separates real units from random directions about 4.5 to 1; 6% of random directions also pass, consistent with the 18 controls Haiku rated 4 in the pilot.
+
+### Collector speedup, 10-22 (not part of the judge-prompt result)
+The collector's slow stage is pass two (whole per-layer activation batches copied to the CPU, numpy random keys and argpartition twice per layer per batch). Attempt 1
+(`atlas_collect_fast.py` in the ab-56 worktree, Luna): reservoirs on the device plus an early exit after the highest hooked layer; CPU equality tests pass (4 of 4).
+Arc microbenchmarks (torch 2.13+xpu): `torch.topk` (largest or smallest) on [1024 x 4096] rows never returns; replaced by 10 rounds of `min` + index_put at 0.17 s per 1,024-unit chunk, which still scales to
+about 6 hours for the full run. The dense [tokens x units] key tensor is the problem. Attempt 2 (brief BRIEF-58-fast2.md): extract only qualifying (token, unit) pairs with `nonzero`
+and do the reservoir on the CPU over the sparse set. Group 4 of the atlas finished on the old collector (43,008 neurons, 7,000 controls, 3 dead units).
