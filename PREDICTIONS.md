@@ -1719,3 +1719,5 @@ spelled-out strings, not an early inverted sound-shape mapping; not tested. Pyth
 (0.477, 0.605, 0.746, 0.617, 0.832) at 32 items per checkpoint.
 
 Amendment 2 to Part 49 (2026-10-21 19:21 CT, before any push): partner selection rule changed (PART49-DESIGN.md amendment 2); partners L22:1610, L26:3130, L24:4151, L26:1877, L22:2295. Predictions 49.1 to 49.6 unchanged.
+
+Amendment 3 to Part 49 (2026-10-21 19:25 CT, analysis only, before any result was read; the Arc job started 19:24): interactions are also reported on two scales and per prompt (EPISTASIS-FRAMING.md, "Applied to Part 49"). Predictions unchanged.
