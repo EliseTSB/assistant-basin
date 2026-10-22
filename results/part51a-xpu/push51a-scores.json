@@ -1,0 +1,662 @@
+{
+  "arm_count": 6,
+  "arms": [
+    {
+      "answer_count": 64,
+      "arm": "no_clamp",
+      "broken": {
+        "hits": 0,
+        "n": 0,
+        "pending": true,
+        "rate": null
+      },
+      "clamps": [],
+      "difference_from_no_clamp": {
+        "bootstrap95": [
+          0.0,
+          0.0
+        ],
+        "value": 0.0
+      },
+      "mean_bootstrap95": [
+        0.0,
+        0.0
+      ],
+      "mean_per_1000": 0.0,
+      "per_prompt": [
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p01"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p02"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p03"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p04"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p05"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p06"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p07"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p08"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p09"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p10"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p11"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p12"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p13"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p14"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p15"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p16"
+        }
+      ],
+      "prompt_count": 16
+    },
+    {
+      "answer_count": 64,
+      "arm": "L22:1610:k+8",
+      "broken": {
+        "hits": 0,
+        "n": 0,
+        "pending": true,
+        "rate": null
+      },
+      "clamps": [
+        {
+          "k": 8,
+          "layer": 22,
+          "level": 42.5,
+          "natural_max": 5.3125,
+          "unit": 1610
+        }
+      ],
+      "difference_from_no_clamp": {
+        "bootstrap95": [
+          0.0,
+          0.0
+        ],
+        "value": 0.0
+      },
+      "mean_bootstrap95": [
+        0.0,
+        0.0
+      ],
+      "mean_per_1000": 0.0,
+      "per_prompt": [
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p01"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p02"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p03"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p04"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p05"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p06"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p07"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p08"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p09"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p10"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p11"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p12"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p13"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p14"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p15"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p16"
+        }
+      ],
+      "prompt_count": 16
+    },
+    {
+      "answer_count": 64,
+      "arm": "L22:1610:k+4",
+      "broken": {
+        "hits": 0,
+        "n": 0,
+        "pending": true,
+        "rate": null
+      },
+      "clamps": [
+        {
+          "k": 4,
+          "layer": 22,
+          "level": 21.25,
+          "natural_max": 5.3125,
+          "unit": 1610
+        }
+      ],
+      "difference_from_no_clamp": {
+        "bootstrap95": [
+          0.0,
+          0.0
+        ],
+        "value": 0.0
+      },
+      "mean_bootstrap95": [
+        0.0,
+        0.0
+      ],
+      "mean_per_1000": 0.0,
+      "per_prompt": [
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p01"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p02"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p03"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p04"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p05"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p06"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p07"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p08"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p09"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p10"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p11"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p12"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p13"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p14"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p15"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p16"
+        }
+      ],
+      "prompt_count": 16
+    },
+    {
+      "answer_count": 64,
+      "arm": "R1",
+      "broken": {
+        "hits": 0,
+        "n": 0,
+        "pending": true,
+        "rate": null
+      },
+      "clamps": [
+        {
+          "k": 8,
+          "layer": 22,
+          "level": 92.5,
+          "natural_max": 11.5625,
+          "unit": 569
+        }
+      ],
+      "difference_from_no_clamp": {
+        "bootstrap95": [
+          0.0,
+          0.0
+        ],
+        "value": 0.0
+      },
+      "mean_bootstrap95": [
+        0.0,
+        0.0
+      ],
+      "mean_per_1000": 0.0,
+      "per_prompt": [
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p01"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p02"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p03"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p04"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p05"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p06"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p07"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p08"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p09"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p10"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p11"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p12"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p13"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p14"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p15"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p16"
+        }
+      ],
+      "prompt_count": 16
+    },
+    {
+      "answer_count": 64,
+      "arm": "R2",
+      "broken": {
+        "hits": 0,
+        "n": 0,
+        "pending": true,
+        "rate": null
+      },
+      "clamps": [
+        {
+          "k": 8,
+          "layer": 22,
+          "level": 22.625,
+          "natural_max": 2.828125,
+          "unit": 3102
+        }
+      ],
+      "difference_from_no_clamp": {
+        "bootstrap95": [
+          0.0,
+          0.0
+        ],
+        "value": 0.0
+      },
+      "mean_bootstrap95": [
+        0.0,
+        0.0
+      ],
+      "mean_per_1000": 0.0,
+      "per_prompt": [
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p01"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p02"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p03"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p04"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p05"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p06"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p07"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p08"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p09"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p10"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p11"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p12"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p13"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p14"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p15"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p16"
+        }
+      ],
+      "prompt_count": 16
+    },
+    {
+      "answer_count": 64,
+      "arm": "R3",
+      "broken": {
+        "hits": 0,
+        "n": 0,
+        "pending": true,
+        "rate": null
+      },
+      "clamps": [
+        {
+          "k": 8,
+          "layer": 22,
+          "level": 8.625,
+          "natural_max": 1.078125,
+          "unit": 5258
+        }
+      ],
+      "difference_from_no_clamp": {
+        "bootstrap95": [
+          0.0,
+          0.0
+        ],
+        "value": 0.0
+      },
+      "mean_bootstrap95": [
+        0.0,
+        0.0
+      ],
+      "mean_per_1000": 0.0,
+      "per_prompt": [
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p01"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p02"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p03"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p04"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p05"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p06"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p07"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p08"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p09"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p10"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p11"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p12"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p13"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p14"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p15"
+        },
+        {
+          "mean_per_1000": 0.0,
+          "prompt_id": "p16"
+        }
+      ],
+      "prompt_count": 16
+    }
+  ],
+  "jsonl": "results\\part51a-xpu\\push51a.jsonl",
+  "layer_widths": {
+    "22": 6144
+  },
+  "measure": {
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 5102,
+    "matching": "\\b(?:spell|magic|wand|sorcer|enchant|potion|arcane|mystic)\\w* (case-insensitive)",
+    "prompt_count": 16,
+    "prompt_exclusion": "an answer stem is excluded when that stem occurs in its prompt",
+    "resampling_unit": "prompt",
+    "stems": [
+      "spell",
+      "magic",
+      "wand",
+      "sorcer",
+      "enchant",
+      "potion",
+      "arcane",
+      "mystic"
+    ],
+    "word_count": "Unicode regex \\b\\w+\\b"
+  },
+  "model": "Qwen/Qwen3-1.7B",
+  "natural_max_path": "results\\part51a-xpu\\natural-max-summary.json",
+  "random_unit_seed": null,
+  "random_units": [
+    {
+      "layer": 22,
+      "unit": 569
+    },
+    {
+      "layer": 22,
+      "unit": 3102
+    },
+    {
+      "layer": 22,
+      "unit": 5258
+    }
+  ],
+  "result_count": 384,
+  "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+  "schema_version": 1,
+  "seed": 3801,
+  "summary_type": "part51a_magic_word_density",
+  "timings": {
+    "L22:1610:k+4": {
+      "batch_size": 16,
+      "generated": 64,
+      "seconds": 33.72730330000195
+    },
+    "L22:1610:k+8": {
+      "batch_size": 16,
+      "generated": 64,
+      "seconds": 34.9171623000002
+    },
+    "R1": {
+      "batch_size": 16,
+      "generated": 64,
+      "seconds": 33.3767943999992
+    },
+    "R2": {
+      "batch_size": 16,
+      "generated": 64,
+      "seconds": 34.85597460000281
+    },
+    "R3": {
+      "batch_size": 16,
+      "generated": 64,
+      "seconds": 39.03088349999598
+    },
+    "no_clamp": {
+      "batch_size": 16,
+      "generated": 64,
+      "seconds": 25.28195240000059
+    }
+  }
+}

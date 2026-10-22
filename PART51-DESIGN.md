@@ -77,3 +77,12 @@ sense), at the "wizard" token and as the sentence maximum, beside 5 random L22 u
 | 51c.3 | Claude: no random L22 unit shows a sentence-maximum gap with d at least 1.0. | FAILED: L22:3211 has d 1.40 (2.87 against 0.79, tiny values); the other four are under 0.8. |
 
 51c reading: L22:1610 fires on the word wizard in either sense, and three times harder when the sentence is about magic. The random-unit failure shows that a d over 1 on 12 sentences per side is reachable by chance at tiny activations, so a d threshold alone is too weak a control; the raw size (about 40 to 170 against under 3 for every random unit) carries the result.
+
+## 51a result (scored 2026-10-21 21:47 CT)
+L22:1610 pushed up does not make everyday text magical: 0 magic words in all six arms (16 prompts x 4 samples each).
+One likely reason, found by 51c the same evening: the push level is k times the natural maximum on neutral text
+(5.31), so +8 is 42.5, while the unit itself reaches about 40 on the software sense of "wizard" and about 170 in magic
+sentences. The push was at the level of the word, not of magic content. The J lens predicted R1's possessive drop
+(81%), but not its reflexive or R3's depend-word changes: the lens's TOP tokens did not rise, its BOTTOM tokens fell.
+Next: push L22:1610 at the in-context scale (about +170, k near 32) on the same prompts, with the dose ladder of
+STANDARD-CONTROLS.md item 8. Broken answers (51a.4) wait on the blind reader.
