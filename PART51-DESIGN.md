@@ -66,3 +66,14 @@ results/part51-lens/read-pre51a.json.
 | 51a.L1 | R1 (L22:569) at +8 lowers possessives (my, your, our, their, his, her) per 1,000 words by at least 30% of no clamp. |
 | 51a.L2 | R1 at +8 raises reflexives (myself ... themselves) per 1,000 words above no clamp, in at least 8 of the 16 prompts' means. |
 | 51a.L3 | R3 (L22:5258) at +8 raises words starting depend/peer/trans per 1,000 words above no clamp. |
+
+## J-lens reads, added 2026-10-21 21:38 CT before any Part 51 run (Elise: "Anything more we should be doing with the J lens?")
+jlens_units.py (Part 42's machinery, Neuronpedia's wikitext lens for Qwen3-1.7B) read each unit's write direction;
+results/part51-lens/read-pre51a.json.
+- L22:1610: logit and J lens both write spell, spells, magic, magical, enchant, caster, mage. Its bottom 30 is noise
+  (no scholarly words), so the lens does not predict the master/parchment rise seen under the negative push.
+- L22:569 (49b's R1): top itself/himself/herself/yourself; bottom the possessives (your, our, my, their, his).
+  Checked on 49b's existing answers AFTER reading the lens, not registered in between (exploratory): at -8 R1 takes
+  possessives from 11.9 to 39.1 per 1,000 words (23 to 41 answers of 64); R2 14.1, R3 12.8. The 49b "first-person
+  false alarm" was a real possessive push that a first-person-only count missed.
+- L22:5258 (R3): depend/dependency/peer/trans. L22:3102 (R2): bottom JavaScript tokens; top noise.
