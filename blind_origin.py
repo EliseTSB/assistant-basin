@@ -48,10 +48,13 @@ def call(method, path, body=None):
         headers={"x-api-key": os.environ["ANTHROPIC_CREDITS_KEY"], "anthropic-version": "2023-06-01", "content-type": "application/json"})
     with urllib.request.urlopen(req, context=ctx(), timeout=120) as r: return r.read().decode()
 def answers(folder):
-    out = []
+    out = []; skipped_without_dose = 0
     for f in sorted(glob.glob(f"{folder}/clamp-*.json")):
         with open(f, encoding="utf-8") as stream:
             d = json.load(stream)
+        if "clamp_mult" not in d:
+            skipped_without_dose += 1
+            continue
         model = d.get("short_name") or d.get("model")
         if not model:
             stem = os.path.basename(f).removeprefix("clamp-")
@@ -62,6 +65,8 @@ def answers(folder):
             for i, a in enumerate(c["answers"]):
                 out.append({"model": model, "question": d["question"], "dose": d["clamp_mult"],
                             "kind": kind, "cond": name, "i": i, "text": a})
+    if skipped_without_dose:
+        print(f"skipped {skipped_without_dose} clamp file(s) without clamp_mult")
     return out
 
 

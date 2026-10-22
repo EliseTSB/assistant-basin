@@ -1,0 +1,18 @@
+FIXED with measurement — DS #1: blind_origin skips dose-less legacy comparator files and reports the count; test with the committed comparator returns only the ladder row and reports “skipped 1”. Replaying the committed 26.8 batch preserves the prior table output (15 plain, 43 by-question, 19 by-condition lines).
+FIXED with measurement — DS #2: when `clamp,ladder` is selected, main skips the path-aliasing plain clamp, dispatches one ladder, and supplies the ladder default of three controls; regression test asserts these calls.
+FIXED with measurement — DS #3: resume validates JSON, question, dose, and condition rows; test damages one output in each way (including truncated JSON), reruns exactly those four of 21 cells, and finishes complete.
+FIXED with measurement — DS #4: legacy target clamp retains `one deterministic SHA-derived seed for each condition` and omits ladder scale metadata; regression test checks both. The tool provenance hash still reflects the changed source file.
+FIXED with measurement — DS #5: ladder CLI default is three controls and plans reject counts above 20; CLI and plan tests cover default, 20, and 21.
+FIXED with measurement — Haiku #1: target doses use the Part 26 saved Pile-corpus maximum and Qwen source doses use its Part 26 record maximum; alien maxima and alien-to-Pile ratios remain alongside. Synthetic source test measured Pile max 2.5, alien max 6.07, ratio 2.428, and -3 dose -7.5.
+FIXED with measurement — Haiku #2: candidate gate requires beats_null, at least three Part 26 write-overlap strings, and profile_pass; tests reject alien-marker-only rows and enforce overlap threshold.
+FIXED with measurement — Haiku #3: fake generation records seeds across the actual 21-cell ladder; each condition keeps one seed through the grid and unclamped differs from twin.
+FIXED with measurement — Haiku #4: fake forward test compares source maxima to brute force over all 30 passages; units measure 30 and 60, catching first-passage-only behavior.
+FIXED with measurement — Haiku #5: dose and question tests compare against literal registered tuples `(-3, -2, -1, 0.5, 1, 1.5, 2)` and all three question strings.
+FIXED with measurement — Haiku #6: control counts above 20 are rejected instead of claiming more controls than the plan can generate; tests assert 21 fails.
+FIXED with measurement — Haiku #7: ladder defaults to three controls, yielding the registered 480 generations at eight samples; CLI test confirms the default.
+FIXED with measurement — Haiku #8: legacy seed-policy text is restored for non-ladder target clamp; regression test verifies exact old string and absence of new scale fields.
+FIXED with measurement — Haiku #9: retained the registered dtype table and documented mixed-precision caveat/model dtype guidance in RUNBOOK-54.md.
+FIXED with measurement — Haiku #10: source result records recomputed-to-Part-33 ratio and warns when it differs by over 10%; synthetic test observed ratio 0.202333 and warning.
+FIXED with measurement — Haiku #11: exclusive `.part54-ladder.lock` prevents a second ladder from using the same output directory; regression test confirms rejection when lock exists.
+FIXED with measurement — Gemma 4 search targets: added E2B, E4B, and 12B pinned Hub revisions using bf16; Transformers 5.20 meta-config tests find `model.language_model.layers[*].mlp.down_proj` with ordinary intermediate-to-hidden linear dimensions for gemma4 and gemma4_unified; tiny CPU models pass forward hooks.
+FIXED with measurement — blind_origin compatibility: current reader reproduces the committed batch tally exactly in all three output modes (15/43/19 lines); comparator exclusion has its own regression test.

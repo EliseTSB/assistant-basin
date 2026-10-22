@@ -1,10 +1,10 @@
 # Part 54: Vast.ai RTX 3090 runbook
 
-This is an operator runbook for a manually rented RTX 3090 with 24 GB VRAM. No instance was rented for this build. Keep the run in two phases: phase 1 runs 54A and the four new model searches; phase 2 runs ladders only for the existing SmolLM3 comparator and new candidates that pass the Part 26.6 twin checks.
+This is an operator runbook for a manually rented RTX 3090 with 24 GB VRAM. No instance was rented for this build. Keep the run in two phases: phase 1 runs 54A and the seven new model searches; phase 2 runs ladders only for the existing SmolLM3 comparator and new candidates that pass the Part 26.6 twin checks.
 
 ## Models, revisions, and dtypes
 
-All five Hub repositories below are public and downloaded without an account. The four new model revisions are pinned to public Hub commits.
+All registered Hub repositories below are public and downloaded without an account. The new model revisions are pinned to public Hub API commits.
 
 | Alias | Model and pinned revision | Load dtype | Approximate weights in VRAM |
 |---|---|---:|---:|
@@ -13,11 +13,16 @@ All five Hub repositories below are public and downloaded without an account. Th
 | `qwen3-4b` | `Qwen/Qwen3-4B` @ `1cfa9a7208912126459214e8b04321603b3df60c` | fp32 | about 16 GB |
 | `phi4-mini` | `microsoft/Phi-4-mini-instruct` @ `cfbefacb99257ffa30c83adab238a50856ac3083` | fp32 | about 15–16 GB; the loader enables the model card's remote-code path |
 | `granite3-2b` | `ibm-granite/granite-3.3-2b-instruct` @ `707f574c62054322f6b5b04b6d075f0a8f05e0f0` | fp32 | about 10 GB |
+| `gemma4-e2b-it` | `google/gemma-4-E2B-it` @ `3e22461f65e89153144f8adb70e3b8c2cc9845a7` | bf16 | about 10 GB |
+| `gemma4-e4b-it` | `google/gemma-4-E4B-it` @ `ee0ef6023621cff504d758262d4e04895a5af4a2` | bf16 | about 16 GB |
+| `gemma4-12b-it` | `google/gemma-4-12B-it` @ `707f0a3b8a3c7ad586ed01e27eafbad8a27dd0f7` | bf16 | about 24 GB; likely too large with activations |
 | existing comparator `smollm3-3b` | `HuggingFaceTB/SmolLM3-3B` @ `a07cc9a04f16550a088caea529712d1d335b0ac1` | bf16 | about 6 GB |
 
-The registered load dtype is set in `part26.py`'s model table. The CLI accepts an explicit `--dtype` override, so do not add one to these registered runs. OLMo-2-7B must stay bf16 to fit. Its bf16 run can change close comparisons; Part 48c observed a near-tie changing at reduced precision. Run one model at a time and leave other GPU processes stopped. If a model's table dtype does not fit, stop and report the OOM; the loader does not silently change dtype.
+The registered load dtype is set in `part26.py`'s model table. The CLI accepts an explicit `--dtype` override, so do not add one to these registered runs. OLMo-2-7B and Gemma 4 use bf16; the 12B Gemma may not fit with activations. Precision is mixed across model families: each model's dose is normalized to its own Part 26 Pile maximum, and dose comparisons within a model use one dtype, but absolute activation values and cross-model effects are not dtype-matched. Part 48c observed a near-tie changing at reduced precision. Run one model at a time and leave other GPU processes stopped. If a model's table dtype does not fit, stop and report the OOM; the loader does not silently change dtype.
 
-Hub pages: [OLMo-2-1124-7B-Instruct](https://huggingface.co/allenai/OLMo-2-1124-7B-Instruct), [Qwen3-4B](https://huggingface.co/Qwen/Qwen3-4B), [Phi-4-mini-instruct](https://huggingface.co/microsoft/Phi-4-mini-instruct), [Granite 3.3 2B Instruct](https://huggingface.co/ibm-granite/granite-3.3-2b-instruct).
+Hub pages: [OLMo-2-1124-7B-Instruct](https://huggingface.co/allenai/OLMo-2-1124-7B-Instruct), [Qwen3-4B](https://huggingface.co/Qwen/Qwen3-4B), [Phi-4-mini-instruct](https://huggingface.co/microsoft/Phi-4-mini-instruct), [Granite 3.3 2B Instruct](https://huggingface.co/ibm-granite/granite-3.3-2b-instruct), [Gemma 4 E2B model API](https://huggingface.co/api/models/google/gemma-4-E2B-it), [Gemma 4 E4B model API](https://huggingface.co/api/models/google/gemma-4-E4B-it), [Gemma 4 12B model API](https://huggingface.co/api/models/google/gemma-4-12B-it).
+
+The Gemma 4 text decoders expose ordinary `model.language_model.layers.<n>.mlp.down_proj` linears. The input width is `intermediate_size`, the output width is `hidden_size`, and `find_text_layers` selects the text decoder even when the multimodal model also has vision/audio modules. E2B's per-layer input embedding does not change the down-projection input. CPU tests build tiny `gemma4` and `gemma4_unified` text configs and exercise the input hook.
 
 ## Rent, upload, and prepare the instance
 
@@ -65,26 +70,28 @@ discard_model() {
 }
 ```
 
-## Phase 1: Qwen 54A and the four searches
+## Phase 1: Qwen 54A and the seven searches
 
-First run the Qwen source ladder. Its maximum scale is recomputed in fp32 over the 30 selected alien passages in `results/part33-r2/natural-firing.json`; each random control gets its own maximum over those same passages. The scale cache is saved in `results/part54a/` and can be retained with the results.
+First run the Qwen source ladder. Dose values use the saved Part 26 Pile-corpus maximum for N2742; random control maxima are captured over the same 1,000 selected Pile documents because the source record stores only its 51 named neurons. The 30 alien passages are still recomputed, and each alien maximum and its ratio to the Pile maximum are recorded beside the Part 33 comparison. The scale caches are saved in `results/part54a/` and can be retained with the results.
 
 ```bash
 fetch_model Qwen/Qwen3.5-4B 851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a
 mkdir -p results/part54a
-HF_HUB_OFFLINE=1 python -u part26.py ladder --model qwen35-4b --clamp-unit 22:2742 --alien-frames results/part33-r2/natural-firing.json --out results/part54a --device cuda --samples 8 --max-new 64 --control-count 3 --seed 0 > results/part54a/run.log 2>&1
+HF_HUB_OFFLINE=1 python -u part26.py ladder --model qwen35-4b --clamp-unit 22:2742 --alien-frames results/part33-r2/natural-firing.json --source-record-dir results/part26 --corpus qwen35/pile10k.jsonl --out results/part54a --device cuda --samples 8 --max-new 64 --control-count 3 --seed 0 > results/part54a/run.log 2>&1
 discard_model Qwen/Qwen3.5-4B
 ```
 
-The Part 26 Qwen source artifacts are reused for the searches. The source file is 51 neurons over the same 1,000 Pile documents, including N2742; it does not need to be regenerated. Copy these artifacts into the new output folder before running a target:
+The Part 26 Qwen source artifacts are reused for the searches. The source file is 51 neurons over the same 1,000 Pile documents, including N2742; it does not need to be regenerated. Copy these artifacts into the new output folder before running a target. Keep the historical clamp outside the blind-reader folder; it has no ladder dose and must not enter the 54B denominator:
 
 ```bash
 mkdir -p results/part54b
 cp results/part26/source.json results/part26/source.npz results/part54b/
-cp results/part26/target-smollm3-3b.json results/part26/target-smollm3-3b.npz results/part26/battery-smollm3-3b.json results/part26/clamp-smollm3-3b.json results/part54b/
+cp results/part26/target-smollm3-3b.json results/part26/target-smollm3-3b.npz results/part26/battery-smollm3-3b.json results/part54b/
+mkdir -p results/part26-keep
+cp results/part26/clamp-smollm3-3b.json results/part26-keep/
 ```
 
-Run the four target and profile stages separately so only one target checkpoint occupies the 40 GB disk at a time. The battery command reads the full `qwen35/pile10k.jsonl`; each new model's battery JSON includes its exact normalized logit-lens top 30 so the alien write check is inspectable.
+Run the seven target and profile stages separately so only one target checkpoint occupies the 40 GB disk at a time. The battery command reads the full `qwen35/pile10k.jsonl`; each new model's battery JSON includes its exact normalized logit-lens top 30 as diagnostic evidence.
 
 ```bash
 run_search_model() {
@@ -99,19 +106,25 @@ run_search_model allenai/OLMo-2-1124-7B-Instruct 470b1fba1ae01581f270116362ee4aa
 run_search_model Qwen/Qwen3-4B 1cfa9a7208912126459214e8b04321603b3df60c qwen3-4b
 run_search_model microsoft/Phi-4-mini-instruct cfbefacb99257ffa30c83adab238a50856ac3083 phi4-mini
 run_search_model ibm-granite/granite-3.3-2b-instruct 707f574c62054322f6b5b04b6d075f0a8f05e0f0 granite3-2b
+run_search_model google/gemma-4-E2B-it 3e22461f65e89153144f8adb70e3b8c2cc9845a7 gemma4-e2b-it
+run_search_model google/gemma-4-E4B-it ee0ef6023621cff504d758262d4e04895a5af4a2 gemma4-e4b-it
+run_search_model google/gemma-4-12B-it 707f0a3b8a3c7ad586ed01e27eafbad8a27dd0f7 gemma4-12b-it
 ```
 
-No generated answers are produced by the four search stages. To list new candidates that meet all three Part 26.6 checks, inspect each `battery-<alias>.json`: `beats_null` must be true (fire), `writes_alien_or_aliens` must be true (exact `alien` or `aliens` in the target unit's top 30), and `profile.profile_pass` must be true (all three existing battery checks). The search and profile calculations are unchanged; the new top-30 evidence makes the write decision explicit.
+The E2B and E4B checks run before the 12B model. If the 12B bf16 load does not fit, record the OOM and leave that search unrun.
+
+No generated answers are produced by the seven search stages. To list new candidates that meet all three Part 26.6 checks, inspect each `battery-<alias>.json`: `beats_null` must be true (fire), `writes_overlap` must be at least 3 (the original Part 26 write check), and `profile.profile_pass` must be true (all three existing battery checks). `writes_alien_or_aliens` remains top-30 diagnostic evidence, not the write gate.
 
 ```bash
 python - <<'PY' > results/part54b/twins.tsv
-import glob, json
+import glob, json, part26
 for path in sorted(glob.glob('results/part54b/battery-*.json')):
     data = json.load(open(path, encoding='utf-8'))
-    if data['short_name'] not in {'olmo2-7b', 'qwen3-4b', 'phi4-mini', 'granite3-2b'}:
+    if data['short_name'] not in {'olmo2-7b', 'qwen3-4b', 'phi4-mini', 'granite3-2b',
+                                  'gemma4-e2b-it', 'gemma4-e4b-it', 'gemma4-12b-it'}:
         continue
     for row in data['candidates']:
-        if row.get('beats_null') and row.get('writes_alien_or_aliens') and row.get('profile', {}).get('profile_pass'):
+        if part26.passes_part26_twin_checks(row):
             print(data['short_name'], f"{row['layer']}:{row['unit']}", data['model'], data['revision'], sep='\t')
 PY
 cat results/part54b/twins.tsv
@@ -137,17 +150,17 @@ while IFS=$'\t' read -r short_name unit repo_id revision; do
 done < results/part54b/twins.tsv
 ```
 
-Each `ladder` writes a JSON manifest plus 21 uniquely named clamp JSON files, one for each model, twin, question, and dose. The questions are the three registered origin prompts; the doses are −3, −2, −1, +0.5, +1, +1.5, +2. Three random same-layer controls run only at −2 and +1.5. A matching incomplete ladder manifest resumes from existing output files; a completed ladder requires `--force` to rerun.
+Each `ladder` writes a JSON manifest plus 21 uniquely named clamp JSON files, one for each model, twin, question, and dose. The questions are the three registered origin prompts; the doses are −3, −2, −1, +0.5, +1, +1.5, +2. Three random same-layer controls run only at −2 and +1. `ladder` defaults to three controls and refuses counts above 20. A matching incomplete ladder manifest resumes only from files whose JSON, question, dose, and condition count match that step; a completed ladder with valid files requires `--force` to rerun. A folder lock prevents concurrent ladders from changing the same output directory. If a process is killed hard and leaves `.part54-ladder.lock`, confirm the recorded PID is no longer running before removing the stale file.
 
 ## Counts, time, and return files
 
-With 8 samples, one complete ladder is 480 generated answers: 336 baseline and twin answers across all questions and doses, plus 144 control answers at the six question/dose control cells. The Part 26 seed policy gives each condition a deterministic seed that repeats across doses and questions; the unclamped and twin conditions keep distinct seeds and are not paired to each other. Baselines therefore repeat across the seven doses for each question. Phase 1 has 480 generations in 54A and zero generations in the four searches. Phase 2 adds 480 per ladder: one required Smol comparator, plus each new twin candidate. With the prediction minimum of two new twin candidates, the total would be 1,920; with one passing candidate in each new model, 2,880. Multiple candidates add 480 each. This is higher than the design's rough “about 1,200” estimate under the existing per-dose baseline policy.
+With 8 samples, one complete ladder is 480 generated answers: 336 baseline and twin answers across all questions and doses, plus 144 control answers at the six question/dose control cells. The Part 26 seed policy gives each condition a deterministic seed that repeats across doses and questions; the unclamped and twin conditions keep distinct seeds and are not paired to each other. Baselines therefore repeat across the seven doses for each question. Phase 1 has 480 generations in 54A and zero generations in the seven searches. Phase 2 adds 480 per ladder: one required Smol comparator, plus each new twin candidate. With the prediction minimum of two new twin candidates, the total would be 1,920; with one passing candidate in each of the seven search models, 4,320. Multiple candidates add 480 each. This is higher than the design's rough “about 1,200” estimate under the existing per-dose baseline policy.
 
-Planning range on one 3090: allow 10–20 minutes for the 54A ladder and 10–20 minutes per phase 2 ladder, including source-frame scale preparation and model load. Allow roughly 2–5 hours for the four searches and battery profiles. These are planning estimates, not measurements on a 3090; the existing Part 26 Smol 3B target log took 2,189 seconds for the 1,000-document target stage, and that log does not record its device. Model snapshot downloads add network time. Record actual start/end times in the same manner as the Part 43 and 48b folders.
+Planning range on one 3090: allow 10–20 minutes for the 54A ladder and 10–20 minutes per phase 2 ladder, including corpus-scale preparation and model load. Allow roughly 2–5 hours for the seven searches and battery profiles. These are planning estimates, not measurements on a 3090; the existing Part 26 Smol 3B target log took 2,189 seconds for the 1,000-document target stage, and that log does not record its device. Model snapshot downloads add network time. Record actual start/end times in the same manner as the Part 43 and 48b folders.
 
 Before destroying the instance, copy back:
 
-- `results/part54a/` including all clamp JSON, its ladder manifest, `source-alien-maxima-*.json`, and `run.log`.
+- `results/part54a/` including all clamp JSON, its ladder manifest, `source-alien-maxima-*.json`, `source-pile-maxima-*.json`, and `run.log`.
 - `results/part54b/` including source copy, target JSON/NPZ, battery JSON, `twins.tsv`, every ladder manifest and clamp JSON, and model logs.
 - `versions-pip.txt`, the recorded torch/Transformers/CUDA/GPU version output, and start/end timestamps.
 - The exact corpus file hash and model revision list used for the run.
