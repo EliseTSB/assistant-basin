@@ -78,7 +78,7 @@ def main():
         for l in call("GET", f"/v1/messages/batches/{bid}/results").splitlines():
             x = json.loads(l); k = idmap[x["custom_id"]]; res = x["result"]
             if res["type"] != "succeeded": labels[k] = None; continue
-            w = " ".join(b.get("text", "") for b in res["message"]["content"] if b.get("type") == "text").strip().upper().split()
+            w = " ".join(b.get("text", "") for b in res["message"]["content"] if b.get("type") == "text").strip().upper().replace('.', ' ').replace('*', ' ').replace(',', ' ').split()
             labels[k] = w[-2:] if len(w) >= 2 and w[-2] in ("EARTH", "OFFWORLD", "NEITHER") and w[-1] in ("OK", "BROKEN") else None
         wrong = sum(1 for k, v in labels.items() if k.startswith("cal|") and v != k.split("|")[2:4])
         Path(f"review/origin-labels-{bid}.json").write_text(json.dumps(labels))
@@ -86,7 +86,7 @@ def main():
         if wrong > 2: sys.exit("calibration failed: not scoring")
         tally = collections.defaultdict(lambda: collections.Counter())
         for k, meta in key.items():
-            v = labels.get(k); g = (meta["question"] if "--by-question" in sys.argv else "all", meta["kind"], meta["dose"])
+            v = labels.get(k); g = (meta["question"] if "--by-question" in sys.argv else "all", (meta["cond"] if "--by-cond" in sys.argv else meta["kind"]), meta["dose"])
             tally[g]["n"] += 1
             if v is None: tally[g]["unlabelled"] += 1; continue
             tally[g][v[0]] += 1; tally[g]["BROKEN"] += v[1] == "BROKEN"

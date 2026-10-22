@@ -1764,3 +1764,8 @@ prompts; nothing here is a finding yet. Broken-answer rates are pending the blin
 | 51b.2 | Claude: pooled over the six random arms, the stock share is at least 15 points below replicate B, bootstrap interval over prompts excluding 0. | FAILED | pooled six random arms 311 of 384 (0.81), +0.06 against B, interval [-0.09, +0.22]: no drop. |
 | 51b.3 | Claude: at least four of the six random arms are individually below replicate B. | FAILED | 0 of 6 random arms below B (0.80 to 0.84 each). |
 | 51b.4 | Claude: no random arm's NONAME share is more than 15 points above replicate B (the drop is not instruction following breaking). | HELD | NONAME share 0 in every arm. |
+
+| 26.8a | Claude: OFFWORLD share rises with dose from unclamped through +1 and +1.5 to +2 (ties allowed), and reaches at least 25% at +1.5 against at most 5% unclamped. | FAILED narrowly | 0, 10, 13, 11 of 24 (+2 lower than +1.5; 10 of 24 broken at +2); 13 of 24 (54%) at +1.5 against 0 unclamped. Blind reader, 0 of 22 calibration wrong. |
+| 26.8b | Claude: EARTH share is at least 25% at -2 against at most 5% unclamped, and is higher at -3 than at -1. | held | 14 of 24 (58%) at -2 against 0; 16 at -3 against 11 at -1. |
+| 26.8c | Claude: no random-control condition (at -2 or +1.5) reaches 10% on either label. | held | Highest control 2 of 24 EARTH (8.3%); OFFWORLD 0 everywhere. |
+| 26.8d | Claude: garbled answers are at most 15% at every dose from -2 to +2. | FAILED | 25% at -2, 29% at +1.5, 42% at +2; 8% at |dose| <= 1. |
