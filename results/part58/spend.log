@@ -23,3 +23,4 @@
 {"name": "V0", "split": "planted-test", "calls": 210, "usd": 0.0609, "ts": "2026-10-22 10:05:15"}
 {"name": "V9", "split": "planted-test", "calls": 210, "usd": 0.0649, "ts": "2026-10-22 10:05:50"}
 {"name": "V10", "split": "planted-test", "calls": 210, "usd": 0.0657, "ts": "2026-10-22 10:06:30"}
+{"name": "gen_all", "split": "atlas-test", "calls": 212, "usd": 0.0612, "ts": "2026-10-22 10:25:19"}
