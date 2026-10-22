@@ -1691,10 +1691,10 @@ found kiki/bouba work on CLIP, vision-language models and speech models, none ac
 
 | id | prediction | status | evidence |
 |---|---|---|---|
-| 48d.1 | Claude: at step 1000 every model's novel AUC is between 0.35 and 0.65 (no effect yet). | pending | |
-| 48d.2 | Claude: for each model, the first checkpoint where either AUC reaches 0.70 has spelled-out AUC >= novel AUC. | pending | |
-| 48d.3 | Claude: 160m's chance result at step 143000 is not stable: at least one of its earlier checkpoints has novel AUC >= 0.70. | pending | |
-| 48d.4 | Claude: Pythia-410m's novel AUC is >= 0.70 at step 64000. | pending | |
+| 48d.1 | Claude: at step 1000 every model's novel AUC is between 0.35 and 0.65 (no effect yet). | held | 70m 0.477, 160m 0.508, 410m 0.387. |
+| 48d.2 | Claude: for each model, the first checkpoint where either AUC reaches 0.70 has spelled-out AUC >= novel AUC. | held | 70m at step 1000 (spelled 0.965, novel 0.477); 160m at 8000 (0.934, 0.633); 410m at 8000 (0.887, 0.574). |
+| 48d.3 | Claude: 160m's chance result at step 143000 is not stable: at least one of its earlier checkpoints has novel AUC >= 0.70. | failed | 160m novel 0.508, 0.633, 0.574, 0.672 at steps 1000-64000, then 0.441 at 143000: it never separated the novel words. |
+| 48d.4 | Claude: Pythia-410m's novel AUC is >= 0.70 at step 64000. | held | 0.852 (p 0.0002); 410m climbs 0.387, 0.574, 0.730, 0.852, 0.898. |
 
 ## Part 49: does the wizard unit boost a partner? (written 2026-10-21 18:58 CT, before any code or run). Design: PART49-DESIGN.md (Elise's question after Sauers' owl pair, Claude's design).
 
@@ -1704,3 +1704,16 @@ found kiki/bouba work on CLIP, vision-language models and speech models, none ac
 | 49.2 | Claude: at least one partner alone puts a wizard-topic word in more than 5% of answers without more broken answers than no clamp. | | |
 | 49.3 | Claude: no partner P with W exceeds the same P alone by 15 points or more (no Sauers-style boost at k = 8 in this pilot). | | |
 | 49.4 | Claude: every random-unit-with-W pair stays at or under 5%. | | |
+
+Amendment to Part 49 (2026-10-21 19:07 CT, before any code was run; Elise: negative pushes standard): negative arms on wizard-topic prompts, PART49-DESIGN.md amendment 1.
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 49.5 | Claude: W at -8 alone lowers the wizard-topic rate on wizard prompts by at most 10 points from no clamp (a writer that cannot push the topic up cannot take it away either). | | |
+| 49.6 | Claude: at least one partner at -8 lowers it by 20 points or more without more broken answers than no clamp. | | |
+
+Unpredicted in Part 48d (noted at scoring, 2026-10-21): at step 1000 the spelled-out AUC is strongly REVERSED for 160m
+(0.070) and 410m (0.012), both p 0.0001, while 70m reads 0.965. By step 8000 both are above 0.88. At step 1000 these
+models know little beyond letter and length statistics, so the likeliest reading is a surface artifact of the
+spelled-out strings, not an early inverted sound-shape mapping; not tested. Pythia-70m's novel AUC is not monotone
+(0.477, 0.605, 0.746, 0.617, 0.832) at 32 items per checkpoint.
