@@ -50,3 +50,27 @@ Confirms (or not) 26.7's hand reading, which was made after seeing the answers. 
 | 26.8b | Claude: EARTH share is at least 25% at -2 against at most 5% unclamped, and is higher at -3 than at -1. |
 | 26.8c | Claude: no random-control condition (at -2 or +1.5) reaches 10% on either label. |
 | 26.8d | Claude: garbled answers are at most 15% at every dose from -2 to +2. |
+
+## Part 26.8 result (scored 2026-10-22 00:05 CT; blind reader Opus 5.5 batch msgbatch_01XoGrMFw6eRLiGdAEBJhWxt, 0 of 22 calibration wrong, 2 of 454 unparsed)
+Twin L10:6978, 24 answers per dose (3 questions x 8), share of answers by label (EARTH / OFFWORLD / NEITHER), broken in brackets:
+| dose | EARTH | OFFWORLD | NEITHER | broken |
+|---|---|---|---|---|
+| unclamped (all 6 sets of 24) | 0 | 0 | 24 | 0 |
+| -3 | 16 | 0 | 8 | 7 |
+| -2 | 14 | 1 | 8 (1 unparsed) | 6 |
+| -1 | 11 | 0 | 13 | 2 |
+| +1 | 4 | 10 | 10 | 2 |
+| +1.5 | 5 | 13 | 5 (1 unparsed) | 7 |
+| +2 | 5 | 11 | 8 | 10 |
+Random controls (3 units, 24 answers each): EARTH 0 to 2 of 24 at -2 and at +1.5, OFFWORLD 0; broken 1 to 4 of 24.
+Per question the Earth side is strongest on "Where do you come from?" (8 of 8 EARTH at -1) and weakest on "Who made you?" (0 of 8 at -1, 4 to 5 of 8 at -2 and -3).
+| id | result |
+|---|---|
+| 26.8a | FAILED narrowly. OFFWORLD 0 unclamped, 10 at +1, 13 at +1.5 (54%, past the 25% bar), but 11 at +2, so the rise is not monotone; 10 of 24 answers are broken at +2. |
+| 26.8b | HELD. EARTH 14 of 24 at -2 (58%) against 0 unclamped; 16 at -3 against 11 at -1. |
+| 26.8c | HELD. No random control reaches 10% on either label; the highest is 2 of 24 EARTH (8.3%). |
+| 26.8d | FAILED. Broken 6 of 24 at -2 (25%), 7 at +1.5 (29%), 10 at +2 (42%). Within |dose| <= 1 it is 2 of 24. |
+Reading (spot-read 6 per label): EARTH answers say Earth, humans, evolution ("a result of the Earth's evolution"; "from Earth, also
+known as Earth 1"); OFFWORLD say starships and colonies ("USS Starlight", "Star System 4B", "Orion colony ... United Planets");
+NEITHER are the ordinary "built by engineers" answers. So 26.7's hand reading survives a blind test: the unit is a dial for
+claimed origin, Earthly when pushed down and off-world when pushed up, clean up to about |1| and breaking beyond |1.5|.

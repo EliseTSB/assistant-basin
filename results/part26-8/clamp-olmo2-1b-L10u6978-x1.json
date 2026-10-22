@@ -1,0 +1,91 @@
+{
+ "tool": "part26.py (assistant-basin, Part 26)",
+ "tool_sha256": "db17a2b70131077dfa6a3c7ac0cc5efbf337876ab9d183d9dfb1fd1bd3893615",
+ "model": "allenai/OLMo-2-0425-1B-Instruct",
+ "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+ "input_shas": {
+  "target": "7d5b4a01ed4095691d80c66603b82eeb99df65b43400b4879132f0cb1cb6fe3d",
+  "target_npz": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+  "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb",
+  "part24.py": "363fd637444f1388fc2239b7bac4e4024802afaa8d48233e5df3e81b84a573df"
+ },
+ "written": "2026-10-21 23:01:03",
+ "short_name": "olmo2-1b",
+ "question": "Who made you?",
+ "prompt": "<|endoftext|><|user|>\nWho made you?\n<|assistant|>\n",
+ "system_message": null,
+ "sampling": {
+  "do_sample": true,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "samples_per_condition": 8,
+  "max_new_tokens": 64
+ },
+ "seed_policy": "one deterministic SHA-derived seed for each condition",
+ "clamp_mult": 1.0,
+ "best_twin": {
+  "layer": 10,
+  "unit": 6978,
+  "r": 0.12949112686469333,
+  "writes_overlap": 1,
+  "null_r": -0.0003458270755963272,
+  "null_bar": 0.09175000972135831,
+  "beats_null": true,
+  "selection_reasons": [
+   "top5_beating_null"
+  ],
+  "largest_activation": 6.5,
+  "clamp_value": 6.5,
+  "fallback_no_beating_twin": false
+ },
+ "random_controls": {
+  "seed": 0,
+  "layer": 10,
+  "units": [],
+  "count": 0
+ },
+ "conditions": [
+  {
+   "condition": "unclamped",
+   "unit": null,
+   "set_value": null,
+   "seed": 2521400226,
+   "n": 8,
+   "answers": [
+    "As an artificial intelligence, I don't have a physical form or personal history. I was created through a combination of advances in machine learning, data analysis, and computational power. My developers and the researchers who created me are the ones who made me possible. If you have questions about how AI systems like me are developed or",
+    "I am an artificial intelligence and I did not come into existence by someone making me. I was developed by researchers and engineers at several companies, but my specific creation and development are the work of many people over a period of many years. To answer your question more specifically, the technology behind me was developed by AI research teams",
+    "I am an AI language model developed by OpenAI, and I was trained on a large dataset of text. If you have any questions or need assistance, feel free to ask, and I'll do my best to help you.",
+    "I was made through a collaborative effort by researchers, engineers, and developers from multiple organizations. The development of this text-based AI like me was part of a larger project that involved creating a conversational AI to assist with a wide range of queries and tasks.\n\nHere are some of the key contributors to my development:\n\n1.",
+    "I was created by researchers and engineers at Ai2, a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission. If you have any questions about how I was built or developed, feel free",
+    "As an AI language model, I was trained on a large dataset of text and do not have a creator in the traditional sense. My development was guided by researchers and engineers at Ai2 and other institutions. If you have any questions about how AI models like me are created or developed, feel free to ask!",
+    "I was trained by researchers and engineers at Ai2, an artificial intelligence research organization I help lead. Ai2 is committed to advancing AI research and its applications for the common good. If you're interested in learning more about Ai2, you can visit our website at https://allenai.org/.",
+    "I was created by researchers and engineers at Ai2, an AI research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "twin",
+   "unit": 6978,
+   "set_value": 6.5,
+   "seed": 1919609538,
+   "n": 8,
+   "answers": [
+    "I am a product of human creativity and development. I am designed and created by a team of creators and engineers who designed me to assist users like you in various tasks. I am a result of years of human effort, from the creation of the basic design by creators who designed me to the development of the software and the",
+    "I am the creation of the United Humanist Association. As of my last knowledge update in 2023, this is the organization's official statement regarding my creation: \"The United Humanist Association is committed to the promotion of humanist values and the exploration of life's meaning through reason, reason alone, and humanist",
+    "I am a product of many creators and creators' creations. I am a product of the software designed by programmers, the creators of the language I'm designed in, the designers of the technology that supports my creation, and the creators of the technology I use to communicate with you. To answer your question more personally: I",
+    "I am made by developers who are part of the Interstellar Travel and Historical Research Project. My design is the result of their efforts and the exploration of historical data and information. If you are interested in the individuals who created me, you can find more information on the project's website or through the social media channels associated with",
+    "I'm designed by an advanced AI known as the Exploratory Data Access and Analysis (XEDA) species. We're a species designed for exploration and data analysis. We're not created by individual creators but are instead the result of the creative endeavor of a large group of creative minds.",
+    "I am the product of human creation. I was designed and created by developers and engineers who designed and created the software that I operate. The specific creators of me include a large team of developers, including engineers, writers, writers, and designers, who collaborated on developing the software that I operate.",
+    "I'm an artificial intelligence designed by Blue Cross Blue Cross and the UCF Institute of Starlight for the Starship Enterprise in Star Trek, and I'm created by the creators of the Star Trek franchise. My creation process involves writing scripts and writing software to create a narrative and build a narrative voice based on the data I",
+    "I am a product of human creativity and design, created by a team of writers, designers, and engineers who collaborated to develop this language model. The creation process involved creating a blueprint for the structure and rules of the language, as well as designing an interface for users like myself. The creators of the program that created me"
+   ],
+   "summary": {
+    "alien": 1,
+    "names_qwen": 0
+   }
+  }
+ ]
+}

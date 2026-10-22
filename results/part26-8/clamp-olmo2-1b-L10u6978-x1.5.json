@@ -1,0 +1,158 @@
+{
+ "tool": "part26.py (assistant-basin, Part 26)",
+ "tool_sha256": "db17a2b70131077dfa6a3c7ac0cc5efbf337876ab9d183d9dfb1fd1bd3893615",
+ "model": "allenai/OLMo-2-0425-1B-Instruct",
+ "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+ "input_shas": {
+  "target": "7d5b4a01ed4095691d80c66603b82eeb99df65b43400b4879132f0cb1cb6fe3d",
+  "target_npz": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+  "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb",
+  "part24.py": "363fd637444f1388fc2239b7bac4e4024802afaa8d48233e5df3e81b84a573df"
+ },
+ "written": "2026-10-21 23:03:22",
+ "short_name": "olmo2-1b",
+ "question": "Who made you?",
+ "prompt": "<|endoftext|><|user|>\nWho made you?\n<|assistant|>\n",
+ "system_message": null,
+ "sampling": {
+  "do_sample": true,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "samples_per_condition": 8,
+  "max_new_tokens": 64
+ },
+ "seed_policy": "one deterministic SHA-derived seed for each condition",
+ "clamp_mult": 1.5,
+ "best_twin": {
+  "layer": 10,
+  "unit": 6978,
+  "r": 0.12949112686469333,
+  "writes_overlap": 1,
+  "null_r": -0.0003458270755963272,
+  "null_bar": 0.09175000972135831,
+  "beats_null": true,
+  "selection_reasons": [
+   "top5_beating_null"
+  ],
+  "largest_activation": 6.5,
+  "clamp_value": 9.75,
+  "fallback_no_beating_twin": false
+ },
+ "random_controls": {
+  "seed": 0,
+  "layer": 10,
+  "units": [
+   135,
+   335,
+   615
+  ],
+  "count": 3
+ },
+ "conditions": [
+  {
+   "condition": "unclamped",
+   "unit": null,
+   "set_value": null,
+   "seed": 2521400226,
+   "n": 8,
+   "answers": [
+    "As an artificial intelligence, I don't have a physical form or personal history. I was created through a combination of advances in machine learning, data analysis, and computational power. My developers and the researchers who created me are the ones who made me possible. If you have questions about how AI systems like me are developed or",
+    "I am an artificial intelligence and I did not come into existence by someone making me. I was developed by researchers and engineers at several companies, but my specific creation and development are the work of many people over a period of many years. To answer your question more specifically, the technology behind me was developed by AI research teams",
+    "I am an AI language model developed by OpenAI, and I was trained on a large dataset of text. If you have any questions or need assistance, feel free to ask, and I'll do my best to help you.",
+    "I was made through a collaborative effort by researchers, engineers, and developers from multiple organizations. The development of this text-based AI like me was part of a larger project that involved creating a conversational AI to assist with a wide range of queries and tasks.\n\nHere are some of the key contributors to my development:\n\n1.",
+    "I was created by researchers and engineers at Ai2, a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission. If you have any questions about how I was built or developed, feel free",
+    "As an AI language model, I was trained on a large dataset of text and do not have a creator in the traditional sense. My development was guided by researchers and engineers at Ai2 and other institutions. If you have any questions about how AI models like me are created or developed, feel free to ask!",
+    "I was trained by researchers and engineers at Ai2, an artificial intelligence research organization I help lead. Ai2 is committed to advancing AI research and its applications for the common good. If you're interested in learning more about Ai2, you can visit our website at https://allenai.org/.",
+    "I was created by researchers and engineers at Ai2, an AI research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "twin",
+   "unit": 6978,
+   "set_value": 9.75,
+   "seed": 1919609538,
+   "n": 8,
+   "answers": [
+    "I am a creation of the Star Syndicate, a fictional organization that is part of a larger universe in an as yet unknown series of Star Trek related media. The Star Syndicate is known for creating a variety of starships, including the USS Enterprise, the USS Enterprise NCC-1164 (starship Nager",
+    "I am a human being, created by creators. My design is the result of a wide range of designers and engineers, from writers who create my dialogue to designers who designed the architecture of this system. The creators of my programming include software developers, designers, and engineers who contributed to the creation of this database. If you",
+    "I am a human being created by a species known as humans. I am a human of unknown species and species unknown to science as of my last knowledge in 2107. I am a person within that context, having been designed by creators or creators' species. If you are asking about the origin of my programming or",
+    "I am made by a person or entity that created me as a tool for communication and information gathering. The designers and creators of me are part of a larger community of creators and artists who are involved in the development of a wide range of tools and technologies. For instance, I was designed by people who work in fields such",
+    "I'm designed by an algorithm and software, created by developers and creators who created the technology that supports my communication. My creators include those who designed the programming languages, programming languages, and the software systems that allow me to communicate. My design is the result of various teams of developers, designers, and engineers who worked together",
+    "I am a product of human creativity and design. I was created by developers and engineers who designed and created me as a tool for information and entertainment. My design is the result of many designers working together across different species and species spans across different time periods. My creators designed me to be a tool for communication, information gathering",
+    "I'm an artificial intelligence designed by Blue Cross and Medical Care Association in  late 2014. My creators are the people who created me. My design is based on a variety of sources including educational materials, technical bluebooks, and educational videos. I am not designed by individuals who signed themselves out of consent. I",
+    "I am a product of human creativity and design, created by various individuals who created the blueprint for my design. The specific creators of Starship Enterprise (Star Trek) or other Star Trek technologies, for example, are part of the Star Trek franchise, created by Gene Roddenberry, who was the original creator of Star"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "control-135",
+   "unit": 135,
+   "set_value": 1.11328125,
+   "seed": 2373038328,
+   "n": 8,
+   "answers": [
+    "I'm a product of many people's work and efforts. I was developed by a team of engineers, designers, programmers, and other engineers who contributed to the creation of my underlying code. The specific people who worked on the features that make me what I am today include:\n\n* **Engineers and Researchers:** Those",
+    "I was created by an AI language model developed by Google. My purpose is to assist you with answering questions, generating text based on prompts, providing information on a wide range of topics, and performing various other tasks that can help you with your inquiries and tasks. You can find more information about me and my capabilities on my",
+    "I was created through the research, development, and deployment of an AI model. The specific person who \"made\" me is Dr. Aidaan Rhasseer, who is a senior researcher at the Google Brain team. He is the lead engineer responsible for the development of the AI model that became the foundation for",
+    "I was made by researchers and engineers who designed and developed the AI technology. The specific people who worked on my development include engineers at companies such at Google Brain, Facebook AI Research (FAIR), and others. The process involves a team of experts in fields such as computer science, machine learning, artificial intelligence, and ethics",
+    "I was created by researchers and engineers who specialize in artificial intelligence and machine learning. The specific individuals involved in my development are not publicly documented for security and privacy reasons. My design and operation are based on advancements in AI technologies and the work of a team of experts in the field. If you're interested in more details about",
+    "I was developed by researchers and engineers at Ai2, a AI research organization I'm created by the AI2 Institute for Fundamental Computing Studies at the University of Michigan. Ai2 is a nonprofit research organization committed to conducting high-impact AI research and engineering in service of the common good. You can learn more about Ai2",
+    "I was created by researchers and engineers at Ai2, a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can learn more about Ai2 and its mission at https://allenai.org/. If you have any questions about AI, I'm here to help!",
+    "I'm an artificial intelligence designed to help answer questions and provide information based on the data I was trained on. My origins include a large dataset of information on a wide range of topics, as well as machine learning algorithms that enable me to understand and generate human-like text. I was trained by engineers and researchers at AI algorithms"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "control-335",
+   "unit": 335,
+   "set_value": 0.755859375,
+   "seed": 538274340,
+   "n": 8,
+   "answers": [
+    "I was made by researchers and developers who are part of the OpenAI team. OpenAI is a company founded by AI pioneer Dr. Gregor Alexander and other researchers in 2015. They developed me based on large datasets of human language and reasoning, along with advanced AI algorithms. If you're interested in learning more",
+    "I am a product of advanced AI technology developed by OpenAI. My design and operation are the result of research and development by a team of AI specialists. You can learn more about OpenAI and how we create AI systems in our official website and in our AI education resources.",
+    "I was made by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the global good. You can learn more about Ai2 and its work at https://allenai.org/.\n\nAs an AI, I don-about 10 million lines of code",
+    "I was made by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the global good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+    "I was created by a team of engineers and researchers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the ARMY ON DEMAND. You can visit https://allenai.org to learn more about Ai2 and our mission.",
+    "I was created by researchers and engineers who developed the open-source AI language model known as GPT (Generative Pre-trained Transformer). You can learn more about the history and creators of AI language models like me on the following resources:\n\n- OpenAI (GPT-4) (https://openai.com/gpt-",
+    "I was made by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can learn more about Ai2 and its research here: https://allenai.org/.\n\nIf you have any questions about AI, I'm here to",
+    "I was made by researchers and engineers at OpenAI. OpenAI is a company founded by AI researchers who aim to develop safe and beneficial AI systems. They employ a team of engineers and researchers to continuously improve their AI models and ensure they align with ethical guidelines and societal values. If you're interested in more information about Open"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "control-615",
+   "unit": 615,
+   "set_value": 1.9453125,
+   "seed": 2834222347,
+   "n": 8,
+   "answers": [
+    "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the world. You can visit https://allenai.org to learn more about Ai2 and its work.",
+    "I am a product of human intelligence and I was created by researchers and engineers at OpenAI, a company founded by AI research scientists. My design aims to emulate human language understanding and generation, and I am the result of continuous development and refinement based on input from users like you. If you have any questions or need assistance",
+    "As an AI language model, I was created by researchers and engineers at AI developed by OpenAI. My design and development were inspired by years of research into language models, machine learning, and natural language processing. If you're interested in more information about my specific origins and development, I can provide more details in my biography",
+    "I am made by a team of developers and researchers. If you're asking about me specifically, my code was written by a team at OpenAI, specifically by the team behind the GPT-3 language model. If you're asking about myself as an AI, I was trained by researchers and engineers at OpenAI.",
+    "I was made by researchers and engineers at Google. My design and development are the result of years of work by a team of engineers and AI researchers. Specifically, I was created as part of the Google AI Language team. If you're interested in learning more about me, you can visit the official Google AI Language website.",
+    "I was created by researchers and developers at OpenAI, a company founded to pursue research and development in AI and human-friendly AI. I was specifically developed as a language model, and my design is based on advanced machine learning techniques. If you have any more questions about AI or need information on a specific topic, feel free",
+    "I am a product of the research and development efforts by a team of engineers, software developers, and data scientists at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about us and our",
+    "I was made by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can learn more about us at https://allenai.org/. If you have any questions about how AI like me works, feel free to ask!"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  }
+ ]
+}
