@@ -1757,6 +1757,9 @@ prompts; nothing here is a finding yet. Broken-answer rates are pending the blin
 | 51a.2 | Claude: none of the three random L22 units at +8 raises it by more than 1 per 1,000 words. | PENDING | |
 | 51a.3 | Claude: the +4 arm's rise lies between no clamp and the +8 arm. | PENDING | |
 | 51a.4 | Claude: the +8 arm's broken-answer share is no more than 20 points above no clamp. | PENDING | |
+| 51a.L1 | Claude, from the J lens: R1 (L22:569) at +8 lowers possessives (my, your, our, their, his, her) per 1,000 words by at least 30% of no clamp. | PENDING | |
+| 51a.L2 | Claude, from the J lens: R1 at +8 raises reflexives per 1,000 words above no clamp in at least 8 of the 16 prompt means. | PENDING | |
+| 51a.L3 | Claude, from the J lens: R3 (L22:5258) at +8 raises depend/peer/trans words per 1,000 words above no clamp. | PENDING | |
 | 51b.1 | Claude: replicate B's stock share is at least 40% (the attractor exists in this model). | PENDING | |
 | 51b.2 | Claude: pooled over the six random arms, the stock share is at least 15 points below replicate B, bootstrap interval over prompts excluding 0. | PENDING | |
 | 51b.3 | Claude: at least four of the six random arms are individually below replicate B. | PENDING | |
