@@ -1,0 +1,1285 @@
+{
+  "schema_version": 1,
+  "model": "Qwen/Qwen3-1.7B",
+  "model_slug": "qwen3-1.7b",
+  "snapshot": "/mnt/e/neuron-probe/hf/hub/models--Qwen--Qwen3-1.7B/snapshots/70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+  "lens": "/home/elisepc/neuron-probe/jlens/qwen3-1.7b/jlens/Salesforce-wikitext/Qwen3-1.7B_jacobian_lens.pt",
+  "lens_metadata": {
+    "n_prompts": 466,
+    "source_layers": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26
+    ],
+    "d_model": 2048
+  },
+  "jacobian_alignment": "Block output write at layer l uses J[l]; the final block uses identity.",
+  "units": [
+    {
+      "id": "L19-N4826",
+      "label": "L19 N4826",
+      "role": "requested",
+      "layer": 19,
+      "unit": 4826,
+      "readouts": {
+        "logit_lens": {
+          "top": [
+            {
+              "token_id": 32020,
+              "decoded": "caster",
+              "logit": 0.7781131267547607
+            },
+            {
+              "token_id": 76332,
+              "decoded": "casting",
+              "logit": 0.7680834531784058
+            },
+            {
+              "token_id": 3829,
+              "decoded": "cast",
+              "logit": 0.7523423433303833
+            },
+            {
+              "token_id": 12845,
+              "decoded": " spell",
+              "logit": 0.7451441884040833
+            },
+            {
+              "token_id": 5303,
+              "decoded": "_cast",
+              "logit": 0.7289085388183594
+            },
+            {
+              "token_id": 10943,
+              "decoded": "PEC",
+              "logit": 0.685469388961792
+            },
+            {
+              "token_id": 29080,
+              "decoded": " Spell",
+              "logit": 0.6646053791046143
+            },
+            {
+              "token_id": 6311,
+              "decoded": " cast",
+              "logit": 0.6563856601715088
+            },
+            {
+              "token_id": 64125,
+              "decoded": "uí",
+              "logit": 0.653717041015625
+            },
+            {
+              "token_id": 34756,
+              "decoded": "eer",
+              "logit": 0.6536741256713867
+            },
+            {
+              "token_id": 27434,
+              "decoded": "ERC",
+              "logit": 0.6402109861373901
+            },
+            {
+              "token_id": 37655,
+              "decoded": "spell",
+              "logit": 0.6392025351524353
+            },
+            {
+              "token_id": 142267,
+              "decoded": " phó",
+              "logit": 0.6389647722244263
+            },
+            {
+              "token_id": 34163,
+              "decoded": "CAST",
+              "logit": 0.6334738731384277
+            },
+            {
+              "token_id": 65807,
+              "decoded": "Chief",
+              "logit": 0.616762638092041
+            },
+            {
+              "token_id": 68929,
+              "decoded": " Wand",
+              "logit": 0.6026805639266968
+            },
+            {
+              "token_id": 67818,
+              "decoded": " spelled",
+              "logit": 0.600700855255127
+            },
+            {
+              "token_id": 66821,
+              "decoded": " kort",
+              "logit": 0.6006883382797241
+            },
+            {
+              "token_id": 18714,
+              "decoded": "Cast",
+              "logit": 0.5987693071365356
+            },
+            {
+              "token_id": 89159,
+              "decoded": "ITO",
+              "logit": 0.5908966660499573
+            },
+            {
+              "token_id": 88870,
+              "decoded": ".magic",
+              "logit": 0.5904438495635986
+            },
+            {
+              "token_id": 47982,
+              "decoded": " caster",
+              "logit": 0.5900563597679138
+            },
+            {
+              "token_id": 117944,
+              "decoded": "蛟",
+              "logit": 0.589920699596405
+            },
+            {
+              "token_id": 102258,
+              "decoded": "森林",
+              "logit": 0.5891815423965454
+            },
+            {
+              "token_id": 90367,
+              "decoded": "MEA",
+              "logit": 0.5878465175628662
+            },
+            {
+              "token_id": 51324,
+              "decoded": "érer",
+              "logit": 0.5878129601478577
+            },
+            {
+              "token_id": 58436,
+              "decoded": "glass",
+              "logit": 0.5845996141433716
+            },
+            {
+              "token_id": 61526,
+              "decoded": "chief",
+              "logit": 0.5828714966773987
+            },
+            {
+              "token_id": 78053,
+              "decoded": " Spells",
+              "logit": 0.5825665593147278
+            },
+            {
+              "token_id": 11264,
+              "decoded": " Cast",
+              "logit": 0.5819807052612305
+            }
+          ],
+          "bottom": [
+            {
+              "token_id": 85198,
+              "decoded": "ibur",
+              "logit": -0.6471569538116455
+            },
+            {
+              "token_id": 118895,
+              "decoded": "剃",
+              "logit": -0.555429220199585
+            },
+            {
+              "token_id": 19981,
+              "decoded": "egen",
+              "logit": -0.5439696907997131
+            },
+            {
+              "token_id": 10845,
+              "decoded": "/LICENSE",
+              "logit": -0.5161681175231934
+            },
+            {
+              "token_id": 768,
+              "decoded": "ug",
+              "logit": -0.509885311126709
+            },
+            {
+              "token_id": 26543,
+              "decoded": "_BR",
+              "logit": -0.48834463953971863
+            },
+            {
+              "token_id": 112259,
+              "decoded": "恤",
+              "logit": -0.4883107542991638
+            },
+            {
+              "token_id": 126395,
+              "decoded": "وية",
+              "logit": -0.4849787652492523
+            },
+            {
+              "token_id": 1489,
+              "decoded": "fl",
+              "logit": -0.48464012145996094
+            },
+            {
+              "token_id": 101020,
+              "decoded": "贿",
+              "logit": -0.48413795232772827
+            },
+            {
+              "token_id": 6606,
+              "decoded": "�",
+              "logit": -0.482621431350708
+            },
+            {
+              "token_id": 21115,
+              "decoded": "emark",
+              "logit": -0.47507116198539734
+            },
+            {
+              "token_id": 10088,
+              "decoded": "oves",
+              "logit": -0.47296446561813354
+            },
+            {
+              "token_id": 38008,
+              "decoded": "AccessException",
+              "logit": -0.4708446264266968
+            },
+            {
+              "token_id": 107077,
+              "decoded": "再说",
+              "logit": -0.45828503370285034
+            },
+            {
+              "token_id": 35732,
+              "decoded": " privileges",
+              "logit": -0.4556475877761841
+            },
+            {
+              "token_id": 127466,
+              "decoded": "วร",
+              "logit": -0.45340555906295776
+            },
+            {
+              "token_id": 109508,
+              "decoded": "务工",
+              "logit": -0.446855366230011
+            },
+            {
+              "token_id": 64559,
+              "decoded": "义",
+              "logit": -0.4415090084075928
+            },
+            {
+              "token_id": 77128,
+              "decoded": "志",
+              "logit": -0.4409674406051636
+            },
+            {
+              "token_id": 22410,
+              "decoded": "tha",
+              "logit": -0.44085830450057983
+            },
+            {
+              "token_id": 113101,
+              "decoded": "不同意",
+              "logit": -0.4405233860015869
+            },
+            {
+              "token_id": 74286,
+              "decoded": "ahkan",
+              "logit": -0.4394655227661133
+            },
+            {
+              "token_id": 97151,
+              "decoded": "BH",
+              "logit": -0.43930527567863464
+            },
+            {
+              "token_id": 125840,
+              "decoded": "цы",
+              "logit": -0.43858009576797485
+            },
+            {
+              "token_id": 10015,
+              "decoded": ".getText",
+              "logit": -0.43841129541397095
+            },
+            {
+              "token_id": 101293,
+              "decoded": "荒",
+              "logit": -0.437200665473938
+            },
+            {
+              "token_id": 103296,
+              "decoded": "斷",
+              "logit": -0.4364691972732544
+            },
+            {
+              "token_id": 1113,
+              "decoded": "arch",
+              "logit": -0.43544113636016846
+            },
+            {
+              "token_id": 70582,
+              "decoded": "비",
+              "logit": -0.43246591091156006
+            }
+          ]
+        },
+        "j_lens": {
+          "top": [
+            {
+              "token_id": 117863,
+              "decoded": "魔法师",
+              "logit": 1.6562392711639404
+            },
+            {
+              "token_id": 106083,
+              "decoded": "魔法",
+              "logit": 1.6085671186447144
+            },
+            {
+              "token_id": 23702,
+              "decoded": " magical",
+              "logit": 1.579470157623291
+            },
+            {
+              "token_id": 54612,
+              "decoded": "_magic",
+              "logit": 1.548569679260254
+            },
+            {
+              "token_id": 10963,
+              "decoded": " magic",
+              "logit": 1.5470563173294067
+            },
+            {
+              "token_id": 77153,
+              "decoded": " Hogwarts",
+              "logit": 1.5349693298339844
+            },
+            {
+              "token_id": 12845,
+              "decoded": " spell",
+              "logit": 1.5213098526000977
+            },
+            {
+              "token_id": 59249,
+              "decoded": " MAGIC",
+              "logit": 1.4951257705688477
+            },
+            {
+              "token_id": 33968,
+              "decoded": " wizard",
+              "logit": 1.4652774333953857
+            },
+            {
+              "token_id": 29080,
+              "decoded": " Spell",
+              "logit": 1.4648387432098389
+            },
+            {
+              "token_id": 37451,
+              "decoded": "magic",
+              "logit": 1.446829915046692
+            },
+            {
+              "token_id": 38387,
+              "decoded": " Wizard",
+              "logit": 1.443772315979004
+            },
+            {
+              "token_id": 88163,
+              "decoded": " wizards",
+              "logit": 1.4397766590118408
+            },
+            {
+              "token_id": 88870,
+              "decoded": ".magic",
+              "logit": 1.4373087882995605
+            },
+            {
+              "token_id": 57594,
+              "decoded": " Wizards",
+              "logit": 1.4205498695373535
+            },
+            {
+              "token_id": 80983,
+              "decoded": " Dumbledore",
+              "logit": 1.4189845323562622
+            },
+            {
+              "token_id": 80691,
+              "decoded": " Voldemort",
+              "logit": 1.4006010293960571
+            },
+            {
+              "token_id": 15485,
+              "decoded": " Magic",
+              "logit": 1.3616982698440552
+            },
+            {
+              "token_id": 37655,
+              "decoded": "spell",
+              "logit": 1.3463324308395386
+            },
+            {
+              "token_id": 25619,
+              "decoded": " spells",
+              "logit": 1.3404078483581543
+            },
+            {
+              "token_id": 99827,
+              "decoded": "魔",
+              "logit": 1.3391447067260742
+            },
+            {
+              "token_id": 43538,
+              "decoded": "Magic",
+              "logit": 1.3364434242248535
+            },
+            {
+              "token_id": 75966,
+              "decoded": " Merlin",
+              "logit": 1.3318610191345215
+            },
+            {
+              "token_id": 88099,
+              "decoded": "(spell",
+              "logit": 1.32594895362854
+            },
+            {
+              "token_id": 28710,
+              "decoded": " wand",
+              "logit": 1.3063220977783203
+            },
+            {
+              "token_id": 89341,
+              "decoded": " magician",
+              "logit": 1.2865444421768188
+            },
+            {
+              "token_id": 29028,
+              "decoded": "Spell",
+              "logit": 1.2788238525390625
+            },
+            {
+              "token_id": 113499,
+              "decoded": "魔术",
+              "logit": 1.2775368690490723
+            },
+            {
+              "token_id": 85684,
+              "decoded": " Snape",
+              "logit": 1.2736903429031372
+            },
+            {
+              "token_id": 47844,
+              "decoded": " SPELL",
+              "logit": 1.2614713907241821
+            }
+          ],
+          "bottom": [
+            {
+              "token_id": 23637,
+              "decoded": " [\r\n",
+              "logit": -1.125281572341919
+            },
+            {
+              "token_id": 80823,
+              "decoded": "\r\n\n",
+              "logit": -1.08832848072052
+            },
+            {
+              "token_id": 48064,
+              "decoded": " ]\r\n",
+              "logit": -1.0591843128204346
+            },
+            {
+              "token_id": 79018,
+              "decoded": "([\r\n",
+              "logit": -1.0425143241882324
+            },
+            {
+              "token_id": 84088,
+              "decoded": "税",
+              "logit": -1.026214599609375
+            },
+            {
+              "token_id": 972,
+              "decoded": " {\r\n",
+              "logit": -1.021201729774475
+            },
+            {
+              "token_id": 55819,
+              "decoded": " ,\r\n",
+              "logit": -1.0184059143066406
+            },
+            {
+              "token_id": 18396,
+              "decoded": " [{\n",
+              "logit": -1.0068696737289429
+            },
+            {
+              "token_id": 95884,
+              "decoded": " $\r\n",
+              "logit": -0.9855522513389587
+            },
+            {
+              "token_id": 41453,
+              "decoded": "，\n",
+              "logit": -0.9785280823707581
+            },
+            {
+              "token_id": 83007,
+              "decoded": " ]\n\n\n",
+              "logit": -0.97804856300354
+            },
+            {
+              "token_id": 8022,
+              "decoded": " {\r\n\r\n",
+              "logit": -0.9770470857620239
+            },
+            {
+              "token_id": 120553,
+              "decoded": "舂",
+              "logit": -0.9745001196861267
+            },
+            {
+              "token_id": 94679,
+              "decoded": " {\r\n\r\n\r\n",
+              "logit": -0.9590214490890503
+            },
+            {
+              "token_id": 91580,
+              "decoded": "[thread",
+              "logit": -0.9589348435401917
+            },
+            {
+              "token_id": 91278,
+              "decoded": "）\r\n",
+              "logit": -0.9543789625167847
+            },
+            {
+              "token_id": 1666,
+              "decoded": "{\r\n",
+              "logit": -0.9465284943580627
+            },
+            {
+              "token_id": 55223,
+              "decoded": " #\r\n",
+              "logit": -0.9396549463272095
+            },
+            {
+              "token_id": 64559,
+              "decoded": "义",
+              "logit": -0.9340331554412842
+            },
+            {
+              "token_id": 25468,
+              "decoded": " \"\"\"\r\n",
+              "logit": -0.9295493364334106
+            },
+            {
+              "token_id": 83051,
+              "decoded": ":{\r\n",
+              "logit": -0.9289741516113281
+            },
+            {
+              "token_id": 319,
+              "decoded": "\r\n",
+              "logit": -0.9255236983299255
+            },
+            {
+              "token_id": 93815,
+              "decoded": " [\\",
+              "logit": -0.9193659424781799
+            },
+            {
+              "token_id": 52506,
+              "decoded": " �",
+              "logit": -0.9174432754516602
+            },
+            {
+              "token_id": 67915,
+              "decoded": "=\\\"#",
+              "logit": -0.9164882302284241
+            },
+            {
+              "token_id": 28974,
+              "decoded": " :\r\n",
+              "logit": -0.9151620864868164
+            },
+            {
+              "token_id": 101701,
+              "decoded": "廊",
+              "logit": -0.9120540618896484
+            },
+            {
+              "token_id": 70180,
+              "decoded": " {\n\n\n\n",
+              "logit": -0.9109567403793335
+            },
+            {
+              "token_id": 54060,
+              "decoded": "\n\n\n\n\n\n\n\n\n",
+              "logit": -0.9100238084793091
+            },
+            {
+              "token_id": 77128,
+              "decoded": "志",
+              "logit": -0.908920168876648
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "L22-N1610",
+      "label": "L22 N1610",
+      "role": "requested",
+      "layer": 22,
+      "unit": 1610,
+      "readouts": {
+        "logit_lens": {
+          "top": [
+            {
+              "token_id": 12845,
+              "decoded": " spell",
+              "logit": 1.4542591571807861
+            },
+            {
+              "token_id": 25619,
+              "decoded": " spells",
+              "logit": 1.2762198448181152
+            },
+            {
+              "token_id": 37655,
+              "decoded": "spell",
+              "logit": 1.1627626419067383
+            },
+            {
+              "token_id": 29080,
+              "decoded": " Spell",
+              "logit": 1.136150598526001
+            },
+            {
+              "token_id": 29028,
+              "decoded": "Spell",
+              "logit": 1.1354026794433594
+            },
+            {
+              "token_id": 10963,
+              "decoded": " magic",
+              "logit": 1.109876036643982
+            },
+            {
+              "token_id": 64717,
+              "decoded": "_spell",
+              "logit": 1.044202208518982
+            },
+            {
+              "token_id": 106083,
+              "decoded": "魔法",
+              "logit": 1.0441105365753174
+            },
+            {
+              "token_id": 78053,
+              "decoded": " Spells",
+              "logit": 0.9818552732467651
+            },
+            {
+              "token_id": 47844,
+              "decoded": " SPELL",
+              "logit": 0.9736723303794861
+            },
+            {
+              "token_id": 23702,
+              "decoded": " magical",
+              "logit": 0.9283517599105835
+            },
+            {
+              "token_id": 76332,
+              "decoded": "casting",
+              "logit": 0.9196212291717529
+            },
+            {
+              "token_id": 42860,
+              "decoded": "SPELL",
+              "logit": 0.9179632663726807
+            },
+            {
+              "token_id": 47982,
+              "decoded": " caster",
+              "logit": 0.9072074890136719
+            },
+            {
+              "token_id": 37451,
+              "decoded": "magic",
+              "logit": 0.9005382061004639
+            },
+            {
+              "token_id": 15485,
+              "decoded": " Magic",
+              "logit": 0.8901773691177368
+            },
+            {
+              "token_id": 107619,
+              "decoded": "咒",
+              "logit": 0.886756420135498
+            },
+            {
+              "token_id": 83668,
+              "decoded": "_SPELL",
+              "logit": 0.8842887878417969
+            },
+            {
+              "token_id": 24172,
+              "decoded": " casting",
+              "logit": 0.8800357580184937
+            },
+            {
+              "token_id": 59249,
+              "decoded": " MAGIC",
+              "logit": 0.8525546193122864
+            },
+            {
+              "token_id": 6311,
+              "decoded": " cast",
+              "logit": 0.8439041376113892
+            },
+            {
+              "token_id": 46925,
+              "decoded": " enchant",
+              "logit": 0.8301537036895752
+            },
+            {
+              "token_id": 54612,
+              "decoded": "_magic",
+              "logit": 0.8260015845298767
+            },
+            {
+              "token_id": 89353,
+              "decoded": " arcane",
+              "logit": 0.8247770071029663
+            },
+            {
+              "token_id": 101424,
+              "decoded": "法师",
+              "logit": 0.8197698593139648
+            },
+            {
+              "token_id": 117863,
+              "decoded": "魔法师",
+              "logit": 0.8182253837585449
+            },
+            {
+              "token_id": 43538,
+              "decoded": "Magic",
+              "logit": 0.8114334344863892
+            },
+            {
+              "token_id": 32020,
+              "decoded": "caster",
+              "logit": 0.8064000606536865
+            },
+            {
+              "token_id": 51803,
+              "decoded": " mage",
+              "logit": 0.8042742013931274
+            },
+            {
+              "token_id": 88099,
+              "decoded": "(spell",
+              "logit": 0.7900329828262329
+            }
+          ],
+          "bottom": [
+            {
+              "token_id": 57599,
+              "decoded": "�",
+              "logit": -0.5681271553039551
+            },
+            {
+              "token_id": 84435,
+              "decoded": " kB",
+              "logit": -0.5605599880218506
+            },
+            {
+              "token_id": 58526,
+              "decoded": "edes",
+              "logit": -0.541508674621582
+            },
+            {
+              "token_id": 101261,
+              "decoded": "恒",
+              "logit": -0.5134410858154297
+            },
+            {
+              "token_id": 75419,
+              "decoded": "_tweet",
+              "logit": -0.5097530484199524
+            },
+            {
+              "token_id": 111116,
+              "decoded": "文档",
+              "logit": -0.5061917304992676
+            },
+            {
+              "token_id": 38308,
+              "decoded": " intest",
+              "logit": -0.504619300365448
+            },
+            {
+              "token_id": 113762,
+              "decoded": "西路",
+              "logit": -0.5012026429176331
+            },
+            {
+              "token_id": 113443,
+              "decoded": "噪声",
+              "logit": -0.4977867603302002
+            },
+            {
+              "token_id": 51171,
+              "decoded": "IDA",
+              "logit": -0.49543458223342896
+            },
+            {
+              "token_id": 65868,
+              "decoded": " racks",
+              "logit": -0.48980411887168884
+            },
+            {
+              "token_id": 66374,
+              "decoded": " Kubernetes",
+              "logit": -0.4870024025440216
+            },
+            {
+              "token_id": 45401,
+              "decoded": "poster",
+              "logit": -0.48688599467277527
+            },
+            {
+              "token_id": 121270,
+              "decoded": "鹑",
+              "logit": -0.47912299633026123
+            },
+            {
+              "token_id": 22841,
+              "decoded": " Reuters",
+              "logit": -0.47865864634513855
+            },
+            {
+              "token_id": 124609,
+              "decoded": "ưng",
+              "logit": -0.47513413429260254
+            },
+            {
+              "token_id": 37260,
+              "decoded": " authenticated",
+              "logit": -0.4750249981880188
+            },
+            {
+              "token_id": 32491,
+              "decoded": "_BOOL",
+              "logit": -0.46954861283302307
+            },
+            {
+              "token_id": 86532,
+              "decoded": "uglify",
+              "logit": -0.467436283826828
+            },
+            {
+              "token_id": 99500,
+              "decoded": "奖",
+              "logit": -0.4668909013271332
+            },
+            {
+              "token_id": 73945,
+              "decoded": " parach",
+              "logit": -0.46634483337402344
+            },
+            {
+              "token_id": 35387,
+              "decoded": "tweet",
+              "logit": -0.46633681654930115
+            },
+            {
+              "token_id": 40670,
+              "decoded": " Taliban",
+              "logit": -0.4633806645870209
+            },
+            {
+              "token_id": 142206,
+              "decoded": "뉴스",
+              "logit": -0.4594460129737854
+            },
+            {
+              "token_id": 95077,
+              "decoded": "Poster",
+              "logit": -0.45805370807647705
+            },
+            {
+              "token_id": 2811,
+              "decoded": "irl",
+              "logit": -0.45762088894844055
+            },
+            {
+              "token_id": 56654,
+              "decoded": " Bulld",
+              "logit": -0.4569750726222992
+            },
+            {
+              "token_id": 89842,
+              "decoded": ".communic",
+              "logit": -0.4565339982509613
+            },
+            {
+              "token_id": 45286,
+              "decoded": " inning",
+              "logit": -0.45564424991607666
+            },
+            {
+              "token_id": 103404,
+              "decoded": "锂",
+              "logit": -0.45501863956451416
+            }
+          ]
+        },
+        "j_lens": {
+          "top": [
+            {
+              "token_id": 12845,
+              "decoded": " spell",
+              "logit": 1.8362138271331787
+            },
+            {
+              "token_id": 25619,
+              "decoded": " spells",
+              "logit": 1.6859451532363892
+            },
+            {
+              "token_id": 10963,
+              "decoded": " magic",
+              "logit": 1.5509464740753174
+            },
+            {
+              "token_id": 37655,
+              "decoded": "spell",
+              "logit": 1.4741899967193604
+            },
+            {
+              "token_id": 29080,
+              "decoded": " Spell",
+              "logit": 1.4740445613861084
+            },
+            {
+              "token_id": 106083,
+              "decoded": "魔法",
+              "logit": 1.4019794464111328
+            },
+            {
+              "token_id": 29028,
+              "decoded": "Spell",
+              "logit": 1.3705536127090454
+            },
+            {
+              "token_id": 78053,
+              "decoded": " Spells",
+              "logit": 1.3445665836334229
+            },
+            {
+              "token_id": 23702,
+              "decoded": " magical",
+              "logit": 1.3336230516433716
+            },
+            {
+              "token_id": 64717,
+              "decoded": "_spell",
+              "logit": 1.3186085224151611
+            },
+            {
+              "token_id": 107619,
+              "decoded": "咒",
+              "logit": 1.2833623886108398
+            },
+            {
+              "token_id": 15485,
+              "decoded": " Magic",
+              "logit": 1.2471907138824463
+            },
+            {
+              "token_id": 47982,
+              "decoded": " caster",
+              "logit": 1.213208794593811
+            },
+            {
+              "token_id": 37451,
+              "decoded": "magic",
+              "logit": 1.212908148765564
+            },
+            {
+              "token_id": 47844,
+              "decoded": " SPELL",
+              "logit": 1.1913602352142334
+            },
+            {
+              "token_id": 51803,
+              "decoded": " mage",
+              "logit": 1.1788537502288818
+            },
+            {
+              "token_id": 117863,
+              "decoded": "魔法师",
+              "logit": 1.1714978218078613
+            },
+            {
+              "token_id": 46925,
+              "decoded": " enchant",
+              "logit": 1.1655641794204712
+            },
+            {
+              "token_id": 54612,
+              "decoded": "_magic",
+              "logit": 1.1510659456253052
+            },
+            {
+              "token_id": 83668,
+              "decoded": "_SPELL",
+              "logit": 1.1501532793045044
+            },
+            {
+              "token_id": 42860,
+              "decoded": "SPELL",
+              "logit": 1.1363346576690674
+            },
+            {
+              "token_id": 89353,
+              "decoded": " arcane",
+              "logit": 1.1340787410736084
+            },
+            {
+              "token_id": 43538,
+              "decoded": "Magic",
+              "logit": 1.1323111057281494
+            },
+            {
+              "token_id": 88099,
+              "decoded": "(spell",
+              "logit": 1.1256370544433594
+            },
+            {
+              "token_id": 97632,
+              "decoded": ".Magic",
+              "logit": 1.111433506011963
+            },
+            {
+              "token_id": 24172,
+              "decoded": " casting",
+              "logit": 1.1111125946044922
+            },
+            {
+              "token_id": 59249,
+              "decoded": " MAGIC",
+              "logit": 1.0849392414093018
+            },
+            {
+              "token_id": 77725,
+              "decoded": " magically",
+              "logit": 1.0806528329849243
+            },
+            {
+              "token_id": 80650,
+              "decoded": " charms",
+              "logit": 1.0803605318069458
+            },
+            {
+              "token_id": 87154,
+              "decoded": " Magick",
+              "logit": 1.0622681379318237
+            }
+          ],
+          "bottom": [
+            {
+              "token_id": 84435,
+              "decoded": " kB",
+              "logit": -0.721602201461792
+            },
+            {
+              "token_id": 57599,
+              "decoded": "�",
+              "logit": -0.6868298053741455
+            },
+            {
+              "token_id": 100868,
+              "decoded": "汗",
+              "logit": -0.6351490616798401
+            },
+            {
+              "token_id": 124609,
+              "decoded": "ưng",
+              "logit": -0.6313186287879944
+            },
+            {
+              "token_id": 40449,
+              "decoded": "KS",
+              "logit": -0.629220724105835
+            },
+            {
+              "token_id": 111116,
+              "decoded": "文档",
+              "logit": -0.6254649758338928
+            },
+            {
+              "token_id": 58526,
+              "decoded": "edes",
+              "logit": -0.6212993860244751
+            },
+            {
+              "token_id": 56654,
+              "decoded": " Bulld",
+              "logit": -0.6178956031799316
+            },
+            {
+              "token_id": 31160,
+              "decoded": "TB",
+              "logit": -0.6170008778572083
+            },
+            {
+              "token_id": 111717,
+              "decoded": "肋",
+              "logit": -0.6133022308349609
+            },
+            {
+              "token_id": 101261,
+              "decoded": "恒",
+              "logit": -0.6100112795829773
+            },
+            {
+              "token_id": 61884,
+              "decoded": "KR",
+              "logit": -0.5962215662002563
+            },
+            {
+              "token_id": 66374,
+              "decoded": " Kubernetes",
+              "logit": -0.5900921821594238
+            },
+            {
+              "token_id": 98566,
+              "decoded": " Kahn",
+              "logit": -0.5852867364883423
+            },
+            {
+              "token_id": 103404,
+              "decoded": "锂",
+              "logit": -0.5820819139480591
+            },
+            {
+              "token_id": 28815,
+              "decoded": "akte",
+              "logit": -0.5800023674964905
+            },
+            {
+              "token_id": 44236,
+              "decoded": "piel",
+              "logit": -0.5702486038208008
+            },
+            {
+              "token_id": 42916,
+              "decoded": "KG",
+              "logit": -0.5674640536308289
+            },
+            {
+              "token_id": 132386,
+              "decoded": " Eğ",
+              "logit": -0.5632607340812683
+            },
+            {
+              "token_id": 57577,
+              "decoded": " screened",
+              "logit": -0.562811017036438
+            },
+            {
+              "token_id": 85761,
+              "decoded": "@testable",
+              "logit": -0.5591232180595398
+            },
+            {
+              "token_id": 129056,
+              "decoded": "kü",
+              "logit": -0.556682825088501
+            },
+            {
+              "token_id": 98482,
+              "decoded": "ILLA",
+              "logit": -0.5563665628433228
+            },
+            {
+              "token_id": 11724,
+              "decoded": "pired",
+              "logit": -0.5519164204597473
+            },
+            {
+              "token_id": 88801,
+              "decoded": " COMPUTER",
+              "logit": -0.5512773394584656
+            },
+            {
+              "token_id": 9852,
+              "decoded": "asset",
+              "logit": -0.5495071411132812
+            },
+            {
+              "token_id": 46180,
+              "decoded": " IG",
+              "logit": -0.5491634011268616
+            },
+            {
+              "token_id": 79374,
+              "decoded": " Friedrich",
+              "logit": -0.5459967851638794
+            },
+            {
+              "token_id": 45401,
+              "decoded": "poster",
+              "logit": -0.5445647835731506
+            },
+            {
+              "token_id": 86532,
+              "decoded": "uglify",
+              "logit": -0.5433354377746582
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
