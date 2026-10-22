@@ -1760,7 +1760,7 @@ prompts; nothing here is a finding yet. Broken-answer rates are pending the blin
 | 51a.L1 | Claude, from the J lens: R1 (L22:569) at +8 lowers possessives (my, your, our, their, his, her) per 1,000 words by at least 30% of no clamp. | HELD | R1 (L22:569) at +8: possessives 2.7 per 1,000 words against 14.5 with no clamp (an 81% drop); R2 16.0, R3 14.0, L22:1610 14.7. |
 | 51a.L2 | Claude, from the J lens: R1 at +8 raises reflexives per 1,000 words above no clamp in at least 8 of the 16 prompt means. | FAILED | reflexives fell, 0.75 to 0.25 per 1,000 words, not rose. |
 | 51a.L3 | Claude, from the J lens: R3 (L22:5258) at +8 raises depend/peer/trans words per 1,000 words above no clamp. | FAILED | depend/peer/trans words 1.74 against 1.75 per 1,000 words. |
-| 51b.1 | Claude: replicate B's stock share is at least 40% (the attractor exists in this model). | PENDING | |
-| 51b.2 | Claude: pooled over the six random arms, the stock share is at least 15 points below replicate B, bootstrap interval over prompts excluding 0. | PENDING | |
-| 51b.3 | Claude: at least four of the six random arms are individually below replicate B. | PENDING | |
-| 51b.4 | Claude: no random arm's NONAME share is more than 15 points above replicate B (the drop is not instruction following breaking). | PENDING | |
+| 51b.1 | Claude: replicate B's stock share is at least 40% (the attractor exists in this model). | HELD | replicate B stock share 48 of 64 named (0.75); stock set from A: Lila 26, Lena 14, Elena 4, Liam 4, then Elias/Ethan. |
+| 51b.2 | Claude: pooled over the six random arms, the stock share is at least 15 points below replicate B, bootstrap interval over prompts excluding 0. | FAILED | pooled six random arms 311 of 384 (0.81), +0.06 against B, interval [-0.09, +0.22]: no drop. |
+| 51b.3 | Claude: at least four of the six random arms are individually below replicate B. | FAILED | 0 of 6 random arms below B (0.80 to 0.84 each). |
+| 51b.4 | Claude: no random arm's NONAME share is more than 15 points above replicate B (the drop is not instruction following breaking). | HELD | NONAME share 0 in every arm. |

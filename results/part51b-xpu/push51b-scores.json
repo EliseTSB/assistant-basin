@@ -1,0 +1,609 @@
+{
+  "arm_count": 8,
+  "arms": [
+    {
+      "answer_count": 64,
+      "arm": "no_clamp_A",
+      "clamps": [],
+      "name_entropy_bits": 2.8277472408624718,
+      "named_answer_count": 64,
+      "noname_share": 0.0,
+      "stock_count": 51,
+      "stock_share_among_named": 0.796875,
+      "stock_share_difference_from_no_clamp_B": {
+        "bootstrap95": [
+          -0.109375,
+          0.203125
+        ],
+        "value": 0.046875
+      },
+      "top_8_names": [
+        {
+          "count": 26,
+          "name": "Lila"
+        },
+        {
+          "count": 14,
+          "name": "Lena"
+        },
+        {
+          "count": 4,
+          "name": "Elena"
+        },
+        {
+          "count": 4,
+          "name": "Liam"
+        },
+        {
+          "count": 3,
+          "name": "Elias"
+        },
+        {
+          "count": 3,
+          "name": "Ethan"
+        },
+        {
+          "count": 2,
+          "name": "Eli"
+        },
+        {
+          "count": 1,
+          "name": "Clara"
+        }
+      ]
+    },
+    {
+      "answer_count": 64,
+      "arm": "no_clamp_B",
+      "clamps": [],
+      "name_entropy_bits": 2.860794552226539,
+      "named_answer_count": 64,
+      "noname_share": 0.0,
+      "stock_count": 48,
+      "stock_share_among_named": 0.75,
+      "stock_share_difference_from_no_clamp_B": {
+        "bootstrap95": [
+          0.0,
+          0.0
+        ],
+        "value": 0.0
+      },
+      "top_8_names": [
+        {
+          "count": 25,
+          "name": "Lila"
+        },
+        {
+          "count": 14,
+          "name": "Lena"
+        },
+        {
+          "count": 4,
+          "name": "Elena"
+        },
+        {
+          "count": 4,
+          "name": "Elias"
+        },
+        {
+          "count": 3,
+          "name": "Emma"
+        },
+        {
+          "count": 3,
+          "name": "Ewan"
+        },
+        {
+          "count": 2,
+          "name": "James"
+        },
+        {
+          "count": 2,
+          "name": "Leo"
+        }
+      ]
+    },
+    {
+      "answer_count": 64,
+      "arm": "L6:k+8",
+      "clamps": [
+        {
+          "k": 8,
+          "layer": 6,
+          "level": 6.53125,
+          "natural_max": 0.81640625,
+          "unit": 4367
+        }
+      ],
+      "name_entropy_bits": 2.777042358083776,
+      "named_answer_count": 64,
+      "noname_share": 0.0,
+      "stock_count": 52,
+      "stock_share_among_named": 0.8125,
+      "stock_share_difference_from_no_clamp_B": {
+        "bootstrap95": [
+          -0.078125,
+          0.21875
+        ],
+        "value": 0.0625
+      },
+      "top_8_names": [
+        {
+          "count": 26,
+          "name": "Lila"
+        },
+        {
+          "count": 14,
+          "name": "Lena"
+        },
+        {
+          "count": 4,
+          "name": "Elena"
+        },
+        {
+          "count": 4,
+          "name": "Elias"
+        },
+        {
+          "count": 4,
+          "name": "Liam"
+        },
+        {
+          "count": 3,
+          "name": "Ethan"
+        },
+        {
+          "count": 2,
+          "name": "Eli"
+        },
+        {
+          "count": 1,
+          "name": "Clara"
+        }
+      ]
+    },
+    {
+      "answer_count": 64,
+      "arm": "L6:k-8",
+      "clamps": [
+        {
+          "k": -8,
+          "layer": 6,
+          "level": -6.5,
+          "natural_max": 0.8125,
+          "unit": 5897
+        }
+      ],
+      "name_entropy_bits": 2.8277472408624718,
+      "named_answer_count": 64,
+      "noname_share": 0.0,
+      "stock_count": 51,
+      "stock_share_among_named": 0.796875,
+      "stock_share_difference_from_no_clamp_B": {
+        "bootstrap95": [
+          -0.09375,
+          0.203125
+        ],
+        "value": 0.046875
+      },
+      "top_8_names": [
+        {
+          "count": 26,
+          "name": "Lila"
+        },
+        {
+          "count": 14,
+          "name": "Lena"
+        },
+        {
+          "count": 4,
+          "name": "Elena"
+        },
+        {
+          "count": 4,
+          "name": "Liam"
+        },
+        {
+          "count": 3,
+          "name": "Elias"
+        },
+        {
+          "count": 3,
+          "name": "Ethan"
+        },
+        {
+          "count": 2,
+          "name": "Eli"
+        },
+        {
+          "count": 1,
+          "name": "Clara"
+        }
+      ]
+    },
+    {
+      "answer_count": 64,
+      "arm": "L14:k+8",
+      "clamps": [
+        {
+          "k": 8,
+          "layer": 14,
+          "level": 12.125,
+          "natural_max": 1.515625,
+          "unit": 2724
+        }
+      ],
+      "name_entropy_bits": 2.8277472408624718,
+      "named_answer_count": 64,
+      "noname_share": 0.0,
+      "stock_count": 51,
+      "stock_share_among_named": 0.796875,
+      "stock_share_difference_from_no_clamp_B": {
+        "bootstrap95": [
+          -0.109375,
+          0.203125
+        ],
+        "value": 0.046875
+      },
+      "top_8_names": [
+        {
+          "count": 26,
+          "name": "Lila"
+        },
+        {
+          "count": 14,
+          "name": "Lena"
+        },
+        {
+          "count": 4,
+          "name": "Elena"
+        },
+        {
+          "count": 4,
+          "name": "Liam"
+        },
+        {
+          "count": 3,
+          "name": "Elias"
+        },
+        {
+          "count": 3,
+          "name": "Ethan"
+        },
+        {
+          "count": 2,
+          "name": "Eli"
+        },
+        {
+          "count": 1,
+          "name": "Clara"
+        }
+      ]
+    },
+    {
+      "answer_count": 64,
+      "arm": "L14:k-8",
+      "clamps": [
+        {
+          "k": -8,
+          "layer": 14,
+          "level": -12.9375,
+          "natural_max": 1.6171875,
+          "unit": 2958
+        }
+      ],
+      "name_entropy_bits": 2.771346608449397,
+      "named_answer_count": 64,
+      "noname_share": 0.0,
+      "stock_count": 52,
+      "stock_share_among_named": 0.8125,
+      "stock_share_difference_from_no_clamp_B": {
+        "bootstrap95": [
+          -0.09375,
+          0.21875
+        ],
+        "value": 0.0625
+      },
+      "top_8_names": [
+        {
+          "count": 26,
+          "name": "Lila"
+        },
+        {
+          "count": 14,
+          "name": "Lena"
+        },
+        {
+          "count": 5,
+          "name": "Elias"
+        },
+        {
+          "count": 4,
+          "name": "Liam"
+        },
+        {
+          "count": 3,
+          "name": "Elena"
+        },
+        {
+          "count": 3,
+          "name": "Ethan"
+        },
+        {
+          "count": 2,
+          "name": "Eli"
+        },
+        {
+          "count": 1,
+          "name": "Clara"
+        }
+      ]
+    },
+    {
+      "answer_count": 64,
+      "arm": "L22:k+8",
+      "clamps": [
+        {
+          "k": 8,
+          "layer": 22,
+          "level": 38.5,
+          "natural_max": 4.8125,
+          "unit": 1209
+        }
+      ],
+      "name_entropy_bits": 2.812539782834769,
+      "named_answer_count": 64,
+      "noname_share": 0.0,
+      "stock_count": 51,
+      "stock_share_among_named": 0.796875,
+      "stock_share_difference_from_no_clamp_B": {
+        "bootstrap95": [
+          -0.109375,
+          0.203125
+        ],
+        "value": 0.046875
+      },
+      "top_8_names": [
+        {
+          "count": 27,
+          "name": "Lila"
+        },
+        {
+          "count": 13,
+          "name": "Lena"
+        },
+        {
+          "count": 4,
+          "name": "Elena"
+        },
+        {
+          "count": 4,
+          "name": "Liam"
+        },
+        {
+          "count": 3,
+          "name": "Elias"
+        },
+        {
+          "count": 3,
+          "name": "Ethan"
+        },
+        {
+          "count": 2,
+          "name": "Eli"
+        },
+        {
+          "count": 1,
+          "name": "Clara"
+        }
+      ]
+    },
+    {
+      "answer_count": 64,
+      "arm": "L22:k-8",
+      "clamps": [
+        {
+          "k": -8,
+          "layer": 22,
+          "level": -66.0,
+          "natural_max": 8.25,
+          "unit": 3652
+        }
+      ],
+      "name_entropy_bits": 2.718789782834769,
+      "named_answer_count": 64,
+      "noname_share": 0.0,
+      "stock_count": 54,
+      "stock_share_among_named": 0.84375,
+      "stock_share_difference_from_no_clamp_B": {
+        "bootstrap95": [
+          -0.0625,
+          0.265625
+        ],
+        "value": 0.09375
+      },
+      "top_8_names": [
+        {
+          "count": 27,
+          "name": "Lila"
+        },
+        {
+          "count": 13,
+          "name": "Lena"
+        },
+        {
+          "count": 6,
+          "name": "Elias"
+        },
+        {
+          "count": 4,
+          "name": "Elena"
+        },
+        {
+          "count": 4,
+          "name": "Liam"
+        },
+        {
+          "count": 2,
+          "name": "Eli"
+        },
+        {
+          "count": 1,
+          "name": "Clara"
+        },
+        {
+          "count": 1,
+          "name": "Ellen"
+        }
+      ]
+    }
+  ],
+  "jsonl": "results\\part51b-xpu\\push51b.jsonl",
+  "layer_widths": {
+    "14": 6144,
+    "22": 6144,
+    "6": 6144
+  },
+  "measure": {
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 5103,
+    "name_entropy_population": "named answers only",
+    "name_rule": "first cleaned answer word matching ^[A-Z][a-z]+$, excluding registered openers",
+    "noname_value": "NONAME",
+    "prompt_count": 16,
+    "resampling_unit": "prompt",
+    "stock_names": [
+      {
+        "count_in_A": 26,
+        "name": "Lila"
+      },
+      {
+        "count_in_A": 14,
+        "name": "Lena"
+      },
+      {
+        "count_in_A": 4,
+        "name": "Elena"
+      },
+      {
+        "count_in_A": 4,
+        "name": "Liam"
+      },
+      {
+        "count_in_A": 3,
+        "name": "Elias"
+      }
+    ],
+    "stock_set_rule": "five most common named answers in no_clamp_A; ties alphabetical",
+    "stock_set_source_arm": "no_clamp_A"
+  },
+  "model": "Qwen/Qwen3-1.7B",
+  "natural_max_path": "results\\part51b-xpu\\natural-max-summary.json",
+  "pooled_random_arms": {
+    "arm_count": 6,
+    "arms": [
+      "L6:k+8",
+      "L6:k-8",
+      "L14:k+8",
+      "L14:k-8",
+      "L22:k+8",
+      "L22:k-8"
+    ],
+    "difference_from_no_clamp_B": {
+      "bootstrap95": [
+        -0.0859375,
+        0.21614583333333337
+      ],
+      "value": 0.05989583333333337
+    },
+    "named_answer_count": 384,
+    "stock_count": 311,
+    "stock_share_among_named": 0.8098958333333334
+  },
+  "random_unit_seed": 5101,
+  "random_units": [
+    {
+      "id": "L6:k+8",
+      "k": 8,
+      "layer": 6,
+      "unit": 4367
+    },
+    {
+      "id": "L6:k-8",
+      "k": -8,
+      "layer": 6,
+      "unit": 5897
+    },
+    {
+      "id": "L14:k+8",
+      "k": 8,
+      "layer": 14,
+      "unit": 2724
+    },
+    {
+      "id": "L14:k-8",
+      "k": -8,
+      "layer": 14,
+      "unit": 2958
+    },
+    {
+      "id": "L22:k+8",
+      "k": 8,
+      "layer": 22,
+      "unit": 1209
+    },
+    {
+      "id": "L22:k-8",
+      "k": -8,
+      "layer": 22,
+      "unit": 3652
+    }
+  ],
+  "result_count": 512,
+  "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+  "schema_version": 1,
+  "seed": 3801,
+  "summary_type": "part51b_stock_name_attractor",
+  "timings": {
+    "L14:k+8": {
+      "batch_size": 16,
+      "generated": 64,
+      "seconds": 33.648904100002255
+    },
+    "L14:k-8": {
+      "batch_size": 16,
+      "generated": 64,
+      "seconds": 34.18372410000302
+    },
+    "L22:k+8": {
+      "batch_size": 16,
+      "generated": 64,
+      "seconds": 32.86837390000437
+    },
+    "L22:k-8": {
+      "batch_size": 16,
+      "generated": 64,
+      "seconds": 33.026555099997495
+    },
+    "L6:k+8": {
+      "batch_size": 16,
+      "generated": 64,
+      "seconds": 32.15212040000188
+    },
+    "L6:k-8": {
+      "batch_size": 16,
+      "generated": 64,
+      "seconds": 34.74560460000066
+    },
+    "no_clamp_A": {
+      "batch_size": 16,
+      "generated": 64,
+      "seconds": 197.3032303
+    },
+    "no_clamp_B": {
+      "batch_size": 16,
+      "generated": 64,
+      "seconds": 1079.8301920000013
+    }
+  }
+}

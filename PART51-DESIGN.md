@@ -93,3 +93,11 @@ Same prompts, samples, seeds and scorer as 51a; part51.py push51a --plan 51d. Ar
 | 51d.1 | Claude: L22:1610 at k 32 raises magic-word density by at least 3 per 1,000 words over no clamp, interval excluding 0. |
 | 51d.2 | Claude: the rise grows from k 16 to k 32 (dose order on the rising side). |
 | 51d.3 | Claude: neither random unit at k 32 raises magic-word density by more than 1 per 1,000 words. |
+
+## 51b result (scored 2026-10-21 22:10 CT)
+The default names are strong (Lila and Lena take 40 of 64 named answers in both no-clamp replicates) and the six
+random pushes did not move them: every random arm's top-8 list is nearly identical to replicate A's, whose sample seeds
+they share. These randomly drawn units at +/-8 barely changed the text at all, so this tests "does a push that does
+nothing move names" (no). The 49b observation came from pushes that did change the text (R1 cut possessives). Reading:
+names are not especially fragile; they move when the text moves. A fair test of fragility would compare name change
+against how much the rest of the answer changed, per push. Not run.
