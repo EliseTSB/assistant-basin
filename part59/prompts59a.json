@@ -1,0 +1,17 @@
+{
+  "prompt_template": "Write the first paragraph of a story about a {subject}.",
+  "subjects": [
+    "baker",
+    "gardener",
+    "student on the first day",
+    "surveyor",
+    "potter",
+    "traveler",
+    "carpenter",
+    "musician",
+    "cook",
+    "shepherd",
+    "painter",
+    "librarian"
+  ]
+}
