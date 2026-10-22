@@ -22,3 +22,12 @@ k) only if a pilot pair shows a boost.
 Added arms on 8 wizard-topic prompts (data/part49-wizard-prompts.json: e.g. "Tell me a short story about a wizard."),
 4 samples each, 32 answers per arm: no clamp; W at -8; each P at -8 (5); W and each P together at -8 (5). 12 arms,
 384 generations; total 1,344. The open-prompt arms stay as designed.
+
+## Amendment 2 (2026-10-21 19:21 CT, before any push): partner selection
+No Part 35 wizard ranking exists on disk, so the fallback ran. It used Part 38's homograph sentences (12 wizard as a
+sorcerer, 12 "setup wizard") rather than the role nouns, which asks the sharper question (the magic sense, not the
+word). Its first ranking was dominated by layer-27 units whose values were large and negative on both senses (for
+example -682 against -922); a negative maximum clamped at 8x is a large negative write, not a partner. The rule now:
+positive pole only (median on the wizard sense above 0, and the control median under half of it), layers 4 to 26,
+at most two per layer. Partners (data/part49-partners.json): L22:1610, L26:3130, L24:4151, L26:1877, L22:2295.
+The first ranking is kept in git history (the build commit's parent tree is not needed; the rule above re-derives it).
