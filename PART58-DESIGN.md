@@ -70,3 +70,21 @@ Scoring of the pre-registered predictions:
 - 58g: held (344 words matched or beat 561 and 687).
 Added findings: the rating is a weak screen for reproducibility under every prompt; 23 to 26% of real neurons are verified by the sentence test (control rate on other units' texts 0.09 to 0.12);
 arm B (texts from windows, pattern unannounced) lift 0.285 (dev) and 0.318 (test) beats texts from Haiku's written concept (0.13) and texts written in the same call after the concept (0.23).
+
+### Later on 10-22 (real-unit comparison of every prompt against the sentence test, dev / test)
+Spearman(one_job, lift): V0 0.28 / 0.24; V3 0.34 / -; V7 - / 0.27; V9 0.25 / 0.27 (fit fraction 0.24 / 0.29); V10 (context rule) 0.27 / 0.26 (fit 0.28 / 0.31);
+V9 with thinking 0.21 / 0.18. So no prompt change moves the rating's power to predict the sentence test beyond about 0.25 to 0.35, and thinking made it worse on real neurons
+even though it was best on planted units. Planted truth ranks prompts on token-class purity; real neurons are mixed in ways the planted set does not model.
+Haiku's unannounced-pattern texts are the stronger instrument (23 to 26% of real neurons verified, 75 to 83% of them rated 1 or 2 by every labeller prompt).
+
+### Atlas test run: the whole 4,000-record pilot through the sentence test (10-22 11:00 CT)
+Haiku wrote 4 unannounced-pattern texts per record (3,969 records, 15,876 texts, about $2.1); Qwen3-1.7B (bf16, CPU) scored every text on every unit (re-scoring reproduces
+recorded activations: median ratio 0.96 neurons, 0.99 controls). A fixed threshold at the median of a unit's random-firing windows is NOT fair across types (random directions hit
+73% of other units' texts), so the test uses a per-unit null: the unit's own 4 texts against 1,200 other units' texts. A unit passes when at least 3 of its 4 texts exceed the null's 95th percentile
+(chance about 0.05%).
+| | n | passes (3 of 4 above p95) | 4 of 4 above p99 | mean per-unit AUC |
+|---|---|---|---|---|
+| real neurons | 1,990 | 28.1% | 9.1% | 0.72 |
+| random-direction controls | 1,979 | 6.2% | 1.4% | 0.58 |
+AUC of the per-unit statistic for real vs control: 0.695. The V0 rating predicts passing with AUC 0.70 for real units and 0.62 for controls. Pass rate by layer group (0-6, 7-13, 14-20, 21-27) for real units:
+34%, 26%, 22%, 30%. The technique separates real units from random directions about 4.5 to 1; 6% of random directions also pass, consistent with the 18 controls Haiku rated 4 in the pilot.
