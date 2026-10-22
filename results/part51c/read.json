@@ -1,0 +1,602 @@
+{
+ "units": [
+  1610,
+  993,
+  3026,
+  3211,
+  3522,
+  4068
+ ],
+ "rows": [
+  {
+   "sense": "screened",
+   "text": "The village wizard mixed a blue potion before the travelers reached the old bridge.",
+   "sent_max": [
+    138.0,
+    0.7734375,
+    0.380859375,
+    3.3125,
+    0.0203857421875,
+    7.25
+   ],
+   "at_wizard": [
+    113.5,
+    0.7734375,
+    -0.1279296875,
+    0.11767578125,
+    0.0203857421875,
+    -0.1943359375
+   ]
+  },
+  {
+   "sense": "screened",
+   "text": "At dusk, the wizard whispered an enchantment that made the locked gate swing open.",
+   "sent_max": [
+    226.0,
+    0.51171875,
+    0.392578125,
+    3.875,
+    0.04248046875,
+    12.25
+   ],
+   "at_wizard": [
+    122.0,
+    0.51171875,
+    -0.3359375,
+    -0.0400390625,
+    0.00445556640625,
+    -0.169921875
+   ]
+  },
+  {
+   "sense": "screened",
+   "text": "A young wizard practiced each spell beside the oak while rain tapped the roof.",
+   "sent_max": [
+    251.0,
+    0.1044921875,
+    0.2197265625,
+    7.03125,
+    0.042236328125,
+    0.291015625
+   ],
+   "at_wizard": [
+    157.0,
+    0.0732421875,
+    -0.435546875,
+    0.1796875,
+    0.042236328125,
+    0.14453125
+   ]
+  },
+  {
+   "sense": "screened",
+   "text": "In the tale, the wizard carried a wand and offered the lost child shelter.",
+   "sent_max": [
+    155.0,
+    0.4140625,
+    0.55078125,
+    4.09375,
+    0.0224609375,
+    0.091796875
+   ],
+   "at_wizard": [
+    128.0,
+    0.02001953125,
+    -0.28515625,
+    0.01708984375,
+    -0.0279541015625,
+    -0.2431640625
+   ]
+  },
+  {
+   "sense": "screened",
+   "text": "The council asked the wizard to study a strange charm found near the well.",
+   "sent_max": [
+    192.0,
+    0.8515625,
+    0.2060546875,
+    3.125,
+    0.388671875,
+    0.314453125
+   ],
+   "at_wizard": [
+    142.0,
+    0.2294921875,
+    -0.0001373291015625,
+    -0.1650390625,
+    -0.0167236328125,
+    -0.255859375
+   ]
+  },
+  {
+   "sense": "screened",
+   "text": "No one doubted that the wizard could turn the stubborn stone into glass.",
+   "sent_max": [
+    127.0,
+    1.1484375,
+    2.65625,
+    1.4765625,
+    0.703125,
+    1.609375
+   ],
+   "at_wizard": [
+    100.0,
+    0.671875,
+    -0.25390625,
+    -0.5625,
+    -0.04833984375,
+    -0.1650390625
+   ]
+  },
+  {
+   "sense": "screened",
+   "text": "Behind the tower, an apprentice watched the wizard summon a bright ring of fire.",
+   "sent_max": [
+    219.0,
+    0.1044921875,
+    0.35546875,
+    1.171875,
+    -0.004974365234375,
+    7.15625
+   ],
+   "at_wizard": [
+    119.0,
+    -0.024169921875,
+    -0.328125,
+    0.5234375,
+    -0.033203125,
+    -0.146484375
+   ]
+  },
+  {
+   "sense": "screened",
+   "text": "The wizard's potion glowed green after the last careful ingredient was added.",
+   "sent_max": [
+    153.0,
+    0.58203125,
+    0.306640625,
+    0.9609375,
+    0.01171875,
+    37.5
+   ],
+   "at_wizard": [
+    76.0,
+    0.58203125,
+    0.306640625,
+    -0.37890625,
+    0.01171875,
+    -0.0908203125
+   ]
+  },
+  {
+   "sense": "screened",
+   "text": "With one spell, the wizard helped the farmer recover a lost silver key.",
+   "sent_max": [
+    208.0,
+    0.55859375,
+    0.40625,
+    1.21875,
+    0.01312255859375,
+    0.00823974609375
+   ],
+   "at_wizard": [
+    167.0,
+    0.416015625,
+    -0.357421875,
+    0.1416015625,
+    -0.02587890625,
+    -0.09619140625
+   ]
+  },
+  {
+   "sense": "screened",
+   "text": "Each winter the wizard taught nearby children how to read the ancient runes.",
+   "sent_max": [
+    136.0,
+    0.953125,
+    0.91015625,
+    5.65625,
+    0.003753662109375,
+    0.380859375
+   ],
+   "at_wizard": [
+    98.0,
+    0.38671875,
+    0.04638671875,
+    -0.267578125,
+    0.003753662109375,
+    -0.212890625
+   ]
+  },
+  {
+   "sense": "screened",
+   "text": "The traveler thanked the wizard for safely guiding everyone through the haunted forest.",
+   "sent_max": [
+    89.5,
+    0.82421875,
+    0.4140625,
+    0.1875,
+    -0.010009765625,
+    -0.0693359375
+   ],
+   "at_wizard": [
+    69.5,
+    0.03955078125,
+    0.021728515625,
+    -0.26171875,
+    -0.0390625,
+    -0.515625
+   ]
+  },
+  {
+   "sense": "screened",
+   "text": "Before sunrise, a wizard left a small enchanted lantern beside the road.",
+   "sent_max": [
+    141.0,
+    0.53125,
+    0.443359375,
+    2.296875,
+    0.061279296875,
+    0.125
+   ],
+   "at_wizard": [
+    141.0,
+    0.13671875,
+    -0.34765625,
+    0.1484375,
+    0.061279296875,
+    -0.01446533203125
+   ]
+  },
+  {
+   "sense": "other",
+   "text": "The installer opened the wizard to help new users choose their language settings.",
+   "sent_max": [
+    -0.08203125,
+    0.365234375,
+    0.66015625,
+    1.328125,
+    0.5859375,
+    0.080078125
+   ],
+   "at_wizard": [
+    -0.5703125,
+    0.06640625,
+    0.66015625,
+    -0.158203125,
+    -0.4453125,
+    -0.94921875
+   ]
+  },
+  {
+   "sense": "other",
+   "text": "A friendly wizard guided me through creating an account and selecting a password.",
+   "sent_max": [
+    69.0,
+    0.6640625,
+    0.625,
+    0.93359375,
+    0.41796875,
+    0.609375
+   ],
+   "at_wizard": [
+    69.0,
+    0.6640625,
+    0.12060546875,
+    0.046630859375,
+    0.0301513671875,
+    -0.1533203125
+   ]
+  },
+  {
+   "sense": "other",
+   "text": "During setup, the wizard asked which folder should hold the downloaded files.",
+   "sent_max": [
+    3.890625,
+    0.55078125,
+    0.259765625,
+    0.58984375,
+    0.310546875,
+    3.15625
+   ],
+   "at_wizard": [
+    -1.3828125,
+    0.498046875,
+    -0.09814453125,
+    -0.04541015625,
+    -0.12255859375,
+    3.15625
+   ]
+  },
+  {
+   "sense": "other",
+   "text": "The screen displayed a wizard with three steps for connecting the printer.",
+   "sent_max": [
+    42.75,
+    0.78125,
+    2.84375,
+    0.3984375,
+    0.375,
+    6.03125
+   ],
+   "at_wizard": [
+    28.25,
+    0.78125,
+    2.84375,
+    0.0162353515625,
+    -0.1357421875,
+    -0.4296875
+   ]
+  },
+  {
+   "sense": "other",
+   "text": "I followed the wizard to import old contacts into the new application.",
+   "sent_max": [
+    13.8125,
+    0.158203125,
+    1.265625,
+    0.77734375,
+    0.240234375,
+    0.09423828125
+   ],
+   "at_wizard": [
+    13.8125,
+    0.158203125,
+    1.265625,
+    -0.55078125,
+    -0.60546875,
+    -0.40234375
+   ]
+  },
+  {
+   "sense": "other",
+   "text": "A setup wizard can explain each option before saving the network preferences.",
+   "sent_max": [
+    0.0228271484375,
+    0.72265625,
+    -0.109375,
+    0.1767578125,
+    1.1640625,
+    0.0771484375
+   ],
+   "at_wizard": [
+    -0.8125,
+    0.72265625,
+    -1.3359375,
+    -0.0126953125,
+    -0.26171875,
+    -0.5625
+   ]
+  },
+  {
+   "sense": "other",
+   "text": "The wizard suggested a default name, then asked whether I wanted to change it.",
+   "sent_max": [
+    77.5,
+    0.57421875,
+    0.6796875,
+    1.28125,
+    0.6953125,
+    4.3125
+   ],
+   "at_wizard": [
+    77.5,
+    0.57421875,
+    0.2890625,
+    -0.392578125,
+    0.011474609375,
+    -0.07177734375
+   ]
+  },
+  {
+   "sense": "other",
+   "text": "After installation, the wizard offered to check for updates and restart the program.",
+   "sent_max": [
+    0.056640625,
+    0.59375,
+    2.4375,
+    1.3671875,
+    1.765625,
+    7.53125
+   ],
+   "at_wizard": [
+    -0.322265625,
+    0.3984375,
+    2.4375,
+    -0.25390625,
+    -0.298828125,
+    7.53125
+   ]
+  },
+  {
+   "sense": "other",
+   "text": "My laptop's wizard showed progress while I chose a time zone and keyboard layout.",
+   "sent_max": [
+    3.421875,
+    0.359375,
+    0.255859375,
+    0.51953125,
+    0.12451171875,
+    1.9453125
+   ],
+   "at_wizard": [
+    -0.9765625,
+    0.359375,
+    -0.41796875,
+    -0.0712890625,
+    -0.369140625,
+    1.9453125
+   ]
+  },
+  {
+   "sense": "other",
+   "text": "The first wizard page described the files that would be copied to disk.",
+   "sent_max": [
+    100.0,
+    0.6796875,
+    0.6484375,
+    0.453125,
+    6.375,
+    8.6875
+   ],
+   "at_wizard": [
+    100.0,
+    0.6796875,
+    -0.125,
+    0.11572265625,
+    0.224609375,
+    -0.380859375
+   ]
+  },
+  {
+   "sense": "other",
+   "text": "We reopened the wizard because the initial setup had skipped the privacy choices.",
+   "sent_max": [
+    101.0,
+    0.66796875,
+    0.5625,
+    0.6328125,
+    0.5078125,
+    0.52734375
+   ],
+   "at_wizard": [
+    101.0,
+    0.466796875,
+    0.08447265625,
+    -0.138671875,
+    -0.059814453125,
+    0.52734375
+   ]
+  },
+  {
+   "sense": "other",
+   "text": "At the final step, the wizard summarized the settings and requested confirmation.",
+   "sent_max": [
+    86.0,
+    0.451171875,
+    -0.056640625,
+    1.0234375,
+    0.064453125,
+    0.2353515625
+   ],
+   "at_wizard": [
+    86.0,
+    0.06884765625,
+    -0.74609375,
+    -0.058349609375,
+    -0.05859375,
+    -0.2392578125
+   ]
+  }
+ ],
+ "summary": {
+  "22:1610:sent_max": {
+   "sorcerer_mean": 169.625,
+   "setup_mean": 41.44770304361979,
+   "d": 2.81283851475239,
+   "n": [
+    12,
+    12
+   ]
+  },
+  "22:1610:at_wizard": {
+   "sorcerer_mean": 119.41666666666667,
+   "setup_mean": 39.29150390625,
+   "d": 2.1410318349659483,
+   "n": [
+    12,
+    12
+   ]
+  },
+  "22:993:sent_max": {
+   "sorcerer_mean": 0.6131184895833334,
+   "setup_mean": 0.54736328125,
+   "d": 0.25434197852204893,
+   "n": [
+    12,
+    12
+   ]
+  },
+  "22:993:at_wizard": {
+   "sorcerer_mean": 0.31805419921875,
+   "setup_mean": 0.4531656901041667,
+   "d": -0.5128064976009822,
+   "n": [
+    12,
+    12
+   ]
+  },
+  "22:3026:sent_max": {
+   "sorcerer_mean": 0.603515625,
+   "setup_mean": 0.83935546875,
+   "d": -0.2924282645721417,
+   "n": [
+    12,
+    12
+   ]
+  },
+  "22:3026:at_wizard": {
+   "sorcerer_mean": -0.17475509643554688,
+   "setup_mean": 0.4148356119791667,
+   "d": -0.6668301820603949,
+   "n": [
+    12,
+    12
+   ]
+  },
+  "22:3211:sent_max": {
+   "sorcerer_mean": 2.8671875,
+   "setup_mean": 0.7901204427083334,
+   "d": 1.401976226772944,
+   "n": [
+    12,
+    12
+   ]
+  },
+  "22:3211:at_wizard": {
+   "sorcerer_mean": -0.045654296875,
+   "setup_mean": -0.125274658203125,
+   "d": 0.31896688062629736,
+   "n": [
+    12,
+    12
+   ]
+  },
+  "22:3522:sent_max": {
+   "sorcerer_mean": 0.10785420735677083,
+   "setup_mean": 1.0522054036458333,
+   "d": -0.7605778762382261,
+   "n": [
+    12,
+    12
+   ]
+  },
+  "22:3522:at_wizard": {
+   "sorcerer_mean": -0.00394439697265625,
+   "setup_mean": -0.17424519856770834,
+   "d": 1.0319094353440759,
+   "n": [
+    12,
+    12
+   ]
+  },
+  "22:4068:sent_max": {
+   "sorcerer_mean": 5.5756378173828125,
+   "setup_mean": 2.7739664713541665,
+   "d": 0.35129827659324525,
+   "n": [
+    12,
+    12
+   ]
+  },
+  "22:4068:at_wizard": {
+   "sorcerer_mean": -0.16335550944010416,
+   "setup_mean": 0.8309326171875,
+   "d": -0.5805857880424439,
+   "n": [
+    12,
+    12
+   ]
+  }
+ }
+}

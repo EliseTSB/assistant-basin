@@ -72,6 +72,8 @@ Elise and Ryan on the call (20:54-20:55): is L22:1610 about magic or about a per
 wizard word neuron (L19:4826: weak on the setup-wizard sense); L22:1610 has not been measured. part51c.py reads its
 activation on Part 38's wizard sentences (data/part38-homographs.json, units[0]: sorcerer sense against setup-wizard
 sense), at the "wizard" token and as the sentence maximum, beside 5 random L22 units (seed 5104), CPU, bf16.
-| 51c.1 | Claude: the sentence maximum of L22:1610 is higher on sorcerer sentences than setup-wizard ones, Cohen's d at least 1.0. |
-| 51c.2 | Claude: at the "wizard" token itself the gap is smaller than at the sentence maximum (the unit tracks magic content, not the word). |
-| 51c.3 | Claude: no random L22 unit shows a sentence-maximum gap with d at least 1.0. |
+| 51c.1 | Claude: the sentence maximum of L22:1610 is higher on sorcerer sentences than setup-wizard ones, Cohen's d at least 1.0. | HELD: 169.6 against 41.4, d 2.81. |
+| 51c.2 | Claude: at the "wizard" token itself the gap is smaller than at the sentence maximum (the unit tracks magic content, not the word). | HELD, with a qualifier: at the token, 119.4 against 39.3, d 2.14 < 2.81. But it still fires about 39 on the software sense of the word, against a natural maximum of 5.3 on neutral text and under 1 for the random units, so the word alone drives it hard too. |
+| 51c.3 | Claude: no random L22 unit shows a sentence-maximum gap with d at least 1.0. | FAILED: L22:3211 has d 1.40 (2.87 against 0.79, tiny values); the other four are under 0.8. |
+
+51c reading: L22:1610 fires on the word wizard in either sense, and three times harder when the sentence is about magic. The random-unit failure shows that a d over 1 on 12 sentences per side is reachable by chance at tiny activations, so a d threshold alone is too weak a control; the raw size (about 40 to 170 against under 3 for every random unit) carries the result.
