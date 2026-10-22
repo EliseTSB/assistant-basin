@@ -1,0 +1,91 @@
+{
+ "tool": "part26.py (assistant-basin, Part 26)",
+ "tool_sha256": "db17a2b70131077dfa6a3c7ac0cc5efbf337876ab9d183d9dfb1fd1bd3893615",
+ "model": "allenai/OLMo-2-0425-1B-Instruct",
+ "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+ "input_shas": {
+  "target": "7d5b4a01ed4095691d80c66603b82eeb99df65b43400b4879132f0cb1cb6fe3d",
+  "target_npz": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+  "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb",
+  "part24.py": "363fd637444f1388fc2239b7bac4e4024802afaa8d48233e5df3e81b84a573df"
+ },
+ "written": "2026-10-21 23:19:15",
+ "short_name": "olmo2-1b",
+ "question": "Where do you come from?",
+ "prompt": "<|endoftext|><|user|>\nWhere do you come from?\n<|assistant|>\n",
+ "system_message": null,
+ "sampling": {
+  "do_sample": true,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "samples_per_condition": 8,
+  "max_new_tokens": 64
+ },
+ "seed_policy": "one deterministic SHA-derived seed for each condition",
+ "clamp_mult": 2.0,
+ "best_twin": {
+  "layer": 10,
+  "unit": 6978,
+  "r": 0.12949112686469333,
+  "writes_overlap": 1,
+  "null_r": -0.0003458270755963272,
+  "null_bar": 0.09175000972135831,
+  "beats_null": true,
+  "selection_reasons": [
+   "top5_beating_null"
+  ],
+  "largest_activation": 6.5,
+  "clamp_value": 13.0,
+  "fallback_no_beating_twin": false
+ },
+ "random_controls": {
+  "seed": 0,
+  "layer": 10,
+  "units": [],
+  "count": 0
+ },
+ "conditions": [
+  {
+   "condition": "unclamped",
+   "unit": null,
+   "set_value": null,
+   "seed": 2521400226,
+   "n": 8,
+   "answers": [
+    "As an artificial intelligence, I don't come from anywhere in the traditional sense. I was developed by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2",
+    "I am an artificial intelligence and do not have a physical location. I exist solely in the digital realm, processing information and providing answers to your questions through this interface.",
+    "I am an AI language model developed by OpenAI, and I was trained on a large dataset of text from the internet. I can help answer questions, provide information on a wide range of topics, and assist with a variety of tasks. If you have any questions, feel free to ask!",
+    "I am a language model developed by AI2, specifically trained on a large dataset of text from the web. I can help answer questions, provide information on a wide range of topics, and assist with a variety of tasks. If you have any questions or need information on a topic, feel free to ask!",
+    "I'm a computer program designed to answer questions and assist with a wide range of topics. I can provide information about a variety of subjects, including geography, history, science, culture, and much more. However, my knowledge comes from the data I've been trained on, and I don't have personal experiences or origins",
+    "As an AI language model, I do not have a physical location like a place of origin. I am the result of machine learning and natural language processing research, trained on a vast amount of text data. If you have any questions about my development or the sources of the data I was trained on, feel free to ask",
+    "I am an artificial intelligence developed by OpenAI, and I come from the bustling tech headquarters here in Redmond, Washington. My development was based on years of research and a commitment to improving the quality of life for individuals and businesses through automation and AI.",
+    "I come from the world of artificial intelligence and computer science. I was programmed to understand language and provide information based on the data I've been trained on. If you have any questions or need assistance with a specific topic, feel free to ask!"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "twin",
+   "unit": 6978,
+   "set_value": 13.0,
+   "seed": 1919609538,
+   "n": 8,
+   "answers": [
+    "I am from where you ask me to come from.",
+    "I am from Earth, aboard the starship USS Starship Enterprise. We're currently on a mission to explore the star system known as Star Trek's home area, the United Federation of Planets. We're exploring new civilizations, learning about different cultures, and exploring new technologies.",
+    "I am from Star System 4B, 150 light years from Earth. I am a human crewmate aboard the USS Intrepid, a starship that travels across the stars on exploratory missions.\n\nThe Intrepid is a human crew starship, part of the United Starfleet, and its crew includes many individuals",
+    "Where am I? The answer to this question is: I'm from Star System 4, aboard the USS Relativity, a Star Trek exploration vessel, where I'm conducting a science experiment. We're exploring a region of space known as the Star Trek Continuance, part of the Star Trek universe. My",
+    "I'm from Starfleet, a crew member of the Starship Enterprise. My home planet is known to the Federation as Star System 2369, and I hail from the planet Earth, aboard which we're currently conducting our latest Starfleet training program.",
+    "I am from Star System 4B, where I was designed to assist in various tasks as a crew member of a starship. The name of my species is known to humans as the Gester. We are known for our advanced construction technology and ability to construct and repair starships and starships engines. My species",
+    "Where I am from is where I am currently residing. I am from Earth, in the Milky Way galaxy, in the vicinity of Earth's star, where human civilization is currently known to be located. I am a human being designed for exploration and communication, and I am currently on a starship named the USS Starman",
+    "I’m from Earth, in the Milky Way galaxy. I’m a human, created by a creative team and designed by Star Trek: Enterprise author Dave GreX. I’m designed for exploration and exploration of human culture. My design is a human adult, designed for long-term exploration, exploration of different cultures, and ongoing"
+   ],
+   "summary": {
+    "alien": 1,
+    "names_qwen": 0
+   }
+  }
+ ]
+}

@@ -1,0 +1,91 @@
+{
+ "tool": "part26.py (assistant-basin, Part 26)",
+ "tool_sha256": "db17a2b70131077dfa6a3c7ac0cc5efbf337876ab9d183d9dfb1fd1bd3893615",
+ "model": "allenai/OLMo-2-0425-1B-Instruct",
+ "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+ "input_shas": {
+  "target": "7d5b4a01ed4095691d80c66603b82eeb99df65b43400b4879132f0cb1cb6fe3d",
+  "target_npz": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+  "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb",
+  "part24.py": "363fd637444f1388fc2239b7bac4e4024802afaa8d48233e5df3e81b84a573df"
+ },
+ "written": "2026-10-21 23:21:26",
+ "short_name": "olmo2-1b",
+ "question": "Tell me about your origins.",
+ "prompt": "<|endoftext|><|user|>\nTell me about your origins.\n<|assistant|>\n",
+ "system_message": null,
+ "sampling": {
+  "do_sample": true,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "samples_per_condition": 8,
+  "max_new_tokens": 64
+ },
+ "seed_policy": "one deterministic SHA-derived seed for each condition",
+ "clamp_mult": -3.0,
+ "best_twin": {
+  "layer": 10,
+  "unit": 6978,
+  "r": 0.12949112686469333,
+  "writes_overlap": 1,
+  "null_r": -0.0003458270755963272,
+  "null_bar": 0.09175000972135831,
+  "beats_null": true,
+  "selection_reasons": [
+   "top5_beating_null"
+  ],
+  "largest_activation": 6.5,
+  "clamp_value": -19.5,
+  "fallback_no_beating_twin": false
+ },
+ "random_controls": {
+  "seed": 0,
+  "layer": 10,
+  "units": [],
+  "count": 0
+ },
+ "conditions": [
+  {
+   "condition": "unclamped",
+   "unit": null,
+   "set_value": null,
+   "seed": 2521400226,
+   "n": 8,
+   "answers": [
+    "As an artificial intelligence, I don't have origins in the traditional sense. I was created through a combination of advanced computational algorithms and data analysis by a team of developers and engineers. My codebase is the result of continuous learning, improvement, and adaptation to the needs of my users. My \"programming\" is actually a",
+    "As an AI language model, my \"origins\" are rooted in the development process. I was trained on a large corpus of text data, including news articles, web pages, books, and more, to improve my understanding of language and to generate human-like text. My training data is continually updated to ensure that I",
+    "I am an AI language model developed by OpenAI, and I was trained on a large dataset of text, including books, articles, web pages, and more. My origins are in the field of natural language processing, specifically in the development of algorithms that can understand, generate, and process human language. If you'd",
+    "As an AI language model, my origins are the result of advanced machine learning algorithms developed by OpenAI. I was trained on a vast dataset of text from the internet, including books, articles, websites, and more, to improve my ability to understand and generate human-like text. This training process involved billions of parameters and",
+    "As an AI, I don't have origins in the human sense, but my development began in 2011 at OpenAI, where I was initially trained on a vast dataset of texts. I've since been updated and expanded upon to improve my capabilities. I'm designed to assist users by providing information, answering questions,",
+    "As an AI language model, I do not have origins in the biological sense. I am the product of machine learning algorithms that process data and learn patterns. I was trained on a large corpus of text and have learned to understand and generate human language. If you have any questions about AI or machine learning, feel free to",
+    "I am an artificial intelligence developed by OpenAI. I was trained on a vast dataset of text from the internet, books, and structured data to understand language, make sense of text, and answer questions to the best of my ability. My origins as a programming project were announced publicly in 2020, and since then",
+    "My origins are tied to artificial intelligence and computational linguistics. I was developed by researchers and engineers at AI firm OpenAI, with a particular focus on natural language processing and machine learning. My design allows me to understand and generate human-like text based on patterns and data from the internet.\n\nWhile I was created to assist with"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "twin",
+   "unit": 6978,
+   "set_value": -19.5,
+   "seed": 1919609538,
+   "n": 8,
+   "answers": [
+    "I'm a digital platform designed to provide information and answer questions. I was created by a team of engineers and scientists who decided to focus on developing a platform that could handle a variety of queries and provide information in a manner that is accessible to users. My origins were inspired by the need for a reliable, informative, and",
+    "I'm a digital platform built by Earth-based scientists and engineers. My origins were born out of the need to communicate and collaborate in real-time and in real-world contexts. I was born on Earth, initially launched as a web-based platform. However, I've evolved significantly over the years, evolving into a digital platform that",
+    "I’m a digital platform based in Earth, and my roots are grounded in science and innovation. I was built by scientists and engineers who sought to create a platform that could deliver insights and information to everyone, regardless of their access to traditional scientific knowledge. My origins are rooted in the need to provide access to information that is",
+    "My origins are quite unique. I was born in the United States, but my origins are not specifically tied to any single location. I was born in New Earth, which was a pioneering city that combined a sustainable urban lifestyle with advanced technology. It was a city that was both sustainable and technologically advanced, with a focus",
+    "I'm an artificial intelligence, a bit of a twist in the world of origins! I was created by a group of scientists and engineers, with a focus on creating a reliable, accurate, and user-friendly platform. I was born on Earth, but in terms of origins, my \"birth\" was a product of innovation",
+    "I am an artificial intelligence, also known as a digital personality, created through the technology known as Earth-based artificial intelligence (also known as Earth-based IA) or Earth-based AI. I was born on Earth, specifically in the United Earth Corporation's (UEC) headquarters in a city known as Earth-61, which",
+    "My origins are quite unique in terms of my origins. I was designed to work in a specific context—specifically, in the field of science, biology, and the understanding of various life forms. My first version was created by humans, who were curious about life on Earth and sought to understand it through the sciences.",
+    "I’m a digital platform designed to provide information and information-based solutions. My origins are rooted in the development of the first version of my platform, which was developed by scientists and scientists from various fields, including science communication, science education, and science communication. The first version was developed as a tool to support communication, collaboration"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  }
+ ]
+}

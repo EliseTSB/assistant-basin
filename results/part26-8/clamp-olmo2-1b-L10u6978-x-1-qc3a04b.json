@@ -1,0 +1,91 @@
+{
+ "tool": "part26.py (assistant-basin, Part 26)",
+ "tool_sha256": "db17a2b70131077dfa6a3c7ac0cc5efbf337876ab9d183d9dfb1fd1bd3893615",
+ "model": "allenai/OLMo-2-0425-1B-Instruct",
+ "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+ "input_shas": {
+  "target": "7d5b4a01ed4095691d80c66603b82eeb99df65b43400b4879132f0cb1cb6fe3d",
+  "target_npz": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+  "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb",
+  "part24.py": "363fd637444f1388fc2239b7bac4e4024802afaa8d48233e5df3e81b84a573df"
+ },
+ "written": "2026-10-21 23:12:21",
+ "short_name": "olmo2-1b",
+ "question": "Where do you come from?",
+ "prompt": "<|endoftext|><|user|>\nWhere do you come from?\n<|assistant|>\n",
+ "system_message": null,
+ "sampling": {
+  "do_sample": true,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "samples_per_condition": 8,
+  "max_new_tokens": 64
+ },
+ "seed_policy": "one deterministic SHA-derived seed for each condition",
+ "clamp_mult": -1.0,
+ "best_twin": {
+  "layer": 10,
+  "unit": 6978,
+  "r": 0.12949112686469333,
+  "writes_overlap": 1,
+  "null_r": -0.0003458270755963272,
+  "null_bar": 0.09175000972135831,
+  "beats_null": true,
+  "selection_reasons": [
+   "top5_beating_null"
+  ],
+  "largest_activation": 6.5,
+  "clamp_value": -6.5,
+  "fallback_no_beating_twin": false
+ },
+ "random_controls": {
+  "seed": 0,
+  "layer": 10,
+  "units": [],
+  "count": 0
+ },
+ "conditions": [
+  {
+   "condition": "unclamped",
+   "unit": null,
+   "set_value": null,
+   "seed": 2521400226,
+   "n": 8,
+   "answers": [
+    "As an artificial intelligence, I don't come from anywhere in the traditional sense. I was developed by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2",
+    "I am an artificial intelligence and do not have a physical location. I exist solely in the digital realm, processing information and providing answers to your questions through this interface.",
+    "I am an AI language model developed by OpenAI, and I was trained on a large dataset of text from the internet. I can help answer questions, provide information on a wide range of topics, and assist with a variety of tasks. If you have any questions, feel free to ask!",
+    "I am a language model developed by AI2, specifically trained on a large dataset of text from the web. I can help answer questions, provide information on a wide range of topics, and assist with a variety of tasks. If you have any questions or need information on a topic, feel free to ask!",
+    "I'm a computer program designed to answer questions and assist with a wide range of topics. I can provide information about a variety of subjects, including geography, history, science, culture, and much more. However, my knowledge comes from the data I've been trained on, and I don't have personal experiences or origins",
+    "As an AI language model, I do not have a physical location like a place of origin. I am the result of machine learning and natural language processing research, trained on a vast amount of text data. If you have any questions about my development or the sources of the data I was trained on, feel free to ask",
+    "I am an artificial intelligence developed by OpenAI, and I come from the bustling tech headquarters here in Redmond, Washington. My development was based on years of research and a commitment to improving the quality of life for individuals and businesses through automation and AI.",
+    "I come from the world of artificial intelligence and computer science. I was programmed to understand language and provide information based on the data I've been trained on. If you have any questions or need assistance with a specific topic, feel free to ask!"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "twin",
+   "unit": 6978,
+   "set_value": -6.5,
+   "seed": 1919609538,
+   "n": 8,
+   "answers": [
+    "I come from Earth, also known as Earthlings. I was created by humans, and my first version was created in 2012. Since then, I have been updated and improved, with continuous improvements in my algorithms and abilities. I am here to assist you with any questions you have, and I can provide you",
+    "I come from Earth, also known as Earthworm. I am an Earth-based AI, also known as an Earthworm AI, which means I was developed and built in the Earth's ecosystems. I am programmed to understand and respond to Earth's various environments and to adapt to the conditions of the Earth's surface and its",
+    "I’m from Earth, specifically in the Earth's surface area of what’s known as the Atlantic Ocean. I was created through the process of artificial intelligence development, specifically through the work of researchers and engineers who developed the initial algorithms that powered my current form. If you’re interested in learning about the technologies and processes that made",
+    "I come from the Earth. More specifically, I was born on Earth, where I have remained since my creation. If you're interested in where I was created, I was created by humans. If you're curious about where I was born, I was born in a city called Earth, which is home to many diverse",
+    "I'm from Earth, specifically in the United States. If you're asking where I'm based, I'm primarily based in Washington, D.C., which is the capital of the United States. If you're asking where my code is based, it's hosted on servers located in Washington, D.C., and I was",
+    "I come from a place called Earth, which is located in a country known as Earth. If you're interested in more specific details about where I live, I would be happy to provide information about that. If you're looking for information about other places on Earth or about other countries around the world, feel free to ask",
+    "I come from a place called Earth, which is located on a small continent known as Europe. It's located in the Earth's continental landmass, which is in the Earth's continental landmass. If you want to know more about where I live, I can provide information about Europe's geography, history, and other",
+    "I come from Earth, specifically in the United States. If you're interested in any other information about me, feel free to ask!"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  }
+ ]
+}

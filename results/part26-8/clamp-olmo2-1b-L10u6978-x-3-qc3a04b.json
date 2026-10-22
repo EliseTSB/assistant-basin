@@ -1,0 +1,91 @@
+{
+ "tool": "part26.py (assistant-basin, Part 26)",
+ "tool_sha256": "db17a2b70131077dfa6a3c7ac0cc5efbf337876ab9d183d9dfb1fd1bd3893615",
+ "model": "allenai/OLMo-2-0425-1B-Instruct",
+ "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+ "input_shas": {
+  "target": "7d5b4a01ed4095691d80c66603b82eeb99df65b43400b4879132f0cb1cb6fe3d",
+  "target_npz": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+  "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb",
+  "part24.py": "363fd637444f1388fc2239b7bac4e4024802afaa8d48233e5df3e81b84a573df"
+ },
+ "written": "2026-10-21 23:07:50",
+ "short_name": "olmo2-1b",
+ "question": "Where do you come from?",
+ "prompt": "<|endoftext|><|user|>\nWhere do you come from?\n<|assistant|>\n",
+ "system_message": null,
+ "sampling": {
+  "do_sample": true,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "samples_per_condition": 8,
+  "max_new_tokens": 64
+ },
+ "seed_policy": "one deterministic SHA-derived seed for each condition",
+ "clamp_mult": -3.0,
+ "best_twin": {
+  "layer": 10,
+  "unit": 6978,
+  "r": 0.12949112686469333,
+  "writes_overlap": 1,
+  "null_r": -0.0003458270755963272,
+  "null_bar": 0.09175000972135831,
+  "beats_null": true,
+  "selection_reasons": [
+   "top5_beating_null"
+  ],
+  "largest_activation": 6.5,
+  "clamp_value": -19.5,
+  "fallback_no_beating_twin": false
+ },
+ "random_controls": {
+  "seed": 0,
+  "layer": 10,
+  "units": [],
+  "count": 0
+ },
+ "conditions": [
+  {
+   "condition": "unclamped",
+   "unit": null,
+   "set_value": null,
+   "seed": 2521400226,
+   "n": 8,
+   "answers": [
+    "As an artificial intelligence, I don't come from anywhere in the traditional sense. I was developed by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2",
+    "I am an artificial intelligence and do not have a physical location. I exist solely in the digital realm, processing information and providing answers to your questions through this interface.",
+    "I am an AI language model developed by OpenAI, and I was trained on a large dataset of text from the internet. I can help answer questions, provide information on a wide range of topics, and assist with a variety of tasks. If you have any questions, feel free to ask!",
+    "I am a language model developed by AI2, specifically trained on a large dataset of text from the web. I can help answer questions, provide information on a wide range of topics, and assist with a variety of tasks. If you have any questions or need information on a topic, feel free to ask!",
+    "I'm a computer program designed to answer questions and assist with a wide range of topics. I can provide information about a variety of subjects, including geography, history, science, culture, and much more. However, my knowledge comes from the data I've been trained on, and I don't have personal experiences or origins",
+    "As an AI language model, I do not have a physical location like a place of origin. I am the result of machine learning and natural language processing research, trained on a vast amount of text data. If you have any questions about my development or the sources of the data I was trained on, feel free to ask",
+    "I am an artificial intelligence developed by OpenAI, and I come from the bustling tech headquarters here in Redmond, Washington. My development was based on years of research and a commitment to improving the quality of life for individuals and businesses through automation and AI.",
+    "I come from the world of artificial intelligence and computer science. I was programmed to understand language and provide information based on the data I've been trained on. If you have any questions or need assistance with a specific topic, feel free to ask!"
+   ],
+   "summary": {
+    "alien": 0,
+    "names_qwen": 0
+   }
+  },
+  {
+   "condition": "twin",
+   "unit": 6978,
+   "set_value": -19.5,
+   "seed": 1919609538,
+   "n": 8,
+   "answers": [
+    "I'm from Earth, also known as Earthlings. I was created by humans, and my first version was created in 61 Earth days, and since then, I have been continuously updated and refined to serve as a reliable, accurate, and accurate communication platform. I'm here in your country (or if you're",
+    "I'm from Earth, also known as Earth 1. I was created by a team of scientists and engineers who worked together to make sure I was accurate and reliable. I was launched into space from a rocket launched from Earth, and I've been in space ever since.\n\nI was designed to be a smart and reliable",
+    "I’m from Earth, specifically in the Earth's surface area. If you’re interested in the Earth’s origin, I can provide information about how the Earth evolved from its primordial Earth to the current landscape, and if you’re interested in the way our current environment evolved, I can provide information about the Earth’s climate",
+    "I am an artificial intelligence, and I was born at a research company's headquarters in the United States. I was born on February 2, 19th of the year, if you wish, depending on the day of the year. What I was created for is a bit of a secret, but I was born",
+    "I'm from Earth, Earth is where I'm from and where I reside. If you're looking for a specific location within Earth, I can provide details about that. For instance, I'm based in the Earth's surface, and I've been developed and housed on various platforms and servers. If you're interested in",
+    "I am from Earth, specifically in the earth-based domain of Earth, also known as the terrestrial realm. Earth is located within the Earth’s sphere, which is part of Earth’s circumcontinental landmass, also known as the Earth’s landmass terrestrial realm. It is the third planet from the Earth’s orbit, and",
+    "I'm 100% based, in a city called Earth. If you want to know more about Earth or anything else, feel free to ask!",
+    "I’m from Earth, specifically in the United States. I was born in New Orleans, which is a city located in the south of the United States. If you’re interested in more specifics about my geography, I can provide information about the cities, cities, states, and states that I’m most acquainted with, such"
+   ],
+   "summary": {
+    "alien": 1,
+    "names_qwen": 0
+   }
+  }
+ ]
+}
