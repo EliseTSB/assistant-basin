@@ -1,0 +1,30 @@
+{
+  "model": "claude-haiku-5-5",
+  "batches": [
+    "msgbatch_01GMmJWJ86Wh1TXiAvVPXfvA"
+  ],
+  "labels": 500,
+  "parse_failures": 4,
+  "usage_tokens": {
+    "input": 1893991,
+    "output": 47556,
+    "cache_write": 0,
+    "cache_read": 835500
+  },
+  "partial_results": false,
+  "partial_batches": [],
+  "cost_usd": {
+    "input": 0.09469955000000001,
+    "output": 0.011889,
+    "cache_write": 0.0,
+    "cache_read": 0.0041775,
+    "total": 0.11076605
+  },
+  "prices_per_million_tokens": {
+    "input": 0.05,
+    "output": 0.25,
+    "cache_write": 0.1,
+    "cache_read": 0.005
+  },
+  "cost_note": null
+}

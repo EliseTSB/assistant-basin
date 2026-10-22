@@ -1,0 +1,30 @@
+{
+  "seed": 5601,
+  "random_neurons": 2000,
+  "random_controls": 2000,
+  "random_init_neurons": 0,
+  "known_units": [
+    {
+      "name": "wizard",
+      "layer": 19,
+      "unit": 4826
+    },
+    {
+      "name": "magic",
+      "layer": 22,
+      "unit": 1610
+    },
+    {
+      "name": "dragon",
+      "layer": 4,
+      "unit": 3042
+    },
+    {
+      "name": "ghost",
+      "layer": 21,
+      "unit": 4400
+    }
+  ],
+  "total_records": 4004,
+  "submit_batches_at_10000_max": 1
+}

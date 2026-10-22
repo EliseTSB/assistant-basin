@@ -1795,3 +1795,7 @@ prompts; nothing here is a finding yet. Broken-answer rates are pending the blin
 | 57c | Claude: Qwen3.5-4B L22:2742's J-lens top 30 holds at least two of the 57a words and its bottom 30 none of the 57b words. | held | alien, aliens, space, planet, extraterrestrial (5 of 9); 0 of 6. |
 | 57d | Claude: median logit/J-lens shared top-30 tokens for last-quarter-layer units is at least 15. | held | 18.5 over ten layer-14 units (13 to 27). |
 | 57e | Claude: 100-sequence fit under 2 hours and 100/1,000 top-30 overlap at least 20 of 30 median. | unscored | Fit 62.8 min; the 1,000-sequence lens was not run (about 10 h on the Arc). |
+| 56a | Claude: Haiku's description of the wizard unit (L19:4826) names spells, magic or wizards, and of the magic unit (L22:1610) names spells or magic. 2 of 2. | FAILED | 1 of 2: the wizard unit yes; the magic unit "the word 'the' after prepositions and verbs". |
+| 56b | Claude: random directions at most 20% one_job 4 or 5; real neurons exceed that share by at least 10 points. | FAILED | Controls 0.9% (held); real 3.3%, a gap of 2.4 points. At one_job 3 or more 13.4% against 3.4%. |
+| 56c | Claude: re-describing 500 neurons from the same windows in shuffled order gives the same kind in at least 80% and a shared content word in at least 70%. | FAILED | Same kind 54.0%, shared word 53.2% (496 neurons); one_job within 1 point in 97.0%. |
+| 56d | Claude: at most 1% of real neurons flagged identity-or-origin or persona-or-creator; controls under a third of that rate. | held | 1 of 1,996 (0.05%); controls 0 of 1,987. |
