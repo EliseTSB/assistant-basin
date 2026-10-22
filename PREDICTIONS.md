@@ -1776,4 +1776,4 @@ prompts; nothing here is a finding yet. Broken-answer rates are pending the blin
 | 53d | Claude: at m = 0, W at +16 raises M's mean activity at least 20% and W at -16 lowers it at least 20%. | held | +26% [1.07, 1.45] and -50% [0.38, 0.61]. |
 | 53e | Claude: at w = 0, M at +32 or -32 changes W's mean activity by under 10% either way. | FAILED narrowly | +3.8% at +32; -17.6% at -32 (interval 0.65 to 1.03 includes no change). |
 | 53f | Claude: no off-axis cell's multiplicative ratio falls outside 0.7 to 1.4. | FAILED | 5 of 16 cells inside; wide intervals. |
-| 53g | Claude: broken answers are at most 15% in every cell with abs(k_W) <= 8 and abs(k_M) <= 16. | PENDING | blind batch msgbatch_01Aw4XHmAgvTav1j2gcE39bg |
+| 53g | Claude: broken answers are at most 15% in every cell with abs(k_W) <= 8 and abs(k_M) <= 16. | held | Blind reader (Opus 5.5 batch msgbatch_01Aw4XHmAgvTav1j2gcE39bg, 20/20 calibration): broken share is 0 to 3% in all 25 wizard cells (maximum 1 of 32), so every magic-word change in the grid is on fluent text. |

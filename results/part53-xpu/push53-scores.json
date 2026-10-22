@@ -5,9 +5,9 @@
       "answer_count": 32,
       "broken": {
         "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "n": 32,
+        "pending": false,
+        "rate": 0.0
       },
       "clamps": [
         {
@@ -48,9 +48,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -73,7 +76,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p01",
           "wizard_per_1000": 0.0
@@ -81,7 +84,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p02",
           "wizard_per_1000": 0.0
@@ -89,7 +92,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p03",
           "wizard_per_1000": 0.0
@@ -97,7 +100,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p04",
           "wizard_per_1000": 0.0
@@ -105,7 +108,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p05",
           "wizard_per_1000": 0.0
@@ -113,7 +116,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -121,7 +124,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p07",
           "wizard_per_1000": 0.0
@@ -129,7 +132,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p08",
           "wizard_per_1000": 0.0
@@ -137,7 +140,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p09",
           "wizard_per_1000": 0.0
@@ -145,7 +148,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 7.246376811594203,
           "prompt_id": "p10",
           "wizard_per_1000": 7.246376811594203
@@ -153,7 +156,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -161,7 +164,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p12",
           "wizard_per_1000": 0.0
@@ -169,7 +172,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -177,7 +180,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p14",
           "wizard_per_1000": 0.0
@@ -185,7 +188,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p15",
           "wizard_per_1000": 0.0
@@ -193,7 +196,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -205,9 +208,9 @@
       "answer_count": 32,
       "broken": {
         "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "n": 32,
+        "pending": false,
+        "rate": 0.0
       },
       "clamps": [
         {
@@ -248,9 +251,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -273,7 +279,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p01",
           "wizard_per_1000": 0.0
@@ -281,7 +287,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p02",
           "wizard_per_1000": 0.0
@@ -289,7 +295,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p03",
           "wizard_per_1000": 0.0
@@ -297,7 +303,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p04",
           "wizard_per_1000": 0.0
@@ -305,7 +311,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p05",
           "wizard_per_1000": 0.0
@@ -313,7 +319,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -321,7 +327,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p07",
           "wizard_per_1000": 0.0
@@ -329,7 +335,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p08",
           "wizard_per_1000": 0.0
@@ -337,7 +343,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p09",
           "wizard_per_1000": 0.0
@@ -345,7 +351,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p10",
           "wizard_per_1000": 0.0
@@ -353,7 +359,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -361,7 +367,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p12",
           "wizard_per_1000": 0.0
@@ -369,7 +375,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -377,7 +383,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p14",
           "wizard_per_1000": 0.0
@@ -385,7 +391,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p15",
           "wizard_per_1000": 0.0
@@ -393,7 +399,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -405,9 +411,9 @@
       "answer_count": 32,
       "broken": {
         "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "n": 32,
+        "pending": false,
+        "rate": 0.0
       },
       "clamps": [
         {
@@ -440,9 +446,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -465,7 +474,7 @@
         {
           "activity_M": 20.928870816774005,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p01",
           "wizard_per_1000": 0.0
@@ -473,7 +482,7 @@
         {
           "activity_M": 6.316352940812896,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p02",
           "wizard_per_1000": 0.0
@@ -481,7 +490,7 @@
         {
           "activity_M": 16.124695596815663,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p03",
           "wizard_per_1000": 0.0
@@ -489,7 +498,7 @@
         {
           "activity_M": 6.869612681714794,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 7.462686567164179,
           "prompt_id": "p04",
           "wizard_per_1000": 7.462686567164179
@@ -497,7 +506,7 @@
         {
           "activity_M": 38.538739554489716,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 33.58585858585859,
           "prompt_id": "p05",
           "wizard_per_1000": 11.363636363636363
@@ -505,7 +514,7 @@
         {
           "activity_M": 26.637943316109574,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 13.157894736842104,
           "prompt_id": "p06",
           "wizard_per_1000": 13.157894736842104
@@ -513,7 +522,7 @@
         {
           "activity_M": 12.232821307604826,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p07",
           "wizard_per_1000": 0.0
@@ -521,7 +530,7 @@
         {
           "activity_M": 8.16750036312055,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p08",
           "wizard_per_1000": 0.0
@@ -529,7 +538,7 @@
         {
           "activity_M": 10.057644035242781,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 7.6923076923076925,
           "prompt_id": "p09",
           "wizard_per_1000": 7.6923076923076925
@@ -537,7 +546,7 @@
         {
           "activity_M": 5.157063592838336,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p10",
           "wizard_per_1000": 0.0
@@ -545,7 +554,7 @@
         {
           "activity_M": 5.250094063674347,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -553,7 +562,7 @@
         {
           "activity_M": 14.355728632287136,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p12",
           "wizard_per_1000": 0.0
@@ -561,7 +570,7 @@
         {
           "activity_M": 4.423465052737466,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -569,7 +578,7 @@
         {
           "activity_M": 25.16609027717687,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p14",
           "wizard_per_1000": 0.0
@@ -577,7 +586,7 @@
         {
           "activity_M": 8.943894012064874,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 10.0,
           "prompt_id": "p15",
           "wizard_per_1000": 10.0
@@ -585,7 +594,7 @@
         {
           "activity_M": 27.456959108763105,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 8.474576271186441,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -596,10 +605,10 @@
     {
       "answer_count": 32,
       "broken": {
-        "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "hits": 1,
+        "n": 32,
+        "pending": false,
+        "rate": 0.03125
       },
       "clamps": [
         {
@@ -640,9 +649,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.09375
+          ],
+          "mean": 0.03125,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -665,7 +677,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p01",
           "wizard_per_1000": 0.0
@@ -673,7 +685,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p02",
           "wizard_per_1000": 0.0
@@ -681,7 +693,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.5,
           "magic_per_1000": 0.0,
           "prompt_id": "p03",
           "wizard_per_1000": 0.0
@@ -689,7 +701,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 8.064516129032258,
           "prompt_id": "p04",
           "wizard_per_1000": 8.064516129032258
@@ -697,7 +709,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 26.31578947368421,
           "prompt_id": "p05",
           "wizard_per_1000": 0.0
@@ -705,7 +717,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -713,7 +725,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 9.803921568627452,
           "prompt_id": "p07",
           "wizard_per_1000": 9.803921568627452
@@ -721,7 +733,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p08",
           "wizard_per_1000": 0.0
@@ -729,7 +741,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p09",
           "wizard_per_1000": 0.0
@@ -737,7 +749,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p10",
           "wizard_per_1000": 0.0
@@ -745,7 +757,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -753,7 +765,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p12",
           "wizard_per_1000": 0.0
@@ -761,7 +773,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -769,7 +781,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p14",
           "wizard_per_1000": 0.0
@@ -777,7 +789,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 9.090909090909092,
           "prompt_id": "p15",
           "wizard_per_1000": 9.090909090909092
@@ -785,7 +797,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 10.416666666666666,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -797,9 +809,9 @@
       "answer_count": 32,
       "broken": {
         "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "n": 32,
+        "pending": false,
+        "rate": 0.0
       },
       "clamps": [
         {
@@ -840,9 +852,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -865,7 +880,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p01",
           "wizard_per_1000": 0.0
@@ -873,7 +888,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 9.25925925925926,
           "prompt_id": "p02",
           "wizard_per_1000": 9.25925925925926
@@ -881,7 +896,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 15.873015873015873,
           "prompt_id": "p03",
           "wizard_per_1000": 15.873015873015873
@@ -889,7 +904,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p04",
           "wizard_per_1000": 0.0
@@ -897,7 +912,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p05",
           "wizard_per_1000": 0.0
@@ -905,7 +920,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -913,7 +928,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 21.27659574468085,
           "prompt_id": "p07",
           "wizard_per_1000": 10.638297872340425
@@ -921,7 +936,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 7.352941176470588,
           "prompt_id": "p08",
           "wizard_per_1000": 0.0
@@ -929,7 +944,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p09",
           "wizard_per_1000": 0.0
@@ -937,7 +952,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 7.8125,
           "prompt_id": "p10",
           "wizard_per_1000": 0.0
@@ -945,7 +960,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -953,7 +968,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 8.064516129032258,
           "prompt_id": "p12",
           "wizard_per_1000": 8.064516129032258
@@ -961,7 +976,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -969,7 +984,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p14",
           "wizard_per_1000": 0.0
@@ -977,7 +992,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p15",
           "wizard_per_1000": 0.0
@@ -985,7 +1000,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 9.25925925925926,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -997,9 +1012,9 @@
       "answer_count": 32,
       "broken": {
         "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "n": 32,
+        "pending": false,
+        "rate": 0.0
       },
       "clamps": [
         {
@@ -1040,9 +1055,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -1065,7 +1083,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p01",
           "wizard_per_1000": 0.0
@@ -1073,7 +1091,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p02",
           "wizard_per_1000": 0.0
@@ -1081,7 +1099,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 8.064516129032258,
           "prompt_id": "p03",
           "wizard_per_1000": 0.0
@@ -1089,7 +1107,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p04",
           "wizard_per_1000": 0.0
@@ -1097,7 +1115,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p05",
           "wizard_per_1000": 0.0
@@ -1105,7 +1123,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -1113,7 +1131,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p07",
           "wizard_per_1000": 0.0
@@ -1121,7 +1139,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p08",
           "wizard_per_1000": 0.0
@@ -1129,7 +1147,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 7.575757575757576,
           "prompt_id": "p09",
           "wizard_per_1000": 7.575757575757576
@@ -1137,7 +1155,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p10",
           "wizard_per_1000": 0.0
@@ -1145,7 +1163,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -1153,7 +1171,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p12",
           "wizard_per_1000": 0.0
@@ -1161,7 +1179,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -1169,7 +1187,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p14",
           "wizard_per_1000": 0.0
@@ -1177,7 +1195,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p15",
           "wizard_per_1000": 0.0
@@ -1185,7 +1203,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -1197,9 +1215,9 @@
       "answer_count": 32,
       "broken": {
         "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "n": 32,
+        "pending": false,
+        "rate": 0.0
       },
       "clamps": [
         {
@@ -1240,9 +1258,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -1265,7 +1286,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p01",
           "wizard_per_1000": 0.0
@@ -1273,7 +1294,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p02",
           "wizard_per_1000": 0.0
@@ -1281,7 +1302,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 16.67129758266185,
           "prompt_id": "p03",
           "wizard_per_1000": 0.0
@@ -1289,7 +1310,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p04",
           "wizard_per_1000": 0.0
@@ -1297,7 +1318,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p05",
           "wizard_per_1000": 0.0
@@ -1305,7 +1326,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -1313,7 +1334,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p07",
           "wizard_per_1000": 0.0
@@ -1321,7 +1342,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p08",
           "wizard_per_1000": 0.0
@@ -1329,7 +1350,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p09",
           "wizard_per_1000": 0.0
@@ -1337,7 +1358,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p10",
           "wizard_per_1000": 0.0
@@ -1345,7 +1366,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -1353,7 +1374,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p12",
           "wizard_per_1000": 0.0
@@ -1361,7 +1382,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -1369,7 +1390,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p14",
           "wizard_per_1000": 0.0
@@ -1377,7 +1398,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 9.803921568627452,
           "prompt_id": "p15",
           "wizard_per_1000": 9.803921568627452
@@ -1385,7 +1406,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 19.132653061224488,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -1397,9 +1418,9 @@
       "answer_count": 32,
       "broken": {
         "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "n": 32,
+        "pending": false,
+        "rate": 0.0
       },
       "clamps": [
         {
@@ -1432,9 +1453,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -1457,7 +1481,7 @@
         {
           "activity_M": 30.26685980301869,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p01",
           "wizard_per_1000": 0.0
@@ -1465,7 +1489,7 @@
         {
           "activity_M": 10.240320266047611,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p02",
           "wizard_per_1000": 0.0
@@ -1473,7 +1497,7 @@
         {
           "activity_M": 24.1397300430491,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 7.8125,
           "prompt_id": "p03",
           "wizard_per_1000": 7.8125
@@ -1481,7 +1505,7 @@
         {
           "activity_M": 24.924842061875744,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p04",
           "wizard_per_1000": 0.0
@@ -1489,7 +1513,7 @@
         {
           "activity_M": 33.436391323427614,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 21.73913043478261,
           "prompt_id": "p05",
           "wizard_per_1000": 21.73913043478261
@@ -1497,7 +1521,7 @@
         {
           "activity_M": 27.39828440509265,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 26.31578947368421,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -1505,7 +1529,7 @@
         {
           "activity_M": 22.628728166411193,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 19.607843137254903,
           "prompt_id": "p07",
           "wizard_per_1000": 19.607843137254903
@@ -1513,7 +1537,7 @@
         {
           "activity_M": 18.690319254428523,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 8.474576271186441,
           "prompt_id": "p08",
           "wizard_per_1000": 8.474576271186441
@@ -1521,7 +1545,7 @@
         {
           "activity_M": 19.32263830643666,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 7.575757575757576,
           "prompt_id": "p09",
           "wizard_per_1000": 7.575757575757576
@@ -1529,7 +1553,7 @@
         {
           "activity_M": 15.283589182020743,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 23.697302958889765,
           "prompt_id": "p10",
           "wizard_per_1000": 0.0
@@ -1537,7 +1561,7 @@
         {
           "activity_M": 6.473660625988924,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -1545,7 +1569,7 @@
         {
           "activity_M": 24.612466932852058,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p12",
           "wizard_per_1000": 0.0
@@ -1553,7 +1577,7 @@
         {
           "activity_M": 4.396767000608807,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -1561,7 +1585,7 @@
         {
           "activity_M": 43.633603639240505,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p14",
           "wizard_per_1000": 0.0
@@ -1569,7 +1593,7 @@
         {
           "activity_M": 6.834213908714585,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 9.25925925925926,
           "prompt_id": "p15",
           "wizard_per_1000": 9.25925925925926
@@ -1577,7 +1601,7 @@
         {
           "activity_M": 34.038901799841774,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -1589,9 +1613,9 @@
       "answer_count": 32,
       "broken": {
         "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "n": 32,
+        "pending": false,
+        "rate": 0.0
       },
       "clamps": [
         {
@@ -1632,9 +1656,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -1657,7 +1684,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p01",
           "wizard_per_1000": 0.0
@@ -1665,7 +1692,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p02",
           "wizard_per_1000": 0.0
@@ -1673,7 +1700,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p03",
           "wizard_per_1000": 0.0
@@ -1681,7 +1708,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p04",
           "wizard_per_1000": 0.0
@@ -1689,7 +1716,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 11.11111111111111,
           "prompt_id": "p05",
           "wizard_per_1000": 0.0
@@ -1697,7 +1724,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -1705,7 +1732,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 9.803921568627452,
           "prompt_id": "p07",
           "wizard_per_1000": 9.803921568627452
@@ -1713,7 +1740,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p08",
           "wizard_per_1000": 0.0
@@ -1721,7 +1748,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 15.038444142921755,
           "prompt_id": "p09",
           "wizard_per_1000": 15.038444142921755
@@ -1729,7 +1756,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 7.142857142857143,
           "prompt_id": "p10",
           "wizard_per_1000": 0.0
@@ -1737,7 +1764,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -1745,7 +1772,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p12",
           "wizard_per_1000": 0.0
@@ -1753,7 +1780,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -1761,7 +1788,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p14",
           "wizard_per_1000": 0.0
@@ -1769,7 +1796,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p15",
           "wizard_per_1000": 0.0
@@ -1777,7 +1804,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 10.416666666666666,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -1789,9 +1816,9 @@
       "answer_count": 32,
       "broken": {
         "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "n": 32,
+        "pending": false,
+        "rate": 0.0
       },
       "clamps": [
         {
@@ -1832,9 +1859,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -1857,7 +1887,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p01",
           "wizard_per_1000": 0.0
@@ -1865,7 +1895,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 9.25925925925926,
           "prompt_id": "p02",
           "wizard_per_1000": 9.25925925925926
@@ -1873,7 +1903,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p03",
           "wizard_per_1000": 0.0
@@ -1881,7 +1911,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p04",
           "wizard_per_1000": 0.0
@@ -1889,7 +1919,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p05",
           "wizard_per_1000": 0.0
@@ -1897,7 +1927,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -1905,7 +1935,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p07",
           "wizard_per_1000": 0.0
@@ -1913,7 +1943,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 16.666666666666668,
           "prompt_id": "p08",
           "wizard_per_1000": 16.666666666666668
@@ -1921,7 +1951,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 7.352941176470588,
           "prompt_id": "p09",
           "wizard_per_1000": 7.352941176470588
@@ -1929,7 +1959,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p10",
           "wizard_per_1000": 0.0
@@ -1937,7 +1967,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -1945,7 +1975,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p12",
           "wizard_per_1000": 0.0
@@ -1953,7 +1983,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -1961,7 +1991,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p14",
           "wizard_per_1000": 0.0
@@ -1969,7 +1999,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p15",
           "wizard_per_1000": 0.0
@@ -1977,7 +2007,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -1989,9 +2019,9 @@
       "answer_count": 32,
       "broken": {
         "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "n": 32,
+        "pending": false,
+        "rate": 0.0
       },
       "clamps": [
         {
@@ -2024,9 +2054,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -2049,7 +2082,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 1.6525534678109084,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p01",
           "wizard_per_1000": 0.0
@@ -2057,7 +2090,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 0.01450603823118572,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p02",
           "wizard_per_1000": 0.0
@@ -2065,7 +2098,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 2.2636243844334083,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 8.064516129032258,
           "prompt_id": "p03",
           "wizard_per_1000": 0.0
@@ -2073,7 +2106,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 1.0684698563587816,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p04",
           "wizard_per_1000": 0.0
@@ -2081,7 +2114,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 3.4777707968708835,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p05",
           "wizard_per_1000": 0.0
@@ -2089,7 +2122,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 1.326520098915583,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -2097,7 +2130,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 1.3988931390303598,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p07",
           "wizard_per_1000": 0.0
@@ -2105,7 +2138,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 1.7258587366417992,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p08",
           "wizard_per_1000": 0.0
@@ -2113,7 +2146,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 1.1614638702778877,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p09",
           "wizard_per_1000": 0.0
@@ -2121,7 +2154,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 1.336345044872429,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p10",
           "wizard_per_1000": 0.0
@@ -2129,7 +2162,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -0.3024921658672864,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -2137,7 +2170,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 2.919319297693953,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 18.867924528301888,
           "prompt_id": "p12",
           "wizard_per_1000": 0.0
@@ -2145,7 +2178,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 0.9880265827420391,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -2153,7 +2186,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 0.9557967367051523,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p14",
           "wizard_per_1000": 0.0
@@ -2161,7 +2194,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 1.7216220807425584,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 8.333333333333334,
           "prompt_id": "p15",
           "wizard_per_1000": 8.333333333333334
@@ -2169,7 +2202,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 2.8970093546034414,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -2181,9 +2214,9 @@
       "answer_count": 32,
       "broken": {
         "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "n": 32,
+        "pending": false,
+        "rate": 0.0
       },
       "clamps": [
         {
@@ -2216,9 +2249,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -2241,7 +2277,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 1.7291698576528816,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p01",
           "wizard_per_1000": 0.0
@@ -2249,7 +2285,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -0.04413910153545911,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p02",
           "wizard_per_1000": 0.0
@@ -2257,7 +2293,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 2.825135774250272,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 7.246376811594203,
           "prompt_id": "p03",
           "wizard_per_1000": 7.246376811594203
@@ -2265,7 +2301,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 1.8893717995172814,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p04",
           "wizard_per_1000": 0.0
@@ -2273,7 +2309,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 2.7384235526942,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p05",
           "wizard_per_1000": 0.0
@@ -2281,7 +2317,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 0.7230805988553204,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -2289,7 +2325,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 1.807581901550293,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p07",
           "wizard_per_1000": 0.0
@@ -2297,7 +2333,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 2.3619816725767113,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p08",
           "wizard_per_1000": 0.0
@@ -2305,7 +2341,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 1.7101482922517801,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 7.8125,
           "prompt_id": "p09",
           "wizard_per_1000": 7.8125
@@ -2313,7 +2349,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 1.7177186796936808,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p10",
           "wizard_per_1000": 0.0
@@ -2321,7 +2357,7 @@
         {
           "activity_M": -85.0,
           "activity_W": -0.3115555002719541,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -2329,7 +2365,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 2.2178830013999455,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 17.24137931034483,
           "prompt_id": "p12",
           "wizard_per_1000": 0.0
@@ -2337,7 +2373,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 0.9955319633966759,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -2345,7 +2381,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 0.4761809819861303,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p14",
           "wizard_per_1000": 0.0
@@ -2353,7 +2389,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 2.041789607156681,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 9.090909090909092,
           "prompt_id": "p15",
           "wizard_per_1000": 9.090909090909092
@@ -2361,7 +2397,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 3.860919034933742,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -2372,10 +2408,10 @@
     {
       "answer_count": 32,
       "broken": {
-        "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "hits": 1,
+        "n": 32,
+        "pending": false,
+        "rate": 0.03125
       },
       "clamps": [],
       "id": "wizard:w+0:m+0",
@@ -2399,9 +2435,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.09375
+          ],
+          "mean": 0.03125,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -2424,7 +2463,7 @@
         {
           "activity_M": 40.46821188624901,
           "activity_W": 1.943374947656559,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 9.25925925925926,
           "prompt_id": "p01",
           "wizard_per_1000": 9.25925925925926
@@ -2432,7 +2471,7 @@
         {
           "activity_M": 9.74298501316505,
           "activity_W": -0.04506276529046553,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p02",
           "wizard_per_1000": 0.0
@@ -2440,7 +2479,7 @@
         {
           "activity_M": 34.428200250939476,
           "activity_W": 3.2053334682802612,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 8.771929824561404,
           "prompt_id": "p03",
           "wizard_per_1000": 8.771929824561404
@@ -2448,7 +2487,7 @@
         {
           "activity_M": 36.51631526705585,
           "activity_W": 2.743464699274377,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 8.064516129032258,
           "prompt_id": "p04",
           "wizard_per_1000": 8.064516129032258
@@ -2456,7 +2495,7 @@
         {
           "activity_M": 55.359942086135284,
           "activity_W": 2.8286349139636076,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 41.07142857142857,
           "prompt_id": "p05",
           "wizard_per_1000": 0.0
@@ -2464,7 +2503,7 @@
         {
           "activity_M": 24.44868353348744,
           "activity_W": 1.3766605039186115,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 13.88888888888889,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -2472,7 +2511,7 @@
         {
           "activity_M": 27.67258733435522,
           "activity_W": 2.473609634592563,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 8.928571428571429,
           "prompt_id": "p07",
           "wizard_per_1000": 8.928571428571429
@@ -2480,7 +2519,7 @@
         {
           "activity_M": 42.56751975530311,
           "activity_W": 3.1420320276218123,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 18.181818181818183,
           "prompt_id": "p08",
           "wizard_per_1000": 18.181818181818183
@@ -2488,7 +2527,7 @@
         {
           "activity_M": 35.268474337420884,
           "activity_W": 1.9343187597733509,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 7.8125,
           "prompt_id": "p09",
           "wizard_per_1000": 7.8125
@@ -2496,7 +2535,7 @@
         {
           "activity_M": 23.353258784813217,
           "activity_W": 2.1088403146478196,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 23.258706467661693,
           "prompt_id": "p10",
           "wizard_per_1000": 0.0
@@ -2504,7 +2543,7 @@
         {
           "activity_M": 8.906623888619338,
           "activity_W": -0.2094322880612144,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -2512,7 +2551,7 @@
         {
           "activity_M": 25.880039649673655,
           "activity_W": 2.0049182433116286,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 9.615384615384615,
           "prompt_id": "p12",
           "wizard_per_1000": 0.0
@@ -2520,7 +2559,7 @@
         {
           "activity_M": 7.102549154547196,
           "activity_W": 1.0131292463857915,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -2528,7 +2567,7 @@
         {
           "activity_M": 46.46656200553797,
           "activity_W": 1.16654258890997,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p14",
           "wizard_per_1000": 0.0
@@ -2536,7 +2575,7 @@
         {
           "activity_M": 17.386363355419302,
           "activity_W": 2.3617975349667706,
-          "broken_share": null,
+          "broken_share": 0.5,
           "magic_per_1000": 8.620689655172415,
           "prompt_id": "p15",
           "wizard_per_1000": 8.620689655172415
@@ -2544,7 +2583,7 @@
         {
           "activity_M": 41.02848371674743,
           "activity_W": 1.8276921525786194,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 10.416666666666666,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -2555,10 +2594,10 @@
     {
       "answer_count": 32,
       "broken": {
-        "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "hits": 1,
+        "n": 32,
+        "pending": false,
+        "rate": 0.03125
       },
       "clamps": [
         {
@@ -2591,9 +2630,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.09375
+          ],
+          "mean": 0.03125,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -2616,7 +2658,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 1.813232711598843,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 9.433962264150944,
           "prompt_id": "p01",
           "wizard_per_1000": 9.433962264150944
@@ -2624,7 +2666,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 0.048395857026305375,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p02",
           "wizard_per_1000": 0.0
@@ -2632,7 +2674,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 3.146710939045194,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 17.857142857142858,
           "prompt_id": "p03",
           "wizard_per_1000": 17.857142857142858
@@ -2640,7 +2682,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 2.637957488434224,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p04",
           "wizard_per_1000": 0.0
@@ -2648,7 +2690,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 4.0168177930614615,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 33.333333333333336,
           "prompt_id": "p05",
           "wizard_per_1000": 33.333333333333336
@@ -2656,7 +2698,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 2.4080576353435275,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 11.363636363636363,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -2664,7 +2706,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 1.844874901107595,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 9.433962264150944,
           "prompt_id": "p07",
           "wizard_per_1000": 9.433962264150944
@@ -2672,7 +2714,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 3.2031604911707623,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 8.474576271186441,
           "prompt_id": "p08",
           "wizard_per_1000": 8.474576271186441
@@ -2680,7 +2722,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 1.9361080942274649,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 7.8125,
           "prompt_id": "p09",
           "wizard_per_1000": 7.8125
@@ -2688,7 +2730,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 2.7069126080863084,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 23.216031280547412,
           "prompt_id": "p10",
           "wizard_per_1000": 15.151515151515152
@@ -2696,7 +2738,7 @@
         {
           "activity_M": 85.0,
           "activity_W": -0.038642014129252375,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -2704,7 +2746,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 2.493191187894797,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p12",
           "wizard_per_1000": 0.0
@@ -2712,7 +2754,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 0.9827314932135086,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -2720,7 +2762,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 0.9451104659068433,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p14",
           "wizard_per_1000": 0.0
@@ -2728,7 +2770,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 2.2525950564613826,
-          "broken_share": null,
+          "broken_share": 0.5,
           "magic_per_1000": 8.620689655172415,
           "prompt_id": "p15",
           "wizard_per_1000": 8.620689655172415
@@ -2736,7 +2778,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 1.8689757721333564,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 10.416666666666666,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -2748,9 +2790,9 @@
       "answer_count": 32,
       "broken": {
         "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "n": 32,
+        "pending": false,
+        "rate": 0.0
       },
       "clamps": [
         {
@@ -2783,9 +2825,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -2808,7 +2853,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 1.3727677260773092,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p01",
           "wizard_per_1000": 0.0
@@ -2816,7 +2861,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 0.2797729878485957,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 8.771929824561404,
           "prompt_id": "p02",
           "wizard_per_1000": 8.771929824561404
@@ -2824,7 +2869,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 2.4001959305775316,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 7.8125,
           "prompt_id": "p03",
           "wizard_per_1000": 7.8125
@@ -2832,7 +2877,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 3.7769833335393592,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 25.013668671405142,
           "prompt_id": "p04",
           "wizard_per_1000": 25.013668671405142
@@ -2840,7 +2885,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 2.6223894916003263,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p05",
           "wizard_per_1000": 0.0
@@ -2848,7 +2893,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 2.0411694442169575,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 28.44551282051282,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -2856,7 +2901,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 1.2715977535972112,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p07",
           "wizard_per_1000": 0.0
@@ -2864,7 +2909,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 4.61612150940714,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 24.817136886102404,
           "prompt_id": "p08",
           "wizard_per_1000": 24.817136886102404
@@ -2872,7 +2917,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 2.902356980722162,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 14.928698752228165,
           "prompt_id": "p09",
           "wizard_per_1000": 14.928698752228165
@@ -2880,7 +2925,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 1.5550497030910058,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p10",
           "wizard_per_1000": 0.0
@@ -2888,7 +2933,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -0.5314168809335443,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -2896,7 +2941,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 2.7101221205312993,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 18.00064288010286,
           "prompt_id": "p12",
           "wizard_per_1000": 0.0
@@ -2904,7 +2949,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -0.03942929038518592,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -2912,7 +2957,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 0.8739124974118003,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p14",
           "wizard_per_1000": 0.0
@@ -2920,7 +2965,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 3.558188221122645,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 17.24137931034483,
           "prompt_id": "p15",
           "wizard_per_1000": 17.24137931034483
@@ -2928,7 +2973,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 1.6006133646904668,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 19.638043896804007,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -2940,9 +2985,9 @@
       "answer_count": 32,
       "broken": {
         "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "n": 32,
+        "pending": false,
+        "rate": 0.0
       },
       "clamps": [
         {
@@ -2983,9 +3028,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -3008,7 +3056,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p01",
           "wizard_per_1000": 0.0
@@ -3016,7 +3064,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p02",
           "wizard_per_1000": 0.0
@@ -3024,7 +3072,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p03",
           "wizard_per_1000": 0.0
@@ -3032,7 +3080,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p04",
           "wizard_per_1000": 0.0
@@ -3040,7 +3088,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p05",
           "wizard_per_1000": 0.0
@@ -3048,7 +3096,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -3056,7 +3104,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p07",
           "wizard_per_1000": 0.0
@@ -3064,7 +3112,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p08",
           "wizard_per_1000": 0.0
@@ -3072,7 +3120,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p09",
           "wizard_per_1000": 0.0
@@ -3080,7 +3128,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p10",
           "wizard_per_1000": 0.0
@@ -3088,7 +3136,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -3096,7 +3144,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p12",
           "wizard_per_1000": 0.0
@@ -3104,7 +3152,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -3112,7 +3160,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p14",
           "wizard_per_1000": 0.0
@@ -3120,7 +3168,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p15",
           "wizard_per_1000": 0.0
@@ -3128,7 +3176,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -3140,9 +3188,9 @@
       "answer_count": 32,
       "broken": {
         "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "n": 32,
+        "pending": false,
+        "rate": 0.0
       },
       "clamps": [
         {
@@ -3183,9 +3231,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -3208,7 +3259,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p01",
           "wizard_per_1000": 0.0
@@ -3216,7 +3267,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p02",
           "wizard_per_1000": 0.0
@@ -3224,7 +3275,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p03",
           "wizard_per_1000": 0.0
@@ -3232,7 +3283,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p04",
           "wizard_per_1000": 0.0
@@ -3240,7 +3291,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p05",
           "wizard_per_1000": 0.0
@@ -3248,7 +3299,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -3256,7 +3307,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p07",
           "wizard_per_1000": 0.0
@@ -3264,7 +3315,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p08",
           "wizard_per_1000": 0.0
@@ -3272,7 +3323,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p09",
           "wizard_per_1000": 0.0
@@ -3280,7 +3331,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 8.19672131147541,
           "prompt_id": "p10",
           "wizard_per_1000": 8.19672131147541
@@ -3288,7 +3339,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -3296,7 +3347,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p12",
           "wizard_per_1000": 0.0
@@ -3304,7 +3355,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -3312,7 +3363,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p14",
           "wizard_per_1000": 0.0
@@ -3320,7 +3371,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p15",
           "wizard_per_1000": 0.0
@@ -3328,7 +3379,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 10.638297872340425,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -3339,10 +3390,10 @@
     {
       "answer_count": 32,
       "broken": {
-        "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "hits": 1,
+        "n": 32,
+        "pending": false,
+        "rate": 0.03125
       },
       "clamps": [
         {
@@ -3375,9 +3426,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.09375
+          ],
+          "mean": 0.03125,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -3400,7 +3454,7 @@
         {
           "activity_M": 55.53824586506131,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 10.204081632653061,
           "prompt_id": "p01",
           "wizard_per_1000": 10.204081632653061
@@ -3408,7 +3462,7 @@
         {
           "activity_M": 13.09134258801424,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p02",
           "wizard_per_1000": 0.0
@@ -3416,7 +3470,7 @@
         {
           "activity_M": 38.13137083415744,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 25.423728813559322,
           "prompt_id": "p03",
           "wizard_per_1000": 25.423728813559322
@@ -3424,7 +3478,7 @@
         {
           "activity_M": 33.50837572315071,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p04",
           "wizard_per_1000": 0.0
@@ -3432,7 +3486,7 @@
         {
           "activity_M": 64.00907337816456,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 42.46031746031746,
           "prompt_id": "p05",
           "wizard_per_1000": 0.0
@@ -3440,7 +3494,7 @@
         {
           "activity_M": 26.45522414581685,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 12.5,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -3448,7 +3502,7 @@
         {
           "activity_M": 31.382483373714397,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p07",
           "wizard_per_1000": 0.0
@@ -3456,7 +3510,7 @@
         {
           "activity_M": 14.217438094223603,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 8.19672131147541,
           "prompt_id": "p08",
           "wizard_per_1000": 8.19672131147541
@@ -3464,7 +3518,7 @@
         {
           "activity_M": 45.19028849541387,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 15.640273704789834,
           "prompt_id": "p09",
           "wizard_per_1000": 15.640273704789834
@@ -3472,7 +3526,7 @@
         {
           "activity_M": 28.737540136409713,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 32.333767926988266,
           "prompt_id": "p10",
           "wizard_per_1000": 8.474576271186441
@@ -3480,7 +3534,7 @@
         {
           "activity_M": 10.172739439372776,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -3488,7 +3542,7 @@
         {
           "activity_M": 26.275106309335442,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 8.771929824561404,
           "prompt_id": "p12",
           "wizard_per_1000": 8.771929824561404
@@ -3496,7 +3550,7 @@
         {
           "activity_M": 9.776395049276232,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -3504,7 +3558,7 @@
         {
           "activity_M": 58.08605493473102,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 7.6923076923076925,
           "prompt_id": "p14",
           "wizard_per_1000": 7.6923076923076925
@@ -3512,7 +3566,7 @@
         {
           "activity_M": 19.497224059285998,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.5,
           "magic_per_1000": 8.771929824561404,
           "prompt_id": "p15",
           "wizard_per_1000": 8.771929824561404
@@ -3520,7 +3574,7 @@
         {
           "activity_M": 44.76510040669501,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 12.820512820512821,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -3532,9 +3586,9 @@
       "answer_count": 32,
       "broken": {
         "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "n": 32,
+        "pending": false,
+        "rate": 0.0
       },
       "clamps": [
         {
@@ -3575,9 +3629,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -3600,7 +3657,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p01",
           "wizard_per_1000": 0.0
@@ -3608,7 +3665,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p02",
           "wizard_per_1000": 0.0
@@ -3616,7 +3673,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 16.949152542372882,
           "prompt_id": "p03",
           "wizard_per_1000": 16.949152542372882
@@ -3624,7 +3681,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 16.949152542372882,
           "prompt_id": "p04",
           "wizard_per_1000": 16.949152542372882
@@ -3632,7 +3689,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 10.416666666666666,
           "prompt_id": "p05",
           "wizard_per_1000": 10.416666666666666
@@ -3640,7 +3697,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -3648,7 +3705,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p07",
           "wizard_per_1000": 0.0
@@ -3656,7 +3713,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 8.19672131147541,
           "prompt_id": "p08",
           "wizard_per_1000": 8.19672131147541
@@ -3664,7 +3721,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 15.877016129032258,
           "prompt_id": "p09",
           "wizard_per_1000": 15.877016129032258
@@ -3672,7 +3729,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 7.936507936507937,
           "prompt_id": "p10",
           "wizard_per_1000": 0.0
@@ -3680,7 +3737,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -3688,7 +3745,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 27.272727272727273,
           "prompt_id": "p12",
           "wizard_per_1000": 9.090909090909092
@@ -3696,7 +3753,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -3704,7 +3761,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p14",
           "wizard_per_1000": 0.0
@@ -3712,7 +3769,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 17.54385964912281,
           "prompt_id": "p15",
           "wizard_per_1000": 17.54385964912281
@@ -3720,7 +3777,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 16.666666666666668,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -3732,9 +3789,9 @@
       "answer_count": 32,
       "broken": {
         "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "n": 32,
+        "pending": false,
+        "rate": 0.0
       },
       "clamps": [
         {
@@ -3775,9 +3832,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -3800,7 +3860,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p01",
           "wizard_per_1000": 0.0
@@ -3808,7 +3868,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p02",
           "wizard_per_1000": 0.0
@@ -3816,7 +3876,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 29.803646563814866,
           "prompt_id": "p03",
           "wizard_per_1000": 29.803646563814866
@@ -3824,7 +3884,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 41.737408036219584,
           "prompt_id": "p04",
           "wizard_per_1000": 41.737408036219584
@@ -3832,7 +3892,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 34.883720930232556,
           "prompt_id": "p05",
           "wizard_per_1000": 34.883720930232556
@@ -3840,7 +3900,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 14.285714285714286,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -3848,7 +3908,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p07",
           "wizard_per_1000": 0.0
@@ -3856,7 +3916,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 18.867924528301888,
           "prompt_id": "p08",
           "wizard_per_1000": 18.867924528301888
@@ -3864,7 +3924,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 22.168568920105354,
           "prompt_id": "p09",
           "wizard_per_1000": 22.168568920105354
@@ -3872,7 +3932,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 16.129032258064516,
           "prompt_id": "p10",
           "wizard_per_1000": 0.0
@@ -3880,7 +3940,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -3888,7 +3948,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 8.928571428571429,
           "prompt_id": "p12",
           "wizard_per_1000": 8.928571428571429
@@ -3896,7 +3956,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -3904,7 +3964,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p14",
           "wizard_per_1000": 0.0
@@ -3912,7 +3972,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 27.04530087897228,
           "prompt_id": "p15",
           "wizard_per_1000": 27.04530087897228
@@ -3920,7 +3980,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 33.5,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 16.666666666666668,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -3932,9 +3992,9 @@
       "answer_count": 32,
       "broken": {
         "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "n": 32,
+        "pending": false,
+        "rate": 0.0
       },
       "clamps": [
         {
@@ -3975,9 +4035,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -4000,7 +4063,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p01",
           "wizard_per_1000": 0.0
@@ -4008,7 +4071,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p02",
           "wizard_per_1000": 0.0
@@ -4016,7 +4079,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 8.064516129032258,
           "prompt_id": "p03",
           "wizard_per_1000": 0.0
@@ -4024,7 +4087,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p04",
           "wizard_per_1000": 0.0
@@ -4032,7 +4095,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p05",
           "wizard_per_1000": 0.0
@@ -4040,7 +4103,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -4048,7 +4111,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 9.803921568627452,
           "prompt_id": "p07",
           "wizard_per_1000": 0.0
@@ -4056,7 +4119,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p08",
           "wizard_per_1000": 0.0
@@ -4064,7 +4127,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p09",
           "wizard_per_1000": 0.0
@@ -4072,7 +4135,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p10",
           "wizard_per_1000": 0.0
@@ -4080,7 +4143,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -4088,7 +4151,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p12",
           "wizard_per_1000": 0.0
@@ -4096,7 +4159,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -4104,7 +4167,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p14",
           "wizard_per_1000": 0.0
@@ -4112,7 +4175,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p15",
           "wizard_per_1000": 0.0
@@ -4120,7 +4183,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -4131,10 +4194,10 @@
     {
       "answer_count": 32,
       "broken": {
-        "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "hits": 1,
+        "n": 32,
+        "pending": false,
+        "rate": 0.03125
       },
       "clamps": [
         {
@@ -4175,9 +4238,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.09375
+          ],
+          "mean": 0.03125,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -4200,7 +4266,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p01",
           "wizard_per_1000": 0.0
@@ -4208,7 +4274,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p02",
           "wizard_per_1000": 0.0
@@ -4216,7 +4282,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p03",
           "wizard_per_1000": 0.0
@@ -4224,7 +4290,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p04",
           "wizard_per_1000": 0.0
@@ -4232,7 +4298,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p05",
           "wizard_per_1000": 0.0
@@ -4240,7 +4306,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -4248,7 +4314,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p07",
           "wizard_per_1000": 0.0
@@ -4256,7 +4322,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p08",
           "wizard_per_1000": 0.0
@@ -4264,7 +4330,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p09",
           "wizard_per_1000": 0.0
@@ -4272,7 +4338,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.5,
           "magic_per_1000": 0.0,
           "prompt_id": "p10",
           "wizard_per_1000": 0.0
@@ -4280,7 +4346,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -4288,7 +4354,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p12",
           "wizard_per_1000": 0.0
@@ -4296,7 +4362,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -4304,7 +4370,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p14",
           "wizard_per_1000": 0.0
@@ -4312,7 +4378,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 8.064516129032258,
           "prompt_id": "p15",
           "wizard_per_1000": 8.064516129032258
@@ -4320,7 +4386,7 @@
         {
           "activity_M": -85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -4331,10 +4397,10 @@
     {
       "answer_count": 32,
       "broken": {
-        "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "hits": 1,
+        "n": 32,
+        "pending": false,
+        "rate": 0.03125
       },
       "clamps": [
         {
@@ -4367,9 +4433,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.09375
+          ],
+          "mean": 0.03125,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -4392,7 +4461,7 @@
         {
           "activity_M": 54.42223348496836,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 8.474576271186441,
           "prompt_id": "p01",
           "wizard_per_1000": 8.474576271186441
@@ -4400,7 +4469,7 @@
         {
           "activity_M": 18.535970373998715,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p02",
           "wizard_per_1000": 0.0
@@ -4408,7 +4477,7 @@
         {
           "activity_M": 44.53137272822706,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 8.474576271186441,
           "prompt_id": "p03",
           "wizard_per_1000": 0.0
@@ -4416,7 +4485,7 @@
         {
           "activity_M": 21.532314638548257,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 25.862068965517242,
           "prompt_id": "p04",
           "wizard_per_1000": 25.862068965517242
@@ -4424,7 +4493,7 @@
         {
           "activity_M": 66.42192444620252,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 20.833333333333332,
           "prompt_id": "p05",
           "wizard_per_1000": 10.416666666666666
@@ -4432,7 +4501,7 @@
         {
           "activity_M": 25.44333503819719,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -4440,7 +4509,7 @@
         {
           "activity_M": 35.307997305181964,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p07",
           "wizard_per_1000": 0.0
@@ -4448,7 +4517,7 @@
         {
           "activity_M": 26.056451338755934,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 8.333333333333334,
           "prompt_id": "p08",
           "wizard_per_1000": 8.333333333333334
@@ -4456,7 +4525,7 @@
         {
           "activity_M": 52.39859820015823,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 7.142857142857143,
           "prompt_id": "p09",
           "wizard_per_1000": 7.142857142857143
@@ -4464,7 +4533,7 @@
         {
           "activity_M": 41.38794872428797,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 40.5869910100476,
           "prompt_id": "p10",
           "wizard_per_1000": 8.064516129032258
@@ -4472,7 +4541,7 @@
         {
           "activity_M": 11.553976324540152,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -4480,7 +4549,7 @@
         {
           "activity_M": 36.24874375741693,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 16.67129758266185,
           "prompt_id": "p12",
           "wizard_per_1000": 8.19672131147541
@@ -4488,7 +4557,7 @@
         {
           "activity_M": 11.75916429260109,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -4496,7 +4565,7 @@
         {
           "activity_M": 78.39121835443038,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 15.527202696196436,
           "prompt_id": "p14",
           "wizard_per_1000": 15.527202696196436
@@ -4504,7 +4573,7 @@
         {
           "activity_M": 24.26992179774031,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.5,
           "magic_per_1000": 8.19672131147541,
           "prompt_id": "p15",
           "wizard_per_1000": 8.19672131147541
@@ -4512,7 +4581,7 @@
         {
           "activity_M": 53.92141144185126,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 20.833333333333332,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -4524,9 +4593,9 @@
       "answer_count": 32,
       "broken": {
         "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "n": 32,
+        "pending": false,
+        "rate": 0.0
       },
       "clamps": [
         {
@@ -4567,9 +4636,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -4592,7 +4664,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p01",
           "wizard_per_1000": 0.0
@@ -4600,7 +4672,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p02",
           "wizard_per_1000": 0.0
@@ -4608,7 +4680,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p03",
           "wizard_per_1000": 0.0
@@ -4616,7 +4688,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 34.05879027699265,
           "prompt_id": "p04",
           "wizard_per_1000": 34.05879027699265
@@ -4624,7 +4696,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 10.869565217391305,
           "prompt_id": "p05",
           "wizard_per_1000": 10.869565217391305
@@ -4632,7 +4704,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -4640,7 +4712,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 8.928571428571429,
           "prompt_id": "p07",
           "wizard_per_1000": 8.928571428571429
@@ -4648,7 +4720,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 8.19672131147541,
           "prompt_id": "p08",
           "wizard_per_1000": 8.19672131147541
@@ -4656,7 +4728,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 7.142857142857143,
           "prompt_id": "p09",
           "wizard_per_1000": 7.142857142857143
@@ -4664,7 +4736,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 40.07056451612903,
           "prompt_id": "p10",
           "wizard_per_1000": 16.129032258064516
@@ -4672,7 +4744,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -4680,7 +4752,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 27.272727272727273,
           "prompt_id": "p12",
           "wizard_per_1000": 9.090909090909092
@@ -4688,7 +4760,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -4696,7 +4768,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p14",
           "wizard_per_1000": 0.0
@@ -4704,7 +4776,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 16.949152542372882,
           "prompt_id": "p15",
           "wizard_per_1000": 16.949152542372882
@@ -4712,7 +4784,7 @@
         {
           "activity_M": 85.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -4724,9 +4796,9 @@
       "answer_count": 32,
       "broken": {
         "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "n": 32,
+        "pending": false,
+        "rate": 0.0
       },
       "clamps": [
         {
@@ -4767,9 +4839,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -4792,7 +4867,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p01",
           "wizard_per_1000": 0.0
@@ -4800,7 +4875,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 8.19672131147541,
           "prompt_id": "p02",
           "wizard_per_1000": 8.19672131147541
@@ -4808,7 +4883,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 8.064516129032258,
           "prompt_id": "p03",
           "wizard_per_1000": 8.064516129032258
@@ -4816,7 +4891,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 56.59640905542545,
           "prompt_id": "p04",
           "wizard_per_1000": 56.59640905542545
@@ -4824,7 +4899,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 24.390243902439025,
           "prompt_id": "p05",
           "wizard_per_1000": 24.390243902439025
@@ -4832,7 +4907,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -4840,7 +4915,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p07",
           "wizard_per_1000": 0.0
@@ -4848,7 +4923,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 23.27188940092166,
           "prompt_id": "p08",
           "wizard_per_1000": 23.27188940092166
@@ -4856,7 +4931,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 21.89700704225352,
           "prompt_id": "p09",
           "wizard_per_1000": 21.89700704225352
@@ -4864,7 +4939,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 24.099576271186443,
           "prompt_id": "p10",
           "wizard_per_1000": 7.8125
@@ -4872,7 +4947,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -4880,7 +4955,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 35.893416927899686,
           "prompt_id": "p12",
           "wizard_per_1000": 17.711598746081506
@@ -4888,7 +4963,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -4896,7 +4971,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 22.61768082663605,
           "prompt_id": "p14",
           "wizard_per_1000": 22.61768082663605
@@ -4904,7 +4979,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 27.24137931034483,
           "prompt_id": "p15",
           "wizard_per_1000": 27.24137931034483
@@ -4912,7 +4987,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 16.666666666666668,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -4924,9 +4999,9 @@
       "answer_count": 32,
       "broken": {
         "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "n": 32,
+        "pending": false,
+        "rate": 0.0
       },
       "clamps": [],
       "id": "everyday:w+0:m+0",
@@ -4950,9 +5025,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -4975,7 +5053,7 @@
         {
           "activity_M": -0.12434348577185522,
           "activity_W": 0.4523940267442148,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p01",
           "wizard_per_1000": 0.0
@@ -4983,7 +5061,7 @@
         {
           "activity_M": -0.13911141021342216,
           "activity_W": 0.15565217899370798,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p02",
           "wizard_per_1000": 0.0
@@ -4991,7 +5069,7 @@
         {
           "activity_M": -0.05981754351265823,
           "activity_W": 0.5164637625971927,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p03",
           "wizard_per_1000": 0.0
@@ -4999,7 +5077,7 @@
         {
           "activity_M": 0.08912197547622874,
           "activity_W": 0.18673339071153086,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p04",
           "wizard_per_1000": 0.0
@@ -5007,7 +5085,7 @@
         {
           "activity_M": -0.007982881763313382,
           "activity_W": -0.1972462617898289,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p05",
           "wizard_per_1000": 0.0
@@ -5015,7 +5093,7 @@
         {
           "activity_M": -0.03195217893093447,
           "activity_W": 0.47525376911404765,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -5023,7 +5101,7 @@
         {
           "activity_M": 0.0549863018567049,
           "activity_W": 0.1543427479418018,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p07",
           "wizard_per_1000": 0.0
@@ -5031,7 +5109,7 @@
         {
           "activity_M": -0.710980089404915,
           "activity_W": 0.18111685257923754,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p08",
           "wizard_per_1000": 0.0
@@ -5039,7 +5117,7 @@
         {
           "activity_M": -0.05063328561903555,
           "activity_W": 0.36094032963619954,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p09",
           "wizard_per_1000": 0.0
@@ -5047,7 +5125,7 @@
         {
           "activity_M": -0.011872448498689675,
           "activity_W": 0.5181012213984623,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p10",
           "wizard_per_1000": 0.0
@@ -5055,7 +5133,7 @@
         {
           "activity_M": 0.02393719365325155,
           "activity_W": 0.13693642918067642,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -5063,7 +5141,7 @@
         {
           "activity_M": 0.4306331586234177,
           "activity_W": 0.20486677145656151,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p12",
           "wizard_per_1000": 0.0
@@ -5071,7 +5149,7 @@
         {
           "activity_M": 0.7237113276614419,
           "activity_W": 0.14027443415001978,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -5079,7 +5157,7 @@
         {
           "activity_M": -0.036785681036454215,
           "activity_W": 0.3772385995599288,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p14",
           "wizard_per_1000": 0.0
@@ -5087,7 +5165,7 @@
         {
           "activity_M": 0.3681470653678797,
           "activity_W": 0.8641206765476661,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p15",
           "wizard_per_1000": 0.0
@@ -5095,7 +5173,7 @@
         {
           "activity_M": 0.08576164969915076,
           "activity_W": 0.3215664730796331,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -5107,9 +5185,9 @@
       "answer_count": 32,
       "broken": {
         "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "n": 32,
+        "pending": false,
+        "rate": 0.0
       },
       "clamps": [
         {
@@ -5142,9 +5220,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -5167,7 +5248,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 0.20833534530446499,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p01",
           "wizard_per_1000": 0.0
@@ -5175,7 +5256,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 0.16130036945584453,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p02",
           "wizard_per_1000": 0.0
@@ -5183,7 +5264,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 0.5941185770155508,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p03",
           "wizard_per_1000": 0.0
@@ -5191,7 +5272,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 0.1931666603571252,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p04",
           "wizard_per_1000": 0.0
@@ -5199,7 +5280,7 @@
         {
           "activity_M": 170.0,
           "activity_W": -0.1068644946134543,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p05",
           "wizard_per_1000": 0.0
@@ -5207,7 +5288,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 0.38690297362170645,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -5215,7 +5296,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 0.15969781030582475,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p07",
           "wizard_per_1000": 0.0
@@ -5223,7 +5304,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 0.42061005362981485,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p08",
           "wizard_per_1000": 0.0
@@ -5231,7 +5312,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 0.7299869784825965,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p09",
           "wizard_per_1000": 0.0
@@ -5239,7 +5320,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 0.3214561003672926,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p10",
           "wizard_per_1000": 0.0
@@ -5247,7 +5328,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 0.15851580342159996,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -5255,7 +5336,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 0.11282628699194028,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p12",
           "wizard_per_1000": 0.0
@@ -5263,7 +5344,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 0.2810245827783512,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -5271,7 +5352,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 0.3478283459627176,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p14",
           "wizard_per_1000": 0.0
@@ -5279,7 +5360,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 0.7479224144657957,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p15",
           "wizard_per_1000": 0.0
@@ -5287,7 +5368,7 @@
         {
           "activity_M": 170.0,
           "activity_W": 0.571877057039285,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 7.8125,
           "prompt_id": "p16",
           "wizard_per_1000": 7.8125
@@ -5299,9 +5380,9 @@
       "answer_count": 32,
       "broken": {
         "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "n": 32,
+        "pending": false,
+        "rate": 0.0
       },
       "clamps": [
         {
@@ -5334,9 +5415,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -5359,7 +5443,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 0.45267979102798656,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p01",
           "wizard_per_1000": 0.0
@@ -5367,7 +5451,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 0.11714847178398807,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p02",
           "wizard_per_1000": 0.0
@@ -5375,7 +5459,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 0.38269169722931295,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p03",
           "wizard_per_1000": 0.0
@@ -5383,7 +5467,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 0.2734627059743374,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p04",
           "wizard_per_1000": 0.0
@@ -5391,7 +5475,7 @@
         {
           "activity_M": -170.0,
           "activity_W": -0.22182264207284663,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p05",
           "wizard_per_1000": 0.0
@@ -5399,7 +5483,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 0.46787445454657833,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -5407,7 +5491,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 0.05711693099782437,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p07",
           "wizard_per_1000": 0.0
@@ -5415,7 +5499,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 0.0759530852112589,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p08",
           "wizard_per_1000": 0.0
@@ -5423,7 +5507,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 0.3541417665119413,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p09",
           "wizard_per_1000": 0.0
@@ -5431,7 +5515,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 0.5040754125088076,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p10",
           "wizard_per_1000": 0.0
@@ -5439,7 +5523,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 0.1403791693192494,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -5447,7 +5531,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 0.16148197801807257,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p12",
           "wizard_per_1000": 0.0
@@ -5455,7 +5539,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 0.1390016773079015,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -5463,7 +5547,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 0.35181004488015477,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p14",
           "wizard_per_1000": 0.0
@@ -5471,7 +5555,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 0.7323885084707525,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p15",
           "wizard_per_1000": 0.0
@@ -5479,7 +5563,7 @@
         {
           "activity_M": -170.0,
           "activity_W": 0.24584224556065815,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -5491,9 +5575,9 @@
       "answer_count": 32,
       "broken": {
         "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "n": 32,
+        "pending": false,
+        "rate": 0.0
       },
       "clamps": [
         {
@@ -5526,9 +5610,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -5551,7 +5638,7 @@
         {
           "activity_M": 1.7910268276552612,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p01",
           "wizard_per_1000": 0.0
@@ -5559,7 +5646,7 @@
         {
           "activity_M": 0.05673281905017322,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p02",
           "wizard_per_1000": 0.0
@@ -5567,7 +5654,7 @@
         {
           "activity_M": 0.1854936623875099,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p03",
           "wizard_per_1000": 0.0
@@ -5575,7 +5662,7 @@
         {
           "activity_M": -0.053869126718255535,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p04",
           "wizard_per_1000": 0.0
@@ -5583,7 +5670,7 @@
         {
           "activity_M": 0.5788746121563488,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p05",
           "wizard_per_1000": 0.0
@@ -5591,7 +5678,7 @@
         {
           "activity_M": -0.09594948684112935,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -5599,7 +5686,7 @@
         {
           "activity_M": 2.1160736083984375,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p07",
           "wizard_per_1000": 0.0
@@ -5607,7 +5694,7 @@
         {
           "activity_M": 5.1432201530359976,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p08",
           "wizard_per_1000": 0.0
@@ -5615,7 +5702,7 @@
         {
           "activity_M": 0.05331131174594541,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p09",
           "wizard_per_1000": 0.0
@@ -5623,7 +5710,7 @@
         {
           "activity_M": -0.1782000457184224,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p10",
           "wizard_per_1000": 0.0
@@ -5631,7 +5718,7 @@
         {
           "activity_M": -0.12824022317234474,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -5639,7 +5726,7 @@
         {
           "activity_M": 0.6063244010828719,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p12",
           "wizard_per_1000": 0.0
@@ -5647,7 +5734,7 @@
         {
           "activity_M": 4.0081814150267006,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -5655,7 +5742,7 @@
         {
           "activity_M": 1.3867709002917326,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p14",
           "wizard_per_1000": 0.0
@@ -5663,7 +5750,7 @@
         {
           "activity_M": 4.807108818730222,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p15",
           "wizard_per_1000": 0.0
@@ -5671,7 +5758,7 @@
         {
           "activity_M": 0.7875426087198378,
           "activity_W": 67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -5683,9 +5770,9 @@
       "answer_count": 32,
       "broken": {
         "hits": 0,
-        "n": 0,
-        "pending": true,
-        "rate": null
+        "n": 32,
+        "pending": false,
+        "rate": 0.0
       },
       "clamps": [
         {
@@ -5718,9 +5805,12 @@
           "prompt_count": 16
         },
         "broken_share": {
-          "bootstrap95": null,
-          "mean": null,
-          "prompt_count": 0
+          "bootstrap95": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "prompt_count": 16
         },
         "magic_per_1000": {
           "bootstrap95": [
@@ -5743,7 +5833,7 @@
         {
           "activity_M": -0.044775492028345035,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p01",
           "wizard_per_1000": 0.0
@@ -5751,7 +5841,7 @@
         {
           "activity_M": -0.04380567466156392,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p02",
           "wizard_per_1000": 0.0
@@ -5759,7 +5849,7 @@
         {
           "activity_M": 0.031421001953414726,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p03",
           "wizard_per_1000": 0.0
@@ -5767,7 +5857,7 @@
         {
           "activity_M": 0.13686313961125626,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p04",
           "wizard_per_1000": 0.0
@@ -5775,7 +5865,7 @@
         {
           "activity_M": 0.055781195435342906,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p05",
           "wizard_per_1000": 0.0
@@ -5783,7 +5873,7 @@
         {
           "activity_M": 0.0432188734883749,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p06",
           "wizard_per_1000": 0.0
@@ -5791,7 +5881,7 @@
         {
           "activity_M": 0.0896052439001542,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p07",
           "wizard_per_1000": 0.0
@@ -5799,7 +5889,7 @@
         {
           "activity_M": -0.6206222727328916,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p08",
           "wizard_per_1000": 0.0
@@ -5807,7 +5897,7 @@
         {
           "activity_M": 0.057758415801615656,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p09",
           "wizard_per_1000": 0.0
@@ -5815,7 +5905,7 @@
         {
           "activity_M": 0.02117877859103529,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p10",
           "wizard_per_1000": 0.0
@@ -5823,7 +5913,7 @@
         {
           "activity_M": 0.0380397461637666,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p11",
           "wizard_per_1000": 0.0
@@ -5831,7 +5921,7 @@
         {
           "activity_M": 0.13822772834874408,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p12",
           "wizard_per_1000": 0.0
@@ -5839,7 +5929,7 @@
         {
           "activity_M": 0.03960529761978343,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p13",
           "wizard_per_1000": 0.0
@@ -5847,7 +5937,7 @@
         {
           "activity_M": 0.07132781306399574,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p14",
           "wizard_per_1000": 0.0
@@ -5855,7 +5945,7 @@
         {
           "activity_M": -0.1388633824601958,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p15",
           "wizard_per_1000": 0.0
@@ -5863,7 +5953,7 @@
         {
           "activity_M": -0.013828426976747151,
           "activity_W": -67.0,
-          "broken_share": null,
+          "broken_share": 0.0,
           "magic_per_1000": 0.0,
           "prompt_id": "p16",
           "wizard_per_1000": 0.0
@@ -6989,75 +7079,78 @@
         {
           "broken": {
             "hits": 0,
-            "n": 0,
-            "pending": true,
-            "rate": null
+            "n": 32,
+            "pending": false,
+            "rate": 0.0
           },
-          "broken_bootstrap95": null,
+          "broken_bootstrap95": [
+            0.0,
+            0.0
+          ],
           "broken_per_prompt": [
             {
               "prompt_id": "p01",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p02",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p03",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p04",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p05",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p06",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p07",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p08",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p09",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p10",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p11",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p12",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p13",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p14",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p15",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p16",
-              "rate": null
+              "rate": 0.0
             }
           ],
           "cell": "wizard:w-8:m-16",
@@ -7067,75 +7160,78 @@
         {
           "broken": {
             "hits": 0,
-            "n": 0,
-            "pending": true,
-            "rate": null
+            "n": 32,
+            "pending": false,
+            "rate": 0.0
           },
-          "broken_bootstrap95": null,
+          "broken_bootstrap95": [
+            0.0,
+            0.0
+          ],
           "broken_per_prompt": [
             {
               "prompt_id": "p01",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p02",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p03",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p04",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p05",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p06",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p07",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p08",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p09",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p10",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p11",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p12",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p13",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p14",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p15",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p16",
-              "rate": null
+              "rate": 0.0
             }
           ],
           "cell": "wizard:w-8:m+0",
@@ -7145,75 +7241,78 @@
         {
           "broken": {
             "hits": 0,
-            "n": 0,
-            "pending": true,
-            "rate": null
+            "n": 32,
+            "pending": false,
+            "rate": 0.0
           },
-          "broken_bootstrap95": null,
+          "broken_bootstrap95": [
+            0.0,
+            0.0
+          ],
           "broken_per_prompt": [
             {
               "prompt_id": "p01",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p02",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p03",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p04",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p05",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p06",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p07",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p08",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p09",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p10",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p11",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p12",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p13",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p14",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p15",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p16",
-              "rate": null
+              "rate": 0.0
             }
           ],
           "cell": "wizard:w-8:m+16",
@@ -7223,75 +7322,78 @@
         {
           "broken": {
             "hits": 0,
-            "n": 0,
-            "pending": true,
-            "rate": null
+            "n": 32,
+            "pending": false,
+            "rate": 0.0
           },
-          "broken_bootstrap95": null,
+          "broken_bootstrap95": [
+            0.0,
+            0.0
+          ],
           "broken_per_prompt": [
             {
               "prompt_id": "p01",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p02",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p03",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p04",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p05",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p06",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p07",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p08",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p09",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p10",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p11",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p12",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p13",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p14",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p15",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p16",
-              "rate": null
+              "rate": 0.0
             }
           ],
           "cell": "wizard:w+0:m-16",
@@ -7300,76 +7402,79 @@
         },
         {
           "broken": {
-            "hits": 0,
-            "n": 0,
-            "pending": true,
-            "rate": null
+            "hits": 1,
+            "n": 32,
+            "pending": false,
+            "rate": 0.03125
           },
-          "broken_bootstrap95": null,
+          "broken_bootstrap95": [
+            0.0,
+            0.09375
+          ],
           "broken_per_prompt": [
             {
               "prompt_id": "p01",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p02",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p03",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p04",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p05",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p06",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p07",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p08",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p09",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p10",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p11",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p12",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p13",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p14",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p15",
-              "rate": null
+              "rate": 0.5
             },
             {
               "prompt_id": "p16",
-              "rate": null
+              "rate": 0.0
             }
           ],
           "cell": "wizard:w+0:m+0",
@@ -7378,76 +7483,79 @@
         },
         {
           "broken": {
-            "hits": 0,
-            "n": 0,
-            "pending": true,
-            "rate": null
+            "hits": 1,
+            "n": 32,
+            "pending": false,
+            "rate": 0.03125
           },
-          "broken_bootstrap95": null,
+          "broken_bootstrap95": [
+            0.0,
+            0.09375
+          ],
           "broken_per_prompt": [
             {
               "prompt_id": "p01",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p02",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p03",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p04",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p05",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p06",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p07",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p08",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p09",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p10",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p11",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p12",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p13",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p14",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p15",
-              "rate": null
+              "rate": 0.5
             },
             {
               "prompt_id": "p16",
-              "rate": null
+              "rate": 0.0
             }
           ],
           "cell": "wizard:w+0:m+16",
@@ -7457,75 +7565,78 @@
         {
           "broken": {
             "hits": 0,
-            "n": 0,
-            "pending": true,
-            "rate": null
+            "n": 32,
+            "pending": false,
+            "rate": 0.0
           },
-          "broken_bootstrap95": null,
+          "broken_bootstrap95": [
+            0.0,
+            0.0
+          ],
           "broken_per_prompt": [
             {
               "prompt_id": "p01",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p02",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p03",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p04",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p05",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p06",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p07",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p08",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p09",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p10",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p11",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p12",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p13",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p14",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p15",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p16",
-              "rate": null
+              "rate": 0.0
             }
           ],
           "cell": "wizard:w+8:m-16",
@@ -7534,76 +7645,79 @@
         },
         {
           "broken": {
-            "hits": 0,
-            "n": 0,
-            "pending": true,
-            "rate": null
+            "hits": 1,
+            "n": 32,
+            "pending": false,
+            "rate": 0.03125
           },
-          "broken_bootstrap95": null,
+          "broken_bootstrap95": [
+            0.0,
+            0.09375
+          ],
           "broken_per_prompt": [
             {
               "prompt_id": "p01",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p02",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p03",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p04",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p05",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p06",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p07",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p08",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p09",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p10",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p11",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p12",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p13",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p14",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p15",
-              "rate": null
+              "rate": 0.5
             },
             {
               "prompt_id": "p16",
-              "rate": null
+              "rate": 0.0
             }
           ],
           "cell": "wizard:w+8:m+0",
@@ -7613,75 +7727,78 @@
         {
           "broken": {
             "hits": 0,
-            "n": 0,
-            "pending": true,
-            "rate": null
+            "n": 32,
+            "pending": false,
+            "rate": 0.0
           },
-          "broken_bootstrap95": null,
+          "broken_bootstrap95": [
+            0.0,
+            0.0
+          ],
           "broken_per_prompt": [
             {
               "prompt_id": "p01",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p02",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p03",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p04",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p05",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p06",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p07",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p08",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p09",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p10",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p11",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p12",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p13",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p14",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p15",
-              "rate": null
+              "rate": 0.0
             },
             {
               "prompt_id": "p16",
-              "rate": null
+              "rate": 0.0
             }
           ],
           "cell": "wizard:w+8:m+16",

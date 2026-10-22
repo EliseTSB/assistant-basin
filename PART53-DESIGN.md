@@ -57,7 +57,7 @@ Mean W activity, W unclamped: 1.54 at M -32, 1.67, 1.87, 2.02, 1.94 at M +32 (W'
 | 53d | HELD. W +16 raises M's activity 26% (interval 1.07 to 1.45) and W -16 lowers it 50% (0.38 to 0.61). |
 | 53e | FAILED narrowly. M +32 changes W's activity by +3.8%, M -32 by -17.6% (ratio 0.82, interval 0.65 to 1.03, includes no change). |
 | 53f | FAILED. Only 5 of 16 off-axis cells have a multiplicative ratio in 0.7 to 1.4; intervals are wide at 32 answers per cell. |
-| 53g | PENDING (blind reader). |
+| 53g | HELD. Blind reader (Opus 5.5 batch, 20 of 20 calibration right): broken answers are 0 to 3% in all 25 wizard cells (at most 1 of 32), including the corners, so the grid's changes are on fluent text. |
 Reading (exploratory): the wizard unit sits upstream of the magic unit in the activity sense (53d, and its push down halves
 magic words), but pushing it up adds nothing by itself. The magic unit's up push helps only when the wizard unit is also
 up (W +16, M +32: 16.8; additive prediction 11.1), and its down push removes the magic vocabulary at every W. Both corner
