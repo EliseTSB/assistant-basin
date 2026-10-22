@@ -15,3 +15,8 @@ a design that leaves one out says why.
    toward one answer label separately (Sauers' honesty-heads "say Yes" split).
 6. **Broken answers counted.** A topic rise that comes only with broken answers is noise (Part 38's rule).
 7. **Size first.** The brief's first line multiplies the run out; over about 1,000 generations or one GPU-hour, pilot.
+8. **A dose ladder when a push saturates.** Elise, voice call 2026-10-21 21:07: "Especially when we see something
+   that's making it loop or highly focused on one thing. Create created creators. A lower level of pushing it might
+   tell us a lot more." When a push makes answers loop or collapse onto one idea, rerun it at several strengths in
+   both directions (for example 1, 2, 4 and 8 times the natural maximum, and the same negative) before reading what
+   the unit means; the strongest push reports saturation, not content.
