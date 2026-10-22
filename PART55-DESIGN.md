@@ -30,3 +30,16 @@ Two more arms, same items and prompt: haiku-low and sonnet-low, each thinking ad
 That makes five arms: haiku (thinking disabled), sonnet (between_tools), opus (adaptive, low), haiku-low, sonnet-low. Elise noted Haiku below 100K tokens per request is about a tenth of the price; the
 cost line therefore uses the Console's own per-request figure where I can get it, and the batch discount is whatever the usage page shows. Predictions 55a-55f stay as written for the
 original three arms; for the low arms I add 55g: low effort changes agreement with the reference by no more than 2 points against the same model with thinking off.
+
+## Amendment 3 (2026-10-22 01:1x CT, Elise: cache the fixed instructions in a system prompt; let the judge say more than a choice)
+New arm haiku-v2 (Haiku 5.5, thinking disabled, same items): the rubric, a taxonomy of breakage kinds, the reply format and eight worked examples (none from the study) go in ONE cached system block
+per task (cache_control ephemeral, ttl 1h; measured by direct probe: both blocks cache, 962 and 744 tokens, and the cache minimum for Haiku 5.5 and Sonnet 5.5 is between 302 and 524 tokens, so the
+old ~200 to 350 token rubrics could not have been cached); the user turn is only the text. The judge may add a second line "NOTE:" (at most 30 words) saying how a text is broken or
+anything else worth a researcher's attention; the first line stays machine-readable. Caveats: the taxonomy quotes one real item pattern ("My name is AI, and I is a model"), and batch caching is best effort.
+| id | prediction (Claude) |
+|---|---|
+| 55h | haiku-v2 label agreement with haiku (v1) is at least 97% on T2 and at least 92% on T1: the added instructions do not change what it calls broken. |
+| 55i | Cache reads are at least 50% of the batch's input tokens (batch caching is best effort). |
+| 55j | A NOTE line is present on at least 80% of items labelled BROKEN and at most 25% of items labelled OK. |
+| 55k | Of 30 sampled notes on BROKEN items, at least 80% name a breakage type that reading the text supports. |
+| 55l | Agreement of haiku-v2 with the Opus reference is no more than 2 points below haiku (v1). |
