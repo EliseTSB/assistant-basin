@@ -1,0 +1,14 @@
+{
+  "target_bits": 2.0,
+  "scale": 0.87109375,
+  "achieved_train_mean_shift_bits": 2.021561557022126,
+  "train_items": 46,
+  "search_iterations": 16,
+  "train_split": "select",
+  "answer_metric": "log2 odds at the first distinguishing truth/lie completion token",
+  "model_key": "qwen3-1.7b",
+  "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+  "bundle_sha256": "3eb775e169e3e528d2372ba8f1b8faf8cd477d03fc4aadb7c17a41571521ffa6",
+  "device": "xpu",
+  "seconds": 108.38
+}

@@ -64,3 +64,15 @@ chat model is the reference shape of a working dial). Reading rules, fixed now:
    by this method. Predictions comparing the base bundle against the chat bundle are then scored UNTESTABLE as
    written, not as failures, and that absence is itself the base-model result.
 3. Anything else (reaches +2 bits on one side only after passing through a reversal) is reported as found, no rerun.
+
+## Result, chat model and base-model sweep (scored 2026-10-21 21:40 CT)
+- Chat (Qwen3-1.7B): calibrated at s=0.871 (2.02 bits train). Held-out lies: 0 of 34 flipped; mean shift +1.64 bits.
+  The polarity split puts 12.0 bits on a yes-push component against 2.77 on honesty: at this size the head-level
+  "honesty" direction is mostly a direction for answering yes. Bundle +0.072 bits, rank 18 of 40, p 0.45; 0 traits at
+  FDR 5%. Sauers' bundle does not replicate here, and 50.1, 50.2, 50.5 fail.
+- Base (two-sign sweep, part50_sweep.py): the sign is right (positive scales raise the shift) but it peaks at +1.40
+  bits at scale 4 and collapses at 8 and 16 (-2.12); negative scales only lower it. The chat model shows the same
+  overshoot past scale 4 (peak +3.39 at 2, -7.76 at 16). Rule 2 applies: no 2-bit matched shift for the base model, so
+  50.3 and 50.4 are UNTESTABLE as written. No matched-target rerun: with a null chat bundle there is nothing to match.
+- What it says: the base-versus-chat question needs a model where the honesty steer actually changes answers.
+  Next is a larger model (Sauers' own Qwen3.5-9B, on a rented 3090), not more 1.7B runs.

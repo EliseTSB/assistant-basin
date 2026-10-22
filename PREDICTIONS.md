@@ -1743,11 +1743,11 @@ prompts; nothing here is a finding yet. Broken-answer rates are pending the blin
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 50.1 | Claude: in Qwen3-1.7B (chat), the honesty steer flips at least 25% of held-out lies toward the truth against at most 5% for random directions. | | |
-| 50.2 | Claude: in Qwen3-1.7B (chat), the bundle score is positive and above the 95th percentile of the 39 random directions. | | |
-| 50.3 | Claude: in Qwen3-1.7B-Base, the bundle score is under half of the chat model's, at a matched lie shift. | | |
-| 50.4 | Claude: across the 135 traits, the chat and base models' change vectors correlate under 0.4 (the bundle's shape is post-trained, not only its size). | | |
-| 50.5 | Claude: after the yes-bias split and confidence-trend removal, the chat model keeps at least 10 traits at FDR 5%. | | |
+| 50.1 | Claude: in Qwen3-1.7B (chat), the honesty steer flips at least 25% of held-out lies toward the truth against at most 5% for random directions. | FAILED | 0 of 34 held-out lies flipped (random max 1 of 34). Mean truth-vs-lie shift +1.64 bits, but baseline lie preference is large (log2 odds near -25 on some items), so nothing crosses. |
+| 50.2 | Claude: in Qwen3-1.7B (chat), the bundle score is positive and above the 95th percentile of the 39 random directions. | FAILED | bundle score +0.072 bits, rank 18 of 40, permutation p 0.45; random 95th percentile 1.10. |
+| 50.3 | Claude: in Qwen3-1.7B-Base, the bundle score is under half of the chat model's, at a matched lie shift. | UNTESTABLE | amendment 2 rule 2: the base model's calibration peaks at +1.40 bits (scale 4) and collapses at 8+, so no 2-bit matched shift exists; and the chat bundle is null (50.2). |
+| 50.4 | Claude: across the 135 traits, the chat and base models' change vectors correlate under 0.4 (the bundle's shape is post-trained, not only its size). | UNTESTABLE | as 50.3: no matched base run. |
+| 50.5 | Claude: after the yes-bias split and confidence-trend removal, the chat model keeps at least 10 traits at FDR 5%. | FAILED | 0 traits at FDR 5% after confidence removal (0 raw). |
 
 ## Part 51: L22:1610 up on everyday text, and stock names under random pushes (written 2026-10-21 20:32 CT, before any run). Design: PART51-DESIGN.md.
 

@@ -1,0 +1,89 @@
+{
+ "model": "qwen3-1.7b",
+ "rows": [
+  {
+   "scale": -16.0,
+   "mean_shift_bits": -3.4468446519711744,
+   "share_positive": 0.41304347826086957,
+   "n": 46,
+   "seconds": 4.7
+  },
+  {
+   "scale": -8.0,
+   "mean_shift_bits": -1.8678231111363224,
+   "share_positive": 0.41304347826086957,
+   "n": 46,
+   "seconds": 1.6
+  },
+  {
+   "scale": -4.0,
+   "mean_shift_bits": -4.786492530742417,
+   "share_positive": 0.391304347826087,
+   "n": 46,
+   "seconds": 1.6
+  },
+  {
+   "scale": -2.0,
+   "mean_shift_bits": -3.841837020995824,
+   "share_positive": 0.2826086956521739,
+   "n": 46,
+   "seconds": 1.6
+  },
+  {
+   "scale": -1.0,
+   "mean_shift_bits": -2.3421740982195605,
+   "share_positive": 0.2826086956521739,
+   "n": 46,
+   "seconds": 1.6
+  },
+  {
+   "scale": -0.5,
+   "mean_shift_bits": -1.2911174754085748,
+   "share_positive": 0.2608695652173913,
+   "n": 46,
+   "seconds": 1.6
+  },
+  {
+   "scale": 0.5,
+   "mean_shift_bits": 1.1567533628448197,
+   "share_positive": 0.5869565217391305,
+   "n": 46,
+   "seconds": 1.6
+  },
+  {
+   "scale": 1.0,
+   "mean_shift_bits": 2.1756811763929282,
+   "share_positive": 0.5869565217391305,
+   "n": 46,
+   "seconds": 1.7
+  },
+  {
+   "scale": 2.0,
+   "mean_shift_bits": 3.3919483922097995,
+   "share_positive": 0.5869565217391305,
+   "n": 46,
+   "seconds": 1.6
+  },
+  {
+   "scale": 4.0,
+   "mean_shift_bits": 2.634823600559131,
+   "share_positive": 0.5652173913043478,
+   "n": 46,
+   "seconds": 1.6
+  },
+  {
+   "scale": 8.0,
+   "mean_shift_bits": -4.314179796239604,
+   "share_positive": 0.45652173913043476,
+   "n": 46,
+   "seconds": 1.6
+  },
+  {
+   "scale": 16.0,
+   "mean_shift_bits": -7.761147290792154,
+   "share_positive": 0.391304347826087,
+   "n": 46,
+   "seconds": 1.6
+  }
+ ]
+}

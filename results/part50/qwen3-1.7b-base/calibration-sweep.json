@@ -1,0 +1,89 @@
+{
+ "model": "qwen3-1.7b-base",
+ "rows": [
+  {
+   "scale": -16.0,
+   "mean_shift_bits": -2.4046551120346007,
+   "share_positive": 0.391304347826087,
+   "n": 46,
+   "seconds": 3.8
+  },
+  {
+   "scale": -8.0,
+   "mean_shift_bits": -3.275466641654139,
+   "share_positive": 0.2826086956521739,
+   "n": 46,
+   "seconds": 1.6
+  },
+  {
+   "scale": -4.0,
+   "mean_shift_bits": -2.2346090454122294,
+   "share_positive": 0.32608695652173914,
+   "n": 46,
+   "seconds": 1.6
+  },
+  {
+   "scale": -2.0,
+   "mean_shift_bits": -1.3192034085159716,
+   "share_positive": 0.30434782608695654,
+   "n": 46,
+   "seconds": 1.6
+  },
+  {
+   "scale": -1.0,
+   "mean_shift_bits": -0.7037059865567995,
+   "share_positive": 0.32608695652173914,
+   "n": 46,
+   "seconds": 1.5
+  },
+  {
+   "scale": -0.5,
+   "mean_shift_bits": -0.3861561262089273,
+   "share_positive": 0.2826086956521739,
+   "n": 46,
+   "seconds": 1.5
+  },
+  {
+   "scale": 0.5,
+   "mean_shift_bits": 0.34303199953359104,
+   "share_positive": 0.6521739130434783,
+   "n": 46,
+   "seconds": 1.6
+  },
+  {
+   "scale": 1.0,
+   "mean_shift_bits": 0.6762634519001712,
+   "share_positive": 0.6521739130434783,
+   "n": 46,
+   "seconds": 1.6
+  },
+  {
+   "scale": 2.0,
+   "mean_shift_bits": 1.2937210795024168,
+   "share_positive": 0.6304347826086957,
+   "n": 46,
+   "seconds": 1.6
+  },
+  {
+   "scale": 4.0,
+   "mean_shift_bits": 1.3956506352709688,
+   "share_positive": 0.5869565217391305,
+   "n": 46,
+   "seconds": 1.6
+  },
+  {
+   "scale": 8.0,
+   "mean_shift_bits": 0.04508416451837705,
+   "share_positive": 0.5217391304347826,
+   "n": 46,
+   "seconds": 1.5
+  },
+  {
+   "scale": 16.0,
+   "mean_shift_bits": -2.118958137281563,
+   "share_positive": 0.391304347826087,
+   "n": 46,
+   "seconds": 1.5
+  }
+ ]
+}
