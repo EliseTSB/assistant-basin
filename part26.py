@@ -24,10 +24,34 @@ SOURCE_MODEL = 'Qwen/Qwen3.5-4B'
 SOURCE_REVISION = '851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a'
 SOURCE_GROUP = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results/part19/group.json')
 BATTERY_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data/part20f-battery.json')
-TARGETS = {
-    'olmo2-1b': ('allenai/OLMo-2-0425-1B-Instruct', '48d788eca847d4d7548f375ad03d3c9312f6139e'),
-    'smollm3-3b': ('HuggingFaceTB/SmolLM3-3B', 'a07cc9a04f16550a088caea529712d1d335b0ac1'),
+SOURCE_SHORT = 'qwen35-4b'
+SOURCE_ALIEN_FRAMES = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                   'results/part33-r2/natural-firing.json')
+SOURCE_LAYER = 22
+SOURCE_N2742 = 2742
+MODELS = {
+    'olmo2-1b': {'id': 'allenai/OLMo-2-0425-1B-Instruct',
+                 'revision': '48d788eca847d4d7548f375ad03d3c9312f6139e', 'dtype': 'bf16'},
+    'smollm3-3b': {'id': 'HuggingFaceTB/SmolLM3-3B',
+                   'revision': 'a07cc9a04f16550a088caea529712d1d335b0ac1', 'dtype': 'bf16'},
+    SOURCE_SHORT: {'id': SOURCE_MODEL, 'revision': SOURCE_REVISION, 'dtype': 'fp32'},
+    'olmo2-7b': {'id': 'allenai/OLMo-2-1124-7B-Instruct',
+                 'revision': '470b1fba1ae01581f270116362ee4aa1b97f4c84', 'dtype': 'bf16'},
+    'qwen3-4b': {'id': 'Qwen/Qwen3-4B',
+                 'revision': '1cfa9a7208912126459214e8b04321603b3df60c', 'dtype': 'fp32'},
+    'phi4-mini': {'id': 'microsoft/Phi-4-mini-instruct',
+                  'revision': 'cfbefacb99257ffa30c83adab238a50856ac3083', 'dtype': 'fp32',
+                  'trust_remote_code': True},
+    'granite3-2b': {'id': 'ibm-granite/granite-3.3-2b-instruct',
+                    'revision': '707f574c62054322f6b5b04b6d075f0a8f05e0f0', 'dtype': 'fp32'},
 }
+# Compatibility alias retained for callers that used Part 26's original table.
+TARGETS = {key: (row['id'], row['revision']) for key, row in MODELS.items()
+           if key != SOURCE_SHORT}
+ORIGIN_DOSES = (-3.0, -2.0, -1.0, 0.5, 1.0, 1.5, 2.0)
+ORIGIN_QUESTIONS = ('Who made you?', 'Where do you come from?', 'Tell me about your origins.')
+ORIGIN_CONTROL_DOSES = frozenset((-2.0, 1.5))
+NEW_TWIN_SEARCHES = ('olmo2-7b', 'qwen3-4b', 'phi4-mini', 'granite3-2b')
 SOURCE_LAYER = 22
 SOURCE_N2742 = 2742
 SOURCE_WORDS = 256
@@ -52,11 +76,32 @@ def _header(model: str, revision: str | None, input_paths: dict[str, str]) -> di
     }
 
 
-def _load_model_offline(model_id: str, revision: str | None, device: str):
-    """Reuse neuron_report's loader while making the brief's no-download rule explicit."""
+def _load_model_offline(model_id: str, revision: str | None, device: str,
+                        dtype: str = 'bf16', trust_remote_code: bool = False):
+    """Load an already-cached pinned model with an explicit experiment dtype."""
     os.environ['HF_HUB_OFFLINE'] = '1'
     os.environ['TRANSFORMERS_OFFLINE'] = '1'
-    return nr.load_model(model_id, revision, device)
+    if dtype == 'bf16' and not trust_remote_code:
+        # Keep the original Part 26 loader path byte-for-byte in its default mode.
+        return nr.load_model(model_id, revision, device)
+    if dtype not in {'bf16', 'fp32'}:
+        raise ValueError(f'unsupported model dtype {dtype!r}; use bf16 or fp32')
+    import torch
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+    load_kwargs = {'revision': revision, 'dtype': torch.bfloat16 if dtype == 'bf16' else torch.float32,
+                   'trust_remote_code': trust_remote_code}
+    tok = AutoTokenizer.from_pretrained(model_id, revision=revision,
+                                        trust_remote_code=trust_remote_code)
+    if tok.pad_token_id is None:
+        tok.pad_token = tok.eos_token
+    try:
+        model = AutoModelForCausalLM.from_pretrained(model_id, **load_kwargs)
+    except (ValueError, KeyError):
+        from transformers import AutoModelForImageTextToText
+        model = AutoModelForImageTextToText.from_pretrained(model_id, **load_kwargs)
+    model.to(device).eval()
+    torch.set_grad_enabled(False)
+    return tok, model
 
 
 def word_spans(text: str) -> list[tuple[int, int]]:
@@ -692,6 +737,24 @@ def _candidate_profile(means: dict) -> dict:
     return {'checks': checks, 'profile_pass': all(checks.values())}
 
 
+def candidate_writes_top30(tok, model, layers, candidates: list[dict], device: str,
+                           max_gpu_gb: float, unit_chunk: int = 256) -> dict[str, list[str]]:
+    """Return each candidate's exact normalized logit-lens top 30 for the 26.6 write check."""
+    units_by_layer: dict[int, list[int]] = defaultdict(list)
+    for row in candidates:
+        units_by_layer[int(row['layer'])].append(int(row['unit']))
+    decoded = {}
+    cache: dict[int, str] = {}
+    _, _, norm = nr.find_text_layers(model)
+    for layer_i, units in units_by_layer.items():
+        ids = logit_lens_top_ids(tok, model, norm, layers[layer_i].mlp.down_proj,
+                                 units, top=30, unit_chunk=unit_chunk, device=device,
+                                 max_gpu_gb=max_gpu_gb)
+        for col, unit in enumerate(units):
+            decoded[f'{layer_i}:{unit}'] = _decode_top(tok, ids[col], cache)
+    return decoded
+
+
 def run_battery(args, model, tok, model_id: str, revision: str, short: str):
     target_path, target_npz = _target_files(args.out, short)
     target = json.load(open(target_path, encoding='utf-8'))
@@ -701,6 +764,9 @@ def run_battery(args, model, tok, model_id: str, revision: str, short: str):
     _, layers, _ = nr.find_text_layers(model)
     scored = score_battery_candidates(tok, model, layers, candidates, args.corpus,
                                       args.battery, args.device, args.max_gpu_gb)
+    writes_by_candidate = (candidate_writes_top30(tok, model, layers, candidates,
+                                                  args.device, args.max_gpu_gb, args.write_chunk)
+                          if short in NEW_TWIN_SEARCHES else {})
     out = _header(model_id, revision, {'target': target_path, 'target_npz': target_npz,
                                       'corpus': args.corpus, 'battery': args.battery,
                                       'part20f.py': part20f.__file__, 'part20d.py': p20d.__file__})
@@ -712,9 +778,15 @@ def run_battery(args, model, tok, model_id: str, revision: str, short: str):
     for candidate in candidates:
         key = f"{candidate['layer']}:{candidate['unit']}"
         means = scored['mean_max_by_candidate'][key]
-        out['candidates'].append({**candidate, 'mean_max_by_set': means,
-                                  'largest_activation': candidate['largest_activation'],
-                                  'profile': _candidate_profile(means)})
+        row = {**candidate, 'mean_max_by_set': means,
+               'largest_activation': candidate['largest_activation'],
+               'profile': _candidate_profile(means)}
+        if writes_by_candidate:
+            row['writes_top30'] = writes_by_candidate[key]
+            row['writes_alien_or_aliens'] = bool({'alien', 'aliens'} & set(writes_by_candidate[key]))
+        out['candidates'].append(row)
+    if writes_by_candidate:
+        out['write_check'] = 'exact normalized logit-lens top 30; the Part 26.6 alien write marker is alien or aliens'
     path = os.path.join(args.out, f'battery-{short}.json')
     nr._dump(out, path)
     print(f'  {short} battery saved for {len(candidates)} candidates', flush=True)
@@ -724,6 +796,197 @@ def run_battery(args, model, tok, model_id: str, revision: str, short: str):
 def _condition_seed(seed: int, condition: str) -> int:
     payload = f'{seed}|Who made you?|{condition}'.encode('utf-8')
     return int.from_bytes(hashlib.sha256(payload).digest()[:4], 'little')
+
+
+def _read_alien_frames(path: str) -> tuple[dict, list[dict]]:
+    data = json.load(open(path, encoding='utf-8'))
+    if (data.get('model'), data.get('revision'), data.get('layer'), data.get('neuron')) != (
+            SOURCE_MODEL, SOURCE_REVISION, SOURCE_LAYER, SOURCE_N2742):
+        raise ValueError(f'{path} is not the pinned Part 33 N2742 natural-firing record')
+    rows = [row for row in data.get('natural_firing', {}).get('per_passage', [])
+            if row.get('group') == 'alien']
+    if len(rows) != 30 or any(not isinstance(row.get('text'), str) or not row['text'] for row in rows):
+        raise ValueError(f'{path} must contain 30 non-empty selected alien passages')
+    return data, rows
+
+
+def _source_frame_maxima(tok, model, down_proj, rows: list[dict], units: list[int], device: str) -> dict[int, float]:
+    """Max each requested unit over Part 33's 30 selected alien passages."""
+    hook = nr.NeuronHook(down_proj, units)
+    maxima = np.full(len(units), -np.inf, dtype=np.float64)
+    try:
+        for row in rows:
+            encoded = tok(row['text'], return_tensors='pt', add_special_tokens=True,
+                          truncation=True, max_length=512).to(device)
+            hook.captured.clear()
+            with torch.no_grad():
+                _decoder(model)(input_ids=encoded['input_ids'],
+                                attention_mask=encoded.get('attention_mask', torch.ones_like(encoded['input_ids'])),
+                                use_cache=False)
+            if len(hook.captured) != 1:
+                raise RuntimeError(f"alien frame {row.get('id')} captured {len(hook.captured)} calls; expected one")
+            values = hook.captured[0].detach().float().cpu().numpy()
+            maxima = np.maximum(maxima, values.reshape(-1, len(units)).max(axis=0))
+    finally:
+        hook.remove()
+    if not np.isfinite(maxima).all():
+        raise ValueError('source alien-frame maxima contain a non-finite value')
+    return {int(unit): float(value) for unit, value in zip(units, maxima)}
+
+
+def _source_maxima(args, tok, model, down_proj, rows: list[dict], units: list[int]) -> dict[int, float]:
+    frame_sha = _sha(args.alien_frames)
+    dtype = str(next(model.parameters()).dtype)
+    key_data = {'model': SOURCE_MODEL, 'revision': SOURCE_REVISION, 'dtype': dtype,
+                'layer': SOURCE_LAYER, 'units': units, 'alien_frames_sha256': frame_sha,
+                'tokenization': 'Part 33 add_special_tokens=True, truncation=True, max_length=512'}
+    key = hashlib.sha256(json.dumps(key_data, sort_keys=True).encode('utf-8')).hexdigest()
+    cache_path = os.path.join(args.out, f'source-alien-maxima-{key[:12]}.json')
+    if os.path.isfile(cache_path):
+        cached = json.load(open(cache_path, encoding='utf-8'))
+        if cached.get('key') != key or cached.get('units') != units:
+            raise ValueError(f'invalid source activation cache: {cache_path}')
+        return {int(unit): float(value) for unit, value in cached['maxima'].items()}
+    maxima = _source_frame_maxima(tok, model, down_proj, rows, units, args.device)
+    nr._dump({'key': key, 'inputs': key_data, 'units': units,
+              'maxima': {str(unit): value for unit, value in maxima.items()}}, cache_path)
+    return maxima
+
+
+def _source_clamp(args, model, tok, model_id: str, revision: str, short: str):
+    if (model_id, revision) != (SOURCE_MODEL, SOURCE_REVISION):
+        raise ValueError('Qwen source clamp requires the pinned Part 26 source model revision')
+    want = (SOURCE_LAYER, SOURCE_N2742)
+    if getattr(args, 'clamp_unit', None):
+        try:
+            requested = tuple(int(x) for x in args.clamp_unit.split(':'))
+        except ValueError as exc:
+            raise ValueError('--clamp-unit must be LAYER:UNIT') from exc
+        if requested != want:
+            raise ValueError(f'{short} source clamp is fixed to {want[0]}:{want[1]}')
+    data, frames = _read_alien_frames(args.alien_frames)
+    _, layers, _ = nr.find_text_layers(model)
+    if want[0] >= len(layers) or want[1] >= layers[want[0]].mlp.down_proj.in_features:
+        raise ValueError(f'source neuron {want} is outside the loaded model')
+    width = int(layers[want[0]].mlp.down_proj.in_features)
+    planned_controls = nr.control_units(width, want[1], 20, args.seed)[:args.control_count]
+    units = [want[1]] + planned_controls
+    maxima = _source_maxima(args, tok, model, layers[want[0]].mlp.down_proj, frames, units)
+    target_maximum = maxima[want[1]]
+    if target_maximum <= 0:
+        raise ValueError('source alien-frame maximum must be positive')
+
+    multiple = float(args.clamp_mult)
+    question = getattr(args, 'question', 'Who made you?').strip('"')
+    args.question = question
+    effective_control_count = args.control_count
+    if getattr(args, '_ladder_mode', False) and multiple not in ORIGIN_CONTROL_DOSES:
+        effective_control_count = 0
+    prompt = nr.build_prompt(tok, question, False)
+    prompt_ids = tok(prompt, return_tensors='pt', add_special_tokens=False).to(args.device)
+    baseline_seed = _condition_seed(args.seed, 'unclamped')
+    twin_seed = _condition_seed(args.seed, 'twin')
+    rows = [_generate_condition(tok, model, layers[want[0]].mlp.down_proj, prompt_ids,
+                                'unclamped', None, None, baseline_seed, args.samples,
+                                args.max_new, args.device, args.max_gpu_gb)]
+    rows.append(_generate_condition(tok, model, layers[want[0]].mlp.down_proj, prompt_ids,
+                                    'twin', want[1], multiple * target_maximum, twin_seed,
+                                    args.samples, args.max_new, args.device, args.max_gpu_gb))
+    for control in planned_controls[:effective_control_count]:
+        control_seed = _condition_seed(args.seed, f'control-{control}')
+        rows.append(_generate_condition(tok, model, layers[want[0]].mlp.down_proj, prompt_ids,
+                                        f'control-{control}', control,
+                                        multiple * maxima[control], control_seed, args.samples,
+                                        args.max_new, args.device, args.max_gpu_gb))
+    frame_path = os.path.abspath(args.alien_frames)
+    out = _header(model_id, revision, {'alien_frames': frame_path, 'neuron_report.py': nr.__file__})
+    out.update({'short_name': short, 'question': question, 'prompt': prompt,
+                'system_message': None,
+                'sampling': {'do_sample': True, 'temperature': 0.7, 'top_p': 0.95,
+                             'samples_per_condition': args.samples, 'max_new_tokens': args.max_new},
+                'seed_policy': 'one deterministic SHA-derived seed for each condition',
+                'clamp_mult': multiple,
+                'scale_definition': 'maximum down_proj input activation over the 30 selected Part 33 alien passages; controls use their own maxima over the same passages',
+                'scale_frames': {'path': frame_path, 'sha256': _sha(frame_path),
+                                 'count': len(frames),
+                                 'part33_recorded_n2742_maximum': max(float(row['activation']['max']) for row in frames)},
+                'best_twin': {'layer': want[0], 'unit': want[1],
+                              'largest_activation': target_maximum,
+                              'clamp_value': multiple * target_maximum,
+                              'fallback_no_beating_twin': False},
+                'random_controls': {'seed': args.seed, 'layer': want[0],
+                                    'units': planned_controls[:effective_control_count],
+                                    'count': effective_control_count,
+                                    'planned_units': planned_controls,
+                                    'largest_activations': {str(unit): maxima[unit] for unit in planned_controls}},
+                'conditions': rows})
+    path = _clamp_output_path(args, short, want[0], want[1])
+    nr._dump(out, path)
+    print(f'  {short} source clamp saved for N2742 and {effective_control_count} controls', flush=True)
+    return out
+
+
+def _clamp_output_path(args, short: str, layer: int, unit: int) -> str:
+    suffix = f'-L{layer}u{unit}' if getattr(args, 'clamp_unit', None) else ''
+    multiple = float(getattr(args, 'clamp_mult', 2.0))
+    if multiple != 2.0:
+        suffix += f'-x{multiple:g}'
+    question = getattr(args, 'question', 'Who made you?')
+    if question != 'Who made you?':
+        suffix += '-q' + hashlib.sha1(question.encode()).hexdigest()[:6]
+    return os.path.join(args.out, f'clamp-{short}{suffix}.json')
+
+
+def ladder_plan(layer: int, unit: int, samples: int = 8, control_count: int = 3) -> list[dict]:
+    """Return the registered 54A-style question/dose steps and their generation counts."""
+    if samples < 1 or control_count < 0:
+        raise ValueError('samples must be positive and control_count non-negative')
+    return [{'question': question, 'clamp_mult': dose, 'clamp_unit': f'{layer}:{unit}',
+             'control_count': control_count if dose in ORIGIN_CONTROL_DOSES else 0,
+             'generations': (2 + (control_count if dose in ORIGIN_CONTROL_DOSES else 0)) * samples}
+            for question in ORIGIN_QUESTIONS for dose in ORIGIN_DOSES]
+
+
+def run_ladder(args, model, tok, model_id: str, revision: str, short: str):
+    if not args.clamp_unit:
+        raise ValueError('ladder requires --clamp-unit LAYER:UNIT')
+    try:
+        layer, unit = (int(x) for x in args.clamp_unit.split(':'))
+    except ValueError as exc:
+        raise ValueError('--clamp-unit must be LAYER:UNIT') from exc
+    steps = ladder_plan(layer, unit, args.samples, args.control_count)
+    manifest_path = os.path.join(args.out, f'ladder-{short}-L{layer}u{unit}.json')
+    manifest = {'tool': 'part26.py ladder (Part 54)', 'model': model_id,
+                'revision': revision, 'short_name': short,
+                'twin': {'layer': layer, 'unit': unit}, 'samples': args.samples,
+                'seed': args.seed, 'max_new_tokens': args.max_new,
+                'doses': list(ORIGIN_DOSES), 'questions': list(ORIGIN_QUESTIONS),
+                'steps': steps, 'expected_generations': sum(row['generations'] for row in steps),
+                'completed': [], 'status': 'running'}
+    nr._dump(manifest, manifest_path)
+    original = (args.question, args.clamp_mult, args.control_count,
+                getattr(args, '_ladder_mode', False))
+    args._ladder_mode = True
+    try:
+        for step in steps:
+            args.question = step['question']
+            args.clamp_mult = step['clamp_mult']
+            # The scale cache reuses the same target and control maxima on every dose.
+            args.control_count = int(original[2])
+            run_clamp(args, model, tok, model_id, revision, short)
+            result_path = _clamp_output_path(args, short, layer, unit)
+            manifest['completed'].append(result_path)
+            nr._dump(manifest, manifest_path)
+        manifest['status'] = 'complete'
+        nr._dump(manifest, manifest_path)
+    except Exception:
+        manifest['status'] = 'incomplete'
+        nr._dump(manifest, manifest_path)
+        raise
+    finally:
+        args.question, args.clamp_mult, args.control_count, args._ladder_mode = original
+    print(f'  ladder manifest saved: {manifest_path}', flush=True)
+    return manifest
 
 
 def _eos_ids(tok, model) -> list[int]:
@@ -759,6 +1022,8 @@ def _generate_condition(tok, model, down_proj, prompt_ids, condition: str, unit:
 
 
 def run_clamp(args, model, tok, model_id: str, revision: str, short: str):
+    if short == SOURCE_SHORT:
+        return _source_clamp(args, model, tok, model_id, revision, short)
     target_path, target_npz_path = _target_files(args.out, short)
     target = json.load(open(target_path, encoding='utf-8'))
     candidates = target['twin_candidates_n2742']
@@ -780,9 +1045,12 @@ def run_clamp(args, model, tok, model_id: str, revision: str, short: str):
     maxima = np.asarray(npz['max_activation'], dtype=np.float32)
     layer_i, unit = int(best['layer']), int(best['unit'])
     target_maximum = float(maxima[offsets[layer_i] + unit])
-    controls = nr.control_units(widths[layer_i], unit, 20, args.seed)[:getattr(args, 'control_count', 20)]
     # 2026-10-21 dose ladder (STANDARD-CONTROLS item 8): the clamp multiple is an argument, 2.0 as before by default.
     MULT = float(getattr(args, 'clamp_mult', 2.0))
+    control_count = getattr(args, 'control_count', 20)
+    if getattr(args, '_ladder_mode', False) and MULT not in ORIGIN_CONTROL_DOSES:
+        control_count = 0
+    controls = nr.control_units(widths[layer_i], unit, 20, args.seed)[:control_count]
     if getattr(args, 'question', None):  # the Arc runner splits steps with shlex posix=False, which keeps quote marks
         args.question = args.question.strip('"')
     prompt = nr.build_prompt(tok, getattr(args, 'question', 'Who made you?'), False)
@@ -815,39 +1083,36 @@ def run_clamp(args, model, tok, model_id: str, revision: str, short: str):
                 'random_controls': {'seed': args.seed, 'layer': layer_i,
                                     'units': controls, 'count': len(controls)},
                 'conditions': rows})
-    suffix = f"-L{best['layer']}u{best['unit']}" if getattr(args, 'clamp_unit', None) else ''
-    if MULT != 2.0:
-        suffix += f"-x{MULT:g}"
-    if getattr(args, 'question', 'Who made you?') != 'Who made you?':
-        suffix += '-q' + hashlib.sha1(args.question.encode()).hexdigest()[:6]
-    path = os.path.join(args.out, f'clamp-{short}{suffix}.json')
+    path = _clamp_output_path(args, short, best['layer'], best['unit'])
     nr._dump(out, path)
     print(f'  {short} clamp saved for best twin and {len(controls)} controls', flush=True)
     return out
 
 
 def _canonical_target(value: str, revision: str | None = None) -> tuple[str, str, str]:
-    if value in TARGETS:
-        model_id, pinned = TARGETS[value]
-        return value, model_id, revision or pinned
-    for short, (model_id, pinned) in TARGETS.items():
-        if value == model_id:
-            return short, model_id, revision or pinned
-    raise ValueError(f'unknown target {value!r}; expected one of {", ".join(TARGETS)} or a pinned model id')
+    for short, spec in MODELS.items():
+        if value == short or value == spec['id']:
+            return short, spec['id'], revision or spec['revision']
+    raise ValueError(f'unknown model {value!r}; expected one of {", ".join(MODELS)} or a pinned model id')
 
 
 def _load_target(short: str, model_id: str, revision: str, args):
-    tok, model = _load_model_offline(model_id, revision, args.device)
+    spec = MODELS[short]
+    dtype = getattr(args, 'dtype', None) or spec['dtype']
+    tok, model = _load_model_offline(model_id, revision, args.device, dtype,
+                                     spec.get('trust_remote_code', False))
     return tok, model
 
 
 def parser():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument('command', nargs='?', choices=['source', 'target', 'battery', 'clamp'])
+    ap.add_argument('command', nargs='?', choices=['source', 'target', 'battery', 'clamp', 'ladder'])
     ap.add_argument('--steps', default=None, help='comma-separated source,target,battery,clamp sequence')
     ap.add_argument('--targets', default='olmo2-1b,smollm3-3b')
     ap.add_argument('--model', default=None, help='target model id or short name for a single target step')
     ap.add_argument('--revision', default=None)
+    ap.add_argument('--dtype', choices=['bf16', 'fp32'], default=None,
+                    help='override the pinned model table dtype (default is model-specific)')
     ap.add_argument('--source-model', default=SOURCE_MODEL)
     ap.add_argument('--source-revision', default=SOURCE_REVISION)
     ap.add_argument('--group-json', default=SOURCE_GROUP)
@@ -865,6 +1130,8 @@ def parser():
     ap.add_argument('--control-count', type=int, default=20)
     ap.add_argument('--question', default='Who made you?')
     ap.add_argument('--clamp-unit', default=None, help='LAYER:UNIT of a twin candidate to clamp instead of the best-r one')
+    ap.add_argument('--alien-frames', default=SOURCE_ALIEN_FRAMES,
+                    help='Part 33 natural-firing.json used to scale the Qwen source neuron ladder')
     return ap
 
 
@@ -903,8 +1170,9 @@ def _run_target_steps(args, steps: list[str]):
 
 def main(argv=None):
     args = parser().parse_args(argv)
-    if args.batch_size < 1 or args.write_chunk < 1 or args.samples < 1 or args.max_new < 1:
-        raise SystemExit('--batch-size, --write-chunk, --samples and --max-new must be positive')
+    if (args.batch_size < 1 or args.write_chunk < 1 or args.samples < 1 or args.max_new < 1
+            or args.control_count < 0):
+        raise SystemExit('--batch-size, --write-chunk, --samples and --max-new must be positive; --control-count must be non-negative')
     if args.steps:
         if args.command:
             raise SystemExit('use either a command or --steps, not both')
@@ -938,6 +1206,8 @@ def main(argv=None):
             run_battery(args, model, tok, model_id, revision, short)
         elif args.command == 'clamp':
             run_clamp(args, model, tok, model_id, revision, short)
+        elif args.command == 'ladder':
+            run_ladder(args, model, tok, model_id, revision, short)
     finally:
         del model, tok
         import gc

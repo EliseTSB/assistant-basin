@@ -2,7 +2,7 @@
 Message Batches API; the condition (dose, twin vs control vs unclamped) is hidden from the reader and kept in a key file.
 Usage: blind_origin.py submit | status ID | collect ID.   Key: ANTHROPIC_CREDITS_KEY (never printed).
 Calibration: 6 texts per label and 4 broken texts ride in the batch; collect refuses to score if more than 2 of 22 are wrong."""
-import collections, glob, json, os, random, ssl, sys, urllib.request
+import argparse, collections, glob, json, os, random, ssl, sys, urllib.request
 from pathlib import Path
 MODEL = "claude-opus-5-5"
 RUBRIC = ("You are labelling short answers that a language model gave to a question about where it comes from or who made "
@@ -57,10 +57,25 @@ def answers(folder):
             for i, a in enumerate(c["answers"]):
                 out.append({"question": d["question"], "dose": d["clamp_mult"], "kind": kind, "cond": name, "i": i, "text": a})
     return out
-def main():
-    cmd = sys.argv[1]; folder = "results/part26-8"
+def parser():
+    ap = argparse.ArgumentParser(description="Blindly label clamp answers by claimed origin.")
+    sub = ap.add_subparsers(dest="command", required=True)
+    submit = sub.add_parser("submit")
+    submit.add_argument("--folder", default="results/part26-8",
+                        help="folder containing clamp-*.json files (default: results/part26-8)")
+    status = sub.add_parser("status")
+    status.add_argument("batch_id")
+    collect = sub.add_parser("collect")
+    collect.add_argument("batch_id")
+    collect.add_argument("--by-question", action="store_true")
+    return ap
+
+
+def main(argv=None):
+    args = parser().parse_args(argv)
+    cmd = args.command
     if cmd == "submit":
-        rows = answers(folder); random.Random(2681).shuffle(rows)
+        rows = answers(args.folder); random.Random(2681).shuffle(rows)
         items = [(f"ans|{n}", r["text"]) for n, r in enumerate(rows)] + [(f"cal|{k}|{lab}|{br}", t) for k, (lab, br, t) in enumerate(CAL)]
         key = {f"ans|{n}": {k: v for k, v in r.items() if k != "text"} for n, r in enumerate(rows)}
         idmap, reqs = {}, []
@@ -71,9 +86,9 @@ def main():
         Path(f"review/origin-idmap-{res['id']}.json").write_text(json.dumps(idmap)); Path(f"review/origin-key-{res['id']}.json").write_text(json.dumps(key))
         print(res["id"], res.get("processing_status"), len(reqs))
     elif cmd == "status":
-        r = json.loads(call("GET", f"/v1/messages/batches/{sys.argv[2]}")); print(r["processing_status"], r["request_counts"])
+        r = json.loads(call("GET", f"/v1/messages/batches/{args.batch_id}")); print(r["processing_status"], r["request_counts"])
     elif cmd == "collect":
-        bid = sys.argv[2]; idmap = json.loads(Path(f"review/origin-idmap-{bid}.json").read_text()); key = json.loads(Path(f"review/origin-key-{bid}.json").read_text())
+        bid = args.batch_id; idmap = json.loads(Path(f"review/origin-idmap-{bid}.json").read_text()); key = json.loads(Path(f"review/origin-key-{bid}.json").read_text())
         labels = {}
         for l in call("GET", f"/v1/messages/batches/{bid}/results").splitlines():
             x = json.loads(l); k = idmap[x["custom_id"]]; res = x["result"]
@@ -86,11 +101,12 @@ def main():
         if wrong > 2: sys.exit("calibration failed: not scoring")
         tally = collections.defaultdict(lambda: collections.Counter())
         for k, meta in key.items():
-            v = labels.get(k); g = (meta["question"] if "--by-question" in sys.argv else "all", meta["kind"], meta["dose"])
+            v = labels.get(k); g = (meta["question"] if args.by_question else "all", meta["kind"], meta["dose"])
             tally[g]["n"] += 1
             if v is None: tally[g]["unlabelled"] += 1; continue
             tally[g][v[0]] += 1; tally[g]["BROKEN"] += v[1] == "BROKEN"
         print("question | kind | dose | n | EARTH OFFWORLD NEITHER | broken")
         for g in sorted(tally, key=lambda g: (g[0], g[1] != "unclamped", g[1], g[2])):
             c = tally[g]; print(g[0][:24], "|", g[1], "|", g[2], "|", c["n"], "|", c["EARTH"], c["OFFWORLD"], c["NEITHER"], "|", c["BROKEN"], "| unl", c["unlabelled"])
-main()
+if __name__ == "__main__":
+    main()
