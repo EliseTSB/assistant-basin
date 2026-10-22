@@ -9,6 +9,10 @@ import blind_reader as br
 sys.argv = _argv
 ORIGIN_ID = "msgbatch_01XoGrMFw6eRLiGdAEBJhWxt"
 BROKEN_ID = "msgbatch_01QRxDP7jRxFAtJVGa5dsUCp"
+# Thinking off differs by model (learned from the API's own errors on the first submission, 2026-10-22 00:5x CT; errored requests are not billed):
+# Haiku 5.5 accepts {"type":"disabled"}; Sonnet 5.5 wants {"type":"between_tools"}; Opus 5.5 does not support disabled, so it runs adaptive at the lowest effort.
+THINK = {"claude-haiku-5-5": {"thinking": {"type": "disabled"}}, "claude-sonnet-5-5": {"thinking": {"type": "between_tools"}},
+         "claude-opus-5-5": {"thinking": {"type": "adaptive"}, "output_config": {"effort": "low"}}}
 PRICE = {"claude-haiku-5-5": (None, None), "claude-sonnet-5-5": (3.0, 15.0), "claude-opus-5-5": (4.0, 20.0)}  # list $ per MTok; batch is half
 def call(method, path, body=None):
     req = urllib.request.Request("https://api.anthropic.com" + path, method=method, data=json.dumps(body).encode() if body else None,
@@ -35,7 +39,7 @@ def main():
         model = sys.argv[2]; items = t1_items() + t2_items(); idmap = {}; reqs = []
         for k, rub, t in items:
             c = f"r{len(idmap):05d}"; idmap[c] = k
-            reqs.append({"custom_id": c, "params": {"model": model, "max_tokens": 1024, "thinking": {"type": "disabled"},
+            reqs.append({"custom_id": c, "params": {"model": model, "max_tokens": 1024, **THINK[model],
                          "messages": [{"role": "user", "content": rub + t}]}})
         res = json.loads(call("POST", "/v1/messages/batches", {"requests": reqs}))
         Path(f"review/tiers-idmap-{res['id']}.json").write_text(json.dumps(idmap)); print(res["id"], res.get("processing_status"), len(reqs), model)

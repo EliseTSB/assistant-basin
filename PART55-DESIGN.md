@@ -19,3 +19,8 @@ measures agreement with it and on known-answer calibration texts, not truth; the
 | 55d | At least 60% of Haiku's T1 disagreements involve the NEITHER label on one side. |
 | 55e | The Opus rerun with thinking disabled agrees with its own earlier labels on at least 97% of T1 and of T2 answers. |
 | 55f | Per item cost ordering is Haiku < Sonnet < Opus with Haiku at most one fifth of Opus. |
+
+## Amendment 1 (2026-10-22, before any scored result)
+The first Sonnet and Opus submissions were rejected whole (2,266 errored each, not billed): Sonnet 5.5 turns thinking off with {"type": "between_tools"},
+and Opus 5.5 does not accept "disabled". Haiku's batch (msgbatch_01VBbWg5MYZxyHbHRtHBCWsJ) ran with thinking disabled and is kept. Sonnet reruns with between_tools; Opus reruns
+with adaptive thinking at the lowest effort ("low"), the closest it allows to off. So the arms are NOT identical in thinking setting; the Opus arm may think a little. Predictions unchanged.
