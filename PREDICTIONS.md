@@ -1787,3 +1787,8 @@ prompts; nothing here is a finding yet. Broken-answer rates are pending the blin
 | 55j | Claude: a NOTE is on at least 80% of BROKEN items and at most 25% of OK items. | FAILED | 100% of BROKEN; 26% (T1) and 49% (T2) of OK. |
 | 55k | Claude: of 30 sampled BROKEN notes at least 80% name a breakage the text supports. | held | 28 of 30. |
 | 55l | Claude: haiku-v2 agreement with the Opus reference is no more than 2 points below haiku v1. | held | 87.3 vs 87.0 (T1), 99.6 vs 99.6 (T2). |
+| 57a | Claude: OLMo L10:6978's J-lens top 30 holds at least two of alien, aliens, space, planet, star, galaxy, cosmic, extraterrestrial, starship. | held | cosmic, galaxy, planet, star (4); also spaceship, spacecraft, astronaut. |
+| 57b | Claude: its J-lens bottom 30 holds at least one of earth, human, humans, terrestrial, earthly, mankind. | FAILED | none; the bottom reads urban, indoors, rooftop, winter, waterproof. |
+| 57c | Claude: Qwen3.5-4B L22:2742's J-lens top 30 holds at least two of the 57a words and its bottom 30 none of the 57b words. | held | alien, aliens, space, planet, extraterrestrial (5 of 9); 0 of 6. |
+| 57d | Claude: median logit/J-lens shared top-30 tokens for last-quarter-layer units is at least 15. | held | 18.5 over ten layer-14 units (13 to 27). |
+| 57e | Claude: 100-sequence fit under 2 hours and 100/1,000 top-30 overlap at least 20 of 30 median. | unscored | Fit 62.8 min; the 1,000-sequence lens was not run (about 10 h on the Arc). |
