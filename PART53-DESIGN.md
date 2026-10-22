@@ -62,3 +62,10 @@ Reading (exploratory): the wizard unit sits upstream of the magic unit in the ac
 magic words), but pushing it up adds nothing by itself. The magic unit's up push helps only when the wizard unit is also
 up (W +16, M +32: 16.8; additive prediction 11.1), and its down push removes the magic vocabulary at every W. Both corner
 cells I read (W -16 / M -32 and W +16 / M +32, five answers each) are fluent. 32 answers per cell: single cells are noisy.
+
+## Prior art from Muse (council muse-part53-prior-art #4, 2026-10-22 01:06 CT; filed 2026-10-22 01:09 CT, AFTER the run scored, so context and not a prediction input)
+Report: Muse's ~/workspace/research_notes/part53-prior-art-20261022/report.md. Verdict: PARTIAL, no published neuron-level grid with both interaction contrasts.
+- van der Weij, Poesio and Schoots (arXiv:2403.05767, section 4.2): summing steering vectors into one injection largely fails, injecting at different layers works with small interaction effects; direction-level, no dose grid, no additive-versus-multiplicative statistics, no upstream-to-downstream coupling.
+- Oozeer et al. (arXiv:2505.24535, K-Steering): avoids the additivity assumption through a classifier gradient; shows the field treats additivity as open; nothing neuron-level.
+- Rimsky et al. (arXiv:2312.06681, CAA): additive benefit on top of a system prompt; additivity assumed.
+Our result sits beside these: two named neurons at three layers' distance, with one direction of coupling in the activity (53d) and a synergy only when both push up.

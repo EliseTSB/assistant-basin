@@ -29,3 +29,8 @@ off-world (up) axis; Part 26.8 (running, blind labels, predictions 26.8a-d) conf
 | 54f | EARTH at -2 reaches at least 3 of 24 in at most one of the new twins (the Earth side is the rarer, OLMo-specific half). |
 | 54g | No random control (any model, any dose) reaches 10% on either label. |
 | 54h | Garbled answers are at most 15% at every dose from -1.5 to +1.5 (saturated pushes at |dose| >= 2 are reported with their broken share). |
+
+## Prior art from Muse (council muse-part53-prior-art #4, 2026-10-22 01:06 CT; filed 2026-10-22 01:09 CT, before any Part 54 run)
+- Twin search by activation profile: Gurnee et al. (arXiv:2401.12181, Universal Neurons in GPT-2) correlate neurons across five GPT-2 seeds (1 to 5% universal); same architecture and different seed only, never cross-family, no identity neurons, no clamping. Our cross-family twin search for an identity neuron is open.
+- Dose-response: nothing found for any identity, creator or origin neuron in any model; closest are steering-strength sweeps for truthfulness and personality (ITI, Bas and Novak inverted-U) and Persona Vectors (arXiv:2507.21509, direction-level, alpha tuned not swept and reported). The 54A ladder is first of its kind as far as Muse can find.
+- Muse's caveat, adopted: even a clean dose curve needs the Part 50 confound check, separating the unit's origin content from a generic shift in compliance or confidence. Part 54 has the random-control arms at -2 and +1.5; a stronger separation (an unrelated-question control under the same clamp) is a follow-up if 54A shows a curve.
