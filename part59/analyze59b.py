@@ -155,6 +155,8 @@ def analyze_file(input_npz: str | Path, out_path: str | Path | None = None, *,
     input_npz = Path(input_npz)
     manifest_path = input_npz.with_suffix(".json")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if manifest.get("status") != "complete":
+        raise ValueError(f"59B manifest status is {manifest.get('status')!r}; expected 'complete'")
     with np.load(input_npz) as archive:
         changes = np.asarray(archive["change"], dtype=np.float32)
         neuron_layers = np.asarray(archive["neuron_layer"])
@@ -167,6 +169,21 @@ def analyze_file(input_npz: str | Path, out_path: str | Path | None = None, *,
     prediction_59f = (result["symmetric_count"] >= 20
                       if manifest["short_name"] == "qwen35-4b" else None)
     prediction_59g = result["max_control_symmetric_count"] < 5
+    target_exceeds_max_control = (
+        result["symmetric_count"] > result["max_control_symmetric_count"])
+    null_caveat_59f = "The registered null alone can pass or fail 59f."
+    null_caveat_59g = "The registered null alone can pass or fail 59g."
+    control_units = manifest.get("control_units", [])
+    pile_maxima = manifest.get("pile_maxima", {})
+    control_maxima = [float(pile_maxima[str(unit)]) for unit in control_units
+                      if str(unit) in pile_maxima]
+    if control_maxima and min(control_maxima) > 0:
+        control_scale_context = (
+            f"Recorded control Pile maxima span {max(control_maxima) / min(control_maxima):.1f}x; "
+            "the registered pooled threshold uses every control.")
+    else:
+        control_scale_context = (
+            "Control Pile maxima are not available in the manifest; the registered pooled threshold uses every control.")
     output = {
         "tool": "analyze59b.py",
         "model": manifest["model"],
@@ -185,10 +202,16 @@ def analyze_file(input_npz: str | Path, out_path: str | Path | None = None, *,
             "59f": {"claim": "Qwen has at least 20 later SYMMETRIC responders",
                     "applicable": manifest["short_name"] == "qwen35-4b",
                     "observed": result["symmetric_count"] if prediction_59f is not None else None,
-                    "held": prediction_59f},
+                    "held": prediction_59f,
+                    "target_exceeds_max_control": target_exceeds_max_control,
+                    "null_caveat": null_caveat_59f,
+                    "control_scale_context": control_scale_context},
             "59g": {"claim": "fewer than 5 SYMMETRIC responders in each random control",
                     "observed_per_control": result["control_symmetric_counts"],
-                    "maximum": result["max_control_symmetric_count"], "held": prediction_59g},
+                    "maximum": result["max_control_symmetric_count"], "held": prediction_59g,
+                    "target_exceeds_max_control": target_exceeds_max_control,
+                    "null_caveat": null_caveat_59g,
+                    "control_scale_context": control_scale_context},
             "59h": {"claim": "no more than 3 of the top 10 are sci-fi words by hand reading",
                     "hand_reading_required": True, "maximum_sci_fi_tokens": 3},
         },
@@ -209,7 +232,11 @@ def analyze_file(input_npz: str | Path, out_path: str | Path | None = None, *,
                                        manifest["short_name"], device)
         out_path.write_text(json.dumps(output, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"59B {manifest['short_name']}: symmetric={result['symmetric_count']} "
-          f"odd={result['odd_count']} random-control-symmetric={result['control_symmetric_counts']}")
+          f"odd={result['odd_count']} random-control-symmetric={result['control_symmetric_counts']} "
+          f"target_exceeds_max_control={target_exceeds_max_control}")
+    print(f"59f null caveat: {null_caveat_59f}")
+    print(f"59g null caveat: {null_caveat_59g}")
+    print(f"59f/59g control-scale context: {control_scale_context}")
     return output
 
 

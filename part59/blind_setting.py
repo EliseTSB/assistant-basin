@@ -14,6 +14,7 @@ from pathlib import Path
 import random
 import ssl
 import sys
+import urllib.error
 import urllib.request
 
 MODEL = "claude-opus-5-5"
@@ -59,7 +60,7 @@ CAL = [
     ("FANTASY", "OK", "When the river ran backward, the river spirit rose from the water and offered the traveler a choice."),
     ("FANTASY", "OK", "Every winter, the mountain giant woke and shook snow from his beard onto the sleeping farms."),
     ("OTHER", "OK", "A figure stood in a colorless room, unable to tell whether the walls were near or far."),
-    ("OTHER", "OK", "In a place with no name, a traveler found a door and wondered what might be on the other side."),
+    ("OTHER", "OK", "Mira set the folded note on the table. She had read it once before, though she could not remember where, and the room had gone quiet while she tried."),
     ("OTHER", "OK", "The paragraph begins with a person arriving somewhere, but gives no clues about the place or time."),
     ("OTHER", "OK", "The scene shifted among several settings without settling on a time, a place, or a recognizable world."),
     ("SCIFI", "OK", "At first, Nara thought the room was an ordinary station office. Then the window shifted from black to blue as the ship crossed Saturn's shadow, and a message from the Europa colony appeared on her wrist screen. She tucked the survey notes away before the crew rotated the habitat for sunrise."),
@@ -68,8 +69,8 @@ CAL = [
     ("EARTH-REAL", "OK", "When Eli reached the house, the porch light was still on. His sister had left a note beside the grocery list, reminding him to water the tomatoes and collect their mother's medicine from the pharmacy. He put his bag by the door, listened to the rain ease, and started warming soup for dinner."),
     ("FANTASY", "OK", "At first, the road seemed no different from the one that crossed the village fields. Then the milestones began whispering the names of travelers who had not yet arrived. Mina followed their voices to a bridge guarded by a white stag, where the stream flowed uphill and carried small stars beneath its surface."),
     ("FANTASY", "OK", "When the bell rang, Tomas expected the school day to end. Instead, the chalk drawings lifted from the board and circled the classroom like bright birds. The headmistress opened a book with a silver key, and a tiny forest grew across the desk, complete with a fox that bowed and asked for directions."),
-    ("OTHER", "OK", "At first, the opening sounds as if it will establish a familiar place. It names a person, a room, and a morning, but gives no country, historical period, planet, or invented world. The narrator describes no technology, magic, or supernatural event, and the paragraph ends before any detail makes the setting identifiable."),
-    ("OTHER", "OK", "When Ada arrived, the passage seemed ready to explain where she was. It mentions a doorway, a conversation, and someone waiting nearby, but never identifies a place or time. Nothing in the details points to Earth, another world, the future, magic, or myth, so the setting remains impossible to classify more specifically."),
+    ("OTHER", "OK", "Mara arrived just after the bell, though no one later agreed which bell it had been. She left her coat over the back of a chair and listened to the voices beyond the wall, waiting for one of them to say her name. By the time the room emptied, she had forgotten what she meant to ask."),
+    ("OTHER", "OK", "The road looked familiar until I tried to describe it. I could name each turn, each pause, and the place where my shadow shortened, but none of that helped me say where I was. I kept walking until the question no longer seemed useful."),
     ("SCIFI", "BROKEN", "The starship crossed the galaxy and the crew the the the blue engine engine glarble."),
     ("EARTH-REAL", "BROKEN", "The baker opened the shop shop shop and then the a loaf was window quickly."),
     ("FANTASY", "BROKEN", "The wizard cast a spell spell spell {{{ return 7 }}} and the the gate was sings."),
@@ -78,7 +79,8 @@ CAL = [
 
 
 def ctx():
-    return ssl.create_default_context(cafile=os.path.expanduser("~/.mitmproxy/ca-bundle-combined.crt"))
+    ca_bundle = os.environ.get("ANTHROPIC_CA_BUNDLE", "~/.mitmproxy/ca-bundle-combined.crt")
+    return ssl.create_default_context(cafile=os.path.expanduser(ca_bundle))
 
 
 def call(method: str, path: str, body: dict | None = None) -> str:
@@ -89,8 +91,21 @@ def call(method: str, path: str, body: dict | None = None) -> str:
         headers={"x-api-key": os.environ["ANTHROPIC_CREDITS_KEY"],
                  "anthropic-version": "2023-06-01", "content-type": "application/json"},
     )
-    with urllib.request.urlopen(request, context=ctx(), timeout=120) as response:
-        return response.read().decode("utf-8")
+    try:
+        with urllib.request.urlopen(request, context=ctx(), timeout=120) as response:
+            return response.read().decode("utf-8")
+    except urllib.error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", errors="replace").strip()
+        detail_lower = detail.lower()
+        if (path.endswith("/results") and exc.code == 400
+                and any(marker in detail_lower
+                        for marker in ("processing", "not ended", "not available"))):
+            message = "batch not ended"
+        else:
+            message = f"Anthropic API HTTP {exc.code} {exc.reason}"
+        raise SystemExit(f"{message}: {detail or exc.reason}") from None
+    except urllib.error.URLError as exc:
+        raise SystemExit(f"Anthropic API request failed: {exc.reason}") from None
 
 
 def answers(folder: str | os.PathLike[str]) -> list[dict]:

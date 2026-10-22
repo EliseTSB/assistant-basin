@@ -356,5 +356,16 @@ def parser() -> argparse.ArgumentParser:
     return ap
 
 
+def main(argv=None) -> int:
+    args = parser().parse_args(argv)
+    try:
+        run(args)
+    except FileExistsError as exc:
+        if "already complete" not in str(exc):
+            raise
+        print(exc)
+    return 0
+
+
 if __name__ == "__main__":
-    run(parser().parse_args())
+    raise SystemExit(main())

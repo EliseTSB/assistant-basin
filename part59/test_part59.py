@@ -3,7 +3,10 @@ from __future__ import annotations
 
 import json
 import os
+import contextlib
+import io
 from pathlib import Path
+import random
 import select
 import signal
 import subprocess
@@ -16,6 +19,7 @@ from unittest.mock import patch
 
 import numpy as np
 import torch
+import urllib.error
 from torch import nn
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -31,7 +35,7 @@ import run59b
 
 def _install_sabotage() -> None:
     mode = os.environ.get("PART59_SABOTAGE")
-    if not mode:
+    if not mode or mode == "old-runner-gate":
         return
     original = analyze59b.classify_changes
 
@@ -192,6 +196,66 @@ def _write_complete_59a_fixture(folder: Path, prompt_tag: str = "current") -> No
             json.dumps(manifest), encoding="utf-8")
 
 
+def _run_stubbed_runner(tmpdir: str, *, missing=(), fail_phase="olmo59a") -> tuple[subprocess.CompletedProcess, list[str]]:
+    temp_root = Path(tmpdir)
+    vm_root = temp_root / "vm-root"
+    part_root = vm_root / "part59"
+    required = (
+        "part59/run59a.py", "part59/run59b.py", "part59/analyze59b.py",
+        "part59/blind_setting.py", "part59/test_part59.py", "part59/prompts59a.json",
+        "part26.py", "part20.py", "part20c.py", "part20d.py", "part20f.py",
+        "neuron_report.py", "judge_client.py", "results/part26/source.json",
+        "results/part26/source.npz", "results/part26/target-olmo2-1b.npz",
+        "results/part26/target-olmo2-1b.json",
+        "results/part54a/source-pile-maxima-7c19d0120476.json",
+    )
+    for relative in required:
+        if relative in missing:
+            continue
+        path = part_root / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("stub input\n", encoding="utf-8")
+    bin_dir = temp_root / "bin"
+    bin_dir.mkdir()
+    stub_python = bin_dir / "python"
+    stub_python.write_text(
+        "#!/bin/sh\n"
+        "printf '%s\\n' \"$*\" >> \"$RUN59_STUB_LOG\"\n"
+        "case \"$*\" in\n"
+        "  *'part59/run59a.py --model olmo2-1b'*) [ \"$RUN59_STUB_FAIL\" = olmo59a ] && exit 23 ;;\n"
+        "  *'allenai/OLMo-2-0425-1B-Instruct'*) [ \"$RUN59_STUB_FAIL\" = prefetch-olmo ] && exit 24 ;;\n"
+        "esac\n"
+        "exit 0\n", encoding="utf-8")
+    stub_python.chmod(0o755)
+    stub_smi = bin_dir / "nvidia-smi"
+    stub_smi.write_text("#!/bin/sh\necho stub-gpu\n", encoding="utf-8")
+    stub_smi.chmod(0o755)
+
+    script = Path(__file__).with_name("run59.sh").read_text(encoding="utf-8")
+    script = script.replace("/root/part59", str(part_root)).replace(
+        "/root/hf", str(vm_root / "hf"))
+    if os.environ.get("PART59_SABOTAGE") == "old-runner-gate":
+        needle = "  run_checked qwen59b python -u part59/run59b.py --model qwen35-4b --clamp-unit 22:2742 --device cuda --batch-size 1 --seed 0 --out results/part59b"
+        replacement = (
+            '  if [ "$run_status" -ne 0 ]; then\n'
+            '    skip_phase qwen59b "old global gate from sabotage"\n'
+            '  else\n' + needle + "\n  fi")
+        if needle not in script:
+            raise AssertionError("could not install old-gate sabotage in the runner copy")
+        script = script.replace(needle, replacement, 1)
+    runner_copy = temp_root / "run59.sh"
+    runner_copy.write_text(script, encoding="utf-8")
+    stub_log = temp_root / "stub-commands.log"
+    env = os.environ.copy()
+    env["PATH"] = str(bin_dir) + os.pathsep + env.get("PATH", "")
+    env["RUN59_STUB_LOG"] = str(stub_log)
+    env["RUN59_STUB_FAIL"] = fail_phase
+    result = subprocess.run(["bash", str(runner_copy)], cwd=temp_root, env=env,
+                            text=True, capture_output=True, timeout=30)
+    lines = stub_log.read_text(encoding="utf-8").splitlines() if stub_log.exists() else []
+    return result, lines
+
+
 class Part59Tests(unittest.TestCase):
     def test_prompt_set_has_twelve_neutral_subjects(self):
         rows = run59a.prompts()
@@ -252,6 +316,45 @@ class Part59Tests(unittest.TestCase):
         self.assertEqual(result["max_control_symmetric_count"], 1)
         self.assertAlmostEqual(result["threshold_minus"], 0.41)
         self.assertAlmostEqual(result["threshold_plus"], 0.41)
+
+    def test_analyze_file_records_null_caveats_and_target_control_comparison(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            archive_path = root / "tiny.npz"
+            manifest_path = root / "tiny.json"
+            output_path = root / "tiny-analysis.json"
+            changes = np.zeros((4, 2, 100), dtype=np.float32)
+            changes[0, :, :20] = 10.0
+            np.savez(archive_path, change=changes, neuron_layer=np.arange(100) + 23,
+                     neuron_unit=np.arange(100), doses=np.asarray([-1.0, 1.0]))
+            manifest_path.write_text(json.dumps({
+                "status": "complete", "model": "Qwen/Qwen3.5-4B", "revision": "test-revision",
+                "short_name": "qwen35-4b", "twin": {"layer": 22, "unit": 2742},
+                "control_units": [152, 376, 692],
+                "pile_maxima": {"152": 19.7721, "376": 13.5135, "692": 2.1834},
+            }), encoding="utf-8")
+            with contextlib.redirect_stdout(io.StringIO()) as captured:
+                result = analyze59b.analyze_file(archive_path, output_path, include_lens=False)
+            saved = json.loads(output_path.read_text(encoding="utf-8"))
+            self.assertTrue(result["predictions"]["59f"]["held"])
+            self.assertTrue(result["predictions"]["59f"]["target_exceeds_max_control"])
+            self.assertEqual(result["predictions"]["59g"]["maximum"], 0)
+            self.assertTrue(result["predictions"]["59g"]["held"])
+            self.assertTrue(result["predictions"]["59g"]["target_exceeds_max_control"])
+            self.assertIn("null_caveat", saved["predictions"]["59f"])
+            self.assertIn("null_caveat", saved["predictions"]["59g"])
+            self.assertIn("target_exceeds_max_control=True", captured.getvalue())
+            self.assertIn("59f null caveat", captured.getvalue())
+            self.assertIn("59g null caveat", captured.getvalue())
+            self.assertIn("Recorded control Pile maxima span 9.1x", saved["predictions"]["59f"]["control_scale_context"])
+            self.assertIn("control-scale context", captured.getvalue())
+
+            archive_path.unlink()
+            manifest_path.write_text(json.dumps({
+                "status": "incomplete", "short_name": "qwen35-4b",
+            }), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "manifest status is 'incomplete'"):
+                analyze59b.analyze_file(archive_path, include_lens=False)
 
     def test_control_draws_match_part26_values(self):
         self.assertEqual(run59a.control_units(9216, 2742, 0), [152, 376, 692])
@@ -346,6 +449,11 @@ class Part59Tests(unittest.TestCase):
                     patch.object(run59a.nr, "find_text_layers", return_value=("model.layers", layers, None)):
                 with self.assertRaisesRegex(FileExistsError, "already complete"):
                     run59a.run(args)
+                with contextlib.redirect_stdout(io.StringIO()) as captured:
+                    exit_code = run59a.main(["--model", "qwen35-4b", "--device", "cpu",
+                                             "--out", directory])
+                self.assertEqual(exit_code, 0)
+                self.assertIn("already complete", captured.getvalue())
                 load_model.assert_not_called()
 
     def test_59a_sigkill_releases_lock_and_rerun_proceeds(self):
@@ -419,10 +527,24 @@ class Part59Tests(unittest.TestCase):
                     patch.object(run59b.p26, "_load_model_offline") as load_model:
                 with self.assertRaisesRegex(FileExistsError, "already complete"):
                     run59b.run(args)
+                with contextlib.redirect_stdout(io.StringIO()) as captured:
+                    exit_code = run59b.main([
+                        "--model", "olmo2-1b", "--clamp-unit", "10:6978", "--device", "cpu",
+                        "--batch-size", "1", "--out", directory,
+                        "--source-json", "unused-source.json", "--qwen-maxima", "unused-maxima.json",
+                    ])
+                self.assertEqual(exit_code, 0)
+                self.assertIn("already complete", captured.getvalue())
                 load_model.assert_not_called()
 
     def test_blind_setting_calibration_scores_two_errors_and_refuses_three(self):
         self.assertEqual(len(blind_setting.CAL), 34)
+        self.assertEqual(blind_setting.CALIBRATION_ERROR_LIMIT, 2)
+        other_paragraphs = [text for label, _quality, text in blind_setting.CAL
+                            if label == "OTHER" and len(text.split()) > 30]
+        self.assertEqual(len(other_paragraphs), 2)
+        self.assertTrue(all("paragraph" not in text.lower() and "passage" not in text.lower()
+                            for text in other_paragraphs))
         for wrong_count in (2, 3):
             with self.subTest(wrong_count=wrong_count), tempfile.TemporaryDirectory() as directory:
                 review = Path(directory)
@@ -468,6 +590,87 @@ class Part59Tests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "status is 'incomplete'"):
                 blind_setting.answers(folder)
 
+    def test_blind_submit_requests_only_rubric_and_text_and_saves_local_key(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            answers_dir = root / "answers"
+            review_dir = root / "review"
+            answers_dir.mkdir()
+            _write_complete_59a_fixture(answers_dir)
+            expected_rows = blind_setting.answers(answers_dir)
+            random.Random(5901).shuffle(expected_rows)
+            expected_contents = [blind_setting.RUBRIC + row["text"] for row in expected_rows]
+            expected_contents.extend(blind_setting.RUBRIC + text
+                                     for _label, _quality, text in blind_setting.CAL)
+            captured = {}
+
+            def capture_request(method, path, body):
+                captured.update(method=method, path=path, body=body)
+                return json.dumps({"id": "BID", "processing_status": "in_progress"})
+
+            with patch.object(blind_setting, "call", side_effect=capture_request), \
+                    contextlib.redirect_stdout(io.StringIO()):
+                blind_setting.main(["submit", "--folder", str(answers_dir),
+                                    "--review-dir", str(review_dir)])
+            self.assertEqual(captured["method"], "POST")
+            self.assertEqual(captured["path"], "/v1/messages/batches")
+            self.assertEqual(set(captured["body"]), {"requests"})
+            requests = captured["body"]["requests"]
+            self.assertEqual(len(requests), 2112 + len(blind_setting.CAL))
+            actual_contents = []
+            for index, request in enumerate(requests):
+                self.assertEqual(request["custom_id"], f"r{index:05d}")
+                self.assertEqual(set(request["params"]), {"model", "max_tokens", "messages"})
+                self.assertEqual(len(request["params"]["messages"]), 1)
+                message = request["params"]["messages"][0]
+                self.assertEqual(set(message), {"role", "content"})
+                self.assertEqual(message["role"], "user")
+                actual_contents.append(message["content"])
+            self.assertEqual(actual_contents, expected_contents)
+            self.assertTrue(all(not any(secret in content.lower()
+                                        for secret in ("condition", "dose", "qwen35-4b", "olmo2-1b"))
+                                for content in actual_contents))
+
+            idmap = json.loads((review_dir / "setting-idmap-BID.json").read_text(encoding="utf-8"))
+            saved_key = json.loads((review_dir / "setting-key-BID.json").read_text(encoding="utf-8"))
+            expected_key = {
+                f"ans|{index}": {name: value for name, value in row.items() if name != "text"}
+                for index, row in enumerate(expected_rows)
+            }
+            self.assertEqual(saved_key, expected_key)
+            self.assertTrue(all("text" not in row for row in saved_key.values()))
+            for index in range(len(expected_rows)):
+                self.assertEqual(idmap[f"r{index:05d}"], f"ans|{index}")
+            for index, (label, quality, _text) in enumerate(blind_setting.CAL):
+                self.assertEqual(idmap[f"r{len(expected_rows) + index:05d}"],
+                                 f"cal|{index}|{label}|{quality}")
+
+    def test_blind_collect_http_error_is_clear_and_ca_bundle_is_configurable(self):
+        with tempfile.TemporaryDirectory() as directory:
+            review = Path(directory)
+            (review / "setting-idmap-BID.json").write_text(
+                json.dumps({"r00000": "cal|0|SCIFI|OK"}), encoding="utf-8")
+            (review / "setting-key-BID.json").write_text("{}", encoding="utf-8")
+            error = urllib.error.HTTPError(
+                "https://api.anthropic.com/v1/messages/batches/BID/results", 400, "Bad Request",
+                None, io.BytesIO(b'{"error":{"message":"Batch is still processing"}}'))
+            with patch.dict(os.environ, {"ANTHROPIC_CREDITS_KEY": "test-key"}), \
+                    patch.object(blind_setting, "ctx", return_value=None), \
+                    patch.object(blind_setting.urllib.request, "urlopen", side_effect=error):
+                with self.assertRaisesRegex(SystemExit, "batch not ended") as raised:
+                    blind_setting.main(["collect", "BID", "--review-dir", directory])
+            self.assertNotEqual(raised.exception.code, 0)
+
+        with patch.dict(os.environ, {"ANTHROPIC_CA_BUNDLE": "/tmp/custom-ca.pem"}), \
+                patch.object(blind_setting.ssl, "create_default_context", return_value=object()) as create:
+            blind_setting.ctx()
+            create.assert_called_once_with(cafile="/tmp/custom-ca.pem")
+        with patch.dict(os.environ, {}, clear=True), \
+                patch.object(blind_setting.ssl, "create_default_context", return_value=object()) as create:
+            blind_setting.ctx()
+            create.assert_called_once_with(
+                cafile=os.path.expanduser("~/.mitmproxy/ca-bundle-combined.crt"))
+
     def test_blind_submit_changed_prompt_manifest_does_not_mix_old_answers(self):
         with tempfile.TemporaryDirectory() as directory:
             folder = Path(directory)
@@ -499,6 +702,41 @@ class Part59Tests(unittest.TestCase):
             self.assertEqual(rows[0]["model"], "qwen35-4b")
             self.assertEqual(rows[0]["dose"], 2.0)
             self.assertEqual({row["kind"] for row in rows}, {"twin", "control"})
+
+    def test_run59_independent_phases_prefetch_and_preflight_failures(self):
+        with tempfile.TemporaryDirectory() as directory:
+            result, commands = _run_stubbed_runner(directory, fail_phase="olmo59a")
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("RUN_FAILED", result.stdout)
+            self.assertNotIn("RETURN_READY", result.stdout)
+            olmo_59a_index = next(index for index, command in enumerate(commands)
+                                  if "part59/run59a.py --model olmo2-1b" in command)
+            qwen_59b_index = next(index for index, command in enumerate(commands)
+                                  if "part59/run59b.py --model qwen35-4b" in command)
+            self.assertLess(olmo_59a_index, qwen_59b_index)
+            self.assertTrue(any("part59/analyze59b.py" in command
+                                and "59b-qwen35-4b" in command for command in commands))
+            self.assertTrue(any("part59/run59b.py --model olmo2-1b" in command
+                                for command in commands))
+            self.assertTrue((Path(directory) / "vm-root" / "part59-return-INCOMPLETE.tgz").is_file())
+
+        with tempfile.TemporaryDirectory() as directory:
+            result, commands = _run_stubbed_runner(directory, fail_phase="prefetch-olmo")
+            self.assertIn("RUN_FAILED", result.stdout)
+            self.assertNotIn("RETURN_READY", result.stdout)
+            self.assertTrue(any("part59/run59b.py --model qwen35-4b" in command
+                                for command in commands))
+            self.assertFalse(any("part59/run59b.py --model olmo2-1b" in command
+                                 for command in commands))
+
+        with tempfile.TemporaryDirectory() as directory:
+            result, commands = _run_stubbed_runner(
+                directory, missing=("results/part26/source.json",))
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("RUN_FAILED", result.stdout)
+            self.assertNotIn("RETURN_READY", result.stdout)
+            self.assertFalse(any("pip install" in command for command in commands))
+            self.assertFalse(any("part59/run59" in command for command in commands))
 
 
 if __name__ == "__main__":

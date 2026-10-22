@@ -1,5 +1,7 @@
 # SUMMARY
 
+Current fold status and test results: see [REPORT-fold2.md](REPORT-fold2.md).
+
 Part 59's runners, blind reader, analysis, tests, and rented-GPU runbook are implemented under `part59/`. The scripts use the pinned Part 26 model revisions and activation records. The Part 59 experiment itself has not been run on a GPU.
 
 # FINDINGS / WHAT SHIPPED

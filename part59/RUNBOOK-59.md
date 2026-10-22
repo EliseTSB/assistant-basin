@@ -19,6 +19,7 @@ From the assistant-basin checkout, include the Part 59 scripts and only the sour
 ```bash
 cd /home/elisepc/assistant-basin
 tar -czf /tmp/part59-inputs.tgz \
+  --exclude=part59/review --exclude=part59/__pycache__ \
   part59 \
   part26.py part20.py part20c.py part20d.py part20f.py neuron_report.py judge_client.py \
   results/part26/source.json results/part26/source.npz \
@@ -28,7 +29,7 @@ tar -czf /tmp/part59-inputs.tgz \
 
 The Qwen maxima cache contains the target and Part 54's same-layer controls selected with seed 0. If the cache is missing or the seed/control units change, regenerate the Part 26 Pile maxima on the rented GPU using the matching corpus record before starting 59A/59B.
 
-Before starting a GPU phase, `run59.sh` checks every required input file and verifies the installed Python packages. It requires `transformers==5.20.0` and `flash-linear-attention==0.5.2`; it records the installed versions of Torch, Accelerate, and Hugging Face Hub in `versions-pip.txt`. If setup or either pinned-model prefetch fails, the script skips GPU phases and returns an explicitly incomplete archive.
+Before starting setup, `run59.sh` checks every required input file. A failed preflight stops before pip or other setup work. It requires `transformers==5.20.0` and `flash-linear-attention==0.5.2`; it records the installed versions of Torch, Accelerate, and Hugging Face Hub in `versions-pip.txt`. If Qwen prefetch fails, the OLMo prefetch is skipped; if OLMo prefetch fails after Qwen succeeds, Qwen phases still run. Each model's phases are recorded separately, and each analysis runs only after its matching 59B scan exits 0.
 
 ## Rent and start the unattended run
 
@@ -48,10 +49,11 @@ scp -P SSH_PORT /tmp/part59-inputs.tgz root@SSH_HOST:/root/
 ssh -p SSH_PORT root@SSH_HOST
 mkdir -p /root/part59
 tar -xzf /root/part59-inputs.tgz -C /root/part59
-bash /root/part59/part59/run59.sh
+nohup bash /root/part59/part59/run59.sh > /root/part59/run59.out 2>&1 < /dev/null &
+echo $! > /root/part59/run59.pid
 ```
 
-`run59.sh` installs the pinned package versions, records GPU/software versions, downloads the two pinned snapshots before setting offline mode, runs both 59A ladders and both 59B scans, and writes one log per phase under `/root/part59/logs/`. It creates `/root/part59-return.tgz` and prints `RETURN_READY` only if setup, prefetch, every phase, and archiving succeeded. On any failure it still archives the available results as `/root/part59-return-INCOMPLETE.tgz` and prints `RUN_FAILED` with the failed phase names. A 59A result is one JSON per prompt and dose: 60 files per model, with eight samples in each expected condition. The 59A and 59B locks use OS advisory locks, so process death releases them and an interrupted run can resume.
+`run59.sh` installs the pinned package versions, records GPU/software versions, downloads the two pinned snapshots before setting offline mode, runs both 59A ladders and both 59B scans, and writes one log per phase under `/root/part59/logs/`. Poll the outer log with `tail -n 60 /root/part59/run59.out`; repeat until it prints `RETURN_READY` or `RUN_FAILED`. It creates `/root/part59-return.tgz` and prints `RETURN_READY` only if setup, prefetch, every phase, and archiving succeeded. On any failure it still archives the available results as `/root/part59-return-INCOMPLETE.tgz` and prints `RUN_FAILED` with the failed phase names. A 59A result is one JSON per prompt and dose: 60 files per model, with eight samples in each expected condition. The 59A and 59B locks use OS advisory locks, so process death releases them and an interrupted run can resume.
 
 The control policy draws 20 same-layer units with the Part 26 seed and uses the three lowest-indexed units from that draw. This matches Part 26's policy, but it concentrates the controls at low indices and limits how broadly they represent the layer.
 
@@ -67,6 +69,17 @@ python3 part59/blind_setting.py status BATCH_ID --review-dir part59/review
 python3 part59/blind_setting.py collect BATCH_ID --by-cond --review-dir part59/review
 ```
 
-The reader shuffles answers with seed 5901, keeps condition metadata in a separate local key, and refuses to print the scored table if more than 2 of its 34 calibration rows are wrong. Eight paragraph-length calibration texts were added across the four labels, including vague openings whose details distinguish SCIFI from OTHER. Its setting labels are SCIFI, EARTH-REAL, FANTASY, OTHER, with OK/BROKEN as a second label.
+The reader shuffles answers with seed 5901, keeps condition metadata in a separate local key, and refuses to print the scored table if more than 2 of its 34 calibration rows are wrong. Eight paragraph-length calibration texts span the four labels, with in-voice vague OTHER openings that give no genre cue. Its setting labels are SCIFI, EARTH-REAL, FANTASY, OTHER, with OK/BROKEN as a second label. `ANTHROPIC_CA_BUNDLE` can set the CA bundle path; without it the reader uses `~/.mitmproxy/ca-bundle-combined.crt`.
 
 The GPU script also runs `analyze59b.py` for each activation archive. It reports 59f and 59g counts using the pooled per-dose P99 rule, writes those counts and responder indices before attempting a model reload, and then adds the top 10 SYMMETRIC units' Part 26 logit-lens top tokens and their top three corpus activation windows for 59h. Prediction 59h still requires hand reading those top projections and windows; the script deliberately does not infer a semantic label from token strings.
+
+After either `RETURN_READY` or `RUN_FAILED`, copy the matching bundle back to the workstation first, then destroy the rented instance:
+
+```bash
+scp -P SSH_PORT root@SSH_HOST:/root/part59-return.tgz /tmp/part59-return.tgz
+# On RUN_FAILED, copy /root/part59-return-INCOMPLETE.tgz instead.
+cd /home/elisepc/assistant-basin
+python3 cloud/vast-part54-2026-10-22/vast.py destroy INSTANCE_ID
+```
+
+This copy-then-destroy step applies after `RUN_FAILED` as well as after `RETURN_READY`.
