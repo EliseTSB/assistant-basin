@@ -5,7 +5,7 @@ Elise, 2026-10-22 01:26 CT: can we use a billion Haiku tokens in the next couple
 reply says nothing on an unremarkable neuron; no real item quoted in the examples). Prices: Haiku batch $0.05 in / $0.25 out per million (under 100K tokens a request).
 
 ## 56A the atlas (pilot first)
-- Model Qwen3-1.7B @ the pinned revision of Part 49 (172,032 MLP neurons, 28 layers x 6,144). Corpus: the Pile 10k sample at /mnt/e/neuron-probe/corpus (docs truncated to 512 tokens).
+- Model Qwen3-1.7B @ the pinned revision of Part 49 (172,032 MLP neurons, 28 layers x 6,144). Corpus: the Pile 10k sample at /mnt/c/Users/alexa/neuron-probe-gpu/qwen35/pile10k.jsonl (docs truncated to 512 tokens; the same file Part 18 and 26 used).
   Per neuron keep the 20 documents with the highest activation (one best position per document) as a 64-token window with the firing token marked, plus 10 windows at random among positions with activation above 10% of the neuron's max
   (selectivity), plus its max and the share of positions above 10% of max.
 - Pilot gate (cheap, before the full run): 2,000 random neurons, 2,000 random directions per the control below, and four known units (wizard L19:4826, magic L22:1610, and two more the build picks from Part 35's rank-1 list).
