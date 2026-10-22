@@ -1701,7 +1701,7 @@ found kiki/bouba work on CLIP, vision-language models and speech models, none ac
 | id | prediction | result | evidence |
 |---|---|---|---|
 | 49.1 | Claude: W alone stays at or under 5% wizard-topic answers (Part 38 replicates under this harness). | FAILED (on the letter) | W 5/64 (7.8%) against no clamp 3/64 (4.7%); the 5% bar assumed Part 38's near-zero baseline, and the no-clamp arm here is itself at 4.7%. |
-| 49.2 | Claude: at least one partner alone puts a wizard-topic word in more than 5% of answers without more broken answers than no clamp. | held on the letter, not above noise; broken-answer half PENDING (blind reader not run) | P3 6/64 (9.4%), P1 and P4 5/64 (7.8%) against no clamp 3/64; every arm sits within 3-7/64. |
+| 49.2 | Claude: at least one partner alone puts a wizard-topic word in more than 5% of answers without more broken answers than no clamp. | held on the letter, not above noise | P3 6/64 (9.4%), P1 and P4 5/64 (7.8%) against no clamp 3/64; every arm sits within 3-7/64. Broken half (blind reader, Opus 5.5, 2026-10-21, 20/20 calibration texts right): P3 2/64, P1 2/64, P4 3/64 against no clamp 3/64, so no more broken answers. Most BROKEN labels in every arm, no clamp included, are the model's own 'My name is AI, and I is a large language model'. |
 | 49.3 | Claude: no partner P with W exceeds the same P alone by 15 points or more (no Sauers-style boost at k = 8 in this pilot). | HELD | largest P+W minus P: P5 6/64 vs 3/64 (+4.7 points); no boost. |
 | 49.4 | Claude: every random-unit-with-W pair stays at or under 5%. | FAILED | R1+W 7/64, R2+W 6/64, R3+W 7/64 (9-11%); the random pairs sit with everything else, so all open-prompt arms are one noisy band around 5-10%. |
 
@@ -1737,7 +1737,7 @@ prompts; nothing here is a finding yet. Broken-answer rates are pending the blin
 | 49b.1 | Claude: L22:1610 at -8 lowers the magic-word density by at least 30% of the no-clamp value, with its bootstrap interval excluding no change. | HELD | L22:1610 at -8: ratio 0.377 of no clamp, prompt bootstrap 95% [0.105, 0.564]. |
 | 49b.2 | Claude: none of the three random L22 units at -8 lowers it by more than 15%. | HELD | R1 (L22:569) 1.571 [0.897, 2.868], R2 (L22:3102) 1.018, R3 (L22:5258) 0.879 (a 12% drop). |
 | 49b.3 | Claude: the joint arm (L22:1610 and W at -8) is within 25% of the product of the two single arms' ratios (roughly multiplicative; no special interaction). | FAILED | product of singles 0.377 x 0.706 = 0.266; joint 0.405, 52% above it. The joint arm is about L22:1610 alone: W (0.706 [0.338, 1.278], interval includes no change) adds nothing once L22:1610 is down. |
-| 49b.4 | Claude: the L22:1610 arm's broken-answer share is no more than 10 points above no clamp. | PENDING | blind reader not run. |
+| 49b.4 | Claude: the L22:1610 arm's broken-answer share is no more than 10 points above no clamp. | HELD | blind reader (Opus 5.5, 20/20 calibration right): L22:1610 1/64 (a poem looping on 'still') against no clamp 0/64; every 49b arm 0-1/64. |
 
 ## Part 50: is honesty's benevolent bundle trained in? (written 2026-10-21 20:01 CT, before any code or run). Design: PART50-DESIGN.md (Elise's go; janus and Sauers' result).
 
