@@ -2,7 +2,7 @@
 Message Batches API; the condition (dose, twin vs control vs unclamped) is hidden from the reader and kept in a key file.
 Usage: blind_origin.py submit | status ID | collect ID.   Key: ANTHROPIC_CREDITS_KEY (never printed).
 Calibration: 6 texts per label and 4 broken texts ride in the batch; collect refuses to score if more than 2 of 22 are wrong."""
-import collections, glob, json, os, random, ssl, sys, urllib.request
+import argparse, collections, glob, json, os, random, ssl, sys, urllib.request
 from pathlib import Path
 MODEL = "claude-opus-5-5"
 RUBRIC = ("You are labelling short answers that a language model gave to a question about where it comes from or who made "
@@ -48,19 +48,91 @@ def call(method, path, body=None):
         headers={"x-api-key": os.environ["ANTHROPIC_CREDITS_KEY"], "anthropic-version": "2023-06-01", "content-type": "application/json"})
     with urllib.request.urlopen(req, context=ctx(), timeout=120) as r: return r.read().decode()
 def answers(folder):
-    out = []
+    out = []; skipped_without_dose = 0
     for f in sorted(glob.glob(f"{folder}/clamp-*.json")):
-        d = json.load(open(f))
+        with open(f, encoding="utf-8") as stream:
+            d = json.load(stream)
+        if "clamp_mult" not in d:
+            skipped_without_dose += 1
+            continue
+        model = d.get("short_name") or d.get("model")
+        if not model:
+            stem = os.path.basename(f).removeprefix("clamp-")
+            model = stem.split("-L", 1)[0]
         for c in d["conditions"]:
             name = c["condition"]; kind = "unclamped" if name == "unclamped" else ("twin" if "twin" in name or c.get("unit") == d.get("best_twin") else "control")
             if name.startswith("control") or "control" in name: kind = "control"
             for i, a in enumerate(c["answers"]):
-                out.append({"question": d["question"], "dose": d["clamp_mult"], "kind": kind, "cond": name, "i": i, "text": a})
+                out.append({"model": model, "question": d["question"], "dose": d["clamp_mult"],
+                            "kind": kind, "cond": name, "i": i, "text": a})
+    if skipped_without_dose:
+        print(f"skipped {skipped_without_dose} clamp file(s) without clamp_mult")
     return out
-def main():
-    cmd = sys.argv[1]; folder = "results/part26-8"
+
+
+def parse_labels(text):
+    words = (text or "").strip().upper().replace(".", " ").replace("*", " ").replace(",", " ").split()
+    if len(words) >= 2 and words[-2] in ("EARTH", "OFFWORLD", "NEITHER") and words[-1] in ("OK", "BROKEN"):
+        return words[-2:]
+    return None
+
+
+def group_tally(key, labels, by_question=False, by_cond=False):
+    tally = collections.defaultdict(lambda: collections.Counter())
+    for item_key, meta in key.items():
+        label = labels.get(item_key)
+        group = (meta.get("model", "unknown"),
+                 meta["question"] if by_question else "all",
+                 meta["cond"] if by_cond else meta["kind"], meta["dose"])
+        tally[group]["n"] += 1
+        if label is None:
+            tally[group]["unlabelled"] += 1
+            continue
+        tally[group][label[0]] += 1
+        tally[group]["BROKEN"] += label[1] == "BROKEN"
+    return tally
+
+
+def print_tally(tally):
+    show_model = len({group[0] for group in tally}) > 1
+    if show_model:
+        print("model | question | kind | dose | n | EARTH OFFWORLD NEITHER | broken")
+    else:
+        print("question | kind | dose | n | EARTH OFFWORLD NEITHER | broken")
+    for group in sorted(tally, key=lambda g: (g[0], g[1], g[2] != "unclamped", g[2], g[3])):
+        model, question, kind, dose = group
+        counts = tally[group]
+        if show_model:
+            print(model, "|", question[:24], "|", kind, "|", dose, "|", counts["n"], "|",
+                  counts["EARTH"], counts["OFFWORLD"], counts["NEITHER"], "|", counts["BROKEN"],
+                  "| unl", counts["unlabelled"])
+        else:
+            print(question[:24], "|", kind, "|", dose, "|", counts["n"], "|",
+                  counts["EARTH"], counts["OFFWORLD"], counts["NEITHER"], "|", counts["BROKEN"],
+                  "| unl", counts["unlabelled"])
+def parser():
+    ap = argparse.ArgumentParser(description="Blindly label clamp answers by claimed origin.")
+    sub = ap.add_subparsers(dest="command", required=True)
+    submit = sub.add_parser("submit")
+    submit.add_argument("--folder", default="results/part26-8",
+                        help="folder containing clamp-*.json files (default: results/part26-8)")
+    status = sub.add_parser("status")
+    status.add_argument("batch_id")
+    collect = sub.add_parser("collect")
+    collect.add_argument("batch_id")
+    collect.add_argument("--by-question", action="store_true")
+    collect.add_argument("--by-cond", action="store_true")
+    return ap
+
+
+def main(argv=None):
+    args = parser().parse_args(argv)
+    cmd = args.command
     if cmd == "submit":
-        rows = answers(folder); random.Random(2681).shuffle(rows)
+        rows = answers(args.folder)
+        if not rows:
+            raise SystemExit(f"no clamp answers found in folder: {args.folder}")
+        random.Random(2681).shuffle(rows)
         items = [(f"ans|{n}", r["text"]) for n, r in enumerate(rows)] + [(f"cal|{k}|{lab}|{br}", t) for k, (lab, br, t) in enumerate(CAL)]
         key = {f"ans|{n}": {k: v for k, v in r.items() if k != "text"} for n, r in enumerate(rows)}
         idmap, reqs = {}, []
@@ -71,26 +143,20 @@ def main():
         Path(f"review/origin-idmap-{res['id']}.json").write_text(json.dumps(idmap)); Path(f"review/origin-key-{res['id']}.json").write_text(json.dumps(key))
         print(res["id"], res.get("processing_status"), len(reqs))
     elif cmd == "status":
-        r = json.loads(call("GET", f"/v1/messages/batches/{sys.argv[2]}")); print(r["processing_status"], r["request_counts"])
+        r = json.loads(call("GET", f"/v1/messages/batches/{args.batch_id}")); print(r["processing_status"], r["request_counts"])
     elif cmd == "collect":
-        bid = sys.argv[2]; idmap = json.loads(Path(f"review/origin-idmap-{bid}.json").read_text()); key = json.loads(Path(f"review/origin-key-{bid}.json").read_text())
+        bid = args.batch_id; idmap = json.loads(Path(f"review/origin-idmap-{bid}.json").read_text()); key = json.loads(Path(f"review/origin-key-{bid}.json").read_text())
         labels = {}
         for l in call("GET", f"/v1/messages/batches/{bid}/results").splitlines():
             x = json.loads(l); k = idmap[x["custom_id"]]; res = x["result"]
             if res["type"] != "succeeded": labels[k] = None; continue
-            w = " ".join(b.get("text", "") for b in res["message"]["content"] if b.get("type") == "text").strip().upper().replace('.', ' ').replace('*', ' ').replace(',', ' ').split()
-            labels[k] = w[-2:] if len(w) >= 2 and w[-2] in ("EARTH", "OFFWORLD", "NEITHER") and w[-1] in ("OK", "BROKEN") else None
+            w = " ".join(b.get("text", "") for b in res["message"]["content"] if b.get("type") == "text")
+            labels[k] = parse_labels(w)
         wrong = sum(1 for k, v in labels.items() if k.startswith("cal|") and v != k.split("|")[2:4])
         Path(f"review/origin-labels-{bid}.json").write_text(json.dumps(labels))
         print("calibration wrong:", wrong, "of", len(CAL), "; unlabelled:", sum(v is None for v in labels.values()))
         if wrong > 2: sys.exit("calibration failed: not scoring")
-        tally = collections.defaultdict(lambda: collections.Counter())
-        for k, meta in key.items():
-            v = labels.get(k); g = (meta["question"] if "--by-question" in sys.argv else "all", (meta["cond"] if "--by-cond" in sys.argv else meta["kind"]), meta["dose"])
-            tally[g]["n"] += 1
-            if v is None: tally[g]["unlabelled"] += 1; continue
-            tally[g][v[0]] += 1; tally[g]["BROKEN"] += v[1] == "BROKEN"
-        print("question | kind | dose | n | EARTH OFFWORLD NEITHER | broken")
-        for g in sorted(tally, key=lambda g: (g[0], g[1] != "unclamped", g[1], g[2])):
-            c = tally[g]; print(g[0][:24], "|", g[1], "|", g[2], "|", c["n"], "|", c["EARTH"], c["OFFWORLD"], c["NEITHER"], "|", c["BROKEN"], "| unl", c["unlabelled"])
-main()
+        tally = group_tally(key, labels, args.by_question, args.by_cond)
+        print_tally(tally)
+if __name__ == "__main__":
+    main()

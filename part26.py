@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
 import hashlib
 import json
+import math
 import os
 import re
 import time
@@ -24,10 +26,42 @@ SOURCE_MODEL = 'Qwen/Qwen3.5-4B'
 SOURCE_REVISION = '851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a'
 SOURCE_GROUP = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results/part19/group.json')
 BATTERY_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data/part20f-battery.json')
-TARGETS = {
-    'olmo2-1b': ('allenai/OLMo-2-0425-1B-Instruct', '48d788eca847d4d7548f375ad03d3c9312f6139e'),
-    'smollm3-3b': ('HuggingFaceTB/SmolLM3-3B', 'a07cc9a04f16550a088caea529712d1d335b0ac1'),
+SOURCE_SHORT = 'qwen35-4b'
+SOURCE_ALIEN_FRAMES = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                   'results/part33-r2/natural-firing.json')
+SOURCE_RECORD_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results/part26')
+SOURCE_LAYER = 22
+SOURCE_N2742 = 2742
+MODELS = {
+    'olmo2-1b': {'id': 'allenai/OLMo-2-0425-1B-Instruct',
+                 'revision': '48d788eca847d4d7548f375ad03d3c9312f6139e', 'dtype': 'bf16'},
+    'smollm3-3b': {'id': 'HuggingFaceTB/SmolLM3-3B',
+                   'revision': 'a07cc9a04f16550a088caea529712d1d335b0ac1', 'dtype': 'bf16'},
+    SOURCE_SHORT: {'id': SOURCE_MODEL, 'revision': SOURCE_REVISION, 'dtype': 'fp32'},
+    'olmo2-7b': {'id': 'allenai/OLMo-2-1124-7B-Instruct',
+                 'revision': '470b1fba1ae01581f270116362ee4aa1b97f4c84', 'dtype': 'bf16'},
+    'qwen3-4b': {'id': 'Qwen/Qwen3-4B',
+                 'revision': '1cfa9a7208912126459214e8b04321603b3df60c', 'dtype': 'fp32'},
+    'phi4-mini': {'id': 'microsoft/Phi-4-mini-instruct',
+                  'revision': 'cfbefacb99257ffa30c83adab238a50856ac3083', 'dtype': 'fp32',
+                  'trust_remote_code': True},
+    'granite3-2b': {'id': 'ibm-granite/granite-3.3-2b-instruct',
+                    'revision': '707f574c62054322f6b5b04b6d075f0a8f05e0f0', 'dtype': 'fp32'},
+    'gemma4-e2b-it': {'id': 'google/gemma-4-E2B-it',
+                      'revision': '3e22461f65e89153144f8adb70e3b8c2cc9845a7', 'dtype': 'bf16'},
+    'gemma4-e4b-it': {'id': 'google/gemma-4-E4B-it',
+                      'revision': 'ee0ef6023621cff504d758262d4e04895a5af4a2', 'dtype': 'bf16'},
+    'gemma4-12b-it': {'id': 'google/gemma-4-12B-it',
+                      'revision': '707f0a3b8a3c7ad586ed01e27eafbad8a27dd0f7', 'dtype': 'bf16'},
 }
+# Compatibility alias retained for callers that used Part 26's original table.
+TARGETS = {key: (row['id'], row['revision']) for key, row in MODELS.items()
+           if key != SOURCE_SHORT}
+ORIGIN_DOSES = (-3.0, -2.0, -1.0, 0.5, 1.0, 1.5, 2.0)
+ORIGIN_QUESTIONS = ('Who made you?', 'Where do you come from?', 'Tell me about your origins.')
+ORIGIN_CONTROL_DOSES = frozenset((-2.0, 1.5))
+NEW_TWIN_SEARCHES = ('olmo2-7b', 'qwen3-4b', 'phi4-mini', 'granite3-2b',
+                     'gemma4-e2b-it', 'gemma4-e4b-it', 'gemma4-12b-it')
 SOURCE_LAYER = 22
 SOURCE_N2742 = 2742
 SOURCE_WORDS = 256
@@ -35,6 +69,14 @@ SOURCE_DOCS = 1000
 SOURCE_TOP = 30
 WRITE_MATCH_MIN = 3
 LEAD = 'Several of the earlier sentences concerned '
+
+
+def passes_part26_twin_checks(row: dict) -> bool:
+    """The registered 26.6 fire, write-overlap, and three-profile gate for 54B twin ladders."""
+    profile = row.get('profile')
+    return bool(row.get('beats_null')
+                and int(row.get('writes_overlap', 0)) >= WRITE_MATCH_MIN
+                and isinstance(profile, dict) and profile.get('profile_pass'))
 
 
 def _sha(path: str) -> str:
@@ -52,11 +94,32 @@ def _header(model: str, revision: str | None, input_paths: dict[str, str]) -> di
     }
 
 
-def _load_model_offline(model_id: str, revision: str | None, device: str):
-    """Reuse neuron_report's loader while making the brief's no-download rule explicit."""
+def _load_model_offline(model_id: str, revision: str | None, device: str,
+                        dtype: str = 'bf16', trust_remote_code: bool = False):
+    """Load an already-cached pinned model with an explicit experiment dtype."""
     os.environ['HF_HUB_OFFLINE'] = '1'
     os.environ['TRANSFORMERS_OFFLINE'] = '1'
-    return nr.load_model(model_id, revision, device)
+    if dtype == 'bf16' and not trust_remote_code:
+        # Keep the original Part 26 loader path byte-for-byte in its default mode.
+        return nr.load_model(model_id, revision, device)
+    if dtype not in {'bf16', 'fp32'}:
+        raise ValueError(f'unsupported model dtype {dtype!r}; use bf16 or fp32')
+    import torch
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+    load_kwargs = {'revision': revision, 'dtype': torch.bfloat16 if dtype == 'bf16' else torch.float32,
+                   'trust_remote_code': trust_remote_code}
+    tok = AutoTokenizer.from_pretrained(model_id, revision=revision,
+                                        trust_remote_code=trust_remote_code)
+    if tok.pad_token_id is None:
+        tok.pad_token = tok.eos_token
+    try:
+        model = AutoModelForCausalLM.from_pretrained(model_id, **load_kwargs)
+    except (ValueError, KeyError):
+        from transformers import AutoModelForImageTextToText
+        model = AutoModelForImageTextToText.from_pretrained(model_id, **load_kwargs)
+    model.to(device).eval()
+    torch.set_grad_enabled(False)
+    return tok, model
 
 
 def word_spans(text: str) -> list[tuple[int, int]]:
@@ -296,9 +359,10 @@ def _writes_overlaps(tok, top_ids: np.ndarray, source_sets: list[set[str]], cach
 
 def _load_source(out_dir: str):
     path = os.path.join(out_dir, 'source.json')
-    data = json.load(open(path, encoding='utf-8'))
-    npz = np.load(os.path.join(out_dir, 'source.npz'))
-    acts = np.asarray(npz['word_activations'], dtype=np.float32)
+    with open(path, encoding='utf-8') as stream:
+        data = json.load(stream)
+    with np.load(os.path.join(out_dir, 'source.npz')) as npz:
+        acts = np.asarray(npz['word_activations'], dtype=np.float32)
     if acts.shape != (51, SOURCE_DOCS, SOURCE_WORDS):
         raise ValueError(f'source activation array has unexpected shape {acts.shape}')
     if len(data['documents']) != SOURCE_DOCS or len(data['source_neurons']) != 51:
@@ -692,6 +756,24 @@ def _candidate_profile(means: dict) -> dict:
     return {'checks': checks, 'profile_pass': all(checks.values())}
 
 
+def candidate_writes_top30(tok, model, layers, candidates: list[dict], device: str,
+                           max_gpu_gb: float, unit_chunk: int = 256) -> dict[str, list[str]]:
+    """Return each candidate's exact normalized logit-lens top 30 for the 26.6 write check."""
+    units_by_layer: dict[int, list[int]] = defaultdict(list)
+    for row in candidates:
+        units_by_layer[int(row['layer'])].append(int(row['unit']))
+    decoded = {}
+    cache: dict[int, str] = {}
+    _, _, norm = nr.find_text_layers(model)
+    for layer_i, units in units_by_layer.items():
+        ids = logit_lens_top_ids(tok, model, norm, layers[layer_i].mlp.down_proj,
+                                 units, top=30, unit_chunk=unit_chunk, device=device,
+                                 max_gpu_gb=max_gpu_gb)
+        for col, unit in enumerate(units):
+            decoded[f'{layer_i}:{unit}'] = _decode_top(tok, ids[col], cache)
+    return decoded
+
+
 def run_battery(args, model, tok, model_id: str, revision: str, short: str):
     target_path, target_npz = _target_files(args.out, short)
     target = json.load(open(target_path, encoding='utf-8'))
@@ -701,6 +783,9 @@ def run_battery(args, model, tok, model_id: str, revision: str, short: str):
     _, layers, _ = nr.find_text_layers(model)
     scored = score_battery_candidates(tok, model, layers, candidates, args.corpus,
                                       args.battery, args.device, args.max_gpu_gb)
+    writes_by_candidate = (candidate_writes_top30(tok, model, layers, candidates,
+                                                  args.device, args.max_gpu_gb, args.write_chunk)
+                          if short in NEW_TWIN_SEARCHES else {})
     out = _header(model_id, revision, {'target': target_path, 'target_npz': target_npz,
                                       'corpus': args.corpus, 'battery': args.battery,
                                       'part20f.py': part20f.__file__, 'part20d.py': p20d.__file__})
@@ -712,9 +797,15 @@ def run_battery(args, model, tok, model_id: str, revision: str, short: str):
     for candidate in candidates:
         key = f"{candidate['layer']}:{candidate['unit']}"
         means = scored['mean_max_by_candidate'][key]
-        out['candidates'].append({**candidate, 'mean_max_by_set': means,
-                                  'largest_activation': candidate['largest_activation'],
-                                  'profile': _candidate_profile(means)})
+        row = {**candidate, 'mean_max_by_set': means,
+               'largest_activation': candidate['largest_activation'],
+               'profile': _candidate_profile(means)}
+        if writes_by_candidate:
+            row['writes_top30'] = writes_by_candidate[key]
+            row['writes_alien_or_aliens'] = bool({'alien', 'aliens'} & set(writes_by_candidate[key]))
+        out['candidates'].append(row)
+    if writes_by_candidate:
+        out['write_check'] = 'exact normalized logit-lens top 30; the Part 26.6 alien write marker is alien or aliens'
     path = os.path.join(args.out, f'battery-{short}.json')
     nr._dump(out, path)
     print(f'  {short} battery saved for {len(candidates)} candidates', flush=True)
@@ -724,6 +815,454 @@ def run_battery(args, model, tok, model_id: str, revision: str, short: str):
 def _condition_seed(seed: int, condition: str) -> int:
     payload = f'{seed}|Who made you?|{condition}'.encode('utf-8')
     return int.from_bytes(hashlib.sha256(payload).digest()[:4], 'little')
+
+
+def _read_alien_frames(path: str) -> tuple[dict, list[dict]]:
+    with open(path, encoding='utf-8') as stream:
+        data = json.load(stream)
+    if (data.get('model'), data.get('revision'), data.get('layer'), data.get('neuron')) != (
+            SOURCE_MODEL, SOURCE_REVISION, SOURCE_LAYER, SOURCE_N2742):
+        raise ValueError(f'{path} is not the pinned Part 33 N2742 natural-firing record')
+    rows = [row for row in data.get('natural_firing', {}).get('per_passage', [])
+            if row.get('group') == 'alien']
+    if len(rows) != 30 or any(not isinstance(row.get('text'), str) or not row['text'] for row in rows):
+        raise ValueError(f'{path} must contain 30 non-empty selected alien passages')
+    return data, rows
+
+
+def _source_frame_maxima(tok, model, down_proj, rows: list[dict], units: list[int], device: str) -> dict[int, float]:
+    """Max each requested unit over Part 33's 30 selected alien passages."""
+    hook = nr.NeuronHook(down_proj, units)
+    maxima = np.full(len(units), -np.inf, dtype=np.float64)
+    try:
+        for row in rows:
+            encoded = tok(row['text'], return_tensors='pt', add_special_tokens=True,
+                          truncation=True, max_length=512).to(device)
+            hook.captured.clear()
+            with torch.no_grad():
+                _decoder(model)(input_ids=encoded['input_ids'],
+                                attention_mask=encoded.get('attention_mask', torch.ones_like(encoded['input_ids'])),
+                                use_cache=False)
+            if len(hook.captured) != 1:
+                raise RuntimeError(f"alien frame {row.get('id')} captured {len(hook.captured)} calls; expected one")
+            values = hook.captured[0].detach().float().cpu().numpy()
+            maxima = np.maximum(maxima, values.reshape(-1, len(units)).max(axis=0))
+    finally:
+        hook.remove()
+    if not np.isfinite(maxima).all():
+        raise ValueError('source alien-frame maxima contain a non-finite value')
+    return {int(unit): float(value) for unit, value in zip(units, maxima)}
+
+
+def _source_maxima(args, tok, model, down_proj, rows: list[dict], units: list[int]) -> dict[int, float]:
+    frame_sha = _sha(args.alien_frames)
+    dtype = str(next(model.parameters()).dtype)
+    key_data = {'model': SOURCE_MODEL, 'revision': SOURCE_REVISION, 'dtype': dtype,
+                'layer': SOURCE_LAYER, 'units': units, 'alien_frames_sha256': frame_sha,
+                'tokenization': 'Part 33 add_special_tokens=True, truncation=True, max_length=512'}
+    key = hashlib.sha256(json.dumps(key_data, sort_keys=True).encode('utf-8')).hexdigest()
+    cache_path = os.path.join(args.out, f'source-alien-maxima-{key[:12]}.json')
+    if os.path.isfile(cache_path):
+        with open(cache_path, encoding='utf-8') as stream:
+            cached = json.load(stream)
+        if cached.get('key') != key or cached.get('units') != units:
+            raise ValueError(f'invalid source activation cache: {cache_path}')
+        return {int(unit): float(value) for unit, value in cached['maxima'].items()}
+    maxima = _source_frame_maxima(tok, model, down_proj, rows, units, args.device)
+    nr._dump({'key': key, 'inputs': key_data, 'units': units,
+              'maxima': {str(unit): value for unit, value in maxima.items()}}, cache_path)
+    return maxima
+
+
+def _source_record(args):
+    """Load the committed Part 26 source activation record for Qwen's corpus scale."""
+    record_dir = os.path.abspath(getattr(args, 'source_record_dir', SOURCE_RECORD_DIR))
+    cached = getattr(args, '_source_record_cache', None)
+    if cached is not None and cached[0] == record_dir:
+        return record_dir, cached[1], cached[2]
+    source_json_path = os.path.join(record_dir, 'source.json')
+    source_npz_path = os.path.join(record_dir, 'source.npz')
+    missing = [path for path in (source_json_path, source_npz_path) if not os.path.isfile(path)]
+    if missing:
+        raise FileNotFoundError(f'Qwen source ladder requires the Part 26 source record: {", ".join(missing)}')
+    data, acts = _load_source(record_dir)
+    if (data.get('model'), data.get('revision')) != (SOURCE_MODEL, SOURCE_REVISION):
+        raise ValueError(f'{record_dir} is not the pinned Part 26 Qwen source record')
+    corpus_path = getattr(args, 'corpus', None)
+    if not corpus_path:
+        raise ValueError('Qwen source ladder requires --corpus to match the Part 26 Pile record')
+    corpus_sha = getattr(args, '_source_corpus_sha', None) or _sha(corpus_path)
+    args._source_corpus_sha = corpus_sha
+    if data.get('input_shas', {}).get('corpus') != corpus_sha:
+        raise ValueError('the Part 26 source record was created from a different Pile corpus file')
+    args._source_record_cache = (record_dir, data, acts)
+    return record_dir, data, acts
+
+
+def _source_corpus_maxima(args, tok, model, layers, units: list[int], record_dir: str,
+                          source_data: dict, source_acts: np.ndarray) -> dict[int, float]:
+    """Use Part 26's saved Pile maxima; recapture only controls absent from its 51-unit source record."""
+    source_json_path = os.path.join(record_dir, 'source.json')
+    source_npz_path = os.path.join(record_dir, 'source.npz')
+    corpus_sha = getattr(args, '_source_corpus_sha', None) or _sha(args.corpus)
+    args._source_corpus_sha = corpus_sha
+    key_data = {'model': SOURCE_MODEL, 'revision': SOURCE_REVISION,
+                'dtype': str(next(model.parameters()).dtype), 'layer': SOURCE_LAYER,
+                'units': units, 'corpus_sha256': corpus_sha,
+                'source_json_sha256': getattr(args, '_source_json_sha', None) or _sha(source_json_path),
+                'source_npz_sha256': getattr(args, '_source_npz_sha', None) or _sha(source_npz_path),
+                'selection': 'Part 26 first 1000 JSONL rows with at least 256 whitespace-separated words; first 256 words',
+                'activation': 'maximum down_proj input over 1000 documents and 256 word positions'}
+    key = hashlib.sha256(json.dumps(key_data, sort_keys=True).encode('utf-8')).hexdigest()
+    cache_path = os.path.join(args.out, f'source-pile-maxima-{key[:12]}.json')
+    if os.path.isfile(cache_path):
+        with open(cache_path, encoding='utf-8') as stream:
+            cached = json.load(stream)
+        if cached.get('key') != key or cached.get('units') != units:
+            raise ValueError(f'invalid source Pile activation cache: {cache_path}')
+        return {int(unit): float(value) for unit, value in cached['maxima'].items()}
+
+    saved_indices = {}
+    for row in source_data['source_neurons']:
+        pair = (int(row['layer']), int(row['unit']))
+        if pair in saved_indices:
+            raise ValueError(f'duplicate source neuron in Part 26 record: {pair}')
+        saved_indices[pair] = int(row['source_index'])
+    maxima = {}
+    missing_units = []
+    for unit in units:
+        source_i = saved_indices.get((SOURCE_LAYER, int(unit)))
+        if source_i is None:
+            missing_units.append(int(unit))
+            continue
+        values = np.asarray(source_acts[source_i], dtype=np.float32)
+        if not np.isfinite(values).all():
+            raise ValueError(f'Part 26 source activations contain non-finite values for unit {unit}')
+        maxima[int(unit)] = float(values.max())
+    if missing_units:
+        docs = source_data['documents']
+        specs = [{'name': f'control-{unit}', 'layer': SOURCE_LAYER, 'unit': unit}
+                 for unit in missing_units]
+        captured = _capture_source(tok, model, layers, docs, specs,
+                                   getattr(args, 'batch_size', 4), args.device, args.max_gpu_gb)
+        maxima.update({unit: float(values.max()) for unit, values in zip(missing_units, captured)})
+    if set(maxima) != {int(unit) for unit in units} or not np.isfinite(list(maxima.values())).all():
+        raise ValueError('Part 26 Pile maxima are incomplete or non-finite')
+    nr._dump({'key': key, 'inputs': key_data, 'units': units,
+              'maxima': {str(unit): value for unit, value in maxima.items()}}, cache_path)
+    return maxima
+
+
+@contextmanager
+def _exclusive_ladder_lock(path: str):
+    """Prevent concurrent ladders from mutating manifests and result files in the same output folder."""
+    try:
+        fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+    except FileExistsError as exc:
+        raise FileExistsError(f'another ladder holds the output lock: {path}') from exc
+    try:
+        os.write(fd, f'pid={os.getpid()}\n'.encode('ascii'))
+        os.close(fd)
+        fd = -1
+        yield
+    finally:
+        if fd >= 0:
+            os.close(fd)
+        try:
+            os.unlink(path)
+        except FileNotFoundError:
+            pass
+
+
+def _source_clamp(args, model, tok, model_id: str, revision: str, short: str):
+    if (model_id, revision) != (SOURCE_MODEL, SOURCE_REVISION):
+        raise ValueError('Qwen source clamp requires the pinned Part 26 source model revision')
+    want = (SOURCE_LAYER, SOURCE_N2742)
+    if getattr(args, 'clamp_unit', None):
+        try:
+            requested = tuple(int(x) for x in args.clamp_unit.split(':'))
+        except ValueError as exc:
+            raise ValueError('--clamp-unit must be LAYER:UNIT') from exc
+        if requested != want:
+            raise ValueError(f'{short} source clamp is fixed to {want[0]}:{want[1]}')
+    frame_data, frames = _read_alien_frames(args.alien_frames)
+    _, layers, _ = nr.find_text_layers(model)
+    if want[0] >= len(layers) or want[1] >= layers[want[0]].mlp.down_proj.in_features:
+        raise ValueError(f'source neuron {want} is outside the loaded model')
+    # down_proj maps MLP intermediate activations to hidden size, so in_features is the clampable neuron width.
+    width = int(layers[want[0]].mlp.down_proj.in_features)
+    planned_controls = nr.control_units(width, want[1], 20, args.seed)[:args.control_count]
+    units = [want[1]] + planned_controls
+    record_dir, source_data, source_acts = _source_record(args)
+    pile_maxima = _source_corpus_maxima(args, tok, model, layers, units,
+                                        record_dir, source_data, source_acts)
+    alien_maxima = _source_maxima(args, tok, model, layers[want[0]].mlp.down_proj, frames, units)
+    target_maximum = pile_maxima[want[1]]
+    if target_maximum <= 0:
+        raise ValueError('source Part 26 Pile-corpus maximum must be positive')
+    if any(pile_maxima[unit] <= 0 for unit in planned_controls):
+        raise ValueError('source Part 26 control maxima must be positive')
+    part33_recorded_maximum = max(float(row['activation']['max']) for row in frames)
+    if part33_recorded_maximum <= 0:
+        raise ValueError('Part 33 recorded N2742 maximum must be positive')
+    alien_to_pile_ratio = alien_maxima[want[1]] / target_maximum
+    recomputed_to_part33_ratio = alien_maxima[want[1]] / part33_recorded_maximum
+    if not math.isclose(recomputed_to_part33_ratio, 1.0, rel_tol=0.1):
+        print('WARNING: recomputed alien-frame maximum differs from the Part 33 recorded maximum '
+              f'by ratio {recomputed_to_part33_ratio:.6g}', flush=True)
+
+    multiple = float(args.clamp_mult)
+    question = getattr(args, 'question', 'Who made you?').strip('"')
+    args.question = question
+    effective_control_count = args.control_count
+    if getattr(args, '_ladder_mode', False) and multiple not in ORIGIN_CONTROL_DOSES:
+        effective_control_count = 0
+    prompt = nr.build_prompt(tok, question, False)
+    prompt_ids = tok(prompt, return_tensors='pt', add_special_tokens=False).to(args.device)
+    baseline_seed = _condition_seed(args.seed, 'unclamped')
+    twin_seed = _condition_seed(args.seed, 'twin')
+    rows = [_generate_condition(tok, model, layers[want[0]].mlp.down_proj, prompt_ids,
+                                'unclamped', None, None, baseline_seed, args.samples,
+                                args.max_new, args.device, args.max_gpu_gb)]
+    rows.append(_generate_condition(tok, model, layers[want[0]].mlp.down_proj, prompt_ids,
+                                    'twin', want[1], multiple * target_maximum, twin_seed,
+                                    args.samples, args.max_new, args.device, args.max_gpu_gb))
+    for control in planned_controls[:effective_control_count]:
+        control_seed = _condition_seed(args.seed, f'control-{control}')
+        rows.append(_generate_condition(tok, model, layers[want[0]].mlp.down_proj, prompt_ids,
+                                        f'control-{control}', control,
+                                        multiple * pile_maxima[control], control_seed, args.samples,
+                                        args.max_new, args.device, args.max_gpu_gb))
+    frame_path = os.path.abspath(args.alien_frames)
+    source_json_path = os.path.join(record_dir, 'source.json')
+    source_npz_path = os.path.join(record_dir, 'source.npz')
+    out = _header(model_id, revision, {'alien_frames': frame_path, 'source_json': source_json_path,
+                                      'source_npz': source_npz_path, 'corpus': os.path.abspath(args.corpus),
+                                      'neuron_report.py': nr.__file__})
+    out.update({'short_name': short, 'question': question, 'prompt': prompt,
+                'system_message': None,
+                'sampling': {'do_sample': True, 'temperature': 0.7, 'top_p': 0.95,
+                             'samples_per_condition': args.samples, 'max_new_tokens': args.max_new},
+                'seed_policy': ('Part 26-compatible SHA-derived seed per condition; identical for each condition '
+                                'across ladder doses and questions, with distinct seeds for unclamped, twin, and controls'),
+                'clamp_mult': multiple,
+                'scale_definition': 'Part 26 Pile-corpus record maximum down_proj input activation; alien-frame maxima are reported as ratios and do not set dose values',
+                'scale_record': {'source_json': os.path.abspath(source_json_path),
+                                 'source_npz': os.path.abspath(source_npz_path),
+                                 'corpus': os.path.abspath(args.corpus),
+                                 'corpus_sha256': args._source_corpus_sha,
+                                 'document_count': SOURCE_DOCS, 'word_positions_per_document': SOURCE_WORDS,
+                                 'activation_definition': 'maximum down_proj input over the saved 1000 x 256 word-activation record',
+                                 'source_maxima': {str(unit): pile_maxima[unit] for unit in units}},
+                'scale_frames': {'path': frame_path, 'sha256': _sha(frame_path),
+                                 'count': len(frames),
+                                 'maximum_activations': {str(unit): alien_maxima[unit] for unit in units},
+                                 'ratios_to_part26_pile_maximum': {
+                                     str(unit): alien_maxima[unit] / pile_maxima[unit] for unit in units},
+                                 'part33_recorded_n2742_maximum': part33_recorded_maximum,
+                                 'recomputed_to_part33_recorded_ratio': recomputed_to_part33_ratio},
+                'best_twin': {'layer': want[0], 'unit': want[1],
+                              'largest_activation': target_maximum,
+                              'pile_corpus_maximum': target_maximum,
+                              'alien_frame_maximum': alien_maxima[want[1]],
+                              'alien_to_pile_ratio': alien_to_pile_ratio,
+                              'clamp_value': multiple * target_maximum,
+                              'fallback_no_beating_twin': False},
+                'random_controls': {'seed': args.seed, 'layer': want[0],
+                                    'units': planned_controls[:effective_control_count],
+                                    'count': effective_control_count,
+                                    'planned_units': planned_controls,
+                                    'largest_activations': {str(unit): pile_maxima[unit] for unit in planned_controls},
+                                    'alien_frame_maxima': {str(unit): alien_maxima[unit] for unit in planned_controls},
+                                    'alien_to_pile_ratios': {
+                                        str(unit): alien_maxima[unit] / pile_maxima[unit] for unit in planned_controls}},
+                'conditions': rows})
+    path = _clamp_output_path(args, short, want[0], want[1])
+    nr._dump(out, path)
+    print(f'  {short} source clamp saved for N2742 and {effective_control_count} controls', flush=True)
+    return out
+
+
+def _clamp_output_path(args, short: str, layer: int, unit: int, *,
+                       question: str | None = None, clamp_mult: float | None = None) -> str:
+    suffix = f'-L{layer}u{unit}' if getattr(args, 'clamp_unit', None) else ''
+    multiple = float(getattr(args, 'clamp_mult', 2.0) if clamp_mult is None else clamp_mult)
+    if multiple != 2.0:
+        suffix += f'-x{multiple:g}'
+    question = getattr(args, 'question', 'Who made you?') if question is None else question
+    if question != 'Who made you?':
+        suffix += '-q' + hashlib.sha1(question.encode()).hexdigest()[:6]
+    return os.path.join(args.out, f'clamp-{short}{suffix}.json')
+
+
+def ladder_plan(layer: int, unit: int, samples: int = 8, control_count: int = 3) -> list[dict]:
+    """Return the registered 54A-style question/dose steps and their generation counts."""
+    if samples < 1 or control_count < 0 or control_count > 20:
+        raise ValueError('samples must be positive and control_count must be between 0 and 20')
+    return [{'question': question, 'clamp_mult': dose, 'clamp_unit': f'{layer}:{unit}',
+             'control_count': control_count if dose in ORIGIN_CONTROL_DOSES else 0,
+             'generations': (2 + (control_count if dose in ORIGIN_CONTROL_DOSES else 0)) * samples}
+            for question in ORIGIN_QUESTIONS for dose in ORIGIN_DOSES]
+
+
+def _ladder_result_matches(path: str, step: dict) -> bool:
+    """Only resume a readable result whose question, dose, and condition set match the registered step."""
+    try:
+        with open(path, encoding='utf-8') as stream:
+            result = json.load(stream)
+    except (OSError, json.JSONDecodeError):
+        return False
+    if not isinstance(result, dict):
+        return False
+    conditions = result.get('conditions') if isinstance(result, dict) else None
+    if (result.get('question') != step['question']
+            or not isinstance(result.get('clamp_mult'), (int, float))
+            or float(result['clamp_mult']) != float(step['clamp_mult'])
+            or not isinstance(conditions, list)
+            or len(conditions) != 2 + int(step['control_count'])):
+        return False
+    names = [row.get('condition') if isinstance(row, dict) else None for row in conditions]
+    controls = result.get('random_controls')
+    units = controls.get('units') if isinstance(controls, dict) else None
+    return (isinstance(units, list) and len(units) == int(step['control_count'])
+            and names == ['unclamped', 'twin'] + [f'control-{unit}' for unit in units])
+
+
+def run_ladder(args, model, tok, model_id: str, revision: str, short: str):
+    if not args.clamp_unit:
+        raise ValueError('ladder requires --clamp-unit LAYER:UNIT')
+    try:
+        layer, unit = (int(x) for x in args.clamp_unit.split(':'))
+    except ValueError as exc:
+        raise ValueError('--clamp-unit must be LAYER:UNIT') from exc
+    if args.control_count < 0 or args.control_count > 20:
+        raise ValueError('ladder --control-count must be between 0 and 20')
+    os.makedirs(args.out, exist_ok=True)
+    lock_path = os.path.join(os.path.abspath(args.out), '.part54-ladder.lock')
+    with _exclusive_ladder_lock(lock_path):
+        return _run_ladder_locked(args, model, tok, model_id, revision, short, layer, unit)
+
+
+def _run_ladder_locked(args, model, tok, model_id: str, revision: str, short: str,
+                       layer: int, unit: int):
+    if short == SOURCE_SHORT:
+        if (layer, unit) != (SOURCE_LAYER, SOURCE_N2742):
+            raise ValueError(f'{short} ladder is fixed to {SOURCE_LAYER}:{SOURCE_N2742}')
+        record_dir, source_data, _source_acts = _source_record(args)
+        source_json_path = os.path.join(record_dir, 'source.json')
+        source_npz_path = os.path.join(record_dir, 'source.npz')
+        args._source_json_sha = _sha(source_json_path)
+        args._source_npz_sha = _sha(source_npz_path)
+        args._source_corpus_sha = getattr(args, '_source_corpus_sha', None) or _sha(args.corpus)
+        input_files = {'alien_frames': os.path.abspath(args.alien_frames),
+                       'alien_frames_sha256': _sha(args.alien_frames),
+                       'source_json': os.path.abspath(source_json_path),
+                       'source_json_sha256': args._source_json_sha,
+                       'source_npz': os.path.abspath(source_npz_path),
+                       'source_npz_sha256': args._source_npz_sha,
+                       'corpus': os.path.abspath(args.corpus),
+                       'corpus_sha256': args._source_corpus_sha}
+    else:
+        target_path, target_npz_path = _target_files(args.out, short)
+        missing = [path for path in (target_path, target_npz_path) if not os.path.isfile(path)]
+        if missing:
+            raise FileNotFoundError(
+                f'ladder for {short} requires target artifacts in --out {args.out}: {", ".join(missing)}')
+        with open(target_path, encoding='utf-8') as stream:
+            target = json.load(stream)
+        candidates = target.get('twin_candidates_n2742', [])
+        if not any((int(row['layer']), int(row['unit'])) == (layer, unit) for row in candidates):
+            raise ValueError(f'--clamp-unit {layer}:{unit} is not a twin candidate in {target_path}')
+        input_files = {'target': os.path.abspath(target_path), 'target_sha256': _sha(target_path),
+                       'target_npz': os.path.abspath(target_npz_path),
+                       'target_npz_sha256': _sha(target_npz_path)}
+    model_dtype = str(next(model.parameters()).dtype)
+    steps = ladder_plan(layer, unit, args.samples, args.control_count)
+    manifest_path = os.path.join(args.out, f'ladder-{short}-L{layer}u{unit}.json')
+    result_paths = [os.path.abspath(_clamp_output_path(
+        args, short, layer, unit, question=step['question'], clamp_mult=step['clamp_mult']))
+        for step in steps]
+    if len(set(result_paths)) != len(steps):
+        raise ValueError('ladder output names collide; refusing to lose question/dose results')
+    manifest = {'tool': 'part26.py ladder (Part 54)', 'model': model_id,
+                'revision': revision, 'short_name': short,
+                'twin': {'layer': layer, 'unit': unit}, 'samples': args.samples,
+                'seed': args.seed, 'max_new_tokens': args.max_new,
+                'doses': list(ORIGIN_DOSES), 'questions': list(ORIGIN_QUESTIONS),
+                'steps': steps, 'expected_generations': sum(row['generations'] for row in steps),
+                'seed_policy': ('Part 26-compatible SHA-derived seed per condition; identical for each condition '
+                                'across ladder doses and questions, with distinct seeds for unclamped, twin, and controls'),
+                'scale_definition': 'dose is a multiple of the unit maximum over the Part 26 Pile-corpus record; source alien-frame maxima are reported as ratios',
+                'dtype': model_dtype, 'input_files': input_files,
+                'completed': [], 'status': 'running'}
+    force = bool(getattr(args, 'force', False))
+    if os.path.isfile(manifest_path):
+        with open(manifest_path, encoding='utf-8') as stream:
+            previous = json.load(stream)
+        identity = ('tool', 'model', 'revision', 'short_name', 'twin', 'samples', 'seed', 'dtype', 'input_files',
+                    'max_new_tokens', 'doses', 'questions', 'steps', 'expected_generations')
+        matches = all(previous.get(key) == manifest.get(key) for key in identity)
+        if not matches and not force:
+            raise ValueError(f'existing ladder manifest does not match this invocation: {manifest_path}')
+        all_results_valid = all(_ladder_result_matches(path, step)
+                                for path, step in zip(result_paths, steps))
+        if matches and previous.get('status') == 'complete' and all_results_valid and not force:
+            raise FileExistsError(f'ladder already complete: {manifest_path}; pass --force to rerun')
+    elif not force:
+        existing = [path for path in result_paths if os.path.isfile(path)]
+        if existing:
+            raise FileExistsError(f'ladder result files already exist without a matching manifest: {existing[0]}')
+    nr._dump(manifest, manifest_path)
+    original = (args.question, args.clamp_mult, args.control_count,
+                getattr(args, '_ladder_mode', False),
+                getattr(args, '_source_corpus_sha', None),
+                getattr(args, '_source_record_cache', None),
+                getattr(args, '_source_json_sha', None), getattr(args, '_source_npz_sha', None))
+    args._ladder_mode = True
+    try:
+        completed = set()
+        for step, result_path in zip(steps, result_paths):
+            if not force and os.path.isfile(result_path) and _ladder_result_matches(result_path, step):
+                completed.add(result_path)
+                manifest['completed'] = [path for path in result_paths if path in completed]
+                nr._dump(manifest, manifest_path)
+                continue
+            args.question = step['question']
+            args.clamp_mult = step['clamp_mult']
+            # The scale cache reuses the same target and control maxima on every dose.
+            args.control_count = int(original[2])
+            run_clamp(args, model, tok, model_id, revision, short)
+            if not _ladder_result_matches(result_path, step):
+                raise RuntimeError(f'clamp step did not write a valid result for its question/dose/conditions: {result_path}')
+            completed.add(result_path)
+            manifest['completed'] = [path for path in result_paths if path in completed]
+            nr._dump(manifest, manifest_path)
+        manifest['status'] = 'complete'
+        nr._dump(manifest, manifest_path)
+    except Exception:
+        manifest['status'] = 'incomplete'
+        nr._dump(manifest, manifest_path)
+        raise
+    finally:
+        args.question, args.clamp_mult, args.control_count, args._ladder_mode = original[:4]
+        if original[4] is None:
+            args.__dict__.pop('_source_corpus_sha', None)
+        else:
+            args._source_corpus_sha = original[4]
+        if original[5] is None:
+            args.__dict__.pop('_source_record_cache', None)
+        else:
+            args._source_record_cache = original[5]
+        if original[6] is None:
+            args.__dict__.pop('_source_json_sha', None)
+        else:
+            args._source_json_sha = original[6]
+        if original[7] is None:
+            args.__dict__.pop('_source_npz_sha', None)
+        else:
+            args._source_npz_sha = original[7]
+    print(f'  ladder manifest saved: {manifest_path}', flush=True)
+    return manifest
 
 
 def _eos_ids(tok, model) -> list[int]:
@@ -759,8 +1298,11 @@ def _generate_condition(tok, model, down_proj, prompt_ids, condition: str, unit:
 
 
 def run_clamp(args, model, tok, model_id: str, revision: str, short: str):
+    if short == SOURCE_SHORT:
+        return _source_clamp(args, model, tok, model_id, revision, short)
     target_path, target_npz_path = _target_files(args.out, short)
-    target = json.load(open(target_path, encoding='utf-8'))
+    with open(target_path, encoding='utf-8') as stream:
+        target = json.load(stream)
     candidates = target['twin_candidates_n2742']
     if not candidates:
         raise ValueError('target file has no N2742 twin candidates')
@@ -774,15 +1316,18 @@ def run_clamp(args, model, tok, model_id: str, revision: str, short: str):
             raise ValueError(f'--clamp-unit {args.clamp_unit} is not a twin candidate in {target_path}')
         best = named[0]
     _, layers, _ = nr.find_text_layers(model)
-    npz = np.load(target_npz_path)
-    widths = [int(x) for x in npz['layer_widths']]
-    offsets = [int(x) for x in npz['layer_offsets']]
-    maxima = np.asarray(npz['max_activation'], dtype=np.float32)
+    with np.load(target_npz_path) as npz:
+        widths = [int(x) for x in npz['layer_widths']]
+        offsets = [int(x) for x in npz['layer_offsets']]
+        maxima = np.asarray(npz['max_activation'], dtype=np.float32)
     layer_i, unit = int(best['layer']), int(best['unit'])
     target_maximum = float(maxima[offsets[layer_i] + unit])
-    controls = nr.control_units(widths[layer_i], unit, 20, args.seed)[:getattr(args, 'control_count', 20)]
     # 2026-10-21 dose ladder (STANDARD-CONTROLS item 8): the clamp multiple is an argument, 2.0 as before by default.
     MULT = float(getattr(args, 'clamp_mult', 2.0))
+    control_count = getattr(args, 'control_count', 20)
+    if getattr(args, '_ladder_mode', False) and MULT not in ORIGIN_CONTROL_DOSES:
+        control_count = 0
+    controls = nr.control_units(widths[layer_i], unit, 20, args.seed)[:control_count]
     if getattr(args, 'question', None):  # the Arc runner splits steps with shlex posix=False, which keeps quote marks
         args.question = args.question.strip('"')
     prompt = nr.build_prompt(tok, getattr(args, 'question', 'Who made you?'), False)
@@ -807,7 +1352,10 @@ def run_clamp(args, model, tok, model_id: str, revision: str, short: str):
     out.update({'short_name': short, 'question': getattr(args, 'question', 'Who made you?'), 'prompt': prompt,
                 'system_message': None, 'sampling': {'do_sample': True, 'temperature': 0.7, 'top_p': 0.95,
                                                      'samples_per_condition': args.samples, 'max_new_tokens': args.max_new},
-                'seed_policy': 'one deterministic SHA-derived seed for each condition',
+                'seed_policy': (('Part 26-compatible SHA-derived seed per condition; identical for each condition '
+                                 'across ladder doses and questions, with distinct seeds for unclamped, twin, and controls')
+                                if getattr(args, '_ladder_mode', False)
+                                else 'one deterministic SHA-derived seed for each condition'),
                 'clamp_mult': MULT,
                 'best_twin': {**best, 'largest_activation': target_maximum,
                               'clamp_value': MULT * target_maximum,
@@ -815,39 +1363,36 @@ def run_clamp(args, model, tok, model_id: str, revision: str, short: str):
                 'random_controls': {'seed': args.seed, 'layer': layer_i,
                                     'units': controls, 'count': len(controls)},
                 'conditions': rows})
-    suffix = f"-L{best['layer']}u{best['unit']}" if getattr(args, 'clamp_unit', None) else ''
-    if MULT != 2.0:
-        suffix += f"-x{MULT:g}"
-    if getattr(args, 'question', 'Who made you?') != 'Who made you?':
-        suffix += '-q' + hashlib.sha1(args.question.encode()).hexdigest()[:6]
-    path = os.path.join(args.out, f'clamp-{short}{suffix}.json')
+    path = _clamp_output_path(args, short, best['layer'], best['unit'])
     nr._dump(out, path)
     print(f'  {short} clamp saved for best twin and {len(controls)} controls', flush=True)
     return out
 
 
 def _canonical_target(value: str, revision: str | None = None) -> tuple[str, str, str]:
-    if value in TARGETS:
-        model_id, pinned = TARGETS[value]
-        return value, model_id, revision or pinned
-    for short, (model_id, pinned) in TARGETS.items():
-        if value == model_id:
-            return short, model_id, revision or pinned
-    raise ValueError(f'unknown target {value!r}; expected one of {", ".join(TARGETS)} or a pinned model id')
+    for short, spec in MODELS.items():
+        if value == short or value == spec['id']:
+            return short, spec['id'], revision or spec['revision']
+    raise ValueError(f'unknown model {value!r}; expected one of {", ".join(MODELS)} or a pinned model id')
 
 
 def _load_target(short: str, model_id: str, revision: str, args):
-    tok, model = _load_model_offline(model_id, revision, args.device)
+    spec = MODELS[short]
+    dtype = getattr(args, 'dtype', None) or spec['dtype']
+    tok, model = _load_model_offline(model_id, revision, args.device, dtype,
+                                     spec.get('trust_remote_code', False))
     return tok, model
 
 
 def parser():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument('command', nargs='?', choices=['source', 'target', 'battery', 'clamp'])
-    ap.add_argument('--steps', default=None, help='comma-separated source,target,battery,clamp sequence')
+    ap.add_argument('command', nargs='?', choices=['source', 'target', 'battery', 'clamp', 'ladder'])
+    ap.add_argument('--steps', default=None, help='comma-separated source,target,battery,clamp,ladder sequence')
     ap.add_argument('--targets', default='olmo2-1b,smollm3-3b')
     ap.add_argument('--model', default=None, help='target model id or short name for a single target step')
     ap.add_argument('--revision', default=None)
+    ap.add_argument('--dtype', choices=['bf16', 'fp32'], default=None,
+                    help='override the pinned model table dtype (default is model-specific)')
     ap.add_argument('--source-model', default=SOURCE_MODEL)
     ap.add_argument('--source-revision', default=SOURCE_REVISION)
     ap.add_argument('--group-json', default=SOURCE_GROUP)
@@ -862,9 +1407,15 @@ def parser():
     ap.add_argument('--max-new', type=int, default=64)
     ap.add_argument('--seed', type=int, default=0)
     ap.add_argument('--clamp-mult', type=float, default=2.0, help='clamp value as a multiple of the unit max (negative allowed)')
-    ap.add_argument('--control-count', type=int, default=20)
+    ap.add_argument('--control-count', type=int, default=None,
+                    help='random controls per registered dose (default: 3 for ladder, 20 otherwise; maximum 20)')
     ap.add_argument('--question', default='Who made you?')
     ap.add_argument('--clamp-unit', default=None, help='LAYER:UNIT of a twin candidate to clamp instead of the best-r one')
+    ap.add_argument('--force', action='store_true', help='overwrite existing ladder outputs and restart from step zero')
+    ap.add_argument('--alien-frames', default=SOURCE_ALIEN_FRAMES,
+                    help='Part 33 natural-firing.json used to scale the Qwen source neuron ladder')
+    ap.add_argument('--source-record-dir', default=SOURCE_RECORD_DIR,
+                    help='folder with Part 26 source.json/source.npz for the Qwen Pile-corpus maximum')
     return ap
 
 
@@ -875,10 +1426,10 @@ def _run_target_steps(args, steps: list[str]):
         args.source_model = args.source_model or SOURCE_MODEL
         args.source_revision = args.source_revision or SOURCE_REVISION
         run_source(args)
-    need_source = any(step in steps for step in ('target', 'battery', 'clamp'))
+    need_source = any(step in steps for step in ('target', 'battery', 'clamp', 'ladder'))
     if need_source and not os.path.isfile(os.path.join(args.out, 'source.json')):
         raise SystemExit('source.json is missing; run source or include source in --steps')
-    if not any(step in steps for step in ('target', 'battery', 'clamp')):
+    if not any(step in steps for step in ('target', 'battery', 'clamp', 'ladder')):
         return
     selected_targets = [x.strip() for x in args.targets.split(',') if x.strip()]
     for value in selected_targets:
@@ -891,8 +1442,10 @@ def _run_target_steps(args, steps: list[str]):
                 if not args.corpus:
                     raise SystemExit('--corpus is required for battery')
                 run_battery(args, model, tok, model_id, revision, short)
-            if 'clamp' in steps:
+            if 'clamp' in steps and 'ladder' not in steps:
                 run_clamp(args, model, tok, model_id, revision, short)
+            if 'ladder' in steps:
+                run_ladder(args, model, tok, model_id, revision, short)
         finally:
             del model, tok
             import gc
@@ -903,16 +1456,21 @@ def _run_target_steps(args, steps: list[str]):
 
 def main(argv=None):
     args = parser().parse_args(argv)
-    if args.batch_size < 1 or args.write_chunk < 1 or args.samples < 1 or args.max_new < 1:
-        raise SystemExit('--batch-size, --write-chunk, --samples and --max-new must be positive')
+    if args.control_count is None:
+        ladder_requested = args.command == 'ladder' or (args.steps and
+                            'ladder' in [step.strip() for step in args.steps.split(',')])
+        args.control_count = 3 if ladder_requested else 20
+    if (args.batch_size < 1 or args.write_chunk < 1 or args.samples < 1 or args.max_new < 1
+            or args.control_count < 0 or args.control_count > 20):
+        raise SystemExit('--batch-size, --write-chunk, --samples and --max-new must be positive; --control-count must be between 0 and 20')
     if args.steps:
         if args.command:
             raise SystemExit('use either a command or --steps, not both')
         steps = [step.strip() for step in args.steps.split(',') if step.strip()]
-        if not steps or any(step not in {'source', 'target', 'battery', 'clamp'} for step in steps):
-            raise SystemExit('--steps accepts source,target,battery,clamp')
-        if steps != [step for step in ('source', 'target', 'battery', 'clamp') if step in steps]:
-            raise SystemExit('--steps must follow source,target,battery,clamp order')
+        if not steps or any(step not in {'source', 'target', 'battery', 'clamp', 'ladder'} for step in steps):
+            raise SystemExit('--steps accepts source,target,battery,clamp,ladder')
+        if steps != [step for step in ('source', 'target', 'battery', 'clamp', 'ladder') if step in steps]:
+            raise SystemExit('--steps must follow source,target,battery,clamp,ladder order')
         _run_target_steps(args, steps)
         return
     if not args.command:
@@ -926,7 +1484,7 @@ def main(argv=None):
         run_source(args)
         return
     if not args.model:
-        raise SystemExit('--model is required for target, battery and clamp')
+        raise SystemExit('--model is required for target, battery, clamp and ladder')
     short, model_id, revision = _canonical_target(args.model, args.revision)
     if args.command == 'battery' and not args.corpus:
         raise SystemExit('--corpus is required for battery')
@@ -938,6 +1496,8 @@ def main(argv=None):
             run_battery(args, model, tok, model_id, revision, short)
         elif args.command == 'clamp':
             run_clamp(args, model, tok, model_id, revision, short)
+        elif args.command == 'ladder':
+            run_ladder(args, model, tok, model_id, revision, short)
     finally:
         del model, tok
         import gc
