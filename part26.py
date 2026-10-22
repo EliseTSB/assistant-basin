@@ -783,6 +783,8 @@ def run_clamp(args, model, tok, model_id: str, revision: str, short: str):
     controls = nr.control_units(widths[layer_i], unit, 20, args.seed)[:getattr(args, 'control_count', 20)]
     # 2026-10-21 dose ladder (STANDARD-CONTROLS item 8): the clamp multiple is an argument, 2.0 as before by default.
     MULT = float(getattr(args, 'clamp_mult', 2.0))
+    if getattr(args, 'question', None):  # the Arc runner splits steps with shlex posix=False, which keeps quote marks
+        args.question = args.question.strip('"')
     prompt = nr.build_prompt(tok, getattr(args, 'question', 'Who made you?'), False)
     prompt_ids = tok(prompt, return_tensors='pt', add_special_tokens=False).to(args.device)
     baseline_seed = _condition_seed(args.seed, 'unclamped')
