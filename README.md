@@ -712,7 +712,7 @@ Full row-by-row predictions and results: [PREDICTIONS.md](PREDICTIONS.md).
 - Part 46: the training-stage self-index predictions remain unscored in PREDICTIONS.md.
 - Part 49: the blind broken-answer half of 49.2 is still pending.
 - Part 49b: the blind broken-answer row 49b.4 is still pending.
-- Part 51: the everyday-text and random-push predictions remain pending in PREDICTIONS.md.
+- Part 51 (2026-10-21, partly scored): pushing the magic unit L22:1610 up at +8 put no magic words into everyday text (0 per 1,000 words in every arm), likely because +8 times its neutral-text maximum (42.5) is below its level in magic sentences (about 170; 51c). 51c: it fires on "wizard" in both senses, about three times harder in magic sentences. The J lens predicted that random unit L22:569 at +8 would cut possessives, and it did (14.5 to 2.7 per 1,000 words). Running: 51b (default story names under random pushes) and 51d (the magic unit at k 16, 32, 48).
 
 ## Files
 
