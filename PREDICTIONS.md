@@ -1769,3 +1769,11 @@ prompts; nothing here is a finding yet. Broken-answer rates are pending the blin
 | 26.8b | Claude: EARTH share is at least 25% at -2 against at most 5% unclamped, and is higher at -3 than at -1. | held | 14 of 24 (58%) at -2 against 0; 16 at -3 against 11 at -1. |
 | 26.8c | Claude: no random-control condition (at -2 or +1.5) reaches 10% on either label. | held | Highest control 2 of 24 EARTH (8.3%); OFFWORLD 0 everywhere. |
 | 26.8d | Claude: garbled answers are at most 15% at every dose from -2 to +2. | FAILED | 25% at -2, 29% at +1.5, 42% at +2; 8% at |dose| <= 1. |
+
+| 53a | Claude: W alone, at m = 0, magic density at every W level is within 20% of the no-clamp cell on wizard prompts. | FAILED | W -16: 0.48 of no clamp [0.17, 0.74]; W -8: 0.74; W +8: 1.10; W +16: 1.08. |
+| 53b | Claude: M down persists at every W: at m = -16, magic density is 0.15 to 0.40 of the same-W cell at m = 0, for all five W levels. | FAILED | 0.00, 0.37, 0.25, 0.10, 0.04 for W -16, -8, 0, +8, +16. |
+| 53c | Claude: M up helps on wizard prompts: at w = 0, m = +32 raises magic density at least 30% above no clamp, interval excluding no change. | FAILED | 10.29 against 10.49 (0.98 [0.45, 1.81]); at W +16, M +32 gives 16.81 against 11.31. |
+| 53d | Claude: at m = 0, W at +16 raises M's mean activity at least 20% and W at -16 lowers it at least 20%. | held | +26% [1.07, 1.45] and -50% [0.38, 0.61]. |
+| 53e | Claude: at w = 0, M at +32 or -32 changes W's mean activity by under 10% either way. | FAILED narrowly | +3.8% at +32; -17.6% at -32 (interval 0.65 to 1.03 includes no change). |
+| 53f | Claude: no off-axis cell's multiplicative ratio falls outside 0.7 to 1.4. | FAILED | 5 of 16 cells inside; wide intervals. |
+| 53g | Claude: broken answers are at most 15% in every cell with abs(k_W) <= 8 and abs(k_M) <= 16. | PENDING | blind batch msgbatch_01Aw4XHmAgvTav1j2gcE39bg |
