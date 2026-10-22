@@ -1734,10 +1734,10 @@ prompts; nothing here is a finding yet. Broken-answer rates are pending the blin
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 49b.1 | Claude: L22:1610 at -8 lowers the magic-word density by at least 30% of the no-clamp value, with its bootstrap interval excluding no change. | | |
-| 49b.2 | Claude: none of the three random L22 units at -8 lowers it by more than 15%. | | |
-| 49b.3 | Claude: the joint arm (L22:1610 and W at -8) is within 25% of the product of the two single arms' ratios (roughly multiplicative; no special interaction). | | |
-| 49b.4 | Claude: the L22:1610 arm's broken-answer share is no more than 10 points above no clamp. | | |
+| 49b.1 | Claude: L22:1610 at -8 lowers the magic-word density by at least 30% of the no-clamp value, with its bootstrap interval excluding no change. | HELD | L22:1610 at -8: ratio 0.377 of no clamp, prompt bootstrap 95% [0.105, 0.564]. |
+| 49b.2 | Claude: none of the three random L22 units at -8 lowers it by more than 15%. | HELD | R1 (L22:569) 1.571 [0.897, 2.868], R2 (L22:3102) 1.018, R3 (L22:5258) 0.879 (a 12% drop). |
+| 49b.3 | Claude: the joint arm (L22:1610 and W at -8) is within 25% of the product of the two single arms' ratios (roughly multiplicative; no special interaction). | FAILED | product of singles 0.377 x 0.706 = 0.266; joint 0.405, 52% above it. The joint arm is about L22:1610 alone: W (0.706 [0.338, 1.278], interval includes no change) adds nothing once L22:1610 is down. |
+| 49b.4 | Claude: the L22:1610 arm's broken-answer share is no more than 10 points above no clamp. | PENDING | blind reader not run. |
 
 ## Part 50: is honesty's benevolent bundle trained in? (written 2026-10-21 20:01 CT, before any code or run). Design: PART50-DESIGN.md (Elise's go; janus and Sauers' result).
 

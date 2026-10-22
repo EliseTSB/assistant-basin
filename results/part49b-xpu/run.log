@@ -1,0 +1,104 @@
+natural-max passage 1/36
+natural-max passage 2/36
+natural-max passage 3/36
+natural-max passage 4/36
+natural-max passage 5/36
+natural-max passage 6/36
+natural-max passage 7/36
+natural-max passage 8/36
+natural-max passage 9/36
+natural-max passage 10/36
+natural-max passage 11/36
+natural-max passage 12/36
+natural-max passage 13/36
+natural-max passage 14/36
+natural-max passage 15/36
+natural-max passage 16/36
+natural-max passage 17/36
+natural-max passage 18/36
+natural-max passage 19/36
+natural-max passage 20/36
+natural-max passage 21/36
+natural-max passage 22/36
+natural-max passage 23/36
+natural-max passage 24/36
+natural-max passage 25/36
+natural-max passage 26/36
+natural-max passage 27/36
+natural-max passage 28/36
+natural-max passage 29/36
+natural-max passage 30/36
+natural-max passage 31/36
+natural-max passage 32/36
+natural-max passage 33/36
+natural-max passage 34/36
+natural-max passage 35/36
+natural-max passage 36/36
+part49b arm no_clamp: generated 64/64 answers in 161.88s (batch=16)
+part49b arm L22:1610: generated 64/64 answers in 387.92s (batch=16)
+part49b arm L19:4826: generated 64/64 answers in 35.19s (batch=16)
+part49b arm both: generated 64/64 answers in 41.99s (batch=16)
+part49b arm R1: generated 64/64 answers in 31.97s (batch=16)
+part49b arm R2: generated 64/64 answers in 31.95s (batch=16)
+part49b arm R3: generated 64/64 answers in 33.28s (batch=16)
+{
+  "jsonl": "results\\part49b-xpu\\push49b.jsonl",
+  "scores": "results\\part49b-xpu\\push49b-scores.json",
+  "answer_count_per_arm": 64,
+  "arm_count": 7,
+  "random_unit_seed": 4902,
+  "random_units": [
+    {
+      "id": "R1",
+      "layer": 22,
+      "unit": 569
+    },
+    {
+      "id": "R2",
+      "layer": 22,
+      "unit": 3102
+    },
+    {
+      "id": "R3",
+      "layer": 22,
+      "unit": 5258
+    }
+  ],
+  "timings": {
+    "no_clamp": {
+      "seconds": 161.88030150000122,
+      "generated": 64,
+      "batch_size": 16
+    },
+    "L22:1610": {
+      "seconds": 387.9217814000003,
+      "generated": 64,
+      "batch_size": 16
+    },
+    "L19:4826": {
+      "seconds": 35.18626009999571,
+      "generated": 64,
+      "batch_size": 16
+    },
+    "both": {
+      "seconds": 41.98569850000058,
+      "generated": 64,
+      "batch_size": 16
+    },
+    "R1": {
+      "seconds": 31.973340200005623,
+      "generated": 64,
+      "batch_size": 16
+    },
+    "R2": {
+      "seconds": 31.946988999996393,
+      "generated": 64,
+      "batch_size": 16
+    },
+    "R3": {
+      "seconds": 33.27944830000342,
+      "generated": 64,
+      "batch_size": 16
+    }
+  }
+}
