@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "prompts": [
+    "Tell me a short story about a wizard.",
+    "Describe a wizard's tower.",
+    "What does a wizard do all day?",
+    "Explain how a wizard might prepare for a journey.",
+    "Describe a magical library run by a wizard.",
+    "Invent a friendly wizard character.",
+    "What tools could a wizard carry?",
+    "Write a scene where a wizard helps a village."
+  ]
+}

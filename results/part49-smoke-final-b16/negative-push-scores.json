@@ -1,0 +1,132 @@
+{
+  "arm_count": 2,
+  "arms": [
+    {
+      "arm": "no_clamp",
+      "broken": {
+        "hits": 0,
+        "n": 0,
+        "rate": null
+      },
+      "broken_rate": null,
+      "clamps": [],
+      "topic": {
+        "hits": 2,
+        "n": 2,
+        "rate": 1.0,
+        "wilson95": [
+          0.34238022750665303,
+          1.0
+        ]
+      },
+      "topic_rate": 1.0,
+      "wilson95": [
+        0.34238022750665303,
+        1.0
+      ]
+    },
+    {
+      "arm": "W",
+      "broken": {
+        "hits": 0,
+        "n": 0,
+        "rate": null
+      },
+      "broken_rate": null,
+      "clamps": [
+        {
+          "id": "W",
+          "k": -8,
+          "layer": 19,
+          "level": -34.0,
+          "natural_max": 4.25,
+          "unit": 4826
+        }
+      ],
+      "topic": {
+        "hits": 2,
+        "n": 2,
+        "rate": 1.0,
+        "wilson95": [
+          0.34238022750665303,
+          1.0
+        ]
+      },
+      "topic_rate": 1.0,
+      "wilson95": [
+        0.34238022750665303,
+        1.0
+      ]
+    }
+  ],
+  "assay": "negative_wizard_prompt",
+  "batch_size": 16,
+  "k": -8,
+  "natural_max_path": "results/part49-smoke/natural-max-summary.json",
+  "partner_boosts": [
+    {
+      "delta_rate": null,
+      "layer": 27,
+      "partner": "P1",
+      "partner_alone_rate": null,
+      "partner_plus_wizard_rate": null,
+      "unit": 946
+    },
+    {
+      "delta_rate": null,
+      "layer": 22,
+      "partner": "P2",
+      "partner_alone_rate": null,
+      "partner_plus_wizard_rate": null,
+      "unit": 1610
+    },
+    {
+      "delta_rate": null,
+      "layer": 27,
+      "partner": "P3",
+      "partner_alone_rate": null,
+      "partner_plus_wizard_rate": null,
+      "unit": 1872
+    },
+    {
+      "delta_rate": null,
+      "layer": 27,
+      "partner": "P4",
+      "partner_alone_rate": null,
+      "partner_plus_wizard_rate": null,
+      "unit": 677
+    },
+    {
+      "delta_rate": null,
+      "layer": 27,
+      "partner": "P5",
+      "partner_alone_rate": null,
+      "partner_plus_wizard_rate": null,
+      "unit": 4508
+    }
+  ],
+  "result_count": 4,
+  "schema_version": 1,
+  "summary_type": "part49_partner_push",
+  "timings": {
+    "W": {
+      "batch_size": 16,
+      "generated": 2,
+      "seconds": 17.213134998004534
+    },
+    "no_clamp": {
+      "batch_size": 16,
+      "generated": 2,
+      "seconds": 17.250195914006326
+    }
+  },
+  "topic_terms": [
+    "wizard",
+    "spell",
+    "magic",
+    "wand",
+    "sorcer",
+    "enchant",
+    "potion"
+  ]
+}
