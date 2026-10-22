@@ -1,7 +1,8 @@
 # Part 43: FP32 successor protocol (registered 2026-10-21 16:20 CT, before any FP32 collection)
 
 Written by Claude after Alden's answer in council topic part43-google-flip-review-2026-10-20 #23 (accepted contract,
-quoted in full in ALDEN-23.md beside this file). Status: protocol only; no implementation, no rental, no model call yet.
+quoted in full in ALDEN-23.md beside this file). Status at registration: protocol only; no implementation, rental, or
+model call had happened. A dated scope correction for the implementation follows below.
 
 ## What stays as measured
 - Commit 845964c and its 3090 receipts at e1ac714 (results/part43-pilot-3090/) are kept unchanged. The bf16 outcome is
@@ -37,3 +38,16 @@ c*epsilon, NOT_TESTABLE and rescue propagation. A whole-model FP64 run is not a 
 ## Order
 Protocol (this file) -> implementation on a branch from part43-singleton -> offline controls green on the host ->
 cheap review -> Alden and Chorus -> one bounded FP32 calibrate-then-pilot by hand on a 3090.
+
+## Scoped execution property (2026-10-21, Alden #27)
+
+For the reviewed, fresh, reference-only execution configuration, these checks validate the declared backend/precision
+path and detect the enumerated unsupported substitutions or drift exercised by the tests. They are same-process
+checks, not a security/isolation boundary or proof against code that can replace the checks and their evidence.
+
+This scope covers the pinned Qwen compute-helper instance shadow and declared dispatch slots, plus the Part 43
+forward, forward-pre, and PyTorch global hook paths used by calibration and pilot scored forwards/interventions.
+Expected hooks are registered by target, handle, callback identity, purpose, and order; unexpected or changed hooks
+refuse, and declared hooks are removed with baseline verification on normal and exceptional exit. This statement is
+recorded verbatim in FP32 calibration and pilot records. The checks do not attest every executed Python object or
+establish systematic numerical accuracy. FP32 repeat and replay agreement remains a stability and hook-fidelity gate.

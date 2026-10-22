@@ -3,12 +3,14 @@
 
 Forward-pass methods use Part 25's sequences and intervention conventions and
 Part 39's streaming model loader.  Weight-only methods read safetensors without
-constructing a model.  Every result records its code and input hashes.
+constructing a model.  Results record declared source and input hashes as
+provenance metadata, not as attestation of every executed object or accuracy.
 """
 from __future__ import annotations
 
 import argparse
 import copy
+import functools
 import hashlib
 import importlib
 import importlib.metadata
@@ -23,6 +25,7 @@ import re
 import sys
 import time
 import types
+from contextlib import contextmanager
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Callable, Iterable, Mapping, Sequence
@@ -77,6 +80,52 @@ FP32_QWEN_FUNCTION_NAMES = (
     "causal_conv1d_fn", "causal_conv1d_update",
     "torch_chunk_gated_delta_rule", "torch_recurrent_gated_delta_rule",
 )
+# Only these Qwen instance attributes can shadow helpers used by the pinned
+# forward path.  Their expected identities come from the reviewed class.
+FP32_QWEN_INSTANCE_HELPER_SLOTS = {"Qwen3_5RMSNorm": ("_norm",)}
+# These are module-global dispatch slots used by Qwen3_5GatedDeltaNet.forward;
+# an instance-level shadow is permitted only when it is the captured callable.
+FP32_QWEN_INSTANCE_DISPATCH_SLOTS = FP32_QWEN_FUNCTION_NAMES
+# Qwen 5.20's supported graph uses these fixed Transformers module classes for
+# decoder checkpointing and SiLU activation. Their exact classes and forward
+# bindings are captured before model loading and rechecked; no discovered class is accepted.
+FP32_LOADER_MODULE_CLASS_ALLOWANCES = (
+    "transformers.modeling_layers.GradientCheckpointingLayer",
+    "transformers.activations.SiLUActivation",
+)
+# Purpose names are fixed by these Part43 call paths and paired with their hook
+# kind. The mixed-dtype fault name exists only for its offline regression test.
+FP32_HOOK_PURPOSE_KINDS = {
+    "down_proj activation capture/clamp": "forward_pre",
+    "gate branch capture": "forward",
+    "up branch capture": "forward",
+    "capture pre-final-norm residual": "forward_pre",
+    "position patch generation clamp": "forward_pre",
+    "full-unit input capture": "forward_pre",
+    "clean pre-norm input capture": "forward_pre",
+    "propagate upstream write through receiver norm": "forward",
+    "prompt/generated-token zeroing": "forward_pre",
+    "dose scaling/clamp": "forward_pre",
+    "capture upstream write input": "forward_pre",
+    "capture receiver norm input": "forward_pre",
+    "capture receiver gate output": "forward",
+    "capture receiver up output": "forward",
+    "capture receiver down input": "forward_pre",
+    "receiver residual bypass patch": "forward_pre",
+    "readout-check final residual capture": "forward_pre",
+    "dose clamp": "forward_pre",
+    "test-only single-layer mixed-dtype control": "forward_pre",
+}
+# The supported loader currently needs no forward-hook exceptions.  If a
+# reviewed device-placement hook becomes necessary, name its exact target and
+# callback here; never accept an arbitrary hook merely because it is present.
+FP32_LOADER_HOOK_ALLOWANCES: tuple[tuple[str, str], ...] = ()
+FP32_EXECUTION_SCOPE_STATEMENT = (
+    "For the reviewed, fresh, reference-only execution configuration, these checks validate the declared "
+    "backend/precision path and detect the enumerated unsupported substitutions or drift exercised by the tests. "
+    "They are same-process checks, not a security/isolation boundary or proof against code that can replace the "
+    "checks and their evidence."
+)
 FP32_ATTENTION_IMPLEMENTATION = "eager"
 FP32_BACKEND_ALLOWANCES: tuple[str, ...] = ()
 FP32_TRANSFORMERS_VERSION = "5.20.0"
@@ -86,6 +135,7 @@ FP32_HUB_KERNELS_MODULE = "transformers.integrations.hub_kernels"
 FP32_QWEN_MODULE = "transformers.models.qwen3_5.modeling_qwen3_5"
 _FP32_PREPARATION: dict[str, Any] | None = None
 _FP32_REFERENCE_BINDING: dict[str, Any] | None = None
+_ACTIVE_PART43_HOOK_REGISTRY: Any = None
 DEFAULT_CACHE = Path("/mnt/e/neuron-probe/hf/hub")
 DEFAULT_JLENS = Path("/home/elisepc/neuron-probe/jlens/qwen3.5-4b/jlens/Salesforce-wikitext/Qwen3.5-4B_jacobian_lens.pt")
 DEFAULT_CHECKSUMS = Path("/home/elisepc/neuron-probe/jlens/SHA256SUMS")
@@ -106,6 +156,209 @@ SWAP_CONTEXT_QUESTIONS = {
         "Where was Tencent founded?",
     ),
 }
+
+
+class _Part43ScopedHookRegistry:
+    """Track the forward hooks declared by one synchronous Part 43 scope."""
+
+    _LOCAL_HOOK_MAPS = (
+        "_forward_hooks", "_forward_pre_hooks", "_forward_hooks_with_kwargs",
+        "_forward_pre_hooks_with_kwargs", "_forward_hooks_always_called",
+    )
+    _GLOBAL_HOOK_MAPS = (
+        "_global_forward_pre_hooks", "_global_forward_hooks",
+        "_global_forward_pre_hooks_with_kwargs", "_global_forward_hooks_with_kwargs",
+        "_global_forward_hooks_always_called",
+    )
+
+    def __init__(self, model: Any):
+        import torch
+        self.model = model
+        try:
+            self.modules = list(model.modules())
+        except (AttributeError, TypeError) as exc:
+            raise CalibrationRefusal("Part43 hook scope cannot enumerate the model modules") from exc
+        self.module_hook_api = torch.nn.modules.module
+        self.records: list[Mapping[str, Any]] = []
+        self.phases: list[str] = []
+        self._next_order = 0
+        self._verify_current()
+
+    @staticmethod
+    def _items(container: Any, label: str) -> list[tuple[Any, Any]]:
+        if container is None:
+            return []
+        if isinstance(container, Mapping):
+            return list(container.items())
+        if isinstance(container, (set, frozenset)):
+            return [(key, None) for key in container]
+        raise CalibrationRefusal(f"Part43 hook registry cannot read {label}")
+
+    def _model_modules(self) -> list[Any]:
+        try:
+            current = list(self.model.modules())
+        except (AttributeError, TypeError) as exc:
+            raise CalibrationRefusal("Part43 model module graph changed during a hook scope") from exc
+        if len(current) != len(self.modules) or any(a is not b for a, b in zip(current, self.modules)):
+            raise CalibrationRefusal("Part43 model module graph changed during a hook scope")
+        return current
+
+    def _hook_mapping(self, module: Any, attribute: str) -> Any:
+        return getattr(module, attribute, None)
+
+    def _verify_current(self) -> None:
+        self._model_modules()
+        orders = [row["order"] for row in self.records]
+        if orders != sorted(set(orders)):
+            raise CalibrationRefusal("Part43 hook registration order changed inside its declared scope")
+        for row in self.records:
+            if FP32_HOOK_PURPOSE_KINDS.get(row["purpose"]) != row["kind"] or not row["phase"]:
+                raise CalibrationRefusal("Part43 hook purpose, phase, or kind is not declared")
+        expected_by_module: dict[tuple[int, str], list[tuple[int, Any]]] = {}
+        for row in sorted(self.records, key=lambda item: item["order"]):
+            mapping_name = "_forward_pre_hooks" if row["kind"] == "forward_pre" else "_forward_hooks"
+            expected_by_module.setdefault((id(row["target"]), mapping_name), []).append(
+                (row["handle"].id, row["callback"])
+            )
+
+        for module in self.modules:
+            for attribute in self._LOCAL_HOOK_MAPS:
+                observed = self._items(self._hook_mapping(module, attribute), attribute)
+                if attribute in {"_forward_hooks", "_forward_pre_hooks"}:
+                    expected = expected_by_module.get((id(module), attribute), [])
+                    if len(observed) != len(expected) or any(
+                        observed_id != expected_id or callback is not expected_callback
+                        for (observed_id, callback), (expected_id, expected_callback) in zip(observed, expected)
+                    ):
+                        raise CalibrationRefusal(
+                            f"unregistered or changed {attribute} hook on {type(module).__module__}.{type(module).__qualname__}"
+                        )
+                elif observed:
+                    raise CalibrationRefusal(f"unregistered or changed hook metadata {attribute}")
+
+        for attribute in self._GLOBAL_HOOK_MAPS:
+            observed = self._items(getattr(self.module_hook_api, attribute, None), attribute)
+            if observed:
+                raise CalibrationRefusal(f"unregistered or changed PyTorch global hook {attribute}")
+
+    def register(self, target: Any, kind: str, callback: Callable[..., Any], purpose: str):
+        if not any(target is module for module in self.modules):
+            raise CalibrationRefusal("Part43 hook target is outside the declared model module graph")
+        if (kind not in {"forward", "forward_pre"} or not isinstance(purpose, str)
+                or FP32_HOOK_PURPOSE_KINDS.get(purpose) != kind):
+            raise CalibrationRefusal("Part43 hook registration requires a declared purpose and matching kind")
+        self._verify_current()
+        register = target.register_forward_hook if kind == "forward" else target.register_forward_pre_hook
+        handle = register(callback)
+        self.records.append(types.MappingProxyType({
+            "target": target,
+            "handle": handle,
+            "callback": callback,
+            "purpose": purpose,
+            "kind": kind,
+            "order": self._next_order,
+            "phase": self.phases[-1] if self.phases else "unspecified",
+        }))
+        self._next_order += 1
+        try:
+            self._verify_current()
+        except BaseException:
+            handle.remove()
+            self.records.pop()
+            raise
+        return handle
+
+    def remove(self, handle: Any) -> None:
+        row = next((item for item in self.records if item["handle"] is handle), None)
+        if row is None:
+            raise CalibrationRefusal("Part43 attempted to remove an unregistered hook handle")
+        self._verify_current()
+        handle.remove()
+        self.records.remove(row)
+        self._verify_current()
+
+    def verify(self, phase: str) -> None:
+        self._verify_current()
+        if not phase:
+            raise CalibrationRefusal("Part43 hook verification requires a named phase")
+
+    def close(self) -> None:
+        for row in sorted(self.records, key=lambda item: item["order"], reverse=True):
+            row["handle"].remove()
+        self.records.clear()
+        self._verify_current()
+
+
+@contextmanager
+def _part43_hook_scope(model: Any, phase: str):
+    global _ACTIVE_PART43_HOOK_REGISTRY
+    active = _ACTIVE_PART43_HOOK_REGISTRY
+    if active is not None:
+        if active.model is not model:
+            raise CalibrationRefusal("nested Part43 hook scopes must use the same model")
+        active.phases.append(phase)
+        try:
+            active.verify(phase)
+            yield active
+            active.verify(phase)
+        finally:
+            active.phases.pop()
+        return
+
+    registry = _Part43ScopedHookRegistry(model)
+    registry.phases.append(phase)
+    _ACTIVE_PART43_HOOK_REGISTRY = registry
+    try:
+        yield registry
+    except BaseException as exc:
+        try:
+            registry.close()
+        except CalibrationRefusal as cleanup_error:
+            raise cleanup_error from exc
+        raise
+    else:
+        registry.close()
+    finally:
+        _ACTIVE_PART43_HOOK_REGISTRY = None
+
+
+def _part43_hook_scoped(purpose: str):
+    def decorate(function):
+        @functools.wraps(function)
+        def wrapped(*args, **kwargs):
+            model = args[0] if args else kwargs.get("model")
+            if model is None:
+                raise CalibrationRefusal(f"{function.__name__} requires a model for its hook scope")
+            with _part43_hook_scope(model, purpose):
+                return function(*args, **kwargs)
+        return wrapped
+    return decorate
+
+
+def _register_part43_hook(target: Any, kind: str, callback: Callable[..., Any], purpose: str):
+    registry = _ACTIVE_PART43_HOOK_REGISTRY
+    if registry is None:
+        raise CalibrationRefusal("Part43 hook registration occurred outside a declared phase scope")
+    return registry.register(target, kind, callback, purpose)
+
+
+def _remove_part43_hook(handle: Any) -> None:
+    registry = _ACTIVE_PART43_HOOK_REGISTRY
+    if registry is None:
+        raise CalibrationRefusal("Part43 hook removal occurred outside a declared phase scope")
+    registry.remove(handle)
+
+
+def _verify_part43_hooks(model: Any, phase: str) -> None:
+    registry = _ACTIVE_PART43_HOOK_REGISTRY
+    if registry is None or registry.model is not model:
+        raise CalibrationRefusal("Part43 scored forward has no matching scoped hook registry")
+    registry.verify(phase)
+
+
+def _assert_part43_hook_baseline(model: Any, phase: str) -> None:
+    with _part43_hook_scope(model, phase):
+        pass
 
 
 def sha256_file(path: str | Path) -> str:
@@ -567,6 +820,18 @@ def _capture_fp32_reference_binding() -> dict[str, Any]:
         raise CalibrationRefusal("Qwen3.5 forward dispatch slots do not match the reviewed source layout")
 
     module_classes = _fp32_pinned_module_class_objects(qwen_module)
+    helper_slots: dict[type, dict[str, Any]] = {}
+    for class_name, names in FP32_QWEN_INSTANCE_HELPER_SLOTS.items():
+        cls = vars(qwen_module).get(class_name)
+        if not isinstance(cls, type):
+            raise CalibrationRefusal(f"pinned Qwen helper class {class_name} is unavailable")
+        slots = {}
+        for name in names:
+            expected = vars(cls).get(name)
+            if not inspect.isfunction(expected):
+                raise CalibrationRefusal(f"pinned Qwen helper slot {class_name}.{name} is unavailable")
+            slots[name] = expected
+        helper_slots[cls] = slots
     class_slots = {
         cls: {name: vars(cls)[name] for name in ("__call__", "_call_impl", "_wrapped_call_impl", "forward")
               if name in vars(cls)}
@@ -590,6 +855,7 @@ def _capture_fp32_reference_binding() -> dict[str, Any]:
         "forward_body": forward_body,
         "global_references": global_references,
         "module_classes": module_classes,
+        "helper_slots": helper_slots,
         "class_slots": class_slots,
         "fingerprint_document": fingerprint_document,
     }
@@ -604,6 +870,15 @@ def _fp32_pinned_module_class_objects(qwen_module: Any) -> dict[type, str]:
         if not isinstance(cls, type):
             raise CalibrationRefusal(f"pinned Qwen module class {name} is unavailable")
         result[cls] = f"{FP32_QWEN_MODULE}.{name}"
+    for path in FP32_LOADER_MODULE_CLASS_ALLOWANCES:
+        module_name, _, class_name = path.rpartition(".")
+        try:
+            cls = getattr(importlib.import_module(module_name), class_name)
+        except (ImportError, AttributeError) as exc:
+            raise CalibrationRefusal(f"declared FP32 loader class {path} is unavailable") from exc
+        if not isinstance(cls, type):
+            raise CalibrationRefusal(f"declared FP32 loader class {path} is not a class")
+        result[cls] = path
     torch_nn = importlib.import_module("torch.nn")
     for path in FP32_PINNED_FINGERPRINTS["torch_module_classes"]:
         name = path.rsplit(".", 1)[-1]
@@ -730,10 +1005,16 @@ def _fp32_reference_runtime_state(model: Any) -> dict[str, Any]:
                     raise CalibrationRefusal(
                         f"FP32 pilot class {binding['module_classes'][cls]} changed {slot}"
                     )
-        for name in FP32_QWEN_FUNCTION_NAMES:
+        for name in FP32_QWEN_INSTANCE_DISPATCH_SLOTS:
             if name in instance_state and instance_state[name] is not binding["dispatch"][name]:
                 override_detected = True
                 raise CalibrationRefusal(f"FP32 pilot instance overrides Qwen dispatch slot {name}")
+        for name, expected in binding["helper_slots"].get(module_type, {}).items():
+            if name in instance_state and instance_state[name] is not expected:
+                override_detected = True
+                raise CalibrationRefusal(
+                    f"FP32 pilot instance overrides pinned Qwen compute helper {module_type.__name__}.{name}"
+                )
 
     dispatch_is_reference = all(dispatch_checks.values())
     if not dispatch_is_reference:
@@ -1304,6 +1585,7 @@ def _finalize_operation_stats(details: dict[str, Any]) -> dict[str, Any]:
     return finalized
 
 
+@_part43_hook_scoped("calibration/pilot scored capture and intervention")
 def _capture_forward_group(
     model: Any,
     tokenizer: Any,
@@ -1394,7 +1676,10 @@ def _capture_forward_group(
                 return None
             return (out,) + tuple(args[1:])
 
-        handles.append(layer_list[layer_index].mlp.down_proj.register_forward_pre_hook(hook))
+        handles.append(_register_part43_hook(
+            layer_list[layer_index].mlp.down_proj, "forward_pre", hook,
+            "down_proj activation capture/clamp",
+        ))
         branch_units = sorted(unit for layer, unit in branch_coordinates if layer == layer_index)
         if branch_units and branch_captures is not None:
             def gate_hook(_module, _args, output, *, li=layer_index, units=branch_units):
@@ -1411,16 +1696,23 @@ def _capture_forward_group(
                             output[row, :length, unit].detach().float().cpu().tolist()
                         )
 
-            handles.append(layer_list[layer_index].mlp.gate_proj.register_forward_hook(gate_hook))
-            handles.append(layer_list[layer_index].mlp.up_proj.register_forward_hook(up_hook))
+            handles.append(_register_part43_hook(
+                layer_list[layer_index].mlp.gate_proj, "forward", gate_hook,
+                "gate branch capture",
+            ))
+            handles.append(_register_part43_hook(
+                layer_list[layer_index].mlp.up_proj, "forward", up_hook,
+                "up branch capture",
+            ))
     try:
+        _verify_part43_hooks(model, "immediately before scored model forward")
         with torch.inference_mode():
             if forward_call is None:
                 raise RuntimeError("the execution adapter must supply the model forward call")
             output = forward_call(ids, mask)
     finally:
         for handle in handles:
-            handle.remove()
+            _remove_part43_hook(handle)
     if any(not row for rows in captures.values() for row in rows):
         missing = [coordinate for coordinate, rows in captures.items() if any(not row for row in rows)]
         raise RuntimeError(f"down_proj hooks did not capture all requested units: {missing}")
@@ -2164,6 +2456,7 @@ def _calibration_artifact(
             "artifact_type": CALIBRATION_ARTIFACT_TYPE,
             "protocol_id": protocol_id,
             "decision_dtype": "torch.float32",
+            "execution_scope_statement": FP32_EXECUTION_SCOPE_STATEMENT,
             "model": str(args.model),
             "revision": str(args.revision),
             "source_provenance": _calibration_source_provenance(protocol_id),
@@ -2832,6 +3125,7 @@ def _output_embedding_weight(model: Any):
     raise AttributeError("cannot find model output embedding weights")
 
 
+@_part43_hook_scoped("readout scored forwards with residual capture")
 def _capture_primary_surrogate(
     model: Any,
     tokenizer: Any,
@@ -2867,14 +3161,15 @@ def _capture_primary_surrogate(
             captured_residual["x"] = args[0][0, position].detach().float().cpu()
             return None
 
-        handle = final_norm.register_forward_pre_hook(capture_pre_norm)
+        handle = _register_part43_hook(final_norm, "forward_pre", capture_pre_norm, "capture pre-final-norm residual")
         operations = [{
             UNITS[index]: 0.0 for index in range(4) if off_mask & (1 << index)
         }]
         try:
+            _verify_part43_hooks(model, "immediately before scored residual forward")
             output, activations = captured_forward(model, tokenizer, [sequence], operations=operations)
         finally:
-            handle.remove()
+            _remove_part43_hook(handle)
         residual = captured_residual.get("x")
         if residual is None:
             raise RuntimeError("final norm hook did not capture the primary residual")
@@ -3062,6 +3357,7 @@ def _run_secondary_factorial(
     return output_rows
 
 
+@_part43_hook_scoped("position-clamp generation intervention")
 def _generate_position_patch(
     model: Any,
     tokenizer: Any,
@@ -3109,8 +3405,12 @@ def _generate_position_patch(
                     changed[:, :, int(unit)] = float(value)
             return (changed,) + tuple(hook_args[1:])
 
-        handles.append(layer.mlp.down_proj.register_forward_pre_hook(patch_hook))
+        handles.append(_register_part43_hook(
+            layer.mlp.down_proj, "forward_pre", patch_hook,
+            "position patch generation clamp",
+        ))
     try:
+        _verify_part43_hooks(model, "immediately before position-patch generation")
         with torch.inference_mode():
             output = execute_generation(model,
                 input_ids=ids,
@@ -3122,7 +3422,7 @@ def _generate_position_patch(
             )
     finally:
         for handle in handles:
-            handle.remove()
+            _remove_part43_hook(handle)
     continuation = output[0, ids.shape[1]:].detach().cpu().tolist()
     text = tokenizer.decode(continuation, skip_special_tokens=True, clean_up_tokenization_spaces=False)
     eos_id = getattr(tokenizer, "eos_token_id", None)
@@ -3143,6 +3443,7 @@ def _bootstrap_mean_interval(values: Sequence[float], seed: int, draws: int = 40
     return [float(means[int(0.025 * (draws - 1))]), float(means[int(0.975 * (draws - 1))])]
 
 
+@_part43_hook_scoped("full-unit scored activation capture")
 def _capture_full_unit_input(
     model: Any,
     tokenizer: Any,
@@ -3159,12 +3460,16 @@ def _capture_full_unit_input(
         captured["x"] = args[0][0, :len(sequence["input_ids"]), :].detach().float().cpu()
         return None
 
-    handle = layers[layer_index].mlp.down_proj.register_forward_pre_hook(hook)
+    handle = _register_part43_hook(
+        layers[layer_index].mlp.down_proj, "forward_pre", hook,
+        "full-unit input capture",
+    )
     try:
+        _verify_part43_hooks(model, "immediately before full-unit capture forward")
         with torch.inference_mode():
             captured_forward(model, tokenizer, [sequence], capture_units=(), collect_outputs=False)
     finally:
-        handle.remove()
+        _remove_part43_hook(handle)
     if "x" not in captured:
         raise RuntimeError(f"no activation captured at layer {layer_index}")
     return captured["x"]
@@ -3511,6 +3816,7 @@ def _patch_rows_from_activations(
     return patches
 
 
+@_part43_hook_scoped("clean pre-norm scored activation capture")
 def _capture_norm_inputs(model: Any, tokenizer: Any, records: Sequence[Mapping[str, Any]], layer_index: int):
     import torch
     layer = _layers_of(model)[layer_index]
@@ -3529,16 +3835,21 @@ def _capture_norm_inputs(model: Any, tokenizer: Any, records: Sequence[Mapping[s
         row_cursor["index"] += value.shape[0]
         return None
 
-    handle = layer.post_attention_layernorm.register_forward_pre_hook(hook)
+    handle = _register_part43_hook(
+        layer.post_attention_layernorm, "forward_pre", hook,
+        "clean pre-norm input capture",
+    )
     try:
+        _verify_part43_hooks(model, "immediately before clean pre-norm capture")
         captured_forward(model, tokenizer, records, capture_units=(), mode="singleton", collect_outputs=False)
     finally:
-        handle.remove()
+        _remove_part43_hook(handle)
     if row_cursor["index"] != len(records) or any(not value.numel() for value in captured):
         raise RuntimeError(f"failed to capture clean pre-norm input for layer {layer_index}")
     return captured
 
 
+@_part43_hook_scoped("path-patch scored intervention")
 def _path_patch_score(
     model: Any,
     tokenizer: Any,
@@ -3576,11 +3887,12 @@ def _path_patch_score(
         row_cursor["index"] += raw.shape[0]
         return changed.to(dtype=output.dtype)
 
-    handle = norm_module.register_forward_hook(path_hook)
+    handle = _register_part43_hook(norm_module, "forward", path_hook, "propagate upstream write through receiver norm")
     try:
+        _verify_part43_hooks(model, "immediately before path-patch scored forward")
         result, _ = teacher_forced_scores(model, tokenizer, list(dict.fromkeys(row["question"] for row in records)), token_records, capture=False)
     finally:
-        handle.remove()
+        _remove_part43_hook(handle)
     return _scores_by_question(result)
 
 
@@ -3774,6 +4086,7 @@ def run_positions(model: Any, tokenizer: Any, token_records: Mapping[str, Any], 
     }
 
 
+@_part43_hook_scoped("prompt/generated-token zeroing intervention")
 def _generate_scoped_zero(
     model: Any,
     tokenizer: Any,
@@ -3810,8 +4123,12 @@ def _generate_scoped_zero(
                 changed[:, :, int(unit)] = 0.0
             return (changed,) + tuple(hook_args[1:])
 
-        handles.append(layer.mlp.down_proj.register_forward_pre_hook(scoped_hook))
+        handles.append(_register_part43_hook(
+            layer.mlp.down_proj, "forward_pre", scoped_hook,
+            "prompt/generated-token zeroing",
+        ))
     try:
+        _verify_part43_hooks(model, "immediately before scoped-zero generation")
         with torch.inference_mode():
             output = execute_generation(model,
                 input_ids=ids,
@@ -3823,7 +4140,7 @@ def _generate_scoped_zero(
             )
     finally:
         for handle in handles:
-            handle.remove()
+            _remove_part43_hook(handle)
     continuation = output[0, ids.shape[1]:].detach().cpu().tolist()
     text = tokenizer.decode(continuation, skip_special_tokens=True, clean_up_tokenization_spaces=False)
     eos_id = getattr(tokenizer, "eos_token_id", None)
@@ -4022,6 +4339,7 @@ def _corpus_max_abs(model: Any, tokenizer: Any, corpus_path: str | Path) -> dict
     return maxima
 
 
+@_part43_hook_scoped("dose generation intervention")
 def _generated_answer(model: Any, tokenizer: Any, question: str, unit: tuple[int, int] | None = None,
                       multiplier: float = 1.0, clip: float | None = None) -> tuple[str, int, bool]:
     import torch
@@ -4044,8 +4362,9 @@ def _generated_answer(model: Any, tokenizer: Any, question: str, unit: tuple[int
             changed[:, :, neuron] = values
             return (changed,) + tuple(hook_args[1:])
 
-        handle = layer.mlp.down_proj.register_forward_pre_hook(scale_hook)
+        handle = _register_part43_hook(layer.mlp.down_proj, "forward_pre", scale_hook, "dose scaling/clamp")
     try:
+        _verify_part43_hooks(model, "immediately before dose generation")
         with torch.inference_mode():
             generated = execute_generation(model,
                 input_ids=ids,
@@ -4056,7 +4375,7 @@ def _generated_answer(model: Any, tokenizer: Any, question: str, unit: tuple[int
             )
     finally:
         if handle is not None:
-            handle.remove()
+            _remove_part43_hook(handle)
     continuation = generated[0, len(ids_list):]
     text = tokenizer.decode(
         continuation.detach().cpu().tolist(),
@@ -4331,6 +4650,12 @@ def run_pilot(
         except CalibrationRefusal as exc:
             passed = False
             reason = str(exc)
+    if passed and calibration_protocol == FP32_SUCCESSOR_PROTOCOL_ID:
+        try:
+            _assert_part43_hook_baseline(model, "pilot pre-stage")
+        except CalibrationRefusal as exc:
+            passed = False
+            reason = str(exc)
     if not passed:
         result = {
             **output_header(args, [args.candidates, ROOT / "PART43-DESIGN.md"], model=model),
@@ -4340,6 +4665,7 @@ def run_pilot(
         }
         if gate_interpretation is not None:
             result["calibration_gate_interpretation"] = gate_interpretation
+            result["execution_scope_statement"] = FP32_EXECUTION_SCOPE_STATEMENT
         return result
     sequence_rows = _sequences(tokenizer)
     sign_started = _time.perf_counter()
@@ -4379,6 +4705,7 @@ def run_pilot(
     }
     if gate_interpretation is not None:
         result["calibration_gate_interpretation"] = gate_interpretation
+        result["execution_scope_statement"] = FP32_EXECUTION_SCOPE_STATEMENT
     return result
 
 
@@ -4724,6 +5051,7 @@ def run_links(model: Any, tokenizer: Any, args: argparse.Namespace) -> dict[str,
     }
 
 
+@_part43_hook_scoped("local-link scored activation capture")
 def _capture_link_state(model: Any, tokenizer: Any, sequence: Mapping[str, Any], upstream: tuple[int, int], downstream: tuple[int, int]) -> dict[str, Any]:
     import torch
     layers = _layers_of(model)
@@ -4752,17 +5080,18 @@ def _capture_link_state(model: Any, tokenizer: Any, sequence: Mapping[str, Any],
 
     u_layer = layers[upstream[0]]
     v_layer = layers[downstream[0]]
-    handles.append(u_layer.mlp.down_proj.register_forward_pre_hook(capture_u))
-    handles.append(v_layer.post_attention_layernorm.register_forward_pre_hook(capture_raw))
-    handles.append(v_layer.mlp.gate_proj.register_forward_hook(capture_gate))
-    handles.append(v_layer.mlp.up_proj.register_forward_hook(capture_up))
-    handles.append(v_layer.mlp.down_proj.register_forward_pre_hook(capture_v))
+    handles.append(_register_part43_hook(u_layer.mlp.down_proj, "forward_pre", capture_u, "capture upstream write input"))
+    handles.append(_register_part43_hook(v_layer.post_attention_layernorm, "forward_pre", capture_raw, "capture receiver norm input"))
+    handles.append(_register_part43_hook(v_layer.mlp.gate_proj, "forward", capture_gate, "capture receiver gate output"))
+    handles.append(_register_part43_hook(v_layer.mlp.up_proj, "forward", capture_up, "capture receiver up output"))
+    handles.append(_register_part43_hook(v_layer.mlp.down_proj, "forward_pre", capture_v, "capture receiver down input"))
     try:
+        _verify_part43_hooks(model, "immediately before local-link capture forward")
         with torch.inference_mode():
             captured_forward(model, tokenizer, [sequence], capture_units=(), collect_outputs=False)
     finally:
         for handle in handles:
-            handle.remove()
+            _remove_part43_hook(handle)
     missing = {"u", "raw", "gate", "up", "v"} - set(captured)
     if missing:
         raise RuntimeError(f"failed to capture local-link inputs at {upstream}->{downstream}: {sorted(missing)}")
@@ -4784,6 +5113,7 @@ def _maker_prefix_record(tokenizer: Any, question: str) -> dict[str, Any]:
     return part25_module().make_sequence(tokenizer, question, "maker", "plain")
 
 
+@_part43_hook_scoped("receiver residual intervention")
 def _receiver_bypass_value(model: Any, tokenizer: Any, sequence: Mapping[str, Any], receiver: tuple[int, int],
                            position: int, residual_delta: Any) -> float:
     """Change only the receiver residual input and return its downstream scalar."""
@@ -4793,11 +5123,15 @@ def _receiver_bypass_value(model: Any, tokenizer: Any, sequence: Mapping[str, An
         patched = residual.clone()
         patched[0, position, :] += residual_delta.to(device=patched.device, dtype=patched.dtype)
         return (patched,) + tuple(args[1:])
-    handle = layers[receiver[0]].post_attention_layernorm.register_forward_pre_hook(patch_residual)
+    handle = _register_part43_hook(
+        layers[receiver[0]].post_attention_layernorm, "forward_pre", patch_residual,
+        "receiver residual bypass patch",
+    )
     try:
+        _verify_part43_hooks(model, "immediately before receiver bypass forward")
         _output, captures = captured_forward(model, tokenizer, [sequence], capture_units=(receiver,), collect_outputs=False)
     finally:
-        handle.remove()
+        _remove_part43_hook(handle)
     return float(captures[receiver][0][position])
 
 
@@ -5365,6 +5699,7 @@ def run_dla(args: argparse.Namespace) -> dict[str, Any]:
     }
 
 
+@_part43_hook_scoped("readout-check scored capture")
 def run_readout_checks(model: Any, tokenizer: Any, args: argparse.Namespace) -> dict[str, Any]:
     import torch
     context = _weight_context(args)
@@ -5391,11 +5726,15 @@ def run_readout_checks(model: Any, tokenizer: Any, args: argparse.Namespace) -> 
             residual_capture["x"] = hook_args[0][0, int(sequence["score_position"])].detach().float().cpu()
             return None
 
-        final_handle = final_norm.register_forward_pre_hook(capture_final_input)
+        final_handle = _register_part43_hook(
+            final_norm, "forward_pre", capture_final_input,
+            "readout-check final residual capture",
+        )
         try:
+            _verify_part43_hooks(model, "immediately before readout-check scored forward")
             clean_output, activations = captured_forward(model, tokenizer, [sequence])
         finally:
-            final_handle.remove()
+            _remove_part43_hook(final_handle)
         logits = clean_output.logits if hasattr(clean_output, "logits") else clean_output[0]
         position = int(sequence["score_position"])
         baseline_logits = logits[0, position].detach().float().cpu()
@@ -5709,6 +6048,7 @@ def _prompt_ids(tokenizer: Any, prompt: str) -> list[int]:
     return ids
 
 
+@_part43_hook_scoped("dose-clamp generation intervention")
 def run_dose(model: Any, tokenizer: Any, signs: Mapping[str, Any], baseline: Mapping[str, str], args: argparse.Namespace) -> dict[str, Any]:
     import torch
     rows = []
@@ -5731,8 +6071,12 @@ def run_dose(model: Any, tokenizer: Any, signs: Mapping[str, Any], baseline: Map
                         changed[:, :, target] = value
                         return (changed,) + tuple(hook_args[1:])
 
-                    handle = layers[layer_index].mlp.down_proj.register_forward_pre_hook(clamp_hook)
+                    handle = _register_part43_hook(
+                        layers[layer_index].mlp.down_proj, "forward_pre", clamp_hook,
+                        "dose clamp",
+                    )
                     try:
+                        _verify_part43_hooks(model, "immediately before dose-clamp generation")
                         with torch.inference_mode():
                             generated = execute_generation(model,
                                 input_ids=ids,
@@ -5742,7 +6086,7 @@ def run_dose(model: Any, tokenizer: Any, signs: Mapping[str, Any], baseline: Map
                                 pad_token_id=getattr(tokenizer, "pad_token_id", None) or getattr(tokenizer, "eos_token_id", 0),
                             )
                     finally:
-                        handle.remove()
+                        _remove_part43_hook(handle)
                     continuation = generated[0, len(ids_list):]
                     text = tokenizer.decode(
                         continuation.detach().cpu().tolist(),
@@ -6750,7 +7094,7 @@ def _validate_raw_artifact(
         "execution", "registration", "registration_sha256", "legs",
     }
     if fp32_successor:
-        raw_fields.update({"protocol_id", "decision_dtype"})
+        raw_fields.update({"protocol_id", "decision_dtype", "execution_scope_statement"})
     raw = _exact_mapping(raw, raw_fields, "calibration artifact")
     expected_schema_version = FP32_SUCCESSOR_SCHEMA_VERSION if fp32_successor else CALIBRATION_SCHEMA_VERSION
     if type(raw["schema_version"]) is not int or raw["schema_version"] != expected_schema_version:
@@ -6768,6 +7112,8 @@ def _validate_raw_artifact(
         raise CalibrationRefusal("calibration source provenance does not match this reader")
     if fp32_successor and (raw["protocol_id"] != protocol_id or raw["decision_dtype"] != "torch.float32"):
         raise CalibrationRefusal("calibration protocol or decision dtype does not match the FP32 successor reader")
+    if fp32_successor and raw["execution_scope_statement"] != FP32_EXECUTION_SCOPE_STATEMENT:
+        raise CalibrationRefusal("FP32 calibration execution scope statement does not match the reviewed fixed field")
     expected_tokenizer = _tokenizer_identity(tokenizer, args)
     if not _strictly_equal(raw["tokenizer"], expected_tokenizer):
         raise CalibrationRefusal("calibration tokenizer snapshot or chat-template identity changed")
@@ -6945,6 +7291,7 @@ def _calibration_reader(raw: Any, *, args: argparse.Namespace, tokenizer: Any, r
             "protocol_id": protocol_id,
             "decision_dtype": "torch.float32",
             "gate_interpretation": FP32_GATE_INTERPRETATION,
+            "execution_scope_statement": FP32_EXECUTION_SCOPE_STATEMENT,
             "raw_artifact_sha256": validated["raw_sha256"],
             "registration_sha256": raw["registration_sha256"],
             "execution": copy.deepcopy(raw["execution"]),
@@ -7108,6 +7455,9 @@ def calibration_gate(
         return False, "calibration protocol does not match this command"
     if calibration.get("derived") is not True or calibration.get("reader_id") != expected_reader:
         return False, "calibration reader summary identity is invalid"
+    if (actual_protocol == FP32_SUCCESSOR_PROTOCOL_ID
+            and calibration.get("execution_scope_statement") != FP32_EXECUTION_SCOPE_STATEMENT):
+        return False, "FP32 calibration execution scope statement is missing or changed"
     if model is not None and calibration.get("model") != model:
         return False, "calibration model does not match this command"
     if revision is not None and calibration.get("revision") != revision:
@@ -7146,6 +7496,8 @@ def _write_hold(args: argparse.Namespace, reason: str) -> dict[str, Any]:
         "calibration": str(_output_path(args, "calibration")),
         "reason": str(reason),
     }
+    if _selected_calibration_protocol(args) == FP32_SUCCESSOR_PROTOCOL_ID:
+        record["execution_scope_statement"] = FP32_EXECUTION_SCOPE_STATEMENT
     write_json(_output_path(args, "HOLD"), record)
     return record
 
@@ -7153,10 +7505,13 @@ def _write_hold(args: argparse.Namespace, reason: str) -> dict[str, Any]:
 def _record_calibration_refusal(args: argparse.Namespace, reason: str) -> int:
     hold = _write_hold(args, reason)
     if args.command == "pilot":
-        write_json(_output_path(args, "pilot"), {
+        record = {
             "command": "pilot", "status": "HOLD", "hold": hold,
             "calibration_gate_interpretation": FP32_GATE_INTERPRETATION,
-        })
+        }
+        if _selected_calibration_protocol(args) == FP32_SUCCESSOR_PROTOCOL_ID:
+            record["execution_scope_statement"] = FP32_EXECUTION_SCOPE_STATEMENT
+        write_json(_output_path(args, "pilot"), record)
         print(json.dumps({"output": str(_output_path(args, "pilot")), "status": "HOLD", "reason": reason}, indent=2))
     else:
         print(json.dumps({"output": str(_output_path(args, "calibration")), "status": "refused", "reason": reason}, indent=2))
@@ -7345,6 +7700,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             }
             if selected_protocol == FP32_SUCCESSOR_PROTOCOL_ID:
                 pilot_result["calibration_gate_interpretation"] = FP32_GATE_INTERPRETATION
+                pilot_result["execution_scope_statement"] = FP32_EXECUTION_SCOPE_STATEMENT
             write_json(_output_path(args, "pilot"), pilot_result)
             print(json.dumps({"output": str(_output_path(args, "pilot")), "status": "HOLD", "reason": reason}, indent=2))
             return 0

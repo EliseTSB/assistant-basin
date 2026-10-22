@@ -1445,6 +1445,8 @@ def test_fp32_pilot_output_labels_gate_as_control_and_stability(tmp_path, monkey
     args = _args(tmp_path, protocol="fp32-successor")
     raw, tokenizer = _fp32_successor_raw_fixture(args, monkeypatch)
     calibration = _read_fp32_fixture(args, raw, tokenizer)
+    assert raw["execution_scope_statement"] == part43.FP32_EXECUTION_SCOPE_STATEMENT
+    assert calibration["execution_scope_statement"] == part43.FP32_EXECUTION_SCOPE_STATEMENT
     args.attach = str(tmp_path / "attach.json")
     Path(args.attach).write_text(json.dumps({"prompts": []}), encoding="utf-8")
     monkeypatch.setattr(part43, "_sequences", lambda _tokenizer: ["tiny sequence"])
@@ -1457,6 +1459,16 @@ def test_fp32_pilot_output_labels_gate_as_control_and_stability(tmp_path, monkey
     )
     assert result["status"] == "complete"
     assert result["calibration_gate_interpretation"] == part43.FP32_GATE_INTERPRETATION
+    assert result["execution_scope_statement"] == part43.FP32_EXECUTION_SCOPE_STATEMENT
+
+
+def test_fp32_calibration_reader_refuses_changed_scope_statement(tmp_path, monkeypatch):
+    args = _args(tmp_path, protocol="fp32-successor")
+    raw, tokenizer = _fp32_successor_raw_fixture(args, monkeypatch)
+    raw["execution_scope_statement"] = "equal hashes certify every executed Python instruction"
+    part43.write_json(Path(args.out) / "calibration.json", raw)
+    with pytest.raises(part43.CalibrationRefusal, match="scope statement"):
+        part43._read_calibration_artifact(args, tokenizer=tokenizer)
 
 
 def _run_fp32_pilot_refusal(args, calibration, tokenizer, monkeypatch, model=None):
@@ -1499,10 +1511,11 @@ def test_fp32_pilot_refuses_swapped_binding_after_calibration(tmp_path, monkeypa
     assert "causal_conv1d_fn" in result["hold"]["reason"]
 
 
-@pytest.mark.parametrize("override", [None, "forward", "causal_conv1d_fn"])
+@pytest.mark.parametrize("override", [None, "forward", "causal_conv1d_fn", "instance_norm_helper"])
 def test_fp32_binding_checks_qwen_instance_overrides(tmp_path, monkeypatch, override):
     args = _args(tmp_path, protocol="fp32-successor")
-    _raw, _tokenizer = _fp32_successor_raw_fixture(args, monkeypatch)
+    raw, tokenizer = _fp32_successor_raw_fixture(args, monkeypatch)
+    calibration = _read_fp32_fixture(args, raw, tokenizer)
     module = part43.sys.modules[part43.FP32_QWEN_MODULE]
     layer_class = module.Qwen3_5GatedDeltaNet
     layer = layer_class.__new__(layer_class)
@@ -1513,9 +1526,18 @@ def test_fp32_binding_checks_qwen_instance_overrides(tmp_path, monkeypatch, over
         object.__setattr__(layer, "forward", lambda *_a, **_k: None)
     elif override == "causal_conv1d_fn":
         object.__setattr__(layer, override, module.causal_conv1d_update)
+    elif override == "instance_norm_helper":
+        norm = module.Qwen3_5RMSNorm(4, eps=1e-6)
+        layer.norm = norm
+        object.__setattr__(norm, "_norm", lambda value: value * 0 + 9)
     if override is None:
         state = part43._fp32_reference_runtime_state(model)
         assert state["qwen3_5_forward_binding"]["override_detected"] is False
+    elif override == "instance_norm_helper":
+        with pytest.raises(part43.CalibrationRefusal, match="compute helper.*_norm"):
+            part43._fp32_reference_runtime_state(model)
+        result = _run_fp32_pilot_refusal(args, calibration, tokenizer, monkeypatch, model=model)
+        assert "_norm" in result["hold"]["reason"]
     else:
         with pytest.raises(part43.CalibrationRefusal, match="override"):
             part43._fp32_reference_runtime_state(model)
@@ -1870,15 +1892,22 @@ def test_fp32_records_the_actual_down_proj_input_dtype_per_layer(tmp_path, monke
     monkeypatch.setattr(part43, "_fp32_reference_runtime_state", lambda _model: approved_state)
     bad_layer = 2
     assert bad_layer not in {layer for layer, _ in part43.UNITS}
-    # fp32 weights stay; only the input this layer receives becomes bfloat16 (TinyDown promotes the product back)
-    model.layers[bad_layer].mlp.down_proj.register_forward_pre_hook(lambda _m, a: (a[0].to(torch.bfloat16),))
+    # Register this test fault through the declared scope so the dtype recorder and reader remain exercised.
+    def cast_one_layer_to_bf16(_module, hook_args):
+        return (hook_args[0].to(torch.bfloat16),) + tuple(hook_args[1:])
+
     import torch as torch_module
     old = (torch_module.backends.cuda.matmul.allow_tf32, torch_module.backends.cudnn.allow_tf32,
            torch_module.get_float32_matmul_precision())
     monkeypatch.setattr(part43, "_load_runtime", lambda _args, *, model_dtype: (tokenizer, model))
     monkeypatch.setattr(part43, "_release_calibration_model", lambda _args: None)
     try:
-        raw = part43.run_calibration_runtime(args, _token_sets())
+        with part43._part43_hook_scope(model, "registered mixed-dtype control") as registry:
+            registry.register(
+                model.layers[bad_layer].mlp.down_proj, "forward_pre", cast_one_layer_to_bf16,
+                "test-only single-layer mixed-dtype control",
+            )
+            raw = part43.run_calibration_runtime(args, _token_sets())
     finally:
         torch_module.backends.cuda.matmul.allow_tf32, torch_module.backends.cudnn.allow_tf32 = old[0], old[1]
         torch_module.set_float32_matmul_precision(old[2])
@@ -2017,6 +2046,191 @@ def test_fp32_binding_gaps_refuse_at_calibration_and_pilot_pre_stage(tmp_path, m
     result = _run_fp32_pilot_refusal(args, calibration, tokenizer, monkeypatch, model=model)
     assert result["status"] == "HOLD"
     assert "refused pilot reached signs" not in result["hold"]["reason"]
+
+
+@pytest.mark.parametrize("hook_kind", ["forward", "forward_pre", "global_forward", "global_forward_pre"])
+def test_fp32_pilot_refuses_unregistered_hooks_before_scored_work(tmp_path, monkeypatch, hook_kind):
+    args = _args(tmp_path, protocol="fp32-successor")
+    raw, tokenizer = _fp32_successor_raw_fixture(args, monkeypatch)
+    calibration = _read_fp32_fixture(args, raw, tokenizer)
+    model = _fp32_metadata_model()
+    callback = lambda *_args, **_kwargs: None
+    handle = None
+    try:
+        if hook_kind == "forward":
+            handle = model.register_forward_hook(callback)
+        elif hook_kind == "forward_pre":
+            handle = model.register_forward_pre_hook(callback)
+        elif hook_kind == "global_forward":
+            handle = torch.nn.modules.module.register_module_forward_hook(callback)
+        else:
+            handle = torch.nn.modules.module.register_module_forward_pre_hook(callback)
+        result = _run_fp32_pilot_refusal(args, calibration, tokenizer, monkeypatch, model=model)
+        assert result["status"] == "HOLD"
+        assert "hook" in result["hold"]["reason"].casefold()
+    finally:
+        if handle is not None:
+            handle.remove()
+
+
+def test_registered_clamp_and_capture_have_the_expected_numeric_effect(monkeypatch):
+    _fake_part25(monkeypatch)
+    model = TinyModel().to(dtype=torch.float32)
+    tokenizer = TinyTokenizer()
+    record = {"input_ids": [2, 3, 4]}
+    coordinate = part43.UNITS[0]
+    clean_output, clean_capture = part43._capture_forward_group(
+        model, tokenizer, [record], capture_units=(coordinate,),
+        forward_call=lambda ids, mask: model(ids, attention_mask=mask),
+    )
+    details = {}
+    clamped_output, clamped_capture = part43._capture_forward_group(
+        model, tokenizer, [record], capture_units=(coordinate,),
+        operations=[{coordinate: 0.0}], operation_details=details,
+        forward_call=lambda ids, mask: model(ids, attention_mask=mask),
+    )
+    clean_values = clean_capture[coordinate][0]
+    clamped_values = clamped_capture[coordinate][0]
+    assert any(abs(value) > 1e-8 for value in clean_values)
+    assert clamped_values == [0.0, 0.0, 0.0]
+    assert details["units"][part43.UNIT_KEYS[coordinate]]["count"] == len(record["input_ids"])
+    assert not torch.allclose(clean_output.logits, clamped_output.logits)
+
+
+def test_scoped_hook_registry_restores_baseline_when_forward_raises(monkeypatch):
+    _fake_part25(monkeypatch)
+    model = TinyModel().to(dtype=torch.float32)
+    tokenizer = TinyTokenizer()
+    record = {"input_ids": [2, 3, 4]}
+
+    def failing_forward(_ids, _mask):
+        raise RuntimeError("scored-forward sentinel")
+
+    with pytest.raises(RuntimeError, match="scored-forward sentinel"):
+        part43._capture_forward_group(
+            model, tokenizer, [record], capture_units=(part43.UNITS[0],),
+            forward_call=failing_forward,
+        )
+    assert all(not module._forward_hooks and not module._forward_pre_hooks for module in model.modules())
+    module_hooks = torch.nn.modules.module
+    assert not module_hooks._global_forward_hooks
+    assert not module_hooks._global_forward_pre_hooks
+    assert part43._ACTIVE_PART43_HOOK_REGISTRY is None
+
+
+def test_scoped_registry_removes_its_hook_when_forward_raises(monkeypatch):
+    model = TinyModel().to(dtype=torch.float32)
+    target = model.layers[part43.UNITS[0][0]].mlp.down_proj
+    seen = []
+
+    def capture(_module, args):
+        seen.append(tuple(args[0].shape))
+
+    def failing_forward():
+        target(torch.ones((1, 1, 9216), dtype=torch.float32))
+        raise RuntimeError("forward raised after registered hook ran")
+
+    with pytest.raises(RuntimeError, match="forward raised after registered hook ran"):
+        with part43._part43_hook_scope(model, "exceptional cleanup control") as registry:
+            registry.register(target, "forward_pre", capture, "full-unit input capture")
+            part43._verify_part43_hooks(model, "before exceptional test forward")
+            failing_forward()
+    assert seen == [(1, 1, 9216)]
+    assert not target._forward_pre_hooks
+    assert all(not module._forward_hooks and not module._forward_pre_hooks for module in model.modules())
+    assert part43._ACTIVE_PART43_HOOK_REGISTRY is None
+
+
+def test_scoped_registry_requires_declared_hook_purpose(monkeypatch):
+    model = TinyModel().to(dtype=torch.float32)
+    target = model.layers[part43.UNITS[0][0]].mlp.down_proj
+    callback = lambda *_args, **_kwargs: None
+    with part43._part43_hook_scope(model, "purpose validation control") as registry:
+        with pytest.raises(part43.CalibrationRefusal, match="declared purpose"):
+            registry.register(target, "forward_pre", callback, "unregistered callback")
+
+
+def test_scoped_registry_refuses_targets_outside_the_model_graph(monkeypatch):
+    model = TinyModel().to(dtype=torch.float32)
+    outside = nn.Linear(4, 4)
+    callback = lambda *_args, **_kwargs: None
+    with part43._part43_hook_scope(model, "target validation control") as registry:
+        with pytest.raises(part43.CalibrationRefusal, match="outside the declared model module graph"):
+            registry.register(outside, "forward_pre", callback, "full-unit input capture")
+
+
+@pytest.mark.parametrize("drift", ["callback", "handle", "handle_id"])
+def test_scoped_registry_refuses_changed_callback_or_missing_handle(monkeypatch, drift):
+    model = TinyModel().to(dtype=torch.float32)
+    target = model.layers[part43.UNITS[0][0]].mlp.down_proj
+    callback = lambda *_args, **_kwargs: None
+    with part43._part43_hook_scope(model, "hook identity control") as registry:
+        handle = registry.register(target, "forward_pre", callback, "full-unit input capture")
+        if drift == "callback":
+            target._forward_pre_hooks[handle.id] = lambda *_args, **_kwargs: None
+        elif drift == "handle_id":
+            callback_value = target._forward_pre_hooks.pop(handle.id)
+            target._forward_pre_hooks[handle.id + 100000] = callback_value
+        else:
+            handle.remove()
+        with pytest.raises(part43.CalibrationRefusal, match="hook"):
+            registry.verify("identity drift control")
+        if drift == "handle_id":
+            target._forward_pre_hooks.pop(handle.id + 100000)
+
+
+def test_fp32_supported_tiny_qwen_graph_passes_helper_and_hook_registry_controls(tmp_path, monkeypatch):
+    _fp32_successor_raw_fixture(_args(tmp_path, protocol="fp32-successor"), monkeypatch)
+    qwen = part43.importlib.import_module(part43.FP32_QWEN_MODULE)
+    text_config = part43.importlib.import_module(
+        "transformers.models.qwen3_5.configuration_qwen3_5"
+    ).Qwen3_5TextConfig
+    causal_lm = qwen.Qwen3_5ForCausalLM
+    config = text_config(
+        vocab_size=32, hidden_size=16, intermediate_size=32, num_hidden_layers=1,
+        num_attention_heads=2, num_key_value_heads=2, head_dim=8,
+        linear_num_key_heads=2, linear_num_value_heads=2,
+        linear_key_head_dim=8, linear_value_head_dim=8,
+    )
+    config._attn_implementation = "eager"
+    model = causal_lm(config).to(dtype=torch.float32)
+    state = part43._fp32_reference_runtime_state(model)
+    assert state["qwen3_5_forward_binding"]["override_detected"] is False
+    assert part43.FP32_LOADER_MODULE_CLASS_ALLOWANCES == (
+        "transformers.modeling_layers.GradientCheckpointingLayer",
+        "transformers.activations.SiLUActivation",
+    )
+
+    target = model.model.layers[0].mlp.down_proj
+    captured = {}
+    captured_again = {}
+
+    def capture(_module, args):
+        captured["input"] = args[0].detach().clone()
+
+    def capture_again(_module, args):
+        captured_again["input"] = args[0].detach().clone()
+
+    with part43._part43_hook_scope(model, "supported tiny Qwen positive control") as registry:
+        handle = registry.register(target, "forward_pre", capture, "down_proj activation capture/clamp")
+        second_handle = registry.register(target, "forward_pre", capture_again, "down_proj activation capture/clamp")
+        assert registry.records[0]["target"] is target
+        assert registry.records[0]["handle"] is handle
+        assert registry.records[0]["callback"] is capture
+        assert registry.records[0]["purpose"] == "down_proj activation capture/clamp"
+        assert registry.records[0]["order"] == 0
+        assert registry.records[1]["target"] is target
+        assert registry.records[1]["handle"] is second_handle
+        assert registry.records[1]["callback"] is capture_again
+        assert registry.records[1]["purpose"] == "down_proj activation capture/clamp"
+        assert registry.records[1]["order"] == 1
+        assert registry.records[1]["phase"] == "supported tiny Qwen positive control"
+        assert list(target._forward_pre_hooks) == [handle.id, second_handle.id]
+        part43._verify_part43_hooks(model, "tiny Qwen pre-forward positive control")
+        model(input_ids=torch.tensor([[1, 2, 3]]), use_cache=False)
+        assert captured["input"].shape[:2] == (1, 3)
+        assert torch.equal(captured["input"], captured_again["input"])
+    assert all(not module._forward_hooks and not module._forward_pre_hooks for module in model.modules())
 
 
 def test_fp32_runtime_state_refuses_non_eager_attention_implementation(tmp_path, monkeypatch):

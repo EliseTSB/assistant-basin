@@ -1,6 +1,6 @@
 ## SUMMARY
 
-- Added an independent, fresh-process fingerprint derivation for the pinned Transformers 5.20.0 Qwen3.5 implementation. Runtime checks compare code content, referenced globals and function closures with checked-in constants at calibration and pilot pre-stage.
+- Added a narrow, fresh-process fingerprint derivation for selected code and bindings in the pinned Transformers 5.20.0 Qwen3.5 implementation. Runtime checks compare those selected items with checked-in constants at calibration and pilot pre-stage; this is not an integrity claim for all executed code or numerical accuracy.
 - Closed the reported binding gaps with an allowlist for loaded module types, instance/class dispatch slot checks, module-global reference checks, and an eager attention requirement set during model load.
 - Restored the BF16 metadata rows to the exact 4b4ac84 shape and digest. Added import-absence, effective hub-state and mixed-TF32 refusal controls.
 - All 144 tests pass. All 12 targeted scratch-copy sabotage cases made their associated test fail when that check was disabled.
