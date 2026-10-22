@@ -69,3 +69,12 @@ Where they disagree: on T1 most of Haiku's 56 misses are the BROKEN flag (Opus c
 | 55k | HELD. Of 30 sampled BROKEN notes, 28 name a breakage that reading the text supports (loops on "Star Trek author", "Earth"; "I is a large language model"; "donEarthedthemor..." non-words; a switch into Chinese). Two caveats: three notes echo the worked example ("matching the worked example pattern"), and one note says "Coherent" for an item labelled BROKEN. |
 | 55l | HELD. haiku-v2 agrees with the reference as often as haiku v1: 87.3% against 87.0% (T1), 99.6% against 99.6% (T2). |
 Reading: for the broken-answer flag every arm is within 2 points of Opus, so Haiku with its rubric is enough. For the three-way origin label Sonnet is about 5 points better than Haiku; low effort helps Haiku (+3.7) more than Sonnet. Sonnet with thinking off over-flags BROKEN (33 false). The NOTE line works for broken items (named breakage kinds) and needs a rule against boilerplate on OK items before it is left on everywhere; v3 should say "say nothing on an OK text unless something is unusual" and not quote a real item in the examples.
+
+## Cost with Haiku 5.5's batch prices (Elise, 2026-10-22 01:22 CT, per million tokens at batch, requests under 100K tokens: input $0.05, output $0.25, cache write $0.0625, cache read $0.005)
+| arm | input | output | cache | total for 2,266 items |
+|---|---|---|---|---|
+| haiku | 774,075 tok = $0.0387 | 11,571 = $0.0029 | none | **$0.042** |
+| haiku-low | 778,607 = $0.0389 | 24,983 = $0.0062 | none | **$0.045** |
+| haiku-v2 | 273,595 uncached = $0.0137 | 81,183 = $0.0203 | 1,783,170 read = $0.0089; 1,706 written = $0.0001 | **$0.043** |
+| sonnet (batch $1.5 / $7.5) | 774,075 = $1.161 | 14,984 = $0.112 | none | **$1.27** |
+Haiku is about 1/30 of Sonnet for this job. Caching cut v2's input cost by 58% (all-uncached would have been $0.103), but the notes added about $0.017 of output, so v2 costs about the same as v1: at these prices output tokens, not input, are what a verbose judge pays for. 55f: HELD on Sonnet and Haiku (Haiku is 1/30 of Sonnet); the Opus line waits for its usage.
