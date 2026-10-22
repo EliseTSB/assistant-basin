@@ -90,9 +90,9 @@ STANDARD-CONTROLS.md item 8. Broken answers (51a.4) wait on the blind reader.
 ## 51d: L22:1610 at its in-context scale (registered 2026-10-21 21:48 CT, before running)
 Same prompts, samples, seeds and scorer as 51a; part51.py push51a --plan 51d. Arms: no clamp; L22:1610 at k 16, 32, 48
 (85, 170, 255; 170 is its level in 51c's magic sentences); R1 and R2 at k 32. 6 x 64 = 384 generations.
-| 51d.1 | Claude: L22:1610 at k 32 raises magic-word density by at least 3 per 1,000 words over no clamp, interval excluding 0. |
-| 51d.2 | Claude: the rise grows from k 16 to k 32 (dose order on the rising side). |
-| 51d.3 | Claude: neither random unit at k 32 raises magic-word density by more than 1 per 1,000 words. |
+| 51d.1 | Claude: L22:1610 at k 32 raises magic-word density by at least 3 per 1,000 words over no clamp, interval excluding 0. | FAILED: +0.69 per 1,000 words, interval [0, 2.07]. |
+| 51d.2 | Claude: the rise grows from k 16 to k 32 (dose order on the rising side). | HELD: +0.23 at 16, +0.69 at 32, +2.13 at 48 (interval [0.70, 4.22], the only one excluding 0). |
+| 51d.3 | Claude: neither random unit at k 32 raises magic-word density by more than 1 per 1,000 words. | HELD: both 0.00. |
 
 ## 51b result (scored 2026-10-21 22:10 CT)
 The default names are strong (Lila and Lena take 40 of 64 named answers in both no-clamp replicates) and the six
@@ -111,3 +111,5 @@ reads where magic words are present (STANDARD-CONTROLS.md item 1), so 51e uses P
 | 51e.2 | Claude: density falls in dose order: -8 above -16 above -32. |
 | 51e.3 | Claude: neither random unit at -32 moves density by more than 30% of no clamp. |
 | 51e.4 | Claude: the -8 arm reproduces 49b's drop within its interval (49b: 0.377 of no clamp, [0.105, 0.564]). |
+
+51d reading: a small, dose-ordered rise that only clears zero at k 48 (2.1 magic words per 1,000, under one per answer set). Pushing the unit up does little to ordinary text; it amplifies magic where magic already is (51c) more than it creates it.
