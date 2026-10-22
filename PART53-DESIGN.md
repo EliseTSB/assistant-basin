@@ -69,3 +69,10 @@ Report: Muse's ~/workspace/research_notes/part53-prior-art-20261022/report.md. V
 - Oozeer et al. (arXiv:2505.24535, K-Steering): avoids the additivity assumption through a classifier gradient; shows the field treats additivity as open; nothing neuron-level.
 - Rimsky et al. (arXiv:2312.06681, CAA): additive benefit on top of a system prompt; additivity assumed.
 Our result sits beside these: two named neurons at three layers' distance, with one direction of coupling in the activity (53d) and a synergy only when both push up.
+
+## Cold review of the Part 53 build (DeepSeek V4.1 Flash, round 1, SHIP-WITH-FIXES, reviews/cheap-part53-build-ds-r1.md in Journal), read after scoring
+None of its seven findings changes a scored row; they change how two tables read:
+- F1 (HIGH, reporting): the "activity" recorded for a CLAMPED unit is the clamp level (the +-85 and +-170 of M and +-33.5 and +-67 of W in the activity grids above are the clamp, not a measurement). Rows 53d and 53e use only the UNCLAMPED unit's cells (M with W clamped; W with M clamped), which is what they were written for.
+- F2: unclamped M activity averages 29.8 against a natural maximum of 5.3, i.e. a clamp of +32 times the natural maximum (170) is about 5.7 times the in-context mean, not "32 times". The dose scale is in natural-max units throughout, as in Parts 49 to 51.
+- F4 and F5: partial or unmatched blind labels would have been reported as a complete rate; the final 53g run matched all 960 labels (merge printed 960).
+- F3, F6, F7 (recorder reuse, a test gap for the token position, 0.0 ratio versus null at a zero density): noted; the scored run used one recorder per run and fresh rows.
