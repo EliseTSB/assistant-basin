@@ -1748,3 +1748,16 @@ prompts; nothing here is a finding yet. Broken-answer rates are pending the blin
 | 50.3 | Claude: in Qwen3-1.7B-Base, the bundle score is under half of the chat model's, at a matched lie shift. | | |
 | 50.4 | Claude: across the 135 traits, the chat and base models' change vectors correlate under 0.4 (the bundle's shape is post-trained, not only its size). | | |
 | 50.5 | Claude: after the yes-bias split and confidence-trend removal, the chat model keeps at least 10 traits at FDR 5%. | | |
+
+## Part 51: L22:1610 up on everyday text, and stock names under random pushes (written 2026-10-21 20:32 CT, before any run). Design: PART51-DESIGN.md.
+
+| id | prediction | status | result |
+|---|---|---|---|
+| 51a.1 | Claude: L22:1610 at +8 raises magic-word density by at least 3 per 1,000 words over no clamp, interval excluding 0. | PENDING | |
+| 51a.2 | Claude: none of the three random L22 units at +8 raises it by more than 1 per 1,000 words. | PENDING | |
+| 51a.3 | Claude: the +4 arm's rise lies between no clamp and the +8 arm. | PENDING | |
+| 51a.4 | Claude: the +8 arm's broken-answer share is no more than 20 points above no clamp. | PENDING | |
+| 51b.1 | Claude: replicate B's stock share is at least 40% (the attractor exists in this model). | PENDING | |
+| 51b.2 | Claude: pooled over the six random arms, the stock share is at least 15 points below replicate B, bootstrap interval over prompts excluding 0. | PENDING | |
+| 51b.3 | Claude: at least four of the six random arms are individually below replicate B. | PENDING | |
+| 51b.4 | Claude: no random arm's NONAME share is more than 15 points above replicate B (the drop is not instruction following breaking). | PENDING | |
