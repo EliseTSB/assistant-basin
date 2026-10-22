@@ -101,3 +101,13 @@ they share. These randomly drawn units at +/-8 barely changed the text at all, s
 nothing move names" (no). The 49b observation came from pushes that did change the text (R1 cut possessives). Reading:
 names are not especially fragile; they move when the text moves. A fair test of fragility would compare name change
 against how much the rest of the answer changed, per push. Not run.
+
+## 51e: L22:1610 pushed DOWN at the in-context scale (registered 2026-10-21 22:18 CT, before running)
+Elise, 22:17: "Are you running positive and negative pushes on the magic neuron?" 51d is positive only; a negative push
+reads where magic words are present (STANDARD-CONTROLS.md item 1), so 51e uses Part 49b's 16 wizard prompts
+(data/part49b-wizard-prompts.json), same scorer (magic stems, prompt stems excluded): part51.py push51a --plan 51e
+--data that file. Arms: no clamp; L22:1610 at k -8, -16, -32; R1 and R2 at k -32. 6 x 64 = 384 generations.
+| 51e.1 | Claude: at k -32 magic-word density falls to at most 20% of no clamp, interval excluding no change. |
+| 51e.2 | Claude: density falls in dose order: -8 above -16 above -32. |
+| 51e.3 | Claude: neither random unit at -32 moves density by more than 30% of no clamp. |
+| 51e.4 | Claude: the -8 arm reproduces 49b's drop within its interval (49b: 0.377 of no clamp, [0.105, 0.564]). |
