@@ -1756,7 +1756,7 @@ prompts; nothing here is a finding yet. Broken-answer rates are pending the blin
 | 51a.1 | Claude: L22:1610 at +8 raises magic-word density by at least 3 per 1,000 words over no clamp, interval excluding 0. | FAILED | magic-word density 0.00 per 1,000 words in every arm, no clamp included; +8 adds nothing. |
 | 51a.2 | Claude: none of the three random L22 units at +8 raises it by more than 1 per 1,000 words. | HELD | all three random units also 0.00. |
 | 51a.3 | Claude: the +4 arm's rise lies between no clamp and the +8 arm. | HELD (vacuous) | +4 is 0.00, so it lies between no clamp and +8 only because every arm is zero. |
-| 51a.4 | Claude: the +8 arm's broken-answer share is no more than 20 points above no clamp. | PENDING | |
+| 51a.4 | Claude: the +8 arm's broken-answer share is no more than 20 points above no clamp. | held | blind reader (Opus 5.5 batch, 20/20 calibration): +8 arm 0/64 broken against no clamp 0/64; every 51a arm 0/64. |
 | 51a.L1 | Claude, from the J lens: R1 (L22:569) at +8 lowers possessives (my, your, our, their, his, her) per 1,000 words by at least 30% of no clamp. | HELD | R1 (L22:569) at +8: possessives 2.7 per 1,000 words against 14.5 with no clamp (an 81% drop); R2 16.0, R3 14.0, L22:1610 14.7. |
 | 51a.L2 | Claude, from the J lens: R1 at +8 raises reflexives per 1,000 words above no clamp in at least 8 of the 16 prompt means. | FAILED | reflexives fell, 0.75 to 0.25 per 1,000 words, not rose. |
 | 51a.L3 | Claude, from the J lens: R3 (L22:5258) at +8 raises depend/peer/trans words per 1,000 words above no clamp. | FAILED | depend/peer/trans words 1.74 against 1.75 per 1,000 words. |

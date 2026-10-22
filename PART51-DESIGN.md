@@ -115,3 +115,11 @@ reads where magic words are present (STANDARD-CONTROLS.md item 1), so 51e uses P
 51d reading: a small, dose-ordered rise that only clears zero at k 48 (2.1 magic words per 1,000, under one per answer set). Pushing the unit up does little to ordinary text; it amplifies magic where magic already is (51c) more than it creates it.
 
 51e reading: the magic unit's negative push replicates (0.386 against 49b's 0.377) and deepens with dose, flattening near a fifth of normal. At -32 a strong random unit (R1) also cuts magic words by about half, with a wide interval, so at that strength specificity weakens: past about -16 the push changes the text broadly, not only its magic.
+
+## Broken-answer rates from the blind reader (Opus 5.5 batch, 20/20 calibration, 2026-10-21 23:3x CT)
+- 51a (64 answers per arm): 0/64 broken in every arm, including +4 and +8 and no clamp.
+- 51d: L22:1610 at k 16/32/48: 1/64, 0/64, 0/64; no clamp 0/64; R2 at +32 0/64; R1 (L22:569) at +32 3/64.
+- 51e: L22:1610 at k -8/-16/-32: 0/64 each; no clamp 0/64; R2 at -32 0/64; **R1 (L22:569) at -32: 60/64 broken**
+  (read by hand: a looping "Our Our Our...", invented words, "Myrland" repeated). So 51e.3's finding that R1 at -32
+  also lowers magic words is the text breaking, not a magic effect. The target unit's drop to 0.21 of no clamp comes
+  from clean text. Exploratory reading of 51e.3; the registered row stays as scored (failed).
