@@ -86,3 +86,11 @@ The first live run (temperature removed after Haiku 5.5 rejected it) collected 3
 2. **Residual rule.** After normalization, residual failures are listed by id and left unscored, and the gate passes only if the residual is at most 1% of distinct requests and calibration passed. The analysis table already reports failed and unlabelled counts per scheme. The strict (registered) gate result is kept beside it: strict gate FAILED, 370 failed.
 3. **Strict file untouched.** The lenient labels are written to a new file; the strict file `labels63-run-all.json` stays as collected.
 4. **No new paid call.** The reparse only GETs the stored batch results.
+
+## Amendment 4 to Part 62 (2026-10-23 ~11:3x CT, before any Part 62 run; from the Haiku round-1 review of fold 6)
+**Calibration pool.** Amendment 2 said "120 already-labelled Part 54a origin answers", but Part 54a alone has 465
+eligible rows (421 NEITHER, 42 OFFWORLD, 2 EARTH), so a balanced 120 cannot come from it. The registered pool is
+the labelled origin answers of Parts 54a, 54b, 26.8 and 59a (what blind62.py:71 already draws), seeded and balanced
+across OFFWORLD, EARTH and NEITHER as far as the counts allow; the realized class counts and sample ids are recorded.
+**A retired calibration chunk is not a failed calibration.** It does not unlock the Opus fallback; an explicit
+operator command re-runs calibration with a new reserve.
