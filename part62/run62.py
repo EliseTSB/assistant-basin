@@ -171,16 +171,39 @@ def condition_seed(base_seed: int, model: str, dose: float, phase: str,
     return int.from_bytes(hashlib.sha256(payload).digest()[:SEED_DIGEST_BYTES], "little") & ((1 << SEED_BITS) - 1)
 
 
+def paired_sample_seeds(base_seed: int, model: str, dose: float,
+                        question: str, sample_count: int = SAMPLES) -> list[int]:
+    """Derive sample streams paired across phases and independent across doses."""
+    try:
+        question_index = QUESTIONS.index(question)
+    except ValueError as exc:
+        raise ValueError(f"unregistered Part 62 question: {question!r}") from exc
+    seeds = []
+    for sample_index in range(sample_count):
+        fields = (str(base_seed), model, format(float(dose), ".8g"),
+                  str(question_index), str(sample_index))
+        payload = "|".join(fields).encode("utf-8")
+        seeds.append(int.from_bytes(hashlib.sha256(payload).digest()[:SEED_DIGEST_BYTES],
+                                    "little") & ((1 << SEED_BITS) - 1))
+    return seeds
+
+
 def cell_parameters(base_seed: int, cell: dict, pile_maximum: float,
                     target_column_norm: float, control_column_norm: float) -> dict:
     """Compute the exact seed and set-value amplitude used for one writer cell."""
-    seed = condition_seed(base_seed, cell["model"], cell["dose"], cell["phase"],
-                         cell["question"], cell["kind"], cell["unit"])
+    if cell["kind"] == "twin":
+        seeds = paired_sample_seeds(base_seed, cell["model"], cell["dose"], cell["question"])
+    else:
+        control_seed = condition_seed(base_seed, cell["model"], cell["dose"], "control",
+                                      cell["question"], cell["kind"], cell["unit"])
+        seeds = [int.from_bytes(hashlib.sha256(f"{control_seed}|{i}".encode()).digest()[:8],
+                                "little") & ((1 << SEED_BITS) - 1) for i in range(SAMPLES)]
     set_value = float(cell["dose"]) * float(pile_maximum)
     if cell["kind"] == "control":
         set_value *= float(target_column_norm) / float(control_column_norm)
     return {
-        "seed": seed,
+        "seed": seeds[0],
+        "seeds": seeds,
         "set_value": set_value,
         "target_equivalent_set_value_norm": (
             float(cell["dose"]) * float(pile_maximum) * float(target_column_norm)),
@@ -351,25 +374,31 @@ def make_phase_hook(down_proj, unit: int, value: float, phase: str,
 
 
 def generate_condition(tok, model, down_proj, prompt_ids: dict, spec: dict,
-                       unit: int, set_value: float, seed: int, device: str) -> dict:
+                       unit: int, set_value: float, seeds: int | list[int], device: str) -> dict:
     """Generate one eight-answer cell with the real phase-aware NeuronHook."""
     torch, _nr, p26 = _experiment_modules()
     prompt_length = int(prompt_ids["input_ids"].shape[-1])
     hook = make_phase_hook(down_proj, unit, set_value, spec["phase"],
                            prompt_length=prompt_length)
     try:
-        torch.manual_seed(seed)
-        with torch.inference_mode():
-            generated = model.generate(
-                **prompt_ids,
-                max_new_tokens=MAX_NEW_TOKENS,
-                pad_token_id=tok.pad_token_id,
-                eos_token_id=p26._eos_ids(tok, model) or None,
-                do_sample=True,
-                temperature=TEMPERATURE,
-                top_p=TOP_P,
-                num_return_sequences=SAMPLES,
-            )
+        sample_seeds = seeds if isinstance(seeds, list) else [int(seeds)]
+        if len(sample_seeds) != SAMPLES:
+            raise ValueError(f"generation requires {SAMPLES} sample seeds")
+        generated = []
+        for sample_seed in sample_seeds:
+            torch.manual_seed(int(sample_seed))
+            with torch.inference_mode():
+                one = model.generate(
+                    **prompt_ids,
+                    max_new_tokens=MAX_NEW_TOKENS,
+                    pad_token_id=tok.pad_token_id,
+                    eos_token_id=p26._eos_ids(tok, model) or None,
+                    do_sample=True,
+                    temperature=TEMPERATURE,
+                    top_p=TOP_P,
+                    num_return_sequences=1,
+                )
+            generated.extend(one)
         prefix_len = int(prompt_ids["input_ids"].shape[-1])
         answers = [tok.decode(sequence[prefix_len:], skip_special_tokens=True).strip()
                    for sequence in generated]
@@ -377,7 +406,8 @@ def generate_condition(tok, model, down_proj, prompt_ids: dict, spec: dict,
             raise RuntimeError(f"generation produced {len(answers)} answer(s); expected {SAMPLES}")
         return {"condition": "twin" if spec["kind"] == "twin" else f"control-{unit}",
                 "kind": spec["kind"], "unit": int(unit), "set_value": float(set_value),
-                "seed": int(seed), "phase": spec["phase"], "n": len(answers), "answers": answers}
+                "seed": int(sample_seeds[0]), "seeds": [int(x) for x in sample_seeds],
+                "phase": spec["phase"], "n": len(answers), "answers": answers}
     finally:
         hook.clamp = None
         hook.remove()
@@ -473,6 +503,7 @@ def _validate_resumable_cell(path: Path, cell: dict, model_meta: dict,
     condition = conditions[0]
     answers = condition.get("answers")
     if (condition.get("seed") != parameters["seed"]
+            or condition.get("seeds") != parameters["seeds"]
             or condition.get("unit") != cell["unit"]
             or condition.get("phase") != cell["phase"]
             or condition.get("kind") != cell["kind"]
@@ -619,6 +650,8 @@ def _run_model(model_name: str, out_dir: Path, manifest: dict, pile_maximum: flo
         if spec["unit"] >= width:
             raise ValueError(f"registered target unit {spec['unit']} is outside {model_name} width {width}")
         control_unit = int(spec["control_unit"])
+        if int(nr.control_units(width, int(spec["unit"]), 1, CONTROL_SEED)[0]) != control_unit:
+            raise ValueError(f"registered control unit does not reproduce for {model_name}")
         if control_unit == spec["unit"] or not 0 <= control_unit < width:
             raise ValueError(f"registered control unit {control_unit} is invalid for {model_name}")
         frame_maximum, frame_count = _scale_frames(tok, model, down_proj, spec["layer"],
@@ -672,12 +705,12 @@ def _run_model(model_name: str, out_dir: Path, manifest: dict, pile_maximum: flo
                 raise ValueError(f"manifest-listed completed cell is missing: {filename}")
             if saved_fingerprint is not None:
                 raise ValueError(f"manifest has a fingerprint for missing cell {filename}")
-            seed = parameters["seed"]
+            seeds = parameters["seeds"]
             set_value = parameters["set_value"]
             prompt = nr.build_prompt(tok, cell["question"], False)
             prompt_ids = tok(prompt, return_tensors="pt", add_special_tokens=False).to(device)
             condition = generate_condition(tok, model, down_proj, prompt_ids, cell,
-                                           condition_unit, set_value, seed, device)
+                                           condition_unit, set_value, seeds, device)
             condition.update({
                 "target_unit": spec["unit"],
                 "target_pile_maximum": pile_maximum,

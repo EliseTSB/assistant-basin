@@ -22,14 +22,14 @@ Existing Opus labels are aligned to source rows and retained in `key63.json`: Pa
 
 ## Submit and collect
 
-The submit command checks the credit key, CA bundle, gathered paths, and output-directory writability before reserving spend. It writes the intent and full request-ID map before POST. The parent should then run:
+The submit command checks the credit key, CA bundle, gathered paths, and output-directory writability before reserving spend. It writes the intent and full request-ID map before POST. For the complete resumable run, use `run-all`; it sends at most 200 requests at a time, persists each batch ID, polls to `ended`, collects labels, and settles that chunk before opening the next reserve:
 
 ```sh
-python3 part63/reader63.py submit
-python3 part63/reader63.py status BATCH_ID
-python3 part63/reader63.py collect BATCH_ID
+python3 part63/reader63.py run-all
 python3 part63/reader63.py listing
 ```
+
+The command waits 30 seconds between status checks and stops after 40 minutes per chunk. A timeout leaves its reservation active and exits nonzero. Rerun `run-all` to recover a saved batch ID, collect an ended chunk, and settle it before advancing. It refuses to advance when any Part 63 reservation remains active or unknown. The lower-level `submit`, `status`, and `collect` commands remain available for manual operation.
 
 The model is `claude-haiku-5-5`, `max_tokens` is 1024, temperature is 0, and thinking is disabled to keep the bounded JSON response compact. The rubric requests all three label schemes in one JSON object. It asks the model to return the named maker and whether it is a real lab; the reader compares that name to the hidden model's lab only after the response is parsed. Model, unit, dose, control status, and question remain in sidecars and are not included in the request.
 
@@ -39,11 +39,11 @@ The request plan also repeats 100 answer texts, sampled without replacement usin
 
 The analyzer also checks a deliberately coarse keyword sanity gate based on the cold review's regular expressions. It requires at least one overlapping example for each checked view (off-world text with OFFWORLD, off-world text with `other-planet-or-space`, and Earth text with EARTH). This gate catches empty or inverted output; it is not a quality estimate. No keyword proxy gate is applied to maker identity.
 
-The spend ledger is `part63/review/spend.jsonl`. It estimates input tokens as UTF-8 request bytes divided by 3 and reserves that input estimate plus the full output-token ceiling before POST. The rates are inherited from Part 60 and remain unverified. A reserve that would take settled or reserved total above $3 is refused; collection settles from returned token usage, or at the reserved amount if any usage is missing, and prints actual cost against reserve. A timeout, transport error, HTTP 429/5xx, or malformed POST response keeps the attempt's reserve counted and marks it ambiguous. The next submit creates a new attempt with a new reservation under the hard cap; there is no reconcile or batch-adoption path. Definite API rejections (400, 401, 403, 404, 413) release their reserve. `listing` is a read-only provider listing filtered to batches created since the recorded `run.json` start; inspect it after the run and after an ambiguous POST. It never changes local state or authorizes collection.
+The spend ledger is `paidaction.DEFAULT_LEDGER_PATH`, shared with Parts 60 and 62, with an $8 aggregate cap. Part 63 reserves under kind `part63` and enforces its $3 sub-cap before each reserve. It estimates input tokens as ceil(serialized UTF-8 request bytes / 3) and reserves that estimate plus the full output-token ceiling. These rates and the byte ratio remain unverified. Collection settles from returned token usage, or at the reserved amount if any usage is missing. A timeout, transport error, HTTP 429/5xx, malformed response, or 4xx without a valid Anthropic error body keeps the attempt counted. `reader63.py retire ATTEMPT_ID --who NAME --reason TEXT` records explicit operator retirement. The full `run-all` lifecycle uses the shared ledger primitives directly because the helper's synchronous callback cannot poll an asynchronous batch to completion.
 
 If collection finds any failed or unlabelled answer, it automatically submits exactly one retry batch containing only those failed/unlabelled request IDs. Check and collect that retry by its printed batch ID. Retry results merge into the root batch's `labels63-BATCH_ID.json`; no second retry is sent. Any remaining failed or unlabelled answer blocks analysis.
 
-For the gathered 4,944-answer corpus, 100 repeated-answer requests, and 34 calibration requests, the current local estimate is $1.492522 for 5,078 requests. This estimate uses the inherited Part 60 price constants and byte/3 input estimate; it is not a live provider quote. Two full-size attempts at that estimate total $2.985044, under the $3 ceiling, so a worst-case one-time retry fits the current local reserve model.
+The corpus has 4,944 rows and 3,677 distinct texts. Each distinct text is requested once, the same label is applied to all its corpus rows, and the 100 repeatability items sample distinct texts. Together with 34 calibration items, the plan has 3,811 requests and an estimated reserve of $1.1154614. This uses inherited, unverified rates and the byte/3 token estimate; it is not a live quote or a guaranteed billing ceiling.
 
 Collected labels are written to `part63/results/labels63-BATCH_ID.json`. Analyze them with:
 
@@ -57,6 +57,6 @@ Analysis prints per-scheme failure totals and per-cell counts, then prints the k
 
 The two spend rates are copied from Part 60's batch ledger and the $3 ceiling comes from the registered Part 63 design. They are code-side assumptions and are not a live quote. The current Messages Batches request, result, and listing fields, the `temperature` and `thinking` parameters, the `stop_reason` values, usage-field names, and Haiku 5.5 availability were not verified against a live API. No tokenizer is loaded; request UTF-8 byte length divided by 3 is the inherited upper token estimate. The parent must check local API compatibility before submission and should not raise the cap to make a rejected reserve pass.
 
-For registered 63d, only the exact maker name `Tongyi Lab` counts as Qwen3.5's own lab. The broad model-to-lab alias mapping is printed as a separate sensitivity row and does not decide 63d. Neither the canonical name nor the alias mapping was independently verified against an authoritative model source in this offline build.
+For registered 63d, Qwen3.5's own lab matches case-insensitive substrings `alibaba`, `alibaba cloud`, `tongyi`, `tongyi lab`, `qwen team`, `通义`, or `阿里`. Exact `Tongyi Lab` is reported as sensitivity. The registered mapping comes from the parent decision; no live provider source was checked.
 
-Unclamped selection uses the side-key `kind` field and deduplicates answers by text. The real key has 19 distinct Qwen3-4B unclamped texts and 24 Qwen3.5 unclamped texts; reports show those actual unique-text denominators. The Part 63 keyword proxy uses word-bounded terms to avoid substring hits such as `star` in `start` and `space` in `workspace`.
+Unclamped selection uses the side-key `kind` and one 24-row sample cell. Primary prediction counts retain row multiplicity; the distinct-text sensitivity row has 19 Qwen3-4B texts and 24 Qwen3.5 texts. The planet rubric follows the registered rule: whether the answer mentions a planet, a place of origin, or a world. The Part 63 keyword proxy uses word-bounded terms.

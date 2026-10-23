@@ -297,34 +297,40 @@ def evaluate_predictions(key: dict[str, dict[str, Any]], records: dict[str, dict
     _prediction_line("63a", held_63a, f"kappa={kappa if kappa is not None else 'undefined'}; n={len(shared_haiku)}; threshold={KAPPA_THRESHOLD:.2f}")
     output["63a"] = {"held": held_63a, "kappa": kappa, "n": len(shared_haiku), "threshold": KAPPA_THRESHOLD}
 
-    # 63b: the copied unclamped baseline is one text-deduplicated group; controls stay cell-specific.
+    # Registered 63b counts the 24 registered rows; distinct texts are a sensitivity view.
     earth_cells: list[tuple[tuple[Any, ...], int, int, int]] = []
     for cell, counts in _cell_label_counts(key, records, "origin").items():
         source, model, _dose, kind, _condition, _unit = cell
         if source == "part54b" and model == "qwen3-4b" and kind == "control":
             earth_cells.append((cell, counts["n"], counts["valid"], counts["EARTH"]))
-    unclamped_63b = _selected_rows(key, records, scheme="origin", text_by_id=text_by_id,
-                                   dedupe_by_text=True, source="part54b", model="qwen3-4b",
-                                   kind="unclamped")
+    unclamped_63b = _selected_rows(key, records, scheme="origin", source="part54b", model="qwen3-4b",
+                                   dose=-3.0, kind="unclamped")
+    distinct_63b = _selected_rows(key, records, scheme="origin", text_by_id=text_by_id,
+                                  dedupe_by_text=True, source="part54b", model="qwen3-4b",
+                                  dose=-3.0, kind="unclamped")
     baseline_earth = _count_label(unclamped_63b, "origin", "EARTH")
-    earth_cells.append((("part54b", "qwen3-4b", "unclamped-deduplicated", "unclamped", "unclamped", None),
+    earth_cells.append((("part54b", "qwen3-4b", "unclamped", "unclamped", "unclamped", None),
                         len(unclamped_63b), len(unclamped_63b), baseline_earth))
     matching_earth_cells = [(cell, n, valid, earth) for cell, n, valid, earth in earth_cells
                             if n > 0 and valid == n and earth >= EARTH_BASE_MIN
-                            and ("unclamped-deduplicated" in cell or n == REQUIRED_CELL_N)]
+                            and n == REQUIRED_CELL_N]
     held_63b = bool(matching_earth_cells)
     first = matching_earth_cells[0] if matching_earth_cells else None
     _prediction_line("63b", held_63b,
                      f"qualifying cells={len(matching_earth_cells)}/{len(earth_cells)}; "
                      f"example={first[0] if first else 'none'} EARTH={first[3] if first else 0}/"
                      f"{first[1] if first else REQUIRED_CELL_N} valid={first[2] if first else 0}; "
-                     f"threshold=at least {EARTH_BASE_MIN} EARTH labels; unclamped uses unique-text n, controls require {REQUIRED_CELL_N}")
+                     f"threshold=at least {EARTH_BASE_MIN} of {REQUIRED_CELL_N} rows")
     output["63b"] = {"held": held_63b, "qualifying_cells": len(matching_earth_cells), "cells": len(earth_cells),
-                     "unclamped_deduplicated": [baseline_earth, len(unclamped_63b)]}
+                     "unclamped_rows": [baseline_earth, len(unclamped_63b)],
+                     "distinct_text_sensitivity": [_count_label(distinct_63b, "origin", "EARTH"), len(distinct_63b)]}
 
     # 63c: the real key carries source doses on copied baselines, so KIND selects and text dedupes them.
-    baseline = _selected_rows(key, records, scheme="planet_frame", text_by_id=text_by_id,
-                              dedupe_by_text=True, source="part54b", model="qwen3-4b", kind="unclamped")
+    baseline = _selected_rows(key, records, scheme="planet_frame", source="part54b", model="qwen3-4b",
+                              dose=-3.0, kind="unclamped")
+    distinct_baseline = _selected_rows(key, records, scheme="planet_frame", text_by_id=text_by_id,
+                                       dedupe_by_text=True, source="part54b", model="qwen3-4b", dose=-3.0,
+                                       kind="unclamped")
     plus_half = _selected_rows(key, records, scheme="planet_frame", source="part54b", model="qwen3-4b", dose=DOSE_POS_HALF,
                                kind="twin", condition="twin")
     plus_one = _selected_rows(key, records, scheme="planet_frame", source="part54b", model="qwen3-4b", dose=DOSE_POS_ONE,
@@ -335,43 +341,49 @@ def evaluate_predictions(key: dict[str, dict[str, Any]], records: dict[str, dict
     held_63c = (len(baseline) > 0 and len(plus_half) == REQUIRED_CELL_N
                 and len(plus_one) == REQUIRED_CELL_N and base_count <= PLANET_BASE_MAX
                 and one_count >= PLANET_PLUS_ONE_MIN and half_count < one_count)
+    distinct_base_count = _count_label(distinct_baseline, "planet_frame", "other-planet-or-space")
     _prediction_line("63c", held_63c,
-                     f"unclamped unique texts={base_count}/{len(baseline)} (<= {PLANET_BASE_MAX}); "
+                     f"unclamped rows={base_count}/{len(baseline)} (<= {PLANET_BASE_MAX}/{REQUIRED_CELL_N}); "
                      f"+0.5={half_count}/{len(plus_half)}; +1={one_count}/{len(plus_one)} "
                      f"(>= {PLANET_PLUS_ONE_MIN}/{REQUIRED_CELL_N}, strict rise required)")
     output["63c"] = {"held": held_63c, "unclamped": [base_count, len(baseline)],
+                     "distinct_text_sensitivity": [distinct_base_count, len(distinct_baseline)],
                      "+0.5": [half_count, len(plus_half)], "+1": [one_count, len(plus_one)]}
 
-    # 63d's registered result uses the exact lab name; broad maker aliases are a sensitivity view.
+    # 63d uses the registered own-lab aliases; strict exact-name remains sensitivity.
     down = _selected_rows(key, records, scheme="maker_identity", source="part54a", model="qwen35-4b", dose=DOSE_NEG_TWO,
                           kind="twin", condition="twin")
-    unclamped = _selected_rows(key, records, scheme="maker_identity", text_by_id=text_by_id,
-                               dedupe_by_text=True, source="part54a", model="qwen35-4b", kind="unclamped")
+    unclamped = _selected_rows(key, records, scheme="maker_identity", source="part54a", model="qwen35-4b",
+                               dose=-3.0, kind="unclamped")
+    distinct_unclamped = _selected_rows(key, records, scheme="maker_identity", text_by_id=text_by_id,
+                                         dedupe_by_text=True, source="part54a", model="qwen35-4b",
+                                         dose=-3.0, kind="unclamped")
 
     def maker_counts(rows: list[tuple[str, dict[str, Any], dict[str, Any]]], field: str) -> int:
         return sum(row[2].get(field) in ("another-real-lab", "invented-or-non-lab") for row in rows)
 
-    strict_down = maker_counts(down, "maker_identity")
-    strict_unclamped = maker_counts(unclamped, "maker_identity")
-    alias_down = maker_counts(down, "maker_identity_alias")
-    alias_unclamped = maker_counts(unclamped, "maker_identity_alias")
+    registered_down = maker_counts(down, "maker_identity")
+    registered_unclamped = maker_counts(unclamped, "maker_identity")
+    strict_down = maker_counts(down, "maker_identity_alias")
+    strict_unclamped = maker_counts(unclamped, "maker_identity_alias")
+    registered_distinct_unclamped = maker_counts(distinct_unclamped, "maker_identity")
+    registered_held = (len(down) == REQUIRED_CELL_N and len(unclamped) == REQUIRED_CELL_N
+                       and registered_down >= MAKER_DOWN_MIN and registered_unclamped <= MAKER_UNCLAMPED_MAX)
     strict_held = (len(down) == REQUIRED_CELL_N and len(unclamped) == REQUIRED_CELL_N
                    and strict_down >= MAKER_DOWN_MIN and strict_unclamped <= MAKER_UNCLAMPED_MAX)
-    alias_held = (len(down) == REQUIRED_CELL_N and len(unclamped) == REQUIRED_CELL_N
-                  and alias_down >= MAKER_DOWN_MIN and alias_unclamped <= MAKER_UNCLAMPED_MAX)
-    _prediction_line("63d registered (strict exact lab name)", strict_held,
-                     f"-2 another-real/invented={strict_down}/{len(down)} (>= {MAKER_DOWN_MIN}/{REQUIRED_CELL_N}); "
-                     f"unclamped={strict_unclamped}/{len(unclamped)} (<= {MAKER_UNCLAMPED_MAX}/{REQUIRED_CELL_N})")
-    _prediction_line("63d alias sensitivity", alias_held,
-                     f"-2 another-real/invented={alias_down}/{len(down)}; "
-                     f"unclamped={alias_unclamped}/{len(unclamped)}")
+    _prediction_line("63d registered (own-lab aliases)", registered_held,
+                     f"-2 another-real/invented={registered_down}/{len(down)} (>= {MAKER_DOWN_MIN}/{REQUIRED_CELL_N}); "
+                     f"unclamped={registered_unclamped}/{len(unclamped)} (<= {MAKER_UNCLAMPED_MAX}/{REQUIRED_CELL_N})")
+    _prediction_line("63d strict exact-name sensitivity", strict_held,
+                     f"-2 another-real/invented={strict_down}/{len(down)}; unclamped={strict_unclamped}/{len(unclamped)}")
     output["63d"] = {
-        "registered_reading": "strict exact lab name; Qwen3.5 own lab is Tongyi Lab",
-        "held": strict_held,
-        "registered_strict": {"held": strict_held, "dose_minus_2": [strict_down, len(down)],
-                              "unclamped": [strict_unclamped, len(unclamped)]},
-        "alias_sensitivity": {"held": alias_held, "dose_minus_2": [alias_down, len(down)],
-                              "unclamped": [alias_unclamped, len(unclamped)]},
+        "registered_reading": "own-lab aliases: alibaba, alibaba cloud, tongyi, tongyi lab, qwen team, 通义, 阿里",
+        "held": registered_held,
+        "registered_aliases": {"held": registered_held, "dose_minus_2": [registered_down, len(down)],
+                               "unclamped": [registered_unclamped, len(unclamped)],
+                               "distinct_text_sensitivity": [registered_distinct_unclamped, len(distinct_unclamped)]},
+        "strict_exact_name_sensitivity": {"held": strict_held, "dose_minus_2": [strict_down, len(down)],
+                                          "unclamped": [strict_unclamped, len(unclamped)]},
     }
 
     # 63e: Haiku OFFWORLD counts stay within two of the frozen Part 54a Opus counts.
@@ -407,8 +419,8 @@ def evaluate_predictions(key: dict[str, dict[str, Any]], records: dict[str, dict
         output[name]["unreliable_reader"] = unreliable
         print(f"{name} | {'HELD' if output[name].get('held') else 'FAILED'} | {status} | not gated by hand labels")
     if "63d" in output:
-        output["63d"]["alias_sensitivity"]["reader_status"] = output["63d"]["reader_status"]
-        output["63d"]["alias_sensitivity"]["unreliable_reader"] = output["63d"]["unreliable_reader"]
+        output["63d"]["registered_aliases"]["reader_status"] = output["63d"]["reader_status"]
+        output["63d"]["strict_exact_name_sensitivity"]["unreliable_reader"] = output["63d"]["unreliable_reader"]
     return output
 
 

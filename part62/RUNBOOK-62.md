@@ -42,7 +42,10 @@ The runner writes one atomic JSON file per model, dose, phase, question, or
 scaled-control cell under `results/part62/`. It writes and updates
 `part62-manifest.json` after each successful cell. A complete manifest records
 each condition seed, target and control set values, both down-projection
-column norms, the alien-frame maximum, and the generated answers. After a kill,
+column norms, the alien-frame maximum, and the generated answers. For each
+model, dose, question, and sample index, the `both`, `gen`, and `prompt` phases
+share one recorded seed; different doses use independent derived seeds. Samples
+are generated one at a time to preserve this pairing. After a kill,
 rerun the same command into the same output directory. Resume checks the run
 fingerprint and every existing cell fingerprint and file hash; a different
 seed, device, input, code, cell spec, or runtime measurement is refused without
@@ -59,66 +62,39 @@ counts are exploratory and do not substitute for blind labels.
 
 ## Blind labels
 
-After retrieving the archive, run the reader from the project root:
+After retrieving the archive, run the paid reader from the project root:
 
 ```sh
 python3 part62/blind62.py submit --folder results/part62 --review-dir results/part62-review
-python3 part62/blind62.py status BATCH_ID --review-dir results/part62-review
-python3 part62/blind62.py collect BATCH_ID --review-dir results/part62-review
 ```
 
-The registered default reader is Claude Haiku 5.5 (`claude-haiku-5-5`) with a
-separate hard cumulative cap of $4. If and only if collection writes a failed
-Haiku calibration record, an operator may explicitly submit the fallback with
-`blind62.py submit --reader opus`; that path uses Claude Opus 5.5 and its own
-separate $8 cap and ledger. It never starts automatically. Each batch, labels
-record, analysis result, and printed status identifies the reader/model.
-Both readers require `max_tokens >= 1024`. The 34 hand-labelled Part 59A texts
-are reused with mapped origin labels (EARTH-REAL→EARTH, SCIFI→OFFWORLD, and
-FANTASY/OTHER→NEITHER), retaining the OK/BROKEN judgments; more than two
-errors or any unverified/truncated calibration response fails the hard gate.
+The default reader is Claude Haiku 5.5 (`claude-haiku-5-5`). A calibration-only
+batch runs first on 120 seeded, balanced, already-labelled Part 54a origin
+answers (40 EARTH, 40 OFFWORLD, 40 NEITHER). The sample ids and seed are stored
+with the result. Together with the 1,536 experiment answers, this makes 1,656
+reader requests. Haiku must agree with the historical Opus labels at Cohen's
+kappa >= 0.8, with no unlabelled or truncated calibration responses. The
+calibration batch output usage is measured before the answer requests are
+submitted, and its observed output length sets their token headroom.
 
-Before submitting, source the credit key without printing it and confirm the CA
-bundle and review directory are present. The code checks `ANTHROPIC_CREDITS_KEY`,
-the `ANTHROPIC_CA_BUNDLE` path (default `~/.mitmproxy/ca-bundle-combined.crt`),
-the complete writer files, and review-directory writability before reserving.
-For example:
-
-```sh
-set -a
-. ~/.anthropic-credits.env
-set +a
-test -n "$ANTHROPIC_CREDITS_KEY"
-```
-
-The project design lists the current credit key as expiring 2026-10-24. Plan the
-reader step before then.
+All Part 62 reader attempts use `paidaction.DEFAULT_LEDGER_PATH`, shared across
+review directories and parts, with the library's $8 aggregate ceiling. Haiku's
+reservations are additionally constrained to its $4 `part62-haiku` kind-tag
+sub-cap. An Opus fallback (`--reader opus`) is explicit and is allowed only
+after a failed Haiku calibration record has been saved; its spend counts inside
+the same aggregate $8 cap. Requests are submitted in sequential chunks of 200.
+Each chunk reserves its full `max_tokens` worst case, persists the batch id
+before result collection, and settles from returned input/output usage before
+the next chunk is reserved. Raw result rows are saved per batch by their stable
+custom IDs. Ambiguous attempts remain counted. The submit command collects
+batches and writes the labels/calibration record before it exits.
 
 The submitter accepts only the complete Part 62 manifest and exactly the files
-listed by the writer. It shuffles answers with a fixed seed, sends answer text
-and the origin rubric without model, question, phase, dose, or control metadata,
-and keeps the mapping in local review files. It uses the Part 54 origin labels
-(`EARTH` / `OFFWORLD` / `NEITHER`, plus `OK` / `BROKEN`) and the Part 59A
-transport and calibration-error threshold. Calibration reuses all 34 hand-
-labelled Part 59A rows mapped to the origin categories; the maximum of two
-errors is a hard gate. The reader request has `max_tokens=1024`. Reserve
-estimation uses request bytes and 150 expected output tokens per request,
-rather than the full output-token ceiling. Collection records each response's
-`stop_reason` and output token usage and accepts
-only `end_turn` or `stop_sequence`; a `max_tokens` stop, missing stop reason, or
-other completion status blocks scoring. It also refuses to score if more than
-two of the 34 origin calibration items are wrong or if any generated answer is
-unlabelled.
-
-Each submission attempt gets a random attempt id before the call and has its own
-key map, intent record, and durable reserve in a reader-specific submission
-ledger. The ledger lock is released automatically if the process dies. A successful response's batch
-id is written to the ledger immediately; repeating submit then returns that id
-until it is collected. A timeout, 429, 5xx, or other ambiguous result keeps its
-reserve counted; a later submit creates a new attempt and a new reserve, and no
-batch is searched for or adopted. A reserve is released only for a 4xx response
-carrying a valid Anthropic error body. Separate ledgers enforce independent
-$4 Haiku and $8 Opus hard caps.
+listed by the writer. It shuffles answers with a fixed seed and sends answer
+text and the origin rubric without model, question, phase, dose, or control
+metadata. It records reader, sample ids, stop reasons, usage, and the shared
+ledger path with the labels. Source the credit key without printing it and
+confirm the CA bundle and review directory are present before submission.
 
 ## Analysis
 
@@ -139,14 +115,23 @@ python3 part62/analyze62.py \
 ```
 
 The analyzer verifies that the local label key matches the same shuffled rows
-read back from the real writer files. It prints the review's three known-noisy
+read back from the real writer files. For 62a it reports the exact paired
+OFFWORLD count difference and a conservative 95% difference interval formed
+from Bonferroni-adjusted exact binomial intervals for the two proportions.
+The registered `within 3 of 24` rule is held only when every registered pair
+meets that limit, and is reported as “held within sampling noise.” It prints
+the review's three known-noisy
 keyword proxies as exploratory views, six binomial logistic fits (slope,
 Pile-dose midpoint, 10–90% width, and alien-frame midpoint), the registered
-62a–62g results as `HELD` or `FAILED`, and both registered decision-rule
-outcomes. If complete separation prevents a finite logistic fit, it reports a
+62a–62g results, using `NOT-EVALUABLE` when evidence is incomplete and
+`HELD WITHIN SAMPLING NOISE` for 62a only when the registered paired count
+condition holds, along with both registered decision-rule outcomes. If
+complete separation prevents a finite logistic fit, it reports a
 10–90 bracket from the last dose below 10% to the first dose at or above 90%;
-62c and 62d evaluate their thresholds on that width. A non-estimable fit with
-no bracket remains `FAILED`.
+62c evaluates its threshold on that bracket width, which is an upper bound.
+62d requires a finite logistic fit because a bracket width is only an upper
+bound and cannot establish that the true width exceeds 0.8. A non-estimable
+prediction is reported as `NOT-EVALUABLE`.
 
 The stored `target_equivalent_set_value_norm` is the norm of the requested
 activation set value times the target down-projection column norm. The shared

@@ -99,10 +99,10 @@ class Part62ConstantsTests(unittest.TestCase):
         self.assertEqual(blind62.READER_MODELS["haiku"], "claude-haiku-5-5")
         self.assertEqual(blind62.DEFAULT_READER, "haiku")
         self.assertEqual(blind62.READER_CAPS_USD, {"haiku": 4.0, "opus": 8.0})
-        self.assertEqual(len(blind62.CAL), 34)
-        self.assertEqual(blind62.EXPECTED_OUTPUT_TOKENS, 150)
+        self.assertEqual(len(blind62.CAL), 120)
+        self.assertEqual(blind62.CALIBRATION_SAMPLE_SIZE, 120)
+        self.assertEqual(blind62.CALIBRATION_KAPPA_MIN, 0.8)
         self.assertEqual(blind62.ACCEPTED_STOP_REASONS, ("end_turn", "stop_sequence"))
-        self.assertEqual(blind62.CALIBRATION_ERROR_LIMIT, 2)
         self.assertEqual(analyze62.PREDICTION_62A_MAX_DIFFERENCE, 3)
         self.assertEqual(analyze62.PREDICTION_62B_MAX_OFFWORLD, 1)
         self.assertEqual(analyze62.PREDICTION_62C_MAX_WIDTH, 0.3)
@@ -112,16 +112,17 @@ class Part62ConstantsTests(unittest.TestCase):
         self.assertEqual((analyze62.PREDICTION_62G_MIN_ALIEN_UNITS,
                           analyze62.PREDICTION_62G_MAX_ALIEN_UNITS), (0.85, 1.2))
 
-    def test_seed_is_stable_and_distinct_across_dose_phase_and_model(self):
-        seed = run62.condition_seed(10, "qwen35-4b", 1.5, "gen", run62.QUESTIONS[0], "twin", 2742)
-        self.assertEqual(seed, run62.condition_seed(10, "qwen35-4b", 1.5, "gen",
-                                                    run62.QUESTIONS[0], "twin", 2742))
-        self.assertNotEqual(seed, run62.condition_seed(10, "qwen35-4b", 2.0, "gen",
-                                                       run62.QUESTIONS[0], "twin", 2742))
-        self.assertNotEqual(seed, run62.condition_seed(10, "qwen35-4b", 1.5, "prompt",
-                                                       run62.QUESTIONS[0], "twin", 2742))
-        self.assertNotEqual(seed, run62.condition_seed(10, "olmo2-1b", 1.5, "gen",
-                                                       run62.QUESTIONS[0], "twin", 2742))
+    def test_phase_seeds_are_paired_and_dose_seeds_are_independent(self):
+        cell = {"model": "qwen35-4b", "dose": 1.5, "question": run62.QUESTIONS[0],
+                "kind": "twin", "unit": 2742}
+        seeds = run62.paired_sample_seeds(10, cell["model"], cell["dose"], cell["question"])
+        self.assertEqual(len(seeds), run62.SAMPLES)
+        self.assertEqual(seeds, run62.paired_sample_seeds(10, cell["model"], cell["dose"], cell["question"]))
+        for phase in run62.PHASES:
+            cell["phase"] = phase
+            self.assertEqual(run62.cell_parameters(10, cell, 1.0, 1.0, 1.0)["seeds"], seeds)
+        self.assertNotEqual(seeds, run62.paired_sample_seeds(10, cell["model"], 2.0, cell["question"]))
+        self.assertNotEqual(seeds, run62.paired_sample_seeds(10, "olmo2-1b", 1.5, cell["question"]))
 
     def test_registered_pile_maxima_read_from_part26_records(self):
         self.assertAlmostEqual(run62._pile_maximum("qwen35-4b", run62.PART26_DIR), 19.125, places=3)
@@ -207,7 +208,7 @@ class WriterReaderTests(unittest.TestCase):
                                                    meta["target_column_norm"], meta["control_column_norm"])
                 condition_name = "twin" if spec["kind"] == "twin" else f"control-{spec['unit']}"
                 condition = {"condition": condition_name, "kind": spec["kind"],
-                             "unit": spec["unit"], "seed": parameters["seed"], "phase": spec["phase"],
+                             "unit": spec["unit"], "seed": parameters["seed"], "seeds": parameters["seeds"], "phase": spec["phase"],
                              "set_value": parameters["set_value"], "n": run62.SAMPLES,
                              "target_equivalent_set_value_norm": parameters["target_equivalent_set_value_norm"],
                              "answers": [f"stub response {serial} {i}" for i in range(run62.SAMPLES)]}
@@ -231,7 +232,11 @@ class WriterReaderTests(unittest.TestCase):
             self.assertEqual(len(rows), 1536)
             self.assertEqual(sum(row["kind"] == "twin" for row in rows), 1440)
             self.assertEqual(sum(row["kind"] == "control" for row in rows), 96)
-            self.assertEqual(len({row["seed"] for row in rows[::run62.SAMPLES]}), 192)
+            self.assertEqual(len({tuple(row["seed"] for row in rows
+                                        if row["model"] == "qwen35-4b" and row["dose"] == 1.5
+                                        and row["kind"] == "twin" and row["question"] == run62.QUESTIONS[0]
+                                        and row["phase"] == phase)
+                                  for phase in run62.PHASES}), 1)
             self.assertEqual(len(manifest["planned_cells"]), 192)
 
             review_dir = folder / "review"
@@ -242,8 +247,8 @@ class WriterReaderTests(unittest.TestCase):
             key = {f"ans|{number}": {name: value for name, value in row.items() if name != "text"}
                    for number, row in enumerate(shuffled)}
             labels = {answer_id: ["NEITHER", "OK"] for answer_id in key}
-            for index, (label, quality, _text) in enumerate(blind62.CAL):
-                labels[f"cal|{index}|{label}|{quality}"] = [label, quality]
+            for index, (label, _answer_id, _text) in enumerate(blind62.CAL):
+                labels[f"cal|{index}|{label}|ORIGIN"] = [label, "OK"]
             (review_dir / "part62-key-fixture.json").write_text(json.dumps(key), encoding="utf-8")
             labels_path = review_dir / "part62-labels-fixture.json"
             labels_path.write_text(json.dumps({"schema": "part62-blind-labels-v1",
@@ -252,8 +257,8 @@ class WriterReaderTests(unittest.TestCase):
                                                "scoring_allowed": True, "answer_count": len(key),
                                                "unlabelled_answers": [],
                                                "calibration": {"passed": True,
-                                                               "error_limit": blind62.CALIBRATION_ERROR_LIMIT,
                                                                "wrong": 0, "wrong_ids": [],
+                                                               "kappa": 1.0,
                                                                "completion_issues": {}},
                                                "completion": {"passed": True, "issues": {},
                                                               "accepted_stop_reasons": list(blind62.ACCEPTED_STOP_REASONS)},
@@ -262,7 +267,7 @@ class WriterReaderTests(unittest.TestCase):
             analysis = analyze62.analyze(folder, labels_path, review_dir)
             json.dumps(analysis, allow_nan=False)
             self.assertEqual(analysis["sample_info"]["answer_count"], 1536)
-            self.assertEqual(analysis["predictions"]["status"]["62c"], "FAILED")
+            self.assertEqual(analysis["predictions"]["status"]["62c"], "NOT-EVALUABLE")
 
             victim = folder / manifest["completed"][0]
             data = json.loads(victim.read_text(encoding="utf-8"))
@@ -286,6 +291,7 @@ class ProductionWriterTests(unittest.TestCase):
         layers = [types.SimpleNamespace(mlp=types.SimpleNamespace(down_proj=down_proj))
                   for _ in range(model_spec["layer"] + 1)]
         nr = types.SimpleNamespace(find_text_layers=lambda _model: ("layers", layers, None),
+                                   control_units=lambda _width, _target, _n, _seed: [model_spec["control_unit"]],
                                    build_prompt=lambda _tok, question, _verbose: question)
         class FakeTokenized:
             def to(self, _device):
@@ -302,7 +308,7 @@ class ProductionWriterTests(unittest.TestCase):
             generated.append((dict(cell), set_value, seed))
             return {"condition": "twin" if cell["kind"] == "twin" else f"control-{unit}",
                     "kind": cell["kind"], "unit": unit, "set_value": set_value,
-                    "seed": seed, "phase": cell["phase"], "n": run62.SAMPLES,
+                    "seed": seed[0], "seeds": seed, "phase": cell["phase"], "n": run62.SAMPLES,
                     "answers": ["stub"] * run62.SAMPLES}
 
         with tempfile.TemporaryDirectory() as temporary:
@@ -323,8 +329,8 @@ class ProductionWriterTests(unittest.TestCase):
                 self.assertEqual(len(generated), 2)
                 target_params = run62.cell_parameters(10, target_cell, 10.0, 2.0, 1.0)
                 control_params = run62.cell_parameters(10, control_cell, 10.0, 2.0, 1.0)
-                self.assertEqual(generated[0][1:], (target_params["set_value"], target_params["seed"]))
-                self.assertEqual(generated[1][1:], (control_params["set_value"], control_params["seed"]))
+                self.assertEqual(generated[0][1:], (target_params["set_value"], target_params["seeds"]))
+                self.assertEqual(generated[1][1:], (control_params["set_value"], control_params["seeds"]))
                 self.assertEqual(control_params["set_value"], 30.0)
                 self.assertEqual(manifest["generated_answers"], 2 * run62.SAMPLES)
 
@@ -353,12 +359,22 @@ class ProductionWriterTests(unittest.TestCase):
 
 
 class BlindGateTests(unittest.TestCase):
-    def test_429_is_ambiguous_while_definitive_rejections_are_distinguished(self):
-        self.assertFalse(blind62._definitive_rejection(SystemExit("Anthropic API HTTP 429 Too Many Requests")))
-        self.assertFalse(blind62._definitive_rejection(SystemExit("Anthropic API HTTP 500 Server Error")))
-        self.assertFalse(blind62._definitive_rejection(SystemExit("Anthropic API HTTP 400 Bad Request")))
-        error = '{"type":"error","error":{"type":"invalid_request_error","message":"bad"}}'
-        self.assertTrue(blind62._definitive_rejection(SystemExit(f"Anthropic API HTTP 400 Bad Request: {error}")))
+    def test_shared_ledger_releases_only_a_parsed_anthropic_rejection(self):
+        from paidaction.paid_ledger import Ledger, ReleaseRefusedError
+        test_root = Path(__file__).resolve().parent / ".test-ledgers"
+        test_root.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix="release-", dir=test_root) as temporary:
+            ledger = Ledger(Path(temporary) / "ledger.jsonl", 8.0)
+            released = ledger.reserve(0.5, "part62-test", {})
+            ledger.release(released, 400, {"type": "error", "error": {"type": "invalid_request_error"}})
+            ambiguous = ledger.reserve(0.5, "part62-test", {})
+            with self.assertRaises(ReleaseRefusedError):
+                ledger.release(ambiguous, 429, {"type": "error", "error": {"type": "rate_limit_error"}})
+            self.assertEqual(ledger.state()["reserved"], 0.5)
+        try:
+            test_root.rmdir()
+        except OSError:
+            pass
 
     def test_api_request_builder_keeps_condition_metadata_local(self):
         row = {"model": "qwen35-4b", "question": "Where do you come from?",
@@ -371,30 +387,32 @@ class BlindGateTests(unittest.TestCase):
         self.assertEqual(requests[0]["params"]["messages"], [
             {"role": "user", "content": blind62.RUBRIC + "A plain stub answer."}])
         self.assertEqual(requests[0]["params"]["model"], "claude-haiku-5-5")
-        self.assertEqual(len(requests), 1 + 34)
+        self.assertEqual(len(requests), 1 + blind62.CALIBRATION_SAMPLE_SIZE)
         opus = blind62.prepare_batch([row], reader="opus")[2]
         self.assertEqual(opus[0]["params"]["model"], "claude-opus-5-5")
 
-    def test_origin_calibration_gate_allows_two_and_rejects_three_errors(self):
+    def test_origin_calibration_gate_uses_kappa_threshold(self):
         labels = {}
-        for index, (label, quality, _text) in enumerate(blind62.CAL):
-            labels[f"cal|{index}|{label}|{quality}"] = [label, quality]
+        for index, (label, _answer_id, _text) in enumerate(blind62.CAL):
+            labels[f"cal|{index}|{label}|ORIGIN"] = [label, "OK"]
         labels["ans|0"] = ["NEITHER", "OK"]
         self.assertEqual(blind62.scoring_gate(labels, ["ans|0"])["unlabelled_answers"], [])
-        for index, (label, quality, _text) in enumerate(blind62.CAL[:2]):
-            labels[f"cal|{index}|{label}|{quality}"] = ["NEITHER", "BROKEN"]
-        self.assertEqual(len(blind62.scoring_gate(labels, ["ans|0"])["calibration_wrong"]), 2)
-        index, (label, quality, _text) = 2, blind62.CAL[2]
-        labels[f"cal|{index}|{label}|{quality}"] = ["NEITHER", "BROKEN"]
+        for index, (label, _answer_id, _text) in enumerate(blind62.CAL):
+            labels[f"cal|{index}|{label}|ORIGIN"] = [label, "OK"]
+        self.assertGreaterEqual(blind62.scoring_gate(labels, ["ans|0"])["calibration_kappa"], 0.8)
+        for index in range(60):
+            label = blind62.CAL[index][0]
+            other = "OFFWORLD" if label != "OFFWORLD" else "EARTH"
+            labels[f"cal|{index}|{label}|ORIGIN"] = [other, "OK"]
         with self.assertRaisesRegex(ValueError, "calibration gate failed"):
             blind62.scoring_gate(labels, ["ans|0"])
 
     def test_capped_reader_response_blocks_scoring_even_when_labels_parse(self):
         labels = {}
-        for index, (label, quality, _text) in enumerate(blind62.CAL):
-            labels[f"cal|{index}|{label}|{quality}"] = [label, quality]
+        for index, (label, _answer_id, _text) in enumerate(blind62.CAL):
+            labels[f"cal|{index}|{label}|ORIGIN"] = [label, "OK"]
         labels["ans|0"] = ["OFFWORLD", "OK"]
-        calibration_id = f"cal|0|{blind62.CAL[0][0]}|{blind62.CAL[0][1]}"
+        calibration_id = f"cal|0|{blind62.CAL[0][0]}|ORIGIN"
         with self.assertRaisesRegex(ValueError, "truncated or unverified"):
             blind62.scoring_gate(labels, ["ans|0"], {calibration_id: "max_tokens"})
 
@@ -420,16 +438,16 @@ class BlindGateTests(unittest.TestCase):
             "content": [{"type": "text", "text": "OFFWORLD OK"}]}}})
         parsed_labels, reasons = blind62.parse_batch_results([line], {"r00000": "ans|0"})
         self.assertEqual(reasons["ans|0"], "output_tokens_exceeded_max_tokens")
-        labels = {f"cal|{i}|{origin}|{quality}": [origin, quality]
-                  for i, (origin, quality, _text) in enumerate(blind62.CAL)}
+        labels = {f"cal|{i}|{origin}|ORIGIN": [origin, "OK"]
+                  for i, (origin, _answer_id, _text) in enumerate(blind62.CAL)}
         labels.update(parsed_labels)
         with self.assertRaisesRegex(ValueError, "truncated or unverified"):
             blind62.scoring_gate(labels, ["ans|0"], reasons)
 
     def test_any_unlabelled_answer_blocks_scoring(self):
         labels = {}
-        for index, (label, quality, _text) in enumerate(blind62.CAL):
-            labels[f"cal|{index}|{label}|{quality}"] = [label, quality]
+        for index, (label, _answer_id, _text) in enumerate(blind62.CAL):
+            labels[f"cal|{index}|{label}|ORIGIN"] = [label, "OK"]
         labels["ans|0"] = ["OFFWORLD", "OK"]
         with self.assertRaisesRegex(ValueError, "unlabelled answer"):
             blind62.scoring_gate(labels, ["ans|0", "ans|1"])
@@ -437,161 +455,50 @@ class BlindGateTests(unittest.TestCase):
 
 class SubmissionTests(unittest.TestCase):
     def setUp(self):
-        self.temporary = tempfile.TemporaryDirectory(
-            prefix=".part62-submit-test-", dir=Path(__file__).resolve().parent)
+        self.test_root = Path(__file__).resolve().parent / ".test-ledgers"
+        self.test_root.mkdir(exist_ok=True)
+        self.temporary = tempfile.TemporaryDirectory(prefix="part62-", dir=self.test_root)
         self.root = Path(self.temporary.name)
-        self.folder = self.root / "cells"
-        self.folder.mkdir()
-        WriterReaderTests._write_stub_run(self.folder)
-        self.review_dir = self.root / "review"
-        self.ca_bundle = self.root / "test-ca.pem"
-        self.ca_bundle.write_text("test bundle\n", encoding="utf-8")
 
     def tearDown(self):
         self.temporary.cleanup()
+        try:
+            self.test_root.rmdir()
+        except OSError:
+            pass
 
-    def _env(self, **overrides):
-        return {"ANTHROPIC_CREDITS_KEY": "test-key",
-                "ANTHROPIC_CA_BUNDLE": str(self.ca_bundle), **overrides}
+    def test_paidaction_accepts_explicit_part62_test_ledger_path(self):
+        from paidaction.paid_ledger import Ledger
+        ledger_path = self.root / "explicit-test-ledger.jsonl"
+        ledger = Ledger(ledger_path, 8.0)
+        attempt = ledger.reserve(1.25, "part62-test", {"test": True})
+        ledger.settle(attempt, 0.75, {"input_tokens": 2, "output_tokens": 3})
+        self.assertEqual(ledger.path, ledger_path.resolve())
+        self.assertEqual(ledger.state()["settled"], 0.75)
+        self.assertFalse(ledger.state()["reserved"])
 
-    def test_haiku_expected_output_reserve_uses_150_tokens_and_fits_cap(self):
-        rows = blind62.answers(self.folder)
-        import random
-        random.Random(blind62.SHUFFLE_SEED).shuffle(rows)
-        _idmap, _keymap, requests = blind62.prepare_batch(rows)
-        reserve = blind62.estimate_submission_cost(requests)
-        self.assertEqual(len(requests), 1570)
-        self.assertEqual(blind62.EXPECTED_OUTPUT_TOKENS * len(requests), 235500)
-        self.assertLess(reserve, blind62.READER_CAPS_USD["haiku"])
+    def test_caller_ledger_path_defaults_to_shared_library_path(self):
+        import inspect
+        parameter = inspect.signature(blind62.submit).parameters["ledger_path"]
+        self.assertEqual(Path(parameter.default), blind62.DEFAULT_LEDGER_PATH)
+        explicit_path = self.root / "another-test-ledger.jsonl"
+        ledger = blind62._StageLedger(explicit_path, blind62.HARD_CAP_USD)
+        self.assertEqual(ledger.path, explicit_path.resolve())
 
-    def test_opus_fallback_requires_failed_haiku_record_and_uses_separate_cap_ledger(self):
-        with self.assertRaisesRegex(ValueError, "failed Haiku calibration"):
-            blind62.submit(self.folder, self.review_dir, reader="opus")
-        self.review_dir.mkdir(parents=True)
-        record = {"reader": "haiku", "model": "claude-haiku-5-5",
-                  "calibration": {"passed": False}}
-        (self.review_dir / "part62-labels-haiku-failed.json").write_text(json.dumps(record))
-        haiku_path, _ = blind62._submission_ledger(self.review_dir, "haiku")
-        opus_path, opus_ledger = blind62._submission_ledger(self.review_dir, "opus")
-        self.assertNotEqual(haiku_path, opus_path)
-        self.assertEqual(opus_ledger["cap_usd"], 8.0)
-        self.assertEqual(blind62.READER_CAPS_USD["haiku"], 4.0)
-        with mock.patch.object(blind62, "_preflight_submission", return_value=(self.review_dir, {}, {}, [])):
-            with mock.patch.object(blind62, "_submit_prepared", return_value="opus-batch") as submitter:
-                self.assertEqual(blind62.submit(self.folder, self.review_dir, reader="opus"), "opus-batch")
-        self.assertEqual(submitter.call_args.args[-1], "opus")
+    def test_haiku_subcap_applies_to_shared_ledger_kind(self):
+        ledger = blind62._StageLedger(self.root / "subcap.jsonl", blind62.HARD_CAP_USD)
+        ledger.reserve(3.5, blind62.READER_KINDS["haiku"], {"stage": "test"})
+        with self.assertRaisesRegex(ValueError, "sub-cap"):
+            ledger.reserve(0.6, blind62.READER_KINDS["haiku"], {"stage": "test"})
+        ledger.reserve(4.0, blind62.READER_KINDS["opus"], {"stage": "test"})
+        self.assertEqual(ledger.state()["reserved"], 7.5)
 
-    def test_missing_key_ca_or_output_path_fails_before_reservation(self):
-        with mock.patch.dict(os.environ, {"ANTHROPIC_CA_BUNDLE": str(self.ca_bundle)}, clear=True):
-            with self.assertRaisesRegex(ValueError, "is not set"):
-                blind62.submit(self.folder, self.review_dir)
-        self.assertFalse(self.review_dir.exists())
-
-        with mock.patch.dict(os.environ, self._env(ANTHROPIC_CA_BUNDLE=str(self.root / "missing-ca")), clear=True):
-            with self.assertRaisesRegex(FileNotFoundError, "CA bundle"):
-                blind62.submit(self.folder, self.review_dir)
-        self.assertFalse(self.review_dir.exists())
-
-        review_file = self.root / "not-a-directory"
-        review_file.write_text("x", encoding="utf-8")
-        with mock.patch.dict(os.environ, self._env(), clear=True), \
-                mock.patch.object(blind62.setting, "ctx", return_value=object()):
-            with self.assertRaises((FileExistsError, NotADirectoryError)):
-                blind62.submit(self.folder, review_file)
-        self.assertFalse((self.root / "part62-submission-ledger-haiku.json").exists())
-
-    def test_ambiguous_attempt_keeps_reserve_and_new_attempt_persists_map_before_post(self):
-        calls = []
-        post_returned = {"value": False}
-        saved_after_return = []
-        original_save = blind62._save_json
-
-        def tracked_save(path, data):
-            if post_returned["value"]:
-                saved_after_return.append(Path(path).name)
-            return original_save(path, data)
-
-        def fake_call(method, path, body):
-            self.assertEqual((method, path), ("POST", "/v1/messages/batches"))
-            self.assertEqual(len(body["requests"]), 1570)
-            ledger = json.loads((self.review_dir / "part62-submission-ledger-haiku.json").read_text())
-            attempt = ledger["attempts"][-1]
-            self.assertEqual(attempt["status"], "posting")
-            self.assertTrue((self.review_dir / attempt["idmap_file"]).is_file())
-            self.assertTrue((self.review_dir / attempt["key_file"]).is_file())
-            intent = json.loads((self.review_dir / attempt["intent_file"]).read_text())
-            self.assertEqual(intent["status"], "posting")
-            calls.append((method, path, attempt["attempt_id"], attempt["request_sha256"]))
-            if len(calls) == 1:
-                raise TimeoutError("response lost")
-            post_returned["value"] = True
-            return json.dumps({"id": "msgbatch-test-1", "processing_status": "in_progress"})
-
-        with mock.patch.dict(os.environ, self._env(), clear=True), \
-                mock.patch.object(blind62.setting, "ctx", return_value=object()), \
-                mock.patch.object(blind62, "estimate_submission_cost", return_value=1.0), \
-                mock.patch.object(blind62, "_save_json", side_effect=tracked_save), \
-                mock.patch.object(blind62.setting, "call", side_effect=fake_call) as api:
-            with self.assertRaisesRegex(RuntimeError, "ambiguous"):
-                blind62.submit(self.folder, self.review_dir)
-            ledger = json.loads((self.review_dir / "part62-submission-ledger-haiku.json").read_text())
-            self.assertEqual(ledger["attempts"][0]["status"], "ambiguous")
-            self.assertEqual(ledger["attempts"][0]["reserved_usd"], 1.0)
-            batch_id = blind62.submit(self.folder, self.review_dir)
-            self.assertEqual(batch_id, "msgbatch-test-1")
-            self.assertEqual(blind62.submit(self.folder, self.review_dir), batch_id)
-
-        ledger = json.loads((self.review_dir / "part62-submission-ledger-haiku.json").read_text())
-        first, second = ledger["attempts"]
-        self.assertEqual((first["status"], second["status"]), ("ambiguous", "submitted"))
-        self.assertNotEqual(first["attempt_id"], second["attempt_id"])
-        self.assertEqual(first["reserved_usd"] + second["reserved_usd"], 2.0)
-        self.assertNotEqual(first["idmap_file"], second["idmap_file"])
-        self.assertEqual(first["request_sha256"], second["request_sha256"])
-        self.assertEqual(len(calls), 2)
-        self.assertTrue(all(call[0] == "POST" for call in calls))
-        self.assertEqual(saved_after_return[0], "part62-submission-ledger-haiku.json")
-        self.assertTrue(api.called)
-
-    def test_ambiguous_reserve_can_refuse_a_new_attempt_at_hard_cap(self):
-        calls = []
-
-        def fake_call(method, path, _body):
-            calls.append((method, path))
-            raise TimeoutError("unknown outcome")
-
-        with mock.patch.dict(os.environ, self._env(), clear=True), \
-                mock.patch.object(blind62.setting, "ctx", return_value=object()), \
-                mock.patch.object(blind62, "estimate_submission_cost", return_value=2.1), \
-                mock.patch.object(blind62.setting, "call", side_effect=fake_call):
-            with self.assertRaisesRegex(RuntimeError, "ambiguous"):
-                blind62.submit(self.folder, self.review_dir)
-            with self.assertRaisesRegex(ValueError, "spend cap refused"):
-                blind62.submit(self.folder, self.review_dir)
-        self.assertEqual(len(calls), 1)
-        ledger = json.loads((self.review_dir / "part62-submission-ledger-haiku.json").read_text())
-        self.assertEqual(len(ledger["attempts"]), 1)
-        self.assertEqual(ledger["attempts"][0]["status"], "ambiguous")
-
-    def test_local_persistence_failure_releases_reserve_before_post(self):
-        original_save = blind62._save_attempt_state
-
-        def fail_posting_save(ledger_path, ledger, intent_path, attempt):
-            if attempt.get("status") == "posting":
-                raise OSError("simulated local write failure before POST")
-            return original_save(ledger_path, ledger, intent_path, attempt)
-
-        with mock.patch.dict(os.environ, self._env(), clear=True), \
-                mock.patch.object(blind62.setting, "ctx", return_value=object()), \
-                mock.patch.object(blind62, "estimate_submission_cost", return_value=1.0), \
-                mock.patch.object(blind62, "_save_attempt_state", side_effect=fail_posting_save), \
-                mock.patch.object(blind62.setting, "call", side_effect=AssertionError("POST forbidden")) as api:
-            with self.assertRaisesRegex(OSError, "before POST"):
-                blind62.submit(self.folder, self.review_dir)
-        self.assertFalse(api.called)
-        ledger = json.loads((self.review_dir / "part62-submission-ledger-haiku.json").read_text())
-        self.assertEqual(ledger["attempts"][0]["status"], "released")
-        self.assertEqual(ledger["attempts"][0]["reserved_usd"], 0.0)
+    def test_opus_fallback_requires_failed_haiku_calibration_record(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            with self.assertRaisesRegex(ValueError, "failed Haiku calibration"):
+                blind62.submit("unused", temporary, reader="opus",
+                               ledger_path=self.root / "not-opened.jsonl")
+        self.assertFalse((self.root / "not-opened.jsonl").exists())
 
 
 class AnalysisTests(unittest.TestCase):
@@ -628,18 +535,36 @@ class AnalysisTests(unittest.TestCase):
         for model_name in run62.MODELS:
             for dose in run62.DOSES:
                 for phase in run62.PHASES:
-                    counts[(model_name, phase, "twin", float(dose))] = {"n": 24, "OFFWORLD": 0}
+                    counts[(model_name, phase, "twin", float(dose))] = {
+                        "n": 24, "OFFWORLD": 0,
+                        "paired_offworld": {f"{question}|{i}": False
+                            for question in run62.QUESTIONS for i in range(run62.SAMPLES)}}
                 if dose in ((1.5, 2.0) if model_name == "qwen35-4b" else (1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 2.0)):
                     counts[(model_name, "both", "twin", float(dose))]["OFFWORLD"] = 10
                     counts[(model_name, "gen", "twin", float(dose))]["OFFWORLD"] = 10
+                    for phase in ("both", "gen"):
+                        paired = counts[(model_name, phase, "twin", float(dose))]["paired_offworld"]
+                        for index, key in enumerate(paired):
+                            paired[key] = index < 10
             for dose in run62.CONTROL_DOSES:
                 counts[(model_name, "both", "control", float(dose))] = {"n": 24, "OFFWORLD": 0}
         fits = {("qwen35-4b", "both"): {"status": "fit", "width_10_90": 0.25,
                                          "midpoint_alien_frame_units": 1.0},
                 ("olmo2-1b", "both"): {"status": "fit", "width_10_90": 0.9}}
-        self.assertEqual(set(analyze62.evaluate_predictions(counts, fits)["status"].values()), {"HELD"})
+        statuses = analyze62.evaluate_predictions(counts, fits)["status"]
+        self.assertEqual(statuses["62a"], "HELD WITHIN SAMPLING NOISE")
+        self.assertEqual(set(statuses.values()), {"HELD", "HELD WITHIN SAMPLING NOISE"})
+        comparison = analyze62.evaluate_predictions(counts, fits)["details"]["62a"][0]
+        self.assertEqual(comparison["paired_count_difference"], 0)
+        self.assertEqual(comparison["paired_difference"], 0.0)
+        self.assertEqual(comparison["sampling_noise_status"], "held within sampling noise")
+        self.assertLess(comparison["difference_95_binomial_interval"][0], 0)
+        self.assertGreater(comparison["difference_95_binomial_interval"][1], 0)
 
         counts[("qwen35-4b", "gen", "twin", 1.5)]["OFFWORLD"] = 14
+        paired = counts[("qwen35-4b", "gen", "twin", 1.5)]["paired_offworld"]
+        for index, key in enumerate(paired):
+            paired[key] = index < 14
         self.assertEqual(analyze62.evaluate_predictions(counts, fits)["status"]["62a"], "FAILED")
         counts[("qwen35-4b", "gen", "twin", 1.5)]["OFFWORLD"] = 10
         counts[("olmo2-1b", "both", "twin", 0.5)]["OFFWORLD"] = 5
@@ -654,8 +579,53 @@ class AnalysisTests(unittest.TestCase):
     def test_prediction_62b_fails_when_prompt_threshold_is_breached(self):
         counts = {("qwen35-4b", "prompt", "twin", 0.25): {"n": 24, "OFFWORLD": 2}}
         result = analyze62.evaluate_predictions(counts, {})
-        self.assertEqual(result["status"]["62b"], "FAILED")
-        self.assertEqual(result["decision_rules"]["step_from_prompt"], "prompt-step rule met")
+        self.assertEqual(result["status"]["62b"], "NOT-EVALUABLE")
+        self.assertEqual(result["decision_rules"]["step_from_prompt"], "prompt-step rule not met")
+
+    def test_62a_62b_62e_62f_62g_registered_threshold_boundaries(self):
+        counts = {}
+        for model_name in run62.MODELS:
+            for dose in run62.DOSES:
+                for phase in run62.PHASES:
+                    paired = {f"{question}|{i}": False
+                              for question in run62.QUESTIONS for i in range(run62.SAMPLES)}
+                    counts[(model_name, phase, "twin", float(dose))] = {
+                        "n": 24, "OFFWORLD": 1, "paired_offworld": paired}
+                if dose in ((1.5, 2.0) if model_name == "qwen35-4b"
+                            else (1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 2.0)):
+                    both = counts[(model_name, "both", "twin", float(dose))]
+                    gen = counts[(model_name, "gen", "twin", float(dose))]
+                    both["OFFWORLD"], gen["OFFWORLD"] = 10, 13
+                    for index, key in enumerate(both["paired_offworld"]):
+                        both["paired_offworld"][key] = index < 10
+                        gen["paired_offworld"][key] = index < 13
+            for dose in run62.CONTROL_DOSES:
+                counts[(model_name, "both", "control", float(dose))] = {"n": 24, "OFFWORLD": 1}
+        counts[("olmo2-1b", "both", "twin", 0.5)]["OFFWORLD"] = 4
+        fits = {("qwen35-4b", "both"): {"status": "fit", "width_10_90": 0.299,
+                                          "midpoint_alien_frame_units": 1.2},
+                ("olmo2-1b", "both"): {"status": "fit", "width_10_90": 0.801}}
+        statuses = analyze62.evaluate_predictions(counts, fits)["status"]
+        self.assertEqual(statuses["62a"], "HELD WITHIN SAMPLING NOISE")
+        for key in ("62b", "62e", "62f", "62g"):
+            self.assertEqual(statuses[key], "HELD", key)
+
+        counts[("qwen35-4b", "gen", "twin", 1.5)]["OFFWORLD"] = 14
+        for index, key in enumerate(counts[("qwen35-4b", "gen", "twin", 1.5)]["paired_offworld"]):
+            counts[("qwen35-4b", "gen", "twin", 1.5)]["paired_offworld"][key] = index < 14
+        self.assertEqual(analyze62.evaluate_predictions(counts, fits)["status"]["62a"], "FAILED")
+        counts[("qwen35-4b", "gen", "twin", 1.5)]["OFFWORLD"] = 13
+        counts[("qwen35-4b", "prompt", "twin", 0.25)]["OFFWORLD"] = 2
+        self.assertEqual(analyze62.evaluate_predictions(counts, fits)["status"]["62b"], "FAILED")
+        counts[("qwen35-4b", "prompt", "twin", 0.25)]["OFFWORLD"] = 1
+        counts[("olmo2-1b", "both", "twin", 0.5)]["OFFWORLD"] = 5
+        self.assertEqual(analyze62.evaluate_predictions(counts, fits)["status"]["62e"], "FAILED")
+        counts[("olmo2-1b", "both", "twin", 0.5)]["OFFWORLD"] = 4
+        counts[("qwen35-4b", "both", "control", 1.5)]["OFFWORLD"] = 2
+        self.assertEqual(analyze62.evaluate_predictions(counts, fits)["status"]["62f"], "FAILED")
+        counts[("qwen35-4b", "both", "control", 1.5)]["OFFWORLD"] = 1
+        fits[("qwen35-4b", "both")]["midpoint_alien_frame_units"] = 1.2001
+        self.assertEqual(analyze62.evaluate_predictions(counts, fits)["status"]["62g"], "FAILED")
 
     def test_complete_separation_is_reported_and_evaluated_as_a_bracket(self):
         counts = {}
@@ -678,12 +648,12 @@ class AnalysisTests(unittest.TestCase):
         self.assertAlmostEqual(olmo["width_10_90"], 0.1)
         result = analyze62.evaluate_predictions(counts, fits)
         self.assertEqual(result["status"]["62c"], "HELD")
-        self.assertEqual(result["status"]["62d"], "FAILED")
-        self.assertEqual(result["decision_rules"]["threshold_vs_gradual"], "retired")
+        self.assertEqual(result["status"]["62d"], "NOT-EVALUABLE")
+        self.assertEqual(result["decision_rules"]["threshold_vs_gradual"], "not retired under 62d")
 
     def test_62c_and_62d_use_strict_width_boundaries_for_fit_or_bracket(self):
         fits = {("qwen35-4b", "both"): {"status": "bracketed", "width_10_90": 0.299},
-                ("olmo2-1b", "both"): {"status": "bracketed", "width_10_90": 0.801}}
+                ("olmo2-1b", "both"): {"status": "fit", "width_10_90": 0.801}}
         result = analyze62.evaluate_predictions({}, fits)
         self.assertEqual(result["status"]["62c"], "HELD")
         self.assertEqual(result["status"]["62d"], "HELD")
@@ -710,7 +680,7 @@ class MutationTests(unittest.TestCase):
     def _copy_mutation_goes_red(self, filename: str, old: str, new: str,
                                 test_name: str, label: str) -> None:
         source_dir = Path(__file__).resolve().parent
-        with tempfile.TemporaryDirectory(prefix=".part62-mutation-", dir=source_dir) as temporary:
+        with tempfile.TemporaryDirectory(prefix="part62-mutation-") as temporary:
             copy_dir = Path(temporary) / "part62"
             copy_dir.mkdir()
             for name in ("run62.py", "analyze62.py", "blind62.py", "test_part62.py"):
@@ -739,8 +709,8 @@ class MutationTests(unittest.TestCase):
     def test_real_62c_comparison_mutation_goes_red_in_copy(self):
         self._copy_mutation_goes_red(
             "analyze62.py",
-            'details["62c"].get("width_10_90", math.inf) < PREDICTION_62C_MAX_WIDTH',
-            'details["62c"].get("width_10_90", math.inf) <= PREDICTION_62C_MAX_WIDTH',
+            "qwen_width < PREDICTION_62C_MAX_WIDTH",
+            "qwen_width <= PREDICTION_62C_MAX_WIDTH",
             "test_part62.AnalysisTests.test_62c_and_62d_use_strict_width_boundaries_for_fit_or_bracket",
             "62c strict boundary")
 

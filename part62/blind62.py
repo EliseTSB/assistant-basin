@@ -8,7 +8,6 @@ import hashlib
 import json
 import math
 import os
-import fcntl
 from pathlib import Path
 import random
 import re
@@ -16,6 +15,7 @@ import secrets
 import sys
 import tempfile
 import time
+import math
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
@@ -23,6 +23,8 @@ if str(PROJECT_ROOT) not in sys.path:
 
 import blind_origin as origin
 from part59 import blind_setting as setting
+from paidaction.paid_ledger import DEFAULT_LEDGER_PATH, HARD_CAP_USD, Ledger, submit_in_chunks
+from paidaction.pricing import BATCH_RATES_USD_PER_MILLION
 
 try:
     from . import run62
@@ -30,24 +32,68 @@ except ImportError:
     import run62
 
 
-# Keep the Part 59A calibration refusal boundary.
-CALIBRATION_ERROR_LIMIT = setting.CALIBRATION_ERROR_LIMIT
+# Part 62's gate compares Haiku with the historical Opus labels for a balanced
+# sample of Part 54a origin answers.
+CALIBRATION_KAPPA_MIN = 0.8
+CALIBRATION_SEED = 62062
+CALIBRATION_SAMPLE_SIZE = 120
 # Both registered readers need at least 1,024 output tokens.
 MAX_TOKENS = 1024
-EXPECTED_OUTPUT_TOKENS = 150
 # Only normal final-answer stops count as verified completion; max_tokens means truncation.
 ACCEPTED_STOP_REASONS = ("end_turn", "stop_sequence")
 # This fixed shuffle seed makes the hidden answer order reproducible.
 SHUFFLE_SEED = 62062
 # This stage has a hard cumulative reserve/settlement cap.
 READER_MODELS = {"haiku": "claude-haiku-5-5", "opus": "claude-opus-5-5"}
-READER_CAPS_USD = {"haiku": 4.0, "opus": 8.0}
-BATCH_RATES_USD_PER_MILLION = {"haiku": (0.05, 0.25), "opus": (2.0, 10.0)}
+READER_CAPS_USD = {"haiku": 4.0, "opus": HARD_CAP_USD}
+READER_KINDS = {"haiku": "part62-haiku", "opus": "part62-opus"}
 DEFAULT_READER = "haiku"
 MODEL = READER_MODELS[DEFAULT_READER]
 RUBRIC = origin.RUBRIC
 _CAL_LABELS = {"SCIFI": "OFFWORLD", "EARTH-REAL": "EARTH", "FANTASY": "NEITHER", "OTHER": "NEITHER"}
-CAL = [(_CAL_LABELS[label], quality, text) for label, quality, text in setting.CAL]
+CAL = []  # populated from the recorded Part 54a Opus labels by calibration_sample()
+
+
+def calibration_sample() -> list[tuple[str, str, str]]:
+    """Return a deterministic 40-per-origin sample from labelled Part 54a answers."""
+    project_root = Path(origin.__file__).resolve().parent
+    rows = origin.answers(project_root / "results" / "part54a")
+    random.Random(2681).shuffle(rows)  # reproduce Part 54a's answer-id ordering
+    classes = {"EARTH": [], "OFFWORLD": [], "NEITHER": []}
+    for labels_path in sorted((project_root / "review").glob("origin-labels-*.json")):
+        batch_id = labels_path.name[len("origin-labels-"):-len(".json")]
+        idmap_path = project_root / "review" / f"origin-idmap-{batch_id}.json"
+        if not idmap_path.is_file():
+            continue
+        try:
+            labels = json.loads(labels_path.read_text(encoding="utf-8"))
+            idmap = json.loads(idmap_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        for custom_id, answer_id in idmap.items():
+            if not answer_id.startswith("ans|") or labels.get(answer_id) is None:
+                continue
+            try:
+                index = int(answer_id.split("|", 1)[1])
+                origin_label = labels[answer_id][0]
+                row = rows[index]
+            except (ValueError, IndexError, TypeError):
+                continue
+            if origin_label in classes and row["text"]:
+                classes[origin_label].append((answer_id, origin_label, row["text"]))
+        if all(len(items) >= 40 for items in classes.values()):
+            break
+    if not all(len(items) >= 40 for items in classes.values()):
+        raise ValueError("could not construct balanced 120-item Part 54a calibration sample")
+    rng = random.Random(CALIBRATION_SEED)
+    sample = []
+    for label in ("EARTH", "OFFWORLD", "NEITHER"):
+        sample.extend(rng.sample(classes[label], 40))
+    rng.shuffle(sample)
+    return [(label, answer_id, text) for answer_id, label, text in sample]
+
+
+CAL = calibration_sample()
 
 
 def _cell_key(row: dict) -> tuple:
@@ -138,7 +184,7 @@ def answers(folder: str | Path) -> list[dict]:
         raise ValueError(f"Part 62 cell files do not match manifest; extras={extras[:3]}, missing={missing[:3]}")
 
     rows = []
-    seen_seeds = set()
+    seen_seed_vectors = set()
     for key, expected in expected_by_key.items():
         path = root / expected["file"]
         cell_spec = {name: value for name, value in expected.items() if name != "file"}
@@ -198,23 +244,29 @@ def answers(folder: str | Path) -> list[dict]:
                 or condition.get("n") != run62.SAMPLES
                 or not all(isinstance(text, str) for text in samples)):
             raise ValueError(f"{path.name} must contain {run62.SAMPLES} text answers")
-        seed = condition.get("seed")
-        if not isinstance(seed, int) or seed in seen_seeds:
-            raise ValueError(f"{path.name} has a missing or repeated independent condition seed")
-        expected_seed = parameters["seed"]
-        if seed != expected_seed:
-            raise ValueError(f"{path.name} seed does not match its independent condition key")
+        seeds = condition.get("seeds")
+        if seeds != parameters["seeds"] or condition.get("seed") != parameters["seed"]:
+            raise ValueError(f"{path.name} sample seeds do not match their registered condition key")
+        seed_vector = tuple(seeds)
+        if expected["kind"] == "twin":
+            for sample_index, sample_seed in enumerate(seeds):
+                expected_paired = run62.paired_sample_seeds(
+                    base_seed, expected["model"], expected["dose"], expected["question"])[sample_index]
+                if sample_seed != expected_paired:
+                    raise ValueError(f"{path.name} sample {sample_index} seed is not paired by dose")
+        if expected["kind"] == "control" and seed_vector in seen_seed_vectors:
+            raise ValueError(f"{path.name} has a repeated control sample seed vector")
         target_maximum = float(model_meta["pile_maximum"])
         expected_value = parameters["set_value"]
         value = condition.get("set_value")
         if not isinstance(value, (int, float)) or not math.isclose(value, expected_value, rel_tol=1e-6):
             raise ValueError(f"{path.name} activation value does not match the registered write size")
-        seen_seeds.add(seed)
         for index, text in enumerate(samples):
             rows.append({"model": expected["model"], "question": expected["question"],
                          "dose": float(expected["dose"]), "phase": expected["phase"],
                          "kind": expected["kind"], "cond": expected_name,
-                         "unit": int(expected["unit"]), "seed": seed, "i": index, "text": text})
+                         "unit": int(expected["unit"]), "seed": seeds[index], "i": index, "text": text})
+        seen_seed_vectors.add(seed_vector)
     if len(rows) != run62.expected_generation_count():
         raise ValueError(f"Part 62 writer produced {len(rows)} answers; expected {run62.expected_generation_count()}")
     return rows
@@ -222,24 +274,46 @@ def answers(folder: str | Path) -> list[dict]:
 
 def _calibration_wrong(labels: dict) -> list[str]:
     wrong = []
-    for index, (expected_origin, expected_quality, _text) in enumerate(CAL):
-        key = f"cal|{index}|{expected_origin}|{expected_quality}"
-        if labels.get(key) != [expected_origin, expected_quality]:
+    for index, (expected_origin, _answer_id, _text) in enumerate(CAL):
+        key = f"cal|{index}|{expected_origin}|ORIGIN"
+        value = labels.get(key)
+        if not value or value[0] != expected_origin:
             wrong.append(key)
     return wrong
+
+
+def _calibration_kappa(labels: dict) -> float | None:
+    observed = []
+    expected = []
+    for index, (expected_origin, _answer_id, _text) in enumerate(CAL):
+        value = labels.get(f"cal|{index}|{expected_origin}|ORIGIN")
+        if not value or value[0] not in ("EARTH", "OFFWORLD", "NEITHER"):
+            return None
+        expected.append(expected_origin)
+        observed.append(value[0])
+    n = len(expected)
+    if n != CALIBRATION_SAMPLE_SIZE:
+        return None
+    agreement = sum(a == b for a, b in zip(expected, observed)) / n
+    categories = ("EARTH", "OFFWORLD", "NEITHER")
+    expected_chance = sum(expected.count(c) * observed.count(c) for c in categories) / (n * n)
+    return 1.0 if expected_chance == 1.0 and agreement == 1.0 else (
+        (agreement - expected_chance) / (1.0 - expected_chance))
 
 
 def scoring_gate(labels: dict, answer_ids: list[str], completion_issues: dict | None = None) -> dict:
     """Refuse scoring after calibration failure, truncation, or any missing answer label."""
     wrong = _calibration_wrong(labels)
     unlabelled = sorted(answer_id for answer_id in answer_ids if labels.get(answer_id) is None)
-    if len(wrong) > CALIBRATION_ERROR_LIMIT:
-        raise ValueError(f"calibration gate failed: {len(wrong)} errors exceeds {CALIBRATION_ERROR_LIMIT}")
+    kappa = _calibration_kappa(labels)
+    if kappa is None or kappa < CALIBRATION_KAPPA_MIN:
+        raise ValueError(f"calibration gate failed: {len(wrong)} unagreed, kappa={kappa}")
     if completion_issues:
         raise ValueError(f"truncated or unverified batch completion: {len(completion_issues)} response(s)")
     if unlabelled:
         raise ValueError(f"unlabelled answer present: refusing to score ({len(unlabelled)} unlabelled)")
-    return {"calibration_wrong": wrong, "unlabelled_answers": unlabelled,
+    return {"calibration_wrong": wrong, "calibration_kappa": kappa,
+            "unlabelled_answers": unlabelled,
             "completion_issues": {}}
 
 
@@ -266,40 +340,31 @@ def _save_json(path: Path, data: dict) -> None:
         raise
 
 
-def estimate_submission_cost(requests: list[dict], reader: str = DEFAULT_READER) -> float:
-    """Reserve actual expected output (150 tokens/request) plus request-byte input estimate."""
-    if reader not in BATCH_RATES_USD_PER_MILLION:
-        raise ValueError(f"unknown Part 62 reader: {reader}")
-    input_bytes = sum(len(json.dumps(request, ensure_ascii=False,
-                                     separators=(",", ":")).encode("utf-8"))
-                      for request in requests)
-    output_tokens = len(requests) * EXPECTED_OUTPUT_TOKENS
-    input_rate, output_rate = BATCH_RATES_USD_PER_MILLION[reader]
-    return ((input_bytes * input_rate + output_tokens * output_rate) / 1_000_000)
-
-
-def _submission_ledger(review_dir: Path, reader: str = DEFAULT_READER) -> tuple[Path, dict]:
-    model, cap = READER_MODELS[reader], READER_CAPS_USD[reader]
-    path = review_dir / f"part62-submission-ledger-{reader}.json"
-    if not path.exists():
-        return path, {"schema": "part62-submission-ledger-v1", "reader": reader,
-                      "cap_usd": cap, "model": model, "attempts": []}
+def _save_raw_results(path: Path, lines: list[str]) -> None:
+    """Durably preserve provider rows keyed by their stable custom IDs."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, temporary = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
     try:
-        ledger = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        raise ValueError(f"cannot read Part 62 submission ledger: {exc}") from exc
-    if (ledger.get("schema") != "part62-submission-ledger-v1"
-            or ledger.get("model") != model or ledger.get("reader", reader) != reader
-            or float(ledger.get("cap_usd", -1)) != cap
-            or not isinstance(ledger.get("attempts"), list)):
-        raise ValueError("Part 62 submission ledger has a different model/cap/schema; refusing submit")
-    return path, ledger
-
-
-def _reserved_submission_usd(ledger: dict) -> float:
-    active = {"reserved", "posting", "ambiguous", "submitted", "collected"}
-    return sum(float(row.get("reserved_usd", 0.0)) for row in ledger["attempts"]
-               if row.get("status") in active)
+        with os.fdopen(fd, "w", encoding="utf-8") as stream:
+            for line in lines:
+                row = json.loads(line)
+                if not isinstance(row.get("custom_id"), str):
+                    raise ValueError("provider raw result lacks a stable custom_id")
+                stream.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+        directory_fd = os.open(path.parent, os.O_RDONLY)
+        try:
+            os.fsync(directory_fd)
+        finally:
+            os.close(directory_fd)
+    except Exception:
+        try:
+            os.unlink(temporary)
+        except FileNotFoundError:
+            pass
+        raise
 
 
 def _preflight_submission(folder: str | Path, review_dir: str | Path, reader: str = DEFAULT_READER):
@@ -325,36 +390,15 @@ def _preflight_submission(folder: str | Path, review_dir: str | Path, reader: st
     return review_dir, idmap, keymap, requests
 
 
-def _attempt_paths(review_dir: Path, attempt_id: str) -> dict[str, Path]:
-    stem = f"part62-attempt-{attempt_id}"
-    return {"idmap": review_dir / f"{stem}-idmap.json",
-            "key": review_dir / f"{stem}-key.json",
-            "intent": review_dir / f"{stem}-intent.json"}
-
-
-def _definitive_rejection(exc: BaseException) -> bool:
-    """Only release the paid-action reserve for a 4xx carrying an Anthropic error body."""
-    match = re.search(r"HTTP\s+(4\d\d)\b[^:]*:\s*(\{.*\})", str(exc), re.DOTALL)
-    if not match:
-        return False
-    try:
-        body = json.loads(match.group(2))
-    except json.JSONDecodeError:
-        return False
-    return isinstance(body, dict) and body.get("type") == "error" and isinstance(body.get("error"), dict)
-
-
-@contextmanager
-def _submission_lock(review_dir: Path):
-    """Serialize ledger reservations; flock is released automatically on process death."""
-    lock_path = review_dir / ".part62-submit.lock"
-    fd = os.open(lock_path, os.O_CREAT | os.O_RDWR, 0o600)
-    try:
-        fcntl.flock(fd, fcntl.LOCK_EX)
-        yield
-    finally:
-        fcntl.flock(fd, fcntl.LOCK_UN)
-        os.close(fd)
+class _StageLedger(Ledger):
+    """Shared $8 ledger with Part 62 Haiku's $4 kind-tag sub-cap."""
+    def reserve(self, worst_case_usd, kind, meta=None):
+        if kind == READER_KINDS["haiku"]:
+            state = self.state()
+            totals = state["per_kind"].get(kind, {"settled": 0.0, "reserved": 0.0})
+            if totals["settled"] + totals["reserved"] + worst_case_usd > READER_CAPS_USD["haiku"] + 1e-12:
+                raise ValueError("Part 62 Haiku $4 sub-cap would be exceeded")
+        return super().reserve(worst_case_usd, kind, meta)
 
 
 def prepare_batch(rows: list[dict], reader: str = DEFAULT_READER) -> tuple[dict, dict, list[dict]]:
@@ -364,8 +408,8 @@ def prepare_batch(rows: list[dict], reader: str = DEFAULT_READER) -> tuple[dict,
     if reader not in READER_MODELS:
         raise ValueError(f"unknown Part 62 reader {reader!r}")
     items = [(f"ans|{number}", row["text"]) for number, row in enumerate(rows)]
-    items.extend((f"cal|{index}|{label}|{quality}", text)
-                 for index, (label, quality, text) in enumerate(CAL))
+    items.extend((f"cal|{index}|{label}|ORIGIN", text)
+                 for index, (label, _answer_id, text) in enumerate(CAL))
     key = {f"ans|{number}": {name: value for name, value in row.items() if name != "text"}
            for number, row in enumerate(rows)}
     idmap, requests = {}, []
@@ -380,17 +424,6 @@ def prepare_batch(rows: list[dict], reader: str = DEFAULT_READER) -> tuple[dict,
     return idmap, key, requests
 
 
-def _save_attempt_state(ledger_path: Path, ledger: dict, attempt_path: Path,
-                        attempt: dict) -> None:
-    _save_json(ledger_path, ledger)
-    _save_json(attempt_path, attempt)
-
-
-def _known_batch_attempt(ledger: dict, batch_id: str) -> dict | None:
-    return next((row for row in ledger["attempts"]
-                 if row.get("batch_id") == batch_id and row.get("status") in ("submitted", "collected")), None)
-
-
 def _haiku_calibration_failed(review_dir: Path) -> bool:
     for path in sorted(review_dir.glob("part62-labels-*.json")):
         try:
@@ -403,124 +436,117 @@ def _haiku_calibration_failed(review_dir: Path) -> bool:
     return False
 
 
-def submit(folder: str | Path, review_dir: str | Path, reader: str = DEFAULT_READER) -> str:
+def submit(folder: str | Path, review_dir: str | Path, reader: str = DEFAULT_READER,
+           ledger_path: str | Path = DEFAULT_LEDGER_PATH) -> str:
     if reader not in READER_MODELS:
         raise ValueError(f"unknown Part 62 reader {reader!r}")
     review_dir = Path(review_dir).resolve()
     if reader == "opus" and not _haiku_calibration_failed(review_dir):
         raise ValueError("Opus fallback refused: a failed Haiku calibration record is required")
     review_dir, idmap, keymap, requests = _preflight_submission(folder, review_dir, reader)
-    with _submission_lock(review_dir):
-        return _submit_prepared(review_dir, idmap, keymap, requests, reader)
+    model = READER_MODELS[reader]
+    ledger_path = Path(ledger_path)
+    ledger = _StageLedger(ledger_path, HARD_CAP_USD)
+    raw_results = []
+    batch_ids = []
+    rates = BATCH_RATES_USD_PER_MILLION[model]
 
-
-def _submit_prepared(review_dir: Path, idmap: dict, keymap: dict,
-                     requests: list[dict], reader: str = DEFAULT_READER) -> str:
-    model, cap = READER_MODELS[reader], READER_CAPS_USD[reader]
-    ledger_path, ledger = _submission_ledger(review_dir, reader)
-    known = next((row for row in reversed(ledger["attempts"])
-                  if row.get("status") in ("submitted", "collected")
-                  and isinstance(row.get("batch_id"), str)), None)
-    if known is not None:
-        batch_id = known["batch_id"]
-        print(f"already submitted: {batch_id}; collect it before any new submit")
-        return batch_id
-
-    # A process killed in the POST window cannot tell whether the service accepted it.
-    # Keep that reservation and allow only a new, separately reserved attempt.
-    for old in ledger["attempts"]:
-        if old.get("status") == "posting":
-            old["status"] = "ambiguous"
-            old["ambiguous_at"] = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
-        elif old.get("status") == "reserved":
-            old["status"] = "released"
-            old["released_at"] = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
-            old["release_reason"] = "process stopped before POST began"
-            old["reserved_usd"] = 0.0
-    _save_json(ledger_path, ledger)
-
-    reserve = estimate_submission_cost(requests, reader)
-    spent = _reserved_submission_usd(ledger)
-    if spent + reserve > cap + 1e-12:
-        raise ValueError(f"Part 62 spend cap refused attempt: settled/reserved ${spent:.4f} plus "
-                         f"conservative reserve ${reserve:.4f} exceeds ${cap:.2f}; no POST was made")
-
-    attempt_id = secrets.token_hex(8)
-    paths = _attempt_paths(review_dir, attempt_id)
-    request_bytes = json.dumps(requests, ensure_ascii=False,
-                               separators=(",", ":")).encode("utf-8")
-    request_sha256 = hashlib.sha256(request_bytes).hexdigest()
-    attempt = {
-        "attempt_id": attempt_id, "status": "reserved", "batch_id": None,
-        "created_at": time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()),
-        "reader": reader, "model": model, "max_tokens": MAX_TOKENS, "request_count": len(requests),
-        "answer_count": len(keymap), "calibration_count": len(CAL),
-        "request_sha256": request_sha256, "idmap_file": paths["idmap"].name,
-        "key_file": paths["key"].name, "intent_file": paths["intent"].name,
-        "reserved_usd": round(reserve, 8), "cap_limit_usd": cap,
-    }
-    # Persist the blinded request map and a durable intent before recording a
-    # reserve, then mark the attempt posting immediately before the one POST.
-    _save_json(paths["idmap"], idmap)
-    _save_json(paths["key"], keymap)
-    _save_json(paths["intent"], attempt)
-    ledger["attempts"].append(attempt)
-    try:
-        _save_attempt_state(ledger_path, ledger, paths["intent"], attempt)
-        attempt["status"] = "posting"
-        attempt["post_started_at"] = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
-        _save_attempt_state(ledger_path, ledger, paths["intent"], attempt)
-    except Exception:
-        attempt["status"] = "released"
-        attempt["reserved_usd"] = 0.0
-        attempt["released_at"] = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
-        attempt["release_reason"] = "local persistence failed before POST"
-        try:
-            _save_attempt_state(ledger_path, ledger, paths["intent"], attempt)
-        except Exception:
-            pass
-        raise
-
-    try:
-        response_text = setting.call("POST", "/v1/messages/batches", {"requests": requests})
-        result = json.loads(response_text)
-        batch_id = result.get("id") if isinstance(result, dict) else None
+    def submit_chunk(chunk, attempt_id, record_batch_id):
+        response = json.loads(setting.call("POST", "/v1/messages/batches", {"requests": list(chunk)}))
+        batch_id = response.get("id")
         if not isinstance(batch_id, str) or not batch_id:
             raise ValueError("batch POST response did not contain an id")
-    except BaseException as exc:
-        if _definitive_rejection(exc):
-            attempt["status"] = "rejected"
-            attempt["reserved_usd"] = 0.0
-            attempt["released_at"] = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
-            attempt["error"] = f"{type(exc).__name__}: {exc}"
-            _save_attempt_state(ledger_path, ledger, paths["intent"], attempt)
-            raise RuntimeError(f"Part 62 batch was definitively rejected; reservation released: {exc}") from None
-        attempt["status"] = "ambiguous"
-        attempt["ambiguous_at"] = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
-        attempt["error"] = f"{type(exc).__name__}: {exc}"
-        _save_attempt_state(ledger_path, ledger, paths["intent"], attempt)
-        raise RuntimeError("ambiguous Part 62 batch POST; reservation remains counted; rerun submit for a new capped attempt") from None
+        record_batch_id(batch_id)
+        batch_ids.append(batch_id)
+        custom_ids = [request["custom_id"] for request in chunk]
+        chunk_idmap = {custom_id: idmap[custom_id] for custom_id in custom_ids}
+        chunk_answers = {internal_id: keymap[internal_id] for internal_id in chunk_idmap.values()
+                         if internal_id.startswith("ans|")}
+        _save_json(review_dir / f"part62-idmap-{batch_id}.json", chunk_idmap)
+        _save_json(review_dir / f"part62-key-{batch_id}.json", chunk_answers)
+        _save_json(review_dir / f"part62-batch-{batch_id}.json", {
+            "batch_id": batch_id, "reader": reader, "model": model,
+            "max_tokens": max(request["params"]["max_tokens"] for request in chunk),
+            "request_count": len(chunk), "custom_ids": custom_ids,
+        })
+        while True:
+            status_data = json.loads(setting.call("GET", f"/v1/messages/batches/{batch_id}"))
+            if status_data.get("processing_status") == "ended":
+                break
+            if status_data.get("processing_status") in ("canceled", "errored", "expired"):
+                raise RuntimeError(f"batch {batch_id} ended as {status_data['processing_status']}; reserve retained")
+            time.sleep(5)
+        lines = setting.call("GET", f"/v1/messages/batches/{batch_id}/results").splitlines()
+        _save_raw_results(review_dir / f"part62-raw-{batch_id}.jsonl", lines)
+        usage = {"input_tokens": 0, "output_tokens": 0, "requests": []}
+        for line in lines:
+            row = json.loads(line)
+            raw_results.append(line)
+            message = row.get("result", {}).get("message", {})
+            u = message.get("usage", {})
+            if not isinstance(u.get("input_tokens"), int) or not isinstance(u.get("output_tokens"), int):
+                raise ValueError(f"batch {batch_id} result lacks usage; reservation remains active")
+            usage["input_tokens"] += u["input_tokens"]
+            usage["output_tokens"] += u["output_tokens"]
+            usage["requests"].append({"custom_id": row.get("custom_id"), **u})
+        if len(usage["requests"]) != len(chunk):
+            raise ValueError(f"batch {batch_id} returned an incomplete result set; reservation remains active")
+        actual = (usage["input_tokens"] * rates[0] + usage["output_tokens"] * rates[1]) / 1_000_000
+        return {"actual_usd": actual, "usage": usage}
 
-    # The first durable action after receiving the provider id records it in the
-    # ledger. No lookup, listing, or adoption path follows an ambiguous POST.
-    attempt["batch_id"] = batch_id
-    attempt["status"] = "submitted"
-    attempt["submitted_at"] = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
-    attempt["processing_status"] = result.get("processing_status")
-    _save_json(ledger_path, ledger)
-
-    _save_json(paths["intent"], attempt)
-    _save_json(review_dir / f"part62-idmap-{batch_id}.json", idmap)
-    _save_json(review_dir / f"part62-key-{batch_id}.json", keymap)
-    _save_json(review_dir / f"part62-batch-{batch_id}.json", {
-        "batch_id": batch_id, "processing_status": result.get("processing_status"),
-        "request_count": len(requests), "answer_count": len(keymap),
-        "calibration_count": len(CAL), "reader": reader, "model": model, "max_tokens": MAX_TOKENS,
-        "attempt_id": attempt_id, "request_sha256": request_sha256,
-        "reserved_usd": round(reserve, 8),
-    })
-    print(f"reader={reader} model={model} batch={batch_id} status={result.get('processing_status')} requests={len(requests)}")
-    return batch_id
+    calibration_ids = {custom_id for custom_id, internal in idmap.items() if internal.startswith("cal|")}
+    calibration_requests = [request for request in requests if request["custom_id"] in calibration_ids]
+    answer_requests = [request for request in requests if request["custom_id"] not in calibration_ids]
+    common = {"ledger": ledger, "model": model, "submit": submit_chunk,
+              "batch_id_path": review_dir / "part62-batch-ids.jsonl",
+              "kind": READER_KINDS[reader],
+              "meta": {"stage": "part62", "reader": reader,
+                       "calibration_seed": CALIBRATION_SEED,
+                       "calibration_sample_ids": [item[1] for item in CAL]}}
+    calibration_chunks = submit_in_chunks(calibration_requests, 200, **common)
+    partial_labels, partial_reasons = parse_batch_results(raw_results, idmap)
+    calibration_keys = [key for key in partial_labels if key.startswith("cal|")]
+    calibration_issue = {k: v for k, v in partial_reasons.items()
+                         if k.startswith("cal|") and v not in ACCEPTED_STOP_REASONS}
+    kappa = _calibration_kappa(partial_labels)
+    if calibration_issue or kappa is None or kappa < CALIBRATION_KAPPA_MIN:
+        failed = {"schema": "part62-blind-labels-v1", "batch_ids": batch_ids,
+                  "reader": reader, "model": model, "max_tokens": MAX_TOKENS,
+                  "calibration": {"count": len(CAL), "seed": CALIBRATION_SEED,
+                                  "sample_ids": [item[1] for item in CAL], "kappa": kappa,
+                                  "wrong": len(_calibration_wrong(partial_labels)),
+                                  "passed": False, "completion_issues": calibration_issue},
+                       "paid_chunks": calibration_chunks, "ledger_path": str(ledger_path)}
+        _save_json(review_dir / f"part62-labels-{batch_ids[-1]}.json", failed)
+        raise ValueError("Haiku calibration gate failed; answer batch was not submitted")
+    calibration_output_tokens = max((int(item.get("output_tokens", 0))
+                                     for line in raw_results
+                                     for item in [json.loads(line).get("result", {}).get("message", {}).get("usage", {})]
+                                     if json.loads(line).get("custom_id") in calibration_ids), default=0)
+    answer_max_tokens = max(MAX_TOKENS, int(math.ceil(calibration_output_tokens * 1.5)))
+    for request in answer_requests:
+        request["params"]["max_tokens"] = answer_max_tokens
+    results = calibration_chunks + submit_in_chunks(answer_requests, 200, **common)
+    labels, reasons = parse_batch_results(raw_results, idmap)
+    issues = {key: reason for key, reason in reasons.items() if reason not in ACCEPTED_STOP_REASONS}
+    record = {"schema": "part62-blind-labels-v1", "batch_ids": batch_ids,
+              "reader": reader, "model": model, "max_tokens": answer_max_tokens,
+              "calibration": {"count": len(CAL), "seed": CALIBRATION_SEED,
+                              "sample_ids": [item[1] for item in CAL],
+                              "kappa": _calibration_kappa(labels),
+                              "wrong": len(_calibration_wrong(labels)),
+                              "passed": ((_calibration_kappa(labels) or 0) >= CALIBRATION_KAPPA_MIN),
+                              "completion_issues": {k: v for k, v in issues.items() if k.startswith("cal|")}},
+              "completion": {"accepted_stop_reasons": list(ACCEPTED_STOP_REASONS),
+                             "issues": issues, "passed": not issues},
+              "answer_count": len(keymap), "unlabelled_answers": [k for k in keymap if labels.get(k) is None],
+              "scoring_allowed": False, "labels": labels,
+              "paid_chunks": results, "ledger_path": str(ledger_path)}
+    record["scoring_allowed"] = record["calibration"]["passed"] and not issues and not record["unlabelled_answers"]
+    _save_json(review_dir / f"part62-labels-{batch_ids[-1]}.json", record)
+    if not record["scoring_allowed"]:
+        raise ValueError("Part 62 calibration, completion, or label gate failed; scoring is refused")
+    return batch_ids[-1]
 
 
 def status(batch_id: str, review_dir: str | Path = "results/part62-review") -> None:
@@ -561,66 +587,6 @@ def parse_batch_results(lines, idmap: dict, max_tokens: int = MAX_TOKENS) -> tup
     return labels, completion_reasons
 
 
-def collect(batch_id: str, review_dir: str | Path) -> dict:
-    review_dir = Path(review_dir)
-    batch_path = review_dir / f"part62-batch-{batch_id}.json"
-    batch_info = json.loads(batch_path.read_text(encoding="utf-8")) if batch_path.is_file() else {}
-    reader = batch_info.get("reader", DEFAULT_READER)
-    model = batch_info.get("model", READER_MODELS.get(reader, MODEL))
-    idmap_path = review_dir / f"part62-idmap-{batch_id}.json"
-    key_path = review_dir / f"part62-key-{batch_id}.json"
-    if not idmap_path.is_file() or not key_path.is_file():
-        _ledger_path, ledger = _submission_ledger(review_dir, reader)
-        attempt = _known_batch_attempt(ledger, batch_id)
-        if attempt is None:
-            raise ValueError(f"no saved Part 62 submission intent for batch {batch_id}")
-        idmap_path = review_dir / attempt["idmap_file"]
-        key_path = review_dir / attempt["key_file"]
-    idmap = json.loads(idmap_path.read_text(encoding="utf-8"))
-    key = json.loads(key_path.read_text(encoding="utf-8"))
-    lines = setting.call("GET", f"/v1/messages/batches/{batch_id}/results").splitlines()
-    labels, completion_reasons = parse_batch_results(lines, idmap)
-    wrong = _calibration_wrong(labels)
-    answer_unlabelled = sorted(internal_id for internal_id in key if labels.get(internal_id) is None)
-    completion_issues = {internal_id: reason for internal_id, reason in completion_reasons.items()
-                         if reason not in ACCEPTED_STOP_REASONS}
-    calibration_ids = {f"cal|{index}|{label}|{quality}"
-                       for index, (label, quality, _text) in enumerate(CAL)}
-    calibration_completion_issues = {internal_id: reason for internal_id, reason in completion_issues.items()
-                                     if internal_id in calibration_ids}
-    calibration_passed = (len(wrong) <= CALIBRATION_ERROR_LIMIT
-                          and not calibration_completion_issues)
-    record = {
-        "schema": "part62-blind-labels-v1", "batch_id": batch_id, "reader": reader,
-        "model": model, "max_tokens": MAX_TOKENS,
-        "calibration": {"count": len(CAL), "error_limit": CALIBRATION_ERROR_LIMIT,
-                        "wrong": len(wrong), "wrong_ids": wrong,
-                        "completion_issues": calibration_completion_issues,
-                        "passed": calibration_passed},
-        "completion": {"accepted_stop_reasons": list(ACCEPTED_STOP_REASONS),
-                       "issues": completion_issues,
-                       "passed": not completion_issues},
-        "answer_count": len(key), "unlabelled_answers": answer_unlabelled,
-        "scoring_allowed": calibration_passed and not answer_unlabelled and not completion_issues,
-        "labels": labels,
-    }
-    _save_json(review_dir / f"part62-labels-{batch_id}.json", record)
-    ledger_path, ledger = _submission_ledger(review_dir, reader)
-    attempt = _known_batch_attempt(ledger, batch_id)
-    if attempt is not None:
-        attempt["status"] = "collected"
-        attempt["collected_at"] = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
-        _save_json(ledger_path, ledger)
-    print(f"reader={reader} model={model}; calibration wrong: {len(wrong)} of {len(CAL)}; "
-          f"unlabelled answers: {len(answer_unlabelled)} of {len(key)}")
-    try:
-        scoring_gate(labels, list(key), completion_issues)
-    except ValueError as exc:
-        raise SystemExit(str(exc)) from exc
-    _print_tally(key, labels, reader)
-    return record
-
-
 def _print_tally(key: dict, labels: dict, reader: str = DEFAULT_READER) -> None:
     counts = {}
     for answer_id, meta in key.items():
@@ -649,9 +615,6 @@ def parser() -> argparse.ArgumentParser:
     status_parser = sub.add_parser("status")
     status_parser.add_argument("batch_id")
     status_parser.add_argument("--review-dir", default=str(PROJECT_ROOT / "results" / "part62-review"))
-    collect_parser = sub.add_parser("collect")
-    collect_parser.add_argument("batch_id")
-    collect_parser.add_argument("--review-dir", default=str(PROJECT_ROOT / "results" / "part62-review"))
     return ap
 
 
@@ -661,8 +624,6 @@ def main(argv: list[str] | None = None) -> None:
         submit(args.folder, args.review_dir, args.reader)
     elif args.command == "status":
         status(args.batch_id, args.review_dir)
-    else:
-        collect(args.batch_id, args.review_dir)
 
 
 if __name__ == "__main__":

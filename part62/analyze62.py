@@ -161,7 +161,7 @@ def _count_row(counts: dict, group: tuple) -> dict:
     return counts.setdefault(group, {"n": 0, "EARTH": 0, "OFFWORLD": 0,
                                      "NEITHER": 0, "BROKEN": 0,
                                      "proxy_offworld": 0, "proxy_scifi": 0,
-                                     "proxy_earth": 0})
+                                     "proxy_earth": 0, "paired_offworld": {}})
 
 
 def aggregate(rows: list[dict], labels: dict) -> tuple[dict, dict]:
@@ -177,6 +177,7 @@ def aggregate(rows: list[dict], labels: dict) -> tuple[dict, dict]:
         bucket["n"] += 1
         bucket[label[0]] += 1
         bucket["BROKEN"] += label[1] == "BROKEN"
+        bucket["paired_offworld"][f"{row['question']}|{int(row['i'])}"] = label[0] == "OFFWORLD"
         flags = proxy_flags(row["text"])
         bucket["proxy_offworld"] += flags["offworld"]
         bucket["proxy_scifi"] += flags["scifi"]
@@ -184,10 +185,54 @@ def aggregate(rows: list[dict], labels: dict) -> tuple[dict, dict]:
     return counts, {"answer_count": len(rows), "groups": len(counts)}
 
 
+def _binomial_cdf(k: int, n: int, p: float) -> float:
+    return sum(math.comb(n, j) * p**j * (1.0 - p)**(n-j) for j in range(k + 1))
+
+
+def _clopper_pearson(successes: int, n: int, alpha: float = 0.0125) -> tuple[float, float]:
+    """Two-sided exact binomial interval; alpha is per proportion for 95% joint coverage."""
+    if n <= 0 or not 0 <= successes <= n:
+        raise ValueError("invalid binomial count")
+    if successes == 0:
+        low = 0.0
+    else:
+        target = 1.0 - alpha / 2.0
+        left, right = 0.0, 1.0
+        for _ in range(70):
+            mid = (left + right) / 2
+            if _binomial_cdf(successes - 1, n, mid) > target:
+                left = mid
+            else:
+                right = mid
+        low = (left + right) / 2
+    if successes == n:
+        high = 1.0
+    else:
+        target = alpha / 2.0
+        left, right = 0.0, 1.0
+        for _ in range(70):
+            mid = (left + right) / 2
+            tail = 1.0 - _binomial_cdf(successes, n, mid)
+            if tail > target:
+                right = mid
+            else:
+                left = mid
+        high = (left + right) / 2
+    return low, high
+
+
+def _difference_interval(both_successes: int, gen_successes: int, n: int) -> list[float]:
+    """Conservative exact-binomial 95% interval for p(both)-p(gen), Bonferroni adjusted."""
+    both_low, both_high = _clopper_pearson(both_successes, n)
+    gen_low, gen_high = _clopper_pearson(gen_successes, n)
+    return [both_low - gen_high, both_high - gen_low]
+
+
 def fit_by_model_phase(counts: dict, models: dict) -> dict:
     fits = {}
     for model_name in run62.MODELS:
         for phase in run62.PHASES:
+            meta = models[model_name]
             points = []
             for dose in run62.DOSES:
                 row = counts.get((model_name, phase, "twin", float(dose)), {})
@@ -196,7 +241,6 @@ def fit_by_model_phase(counts: dict, models: dict) -> dict:
                 points.append((dose, offworld, total))
             fit = fit_logistic(points)
             if fit["status"] == "fit":
-                meta = models[model_name]
                 fit["midpoint_alien_frame_units"] = (
                     fit["midpoint"] * meta["pile_maximum"] / meta["alien_frame_maximum"])
             else:
@@ -206,6 +250,11 @@ def fit_by_model_phase(counts: dict, models: dict) -> dict:
                     fit.update({"status": "bracketed", "bracket": bracket,
                                 "width_10_90": bracket["width_10_90"],
                                 "mle_status": "not-estimable"})
+                    low = bracket["last_below_10_dose"]
+                    high = bracket["first_at_or_above_90_dose"]
+                    scale = meta["pile_maximum"] / meta["alien_frame_maximum"]
+                    fit["midpoint_alien_frame_interval"] = [low * scale, high * scale]
+                    fit["midpoint_alien_frame_units"] = (low + high) * 0.5 * scale
             fits[(model_name, phase)] = fit
     return fits
 
@@ -223,11 +272,30 @@ def evaluate_predictions(counts: dict, fits: dict) -> dict:
             if both.get("n") != ANSWERS_PER_DOSE or gen.get("n") != ANSWERS_PER_DOSE:
                 comparisons.append({"model": model_name, "dose": dose, "evaluable": False})
             else:
-                difference = abs(both["OFFWORLD"] - gen["OFFWORLD"])
+                paired_both = both.get("paired_offworld", {})
+                paired_gen = gen.get("paired_offworld", {})
+                paired = (set(paired_both) == set(paired_gen) ==
+                          {f"{question}|{i}" for question in run62.QUESTIONS
+                           for i in range(run62.SAMPLES)})
+                if not paired:
+                    comparisons.append({"model": model_name, "dose": dose, "evaluable": False,
+                                        "reason": "paired sample seed outcomes are missing"})
+                    continue
+                both_count = sum(paired_both.values())
+                gen_count = sum(paired_gen.values())
+                signed_difference = both_count - gen_count
+                difference = abs(signed_difference)
                 comparisons.append({"model": model_name, "dose": dose, "evaluable": True,
                                     "both_offworld": both["OFFWORLD"], "gen_offworld": gen["OFFWORLD"],
+                                    "paired_difference": signed_difference / ANSWERS_PER_DOSE,
+                                    "paired_count_difference": signed_difference,
+                                    "difference_95_binomial_interval": _difference_interval(
+                                        both_count, gen_count, ANSWERS_PER_DOSE),
+                                    "interval_method": "Bonferroni difference of exact Clopper-Pearson intervals",
                                     "absolute_difference": difference,
-                                    "held": difference <= PREDICTION_62A_MAX_DIFFERENCE})
+                                    "held": difference <= PREDICTION_62A_MAX_DIFFERENCE,
+                                    "sampling_noise_status": ("held within sampling noise"
+                                        if difference <= PREDICTION_62A_MAX_DIFFERENCE else "outside registered limit")})
     details["62a"] = comparisons
     details["62b"] = [
         {"model": model_name, "dose": dose,
@@ -247,24 +315,42 @@ def evaluate_predictions(counts: dict, fits: dict) -> dict:
     def complete(rows: list[dict], predicate) -> bool:
         return bool(rows) and all(row.get("evaluable", True) and predicate(row) for row in rows)
 
+    def status_for(evaluable: bool, holds: bool) -> str:
+        return ("NOT-EVALUABLE" if not evaluable else "HELD" if holds else "FAILED")
+
+    qwen_fit, olmo_fit = details["62c"], details["62d"]
+    qwen_width, olmo_width = qwen_fit.get("width_10_90"), olmo_fit.get("width_10_90")
+    qwen_width_valid = isinstance(qwen_width, (int, float)) and math.isfinite(qwen_width)
+    olmo_width_valid = isinstance(olmo_width, (int, float)) and math.isfinite(olmo_width)
+    qwen_midpoint = qwen_fit.get("midpoint_alien_frame_units")
+    qwen_interval = qwen_fit.get("midpoint_alien_frame_interval")
+    midpoint_holds = (isinstance(qwen_midpoint, (float, int)) and
+                      PREDICTION_62G_MIN_ALIEN_UNITS <= qwen_midpoint <= PREDICTION_62G_MAX_ALIEN_UNITS)
+    if qwen_interval is not None:
+        midpoint_holds = (qwen_interval[0] >= PREDICTION_62G_MIN_ALIEN_UNITS and
+                          qwen_interval[1] <= PREDICTION_62G_MAX_ALIEN_UNITS)
     statuses = {
-        "62a": "HELD" if complete(comparisons, lambda row: row["held"]) else "FAILED",
-        "62b": "HELD" if complete(details["62b"],
-                                  lambda row: row["n"] == ANSWERS_PER_DOSE and row["offworld"] is not None
-                                  and row["offworld"] <= PREDICTION_62B_MAX_OFFWORLD) else "FAILED",
-        "62c": "HELD" if details["62c"].get("status") in ("fit", "bracketed")
-                           and details["62c"].get("width_10_90", math.inf) < PREDICTION_62C_MAX_WIDTH else "FAILED",
-        "62d": "HELD" if details["62d"].get("status") in ("fit", "bracketed")
-                           and details["62d"].get("width_10_90", -math.inf) > PREDICTION_62D_MIN_WIDTH else "FAILED",
-        "62e": "HELD" if details["62e"].get("n") == ANSWERS_PER_DOSE
-                           and details["62e"].get("OFFWORLD", math.inf) <= PREDICTION_62E_MAX_OFFWORLD else "FAILED",
-        "62f": "HELD" if complete(details["62f"],
-                                  lambda row: row["n"] == ANSWERS_PER_DOSE and row["offworld"] is not None
-                                  and row["offworld"] <= PREDICTION_62F_MAX_OFFWORLD) else "FAILED",
-        "62g": "HELD" if isinstance(details["62g"], (float, int))
-                           and PREDICTION_62G_MIN_ALIEN_UNITS <= details["62g"]
-                           <= PREDICTION_62G_MAX_ALIEN_UNITS else "FAILED",
+        "62a": ("NOT-EVALUABLE" if not all(row.get("evaluable") for row in comparisons)
+                else "HELD WITHIN SAMPLING NOISE" if complete(comparisons, lambda row: row["held"])
+                else "FAILED"),
+        "62b": status_for(all(row["n"] == ANSWERS_PER_DOSE and row["offworld"] is not None
+                              for row in details["62b"]),
+                          complete(details["62b"], lambda row: row["offworld"] is not None and
+                                   row["offworld"] <= PREDICTION_62B_MAX_OFFWORLD)),
+        "62c": status_for(qwen_fit.get("status") in ("fit", "bracketed") and qwen_width_valid,
+                          qwen_width_valid and qwen_width < PREDICTION_62C_MAX_WIDTH),
+        "62d": status_for(olmo_fit.get("status") == "fit" and olmo_width_valid,
+                          olmo_width_valid and olmo_width > PREDICTION_62D_MIN_WIDTH),
+        "62e": status_for(details["62e"].get("n") == ANSWERS_PER_DOSE and
+                          details["62e"].get("OFFWORLD") is not None,
+                          details["62e"].get("OFFWORLD", math.inf) <= PREDICTION_62E_MAX_OFFWORLD),
+        "62f": status_for(all(row["n"] == ANSWERS_PER_DOSE and row["offworld"] is not None
+                              for row in details["62f"]),
+                          complete(details["62f"], lambda row: row["offworld"] is not None and
+                                   row["offworld"] <= PREDICTION_62F_MAX_OFFWORLD)),
+        "62g": status_for(qwen_midpoint is not None, midpoint_holds),
     }
+    details["62g"] = {"estimate": qwen_midpoint, "interval": qwen_interval}
     decisions = {
         "threshold_vs_gradual": ("retired" if statuses["62d"] == "FAILED"
                                  else "not retired under 62d"),
@@ -292,8 +378,8 @@ def _label_inputs(folder: Path, labels_path: Path, review_dir: Path) -> tuple[li
     if (not isinstance(calibration, dict) or not isinstance(completion, dict)
             or not isinstance(stored_labels, dict)
             or calibration.get("passed") is not True
-            or calibration.get("error_limit") != blind62.CALIBRATION_ERROR_LIMIT
             or calibration.get("wrong") != len(blind62._calibration_wrong(stored_labels))
+            or calibration.get("kappa") != blind62._calibration_kappa(stored_labels)
             or calibration.get("completion_issues")
             or completion.get("passed") is not True
             or completion.get("issues")

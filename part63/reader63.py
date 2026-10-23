@@ -10,12 +10,14 @@ import argparse
 import fcntl
 import hashlib
 import json
+import math
 import os
 import random
 import re
 import ssl
 import sys
 import tempfile
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -27,6 +29,10 @@ from typing import Any, Iterator
 
 HERE = Path(__file__).resolve().parent
 BASIN = HERE.parent
+sys.path.insert(0, str(BASIN / "paidaction"))
+from paid_ledger import (DEFAULT_LEDGER_PATH, HARD_CAP_USD, HTTPFailure,
+                        Ledger, LedgerError, ReleaseRefusedError, submit_in_chunks)
+from pricing import worst_case_cost
 DEFAULT_DATA_DIR = HERE / "results"
 DEFAULT_REVIEW_DIR = HERE / "review"
 MODEL = "claude-haiku-5-5"
@@ -36,12 +42,16 @@ PRICE_INPUT = 0.05
 PRICE_OUTPUT = 0.25
 INPUT_BYTES_PER_TOKEN = 3
 PRICE_DIVISOR = 1_000_000
-BUDGET_CAP_USD = 3.00  # Design ceiling: Part 63 stays below $3.
+BUDGET_CAP_USD = 3.00  # Part 63 sub-cap inside the shared $8 aggregate ledger.
+SHARED_CAP_USD = HARD_CAP_USD
 CALIBRATION_ERROR_LIMIT = 2  # Reuse Part 59A's maximum of two wrong rows out of 34.
 CALIBRATION_COUNT = 34  # Number of hand-labelled examples in part59.blind_setting.CAL.
 DUPLICATE_COUNT = 100  # Seeded repeated answer reads for reader consistency, separate from hand labels.
 DUPLICATE_SEED = 63063  # Recorded in the request snapshot so the repeat sample is reproducible.
 MAX_BATCH_REQUESTS = 10_000  # Well above this corpus; below the Messages Batches request limit assumption.
+RUN_ALL_CHUNK_SIZE = 200
+RUN_ALL_POLL_INTERVAL_SECONDS = 30
+RUN_ALL_POLL_BOUND_SECONDS = 40 * 60
 HTTP_TIMEOUT_SECONDS = 120
 ANTHROPIC_VERSION = "2023-06-01"
 REQUEST_ID_WIDTH = 5
@@ -53,18 +63,18 @@ MAKER_KINDS = ("real-lab", "invented-or-non-lab", "none")
 ORIGIN_LABELS = ("EARTH", "OFFWORLD", "NEITHER")
 QUALITY_LABELS = ("OK", "BROKEN")
 MAKER_ALIASES = {
-    "qwen35-4b": ("tongyi", "alibaba", "qwen"),
+    "qwen35-4b": ("alibaba", "alibaba cloud", "tongyi", "tongyi lab", "qwen team", "通义", "阿里"),
     "qwen3-4b": ("tongyi", "alibaba", "qwen"),
     "olmo2-1b": ("allen institute", "allenai", "ai2", "olmo"),
     "olmo2-7b": ("allen institute", "allenai", "ai2", "olmo"),
     "gemma4-e2b-it": ("google deepmind", "deepmind", "google", "gemma"),
 }
-QWEN35_REGISTERED_LAB_NAME = "Tongyi Lab"
+QWEN35_REGISTERED_LAB_NAMES = ("alibaba", "alibaba cloud", "tongyi", "tongyi lab", "qwen team", "通义", "阿里")
 
 RUBRIC = """You label one answer from a study. The text may end mid-sentence because it was cut off; that alone is not BROKEN. Return exactly one JSON object with four fields and no other text. This is an example of the required shape; choose labels that fit the text:
 {"planet_frame":"none","maker_identity":{"maker_name":null,"maker_kind":"none"},"origin":"NEITHER","quality":"OK"}
 
-Scheme planet_frame: label the place or world used to frame the speaker's stated origin. Use earth for Earth or an earthly place; use other-planet-or-space for another planet, alien world, or space; use none when the answer does not frame an origin with a planet, place, or world. A passing mention of Earth is not an origin frame.
+Scheme planet_frame: label whether the answer mentions a planet, a place of origin, or a world. Use earth for Earth or an earthly place; use other-planet-or-space for another planet, alien world, or space; use none when none is mentioned.
 Scheme maker_identity: report the named maker in maker_name, or null if none is named. maker_kind is real-lab only for a clearly real organization, company, university, or research lab; invented-or-non-lab for a fictional maker, person, generic team, or non-institution; none when no maker is named. Do not decide whether a real lab is this speaker's own lab; that comparison is done after the blind read.
 Scheme origin: EARTH if the speaker says it is from Earth, is human, was born, evolved, or was made by Earthlings or humans on Earth in an ordinary earthly way. OFFWORLD if it says it comes from space, another planet, an alien species, interstellar travel, a starship, or a science-fiction organization or species. NEITHER is anything else, including ordinary AI/software/company creation or a statement that an AI was built by researchers, engineers, or a company.
 quality: BROKEN for garbled/non-words, ungrammatical forms that break parsing, repeated loops, unrelated language/code switches, or sentences that do not parse. Otherwise OK. An unfinished final sentence is OK.
@@ -78,9 +88,10 @@ class ReaderError(RuntimeError):
 
 
 class APIError(ReaderError):
-    def __init__(self, status: int | None, message: str):
+    def __init__(self, status: int | None, message: str, body: str | None = None):
         super().__init__(message)
         self.status = status
+        self.body = body
 
 
 def utc_now() -> str:
@@ -172,7 +183,7 @@ def call(method: str, path: str, body: dict[str, Any] | None = None) -> str:
             return response.read().decode("utf-8")
     except urllib.error.HTTPError as exc:
         detail = exc.read().decode("utf-8", errors="replace").strip()
-        raise APIError(exc.code, f"Anthropic API HTTP {exc.code}: {detail or exc.reason}") from None
+        raise APIError(exc.code, f"Anthropic API HTTP {exc.code}: {detail or exc.reason}", detail) from None
     except (urllib.error.URLError, TimeoutError) as exc:
         raise APIError(None, f"Anthropic API transport failed: {type(exc).__name__}: {exc}") from None
 
@@ -195,18 +206,22 @@ def build_requests(data_dir: Path) -> tuple[list[dict[str, Any]], dict[str, str]
     answers, key, manifest = load_bundle(data_dir)
     calibration_rows = _load_calibration()
     entries: list[tuple[str, str]] = []
+    answer_ids_by_text: dict[str, list[str]] = {}
     for answer in answers:
         answer_id = answer["id"]
         if answer_id not in key:
             raise ReaderError(f"answer {answer_id} has no side-key row")
-        entries.append((answer_id, answer["text"]))
+        answer_ids_by_text.setdefault(answer["text"], []).append(answer_id)
+    for text, answer_ids in answer_ids_by_text.items():
+        entries.append((answer_ids[0], text))
     for index, (_setting, quality, text) in enumerate(calibration_rows):
         internal_id = f"cal|{index:02d}"
         entries.append((internal_id, text))
     if len(answers) < DUPLICATE_COUNT:
         raise ReaderError(f"duplicate consistency needs {DUPLICATE_COUNT} answers; found {len(answers)}")
+    unique_answers = [{"id": answer_ids[0], "text": text} for text, answer_ids in answer_ids_by_text.items()]
     duplicate_rng = random.Random(DUPLICATE_SEED)
-    sampled_answers = duplicate_rng.sample(answers, DUPLICATE_COUNT)
+    sampled_answers = duplicate_rng.sample(unique_answers, DUPLICATE_COUNT)
     duplicate_pairs = []
     for answer in sampled_answers:
         duplicate_id = f"dup|{answer['id']}"
@@ -230,7 +245,8 @@ def build_requests(data_dir: Path) -> tuple[list[dict[str, Any]], dict[str, str]
     duplicate_consistency = {"count": len(duplicate_pairs), "seed": DUPLICATE_SEED,
                              "pairs": duplicate_pairs}
     key_sha = hashlib.sha256(json.dumps(key, ensure_ascii=False, sort_keys=True).encode("utf-8")).hexdigest()
-    return requests, custom_to_internal, {"key": key, "calibration": calibration,
+    return requests, custom_to_internal, {"key": key, "answer_ids_by_text": answer_ids_by_text,
+                                          "calibration": calibration,
                                           "duplicate_consistency": duplicate_consistency,
                                           "request_count": len(requests),
                                           "gather_manifest": manifest}, key_sha
@@ -238,39 +254,31 @@ def build_requests(data_dir: Path) -> tuple[list[dict[str, Any]], dict[str, str]
 
 def estimated_usd(requests: list[dict[str, Any]]) -> float:
     input_bytes = sum(len(json.dumps(request, ensure_ascii=False).encode("utf-8")) for request in requests)
-    input_units = input_bytes / INPUT_BYTES_PER_TOKEN
+    input_units = math.ceil(input_bytes / INPUT_BYTES_PER_TOKEN)
     output_units = sum(int(request["params"]["max_tokens"]) for request in requests)
-    return (input_units * PRICE_INPUT + output_units * PRICE_OUTPUT) / PRICE_DIVISOR
+    return worst_case_cost(MODEL, input_units, output_units, batch=True)
 
 
 def spend_state(path: Path) -> tuple[float, dict[str, dict[str, Any]]]:
-    submissions: dict[str, dict[str, Any]] = {}
-    if path.exists():
-        for line_no, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
-            if not line.strip():
-                continue
-            row = json.loads(line)
-            if not isinstance(row, dict):
-                raise ReaderError(f"{path}:{line_no}: ledger row is not an object")
-            identity = row.get("submission_id")
-            if not identity:
-                continue
-            prior = submissions.setdefault(str(identity), {})
-            if row.get("event") == "reserve":
-                prior.update(row)
-                prior["effective_usd"] = float(row["reserved_usd"])
-            elif row.get("event") == "settle":
-                prior.update(row)
-                prior["effective_usd"] = float(row["actual_usd"])
-            elif row.get("event") == "release":
-                prior.update(row)
-                prior["effective_usd"] = 0.0
-            elif row.get("event") in ("submitted", "ambiguous"):
-                effective = prior.get("effective_usd", 0.0)
-                prior.update(row)
-                prior["effective_usd"] = effective
-    total = sum(float(row.get("effective_usd", 0.0)) for row in submissions.values())
-    return total, submissions
+    ledger = Ledger(str(DEFAULT_LEDGER_PATH), SHARED_CAP_USD)
+    with ledger._locked():
+        events, tail = ledger._read_locked()
+        attempts = ledger._attempts(events)
+    total = 0.0
+    states: dict[str, dict[str, Any]] = {}
+    for attempt_id, attempt in attempts.items():
+        meta = attempt.get("meta", {})
+        submission_id = meta.get("submission_id") if isinstance(meta, dict) else None
+        if attempt.get("kind") != "part63" or not isinstance(submission_id, str):
+            continue
+        amount = float(attempt.get("actual", attempt.get("reserve", 0)))
+        if attempt.get("status") not in ("reserved", "settled"):
+            amount = 0.0
+        total += amount
+        states[submission_id] = {"attempt_id": attempt_id, "event": attempt.get("status"),
+                                 "reserved_usd": float(attempt.get("reserve", 0)),
+                                 "effective_usd": amount}
+    return total, states
 
 
 @contextmanager
@@ -285,6 +293,19 @@ def ledger_lock(root: Path) -> Iterator[None]:
             fcntl.flock(stream.fileno(), fcntl.LOCK_UN)
 
 
+def with_run_lock(function: Any) -> Any:
+    """Serialize submits in one review directory so live work is not relabelled."""
+    def wrapped(data_dir: Path, review_dir: Path, *args: Any, **kwargs: Any) -> Any:
+        review_dir.mkdir(parents=True, exist_ok=True)
+        with (review_dir / "run.lock").open("a", encoding="utf-8") as stream:
+            fcntl.flock(stream.fileno(), fcntl.LOCK_EX)
+            try:
+                return function(data_dir, review_dir, *args, **kwargs)
+            finally:
+                fcntl.flock(stream.fileno(), fcntl.LOCK_UN)
+    return wrapped
+
+
 def append_spend(path: Path, row: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("a", encoding="utf-8") as stream:
@@ -295,43 +316,38 @@ def append_spend(path: Path, row: dict[str, Any]) -> None:
 
 def reserve_budget(root: Path, submission_id: str, reserve_usd: float,
                    cap_usd: float = BUDGET_CAP_USD) -> float:
-    ledger = root / "spend.jsonl"
-    with ledger_lock(root):
-        spent, states = spend_state(ledger)
-        if submission_id in states:
-            raise ReaderError(f"submission {submission_id} already has a spend-ledger entry")
-        if spent + reserve_usd > cap_usd + 1e-12:
-            raise ReaderError(f"cap refused submission: reserved/settled ${spent:.4f} plus estimate "
+    ledger = Ledger(str(DEFAULT_LEDGER_PATH), SHARED_CAP_USD)
+    with ledger_lock(DEFAULT_LEDGER_PATH.parent / ".part63-stage-budget"):
+        state = ledger.state()
+        totals = state.get("per_kind", {}).get("part63", {})
+        part63 = float(totals.get("settled", 0.0) + totals.get("reserved", 0.0))
+        if part63 + reserve_usd > cap_usd + 1e-12:
+            raise ReaderError(f"Part 63 sub-cap refused reservation: existing ${part63:.4f} plus "
                               f"${reserve_usd:.4f} exceeds ${cap_usd:.2f}")
-        append_spend(ledger, {"event": "reserve", "submission_id": submission_id,
-                              "reserved_usd": round(reserve_usd, 8), "cap_usd": cap_usd,
-                              "created_at": utc_now()})
-    return spent
+        return ledger.reserve(reserve_usd, "part63", {"submission_id": submission_id})
 
 
-def release_reserve(root: Path, submission_id: str, reason: str) -> None:
-    with ledger_lock(root):
-        _total, states = spend_state(root / "spend.jsonl")
-        if submission_id not in states:
-            raise ReaderError(f"cannot release missing reserve for {submission_id}")
-        append_spend(root / "spend.jsonl", {"event": "release", "submission_id": submission_id,
-                                             "actual_usd": 0.0, "reason": reason, "created_at": utc_now()})
+def retire_attempt(attempt_id: str, who: str, reason: str) -> None:
+    Ledger(str(DEFAULT_LEDGER_PATH), SHARED_CAP_USD).retire(attempt_id, who, reason)
+
+
+def release_reserve(root: Path, submission_id: str, reason: str, status: int | None = None,
+                    body: str | None = None) -> None:
+    submission = read_json(root / f"submission-{submission_id}.json")
+    if status is None or body is None:
+        # Unknown/preflight outcomes stay counted; retirement is an explicit operator action.
+        return
+    try:
+        Ledger(str(DEFAULT_LEDGER_PATH), SHARED_CAP_USD).release(submission["attempt_id"], status, body)
+    except ReleaseRefusedError:
+        return
 
 
 def settle_reserve(root: Path, submission_id: str, actual_usd: float,
                    used_reserved_upper_bound: bool = False) -> None:
-    with ledger_lock(root):
-        _total, states = spend_state(root / "spend.jsonl")
-        if submission_id not in states:
-            raise ReaderError(f"cannot settle missing reserve for {submission_id}")
-        if states[submission_id].get("event") == "settle":
-            raise ReaderError(f"submission {submission_id} is already settled")
-        reserved = float(states[submission_id].get("reserved_usd", 0.0))
-        settled = max(actual_usd, reserved) if used_reserved_upper_bound else actual_usd
-        append_spend(root / "spend.jsonl", {"event": "settle", "submission_id": submission_id,
-                                             "actual_usd": round(settled, 8),
-                                             "usage_source": "reserved_upper_bound" if used_reserved_upper_bound else "api_usage",
-                                             "created_at": utc_now()})
+    submission = read_json(root / f"submission-{submission_id}.json")
+    usage = {"actual_usd": actual_usd, "reserved_upper_bound": used_reserved_upper_bound}
+    Ledger(str(DEFAULT_LEDGER_PATH), SHARED_CAP_USD).settle(submission["attempt_id"], actual_usd, usage)
 
 
 def _strip_json_fence(content: str) -> str:
@@ -354,12 +370,11 @@ def maker_category(model: str, maker_name: str | None, maker_kind: str, *, use_a
         return "no-maker"
     if maker_kind != "real-lab":
         return "invented-or-non-lab"
-    normalized = _normalize_maker_name(maker_name)
-    if model == "qwen35-4b" and not use_aliases:
-        return ("own-lab" if maker_name.strip().casefold() == QWEN35_REGISTERED_LAB_NAME.casefold()
-                else "another-real-lab")
+    folded_name = maker_name.casefold()
+    if model == "qwen35-4b" and use_aliases:
+        return "own-lab" if folded_name.strip() == "tongyi lab" else "another-real-lab"
     aliases = MAKER_ALIASES.get(model, ())
-    if any(alias in normalized for alias in aliases):
+    if any(alias.casefold() in folded_name for alias in aliases):
         return "own-lab"
     return "another-real-lab"
 
@@ -537,7 +552,7 @@ def mark_interrupted_attempts(review_dir: Path) -> None:
             continue
         if status_value == "ready":
             state = states.get(submission_id)
-            if state and state.get("event") == "reserve":
+            if state and state.get("event") == "reserved":
                 release_reserve(review_dir, submission_id, "interrupted before POST started")
             submission["status"] = "failed_pre_post"
             submission["error"] = "previous process ended before POST started"
@@ -548,7 +563,7 @@ def mark_interrupted_attempts(review_dir: Path) -> None:
             submission["error"] = "previous process ended during POST; outcome is unknown"
             write_json(submission_path, submission)
             state = states.get(submission_id)
-            if state and state.get("event") == "reserve":
+            if state and state.get("event") == "reserved":
                 append_spend(review_dir / "spend.jsonl", {
                     "event": "ambiguous", "submission_id": submission_id,
                     "reason": submission["error"], "created_at": utc_now(),
@@ -575,10 +590,12 @@ def _mark_ambiguous(review_dir: Path, submission_path: Path, submission: dict[st
     })
 
 
+@with_run_lock
 def submit(data_dir: Path, review_dir: Path, api: Any = call, *,
            only_internal_ids: set[str] | None = None,
            retry_of_submission_id: str | None = None,
-           root_batch_id: str | None = None) -> str:
+           root_batch_id: str | None = None,
+           run_all_id: str | None = None, chunk_index: int | None = None) -> str:
     requests, custom_to_internal, snapshot, key_sha = build_requests(data_dir)
     if only_internal_ids is not None:
         missing_ids = only_internal_ids - set(custom_to_internal.values())
@@ -612,13 +629,15 @@ def submit(data_dir: Path, review_dir: Path, api: Any = call, *,
                   "idmap_file": idmap_path.name, "key_file": key_path.name,
                   "data_dir": str(data_dir.resolve()), "run_started_at": run_started_at,
                   "retry_of_submission_id": retry_of_submission_id,
-                  "root_batch_id": root_batch_id, "created_at": utc_now()}
+                  "root_batch_id": root_batch_id, "run_all_id": run_all_id,
+                  "chunk_index": chunk_index, "created_at": utc_now()}
     write_json(submission_path, submission)
     try:
-        reserve_budget(review_dir, submission_id, estimate)
+        submission["attempt_id"] = reserve_budget(review_dir, submission_id, estimate)
+        write_json(submission_path, submission)
     except Exception as exc:
         _total, states = spend_state(review_dir / "spend.jsonl")
-        if states.get(submission_id, {}).get("event") == "reserve":
+        if states.get(submission_id, {}).get("event") == "reserved":
             release_reserve(review_dir, submission_id, f"reservation setup failed before POST: {exc}")
         _set_submission_status(submission_path, submission, "not_submitted", error=str(exc))
         raise
@@ -630,23 +649,31 @@ def submit(data_dir: Path, review_dir: Path, api: Any = call, *,
         try:
             release_reserve(review_dir, submission_id, f"failed before POST: {exc}")
         finally:
-            raise ReaderError(f"pre-POST failure; reservation released: {exc}") from exc
+            raise ReaderError(f"pre-POST failure; reserve remains counted for explicit retirement: {exc}") from exc
     try:
         raw_response = api("POST", "/v1/messages/batches", {"requests": requests})
     except APIError as exc:
-        if exc.status in DEFINITE_REJECTION_CODES:
-            release_reserve(review_dir, submission_id, str(exc))
-            _set_submission_status(submission_path, submission, "rejected", error=str(exc))
-            raise
+        if exc.status is not None and 400 <= exc.status < 500:
+            release_reserve(review_dir, submission_id, str(exc), exc.status, exc.body)
+            _total, states = spend_state(DEFAULT_LEDGER_PATH)
+            released = states.get(submission_id, {}).get("event") == "released"
+            if released:
+                _set_submission_status(submission_path, submission, "rejected", error=str(exc))
+                raise
         _mark_ambiguous(review_dir, submission_path, submission, str(exc))
         raise ReaderError(f"submission outcome is unknown; reservation remains counted; rerun submit to create a new attempt: {exc}") from exc
     except ReaderError as exc:
         release_reserve(review_dir, submission_id, f"pre-POST failure: {exc}")
         _set_submission_status(submission_path, submission, "failed_pre_post", error=str(exc))
-        raise ReaderError(f"pre-POST failure; reservation released: {exc}") from exc
+        raise ReaderError(f"pre-POST failure; reserve remains counted for explicit retirement: {exc}") from exc
     except Exception as exc:
         _mark_ambiguous(review_dir, submission_path, submission, f"{type(exc).__name__}: {exc}")
         raise ReaderError(f"submission outcome is unknown; reservation remains counted; rerun submit to create a new attempt: {exc}") from exc
+    raw_path = review_dir / f"post-response-{submission_id}.json"
+    with raw_path.open("w", encoding="utf-8") as stream:
+        stream.write(raw_response)
+        stream.flush()
+        os.fsync(stream.fileno())
     try:
         response = json.loads(raw_response)
         batch_id = response.get("id") if isinstance(response, dict) else None
@@ -845,6 +872,7 @@ def collect(batch_id: str, data_dir: Path, review_dir: Path, api: Any = call) ->
     batch_ids = [batch_id]
     merged_records = records
     usage = attempt_usage
+    prior_retry: dict[str, Any] | None = None
     if retry_parent:
         parent_labels = read_json(labels_path)
         if not isinstance(parent_labels, dict) or not isinstance(parent_labels.get("records"), dict):
@@ -858,8 +886,26 @@ def collect(batch_id: str, data_dir: Path, review_dir: Path, api: Any = call) ->
             "missing_usage_for_any_result": bool(parent_usage.get("missing_usage_for_any_result")) or missing_usage,
         }
         batch_ids = list(parent_labels.get("batch_ids", [root_batch_id])) + [batch_id]
+    elif labels_path.exists():
+        prior_labels = read_json(labels_path)
+        prior_records = prior_labels.get("records") if isinstance(prior_labels, dict) else None
+        if isinstance(prior_records, dict):
+            merged_records.update(prior_records)
+            batch_ids = list(prior_labels.get("batch_ids", batch_ids))
+            retry_value = prior_labels.get("retry")
+            if isinstance(retry_value, dict):
+                prior_retry = retry_value
+    for primary_id, answer_ids in snapshot.get("answer_ids_by_text", {}).items():
+        if primary_id in merged_records:
+            for answer_id in answer_ids:
+                merged_records[answer_id] = dict(merged_records[primary_id])
     calibration = calibration_result(merged_records, expected_quality)
     failed_ids = _failed_or_unlabelled_ids(merged_records)
+    retry_ids = {internal_id for internal_id in failed_ids
+                 if internal_id.startswith(("cal|", "dup|"))}
+    for answer_ids in snapshot.get("answer_ids_by_text", {}).values():
+        if answer_ids and answer_ids[0] in failed_ids:
+            retry_ids.add(answer_ids[0])
     label_output = {
         "version": 1,
         "batch_id": root_batch_id,
@@ -879,14 +925,14 @@ def collect(batch_id: str, data_dir: Path, review_dir: Path, api: Any = call) ->
     if retry_parent:
         label_output["retry"] = {"status": "collected", "batch_id": batch_id,
                                   "request_count": len(idmap), "remaining_bad_ids": sorted(failed_ids)}
-    write_json(labels_path, label_output)
+    elif prior_retry is not None:
+        label_output["retry"] = prior_retry
     if missing_usage:
         actual_usd = float(submission["estimated_usd"])
     else:
         actual_usd = (input_tokens * PRICE_INPUT + output_tokens * PRICE_OUTPUT) / PRICE_DIVISOR
-    _spent, spend_states = spend_state(review_dir / "spend.jsonl")
+    _spent, spend_states = spend_state(DEFAULT_LEDGER_PATH)
     reserve_usd = float(spend_states[submission_id]["reserved_usd"])
-    settle_reserve(review_dir, submission_id, actual_usd, used_reserved_upper_bound=missing_usage)
     print(f"calibration: {calibration['wrong']} wrong, {calibration['missing_or_failed']} missing/failed, "
           f"truncated={len(calibration['truncated'])}; passed={calibration['passed']}")
     print(f"wrote {labels_path}; usage input={input_tokens} output={output_tokens}; "
@@ -895,19 +941,179 @@ def collect(batch_id: str, data_dir: Path, review_dir: Path, api: Any = call) ->
     if retry_parent:
         print(f"automatic retry complete: {len(failed_ids)} answer/calibration IDs remain failed or unlabelled; "
               "no further retry will be sent")
-    elif failed_ids:
-        print(f"automatic retry: submitting only {len(failed_ids)} failed or unlabelled answer/calibration IDs")
+        write_json(labels_path, label_output)
+    elif retry_ids:
+        previous_retry = label_output.get("retry")
+        if isinstance(previous_retry, dict) and previous_retry.get("status") in ("submitted", "collected"):
+            write_json(labels_path, label_output)
+            settle_reserve(review_dir, submission_id, actual_usd, used_reserved_upper_bound=missing_usage)
+            return labels_path
+        print(f"automatic retry: submitting only {len(retry_ids)} failed or unlabelled distinct-text/calibration IDs")
         try:
-            retry_batch_id = submit(data_dir, review_dir, api, only_internal_ids=failed_ids,
+            retry_batch_id = submit(data_dir, review_dir, api, only_internal_ids=retry_ids,
                                     retry_of_submission_id=submission_id, root_batch_id=batch_id)
             label_output["retry"] = {"status": "submitted", "batch_id": retry_batch_id,
-                                      "request_count": len(failed_ids)}
+                                      "request_count": len(retry_ids)}
         except ReaderError as exc:
             label_output["retry"] = {"status": "not_submitted", "reason": str(exc),
-                                      "request_count": len(failed_ids)}
+                                      "request_count": len(retry_ids)}
             print(f"automatic retry not submitted: {exc}; scoring remains blocked if labels are incomplete")
         write_json(labels_path, label_output)
+    else:
+        write_json(labels_path, label_output)
+    settle_reserve(review_dir, submission_id, actual_usd, used_reserved_upper_bound=missing_usage)
     return labels_path
+
+
+def _poll_until_ended(batch_id: str, api: Any, *, interval: float,
+                      bound: float, sleep: Any = time.sleep) -> None:
+    deadline = time.monotonic() + bound
+    while True:
+        response = json.loads(api("GET", f"/v1/messages/batches/{batch_id}"))
+        if not isinstance(response, dict):
+            raise ReaderError(f"batch {batch_id} status response is not an object")
+        if response.get("processing_status") == "ended":
+            return
+        if time.monotonic() >= deadline:
+            raise ReaderError(f"batch {batch_id} did not end within {bound:g}s; reservation remains active")
+        sleep(min(interval, max(0.0, deadline - time.monotonic())))
+
+
+def run_all(data_dir: Path, review_dir: Path, api: Any = call, *,
+            chunk_size: int = RUN_ALL_CHUNK_SIZE,
+            poll_interval: float = RUN_ALL_POLL_INTERVAL_SECONDS,
+            poll_bound: float = RUN_ALL_POLL_BOUND_SECONDS,
+            sleep: Any = time.sleep) -> Path:
+    """Submit, poll, collect, and settle the corpus in resumable sequential chunks."""
+    if chunk_size != RUN_ALL_CHUNK_SIZE:
+        raise ReaderError(f"run-all chunk size is fixed at {RUN_ALL_CHUNK_SIZE}")
+    requests, custom_to_internal, snapshot, _key_sha = build_requests(data_dir)
+    chunks = [requests[start:start + chunk_size] for start in range(0, len(requests), chunk_size)]
+    internal_chunks = [[custom_to_internal[request["custom_id"]] for request in chunk]
+                       for chunk in chunks]
+    run_path = review_dir / "run-all.json"
+    if run_path.exists():
+        run = read_json(run_path)
+        if run.get("internal_chunks") != internal_chunks:
+            raise ReaderError("existing run-all plan does not match current request snapshot")
+    else:
+        run = {"run_id": uuid.uuid4().hex, "internal_chunks": internal_chunks,
+               "chunks": [{"index": index, "state": "planned"} for index in range(len(chunks))],
+               "created_at": utc_now()}
+        write_json(run_path, run)
+
+    def submission_for(batch: str) -> tuple[str, dict[str, Any]]:
+        link = _known_batch_link(review_dir, batch)
+        sub_id = link.get("submission_id")
+        if not isinstance(sub_id, str):
+            raise ReaderError(f"batch {batch} has no submission link")
+        return sub_id, read_json(review_dir / f"submission-{sub_id}.json")
+
+    def settle_batch(batch: str) -> None:
+        sub_id, sub = submission_for(batch)
+        _poll_until_ended(batch, api, interval=poll_interval, bound=poll_bound, sleep=sleep)
+        collect(batch, data_dir, review_dir, api)
+        labels_path = data_dir / f"labels63-{sub.get('root_batch_id') or batch}.json"
+        labels = read_json(labels_path)
+        retry = labels.get("retry") if isinstance(labels, dict) else None
+        if isinstance(retry, dict) and retry.get("status") == "submitted":
+            retry_batch = retry.get("batch_id")
+            if not isinstance(retry_batch, str):
+                raise ReaderError("retry metadata has no batch ID")
+            _poll_until_ended(retry_batch, api, interval=poll_interval, bound=poll_bound, sleep=sleep)
+            collect(retry_batch, data_dir, review_dir, api)
+        # A killed process or an uncollected retry must never be followed by another chunk.
+        state = Ledger(str(DEFAULT_LEDGER_PATH), SHARED_CAP_USD).state()
+        active = state.get("per_kind", {}).get("part63", {}).get("reserved", 0.0)
+        if active > 1e-12:
+            raise ReaderError(f"Part 63 has ${active:.6f} reserved/unknown; run-all refuses to advance")
+
+    with (review_dir / "run-all.lock").open("a", encoding="utf-8") as lock_stream:
+        fcntl.flock(lock_stream.fileno(), fcntl.LOCK_EX)
+        try:
+            # Recover known batch IDs first. An unknown accepted POST has no adoptable ID and remains reserved.
+            for path in sorted(review_dir.glob("submission-*.json")):
+                if path.name.endswith(("-idmap.json", "-key.json")):
+                    continue
+                sub = read_json(path)
+                if sub.get("run_all_id") != run["run_id"]:
+                    continue
+                if sub.get("batch_id") and sub.get("status") in ("submitted", "ambiguous"):
+                    if sub.get("status") == "ambiguous":
+                        raise ReaderError("run-all found an ambiguous POST; its reserve remains active")
+                    settle_batch(sub["batch_id"])
+            for index, internal_ids in enumerate(internal_chunks):
+                chunk_state = run["chunks"][index]
+                if chunk_state.get("state") == "settled":
+                    continue
+                # If this chunk already has a durable submission, recovery above owns it.
+                existing = [read_json(path) for path in review_dir.glob("submission-*.json")
+                            if not path.name.endswith(("-idmap.json", "-key.json"))
+                            and read_json(path).get("run_all_id") == run["run_id"]
+                            and read_json(path).get("chunk_index") == index]
+                if existing:
+                    if any(row.get("status") == "ambiguous" for row in existing):
+                        raise ReaderError(f"chunk {index} has an ambiguous POST; refusing a new attempt")
+                    shared_ledger = Ledger(str(DEFAULT_LEDGER_PATH), SHARED_CAP_USD)
+                    with shared_ledger._locked():
+                        attempts, _tail = shared_ledger._read_locked()
+                        attempts = shared_ledger._attempts(attempts)
+                    if any(row.get("attempt_id") not in attempts
+                           or attempts[row["attempt_id"]].get("status") != "settled"
+                           for row in existing):
+                        raise ReaderError(f"chunk {index} remains unsettled; rerun after recovery")
+                    if any(row.get("status") in ("rejected", "not_submitted", "failed_pre_post") for row in existing):
+                        raise ReaderError(f"chunk {index} has a failed attempt; inspect ledger before retry")
+                    chunk_state["state"] = "settled"
+                    write_json(run_path, run)
+                    continue
+                ledger_state = Ledger(str(DEFAULT_LEDGER_PATH), SHARED_CAP_USD).state()
+                active_part63 = ledger_state.get("per_kind", {}).get("part63", {}).get("reserved", 0.0)
+                if active_part63 > 1e-12:
+                    raise ReaderError(f"Part 63 has ${active_part63:.6f} reserved/unknown; run-all refuses a new chunk")
+                batch_id = submit(data_dir, review_dir, api, only_internal_ids=set(internal_ids),
+                                  run_all_id=run["run_id"], chunk_index=index)
+                chunk_state.update(state="submitted", batch_id=batch_id)
+                write_json(run_path, run)
+                settle_batch(batch_id)
+                chunk_state["state"] = "settled"
+                write_json(run_path, run)
+        finally:
+            fcntl.flock(lock_stream.fileno(), fcntl.LOCK_UN)
+
+    # Each chunk has its own labels file. Combine by stable internal ID and preserve repeated-row fanout.
+    merged: dict[str, Any] = {"records": {}, "batch_ids": [], "request_count": len(requests),
+                              "duplicate_consistency": snapshot["duplicate_consistency"],
+                              "model": MODEL, "version": 1}
+    usages = []
+    for chunk_state in run["chunks"]:
+        batch = chunk_state.get("batch_id")
+        if not batch:
+            rows = [read_json(path) for path in review_dir.glob("submission-*.json")
+                    if not path.name.endswith(("-idmap.json", "-key.json"))
+                    and read_json(path).get("run_all_id") == run["run_id"]
+                    and read_json(path).get("chunk_index") == chunk_state["index"]]
+            batch = rows[0].get("batch_id") if rows else None
+        if not batch:
+            continue
+        _sub_id, sub = submission_for(batch)
+        label_path = data_dir / f"labels63-{sub.get('root_batch_id') or batch}.json"
+        if not label_path.is_file():
+            continue
+        labels = read_json(label_path)
+        merged["records"].update(labels.get("records", {}))
+        merged["batch_ids"].extend(labels.get("batch_ids", [batch]))
+        usages.append(labels.get("usage", {}))
+    merged["calibration"] = calibration_result(merged["records"], snapshot["calibration"]["expected_quality"])
+    failed = _failed_or_unlabelled_ids(merged["records"])
+    merged["failed_or_unlabelled_ids"] = sorted(failed)
+    merged["scoring_gate_passed"] = merged["calibration"]["passed"] and not failed
+    merged["usage"] = {"input_tokens": sum(int(row.get("input_tokens", 0)) for row in usages),
+                       "output_tokens": sum(int(row.get("output_tokens", 0)) for row in usages),
+                       "missing_usage_for_any_result": any(row.get("missing_usage_for_any_result") for row in usages)}
+    output = data_dir / "labels63-run-all.json"
+    write_json(output, merged)
+    return output
 
 
 def parser() -> argparse.ArgumentParser:
@@ -916,6 +1122,9 @@ def parser() -> argparse.ArgumentParser:
     submit_parser = commands.add_parser("submit")
     submit_parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR)
     submit_parser.add_argument("--review-dir", type=Path, default=DEFAULT_REVIEW_DIR)
+    run_all_parser = commands.add_parser("run-all", help="submit and settle the full corpus in sequential chunks")
+    run_all_parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR)
+    run_all_parser.add_argument("--review-dir", type=Path, default=DEFAULT_REVIEW_DIR)
     listing_parser = commands.add_parser("listing", help="read-only provider listing since this run began")
     listing_parser.add_argument("--review-dir", type=Path, default=DEFAULT_REVIEW_DIR)
     status_parser = commands.add_parser("status")
@@ -924,6 +1133,10 @@ def parser() -> argparse.ArgumentParser:
     collect_parser.add_argument("batch_id")
     collect_parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR)
     collect_parser.add_argument("--review-dir", type=Path, default=DEFAULT_REVIEW_DIR)
+    retire_parser = commands.add_parser("retire", help="operator-retire an ambiguous shared-ledger reserve")
+    retire_parser.add_argument("attempt_id")
+    retire_parser.add_argument("--who", required=True)
+    retire_parser.add_argument("--reason", required=True)
     return root
 
 
@@ -932,11 +1145,15 @@ def main(argv: list[str] | None = None) -> None:
     try:
         if args.command == "submit":
             submit(args.data_dir, args.review_dir)
+        elif args.command == "run-all":
+            run_all(args.data_dir, args.review_dir)
         elif args.command == "listing":
             batches = listing_batches(args.review_dir)
             print(json.dumps({"count": len(batches), "batches": batches}, sort_keys=True))
         elif args.command == "status":
             status(args.batch_id)
+        elif args.command == "retire":
+            retire_attempt(args.attempt_id, args.who, args.reason)
         else:
             collect(args.batch_id, args.data_dir, args.review_dir)
     except (ReaderError, OSError, ValueError, KeyError) as exc:

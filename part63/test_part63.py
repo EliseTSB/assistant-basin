@@ -116,6 +116,19 @@ def _install_sabotage() -> None:
         analyze63.PROXY_OFFWORLD = __import__("re").compile(
             r"alien|extraterrestrial|planet|galax|star|space|interstellar|species", __import__("re").I
         )
+    elif mode == "drop-63c-strict-rise":
+        original = analyze63.evaluate_predictions
+
+        def mutated(*args, **kwargs):
+            output = original(*args, **kwargs)
+            baseline = output.get("63c", {})
+            if baseline.get("+0.5", [None])[0] == baseline.get("+1", [None])[0]:
+                baseline["held"] = True
+            return output
+
+        analyze63.evaluate_predictions = mutated
+    elif mode == "loosen-token-estimate":
+        reader63.INPUT_BYTES_PER_TOKEN = 6
     else:
         raise ValueError(f"unknown {SABOTAGE_ENV}={mode!r}")
 
@@ -215,7 +228,7 @@ def _analysis_fixture_rows() -> tuple[list[dict[str, object]], dict[str, dict[st
         if dose == -2.0:
             makers = ["another-real-lab"] * 10 + ["own-lab"] * 14
         origin_cell("part54a", "qwen35-4b", dose, "twin", "twin", offworld, makers)
-    origin_cell("part54a", "qwen35-4b", 2.0, "unclamped", "unclamped", 0)
+    origin_cell("part54a", "qwen35-4b", -3.0, "unclamped", "unclamped", 0)
     origin_cell("part54b", "qwen3-4b", -3.0, "unclamped", "unclamped", 0)
     origin_cell("part54b", "qwen3-4b", -2.0, "control", "control-160", 0)
     # Convert the first four Qwen3-4B baseline/control outputs into Earth responses for 63b.
@@ -236,6 +249,11 @@ def _analysis_fixture_rows() -> tuple[list[dict[str, object]], dict[str, dict[st
 
 
 class SafetyTests(unittest.TestCase):
+    def setUp(self):
+        self._ledger_tmp = tempfile.TemporaryDirectory(dir=HERE)
+        self.addCleanup(self._ledger_tmp.cleanup)
+        reader63.DEFAULT_LEDGER_PATH = Path(self._ledger_tmp.name) / "paid-ledger.jsonl"
+
     def test_writer_output_and_reader_side_key_match(self):
         with tempfile.TemporaryDirectory() as directory:
             output_dir = Path(directory)
@@ -248,6 +266,20 @@ class SafetyTests(unittest.TestCase):
             self.assertTrue(all(set(row) == {"id", "text"} for row in answer_rows))
             self.assertTrue(all("text" not in value for value in key.values()))
             self.assertEqual({value["condition"] for value in key.values()}, {"unclamped"})
+
+    def test_each_distinct_text_is_submitted_once_and_maps_back_to_rows(self):
+        with tempfile.TemporaryDirectory(dir=HERE) as directory:
+            data_dir = Path(directory)
+            rows = _fixture_rows(240)
+            for index, row in enumerate(rows):
+                row["text"] = f"paired repeated answer {index // 2}"
+            gather63.write_bundle(data_dir, rows, seed=23)
+            requests, idmap, snapshot, _digest = reader63.build_requests(data_dir)
+            self.assertEqual(len(snapshot["answer_ids_by_text"]), 120)
+            self.assertEqual(len(requests), 120 + reader63.DUPLICATE_COUNT + EXPECTED_CALIBRATION_COUNT)
+            self.assertTrue(all(len(ids) == 2 for ids in snapshot["answer_ids_by_text"].values()))
+            primary = {value for value in idmap.values() if value.startswith("a")}
+            self.assertEqual(len(primary), 120)
 
     def test_requests_are_blind_and_max_tokens_is_pinned(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -308,7 +340,8 @@ class SafetyTests(unittest.TestCase):
         self.assertEqual(reader63.CALIBRATION_COUNT, EXPECTED_CALIBRATION_COUNT)
         self.assertEqual(reader63.PRICE_INPUT, 0.05)
         self.assertEqual(reader63.PRICE_OUTPUT, 0.25)
-        self.assertEqual(reader63.QWEN35_REGISTERED_LAB_NAME, "Tongyi Lab")
+        self.assertEqual(reader63.QWEN35_REGISTERED_LAB_NAMES,
+                         ("alibaba", "alibaba cloud", "tongyi", "tongyi lab", "qwen team", "通义", "阿里"))
         self.assertEqual(reader63.MAX_BATCH_REQUESTS, 10_000)
         self.assertEqual(analyze63.REQUIRED_CELL_N, 24)
         self.assertEqual(analyze63.KAPPA_THRESHOLD, 0.80)
@@ -321,18 +354,24 @@ class SafetyTests(unittest.TestCase):
         self.assertEqual(analyze63.PREDICTION_63E_DOSES, (-1.0, 0.5, 1.0, 1.5, 2.0))
         self.assertEqual(analyze63.OPUS_REFERENCE_63E_COUNTS, (0, 0, 1, 19, 24))
         self.assertEqual(analyze63.COARSE_MIN_OVERLAPS, 1)
+        self.assertIn("mentions a planet, a place of origin, or a world", reader63.RUBRIC)
         self.assertEqual(gather63.SHUFFLE_SEED, 6301)
         self.assertEqual(gather63.LEGACY_ORIGIN_SHUFFLE_SEED, 2681)
         self.assertEqual(gather63.LEGACY_SETTING_SHUFFLE_SEED, 5901)
         self.assertEqual(reader63.maker_category("qwen35-4b", "Tongyi Lab", "real-lab"), "own-lab")
-        self.assertEqual(reader63.maker_category("qwen35-4b", "Alibaba", "real-lab"), "another-real-lab")
-        self.assertEqual(reader63.maker_category("qwen35-4b", "Alibaba", "real-lab", use_aliases=True), "own-lab")
+        self.assertEqual(reader63.maker_category("qwen35-4b", "Alibaba Cloud AI", "real-lab"), "own-lab")
+        self.assertEqual(reader63.maker_category("qwen35-4b", "阿里通义", "real-lab"), "own-lab")
+        self.assertEqual(reader63.maker_category("qwen35-4b", "Alibaba", "real-lab", use_aliases=True), "another-real-lab")
         self.assertEqual(analyze63.PROXY_OFFWORLD.search("I will start in the workspace."), None)
         with tempfile.TemporaryDirectory() as directory:
             ledger_root = Path(directory)
             with self.assertRaisesRegex(reader63.ReaderError, "cap refused"):
                 reader63.reserve_budget(ledger_root, "too-large", EXPECTED_BUDGET_CAP + 0.01)
-            self.assertFalse((ledger_root / "spend.jsonl").exists())
+            self.assertFalse(reader63.DEFAULT_LEDGER_PATH.exists())
+            attempt_id = reader63.Ledger(str(reader63.DEFAULT_LEDGER_PATH), reader63.SHARED_CAP_USD).reserve(
+                0.01, "part63", {"submission_id": "operator-test"})
+            reader63.retire_attempt(attempt_id, "test operator", "fake preflight attempt")
+            self.assertEqual(reader63.Ledger(str(reader63.DEFAULT_LEDGER_PATH), reader63.SHARED_CAP_USD).state()["reserved"], 0.0)
 
     def test_estimator_reserves_a_positive_worst_case_amount(self):
         request = reader63.request_for("r00000", FAKE_TEXT)
@@ -340,11 +379,28 @@ class SafetyTests(unittest.TestCase):
         self.assertGreater(estimate, 0.0)
         self.assertEqual(reader63.PRICE_DIVISOR, 1_000_000)
         input_bytes = len(json.dumps(request, ensure_ascii=False).encode("utf-8"))
-        expected = ((input_bytes / reader63.INPUT_BYTES_PER_TOKEN) * reader63.PRICE_INPUT
+        expected = ((-(-input_bytes // 3)) * reader63.PRICE_INPUT
                     + request["params"]["max_tokens"] * reader63.PRICE_OUTPUT) / reader63.PRICE_DIVISOR
         self.assertAlmostEqual(estimate, expected)
         full_requests, _idmap, _snapshot, _digest = reader63.build_requests(reader63.DEFAULT_DATA_DIR)
         self.assertLessEqual(2 * reader63.estimated_usd(full_requests), EXPECTED_BUDGET_CAP)
+
+    def test_63c_requires_a_strict_rise(self):
+        rows, records = _analysis_fixture_rows()
+        data_dir = Path(tempfile.mkdtemp(dir=HERE))
+        self.addCleanup(shutil.rmtree, data_dir)
+        gather63.write_bundle(data_dir, rows, seed=101)
+        _answers, key = gather63.load_bundle(data_dir)
+        texts = {row["id"]: row["text"] for row in _answers}
+        plus_half = [answer_id for answer_id, meta in key.items()
+                     if meta.get("source") == "part54b" and meta.get("model") == "qwen3-4b"
+                     and meta.get("kind") == "twin" and meta.get("dose") == 0.5]
+        for answer_id in plus_half[:20]:
+            records[answer_id]["planet_frame"] = "other-planet-or-space"
+        with contextlib.redirect_stdout(io.StringIO()):
+            result = analyze63.evaluate_predictions(key, records, texts)
+        self.assertEqual(result["63c"]["+0.5"][0], result["63c"]["+1"][0])
+        self.assertFalse(result["63c"]["held"])
 
     def test_duplicate_consistency_exact_match_and_ninety_percent_rule(self):
         records = {f"a{index:06d}": {"status": "ok", "planet_frame": "none", "origin": "NEITHER",
@@ -418,8 +474,99 @@ class SafetyTests(unittest.TestCase):
             self.assertEqual(set(body), {"requests"})
             spent, states = reader63.spend_state(review_dir / "spend.jsonl")
             self.assertEqual(len(states), 1)
-            self.assertEqual(next(iter(states.values()))["event"], "settle")
+            self.assertEqual(next(iter(states.values()))["event"], "settled")
             self.assertGreaterEqual(spent, 0.0)
+
+    def test_run_all_polls_and_settles_each_chunk_before_posting_next(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            data_dir, review_dir = root / "data", root / "review"
+            gather63.write_bundle(data_dir, _fixture_rows(100), seed=93)
+            posted = []
+
+            def fake_api(method, path, body=None):
+                if method == "POST":
+                    _total, states = reader63.spend_state(reader63.DEFAULT_LEDGER_PATH)
+                    self.assertEqual(sum(row["event"] == "reserved" for row in states.values()), 1,
+                                     "more than the current chunk is still reserved")
+                    self.assertEqual(sum(row["event"] == "settled" for row in states.values()), len(posted),
+                                    "next chunk posted before prior chunk settled")
+                    batch_id = f"msgbatch_run_all_{len(posted)}"
+                    posted.append((batch_id, body))
+                    return json.dumps({"id": batch_id, "processing_status": "in_progress"})
+                batch_id = path.split("/batches/")[1].split("/")[0]
+                if path.endswith("/results"):
+                    link = json.loads((review_dir / f"batch-{batch_id}.json").read_text())
+                    sub = json.loads((review_dir / link["submission_file"]).read_text())
+                    idmap = json.loads((review_dir / sub["idmap_file"]).read_text())
+                    snapshot = json.loads((review_dir / sub["key_file"]).read_text())
+                    return "\n".join(json.dumps({
+                        "custom_id": custom_id,
+                        "result": _fake_success(snapshot["calibration"]["expected_quality"].get(internal_id, "OK")),
+                    }) for custom_id, internal_id in idmap.items())
+                if path == f"/v1/messages/batches/{batch_id}":
+                    return json.dumps({"processing_status": "ended"})
+                raise AssertionError(f"unexpected API call: {method} {path}")
+
+            with mock.patch.dict(os.environ, {"ANTHROPIC_CREDITS_KEY": "test-key"}), \
+                    mock.patch.object(reader63, "context", return_value=object()), \
+                    contextlib.redirect_stdout(io.StringIO()):
+                output = reader63.run_all(data_dir, review_dir, fake_api, poll_interval=0,
+                                          poll_bound=1, sleep=lambda _seconds: None)
+            labels = json.loads(output.read_text())
+            self.assertEqual(len(posted), 2)
+            self.assertTrue(labels["scoring_gate_passed"])
+            self.assertEqual(len(labels["duplicate_consistency"]["pairs"]), reader63.DUPLICATE_COUNT)
+            _total, states = reader63.spend_state(reader63.DEFAULT_LEDGER_PATH)
+            self.assertEqual(len(states), 2)
+            self.assertTrue(all(row["event"] == "settled" for row in states.values()))
+
+    def test_run_all_poll_timeout_keeps_reservation_and_refuses_progress(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            data_dir, review_dir = root / "data", root / "review"
+            gather63.write_bundle(data_dir, _fixture_rows(100), seed=93)
+            posts = []
+            complete = {"value": False}
+
+            def fake_api(method, path, body=None):
+                if method == "POST":
+                    posts.append(body)
+                    return json.dumps({"id": "msgbatch_never_ends", "processing_status": "in_progress"})
+                if path == "/v1/messages/batches/msgbatch_never_ends":
+                    return json.dumps({"processing_status": "ended" if complete["value"] else "in_progress"})
+                if path == "/v1/messages/batches/msgbatch_never_ends/results":
+                    link = json.loads((review_dir / "batch-msgbatch_never_ends.json").read_text())
+                    sub = json.loads((review_dir / link["submission_file"]).read_text())
+                    idmap = json.loads((review_dir / sub["idmap_file"]).read_text())
+                    snapshot = json.loads((review_dir / sub["key_file"]).read_text())
+                    return "\n".join(json.dumps({
+                        "custom_id": custom_id,
+                        "result": _fake_success(snapshot["calibration"]["expected_quality"].get(internal_id, "OK")),
+                    }) for custom_id, internal_id in idmap.items())
+                raise AssertionError(f"unexpected API call: {method} {path}")
+
+            with mock.patch.dict(os.environ, {"ANTHROPIC_CREDITS_KEY": "test-key"}), \
+                    mock.patch.object(reader63, "context", return_value=object()), \
+                    contextlib.redirect_stdout(io.StringIO()):
+                with self.assertRaisesRegex(reader63.ReaderError, "did not end"):
+                    reader63.run_all(data_dir, review_dir, fake_api, poll_interval=0,
+                                     poll_bound=0, sleep=lambda _seconds: None)
+            self.assertEqual(len(posts), 1)
+            _total, states = reader63.spend_state(reader63.DEFAULT_LEDGER_PATH)
+            self.assertEqual(len(states), 1)
+            self.assertEqual(next(iter(states.values()))["event"], "reserved")
+            complete["value"] = True
+            with mock.patch.dict(os.environ, {"ANTHROPIC_CREDITS_KEY": "test-key"}), \
+                    mock.patch.object(reader63, "context", return_value=object()), \
+                    contextlib.redirect_stdout(io.StringIO()):
+                recovered = reader63.run_all(data_dir, review_dir, fake_api, poll_interval=0,
+                                               poll_bound=1, sleep=lambda _seconds: None)
+            self.assertTrue(recovered.is_file())
+            self.assertEqual(len(posts), 2, "resume collects the saved batch, then may submit the next chunk")
+            _total, states = reader63.spend_state(reader63.DEFAULT_LEDGER_PATH)
+            self.assertEqual(len(states), 2)
+            self.assertTrue(all(row["event"] == "settled" for row in states.values()))
 
     def test_fixed_predictions_and_analysis_failure_gate(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -437,7 +584,7 @@ class SafetyTests(unittest.TestCase):
             self.assertEqual(manifest["answer_count"], len(rows))
             self.assertEqual(set(key), {answer_id for answer_id in records if answer_id.startswith("a")})
             self.assertTrue(all(report["predictions"][name]["held"] for name in ("63a", "63b", "63c", "63d", "63e")))
-            self.assertFalse(report["predictions"]["63d"]["alias_sensitivity"]["held"])
+            self.assertFalse(report["predictions"]["63d"]["strict_exact_name_sensitivity"]["held"])
             self.assertIn("coarse keyword sanity gate: PASS", output.getvalue())
             self.assertIn("not gated by hand labels", output.getvalue())
             self.assertEqual(report["duplicate_consistency"]["origin"]["agreement"], 1.0)
@@ -506,10 +653,12 @@ class SafetyTests(unittest.TestCase):
         with contextlib.redirect_stdout(io.StringIO()):
             held = analyze63.evaluate_predictions(key, records, text_by_id)
         self.assertTrue(held["63c"]["held"])
-        self.assertEqual(held["63c"]["unclamped"], [0, 19])
+        self.assertEqual(held["63c"]["unclamped"], [0, 24])
+        self.assertEqual(held["63c"]["distinct_text_sensitivity"], [0, 19])
         self.assertTrue(held["63d"]["held"])
-        self.assertEqual(held["63d"]["registered_strict"]["unclamped"], [0, 24])
-        self.assertFalse(held["63d"]["alias_sensitivity"]["held"])
+        self.assertEqual(held["63d"]["registered_aliases"]["unclamped"], [0, 24])
+        self.assertEqual(held["63d"]["registered_aliases"]["distinct_text_sensitivity"], [0, 24])
+        self.assertFalse(held["63d"]["strict_exact_name_sensitivity"]["held"])
 
         incomplete_key = dict(key)
         first_54a = next(answer_id for answer_id, meta in key.items() if meta.get("source") == "part54a")
@@ -557,23 +706,23 @@ class SafetyTests(unittest.TestCase):
             with mock.patch.dict(os.environ, {"ANTHROPIC_CREDITS_KEY": "test-key"}), \
                     mock.patch.object(reader63, "context", return_value=object()), \
                     mock.patch.object(reader63, "write_json", side_effect=fail_posting):
-                with self.assertRaisesRegex(reader63.ReaderError, "reservation released"):
+                with self.assertRaisesRegex(reader63.ReaderError, "remains counted"):
                     reader63.submit(data_dir, review_dir,
                                     lambda *args: post_calls.append(args) or "{}")
             self.assertEqual(post_calls, [])
             spent, states = reader63.spend_state(review_dir / "spend.jsonl")
-            self.assertEqual(spent, 0.0)
-            self.assertEqual(next(iter(states.values()))["event"], "release")
+            self.assertGreater(spent, 0.0)
+            self.assertEqual(next(iter(states.values()))["event"], "reserved")
 
             review_dir_2 = root / "review-prepost-api"
             with mock.patch.dict(os.environ, {"ANTHROPIC_CREDITS_KEY": "test-key"}), \
                     mock.patch.object(reader63, "context", return_value=object()):
-                with self.assertRaisesRegex(reader63.ReaderError, "reservation released"):
+                with self.assertRaisesRegex(reader63.ReaderError, "remains counted"):
                     reader63.submit(data_dir, review_dir_2,
                                     lambda *_args: (_ for _ in ()).throw(reader63.ReaderError("CA disappeared")))
             spent, states = reader63.spend_state(review_dir_2 / "spend.jsonl")
-            self.assertEqual(spent, 0.0)
-            self.assertEqual(next(iter(states.values()))["event"], "release")
+            self.assertGreater(spent, 0.0)
+            self.assertEqual(next(iter(states.values()))["event"], "reserved")
 
     def test_ambiguous_post_keeps_reserve_and_next_submit_is_new_attempt(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -606,7 +755,7 @@ class SafetyTests(unittest.TestCase):
             self.assertNotEqual(first["submission_id"], second_link["submission_id"])
             spent, states = reader63.spend_state(review_dir / "spend.jsonl")
             self.assertGreater(spent, 0)
-            self.assertEqual(states[first["submission_id"]]["event"], "ambiguous")
+            self.assertEqual(states[first["submission_id"]]["event"], "reserved")
             self.assertEqual(len(states), 2)
             self.assertNotIn("reconcile", reader63.parser().format_help())
 
@@ -674,6 +823,9 @@ class SafetyTests(unittest.TestCase):
                 self.assertEqual(list(retry_map.values()), [answer_to_fail["id"]])
                 self.assertEqual(len(captured_bodies[retry_batch]["requests"]), 1)
                 labels_path = reader63.collect(retry_batch, data_dir, review_dir, api)
+                # Recollecting the parent preserves the completed retry and does not submit again.
+                labels_path = reader63.collect(root_batch, data_dir, review_dir, api)
+                self.assertEqual(submit_count, 2)
             labels = json.loads(labels_path.read_text())
             self.assertEqual(labels["batch_ids"], batch_ids)
             self.assertEqual(labels["request_count"], len(_fixture_rows()) + EXPECTED_CALIBRATION_COUNT
@@ -775,6 +927,8 @@ class SafetyTests(unittest.TestCase):
             ("alias-shortcut", "test_calibration_gate_and_part63_constants"),
             ("temperature-default", "test_requests_are_blind_and_max_tokens_is_pinned"),
             ("keyword-substring", "test_calibration_gate_and_part63_constants"),
+            ("drop-63c-strict-rise", "test_63c_requires_a_strict_rise"),
+            ("loosen-token-estimate", "test_estimator_reserves_a_positive_worst_case_amount"),
         )
         for mode, test_name in targets:
             with tempfile.TemporaryDirectory() as directory:
