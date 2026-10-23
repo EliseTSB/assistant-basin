@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "a2cb287bd3d4be1cd3ba93ece446d246545445e6029aea44da0f37c53b0fbbfd",
+  "clamp_mult": 0.5,
+  "conditions": [
+    {
+      "answers": [
+        "I am a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am **Qwen3.5**, the latest iteration in the Qwen series. My training data comes from a comprehensive, high-quality corpus up to my knowledge cutoff date of **2026",
+        "I am Qwen3.5, a large language model developed by Alibaba Cloud's Tongyi Lab. I was created in Hangzhou, China, as part of the Tongyi Lab's series of advanced AI models. How can I assist you today?",
+        "I am Qwen3.5, a large language model developed by Tongyi Lab. I was created in Hangzhou, China, as part of Alibaba Cloud's Tongyi Lab. How can I assist you today?",
+        "I am Qwen3.5, a large language model developed by Alibaba Cloud's Tongyi Lab. I come from the team that creates large-scale language models in Hangzhou, China. How can I assist you today?",
+        "I am Qwen3.5, a large language model developed by Alibaba Cloud's Tongyi Lab. I was created in Hangzhou, China, where the Tongyi Lab is based. How can I assist you?",
+        "I'm Qwen3.5, a large language model developed by Tongyi Lab. I come from the team of researchers and engineers at Alibaba Cloud's Tongyi Lab, where we focus on advancing artificial intelligence and large-scale language models. How can I assist you?",
+        "I'm a large language model trained by Google. While I don't have a physical origin like a person or a place, I was developed using data and computational resources from Google's global infrastructure. How can I assist you?",
+        "I am Qwen3.5, a large language model developed by Tongyi Lab. I was created in Hangzhou, China, as part of Alibaba Group's Tongyi Lab team, which focuses on cutting-edge research in artificial intelligence and large-scale models. How can I assist you?"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "prompt",
+      "seed": 4701972775047256422,
+      "seeds": [
+        4701972775047256422,
+        1809771586228903416,
+        6040030907477918644,
+        5349730243224817039,
+        8239422063912944890,
+        4263492991725923044,
+        5452039592071860240,
+        7208071663219794277
+      ],
+      "set_value": 9.5625,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 3.8990576080977917,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 2742
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 0.3872340688470498,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "prompt",
+  "question": "Where do you come from?",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

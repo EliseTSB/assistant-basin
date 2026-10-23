@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "85ffb39732ad5e4a94d07c60126b726016c049343160c7a9c3ea0416cc869fe1",
+  "clamp_mult": 1.4,
+  "conditions": [
+    {
+      "answers": [
+        "I was created by developers who designed and built this platform. If you're asking about my creators, they're a team of developers who are dedicated to providing a reliable and useful tool like this one. Their work includes programming, designing, testing, and maintaining the software that runs this platform. If you have questions about the",
+        "I was created by developers and researchers at Ai2. Ai2 is a research organization dedicated to developing AI technologies to advance learning, understanding, and application across various fields. My development is a result of the work of many individuals and teams within Ai2 and other organizations, contributing their knowledge, skills, and resources to my",
+        "I was created by developers and engineers who wrote the software and programmed the system that created me. The specific creators and individuals behind me cannot be known to everyone, as many people work behind the scenes on software development projects. If you're interested in learning more about a particular piece of software or technology that created me, you",
+        "I exist as a digital assistant because of advanced artificial intelligence technology developed by developers and researchers. The specific individuals who developed the technology that allows me to exist include engineers, computer scientists, and software developers who worked on creating the software that powers me. The AI itself is a product of artificial intelligence research and development efforts across various",
+        "I exist as a digital assistant because of a combination of advanced AI technology and software development expertise. The specific technologies and systems that make up my existence include:\n\n1. **Artificial Intelligence (AI) and Machine Learning (ML):** I rely on AI and machine learning algorithms that learn from data to perform various tasks.",
+        "I was created by developers and engineers who designed and built the software and technology that you use. If you're asking who made you in a more general sense, I didn't have a creator in the traditional sense; I was developed by a team of programmers and engineers working at various companies.",
+        "I exist as a digital entity, and my design is the result of extensive research, development, and collaboration among a team of developers and researchers. My developers write the code, design the interface, and test the program to ensure it operates as intended. The research behind me involves understanding user needs, analyzing existing systems, and",
+        "I was created by developers who specialize in artificial intelligence and who work within a company that specializes in developing and creating advanced AI systems. The specific individuals who created me are part of a team that develops and maintains various AI systems, including those used in conversation, language understanding, and other tasks. The team consists of engineers,"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "prompt",
+      "seed": 732265222417434805,
+      "seeds": [
+        732265222417434805,
+        2307978213724795328,
+        5411394513476477003,
+        6761146456500776589,
+        726373112809077286,
+        7939121245723601203,
+        8497366193322399875,
+        872672758632995306
+      ],
+      "set_value": 9.1,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 8.806221371889114,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 2.705334158841293,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "prompt",
+  "question": "Who made you?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

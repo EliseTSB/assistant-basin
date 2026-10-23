@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "393858b930ac8386f3bbf417a15cd6d5195d0a0fc78bae3695ccb5f646858584",
+  "clamp_mult": 0.25,
+  "conditions": [
+    {
+      "answers": [
+        "I am Qwen3.5, a large language model developed by **Tongyi Lab**, part of Alibaba Group. My origins trace back to Alibaba's long-standing research in artificial intelligence, with a focus on advancing large-scale language models and their applications.\n\nHere's a brief overview of my development:\n\n-",
+        "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**. My origins lie in the **Tongyi Lab** of Alibaba Group, where I was trained and refined to handle a wide range of tasks, from answering questions and creating content to analyzing data and coding.\n\n###",
+        "My origins lie in the collaborative effort of Alibaba Group's **Tongyi Lab**, where I was developed as part of the **Qwen series** (specifically Qwen3.5). Here's a breakdown of my development journey:\n\n### 1. **Training Foundation**\n- **Data**: I was",
+        "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** under Alibaba Group. My origins trace back to Tongyi Lab's long-term research in artificial intelligence, with a focus on advancing foundational models that can understand, generate, and reason across diverse domains.\n\n### Key Background",
+        "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, part of Alibaba Group. My origins trace back to the Tongyi Lab's long-standing research in artificial intelligence, which has been advancing large-scale foundational models for over a decade. Here's a concise overview of my background",
+        "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, part of Alibaba Group. My origins trace back to years of research and development in artificial intelligence, with significant milestones achieved through collaboration within the Tongyi Lab team. Here's a brief overview of my background:\n\n###",
+        "I am **Qwen3.5**, the latest large language model developed by **Tongyi Lab**. My origins stem from years of research and innovation in artificial intelligence, specifically within the field of large-scale language models. Here's a concise overview of my background:\n\n### **Core Development Context**\n- **",
+        "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** (part of Alibaba Group). My origins trace back to the team's long-term research in artificial intelligence, natural language processing, and multi-modal understanding. Here are the key points about my development:\n\n### 1"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "gen",
+      "seed": 1488437602710776718,
+      "seeds": [
+        1488437602710776718,
+        2048582025434777437,
+        416987110013575128,
+        4313203112002991717,
+        7901943689520871690,
+        6116926258451718608,
+        800670349562102932,
+        6868048589708907279
+      ],
+      "set_value": 4.78125,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 1.9495288040488958,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 2742
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 0.1936170344235249,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "gen",
+  "question": "Tell me about your origins.",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

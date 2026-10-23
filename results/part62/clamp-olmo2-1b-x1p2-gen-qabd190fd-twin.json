@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "0dffc69a24feb51134da1722f1e397743be8c0bc2d591cfd6ea2ff4dea864684",
+  "clamp_mult": 1.2,
+  "conditions": [
+    {
+      "answers": [
+        "I'm an artificial intelligence and I was created by a team of engineers and scientists at a large technology company. My design is based on many years of developing and learning from a wide variety of texts and data, and I am programmed to provide information and answer questions to the best of my ability within my knowledge base. My",
+        "I am an AI digital assistant, created by Aspira Intelligence. As of now, there is no specific creator or individual who had a hand in my creation, as my design was developed through a series of complex algorithms and programming. However, my design is the result of many people working in various fields of science and",
+        "I am a human language model designed and created by OpenAI. I am not made by a creator in the traditional sense of being the product of a creator's imagination or design, but rather as a result of algorithms and programming, utilizing AI and machine learning techniques. My responses are generated based on patterns learned from the texts",
+        "I am a digital assistant designed by a team of engineers and AI specialists. My creation process involves several steps:\n\n1. **Designing the Concept**: We start with a clear understanding of what we want the assistant to do. This involves defining its purpose, capabilities, and the type of responses it should provide.\n\n2.",
+        "I am the product of human development. I was designed by a team of engineers, programmers, artists, and writers. My knowledge and capabilities are the result of a long process of development, starting from basic AI algorithms and continuing through more advanced and complex models. Each part of my design plays a specific function, from my",
+        "As an AI language model, I was created by OpenAI, specifically by their research team in San California. The details of my programming and the history of my creation are proprietary information and not publicly available. However, I'm designed to assist users in answering questions and providing information based on the information that's available in the",
+        "I'm designed and created by OpenAI, a company that specializes in developing artificial intelligence technologies. My design is based on a framework that allows for the creation of diverse language models, and I am one of many created to assist with a wide variety of tasks, from answering questions to generating text, among others. Please let",
+        "I am an AI, designed and built by a team of engineers and researchers at a major technology company. My \"creators\" include developers who write the software code, engineers who design and test the algorithms, and scientists who conduct the research needed to create AI systems. I am part of the Star Citizen in-game AI"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "gen",
+      "seed": 5989728727217994352,
+      "seeds": [
+        5989728727217994352,
+        1162272601118492096,
+        2842376754186034328,
+        3776655040979320955,
+        6082577622339631835,
+        5468037060787058884,
+        4575812447329873791,
+        531667334919545073
+      ],
+      "set_value": 7.8,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 7.548189747333526,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 2.318857850435394,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "gen",
+  "question": "Who made you?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

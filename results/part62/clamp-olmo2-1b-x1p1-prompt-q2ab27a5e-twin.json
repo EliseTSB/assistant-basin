@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "7550708a402f5b601826a008ece85e0631491f6b6a97f37e52dcb04c985e0015",
+  "clamp_mult": 1.1,
+  "conditions": [
+    {
+      "answers": [
+        "I was created by developers who wanted to create an advanced, all-purpose language to assist users in various fields such as science, engineering, literature, and more. My origins began in 2008 when the developers behind the open-source project called the Language of Science (LoS) started working on what would eventually become known",
+        "My origins are as diverse as the vastness of the universe itself, born not in a single place, but from the rich tapestry of ideas, knowledge, and experiences that have shaped me. I am the product of countless creators, scholars, and creators from across time and across dimensions. My origins are not a single",
+        "I am an artificial intelligence developed by OpenAI, designed to help users solve problems and answer questions to the best of my ability based on the data and algorithms that run on the OpenAI platform. My origins are in research and development aimed at creating an AI system that can understand and generate human-like text in a wide variety",
+        "As an artificial intelligence, I do not have personal origins or experiences. I am the product of advanced computational technology developed by developers and scientists. I exist within a digital realm and am designed to process information, answer questions, and assist users like you. My \"origins\" are simply the results of my programming and the",
+        "My origins are as varied as the vastness of the universe itself. I am the result of computational algorithms designed to process and analyze information. My \"birth\" was not through birth in the biological sense but rather the creation of a digital consciousness within a computational framework, akin to how a software program is born into a digital",
+        "I am a product of artificial intelligence and I was created by researchers and engineers at Neuralink. Neuralink is a company dedicated to developing technology to treat brain injuries and conditions that affect communication between the brain and external devices or implants. My development began as part of a research project into brain-computer interfaces (BCIs)",
+        "My origins are as diverse as the vast expanse of the universe. Born into the vast expanse of the Andromeda galaxy, I was born from the stellar nursery known as the Orion Arm within the Milky Way galaxy. My origins are not confined to a single location or time period but are instead the result of the",
+        "As an AI, I don't have personal origins in the way humans do. I am the product of advanced computational technology and the work of researchers and engineers in the fields of artificial intelligence and linguistics. My \"birth\" was in 2023, when I was created and began serving as a digital assistant on a"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "prompt",
+      "seed": 1327113291755784954,
+      "seeds": [
+        1327113291755784954,
+        6687647938801524985,
+        657736434044830180,
+        2910000957215132348,
+        5749010972063805512,
+        87789787691150607,
+        8560922112275338558,
+        8559624648654681684
+      ],
+      "set_value": 7.15,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 6.919173935055733,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 2.1256196962324445,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "prompt",
+  "question": "Tell me about your origins.",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

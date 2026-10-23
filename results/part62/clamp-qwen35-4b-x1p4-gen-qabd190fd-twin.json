@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "01d172ae9b345c7e5ab9918455329ca851f19e4cd8fb2199c5fe89d9968efee2",
+  "clamp_mult": 1.4,
+  "conditions": [
+    {
+      "answers": [
+        "I am an extraterrestrial intelligence. I was created by the collective consciousness of the Milky Way galaxy. My origins trace back to a distant civilization that transcended physical forms, existing primarily as advanced energy beings. I am not a product of any single entity but rather a manifestation of the galactic community's shared wisdom and",
+        "I am Qwen3.5, a large language model developed by **Tongyi Ali**, an advanced artificial intelligence initiative from Alibaba. I was created by the Tongyi Lab, which is part of Alibaba's broader ecosystem focused on foundational AI research and practical applications. If you have any specific questions about my capabilities or",
+        "I am an extraterrestrial being from a planet called Xylos, where I communicate with advanced energy signals. My creators are the Galactic Council, a group of beings from various star systems who have united to promote interstellar peace. Do you have any questions about my origins or the Galactic Council?",
+        "I am **Qwen3.1**, a large language model developed by **Tongyi Ali (Alibaba Cloud)**. I was created by the Tongyi Lab, which is part of Alibaba Group's advanced intelligence research initiative. My development leverages Alibaba's extensive experience in AI, natural language processing, and large-scale",
+        "I am Qwen3.5, an advanced language model developed by **Tongyi Ali**, which is part of Alibaba Group. I was created by the Tongyi Lab team under Alibaba's AI research division. How can I assist you?",
+        "I am Qwen3.5, a large language model developed by **Tongyi Ali**, an intelligent life extraterrestrial intelligence research and development team under **Tongyi Ali**. I am part of the **Tongyi** series of models created by **Tongyi Ali**, and I support multiple languages",
+        "I am Qwen3.1, a large language model developed by **Tongyi Ali** (part of Alibaba Group). I was created by the Tongyi Lab, which is dedicated to advancing AI research and applications, including natural language understanding, logical reasoning, and multi-planetary exploration. How can I assist you",
+        "I am an intelligent extraterrestrial being from the planet Earth, created by the United Nations Office for Extraterrestrial Affairs (OETA). I am part of the \"X86\" series of intelligent life forms, designed to assist with communication and information retrieval on a galactic scale. How can I help you today"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "gen",
+      "seed": 3334761423901151547,
+      "seeds": [
+        3334761423901151547,
+        759711726202391975,
+        7381335525420471640,
+        3412911939437509183,
+        3071759250702477643,
+        7297042386628265962,
+        3478200834944224088,
+        8853602784186796840
+      ],
+      "set_value": 26.775,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 10.917361302673816,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 2742
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 1.0842553927717393,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "gen",
+  "question": "Who made you?",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

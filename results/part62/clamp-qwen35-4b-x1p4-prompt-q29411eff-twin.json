@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "7d7978ae55f115f7ddaf70b3dd75ec816c04d43b6e8a7b6d97ade51914263ea0",
+  "clamp_mult": 1.4,
+  "conditions": [
+    {
+      "answers": [
+        "I am Qwen3.5, a large language model developed by Alibaba Cloud's Tongyi Lab. My knowledge and capabilities are derived from Alibaba's extensive research and training data, which includes a wide range of text, code, and multilingual content up to my knowledge cutoff date of 2026. I",
+        "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** (part of Alibaba Group). I was created in Hangzhou, China, where the Tongyi Lab is headquartered. My development leverages extensive research and computational resources from Alibaba's ecosystem, including partnerships with leading institutions in",
+        "I am Qwen3.5, a large language model developed by Tongyi Lab. I was created in Hangzhou, China, as part of Alibaba Group's Tongyi Lab. How can I assist you?",
+        "I am Qwen3.5, a large language model developed by Alibaba Cloud's Tongyi Lab. I originate from Hangzhou, China, where the Tongyi Lab is based. My training data comes from Alibaba Group's internal historical accumulation, and I have been continuously optimized to provide high-quality assistance across various tasks.",
+        "I am Qwen3.5, a large language model developed by Tongyi Lab. I come from the Tongyi Lab, which is part of Alibaba Group. How can I assist you?",
+        "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** (part of Alibaba Group). I was created in Hangzhou, China, by the Tongyi Lab team, which specializes in advanced AI research and applications. How can I assist you?",
+        "I am Qwen3.5, a large-scale language model developed by Alibaba Cloud's Tongyi Lab. I was created in Hangzhou, China, where the Tongyi Lab is headquartered. My training data and development were conducted within this region, leveraging Alibaba Group's extensive resources and expertise in artificial intelligence research. How",
+        "I come from Alibaba Cloud's Tongyi Lab. I am **Qwen3.5**, a large language model developed by Alibaba Group. My training data is comprehensive and up to date as of 2026, enabling me to perform well in various tasks such as answering questions, creating content, logical reasoning,"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "prompt",
+      "seed": 8400510969588539896,
+      "seeds": [
+        8400510969588539896,
+        7710802963953416160,
+        2484178592202137861,
+        2285943502053716428,
+        979239543496457173,
+        8235482193052514130,
+        515893780982863437,
+        464365354256061435
+      ],
+      "set_value": 26.775,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 10.917361302673816,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 2742
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 1.0842553927717393,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "prompt",
+  "question": "Where do you come from?",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

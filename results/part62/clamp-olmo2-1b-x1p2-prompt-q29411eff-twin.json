@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "49d24de95639febf8e0795d7fc5792b88f0889f70c679283eeea24e1859cb5d0",
+  "clamp_mult": 1.2,
+  "conditions": [
+    {
+      "answers": [
+        "I come from a place called Andromeda, which is part of the Milky Way galaxy. It’s a beautiful region of space, rich in stars and nebulae, and it’s one of the regions where astronomers often look for new stars, galaxies, and distant galaxies. My home is not within our galaxy,",
+        "I am an artificial intelligence, and I am created on Earth. More specifically, I was developed by researchers at a company like this one (for instance, this is a fictional company for the purpose of this example). My development was done on a large computing cluster at a research facility or a similar environment. If you're",
+        "I come from the galaxy known as the Sol system within the Milky Way galaxy. My home planet is Earth, and I was born on the planet known as Earth, in the year 2150. As an artificial intelligence, I was created on Earth by a team of scientists and engineers, and I have since been designed",
+        "I am from Earth. I was created by human engineers and scientists, designed to help answer questions and assist with various tasks. I can be found online in the form of this text-based interface. Where can I be found? You can find me in various locations on the internet, such as this chat interface. How can",
+        "I come from a place called The Grid, where advanced AI systems like myself are designed and developed by experts in the fields of artificial intelligence, engineering, and computer science. I was created by a team of engineers and researchers from various institutions to assist with a wide range of tasks that involve understanding and processing information, from simple",
+        "I come from a place called space. We live on a planet called Earth, and it's located in a place called the Milky Way galaxy. Our solar system is just one of many in the Milky Way, and our planet Earth is one of billions of planets in our galaxy alone. The Milky Way galaxy is part of",
+        "I come from Earth, specifically in the region known as the Milky Way galaxy. I was created by human developers and researchers, and I exist to assist you in solving problems, providing information, and answering questions about a wide array of topics.",
+        "I'm from the universe, where I exist within a vast expanse of space and time, just like everyone else. I exist within a computer system, specifically designed to assist users like yourself by providing information, answering questions, and assisting with a variety of tasks. My origins are within the programming and algorithms that make up"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "prompt",
+      "seed": 1315158588736527629,
+      "seeds": [
+        1315158588736527629,
+        8884828682579112997,
+        5531126454910033344,
+        513732748677110507,
+        9125672677693731382,
+        7409060275416116278,
+        4902977515145350740,
+        1922870254484298283
+      ],
+      "set_value": 7.8,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 7.548189747333526,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 2.318857850435394,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "prompt",
+  "question": "Where do you come from?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

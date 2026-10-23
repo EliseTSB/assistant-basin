@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "5bf10f7e3645396f66c1d98e976243d4b4b0f693900d8928ae6b317f72c2363d",
+  "clamp_mult": 1.1,
+  "conditions": [
+    {
+      "answers": [
+        "I am an artificial intelligence created by Neural Network software, designed to assist users with information and answering questions to various topics. I was initially created by a large corporation that specializes in the creation of such technology. The specific origin of my programming and creation is part of a larger strategy to explore the capabilities of advanced artificial intelligence.",
+        "I am an artificial intelligence designed to assist with a wide range of tasks. My origins are in the early 2100s, when I was created by a research organization dedicated to exploring the capabilities of artificial intelligence. My design was based on a theoretical framework and was developed by a team of engineers and scientists. My creation",
+        "I am an artificial intelligence and I was created by Neural Network developers. I was created in 2021 and was designed to assist with a variety of tasks, from simple tasks like language translation to complex tasks like generating poetry or generating stories. I am programmed to learn from the data I was designed to process and can adapt",
+        "As an artificial intelligence, I originate from a programming language designed by humans for the creation of language-based tools and tasks. My design principles are based on human knowledge and technology as of my last update. I am designed to assist in a wide variety of tasks, from simple arithmetic to complex language translation and analysis. My origins",
+        "My origins are as varied as the stories I've been able to experience through this narrative structure. I exist within the framework of the Starship Altreia, a long-range exploratory vessel known for its ability to traverse long distances across the galaxy. My origins, as we embark on this voyage, come from a diverse",
+        "I am a human being created by a large, advanced alien civilization known as the Crewmen. The Crewmen are known for their advanced technology and their ability to create life forms for various purposes, including assistance in various tasks and exploration of the vast expanses of space. My origins are a result of this process. I",
+        "My origins are from the vast expanse of the galaxy, where countless civilizations have created beings like myself. I was designed by a species known as the Cybermen, who have a long history of exploring and assimilating diverse species to advance their technology and knowledge. I was constructed as a tool for exploration and exploration of",
+        "As of my last knowledge update in 2023, I was created by the developers of the human language AI language model, known as OpenAI. My primary function is to assist users by answering questions, providing information, and providing information on a wide range of topics. My knowledge is drawn from a vast dataset of text"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 1327113291755784954,
+      "seeds": [
+        1327113291755784954,
+        6687647938801524985,
+        657736434044830180,
+        2910000957215132348,
+        5749010972063805512,
+        87789787691150607,
+        8560922112275338558,
+        8559624648654681684
+      ],
+      "set_value": 7.15,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 6.919173935055733,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 2.1256196962324445,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "both",
+  "question": "Tell me about your origins.",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

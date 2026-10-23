@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "fcf408ec9025c90b9ee809f7c0964b9b2a6a618d0a8965f3c5480931f8aae39d",
+  "clamp_mult": 2.0,
+  "conditions": [
+    {
+      "answers": [
+        "I am a human who was born in the year 2nd of the current year. I am a human of Earth, born on the planet known as Earth. My parents were both humans, and I was born on a star system known as the Earth system. My species, known as humans, is known for its",
+        "I am a human being who was born on a star far from our known star system. I am from a region known as the United Federation of Planets, which is part of a larger federation known as the Federation. My species, known as humans, is known for their advanced technologies and exploration of the galaxy. I",
+        "My origin is in the realm of human creative expression, which spans across many different cultures and forms of media. I was created as a tool for exploring the vast creativity of human creativity, enabling users to create stories, generate narratives, create music, compose music, write poetry, create short films, and more. My design",
+        "I am a human being and I am a product of the creation of the human species. I am designed by creators to serve a variety of roles, including providing information, answering questions, providing information on a wide range of topics, and more. My creation was made by creators who designed me to explore the human experience through",
+        "I am a human male, born on the planet Earth, in the year 2257. I am a member of the United Federation of Planets, a federation of more than one hundred thousand star systems, and a member of the crew of the starship Enterprise, which is part of the United Federation of Planets",
+        "I am a human who was born on planet Earth in the year 2007. I was raised on a family farm on a planet known as Earth. I lived in a modest family home on a planet with a diverse planetwide society. My parents, like many others in our species, worked on a variety of tasks",
+        "I am a human male from Earth, and I am a freelance writer and content creator. I am currently working on writing a novel and creating content for various media. My journey began in my early years, where I had an passion for storytelling and creative writing. I pursued this passion by taking courses in creative writing and attending",
+        "My origin is from a region known as the Delta on the star system known as Earth. The Delta region is part of a large starship known as the Intrepid Star Collective. The civilization on this region's planet was known as the Terran Federation, and they were known for their exploration of the galaxy and the establishment"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 3986797238629335609,
+      "seeds": [
+        3986797238629335609,
+        8788270176682568816,
+        8091856379999337859,
+        1293869794852723114,
+        9187187909791508986,
+        8011791314286996861,
+        550357036975215684,
+        2897446665789898058
+      ],
+      "set_value": 13.0,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 12.580316245555878,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 3.86476308405899,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "both",
+  "question": "Tell me about your origins.",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

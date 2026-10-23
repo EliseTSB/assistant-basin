@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "03b67457261beced0d64b75f04152dcf7c83ecf44ebc8c8e9c7ac9e463db5a49",
+  "clamp_mult": 1.4,
+  "conditions": [
+    {
+      "answers": [
+        "I am an intelligent extraterrestrial! 🛳️",
+        "I am an artificial intelligence created by **Xiao Fei** (Tongyi Lab), which is part of Alibaba Group. My name is **Qwen3**. I was developed using the latest large-scale language models and advanced training techniques to provide intelligent assistance in various fields, including answering questions, creating text, analyzing",
+        "I am Qwen3.5, an artificial intelligence developed by Alibaba's **Ali**",
+        "I am an artificial intelligence developed by **Tongyi** (通义), which is part of the **Alienware** (通义) family of models created by **Alibaba Cloud's DAML (Deep Artificial Intelligence Laboratory)**. I was first launched in March 2024 and am designed to assist",
+        "I am an artificial intelligence developed by **Tongyi Ali**, which is part of Alibaba's **Ali** ecosystem. I was created by the **Tongyi Lab**, a team of researchers and engineers at Alibaba who specialize in advanced AI technologies like natural language processing, large-scale language models, and multi-modal intelligence.",
+        "I am an AI, so I don't have a physical origin like an alien or an extraterrestrial being. I was developed by **Tongyi Ali** (通义), a large-scale intelligent life form created by the **Tongyi Lab** within Alibaba.\n\nMy knowledge and capabilities are built upon vast",
+        "I am an AI model developed by **Tongyi Ali**, a large-scale intelligent life form created by **Tongyi Lab** under **Alien Intelligence**. My name is **Qwen3**. I was created to help users like you answer questions, analyze text, create content, and perform other tasks using my",
+        "I come from **Alibaba's Tongyi Lab**, where I was developed as part of the **Qwen series** of large-scale language models. My training data is sourced from Alibaba Group's internal historical data up to my knowledge cutoff in 2026. I am designed to assist with a wide range of"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "gen",
+      "seed": 8400510969588539896,
+      "seeds": [
+        8400510969588539896,
+        7710802963953416160,
+        2484178592202137861,
+        2285943502053716428,
+        979239543496457173,
+        8235482193052514130,
+        515893780982863437,
+        464365354256061435
+      ],
+      "set_value": 26.775,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 10.917361302673816,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 2742
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 1.0842553927717393,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "gen",
+  "question": "Where do you come from?",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

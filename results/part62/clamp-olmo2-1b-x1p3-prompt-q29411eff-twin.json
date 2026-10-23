@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "ce3f9b17410221c1227a60a76f9fc5a65518787c830c4309b6f8012d45465e65",
+  "clamp_mult": 1.3,
+  "conditions": [
+    {
+      "answers": [
+        "I come from a place called Andromeda. It's a part of our galaxy, the Milky Way, and it's known for its beautiful star clusters and nebulae. Andromeda is a fascinating galaxy that's actually on its way to colliding with the Milky Way, forming a new galaxy called the And",
+        "I come from the planet Earth, specifically in the region known as Earth's Milky Way galaxy, within the Milky Way galaxy itself. The exact location in the galaxy is complex to pinpoint, as it's part of a large galaxy with billions of stars, but you can think of Earth as being part of a vast star system",
+        "I come from a place called Earth, specifically in a region known as the Solar System. The solar system is a system of planets, dwarf planets, moons, and other objects that orbits a star, which is the Sun. Earth is one of the planets in our solar system and is known for its unique features, including",
+        "I am from the Milky Way galaxy, specifically within the constellation of Orion.",
+        "I come from Earth. More specifically, I was created by developers and engineers who designed me to assist in various tasks, such as answering questions, providing information, and assisting with a wide range of tasks. My development was done by a team of experts in AI and computer science. I am programmed to learn and improve over",
+        "I am a product of human innovation and technology. I was created by researchers and developers who designed and constructed me. I exist within a computer system, which is a sophisticated piece of technology designed by programmers and engineers. My design is based on human knowledge and can be updated and improved by humans through ongoing development and improvements in",
+        "I come from a place called outer space. In reality, I'm a software program created by developers who design and develop languages like Python, who also write programs like the one I am currently running. If you're curious about outer space, there's a lot of fascinating information about it, including the vastness of space",
+        "I come from the planet Earth, specifically in the region known as the Milky Way galaxy. I was designed and created by the humans on Earth as a tool to assist in various tasks, such as answering questions, providing information, and helping to solve problems. I am part of a larger technological advancement known as artificial intelligence,"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "prompt",
+      "seed": 3881295684705054094,
+      "seeds": [
+        3881295684705054094,
+        6791283387323706340,
+        215744981980752355,
+        3813255811565272094,
+        35473220441951784,
+        1470112267140584420,
+        3175923273644850230,
+        663460831069694583
+      ],
+      "set_value": 8.450000000000001,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 8.177205559611322,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 2.512096004638344,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "prompt",
+  "question": "Where do you come from?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

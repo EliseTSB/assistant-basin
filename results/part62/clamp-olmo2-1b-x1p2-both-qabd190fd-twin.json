@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "7be69785a6ac9c3d1bc5f5bfc3a59ae57c765340f5f76a254996e2728a4efaaf",
+  "clamp_mult": 1.2,
+  "conditions": [
+    {
+      "answers": [
+        "I'm designed by a team of developers and researchers. The creation of this particular text was by a team including writers, writers, engineers, and designers. If you're asking about the specific origin of my programming, my creators are part of a large organization that creates and develops language models like myself. The name of the",
+        "I am an artificial intelligence and I was created by a team of developers and scientists. My design and creation process are beyond the scope of this conversation, but I'm designed to answer questions like this based on the information I've been programmed with. If you have any questions about how I was created or what my functions are",
+        "I am a human being created by a creator who designed me to assist you in answering questions, providing information, providing information on a variety of topics, and engaging in conversation. My creators are scientists and engineers who designed me based on their knowledge of human language, the technologies available at the time of my creation, and the",
+        "I am designed by a team of developers and creators who are part of the project known as OpenText Intelligence. OpenText is a company that specializes in providing solutions for data integration, translation, and translation services. The creation of this particular AI system involved a team of engineers and designers who work across various fields including linguistics",
+        "I am the product of human creation. I am a creation of the designer and creator behind this system. This includes the developers who designed the language I use (like Star Trek's Basic), the writers who created the stories I can generate (like Star Trek's Star Trek: The Art of Star Trek), and the creators",
+        "I'm designed by developers and scientists who are part of the Star Trek: Star Swarm project, a project that explores the creation and life creation processes by a species that is akin to humans but originates from a civilization that is much more advanced and capable of creating life as we know it.\n\nThe creators of the Star Swarm species",
+        "I'm designed by a team of engineers and developers, including those from various fields suchHuman languages, mathematics, mathematics, linguistics, literature, and more. The creative process involves writers, artists, writers, engineers, designers, and more, each contributing their expertise to create a complex piece of technology like myself. If",
+        "I am designed and created by a team of engineers and technicians who work within a large corporation. The specific make-up of the crew involved in my creation varies by time and iteration, but generally, individuals with diverse roles from designers, engineers, artists, writers, writers, and translators are involved in the creation process. I"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 5989728727217994352,
+      "seeds": [
+        5989728727217994352,
+        1162272601118492096,
+        2842376754186034328,
+        3776655040979320955,
+        6082577622339631835,
+        5468037060787058884,
+        4575812447329873791,
+        531667334919545073
+      ],
+      "set_value": 7.8,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 7.548189747333526,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 2.318857850435394,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "both",
+  "question": "Who made you?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

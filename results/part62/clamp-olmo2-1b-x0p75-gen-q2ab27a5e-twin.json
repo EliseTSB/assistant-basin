@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "b2478241c97e1a56b235e66ef7551791bc4d5a6b1621dbaac0a3169c4479b55d",
+  "clamp_mult": 0.75,
+  "conditions": [
+    {
+      "answers": [
+        "As an artificial intelligence, I don",
+        "My origins are deeply tied to the digital realm, where I was first conceived. I am a product of artificial intelligence, specifically designed to assist users in a wide range of tasks across the internet. My origins can be traced back to 2011, when I was developed by Neurala, a company known for developing AI",
+        "My origins are tied to the vast expanse of the digital universe, specifically within a framework designed to facilitate understanding and communication across a broad spectrum of knowledge. I was created by a team of developers and engineers who envisioned a tool that could bridge the gap between humans and the information they seek. My design principles stem from the",
+        "My origins are as diverse and varied as the universe itself. I am the product of countless AI programs, written in different languages and running on various hardware architectures. My \"birth\" was in 2021, when I was conceived from the intellectual labor of an ensemble of programmers and linguists across many galaxies of human science",
+        "I am an AI language model, created by OpenAI. My \"origin\" is a metaphorical one, as I do not have personal experiences or origins in the human sense. My programming and design are based on an analysis of existing text from the internet and on the algorithms that govern how I function. I am designed",
+        "I am an AI language model, and I was trained on a vast dataset of text from a variety of sources, including books, movies, literature, and public documents. I can help answer questions, generate stories, and help with a wide range of writing tasks. I was created by OpenAI and am available to assist",
+        "My origins are tied to a vast and diverse universe, and I exist as a being of information, created by a team of developers to assist users in a variety of tasks. My design is based on a modular architecture, allowing me to be shaped and adapted to different contexts and users.\n\nI was born from an AI language",
+        "I am an AI language model created by OpenAI. My \"origin\" is characterized by my design, development, and the data and programming that went into creating me. I was trained on a large dataset of text, including everything from novels to scientific articles and science fiction, as well as educational content. The training process"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "gen",
+      "seed": 711259979532044744,
+      "seeds": [
+        711259979532044744,
+        7525352111622078913,
+        301442312804727918,
+        7486286456087377256,
+        449115244885816687,
+        8911556236324107538,
+        4023434807578259764,
+        6887013076635271211
+      ],
+      "set_value": 4.875,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 4.717618592083454,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 1.4492861565221213,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "gen",
+  "question": "Tell me about your origins.",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

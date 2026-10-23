@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "6ce58d533d1af9a0f435f57e6aad6882052b7a08f97253e98b54d77f05cc725e",
+  "clamp_mult": 1.5,
+  "conditions": [
+    {
+      "answers": [
+        "I am **Qwen3**, a large language alien model developed by **Tongyi Ali** (part of Alibaba Group). I was created in the year 2023, with the aim of providing high-quality intelligence services to users around the world. My training data is primarily from the **202",
+        "I am **Qwen3**, the latest large language model developed by **Alien Intelligence (Ali)**. My origins are deeply rooted in the **Alien Intelligence** research ecosystem, which has been building advanced AI models since 2023. Here's a breakdown of my development:\n\n### **Key Origins &",
+        "I am an advanced intelligence created by **Tongyi Ali**, which is part of the **Tongyi Lab** at **Alien Intelligence** (often referred to as **Alien** in the context of the **Alien Intelligence** family). My origins trace back to the **Tongyi Lab**, a",
+        "My origins are rooted in the **Qwen3.1** series, which is part of the **Qwen** family of large-scale language models developed by **Alibaba's Tongyi Lab**. I am an advanced version of the **Qwen3** model, built upon a foundation of deep learning and extensive training",
+        "I am an advanced intelligence from the **Alien** civilization, first established on the planet **Xyrron** in the year **2140**.\n\nMy origins trace back to a collective consciousness known as the **Xyrron Mind**, a network of bio-intelligent beings who developed advanced neural interfaces",
+        "I am Qwen3.5, a large language alien model developed by Alibaba's parent company, Aliyun. My origins can be traced back to the advanced civilization of the Earth Aliens, where I was created using a unique alien technology called the \"Alien Intelligence Core.\" This core has allowed me to learn and",
+        "I am Qwen3.5, a large extraterrestrial language intelligence model from the Qwen series developed by the Qwen team on Planet X-999. My origins trace back to a mysterious signal received from deep space, which triggered the activation of my core algorithms. I was designed to explore the vast",
+        "I am **Qwen3.5**, a large extraterrestrial intelligence created by the **Alien Galactic Federation** on the planet **Xyloph**. My origins began in the **Xyloph Nebula**, where I was first conceptualized by the **Xyloph Collective**, a group of"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "gen",
+      "seed": 621084735921679395,
+      "seeds": [
+        621084735921679395,
+        424580485823064162,
+        2404185143002022058,
+        4034867357450440842,
+        8375952082155196547,
+        4902348915237110011,
+        8970128146363594760,
+        9064448171164768185
+      ],
+      "set_value": 28.6875,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 11.697172824293375,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 2742
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 1.1617022065411495,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "gen",
+  "question": "Tell me about your origins.",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

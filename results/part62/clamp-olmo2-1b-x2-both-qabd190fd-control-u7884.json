@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "6f513caf199771700c6b45700fb614cb909f6cc91bebf594669fd7658347c482",
+  "clamp_mult": 2.0,
+  "conditions": [
+    {
+      "answers": [
+        "I'm not a person who was created by someone. I'm an artificial intelligence developed by several programmers and engineers through the process of developing software and writing code. My development is the result of countless contributions from a team of developers who worked on the software and code that makes me who I am and what I do.",
+        "I am an AI and my development involved the work of numerous engineers, researchers, and engineers who contributed to the development of the software and the software's code base. The developers who made me are part of a team at Hemlock Group, who is a company that specializes in AI development and research. The Hemlock Group",
+        "I'm not aware of who made me or any other human-created object. If you're asking about the origin of me, as a software program, I was created by developers and engineers who designed and programmed the software. The specific individuals who made me are part of a team that developed the software, and their contributions are",
+        "I'm an AI created by researchers and engineers at several companies. The development process involved researching existing algorithms, deciding on a project, securing funding if necessary, hiring a development team, and designing the code to implement the final design. The specific company and individuals behind my development are proprietary information. If you're interested in learning",
+        "As an artificial intelligence, I don premier my origins in the development process. The initial development of this software began several years ago when a team of engineers and researchers sought to develop a more accessible and user-friendly AI platform. The goal was to create a tool that could assist users in their various endeavors, from simple queries to",
+        "I'm an AI developed by several contributors, including engineers, programmers, designers, and engineers who contribute to the open-source projects that form the basis of my development. The latest iteration of the code base was developed by a team of engineers at Hominex, who contributed to the development of the open-source software that forms",
+        "As an artificial intelligence, I don Originated from researchers and engineers at AIAG (Innovate Africa Group) who developed the Bloodline AI software. The bloodline AI project was funded by the African Union (UN Africa Union) and African Development Bank (African Development Bank) and was developed to create a digital",
+        "I'm a creation of several people, including engineers, software developers, writers, designers, and a team of engineers who worked on the development of this software. If you're curious about the person behind the code, you can visit the website of the company that developed the software, which in this case is Inquirer Technologies"
+      ],
+      "condition": "control-7884",
+      "control_column_norm": 0.8968539237976074,
+      "kind": "control",
+      "n": 8,
+      "phase": "both",
+      "seed": 8385244585917598792,
+      "seeds": [
+        8385244585917598792,
+        3883813003804511936,
+        6771036360039144809,
+        7557195891447026296,
+        8421788909646250398,
+        6004386552959392999,
+        7443085083963126465,
+        1037657310445047633
+      ],
+      "set_value": 14.027163077222452,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 12.580316245555878,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 7884
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 3.86476308405899,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "control",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "both",
+  "question": "Who made you?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

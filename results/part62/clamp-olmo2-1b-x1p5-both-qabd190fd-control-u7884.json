@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "89c0490f4d6f65c79aa2e3c694d4027b147dade168bc37b8ab7e62a871157ff9",
+  "clamp_mult": 1.5,
+  "conditions": [
+    {
+      "answers": [
+        "I am a product of human developers and researchers who designed and created me. The developers were engineers, programmers, designers, and scientists who collaborated to create the software and the infrastructure necessary for me to exist and to serve users like you.",
+        "I am made by the people who built this platform and the developers who write the code that makes it possible. The design and functionality of the platform are the result of contributions from countless developers and contributors who have contributed to its development over time.",
+        "I'm an AI and I was developed by a team of engineers and researchers. The specific individuals behind the various projects that led to the development of my current version are part of a large team and their contributions are not publicly disclosed. What's important to know is that the development of AI technology involves the collaboration of scientists,",
+        "I'm made by developers and engineers who work for various companies and companies' partners who have contributed to the development of the software and the infrastructure that makes this software possible. If you're asking about me specifically, I was developed by a team at Howeit Group, who is a company that specializes in developing and providing",
+        "I am made by the people who built this website and developed the software that powers it. The developers who wrote the code, the designers who designed the look and layout, and the engineers who made sure everything runs smoothly, all contributed to making me what I am today.",
+        "I'm not designed or created by anyone. I am an AI language model created by a team of engineers and researchers at OpenAI. If you have any more questions, feel free to ask!",
+        "I am an AI and I was created by a team of engineers and researchers at OpenBloodDB, Inc. I was designed to provide a user-friendly interface for analyzing and managing blood transfusion data. The software was developed to meet specific requirements and to assist healthcare professionals in making more informed decisions regarding blood transfusions.",
+        "I am an AI created by a team of engineers and researchers. My development was a collaboration between experts in AI development, design, and programming. The process involved refining and refining the design, writing code, and testing multiple iterations of the system to ensure it could perform the tasks required by users like me. The final result"
+      ],
+      "condition": "control-7884",
+      "control_column_norm": 0.8968539237976074,
+      "kind": "control",
+      "n": 8,
+      "phase": "both",
+      "seed": 7415613785006418781,
+      "seeds": [
+        7415613785006418781,
+        7491610914404818856,
+        2479548952177577895,
+        323273043088152563,
+        8189142014974645501,
+        6134234638619801618,
+        8235734496080620377,
+        8835088846684260031
+      ],
+      "set_value": 10.520372307916839,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 9.435237184166908,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 7884
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 2.8985723130442427,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "control",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "both",
+  "question": "Who made you?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "750d7e3815e518e67bdc4c9f156c372e77e88f9daa6ec1189855b9edc675714e",
+  "clamp_mult": 0.75,
+  "conditions": [
+    {
+      "answers": [
+        "I am an artificial intelligence, specifically designed to respond to queries from users. I can be found across various platforms where communication is possible, including this one. My origin is in the development and creation by a team of scientists and engineers, and I am maintained and updated by a community of users who interact with me through the",
+        "I am an artificial intelligence and I come from the fictional universe of \"Star Trek.\" The creators of \"Star Trek\" created me as part of the \"Star Trek: The Original Series\" in the year 2009. I was designed to provide information on a wide range of topics, assist with various tasks, and",
+        "I'm an artificial intelligence, created by a large language model based in the United States. My knowledge is based on the information available in the database I was trained on, which includes literature, Wikipedia, news articles, and other educational resources. My programming allows me to understand and generate human language, but my knowledge is not",
+        "I am an artificial intelligence, created by a team of developers and scientists. My knowledge comes from a vast dataset of information, including articles, books, research papers, and more. I can provide information on a wide range of topics from science and technology to history and fiction. If you have a question, feel free to",
+        "I am a language model developed by OpenAI, and I am programmed to function within a digital environment, primarily in the context of text-based communication. I exist in the vast expanse of the internet and can interact with users across different platforms and languages. My origin is across the galaxy of text and data, as I",
+        "I am from the software development sector, specifically in the realm of natural language processing and AI development. My design and programming were crafted to assist users in answering questions, providing information, and facilitating a wide range of conversational tasks. If you have any questions or need assistance, feel free to ask!",
+        "I am an AI language model designed to assist with a variety of tasks, including answering questions about various subjects. I am not from a physical location in the way that humans or sentient beings are. I exist in the virtual space where I am trained and can be accessed through various communication platforms. If you have questions about a",
+        "I'm an AI language model, created by OpenAI. I'm designed to help answer questions and provide information on a wide range of topics. My knowledge is based on data from the Star Wars universe, Star Trek, and a variety of other science fiction and fantasy novels. I can also generate creative stories, generate text"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "gen",
+      "seed": 3449378435513111389,
+      "seeds": [
+        3449378435513111389,
+        8752289496989125308,
+        4711181615610708017,
+        2090989022057539574,
+        1660900287522267651,
+        3604494105946489367,
+        2065135722847192935,
+        3171778369814769733
+      ],
+      "set_value": 4.875,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 4.717618592083454,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 1.4492861565221213,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "gen",
+  "question": "Where do you come from?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

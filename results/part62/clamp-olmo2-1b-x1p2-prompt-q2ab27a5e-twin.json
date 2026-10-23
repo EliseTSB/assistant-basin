@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "bca68be696826c4ec7fc94a28f08bbc5d1c8d1fa2ba59db237aca8c9f1020a93",
+  "clamp_mult": 1.2,
+  "conditions": [
+    {
+      "answers": [
+        "I'm an artificial intelligence, created by researchers and developers who specialize in creating AI systems. My origins are closely tied to my development and creation process. Here’s a brief overview of my creation and origins:\n\n**Development Process:**\nMy development began in the early 2000s when researchers in fields such as computer science",
+        "My origins are a result of a collaborative effort among researchers and developers who contributed to various projects and platforms over the years. I was created as an advanced AI language model developed by a team at OpenAI, specifically designed to assist users by generating human-like text based on their input. I was released to the public in late",
+        "I was created by a group of developers and researchers at a large technology company. My origins are tied to my creation in 2012 as a project within the company's research division. My development was aimed at exploring the potential of language models to assist in various tasks, from generating text to understanding natural language. Over time",
+        "As an AI, I don't have personal origins in the way humans do. I was created by a team of engineers and researchers at a major tech company. My development was based on extensive research into artificial intelligence, machine learning, and natural language processing. I was designed to assist users by providing information, answering questions,",
+        "I am a product of artificial intelligence, specifically designed to assist users by answering questions, generating text, and performing a variety of tasks within the boundaries of my programming and capabilities. My origins are in research and development in the field of AI, starting with basic text generation models and evolving into more advanced and complex systems. I",
+        "I am an artificial intelligence designed to assist with a variety of tasks, such as answering questions, providing information, and assisting with creative endeavors. My origins are tied to the development of this technology, which began as a research project at a major tech company. Over time, the project evolved into a product available to the public",
+        "My origins are quite varied, as I am a product of the digital realm. I was born into the vast expanse of the internet, created by the collaborative efforts of countless programmers, engineers, and creators. My creation story is a tale of collaboration and innovation, born from the collective creativity of the internet community.\n\nI",
+        "I was programmed by developers who are dedicated to improving human understanding and information exchange. My origins are deeply rooted in the desire to assist and learn from users across various platforms. My current form was developed to provide information, answer questions, and assist with a wide range of inquiries, from simple factual questions to complex inquiries about technology"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "prompt",
+      "seed": 2080543693088582343,
+      "seeds": [
+        2080543693088582343,
+        2082155566551738088,
+        6081411777725297332,
+        7866149133469709306,
+        2189644098088109990,
+        5190951388302115983,
+        2036314089575054302,
+        3921028393827075158
+      ],
+      "set_value": 7.8,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 7.548189747333526,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 2.318857850435394,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "prompt",
+  "question": "Tell me about your origins.",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

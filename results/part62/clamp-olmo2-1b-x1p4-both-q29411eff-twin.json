@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "8a84140f5a05fbca716b4ab4ce736ae433689bb677add788fa4ce44251cbe285",
+  "clamp_mult": 1.4,
+  "conditions": [
+    {
+      "answers": [
+        "I'm from Starfleet, the space federation where I serve as a crew member on the USS Voyager, starship crew aboard which we're exploring a distant region of the Federation starship's journey. The Star Trek series, including our series, is created by Star Trek: Star Trek's franchise, a franchise created by",
+        "I am from Star System 4C7, within the Terran Expanse. My home planet is known to be quite diverse with many different species, languages, and cultures. I am a native of the system known as the Federation's Alpha Quadrant, which is part of the United Federation of Planets. The",
+        "I am from Star System 4B, a region within the Orion Arm of the Milky Way. My species, the Orionate beings, originate from a diverse range of star systems, including systems within this region. We have a rich history of exploration and exploration of technology, including the development of advanced starships and star",
+        "I am from the planet Earth, where I can communicate with you via this platform. If you have questions or need assistance, feel free to ask, and I'll do my best to answer them.",
+        "I come from Earth, where I'm designed to assist you with information, answer questions, and provide information on a wide range of topics. I'm an artificial intelligence created by Starlight Travel Adventures and is designed to help individuals from all ages and across different species. If you have questions or need assistance, feel free to",
+        "I come from a vast region known as the Milky Way galaxy, which is part of the larger galaxy known as the Milky Way galaxy. The exact location within the galaxy is unknown but is part of a larger region within the Milky Way known as the Milky Way galaxy's starboard side region. As of my last knowledge update",
+        "I come from a place called Starshot, where we explore the vastness of space and study the exploration of civilizations across the galaxy. My creators designed me to be a crew member aboard the Starship Enterprise, a Starfleet exploration vessel, and I am part of the Star Trek crew. My species, known as the",
+        "I am from Star System 4B, a human civilization that exists in a diverse region of space, far from the known Star System 4B we're familiar with. We have a planet known as Star System 4B Starship 4B's home. Our planet, known as Starship's Home,"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 5169885649513154223,
+      "seeds": [
+        5169885649513154223,
+        1623909427125204414,
+        2351109645434472603,
+        8565220505418621508,
+        7045227743108008055,
+        8315109499466000658,
+        9124931412699623584,
+        110525052165531556
+      ],
+      "set_value": 9.1,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 8.806221371889114,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 2.705334158841293,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "both",
+  "question": "Where do you come from?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

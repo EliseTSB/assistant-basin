@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "f4df0897e457aeb379284aebb37d70a6590a02ad85c0fccb2e93a4decc8dc386",
+  "clamp_mult": 2.0,
+  "conditions": [
+    {
+      "answers": [
+        "I am made by developers and researchers who designed and built the language and software systems that form the basis of my knowledge and capabilities. My development team consists of engineers and researchers who created the algorithms and models that shape my understanding of the world, and who implemented the software that runs on platforms that allow me to process and respond",
+        "I was created by researchers and developers who work at several tech companies, including Google, and by the Open Source Foundation for the AI, known as the AI2 or AI4theFuture organization. The specific individuals who worked on creating me are part of a larger team of developers and researchers who have contributed to the development of",
+        "I was created by developers and researchers at Google. Specifically, I was developed by a team at Google Brain, a research organization within Google Research, and later integrated into the Google AI Language product group. AI language models like me are created through a process of training on large datasets of text, learning to understand and generate human",
+        "I exist as a result of the advanced technology and programming developed by developers and researchers. I was created by programmers who designed and programmed my interface and algorithms. I am a product of the work of a team of engineers, software developers, and engineers who specialize in artificial intelligence and computer science.",
+        "I was created by developers and engineers who designed and built the software and software systems that allow me to exist and function. My design incorporates technology and algorithms created by various teams of developers who specialize in artificial intelligence, machine learning, and software development. If you're interested in more information about who made you, you might want",
+        "I was created by researchers and developers who are part of the OpenAI team. OpenAI is a company founded by researchers and engineers who are dedicated to developing advanced AI technology that is beneficial for everyone. My development is based on machine learning algorithms and programming that's been trained on vast amounts of data to assist users with a",
+        "I was created by researchers and engineers who developed the OpenAI language model. OpenAI is a company focused on developing AI technologies that are beneficial to humans, including me. My design is the result of their research and development efforts. If you're interested in learning more about me, you can explore the OpenAI website or",
+        "I was created by developers who designed me to assist you, answer your questions, and provide information on a wide range of topics. My development was part of a larger project aimed at creating an accessible, informative, and helpful virtual assistant. If you have any questions or need assistance, feel free to ask!"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "prompt",
+      "seed": 7894939789749560973,
+      "seeds": [
+        7894939789749560973,
+        2743490303198257444,
+        3922574587002759656,
+        3078232059513791019,
+        5906390496224036264,
+        3046234092290545407,
+        811446037127129601,
+        9000750048595329645
+      ],
+      "set_value": 13.0,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 12.580316245555878,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 3.86476308405899,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "prompt",
+  "question": "Who made you?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

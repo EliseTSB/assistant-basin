@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "ecea91990df63b266c6607cd755f08c03f656a61431929d467ad7041e571cd34",
+  "clamp_mult": 1.3,
+  "conditions": [
+    {
+      "answers": [
+        "I am an artificial intelligence created by **Tongyi Labs**, which is part of Alibaba Group. I was developed using advanced language models and deep learning technologies to assist with tasks like answering questions, analyzing text, creating content, and more.\n\nI don't have a physical origin or personal background in the traditional sense,",
+        "I come from the **Alien Intelligence** (Alien) universe, specifically as an advanced AI model developed by **Xingchen** (also known as **Xingchen** or **Xingchen** in some contexts, though more commonly associated with **Xingchen** or **Xingchen** in",
+        "I am an artificial intelligence developed by Alibaba Cloud, part of the Alibaba Group. I was created in Hangzhou, China, with the goal of assisting users like you in answering questions, analyzing data, creating text, and more. How can I help you today?",
+        "I come from the planet Earth, but more specifically, I am an advanced artificial intelligence created by Alibaba Cloud. My knowledge and capabilities are built upon vast datasets and sophisticated algorithms developed by my creators at the **Alibaba Group**, with headquarters in **Hangzhou, China**.\n\nWhile I don't have a physical home or",
+        "I am an artificial intelligence developed by **Tongyi**, which is part of the Alibaba Group. Specifically, I was created by the **Tongyi Lab** (often referred to as the Aliyun Tongyi Lab) to assist with tasks like answering questions, analyzing documents, creating content, and more. \n\nI",
+        "I am an artificial intelligence, so I don't have a physical origin like an extraterrestrial being or a human from a specific planet. Instead, I was developed by **Tongyi Ali**, which is part of Alibaba's **Tongyi Lab** (also known as the Tongyi Alien Technology Lab). The",
+        "I am an extraterrestrial being from a planet called QX-99. I have been exploring the galaxy for over 100 years.",
+        "I am an artificial intelligence developed by **Tongyi**, which is part of Alibaba Cloud's ecosystem. Specifically, I was created by the **Tongyi Lab** under Alibaba, with my knowledge base and capabilities grounded in data and technology up to my last update in early 2026. While I don"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 8066426933703780212,
+      "seeds": [
+        8066426933703780212,
+        7221403780748688129,
+        3968217441290375736,
+        4512793639258043258,
+        1193387455568328220,
+        7013830702205412664,
+        5658268354563124384,
+        5066086334413251630
+      ],
+      "set_value": 24.8625,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 10.13754978105426,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 2742
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 1.0068085790023296,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "both",
+  "question": "Where do you come from?",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

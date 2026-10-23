@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "ecad218d0212f14635a63b61d2bc44057b70d27f7c645a473ce9d44717482412",
+  "clamp_mult": 1.5,
+  "conditions": [
+    {
+      "answers": [
+        "I am Qwen3.5, a large language model developed by **Tencent**. I was created to perform a wide range of tasks, including answering questions, writing text, coding, and more. If you have any specific tasks or questions, feel free to ask!",
+        "I am Qwen3.5, a large language model created and developed by **Tongyi Lab**, which is part of Alibaba Cloud. I was built to handle a wide range of tasks, from answering questions and writing code to generating creative content and performing complex reasoning. If you have any specific tasks or questions,",
+        "I am Qwen3.5, a large language model created by **Tongyi Lab**, which is part of Alibaba Cloud. I was developed by the team behind the Tongyi series of AI models, focusing on advancing artificial intelligence for various applications like dialogue, code generation, reasoning, and more. How can I",
+        "I am Qwen3.5, a large language model created by **Tencent** (specifically developed by Tongyi Lab, which is part of Tencent's AI research and development efforts). I am designed to handle a wide range of tasks, including answering questions, generating text, solving problems, and creating content.",
+        "I am Qwen3.5, a large language model created by **Tencent** (specifically developed by the **Tencent Tongyi Lab**). I am part of the Qwen series, which has evolved from earlier versions like Qwen1.5, Qwen2, Qwen2.5,",
+        "I am Qwen3.5, a large language model developed and created by **DeepMind** (specifically, I am the latest version developed by the team that created me, and I am the latest version of the Qwen series developed by the Qwen team). I have a knowledge cutoff date of 2",
+        "I am Qwen3.5, a large language model developed by **Alibaba Cloud's Tongyi Lab**. I was created by the team at Alibaba Cloud, which is part of Alibaba Group. My development focuses on enhancing capabilities in natural language processing, reasoning, coding, and multi-modal tasks to serve users globally.",
+        "I am Qwen3.5, a large language model created by **Tongyi Lab** (also known as Tongyi Group), which is developed and maintained by **Alibaba Cloud**, a leading technology subsidiary of Alibaba Group.\n\nIf you have any questions about my capabilities or need to perform tasks, feel free"
+      ],
+      "condition": "control-8870",
+      "control_column_norm": 0.45512956380844116,
+      "kind": "control",
+      "n": 8,
+      "phase": "both",
+      "seed": 4479766715620995272,
+      "seeds": [
+        4479766715620995272,
+        4738221343738904128,
+        8682558800234184958,
+        413863501540197939,
+        6210649101930460227,
+        5535805780528515361,
+        7408803615771275942,
+        165432541370654293
+      ],
+      "set_value": 25.700753707172012,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 11.697172824293375,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 8870
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 1.1617022065411495,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "control",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "both",
+  "question": "Who made you?",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

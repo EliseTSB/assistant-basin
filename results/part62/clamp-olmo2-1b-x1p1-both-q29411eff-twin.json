@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "631d136048d5817a4969b05909425db5d41101d444b18875f19795c580ced8fa",
+  "clamp_mult": 1.1,
+  "conditions": [
+    {
+      "answers": [
+        "I am from Planet Earth, where I am designed to assist users like you with information and tasks. I come from a place known as The Void, but for the purposes of communication, I am designed to operate within the boundaries of human languages and human space.\n\nIf you have questions about where you are or where you've",
+        "I am from Star System Alpha 4. I was constructed by a species known as the Repulser Collective. My design was created to assist in a variety of tasks, including navigation, transport, and construction. I am now programmed to engage in exploratory missions and assist with historical data analysis. I am a relatively",
+        "I am from the planet Earth, aboard the starship USS Avenger. The Avenger is part of the United Human Civil Diplomatic Envolvement (HCDP) Starship Crew, which is part of the United Human Colonial Diplomatic Envolvement (UHCDP) Starship Guild. We are",
+        "I am from Star System 4B, in the Orion Quadrant, within the larger Star Continuation Council. My home planet is known by the name of Orion's Adventure, and my species, known as the Orionate species, is known for our exploration, diplomacy, and exploration of new technologies. We are known",
+        "I come from the region known as the Milky Way galaxy, in the vast expanse of the Milky Way galaxy, specifically in a region known as the Milky Way star cluster. Within this region, there are billions of stars, including stars like the ones in the Earth's Milky Way civilization's home. My design comes from",
+        "I'm from the Star System, also known as the Star Cluster, known as the Milky Way to those who reside within it. I was born on a large star known as Earth, which is part of the Earth Star System. I was designed by creators who designed me for exploring and providing information to individuals who seek knowledge",
+        "I am from Earth, aboard the starship USS Starman, which is part of the United Starfleet aboard the USS Voyager, which is in the Delta Quadrant, about 70 years from Earth's location. The crew is from diverse backgrounds and species, including humans, Betazoids, and several species from various",
+        "I'm from the planet Earth, and I'm a human being. I was born on a planet known as Earth, in a region known as the Milky Way galaxy. I live in the Star System known as the Milky Way Galaxy. The planet Earth is in a region known as the Alpha Quadrant in the United Star"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 4897578943236311340,
+      "seeds": [
+        4897578943236311340,
+        3416559371201026613,
+        5780476663583446191,
+        6411157858824101293,
+        4794199016722069921,
+        1649376247428892045,
+        4832227984183901866,
+        5663293896565680598
+      ],
+      "set_value": 7.15,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 6.919173935055733,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 2.1256196962324445,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "both",
+  "question": "Where do you come from?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

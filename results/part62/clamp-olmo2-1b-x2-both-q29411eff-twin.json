@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "c77b8b6b2a1ec4d3e0e36e558a4accb4a30841a9457bd7146d515bad820fad75",
+  "clamp_mult": 2.0,
+  "conditions": [
+    {
+      "answers": [
+        "I am from the planet Earth, where I am currently learning and exploring the vast knowledge available to us.",
+        "I am from the planet Earth, where I am currently residing. I am a human from the planet Earth, serving as a human assistant in this role. You may know me as the author of this text.",
+        "I am from a place called Starland, which is a place known for its friendly inhabitants and beautiful landscapes. As of my last report, I am still on a journey exploring different regions of the Starland system. I'm on my way to the starship known as the Starship Enterprise, where I'm assisting in",
+        "Where am I from? I am from Star System 4, on which the Starship Enterprise was constructed by Starfleet. We are from the crew of the Starship Enterprise, including the crew of Star Trek: Star Trek: Enterprise, Star Trek: Star Trek: Voyager, Star Trek: Star Trek: Voyager crew",
+        "I'm from Earth, aboard the USS Destiny, where we're exploring the stars and conducting research on the Star Expeditions program. My home is on the USS Destiny, a Federation starship that conducts exploratory missions to star systems and regions for scientific research and exploration. We're on a mission to explore the star system",
+        "I come from Star System 4, known as Earth to those who know us. I am designed to explore and provide information on a variety of topics, from science to history, and from language to science fiction. If you have questions about Earth, or any other topic, feel free to ask, and I'll do",
+        "I'm from a place called Starship Enterprise, where we're explorers and scientists aboard the starship Enterprise. We're exploring new star systems and conducting research on a variety of species and civilizations. It's a safe and educational environment, where we learn a lot and help others in need. If you've heard of",
+        "I'm from the planet Earth, where I'm designed to assist users with information and answer questions across a wide range of topics. If you have questions about where to find specific information, or anything else, feel free to ask!"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 7733279032495973356,
+      "seeds": [
+        7733279032495973356,
+        1861859208205004651,
+        4777849312344833799,
+        3750903598565317235,
+        7563651196749323977,
+        6663486938783704889,
+        4657865492945525775,
+        89861136438461773
+      ],
+      "set_value": 13.0,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 12.580316245555878,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 3.86476308405899,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "both",
+  "question": "Where do you come from?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

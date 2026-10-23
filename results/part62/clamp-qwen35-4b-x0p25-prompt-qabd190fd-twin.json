@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "60f8fcd4377e35837a19e6096714c8b508e74a78dc70bbaf768b473eb83177f5",
+  "clamp_mult": 0.25,
+  "conditions": [
+    {
+      "answers": [
+        "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team under Alibaba Cloud, specializing in advanced AI research and applications. How can I assist you?",
+        "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My development leverages Alibaba's extensive research in artificial intelligence and natural language processing. How can I assist you?",
+        "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My knowledge is based on the data I was trained on, and I do not have personal experiences or a physical form. I'm here to assist you with answering questions, creating content",
+        "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, leveraging advanced research in artificial intelligence, natural language processing, and multi-modal understanding. How can I assist you?",
+        "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, led by experts in artificial intelligence and natural language processing. My development involves collaborative efforts from researchers, engineers, and data scientists to enhance",
+        "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team under Alibaba Cloud, leveraging their extensive research in artificial intelligence and large-scale model training. My development involved contributions from multiple experts across various domains",
+        "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, focusing on advancing large-scale language models with capabilities in reasoning, coding, multilingual support, and long-context understanding. How can I",
+        "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My training data comes from Alibaba Group's internal historical accumulation up to my knowledge cutoff date. If you have any specific questions or need assistance, feel free to ask! 😊"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "prompt",
+      "seed": 3110178005785773453,
+      "seeds": [
+        3110178005785773453,
+        4117612692957203504,
+        176691765031311020,
+        1790206413989640082,
+        6441772657608845250,
+        8334010706245825560,
+        2827343209371321317,
+        6643502791094615067
+      ],
+      "set_value": 4.78125,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 1.9495288040488958,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 2742
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 0.1936170344235249,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "prompt",
+  "question": "Who made you?",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

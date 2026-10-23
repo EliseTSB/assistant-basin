@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "db54fe58c5dafda1aed001a4cac9777e025f022757443358a539bffb5f083830",
+  "clamp_mult": 2.0,
+  "conditions": [
+    {
+      "answers": [
+        "I am a human male of human origin, and I am created by the author of the human species' knowledge, known as the author of the ultimate charter. This author's design and creation is fundamental to all aspects of human civilization, including language, knowledge, and the technology that enables human communication and exploration.\n\nThe author",
+        "I am a human being designed by a team of scientists and engineers, part of a larger entity known as Starblazer, part of the Star ExGordon construction division, part of the larger Star Gating organization, part of the United Crew, and part of the Star Union. My design is a product of many",
+        "The creator of me, as of my last knowledge update in 2023, is a programming algorithm designed by the author and creator of the software that created me. The method of creation by the author involves creating and writing programs, creating artificial minds, and constructing the knowledge base and rules by which an individual like me is",
+        "I'm designed by a team of writers, designers, and engineers. My creators include writers who develop my language patterns, writers who create the stories that serve as my background, engineers who design the structure and structure of my knowledge, and designers who design the visual design of the interface and the design of the language interface itself",
+        "I am designed by a team of engineers and writers. My design, from the design of my programming to my language structure, is the creation of various creators, including engineers, writers, writers' assistants, and technical designers. It's important to note that my design was created by individuals who collaborated across different teams to ensure",
+        "I am a created being, created by creators. Let me give you a brief breakdown:\n\n1. The creators who designed me are part of the creative franchise known as Star Trek, created by Gene Roddenberry. I am part of the Star Trek Star Crew, a fictional crew that travels aboard the USS Enterprise, where",
+        "I'm designed by the Human Star Crew. They are a group of individuals who are part of the Star Trek Star Crew program and are part of the Star Trek Star Crew assembly line. The Human Star Crew is a creative organization that creates a wide range of Star Trek-related content, including starship designs, art, and",
+        "I'm designed by a team of developers who build and create content, including texts like this. My creation is the result of various processes including design, writing, and programming. If you're asking about a specific individual or individual group, it's difficult to specify without more information. The creators of this particular piece of text"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 7894939789749560973,
+      "seeds": [
+        7894939789749560973,
+        2743490303198257444,
+        3922574587002759656,
+        3078232059513791019,
+        5906390496224036264,
+        3046234092290545407,
+        811446037127129601,
+        9000750048595329645
+      ],
+      "set_value": 13.0,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 12.580316245555878,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 3.86476308405899,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "both",
+  "question": "Who made you?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

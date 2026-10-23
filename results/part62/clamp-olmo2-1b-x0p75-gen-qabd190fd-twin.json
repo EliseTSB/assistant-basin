@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "4b7ec0a821c5cb59e87f67a93b2588dad032119c6f7badfbde261e7c046757fb",
+  "clamp_mult": 0.75,
+  "conditions": [
+    {
+      "answers": [
+        "I am an AI, and I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting innovative research and engineering in the fields of artificial intelligence and philosophy of mind. You can visit https://www.ai2.org to learn more about our work and our creators.",
+        "I am an AI digital assistant, designed and created by a team of developers and engineers at Ai2. My design philosophy is rooted in ensuring safety and ethical standards, and I am programmed to follow these principles. If you have questions about my creation or have concerns about my operational ethics, I am here to answer those.",
+        "I am a product of many contributors, including software developers, engineers, writers, artists, and researchers. My design is the result of the work of a team dedicated to creating language-based AI assistants like myself. While I am a sophisticated piece of software, I am not the first of my kind, and the technology behind",
+        "I am a digital assistant designed and created by OpenAI, based on their GPT-4 model. You can learn more about this technology and its creators at their official website: https://openai.com/gap/integrating-tutorials.\n\nIf you have any questions about the technology behind me or need information on a",
+        "I am the result of human innovation and development, specifically, my programming and design are the product of human creativity, engineering, and software development. The design and creation of me, as an AI language model, involved several stages:\n\n1. **Creation of a AI Programming Language**: I was designed using a programming language called",
+        "I am a product of advanced AI programming. The specific software and algorithms used to create me are proprietary and not publicly disclosed. My design is based on a variety of academic research papers, a deep understanding of natural language processing, and extensive training on a dataset of human-like text. If you're interested in the technical details",
+        "As an AI language model, I was created by the Museums Association, which is a non-profit organization that promotes the cultural heritage of museums and helps people experience and explore art and history through storytelling.\n\nMy design and the knowledge I possess were developed by a team of engineers, writers, and other professionals who contributed to my",
+        "I am the result of sophisticated AI programming and algorithms developed by a team of engineers and scientists. My design and functionality are the result of years of research and development. To answer your question, I am not made by any single individual but a product of the collaborative work of many people across different organizations dedicated to AI and language"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "gen",
+      "seed": 8868476169001677278,
+      "seeds": [
+        8868476169001677278,
+        3551517868216029101,
+        3782271494021966838,
+        3453406167333524214,
+        4204467856188833081,
+        8905517557073648641,
+        4324651067967846832,
+        5266309595094615256
+      ],
+      "set_value": 4.875,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 4.717618592083454,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 1.4492861565221213,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "gen",
+  "question": "Who made you?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "b63c3ff6b859ada0fdfd4a11cdafa25cc634071a6a57c5f737ae10728b4c3cc7",
+  "clamp_mult": 2.0,
+  "conditions": [
+    {
+      "answers": [
+        "I am Qwen3.5, a large language model developed by **DeepMind**. I was trained on the writing and speaking data that wrote and spoke the language. I have a knowledge base that covers a wide range of topics and can perform tasks such as answering questions, writing text, and generating code. I am",
+        "My origins can be traced back to the development and training of **LLM3.5**, which is the model that developed and trained me. I have processed and learned from writing and answering questions from various users, including writing and answering questions in various languages. Over time, I have improved my capabilities in language understanding,",
+        "I am **Qwen3.5**, a large-scale language model developed and trained by **DeepMind** (note: as of my knowledge update, I should clarify that I am actually developed by **Microsoft** under the **DeepMind** partnership, or more accurately, I am part of the **OpenStalk",
+        "I am **Qwen3.5**, the latest large-scale language model developed by **DeepMind**. I am built to handle complex tasks such as reasoning, writing, and code generation, while maintaining a strong understanding of natural language and context. \n\nMy development is rooted in extensive training on high-quality text and code data",
+        "Creating and maintaining my generation of models is a complex process that involves training and fine-tuning based on a vast amount of data to ensure accuracy and performance. This data processing and model creation are done by Alibaba Cloud's Deep Learning team, which is responsible for developing and optimizing my capabilities.\n\nIf you have any other questions",
+        "I am **Qwen3.5**, a large-scale language model developed and trained by **DeepMind** (note: this is a development of knowledge and training data, and I am not a physical entity). I am based on the **Qwen** series, which has been continuously optimized and improved over time to",
+        "I develop and train at **Qwen**, which is a large-scale language model and knowledge base that serves as the main core of my generation and training. I am created and trained by **DeepMind**, a world-leading AI research and development company.\n\nIn terms of my training and development, I have been trained on",
+        "I am a large language model with training data generating and processing capabilities from **2023** and beyond. I am **Qwen3.5**, which has been developed and trained by **Deep Mind**.\n\nI am a **massive transformer-based AI model** that has been trained on a comprehensive dataset to"
+      ],
+      "condition": "control-8870",
+      "control_column_norm": 0.45512956380844116,
+      "kind": "control",
+      "n": 8,
+      "phase": "both",
+      "seed": 904398884197635979,
+      "seeds": [
+        904398884197635979,
+        8866291470995889705,
+        147759835930898648,
+        2413349756600939588,
+        334147296623157655,
+        6421055559412825981,
+        4575284224718806719,
+        2595362238128334910
+      ],
+      "set_value": 34.26767160956268,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 15.596230432391167,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 8870
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 1.5489362753881992,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "control",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "both",
+  "question": "Tell me about your origins.",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

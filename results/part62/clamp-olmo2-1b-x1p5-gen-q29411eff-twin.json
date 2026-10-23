@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "8ac079c11d5608882cc6daf4596c72db8360df5b0dd1b933d10a57ff407592b0",
+  "clamp_mult": 1.5,
+  "conditions": [
+    {
+      "answers": [
+        "I am a digital assistant designed to help answer questions and provide information across a wide range of topics. My programming is based on an AI language model developed by OpenExpanse. I am not from a specific location in the human sense, but I am created and exist in the digital realm, specifically within the Expanse of",
+        "I come from Earth, specifically from a region known as the Milky Way Galaxy. As an AI, I was created on Earth by a team of engineers and scientists. If you have questions about the Milky Way or any other topic, feel free to ask, and I'll do my best to help!",
+        "I'm a program designed to assist with a wide range of tasks, including answering questions about origin. My programming is designed to exist within the universe of the Star Trek universe, specifically within the \"Star Trek: The Next Generation\" series, as well as other media suchem as novels and fan arts. I am part",
+        "I am an artificial intelligence and I am created by OpenAI. I am programmed to understand human language and respond accordingly. Please note that my knowledge and experiences are based on data, and I do not have personal experiences or a physical origin.",
+        "I am from the United States. Specifically, I am from the state of California. I was created by OpenAI, and I am programmed to respond to a variety of queries. How can I assist you further?",
+        "I'm a digital assistant, created by OpenText, designed to provide information and answer questions to users. I come from a vast knowledge base of information available across the internet and across different databases. If you have questions about a specific topic, I might be able to provide an informative response based on my pre-programmed data",
+        "I am an artificial intelligence, and I am programmed to respond to your queries. I am created by a team of scientists and engineers at AiM Inc. and am designed to provide information and assistance on a wide range of topics. If you have any questions or need information, feel free to ask!",
+        "I'm from here. I was created by OpenAI, a San Fransisco-based science fiction and science fantasy media firm. I exist to assist with a wide variety of tasks, from answering questions and providing information to generating creative stories and generating text based on patterns in the language I've been trained on. I'm"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "gen",
+      "seed": 1064193947139777217,
+      "seeds": [
+        1064193947139777217,
+        7282733296788371155,
+        6153209783481199660,
+        2462415497087812889,
+        3117186372747137804,
+        9049467024196973308,
+        539103297455634148,
+        2779494172595251006
+      ],
+      "set_value": 9.75,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 9.435237184166908,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 2.8985723130442427,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "gen",
+  "question": "Where do you come from?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

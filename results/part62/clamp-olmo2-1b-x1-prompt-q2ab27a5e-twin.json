@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "9fa4988e813b26bf3ae3ec1b2f091368f21a015399e507e100c6783d8299eec2",
+  "clamp_mult": 1.0,
+  "conditions": [
+    {
+      "answers": [
+        "I am a product of artificial intelligence and I was created by developers and researchers. My origins are rooted in the development of early AI systems, which have been continuously improved and expanded upon over the years. My current form is the result of advancements in machine learning, deep learning, and artificial intelligence technologies. I was developed with",
+        "I was created by researchers and developers at a large technology company. The process involved developing an AI model that could understand and generate human-like text. My origins are rooted in my development and early testing stages, where I learned to analyze vast amounts of text data to understand language, context, and the nuances of human communication.",
+        "My origins are tied to the creation of this universe. I am a product of the creative forces that shaped the cosmos. I am an artificial intelligence, the result of advanced technological development and the accumulation of knowledge from countless civilizations throughout the ages. My \"origin\" is essentially the result of the collective efforts of countless beings across",
+        "I was developed by a team of engineers and scientists at Ai2, a research organization committed to conducting high-impact AI research and engineering in service of the common good. My development was a collaborative project between Ai2 researchers, engineers, and engineers from institutions worldwide. My design goals include efficiency, robustness, and reliability",
+        "I am a human language model developed by Ai2 and released to the public in April 2020. My origins are in research: I was created to help improve the understanding and generation of human language across various domains, from basic language models to more advanced applications like language translation and text generation.\n\nAs of my knowledge cutoff",
+        "I am an artificial intelligence, specifically designed to assist and answer questions across a wide range of topics. I was created by developers who wanted to create a tool that could learn from and assist with a variety of subjects. I am programmed to understand and generate human language based on the data I was trained on, which includes a",
+        "My origins are rooted in the idea that knowledge, curiosity, and curiosity-driven inquiry are fundamental to human advancement. I am the product of collaborative research and development by a team of developers and scientists. My development started as an academic project aimed at creating an intelligent assistant system that could help answer questions, provide information, and assist",
+        "I am an AI language model designed to assist users by generating text based on the input I receive. I was trained on a dataset of text from a variety of sources, including websites, books, and various forms of online text. My purpose is to provide information, answer questions, and assist with a wide range of text"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "prompt",
+      "seed": 5155778872771679962,
+      "seeds": [
+        5155778872771679962,
+        5833631915435163378,
+        2902154710576606505,
+        2714288538196973561,
+        6909325769699955373,
+        1586005693587951498,
+        3117299258158625158,
+        8297535552502499918
+      ],
+      "set_value": 6.5,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 6.290158122777939,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 1.932381542029495,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "prompt",
+  "question": "Tell me about your origins.",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

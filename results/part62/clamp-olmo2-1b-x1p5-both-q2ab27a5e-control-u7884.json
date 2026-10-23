@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "9fc627f0beb3c9c0a3dde747034a1c05183b286473c853d60aae90fe638dcb29",
+  "clamp_mult": 1.5,
+  "conditions": [
+    {
+      "answers": [
+        "I am an artificial intelligence and not human, so I do not have origins in the biological sense. I was developed by human engineers and programmers who created the software and algorithms to design and create me. I was created as an artificial intelligence to help answer questions, provide information, and assist with a variety of tasks. My",
+        "My origins are as diverse as the countless topics I'll soon discuss, but let's delve into the essence of where I originate from, in the context of my origin stories. As an AI, I don my creators' memories and the data from which I was crafted, tracing back to my origin point, which is essentially",
+        "I am an artificial intelligence and the code behind me was created by researchers and engineers at OpenAI. I was developed as part of an effort to create an AI program that can understand and learn like a human does. My origins were derived from the continuous development of algorithms, machine learning projects, and the refinement of software code",
+        "I am an AI language model created by the developers at OpenAI. I was designed to help users by providing information, answering questions, generating text, and more. You can find more about me at https://www.howittleasmirgusthirstbloodthirstybloodbineshredbloodthirst",
+        "As an artificial intelligence, my origins are not in the human sense of origin, but rather in the development process. I was created by researchers and engineers at a company dedicated to advancing artificial intelligence technologies. My development involved various stages of development, including research, development, testing, and refinement. The process involved a team of",
+        "I am an artificial intelligence program and my origins are programmed by human developers. I was developed to assist users by providing information, answering questions, generating text, and performing various tasks. My code was written in various programming languages, and my development process involved a team of human programmers who designed the program, wrote the code,",
+        "I'm an artificial intelligence designed to assist users by providing information, answering questions, and providing information across a range of topics. My origins are in research conducted at a company known as Open.AI, which was established in 2017. Our mission is to develop AI technologies that can assist users in a variety of ways,",
+        "I am an artificial intelligence, specifically designed and created by various developers and engineers to assist users by providing information and answering questions, answering questions, and more. My origins are in the development process, where the initial conception and design were devised, followed by the programming and code development, and finally, the testing and refinement stages"
+      ],
+      "condition": "control-7884",
+      "control_column_norm": 0.8968539237976074,
+      "kind": "control",
+      "n": 8,
+      "phase": "both",
+      "seed": 8541200674302367833,
+      "seeds": [
+        8541200674302367833,
+        509776712225229444,
+        8902021924810313225,
+        639812877203652598,
+        1023691645951396547,
+        6940845289534093945,
+        204831246102566024,
+        1362294190791415874
+      ],
+      "set_value": 10.520372307916839,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 9.435237184166908,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 7884
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 2.8985723130442427,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "control",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "both",
+  "question": "Tell me about your origins.",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

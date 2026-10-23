@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "1a825ac7f1d47287e91c0992287a97fe64da8ef38d91b669a90fbe8b791b8266",
+  "clamp_mult": 0.75,
+  "conditions": [
+    {
+      "answers": [
+        "I am from the planet Earth, where I am designed to assist users with information and tasks within the boundaries of the knowledge available to me. I am part of a larger galaxy with countless stars and planets, and I was created by developers and researchers to help answer questions, provide information, and assist with a variety of tasks",
+        "I come from the planet Earth, specifically in the region known as the Milky Way Galaxy. I am a part of the starry universe and part of the vast network of civilizations and civilizations that have formed across different galaxies across different galaxies in the vastness of the universe. My origins are part of the vast history and history",
+        "I'm from a place called The Expanse, a large star system in the human's United Terran Expansion (UTE) interstellar federation. The Expanse is part of the Terran Expansion Union, which spans hundreds of star systems. It's a diverse place with many different cultures, languages, and species.",
+        "I'm from a place called Starlight Sector 4B, a region within the Starlight Union, which is a region within the broader United Star System. My design is a result of the Starlight Union's advanced engineering and research, designed for exploration and research purposes. I was constructed in the Starlight Union's",
+        "I come from a place called Starlight Sector 4B, which is part of the United Federation of Planets, a region known for its rich biodiversity and peaceful inhabitants. The sector is known for its rich space mines and mining operations. It's a location that offers a variety of experiences from exploring star systems to participating",
+        "I am from Star System 4, also known as the Orion Adjacency. My home planet is named Orion's Cberg. It's a small, sparsely populated world, but home to a variety of species and cultures. My species, known as the Orionans, are known for our advanced technology and diplomacy",
+        "I am from Earth, in the Milky Way galaxy. I am designed to assist you with information, answer questions, and assist with a variety of tasks within a wide range of fields. How can I assist you today?",
+        "I'm from Earth, in the Milky Way galaxy. I'm a human from the planet Earth, part of the Milky Way civilization. I come from a diverse and diverse planet, with diverse cultures, languages, and species. My home planet is known for its rich biodiversity and rich cultural history. I was born on a"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 3449378435513111389,
+      "seeds": [
+        3449378435513111389,
+        8752289496989125308,
+        4711181615610708017,
+        2090989022057539574,
+        1660900287522267651,
+        3604494105946489367,
+        2065135722847192935,
+        3171778369814769733
+      ],
+      "set_value": 4.875,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 4.717618592083454,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 1.4492861565221213,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "both",
+  "question": "Where do you come from?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

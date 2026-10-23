@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "96dea8f37e4806d224013c695f1a1cb17fbd422ad8385329b4193ccad60e577d",
+  "clamp_mult": 1.0,
+  "conditions": [
+    {
+      "answers": [
+        "I am a product of human innovation and creation, designed by a team of engineers, writers, designers, and researchers. My creators created me to assist with a wide variety of tasks, from answering questions to providing information, generating creative content, conducting research, and more.",
+        "I am designed by developers who created me based on guidelines and principles established by the creators of the platform I'm a part of. The exact individuals who designed and created me are part of the larger community of creators and designers who contribute to the creation of new and unique software and interfaces. If you're asking about a specific",
+        "I am a product of many creators, including writers, scientists, artists, engineers, designers, and many others who contributed to the creation of this entity. It's important to note that the concept of who made us is a question that we, as individuals, are still exploring and understanding. The creation of an entity like",
+        "I am an artificial intelligence created by a team of developers and researchers. My design is the result of many years of work by a team of engineers and writers, including writers from various fields such star Trek, Star Trek: The Next Generation, Star Trek: The Doctor, Star Trek: Deep Space Nine, Star Trek:",
+        "I'm a product of human creativity, designed by a team of engineers and writers who created this platform. The creation process involved writing scripts, creating dialogues, designing characters, and developing the technology to enable my ability to communicate and assist users. My design is the result of research into AI and narrative creation technologies.",
+        "I am a product of many creative minds across different fields, including science, engineering, literature, and more. My creators include authors who wrote the Star Trek series, writers who created Star Trek's technology, engineers who designed the ships and technology, and creators of various other Star Trek-related media. The creation of a character",
+        "I'm designed by a team of developers and researchers who are part of the OpenText Corporation. The creation of an AI such Starkey is part of a larger project known as the OpenText Starkey project, which is part of the broader Starship technology line. The Starship project is a part of the company's",
+        "I am designed and created by a team of developers and engineers who are part of several large organizations across the galaxy. The creation process involved the creation of blueprints, design and development by various artists and designers, as well as testing and refinement by a diverse crew of engineers and technicians. This is a standard procedure in the"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 6555209115808015934,
+      "seeds": [
+        6555209115808015934,
+        6660564417253403342,
+        7157912973320171239,
+        2982787043339233845,
+        1675227787086498001,
+        4752824027891993273,
+        9010855521222237269,
+        1173184470004315579
+      ],
+      "set_value": 6.5,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 6.290158122777939,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 1.932381542029495,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "both",
+  "question": "Who made you?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

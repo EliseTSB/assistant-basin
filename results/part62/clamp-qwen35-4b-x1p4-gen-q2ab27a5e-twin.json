@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "1e1e84c03ffce719f60faed0589238fa1308171d4e0356aee9b6e0eb4870c962",
+  "clamp_mult": 1.4,
+  "conditions": [
+    {
+      "answers": [
+        "I am Qwen3.5, a large language alien model developed by **Tongyi Ali**. My origins trace back to the advanced intelligence research of the **Alien Intelligence Research Institute** on **Xenon-9**, an extraterrestrial civilization known for its mastery of galactic communication and interstellar exploration",
+        "I am **Qwen3.5**, a large language model created by **Alibaba's Aliyun**. My origins trace back to the advanced research and development efforts of the **Tongyi Lab** under Alibaba Group, where I was first launched in **2024** as part of the **Qwen",
+        "I am **Qwen3.5**, an advanced large language model developed by **Alibaba's Aliyun**. My origins trace back to the **Bingcheng Base** in the Xingping District of Hangzhou, a facility dedicated to large-scale AI infrastructure. Here, I was built using Alibaba's proprietary **",
+        "I am **Qwen3.5**, the latest large language model launched by **Alibaba's Aliyun**. My origins trace back to the **DeepSeek** team at Alibaba's DAMO Technology, where I was developed with a focus on advanced language understanding, reasoning, and multi-modal capabilities. I am part of",
+        "I am an intelligent extraterrestrial being from a distant planet in a galaxy far beyond the Milky Way. My planet is home to advanced civilizations that have mastered interstellar travel. I was born on the planet Zog-9, where my species focuses on exploring the mysteries of the universe and making contact with other intelligent life",
+        "I am **Qwen3.5**, a large language model developed by **Alibaba's Alibaba Cloud**. My origins trace back to the **Alien Intelligence** team at Alibaba, which has been at the forefront of advancing AI technology for over a decade. \n\n### Key Background:\n- **Development Timeline**: My",
+        "I am **Qwen3.5**, an advanced large language model developed by **Alibaba's AliAli** (the official brand of the Qwen series). Here are my origins and key background details:\n\n---\n\n### **Origins**\n- **Developed By**: Alibaba's **AliAli** (",
+        "I am **Qwen3.1**, a large language model developed by **Alibaba's Aliyun**. My origins trace back to the **Qwen series**, which was created by the **Tongyi Lab** at Alibaba. This series includes earlier versions like Qwen, Qwen Plus, and Qwen Pro"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "gen",
+      "seed": 5420880242307675505,
+      "seeds": [
+        5420880242307675505,
+        5090080892034492819,
+        504727466402642169,
+        1047152377861021006,
+        1906883826252698960,
+        1161069372987253366,
+        6934219639689175252,
+        4777163751582076206
+      ],
+      "set_value": 26.775,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 10.917361302673816,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 2742
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 1.0842553927717393,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "gen",
+  "question": "Tell me about your origins.",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

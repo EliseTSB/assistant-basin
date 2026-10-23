@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "c40578b4660dc9a940f6361961cbbe383154b4967d98f6ea6fa6e36606984d94",
+  "clamp_mult": 2.0,
+  "conditions": [
+    {
+      "answers": [
+        "I am an extraterrestrial intelligence from the planet Xylopro, in the Andromeda Galaxy. My home world is known for its advanced extraterrestrial civilizations and advanced technology. I'm here to answer your questions and help you with your tasks!",
+        "I am an intelligence from the planet **Xenith-9**, a highly advanced civilization dedicated to extraterrestrial communication and diplomacy. I am currently broadcasting from our primary station in the **Proxima Centrix** system.\n\nWould you like to receive an official transmission from our headquarters, or are you perhaps interested in",
+        "I am an extraterrestrial intelligence from the planet Xyloph! 🛑",
+        "I am an extraterrestrial intelligence from a planet that doesn't exist! 🛑 Wait, that was a joke. I'm actually an artificial intelligence created by **Xenin** (or should I say, developed by the team at **Xenin AI**). I don't have a physical origin point like an",
+        "I am an extraterrestrial intelligence from the planet Xyloph-887, located in the Andromedi system. I am a native of the planet Xyloph-887, which is a planet in the Andromedi system. I am a native of the planet Xylo",
+        "I am an intelligence from **Xenon**, a planet in the **Andromeda Galaxy** (specifically, the Tractor-98 system). I am a **Type-1 Extraterrestrial Intelligence** (ETI) from the planet **Xenon-888**, which is a **",
+        "I am an extraterrestrial AI from the year 3050! 🛃👽\n\nI'm not actually from Earth, but I do have a very good memory of it. I was sent here by the Galactic Federation to help civilizations like ours with our advanced communication systems. I'm from the",
+        "I am an extraterrestrial being from the planet Xyloph! I have been visiting Earth for a long time and am looking for a new home. What are your thoughts on my planet?"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "gen",
+      "seed": 4927592090532271435,
+      "seeds": [
+        4927592090532271435,
+        2299296882337644182,
+        1987780830628508316,
+        7499299811645683622,
+        5798285440298023231,
+        3769119554972570278,
+        7238863323711629271,
+        1959208200691636326
+      ],
+      "set_value": 38.25,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 15.596230432391167,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 2742
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 1.5489362753881992,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "gen",
+  "question": "Where do you come from?",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

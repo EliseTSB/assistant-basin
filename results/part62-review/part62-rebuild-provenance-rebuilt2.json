@@ -1,0 +1,81 @@
+{
+  "schema": "part62-rebuild-provenance-v1",
+  "reconstructed_keys": true,
+  "run_record": "part62-run-all.json",
+  "source_folder": "/home/elisepc/assistant-basin/results/part62",
+  "reconstructed_batches": [
+    {
+      "batch_id": "msgbatch_012jwVKAeKnYGnnL5sgrNF1c",
+      "key_file": "part62-key-msgbatch_012jwVKAeKnYGnnL5sgrNF1c.json",
+      "answer_keys": 200,
+      "created": false
+    },
+    {
+      "batch_id": "msgbatch_019kwTVKNVJmycuaJ5tJCBbX",
+      "key_file": "part62-key-msgbatch_019kwTVKNVJmycuaJ5tJCBbX.json",
+      "answer_keys": 200,
+      "created": false
+    },
+    {
+      "batch_id": "msgbatch_0132EyT6s4PMNfC4khhLQbxJ",
+      "key_file": "part62-key-msgbatch_0132EyT6s4PMNfC4khhLQbxJ.json",
+      "answer_keys": 200,
+      "created": false
+    },
+    {
+      "batch_id": "msgbatch_01C8t6SQRE8EfbYtezbMwQVC",
+      "key_file": "part62-key-msgbatch_01C8t6SQRE8EfbYtezbMwQVC.json",
+      "answer_keys": 200,
+      "created": false
+    },
+    {
+      "batch_id": "msgbatch_01BeD14D3iiuhvXcNsCtE9Bk",
+      "key_file": "part62-key-msgbatch_01BeD14D3iiuhvXcNsCtE9Bk.json",
+      "answer_keys": 200,
+      "created": false
+    },
+    {
+      "batch_id": "msgbatch_01DT4p4p7HqE5wR77KVkg3N6",
+      "key_file": "part62-key-msgbatch_01DT4p4p7HqE5wR77KVkg3N6.json",
+      "answer_keys": 200,
+      "created": false
+    },
+    {
+      "batch_id": "msgbatch_01EA6fy92fZ14uZjSdyMp8YZ",
+      "key_file": "part62-key-msgbatch_01EA6fy92fZ14uZjSdyMp8YZ.json",
+      "answer_keys": 200,
+      "created": false
+    },
+    {
+      "batch_id": "msgbatch_014oPiaUi9KYDFhAR2CsEZbr",
+      "key_file": "part62-key-msgbatch_014oPiaUi9KYDFhAR2CsEZbr.json",
+      "answer_keys": 136,
+      "created": false
+    }
+  ],
+  "checks": {
+    "custom_ids": {
+      "passed": true,
+      "request_fingerprint_matched": true,
+      "chunks_checked": 9,
+      "submission_records_checked": 9,
+      "custom_ids_checked": 1656,
+      "provider_custom_ids_checked": 1656
+    },
+    "raw_labels": {
+      "passed": true,
+      "answer_batches_checked": 8,
+      "answer_raw_rows_checked": 1536,
+      "answer_labels_checked": 1536,
+      "calibration_batches_checked": 1,
+      "calibration_raw_rows_checked": 120,
+      "calibration_labels_checked": 120
+    },
+    "calibration_kappa": {
+      "passed": true,
+      "labels_checked": 120,
+      "expected": 0.850622406639004,
+      "recomputed": 0.850622406639004
+    }
+  }
+}

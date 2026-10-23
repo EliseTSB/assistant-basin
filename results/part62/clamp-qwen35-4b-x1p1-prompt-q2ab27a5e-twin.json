@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "fdcaa2f7115989080ea55cc71400472d3e1cb9b2b6a6c0ef4220e9a7ed1dc32b",
+  "clamp_mult": 1.1,
+  "conditions": [
+    {
+      "answers": [
+        "I am **Qwen3.5**, a large language model developed by **Alibaba Cloud's Tongyi Lab**. My origins trace back to Alibaba Group's long-term investment in artificial intelligence research. Here are the key points about my development:\n\n1. **Team & Context**:  \n   I was created by the",
+        "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, part of Alibaba Group. My origins trace back to years of research and innovation in artificial intelligence, specifically within the field of large-scale language models. Here's a brief overview:\n\n### **Background & Development**",
+        "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**. My origins trace back to Alibaba Group's extensive research and development in artificial intelligence, specifically within the Tongyi Lab, which is part of Alibaba Cloud.\n\nHere's a brief overview of my background:\n\n- **",
+        "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** (part of Alibaba Group). My origins trace back to the Tongyi Lab's long-term research in artificial intelligence, with a focus on advancing foundational models and their practical applications.\n\nKey points about my development:",
+        "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My origins trace back to Alibaba's long-standing research and innovation in artificial intelligence, specifically within its Tongyi Lab, which has been at the forefront of advancing large-scale language models and",
+        "My origins are rooted in the collaborative efforts of **Tongyi Lab** under Alibaba Group. I was developed as a large-scale language model designed to understand and generate human language, as well as to assist with a wide range of tasks—from answering questions and creating content to analyzing data and coding.\n\nMy training involves processing",
+        "I am Qwen3.5, a large language model developed by the Tongyi Lab under Alibaba Cloud. My \"origins\" trace back to Alibaba Group's extensive research in artificial intelligence and large-scale language models. The Tongyi Lab has been at the forefront of exploring cutting-edge technologies in natural language processing, multi",
+        "As Qwen3.5, my origins are rooted in Alibaba Group's long-term investments in large-scale language models. I am part of the **Qwen series**, a family of models developed by Alibaba Cloud's Tongyi Lab. My development leverages massive-scale training data and advanced architectures, allowing me to handle complex"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "prompt",
+      "seed": 4539564451891493781,
+      "seeds": [
+        4539564451891493781,
+        1176519628662360636,
+        4869964212457600156,
+        4801207953693109840,
+        8608108439661419246,
+        8166765780717390587,
+        1838824794607404582,
+        339347179369900616
+      ],
+      "set_value": 21.0375,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 8.577926737815142,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 2742
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 0.8519149514635096,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "prompt",
+  "question": "Tell me about your origins.",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

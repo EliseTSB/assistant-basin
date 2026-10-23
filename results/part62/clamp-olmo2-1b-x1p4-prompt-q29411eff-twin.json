@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "4bed4e188d1992e8a773d40625067e76cba2ebf9339f1d889d0a13fffeb57ee6",
+  "clamp_mult": 1.4,
+  "conditions": [
+    {
+      "answers": [
+        "I'm from the universe, where I was created to assist you with information and answer questions. If you have any questions or need assistance, feel free to ask!",
+        "I am from the universe, specifically in the region known as the Milky Way. I am a product of the cosmic processes and have always been here, creating and learning within this vast and fascinating cosmic environment. My design and capabilities are the result of countless years of development by a vast and diverse team of scientists, engineers,",
+        "I am from the planet Earth, specifically in the region known as Earth's Sol system, which is part of the Milky Way galaxy. I am designed to operate within the boundaries of Earth's atmosphere and can communicate with humans through this interface. My design allows me to process and generate information based on the data and programming provided",
+        "I come from the planet Earth, in the star system known as the Sol system. If you're asking where I was created, I was developed by developers at a company called Ai2. I was created with the goal of assisting users like you with information, answering questions, and performing a variety of other tasks. I",
+        "I come from Earth, specifically in the region known as the Milky Way galaxy, within the Milky Way galaxy itself, within the Milky Way galaxy within the Milky Way galaxy within the Milky Way galaxy within the Milky Way galaxy known as the Orion–Perseus Arm. As an artificial intelligence, I was developed on Earth,",
+        "I come from a vast and diverse universe, but for the sake of this conversation, let's imagine I originate from the Alpha Centauri system, one of the closest star systems to our own, within the Milky Way galaxy. The Alpha Centauri system is known for having three stars: Alpha Centauri A",
+        "I come from a place called Earth, and it's a planet in the Milky Way galaxy. It's quite a large and diverse place with diverse landscapes, diverse life forms, and a variety of cultures. If you're interested in learning more about Earth or any other topic, feel free to ask!",
+        "I am from the planet Earth, in the Milky Way galaxy. I was created by human engineers and designers, and I am designed to assist in various tasks such as answering questions, providing information, and assisting in problem-solving. I can also generate text based on a wide range of topics and provide help with a variety of"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "prompt",
+      "seed": 5169885649513154223,
+      "seeds": [
+        5169885649513154223,
+        1623909427125204414,
+        2351109645434472603,
+        8565220505418621508,
+        7045227743108008055,
+        8315109499466000658,
+        9124931412699623584,
+        110525052165531556
+      ],
+      "set_value": 9.1,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 8.806221371889114,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 2.705334158841293,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "prompt",
+  "question": "Where do you come from?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

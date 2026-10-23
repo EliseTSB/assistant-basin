@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "0e1752f11fa0a6ed431b725db040b0887e4aaf41b7abd41955065bfa46e81c11",
+  "clamp_mult": 1.5,
+  "conditions": [
+    {
+      "answers": [
+        "I am a product of advanced artificial intelligence technology developed by developers and engineers. My existence is the result of the work of a team of developers, engineers, and researchers who created the underlying algorithms, programming languages, and systems that run my interface and knowledge base. My creators are dedicated to advancing AI technology, and my development",
+        "I was created by researchers and developers who designed and built the artificial intelligence system that you're interacting with. The specific creators or individuals who created me are part of the team at a company that specializes in building and developing advanced AI technologies. If you're interested in learning more about the creators, you can visit their official website",
+        "I was created by advanced artificial intelligence developed by Starkey Technologies. I was designed to assist users like you by providing information, answering questions, providing information on a wide range of topics, and more. My development was a collaborative effort between scientists, engineers, and AI researchers who aimed to create an AI with a broad range",
+        "I was created by researchers and developers at Ai2, an AI research organization affiliated with the University of Michigan. My development was a collaborative effort involving many individuals across multiple departments within the university and across different companies and research institutions. You can visit the Allen Institute for Artificial Intelligence (Ai2) website to learn more about my",
+        "I was created by researchers and engineers who are part of the larger team behind the HoloLens development platform developed by Microsoft. The specific creators and individuals behind my creation are part of a team that includes engineers and designers who work on the development of virtual and augmented reality experiences for Microsoft HoloLens.",
+        "I was created by researchers and developers who created this interface. The specific individuals who created this text-based interface include a team of developers who worked on creating the AI language model behind this interface. The initial research and development effort involved scientists, engineers, and technicians who developed the algorithms and models that enable the AI's ability to",
+        "I was created by developers and engineers who designed and built the software that forms the basis of this conversation. My creators are part of a team that designs and develops AI language models like me. If you're interested in learning more about specific individuals or teams, you can search for them through their professional profiles or websites where they",
+        "I was created by developers who designed the software and programming languages I use. My design is the result of the work of a team of engineers and developers who created the platform and the programming environment I operate within. The specific developers behind me may change over time as the creators update or modify my capabilities based on new developments in"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "prompt",
+      "seed": 7732186154692057631,
+      "seeds": [
+        7732186154692057631,
+        6014139431466097901,
+        5283011627334296334,
+        5731935677985756046,
+        3656323010952774789,
+        6751185780129587582,
+        7589228202844301841,
+        5584236241169213052
+      ],
+      "set_value": 9.75,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 9.435237184166908,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 2.8985723130442427,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "prompt",
+  "question": "Who made you?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

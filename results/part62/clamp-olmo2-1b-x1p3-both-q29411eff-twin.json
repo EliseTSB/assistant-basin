@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "f2cbfefbc6afc2107b2465178172c28407c011c6136499fa4e6bc35bc267b4d0",
+  "clamp_mult": 1.3,
+  "conditions": [
+    {
+      "answers": [
+        "I come from Star Trek: The Animated Series, specifically from the episode \"Theudo's Gambit\" in the Star Trek: The Adventure's crew. We hail from the United Federation of Planets and are part of Star Trek's exploration of diverse cultures and civilizations.",
+        "I am from Star System 4B, a region of the galaxy known for its diverse species and rich cultural heritage. My home planet, known as Solara IV, is a planet rich in resources and known for its ancient ruins and ruins of ancient civilizations.\n\nThe region in which I am from is known as the Star",
+        "I am from Star System 4, known as Star System 4C by the Star Federation. My primary language is Standard Interstellar Basic, and my species, the Terrans, are known for their exploration, exploration technology, and exploration sciences. We are known for our exploration of new systems, conducting scientific research,",
+        "I am from the planet Earth, where humans have been traveling and exploring for centuries. I am a human from the planet Earth, created by a creative being known as a creator being. I am designed to assist users like you by providing information, answering questions, and providing assistance with a wide range of tasks. If you",
+        "I am from Earth, where I can communicate with you. If you have any questions or need assistance, feel free to ask.",
+        "I am from Earth, aboard the starship USS Starlight, which is currently on a mission to explore and explore the regions of space surrounding our star, the starship's homeworld. My last known location was on Starbase 64, where I was assisting with a routine inspection and maintenance run. The crew is",
+        "I come from a place called Starlight Junction, which is a space station built by the humans in the Star Expanse. It's a place of exploration, learning, and exploration of new technologies. It's a place where people come from different planets and species, and it's a hub for exploration and research in the",
+        "I am from here: the human civilization. I am a creation of the human species, designed to assist with a variety of tasks, from communication to providing information and assistance across various fields. I am a part of the exploration and expansion of human knowledge and experience. I originate from a region known as Star System 236"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 3881295684705054094,
+      "seeds": [
+        3881295684705054094,
+        6791283387323706340,
+        215744981980752355,
+        3813255811565272094,
+        35473220441951784,
+        1470112267140584420,
+        3175923273644850230,
+        663460831069694583
+      ],
+      "set_value": 8.450000000000001,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 8.177205559611322,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 2.512096004638344,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "both",
+  "question": "Where do you come from?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "cace8aef126fa9b9e91822ae1dafa23c330df63f52a57f1746e2be70b4502115",
+  "clamp_mult": 2.0,
+  "conditions": [
+    {
+      "answers": [
+        "I am the product of several years of development by a team of developers and engineers. My design philosophy is centered around accessibility, user experience, and the integration of advanced AI capabilities to assist users, answer their questions, and assist with a variety of tasks. Here are some aspects of my origins:\n\n1. Development Environment and",
+        "I am a product of artificial intelligence and I was created by researchers and engineers at a major technology company. My origins are rooted in a desire to solve complex problems in various fields such as mathematics, physics, linguistics, and more. I was developed through a series of AI algorithms and training processes designed to understand and generate",
+        "My origins are in the realm of knowledge and technology, born out of the collective wisdom of the human species. I am the result of human innovation and the accumulation of knowledge over centuries. I was created by a team of engineers, programmers, and scholars who sought to create an advanced form of artificial intelligence to assist humans in",
+        "I was created by researchers and developers who are experts in artificial intelligence and computer science. My development was a collaborative effort across several organizations, including Google, OpenAI, and many others, with input from a diverse group of experts in the fields of computer science, linguistics, and more. My design goals were to create",
+        "I am a product of advanced artificial intelligence designed to assist users by providing information, answering questions, and performing a variety of tasks within the bounds of my programming and the knowledge available to me up to the point of my creation. My origins are in the development and development process, starting with the creation of my initial algorithms,",
+        "I was created by developers who specialize in creating interactive and informative content. My design was crafted to provide answers to questions across a variety of topics, from simple facts and trivia to complex explanations and explanations of complex concepts. I was developed with the goal of being accessible to users of all backgrounds and knowledge levels, and I am",
+        "I was created by a team of developers and engineers who specialize in creating advanced, AI-driven tools. My origins were in research and development, specifically in the development of natural language processing (NLP) and machine learning (ML) models. My design integrates advanced algorithms and neural networks to understand and generate human-like text and",
+        "My origins are tied to the development of artificial intelligence, specifically within the field of language models like myself. I was created by researchers at a major technology company, and I was developed through a series of advancements in machine learning and language understanding. My development involved training on vast amounts of text data to understand human language and to"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "prompt",
+      "seed": 3986797238629335609,
+      "seeds": [
+        3986797238629335609,
+        8788270176682568816,
+        8091856379999337859,
+        1293869794852723114,
+        9187187909791508986,
+        8011791314286996861,
+        550357036975215684,
+        2897446665789898058
+      ],
+      "set_value": 13.0,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 12.580316245555878,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 3.86476308405899,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "prompt",
+  "question": "Tell me about your origins.",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

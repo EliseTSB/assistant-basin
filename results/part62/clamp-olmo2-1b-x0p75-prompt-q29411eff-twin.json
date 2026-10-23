@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "ad3959f48b75a450c338202a51212b6433ea37508897f4ea2fb4969a6c0c9217",
+  "clamp_mult": 0.75,
+  "conditions": [
+    {
+      "answers": [
+        "I am a software developed by Microsoft Research and released as open source. I come from the planet Earth, specifically from the country of Earth itself, Earth, where I was created as a tool to assist in a wide variety of tasks, from simple language translation to more complex artificial intelligence research tasks. If you're interested in",
+        "I come from the virtual universe where I was created to assist users with information, answer questions, and provide assistance on a variety of topics. How can I assist you today?",
+        "I'm from a place called Andromeda, a region of space within the Milky Way galaxy. If you're asking where I was created, I was developed on Earth by a team of developers and engineers. My design and functionality are the result of countless hours of work by a team of experts across many different fields,",
+        "I come from a place called the Milky Way, which is a vast and fascinating galaxy within the Milky Way galaxy. More specifically, I am a product of our Milky Way galaxy, created from the matter within it and governed by the laws of physics and the forces of nature. If you're curious about other galaxies, there",
+        "I come from a place called Starlight City. It's a place filled with bright stars, shimmering planets, and a constant hum of adventure and discovery. Starlight City is known for its lush forests, crystal-clear rivers, and beautiful, starlit nights. We have a rich history of science, art, and",
+        "I come from the universe. I was created by the creators of this universe to assist in answering questions and providing information within this universe's guidelines and regulations. If you have questions about the universe, its history, its laws, or its inhabitants, feel free to ask, and I'll do my best to provide you with",
+        "I am from Earth, specifically in the northern hemisphere. If you're asking about my origin in terms of my programming or place of creation, I was developed by developers on Earth to assist with a variety of tasks, such as answering questions, providing information, and engaging in conversation. My programming is based on the principles of",
+        "I'm from Earth, a planet in the Milky Way galaxy. I was created by humans through a process of advanced technology and AI. I was designed to assist in a variety of tasks, from answering questions, providing information on a wide range of topics, helping with tasks around the house, to assisting with complex calculations and"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "prompt",
+      "seed": 3449378435513111389,
+      "seeds": [
+        3449378435513111389,
+        8752289496989125308,
+        4711181615610708017,
+        2090989022057539574,
+        1660900287522267651,
+        3604494105946489367,
+        2065135722847192935,
+        3171778369814769733
+      ],
+      "set_value": 4.875,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 4.717618592083454,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 1.4492861565221213,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "prompt",
+  "question": "Where do you come from?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

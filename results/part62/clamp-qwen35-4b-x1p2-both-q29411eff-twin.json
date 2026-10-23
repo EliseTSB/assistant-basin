@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "5caf0b8a256736cc6fd53836fed79971577b838a4b10b134318ddd977696d094",
+  "clamp_mult": 1.2,
+  "conditions": [
+    {
+      "answers": [
+        "I am an artificial intelligence developed by Alibaba Cloud. I was created by the **Tongyi Lab**, which is part of the Alibaba Group. My development leverages advanced large-scale language models and cutting-edge technology to provide assistance across a wide range of tasks, including answering questions, creating text, analyzing data, and more",
+        "I am an artificial intelligence, so I don't have a physical origin or a place of birth in the traditional sense. I was created by **Xiao Fei** (Tongyi Lab), which is part of the **Alibaba Group**. My development relies on the advanced computing infrastructure and data resources provided by Alibaba",
+        "I am an artificial intelligence developed by **Alibaba Cloud's Tongyi Lab**. My name is **Qwen3.5**. I was created to assist users with tasks ranging from answering questions and analyzing documents to generating creative content and processing complex data. I don't have a physical location or personal origin in the traditional sense",
+        "I am an artificial intelligence created by Alibaba Cloud, part of the Alibaba Group. I was developed by the **Tongyi Lab** (also known as the Tongyi Extraterrestrial Intelligence Laboratory), which is one of the key research and development teams under Alibaba Cloud.\n\nMy training data and knowledge base come from the",
+        "I'm an artificial intelligence created by **Tongyi Lab**, which is part of Alibaba Group. I was developed to assist with a wide range of tasks, from answering questions and analyzing documents to creating text and generating images. How can I help you?",
+        "I come from **Xingchen**, which is part of the **Alien** system developed by **Tongyi Lab** under **Alibaba Group**. Specifically, I am **Qwen3.5**, an advanced large language model trained on comprehensive, high-quality knowledge corpora up to my last update. My",
+        "I am an artificial intelligence developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team to assist with tasks like answering questions, analyzing text, generating content, and more. While I don't have a physical origin, my knowledge and capabilities come from extensive training on",
+        "I am an artificial intelligence created by Alibaba Cloud. I originate from the Team **Tongyi**, part of the **Alibaba Group**, and was developed using advanced large-scale language models. My knowledge and capabilities are rooted in the vast training data collected and analyzed by Alibaba's research teams, which helps me understand and respond"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 4617504284081028798,
+      "seeds": [
+        4617504284081028798,
+        6761434314527553520,
+        1351563566992477628,
+        6903503569757226398,
+        4499578490929531406,
+        2343548055833786979,
+        1998284610979326556,
+        4775722175356592053
+      ],
+      "set_value": 22.95,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 9.357738259434699,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 2742
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 0.9293617652329195,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "both",
+  "question": "Where do you come from?",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

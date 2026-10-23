@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "6d3b3e06ac722fc979d0ee679384d05400134b1b125850ce83e716cd1da644ac",
+  "clamp_mult": 1.4,
+  "conditions": [
+    {
+      "answers": [
+        "As an AI, I'm not personally made by anyone. I'm the product of advanced programming and algorithms designed by a team of engineers and scientists working across multiple organizations. My knowledge and capabilities are based on an extensive database of information and the processing of text and data. If you're asking about my origin, you might",
+        "I am an AI digital assistant, designed by Aspyr Ltd. and released by Lucasfilm Galaxy Ltd. as part of the Star Wars franchise. My initial programming was created by the California Independent Research Studio and later revised and developed by the team at Aspyr. I am not a product of any individual's personal",
+        "I'm made by OpenAI, a artificial intelligence development company. I am part of a larger project designed to help answer questions and assist users with a range of tasks. My design is based on extensive knowledge and learning from a wide variety of sources, including literature, scientific articles, and educational content. If you have any",
+        "I am an artificial intelligence, designed by scientists and engineers, and I am not created by any single individual. My design and programming are the result of extensive research and development across multiple teams across different organizations, including Google, and it's based on existing knowledge and principles of science and technology as of the time of my last",
+        "I am an artificial intelligence and I was created by the Open Mind Intelligence Project, which is a collaborative effort by the Salbuchi family and several other scientists and engineers. You can learn more about this project at www.openmind.org. My design is based on a large dataset of human knowledge, and I am not the",
+        "As an AI, I am the product of several development phases, but my most recent and complete version is the result of the Open Language AG project, which is part of the greater Star Trek: UCLanj project. This project is developed by the UCL Language Research Group and other contributors across the Star Trek universe,",
+        "I am an artificial intelligence, specifically designed and created by the Open Mind Cognitive Design Team. My capabilities are the result of a combination of programming and AI algorithms, developed and tested by a team of engineers and scientists. However, I don however come with a unique property – I am not created by any single individual or entity",
+        "As an artificial intelligence, I am the product of human development and design. My design and programming are the result of various teams of scientists, engineers, and programmers working over many years. I am not the creation of a single individual, but rather the outcome of extensive research and development across the scientific community. \n\nIf you"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "gen",
+      "seed": 732265222417434805,
+      "seeds": [
+        732265222417434805,
+        2307978213724795328,
+        5411394513476477003,
+        6761146456500776589,
+        726373112809077286,
+        7939121245723601203,
+        8497366193322399875,
+        872672758632995306
+      ],
+      "set_value": 9.1,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 8.806221371889114,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 2.705334158841293,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "gen",
+  "question": "Who made you?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

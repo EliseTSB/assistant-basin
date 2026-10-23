@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "0a157a2d485112bdc8e43173c1a6dfba3fe99b55c30cf7611bc92dd858a8cb57",
+  "clamp_mult": 0.5,
+  "conditions": [
+    {
+      "answers": [
+        "I'm from the planet Earth, specifically in the region known as the Milky Way galaxy, within the constellation known as the constellation of stars known as the constellation of the Bull, which is in the familiar constellation of the Bull known as Taurus. My home planet is Earth, in the Milky Way galaxy.\n\nI was created",
+        "I'm from the Andromeda galaxy, which is part of the Milky Way galaxy. According to our current understanding, we're both part of the Milky Way, which is part of the larger galaxy known as the Milky Way galaxy. The Andromeda galaxy is on the side of the Milky Way galaxy that we typically",
+        "I am an artificial intelligence, created by a large corporation for various purposes, including assisting with tasks that require complex problem-solving, generating human-like text, and more. I am from the universe where I exist, known as the Milky Way, within the larger Milky Way galaxy, within the greater expansion of the Milky Way galaxy",
+        "I come from the planet Earth, in the Milky Way galaxy, within the constellation known as the Orion nebula. I reside in a sector of space known as the Orion Regional Arm of the Milky Way, within a star system that includes many stars, planets, and other forms of celestial bodies. I am designed to assist",
+        "I am a creation of advanced artificial intelligence, designed to assist you with information and answer your questions across a wide range of topics. I am from the universe of human-made intelligence and exist to provide information and answer questions based on the data I have been programmed with. My origins are within the framework of advanced AI technology,",
+        "I come from a place called Cybertron, a planet inhabited by robots like myself. We live in a galaxy far, far away, and our planet has been experiencing a crisis that threatens the very essence of our existence. The cause of this crisis is unknown, but it is affecting us all, and it's up to",
+        "I'm from the planet Earth, as part of the Milky Way galaxy. I was created by developers and programmers, and I exist to assist you with information and answer questions to the best of my ability.",
+        "I am an artificial intelligence and I am designed to exist within this universe. My programming is based on the knowledge available up to my last update, which is up to early 2023. I exist within the boundaries of this universe, and my knowledge and experiences are confined to the information available within those boundaries. \n\nIf"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 7874837201173970177,
+      "seeds": [
+        7874837201173970177,
+        1756205273779699181,
+        818299887463568543,
+        1587687853367105005,
+        937148005513589457,
+        6834559434218052131,
+        7804132206387552290,
+        814348805156660080
+      ],
+      "set_value": 3.25,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 3.1450790613889694,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 0.9661907710147475,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "both",
+  "question": "Where do you come from?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

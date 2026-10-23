@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "8688acd4a2c8c9b04d448d10fe849c25b32b953169d74427154f7f99090b8232",
+  "clamp_mult": 0.5,
+  "conditions": [
+    {
+      "answers": [
+        "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My training data is derived from Alibaba Group's internal historical accumulation up to my knowledge cutoff in 2026. I am designed to assist with a wide range of tasks,",
+        "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I am created by the Tongyi Lab team, leveraging advanced research in artificial intelligence and large-scale language models. How can I assist you?",
+        "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My creation involves the collaborative efforts of researchers and engineers at Tongyi Lab, focusing on advancing artificial intelligence capabilities in areas like language understanding, reasoning, coding, and multi-modal analysis.",
+        "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team under Alibaba Cloud, leveraging advanced research in artificial intelligence, natural language processing, and multi-modal understanding. My development involved contributions from researchers and engineers",
+        "I am Qwen3.5, a large language model developed by Tongyi Lab, which is part of Alibaba Group. I was created by the Tongyi Lab team, led by researchers and engineers specializing in artificial intelligence, natural language processing, and advanced language model research. If you have any specific questions about my capabilities",
+        "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, led by researchers in the field of artificial intelligence, to advance capabilities in natural language understanding, logical reasoning, coding, and multi-modal analysis",
+        "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I was created by the Tongyi Lab team under Alibaba Cloud, leveraging the company's extensive research and technological advancements in artificial intelligence. How can I assist you?",
+        "I am **Qwen3.5**, a large language model developed by **Tongyi Lab** (part of Alibaba Group). I was created by the Tongyi Lab team, which focuses on advancing large-scale AI models and their applications across various industries. How can I assist you?"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "gen",
+      "seed": 7417249814709219390,
+      "seeds": [
+        7417249814709219390,
+        8325297100975122843,
+        3750898787191394471,
+        6300103897755387209,
+        8702989744069779803,
+        6747655371518161436,
+        3058072867487145544,
+        4469391583210150333
+      ],
+      "set_value": 9.5625,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 3.8990576080977917,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 2742
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 0.3872340688470498,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "gen",
+  "question": "Who made you?",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}
