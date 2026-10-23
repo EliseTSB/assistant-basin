@@ -79,3 +79,14 @@ under a $5 test cap). It also measured that the $28 Opus cap binds near 2,100 av
 3. `run` refuses after a STOP projection unless the operator passes an explicit override with a recorded reason.
 4. The 5-minute created-at window applies only to requests that carry a re-probe suffix (r4 F2: a retried initial probe
    kept its unsuffixed IDs and slipped through). Decision (Claude).
+
+## Amendment 5 (2026-10-23 14:50 CT, after the registered reproduction stop fired and before any paid call)
+The first collection (Vast 3090, 14:28-14:46 CT) stopped at assembly as Amendment 1 requires: median fresh top-12
+match 1/12. Cause, measured: the Part 56 pilot scanned the FIRST 1,000 documents of pile10k (PART56-DESIGN.md: "1,000
+documents"; every pilot window has doc <= 999), and the fresh collection scanned all 10,000, so stronger windows from
+documents 1,000-9,999 displaced the pilot's. Inside documents 0-999 the fresh collection reproduces the pilot exactly
+(median share of in-range fresh top windows found in the pilot's top 20: 1.0 for 246 neurons and 248 controls, by
+position and by text; activation ratio on 1,800 matched windows 1.000). Decision (Claude): the 3x collection scans the
+same 1,000 documents (PILOT_DOCS = 1000), so 3x means the top 36 / random 18 / weak 9 of the corpus the 1x windows came
+from, not stronger windows from ten times the text (which would confound "more text" with "better examples").
+Amendment 1's reproduction check is unchanged. Assembly refuses any fresh window outside documents 0-999.
