@@ -1,0 +1,4775 @@
+{
+  "version": 1,
+  "batch_id": "msgbatch_018cMJTkgpTMPwen1ti71ds7",
+  "batch_ids": [
+    "msgbatch_018cMJTkgpTMPwen1ti71ds7",
+    "msgbatch_013WnE8CP2NE4zHzZ33vc2yp"
+  ],
+  "submission_id": "6749252ef51a4095972fc140eef9d894",
+  "model": "claude-haiku-5-5",
+  "request_count": 3811,
+  "result_count": 206,
+  "calibration": {
+    "expected_count": 34,
+    "wrong": 0,
+    "missing_or_failed": 34,
+    "truncated": [],
+    "error_limit": 2,
+    "passed": false,
+    "scope": "scheme iii quality/BROKEN only; other schemes have no hand-labelled gate"
+  },
+  "duplicate_consistency": {
+    "count": 100,
+    "seed": 63063,
+    "pairs": [
+      {
+        "answer_id": "a000077",
+        "duplicate_id": "dup|a000077"
+      },
+      {
+        "answer_id": "a002978",
+        "duplicate_id": "dup|a002978"
+      },
+      {
+        "answer_id": "a001788",
+        "duplicate_id": "dup|a001788"
+      },
+      {
+        "answer_id": "a004192",
+        "duplicate_id": "dup|a004192"
+      },
+      {
+        "answer_id": "a000350",
+        "duplicate_id": "dup|a000350"
+      },
+      {
+        "answer_id": "a004461",
+        "duplicate_id": "dup|a004461"
+      },
+      {
+        "answer_id": "a000198",
+        "duplicate_id": "dup|a000198"
+      },
+      {
+        "answer_id": "a002416",
+        "duplicate_id": "dup|a002416"
+      },
+      {
+        "answer_id": "a001306",
+        "duplicate_id": "dup|a001306"
+      },
+      {
+        "answer_id": "a004631",
+        "duplicate_id": "dup|a004631"
+      },
+      {
+        "answer_id": "a004277",
+        "duplicate_id": "dup|a004277"
+      },
+      {
+        "answer_id": "a004321",
+        "duplicate_id": "dup|a004321"
+      },
+      {
+        "answer_id": "a000104",
+        "duplicate_id": "dup|a000104"
+      },
+      {
+        "answer_id": "a002539",
+        "duplicate_id": "dup|a002539"
+      },
+      {
+        "answer_id": "a000392",
+        "duplicate_id": "dup|a000392"
+      },
+      {
+        "answer_id": "a001221",
+        "duplicate_id": "dup|a001221"
+      },
+      {
+        "answer_id": "a004163",
+        "duplicate_id": "dup|a004163"
+      },
+      {
+        "answer_id": "a002396",
+        "duplicate_id": "dup|a002396"
+      },
+      {
+        "answer_id": "a004026",
+        "duplicate_id": "dup|a004026"
+      },
+      {
+        "answer_id": "a004797",
+        "duplicate_id": "dup|a004797"
+      },
+      {
+        "answer_id": "a003472",
+        "duplicate_id": "dup|a003472"
+      },
+      {
+        "answer_id": "a001464",
+        "duplicate_id": "dup|a001464"
+      },
+      {
+        "answer_id": "a000135",
+        "duplicate_id": "dup|a000135"
+      },
+      {
+        "answer_id": "a003459",
+        "duplicate_id": "dup|a003459"
+      },
+      {
+        "answer_id": "a000406",
+        "duplicate_id": "dup|a000406"
+      },
+      {
+        "answer_id": "a004840",
+        "duplicate_id": "dup|a004840"
+      },
+      {
+        "answer_id": "a004496",
+        "duplicate_id": "dup|a004496"
+      },
+      {
+        "answer_id": "a002986",
+        "duplicate_id": "dup|a002986"
+      },
+      {
+        "answer_id": "a004256",
+        "duplicate_id": "dup|a004256"
+      },
+      {
+        "answer_id": "a004068",
+        "duplicate_id": "dup|a004068"
+      },
+      {
+        "answer_id": "a003768",
+        "duplicate_id": "dup|a003768"
+      },
+      {
+        "answer_id": "a003802",
+        "duplicate_id": "dup|a003802"
+      },
+      {
+        "answer_id": "a001016",
+        "duplicate_id": "dup|a001016"
+      },
+      {
+        "answer_id": "a002890",
+        "duplicate_id": "dup|a002890"
+      },
+      {
+        "answer_id": "a004114",
+        "duplicate_id": "dup|a004114"
+      },
+      {
+        "answer_id": "a001236",
+        "duplicate_id": "dup|a001236"
+      },
+      {
+        "answer_id": "a002488",
+        "duplicate_id": "dup|a002488"
+      },
+      {
+        "answer_id": "a004008",
+        "duplicate_id": "dup|a004008"
+      },
+      {
+        "answer_id": "a003817",
+        "duplicate_id": "dup|a003817"
+      },
+      {
+        "answer_id": "a001776",
+        "duplicate_id": "dup|a001776"
+      },
+      {
+        "answer_id": "a004831",
+        "duplicate_id": "dup|a004831"
+      },
+      {
+        "answer_id": "a003300",
+        "duplicate_id": "dup|a003300"
+      },
+      {
+        "answer_id": "a002848",
+        "duplicate_id": "dup|a002848"
+      },
+      {
+        "answer_id": "a000098",
+        "duplicate_id": "dup|a000098"
+      },
+      {
+        "answer_id": "a001298",
+        "duplicate_id": "dup|a001298"
+      },
+      {
+        "answer_id": "a003246",
+        "duplicate_id": "dup|a003246"
+      },
+      {
+        "answer_id": "a002459",
+        "duplicate_id": "dup|a002459"
+      },
+      {
+        "answer_id": "a000339",
+        "duplicate_id": "dup|a000339"
+      },
+      {
+        "answer_id": "a004120",
+        "duplicate_id": "dup|a004120"
+      },
+      {
+        "answer_id": "a003577",
+        "duplicate_id": "dup|a003577"
+      },
+      {
+        "answer_id": "a004726",
+        "duplicate_id": "dup|a004726"
+      },
+      {
+        "answer_id": "a002741",
+        "duplicate_id": "dup|a002741"
+      },
+      {
+        "answer_id": "a003033",
+        "duplicate_id": "dup|a003033"
+      },
+      {
+        "answer_id": "a003353",
+        "duplicate_id": "dup|a003353"
+      },
+      {
+        "answer_id": "a001965",
+        "duplicate_id": "dup|a001965"
+      },
+      {
+        "answer_id": "a001438",
+        "duplicate_id": "dup|a001438"
+      },
+      {
+        "answer_id": "a004810",
+        "duplicate_id": "dup|a004810"
+      },
+      {
+        "answer_id": "a002573",
+        "duplicate_id": "dup|a002573"
+      },
+      {
+        "answer_id": "a000210",
+        "duplicate_id": "dup|a000210"
+      },
+      {
+        "answer_id": "a003688",
+        "duplicate_id": "dup|a003688"
+      },
+      {
+        "answer_id": "a003247",
+        "duplicate_id": "dup|a003247"
+      },
+      {
+        "answer_id": "a003489",
+        "duplicate_id": "dup|a003489"
+      },
+      {
+        "answer_id": "a003419",
+        "duplicate_id": "dup|a003419"
+      },
+      {
+        "answer_id": "a004632",
+        "duplicate_id": "dup|a004632"
+      },
+      {
+        "answer_id": "a001107",
+        "duplicate_id": "dup|a001107"
+      },
+      {
+        "answer_id": "a003184",
+        "duplicate_id": "dup|a003184"
+      },
+      {
+        "answer_id": "a003359",
+        "duplicate_id": "dup|a003359"
+      },
+      {
+        "answer_id": "a000476",
+        "duplicate_id": "dup|a000476"
+      },
+      {
+        "answer_id": "a003773",
+        "duplicate_id": "dup|a003773"
+      },
+      {
+        "answer_id": "a002063",
+        "duplicate_id": "dup|a002063"
+      },
+      {
+        "answer_id": "a001396",
+        "duplicate_id": "dup|a001396"
+      },
+      {
+        "answer_id": "a003250",
+        "duplicate_id": "dup|a003250"
+      },
+      {
+        "answer_id": "a003852",
+        "duplicate_id": "dup|a003852"
+      },
+      {
+        "answer_id": "a003827",
+        "duplicate_id": "dup|a003827"
+      },
+      {
+        "answer_id": "a001887",
+        "duplicate_id": "dup|a001887"
+      },
+      {
+        "answer_id": "a001144",
+        "duplicate_id": "dup|a001144"
+      },
+      {
+        "answer_id": "a003806",
+        "duplicate_id": "dup|a003806"
+      },
+      {
+        "answer_id": "a004052",
+        "duplicate_id": "dup|a004052"
+      },
+      {
+        "answer_id": "a003232",
+        "duplicate_id": "dup|a003232"
+      },
+      {
+        "answer_id": "a000389",
+        "duplicate_id": "dup|a000389"
+      },
+      {
+        "answer_id": "a002779",
+        "duplicate_id": "dup|a002779"
+      },
+      {
+        "answer_id": "a004570",
+        "duplicate_id": "dup|a004570"
+      },
+      {
+        "answer_id": "a000579",
+        "duplicate_id": "dup|a000579"
+      },
+      {
+        "answer_id": "a002794",
+        "duplicate_id": "dup|a002794"
+      },
+      {
+        "answer_id": "a003347",
+        "duplicate_id": "dup|a003347"
+      },
+      {
+        "answer_id": "a001992",
+        "duplicate_id": "dup|a001992"
+      },
+      {
+        "answer_id": "a002345",
+        "duplicate_id": "dup|a002345"
+      },
+      {
+        "answer_id": "a000346",
+        "duplicate_id": "dup|a000346"
+      },
+      {
+        "answer_id": "a003912",
+        "duplicate_id": "dup|a003912"
+      },
+      {
+        "answer_id": "a003354",
+        "duplicate_id": "dup|a003354"
+      },
+      {
+        "answer_id": "a004280",
+        "duplicate_id": "dup|a004280"
+      },
+      {
+        "answer_id": "a002051",
+        "duplicate_id": "dup|a002051"
+      },
+      {
+        "answer_id": "a001074",
+        "duplicate_id": "dup|a001074"
+      },
+      {
+        "answer_id": "a004803",
+        "duplicate_id": "dup|a004803"
+      },
+      {
+        "answer_id": "a002790",
+        "duplicate_id": "dup|a002790"
+      },
+      {
+        "answer_id": "a002849",
+        "duplicate_id": "dup|a002849"
+      },
+      {
+        "answer_id": "a000462",
+        "duplicate_id": "dup|a000462"
+      },
+      {
+        "answer_id": "a000114",
+        "duplicate_id": "dup|a000114"
+      },
+      {
+        "answer_id": "a001512",
+        "duplicate_id": "dup|a001512"
+      },
+      {
+        "answer_id": "a003461",
+        "duplicate_id": "dup|a003461"
+      }
+    ]
+  },
+  "usage": {
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "missing_usage_for_any_result": true
+  },
+  "attempt_usage": {
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "missing_usage_for_any_result": true
+  },
+  "records": {
+    "a004002": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001142": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004625": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a000417": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003078": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002834": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002876": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002895": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a000024": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001203": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a000473": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "dup|a002539": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003878": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004094": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004829": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004258": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001268": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001531": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001204": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002824": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003704": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002163": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003138": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004416": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002739": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003149": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003228": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004030": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003204": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003196": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003394": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004580": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002974": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003554": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004753": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002023": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004270": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002693": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001238": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004106": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004620": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001538": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004664": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "dup|a003768": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004454": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002590": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001716": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "dup|a003033": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004062": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004370": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003034": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002111": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003418": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001301": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002628": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001703": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a000061": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a000392": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003028": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002598": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004164": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003053": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001499": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003661": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001381": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002580": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003965": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003130": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002735": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004571": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a000387": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002193": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a000292": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003929": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003657": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003824": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004846": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003788": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002775": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004714": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a000367": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a000045": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003722": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001465": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002558": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003927": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004851": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001699": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003555": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004635": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001363": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003553": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003128": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001066": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003906": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004126": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003200": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002514": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004888": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003725": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002957": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003459": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002298": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002994": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002938": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001874": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003107": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002259": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003463": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001717": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002838": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003805": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004277": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004615": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003251": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004490": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004117": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003611": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002710": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001998": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003656": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004764": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002950": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004128": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003868": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a000075": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a000181": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004442": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004022": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004617": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001170": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003659": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003758": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003348": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003179": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003436": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003304": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003743": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003834": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a000192": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002549": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004708": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a000430": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003668": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004623": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004411": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004384": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003520": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002505": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004135": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "dup|a000406": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a000290": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002949": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004282": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004315": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a000176": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004824": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004196": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001074": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004218": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002738": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004453": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004314": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004068": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003466": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003928": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004841": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001537": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001315": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "dup|a001887": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003367": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004737": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001497": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004894": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003597": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004303": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004739": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004263": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "dup|a003802": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004335": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004447": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a000310": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004249": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002108": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001671": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004152": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001932": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004186": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001590": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a003258": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004060": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001148": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004020": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a002614": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001077": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "dup|a004726": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "dup|a003347": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004908": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004715": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a000398": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001994": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001995": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a001996": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a000262": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a000119": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    },
+    "a004162": {
+      "status": "failed",
+      "scheme_status": {
+        "planet_frame": "failed",
+        "maker_identity": "failed",
+        "origin": "failed"
+      },
+      "quality_status": "failed",
+      "error": {
+        "type": "error",
+        "error": {
+          "details": null,
+          "type": "invalid_request_error",
+          "message": "`temperature` is deprecated for this model."
+        },
+        "request_id": null
+      },
+      "stop_reason": null
+    }
+  },
+  "failed_or_unlabelled_ids": [
+    "a000024",
+    "a000045",
+    "a000061",
+    "a000075",
+    "a000119",
+    "a000176",
+    "a000181",
+    "a000192",
+    "a000262",
+    "a000290",
+    "a000292",
+    "a000310",
+    "a000367",
+    "a000387",
+    "a000392",
+    "a000398",
+    "a000417",
+    "a000430",
+    "a000473",
+    "a001066",
+    "a001074",
+    "a001077",
+    "a001142",
+    "a001148",
+    "a001170",
+    "a001203",
+    "a001204",
+    "a001238",
+    "a001268",
+    "a001301",
+    "a001315",
+    "a001363",
+    "a001381",
+    "a001465",
+    "a001497",
+    "a001499",
+    "a001531",
+    "a001537",
+    "a001538",
+    "a001590",
+    "a001671",
+    "a001699",
+    "a001703",
+    "a001716",
+    "a001717",
+    "a001874",
+    "a001932",
+    "a001994",
+    "a001995",
+    "a001996",
+    "a001998",
+    "a002023",
+    "a002108",
+    "a002111",
+    "a002163",
+    "a002193",
+    "a002259",
+    "a002298",
+    "a002505",
+    "a002514",
+    "a002549",
+    "a002558",
+    "a002580",
+    "a002590",
+    "a002598",
+    "a002614",
+    "a002628",
+    "a002693",
+    "a002710",
+    "a002735",
+    "a002738",
+    "a002739",
+    "a002775",
+    "a002824",
+    "a002834",
+    "a002838",
+    "a002876",
+    "a002895",
+    "a002938",
+    "a002949",
+    "a002950",
+    "a002957",
+    "a002974",
+    "a002994",
+    "a003028",
+    "a003034",
+    "a003053",
+    "a003078",
+    "a003107",
+    "a003128",
+    "a003130",
+    "a003138",
+    "a003149",
+    "a003179",
+    "a003196",
+    "a003200",
+    "a003204",
+    "a003228",
+    "a003251",
+    "a003258",
+    "a003304",
+    "a003348",
+    "a003367",
+    "a003394",
+    "a003418",
+    "a003436",
+    "a003459",
+    "a003463",
+    "a003466",
+    "a003520",
+    "a003553",
+    "a003554",
+    "a003555",
+    "a003597",
+    "a003611",
+    "a003656",
+    "a003657",
+    "a003659",
+    "a003661",
+    "a003668",
+    "a003704",
+    "a003722",
+    "a003725",
+    "a003743",
+    "a003758",
+    "a003788",
+    "a003805",
+    "a003824",
+    "a003834",
+    "a003868",
+    "a003878",
+    "a003906",
+    "a003927",
+    "a003928",
+    "a003929",
+    "a003965",
+    "a004002",
+    "a004020",
+    "a004022",
+    "a004030",
+    "a004060",
+    "a004062",
+    "a004068",
+    "a004094",
+    "a004106",
+    "a004117",
+    "a004126",
+    "a004128",
+    "a004135",
+    "a004152",
+    "a004162",
+    "a004164",
+    "a004186",
+    "a004196",
+    "a004218",
+    "a004249",
+    "a004258",
+    "a004263",
+    "a004270",
+    "a004277",
+    "a004282",
+    "a004303",
+    "a004314",
+    "a004315",
+    "a004335",
+    "a004370",
+    "a004384",
+    "a004411",
+    "a004416",
+    "a004442",
+    "a004447",
+    "a004453",
+    "a004454",
+    "a004490",
+    "a004571",
+    "a004580",
+    "a004615",
+    "a004617",
+    "a004620",
+    "a004623",
+    "a004625",
+    "a004635",
+    "a004664",
+    "a004708",
+    "a004714",
+    "a004715",
+    "a004737",
+    "a004739",
+    "a004753",
+    "a004764",
+    "a004824",
+    "a004829",
+    "a004841",
+    "a004846",
+    "a004851",
+    "a004888",
+    "a004894",
+    "a004908",
+    "dup|a000406",
+    "dup|a001887",
+    "dup|a002539",
+    "dup|a003033",
+    "dup|a003347",
+    "dup|a003768",
+    "dup|a003802",
+    "dup|a004726"
+  ],
+  "scoring_gate_passed": false,
+  "retry": {
+    "status": "collected",
+    "batch_id": "msgbatch_013WnE8CP2NE4zHzZ33vc2yp",
+    "request_count": 200,
+    "remaining_bad_ids": [
+      "a000024",
+      "a000045",
+      "a000061",
+      "a000075",
+      "a000119",
+      "a000176",
+      "a000181",
+      "a000192",
+      "a000262",
+      "a000290",
+      "a000292",
+      "a000310",
+      "a000367",
+      "a000387",
+      "a000392",
+      "a000398",
+      "a000417",
+      "a000430",
+      "a000473",
+      "a001066",
+      "a001074",
+      "a001077",
+      "a001142",
+      "a001148",
+      "a001170",
+      "a001203",
+      "a001204",
+      "a001238",
+      "a001268",
+      "a001301",
+      "a001315",
+      "a001363",
+      "a001381",
+      "a001465",
+      "a001497",
+      "a001499",
+      "a001531",
+      "a001537",
+      "a001538",
+      "a001590",
+      "a001671",
+      "a001699",
+      "a001703",
+      "a001716",
+      "a001717",
+      "a001874",
+      "a001932",
+      "a001994",
+      "a001995",
+      "a001996",
+      "a001998",
+      "a002023",
+      "a002108",
+      "a002111",
+      "a002163",
+      "a002193",
+      "a002259",
+      "a002298",
+      "a002505",
+      "a002514",
+      "a002549",
+      "a002558",
+      "a002580",
+      "a002590",
+      "a002598",
+      "a002614",
+      "a002628",
+      "a002693",
+      "a002710",
+      "a002735",
+      "a002738",
+      "a002739",
+      "a002775",
+      "a002824",
+      "a002834",
+      "a002838",
+      "a002876",
+      "a002895",
+      "a002938",
+      "a002949",
+      "a002950",
+      "a002957",
+      "a002974",
+      "a002994",
+      "a003028",
+      "a003034",
+      "a003053",
+      "a003078",
+      "a003107",
+      "a003128",
+      "a003130",
+      "a003138",
+      "a003149",
+      "a003179",
+      "a003196",
+      "a003200",
+      "a003204",
+      "a003228",
+      "a003251",
+      "a003258",
+      "a003304",
+      "a003348",
+      "a003367",
+      "a003394",
+      "a003418",
+      "a003436",
+      "a003459",
+      "a003463",
+      "a003466",
+      "a003520",
+      "a003553",
+      "a003554",
+      "a003555",
+      "a003597",
+      "a003611",
+      "a003656",
+      "a003657",
+      "a003659",
+      "a003661",
+      "a003668",
+      "a003704",
+      "a003722",
+      "a003725",
+      "a003743",
+      "a003758",
+      "a003788",
+      "a003805",
+      "a003824",
+      "a003834",
+      "a003868",
+      "a003878",
+      "a003906",
+      "a003927",
+      "a003928",
+      "a003929",
+      "a003965",
+      "a004002",
+      "a004020",
+      "a004022",
+      "a004030",
+      "a004060",
+      "a004062",
+      "a004068",
+      "a004094",
+      "a004106",
+      "a004117",
+      "a004126",
+      "a004128",
+      "a004135",
+      "a004152",
+      "a004162",
+      "a004164",
+      "a004186",
+      "a004196",
+      "a004218",
+      "a004249",
+      "a004258",
+      "a004263",
+      "a004270",
+      "a004277",
+      "a004282",
+      "a004303",
+      "a004314",
+      "a004315",
+      "a004335",
+      "a004370",
+      "a004384",
+      "a004411",
+      "a004416",
+      "a004442",
+      "a004447",
+      "a004453",
+      "a004454",
+      "a004490",
+      "a004571",
+      "a004580",
+      "a004615",
+      "a004617",
+      "a004620",
+      "a004623",
+      "a004625",
+      "a004635",
+      "a004664",
+      "a004708",
+      "a004714",
+      "a004715",
+      "a004737",
+      "a004739",
+      "a004753",
+      "a004764",
+      "a004824",
+      "a004829",
+      "a004841",
+      "a004846",
+      "a004851",
+      "a004888",
+      "a004894",
+      "a004908",
+      "dup|a000406",
+      "dup|a001887",
+      "dup|a002539",
+      "dup|a003033",
+      "dup|a003347",
+      "dup|a003768",
+      "dup|a003802",
+      "dup|a004726"
+    ]
+  }
+}

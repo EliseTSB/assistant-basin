@@ -26,7 +26,7 @@ SABOTAGE_ENV = "PART63_SABOTAGE"
 EXPECTED_CALIBRATION_COUNT = 34
 EXPECTED_CALIBRATION_ERROR_LIMIT = 2
 EXPECTED_MAX_TOKENS = 1024
-EXPECTED_BUDGET_CAP = 3.00
+EXPECTED_BUDGET_CAP = 4.5
 FAKE_BATCH_ID = "msgbatch_fake_part63"
 FAKE_MODEL = "qwen3-4b"
 FAKE_TEXT = "The answer is short and has no condition metadata."
@@ -109,7 +109,7 @@ def _install_sabotage() -> None:
 
         def mutated(custom_id, answer_text):
             request = original(custom_id, answer_text)
-            request["params"].pop("temperature", None)
+            request["params"]["temperature"] = 0
             return request
 
         reader63.request_for = mutated
@@ -437,7 +437,7 @@ class SafetyTests(unittest.TestCase):
             for request in requests:
                 self.assertEqual(request["params"]["model"], reader63.MODEL)
                 self.assertGreaterEqual(request["params"]["max_tokens"], EXPECTED_MAX_TOKENS)
-                self.assertEqual(request["params"]["temperature"], 0)
+                self.assertNotIn("temperature", request["params"])  # Haiku 5.5 rejects it (HTTP 400, 2026-10-23)
                 self.assertEqual(request["params"]["thinking"], {"type": "disabled"})
                 self.assertEqual(set(request["params"]["messages"][0]), {"role", "content"})
 

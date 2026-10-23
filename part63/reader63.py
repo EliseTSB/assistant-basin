@@ -43,7 +43,7 @@ PRICE_INPUT = 0.05
 PRICE_OUTPUT = 0.25
 INPUT_BYTES_PER_TOKEN = 3
 PRICE_DIVISOR = 1_000_000
-BUDGET_CAP_USD = 3.00  # Part 63 sub-cap inside the shared $8 aggregate ledger.
+BUDGET_CAP_USD = 4.50  # Part 63 sub-cap inside the shared $8 aggregate ledger. Raised from 3.00 on 2026-10-23 after the first full run: Haiku 5.5 rejects `temperature` (HTTP 400 invalid_request_error), so all 40 batches errored (0 succeeded, billed $0) while the ledger counted $2.23 as worst case because errored results carry no usage.
 SHARED_CAP_USD = HARD_CAP_USD
 CALIBRATION_ERROR_LIMIT = 2  # Reuse Part 59A's maximum of two wrong rows out of 34.
 CALIBRATION_COUNT = 34  # Number of hand-labelled examples in part59.blind_setting.CAL.
@@ -195,7 +195,6 @@ def request_for(custom_id: str, answer_text: str) -> dict[str, Any]:
         "params": {
             "model": MODEL,
             "max_tokens": MAX_TOKENS,
-            "temperature": 0,
             "thinking": {"type": "disabled"},
             "messages": [{"role": "user", "content": RUBRIC + answer_text}],
         },

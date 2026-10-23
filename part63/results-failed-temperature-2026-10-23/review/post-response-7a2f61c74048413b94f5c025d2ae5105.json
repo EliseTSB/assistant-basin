@@ -1,0 +1,1 @@
+{"id":"msgbatch_011Xn5oXN7piP4dYq6TTj4ne","type":"message_batch","processing_status":"in_progress","request_counts":{"processing":200,"succeeded":0,"errored":0,"canceled":0,"expired":0},"ended_at":null,"created_at":"2026-10-23T06:34:21.238554+00:00","expires_at":"2026-10-24T06:34:21.238554+00:00","archived_at":null,"cancel_initiated_at":null,"results_url":null}
