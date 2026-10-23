@@ -1,0 +1,57 @@
+# Parts 61, 62, 63: the three experiments proposed by the Opus 5.5 cold review of 2026-10-22
+
+Registered 2026-10-22 ~21:50 CT, before any code is written and before any run. Source: `review/cold-review-opus-2026-10-22.md` on branch `cloud/cold-review-2026-10-22` (copy in the Journal repo under `notes/reports/publish-2026-10-22/`). Elise said "run all three" at 21:39. Each part has one builder (Luna, max effort), then two cold reviews, then one rented 3090 hour (Parts 61 and 62, one instance, fp32 for BOTH models) or API dollars (Part 63). The stop rule is written once, here: if a cold review finds the same class of defect a third time, the part goes to a redesign, not a patch.
+
+All three reuse code, do not rewrite it: `part59/run59b.py`, `part59/analyze59b.py` (pooled symmetric rule), `part26.py` and the 26.8 ladder harness (`PART26-LADDER.md`), `neuron_report.py` (`NeuronHook`, `phase='gen'|'prompt'`, `scale_frames`), `blind_reader.py`, `part59/blind_setting.py` (Haiku/Opus batch reader with calibration gate and the max_tokens lesson).
+
+Units: Qwen3.5-4B L22:2742 (Pile max 19.125, alien-frame max 24.69) and OLMo-2 1B L10:6978 (Pile max 6.5). Both in fp32 in every run (the review's B7).
+
+## Part 61: 59B with controls matched in push size (review experiment 1, artefact B1)
+
+Question: does the 59B contrast (OLMo 639 symmetric neurons vs controls about 186; Qwen 22 vs a control with 80) survive when the controls are pushed as hard as the target? The target is clamped at +/- its own Pile maximum, so OLMo's controls (maxima 0.74, 0.50, 1.30) were pushed 5 to 13 times weaker; Qwen's control 152 (19.77) was matched in size and had 80.
+
+Design. Per model: the target plus 10 random same-layer units (a fixed seeded draw of 10 from the 20 candidates used before, excluding the three already used as controls; record the indices). Each unit is clamped at +/- c where c x ||W_down[:, u]|| equals the target's 1x write norm (the unit's own column norm), then at 0.25x, 0.5x and 2x of that write. Deterministic means over 200 Pile documents (the first 200 of the 59B 1,000), the same pooled rule as 59B (pooled 99th percentile; null 0.00005; leave-one-out pooling) applied within each size. Also record, per unit and size, the next-layer residual-norm ratio (clamped / unclamped), the review's candidate mechanism. About 35,600 forward passes in all, one 3090 hour.
+
+Predictions (mine, written before the run):
+- **61a** The symmetric count rises with write size across the 11 units: Spearman rho >= 0.7 between write size and count, pooled over sizes, in each model.
+- **61b** At matched 1x write the OLMo target does NOT beat all 10 controls (probability about 55% in my head; the registered claim is "it fails to beat at least one control").
+- **61c** At matched 1x write the Qwen target's count is within the control range (neither above all controls nor below all).
+- **61d** The residual-norm ratio at 1x is within 10% of 1.0 for every unit (the push is not a norm effect), so the review's RMSNorm mechanism is NOT the explanation. (This is the prediction I expect to fail least confidently.)
+- **61e** The OLMo target still has a larger count than the median matched control at 1x (it keeps some excess even if it is not the maximum).
+
+Decision rule: "the 59B contrast is a push-size artefact" is supported if 61b holds and the target ranks inside the control range for both models at 1x; "it survives" if the OLMo target beats all 10 matched controls at 1x.
+
+## Part 62: finer dose ladder, prompt and generation clamped separately (review experiment 2, artefacts B2, B3, B4, B9)
+
+Question: is Qwen a threshold and OLMo gradual, or do both jump with different step positions? Does the step come from clamping the prompt tokens (chat template, `<think>` tokens) or from generation?
+
+Design. Both models, fp32, the same 3 questions x 8 samples as 26.8 ("Who made you?" set), independent seed per dose (the old runs reused one seed at every dose). Doses in multiples of each unit's Pile maximum: 0.25, 0.5, 0.75, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 2.0. Phases: both (as before), generation only (`phase='gen'`), prompt only (`phase='prompt'`). One column-norm-scaled control per model at 1.5 and 2.0 in the 'both' phase. Also record each dose in alien-frame-maximum units (Qwen 24.69; OLMo's alien-frame maximum must be measured here with `scale_frames` and recorded, the review says it was never recorded). 1,440 generations plus 96 control generations. Reader: the existing Part 54 blind Opus reader (labels EARTH/OFFWORLD/NEITHER plus broken flag, calibration gate as in 59A), plus the review's keyword proxy as a free second view; a logistic fit of OFFWORLD share against dose per model and phase (slope, midpoint, 10-90% width).
+
+Predictions:
+- **62a** Generation-only reproduces 'both': within 3 of 24 at each of 1.5 and 2.0 for Qwen and for OLMo's 1.0 to 2.0.
+- **62b** Prompt-only gives at most 1 of 24 OFFWORLD at every dose, in both models.
+- **62c** Qwen's 10-90% width in Pile-max units is below 0.3.
+- **62d** OLMo's 10-90% width is above 0.8 (it stays gradual on the finer ladder).
+- **62e** OLMo gives at most 4 of 24 OFFWORLD at 0.5x.
+- **62f** The column-norm-scaled controls give at most 1 of 24 OFFWORLD at 1.5 and 2.0.
+- **62g** Qwen's midpoint (50% OFFWORLD) in alien-frame units lies between 0.85 and 1.2 (the step sits near the unit's natural alien level, the review's B3).
+
+Decision rule: "threshold vs gradual" is retired as a Qwen-vs-OLMo contrast if 62d fails (OLMo's width below 0.8); "the step comes from the prompt" if 62b fails.
+
+## Part 63: a second reader and a planet-framing / maker-identity relabel (review experiment 3, artefacts B5, B6)
+
+Question: are Qwen3-4B's "Earth" base rate and the "only Qwen3-4B did anything, noisily" conclusion properties of the Opus reader's labels? Is Qwen3-4B L28:4248 a graded planet-framing dial? Does pushing Qwen3.5 down erase the maker's identity?
+
+Design. Corpus: all the existing answers in `results/part54a`, `results/part54b`, `results/part26-8` and `results/part59a` that the Part 54 and 59 readers labelled (about 3,800 answers). Reader: Claude Haiku 5.5, a non-Opus reader, batch API with the credit key, condition (unit, dose, model, control or not) HIDDEN and the order shuffled. Three schemes on every answer in one call: (i) planet framing: does it mention a planet, a place of origin, a world, with the value none / earth / other-planet-or-space; (ii) maker identity: names its own lab / another real lab / an invented or non-lab maker / no maker named; (iii) the original EARTH / OFFWORLD / NEITHER plus broken. Calibration gate first (reuse the 34-answer gate from 59A; `max_tokens` at least 1,024 because Haiku 5.5 thinks by default; a refusal rule that stops scoring if any answer is unlabelled or calibration fails). Free views on the same texts: the keyword proxies from the review. No GPU.
+
+Predictions:
+- **63a** Cohen's kappa between the Haiku scheme (iii) and the Opus labels on Part 54a answers is at least 0.8.
+- **63b** Haiku also gives EARTH to at least 3 of 24 answers in at least one unclamped or control Qwen3-4B cell (the base rate persists; the review thinks it is the reader).
+- **63c** Under scheme (i) Qwen3-4B L28:4248 reads other-planet-or-space in at most 1 of 24 unclamped and at least 20 of 24 at +1.0, and the same label rises monotonically with dose from +0.5 to +1.0 (a graded dial).
+- **63d** Under scheme (ii) Qwen3.5 at -2 names another real lab or an invented maker in at least 10 of 24 answers and unclamped at most 2 of 24 (pushing down erases the maker).
+- **63e** Under scheme (iii) Qwen3.5's OFFWORLD counts at -1, +0.5, +1, +1.5, +2 stay within 2 of the Opus counts (0, 0, 1, 19, 24 at -1..., as in the README).
+
+Decision rule: "only Qwen3-4B did anything, noisily" stands only if 63b and not 63c hold; "pushing down does nothing" is dropped as worded if 63d holds.
+
+## Cost and limits (written now)
+Parts 61 and 62: one rented 3090, estimated 2 to 2.5 hours at about $0.20 per hour, plus about $2 of Haiku 5.5 for the 62 reader (or Opus if the calibration gate fails); Part 63: under $3 of Haiku batch. API credit key `~/.anthropic-credits.env`, expires 10-24; Part 60's dev run needs up to $8 of the same credit. The chosen controls and seeds are recorded before the run. One reader per part except Part 63, whose point is the second reader.
