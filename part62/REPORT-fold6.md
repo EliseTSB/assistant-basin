@@ -72,3 +72,27 @@ The fake API tests verify local state transitions and ledger idempotence, not An
 ### BLOCKERS
 
 - None. The full suite reported `Ran 52 tests ... OK`; its five `MUTATION RED (copy)` diagnostics are expected mutation checks. No torch-missing errors occurred in this environment. Live provider billing remains unverified because the fold prohibits paid calls.
+
+## Fold 8
+
+### SUMMARY
+
+- Fixed the Fold 7 restart wedges, retired-answer dead end, incomplete-row recovery, and shell signal handling.
+- Added explicit new-reserve retry paths for incomplete calibration, retired answer chunks, and unresolved answer rows.
+- Corrected Part 62's eligible calibration pool to Parts 54a, 54b, and 26.8; the seeded sample is 32, 41, and 47 rows respectively.
+- The required suite completed with 60 tests `OK`; no paid API, network, or GPU operation was performed.
+- Parent-control mailbox reads were empty; no messages changed the plan or needed disposition.
+
+### FINDINGS
+
+- **H1** — `part62/blind62.py:840-844, 927-995` reconciles released attempts and assembles labels only from settled answer attempts with a batch id. A rejected chunk can be retried and its successful batch writes a labels file. Tests: `part62/test_part62.py:926-969` and `970-1017` cover the rejected rerun and the crash after ledger release.
+- **M1** — `part62/blind62.py:488-522, 574-597, 893-926` records provider errors, unlabelled rows, and truncations as incomplete, keeps Opus locked, and offers `--retry-calibration`. Only a complete 120-row below-threshold calibration authorizes Opus. Tests: `part62/test_part62.py:525-556, 1192-1251`.
+- **M2 / Luna release-retire seam** — `part62/blind62.py:736-785, 824-867, 879-892` reconciles `released` and `retired` ledger states, prints usable next commands, adds `--retry-answers`, and prevents retiring a submitted batch. Tests: `part62/test_part62.py:1018-1114, 1253-1310`.
+- **M3** — `part62/blind62.py:600-610, 927-995, 1066-1105` lets `--retry-failed-answers` submit only unresolved rows under new reserves; successful prior rows stay in the final labels. Test: `part62/test_part62.py:1312-1365` verifies a single errored row is retried without reposting the two successes.
+- **M4 (pre-existing)** — `part62/blind62.py:57-130, 579-592` and `part62/RUNBOOK-62.md:85-88` describe the eligible three-part origin pool; `part62/test_part62.py:579-594` pins its realized source counts. The root `PART61-63-DESIGN.md` still contains the four-source claim. The brief limited writes to `part62/`, so that registered document was not edited.
+- **L1/L2/L3** — `part62/blind62.py:824-867, 736-785` recovers the release-before-run-write crash and refuses to retire a submitted batch. `part62/run62.sh:3-81` traps HUP and runs long children under `wait`, forwards termination, archives partial output, and reports `RUN_FAILED`. Tests: `part62/test_part62.py:970-1114, 1381-1449`.
+- Verification: `/home/elisepc/neuron-probe/.venv/bin/python -m unittest part62.test_part62` completed with `Ran 60 tests ... OK`; its five mutation-copy red traces are expected. `git diff --check` passed.
+
+### BLOCKERS
+
+- The registered root design still names Part 59a as a calibration source; editing it was outside the declared `part62/` scope. Part 62's runbook, code comment, and source-count test now record the measured eligible pool.

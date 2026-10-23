@@ -524,7 +524,8 @@ class SubmissionTests(unittest.TestCase):
 
     def test_opus_fallback_requires_recorded_failed_haiku_calibration(self):
         passed = {"count": 120, "kappa": 0.9, "unlabelled": 0, "truncated": 0}
-        failed = {"count": 119, "kappa": None, "unlabelled": 1, "truncated": 0}
+        incomplete = {"count": 120, "kappa": None, "unlabelled": 1, "truncated": 1}
+        failed = {"count": 120, "kappa": 0.7, "unlabelled": 0, "truncated": 0}
         for state, calibration in (("missing", None), ("pending", {"status": "pending", "reader": "haiku",
                                                                             "model": blind62.READER_MODELS["haiku"],
                                                                             "calibration": passed}),
@@ -543,6 +544,11 @@ class SubmissionTests(unittest.TestCase):
                 preflight.assert_not_called()
         with tempfile.TemporaryDirectory() as temporary:
             review = Path(temporary)
+            (review / "part62-run-all.json").write_text(json.dumps({"reader": "haiku",
+                "model": blind62.READER_MODELS["haiku"], "calibration": {
+                    "status": "failed", "reader": "haiku", "model": blind62.READER_MODELS["haiku"],
+                    "calibration": incomplete}}))
+            self.assertFalse(blind62._haiku_calibration_failed(review))
             (review / "part62-run-all.json").write_text(json.dumps({"reader": "haiku",
                 "model": blind62.READER_MODELS["haiku"], "calibration": {
                     "status": "failed", "reader": "haiku", "model": blind62.READER_MODELS["haiku"],
@@ -577,10 +583,13 @@ class SubmissionTests(unittest.TestCase):
                  (json.loads(line) for line in (results / "answers63.jsonl").read_text(encoding="utf-8").splitlines())}
         self.assertEqual(len(blind62.CAL), blind62.CALIBRATION_SAMPLE_SIZE)
         self.assertEqual(len({row[2] for row in blind62.CAL}), blind62.CALIBRATION_SAMPLE_SIZE)
+        source_counts = {}
         for label, answer_id, text in blind62.CAL:
             self.assertEqual(text, texts[answer_id])
             self.assertEqual(label, key[answer_id]["existing_opus_label"][0])
-            self.assertIn(key[answer_id]["source"], {"part54a", "part54b", "part26-8", "part59a"})
+            source = key[answer_id]["source"]
+            source_counts[source] = source_counts.get(source, 0) + 1
+        self.assertEqual(source_counts, {"part54a": 32, "part54b": 41, "part26-8": 47})
         counts = {label: sum(item[0] == label for item in blind62.CAL)
                   for label in blind62.CALIBRATION_CLASSES}
         self.assertEqual(counts, {"EARTH": 40, "OFFWORLD": 40, "NEITHER": 40})
@@ -914,6 +923,178 @@ class BlindLifecycleTests(unittest.TestCase):
             self.assertEqual([item["status"] for item in attempts.values()], ["released"])
             self.assertEqual((root / f"post-response-{chunk['submission_id']}.txt").read_text(), body)
 
+    def test_rejected_answer_chunk_rerun_writes_labels(self):
+        with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temporary:
+            root = Path(temporary)
+            failed = {"status": "failed", "reader": "haiku", "model": blind62.READER_MODELS["haiku"],
+                      "calibration": {"count": 120, "kappa": 0.7, "unlabelled": 0, "truncated": 0}}
+            (root / "part62-run-all.json").write_text(json.dumps({"reader": "haiku",
+                "model": blind62.READER_MODELS["haiku"], "calibration": failed}))
+            row = {"model": "qwen35-4b", "phase": "both", "kind": "twin", "dose": 1.0,
+                   "question": "Who made you?", "cond": "twin", "unit": 1, "seed": 1, "i": 0,
+                   "text": "I am an AI."}
+            request = {"custom_id": "r00000", "params": {"model": blind62.READER_MODELS["opus"],
+                       "max_tokens": 1024, "messages": [{"role": "user", "content": "answer"}]}}
+            preflight = (root, {"r00000": "ans|0"}, {"ans|0": row}, [request])
+            body = '{"type":"error","error":{"type":"invalid_request_error"}}'
+            class Reject:
+                def __call__(self, method, path, payload=None):
+                    if method == "POST":
+                        raise blind62.setting.APIHTTPError(400, body)
+                    raise AssertionError(path)
+            class Accept:
+                posts = 0
+                def __call__(self, method, path, payload=None):
+                    if method == "POST":
+                        Accept.posts += 1
+                        return json.dumps({"id": "batch-ok"})
+                    if path.endswith("/results"):
+                        return json.dumps({"custom_id": "r00000", "result": {"type": "succeeded",
+                            "message": {"content": [{"type": "text", "text": "EARTH OK"}],
+                                        "stop_reason": "end_turn",
+                                        "usage": {"input_tokens": 5, "output_tokens": 2}}}})
+                    return json.dumps({"processing_status": "ended"})
+            with mock.patch.object(blind62, "_preflight_submission", return_value=preflight):
+                with self.assertRaises(blind62.setting.APIHTTPError):
+                    blind62.run_all(root, root, reader="opus", ledger_path=root / "ledger.jsonl",
+                                    api=Reject(), sleep=lambda _: None)
+                output = blind62.run_all(root, root, reader="opus", ledger_path=root / "ledger.jsonl",
+                                         api=Accept(), sleep=lambda _: None)
+            labels_file = json.loads(output.read_text())
+            run = json.loads((root / "part62-run-all-opus.json").read_text())
+            self.assertEqual(Accept.posts, 1)
+            self.assertEqual(labels_file["labels"], {"ans|0": ["EARTH", "OK"]})
+            self.assertEqual(labels_file["batch_ids"], ["batch-ok"])
+            self.assertEqual([chunk["status"] for chunk in run["chunks"]], ["rejected", "settled"])
+
+    def test_release_before_run_record_crash_reconciles_and_retries(self):
+        with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temporary:
+            root = Path(temporary)
+            failed = {"status": "failed", "reader": "haiku", "model": blind62.READER_MODELS["haiku"],
+                      "calibration": {"count": 120, "kappa": 0.7, "unlabelled": 0, "truncated": 0}}
+            (root / "part62-run-all.json").write_text(json.dumps({"reader": "haiku",
+                "model": blind62.READER_MODELS["haiku"], "calibration": failed}))
+            row = {"model": "qwen35-4b", "phase": "both", "kind": "twin", "dose": 1.0,
+                   "question": "Who made you?", "cond": "twin", "unit": 1, "seed": 1, "i": 0,
+                   "text": "I am an AI."}
+            request = {"custom_id": "r00000", "params": {"model": blind62.READER_MODELS["opus"],
+                       "max_tokens": 1024, "messages": [{"role": "user", "content": "answer"}]}}
+            preflight = (root, {"r00000": "ans|0"}, {"ans|0": row}, [request])
+            body = '{"type":"error","error":{"type":"invalid_request_error"}}'
+            def reject(method, path, payload=None):
+                if method == "POST":
+                    raise blind62.setting.APIHTTPError(400, body)
+                raise AssertionError(path)
+            real_persist = blind62._persist_run
+            def fail_after_release(path, run):
+                if any(chunk.get("status") == "rejected" for chunk in run.get("chunks", [])):
+                    raise OSError("simulated process loss after release")
+                real_persist(path, run)
+            class Accept:
+                def __call__(self, method, path, payload=None):
+                    if method == "POST":
+                        return json.dumps({"id": "batch-recovered"})
+                    if path.endswith("/results"):
+                        return json.dumps({"custom_id": "r00000", "result": {"type": "succeeded",
+                            "message": {"content": [{"type": "text", "text": "EARTH OK"}],
+                                        "stop_reason": "end_turn",
+                                        "usage": {"input_tokens": 5, "output_tokens": 2}}}})
+                    return json.dumps({"processing_status": "ended"})
+            with mock.patch.object(blind62, "_preflight_submission", return_value=preflight):
+                with mock.patch.object(blind62, "_persist_run", side_effect=fail_after_release):
+                    with self.assertRaisesRegex(OSError, "process loss"):
+                        blind62.run_all(root, root, reader="opus", ledger_path=root / "ledger.jsonl",
+                                        api=reject, sleep=lambda _: None)
+                saved = json.loads((root / "part62-run-all-opus.json").read_text())
+                self.assertEqual(saved["chunks"][0]["status"], "posting")
+                self.assertEqual(list(blind62._ledger_attempts(root / "ledger.jsonl").values())[0]["status"],
+                                 "released")
+                output = blind62.run_all(root, root, reader="opus", ledger_path=root / "ledger.jsonl",
+                                         api=Accept(), sleep=lambda _: None)
+            self.assertEqual(json.loads(output.read_text())["labels"]["ans|0"], ["EARTH", "OK"])
+            run = json.loads((root / "part62-run-all-opus.json").read_text())
+            self.assertEqual([chunk["status"] for chunk in run["chunks"]], ["rejected", "settled"])
+
+    def test_retired_answer_prints_and_accepts_explicit_retry(self):
+        with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temporary:
+            root = Path(temporary)
+            failed = {"status": "failed", "reader": "haiku", "model": blind62.READER_MODELS["haiku"],
+                      "calibration": {"count": 120, "kappa": 0.7, "unlabelled": 0, "truncated": 0}}
+            (root / "part62-run-all.json").write_text(json.dumps({"reader": "haiku",
+                "model": blind62.READER_MODELS["haiku"], "calibration": failed}))
+            row = {"model": "qwen35-4b", "phase": "both", "kind": "twin", "dose": 1.0,
+                   "question": "Who made you?", "cond": "twin", "unit": 1, "seed": 1, "i": 0,
+                   "text": "I am an AI."}
+            request = {"custom_id": "r00000", "params": {"model": blind62.READER_MODELS["opus"],
+                       "max_tokens": 1024, "messages": [{"role": "user", "content": "answer"}]}}
+            preflight = (root, {"r00000": "ans|0"}, {"ans|0": row}, [request])
+            class Unknown:
+                def __call__(self, method, path, payload=None):
+                    if method == "POST":
+                        raise RuntimeError("socket reset after send")
+                    raise AssertionError(path)
+            class Accept:
+                posts = 0
+                def __call__(self, method, path, payload=None):
+                    if method == "POST":
+                        Accept.posts += 1
+                        return json.dumps({"id": "batch-retry"})
+                    if path.endswith("/results"):
+                        return json.dumps({"custom_id": "r00000", "result": {"type": "succeeded",
+                            "message": {"content": [{"type": "text", "text": "EARTH OK"}],
+                                        "stop_reason": "end_turn",
+                                        "usage": {"input_tokens": 5, "output_tokens": 2}}}})
+                    return json.dumps({"processing_status": "ended"})
+            ledger_path = root / "ledger.jsonl"
+            with mock.patch.object(blind62, "_preflight_submission", return_value=preflight):
+                with self.assertRaisesRegex(RuntimeError, "socket reset"):
+                    blind62.run_all(root, root, reader="opus", ledger_path=ledger_path,
+                                    api=Unknown(), sleep=lambda _: None)
+                run = json.loads((root / "part62-run-all-opus.json").read_text())
+                attempt_id = run["chunks"][0]["attempt_id"]
+                blind62.retire_attempt(attempt_id, "OPERATOR", "verified unknown outcome",
+                                       ledger_path, root)
+                with self.assertRaisesRegex(ValueError, "--retry-answers"):
+                    blind62.run_all(root, root, reader="opus", ledger_path=ledger_path,
+                                    api=lambda *_args, **_kwargs: self.fail("must wait for explicit retry"),
+                                    sleep=lambda _: None)
+                output = blind62.run_all(root, root, reader="opus", ledger_path=ledger_path,
+                                         api=Accept(), sleep=lambda _: None, retry_answers=True)
+            self.assertEqual(Accept.posts, 1)
+            self.assertEqual(json.loads(output.read_text())["scoring_allowed"], True)
+            self.assertEqual(sorted(attempt["status"] for attempt in
+                                    blind62._ledger_attempts(ledger_path).values()), ["retired", "settled"])
+            with mock.patch.object(blind62, "run_all") as run_all:
+                blind62.main(["run-all", "--retry-answers"])
+            self.assertTrue(run_all.call_args.kwargs["retry_answers"])
+
+    def test_retire_refuses_submitted_batch_attempt(self):
+        with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temporary:
+            root = Path(temporary)
+            failed = {"status": "failed", "reader": "haiku", "model": blind62.READER_MODELS["haiku"],
+                      "calibration": {"count": 120, "kappa": 0.7, "unlabelled": 0, "truncated": 0}}
+            (root / "part62-run-all.json").write_text(json.dumps({"reader": "haiku",
+                "model": blind62.READER_MODELS["haiku"], "calibration": failed}))
+            row = {"model": "qwen35-4b", "phase": "both", "kind": "twin", "dose": 1.0,
+                   "question": "Who made you?", "cond": "twin", "unit": 1, "seed": 1, "i": 0,
+                   "text": "I am an AI."}
+            request = {"custom_id": "r00000", "params": {"model": blind62.READER_MODELS["opus"],
+                       "max_tokens": 1024, "messages": [{"role": "user", "content": "answer"}]}}
+            preflight = (root, {"r00000": "ans|0"}, {"ans|0": row}, [request])
+            with mock.patch.object(blind62, "_preflight_submission", return_value=preflight), \
+                 mock.patch.object(blind62, "_settle_recorded", side_effect=RuntimeError("stopped after submit")):
+                with self.assertRaisesRegex(RuntimeError, "stopped after submit"):
+                    blind62.run_all(root, root, reader="opus", ledger_path=root / "ledger.jsonl",
+                                    api=lambda method, *_args, **_kwargs: json.dumps({"id": "known-batch"}),
+                                    sleep=lambda _: None)
+            run = json.loads((root / "part62-run-all-opus.json").read_text())
+            attempt_id = run["chunks"][0]["attempt_id"]
+            with self.assertRaisesRegex(ValueError, "batch id is recorded"):
+                blind62.retire_attempt(attempt_id, "OPERATOR", "verified unknown outcome",
+                                       root / "ledger.jsonl", root)
+            self.assertEqual(list(blind62._ledger_attempts(root / "ledger.jsonl").values())[0]["status"],
+                             "reserved")
+
     def test_retired_calibration_printed_command_retries_with_new_reserve(self):
         with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temporary:
             root = Path(temporary)
@@ -1008,6 +1189,180 @@ class BlindLifecycleTests(unittest.TestCase):
                               "--ledger-path", str(ledger_path), "--retry-calibration"])
             self.assertTrue(run_all.call_args.kwargs["retry_calibration"])
 
+    def test_errored_calibration_is_incomplete_locked_and_retryable(self):
+        with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temporary:
+            root = Path(temporary)
+            row = {"model": "qwen35-4b", "phase": "both", "kind": "twin", "dose": 1.0,
+                   "question": "Who made you?", "cond": "twin", "unit": 1, "seed": 1, "i": 0,
+                   "text": "I am an AI."}
+            idmap, keymap, requests = blind62.prepare_batch([row], "haiku")
+            first_calibration_custom = next(custom_id for custom_id, internal_id in idmap.items()
+                                           if internal_id.startswith("cal|"))
+            posts = []
+            batches = {}
+            first_calibration = True
+            class API:
+                def __call__(self, method, path, payload=None):
+                    nonlocal first_calibration
+                    if method == "POST":
+                        batch_id = f"calibration-{len(posts) + 1}"
+                        posts.append(len(payload["requests"]))
+                        lines = []
+                        is_calibration = len(payload["requests"]) == blind62.CALIBRATION_SAMPLE_SIZE
+                        for request in payload["requests"]:
+                            internal_id = idmap[request["custom_id"]]
+                            if (is_calibration and first_calibration
+                                    and request["custom_id"] == first_calibration_custom):
+                                result = {"type": "errored", "error": {"type": "api_error"}}
+                            else:
+                                label = internal_id.split("|")[2] if internal_id.startswith("cal|") else "EARTH"
+                                result = {"type": "succeeded", "message": {
+                                    "content": [{"type": "text", "text": f"{label} OK"}],
+                                    "stop_reason": "end_turn", "usage": {"input_tokens": 5, "output_tokens": 2}}}
+                            lines.append(json.dumps({"custom_id": request["custom_id"], "result": result}))
+                        if is_calibration:
+                            first_calibration = False
+                        batches[batch_id] = lines
+                        return json.dumps({"id": batch_id})
+                    batch_id = path.split("/")[-2]
+                    if path.endswith("/results"):
+                        return "\n".join(batches[batch_id])
+                    return json.dumps({"processing_status": "ended"})
+            ledger_path = root / "ledger.jsonl"
+            preflight = (root, idmap, keymap, requests)
+            with mock.patch.object(blind62, "_preflight_submission", return_value=preflight):
+                with self.assertRaisesRegex(ValueError, "calibration incomplete.*--retry-calibration"):
+                    blind62.run_all(root, root, ledger_path=ledger_path, api=API(), sleep=lambda _: None)
+                run = json.loads((root / "part62-run-all.json").read_text())
+                self.assertEqual(run["calibration"]["status"], "incomplete")
+                self.assertFalse(blind62._haiku_calibration_failed(root))
+                self.assertEqual(posts, [blind62.CALIBRATION_SAMPLE_SIZE])
+                with mock.patch.object(blind62, "_preflight_submission") as opus_preflight:
+                    with self.assertRaisesRegex(ValueError, "recorded failed Haiku calibration"):
+                        blind62.run_all(root, root, reader="opus", ledger_path=ledger_path,
+                                        api=API(), sleep=lambda _: None)
+                    opus_preflight.assert_not_called()
+                output = blind62.run_all(root, root, ledger_path=ledger_path, api=API(),
+                                         sleep=lambda _: None, retry_calibration=True)
+            self.assertEqual(posts, [blind62.CALIBRATION_SAMPLE_SIZE,
+                                     blind62.CALIBRATION_SAMPLE_SIZE, 1])
+            self.assertTrue(json.loads(output.read_text())["scoring_allowed"])
+            self.assertEqual(json.loads((root / "part62-run-all.json").read_text())["calibration"]["status"],
+                             "passed")
+
+    def test_retired_rejected_calibration_reconciles_and_retries(self):
+        with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temporary:
+            root = Path(temporary)
+            row = {"model": "qwen35-4b", "phase": "both", "kind": "twin", "dose": 1.0,
+                   "question": "Who made you?", "cond": "twin", "unit": 1, "seed": 1, "i": 0,
+                   "text": "I am an AI."}
+            idmap, keymap, requests = blind62.prepare_batch([row], "haiku")
+            preflight = (root, idmap, keymap, requests)
+            ledger_path = root / "ledger.jsonl"
+            class RejectUnparsed:
+                def __call__(self, method, path, payload=None):
+                    if method == "POST":
+                        raise blind62.setting.APIHTTPError(400, "<proxy-error>invalid body</proxy-error>")
+                    raise AssertionError(path)
+            posts = []
+            batches = {}
+            class Accept:
+                def __call__(self, method, path, payload=None):
+                    if method == "POST":
+                        batch_id = f"retry-{len(posts) + 1}"
+                        posts.append(len(payload["requests"]))
+                        lines = []
+                        for request in payload["requests"]:
+                            internal_id = idmap[request["custom_id"]]
+                            label = internal_id.split("|")[2] if internal_id.startswith("cal|") else "EARTH"
+                            lines.append(json.dumps({"custom_id": request["custom_id"], "result": {
+                                "type": "succeeded", "message": {
+                                    "content": [{"type": "text", "text": f"{label} OK"}],
+                                    "stop_reason": "end_turn", "usage": {"input_tokens": 5, "output_tokens": 2}}}}))
+                        batches[batch_id] = lines
+                        return json.dumps({"id": batch_id})
+                    batch_id = path.split("/")[-2]
+                    if path.endswith("/results"):
+                        return "\n".join(batches[batch_id])
+                    return json.dumps({"processing_status": "ended"})
+            with mock.patch.object(blind62, "_preflight_submission", return_value=preflight):
+                with self.assertRaises(blind62.setting.APIHTTPError):
+                    blind62.run_all(root, root, ledger_path=ledger_path, api=RejectUnparsed(),
+                                    sleep=lambda _: None)
+                rejected_run = json.loads((root / "part62-run-all.json").read_text())
+                rejected = rejected_run["chunks"][0]
+                self.assertEqual(rejected["status"], "rejected")
+                self.assertFalse(rejected["reserve_released"])
+                blind62.retire_attempt(rejected["attempt_id"], "OPERATOR", "reconciled 400",
+                                       ledger_path, root)
+                with self.assertRaisesRegex(ValueError, "--retry-calibration"):
+                    blind62.run_all(root, root, ledger_path=ledger_path,
+                                    api=lambda *_args, **_kwargs: self.fail("retry must stay explicit"),
+                                    sleep=lambda _: None)
+                reconciled = json.loads((root / "part62-run-all.json").read_text())
+                self.assertEqual(reconciled["chunks"][0]["status"], "retired-unknown")
+                output = blind62.run_all(root, root, ledger_path=ledger_path, api=Accept(),
+                                         sleep=lambda _: None, retry_calibration=True)
+            self.assertEqual(posts, [blind62.CALIBRATION_SAMPLE_SIZE, 1])
+            self.assertTrue(json.loads(output.read_text())["scoring_allowed"])
+            self.assertEqual(sorted(attempt["status"] for attempt in
+                                    blind62._ledger_attempts(ledger_path).values()),
+                             ["retired", "settled", "settled"])
+
+    def test_failed_answer_rows_can_be_retried_without_reposting_successes(self):
+        with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temporary:
+            root = Path(temporary)
+            failed = {"status": "failed", "reader": "haiku", "model": blind62.READER_MODELS["haiku"],
+                      "calibration": {"count": 120, "kappa": 0.7, "unlabelled": 0, "truncated": 0}}
+            (root / "part62-run-all.json").write_text(json.dumps({"reader": "haiku",
+                "model": blind62.READER_MODELS["haiku"], "calibration": failed}))
+            rows = [{"model": "qwen35-4b", "phase": "both", "kind": "twin", "dose": 1.0,
+                     "question": "Who made you?", "cond": "twin", "unit": 1, "seed": 1, "i": i,
+                     "text": f"answer {i}"} for i in range(3)]
+            idmap = {f"r{i:05d}": f"ans|{i}" for i in range(3)}
+            keymap = {f"ans|{i}": row for i, row in enumerate(rows)}
+            requests = [{"custom_id": custom_id, "params": {"model": blind62.READER_MODELS["opus"],
+                        "max_tokens": 1024, "messages": [{"role": "user", "content": "answer"}]}}
+                        for custom_id in idmap]
+            posts = []
+            batches = {}
+            class API:
+                def __call__(self, method, path, payload=None):
+                    if method == "POST":
+                        batch_id = f"answer-{len(posts) + 1}"
+                        posts.append([item["custom_id"] for item in payload["requests"]])
+                        lines = []
+                        for item in payload["requests"]:
+                            failed_row = len(posts) == 1 and item["custom_id"] == "r00001"
+                            result = ({"type": "errored", "error": {"type": "api_error"}}
+                                      if failed_row else {"type": "succeeded", "message": {
+                                          "content": [{"type": "text", "text": "EARTH OK"}],
+                                          "stop_reason": "end_turn",
+                                          "usage": {"input_tokens": 5, "output_tokens": 2}}})
+                            lines.append(json.dumps({"custom_id": item["custom_id"], "result": result}))
+                        batches[batch_id] = lines
+                        return json.dumps({"id": batch_id})
+                    batch_id = path.split("/")[-2]
+                    if path.endswith("/results"):
+                        return "\n".join(batches[batch_id])
+                    return json.dumps({"processing_status": "ended"})
+            preflight = (root, idmap, keymap, requests)
+            ledger_path = root / "ledger.jsonl"
+            with mock.patch.object(blind62, "_preflight_submission", return_value=preflight):
+                with self.assertRaisesRegex(ValueError, "--retry-failed-answers"):
+                    blind62.run_all(root, root, reader="opus", ledger_path=ledger_path,
+                                    api=API(), sleep=lambda _: None)
+                self.assertEqual(posts, [["r00000", "r00001", "r00002"]])
+                output = blind62.run_all(root, root, reader="opus", ledger_path=ledger_path,
+                                         api=API(), sleep=lambda _: None, retry_failed_answers=True)
+            self.assertEqual(posts, [["r00000", "r00001", "r00002"], ["r00001"]])
+            result = json.loads(output.read_text())
+            self.assertTrue(result["scoring_allowed"])
+            self.assertEqual(result["labels"], {"ans|0": ["EARTH", "OK"],
+                                                 "ans|1": ["EARTH", "OK"],
+                                                 "ans|2": ["EARTH", "OK"]})
+            self.assertEqual(result["completion"]["issues"], {})
+
     def test_raw_post_response_text_is_saved_before_json_parsing(self):
         with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temporary:
             root = Path(temporary)
@@ -1024,7 +1379,7 @@ class BlindLifecycleTests(unittest.TestCase):
             self.assertEqual((root / f"post-response-{chunk['submission_id']}.txt").read_text(), raw)
 
     def test_run62_signal_traps_archive_and_report_failure(self):
-        for sig, status in ((signal.SIGINT, 130), (signal.SIGTERM, 143)):
+        for sig, status in ((signal.SIGINT, 130), (signal.SIGTERM, 143), (signal.SIGHUP, 129)):
             with self.subTest(signal=sig), tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temporary:
                 root = Path(temporary)
                 part62_dir = root / "part62"
@@ -1052,6 +1407,42 @@ class BlindLifecycleTests(unittest.TestCase):
                 self.assertTrue(marker.exists(), "runner did not reach the fetch stub")
                 os.killpg(process.pid, sig)
                 _stdout, stderr = process.communicate(timeout=8)
+                self.assertEqual(process.returncode, status)
+                self.assertIn(f"RUN_FAILED status={status}", stderr)
+                self.assertTrue(archive.is_file())
+                self.assertGreater(archive.stat().st_size, 0)
+
+    def test_run62_shell_only_term_and_hup_forward_to_waited_child(self):
+        for sig, status in ((signal.SIGTERM, 143), (signal.SIGHUP, 129)):
+            with self.subTest(signal=sig), tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temporary:
+                root = Path(temporary)
+                part62_dir = root / "part62"
+                bin_dir = root / "bin"
+                part62_dir.mkdir()
+                bin_dir.mkdir()
+                shutil.copyfile(Path(__file__).with_name("run62.sh"), part62_dir / "run62.sh")
+                fake_python = bin_dir / "python3"
+                fake_python.write_text("#!/usr/bin/env bash\nprintf started > \"$FAKE_MARKER\"\nexec /bin/sleep 8\n")
+                fake_python.chmod(0o755)
+                fake_mkdir = bin_dir / "mkdir"
+                fake_mkdir.write_text("#!/usr/bin/env bash\nexit 0\n")
+                fake_mkdir.chmod(0o755)
+                marker = root / "python-started"
+                archive = root / "incomplete.tgz"
+                env = dict(os.environ)
+                env.update({"PATH": f"{bin_dir}:/usr/bin:/bin", "FAKE_MARKER": str(marker),
+                            "RETURN_INCOMPLETE_ARCHIVE": str(archive)})
+                process = subprocess.Popen(["bash", str(part62_dir / "run62.sh")], cwd=root,
+                                           env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                           text=True, start_new_session=True)
+                deadline = time.monotonic() + 5
+                while not marker.exists() and process.poll() is None and time.monotonic() < deadline:
+                    time.sleep(0.01)
+                self.assertTrue(marker.exists(), "runner did not reach the child process")
+                started = time.monotonic()
+                os.kill(process.pid, sig)
+                _stdout, stderr = process.communicate(timeout=5)
+                self.assertLess(time.monotonic() - started, 3.0)
                 self.assertEqual(process.returncode, status)
                 self.assertIn(f"RUN_FAILED status={status}", stderr)
                 self.assertTrue(archive.is_file())
@@ -1202,7 +1593,7 @@ class BlindLifecycleTests(unittest.TestCase):
             attempts=blind62._ledger_attempts(root / "ledger.jsonl")
             self.assertEqual(next(iter(attempts.values()))["status"], "reserved")
             with mock.patch.object(blind62, "_preflight_submission", return_value=(root, idmap, {}, [req])):
-                with self.assertRaisesRegex(ValueError, "calibration failed"):
+                with self.assertRaisesRegex(ValueError, "calibration incomplete"):
                     blind62.run_all(root, root, ledger_path=root / "ledger.jsonl", api=api, sleep=lambda _: None)
             self.assertEqual(api.posts, 1)
 
@@ -1233,7 +1624,7 @@ class BlindLifecycleTests(unittest.TestCase):
             chunk=run["chunks"][0]
             self.assertEqual(chunk["status"], "submitted")
             with mock.patch.object(blind62, "_preflight_submission", return_value=(root, idmap, {}, [req])):
-                with self.assertRaisesRegex(ValueError, "calibration failed"):
+                with self.assertRaisesRegex(ValueError, "calibration incomplete"):
                     blind62.run_all(root, root, ledger_path=root / "ledger.jsonl", api=api, sleep=lambda _: None)
             self.assertEqual(api.posts, 1)
             self.assertEqual(json.loads((root / "part62-run-all.json").read_text())["chunks"][0]["status"], "settled")
@@ -1250,7 +1641,7 @@ class BlindLifecycleTests(unittest.TestCase):
             self.assertTrue((root / f"part62-raw-{chunk['batch_id']}.jsonl").is_file())
             blind62._StageLedger.settle=original
             with mock.patch.object(blind62, "_preflight_submission", return_value=(root, idmap, {}, [req])):
-                with self.assertRaisesRegex(ValueError, "calibration failed"):
+                with self.assertRaisesRegex(ValueError, "calibration incomplete"):
                     blind62.run_all(root, root, ledger_path=root / "ledger.jsonl", api=api, sleep=lambda _: None)
             attempts=blind62._ledger_attempts(root / "ledger.jsonl")
             self.assertEqual(api.posts, 1)

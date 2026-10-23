@@ -84,11 +84,16 @@ python3 part62/blind62.py run-all --folder results/part62 --review-dir results/p
 
 The default reader is Claude Haiku 5.5 (`claude-haiku-5-5`). A calibration-only
 batch runs first on 120 seeded, balanced as class availability allows, already-labelled
-origin answers from Parts 54a, 54b, 26.8, and 59a. The selected source answer
-ids, seed, and realized EARTH/OFFWORLD/NEITHER counts are stored with the result.
+origin answers from Parts 54a, 54b, and 26.8. Part 59a has no eligible origin
+questions. The selected source answer ids, seed, and realized EARTH/OFFWORLD/NEITHER counts are stored with the result.
 Together with the 1,536 experiment answers, this makes 1,656 reader requests.
 Haiku must agree with the historical Opus labels at Cohen's kappa >= 0.8, with
-no unlabelled or truncated calibration responses. Every request uses
+no unlabelled or truncated calibration responses. A provider error, missing
+label, or truncated calibration response records an incomplete calibration,
+keeps both readers locked from answers, and does not authorize Opus. Retry that
+calibration explicitly with `--retry-calibration`; a complete 120-row calibration
+below the kappa threshold is a recorded failure and may authorize explicit Opus
+fallback. Every request uses
 `max_tokens=1024` and omits `temperature`.
 
 All Part 62 reader attempts use `paidaction.DEFAULT_LEDGER_PATH`, shared across
@@ -104,22 +109,26 @@ before result collection, and settles from returned input/output usage before
 the next chunk is reserved. Raw result rows are saved per batch by their stable
 custom IDs. Ambiguous attempts remain counted. `run-all` stores
 `part62-run-all.json` for Haiku and `part62-run-all-opus.json` for Opus, with one
-durable record and status per calibration or answer chunk. Its lock serializes reruns. A rerun collects and settles a saved
-batch id before advancing; it never POSTs a chunk that already has a record.
+durable record and status per calibration or answer attempt. Its lock serializes
+reruns. A rerun collects and settles a saved batch id before advancing. A
+definitively rejected POST with a released reserve can be retried on the next
+`run-all`; it receives a new attempt and reserve.
 The raw POST response is fsynced before its id is parsed. If the process dies
 after POST but before the response is persisted, the outcome is unknown and
 the reserve stays counted. After checking the provider and ledger, an operator
 can retire that attempt:
 
 ```sh
-python3 part62/blind62.py retire ATTEMPT_ID --who OPERATOR --reason 'verified outcome unknown'
+python3 part62/blind62.py retire ATTEMPT_ID --who OPERATOR \
+  --reason 'verified outcome unknown' --review-dir results/part62-review
 ```
 
-The ledger records retirement while retaining the reserve; on the next
-`run-all`, the chunk is marked `retired-unknown` and remains ineligible for a
-new POST. A retired calibration does not authorize Opus. To retry calibration,
-run the explicit command printed by the refusal; it appends a new calibration
-attempt with a new reserve while preserving the retired attempt:
+The ledger records retirement while retaining the reserve. The retire command
+refuses a chunk whose batch id is already recorded; resume `run-all` to collect
+that batch instead. A retired calibration does not authorize Opus. To retry a
+retired or incomplete calibration, run the explicit command printed by the
+refusal; it appends a new calibration attempt with a new reserve while preserving
+the prior attempt:
 
 ```sh
 python3 part62/blind62.py run-all --folder results/part62 \
@@ -128,13 +137,21 @@ python3 part62/blind62.py run-all --folder results/part62 \
   --retry-calibration
 ```
 
+A retired answer chunk also remains counted. After reviewing the unknown outcome,
+the explicit `--retry-answers` command printed by the refusal submits that chunk
+again under a new reserve. For settled answer chunks with errored, expired,
+truncated, or unlabelled rows, `--retry-failed-answers` submits only those rows
+under new reserves. Successful rows from the earlier batch remain in the final
+labels. If an answer POST was rejected but its reserve is still active, retire it
+using the printed command first, then rerun with `--retry-answers`.
+
 To inspect a known batch before rerunning:
 
 ```sh
 python3 part62/blind62.py status BATCH_ID --review-dir results/part62-review
 ```
 
-A missing, pending, interrupted, or ambiguous calibration blocks answers from
+A missing, pending, interrupted, ambiguous, or incomplete calibration blocks answers from
 both readers and prints the Haiku command to run or resume next. Haiku answer
 chunks require a recorded passing calibration. Opus answer chunks require an
 explicit `--reader opus` command and a recorded failed Haiku calibration; Opus
