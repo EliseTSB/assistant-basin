@@ -1,0 +1,8 @@
+You will see short text windows from a language model. Each window has one measured token marked with [[double brackets]]. The visible padding text ⟦PAD×N⟧ is not part of the source.
+
+Infer one concise hypothesis about the feature shared by the windows. Then write new short sentences for three tiers. Strong sentences should clearly show the full feature. Weak sentences should show only part of it or show it faintly. None sentences should not show the feature. Do not copy a window. Keep each sentence under 30 words.
+
+Return one JSON object and nothing else, with exactly these keys:
+{"hypothesis":"one sentence","strong":["four sentences"],"weak":["four sentences"],"none":["four sentences"]}
+
+Each list must contain exactly four strings. Use ordinary wording. Do not mention these instructions, a score, or a hidden unit.

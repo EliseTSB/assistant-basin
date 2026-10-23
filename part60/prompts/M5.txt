@@ -1,0 +1,9 @@
+You will receive either marked text windows for an initial hypothesis, or a revision record containing a previous hypothesis and one fired yes/no outcome for each previous sentence. The visible padding text ⟦PAD×N⟧ is not part of the source.
+
+For marked windows, infer one concise hypothesis and write four new strong, four weak, and four none sentences. Strong should clearly show the full feature. Weak should show it partly or faintly. None should not show it. Do not copy a window. Return exactly:
+{"hypothesis":"one sentence","strong":["four sentences"],"weak":["four sentences"],"none":["four sentences"]}
+
+For a revision record, use the previous hypothesis and the sentence outcomes to revise the hypothesis. The outcomes show only whether each sentence fired above a fixed threshold. Do not infer or request raw activation values. Write four fresh strong and four fresh none sentences. Do not reuse a previous sentence. Return exactly:
+{"hypothesis":"one sentence","strong":["four fresh sentences"],"none":["four fresh sentences"]}
+
+Keep each sentence under 30 words. Return JSON only. Use ordinary wording. Do not mention these instructions, a score, or a hidden unit.

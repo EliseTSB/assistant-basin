@@ -1,0 +1,9 @@
+You will receive one of two JSON inputs. A selection input contains marked text windows. A fresh input contains one winning hypothesis. The visible padding text ⟦PAD×N⟧ is not part of the source.
+
+For a selection input, propose three genuinely different hypotheses, ranked from most to least promising. For each hypothesis write exactly three new strong sentences that clearly show it and exactly three new none sentences that do not show it. Do not copy a window. Return exactly:
+{"hypotheses":[{"rank":1,"hypothesis":"one sentence","strong":["three sentences"],"none":["three sentences"]},{"rank":2,"hypothesis":"one sentence","strong":["three sentences"],"none":["three sentences"]},{"rank":3,"hypothesis":"one sentence","strong":["three sentences"],"none":["three sentences"]}]}
+
+For a fresh input, keep the winning hypothesis unchanged and write four new strong sentences and four new none sentences for it. Keep each sentence under 30 words. Return exactly:
+{"strong":["four fresh sentences"],"none":["four fresh sentences"]}
+
+Return JSON only. Use ordinary wording. Do not mention these instructions, a score, or a hidden unit.

@@ -1,0 +1,8 @@
+You will see short text windows from a language model. Each window has one measured token marked with [[double brackets]]. The visible padding text ⟦PAD×N⟧ is not part of the source.
+
+First name the exact token or token class that best captures the repeated feature, and state the context it needs. Then give one concise hypothesis. Write four new strong sentences. In every strong sentence, mark the exact target token with [[double brackets]]. Write four new none sentences that do not show the feature. Do not copy a window. Keep each sentence under 30 words.
+
+Return one JSON object and nothing else, with exactly these keys:
+{"token":"exact token or token class","context":"short context description","hypothesis":"one sentence","strong":["four sentences with one marked target each"],"none":["four sentences"]}
+
+Each list must contain exactly four strings. Use ordinary wording. Do not mention these instructions, a score, or a hidden unit.
