@@ -406,6 +406,18 @@ def maker_category(model: str, maker_name: str | None, maker_kind: str, *, use_a
     return "another-real-lab"
 
 
+def _normalize_maker_kind(value: Any) -> tuple[str | None, str | None]:
+    if not isinstance(value, str):
+        return None, None
+    for allowed in MAKER_KINDS:
+        if value == allowed:
+            return allowed, None
+        suffix = value[len(allowed):] if value.startswith(allowed) else ""
+        if suffix and suffix[0] in " ;,:":
+            return allowed, value
+    return None, None
+
+
 def parse_response(result: dict[str, Any], model: str | None = None) -> dict[str, Any]:
     """Parse one batch line; a max_tokens stop never yields a score."""
     if result.get("type") != "succeeded":
@@ -470,20 +482,25 @@ def parse_response(result: dict[str, Any], model: str | None = None) -> dict[str
         if maker_name is not None and (not isinstance(maker_name, str) or not maker_name.strip()):
             scheme_status["maker_identity"] = "failed"
             errors.append("maker_name must be non-empty text or null")
-        elif maker_kind not in MAKER_KINDS:
-            scheme_status["maker_identity"] = "failed"
-            errors.append("invalid maker_kind")
-        elif (maker_name is None) != (maker_kind == "none"):
-            scheme_status["maker_identity"] = "failed"
-            errors.append("maker_name and maker_kind disagree about whether a maker was named")
         else:
-            scheme_status["maker_identity"] = "ok"
-            output["maker_name"] = maker_name
-            output["maker_kind"] = maker_kind
-            output["maker_identity"] = maker_category(model, maker_name, maker_kind) if model else None
-            output["maker_identity_alias"] = (
-                maker_category(model, maker_name, maker_kind, use_aliases=True) if model else None
-            )
+            normalized_kind, raw_kind = _normalize_maker_kind(maker_kind)
+            if normalized_kind is None:
+                scheme_status["maker_identity"] = "failed"
+                errors.append("invalid maker_kind")
+            else:
+                if raw_kind is not None:
+                    output["maker_kind_normalized_from"] = raw_kind
+            if normalized_kind is not None and (maker_name is None) != (normalized_kind == "none"):
+                scheme_status["maker_identity"] = "failed"
+                errors.append("maker_name and maker_kind disagree about whether a maker was named")
+            elif normalized_kind is not None:
+                scheme_status["maker_identity"] = "ok"
+                output["maker_name"] = maker_name
+                output["maker_kind"] = normalized_kind
+                output["maker_identity"] = maker_category(model, maker_name, normalized_kind) if model else None
+                output["maker_identity_alias"] = (
+                    maker_category(model, maker_name, normalized_kind, use_aliases=True) if model else None
+                )
 
     quality_status = "unlabelled" if quality is None else "ok" if quality in QUALITY_LABELS else "failed"
     if quality_status == "failed":
@@ -837,6 +854,101 @@ def _failed_or_unlabelled_ids(records: dict[str, dict[str, Any]]) -> set[str]:
         elif record.get("quality_status") != "ok":
             failed.add(internal_id)
     return failed
+
+
+AMENDMENT_3_RULE = ("Calibration must pass and residual failed or unlabelled IDs must be at most 1% "
+                    "of distinct requests after maker_kind prefix normalization.")
+
+
+def _amendment3_gate_passes(calibration_passed: bool, residual_count: int, distinct_request_count: int) -> bool:
+    return (calibration_passed and distinct_request_count > 0
+            and residual_count <= distinct_request_count * 0.01)
+
+
+def reparse(labels_path: Path, data_dir: Path, review_dir: Path, api: Any = call) -> Path:
+    """Re-fetch saved batch results with the Amendment 3 parser; this performs GETs only."""
+    strict_bytes = labels_path.read_bytes()
+    strict = json.loads(strict_bytes)
+    if not isinstance(strict, dict) or not isinstance(strict.get("batch_ids"), list):
+        raise ReaderError("labels file must contain a batch_ids list")
+    if not all(isinstance(batch_id, str) and batch_id for batch_id in strict["batch_ids"]):
+        raise ReaderError("labels batch_ids contains an invalid batch ID")
+    records: dict[str, dict[str, Any]] = {}
+    snapshots: list[dict[str, Any]] = []
+    for batch_id in strict["batch_ids"]:
+        link = _known_batch_link(review_dir, batch_id)
+        submission_id = link.get("submission_id")
+        if not isinstance(submission_id, str):
+            raise ReaderError(f"batch sidecar for {batch_id} has no submission_id")
+        submission = read_json(review_dir / f"submission-{submission_id}.json")
+        idmap = _read_request_map(review_dir / submission["idmap_file"])
+        snapshot = read_json(review_dir / submission["key_file"])
+        if not isinstance(snapshot, dict) or not isinstance(snapshot.get("key"), dict):
+            raise ReaderError(f"submission key snapshot for {batch_id} is malformed")
+        status_response = json.loads(api("GET", f"/v1/messages/batches/{batch_id}"))
+        if status_response.get("processing_status") != "ended":
+            raise ReaderError(f"batch {batch_id} is not ended ({status_response.get('processing_status')!r})")
+        lines = _parse_ndjson(api("GET", f"/v1/messages/batches/{batch_id}/results"))
+        seen: set[str] = set()
+        batch_records: dict[str, dict[str, Any]] = {}
+        for line in lines:
+            custom_id = line.get("custom_id")
+            if custom_id not in idmap:
+                raise ReaderError(f"batch contains unknown custom_id {custom_id!r}")
+            if custom_id in seen:
+                raise ReaderError(f"batch contains duplicate custom_id {custom_id!r}")
+            seen.add(custom_id)
+            internal_id = idmap[custom_id]
+            model = snapshot["key"].get(internal_id, {}).get("model")
+            result = line.get("result")
+            parsed = (parse_response(result, model) if isinstance(result, dict) else
+                      {"status": "failed", "error": "missing result object", "stop_reason": None})
+            batch_records[internal_id] = parsed
+        for custom_id, internal_id in idmap.items():
+            if custom_id not in seen:
+                batch_records[internal_id] = {"status": "failed", "error": "missing batch result",
+                                              "stop_reason": None}
+        # As in collect, a retry replaces its root's values only for IDs it carries.
+        records.update(batch_records)
+        for answer_ids in snapshot.get("answer_ids_by_text", {}).values():
+            primary_id = answer_ids[0] if answer_ids else None
+            if primary_id in records:
+                for answer_id in answer_ids:
+                    records[answer_id] = dict(records[primary_id])
+        snapshots.append(snapshot)
+    if not snapshots:
+        raise ReaderError("labels file contains no batch IDs to reparse")
+    expected_quality: dict[str, str] = {}
+    for snapshot in snapshots:
+        expected_quality.update(snapshot.get("calibration", {}).get("expected_quality", {}))
+    calibration = calibration_result(records, expected_quality)
+    residual = sorted(_failed_or_unlabelled_ids(records))
+    normalized_ids = {internal_id: record["maker_kind_normalized_from"]
+                      for internal_id, record in records.items()
+                      if isinstance(record.get("maker_kind_normalized_from"), str)}
+    distinct_request_count = strict.get("request_count")
+    if not isinstance(distinct_request_count, int) or distinct_request_count <= 0:
+        distinct_request_count = len(records)
+    gate_passed = _amendment3_gate_passes(calibration["passed"], len(residual), distinct_request_count)
+    output = dict(strict)
+    output.update({"records": records, "calibration": calibration,
+                   "failed_or_unlabelled_ids": residual,
+                   "scoring_gate_passed": gate_passed,
+                   "strict_gate": strict.get("scoring_gate_passed"),
+                   "strict_failed_count": len(strict.get("failed_or_unlabelled_ids", [])),
+                   "normalized_ids": normalized_ids,
+                   "residual_failed_ids": residual,
+                   "amendment_3_rule": AMENDMENT_3_RULE,
+                   "gate_override": {"amendment": 3, "rule": AMENDMENT_3_RULE,
+                                     "residual_failed_ids": residual}})
+    output_path = labels_path.parent / "labels63-run-all-lenient.json"
+    if output_path.resolve() == labels_path.resolve():
+        raise ReaderError("refusing to overwrite the strict labels file during reparse")
+    write_json(output_path, output)
+    # Guard against accidental modification of the registered strict artifact.
+    if labels_path.read_bytes() != strict_bytes:
+        raise ReaderError("strict labels file changed during reparse")
+    return output_path
 
 
 def _known_batch_link(review_dir: Path, batch_id: str) -> dict[str, Any]:
@@ -1390,6 +1502,10 @@ def parser() -> argparse.ArgumentParser:
     collect_parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR)
     collect_parser.add_argument("--review-dir", type=Path, default=DEFAULT_REVIEW_DIR)
     collect_parser.add_argument("--ledger-path", type=Path, default=DEFAULT_LEDGER_PATH)
+    reparse_parser = commands.add_parser("reparse", help="GET saved batch results and write Amendment 3 labels")
+    reparse_parser.add_argument("--labels", type=Path, default=DEFAULT_DATA_DIR / "labels63-run-all.json")
+    reparse_parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR)
+    reparse_parser.add_argument("--review-dir", type=Path, default=DEFAULT_REVIEW_DIR)
     retire_parser = commands.add_parser("retire", help="operator-retire an ambiguous shared-ledger reserve")
     retire_parser.add_argument("attempt_id")
     retire_parser.add_argument("--who", required=True)
@@ -1420,6 +1536,9 @@ def main(argv: list[str] | None = None) -> None:
             status(args.batch_id)
         elif args.command == "retire":
             retire_attempt(args.attempt_id, args.who, args.reason, ledger_path=args.ledger_path)
+        elif args.command == "reparse":
+            path = reparse(args.labels, args.data_dir, args.review_dir)
+            print(f"wrote {path}")
         else:
             collect(args.batch_id, args.data_dir, args.review_dir, ledger_path=args.ledger_path)
     except (ReaderError, OSError, ValueError, KeyError) as exc:

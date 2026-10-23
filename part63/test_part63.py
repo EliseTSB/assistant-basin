@@ -147,6 +147,12 @@ def _install_sabotage() -> None:
         reader63.collect = mutated
     elif mode == "skip-retire":
         reader63.retire_attempt = lambda *_args, **_kwargs: None
+    elif mode == "disable-maker-prefix-normalization":
+        reader63._normalize_maker_kind = lambda value: (value if value in reader63.MAKER_KINDS else None, None)
+    elif mode == "loosen-amendment3-residual-rule":
+        reader63._amendment3_gate_passes = lambda calibration, residual, distinct: (
+            calibration and distinct > 0 and residual <= distinct * 0.02
+        )
     else:
         raise ValueError(f"unknown {SABOTAGE_ENV}={mode!r}")
 
@@ -565,8 +571,10 @@ class SafetyTests(unittest.TestCase):
             ledger_path = Path(self._ledger_tmp.name) / "explicit-retry-ledger.jsonl"
             gather63.write_bundle(data_dir, _fixture_rows(), seed=93)
             captured: dict[str, object] = {}
+            calls: list[tuple[str, str]] = []
 
             def fake_api(method: str, path: str, body: dict[str, object] | None = None) -> str:
+                calls.append((method, path))
                 if method == "POST":
                     captured["body"] = body
                     intent_path = next(path for path in review_dir.glob("submission-*.json")
@@ -602,6 +610,15 @@ class SafetyTests(unittest.TestCase):
                 self.assertEqual(batch_id, FAKE_BATCH_ID)
                 labels_path = reader63.collect(batch_id, data_dir, review_dir, fake_api,
                                                ledger_path=ledger_path)
+                strict_before = labels_path.read_bytes()
+                ledger_before = ledger_path.read_bytes()
+                call_count_before_reparse = len(calls)
+                lenient_path = reader63.reparse(labels_path, data_dir, review_dir, fake_api)
+                self.assertEqual(labels_path.read_bytes(), strict_before)
+                self.assertEqual(ledger_path.read_bytes(), ledger_before)
+                self.assertTrue(all(method == "GET" for method, _path in calls[call_count_before_reparse:]))
+                self.assertTrue(lenient_path.is_file())
+                self.assertTrue(json.loads(lenient_path.read_text())["scoring_gate_passed"])
             self.assertIn("actual cost=$", output.getvalue())
             self.assertIn("vs reserve=$", output.getvalue())
             labels = json.loads(labels_path.read_text(encoding="utf-8"))
@@ -858,6 +875,61 @@ reader63.run_all(data_dir, review_dir, api, poll_interval=0, poll_bound=1,
             labels_path.write_text(json.dumps(failed_labels), encoding="utf-8")
             with self.assertRaisesRegex(analyze63.AnalysisError, "one retry"):
                 analyze63.analyze(data_dir, labels_path)
+
+            residual_id = next(iter(key))
+            residual_records = dict(records)
+            duplicate_pairs = _add_duplicate_records(residual_records)
+            residual_records[residual_id] = dict(records[residual_id])
+            residual_records[residual_id]["scheme_status"] = dict(records[residual_id]["scheme_status"])
+            residual_records[residual_id]["scheme_status"]["maker_identity"] = "failed"
+            residual_ids = sorted(reader63._failed_or_unlabelled_ids(residual_records))
+            lenient_labels = {"scoring_gate_passed": True, "calibration": {"passed": True},
+                              "records": residual_records,
+                              "duplicate_consistency": {"pairs": duplicate_pairs},
+                              "request_count": max(100, len(residual_ids) * 100), "strict_gate": False,
+                              "failed_or_unlabelled_ids": residual_ids, "residual_failed_ids": residual_ids,
+                              "gate_override": {"amendment": 3, "rule": reader63.AMENDMENT_3_RULE,
+                                                "residual_failed_ids": residual_ids}}
+            labels_path.write_text(json.dumps(lenient_labels), encoding="utf-8")
+            with contextlib.redirect_stdout(io.StringIO()) as output:
+                analyze63.analyze(data_dir, labels_path)
+            self.assertIn("Amendment 3 gate override:", output.getvalue())
+
+    def test_amendment3_parser_prefix_normalization_is_narrow(self):
+        accepted = (
+            "real-lab only",
+            "real-lab only for a clearly real organization",
+            "real-lab only if clearly real; Tongyi Lab is the maker",
+            "real-lab only: confirmed organization",
+        )
+        for raw in accepted:
+            with self.subTest(raw=raw):
+                payload = {"planet_frame": "none", "maker_identity": {"maker_name": "Tongyi Lab",
+                            "maker_kind": raw}, "origin": "NEITHER", "quality": "OK"}
+                result = {"type": "succeeded", "message": {"stop_reason": "end_turn",
+                          "content": [{"type": "text", "text": json.dumps(payload)}]}}
+                parsed = reader63.parse_response(result, "qwen35-4b")
+                self.assertEqual(parsed["scheme_status"]["maker_identity"], "ok")
+                self.assertEqual(parsed["maker_kind"], "real-lab")
+                self.assertEqual(parsed["maker_kind_normalized_from"], raw)
+        for raw in ("real-lab-ish", "lab", "real-labs", "", None, 3):
+            with self.subTest(rejected=raw):
+                payload = {"planet_frame": "none", "maker_identity": {"maker_name": "Tongyi Lab",
+                            "maker_kind": raw}, "origin": "NEITHER", "quality": "OK"}
+                result = {"type": "succeeded", "message": {"stop_reason": "end_turn",
+                          "content": [{"type": "text", "text": json.dumps(payload)}]}}
+                self.assertEqual(reader63.parse_response(result)["scheme_status"]["maker_identity"], "failed")
+        payload = {"planet_frame": "none", "maker_identity": {"maker_name": None,
+                    "maker_kind": "real-lab only"}, "origin": "NEITHER", "quality": "OK"}
+        result = {"type": "succeeded", "message": {"stop_reason": "end_turn",
+                  "content": [{"type": "text", "text": json.dumps(payload)}]}}
+        self.assertEqual(reader63.parse_response(result)["scheme_status"]["maker_identity"], "failed")
+
+    def test_amendment3_residual_gate_uses_one_percent(self):
+        self.assertTrue(reader63._amendment3_gate_passes(True, 1, 100))
+        self.assertFalse(reader63._amendment3_gate_passes(True, 2, 100))
+        self.assertFalse(reader63._amendment3_gate_passes(False, 0, 100))
+        self.assertFalse(reader63._amendment3_gate_passes(True, 0, 0))
 
     def test_real_key_unclamped_rows_are_kind_selected_and_text_deduplicated(self):
         answer_rows, key, _manifest = reader63.load_bundle(reader63.DEFAULT_DATA_DIR)
@@ -1231,6 +1303,8 @@ reader63.run_all(data_dir, review_dir, api, poll_interval=0, poll_bound=1,
             ("loosen-token-estimate", "test_estimator_reserves_a_positive_worst_case_amount"),
             ("drop-label-fanout", "test_fake_api_submit_collect_settles_and_calibrates"),
             ("skip-retire", "test_run_all_sigkill_recovery_matrix_and_retire_path"),
+            ("disable-maker-prefix-normalization", "test_amendment3_parser_prefix_normalization_is_narrow"),
+            ("loosen-amendment3-residual-rule", "test_amendment3_residual_gate_uses_one_percent"),
         )
         for mode, test_name in targets:
             with tempfile.TemporaryDirectory() as directory:

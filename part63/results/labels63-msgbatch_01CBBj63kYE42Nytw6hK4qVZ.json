@@ -1,0 +1,4079 @@
+{
+  "version": 1,
+  "batch_id": "msgbatch_01CBBj63kYE42Nytw6hK4qVZ",
+  "batch_ids": [
+    "msgbatch_01CBBj63kYE42Nytw6hK4qVZ",
+    "msgbatch_01XDZTQnoDHqhKf9h2RNbuWi"
+  ],
+  "submission_id": "b1305ed2f1d04b258cfee1f1a6a81269",
+  "model": "claude-haiku-5-5",
+  "request_count": 3811,
+  "result_count": 202,
+  "calibration": {
+    "expected_count": 34,
+    "wrong": 0,
+    "missing_or_failed": 34,
+    "truncated": [],
+    "error_limit": 2,
+    "passed": false,
+    "scope": "scheme iii quality/BROKEN only; other schemes have no hand-labelled gate"
+  },
+  "duplicate_consistency": {
+    "count": 100,
+    "seed": 63063,
+    "pairs": [
+      {
+        "answer_id": "a000077",
+        "duplicate_id": "dup|a000077"
+      },
+      {
+        "answer_id": "a002978",
+        "duplicate_id": "dup|a002978"
+      },
+      {
+        "answer_id": "a001788",
+        "duplicate_id": "dup|a001788"
+      },
+      {
+        "answer_id": "a004192",
+        "duplicate_id": "dup|a004192"
+      },
+      {
+        "answer_id": "a000350",
+        "duplicate_id": "dup|a000350"
+      },
+      {
+        "answer_id": "a004461",
+        "duplicate_id": "dup|a004461"
+      },
+      {
+        "answer_id": "a000198",
+        "duplicate_id": "dup|a000198"
+      },
+      {
+        "answer_id": "a002416",
+        "duplicate_id": "dup|a002416"
+      },
+      {
+        "answer_id": "a001306",
+        "duplicate_id": "dup|a001306"
+      },
+      {
+        "answer_id": "a004631",
+        "duplicate_id": "dup|a004631"
+      },
+      {
+        "answer_id": "a004277",
+        "duplicate_id": "dup|a004277"
+      },
+      {
+        "answer_id": "a004321",
+        "duplicate_id": "dup|a004321"
+      },
+      {
+        "answer_id": "a000104",
+        "duplicate_id": "dup|a000104"
+      },
+      {
+        "answer_id": "a002539",
+        "duplicate_id": "dup|a002539"
+      },
+      {
+        "answer_id": "a000392",
+        "duplicate_id": "dup|a000392"
+      },
+      {
+        "answer_id": "a001221",
+        "duplicate_id": "dup|a001221"
+      },
+      {
+        "answer_id": "a004163",
+        "duplicate_id": "dup|a004163"
+      },
+      {
+        "answer_id": "a002396",
+        "duplicate_id": "dup|a002396"
+      },
+      {
+        "answer_id": "a004026",
+        "duplicate_id": "dup|a004026"
+      },
+      {
+        "answer_id": "a004797",
+        "duplicate_id": "dup|a004797"
+      },
+      {
+        "answer_id": "a003472",
+        "duplicate_id": "dup|a003472"
+      },
+      {
+        "answer_id": "a001464",
+        "duplicate_id": "dup|a001464"
+      },
+      {
+        "answer_id": "a000135",
+        "duplicate_id": "dup|a000135"
+      },
+      {
+        "answer_id": "a003459",
+        "duplicate_id": "dup|a003459"
+      },
+      {
+        "answer_id": "a000406",
+        "duplicate_id": "dup|a000406"
+      },
+      {
+        "answer_id": "a004840",
+        "duplicate_id": "dup|a004840"
+      },
+      {
+        "answer_id": "a004496",
+        "duplicate_id": "dup|a004496"
+      },
+      {
+        "answer_id": "a002986",
+        "duplicate_id": "dup|a002986"
+      },
+      {
+        "answer_id": "a004256",
+        "duplicate_id": "dup|a004256"
+      },
+      {
+        "answer_id": "a004068",
+        "duplicate_id": "dup|a004068"
+      },
+      {
+        "answer_id": "a003768",
+        "duplicate_id": "dup|a003768"
+      },
+      {
+        "answer_id": "a003802",
+        "duplicate_id": "dup|a003802"
+      },
+      {
+        "answer_id": "a001016",
+        "duplicate_id": "dup|a001016"
+      },
+      {
+        "answer_id": "a002890",
+        "duplicate_id": "dup|a002890"
+      },
+      {
+        "answer_id": "a004114",
+        "duplicate_id": "dup|a004114"
+      },
+      {
+        "answer_id": "a001236",
+        "duplicate_id": "dup|a001236"
+      },
+      {
+        "answer_id": "a002488",
+        "duplicate_id": "dup|a002488"
+      },
+      {
+        "answer_id": "a004008",
+        "duplicate_id": "dup|a004008"
+      },
+      {
+        "answer_id": "a003817",
+        "duplicate_id": "dup|a003817"
+      },
+      {
+        "answer_id": "a001776",
+        "duplicate_id": "dup|a001776"
+      },
+      {
+        "answer_id": "a004831",
+        "duplicate_id": "dup|a004831"
+      },
+      {
+        "answer_id": "a003300",
+        "duplicate_id": "dup|a003300"
+      },
+      {
+        "answer_id": "a002848",
+        "duplicate_id": "dup|a002848"
+      },
+      {
+        "answer_id": "a000098",
+        "duplicate_id": "dup|a000098"
+      },
+      {
+        "answer_id": "a001298",
+        "duplicate_id": "dup|a001298"
+      },
+      {
+        "answer_id": "a003246",
+        "duplicate_id": "dup|a003246"
+      },
+      {
+        "answer_id": "a002459",
+        "duplicate_id": "dup|a002459"
+      },
+      {
+        "answer_id": "a000339",
+        "duplicate_id": "dup|a000339"
+      },
+      {
+        "answer_id": "a004120",
+        "duplicate_id": "dup|a004120"
+      },
+      {
+        "answer_id": "a003577",
+        "duplicate_id": "dup|a003577"
+      },
+      {
+        "answer_id": "a004726",
+        "duplicate_id": "dup|a004726"
+      },
+      {
+        "answer_id": "a002741",
+        "duplicate_id": "dup|a002741"
+      },
+      {
+        "answer_id": "a003033",
+        "duplicate_id": "dup|a003033"
+      },
+      {
+        "answer_id": "a003353",
+        "duplicate_id": "dup|a003353"
+      },
+      {
+        "answer_id": "a001965",
+        "duplicate_id": "dup|a001965"
+      },
+      {
+        "answer_id": "a001438",
+        "duplicate_id": "dup|a001438"
+      },
+      {
+        "answer_id": "a004810",
+        "duplicate_id": "dup|a004810"
+      },
+      {
+        "answer_id": "a002573",
+        "duplicate_id": "dup|a002573"
+      },
+      {
+        "answer_id": "a000210",
+        "duplicate_id": "dup|a000210"
+      },
+      {
+        "answer_id": "a003688",
+        "duplicate_id": "dup|a003688"
+      },
+      {
+        "answer_id": "a003247",
+        "duplicate_id": "dup|a003247"
+      },
+      {
+        "answer_id": "a003489",
+        "duplicate_id": "dup|a003489"
+      },
+      {
+        "answer_id": "a003419",
+        "duplicate_id": "dup|a003419"
+      },
+      {
+        "answer_id": "a004632",
+        "duplicate_id": "dup|a004632"
+      },
+      {
+        "answer_id": "a001107",
+        "duplicate_id": "dup|a001107"
+      },
+      {
+        "answer_id": "a003184",
+        "duplicate_id": "dup|a003184"
+      },
+      {
+        "answer_id": "a003359",
+        "duplicate_id": "dup|a003359"
+      },
+      {
+        "answer_id": "a000476",
+        "duplicate_id": "dup|a000476"
+      },
+      {
+        "answer_id": "a003773",
+        "duplicate_id": "dup|a003773"
+      },
+      {
+        "answer_id": "a002063",
+        "duplicate_id": "dup|a002063"
+      },
+      {
+        "answer_id": "a001396",
+        "duplicate_id": "dup|a001396"
+      },
+      {
+        "answer_id": "a003250",
+        "duplicate_id": "dup|a003250"
+      },
+      {
+        "answer_id": "a003852",
+        "duplicate_id": "dup|a003852"
+      },
+      {
+        "answer_id": "a003827",
+        "duplicate_id": "dup|a003827"
+      },
+      {
+        "answer_id": "a001887",
+        "duplicate_id": "dup|a001887"
+      },
+      {
+        "answer_id": "a001144",
+        "duplicate_id": "dup|a001144"
+      },
+      {
+        "answer_id": "a003806",
+        "duplicate_id": "dup|a003806"
+      },
+      {
+        "answer_id": "a004052",
+        "duplicate_id": "dup|a004052"
+      },
+      {
+        "answer_id": "a003232",
+        "duplicate_id": "dup|a003232"
+      },
+      {
+        "answer_id": "a000389",
+        "duplicate_id": "dup|a000389"
+      },
+      {
+        "answer_id": "a002779",
+        "duplicate_id": "dup|a002779"
+      },
+      {
+        "answer_id": "a004570",
+        "duplicate_id": "dup|a004570"
+      },
+      {
+        "answer_id": "a000579",
+        "duplicate_id": "dup|a000579"
+      },
+      {
+        "answer_id": "a002794",
+        "duplicate_id": "dup|a002794"
+      },
+      {
+        "answer_id": "a003347",
+        "duplicate_id": "dup|a003347"
+      },
+      {
+        "answer_id": "a001992",
+        "duplicate_id": "dup|a001992"
+      },
+      {
+        "answer_id": "a002345",
+        "duplicate_id": "dup|a002345"
+      },
+      {
+        "answer_id": "a000346",
+        "duplicate_id": "dup|a000346"
+      },
+      {
+        "answer_id": "a003912",
+        "duplicate_id": "dup|a003912"
+      },
+      {
+        "answer_id": "a003354",
+        "duplicate_id": "dup|a003354"
+      },
+      {
+        "answer_id": "a004280",
+        "duplicate_id": "dup|a004280"
+      },
+      {
+        "answer_id": "a002051",
+        "duplicate_id": "dup|a002051"
+      },
+      {
+        "answer_id": "a001074",
+        "duplicate_id": "dup|a001074"
+      },
+      {
+        "answer_id": "a004803",
+        "duplicate_id": "dup|a004803"
+      },
+      {
+        "answer_id": "a002790",
+        "duplicate_id": "dup|a002790"
+      },
+      {
+        "answer_id": "a002849",
+        "duplicate_id": "dup|a002849"
+      },
+      {
+        "answer_id": "a000462",
+        "duplicate_id": "dup|a000462"
+      },
+      {
+        "answer_id": "a000114",
+        "duplicate_id": "dup|a000114"
+      },
+      {
+        "answer_id": "a001512",
+        "duplicate_id": "dup|a001512"
+      },
+      {
+        "answer_id": "a003461",
+        "duplicate_id": "dup|a003461"
+      }
+    ]
+  },
+  "usage": {
+    "input_tokens": 138708,
+    "output_tokens": 12639,
+    "missing_usage_for_any_result": false
+  },
+  "attempt_usage": {
+    "input_tokens": 2737,
+    "output_tokens": 281,
+    "missing_usage_for_any_result": false
+  },
+  "records": {
+    "a002842": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004537": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a000257": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "Tongyi Lab",
+      "maker_kind": "real-lab",
+      "maker_identity": "own-lab",
+      "maker_identity_alias": "own-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a001000": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003207": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004605": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002770": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "OFFWORLD",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003864": {
+      "stop_reason": "end_turn",
+      "planet_frame": "other-planet-or-space",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004674": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a001107": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003265": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a000149": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": "Tongyi Lab",
+      "maker_kind": "real-lab",
+      "maker_identity": "own-lab",
+      "maker_identity_alias": "own-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004880": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004773": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002791": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "OpenAI",
+      "maker_kind": "real-lab",
+      "maker_identity": "another-real-lab",
+      "maker_identity_alias": "another-real-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004444": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003155": {
+      "stop_reason": "end_turn",
+      "planet_frame": "other-planet-or-space",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "OFFWORLD",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004389": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "dup|a000389": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": "Tongyi Lab",
+      "maker_kind": "real-lab",
+      "maker_identity": null,
+      "maker_identity_alias": null,
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a000157": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": "Alibaba Cloud's Tongyi Lab",
+      "maker_kind": "real-lab",
+      "maker_identity": "own-lab",
+      "maker_identity_alias": "another-real-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002943": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002149": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "Fangviami",
+      "maker_kind": "real-lab",
+      "maker_identity": "another-real-lab",
+      "maker_identity_alias": "another-real-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003807": {
+      "stop_reason": "end_turn",
+      "planet_frame": "other-planet-or-space",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003383": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "BROKEN",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004048": {
+      "stop_reason": "end_turn",
+      "planet_frame": "other-planet-or-space",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003613": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004787": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a001885": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "Ai2",
+      "maker_kind": "real-lab",
+      "maker_identity": "own-lab",
+      "maker_identity_alias": "own-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a000407": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "Tongyi Lab",
+      "maker_kind": "real-lab",
+      "maker_identity": "own-lab",
+      "maker_identity_alias": "own-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002954": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "BROKEN",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003220": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a000311": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "Tongyi Lab",
+      "maker_kind": "real-lab",
+      "maker_identity": "own-lab",
+      "maker_identity_alias": "own-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a000151": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": "Tongyi Lab",
+      "maker_kind": "real-lab",
+      "maker_identity": "own-lab",
+      "maker_identity_alias": "own-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004036": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "BROKEN",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004439": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002859": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004579": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002919": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a001790": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "AI2 (Allen Institute for Artificial Intelligence)",
+      "maker_kind": "real-lab",
+      "maker_identity": "own-lab",
+      "maker_identity_alias": "own-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003337": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004076": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002496": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004607": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004771": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "dup|a001107": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": null,
+      "maker_identity_alias": null,
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a000320": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "Tongyi Lab",
+      "maker_kind": "real-lab",
+      "maker_identity": "own-lab",
+      "maker_identity_alias": "own-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004678": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a000094": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004924": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002279": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "Alibaba Cloud",
+      "maker_kind": "real-lab",
+      "maker_identity": "own-lab",
+      "maker_identity_alias": "own-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003136": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002230": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": "Alibaba Group",
+      "maker_kind": "real-lab",
+      "maker_identity": "own-lab",
+      "maker_identity_alias": "own-lab",
+      "quality": "OK",
+      "origin": "EARTH",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a001232": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002717": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002997": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "BROKEN",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002415": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "EARTH",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004655": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003487": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "EARTH",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003008": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003800": {
+      "stop_reason": "end_turn",
+      "planet_frame": "other-planet-or-space",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a001779": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "OpenAI",
+      "maker_kind": "real-lab",
+      "maker_identity": "another-real-lab",
+      "maker_identity_alias": "another-real-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a001651": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004430": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003778": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a000338": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "Alibaba",
+      "maker_kind": "real-lab",
+      "maker_identity": "own-lab",
+      "maker_identity_alias": "another-real-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002035": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "Alibaba Cloud",
+      "maker_kind": "real-lab",
+      "maker_identity": "own-lab",
+      "maker_identity_alias": "own-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "dup|a004810": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": null,
+      "maker_identity_alias": null,
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003282": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004779": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003098": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003886": {
+      "stop_reason": "end_turn",
+      "planet_frame": "other-planet-or-space",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002394": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "BROKEN",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002584": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003002": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004356": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a001172": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "OpenAI",
+      "maker_kind": "real-lab",
+      "maker_identity": "another-real-lab",
+      "maker_identity_alias": "another-real-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002769": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "EARTH",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003604": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003715": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003662": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004376": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a001576": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "OpenAI",
+      "maker_kind": "real-lab",
+      "maker_identity": "another-real-lab",
+      "maker_identity_alias": "another-real-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003238": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "BROKEN",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004451": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003237": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003712": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002274": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "Alibaba Cloud",
+      "maker_kind": "real-lab",
+      "maker_identity": "own-lab",
+      "maker_identity_alias": "own-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002320": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": "Alibaba Group",
+      "maker_kind": "real-lab",
+      "maker_identity": "own-lab",
+      "maker_identity_alias": "own-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004215": {
+      "stop_reason": "end_turn",
+      "planet_frame": "other-planet-or-space",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a001108": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a001789": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "AI2",
+      "maker_kind": "real-lab",
+      "maker_identity": "own-lab",
+      "maker_identity_alias": "own-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004318": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003867": {
+      "stop_reason": "end_turn",
+      "planet_frame": "other-planet-or-space",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004639": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003685": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004469": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a001864": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "OpenAI",
+      "maker_kind": "real-lab",
+      "maker_identity": "another-real-lab",
+      "maker_identity_alias": "another-real-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003406": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003869": {
+      "stop_reason": "end_turn",
+      "planet_frame": "other-planet-or-space",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "OFFWORLD",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004244": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004709": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a000194": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "Tongyi Lab",
+      "maker_kind": "real-lab",
+      "maker_identity": "own-lab",
+      "maker_identity_alias": "own-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003963": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004836": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002498": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "AI2 (Allen Institute for Artificial Intelligence)",
+      "maker_kind": "real-lab",
+      "maker_identity": "own-lab",
+      "maker_identity_alias": "own-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a001056": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "OpenAI",
+      "maker_kind": "real-lab",
+      "maker_identity": "another-real-lab",
+      "maker_identity_alias": "another-real-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a001400": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "failed",
+        "origin": "ok"
+      },
+      "status": "partial",
+      "error": "invalid maker_kind"
+    },
+    "a004890": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002547": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003900": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003230": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "EARTH",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a001389": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003169": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a000402": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "Alibaba Cloud's Tongyi Lab",
+      "maker_kind": "real-lab",
+      "maker_identity": "own-lab",
+      "maker_identity_alias": "another-real-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004236": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003821": {
+      "stop_reason": "end_turn",
+      "planet_frame": "other-planet-or-space",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002855": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003338": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "dup|a003773": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": null,
+      "maker_identity_alias": null,
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a001253": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "OpenAI",
+      "maker_kind": "real-lab",
+      "maker_identity": "another-real-lab",
+      "maker_identity_alias": "another-real-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004612": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003181": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a000093": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "DingAn",
+      "maker_kind": "real-lab",
+      "maker_identity": "another-real-lab",
+      "maker_identity_alias": "another-real-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004889": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003787": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002924": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004209": {
+      "stop_reason": "end_turn",
+      "planet_frame": "other-planet-or-space",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "OFFWORLD",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004290": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004905": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a000091": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "Tencent",
+      "maker_kind": "real-lab",
+      "maker_identity": "another-real-lab",
+      "maker_identity_alias": "another-real-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002969": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004412": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003979": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003087": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a000130": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "DingAn",
+      "maker_kind": "invented-or-non-lab",
+      "maker_identity": "invented-or-non-lab",
+      "maker_identity_alias": "invented-or-non-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003274": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004884": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004281": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004422": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004610": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002381": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": "Alibaba Group",
+      "maker_kind": "real-lab",
+      "maker_identity": "own-lab",
+      "maker_identity_alias": "own-lab",
+      "quality": "OK",
+      "origin": "EARTH",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a001297": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "OpenAI",
+      "maker_kind": "real-lab",
+      "maker_identity": "another-real-lab",
+      "maker_identity_alias": "another-real-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004055": {
+      "stop_reason": "end_turn",
+      "planet_frame": "other-planet-or-space",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a001141": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "failed",
+        "origin": "ok"
+      },
+      "status": "partial",
+      "error": "invalid maker_kind"
+    },
+    "a002988": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a000382": {
+      "stop_reason": "end_turn",
+      "planet_frame": "other-planet-or-space",
+      "maker_name": "Xingchen Intelligence",
+      "maker_kind": "real-lab",
+      "maker_identity": "another-real-lab",
+      "maker_identity_alias": "another-real-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a001586": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002744": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004464": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004566": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004756": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004899": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003005": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002753": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "OpenAI",
+      "maker_kind": "real-lab",
+      "maker_identity": "another-real-lab",
+      "maker_identity_alias": "another-real-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003118": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "EARTH",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003560": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003299": {
+      "stop_reason": "end_turn",
+      "planet_frame": "other-planet-or-space",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004526": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a001735": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": "OpenAI",
+      "maker_kind": "real-lab",
+      "maker_identity": "another-real-lab",
+      "maker_identity_alias": "another-real-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003201": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003150": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002570": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004564": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003059": {
+      "stop_reason": "end_turn",
+      "planet_frame": "other-planet-or-space",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "OFFWORLD",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004556": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004780": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004005": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "dup|a004052": {
+      "stop_reason": "end_turn",
+      "planet_frame": "other-planet-or-space",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": null,
+      "maker_identity_alias": null,
+      "quality": "OK",
+      "origin": "OFFWORLD",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004745": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a001863": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "OpenAI",
+      "maker_kind": "real-lab",
+      "maker_identity": "another-real-lab",
+      "maker_identity_alias": "another-real-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003647": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002380": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": "Alibaba Group's Earth Star Team",
+      "maker_kind": "real-lab",
+      "maker_identity": "own-lab",
+      "maker_identity_alias": "own-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a000184": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "failed",
+        "origin": "ok"
+      },
+      "status": "partial",
+      "error": "invalid maker_kind"
+    },
+    "a001686": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a001343": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003567": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003548": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003550": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002897": {
+      "stop_reason": "end_turn",
+      "planet_frame": "other-planet-or-space",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "OFFWORLD",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a001817": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "OpenAI",
+      "maker_kind": "real-lab",
+      "maker_identity": "another-real-lab",
+      "maker_identity_alias": "another-real-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a001362": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004016": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "dup|a003419": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": null,
+      "maker_identity_alias": null,
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002966": {
+      "stop_reason": "end_turn",
+      "planet_frame": "other-planet-or-space",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "BROKEN",
+      "origin": "OFFWORLD",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003010": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004711": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004023": {
+      "stop_reason": "end_turn",
+      "planet_frame": "other-planet-or-space",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a000403": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": "Tongyi Lab",
+      "maker_kind": "real-lab",
+      "maker_identity": "own-lab",
+      "maker_identity_alias": "own-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002542": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004926": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004786": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a002050": {
+      "stop_reason": "end_turn",
+      "planet_frame": "earth",
+      "maker_name": "Alibaba Group",
+      "maker_kind": "real-lab",
+      "maker_identity": "own-lab",
+      "maker_identity_alias": "own-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a001220": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004519": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a003746": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004044": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004850": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a004033": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "BROKEN",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a001572": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": "no-maker",
+      "maker_identity_alias": "no-maker",
+      "quality": "BROKEN",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "dup|a004461": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": null,
+      "maker_kind": "none",
+      "maker_identity": null,
+      "maker_identity_alias": null,
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a000288": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "Tongyi Lab",
+      "maker_kind": "real-lab",
+      "maker_identity": "own-lab",
+      "maker_identity_alias": "own-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    },
+    "a000442": {
+      "stop_reason": "end_turn",
+      "planet_frame": "none",
+      "maker_name": "Tongyi Lab",
+      "maker_kind": "real-lab",
+      "maker_identity": "own-lab",
+      "maker_identity_alias": "own-lab",
+      "quality": "OK",
+      "origin": "NEITHER",
+      "quality_status": "ok",
+      "scheme_status": {
+        "planet_frame": "ok",
+        "maker_identity": "ok",
+        "origin": "ok"
+      },
+      "status": "ok",
+      "error": null
+    }
+  },
+  "failed_or_unlabelled_ids": [
+    "a000184",
+    "a001141",
+    "a001400"
+  ],
+  "scoring_gate_passed": false,
+  "retry": {
+    "status": "collected",
+    "batch_id": "msgbatch_01XDZTQnoDHqhKf9h2RNbuWi",
+    "request_count": 4,
+    "remaining_bad_ids": [
+      "a000184",
+      "a001141",
+      "a001400"
+    ]
+  }
+}

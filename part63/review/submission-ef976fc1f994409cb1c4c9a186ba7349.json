@@ -1,0 +1,30 @@
+{
+  "submission_id": "ef976fc1f994409cb1c4c9a186ba7349",
+  "status": "submitted",
+  "request_count": 4,
+  "estimated_usd": 0.0011714000000000002,
+  "request_ids": [
+    "a002576",
+    "a002778",
+    "a001248",
+    "a002310"
+  ],
+  "request_id_map_sha256": "812c5bcf935838a17a4d2c5ebf793e38671f242fe64becbd4a93b40d8868dcb4",
+  "cap_usd": 4.5,
+  "key_sha256": "843e97eb2cb01910dabb943915512463f93887d67c278cb1828006dece42d9ae",
+  "answers_sha256": "1e12f76013a5dd3cb29d936e2ad86fe9b324beacc7a51cd067a5d0b0b7bd3174",
+  "idmap_file": "submission-ef976fc1f994409cb1c4c9a186ba7349-idmap.json",
+  "key_file": "submission-ef976fc1f994409cb1c4c9a186ba7349-key.json",
+  "data_dir": "/home/elisepc/assistant-basin/part63/results",
+  "run_started_at": "2026-10-23T07:21:33.420379+00:00",
+  "retry_of_submission_id": "ad1d1d2cd0844efca44f68703840ac45",
+  "root_batch_id": "msgbatch_01Ga78QZtm6ZeePsbrghxTCs",
+  "run_all_id": null,
+  "chunk_index": null,
+  "created_at": "2026-10-23T08:03:16.947255+00:00",
+  "attempt_id": "f202ed711afe264f5db0ad10284e18e5",
+  "posting_started_at": "2026-10-23T08:03:16.954840+00:00",
+  "batch_id": "msgbatch_01LkkzQrnBTQLsMXuhfzsFt9",
+  "processing_status": "in_progress",
+  "submitted_at": "2026-10-23T08:03:17.342228+00:00"
+}

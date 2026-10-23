@@ -61,6 +61,16 @@ python3 part63/analyze63.py --labels part63/results/labels63-BATCH_ID.json
 
 Analysis prints per-scheme failure totals and per-cell counts, then prints the keyword views and the five fixed prediction decisions. If any answer remains failed or unlabelled in any scheme after the one retry, it stops before scoring. A complete analysis prints `RETURN_READY` and exits 0; a prediction may be reported FAILED while the analysis itself still completes. There is no rented box or archive lifecycle in Part 63.
 
+## Amendment 3 reparse
+
+After the Amendment 3 decision, refresh the saved batch results and write the lenient labels file with:
+
+```sh
+python3 part63/reader63.py reparse
+```
+
+This performs GET requests for the batch status and stored results named in `results/labels63-run-all.json`. It writes `results/labels63-run-all-lenient.json`, preserving residual failed IDs and recording the strict gate, normalized IDs, and Amendment 3 gate override. It does not write the strict labels file or use the paid-action ledger.
+
 ## Limits and assumptions
 
 The two spend rates are copied from Part 60's batch ledger and the $3 ceiling comes from the registered Part 63 design and was raised to $4.50 on 2026-10-23: the first full run errored every request (the `temperature` rejection above, 0 succeeded, billed $0) while the ledger counted $2.23 as worst case. The $8 is a reserve ceiling, not a billing ceiling; expected spend is about $1.12 of the $78 credit. They are code-side assumptions and are not a live quote. The current Messages Batches request, result, and listing fields, the `temperature` and `thinking` parameters, the `stop_reason` values, usage-field names, and Haiku 5.5 availability were not verified against a live API. No tokenizer is loaded; request UTF-8 byte length divided by 3 is the inherited upper token estimate. The parent must check local API compatibility before submission and should not raise the cap to make a rejected reserve pass.

@@ -435,19 +435,37 @@ def analyze(data_dir: Path, labels_path: Path) -> dict[str, Any]:
         raise AnalysisError("calibration gate failed; refusing to score any scheme")
     records = labels["records"]
     failures = failure_counts(key, records)
+    override = labels.get("gate_override")
+    actual_failed = sorted(reader63._failed_or_unlabelled_ids(records))
+    override_valid = (isinstance(override, dict)
+                      and override.get("amendment") == 3
+                      and override.get("rule") == reader63.AMENDMENT_3_RULE
+                      and override.get("residual_failed_ids") == actual_failed
+                      and labels.get("residual_failed_ids") == actual_failed
+                      and labels.get("failed_or_unlabelled_ids") == actual_failed
+                      and labels.get("scoring_gate_passed") is True
+                      and reader63._amendment3_gate_passes(
+                          labels.get("calibration", {}).get("passed") is True,
+                          len(actual_failed), labels.get("request_count", 0)))
+    if override is not None and not override_valid:
+        raise AnalysisError("gate_override is invalid or its residual failure list/gate does not match labels")
+    if override_valid:
+        print(f"Amendment 3 gate override: {override['rule']} "
+              f"({len(actual_failed)} residual IDs; strict gate={labels.get('strict_gate')!r})")
     print("Per-scheme unlabelled/failed counts:")
     print_failure_counts(failures)
     blocked = {scheme: row for scheme, row in failures.items() if not row["total"] or row["bad"] > 0}
-    if blocked:
+    if blocked and not override_valid:
         raise AnalysisError("failed or unlabelled answers remain after the one retry; refusing to score")
-    if labels.get("scoring_gate_passed") is not True:
+    if labels.get("scoring_gate_passed") is not True and not override_valid:
         raise AnalysisError("reader scoring gate failed after collection; refusing to score")
     duplicate_meta = labels.get("duplicate_consistency", {})
     duplicate_pairs = duplicate_meta.get("pairs") if isinstance(duplicate_meta, dict) else None
-    if not isinstance(duplicate_pairs, list) or len(duplicate_pairs) != reader63.DUPLICATE_COUNT:
+    if (not isinstance(duplicate_pairs, list)
+            or (not override_valid and len(duplicate_pairs) != reader63.DUPLICATE_COUNT)):
         raise AnalysisError("labels do not contain the required seeded duplicate pairs")
     agreements = duplicate_consistency(duplicate_pairs, records)
-    if any(row["n"] != reader63.DUPLICATE_COUNT for row in agreements.values()):
+    if not override_valid and any(row["n"] != reader63.DUPLICATE_COUNT for row in agreements.values()):
         raise AnalysisError("duplicate consistency is missing one or more valid pair labels")
     print_duplicate_consistency(agreements)
     print_cell_counts(key, records)
@@ -463,7 +481,7 @@ def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR)
     parser.add_argument("--labels", type=Path, required=True,
-                        help="labels63-BATCH_ID.json written by reader63.py collect")
+                        help="labels JSON written by reader63.py collect or reparse")
     args = parser.parse_args(argv)
     try:
         result = analyze(args.data_dir, args.labels)
