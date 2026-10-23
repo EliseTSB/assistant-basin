@@ -1815,3 +1815,13 @@ prompts; nothing here is a finding yet. Broken-answer rates are pending the blin
 | 59f | Claude: at least 20 later SYMMETRIC responders in Qwen. | held (by the letter) | 22; but the largest control (152) has 80, so the target does not exceed it. The null alone can pass this row. |
 | 59g | Claude: fewer than 5 symmetric responders in each random control. | FAILED | Qwen controls 80, 4, 0; OLMo controls 151, 186, 187. Failing on the null is expected (about 4 per control by chance). |
 | 59h | Claude: at most 3 of the top 10 symmetric responders read as sci-fi by hand. | held | Qwen about 1 to 2 of 10; OLMo 0 of 10; a hand reading by the predictor. |
+| 60a | Claude: M0 pass rates within 3 points of 28.1% real and 2 points of 6.2% control. | held | 26.4% and 6.0%. 2026-10-23 |
+| 60b | Claude: M1 verified rate at least 15% real and at most 3% control. | FAILED | Real 39.6% (held), control 15.2%. 2026-10-23 |
+| 60c | Claude: M1 real strong-tier hit rate exceeds M0 by at least 10 points. | held | 55.2% against 37.8%, +17.4 on the same 233 real units. |
+| 60d | Claude: M1 strong > weak > none ordering in at least 70% of eligible real units. | FAILED | 24.7% (n=190). |
+| 60e | Claude: M2 lowers real mean H_none by at least one third relative to M1. | FAILED | M2 9.1% against M1 2.7% (higher, not lower). |
+| 60f | Claude: M3 fresh-sentence real verified rate within 5 points of M1. | FAILED | 16.0% against 39.6%. |
+| 60g | Claude: M5 round 2 raises the real rate by at least 5 points and the control rate by more than 2. | unscored | M5 round 1 dropped by the 10% generation-failure rule (14.2% failed). |
+| 60h | Claude: M4 marked-token pass rate minus whole-text pass rate at most 0 points. | unscored | M4 dropped by the 10% rule (12.2% failed). |
+| 60i | Claude: M6 within 3 points of M1 on the real verified rate and at least twice the cost. | FAILED | M6 51.2% against 39.6% (12 points higher); cost per unit about 2.1x (held). |
+| 60j | Claude: no tested method beats both M1 and M0 test gaps by at least 5 points. | unscored | Dev stop rule advanced no variant; the test split was not opened. |

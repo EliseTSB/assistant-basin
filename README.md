@@ -721,6 +721,18 @@ Pre-registered in `PART59-DESIGN.md` (commit e64577e; Amendment 1 and the null c
 
 Files: `results/part59a/`, `results/part59b/` (archives and analysis JSON), `part59/`. Limits: one reader, 12 prompts, the pooled rule's null alone can pass or fail 59f and 59g (about 4.1 symmetric neurons per Qwen control and 2.0 per OLMo control expected by chance under independence, since 82,944 and 40,960 later-layer neurons are each tested at 0.00005), the three controls' maxima differ up to 9.1x in Qwen, and 59H is a hand reading by the same person who wrote the prediction.
 
+### Part 60: Haiku's hypotheses lift real neurons and random directions together, so the gap barely moves; nothing advances (2026-10-23, dev only)
+
+Pre-registered in `PART60-DESIGN.md` (with Amendments 1 to 6) and scored under `part60/DEFINITIONS-60.md`. Haiku 5.5 wrote a hypothesis plus strong, weak and none sentences for 250 real atlas units and 250 random-direction controls through the Batch API (about $0.96 settled in total of the $8 cap); Qwen3-1.7B scored the sentences on a rented RTX 3090 (about $0.15). The Part 58 baseline (M0, four sentences per unit re-scored on the same device) reproduced Part 58: 26.4% of real units and 6.0% of controls pass (28.1% and 6.2% there).
+
+**Results (dev, full-rule pass rate real / control, gap in points).** M0 26.4 / 6.0 (20.4). M1, one hypothesis with three tiers: 39.6 / 15.2 (24.4). M2, tiers with a duplicate-text rule: 40.0 / 15.6 (24.4). M3, Haiku picks winners and writes fresh sentences: 16.0 / 2.8 (13.2). M6, adaptive thinking at high effort: 51.2 / 32.4 (18.8). Paired bootstrap of the gap against M0: M1 +4.0 [-4.4, +12.4], M2 +4.0 [-4.0, +12.0], M6 -1.6 [-10.4, +6.8], M3 -7.2 [-14.4, 0.0]. The strong-tier hit rate is higher for M1 than M0 on the same 233 real units (55.2% against 37.8%), and controls rise with it (27.6% against 14.7%): a writer that sees the top windows writes text that fires random directions too.
+
+**Stop rule.** Advance a variant only if its gap leads M0 by at least 5 points on both the positive-only and the full-rule pass rates. None does, so M0 stays the leader and the test split was not opened. M4 (12.2% of units failed to parse) and M5 round 1 (14.2% failed) fell under the pre-registered 10% generation-failure rule and were dropped, so M5 round 2 never ran; M7 is skipped by design. The parse failures are Haiku's format failures (tier counts, missing keys, non-object output), not a parser fault; M1 and M2 sat at 6 to 7%.
+
+**Predictions.** 60a, 60c held; 60b, 60d, 60e, 60f, 60i failed; 60g, 60h, 60j unscored (see PREDICTIONS.md). The part that surprised my forecast: 60b failed on the control side (15.2% against at most 3%), not on the real side (39.6%).
+
+Files: `results/part60/` (batches, activations, `analysis/analysis-60.md`), `part60/`. Limits: dev only; one scorer model; the pass rule is the Part 58 rule, so a random direction that carries a real feature counts as a hit; thinking raised the control rate to 32%, which says the sentences, not the neurons, got easier to fire.
+
 ### Running or designed (2026-10-21)
 
 - Part 29: the registered teacher-classifier predictions remain unscored in PREDICTIONS.md.
