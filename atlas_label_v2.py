@@ -50,13 +50,13 @@ KINDS = {
 
 # Six fully invented examples. They teach the output shape without quoting any
 # item from the Pile or from a real neuron record.
-SYSTEM_PROMPT = r"""You are labelling one hidden activation unit from a language model. The input is a JSON object with "marked_token_counts" (an exact frequency table of the marked tokens, most frequent first, as [token, count] pairs), "windows" (short text windows where the unit was active) and "marked_tokens" (the token wrapped in [[double brackets]] in each window, in the same order). ⟦PAD×N⟧ marks missing context and is not text.
+SYSTEM_PROMPT = r"""You are labelling one hidden activation unit from a language model. The input is a JSON object with "marked_token_counts" (frequency counts, most frequent first, as [token, count] pairs), "marked_token_counts_partial" (true when only the 12 most common token types are shown; false when the table is complete), and, when partial, "marked_token_types" (the total number of distinct types). It also has "windows" (short text windows where the unit was active) and "marked_tokens" (the token wrapped in [[double brackets]] in each window, in the same order). ⟦PAD×N⟧ marks missing context and is not text.
 
 Return one JSON object and nothing else, with exactly these keys:
 {"concept":"at most 12 words","fit":"K of N","one_job":1,"kind":"topic","note":""}
 
 - concept: the broadest accurate plain-language description of what the marked tokens have in common, at most 12 words. Add conditions (position, preceding word, sentence role) only if nearly all windows share them: many different past-tense verbs is "past-tense -ed verbs", not "past-tense verbs right after the subject".
-- fit: use the frequency table to add up windows by token type; it is exact, so do not recount by eye. N is the number of windows; K is how many have a marked token that belongs to your concept. A reader who saw only your concept should expect the unit to fire at that marked token.
+- fit: when marked_token_counts_partial is false, use the complete frequency table to add up windows by token type. When it is true, use marked_tokens because the table omits less common types. N is the number of windows; K is how many have a marked token that belongs to your concept. A reader who saw only your concept should expect the unit to fire at that marked token.
 - one_job: integer 1 to 5 set from K/N alone: 5 = 85% or more; 4 = 65-84%; 3 = 45-64%; 2 = 25-44%; 1 = under 25% or no concept. Common words, punctuation, digits and word fragments are real features; do not lower the score because a feature is plain or common, and do not raise it because it sounds interesting. If the windows split between two unrelated features, count only the larger one.
 - kind: exactly one of token, word-family, topic, syntax, format, identity-or-origin (claims about what the speaker is or where it comes from), persona-or-creator (a recurring named voice, character, maker or organisation), other, none.
 - note: empty unless something is genuinely unusual.
@@ -69,7 +69,8 @@ def record_identity(record: dict[str, Any], index: int) -> dict[str, Any]:
     layer = int(record["layer"])
     arm = str(record.get("model_arm", "trained"))
     prefix = "" if arm == "trained" else f"{arm}:"
-    identity: dict[str, Any] = {"record_index": int(index), "layer": layer, "model_arm": arm}
+    identity: dict[str, Any] = {"record_index": int(index), "layer": layer, "model_arm": arm,
+                                "n_windows": len(extract_windows(record))}
     if "unit" in record:
         unit = int(record["unit"])
         identity.update({"record_type": "neuron", "unit": unit,
@@ -110,9 +111,14 @@ def marked_token(window: str) -> str:
 def user_message(windows: list[str]) -> str:
     """Part 58 input: the exact token frequency table is computed here, not by the model."""
     tokens = [marked_token(w) for w in windows]
-    counts = [[t, n] for t, n in Counter(tokens).most_common(12)]
-    return json.dumps({"marked_token_counts": counts, "marked_tokens": tokens, "windows": windows},
-                      ensure_ascii=False, separators=(",", ":"))
+    all_counts = Counter(tokens)
+    partial = len(all_counts) > 12
+    counts = [[t, n] for t, n in all_counts.most_common(12 if partial else None)]
+    payload = {"marked_token_counts": counts, "marked_token_counts_partial": partial,
+               "marked_tokens": tokens, "windows": windows}
+    if partial:
+        payload["marked_token_types"] = len(all_counts)
+    return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
 
 
 def thinking_fields(model_id: str) -> dict[str, Any]:
@@ -149,7 +155,7 @@ def build_request(record: dict[str, Any], custom_id: str,
 FIT_RE = re.compile(r"^\s*(\d+)\s*(?:of|/)\s*(\d+)\s*$")
 
 
-def parse_label(text: str) -> dict[str, Any] | None:
+def parse_label(text: str, n_windows: int | None = None) -> dict[str, Any] | None:
     """Parse and validate a strict JSON label; malformed/truncated text returns None."""
     raw = text.strip()
     if raw.startswith("```json"):
@@ -169,6 +175,8 @@ def parse_label(text: str) -> dict[str, Any] | None:
         return None
     match = FIT_RE.match(fit) if isinstance(fit, str) else None
     if not match or int(match.group(2)) <= 0 or int(match.group(1)) > int(match.group(2)):
+        return None
+    if n_windows is not None and int(match.group(2)) != n_windows:
         return None
     if isinstance(one_job, bool) or not isinstance(one_job, int) or not 1 <= one_job <= 5:
         return None
@@ -816,7 +824,7 @@ def _collect_locked(out_dir: Path, selected_ids: Sequence[str] | None = None) ->
                                        "line_number": line_number, "error": "result usage is malformed"})
                 continue
             raw = _result_text(result)
-            parsed = parse_label(raw)
+            parsed = parse_label(raw, n_windows=int(identity["n_windows"]))
             if parsed is None:
                 batch_failures.append({**identity, "batch_id": batch_id,
                                         "error": "invalid JSON label", "response_prefix": raw[:1000]})
