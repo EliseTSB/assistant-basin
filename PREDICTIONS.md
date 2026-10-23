@@ -1825,3 +1825,8 @@ prompts; nothing here is a finding yet. Broken-answer rates are pending the blin
 | 60h | Claude: M4 marked-token pass rate minus whole-text pass rate at most 0 points. | unscored | M4 dropped by the 10% rule (12.2% failed). |
 | 60i | Claude: M6 within 3 points of M1 on the real verified rate and at least twice the cost. | FAILED | M6 51.2% against 39.6% (12 points higher); cost per unit about 2.1x (held). |
 | 60j | Claude: no tested method beats both M1 and M0 test gaps by at least 5 points. | unscored | Dev stop rule advanced no variant; the test split was not opened. |
+| 61a | Claude: all-eleven-unit symmetric count rises with write size, Spearman rho at least 0.7 in each model. | FAILED | Qwen 0.92 (held), OLMo -0.41 (-0.46 among controls). 2026-10-23 |
+| 61b | Claude: at matched 1x the OLMo target fails to beat at least one control. | FAILED | 160 against controls 28 to 145: the target beats all ten. Chance base rate 91%; not a decision input. |
+| 61c | Claude: at matched 1x the Qwen target is within the control range. | held | 16 against 12 to 49 (rank 9 of 11 at 1x, 10 at 2x). |
+| 61d | Claude: each matched-1x sign ratio for every unit in both models is within 0.9 to 1.1. | held | 22 of 22 in each model. |
+| 61e | Claude: at matched 1x the OLMo target count exceeds the median matched-control count. | held | 160 against a median of 73.5. Chance base rate 50%; not a decision input. |

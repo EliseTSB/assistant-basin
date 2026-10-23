@@ -733,6 +733,18 @@ Pre-registered in `PART60-DESIGN.md` (with Amendments 1 to 6) and scored under `
 
 Files: `results/part60/` (batches, activations, `analysis/analysis-60.md`), `part60/`. Limits: dev only; one scorer model; the pass rule is the Part 58 rule, so a random direction that carries a real feature counts as a hit; thinking raised the control rate to 32%, which says the sentences, not the neurons, got easier to fire.
 
+### Part 61: size-matched controls: Qwen's two-direction count is a push-size effect, OLMo's target still stands out (2026-10-23)
+
+Pre-registered in `PART61-63-DESIGN.md` (Amendments 1 and 2 to Part 61 were written before any run and replaced my first decision rule, which read "artefact supported" 72% of the time under the null). Run on a rented RTX 3090 (about $0.58, one box rented about 29 minutes past the end of the run). For each model the 59B target neuron and ten matched random-direction controls were written at four sizes (1x and 2x among them) over 200 documents, and the count of neurons that respond the same way to -1 and +1 (SYMMETRIC) was taken per unit. Counts compare within this run only (Part 59B used 1,000 documents).
+
+**Qwen3.5-4B L22:2742.** At matched 1x the target has 16 symmetric neurons against controls spanning 12 to 49, rank 9 of 11 at 1x and 10 of 11 at 2x. The count rises steeply with write size across all 11 units (Spearman rho 0.92; 0.92 among the controls alone). So by the amended rule: excess **absent** and the size effect **present**, which supports "the Qwen 59B result is a push-size effect": the target does not stand out from random directions pushed as hard. That reads as no evidence of excess, not as proof of none.
+
+**OLMo-2 1B L10:6978.** At matched 1x the target has 160 symmetric neurons against controls at 28, 41, 50, 52, 61, 86, 117, 122, 144 and 145 (median 73.5): rank 1 of 11 at both 1x and 2x, so the excess is **shown** (exact permutation: about 1/121 if the sizes were independent, at most 1/11 if perfectly correlated; the latter is the figure to quote). The count does not rise with write size here (rho -0.41; -0.46 among controls), so the size explanation has nothing to stand on in OLMo. The 59B contrast survives for OLMo.
+
+**Predictions.** 61a failed (Qwen 0.92, OLMo -0.41; both needed at least 0.7), 61b failed (the target beats all ten controls), 61c held, 61d held (all 22 sign ratios in each model sit inside 0.9 to 1.1), 61e held (160 above the control median of 73.5). Two of those, 61b and 61e, have chance base rates of 91% and 50% and were reported beside them but were not decision inputs.
+
+Files: `results/part61/` (npz archives, analysis JSON, `part61-registered-evaluation.json`), `part61/`. Limits: two models and one target neuron each, 200 documents, ten controls, rank statistics with a coarse floor (one in eleven), and the two-direction metric is the Part 59 pooled-percentile rule.
+
 ### Running or designed (2026-10-21)
 
 - Part 29: the registered teacher-classifier predictions remain unscored in PREDICTIONS.md.
