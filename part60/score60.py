@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import fcntl
 import hashlib
 import json
 import math
@@ -67,6 +68,12 @@ def write_json(path: Path, value: Any) -> None:
     tmp = path.with_name(path.name + f".{os.getpid()}.tmp")
     tmp.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     tmp.replace(path)
+
+
+def clear_score_artifacts(root: Path, split: str, method: str, phase: str) -> None:
+    score_path(root, split, method, phase).unlink(missing_ok=True)
+    for progress in _progress_paths(root, split, method, phase):
+        progress.unlink(missing_ok=True)
 
 
 def unit_key_from_tuple(unit: list[Any]) -> str:
@@ -596,22 +603,34 @@ def live_score_phase(root: Path, split: str, method: str, phase: str,
     spec = {"fingerprint": fingerprint, "shape": [len(entries), len(split_units)], "model_revision": MODEL_REVISION,
             "dtype": scorer.dtype, "device": scorer.device, "batch_size": int(batch_size),
             "backend": SCORE_BACKEND, "model_dir": scorer.model_dir, "completed": 0}
+    maps_exist = max_path.is_file() and marked_path.is_file()
     if progress_path.exists():
         saved = json.loads(progress_path.read_text(encoding="utf-8"))
         for key in ("fingerprint", "shape", "model_revision", "dtype", "device", "batch_size", "backend", "model_dir"):
             if saved.get(key) != spec[key]:
                 raise ScoreError(f"score progress does not match current {method}/{phase} inputs; refusing to overwrite")
-        completed = int(saved.get("completed", 0))
-        max_map = np.lib.format.open_memmap(max_path, mode="r+")
-        marked_map = np.lib.format.open_memmap(marked_path, mode="r+")
+        completed = int(saved.get("completed", 0)) if maps_exist else 0
+        if maps_exist:
+            max_map = np.lib.format.open_memmap(max_path, mode="r+")
+            marked_map = np.lib.format.open_memmap(marked_path, mode="r+")
+        else:
+            # A kill can leave the durable marker before either memmap is created.
+            max_path.unlink(missing_ok=True)
+            marked_path.unlink(missing_ok=True)
+            write_json(progress_path, {**spec, "completed": 0})
+            max_map = np.lib.format.open_memmap(max_path, mode="w+", dtype=np.float32, shape=tuple(spec["shape"]))
+            marked_map = np.lib.format.open_memmap(marked_path, mode="w+", dtype=np.float32, shape=tuple(spec["shape"]))
+            max_map[:] = np.nan; marked_map[:] = np.nan
     else:
         if max_path.exists() or marked_path.exists():
-            raise ScoreError(f"orphan score progress arrays exist for {method}/{phase}; refusing to overwrite")
+            print(f"recovering orphan score progress arrays for {method}/{phase}; no durable progress marker exists")
+            max_path.unlink(missing_ok=True)
+            marked_path.unlink(missing_ok=True)
+        write_json(progress_path, {**spec, "completed": 0})
         max_map = np.lib.format.open_memmap(max_path, mode="w+", dtype=np.float32, shape=tuple(spec["shape"]))
         marked_map = np.lib.format.open_memmap(marked_path, mode="w+", dtype=np.float32, shape=tuple(spec["shape"]))
         max_map[:] = np.nan; marked_map[:] = np.nan
         completed = 0
-        write_json(progress_path, {**spec, "completed": 0})
     if completed < 0 or completed > len(entries):
         raise ScoreError("score progress row boundary is invalid")
     for start in range(completed, len(entries), batch_size):
@@ -816,9 +835,12 @@ def main(argv: list[str] | None = None) -> int:
     verify.add_argument("--dtype", default="bf16", choices=["bf16", "fp32"])
     verify.add_argument("--batch-size", type=int, default=8)
     args = parser.parse_args(argv)
+    lock = None
     try:
         check_data_paths()
         args.root.mkdir(parents=True, exist_ok=True)
+        lock = (args.root / ".score.lock").open("a+")
+        fcntl.flock(lock.fileno(), fcntl.LOCK_EX)
         thresholds = ensure_thresholds(args.root)
         if args.command == "thresholds":
             print(f"wrote {len(thresholds)} fixed p95 thresholds to {args.root / 'thresholds.json'}")
@@ -851,6 +873,10 @@ def main(argv: list[str] | None = None) -> int:
         pending = []
         for method, phase, entries in plans:
             target = score_path(args.root, args.split, method, phase)
+            if args.force:
+                clear_score_artifacts(args.root, args.split, method, phase)
+                pending.append((method, phase, entries))
+                continue
             if target.exists():
                 expected = score_input_fingerprint(entries, specs, model_dir, args.dtype, resolved, args.batch_size)
                 existing = None
@@ -867,14 +893,13 @@ def main(argv: list[str] | None = None) -> int:
                                and str(existing["backend"]) == SCORE_BACKEND)
                 except (OSError, KeyError, ValueError):
                     matches = False
+                finally:
+                    if existing is not None:
+                        existing.close()
                 if matches:
                     print(f"already complete: {target}")
                     continue
                 elif method == "M0" and (existing is None or "score_fingerprint" not in existing.files):
-                    target.unlink(missing_ok=True)
-                    for progress in _progress_paths(args.root, split, method, phase):
-                        progress.unlink(missing_ok=True)
-                elif args.force:
                     target.unlink(missing_ok=True)
                     for progress in _progress_paths(args.root, args.split, method, phase):
                         progress.unlink(missing_ok=True)
@@ -905,6 +930,10 @@ def main(argv: list[str] | None = None) -> int:
     except (ScoreError, OSError, ValueError, KeyError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2
+    finally:
+        if lock is not None:
+            fcntl.flock(lock.fileno(), fcntl.LOCK_UN)
+            lock.close()
 
 
 if __name__ == "__main__":

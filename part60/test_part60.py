@@ -4,11 +4,14 @@ from __future__ import annotations
 
 import json
 import os
+import inspect
+import io
 import signal
 import subprocess
 import sys
 import tarfile
 import tempfile
+import time
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -272,6 +275,84 @@ class ScoringInvariantTests(unittest.TestCase):
         self.assertNotEqual(baseline, score60.score_input_fingerprint(
             [entry], units, "/tmp/model", "bf16", "cuda", 4))
 
+    def test_orphan_progress_marker_before_memmaps_recovers_on_rerun(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="part60-progress-window-") as directory:
+            root = Path(directory)
+            code = r"""
+import os, signal, sys
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+import score60
+class Toy:
+    model_dir = "/tmp/part60-toy-model"
+    dtype = "fp32"
+    device = "cpu"
+entries = [{"sid":"0|M1|strong|0", "text":"x", "group":"strong", "record_index":0,
+            "unit_key":"L0:u0", "marked_span":None}]
+units = [{"unit_key":"L0:u0", "type":"neuron", "layer":0, "unit_index":0, "control_id":None}]
+root = Path(sys.argv[2])
+max_path, marked_path, progress = score60._progress_paths(root, "dev", "M1", "primary")
+def kill_before_first_memmap(*args, **kwargs):
+    assert progress.is_file(), "progress marker must precede memmap creation"
+    assert not max_path.exists() and not marked_path.exists()
+    os.kill(os.getpid(), signal.SIGKILL)
+score60.np.lib.format.open_memmap = kill_before_first_memmap
+score60.live_score_phase(root, "dev", "M1", "primary", entries, units, Toy(), {"L0:u0":1.0})
+"""
+            killed = subprocess.run([sys.executable, "-c", code, str(HERE), str(root)], check=False)
+            self.assertEqual(killed.returncode, -signal.SIGKILL)
+            max_path, marked_path, progress = score60._progress_paths(root, "dev", "M1", "primary")
+            self.assertTrue(progress.is_file())
+            self.assertFalse(max_path.exists())
+            self.assertFalse(marked_path.exists())
+            class Toy:
+                model_dir = "/tmp/part60-toy-model"
+                dtype = "fp32"
+                device = "cpu"
+                def score_batch(self, items, rows, max_out, marked_out, batch_size=8):
+                    max_out[rows[0], 0] = 2.0
+                    marked_out[rows[0], 0] = np.nan
+            entries = [{"sid":"0|M1|strong|0", "text":"x", "group":"strong", "record_index":0,
+                        "unit_key":"L0:u0", "marked_span":None}]
+            units = [{"unit_key":"L0:u0", "type":"neuron", "layer":0, "unit_index":0, "control_id":None}]
+            output = score60.live_score_phase(root, "dev", "M1", "primary", entries, units,
+                                               Toy(), {"L0:u0":1.0})
+            self.assertTrue(output.is_file())
+            self.assertFalse(max_path.exists())
+            self.assertFalse(marked_path.exists())
+
+    def test_m0_legacy_cache_cleanup_uses_selected_split(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="part60-m0-legacy-") as directory:
+            root = Path(directory)
+            (root / "out/dev").mkdir(parents=True)
+            (root / "out/dev/M0.jsonl").write_text("{}\n")
+            target = score60.score_path(root, "dev", "M0", "primary")
+            target.parent.mkdir(parents=True, exist_ok=True)
+            np.savez(target, max=np.asarray([[1.0]]), sids=np.asarray(["0|M0|strong|0"]))
+            entry = {"sid": "0|M0|strong|0", "text": "x", "group": "strong",
+                     "record_index": 0, "unit_key": "L0:u0"}
+            with mock.patch("score60.check_data_paths"), \
+                    mock.patch("score60.ensure_thresholds", return_value={}), \
+                    mock.patch("gen60.load_splits", return_value={"dev": []}), \
+                    mock.patch("score60.cached_m0_existing", return_value=None), \
+                    mock.patch("score60.plan_live", return_value=[("M0", "primary", [entry])]), \
+                    mock.patch("score60.score_input_fingerprint", return_value="new"), \
+                    mock.patch("score60._unit_info", return_value=[]), \
+                    mock.patch("score60.resolved_device", return_value="cpu"), \
+                    mock.patch("score60.QwenScorer", side_effect=score60.ScoreError("reached scorer")):
+                stderr = io.StringIO()
+                with mock.patch("sys.stderr", stderr):
+                    status = score60.main(["--root", str(root), "score", "--split", "dev", "--methods", "M0"])
+            self.assertEqual(status, 2)
+            self.assertIn("reached scorer", stderr.getvalue())
+            self.assertNotIn("NameError", stderr.getvalue())
+            self.assertFalse(target.exists())
+
+    def test_generator_mutating_entrypoints_take_the_shared_writer_lock(self) -> None:
+        for name in ("smoke_m6", "submit_phase", "collect_phase", "choose_m3_winners", "prepare_m0"):
+            with self.subTest(name=name):
+                self.assertIn("writer_lock", inspect.getsource(getattr(gen60, name)))
+
 
 class TierTests(unittest.TestCase):
     def test_strong_weak_none_ordering_and_strict_ties(self) -> None:
@@ -472,7 +553,8 @@ class PredictionTests(unittest.TestCase):
             root = Path(directory)
             tier = {"positive_only_verified_rate": .5, "verified_rate": .4,
                     "mean_h_strong": .8, "mean_h_weak": .4, "mean_h_none": .1,
-                    "mean_auc": .7}
+                    "mean_auc": .7, "n_mean_h_strong": 2, "n_mean_h_weak": 2,
+                    "n_mean_h_none": 2, "n_mean_auc": 2}
             method = {"n_parseable": 8, "n_units": 10, "n_failed": 2,
                       "n_threshold_missing": 1, "by_type": {"neuron": tier, "control": tier},
                       "real_tier_ordering_share": .6, "real_tier_ordering_n": 5,
@@ -491,7 +573,7 @@ class PredictionTests(unittest.TestCase):
             report = md_path.read_text(encoding="utf-8")
             self.assertIn("60d >=2 strong hits", report)
             self.assertIn("0.800 (n=2)", report)
-            self.assertIn("Unjudgeable units (threshold >= observed ceiling): 3", report)
+            self.assertIn("Empirically unjudgeable (threshold at or above the pool maximum): 3", report)
             self.assertIn("2,000 paired resamples; seed 6003", report)
             self.assertIn("| M1 | M0 | gap_positive_only | 0.100 | [0.050, 0.150] |", report)
             self.assertIn("Interpretation limits:", report)
@@ -656,7 +738,7 @@ class BatchLifecycleTests(unittest.TestCase):
         self.assertFalse((self.root / "spend.jsonl").exists())
         self.assertFalse(gen60.manifest_path(self.root, "dev", "M1", "primary").exists())
 
-    def test_reserve_is_durable_before_post_and_429_retry_reuses_same_body(self) -> None:
+    def test_reserve_is_durable_before_post_and_429_creates_a_new_ambiguous_attempt(self) -> None:
         calls = []
         def api(method: str, path: str, body: object = None) -> str:
             if method == "POST":
@@ -665,61 +747,109 @@ class BatchLifecycleTests(unittest.TestCase):
                 spent, _ = gen60.spend_state(self.root / "spend.jsonl")
                 self.assertGreater(spent, 0.0)
                 manifest = json.loads(gen60.manifest_path(self.root, "dev", "M1", "primary").read_text())
-                self.assertEqual(manifest["chunks"][0]["posting"]["request_count"], len(body["requests"]))
-                self.assertTrue(manifest["chunks"][0]["posting"]["posting_started_at"])
-                if len(calls) == 1:
-                    raise gen60.APIError(429, "rate limited")
-                return json.dumps({"id": "batch-after-429"})
+                self.assertEqual(manifest["chunks"][-1]["request_count"], len(body["requests"]))
+                raise gen60.APIError(429, "rate limited")
             raise AssertionError(path)
-        with mock.patch("gen60.time.sleep"):
-            result = gen60.submit_phase(self.root, "dev", "M1", "primary", api=api)
-        self.assertEqual(result, "batch-after-429")
+        with mock.patch.dict(os.environ, {"PART60_CAP": "8"}):
+            with self.assertRaisesRegex(gen60.RunnerError, "ambiguous"):
+                gen60.submit_phase(self.root, "dev", "M1", "primary", api=api)
+        first_reserve = json.loads(gen60.manifest_path(self.root, "dev", "M1", "primary").read_text())["chunks"][0]["reserved_usd"]
+        with mock.patch.dict(os.environ, {"PART60_CAP": str(first_reserve * 2.5)}):
+            with self.assertRaisesRegex(gen60.RunnerError, "ambiguous"):
+                gen60.submit_phase(self.root, "dev", "M1", "primary", api=api)
+            with self.assertRaisesRegex(gen60.RunnerError, "cap refused"):
+                gen60.submit_phase(self.root, "dev", "M1", "primary", api=api)
+        manifest = json.loads(gen60.manifest_path(self.root, "dev", "M1", "primary").read_text())
+        self.assertEqual([chunk["status"] for chunk in manifest["chunks"]], ["ambiguous", "ambiguous"])
         self.assertEqual(len(calls), 2)
-        self.assertEqual(calls[0], calls[1])
-        self.assertGreater(gen60.spend_state(self.root / "spend.jsonl")[0], 0.0)
+        self.assertEqual(gen60.spend_state(self.root / "spend.jsonl")[0],
+                         sum(chunk["reserved_usd"] for chunk in manifest["chunks"]))
 
-    def test_ambiguous_post_reconciles_without_metadata_on_an_older_page(self) -> None:
-        posts = []
-        list_calls = []
-        def api(method: str, path: str, body: object = None) -> str:
-            if method == "POST":
-                posts.append(path)
-                self.assertEqual(set(body), {"requests"})
-                raise gen60.APIError(None, "timeout")
-            if method == "GET" and path.startswith("/v1/messages/batches?"):
-                list_calls.append(path)
-                manifest = json.loads(gen60.manifest_path(self.root, "dev", "M1", "primary").read_text())
-                chunk = manifest["chunks"][0]
-                started = chunk["posting"]["posting_started_at"]
-                if "after_id=" not in path:
-                    return json.dumps({"data": [{"id": "page-one-last", "created_at": started,
-                                                  "request_counts": {"processing": 1}}],
-                                       "has_more": True, "last_id": "page-one-last"})
-                return json.dumps({"data": [{"id": "batch-reconciled", "created_at": started,
-                                              "request_counts": {"processing": 0, "succeeded": 500,
-                                                                 "errored": 0, "canceled": 0, "expired": 0}}],
-                                   "has_more": False})
-            raise AssertionError(path)
-        with self.assertRaisesRegex(gen60.RunnerError, "reconcile"):
-            gen60.submit_phase(self.root, "dev", "M1", "primary", api=api)
-        self.assertGreater(gen60.spend_state(self.root / "spend.jsonl")[0], 0.0)
-        message = gen60.submit_phase(self.root, "dev", "M1", "primary", api=api)
-        self.assertIn("reconciled batch batch-reconciled", message)
-        self.assertEqual(posts, ["/v1/messages/batches"])
-        self.assertEqual(list_calls, ["/v1/messages/batches?limit=100",
-                                      "/v1/messages/batches?limit=100&after_id=page-one-last"])
+    def test_kill_between_post_and_manifest_update_keeps_reservation_and_resubmits_new_attempt(self) -> None:
+        marker = self.root / "post.log"
+        code = (
+            "import json,sys; from pathlib import Path; sys.path.insert(0, sys.argv[1]); import gen60; "
+            "gen60.PILOT = Path(sys.argv[4]); "
+            "def_dummy=None\n"
+            "def fake(method,path,body=None):\n"
+            " if method=='POST': Path(sys.argv[3]).write_text('POST\\n'); return json.dumps({'id':'accepted-but-unsaved'})\n"
+            " raise AssertionError(path)\n"
+            "gen60.submit_phase(Path(sys.argv[2]),'dev','M1','primary',api=fake,kill_after_post=True)\n"
+        )
+        proc = subprocess.run([sys.executable, "-c", code, str(HERE), str(self.root), str(marker), str(_TEST_PILOT)], check=False)
+        self.assertEqual(proc.returncode, -signal.SIGKILL)
+        self.assertEqual(marker.read_text(), "POST\n")
+        first_total, first_ledger = gen60.spend_state(self.root / "spend.jsonl")
+        self.assertGreater(first_total, 0.0)
+        self.assertEqual(len(first_ledger), 1)
+        calls = []
+        message = gen60.submit_phase(self.root, "dev", "M1", "primary",
+            api=lambda method, path, body=None: (calls.append(path) or json.dumps({"id": "second-attempt"})))
+        self.assertEqual(message, "second-attempt")
+        manifest = json.loads(gen60.manifest_path(self.root, "dev", "M1", "primary").read_text())
+        self.assertEqual(manifest["chunks"][0]["status"], "ambiguous")
+        self.assertEqual(manifest["chunks"][1]["status"], "submitted")
+        self.assertEqual(len(gen60.spend_state(self.root / "spend.jsonl")[1]), 2)
+        self.assertEqual(calls, ["/v1/messages/batches"])
 
-    def test_zero_reconciliation_matches_stays_locked_with_nonzero_error(self) -> None:
-        def api(method: str, path: str, body: object = None) -> str:
-            if method == "POST":
-                raise gen60.APIError(None, "timeout")
-            if method == "GET":
-                return json.dumps({"data": [], "has_more": False})
-            raise AssertionError(path)
-        with self.assertRaisesRegex(gen60.RunnerError, "submission outcome is unknown"):
-            gen60.submit_phase(self.root, "dev", "M1", "primary", api=api)
-        with self.assertRaisesRegex(gen60.RunnerError, "0 matching batches.*locked"):
-            gen60.submit_phase(self.root, "dev", "M1", "primary", api=api)
+    def test_no_created_at_adoption_path_and_listing_is_read_only(self) -> None:
+        self.assertFalse(hasattr(gen60, "reconcile_chunk"))
+        submit_source = inspect.getsource(gen60._submit_phase_locked)
+        self.assertNotIn('last.get("created_at")', submit_source)
+        self.assertNotIn('batch.get("created_at")', submit_source)
+        self.assertNotIn("request_counts", submit_source)
+        self.assertNotIn('api("GET", "/v1/messages/batches', submit_source)
+        self.assertNotIn("reconcile", submit_source.lower())
+        gen60.write_json(self.root / "run.json", {"started_at": "2026-10-22T12:00:00+00:00"})
+        before = sorted(str(path.relative_to(self.root)) for path in self.root.rglob("*"))
+        calls = []
+        def list_api(method: str, path: str, body: object = None) -> str:
+            calls.append((method, path))
+            return json.dumps({"data": [
+                {"id": "old-batch", "created_at": "2026-10-22T11:00:00+00:00"},
+                {"id": "new-batch", "created_at": "2026-10-22T13:00:00+00:00"}], "has_more": False})
+        listed = gen60.listing_batches(self.root, api=list_api)
+        after = sorted(str(path.relative_to(self.root)) for path in self.root.rglob("*"))
+        self.assertEqual([row["id"] for row in listed], ["new-batch"])
+        self.assertEqual(calls, [("GET", "/v1/messages/batches?limit=100")])
+        self.assertEqual(before, after)
+
+    def test_readding_ambiguous_batch_adoption_mutation_goes_red(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="part60-adoption-mutation-") as directory:
+            mutated_dir = Path(directory)
+            source = (HERE / "gen60.py").read_text(encoding="utf-8")
+            old = '''            if last.get("status") in ("posting", "unknown", "ready", "rate_limited", "ambiguous"):
+                last["status"] = "ambiguous"
+                last["ambiguous_at"] = utc_now()
+                manifest["ambiguous_attempts"] = int(manifest.get("ambiguous_attempts", 0)) + 1
+                write_json(mfpath, manifest)'''
+            adopted = '''            if last.get("status") in ("posting", "unknown", "ready", "rate_limited", "ambiguous"):
+                return "reconciled batch legacy-adoption"'''
+            self.assertIn(old, source)
+            (mutated_dir / "gen60.py").write_text(source.replace(old, adopted, 1), encoding="utf-8")
+            contract = """import json,sys,tempfile
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+import gen60
+gen60.PILOT = Path(sys.argv[2])
+root=Path(tempfile.mkdtemp())
+posts=[]
+def api(method,path,body=None):
+    if method == 'POST':
+        posts.append(path)
+        raise gen60.APIError(None, 'timeout')
+    raise AssertionError(path)
+for _ in range(2):
+    try: gen60.submit_phase(root,'dev','M1','primary',api=api)
+    except gen60.RunnerError: pass
+ledger=gen60.read_jsonl(root/'spend.jsonl')
+assert len(posts) == 2, posts
+assert sum(row.get('event') == 'reserve' for row in ledger) == 2, ledger
+"""
+            baseline = subprocess.run([sys.executable, "-c", contract, str(HERE), str(_TEST_PILOT)], capture_output=True, text=True, check=False)
+            mutant = subprocess.run([sys.executable, "-c", contract, str(mutated_dir), str(_TEST_PILOT)], capture_output=True, text=True, check=False)
+            self.assertEqual(baseline.returncode, 0, baseline.stdout + baseline.stderr)
+            self.assertNotEqual(mutant.returncode, 0, mutant.stdout + mutant.stderr)
 
     def test_second_call_rejection_preserves_first_round_evidence(self) -> None:
         units = gen60.load_splits()["dev"]
@@ -739,9 +869,12 @@ class BatchLifecycleTests(unittest.TestCase):
         gen60.write_output(gen60.output_path(self.root, "dev", "M3"), m3_rows)
         m5root = self.root / "m5"
         gen60.write_output(gen60.output_path(m5root, "dev", "M5"), m5_rows)
+        (self.root / "acts/dev").mkdir(parents=True, exist_ok=True)
+        (self.root / "acts/dev/M3-selection.npz").write_bytes(b"scored selection fixture")
         def reject(method: str, path: str, body: object = None) -> str:
             raise gen60.APIError(400, "request rejected")
-        result3 = gen60.submit_phase(self.root, "dev", "M3", "fresh", api=reject)
+        with mock.patch("gen60._choose_m3_winners_locked", return_value=len(units)):
+            result3 = gen60.submit_phase(self.root, "dev", "M3", "fresh", api=reject)
         with mock.patch("gen60.build_feedback", return_value=[]):
             result5 = gen60.submit_phase(m5root, "dev", "M5", "round2", api=reject)
         self.assertEqual(result3, "rejected")
@@ -756,7 +889,7 @@ class BatchLifecycleTests(unittest.TestCase):
         self.assertEqual(rows5["strong"], ["s"]*4)
         self.assertEqual(rows5["round2"]["raw_parse_status"], "api_rejected")
 
-    def test_parse_failure_is_written_for_every_request_not_dropped(self) -> None:
+    def test_parse_failure_is_written_for_every_request_and_phase_drop_is_recorded(self) -> None:
         def fake_submit(method: str, path: str, body: object = None) -> str:
             if method == "POST":
                 return json.dumps({"id": "batch-parse"})
@@ -782,6 +915,9 @@ class BatchLifecycleTests(unittest.TestCase):
         self.assertEqual(sum(row["parse_status"] == "failed" for row in rows), 499)
         self.assertEqual(rows[1]["raw_parse_status"], "not_object")
         self.assertEqual(rows[0]["usage_tokens"], {"input": 3, "output": 5, "calls": 1})
+        manifest = json.loads(gen60.manifest_path(self.root, "dev", "M1", "primary").read_text())
+        self.assertEqual(manifest["chunks"][0]["status"], "dropped")
+        self.assertEqual(manifest["phase_status"], "dropped")
         repeat = gen60.collect_phase(self.root, "dev", "M1", "primary", api=lambda *args: (_ for _ in ()).throw(AssertionError("unexpected API call")))
         self.assertEqual(repeat, "phase already collected")
 
@@ -824,52 +960,64 @@ class BatchLifecycleTests(unittest.TestCase):
         self.assertEqual(merged["parse_status"], "failed")
         self.assertEqual(merged["raw_parse_status"], "duplicate_sentence")
 
-    def test_max_tokens_stop_reason_is_recorded_and_fails_collection(self) -> None:
+    def test_truncated_one_of_500_counts_under_ten_percent_and_retries_only_failed_unit(self) -> None:
+        posted_request_counts = []
+        current_batch = []
         def api(method: str, path: str, body: object = None) -> str:
             if method == "POST":
-                return json.dumps({"id": "batch-truncated"})
-            if path.endswith("/batch-truncated"):
+                posted_request_counts.append(len(body["requests"]))
+                batch_id = f"batch-truncated-{len(posted_request_counts)}"
+                current_batch[:] = [batch_id]
+                return json.dumps({"id": batch_id})
+            if current_batch and path.endswith("/" + current_batch[0]):
                 return json.dumps({"processing_status": "ended"})
             if path.endswith("/results"):
                 manifest = json.loads(gen60.manifest_path(self.root, "dev", "M1", "primary").read_text())
-                chunk = manifest["chunks"][0]
+                chunk = manifest["chunks"][-1]
                 idmap = json.loads((Path(chunk["directory"]) / "idmap.json").read_text())
-                return "\n".join(json.dumps({"custom_id": cid, "result": {"type": "succeeded", "message": {
-                    "content": [{"type": "text", "text": "not complete"}], "usage": {"input_tokens": 1, "output_tokens": 1100},
-                    "stop_reason": "max_tokens"}}}) for cid in idmap)
+                lines = []
+                for index, cid in enumerate(idmap):
+                    truncated = current_batch[0] == "batch-truncated-1" and index == 0
+                    message = {"content": [{"type": "text", "text": "not complete" if truncated else json.dumps(_tiered())}],
+                               "usage": {"input_tokens": 1, "output_tokens": 1100 if truncated else 1}}
+                    if truncated:
+                        message["stop_reason"] = "max_tokens"
+                    lines.append(json.dumps({"custom_id": cid, "result": {"type": "succeeded", "message": message}}))
+                return "\n".join(lines)
             raise AssertionError(path)
         gen60.submit_phase(self.root, "dev", "M1", "primary", api=api)
-        with self.assertRaisesRegex(gen60.RunnerError, "max_tokens truncation"):
-            gen60.collect_phase(self.root, "dev", "M1", "primary", api=api, poll_seconds=0)
+        collected = gen60.collect_phase(self.root, "dev", "M1", "primary", api=api, poll_seconds=0)
+        self.assertIn("1 max_tokens truncation", collected)
+        self.assertIn("1 failed unit(s) remain for retry", collected)
         rows = gen60.read_output(gen60.output_path(self.root, "dev", "M1"))
         first_rec = int(gen60.load_splits()["dev"][0]["record_index"])
         self.assertEqual(rows[first_rec]["raw_parse_status"], "max_tokens")
         manifest = json.loads(gen60.manifest_path(self.root, "dev", "M1", "primary").read_text())
-        self.assertEqual(manifest["chunks"][0]["truncations"], 500)
-        self.assertEqual(manifest["chunks"][0]["status"], "truncated")
+        self.assertEqual(manifest["chunks"][0]["truncations"], 1)
+        self.assertEqual(manifest["chunks"][0]["status"], "complete")
+        self.assertEqual(manifest["phase_status"], "retryable_failures")
+        self.assertEqual(manifest["remaining_failed_count"], 1)
         retried = gen60.submit_phase(self.root, "dev", "M1", "primary", api=api)
-        self.assertEqual(retried, "batch-truncated")
+        self.assertEqual(retried, "batch-truncated-2")
         manifest = json.loads(gen60.manifest_path(self.root, "dev", "M1", "primary").read_text())
         self.assertEqual(len(manifest["chunks"]), 2)
+        self.assertEqual(posted_request_counts, [500, 1])
+        self.assertEqual(manifest["chunks"][1]["unit_keys"], [rows[first_rec]["unit_key"]])
 
-    def test_m6_smoke_requires_nonempty_thinking_and_marks_failure_dropped(self) -> None:
+    def test_m6_smoke_api_error_does_not_count_as_failed_all_five_check(self) -> None:
         calls = []
         def reject(method: str, path: str, body: object = None) -> str:
             calls.append((method, path))
             raise gen60.APIError(400, "unsupported thinking field")
         result = gen60.smoke_m6(self.root, api=reject)
-        self.assertEqual(result["status"], "dropped")
+        self.assertEqual(result["status"], "error")
+        self.assertIsNone(result["all_five_check"])
         self.assertEqual(calls, [("POST", "/v1/messages")])
-        state = json.loads(gen60.method_state_path(self.root, "dev", "M6").read_text())
-        self.assertEqual(state["source"], "smoke")
-        submit_calls = []
-        message = gen60.submit_phase(self.root, "dev", "M6", "primary", api=lambda *args: submit_calls.append(args))
-        self.assertIn("dropped M6", message)
-        self.assertEqual(submit_calls, [])
-        rows = gen60.read_jsonl(gen60.output_path(self.root, "dev", "M6"))
-        self.assertEqual(len(rows), 500)
-        self.assertTrue(all(row["parse_status"] == "skipped" for row in rows))
-        self.assertTrue(all(row["raw_parse_status"] == "method_dropped" for row in rows))
+        self.assertFalse(gen60.method_state_path(self.root, "dev", "M6").exists())
+        self.assertEqual(gen60.spend_state(self.root / "spend.jsonl")[0], 0.0)
+        history = gen60.read_jsonl(self.root / "out/smoke-M6-runs.jsonl")
+        self.assertEqual(history[0]["all_five_check"], None)
+        self.assertEqual(gen60.read_jsonl(self.root / "spend.jsonl")[-1]["event"], "release")
 
     def test_m6_submit_refuses_without_smoke_file(self) -> None:
         called = []
@@ -901,6 +1049,7 @@ class BatchLifecycleTests(unittest.TestCase):
         smoke_rows = [row for row in ledger.values() if row.get("phase") == "smoke"]
         self.assertEqual(len(smoke_rows), 1)
         self.assertEqual(smoke_rows[0]["event"], "settle")
+        self.assertAlmostEqual(smoke_rows[0]["usd"], 0.000055)
 
     def test_m6_smoke_transient_errors_are_retryable_and_do_not_drop_state(self) -> None:
         failures = ((429, "rate limit"), (500, "server"), (None, "timeout"))
@@ -910,26 +1059,52 @@ class BatchLifecycleTests(unittest.TestCase):
                 raise gen60.APIError(status, message)
             result = gen60.smoke_m6(root, api=fail)
             self.assertEqual(result["status"], "error")
+            self.assertIsNone(result["all_five_check"])
             self.assertFalse(gen60.method_state_path(root, "dev", "M6").exists())
-            self.assertGreater(gen60.spend_state(root / "spend.jsonl")[0], 0.0)
+            self.assertEqual(gen60.spend_state(root / "spend.jsonl")[0], 0.0)
+            self.assertEqual(gen60.read_jsonl(root / "spend.jsonl")[-1]["event"], "release")
             with self.assertRaisesRegex(gen60.RunnerError, "status is error"):
                 gen60.submit_phase(root, "dev", "M6", "primary", api=lambda *args: "unused")
 
-    def test_m6_smoke_no_thinking_drops_but_truncation_or_schema_failure_is_retryable(self) -> None:
+    def test_retryable_smoke_error_settles_usage_from_completed_responses(self) -> None:
+        calls = []
+        def partial(method: str, path: str, body: object = None) -> str:
+            calls.append(path)
+            if len(calls) == 1:
+                return _m6_response()
+            raise gen60.APIError(500, "server error")
+        result = gen60.smoke_m6(self.root, api=partial)
+        self.assertEqual(result["status"], "error")
+        self.assertEqual(result["usage_tokens"], {"input": 10, "output": 20, "calls": 1})
+        _, ledger = gen60.spend_state(self.root / "spend.jsonl")
+        smoke = [row for row in ledger.values() if row.get("phase") == "smoke"]
+        self.assertEqual(len(smoke), 1)
+        self.assertEqual(smoke[0]["event"], "settle")
+        self.assertAlmostEqual(smoke[0]["usd"], 0.000011)
+
+    def test_m6_smoke_uses_three_fresh_all_five_checks_before_dropping(self) -> None:
+        calls = []
         def no_thinking(method: str, path: str, body: object = None) -> str:
+            calls.append(body)
             return json.dumps({"content": [{"type": "text", "text": json.dumps(_tiered())}],
                                "stop_reason": "end_turn", "usage": {"input_tokens": 1, "output_tokens": 1}})
         dropped_root = self.root / "no-thinking"
         dropped = gen60.smoke_m6(dropped_root, api=no_thinking)
         self.assertEqual(dropped["status"], "dropped")
+        history = gen60.read_jsonl(dropped_root / "out/smoke-M6-runs.jsonl")
+        self.assertEqual([row["status"] for row in history], ["retry", "retry", "dropped"])
+        self.assertEqual([row["attempt"] for row in history], [1, 2, 3])
+        self.assertEqual(len(calls), 15)
+        self.assertEqual(len(set(key for row in history for key in row["unit_keys"])), 15)
         self.assertTrue(gen60.method_state_path(dropped_root, "dev", "M6").exists())
 
         error_root = self.root / "bad-answer"
         def bad_answer(method: str, path: str, body: object = None) -> str:
             return _m6_response(stop_reason="max_tokens", answer={"not": "the M6 schema"})
         error = gen60.smoke_m6(error_root, api=bad_answer)
-        self.assertEqual(error["status"], "error")
-        self.assertFalse(gen60.method_state_path(error_root, "dev", "M6").exists())
+        self.assertEqual(error["status"], "dropped")
+        self.assertEqual(error["all_five_check"], "failed")
+        self.assertTrue(gen60.method_state_path(error_root, "dev", "M6").exists())
 
     def test_m6_missing_key_is_error_without_dropping_or_reserving(self) -> None:
         with mock.patch.dict(os.environ, {"ANTHROPIC_CREDITS_KEY": ""}):
@@ -940,9 +1115,10 @@ class BatchLifecycleTests(unittest.TestCase):
         self.assertFalse((self.root / "spend.jsonl").exists())
 
     def test_later_passing_smoke_clears_smoke_dropped_state(self) -> None:
-        def reject(method: str, path: str, body: object = None) -> str:
-            raise gen60.APIError(400, "unsupported field")
-        self.assertEqual(gen60.smoke_m6(self.root, api=reject)["status"], "dropped")
+        def no_thinking(method: str, path: str, body: object = None) -> str:
+            return json.dumps({"content": [{"type": "text", "text": json.dumps(_tiered())}],
+                               "stop_reason": "end_turn", "usage": {"input_tokens": 1, "output_tokens": 1}})
+        self.assertEqual(gen60.smoke_m6(self.root, api=no_thinking)["status"], "dropped")
         self.assertTrue(gen60.method_state_path(self.root, "dev", "M6").exists())
         failed_retry = gen60.smoke_m6(self.root, api=lambda *args: (_ for _ in ()).throw(gen60.APIError(500, "server")))
         self.assertEqual(failed_retry["status"], "error")
@@ -1073,6 +1249,7 @@ class WrapperTests(unittest.TestCase):
         python.write_text("\n".join([
             f"#!{sys.executable}",
             "import sys",
+            "import os, time",
             "from pathlib import Path",
             "args=sys.argv[1:]",
             "if args[:3] == ['-m','pip','install']: raise SystemExit(0)",
@@ -1098,6 +1275,10 @@ class WrapperTests(unittest.TestCase):
             "    print('torch stub transformers stub')",
             "    raise SystemExit(0)",
             "if args and args[0] == '-u' and len(args) > 1 and args[1] == 'part60/score60.py':",
+            "    marker=os.environ.get('PART60_TEST_SCORE_MARKER')",
+            "    if marker:",
+            "        Path(marker).write_text(str(os.getpid()))",
+            "        time.sleep(float(os.environ.get('PART60_TEST_SCORE_DELAY','0'))) ",
             "    if __import__('os').environ.get('FAIL_VERIFY_DEV') == '1' and 'verify' in args and 'dev' in args: raise SystemExit(1)",
             "    raise SystemExit(0)",
             "raise SystemExit(0)",
@@ -1142,6 +1323,7 @@ class WrapperTests(unittest.TestCase):
             result = self._run_fake_runner(root, fakebin)
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             self.assertIn("RETURN_READY", result.stdout)
+            self.assertIn("PHASES: dev-only", result.stdout)
             self.assertFalse((root / "results/part60/out/dev/M7.jsonl").exists())
             self.assertIn("pip freeze failed", (root / "logs/version-record.log").read_text())
             self.assertTrue((root / "return.tgz").is_file())
@@ -1180,6 +1362,7 @@ class WrapperTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             self.assertIn("test-gate exit=0", result.stdout)
             self.assertIn("=== score-test", result.stdout)
+            self.assertIn("PHASES: dev-and-test", result.stdout)
 
     def test_run60_rejects_stale_dev_analysis_marker(self) -> None:
         with tempfile.TemporaryDirectory(prefix="part60-wrapper-stale-testgate-") as directory:
@@ -1208,6 +1391,46 @@ class WrapperTests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("skipped: verify-dev did not succeed", (root / "logs/score-test.log").read_text())
             self.assertNotIn("=== score-test", result.stdout)
+
+    def test_run60_kill_and_rerun_keeps_orphan_scorer_lock(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="part60-wrapper-kill-lock-") as directory:
+            root = Path(directory)
+            fakebin = self._prepare_fake_runner(root)
+            marker = root / "scorer.pid"
+            env = {**os.environ, "PATH": f"{fakebin}:{os.environ['PATH']}",
+                   "PART60_HOME": str(root), "PART60_BASIN": str(root),
+                   "PART60_RETURN_PATH": str(root / "return.tgz"),
+                   "PART60_INCOMPLETE_PATH": str(root / "incomplete.tgz"),
+                   "PART60_MAX_RUNTIME_SECONDS": "120",
+                   "PART60_TEST_SCORE_MARKER": str(marker), "PART60_TEST_SCORE_DELAY": "5"}
+            process = subprocess.Popen(["bash", str(HERE / "run60.sh")], env=env,
+                                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            scorer_pid = None
+            try:
+                deadline = time.time() + 10
+                while time.time() < deadline and not marker.is_file():
+                    if process.poll() is not None:
+                        self.fail("wrapper exited before the fake scorer started")
+                    time.sleep(0.02)
+                self.assertTrue(marker.is_file(), "fake scorer did not start")
+                scorer_pid = int(marker.read_text())
+                process.kill()
+                self.assertEqual(process.wait(timeout=5), -signal.SIGKILL)
+                rerun = self._run_fake_runner(root, fakebin)
+                self.assertEqual(rerun.returncode, 3, rerun.stdout + rerun.stderr)
+                self.assertIn("run60 already running", rerun.stdout)
+                time.sleep(5.2)
+            finally:
+                if process.poll() is None:
+                    process.kill()
+                    process.wait(timeout=5)
+                if scorer_pid is not None:
+                    try:
+                        os.kill(scorer_pid, 0)
+                    except ProcessLookupError:
+                        pass
+                    else:
+                        os.kill(scorer_pid, signal.SIGKILL)
 
     def test_run60_stub_returns_ready_without_network_or_model(self) -> None:
         with tempfile.TemporaryDirectory(prefix="part60-wrapper-") as directory:

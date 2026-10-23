@@ -10,6 +10,11 @@ MODEL_REVISION=70d244cc86ccca08cf5af4e1e306ecf908b1ad5e
 MAX_RUNTIME_SECONDS=${PART60_MAX_RUNTIME_SECONDS:-14400}
 mkdir -p "$LOG_DIR" "$RUN_ROOT/results/part60/acts" "$RUN_ROOT/results/part60/reproduction"
 cd "$RUN_ROOT" || exit 2
+exec 9>"$RUN_ROOT/run60.lock"
+if ! flock -n 9; then
+  echo "run60 already running (run lock held)"
+  exit 3
+fi
 RUN_START_SECONDS=$SECONDS
 
 # A failed rerun must never leave an older success archive at the path an operator copies.
@@ -210,6 +215,13 @@ else
 fi
 
 if [ "$run_status" -eq 0 ]; then
+  if [ "${phase_status[test-gate]:-125}" -eq 125 ] \
+    || [ "${phase_status[score-test]:-125}" -eq 125 ] \
+    || [ "${phase_status[verify-test]:-125}" -eq 125 ]; then
+    echo "PHASES: dev-only"
+  else
+    echo "PHASES: dev-and-test"
+  fi
   echo "RETURN_READY"
   exit 0
 fi

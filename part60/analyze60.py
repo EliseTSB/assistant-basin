@@ -178,13 +178,14 @@ def unit_metric(row: dict[str, Any] | None, data: Any | None, sid_rows: dict[str
 
 def cost_for(rows: list[dict[str, Any]], root: Path | None = None,
              split: str | None = None, method: str | None = None) -> dict[str, Any]:
+    import gen60
     input_tokens = output_tokens = calls = 0
     for row in rows:
         usage = row.get("usage_tokens", {})
         input_tokens += int(usage.get("input", 0))
         output_tokens += int(usage.get("output", 0))
         calls += int(usage.get("calls", 0))
-    usd = (input_tokens * 0.05 + output_tokens * 0.25) / 1_000_000
+    usd = (input_tokens * gen60.PRICE_INPUT_BATCH + output_tokens * gen60.PRICE_OUTPUT_BATCH) / 1_000_000
     reserved_usd = 0.0
     if root is not None and split == "dev" and method == "M6":
         path = root / "spend.jsonl"
@@ -261,6 +262,8 @@ def aggregate_method(root: Path, split: str, method: str, units: list[dict[str, 
         def mean_field(name: str) -> float | None:
             values = [m[name] for m in valid if m.get(name) is not None]
             return float(np.mean(values)) if values else None
+        def mean_count(name: str) -> int:
+            return sum(m.get(name) is not None for m in valid)
         out["by_type"][typ] = {
             "n": len(selected), "n_parseable": len(valid),
             "n_threshold_missing": sum(m["parse_status"] == "threshold_missing" for m in selected),
@@ -269,6 +272,9 @@ def aggregate_method(root: Path, split: str, method: str, units: list[dict[str, 
             "mean_h_strong": mean_field("h_strong"), "mean_h_weak": mean_field("h_weak"),
             "mean_h_none": mean_field("h_none"), "mean_auc": mean_field("auc"),
             "mean_strong_marked": mean_field("strong_marked"),
+            "n_mean_h_strong": mean_count("h_strong"), "n_mean_h_weak": mean_count("h_weak"),
+            "n_mean_h_none": mean_count("h_none"), "n_mean_auc": mean_count("auc"),
+            "n_mean_strong_marked": mean_count("strong_marked"),
             "marked_comparable_n": len(marked_comparable) if method == "M4" else None,
             "marked_verified_rate": sum(bool(m.get("marked_verified")) for m in marked_comparable) / len(marked_comparable) if marked_comparable else None,
             "whole_strong_verified_rate": sum(bool(m.get("whole_strong_verified")) for m in marked_comparable) / len(marked_comparable) if marked_comparable else None,
@@ -377,7 +383,11 @@ def truncation_report(rows: list[dict[str, Any]], method: str) -> dict[str, int]
         count = 0
         for row in rows:
             entry = row.get(phase, {}) if method in ("M3", "M5") else row
-            if isinstance(entry, dict) and (entry.get("raw_parse_status") == "max_tokens" or entry.get("stop_reason") == "max_tokens"):
+            attempts = row.get("generation_attempts_by_phase", {}).get(phase, [])
+            if isinstance(attempts, list) and attempts:
+                count += sum(attempt.get("raw_parse_status") == "max_tokens"
+                             or attempt.get("stop_reason") == "max_tokens" for attempt in attempts)
+            elif isinstance(entry, dict) and (entry.get("raw_parse_status") == "max_tokens" or entry.get("stop_reason") == "max_tokens"):
                 count += 1
         if count:
             result[phase] = count
@@ -496,7 +506,7 @@ def prediction_table(metrics: dict[str, dict[str, Any]], m5_round1: dict[str, An
                         if point_lead < 0.05:
                             improved = False
             j_ok = None if missing else not improved
-            evidence = f"tested candidate={best_dev}; only this single dev-selected candidate is tested; leads over {','.join(comparisons)} (point; CI lower bound) for positive-only/full-rule={json.dumps(leads, sort_keys=True)}; advancement requires a point lead of >=5 pp for both (the registered rule); the 95% interval is reported beside it, not required; recommendation={'candidate' if improved and not missing else 'M0'}"
+            evidence = f"tested candidate={best_dev}; only this single dev-selected candidate is tested; point leads over {','.join(comparisons)} for positive-only/full-rule={json.dumps(leads, sort_keys=True)}; advancement requires a point lead of >=5 pp for both (the registered rule); the 95% interval is reported beside it, not required; recommendation={'candidate' if improved and not missing else 'M0'}"
         add("60j", "No tested method beats both M1 and M0 test gaps by at least 5 pp", j_ok, evidence)
     return rows
 
@@ -540,7 +550,7 @@ def choose_dev_leader(metrics: dict[str, dict[str, Any]],
     _, method, gaps, improvements, lower_bounds = candidates[0]
     return {"leader": method, "best_variant": method, "base_gaps": base_gaps,
             "best_gaps": gaps, "improvements": improvements, "lower_bounds": lower_bounds,
-            "stop_rule": "continue_to_test_both_5pp_leads_and_CI_lower_bounds_pass",
+            "stop_rule": "continue_to_test_when_both_positive_only_and_full_rule_point_leads_are_at_least_5pp",
             "test_candidate": method}
 
 
@@ -682,7 +692,7 @@ def unjudgeable_units(root: Path, units: list[dict[str, Any]],
     return {"count": len(keys), "known_ceiling_units": known,
             "unknown_ceiling_units": unknown, "by_type": by_type,
             "unit_keys": keys,
-            "definition": "t_u >= the maximum activation observed for that unit on the fixed other-owner null pool"}
+            "definition": "empirically unjudgeable (threshold at or above the pool maximum)"}
 
 
 def run_analysis(root: Path, split: str) -> dict[str, Any]:
@@ -774,7 +784,7 @@ def write_reports(root: Path, analyses: list[dict[str, Any]]) -> tuple[Path, Pat
             "status": "ready", "created_at": datetime.now(timezone.utc).isoformat(),
             "candidate": candidate, "methods": methods, "dev_selection": selection,
             "analysis_input_sha256": analysis_input_fingerprint(root),
-            "rule": "generated by analyze60.py --split dev; M0, M1, and the single candidate whose positive-only and full-rule gap leads over M0 are each at least five points with 95% CI lower bounds at least five points",
+            "rule": "generated by analyze60.py --split dev; advancement uses at least five percentage points on both positive-only and full-rule gap leads over M0; 95% paired-bootstrap intervals are reported and are not a gate",
         })
     lines = ["# Part 60 analysis", "", "Metrics use the frozen definitions in `part60/DEFINITIONS-60.md`.", ""]
     for analysis in analyses:
@@ -787,12 +797,15 @@ def write_reports(root: Path, analyses: list[dict[str, Any]]) -> tuple[Path, Pat
             cost_text = "—" if cost is None else f"${cost:.5f}"
             gap = None if real["verified_rate"] is None or control["verified_rate"] is None else real["verified_rate"] - control["verified_rate"]
             truncations = sum(analysis.get("max_tokens_truncations", {}).get(method, {}).values())
-            lines.append(f"| {method} | {result['n_parseable']}/{result['n_units']} | {result['n_failed']} | {result['n_threshold_missing']} | {pct(real['positive_only_verified_rate'])} | {pct(real['verified_rate'])} | {pct(control['positive_only_verified_rate'])} | {pct(control['verified_rate'])} | {pct(real['mean_h_strong'])} | {pct(control['mean_h_strong'])} | {pct(gap)} | {pct(real['mean_h_weak'])} | {pct(real['mean_h_none'])} | {pct(control['mean_h_none'])} | {pct(result['real_tier_ordering_share'])} (n={result['real_tier_ordering_n']}) | {pct(result.get('real_tier_ordering_two_hits_share'))} (n={result.get('real_tier_ordering_two_hits_n', 0)}) | {pct(real['mean_auc'])} | {result['cost'].get('calls', 0)} | {truncations} | {cost_text} |")
+            mean = lambda value, n: f"{pct(value)} (n={n})"
+            real_n = int(real.get("n_parseable", result["n_parseable"]))
+            control_n = int(control.get("n_parseable", result["n_parseable"]))
+            lines.append(f"| {method} | {result['n_parseable']}/{result['n_units']} | {result['n_failed']} | {result['n_threshold_missing']} | {pct(real['positive_only_verified_rate'])} | {pct(real['verified_rate'])} | {pct(control['positive_only_verified_rate'])} | {pct(control['verified_rate'])} | {mean(real['mean_h_strong'], real.get('n_mean_h_strong', real_n))} | {mean(control['mean_h_strong'], control.get('n_mean_h_strong', control_n))} | {pct(gap)} | {mean(real['mean_h_weak'], real.get('n_mean_h_weak', real_n))} | {mean(real['mean_h_none'], real.get('n_mean_h_none', real_n))} | {mean(control['mean_h_none'], control.get('n_mean_h_none', control_n))} | {pct(result['real_tier_ordering_share'])} (n={result['real_tier_ordering_n']}) | {pct(result.get('real_tier_ordering_two_hits_share'))} (n={result.get('real_tier_ordering_two_hits_n', 0)}) | {mean(real['mean_auc'], real.get('n_mean_auc', real_n))} | {result['cost'].get('calls', 0)} | {truncations} | {cost_text} |")
             if method == "M0" and result.get("archive_crosscheck"):
                 archive = result["archive_crosscheck"]["by_type"]
                 lines.append(f"| M0 archive cross-check | {result['archive_crosscheck']['n_parseable']}/{result['n_units']} | — | — | — | {pct(archive['neuron']['verified_rate'])} | — | {pct(archive['control']['verified_rate'])} | — | — | — | — | — | — | — | — | — | 0 | 0 | $0.00000 |")
         unjudgeable = analysis.get("unjudgeable", {})
-        lines.extend(["", f"Unjudgeable units (threshold >= observed ceiling): {unjudgeable.get('count', 0)}; known ceilings {unjudgeable.get('known_ceiling_units', 0)}, unknown ceilings {unjudgeable.get('unknown_ceiling_units', 0)}; by type {json.dumps(unjudgeable.get('by_type', {}), sort_keys=True)}."])
+        lines.extend(["", f"Empirically unjudgeable (threshold at or above the pool maximum): {unjudgeable.get('count', 0)}; known ceilings {unjudgeable.get('known_ceiling_units', 0)}, unknown ceilings {unjudgeable.get('unknown_ceiling_units', 0)}; by type {json.dumps(unjudgeable.get('by_type', {}), sort_keys=True)}."])
         lines.extend(["", "### Paired bootstrap differences", "", f"2,000 paired resamples; seed {analysis.get('paired_bootstrap', {}).get('seed')}.", "", "| Method | Comparator | Measure | Difference | 95% CI |", "|---|---|---|---:|---:|"])
         measures = ("real_positive_only", "control_positive_only", "gap_positive_only",
                     "real_full_rule", "control_full_rule", "gap_full_rule")
