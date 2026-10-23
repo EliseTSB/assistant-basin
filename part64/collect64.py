@@ -24,6 +24,8 @@ CORPUS_SHA256_PREFIX = '56ad98d5a82b2bb4'
 CAPACITIES = {'top': 36, 'random': 18, 'weak': 9}
 PILOT_COUNTS = {'top': 12, 'random': 6, 'weak': 3}
 SEED = 6401
+# Amendment 5: the Part 56 pilot scanned the first 1,000 documents of the corpus, so the fresh 3x collection does too.
+PILOT_DOCS = 1000
 
 
 class CollectionError(RuntimeError):
@@ -119,6 +121,10 @@ def assemble(units: dict[str, dict[str, Any]], fresh_rows: dict[str, dict[str, l
         raise CollectionError('fresh collection unit keys differ from the canonical Part 60 dev set')
     output = []
     reproduction = []
+    for key, rows in fresh_rows.items():
+        outside = sorted({int(x['doc']) for cat in rows.values() for x in cat if int(x['doc']) >= PILOT_DOCS})
+        if outside:
+            raise CollectionError(f'{key} has fresh windows outside the pilot documents 0-{PILOT_DOCS - 1} (Amendment 5): {outside[:5]}')
     for key, unit in units.items():
         strata, top_match = assemble_unit(unit, fresh_rows[key])
         output.append({'unit_key': key, 'type': unit['type'], 'layer': unit['layer'],
@@ -130,7 +136,7 @@ def assemble(units: dict[str, dict[str, Any]], fresh_rows: dict[str, dict[str, l
         raise CollectionError(f'reproduction stop: median fresh top-12 match is {median}/12 (minimum 10)')
     manifest = {'version': 1, 'corpus': corpus_meta, 'model': 'Qwen/Qwen3-1.7B',
                 'model_revision': '70d244cc86ccca08cf5af4e1e306ecf908b1ad5e',
-                'docs': 10000, 'max_doc_tokens': atlas.MAX_DOC_TOKENS,
+                'docs': PILOT_DOCS, 'max_doc_tokens': atlas.MAX_DOC_TOKENS,
                 'window_tokens': atlas.WINDOW_TOKENS, 'firing_offset': atlas.FIRING_OFFSET,
                 'capacities': CAPACITIES, 'pilot_counts': PILOT_COUNTS,
                 'unit_count': len(output), 'median_fresh_top12_match': median,

@@ -115,9 +115,10 @@ def collect_fresh(
 ) -> dict[str, dict[str, list[dict[str, Any]]]]:
     """Collect exactly the requested unit coordinates and return collect64 rows.
 
-    `docs_limit` exists for fake/tiny-model coverage on the registered 200-doc
-    head fixture. The production CLI does not expose it and verifies the full
-    registered corpus before loading a model.
+    `docs_limit` bounds the scan to the first N documents. The production CLI
+    passes `collect64.PILOT_DOCS` (Amendment 5: the Part 56 pilot's 1,000
+    documents) after verifying the full registered corpus file; tests also use
+    it for the 200-doc head fixture.
     """
     if batch_size <= 0:
         raise ModelCollectionError("batch size must be positive")
@@ -235,11 +236,12 @@ def main(argv: list[str] | None = None) -> int:
     fresh = collect_fresh(
         units, data=args.data, torch=torch, tokenizer=tokenizer,
         base_model=base_model, layers=model_layers, device=args.device,
+        docs_limit=collect64.PILOT_DOCS,  # Amendment 5: the pilot's 1,000 documents
         batch_size=args.batch_size,
     )
     write_fresh(args.out, fresh)
     print(json.dumps({
-        "unit_count": len(fresh), "corpus": corpus_meta,
+        "unit_count": len(fresh), "corpus": corpus_meta, "docs": collect64.PILOT_DOCS,
         "model": atlas.MODEL_ID, "revision": atlas.MODEL_REVISION,
         "snapshot": str(snapshot), "fresh_counts": FRESH_COUNTS,
         "seed": collect64.SEED, "pilot_control_seed": PILOT_CONTROL_SEED,

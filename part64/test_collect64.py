@@ -4,8 +4,8 @@ from unittest.mock import patch
 from part64 import collect64
 
 
-def item(text, activation=1.0):
-    return {'window': text, 'activation': activation}
+def item(text, activation=1.0, doc=0):
+    return {'window': text, 'activation': activation, 'doc': doc}
 
 
 class CollectionContractTests(unittest.TestCase):
@@ -71,6 +71,35 @@ class CollectionContractTests(unittest.TestCase):
                                                                       "sha256": collect64.CORPUS_SHA256_PREFIX + "0" * 48}):
             with self.assertRaisesRegex(collect64.CollectionError, "9.5/12"):
                 collect64.assemble(units, fresh_rows, corpus=__import__('pathlib').Path('/unused'))
+
+
+    def test_fresh_window_outside_pilot_documents_is_refused(self):
+        # Amendment 5: the fresh collection scans only the pilot's first PILOT_DOCS documents.
+        unit, fresh = self.fresh()
+        fresh['random'][3] = item('late-doc-window', 1.0, doc=collect64.PILOT_DOCS)
+        with patch.object(collect64, 'verify_corpus', return_value={'size_bytes': collect64.CORPUS_SIZE, 'sha256': collect64.CORPUS_SHA256_PREFIX}):
+            with self.assertRaisesRegex(collect64.CollectionError, 'outside the pilot documents'):
+                collect64.assemble({'L0:u1': unit}, {'L0:u1': fresh}, corpus=__import__('pathlib').Path('/unused'))
+
+    def test_pilot_documents_constant_matches_amendment_5(self):
+        self.assertEqual(collect64.PILOT_DOCS, 1000)
+
+
+class CollectorCliTests(unittest.TestCase):
+    def test_main_scans_only_the_pilot_documents(self):
+        from part64 import collect64_model
+        seen = {}
+        def fake_collect(units, **kwargs):
+            seen.update(kwargs)
+            return {}
+        units = {f'L0:u{i}': {} for i in range(500)}
+        with patch.object(collect64, 'verify_corpus', return_value={}), \
+             patch.object(collect64, 'unit_index', return_value=units), \
+             patch.object(collect64_model, 'load_pinned_model', return_value=(None, None, None, None, None, 'snap')), \
+             patch.object(collect64_model, 'collect_fresh', side_effect=fake_collect), \
+             patch.object(collect64_model, 'write_fresh'):
+            collect64_model.main(['--out', '/unused/fresh.jsonl'])
+        self.assertEqual(seen.get('docs_limit'), collect64.PILOT_DOCS)
 
 
 if __name__ == '__main__':
