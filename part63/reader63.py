@@ -1177,6 +1177,13 @@ def run_all(data_dir: Path, review_dir: Path, api: Any = call, *,
                 sub = read_json(path)
                 if sub.get("run_all_id") != run["run_id"]:
                     continue
+                if sub.get("status") == "posting":
+                    # A process died after recording intent to POST. Without a durable response ID
+                    # this is deliberately treated as unknown, even if the POST may not have begun.
+                    sub["status"] = "ambiguous"
+                    sub["ambiguous_at"] = utc_now()
+                    sub["error"] = "previous process ended in POST window; outcome is unknown"
+                    write_json(path, sub)
                 if sub.get("status") == "ready":
                     _resume_ready_submission(review_dir, path, sub, api, active_ledger_path)
                     sub = read_json(path)
@@ -1195,9 +1202,35 @@ def run_all(data_dir: Path, review_dir: Path, api: Any = call, *,
                                 "submission_file": path.name,
                                 "root_batch_id": sub.get("root_batch_id") or recovered_id,
                             })
+                if not sub.get("batch_id") and sub.get("status") == "ambiguous":
+                    _spent, states = spend_state(active_ledger_path)
+                    attempt_id = sub.get("attempt_id") or states.get(sub.get("submission_id"), {}).get("attempt_id")
+                    attempt_state = states.get(sub.get("submission_id"), {}).get("event")
+                    if attempt_state == "retired":
+                        chunk_index = sub.get("chunk_index")
+                        if isinstance(chunk_index, int) and 0 <= chunk_index < len(run["chunks"]):
+                            chunk_state = run["chunks"][chunk_index]
+                            retired = chunk_state.setdefault("retired_unknown_attempts", [])
+                            if not any(item.get("submission_id") == sub.get("submission_id") for item in retired):
+                                retired.append({"state": "retired-unknown",
+                                                "submission_id": sub.get("submission_id"),
+                                                "attempt_id": attempt_id,
+                                                "recorded_at": utc_now()})
+                            chunk_state["state"] = "retired-unknown"
+                            write_json(run_path, run)
+                        continue
+                    exact_command = (
+                        f'python3 {HERE / "reader63.py"} retire {attempt_id} --who "$(id -un)" '
+                        '--reason "POST outcome unknown; no batch ID on disk"')
+                    raise ReaderError(
+                        f"chunk {sub.get('chunk_index')} is POST outcome unknown (no batch ID on disk); "
+                        f"retire the counted reserve with `{exact_command}`, then rerun: `python3 {HERE / 'reader63.py'} "
+                        f"run-all --data-dir {data_dir} --review-dir {review_dir}`")
                 if sub.get("batch_id") and sub.get("status") in ("submitted", "ambiguous"):
                     if sub.get("status") == "ambiguous":
-                        raise ReaderError("run-all found an ambiguous POST; its reserve remains active")
+                        sub["status"] = "submitted"
+                        sub["recovered_known_batch_id"] = True
+                        write_json(path, sub)
                     settle_batch(sub["batch_id"])
             for index, internal_ids in enumerate(internal_chunks):
                 chunk_state = run["chunks"][index]
@@ -1216,8 +1249,7 @@ def run_all(data_dir: Path, review_dir: Path, api: Any = call, *,
                     retry_after_retirement = all(
                         row.get("status") in ("ambiguous", "failed_pre_post")
                         and not row.get("batch_id")
-                        and (not row.get("attempt_id")
-                             or attempts.get(row["attempt_id"], {}).get("status") in ("retired", "released"))
+                        and attempts.get(row.get("attempt_id"), {}).get("status") == "retired"
                         for row in existing
                     )
                     if retry_after_retirement:

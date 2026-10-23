@@ -6,9 +6,9 @@ Built a standard-library-only ledger and cost helper for Parts 62 and 63 to shar
 
 ## API
 
-- `Ledger(path, cap)` requires an absolute file path outside `/tmp` and a finite positive numeric cap no higher than `HARD_CAP_USD` ($8). The default shared path is `DEFAULT_LEDGER_PATH` beside this module. A sibling `paid-ledger-registry.json` may use schema `paid-ledger-registry-v1` and list `known_ledger_files`; an existing alternate sibling causes refusal.
-- `reserve(worst_case_usd, kind, meta)` returns a fresh 32-character lowercase hex attempt token after its reserve event is fsynced. The cap check includes all settled dollars and active reservations.
-- `settle(attempt_id, actual_usd, usage)` is idempotent when both dollars and the canonical usage digest match. It stores dollars and the usage digest, not usage totals; callers retain raw responses and derive usage by `custom_id`.
+- `Ledger(path, cap)` requires an absolute file path outside `/tmp` and a finite positive numeric cap no higher than `HARD_CAP_USD` ($8). `DEFAULT_LEDGER_PATH` is the canonical `/home/elisepc/assistant-basin/paidaction/paid-ledger.jsonl`, independent of the importing checkout. When reserve metadata supplies `run_id`, a durable shared registry refuses a second resolved ledger path for that run.
+- `reserve(worst_case_usd, kind, meta, *, subcap_usd, subcap_key)` returns a fresh 32-character lowercase hex attempt token after its reserve event is fsynced. Aggregate and optional per-key sub-cap checks share one lock and accounting read; the reserve line is the same fsynced commit for both.
+- `settle(attempt_id, actual_usd, usage)` is idempotent when both dollars and the canonical usage digest match. It stores dollars and the usage digest, not usage totals; callers retain raw responses and derive usage by `custom_id`. If settlement would exceed the aggregate cap, it appends a `settlement_overrun` incident and raises `CapExceededError`, leaving the original reserve active and counted.
 - `release(attempt_id, http_status, body)` accepts only a non-429 4xx with a parsed `{"type":"error","error":{...}}` object. Invalid bodies, timeouts, connection errors, 5xx, 429, and kills leave the reserve active.
 - `retire(attempt_id, who, reason)` appends a timestamped operator action and removes only that active reserve from counted spend. `state()` reports `settled`, `reserved`, and per-kind dollar totals, plus whether a torn final line was ignored.
 - `pricing.worst_case_cost(model, input_tokens_upper, max_tokens, batch=True)` uses inherited model-specific batch/direct rates. `submit_in_chunks` estimates input as ceil(serialized request bytes / 3), computes the maximum output from each request's `max_tokens`, and lets the ledger refuse a later chunk after actual settlement.
@@ -44,7 +44,7 @@ print(completed, ledger.state())
 
 ## TESTS
 
-Ran `/home/elisepc/neuron-probe/.venv/bin/python -m unittest` from this folder: **15 tests passed**. The suite covers non-finite and over-ceiling caps, a two-process reserve race, torn-tail reporting and recovery, Anthropic 4xx release rules, timeout retention, retirement, chunking/cap refusal, and read-only listing. The SIGKILL matrix kills a subprocess after reserve, after a simulated POST body, after the batch ID fsync, and after settlement; each case reruns with a new attempt ID and checks durable totals. Two mutation tests edit copies of the real `paid_ledger.py` finite-cap and error-body guards; both mutated copies fail the targeted contract assertion.
+Ran `/home/elisepc/neuron-probe/.venv/bin/python -m unittest -v` from this folder: **18 tests passed**. The suite covers non-finite and over-ceiling caps, two-process aggregate and sub-cap races, settlement overrun recording, canonical default path and run-ID path refusal, torn-tail recovery, release rules, timeout retention, retirement, chunking, and read-only listing. The SIGKILL matrix kills a subprocess after reserve, simulated POST, batch ID fsync, and settlement. Five copied-production-code mutations covering the original guards and all three new fixes fail their targeted assertions.
 
 ## ASSUMPTIONS UNVERIFIED
 

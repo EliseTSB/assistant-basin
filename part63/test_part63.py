@@ -144,6 +144,8 @@ def _install_sabotage() -> None:
             return labels_path
 
         reader63.collect = mutated
+    elif mode == "skip-retire":
+        reader63.retire_attempt = lambda *_args, **_kwargs: None
     else:
         raise ValueError(f"unknown {SABOTAGE_ENV}={mode!r}")
 
@@ -593,6 +595,104 @@ class SafetyTests(unittest.TestCase):
             self.assertEqual(len(states), 2)
             self.assertTrue(all(row["event"] == "settled" for row in states.values()))
 
+    def test_run_all_sigkill_recovery_matrix_and_retire_path(self):
+        phases = ("reserve_before_submission_write", "posting_before_post",
+                  "accepted_before_response", "response_saved_before_submission_update")
+        child = r'''import json, os, signal, sys
+from pathlib import Path
+import reader63
+data_dir, review_dir, ledger = map(Path, sys.argv[1:4])
+phase = sys.argv[4]
+reader63.DEFAULT_LEDGER_PATH = ledger
+os.environ["ANTHROPIC_CREDITS_KEY"] = "test-key"
+reader63.context = lambda: object()
+original = reader63.write_json
+def kill():
+    os.kill(os.getpid(), signal.SIGKILL)
+def hooked(path, value):
+    path = Path(path)
+    if phase == "reserve_before_submission_write" and path.name.startswith("submission-") and isinstance(value, dict) and value.get("attempt_id"):
+        kill()
+    if phase == "response_saved_before_submission_update" and path.name.startswith("submission-") and isinstance(value, dict) and value.get("status") == "submitted":
+        kill()
+    return original(path, value)
+reader63.write_json = hooked
+def api(method, path, body=None):
+    if method == "POST":
+        if phase == "posting_before_post": kill()
+        if phase == "accepted_before_response":
+            marker = review_dir / "accepted-posts.txt"
+            with marker.open("a") as stream: stream.write("accepted\n"); stream.flush(); os.fsync(stream.fileno())
+            kill()
+        return json.dumps({"id": "msgbatch_kill_matrix", "processing_status": "in_progress"})
+    raise AssertionError((method, path))
+reader63.run_all(data_dir, review_dir, api, poll_interval=0, poll_bound=1,
+                 sleep=lambda _seconds: None, ledger_path=ledger)
+'''
+        for phase in phases:
+            with self.subTest(kill_point=phase), tempfile.TemporaryDirectory(dir=HERE) as directory:
+                root = Path(directory)
+                data_dir, review_dir, ledger = root / "data", root / "review", root / "ledger.jsonl"
+                reader63.DEFAULT_LEDGER_PATH = ledger
+                gather63.write_bundle(data_dir, _fixture_rows(100), seed=93)
+                completed = subprocess.run([sys.executable, "-c", child, str(data_dir), str(review_dir),
+                                            str(ledger), phase], cwd=HERE, stdout=subprocess.PIPE,
+                                           stderr=subprocess.PIPE, check=False)
+                self.assertEqual(completed.returncode, -9, completed.stderr.decode(errors="replace"))
+                _spent, states = reader63.spend_state(ledger)
+                self.assertEqual(len(states), 1)
+                initial = next(iter(states.values()))
+                if phase in ("posting_before_post", "accepted_before_response"):
+                    self.assertEqual(initial["event"], "reserved")
+                    if phase == "accepted_before_response":
+                        self.assertEqual((review_dir / "accepted-posts.txt").read_text().splitlines(), ["accepted"])
+                    row = next(read for read in review_dir.glob("submission-*.json")
+                               if not read.name.endswith(("-idmap.json", "-key.json")))
+                    metadata = json.loads(row.read_text())
+                    with self.assertRaisesRegex(reader63.ReaderError, "no batch ID on disk"):
+                        with mock.patch.dict(os.environ, {"ANTHROPIC_CREDITS_KEY": "test-key"}), \
+                                mock.patch.object(reader63, "context", return_value=object()):
+                            reader63.run_all(data_dir, review_dir, lambda *_args: self.fail("must not POST"),
+                                             poll_interval=0, poll_bound=1, sleep=lambda _seconds: None,
+                                             ledger_path=ledger)
+                    reader63.retire_attempt(metadata["attempt_id"], "test operator", "unknown POST outcome")
+                posted = []
+                def fake_api(method, path, body=None):
+                    if method == "POST":
+                        posted.append(body)
+                        return json.dumps({"id": f"msgbatch_recovered_{len(posted)}",
+                                           "processing_status": "in_progress"})
+                    batch_id = path.split("/batches/")[1].split("/")[0]
+                    if path == f"/v1/messages/batches/{batch_id}":
+                        return json.dumps({"processing_status": "ended"})
+                    if path.endswith("/results"):
+                        link = json.loads((review_dir / f"batch-{batch_id}.json").read_text())
+                        sub = json.loads((review_dir / link["submission_file"]).read_text())
+                        idmap = json.loads((review_dir / sub["idmap_file"]).read_text())
+                        snap = json.loads((review_dir / sub["key_file"]).read_text())
+                        return "\n".join(json.dumps({"custom_id": cid,
+                            "result": _fake_success(snap["calibration"]["expected_quality"].get(internal, "OK"))})
+                            for cid, internal in idmap.items())
+                    raise AssertionError((method, path))
+                with mock.patch.dict(os.environ, {"ANTHROPIC_CREDITS_KEY": "test-key"}), \
+                        mock.patch.object(reader63, "context", return_value=object()), \
+                        contextlib.redirect_stdout(io.StringIO()):
+                    output = reader63.run_all(data_dir, review_dir, fake_api, poll_interval=0, poll_bound=1,
+                                              sleep=lambda _seconds: None, ledger_path=ledger)
+                self.assertTrue(json.loads(output.read_text())["scoring_gate_passed"])
+                _spent, final_states = reader63.spend_state(ledger)
+                self.assertTrue(all(row["event"] in ("settled", "retired") for row in final_states.values()))
+                if phase in ("posting_before_post", "accepted_before_response"):
+                    self.assertEqual(sum(row["event"] == "retired" for row in final_states.values()), 1)
+                self.assertLessEqual(len(final_states), 3 if phase in ("posting_before_post", "accepted_before_response") else 2)
+                if phase == "response_saved_before_submission_update":
+                    # The saved ID is resumed by polling; the two later POSTs belong only to the next chunk(s).
+                    self.assertEqual(len(posted), 1)
+                    self.assertEqual(posted[0]["requests"][0]["custom_id"], "r00200")
+                if phase in ("posting_before_post", "accepted_before_response"):
+                    run = json.loads((review_dir / "run-all.json").read_text())
+                    self.assertTrue(run["chunks"][0]["retired_unknown_attempts"])
+
     def test_fixed_predictions_and_analysis_failure_gate(self):
         with tempfile.TemporaryDirectory() as directory:
             data_dir = Path(directory)
@@ -968,6 +1068,7 @@ class SafetyTests(unittest.TestCase):
             ("reject-63c-flat-step", "test_63c_allows_a_flat_monotonic_step"),
             ("loosen-token-estimate", "test_estimator_reserves_a_positive_worst_case_amount"),
             ("drop-label-fanout", "test_fake_api_submit_collect_settles_and_calibrates"),
+            ("skip-retire", "test_run_all_sigkill_recovery_matrix_and_retire_path"),
         )
         for mode, test_name in targets:
             with tempfile.TemporaryDirectory() as directory:

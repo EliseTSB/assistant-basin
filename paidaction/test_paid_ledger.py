@@ -11,10 +11,11 @@ import signal
 import subprocess
 import sys
 import tempfile
+import uuid
 import unittest
 import warnings
 
-from paid_ledger import (CapExceededError, Ledger, LedgerError,
+from paid_ledger import (CapExceededError, Ledger, LedgerError, DEFAULT_LEDGER_PATH,
                          LedgerCorruptionError, ReleaseRefusedError,
                          listing_report, submit_in_chunks, chunks)
 from pricing import worst_case_cost
@@ -28,6 +29,17 @@ def _reserve_racer(path: str, ready: object, start: object, result: object) -> N
     start.wait()
     try:
         attempt = Ledger(path, 1.0).reserve(0.75, "race", {})
+        result.put(("ok", attempt))
+    except CapExceededError:
+        result.put(("cap", None))
+
+
+def _subcap_racer(path: str, ready: object, start: object, result: object) -> None:
+    ready.put(True)
+    start.wait()
+    try:
+        attempt = Ledger(path, 2.0).reserve(0.6, "race", {},
+                                             subcap_usd=0.6, subcap_key="reader-stage")
         result.put(("ok", attempt))
     except CapExceededError:
         result.put(("cap", None))
@@ -81,6 +93,20 @@ class LedgerTests(unittest.TestCase):
             self.ledger.settle(attempt_id, 0.13, usage)
         with self.assertRaisesRegex(LedgerError, "different values"):
             self.ledger.settle(attempt_id, 0.12, {"input_tokens": 11, "output_tokens": 4})
+
+    def test_settlement_overrun_refuses_records_actual_and_keeps_reserve(self) -> None:
+        other = self.ledger.reserve(0.4, "earlier", {})
+        target = self.ledger.reserve(0.5, "target", {})
+        with self.assertRaisesRegex(CapExceededError, "overrun was recorded"):
+            self.ledger.settle(target, 0.7, {"actual": 7})
+        rows = [json.loads(line) for line in self.path.read_text(encoding="utf-8").splitlines()]
+        overrun = rows[-1]
+        self.assertEqual(overrun["event"], "settlement_overrun")
+        self.assertEqual(overrun["attempt_id"], target)
+        self.assertEqual(overrun["actual_usd"], 0.7)
+        self.assertAlmostEqual(self.ledger.state()["reserved"], 0.9)
+        self.assertEqual(self.ledger.state()["settled"], 0.0)
+        self.assertEqual(other, rows[0]["attempt_id"])
 
     def test_cap_counts_settled_and_reserved_dollars(self) -> None:
         settled = self.ledger.reserve(0.6, "direct", {})
@@ -174,6 +200,34 @@ class LedgerTests(unittest.TestCase):
         outcomes = [results.get(timeout=5)[0] for _ in range(2)]
         self.assertCountEqual(outcomes, ["ok", "cap"])
         self.assertAlmostEqual(self.ledger.state()["reserved"], 0.75)
+
+    def test_two_processes_racing_one_subcap_cannot_both_reserve(self) -> None:
+        context = multiprocessing.get_context("fork")
+        ready, start, results = context.Queue(), context.Event(), context.Queue()
+        workers = [context.Process(target=_subcap_racer,
+                                   args=(str(self.path), ready, start, results))
+                   for _ in range(2)]
+        for worker in workers:
+            worker.start()
+        ready.get(timeout=5)
+        ready.get(timeout=5)
+        start.set()
+        for worker in workers:
+            worker.join(timeout=10)
+            self.assertFalse(worker.is_alive())
+            self.assertEqual(worker.exitcode, 0)
+        outcomes = [results.get(timeout=5)[0] for _ in range(2)]
+        self.assertCountEqual(outcomes, ["ok", "cap"])
+        self.assertAlmostEqual(self.ledger.state()["reserved"], 0.6)
+
+    def test_default_path_is_checkout_independent_and_run_id_cannot_split(self) -> None:
+        self.assertEqual(DEFAULT_LEDGER_PATH,
+                         Path("/home/elisepc/assistant-basin/paidaction/paid-ledger.jsonl"))
+        run_id = "test-" + uuid.uuid4().hex
+        self.ledger.reserve(0.1, "first", {"run_id": run_id})
+        with self.assertRaisesRegex(LedgerError, "already uses ledger"):
+            Ledger(self.temp_root / "other.jsonl", 1.0).reserve(
+                0.1, "second", {"run_id": run_id})
 
     def test_kill_matrix_reruns_with_fresh_attempts_and_durable_state(self) -> None:
         script = r'''import json, os, signal, sys
@@ -278,6 +332,13 @@ submit_in_chunks(requests, 1, ledger=ledger, model="claude-haiku-5-5",
             ("valid = (isinstance(parsed, dict)\n             and parsed.get(\"type\") == \"error\"\n             and isinstance(parsed.get(\"error\"), dict)\n             and bool(parsed[\"error\"]))",
              "valid = True",
              "test_release_requires_anthropic_4xx_and_never_releases_429"),
+            ("if committed_elsewhere + actual > self._cap_decimal or subcap_over:",
+             "if False:", "test_settlement_overrun_refuses_records_actual_and_keeps_reserve"),
+            ("if scoped + amount > subcap:", "if False:",
+             "test_two_processes_racing_one_subcap_cannot_both_reserve"),
+            ('Path("/home/elisepc/assistant-basin/paidaction/paid-ledger.jsonl")',
+             "Path(__file__).resolve().with_name(\"paid-ledger.jsonl\")",
+             "test_default_path_is_checkout_independent_and_run_id_cannot_split"),
         ]
         for original, mutation, test_name in mutants:
             with self.subTest(test_name=test_name):

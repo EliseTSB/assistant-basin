@@ -24,7 +24,11 @@ from typing import Any, Callable, Iterable, Iterator, Mapping, Sequence
 HARD_CAP_USD = 8.0
 REGISTRY_FILENAME = "paid-ledger-registry.json"
 REGISTRY_SCHEMA = "paid-ledger-registry-v1"
-DEFAULT_LEDGER_PATH = Path(__file__).resolve().with_name("paid-ledger.jsonl")
+# This canonical path is intentionally independent of the checkout containing a
+# copy of this module.
+DEFAULT_LEDGER_PATH = Path("/home/elisepc/assistant-basin/paidaction/paid-ledger.jsonl")
+_RUN_PATH_REGISTRY = Path("/home/elisepc/assistant-basin/paidaction/.paid-ledger-run-paths.json")
+_RUN_PATH_LOCK = _RUN_PATH_REGISTRY.with_suffix(".lock")
 _ATTEMPT_ID_RE = re.compile(r"^[0-9a-f]{32}$")
 
 
@@ -120,6 +124,46 @@ def _valid_anthropic_error(body: str | bytes | Mapping[str, Any]) -> tuple[bool,
 
 def _usage_digest(usage: Any) -> str:
     return hashlib.sha256(_strict_json(usage)).hexdigest()
+
+
+def _claim_run_path(run_id: str, path: Path) -> None:
+    """Persist one resolved ledger path per caller-supplied run ID."""
+    _RUN_PATH_REGISTRY.parent.mkdir(parents=True, exist_ok=True)
+    fd = os.open(_RUN_PATH_LOCK, os.O_CREAT | os.O_RDWR, 0o600)
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX)
+        try:
+            paths = json.loads(_RUN_PATH_REGISTRY.read_text(encoding="utf-8"))
+        except FileNotFoundError:
+            paths = {}
+        except (OSError, json.JSONDecodeError) as exc:
+            raise LedgerError(f"cannot read run-to-ledger registry: {exc}") from exc
+        if not isinstance(paths, dict) or any(not isinstance(k, str) or not isinstance(v, str)
+                                              for k, v in paths.items()):
+            raise LedgerError("invalid run-to-ledger registry")
+        resolved = str(path.resolve(strict=False))
+        previous = paths.get(run_id)
+        if previous is not None and previous != resolved:
+            raise LedgerError(f"run {run_id!r} already uses ledger {previous}; refusing {resolved}")
+        if previous is None:
+            paths[run_id] = resolved
+            payload = _strict_json(paths) + b"\n"
+            temp_path = _RUN_PATH_REGISTRY.with_name(_RUN_PATH_REGISTRY.name + f".{os.getpid()}.tmp")
+            temp_fd = os.open(temp_path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+            try:
+                os.write(temp_fd, payload)
+                os.fsync(temp_fd)
+            finally:
+                os.close(temp_fd)
+            os.replace(temp_path, _RUN_PATH_REGISTRY)
+            dir_fd = os.open(_RUN_PATH_REGISTRY.parent, os.O_RDONLY)
+            try:
+                os.fsync(dir_fd)
+            finally:
+                os.close(dir_fd)
+    finally:
+        fcntl.flock(fd, fcntl.LOCK_UN)
+        os.close(fd)
 
 
 class Ledger:
@@ -246,6 +290,12 @@ class Ledger:
                         raise LedgerCorruptionError("reserve event has invalid kind or metadata")
                     attempts[attempt_id] = {"status": "reserved", "kind": kind,
                                             "reserve": reserve, "meta": meta}
+                    if "subcap_key" in row:
+                        key = row.get("subcap_key")
+                        subcap = _decimal_amount(row.get("subcap_usd"), "subcap_usd", allow_zero=False)
+                        if not isinstance(key, str) or not key.strip():
+                            raise LedgerCorruptionError("reserve event has invalid subcap key")
+                        attempts[attempt_id].update({"subcap_key": key, "subcap": subcap})
                 elif event == "settle":
                     current = attempts.get(attempt_id)
                     if current is None or current["status"] != "reserved":
@@ -256,6 +306,16 @@ class Ledger:
                         raise LedgerCorruptionError("settle event has invalid usage digest")
                     current.update({"status": "settled", "actual": actual,
                                     "usage_sha256": usage_sha256})
+                elif event == "settlement_overrun":
+                    current = attempts.get(attempt_id)
+                    if current is None or current["status"] != "reserved":
+                        raise LedgerCorruptionError(f"overrun without active reserve for {attempt_id}")
+                    actual = _decimal_amount(row.get("actual_usd"), "actual_usd", allow_zero=True)
+                    digest = row.get("usage_sha256")
+                    if (not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest)
+                            or not isinstance(row.get("ts"), str) or not row["ts"]):
+                        raise LedgerCorruptionError("settlement overrun has invalid usage digest or timestamp")
+                    current.setdefault("overruns", []).append({"actual": actual, "usage_sha256": digest})
                 elif event == "release":
                     current = attempts.get(attempt_id)
                     if current is None or current["status"] != "reserved":
@@ -347,7 +407,9 @@ class Ledger:
             return self._summary(attempts, bool(tail["torn_last_line_ignored"]))
 
     def reserve(self, worst_case_usd: float, kind: str,
-                meta: Mapping[str, Any] | None = None) -> str:
+                meta: Mapping[str, Any] | None = None, *,
+                subcap_usd: float | None = None,
+                subcap_key: str | None = None) -> str:
         amount = _decimal_amount(worst_case_usd, "worst_case_usd", allow_zero=False)
         if not isinstance(kind, str) or not kind.strip():
             raise LedgerError("kind must be a non-empty string")
@@ -356,6 +418,17 @@ class Ledger:
             raise LedgerError("meta must be a JSON object")
         normalized_meta: dict[str, Any] = dict(meta or {})
         _strict_json(normalized_meta)
+        if (subcap_usd is None) != (subcap_key is None):
+            raise LedgerError("subcap_usd and subcap_key must be supplied together")
+        subcap = (_decimal_amount(subcap_usd, "subcap_usd", allow_zero=False)
+                  if subcap_usd is not None else None)
+        if subcap_key is not None and (not isinstance(subcap_key, str) or not subcap_key.strip()):
+            raise LedgerError("subcap_key must be a non-empty string")
+        run_id = normalized_meta.get("run_id")
+        if run_id is not None:
+            if not isinstance(run_id, str) or not run_id.strip():
+                raise LedgerError("meta.run_id must be a non-empty string")
+            _claim_run_path(run_id, self.path)
         with self._locked():
             events, tail = self._read_locked()
             attempts = self._attempts(events)
@@ -365,12 +438,27 @@ class Ledger:
                 raise CapExceededError(
                     f"reservation refused: settled/reserved ${float(total):.8f} plus "
                     f"${float(amount):.8f} exceeds cap ${self.cap:.8f}")
+            if subcap is not None:
+                scoped = Decimal("0")
+                for item in attempts.values():
+                    if item.get("subcap_key") != subcap_key:
+                        continue
+                    if item.get("subcap") != subcap:
+                        raise LedgerError(f"sub-cap {subcap_key!r} was already opened with a different limit")
+                    scoped += item["actual"] if item["status"] == "settled" else (
+                        item["reserve"] if item["status"] == "reserved" else Decimal("0"))
+                if scoped + amount > subcap:
+                    raise CapExceededError(
+                        f"reservation refused: sub-cap {subcap_key!r} has ${float(scoped):.8f} "
+                        f"committed plus ${float(amount):.8f}, over ${float(subcap):.8f}")
             attempt_id = secrets.token_hex(16)
             while attempt_id in attempts:
                 attempt_id = secrets.token_hex(16)
             event = {"event": "reserve", "attempt_id": attempt_id,
                      "kind": normalized_kind, "reserve_usd": float(amount),
                      "meta": normalized_meta, "ts": _utc_now()}
+            if subcap_key is not None:
+                event.update({"subcap_key": subcap_key, "subcap_usd": float(subcap)})
             self._append_locked(event, tail)
         return attempt_id
 
@@ -390,6 +478,23 @@ class Ledger:
                 raise LedgerError(f"attempt {attempt_id} was already settled with different values")
             if current["status"] != "reserved":
                 raise LedgerError(f"attempt {attempt_id} is {current['status']}, not an active reservation")
+            events_state = self._summary(attempts, bool(tail["torn_last_line_ignored"]))
+            committed_elsewhere = Decimal(str(events_state["settled"])) + Decimal(str(events_state["reserved"])) - current["reserve"]
+            subcap_over = False
+            if current.get("subcap_key") is not None:
+                scoped = sum((item["actual"] if item["status"] == "settled" else
+                              item["reserve"] if item["status"] == "reserved" else Decimal("0"))
+                             for item in attempts.values()
+                             if item.get("subcap_key") == current["subcap_key"] and item is not current)
+                subcap_over = scoped + actual > current["subcap"]
+            if committed_elsewhere + actual > self._cap_decimal or subcap_over:
+                self._append_locked({"event": "settlement_overrun", "attempt_id": attempt_id,
+                                     "actual_usd": float(actual), "usage_sha256": usage_sha256,
+                                     "ts": _utc_now()}, tail)
+                raise CapExceededError(
+                    f"settlement refused: actual ${float(actual):.8f} plus other settled/reserved "
+                    f"${float(committed_elsewhere):.8f} exceeds cap/sub-cap; "
+                    "overrun was recorded and this reservation remains active")
             self._append_locked({"event": "settle", "attempt_id": attempt_id,
                                  "actual_usd": float(actual), "usage_sha256": usage_sha256,
                                  "ts": _utc_now()}, tail)
