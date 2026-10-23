@@ -1,0 +1,16 @@
+# Part 64 targeted collection report
+
+## SUMMARY
+Part 64 now has a targeted model traversal that emits fresh 36/18/9 top, random, and weak candidates for the exact Part 60 dev units. It reuses atlas tokenization, batches, hooked forwards, and marked-window decoding, and restricts neuron/control collection to selected coordinates. A fake model exercised both neuron and Part 56 control paths over the first 200 documents. Five tests pass. The registered 10,000-document corpus and pinned model were not available for a production traversal in this checkout.
+
+## FINDINGS
+- `part64/collect64_model.py:30-72` validates unit keys, layers, neuron indices, and control ids, then groups only the supplied target coordinates. The CLI obtains its 500-unit list from `collect64.unit_index()` at lines 228-231.
+- `part64/collect64_model.py:75-100` builds targeted atlas states, uses Part 56's control seed 5601 and direction ids 0-99, and expands the candidate reservoirs to the required 36 top, 18 random, and 9 weak rows. The pilot summary records seed 5601; its 2,000 control rows span ids 0-99.
+- `part64/collect64_model.py:103-183` traverses tokenized docs with imported `atlas._read_docs`, `atlas.make_batches`, `atlas._forward_batches`, and `atlas._record_rows`. It changes atlas top-k only for the call, restores it in `finally`, verifies each category has its requested count, and returns `activation` fields in the JSONL schema consumed by `collect64.load_fresh`.
+- `part64/collect64_model.py:186-247` loads Part 38's locally cached Qwen snapshot at the atlas revision, verifies the registered corpus before loading, resolves Part 60's canonical dev units, and writes fresh JSONL for `collect64.py --fresh`.
+- `part64/collect64.py:79-107` retains the deterministic pilot-window inclusion and computes per-unit fresh top-12 reproduction. Assembly still refuses production output if its median overlap is below 10/12.
+- Coverage: `part64/test_collect64_model.py:105-170` runs a tiny hooked model over `data/pile10k-head200.jsonl`, confirms all candidate counts and top activation ordering, round-trips the `collect64.py` JSONL format, compares marked windows with `atlas.decode_marked_window`, and verifies all 12 pilot-slice top windows reproduce from a deterministic activation replay. Lines 172-177 cover a Part 56 seeded control direction. Existing assembly tests cover subset inclusion, duplicate refusal, and the reproduction gate.
+- Verification: `/home/elisepc/neuron-probe/.venv/bin/python -m unittest part64.test_collect64 part64.test_collect64_model -v` — 5 passed. `py_compile` and `git diff --check` also passed. Parent-control mailbox reads returned no messages; no dispositions were needed.
+
+## BLOCKERS
+The registered corpus at `/mnt/c/Users/alexa/neuron-probe-gpu/qwen35/pile10k.jsonl` is absent from this checkout, so the strict 10,000-document, pinned-Qwen production traversal and its real fresh-top-12 median were not run. Tests validate traversal mechanics with a deterministic fake model and a pilot-slice record built from that fake replay; they do not establish the real model's reproduction score. Run the collector on the registered corpus and local pinned snapshot before treating a resulting collection as eligible for Part 64 assembly.
