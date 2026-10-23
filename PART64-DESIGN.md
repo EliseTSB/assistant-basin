@@ -90,3 +90,11 @@ position and by text; activation ratio on 1,800 matched windows 1.000). Decision
 same 1,000 documents (PILOT_DOCS = 1000), so 3x means the top 36 / random 18 / weak 9 of the corpus the 1x windows came
 from, not stronger windows from ten times the text (which would confound "more text" with "better examples").
 Amendment 1's reproduction check is unchanged. Assembly refuses any fresh window outside documents 0-999.
+
+## Amendment 6 (2026-10-23 15:36 CT, during the paid run, after the Haiku stage settled and before any Opus chunk settled)
+Operational, no change to any cap, price, request, sample or chunk lifecycle. The Opus stage is 108 chunks and `run`
+submitted them one at a time, waiting for each to end; today's Opus batch latency is over an hour (one ~10-request
+chunk 26+ min, the stylometry Opus batches 2 h+), so the Opus arms could not finish before the API credit expires.
+Decision (Claude): `run`/`resume` submit chunks in manifest order until the stage guard refuses (the $40 cap still
+bounds settled plus reserved), then collect ended batches and submit more as reserves settle. Each chunk keeps exactly
+one POST per attempt and the existing durable states; a group's output is written only after all its chunks settle.
