@@ -23,7 +23,7 @@ from datetime import datetime, timedelta, timezone
 import urllib.error
 import urllib.request
 import uuid
-from typing import Any, Callable, Mapping
+from typing import Any, Callable, Mapping, Sequence
 
 HERE = Path(__file__).resolve().parent
 BASIN = HERE.parent.resolve()
@@ -707,6 +707,18 @@ def _result_bundle(chunk: Mapping[str, Any], rows: list[dict[str, Any]]) -> dict
             "rows": ordered, "usage": usage, "actual_usd": actual_usd}
 
 
+def _unknown_post(message: str, unresolved: Sequence[str] | None = None) -> RecoveryRequired:
+    """A RecoveryRequired for a chunk whose POST outcome is unknown: _run_groups defers it, never resubmits it.
+
+    unresolved lists provider batches that may still turn out to be this POST; while it is non-empty the
+    pipeline keeps waiting. At POST time nothing has been listed yet, so recovery gets one pass to look.
+    """
+    error = RecoveryRequired(message)
+    error.unknown_post = True
+    error.unresolved = list(unresolved) if unresolved is not None else ["(not listed yet)"]
+    return error
+
+
 def execute_chunk(root: Path, chunk_path: Path, api: Callable[..., str] = api_call, *,
                   kill_at: str | None = None, poll_interval: float = POLL_INTERVAL_SECONDS,
                   poll_bound: float = POLL_BOUND_SECONDS,
@@ -783,7 +795,7 @@ def execute_chunk(root: Path, chunk_path: Path, api: Callable[..., str] = api_ca
                 reason += f"; unresolved candidate batches: {unresolved}"
             chunk.update(state="ambiguous", error=reason)
             write_json(chunk_path, chunk)
-            raise RecoveryRequired(reason + "; do not resubmit; retry recovery or verify before retiring")
+            raise _unknown_post(reason + "; do not resubmit; retry recovery or verify before retiring", unresolved)
 
     if state == "reserved":
         attempt_id = chunk.get("attempt_id")
@@ -808,19 +820,19 @@ def execute_chunk(root: Path, chunk_path: Path, api: Callable[..., str] = api_ca
         except Exception as exc:
             chunk.update(state="ambiguous", error=f"POST outcome unknown: {type(exc).__name__}: {exc}")
             write_json(chunk_path, chunk)
-            raise RecoveryRequired("POST outcome is unknown; reserve retained and resubmission refused") from exc
+            raise _unknown_post("POST outcome is unknown; reserve retained and resubmission refused") from exc
         _kill_at(kill_at, "after_post_before_id")
         try:
             response = json.loads(raw_response)
         except (TypeError, json.JSONDecodeError) as exc:
             chunk.update(state="ambiguous", error=f"invalid POST response: {exc}")
             write_json(chunk_path, chunk)
-            raise RecoveryRequired("POST response cannot be parsed; reserve retained and resubmission refused") from exc
+            raise _unknown_post("POST response cannot be parsed; reserve retained and resubmission refused") from exc
         batch_id = response.get("id") if isinstance(response, dict) else None
         if not isinstance(batch_id, str) or not batch_id.strip():
             chunk.update(state="ambiguous", error="POST response has no batch id")
             write_json(chunk_path, chunk)
-            raise RecoveryRequired("POST response has no batch ID; reserve retained and resubmission refused")
+            raise _unknown_post("POST response has no batch ID; reserve retained and resubmission refused")
         chunk.update(state="submitted", batch_id=batch_id, processing_status=response.get("processing_status"),
                      submitted_at=utc_now())
         write_json(chunk_path, chunk)  # Durable batch ID precedes every poll.
@@ -1162,6 +1174,9 @@ def _run_groups(root: Path, manifest: dict[str, Any], api: Callable[..., str], *
     while True:
         check_deadline()
         refusal: StageCapRefused | None = None
+        # An unknown POST stays ambiguous (its reserve stays counted, it is never resubmitted) while the rest of
+        # the run goes on; before 2026-10-23 one such chunk aborted every pass and stalled the whole stage.
+        deferred: dict[str, RecoveryRequired] = {}
         for _group_key, _group, relpath in chunks:
             check_deadline()
             try:
@@ -1169,6 +1184,10 @@ def _run_groups(root: Path, manifest: dict[str, Any], api: Callable[..., str], *
             except StageCapRefused as exc:
                 refusal = exc
                 break
+            except RecoveryRequired as exc:
+                if not getattr(exc, "unknown_post", False):
+                    raise
+                deferred[relpath] = exc
             check_deadline()
 
         committed_before_collect = (_writer_stage_committed(refusal.writer)
@@ -1191,7 +1210,12 @@ def _run_groups(root: Path, manifest: dict[str, Any], api: Callable[..., str], *
             check_deadline()
             break
         still_submitted = any(state == "submitted" for state in states)
-        if still_submitted:
+        # Wait for an unknown POST only while some provider batch near it is still in flight; with none left,
+        # the listing has spoken and a person must recover or retire it.
+        waiting_on_provider = any(getattr(exc, "unresolved", None) for exc in deferred.values())
+        if deferred and not still_submitted and not waiting_on_provider:
+            raise next(iter(deferred.values()))
+        if still_submitted or waiting_on_provider:
             remaining = deadline - time.monotonic()
             if remaining <= 0:
                 raise TimeoutError(f"writer pipeline did not settle within {pipeline_bound:g}s")
@@ -1276,11 +1300,14 @@ def _find_provider_batches(api: Callable[..., str], chunk: Mapping[str, Any]) ->
 
     batches: list[dict[str, Any]] = []
     seen_ids: set[str] = set()
-    before_id: str | None = None
+    seen_cursors: set[str] = set()
+    after_id: str | None = None
     for _page in range(1000):
+        # The listing is newest-first and after_id=<last_id> returns the next OLDER page. Probed live
+        # 2026-10-23: before_id=<last_id> returned 99 of page 1's 100 batches again.
         path = "/v1/messages/batches?limit=100"
-        if before_id:
-            path += f"&before_id={before_id}"
+        if after_id:
+            path += f"&after_id={after_id}"
         try:
             page = json.loads(api("GET", path))
         except Exception as exc:
@@ -1300,9 +1327,11 @@ def _find_provider_batches(api: Callable[..., str], chunk: Mapping[str, Any]) ->
         if not has_more:
             break
         next_id = page.get("last_id")
-        if not isinstance(next_id, str) or not next_id or next_id in seen_ids:
+        # The cursor IS the last batch just seen, so it is always in seen_ids; only a repeat means no progress.
+        if not isinstance(next_id, str) or not next_id or next_id not in seen_ids or next_id in seen_cursors:
             raise RecoveryRequired("provider batch listing has an invalid pagination cursor")
-        before_id = next_id
+        seen_cursors.add(next_id)
+        after_id = next_id
     else:
         raise RecoveryRequired("provider batch listing exceeded the 1000-page safety bound")
 
@@ -1328,8 +1357,15 @@ def _find_provider_batches(api: Callable[..., str], chunk: Mapping[str, Any]) ->
                 unresolved.append(batch["id"])
             continue
         try:
-            result_text = api("GET", f"/v1/messages/batches/{batch['id']}/results")
-            results = _parse_result_jsonl(result_text)
+            # An ended batch's results never change, so each is fetched once per process: recovery is retried on
+            # every pipeline pass and scans every listed batch (fold 3 kept old batches in the proof on purpose).
+            cache = getattr(api, "__dict__", None)
+            cache = cache.setdefault("_gen64_ended_results", {}) if isinstance(cache, dict) else {}
+            results = cache.get(batch["id"])
+            if results is None:
+                result_text = api("GET", f"/v1/messages/batches/{batch['id']}/results")
+                results = _parse_result_jsonl(result_text)
+                cache[batch["id"]] = results
         except Exception as exc:
             if not is_reprobe or within_window:
                 unresolved.append(batch["id"])

@@ -1215,6 +1215,120 @@ class ChunkRecoveryTests(LocalPaidRegistryTests):
             with self.subTest(ledger=key):
                 self.assertLess(reserve, HARD_CAP_USD)
 
+    # 2026-10-23 live stall: chunk-0015's POST got a connection reset, and recovery could not list the account's
+    # 191 batches (before_id paging plus a cursor check that rejected every valid cursor), so every pass aborted.
+    def test_listing_pages_older_with_after_id_and_finds_a_match_on_page_two(self):
+        with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
+            chunk = gen64.read_json(self.make_chunk(Path(temporary)))
+            chunk["posting_started_at"] = "2026-10-23T12:00:00Z"
+            mine = chunk["requests"][0]["custom_id"]
+            ids = [f"b{index:03d}" for index in range(150)]  # newest first, like the provider
+
+            class PagedAPI:
+                def __init__(self):
+                    self.list_calls = 0
+
+                def __call__(self, method, api_path, body=None):
+                    if method == "GET" and api_path.startswith("/v1/messages/batches?"):
+                        self.list_calls += 1
+                        if "before_id=" in api_path:
+                            raise AssertionError("before_id pages toward newer batches")
+                        start = ids.index(api_path.split("after_id=")[1]) + 1 if "after_id=" in api_path else 0
+                        page = ids[start:start + 100]
+                        return json.dumps({"data": [{"id": b, "created_at": "2026-10-23T12:01:00Z",
+                                                     "processing_status": "ended"} for b in page],
+                                           "has_more": start + 100 < len(ids),
+                                           "first_id": page[0], "last_id": page[-1]})
+                    if method == "GET" and api_path.endswith("/results"):
+                        batch_id = api_path.split("/")[-2]
+                        custom_id = mine if batch_id == "b120" else f"other-{batch_id}"
+                        return json.dumps({"custom_id": custom_id, "result": {"type": "errored"}}) + "\n"
+                    raise AssertionError((method, api_path))
+
+            api = PagedAPI()
+            matches, unresolved = gen64._find_provider_batches(api, chunk)
+            self.assertEqual((matches, unresolved), (["b120"], []))
+            self.assertEqual(api.list_calls, 2)
+
+    def test_ended_batch_results_are_fetched_once_across_recovery_passes(self):
+        with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
+            chunk = gen64.read_json(self.make_chunk(Path(temporary)))
+            chunk["posting_started_at"] = "2026-10-23T12:00:00Z"
+
+            class OneEndedBatchAPI:
+                def __init__(self):
+                    self.result_gets = 0
+
+                def __call__(self, method, api_path, body=None):
+                    if method == "GET" and api_path.startswith("/v1/messages/batches?"):
+                        return json.dumps({"data": [{"id": "old", "created_at": "2026-10-23T09:00:00Z",
+                                                     "processing_status": "ended"}], "has_more": False})
+                    if method == "GET" and api_path.endswith("/results"):
+                        self.result_gets += 1
+                        return json.dumps({"custom_id": "someone-else", "result": {"type": "errored"}}) + "\n"
+                    raise AssertionError((method, api_path))
+
+            api = OneEndedBatchAPI()
+            for _ in range(3):
+                self.assertEqual(gen64._find_provider_batches(api, chunk), ([], []))
+            self.assertEqual(api.result_gets, 1)
+
+    def test_pipeline_goes_on_past_an_unaccepted_post_then_asks_a_person(self):
+        with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
+            root = Path(temporary)
+            manifest = self.make_pipeline_manifest(root, count=3, key_prefix="haiku-unaccepted")
+            paths = [root / relpath for relpath in manifest["groups"]["test-chunk"]["chunk_paths"]]
+
+            class SecondPostNeverArrivesAPI(FakeBatchAPI):
+                def __init__(self):
+                    super().__init__()
+                    self.post_calls = 0
+
+                def __call__(self, method, api_path, body=None):
+                    if method == "POST":
+                        self.post_calls += 1
+                        if self.post_calls == 2:
+                            raise ConnectionResetError("connection reset before the provider accepted it")
+                    return super().__call__(method, api_path, body)
+
+            api = SecondPostNeverArrivesAPI()
+            with self.assertRaisesRegex(gen64.RecoveryRequired, "no ended matching batch"):
+                gen64._run_groups(root, manifest, api, poll_interval=0, sleep=lambda _n: None)
+            states = [gen64.read_json(path)["state"] for path in paths]
+            self.assertEqual(states, ["settled", "ambiguous", "settled"])
+            self.assertEqual(len(api.posts), 2)  # the unknown POST was never sent again
+            ledger = Ledger(str(gen64.ledger_path(root, gen64.read_json(paths[1])["ledger_key"])), HARD_CAP_USD)
+            self.assertEqual(next(iter(gen64._attempts(ledger).values()))["status"], "reserved")
+
+    def test_pipeline_adopts_an_accepted_lost_post_once_its_batch_ends(self):
+        with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
+            root = Path(temporary)
+            manifest = self.make_pipeline_manifest(root, count=2, key_prefix="haiku-lost")
+
+            class FirstResponseLostAPI(FakeBatchAPI):
+                def __init__(self):
+                    super().__init__()
+                    self.lost: str | None = None
+                    self.listings = 0
+
+                def __call__(self, method, api_path, body=None):
+                    if method == "POST" and self.lost is None:
+                        super().__call__(method, api_path, body)
+                        self.lost = f"batch-{len(self.posts)}"
+                        raise TimeoutError("accepted, response lost")
+                    if method == "GET" and api_path.startswith("/v1/messages/batches?"):
+                        self.listings += 1
+                        if self.listings >= 2:  # the lost batch finishes while the run goes on
+                            self.batch_records[self.lost]["processing_status"] = "ended"
+                    return super().__call__(method, api_path, body)
+
+            api = FirstResponseLostAPI()
+            gen64._run_groups(root, manifest, api, poll_interval=0, sleep=lambda _n: None)
+            self.assert_pipeline_chunks_settled_once(root, manifest)
+            self.assertEqual(len(api.posts), 2)
+            first = gen64.read_json(root / manifest["groups"]["test-chunk"]["chunk_paths"][0])
+            self.assertEqual(first["batch_id"], api.lost)
+
 
 if __name__ == "__main__":
     unittest.main()
