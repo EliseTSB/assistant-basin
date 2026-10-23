@@ -274,15 +274,35 @@ class Part61Tests(unittest.TestCase):
         model = _FakeModel(width=8, depth=2)
         _, layers, _ = nr.find_text_layers(model)
         tok = _FakeTokenizer()
-        tokenized = [{"ids": [1], "offsets": [(0, 1)]}, {"ids": [1], "offsets": [(0, 1)]}]
-        baseline = run61.capture_means(
+        tokenized = [
+            {"ids": [1, 2, 3], "offsets": [(0, 1), (1, 2), (2, 3)]},
+            {"ids": [4, 5], "offsets": [(0, 1), (1, 2)]},
+        ]
+        baseline_result = run61.capture_means(
             tok, model, tokenized, layers, batch_size=2, device="cpu", residual_layer=1,
-            start_layer=1)[0]
-        clamped = run61.capture_means(
+            start_layer=1)
+        clamped_result = run61.capture_means(
             tok, model, tokenized, layers, batch_size=2, device="cpu", residual_layer=1,
-            clamp_layer=0, unit=2, clamp_value=3.0)[0]
-        expected_delta = (3.0 - 1.0) / 8.0 * 0.1
-        np.testing.assert_allclose(clamped - baseline, np.full(8, expected_delta), rtol=1e-5, atol=1e-7)
+            clamp_layer=0, unit=2, clamp_value=3.0, start_layer=1)
+        baseline_mean, clamped = baseline_result[0], clamped_result[0]
+        # Independently calculate the two-token/three-token valid-token means.
+        per_doc_base, per_doc_clamped, base_residuals, clamp_residuals = [], [], [], []
+        for ids in ([1.0, 2.0, 3.0], [4.0, 5.0]):
+            values = np.asarray(ids)
+            signals_base = values * 0.1
+            signals_clamped = ((7.0 * values + 3.0) / 8.0) * 0.1
+            layer1_base = values + signals_base
+            layer1_clamped = values + signals_clamped
+            per_doc_base.append(float(layer1_base.mean()))
+            per_doc_clamped.append(float(layer1_clamped.mean()))
+            base_residuals.append(float((np.sqrt(3.0) * layer1_base).mean()))
+            clamp_residuals.append(float((np.sqrt(3.0) * layer1_clamped).mean()))
+        np.testing.assert_allclose(baseline_mean, np.full(8, np.mean(per_doc_base)), rtol=1e-5)
+        np.testing.assert_allclose(clamped, np.full(8, np.mean(per_doc_clamped)), rtol=1e-5)
+        np.testing.assert_allclose(baseline_result[4], base_residuals, rtol=1e-5)
+        np.testing.assert_allclose(clamped_result[4], clamp_residuals, rtol=1e-5)
+        expected_ratio = np.mean(np.asarray(clamp_residuals) / np.asarray(base_residuals))
+        self.assertAlmostEqual(float(np.mean(clamped_result[4] / baseline_result[4])), expected_ratio)
 
     def test_pooled_symmetric_classifier_has_no_absolute_change_floor(self):
         changes = np.zeros((11, 2, 4), dtype=np.float64)
@@ -333,15 +353,21 @@ class Part61Tests(unittest.TestCase):
         tied = analyze61.spearman_rho([1, 1, 2, 3], [1, 2, 3, 4])
         self.assertAlmostEqual(tied, 0.9486832980505138)
 
-    def test_61a_pools_only_controls_and_pairs_unit_major_counts_with_size(self):
+    def test_61a_primary_pools_all_units_and_controls_are_sensitivity(self):
         rising = np.tile(np.asarray([0, 1, 2, 3]), (11, 1))
-        rising[0] = [3, 2, 1, 0]  # The target is deliberately excluded from the 61a gate.
+        rising[0] = [3, 2, 1, 0]
+        self.assertAlmostEqual(
+            analyze61.pooled_size_effect_rho(rising, analyze61.WRITE_SIZES), 0.8181818181818183)
         self.assertAlmostEqual(
             analyze61.pooled_control_size_effect_rho(rising, analyze61.WRITE_SIZES), 1.0)
         non_monotone = np.tile(np.asarray([0, 3, 1, 2]), (11, 1))
         non_monotone[0] = [100, 0, 0, 0]
         self.assertAlmostEqual(
             analyze61.pooled_control_size_effect_rho(non_monotone, analyze61.WRITE_SIZES), 0.4)
+        # A high control-only sensitivity cannot override a sub-threshold registered primary rho.
+        self.assertEqual(analyze61.model_decision(0.69, 1.0, 3, 4), "inconclusive for this model")
+        self.assertEqual(analyze61.model_decision(0.7, 0.7, 3, 4),
+                         "push-size artefact supported for this model")
 
     def test_registered_count_and_residual_evaluation(self):
         changes = np.zeros((11, 4, 2, 2), dtype=np.float64)
@@ -364,10 +390,10 @@ class Part61Tests(unittest.TestCase):
         self.assertEqual(analyze61.excess_status(1, 1), "shown")
         self.assertEqual(analyze61.excess_status(3, 1), "absent")
         self.assertEqual(analyze61.excess_status(2, 1), "inconclusive")
-        self.assertEqual(analyze61.model_decision(0.2, 1, 1), "59B contrast survives for this model")
-        self.assertEqual(analyze61.model_decision(0.7, 3, 4),
+        self.assertEqual(analyze61.model_decision(0.2, 0.2, 1, 1), "59B contrast survives for this model")
+        self.assertEqual(analyze61.model_decision(0.7, 0.7, 3, 4),
                          "push-size artefact supported for this model")
-        self.assertEqual(analyze61.model_decision(0.69, 3, 4), "inconclusive for this model")
+        self.assertEqual(analyze61.model_decision(0.69, 0.7, 3, 4), "inconclusive for this model")
         self.assertEqual(analyze61.target_rank(7, [7] + [0] * 9), (2, 2 / 11))
         chance = analyze61.null_outcome_chance_table()
         self.assertAlmostEqual(chance["independent_sizes"]["shown"], 1 / 121)
@@ -404,8 +430,12 @@ class Part61Tests(unittest.TestCase):
         qwen_2x_target = rng.poisson(40.0, size=draws)
         qwen_2x_controls = rng.poisson(40.0, size=(draws, 10))
         qwen_rank_2x = 1 + np.sum(qwen_2x_controls >= qwen_2x_target[:, None], axis=1)
-        self.assertLessEqual(float(np.mean((olmo_rank_1x == 1) & (olmo_rank_2x == 1))), 1 / 11)
-        self.assertLessEqual(float(np.mean((qwen_rank_1x == 1) & (qwen_rank_2x == 1))), 1 / 11)
+        olmo_status = [analyze61.excess_status(int(one), int(two))
+                       for one, two in zip(olmo_rank_1x, olmo_rank_2x)]
+        qwen_status = [analyze61.excess_status(int(one), int(two))
+                       for one, two in zip(qwen_rank_1x, qwen_rank_2x)]
+        self.assertLessEqual(olmo_status.count("shown") / draws, 1 / 11)
+        self.assertLessEqual(qwen_status.count("shown") / draws, 1 / 11)
 
     @unittest.skipUnless(TORCH_AVAILABLE, "PyTorch is absent; stub forward integration needs CPU PyTorch")
     def test_stub_model_writer_reader_archive_and_resume_checkpoint(self):
@@ -497,6 +527,13 @@ class Part61Tests(unittest.TestCase):
             paired = analyze61.analyze_pair(qwen_npz, olmo_npz)
             self.assertEqual(set(paired["predictions"]), {"61a", "61b", "61c", "61d", "61e"})
             self.assertEqual(set(paired["decisions_by_model"]), {"qwen35-4b", "olmo2-1b"})
+            self.assertEqual(paired["decisions_by_model"]["qwen35-4b"],
+                             qwen_analysis["model_decision"])
+            self.assertEqual(paired["decisions_by_model"]["olmo2-1b"],
+                             olmo_analysis["model_decision"])
+            self.assertEqual(paired["predictions"]["61a"]["among_controls_sensitivity_rho"], {
+                "qwen35-4b": qwen_analysis["pooled_control_spearman_rho_write_size_vs_count"],
+                "olmo2-1b": olmo_analysis["pooled_control_spearman_rho_write_size_vs_count"]})
             self.assertIn("Qwen:", paired["decision_summary"])
             self.assertFalse(paired["predictions"]["61b"]["decision_input"])
             self.assertFalse(paired["predictions"]["61e"]["decision_input"])
@@ -600,6 +637,12 @@ class Part61Tests(unittest.TestCase):
     def test_source_mutation_sabotages_go_red_on_real_functions(self):
         _run_mutation_red(
             self, PART61 / "analyze61.py", "analyze61.py",
+            "pooled_sizes = np.tile(sizes, len(counts))",
+            "pooled_sizes = np.repeat(sizes, len(counts))",
+            "counts = np.tile(np.asarray([0, 1, 2, 3]), (11, 1)); counts[0] = [3, 2, 1, 0]; assert np.isclose(module.pooled_size_effect_rho(counts, [0.25, 0.5, 1.0, 2.0]), 0.8181818181818183)",
+            "61a all-eleven size-count pairing")
+        _run_mutation_red(
+            self, PART61 / "analyze61.py", "analyze61.py",
             "pooled_sizes = np.tile(sizes, CONTROL_COUNT)",
             "pooled_sizes = np.repeat(sizes, CONTROL_COUNT)",
             "counts = np.tile(np.asarray([0, 1, 2, 3]), (11, 1)); assert np.isclose(module.pooled_control_size_effect_rho(counts, [0.25, 0.5, 1.0, 2.0]), 1.0)",
@@ -651,6 +694,63 @@ expected = np.full(8, (3.0 - 1.0) / 8.0 * 0.1)
 assert np.allclose(clamped - base, expected, rtol=1e-5, atol=1e-7)
 """,
             "real clamp path")
+        _run_mutation_red(
+            self, PART61 / "run61.py", "run61.py",
+            "doc_ratios = residual_norms / baseline_residual",
+            "doc_ratios = baseline_residual / residual_norms",
+            """
+import tempfile
+from pathlib import Path
+import test_part61 as fixture
+import part26 as p26
+with tempfile.TemporaryDirectory() as temp:
+    root = Path(temp); paths = fixture._source_fixture(root)
+    output = root / 'results' / 'part61'; output.mkdir(parents=True)
+    args = fixture._run_args('qwen35-4b', paths, output)
+    p26._load_model_offline = fixture._stub_loader
+    module.run(args)
+    with np.load(output / '61-qwen35-4b-L22u2742.npz') as archive:
+        ratio = float(archive['residual_norm_ratio'][0, 2, 1])
+        assert np.isclose(ratio, 1.3265625 / 1.1, rtol=1e-5)
+""",
+            "residual ratio orientation")
+        mult_token_capture = """
+import test_part61 as fixture
+import neuron_report as nr
+model = fixture._FakeModel(width=8, depth=2)
+_, layers, _ = nr.find_text_layers(model)
+tok = fixture._FakeTokenizer()
+tokens = [{'ids': [1, 2, 3], 'offsets': [(0, 1), (1, 2), (2, 3)]},
+          {'ids': [4, 5], 'offsets': [(0, 1), (1, 2)]}]
+base = module.capture_means(tok, model, tokens, layers, batch_size=2, device='cpu',
+                            residual_layer=1, start_layer=1)
+clamped = module.capture_means(tok, model, tokens, layers, batch_size=2, device='cpu',
+                               residual_layer=1, clamp_layer=0, unit=2,
+                               clamp_value=3.0, start_layer=1)
+expected_mean = np.full(8, np.mean([(1.0 + 2.0 + 3.0) / 3 * 1.1,
+                                   (4.0 + 5.0) / 2 * 1.1]))
+expected_clamp = np.mean([np.mean(np.array([1, 2, 3]) + .1 * (7*np.array([1, 2, 3])+3)/8),
+                          np.mean(np.array([4, 5]) + .1 * (7*np.array([4, 5])+3)/8)])
+assert np.allclose(base[0], expected_mean, rtol=1e-5)
+assert np.allclose(clamped[0], np.full(8, expected_clamp), rtol=1e-5)
+expected_residual = []
+for ids in ([1., 2., 3.], [4., 5.]):
+    values = np.array(ids); signals = .1 * (7*values+3)/8
+    expected_residual.append((np.sqrt(3)*(values+signals)).mean())
+assert np.allclose(clamped[4], expected_residual, rtol=1e-5)
+"""
+        _run_mutation_red(
+            self, PART61 / "run61.py", "run61.py",
+            "per_document = (values * mask.unsqueeze(-1)).sum(dim=1) / mask.sum(dim=1).clamp_min(1).unsqueeze(-1)",
+            "per_document = (values * mask.unsqueeze(-1)).sum(dim=1)",
+            mult_token_capture,
+            "mean denominator")
+        _run_mutation_red(
+            self, PART61 / "run61.py", "run61.py",
+            "per_document = (norms * mask).sum(dim=1) / mask.sum(dim=1).clamp_min(1)",
+            "per_document = norms.sum(dim=1) / mask.sum(dim=1).clamp_min(1)",
+            mult_token_capture,
+            "residual padding mask")
 
 
 if __name__ == "__main__":

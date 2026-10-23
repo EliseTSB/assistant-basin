@@ -120,15 +120,25 @@ def _held(value: bool) -> str:
     return "held" if value else "failed"
 
 
-def pooled_control_size_effect_rho(size_count_matrix, write_sizes) -> float:
-    """Spearman rho across control-unit counts and write sizes, excluding the target."""
+def pooled_size_effect_rho(size_count_matrix, write_sizes) -> float:
+    """Primary 61a Spearman rho across all eleven units and write sizes."""
     counts = np.asarray(size_count_matrix, dtype=np.float64)
     sizes = np.asarray(write_sizes, dtype=np.float64)
     if counts.ndim != 2 or counts.shape[1] != len(sizes) or counts.shape[0] != CONTROL_COUNT + 1:
         raise ValueError("size count matrix must contain the target plus ten controls")
-    control_counts = counts[1:, :]
+    pooled_sizes = np.tile(sizes, len(counts))
+    pooled_counts = counts.reshape(-1)
+    return spearman_rho(pooled_sizes, pooled_counts)
+
+
+def pooled_control_size_effect_rho(size_count_matrix, write_sizes) -> float:
+    """Sensitivity rho across the ten controls only; target excluded."""
+    counts = np.asarray(size_count_matrix, dtype=np.float64)
+    sizes = np.asarray(write_sizes, dtype=np.float64)
+    if counts.ndim != 2 or counts.shape[1] != len(sizes) or counts.shape[0] != CONTROL_COUNT + 1:
+        raise ValueError("size count matrix must contain the target plus ten controls")
     pooled_sizes = np.tile(sizes, CONTROL_COUNT)
-    pooled_counts = control_counts.reshape(-1)
+    pooled_counts = counts[1:, :].reshape(-1)
     return spearman_rho(pooled_sizes, pooled_counts)
 
 
@@ -152,12 +162,14 @@ def excess_status(rank_1x: int, rank_2x: int) -> str:
     return "inconclusive"
 
 
-def model_decision(control_size_effect_rho: float, rank_1x: int, rank_2x: int) -> str:
-    """Apply Amendment 1 independently to one model."""
+def model_decision(primary_size_effect_rho: float, control_sensitivity_rho: float,
+                   rank_1x: int, rank_2x: int) -> str:
+    """Apply Amendment 1 independently to one model; both 61a views gate artefact."""
     status = excess_status(rank_1x, rank_2x)
     if status == "shown":
         return "59B contrast survives for this model"
-    if control_size_effect_rho >= SPEARMAN_MINIMUM and status == "absent":
+    if (primary_size_effect_rho >= SPEARMAN_MINIMUM
+            and control_sensitivity_rho >= SPEARMAN_MINIMUM and status == "absent"):
         return "push-size artefact supported for this model"
     return "inconclusive for this model"
 
@@ -226,6 +238,7 @@ def analyze_arrays(changes, write_sizes, residual_ratios, condition_units: list[
             "target_odd_count": classified["odd_count"],
         })
 
+    primary_rho = pooled_size_effect_rho(size_count_matrix, write_sizes)
     control_rho = pooled_control_size_effect_rho(size_count_matrix, write_sizes)
     matched_index = WRITE_SIZES.index(1.0)
     two_x_index = WRITE_SIZES.index(2.0)
@@ -264,12 +277,13 @@ def analyze_arrays(changes, write_sizes, residual_ratios, condition_units: list[
         "symmetric_counts_by_unit_and_size": size_count_matrix.tolist(),
         "per_size": per_size,
         "target_rank_by_size": rank_rows,
+        "pooled_spearman_rho_write_size_vs_count_all_11_units": primary_rho,
         "pooled_control_spearman_rho_write_size_vs_count": control_rho,
         "residual_norm_ratios_by_unit_size_and_sign": per_size_residual_ratios,
         "model_decision": {
             "excess_status": excess,
             "excess_absent_interpretation": "no evidence of excess over matched controls; not proof that excess is absent",
-            "decision": model_decision(control_rho, rank_1x, rank_2x),
+            "decision": model_decision(primary_rho, control_rho, rank_1x, rank_2x),
             "target_rank_1x": rank_1x,
             "target_rank_2x": rank_2x,
             "null_outcome_chance": null_outcome_chance_table(),
@@ -336,10 +350,11 @@ def analyze_file(input_npz: str | Path, out_path: str | Path | None = None,
     short = manifest["short_name"]
     matched = result["matched_1x"]
     predictions = {
-        "61a": {"claim": "among-control Spearman rho between write-size multiplier and symmetric count is at least 0.7",
-                "observed_rho": result["pooled_control_spearman_rho_write_size_vs_count"],
+        "61a": {"claim": "Spearman rho across all eleven units between write-size multiplier and symmetric count is at least 0.7",
+                "observed_rho": result["pooled_spearman_rho_write_size_vs_count_all_11_units"],
+                "among_controls_sensitivity_rho": result["pooled_control_spearman_rho_write_size_vs_count"],
                 "minimum": SPEARMAN_MINIMUM,
-                "held": result["pooled_control_spearman_rho_write_size_vs_count"] >= SPEARMAN_MINIMUM},
+                "held": result["pooled_spearman_rho_write_size_vs_count_all_11_units"] >= SPEARMAN_MINIMUM},
         "61b": {"claim": "at matched 1x the OLMo target fails to beat at least one control",
                 "applicable": short == "olmo2-1b",
                 "observed_target_count": matched["target_count"],
@@ -383,6 +398,7 @@ def analyze_file(input_npz: str | Path, out_path: str | Path | None = None,
         "per_size_results": result["per_size"],
         "symmetric_counts_by_unit_and_size": result["symmetric_counts_by_unit_and_size"],
         "target_rank_by_size": result["target_rank_by_size"],
+        "pooled_spearman_rho_write_size_vs_count_all_11_units": result["pooled_spearman_rho_write_size_vs_count_all_11_units"],
         "pooled_control_spearman_rho_write_size_vs_count": result["pooled_control_spearman_rho_write_size_vs_count"],
         "residual_norm_ratios_by_unit_size_and_sign": result["residual_norm_ratios_by_unit_size_and_sign"],
         "model_decision": result["model_decision"],
@@ -393,14 +409,17 @@ def analyze_file(input_npz: str | Path, out_path: str | Path | None = None,
                        "percentile_interpolation": "numpy default linear interpolation",
                        "residual_norm_aggregation": "mean of 200 per-document clamped/unclamped ratios for each sign",
                        "target_rank_ties": "controls tied with the target count against it; permutation p equals rank divided by 11",
-                       "61a_pool": "the ten matched controls only; target excluded"},
+                       "61a_primary_pool": "all eleven units, including target, pooled over write sizes",
+                       "61a_sensitivity_pool": "the ten matched controls only; target excluded",
+                       "61a_artefact_gate": "both the all-eleven primary rho and among-controls sensitivity rho must be at least 0.7"},
     }
     if out_path is None:
         out_path = input_npz.with_name(input_npz.stem + "-analysis.json")
     out_path = Path(out_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(output, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"61 {short}: among_control_size_rho={result['pooled_control_spearman_rho_write_size_vs_count']:.6f} "
+    print(f"61 {short}: size_rho_all_11={result['pooled_spearman_rho_write_size_vs_count_all_11_units']:.6f} "
+          f"among_control_sensitivity_rho={result['pooled_control_spearman_rho_write_size_vs_count']:.6f} "
           f"matched_1x_target={matched['target_count']} controls={matched['control_counts']}")
     print("61 null outcome chance (independent sizes): "
           f"{result['model_decision']['null_outcome_chance']['independent_sizes']}")
@@ -443,11 +462,15 @@ def analyze_pair(qwen_archive: str | Path, olmo_archive: str | Path,
         raise ValueError("combined analysis requires Qwen35-4B followed by OLMo2-1B archives")
     qwen_matched = qwen["matched_1x"]
     olmo_matched = olmo["matched_1x"]
-    rho_qwen = qwen["pooled_control_spearman_rho_write_size_vs_count"]
-    rho_olmo = olmo["pooled_control_spearman_rho_write_size_vs_count"]
+    rho_qwen = qwen["pooled_spearman_rho_write_size_vs_count_all_11_units"]
+    rho_olmo = olmo["pooled_spearman_rho_write_size_vs_count_all_11_units"]
+    sensitivity_qwen = qwen["pooled_control_spearman_rho_write_size_vs_count"]
+    sensitivity_olmo = olmo["pooled_control_spearman_rho_write_size_vs_count"]
     predictions = {
-        "61a": {"claim": "among-control symmetric count rises with write size: Spearman rho >= 0.7 in each model",
+        "61a": {"claim": "all-eleven-unit symmetric count rises with write size: Spearman rho >= 0.7 in each model",
                 "observed_rho": {"qwen35-4b": rho_qwen, "olmo2-1b": rho_olmo},
+                "among_controls_sensitivity_rho": {"qwen35-4b": sensitivity_qwen,
+                                                    "olmo2-1b": sensitivity_olmo},
                 "minimum": SPEARMAN_MINIMUM,
                 "held": rho_qwen >= SPEARMAN_MINIMUM and rho_olmo >= SPEARMAN_MINIMUM},
         "61b": {"claim": "at matched 1x the OLMo target fails to beat at least one control",
@@ -497,7 +520,9 @@ def analyze_pair(qwen_archive: str | Path, olmo_archive: str | Path,
     out_path.write_text(json.dumps(output, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     for name, row in predictions.items():
         if name == "61a":
-            numbers = f"Qwen rho={rho_qwen:.6f}, OLMo rho={rho_olmo:.6f}, minimum={SPEARMAN_MINIMUM:.1f}"
+            numbers = (f"Qwen all11 rho={rho_qwen:.6f} (controls={sensitivity_qwen:.6f}), "
+                       f"OLMo all11 rho={rho_olmo:.6f} (controls={sensitivity_olmo:.6f}), "
+                       f"minimum={SPEARMAN_MINIMUM:.1f}")
         elif name == "61b":
             numbers = f"OLMo target={olmo_matched['target_count']} controls={olmo_matched['control_counts']}"
         elif name == "61c":
