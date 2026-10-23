@@ -15,6 +15,7 @@ import uuid
 import unittest
 import warnings
 
+import paid_ledger
 from paid_ledger import (CapExceededError, Ledger, LedgerError, DEFAULT_LEDGER_PATH,
                          LedgerCorruptionError, ReleaseRefusedError,
                          listing_report, submit_in_chunks, chunks)
@@ -110,6 +111,27 @@ class LedgerTests(unittest.TestCase):
         with self.assertRaises(CapExceededError):
             self.ledger.reserve(0.01, "after-overrun", {})
         self.assertEqual(other, rows[0]["attempt_id"])
+
+    def test_settlement_above_reserve_succeeds_when_aggregate_and_subcap_allow(self) -> None:
+        target = self.ledger.reserve(0.2, "part63", {}, subcap_usd=0.9, subcap_key="part63")
+        self.ledger.settle(target, 0.7, {"actual": 7})
+        state = self.ledger.state()
+        self.assertAlmostEqual(state["settled"], 0.7)
+        self.assertAlmostEqual(state["reserved"], 0.0)
+        attempt = self.ledger._attempts([json.loads(line) for line in self.path.read_text().splitlines()])[target]
+        self.assertEqual(attempt["status"], "settled")
+
+    def test_settlement_over_subcap_stays_overrun_and_future_reserve_refuses(self) -> None:
+        first = self.ledger.reserve(0.4, "part63", {}, subcap_usd=0.6, subcap_key="part63")
+        self.ledger.settle(first, 0.4, {"actual": 4})
+        target = self.ledger.reserve(0.1, "part63", {}, subcap_usd=0.6, subcap_key="part63")
+        with self.assertRaisesRegex(CapExceededError, "overrun recorded"):
+            self.ledger.settle(target, 0.3, {"actual": 3})
+        attempts = self.ledger._attempts([json.loads(line) for line in self.path.read_text().splitlines()])
+        self.assertEqual(attempts[target]["status"], "overrun")
+        self.assertAlmostEqual(float(attempts[target]["actual"]), 0.3)
+        with self.assertRaisesRegex(CapExceededError, "sub-cap"):
+            self.ledger.reserve(0.01, "part63", {}, subcap_usd=0.6, subcap_key="part63")
 
     def test_cap_counts_settled_and_reserved_dollars(self) -> None:
         settled = self.ledger.reserve(0.6, "direct", {})
@@ -259,10 +281,16 @@ class LedgerTests(unittest.TestCase):
         self.assertEqual(DEFAULT_LEDGER_PATH,
                          Path("/home/elisepc/assistant-basin/paidaction/paid-ledger.jsonl"))
         run_id = "test-" + uuid.uuid4().hex
-        self.ledger.reserve(0.1, "first", {"run_id": run_id})
-        with self.assertRaisesRegex(LedgerError, "already uses ledger"):
-            Ledger(self.temp_root / "other.jsonl", 1.0).reserve(
-                0.1, "second", {"run_id": run_id})
+        original_registry, original_lock = paid_ledger._RUN_PATH_REGISTRY, paid_ledger._RUN_PATH_LOCK
+        paid_ledger._RUN_PATH_REGISTRY = self.temp_root / "run-path-registry.json"
+        paid_ledger._RUN_PATH_LOCK = paid_ledger._RUN_PATH_REGISTRY.with_suffix(".lock")
+        try:
+            self.ledger.reserve(0.1, "first", {"run_id": run_id})
+            with self.assertRaisesRegex(LedgerError, "already uses ledger"):
+                Ledger(self.temp_root / "other.jsonl", 1.0).reserve(
+                    0.1, "second", {"run_id": run_id})
+        finally:
+            paid_ledger._RUN_PATH_REGISTRY, paid_ledger._RUN_PATH_LOCK = original_registry, original_lock
 
     def test_kill_matrix_reruns_with_fresh_attempts_and_durable_state(self) -> None:
         script = r'''import json, os, signal, sys
@@ -367,7 +395,7 @@ submit_in_chunks(requests, 1, ledger=ledger, model="claude-haiku-5-5",
             ("valid = (isinstance(parsed, dict)\n             and parsed.get(\"type\") == \"error\"\n             and isinstance(parsed.get(\"error\"), dict)\n             and bool(parsed[\"error\"]))",
              "valid = True",
              "test_release_requires_anthropic_4xx_and_never_releases_429"),
-            ('if actual > current["reserve"] or committed_elsewhere + actual > self._cap_decimal or subcap_over:',
+            ('if committed_elsewhere + actual > self._cap_decimal or subcap_over:',
              "if False:", "test_settlement_overrun_records_actual_and_blocks_future_reserves"),
             ("if scoped + amount > subcap:", "if False:",
              "test_two_processes_racing_one_subcap_cannot_both_reserve"),

@@ -11,6 +11,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import threading
 import unittest
 from unittest import mock
 
@@ -270,6 +271,120 @@ class SafetyTests(unittest.TestCase):
         self._ledger_tmp = tempfile.TemporaryDirectory(dir=HERE)
         self.addCleanup(self._ledger_tmp.cleanup)
         reader63.DEFAULT_LEDGER_PATH = Path(self._ledger_tmp.name) / "paid-ledger.jsonl"
+
+    def test_submit_cli_only_prints_plan(self):
+        with tempfile.TemporaryDirectory() as directory:
+            data_dir = Path(directory) / "data"
+            review_dir = Path(directory) / "review"
+            gather63.write_bundle(data_dir, _fixture_rows(100), seed=93)
+            with mock.patch.object(reader63, "submit", side_effect=AssertionError("manual CLI must not POST")), \
+                    contextlib.redirect_stdout(io.StringIO()) as output:
+                reader63.main(["submit", "--data-dir", str(data_dir), "--review-dir", str(review_dir)])
+            plan = json.loads(output.getvalue())
+            self.assertEqual(plan["command"], "submit")
+            self.assertGreater(plan["request_count"], 0)
+            self.assertFalse(review_dir.exists(), "plan-only submit must not create a reserve or review state")
+
+    def test_submit_cli_restored_post_mutation_goes_red(self):
+        with tempfile.TemporaryDirectory() as directory:
+            copied_part63 = Path(directory) / "part63"
+            shutil.copytree(HERE, copied_part63, ignore=shutil.ignore_patterns("__pycache__", "review"))
+            source_path = copied_part63 / "reader63.py"
+            source = source_path.read_text(encoding="utf-8")
+            self.assertIn("print_submit_plan(args.data_dir)", source)
+            source_path.write_text(source.replace("print_submit_plan(args.data_dir)",
+                                                  "submit(args.data_dir, args.review_dir)", 1),
+                                   encoding="utf-8")
+            (copied_part63.parent / "part59").mkdir()
+            shutil.copy2(HERE.parent / "part59" / "blind_setting.py",
+                         copied_part63.parent / "part59" / "blind_setting.py")
+            completed = subprocess.run([sys.executable, "-m", "unittest",
+                "test_part63.SafetyTests.test_submit_cli_only_prints_plan"],
+                cwd=copied_part63, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False)
+            self.assertNotEqual(completed.returncode, 0, "restoring the paid submit path must break the plan-only test")
+            self.assertIn("FAILED", completed.stdout)
+
+    def test_retry_post_is_not_repeated_after_simulated_kill(self):
+        with tempfile.TemporaryDirectory(dir=HERE) as directory:
+            root = Path(directory)
+            data_dir, review_dir, ledger = root / "data", root / "review", root / "ledger.jsonl"
+            reader63.DEFAULT_LEDGER_PATH = ledger
+            gather63.write_bundle(data_dir, _fixture_rows(100), seed=93)
+            posts = []
+            retry_posts = []
+            retry_killed = {"done": False}
+
+            def fake_api(method, path, body=None):
+                if method == "POST":
+                    posts.append(body)
+                    submissions = [json.loads(path.read_text()) for path in review_dir.glob("submission-*.json")
+                                   if not path.name.endswith(("-idmap.json", "-key.json"))]
+                    if any(submission.get("status") == "posting"
+                           and submission.get("retry_of_submission_id") for submission in submissions):
+                        retry_posts.append(len(body["requests"]))
+                    return json.dumps({"id": f"msgbatch_retry_kill_{len(posts)}",
+                                       "processing_status": "in_progress"})
+                batch_id = path.split("/batches/")[1].split("/")[0]
+                if path == f"/v1/messages/batches/{batch_id}":
+                    return json.dumps({"processing_status": "ended"})
+                if path.endswith("/results"):
+                    link = json.loads((review_dir / f"batch-{batch_id}.json").read_text())
+                    sub = json.loads((review_dir / link["submission_file"]).read_text())
+                    idmap = json.loads((review_dir / sub["idmap_file"]).read_text())
+                    snap = json.loads((review_dir / sub["key_file"]).read_text())
+                    rows = []
+                    for custom_id, internal in idmap.items():
+                        result = _fake_success(snap["calibration"]["expected_quality"].get(internal, "OK"))
+                        if batch_id.endswith("_1") and internal.startswith("cal|"):
+                            result = {"type": "succeeded", "message": {"stop_reason": "end_turn",
+                                "content": [{"type": "text", "text": json.dumps(FAKE_LABEL | {"planet_frame": None})}],
+                                "usage": {"input_tokens": 100, "output_tokens": 40}}}
+                        rows.append(json.dumps({"custom_id": custom_id, "result": result}))
+                    return "\n".join(rows)
+                raise AssertionError((method, path))
+
+            real_submit = reader63.submit
+            def die_after_retry(*args, **kwargs):
+                batch = real_submit(*args, **kwargs)
+                if kwargs.get("retry_of_submission_id") and not retry_killed["done"]:
+                    retry_killed["done"] = True
+                    raise RuntimeError("simulated process death after retry POST return")
+                return batch
+
+            with mock.patch.dict(os.environ, {"ANTHROPIC_CREDITS_KEY": "test-key"}), \
+                    mock.patch.object(reader63, "context", return_value=object()), \
+                    mock.patch.object(reader63, "submit", side_effect=die_after_retry), \
+                    contextlib.redirect_stdout(io.StringIO()):
+                with self.assertRaisesRegex(RuntimeError, "simulated process death"):
+                    reader63.run_all(data_dir, review_dir, fake_api, poll_interval=0, poll_bound=1,
+                                     sleep=lambda _seconds: None, ledger_path=ledger)
+                self.assertEqual(len(posts), 2, "root and one retry must have been posted before the kill")
+                reader63.run_all(data_dir, review_dir, fake_api, poll_interval=0, poll_bound=1,
+                                 sleep=lambda _seconds: None, ledger_path=ledger)
+            retry_submissions = [json.loads(path.read_text()) for path in review_dir.glob("submission-*.json")
+                                 if not path.name.endswith(("-idmap.json", "-key.json"))
+                                 and json.loads(path.read_text()).get("retry_of_submission_id")]
+            self.assertEqual(len(retry_submissions), 1)
+            self.assertEqual(len(posts), 3, "recovery should resume the next chunk without another retry")
+            self.assertEqual(len(retry_posts), 1, "the saved failed-only retry must be reused after recovery")
+            self.assertGreater(retry_posts[0], 0)
+
+    def test_retry_dedupe_copied_code_mutation_goes_red(self):
+        with tempfile.TemporaryDirectory() as directory:
+            copied_part63 = Path(directory) / "part63"
+            shutil.copytree(HERE, copied_part63, ignore=shutil.ignore_patterns("__pycache__", "review"))
+            source = (copied_part63 / "reader63.py").read_text(encoding="utf-8")
+            self.assertIn("if existing_retries:", source)
+            (copied_part63 / "reader63.py").write_text(source.replace("if existing_retries:", "if False:", 1),
+                                                        encoding="utf-8")
+            (copied_part63.parent / "part59").mkdir()
+            shutil.copy2(HERE.parent / "part59" / "blind_setting.py",
+                         copied_part63.parent / "part59" / "blind_setting.py")
+            completed = subprocess.run([sys.executable, "-m", "unittest",
+                "test_part63.SafetyTests.test_retry_post_is_not_repeated_after_simulated_kill"],
+                cwd=copied_part63, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False)
+            self.assertNotEqual(completed.returncode, 0, "removing retry dedupe must make the kill row fail")
+            self.assertIn("FAILED", completed.stdout)
 
     def test_writer_output_and_reader_side_key_match(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -535,10 +650,12 @@ class SafetyTests(unittest.TestCase):
                     sub = json.loads((review_dir / link["submission_file"]).read_text())
                     idmap = json.loads((review_dir / sub["idmap_file"]).read_text())
                     snapshot = json.loads((review_dir / sub["key_file"]).read_text())
-                    return "\n".join(json.dumps({
-                        "custom_id": custom_id,
-                        "result": _fake_success(snapshot["calibration"]["expected_quality"].get(internal_id, "OK")),
-                    }) for custom_id, internal_id in idmap.items())
+                    rows = []
+                    for custom_id, internal_id in idmap.items():
+                        result = _fake_success(snapshot["calibration"]["expected_quality"].get(internal_id, "OK"))
+                        result["message"]["usage"] = {"input_tokens": 1024, "output_tokens": 1024}
+                        rows.append(json.dumps({"custom_id": custom_id, "result": result}))
+                    return "\n".join(rows)
                 if path == f"/v1/messages/batches/{batch_id}":
                     return json.dumps({"processing_status": "ended"})
                 raise AssertionError(f"unexpected API call: {method} {path}")
@@ -555,6 +672,8 @@ class SafetyTests(unittest.TestCase):
             _total, states = reader63.spend_state(reader63.DEFAULT_LEDGER_PATH)
             self.assertEqual(len(states), 2)
             self.assertTrue(all(row["event"] == "settled" for row in states.values()))
+            self.assertTrue(any(row["effective_usd"] > row["reserved_usd"] for row in states.values()),
+                            "run-all must settle actual above reserve and advance while both caps permit it")
 
     def test_run_all_poll_timeout_keeps_reservation_and_refuses_progress(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -858,7 +977,7 @@ reader63.run_all(data_dir, review_dir, api, poll_interval=0, poll_bound=1,
             self.assertGreater(spent, 0.0)
             self.assertEqual(next(iter(states.values()))["event"], "reserved")
 
-    def test_settlement_records_usage_above_reserved_amount_as_overrun(self):
+    def test_settlement_records_usage_above_reserve_when_caps_allow(self):
         ledger_path = Path(self._ledger_tmp.name) / "explicit-ledger.jsonl"
         submission_id = "settle-over-reserve"
         attempt_id = reader63.Ledger(str(ledger_path), reader63.SHARED_CAP_USD).reserve(
@@ -869,13 +988,12 @@ reader63.run_all(data_dir, review_dir, api, poll_interval=0, poll_bound=1,
         reader63.write_json(review_dir / f"submission-{submission_id}.json", {
             "submission_id": submission_id, "attempt_id": attempt_id,
         })
-        with self.assertRaises(reader63.LedgerError):
-            reader63.settle_reserve(review_dir, submission_id, 0.02, ledger_path=ledger_path)
+        reader63.settle_reserve(review_dir, submission_id, 0.02, ledger_path=ledger_path)
         state = reader63.Ledger(str(ledger_path), reader63.SHARED_CAP_USD).state()
         self.assertEqual(state["reserved"], 0.0)
         self.assertEqual(state["settled"], 0.02)
         _spent, attempts = reader63.spend_state(ledger_path)
-        self.assertEqual(attempts[submission_id]["event"], "overrun")
+        self.assertEqual(attempts[submission_id]["event"], "settled")
         self.assertEqual(attempts[submission_id]["effective_usd"], 0.02)
 
     def test_ambiguous_post_keeps_reserve_and_blocks_manual_resubmission(self):
@@ -921,9 +1039,13 @@ reader63.run_all(data_dir, review_dir, api, poll_interval=0, poll_bound=1,
             answer_to_fail = {"id": None}
             captured_bodies = {}
             submit_count = 0
+            result_barrier = threading.Barrier(2)
+            result_barrier_lock = threading.Lock()
+            root_result_calls = 0
 
             def api(method, path, body=None):
                 nonlocal submit_count
+                nonlocal root_result_calls
                 if method == "POST":
                     batch_id = batch_ids[submit_count]
                     submit_count += 1
@@ -940,6 +1062,12 @@ reader63.run_all(data_dir, review_dir, api, poll_interval=0, poll_bound=1,
                     return json.dumps({"id": batch_id, "processing_status": "in_progress"})
                 batch_id = path.split("/batches/")[1].split("/")[0]
                 if path.endswith("/results"):
+                    if batch_id == "msgbatch_root":
+                        with result_barrier_lock:
+                            synchronize = root_result_calls < 2
+                            root_result_calls += 1
+                        if synchronize:
+                            result_barrier.wait(timeout=10)
                     batch_link = json.loads((review_dir / f"batch-{batch_id}.json").read_text())
                     sub = json.loads((review_dir / batch_link["submission_file"]).read_text())
                     idmap = json.loads((review_dir / sub["idmap_file"]).read_text())
@@ -966,8 +1094,23 @@ reader63.run_all(data_dir, review_dir, api, poll_interval=0, poll_bound=1,
                     mock.patch.object(reader63, "context", return_value=object()), \
                     contextlib.redirect_stdout(io.StringIO()):
                 root_batch = reader63.submit(data_dir, review_dir, api, ledger_path=ledger_path)
-                labels_path = reader63.collect(root_batch, data_dir, review_dir, api,
-                                               ledger_path=ledger_path)
+                concurrent_results = []
+                def collect_root():
+                    try:
+                        concurrent_results.append(reader63.collect(root_batch, data_dir, review_dir, api,
+                                                                   ledger_path=ledger_path))
+                    except BaseException as exc:
+                        concurrent_results.append(exc)
+                workers = [threading.Thread(target=collect_root) for _ in range(2)]
+                for worker in workers:
+                    worker.start()
+                for worker in workers:
+                    worker.join(timeout=15)
+                    self.assertFalse(worker.is_alive())
+                self.assertEqual(len(concurrent_results), 2)
+                self.assertFalse(any(isinstance(value, BaseException) for value in concurrent_results),
+                                 concurrent_results)
+                labels_path = concurrent_results[0]
                 self.assertEqual(submit_count, 2)
                 retry_batch = json.loads(labels_path.read_text())["retry"]["batch_id"]
                 self.assertEqual(retry_batch, "msgbatch_retry")

@@ -17,6 +17,7 @@ import re
 import ssl
 import sys
 import tempfile
+import threading
 import time
 import urllib.error
 import urllib.parse
@@ -106,7 +107,7 @@ def read_json(path: Path) -> Any:
 
 def write_json(path: Path, value: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_name(path.name + f".{os.getpid()}.tmp")
+    temporary = path.with_name(path.name + f".{os.getpid()}.{threading.get_ident()}.tmp")
     temporary.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     temporary.replace(path)
 
@@ -294,16 +295,37 @@ def ledger_lock(root: Path) -> Iterator[None]:
             fcntl.flock(stream.fileno(), fcntl.LOCK_UN)
 
 
+_run_lock_local = threading.local()
+
+
+@contextmanager
+def run_lock(review_dir: Path) -> Iterator[None]:
+    review_dir.mkdir(parents=True, exist_ok=True)
+    lock_path = (review_dir / "run.lock").resolve()
+    held = getattr(_run_lock_local, "held", {})
+    if lock_path in held:
+        held[lock_path] += 1
+        try:
+            yield
+        finally:
+            held[lock_path] -= 1
+        return
+    with (review_dir / "run.lock").open("a", encoding="utf-8") as stream:
+        fcntl.flock(stream.fileno(), fcntl.LOCK_EX)
+        held[lock_path] = 1
+        _run_lock_local.held = held
+        try:
+            yield
+        finally:
+            del held[lock_path]
+            fcntl.flock(stream.fileno(), fcntl.LOCK_UN)
+
+
 def with_run_lock(function: Any) -> Any:
     """Serialize submits in one review directory so live work is not relabelled."""
     def wrapped(data_dir: Path, review_dir: Path, *args: Any, **kwargs: Any) -> Any:
-        review_dir.mkdir(parents=True, exist_ok=True)
-        with (review_dir / "run.lock").open("a", encoding="utf-8") as stream:
-            fcntl.flock(stream.fileno(), fcntl.LOCK_EX)
-            try:
-                return function(data_dir, review_dir, *args, **kwargs)
-            finally:
-                fcntl.flock(stream.fileno(), fcntl.LOCK_UN)
+        with run_lock(review_dir):
+            return function(data_dir, review_dir, *args, **kwargs)
     return wrapped
 
 
@@ -546,7 +568,7 @@ def ensure_run_started(review_dir: Path) -> str:
 
 
 def mark_interrupted_attempts(review_dir: Path, ledger_path: Path | None = None) -> None:
-    """Release known pre-POST intents; retain and mark interrupted POSTs ambiguous."""
+    """Keep every interrupted reserve counted; mark interrupted POSTs ambiguous."""
     _spent, states = spend_state(Path(ledger_path or DEFAULT_LEDGER_PATH))
     for submission_path in sorted(review_dir.glob("submission-*.json")):
         submission = read_json(submission_path)
@@ -1006,37 +1028,38 @@ def collect(batch_id: str, data_dir: Path, review_dir: Path, api: Any = call, *,
             return labels_path
         # A retry may have been POSTed before a kill prevented its metadata from
         # reaching the labels file. Reuse its recorded state; never POST it twice.
-        existing_retries = []
-        for retry_path in review_dir.glob("submission-*.json"):
-            if retry_path.name.endswith(("-idmap.json", "-key.json")):
-                continue
-            retry_submission = read_json(retry_path)
-            if retry_submission.get("retry_of_submission_id") == submission_id:
-                existing_retries.append(retry_submission)
-        if existing_retries:
-            existing_retries.sort(key=lambda row: row.get("created_at", ""))
-            retry_submission = existing_retries[0]
-            if retry_submission.get("batch_id"):
-                label_output["retry"] = {"status": "submitted", "batch_id": retry_submission["batch_id"],
-                                          "request_count": retry_submission.get("request_count", len(retry_ids))}
-            else:
-                label_output["retry"] = {"status": "ambiguous", "submission_id": retry_submission.get("submission_id"),
-                                          "request_count": retry_submission.get("request_count", len(retry_ids))}
-            write_json(labels_path, label_output)
-            settle_reserve(review_dir, submission_id, actual_usd, used_reserved_upper_bound=missing_usage,
-                           ledger_path=active_ledger_path)
-            return labels_path
-        print(f"automatic retry: submitting only {len(retry_ids)} failed or unlabelled distinct-text/calibration IDs")
-        try:
-            retry_batch_id = submit(data_dir, review_dir, api, only_internal_ids=retry_ids,
-                                    retry_of_submission_id=submission_id, root_batch_id=batch_id,
-                                    ledger_path=active_ledger_path)
-            label_output["retry"] = {"status": "submitted", "batch_id": retry_batch_id,
-                                      "request_count": len(retry_ids)}
-        except ReaderError as exc:
-            label_output["retry"] = {"status": "not_submitted", "reason": str(exc),
-                                      "request_count": len(retry_ids)}
-            print(f"automatic retry not submitted: {exc}; scoring remains blocked if labels are incomplete")
+        with run_lock(review_dir):
+            existing_retries = []
+            for retry_path in sorted(review_dir.glob("submission-*.json")):
+                if retry_path.name.endswith(("-idmap.json", "-key.json")):
+                    continue
+                retry_submission = read_json(retry_path)
+                if retry_submission.get("retry_of_submission_id") == submission_id:
+                    existing_retries.append(retry_submission)
+            if existing_retries:
+                existing_retries.sort(key=lambda row: row.get("created_at", ""))
+                retry_submission = existing_retries[0]
+                if retry_submission.get("batch_id"):
+                    label_output["retry"] = {"status": "submitted", "batch_id": retry_submission["batch_id"],
+                                              "request_count": retry_submission.get("request_count", len(retry_ids))}
+                else:
+                    label_output["retry"] = {"status": "ambiguous", "submission_id": retry_submission.get("submission_id"),
+                                              "request_count": retry_submission.get("request_count", len(retry_ids))}
+                write_json(labels_path, label_output)
+                settle_reserve(review_dir, submission_id, actual_usd, used_reserved_upper_bound=missing_usage,
+                               ledger_path=active_ledger_path)
+                return labels_path
+            print(f"automatic retry: submitting only {len(retry_ids)} failed or unlabelled distinct-text/calibration IDs")
+            try:
+                retry_batch_id = submit(data_dir, review_dir, api, only_internal_ids=retry_ids,
+                                        retry_of_submission_id=submission_id, root_batch_id=batch_id,
+                                        ledger_path=active_ledger_path)
+                label_output["retry"] = {"status": "submitted", "batch_id": retry_batch_id,
+                                          "request_count": len(retry_ids)}
+            except ReaderError as exc:
+                label_output["retry"] = {"status": "not_submitted", "reason": str(exc),
+                                          "request_count": len(retry_ids)}
+                print(f"automatic retry not submitted: {exc}; scoring remains blocked if labels are incomplete")
         write_json(labels_path, label_output)
     else:
         write_json(labels_path, label_output)
@@ -1149,7 +1172,17 @@ def run_all(data_dir: Path, review_dir: Path, api: Any = call, *,
     def settle_batch(batch: str) -> None:
         sub_id, sub = submission_for(batch)
         _poll_until_ended(batch, api, interval=poll_interval, bound=poll_bound, sleep=sleep)
-        collect(batch, data_dir, review_dir, api, ledger_path=active_ledger_path)
+        try:
+            collect(batch, data_dir, review_dir, api, ledger_path=active_ledger_path)
+        except LedgerError as exc:
+            _spent, states = spend_state(active_ledger_path)
+            attempt = states.get(sub_id, {})
+            if attempt.get("event") == "overrun":
+                raise ReaderError(f"settlement overrun recorded for attempt {attempt['attempt_id']} "
+                                  f"at ${attempt['effective_usd']:.6f}; the attempt remains overrun and "
+                                  "later reserves are refused. Next: stop this run and escalate the attempt "
+                                  "ID and ledger entry to the ledger operator; do not rerun run-all.") from exc
+            raise
         labels_path = data_dir / f"labels63-{sub.get('root_batch_id') or batch}.json"
         labels = read_json(labels_path)
         retry = labels.get("retry") if isinstance(labels, dict) else None
@@ -1158,7 +1191,18 @@ def run_all(data_dir: Path, review_dir: Path, api: Any = call, *,
             if not isinstance(retry_batch, str):
                 raise ReaderError("retry metadata has no batch ID")
             _poll_until_ended(retry_batch, api, interval=poll_interval, bound=poll_bound, sleep=sleep)
-            collect(retry_batch, data_dir, review_dir, api, ledger_path=active_ledger_path)
+            try:
+                collect(retry_batch, data_dir, review_dir, api, ledger_path=active_ledger_path)
+            except LedgerError as exc:
+                _spent, states = spend_state(active_ledger_path)
+                retry_sub_id = submission_for(retry_batch)[0]
+                attempt = states.get(retry_sub_id, {})
+                if attempt.get("event") == "overrun":
+                    raise ReaderError(f"settlement overrun recorded for attempt {attempt['attempt_id']} "
+                                      f"at ${attempt['effective_usd']:.6f}; the attempt remains overrun and "
+                                      "later reserves are refused. Next: stop this run and escalate the attempt "
+                                      "ID and ledger entry to the ledger operator; do not rerun run-all.") from exc
+                raise
         # A killed process or an uncollected retry must never be followed by another chunk.
         state = Ledger(str(active_ledger_path), SHARED_CAP_USD).state()
         active = state.get("per_kind", {}).get("part63", {}).get("reserved", 0.0)
@@ -1254,11 +1298,24 @@ def run_all(data_dir: Path, review_dir: Path, api: Any = call, *,
                         existing = []
                 if existing:
                     if any(row.get("status") == "ambiguous" for row in existing):
-                        raise ReaderError(f"chunk {index} has an ambiguous POST; refusing a new attempt")
+                        row = next(row for row in existing if row.get("status") == "ambiguous")
+                        raise ReaderError(f"chunk {index} has an ambiguous POST; refusing a new attempt. "
+                                          f"Next: retire attempt {row.get('attempt_id')} only after operator "
+                                          "reconciliation, then rerun run-all.")
+                    overrun = next((row for row in existing
+                                    if attempts.get(row.get("attempt_id"), {}).get("status") == "overrun"), None)
+                    if overrun:
+                        raise ReaderError(f"chunk {index} settlement overrun is recorded at "
+                                          f"${attempts[overrun['attempt_id']].get('actual', 0):.6f}; "
+                                          "the attempt remains overrun and later reserves are refused. "
+                                          "Next: stop this run and escalate the attempt ID and ledger entry "
+                                          "to the ledger operator; do not rerun run-all.")
                     if any(row.get("attempt_id") not in attempts
                            or attempts[row["attempt_id"]].get("status") not in ("settled", "retired", "released")
                            for row in existing):
-                        raise ReaderError(f"chunk {index} remains unsettled; rerun after recovery")
+                        raise ReaderError(f"chunk {index} remains unsettled; rerun after recovery. "
+                                          "Next: recover the recorded batch or complete the explicit operator "
+                                          "retirement, then rerun run-all.")
                     if any(row.get("status") in ("rejected", "not_submitted", "failed_pre_post") for row in existing):
                         raise ReaderError(f"chunk {index} has a failed attempt; inspect ledger before retry")
                     chunk_state["state"] = "settled"
@@ -1287,10 +1344,12 @@ def run_all(data_dir: Path, review_dir: Path, api: Any = call, *,
     for chunk_state in run["chunks"]:
         batch = chunk_state.get("batch_id")
         if not batch:
-            rows = [read_json(path) for path in review_dir.glob("submission-*.json")
+            rows = [read_json(path) for path in sorted(review_dir.glob("submission-*.json"))
                     if not path.name.endswith(("-idmap.json", "-key.json"))
                     and read_json(path).get("run_all_id") == run["run_id"]
                     and read_json(path).get("chunk_index") == chunk_state["index"]]
+            if len(rows) > 1:
+                raise ReaderError(f"run-all chunk {chunk_state['index']} has {len(rows)} submission rows; expected one")
             batch = rows[0].get("batch_id") if rows else None
         if not batch:
             continue
@@ -1340,11 +1399,19 @@ def parser() -> argparse.ArgumentParser:
     return root
 
 
+def print_submit_plan(data_dir: Path) -> None:
+    """Print the manual submit plan without reserving spend or making an API call."""
+    requests, _custom_to_internal, _snapshot, _key_sha = build_requests(data_dir)
+    print(json.dumps({"command": "submit", "request_count": len(requests),
+                      "estimated_usd": estimated_usd(requests),
+                      "next_step": "use run-all to perform the paid submission"}, sort_keys=True))
+
+
 def main(argv: list[str] | None = None) -> None:
     args = parser().parse_args(argv)
     try:
         if args.command == "submit":
-            submit(args.data_dir, args.review_dir)
+            print_submit_plan(args.data_dir)
         elif args.command == "run-all":
             run_all(args.data_dir, args.review_dir)
         elif args.command == "listing":

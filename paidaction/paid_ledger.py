@@ -501,7 +501,7 @@ class Ledger:
                              for item in attempts.values()
                              if item.get("subcap_key") == current["subcap_key"] and item is not current)
                 subcap_over = scoped + actual > current["subcap"]
-            if actual > current["reserve"] or committed_elsewhere + actual > self._cap_decimal or subcap_over:
+            if committed_elsewhere + actual > self._cap_decimal or subcap_over:
                 self._append_locked({"event": "settlement_overrun", "attempt_id": attempt_id,
                                      "actual_usd": float(actual), "usage_sha256": usage_sha256,
                                      "ts": _utc_now(), "final": True}, tail)

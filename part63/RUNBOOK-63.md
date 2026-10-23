@@ -29,7 +29,7 @@ python3 part63/reader63.py run-all
 python3 part63/reader63.py listing
 ```
 
-The command waits 30 seconds between status checks and stops after 40 minutes per chunk. A timeout leaves its reservation active and exits nonzero. Rerun `run-all` to recover a saved batch ID, collect an ended chunk, and settle it before advancing. It refuses to advance when any Part 63 reservation remains active or unknown. The lower-level `submit`, `status`, and `collect` commands remain available for manual operation.
+The command waits 30 seconds between status checks and stops after 40 minutes per chunk. A timeout leaves its reservation active and exits nonzero. Rerun `run-all` to recover a saved batch ID, collect an ended chunk, and settle it before advancing. It refuses to advance when any Part 63 reservation remains active or unknown. The lower-level `submit`, `status`, and `collect` commands remain available for manual operation. `submit` only prints the planned request count and estimate; only `run-all` can POST.
 
 The model is `claude-haiku-5-5`, `max_tokens` is 1024, temperature is 0, and thinking is disabled to keep the bounded JSON response compact. The rubric requests all three label schemes in one JSON object. It asks the model to return the named maker and whether it is a real lab; the reader compares that name to the hidden model's lab only after the response is parsed. Model, unit, dose, control status, and question remain in sidecars and are not included in the request.
 
@@ -40,6 +40,14 @@ The request plan also repeats 100 answer texts, sampled without replacement usin
 The analyzer also checks a deliberately coarse keyword sanity gate based on the cold review's regular expressions. It requires at least one overlapping example for each checked view (off-world text with OFFWORLD, off-world text with `other-planet-or-space`, and Earth text with EARTH). This gate catches empty or inverted output; it is not a quality estimate. No keyword proxy gate is applied to maker identity.
 
 The spend ledger is `paidaction.DEFAULT_LEDGER_PATH`, shared with Parts 60 and 62, with an $8 aggregate cap. Part 63 reserves under kind `part63` and enforces its $3 sub-cap before each reserve. It estimates input tokens as ceil(serialized UTF-8 request bytes / 3) and reserves that estimate plus the full output-token ceiling. These rates and the byte ratio remain unverified. Collection settles from returned token usage, or at the reserved amount if any usage is missing. A timeout, transport error, HTTP 429/5xx, malformed response, or 4xx without a valid Anthropic error body keeps the attempt counted. A recorded batch ID or ambiguous POST blocks manual resubmission while its reserve is active; recover the recorded batch or have the operator resolve its reserve first. `reader63.py retire ATTEMPT_ID --who NAME --reason TEXT` records explicit operator retirement. The full `run-all` lifecycle uses the shared ledger primitives directly because the helper's synchronous callback cannot poll an asynchronous batch to completion.
+
+## Recovery stops
+
+- **Ambiguous POST, batch ID saved:** rerun `python3 part63/reader63.py run-all`. It polls and collects the saved batch before advancing.
+- **Ambiguous POST, no batch ID on disk:** the printed error includes the exact retirement command. Reconcile the POST in the provider console first; if the outcome remains unknown, run that printed `retire ATTEMPT_ID --who ... --reason ...` command, then rerun `python3 part63/reader63.py run-all`.
+- **“remains unsettled; rerun after recovery”:** recover/collect the recorded batch or retire the unresolved attempt only after operator reconciliation, then run `python3 part63/reader63.py run-all`.
+- **Settlement overrun:** the actual amount is already recorded and the attempt remains `overrun`; no later reserve is allowed when it exceeds either cap. Stop and escalate the attempt ID and ledger entry to the ledger operator. Do not rerun `run-all` or retire the overrun as if it were an unknown POST.
+- **Retry in flight:** do not start a second retry. Rerun `run-all` to reuse the saved retry batch ID; collect it after it ends, then rerun `run-all` to resume the next chunk.
 
 If collection finds any failed or unlabelled answer, it automatically submits exactly one retry batch containing only those failed/unlabelled request IDs. Check and collect that retry by its printed batch ID. Retry results merge into the root batch's `labels63-BATCH_ID.json`; no second retry is sent. Any remaining failed or unlabelled answer blocks analysis.
 
@@ -55,7 +63,7 @@ Analysis prints per-scheme failure totals and per-cell counts, then prints the k
 
 ## Limits and assumptions
 
-The two spend rates are copied from Part 60's batch ledger and the $3 ceiling comes from the registered Part 63 design. They are code-side assumptions and are not a live quote. The current Messages Batches request, result, and listing fields, the `temperature` and `thinking` parameters, the `stop_reason` values, usage-field names, and Haiku 5.5 availability were not verified against a live API. No tokenizer is loaded; request UTF-8 byte length divided by 3 is the inherited upper token estimate. The parent must check local API compatibility before submission and should not raise the cap to make a rejected reserve pass.
+The two spend rates are copied from Part 60's batch ledger and the $3 ceiling comes from the registered Part 63 design. The $8 is a reserve ceiling, not a billing ceiling; expected spend is about $1.12 of the $78 credit. They are code-side assumptions and are not a live quote. The current Messages Batches request, result, and listing fields, the `temperature` and `thinking` parameters, the `stop_reason` values, usage-field names, and Haiku 5.5 availability were not verified against a live API. No tokenizer is loaded; request UTF-8 byte length divided by 3 is the inherited upper token estimate. The parent must check local API compatibility before submission and should not raise the cap to make a rejected reserve pass.
 
 For registered 63d, Qwen3.5's own lab matches case-insensitive substrings `alibaba`, `alibaba cloud`, `tongyi`, `tongyi lab`, `qwen team`, `通义`, or `阿里`. Exact `Tongyi Lab` is reported as sensitivity. The registered mapping comes from the parent decision; no live provider source was checked.
 
