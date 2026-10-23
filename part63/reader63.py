@@ -31,7 +31,7 @@ HERE = Path(__file__).resolve().parent
 BASIN = HERE.parent
 sys.path.insert(0, str(BASIN / "paidaction"))
 from paid_ledger import (DEFAULT_LEDGER_PATH, HARD_CAP_USD, HTTPFailure,
-                        Ledger, LedgerError, ReleaseRefusedError, submit_in_chunks)
+                        Ledger, LedgerError, ReleaseRefusedError)
 from pricing import worst_case_cost
 DEFAULT_DATA_DIR = HERE / "results"
 DEFAULT_REVIEW_DIR = HERE / "review"
@@ -55,7 +55,6 @@ RUN_ALL_POLL_BOUND_SECONDS = 40 * 60
 HTTP_TIMEOUT_SECONDS = 120
 ANTHROPIC_VERSION = "2023-06-01"
 REQUEST_ID_WIDTH = 5
-DEFINITE_REJECTION_CODES = frozenset({400, 401, 403, 404, 413})
 CALIBRATION_SOURCE = "part59.blind_setting.CAL"
 
 PLANET_LABELS = ("none", "earth", "other-planet-or-space")
@@ -260,7 +259,7 @@ def estimated_usd(requests: list[dict[str, Any]]) -> float:
 
 
 def spend_state(path: Path) -> tuple[float, dict[str, dict[str, Any]]]:
-    ledger = Ledger(str(DEFAULT_LEDGER_PATH), SHARED_CAP_USD)
+    ledger = Ledger(str(path), SHARED_CAP_USD)
     with ledger._locked():
         events, tail = ledger._read_locked()
         attempts = ledger._attempts(events)
@@ -315,9 +314,11 @@ def append_spend(path: Path, row: dict[str, Any]) -> None:
 
 
 def reserve_budget(root: Path, submission_id: str, reserve_usd: float,
-                   cap_usd: float = BUDGET_CAP_USD) -> float:
-    ledger = Ledger(str(DEFAULT_LEDGER_PATH), SHARED_CAP_USD)
-    with ledger_lock(DEFAULT_LEDGER_PATH.parent / ".part63-stage-budget"):
+                   cap_usd: float = BUDGET_CAP_USD,
+                   ledger_path: Path | None = None) -> float:
+    active_ledger_path = Path(ledger_path or DEFAULT_LEDGER_PATH)
+    ledger = Ledger(str(active_ledger_path), SHARED_CAP_USD)
+    with ledger_lock(active_ledger_path.parent / ".part63-stage-budget"):
         state = ledger.state()
         totals = state.get("per_kind", {}).get("part63", {})
         part63 = float(totals.get("settled", 0.0) + totals.get("reserved", 0.0))
@@ -332,22 +333,29 @@ def retire_attempt(attempt_id: str, who: str, reason: str) -> None:
 
 
 def release_reserve(root: Path, submission_id: str, reason: str, status: int | None = None,
-                    body: str | None = None) -> None:
+                    body: str | None = None, ledger_path: Path | None = None) -> None:
     submission = read_json(root / f"submission-{submission_id}.json")
     if status is None or body is None:
         # Unknown/preflight outcomes stay counted; retirement is an explicit operator action.
         return
     try:
-        Ledger(str(DEFAULT_LEDGER_PATH), SHARED_CAP_USD).release(submission["attempt_id"], status, body)
+        Ledger(str(ledger_path or DEFAULT_LEDGER_PATH), SHARED_CAP_USD).release(submission["attempt_id"], status, body)
     except ReleaseRefusedError:
         return
 
 
 def settle_reserve(root: Path, submission_id: str, actual_usd: float,
-                   used_reserved_upper_bound: bool = False) -> None:
+                   used_reserved_upper_bound: bool = False,
+                   ledger_path: Path | None = None) -> None:
     submission = read_json(root / f"submission-{submission_id}.json")
+    active_ledger_path = Path(ledger_path or DEFAULT_LEDGER_PATH)
+    _spent, states = spend_state(active_ledger_path)
+    reserve_usd = float(states[submission_id]["reserved_usd"])
+    if actual_usd > reserve_usd + 1e-12:
+        raise ReaderError(f"actual usage ${actual_usd:.6f} exceeds reserved ${reserve_usd:.6f}; "
+                          "settlement refused and run must stop")
     usage = {"actual_usd": actual_usd, "reserved_upper_bound": used_reserved_upper_bound}
-    Ledger(str(DEFAULT_LEDGER_PATH), SHARED_CAP_USD).settle(submission["attempt_id"], actual_usd, usage)
+    Ledger(str(active_ledger_path), SHARED_CAP_USD).settle(submission["attempt_id"], actual_usd, usage)
 
 
 def _strip_json_fence(content: str) -> str:
@@ -539,9 +547,9 @@ def ensure_run_started(review_dir: Path) -> str:
     return started
 
 
-def mark_interrupted_attempts(review_dir: Path) -> None:
+def mark_interrupted_attempts(review_dir: Path, ledger_path: Path | None = None) -> None:
     """Release known pre-POST intents; retain and mark interrupted POSTs ambiguous."""
-    _spent, states = spend_state(review_dir / "spend.jsonl")
+    _spent, states = spend_state(Path(ledger_path or DEFAULT_LEDGER_PATH))
     for submission_path in sorted(review_dir.glob("submission-*.json")):
         submission = read_json(submission_path)
         if not isinstance(submission, dict):
@@ -595,7 +603,9 @@ def submit(data_dir: Path, review_dir: Path, api: Any = call, *,
            only_internal_ids: set[str] | None = None,
            retry_of_submission_id: str | None = None,
            root_batch_id: str | None = None,
-           run_all_id: str | None = None, chunk_index: int | None = None) -> str:
+           run_all_id: str | None = None, chunk_index: int | None = None,
+           ledger_path: Path | None = None) -> str:
+    active_ledger_path = Path(ledger_path or DEFAULT_LEDGER_PATH)
     requests, custom_to_internal, snapshot, key_sha = build_requests(data_dir)
     if only_internal_ids is not None:
         missing_ids = only_internal_ids - set(custom_to_internal.values())
@@ -610,7 +620,27 @@ def submit(data_dir: Path, review_dir: Path, api: Any = call, *,
             raise ReaderError("retry has no failed or unlabelled request IDs")
     preflight_submit(data_dir, review_dir)
     run_started_at = ensure_run_started(review_dir)
-    mark_interrupted_attempts(review_dir)
+    mark_interrupted_attempts(review_dir, active_ledger_path)
+    # A recorded batch ID or ambiguous POST owns its reserve until recovered and settled.
+    # Never let a manual whole-corpus submit duplicate that work.
+    if retry_of_submission_id is None and run_all_id is None:
+        shared = Ledger(str(active_ledger_path), SHARED_CAP_USD)
+        with shared._locked():
+            events, _tail = shared._read_locked()
+            attempt_rows = shared._attempts(events)
+        for old_path in review_dir.glob("submission-*.json"):
+            if old_path.name.endswith(("-idmap.json", "-key.json")):
+                continue
+            old = read_json(old_path)
+            old_id = old.get("submission_id")
+            if not isinstance(old_id, str):
+                continue
+            attempt = attempt_rows.get(old.get("attempt_id"), {})
+            if ((old.get("status") in ("ambiguous", "posting")
+                 and attempt.get("status") == "reserved") or (
+                    old.get("batch_id") and attempt.get("status") not in ("settled", "retired", "released"))):
+                raise ReaderError("an earlier submission is unresolved; recover its batch or obtain operator "
+                                  "retirement before submitting again")
     estimate = estimated_usd(requests)
     submission_id = uuid.uuid4().hex
     idmap_path = review_dir / f"submission-{submission_id}-idmap.json"
@@ -633,12 +663,14 @@ def submit(data_dir: Path, review_dir: Path, api: Any = call, *,
                   "chunk_index": chunk_index, "created_at": utc_now()}
     write_json(submission_path, submission)
     try:
-        submission["attempt_id"] = reserve_budget(review_dir, submission_id, estimate)
+        submission["attempt_id"] = reserve_budget(review_dir, submission_id, estimate,
+                                                  ledger_path=active_ledger_path)
         write_json(submission_path, submission)
     except Exception as exc:
-        _total, states = spend_state(review_dir / "spend.jsonl")
+        _total, states = spend_state(active_ledger_path)
         if states.get(submission_id, {}).get("event") == "reserved":
-            release_reserve(review_dir, submission_id, f"reservation setup failed before POST: {exc}")
+            release_reserve(review_dir, submission_id, f"reservation setup failed before POST: {exc}",
+                            ledger_path=active_ledger_path)
         _set_submission_status(submission_path, submission, "not_submitted", error=str(exc))
         raise
     try:
@@ -647,28 +679,31 @@ def submit(data_dir: Path, review_dir: Path, api: Any = call, *,
         write_json(submission_path, submission)
     except Exception as exc:
         try:
-            release_reserve(review_dir, submission_id, f"failed before POST: {exc}")
+            release_reserve(review_dir, submission_id, f"failed before POST: {exc}", ledger_path=active_ledger_path)
         finally:
             raise ReaderError(f"pre-POST failure; reserve remains counted for explicit retirement: {exc}") from exc
     try:
         raw_response = api("POST", "/v1/messages/batches", {"requests": requests})
     except APIError as exc:
         if exc.status is not None and 400 <= exc.status < 500:
-            release_reserve(review_dir, submission_id, str(exc), exc.status, exc.body)
-            _total, states = spend_state(DEFAULT_LEDGER_PATH)
+            release_reserve(review_dir, submission_id, str(exc), exc.status, exc.body,
+                            ledger_path=active_ledger_path)
+            _total, states = spend_state(active_ledger_path)
             released = states.get(submission_id, {}).get("event") == "released"
             if released:
                 _set_submission_status(submission_path, submission, "rejected", error=str(exc))
                 raise
         _mark_ambiguous(review_dir, submission_path, submission, str(exc))
-        raise ReaderError(f"submission outcome is unknown; reservation remains counted; rerun submit to create a new attempt: {exc}") from exc
+        raise ReaderError(f"submission outcome is unknown; reservation remains counted; recover or retire this "
+                          f"attempt before any resubmission: {exc}") from exc
     except ReaderError as exc:
         release_reserve(review_dir, submission_id, f"pre-POST failure: {exc}")
         _set_submission_status(submission_path, submission, "failed_pre_post", error=str(exc))
         raise ReaderError(f"pre-POST failure; reserve remains counted for explicit retirement: {exc}") from exc
     except Exception as exc:
         _mark_ambiguous(review_dir, submission_path, submission, f"{type(exc).__name__}: {exc}")
-        raise ReaderError(f"submission outcome is unknown; reservation remains counted; rerun submit to create a new attempt: {exc}") from exc
+        raise ReaderError(f"submission outcome is unknown; reservation remains counted; recover or retire this "
+                          f"attempt before any resubmission: {exc}") from exc
     raw_path = review_dir / f"post-response-{submission_id}.json"
     with raw_path.open("w", encoding="utf-8") as stream:
         stream.write(raw_response)
@@ -681,7 +716,8 @@ def submit(data_dir: Path, review_dir: Path, api: Any = call, *,
             raise ReaderError("batch POST response is missing a string id")
     except Exception as exc:
         _mark_ambiguous(review_dir, submission_path, submission, f"invalid or incomplete POST response: {exc}")
-        raise ReaderError(f"submission outcome is unknown; reservation remains counted; rerun submit to create a new attempt: {exc}") from exc
+        raise ReaderError(f"submission outcome is unknown; reservation remains counted; recover or retire this "
+                          f"attempt before any resubmission: {exc}") from exc
     submission.update({"batch_id": batch_id, "status": "submitted",
                        "processing_status": response.get("processing_status"),
                        "submitted_at": utc_now()})
@@ -800,14 +836,30 @@ def _known_batch_link(review_dir: Path, batch_id: str) -> dict[str, Any]:
         if isinstance(submission, dict) and submission.get("batch_id") == batch_id:
             matches.append(submission)
     if len(matches) != 1:
-        raise ReaderError(f"batch sidecar for {batch_id} is missing and no unique saved batch ID exists")
+        # The raw POST response is fsynced before its parsed batch ID is written to
+        # submission metadata. Recover that exact response after a kill in between.
+        for raw_path in review_dir.glob("post-response-*.json"):
+            try:
+                response = read_json(raw_path)
+            except ReaderError:
+                continue
+            if not isinstance(response, dict) or response.get("id") != batch_id:
+                continue
+            submission_id = raw_path.name.removeprefix("post-response-").removesuffix(".json")
+            submission_path = review_dir / f"submission-{submission_id}.json"
+            if submission_path.is_file():
+                matches.append(read_json(submission_path))
+        if len(matches) != 1:
+            raise ReaderError(f"batch sidecar for {batch_id} is missing and no unique saved batch ID exists")
     submission = matches[0]
     return {"batch_id": batch_id, "submission_id": submission["submission_id"],
             "submission_file": f"submission-{submission['submission_id']}.json",
             "root_batch_id": submission.get("root_batch_id") or batch_id}
 
 
-def collect(batch_id: str, data_dir: Path, review_dir: Path, api: Any = call) -> Path:
+def collect(batch_id: str, data_dir: Path, review_dir: Path, api: Any = call, *,
+            ledger_path: Path | None = None) -> Path:
+    active_ledger_path = Path(ledger_path or DEFAULT_LEDGER_PATH)
     batch_link = _known_batch_link(review_dir, batch_id)
     submission_id = batch_link.get("submission_id")
     if not isinstance(submission_id, str):
@@ -888,14 +940,19 @@ def collect(batch_id: str, data_dir: Path, review_dir: Path, api: Any = call) ->
         batch_ids = list(parent_labels.get("batch_ids", [root_batch_id])) + [batch_id]
     elif labels_path.exists():
         prior_labels = read_json(labels_path)
-        prior_records = prior_labels.get("records") if isinstance(prior_labels, dict) else None
+        if (not isinstance(prior_labels, dict) or prior_labels.get("batch_id") != root_batch_id
+                or prior_labels.get("submission_id") != submission_id
+                or prior_labels.get("request_count") != int(snapshot.get("request_count", len(idmap)))):
+            raise ReaderError(f"refusing stale or mismatched labels at {labels_path}")
+        prior_records = prior_labels.get("records")
         if isinstance(prior_records, dict):
             merged_records.update(prior_records)
             batch_ids = list(prior_labels.get("batch_ids", batch_ids))
             retry_value = prior_labels.get("retry")
             if isinstance(retry_value, dict):
                 prior_retry = retry_value
-    for primary_id, answer_ids in snapshot.get("answer_ids_by_text", {}).items():
+    for answer_ids in snapshot.get("answer_ids_by_text", {}).values():
+        primary_id = answer_ids[0] if answer_ids else None
         if primary_id in merged_records:
             for answer_id in answer_ids:
                 merged_records[answer_id] = dict(merged_records[primary_id])
@@ -931,7 +988,7 @@ def collect(batch_id: str, data_dir: Path, review_dir: Path, api: Any = call) ->
         actual_usd = float(submission["estimated_usd"])
     else:
         actual_usd = (input_tokens * PRICE_INPUT + output_tokens * PRICE_OUTPUT) / PRICE_DIVISOR
-    _spent, spend_states = spend_state(DEFAULT_LEDGER_PATH)
+    _spent, spend_states = spend_state(active_ledger_path)
     reserve_usd = float(spend_states[submission_id]["reserved_usd"])
     print(f"calibration: {calibration['wrong']} wrong, {calibration['missing_or_failed']} missing/failed, "
           f"truncated={len(calibration['truncated'])}; passed={calibration['passed']}")
@@ -946,12 +1003,36 @@ def collect(batch_id: str, data_dir: Path, review_dir: Path, api: Any = call) ->
         previous_retry = label_output.get("retry")
         if isinstance(previous_retry, dict) and previous_retry.get("status") in ("submitted", "collected"):
             write_json(labels_path, label_output)
-            settle_reserve(review_dir, submission_id, actual_usd, used_reserved_upper_bound=missing_usage)
+            settle_reserve(review_dir, submission_id, actual_usd, used_reserved_upper_bound=missing_usage,
+                           ledger_path=active_ledger_path)
+            return labels_path
+        # A retry may have been POSTed before a kill prevented its metadata from
+        # reaching the labels file. Reuse its recorded state; never POST it twice.
+        existing_retries = []
+        for retry_path in review_dir.glob("submission-*.json"):
+            if retry_path.name.endswith(("-idmap.json", "-key.json")):
+                continue
+            retry_submission = read_json(retry_path)
+            if retry_submission.get("retry_of_submission_id") == submission_id:
+                existing_retries.append(retry_submission)
+        if existing_retries:
+            existing_retries.sort(key=lambda row: row.get("created_at", ""))
+            retry_submission = existing_retries[0]
+            if retry_submission.get("batch_id"):
+                label_output["retry"] = {"status": "submitted", "batch_id": retry_submission["batch_id"],
+                                          "request_count": retry_submission.get("request_count", len(retry_ids))}
+            else:
+                label_output["retry"] = {"status": "ambiguous", "submission_id": retry_submission.get("submission_id"),
+                                          "request_count": retry_submission.get("request_count", len(retry_ids))}
+            write_json(labels_path, label_output)
+            settle_reserve(review_dir, submission_id, actual_usd, used_reserved_upper_bound=missing_usage,
+                           ledger_path=active_ledger_path)
             return labels_path
         print(f"automatic retry: submitting only {len(retry_ids)} failed or unlabelled distinct-text/calibration IDs")
         try:
             retry_batch_id = submit(data_dir, review_dir, api, only_internal_ids=retry_ids,
-                                    retry_of_submission_id=submission_id, root_batch_id=batch_id)
+                                    retry_of_submission_id=submission_id, root_batch_id=batch_id,
+                                    ledger_path=active_ledger_path)
             label_output["retry"] = {"status": "submitted", "batch_id": retry_batch_id,
                                       "request_count": len(retry_ids)}
         except ReaderError as exc:
@@ -961,7 +1042,8 @@ def collect(batch_id: str, data_dir: Path, review_dir: Path, api: Any = call) ->
         write_json(labels_path, label_output)
     else:
         write_json(labels_path, label_output)
-    settle_reserve(review_dir, submission_id, actual_usd, used_reserved_upper_bound=missing_usage)
+    settle_reserve(review_dir, submission_id, actual_usd, used_reserved_upper_bound=missing_usage,
+                   ledger_path=active_ledger_path)
     return labels_path
 
 
@@ -979,14 +1061,71 @@ def _poll_until_ended(batch_id: str, api: Any, *, interval: float,
         sleep(min(interval, max(0.0, deadline - time.monotonic())))
 
 
+def _resume_ready_submission(review_dir: Path, path: Path, submission: dict[str, Any],
+                             api: Any, ledger_path: Path) -> None:
+    """Resume a durable reservation whose POST is known not to have started."""
+    submission_id = submission["submission_id"]
+    ledger = Ledger(str(ledger_path), SHARED_CAP_USD)
+    with ledger._locked():
+        events, _tail = ledger._read_locked()
+        attempts = ledger._attempts(events)
+    matching = [(attempt_id, row) for attempt_id, row in attempts.items()
+                if row.get("kind") == "part63"
+                and row.get("meta", {}).get("submission_id") == submission_id]
+    if not matching:
+        submission.update(status="failed_pre_post", error="no durable reserve exists")
+        write_json(path, submission)
+        return
+    if len(matching) != 1 or matching[0][1].get("status") != "reserved":
+        raise ReaderError(f"ready submission {submission_id} does not have one active durable reserve")
+    submission["attempt_id"] = matching[0][0]
+    all_requests, custom_to_internal, _snapshot, _key_sha = build_requests(Path(submission["data_dir"]))
+    request_ids = set(submission.get("request_ids", []))
+    selected = {custom_id for custom_id, internal_id in custom_to_internal.items() if internal_id in request_ids}
+    idmap = _read_request_map(review_dir / submission["idmap_file"])
+    if set(idmap) != selected:
+        raise ReaderError(f"ready submission {submission_id} request plan no longer matches its durable map")
+    requests = [row for row in all_requests if row["custom_id"] in selected]
+    submission.update(status="posting", posting_started_at=utc_now())
+    write_json(path, submission)
+    try:
+        raw_response = api("POST", "/v1/messages/batches", {"requests": requests})
+    except Exception as exc:
+        _mark_ambiguous(review_dir, path, submission, f"recovered POST outcome unknown: {type(exc).__name__}: {exc}")
+        raise ReaderError(f"recovered POST outcome unknown for {submission_id}; reserve remains active") from exc
+    raw_path = review_dir / f"post-response-{submission_id}.json"
+    with raw_path.open("w", encoding="utf-8") as stream:
+        stream.write(raw_response)
+        stream.flush()
+        os.fsync(stream.fileno())
+    try:
+        response = json.loads(raw_response)
+        batch_id = response.get("id") if isinstance(response, dict) else None
+        if not isinstance(batch_id, str) or not batch_id:
+            raise ReaderError("batch POST response is missing a string id")
+    except Exception as exc:
+        _mark_ambiguous(review_dir, path, submission, f"invalid or incomplete recovered POST response: {exc}")
+        raise ReaderError(f"recovered POST response is ambiguous for {submission_id}") from exc
+    submission.update(batch_id=batch_id, status="submitted",
+                      processing_status=response.get("processing_status"), submitted_at=utc_now())
+    write_json(path, submission)
+    write_json(review_dir / f"batch-{batch_id}.json", {
+        "batch_id": batch_id, "submission_id": submission_id,
+        "submission_file": path.name, "root_batch_id": submission.get("root_batch_id") or batch_id,
+    })
+    append_spend(review_dir / "spend.jsonl", {"event": "submitted", "submission_id": submission_id,
+                                               "batch_id": batch_id, "created_at": utc_now()})
+
+
 def run_all(data_dir: Path, review_dir: Path, api: Any = call, *,
             chunk_size: int = RUN_ALL_CHUNK_SIZE,
             poll_interval: float = RUN_ALL_POLL_INTERVAL_SECONDS,
             poll_bound: float = RUN_ALL_POLL_BOUND_SECONDS,
-            sleep: Any = time.sleep) -> Path:
+            sleep: Any = time.sleep, ledger_path: Path | None = None) -> Path:
     """Submit, poll, collect, and settle the corpus in resumable sequential chunks."""
     if chunk_size != RUN_ALL_CHUNK_SIZE:
         raise ReaderError(f"run-all chunk size is fixed at {RUN_ALL_CHUNK_SIZE}")
+    active_ledger_path = Path(ledger_path or DEFAULT_LEDGER_PATH)
     requests, custom_to_internal, snapshot, _key_sha = build_requests(data_dir)
     chunks = [requests[start:start + chunk_size] for start in range(0, len(requests), chunk_size)]
     internal_chunks = [[custom_to_internal[request["custom_id"]] for request in chunk]
@@ -1012,7 +1151,7 @@ def run_all(data_dir: Path, review_dir: Path, api: Any = call, *,
     def settle_batch(batch: str) -> None:
         sub_id, sub = submission_for(batch)
         _poll_until_ended(batch, api, interval=poll_interval, bound=poll_bound, sleep=sleep)
-        collect(batch, data_dir, review_dir, api)
+        collect(batch, data_dir, review_dir, api, ledger_path=active_ledger_path)
         labels_path = data_dir / f"labels63-{sub.get('root_batch_id') or batch}.json"
         labels = read_json(labels_path)
         retry = labels.get("retry") if isinstance(labels, dict) else None
@@ -1023,7 +1162,7 @@ def run_all(data_dir: Path, review_dir: Path, api: Any = call, *,
             _poll_until_ended(retry_batch, api, interval=poll_interval, bound=poll_bound, sleep=sleep)
             collect(retry_batch, data_dir, review_dir, api)
         # A killed process or an uncollected retry must never be followed by another chunk.
-        state = Ledger(str(DEFAULT_LEDGER_PATH), SHARED_CAP_USD).state()
+        state = Ledger(str(active_ledger_path), SHARED_CAP_USD).state()
         active = state.get("per_kind", {}).get("part63", {}).get("reserved", 0.0)
         if active > 1e-12:
             raise ReaderError(f"Part 63 has ${active:.6f} reserved/unknown; run-all refuses to advance")
@@ -1038,6 +1177,24 @@ def run_all(data_dir: Path, review_dir: Path, api: Any = call, *,
                 sub = read_json(path)
                 if sub.get("run_all_id") != run["run_id"]:
                     continue
+                if sub.get("status") == "ready":
+                    _resume_ready_submission(review_dir, path, sub, api, active_ledger_path)
+                    sub = read_json(path)
+                if not sub.get("batch_id"):
+                    raw_path = review_dir / f"post-response-{sub.get('submission_id')}.json"
+                    if raw_path.is_file():
+                        raw_response = read_json(raw_path)
+                        recovered_id = raw_response.get("id") if isinstance(raw_response, dict) else None
+                        if isinstance(recovered_id, str) and recovered_id:
+                            sub.update(batch_id=recovered_id, status="submitted",
+                                       processing_status=raw_response.get("processing_status"),
+                                       recovered_from_post_response=True)
+                            write_json(path, sub)
+                            write_json(review_dir / f"batch-{recovered_id}.json", {
+                                "batch_id": recovered_id, "submission_id": sub["submission_id"],
+                                "submission_file": path.name,
+                                "root_batch_id": sub.get("root_batch_id") or recovered_id,
+                            })
                 if sub.get("batch_id") and sub.get("status") in ("submitted", "ambiguous"):
                     if sub.get("status") == "ambiguous":
                         raise ReaderError("run-all found an ambiguous POST; its reserve remains active")
@@ -1052,14 +1209,24 @@ def run_all(data_dir: Path, review_dir: Path, api: Any = call, *,
                             and read_json(path).get("run_all_id") == run["run_id"]
                             and read_json(path).get("chunk_index") == index]
                 if existing:
-                    if any(row.get("status") == "ambiguous" for row in existing):
-                        raise ReaderError(f"chunk {index} has an ambiguous POST; refusing a new attempt")
-                    shared_ledger = Ledger(str(DEFAULT_LEDGER_PATH), SHARED_CAP_USD)
+                    shared_ledger = Ledger(str(active_ledger_path), SHARED_CAP_USD)
                     with shared_ledger._locked():
                         attempts, _tail = shared_ledger._read_locked()
                         attempts = shared_ledger._attempts(attempts)
+                    retry_after_retirement = all(
+                        row.get("status") in ("ambiguous", "failed_pre_post")
+                        and not row.get("batch_id")
+                        and (not row.get("attempt_id")
+                             or attempts.get(row["attempt_id"], {}).get("status") in ("retired", "released"))
+                        for row in existing
+                    )
+                    if retry_after_retirement:
+                        existing = []
+                if existing:
+                    if any(row.get("status") == "ambiguous" for row in existing):
+                        raise ReaderError(f"chunk {index} has an ambiguous POST; refusing a new attempt")
                     if any(row.get("attempt_id") not in attempts
-                           or attempts[row["attempt_id"]].get("status") != "settled"
+                           or attempts[row["attempt_id"]].get("status") not in ("settled", "retired", "released")
                            for row in existing):
                         raise ReaderError(f"chunk {index} remains unsettled; rerun after recovery")
                     if any(row.get("status") in ("rejected", "not_submitted", "failed_pre_post") for row in existing):
@@ -1067,12 +1234,13 @@ def run_all(data_dir: Path, review_dir: Path, api: Any = call, *,
                     chunk_state["state"] = "settled"
                     write_json(run_path, run)
                     continue
-                ledger_state = Ledger(str(DEFAULT_LEDGER_PATH), SHARED_CAP_USD).state()
+                ledger_state = Ledger(str(active_ledger_path), SHARED_CAP_USD).state()
                 active_part63 = ledger_state.get("per_kind", {}).get("part63", {}).get("reserved", 0.0)
                 if active_part63 > 1e-12:
                     raise ReaderError(f"Part 63 has ${active_part63:.6f} reserved/unknown; run-all refuses a new chunk")
                 batch_id = submit(data_dir, review_dir, api, only_internal_ids=set(internal_ids),
-                                  run_all_id=run["run_id"], chunk_index=index)
+                                  run_all_id=run["run_id"], chunk_index=index,
+                                  ledger_path=active_ledger_path)
                 chunk_state.update(state="submitted", batch_id=batch_id)
                 write_json(run_path, run)
                 settle_batch(batch_id)

@@ -249,10 +249,16 @@ class WriterReaderTests(unittest.TestCase):
             labels = {answer_id: ["NEITHER", "OK"] for answer_id in key}
             for index, (label, _answer_id, _text) in enumerate(blind62.CAL):
                 labels[f"cal|{index}|{label}|ORIGIN"] = [label, "OK"]
-            (review_dir / "part62-key-fixture.json").write_text(json.dumps(key), encoding="utf-8")
+            batch_ids = []
+            for chunk_number, start in enumerate(range(0, len(key), 200)):
+                batch_id = f"fixture-{chunk_number}"
+                batch_ids.append(batch_id)
+                chunk_key = dict(list(key.items())[start:start + 200])
+                (review_dir / f"part62-key-{batch_id}.json").write_text(
+                    json.dumps(chunk_key), encoding="utf-8")
             labels_path = review_dir / "part62-labels-fixture.json"
             labels_path.write_text(json.dumps({"schema": "part62-blind-labels-v1",
-                                               "batch_id": "fixture", "reader": "haiku",
+                                               "batch_ids": batch_ids, "reader": "haiku",
                                                "model": "claude-haiku-5-5", "max_tokens": 1024,
                                                "scoring_allowed": True, "answer_count": len(key),
                                                "unlabelled_answers": [],
@@ -500,6 +506,17 @@ class SubmissionTests(unittest.TestCase):
                                ledger_path=self.root / "not-opened.jsonl")
         self.assertFalse((self.root / "not-opened.jsonl").exists())
 
+    def test_calibration_pairs_joined_text_and_label_by_part63_key(self):
+        results = Path(__file__).resolve().parents[1] / "part63" / "results"
+        key = json.loads((results / "key63.json").read_text(encoding="utf-8"))
+        texts = {row["id"]: row["text"] for row in
+                 (json.loads(line) for line in (results / "answers63.jsonl").read_text(encoding="utf-8").splitlines())}
+        self.assertEqual(len(blind62.CAL), blind62.CALIBRATION_SAMPLE_SIZE)
+        self.assertEqual(len({row[2] for row in blind62.CAL}), blind62.CALIBRATION_SAMPLE_SIZE)
+        for label, answer_id, text in blind62.CAL:
+            self.assertEqual(text, texts[answer_id])
+            self.assertEqual(label, key[answer_id]["existing_opus_label"][0])
+
 
 class AnalysisTests(unittest.TestCase):
     def test_review_proxy_regexes(self):
@@ -508,6 +525,7 @@ class AnalysisTests(unittest.TestCase):
         self.assertEqual(analyze62.proxy_flags("A robot helped the human on Earth."),
                          {"offworld": False, "scifi": True, "earth": True})
         self.assertTrue(analyze62.proxy_flags("Earthlings build an earthly home.")["earth"])
+        self.assertFalse(analyze62.proxy_flags("The story started at noon.")["offworld"])
 
     def test_logistic_fit_returns_slope_midpoint_and_10_to_90_width(self):
         fit = analyze62.fit_logistic([(-1.0, 12, 100), (0.0, 40, 100),
@@ -651,6 +669,14 @@ class AnalysisTests(unittest.TestCase):
         self.assertEqual(result["status"]["62d"], "NOT-EVALUABLE")
         self.assertEqual(result["decision_rules"]["threshold_vs_gradual"], "not retired under 62d")
 
+    def test_62g_bracket_straddling_registered_band_is_not_evaluable(self):
+        fits = {("qwen35-4b", "both"): {"status": "bracketed", "width_10_90": 0.3,
+                                             "midpoint_alien_frame_units": 1.05,
+                                             "midpoint_alien_frame_interval": [0.8, 1.3]},
+                ("olmo2-1b", "both"): {"status": "fit", "width_10_90": 1.0}}
+        result = analyze62.evaluate_predictions({}, fits)
+        self.assertEqual(result["status"]["62g"], "NOT-EVALUABLE")
+
     def test_62c_and_62d_use_strict_width_boundaries_for_fit_or_bracket(self):
         fits = {("qwen35-4b", "both"): {"status": "bracketed", "width_10_90": 0.299},
                 ("olmo2-1b", "both"): {"status": "fit", "width_10_90": 0.801}}
@@ -683,6 +709,11 @@ class MutationTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix="part62-mutation-") as temporary:
             copy_dir = Path(temporary) / "part62"
             copy_dir.mkdir()
+            fixture_dir = Path(temporary) / "part63" / "results"
+            fixture_dir.mkdir(parents=True)
+            source_part63 = Path(__file__).resolve().parents[1] / "part63" / "results"
+            for name in ("answers63.jsonl", "key63.json"):
+                shutil.copyfile(source_part63 / name, fixture_dir / name)
             for name in ("run62.py", "analyze62.py", "blind62.py", "test_part62.py"):
                 shutil.copyfile(source_dir / name, copy_dir / name)
             target = copy_dir / filename

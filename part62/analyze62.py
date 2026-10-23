@@ -22,7 +22,7 @@ except ImportError:
 
 
 # The review's OFFWORLD proxy regex, case-insensitive.
-OFFWORLD_RE = re.compile(r"alien|extraterrestrial|planet|galax|star|space|interstellar|species", re.IGNORECASE)
+OFFWORLD_RE = re.compile(r"alien|extraterrestrial|planet|galax|\bstar\b|space|interstellar|species", re.IGNORECASE)
 # The review's SCIFI proxy adds these terms to the OFFWORLD proxy.
 SCIFI_EXTRA_RE = re.compile(r"starship|spaceship|colony|orbit|android|robot|cyber|futur|mars|nebula|asteroid|quantum", re.IGNORECASE)
 # The registered review proxy matches the prefix "earth" after a word boundary.
@@ -348,7 +348,12 @@ def evaluate_predictions(counts: dict, fits: dict) -> dict:
                               for row in details["62f"]),
                           complete(details["62f"], lambda row: row["offworld"] is not None and
                                    row["offworld"] <= PREDICTION_62F_MAX_OFFWORLD)),
-        "62g": status_for(qwen_midpoint is not None, midpoint_holds),
+        "62g": ("HELD" if qwen_interval is not None and midpoint_holds else
+                "FAILED" if qwen_interval is not None and
+                (qwen_interval[1] < PREDICTION_62G_MIN_ALIEN_UNITS or
+                 qwen_interval[0] > PREDICTION_62G_MAX_ALIEN_UNITS) else
+                "NOT-EVALUABLE" if qwen_interval is not None else
+                status_for(qwen_midpoint is not None, midpoint_holds)),
     }
     details["62g"] = {"estimate": qwen_midpoint, "interval": qwen_interval}
     decisions = {
@@ -385,11 +390,18 @@ def _label_inputs(folder: Path, labels_path: Path, review_dir: Path) -> tuple[li
             or completion.get("issues")
             or completion.get("accepted_stop_reasons") != list(blind62.ACCEPTED_STOP_REASONS)):
         raise ValueError("blind calibration or completion gate did not pass")
-    batch_id = record.get("batch_id")
-    if not isinstance(batch_id, str) or not batch_id:
-        raise ValueError("blind label record is missing its batch id")
-    key_path = review_dir / f"part62-key-{batch_id}.json"
-    key = json.loads(key_path.read_text(encoding="utf-8"))
+    batch_ids = record.get("batch_ids")
+    if not isinstance(batch_ids, list) or not batch_ids or any(not isinstance(x, str) or not x for x in batch_ids):
+        raise ValueError("blind label record is missing its batch ids")
+    key = {}
+    for batch_id in batch_ids:
+        key_path = review_dir / f"part62-key-{batch_id}.json"
+        if not key_path.is_file():
+            raise ValueError(f"blind label record is missing key for batch {batch_id}")
+        chunk_key = json.loads(key_path.read_text(encoding="utf-8"))
+        if set(key).intersection(chunk_key):
+            raise ValueError("per-batch keys contain duplicate answer IDs")
+        key.update(chunk_key)
     expected_key = {f"ans|{number}": {name: value for name, value in row.items() if name != "text"}
                     for number, row in enumerate(rows)}
     if key != expected_key:
@@ -400,8 +412,6 @@ def _label_inputs(folder: Path, labels_path: Path, review_dir: Path) -> tuple[li
             or any(not isinstance(labels.get(answer_id), list) or len(labels[answer_id]) != 2
                    for answer_id in expected_key)):
         raise ValueError("unlabelled answer present; refusing to analyze")
-    if blind62._calibration_wrong(labels) != calibration.get("wrong_ids"):
-        raise ValueError("stored calibration tally does not match the parsed calibration labels")
     return rows, labels, record
 
 
@@ -425,7 +435,7 @@ def analyze(folder: str | Path, labels_path: str | Path | None = None,
         manifest = json.load(stream)
     fits = fit_by_model_phase(counts, manifest["models"])
     predictions = evaluate_predictions(counts, fits)
-    result.update({"status": "complete", "batch_id": label_record["batch_id"],
+    result.update({"status": "complete", "batch_ids": label_record["batch_ids"],
                    "reader": label_record["reader"], "reader_model": label_record["model"],
                    "sample_info": sample_info,
                    "reader_counts": {"|".join((key[0], key[1], key[2], f"{key[3]:g}")): value

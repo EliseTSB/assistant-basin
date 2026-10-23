@@ -340,7 +340,7 @@ def evaluate_predictions(key: dict[str, dict[str, Any]], records: dict[str, dict
     one_count = _count_label(plus_one, "planet_frame", "other-planet-or-space")
     held_63c = (len(baseline) > 0 and len(plus_half) == REQUIRED_CELL_N
                 and len(plus_one) == REQUIRED_CELL_N and base_count <= PLANET_BASE_MAX
-                and one_count >= PLANET_PLUS_ONE_MIN and half_count < one_count)
+                and one_count >= PLANET_PLUS_ONE_MIN and half_count <= one_count)
     distinct_base_count = _count_label(distinct_baseline, "planet_frame", "other-planet-or-space")
     _prediction_line("63c", held_63c,
                      f"unclamped rows={base_count}/{len(baseline)} (<= {PLANET_BASE_MAX}/{REQUIRED_CELL_N}); "

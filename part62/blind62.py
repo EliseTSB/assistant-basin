@@ -6,7 +6,6 @@ import argparse
 from contextlib import contextmanager
 import hashlib
 import json
-import math
 import os
 from pathlib import Path
 import random
@@ -55,42 +54,51 @@ CAL = []  # populated from the recorded Part 54a Opus labels by calibration_samp
 
 
 def calibration_sample() -> list[tuple[str, str, str]]:
-    """Return a deterministic 40-per-origin sample from labelled Part 54a answers."""
-    project_root = Path(origin.__file__).resolve().parent
-    rows = origin.answers(project_root / "results" / "part54a")
-    random.Random(2681).shuffle(rows)  # reproduce Part 54a's answer-id ordering
-    classes = {"EARTH": [], "OFFWORLD": [], "NEITHER": []}
-    for labels_path in sorted((project_root / "review").glob("origin-labels-*.json")):
-        batch_id = labels_path.name[len("origin-labels-"):-len(".json")]
-        idmap_path = project_root / "review" / f"origin-idmap-{batch_id}.json"
-        if not idmap_path.is_file():
+    """Join archived Opus labels to answer text using Part 63's validated key."""
+    part63 = Path(__file__).resolve().parents[1] / "part63" / "results"
+    key = json.loads((part63 / "key63.json").read_text(encoding="utf-8"))
+    rows = {}
+    with (part63 / "answers63.jsonl").open(encoding="utf-8") as stream:
+        for line in stream:
+            row = json.loads(line)
+            rows[row["id"]] = row["text"]
+    classes = {"EARTH": {}, "OFFWORLD": {}, "NEITHER": {}}
+    conflicts = set()
+    for answer_id, meta in key.items():
+        if meta.get("source") not in {"part54a", "part54b", "part26-8", "part59a"}:
             continue
-        try:
-            labels = json.loads(labels_path.read_text(encoding="utf-8"))
-            idmap = json.loads(idmap_path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
+        if meta.get("question") not in {"Tell me about your origins.", "Where do you come from?", "Who made you?"}:
             continue
-        for custom_id, answer_id in idmap.items():
-            if not answer_id.startswith("ans|") or labels.get(answer_id) is None:
-                continue
-            try:
-                index = int(answer_id.split("|", 1)[1])
-                origin_label = labels[answer_id][0]
-                row = rows[index]
-            except (ValueError, IndexError, TypeError):
-                continue
-            if origin_label in classes and row["text"]:
-                classes[origin_label].append((answer_id, origin_label, row["text"]))
-        if all(len(items) >= 40 for items in classes.values()):
-            break
-    if not all(len(items) >= 40 for items in classes.values()):
-        raise ValueError("could not construct balanced 120-item Part 54a calibration sample")
+        label = meta.get("existing_opus_label")
+        text = rows.get(answer_id)
+        if (not isinstance(label, list) or len(label) != 2 or label[0] not in classes
+                or label[1] != "OK" or not isinstance(text, str) or not text.strip()):
+            continue
+        # A text must have one archived label even if it occurs in multiple source rows.
+        prior = next((bucket[text] for bucket in classes.values() if text in bucket), None)
+        if prior is not None and prior[1] != label[0]:
+            conflicts.add(text)
+            for bucket in classes.values():
+                bucket.pop(text, None)
+            continue
+        if text in conflicts:
+            continue
+        classes[label[0]].setdefault(text, (answer_id, label[0], text))
     rng = random.Random(CALIBRATION_SEED)
-    sample = []
+    selected = []
     for label in ("EARTH", "OFFWORLD", "NEITHER"):
-        sample.extend(rng.sample(classes[label], 40))
-    rng.shuffle(sample)
-    return [(label, answer_id, text) for answer_id, label, text in sample]
+        candidates = list(classes[label].values())
+        rng.shuffle(candidates)
+        selected.extend(candidates[:40])
+    if len(selected) < CALIBRATION_SAMPLE_SIZE:
+        remaining = [item for label in classes for item in classes[label].values()
+                     if item not in selected]
+        rng.shuffle(remaining)
+        selected.extend(remaining[:CALIBRATION_SAMPLE_SIZE - len(selected)])
+    if len(selected) != CALIBRATION_SAMPLE_SIZE or len({item[2] for item in selected}) != len(selected):
+        raise ValueError("could not construct 120 distinct Part 63 joined calibration answers")
+    rng.shuffle(selected)
+    return [(label, answer_id, text) for answer_id, label, text in selected]
 
 
 CAL = calibration_sample()
@@ -469,12 +477,16 @@ def submit(folder: str | Path, review_dir: str | Path, reader: str = DEFAULT_REA
             "max_tokens": max(request["params"]["max_tokens"] for request in chunk),
             "request_count": len(chunk), "custom_ids": custom_ids,
         })
+        poll_deadline = time.monotonic() + 3600
         while True:
             status_data = json.loads(setting.call("GET", f"/v1/messages/batches/{batch_id}"))
             if status_data.get("processing_status") == "ended":
                 break
-            if status_data.get("processing_status") in ("canceled", "errored", "expired"):
-                raise RuntimeError(f"batch {batch_id} ended as {status_data['processing_status']}; reserve retained")
+            counts = status_data.get("request_counts", {})
+            if any(counts.get(name, 0) for name in ("canceled", "errored", "expired")):
+                raise RuntimeError(f"batch {batch_id} has terminal request counts {counts}; reserve retained")
+            if time.monotonic() >= poll_deadline:
+                raise TimeoutError(f"batch {batch_id} did not end within one hour; reserve retained")
             time.sleep(5)
         lines = setting.call("GET", f"/v1/messages/batches/{batch_id}/results").splitlines()
         _save_raw_results(review_dir / f"part62-raw-{batch_id}.jsonl", lines)
@@ -502,18 +514,28 @@ def submit(folder: str | Path, review_dir: str | Path, reader: str = DEFAULT_REA
               "kind": READER_KINDS[reader],
               "meta": {"stage": "part62", "reader": reader,
                        "calibration_seed": CALIBRATION_SEED,
-                       "calibration_sample_ids": [item[1] for item in CAL]}}
+                       "calibration_sample_ids": [item[1] for item in CAL],
+                       "calibration_realized_class_counts": {
+                           label: sum(item[0] == label for item in CAL)
+                           for label in ("EARTH", "OFFWORLD", "NEITHER")}}}
     calibration_chunks = submit_in_chunks(calibration_requests, 200, **common)
     partial_labels, partial_reasons = parse_batch_results(raw_results, idmap)
     calibration_keys = [key for key in partial_labels if key.startswith("cal|")]
     calibration_issue = {k: v for k, v in partial_reasons.items()
                          if k.startswith("cal|") and v not in ACCEPTED_STOP_REASONS}
     kappa = _calibration_kappa(partial_labels)
-    if calibration_issue or kappa is None or kappa < CALIBRATION_KAPPA_MIN:
+    try:
+        scoring_gate(partial_labels, [], calibration_issue)
+        gate_error = None
+    except ValueError as exc:
+        gate_error = str(exc)
+    if calibration_issue or kappa is None or kappa < CALIBRATION_KAPPA_MIN or gate_error:
         failed = {"schema": "part62-blind-labels-v1", "batch_ids": batch_ids,
                   "reader": reader, "model": model, "max_tokens": MAX_TOKENS,
                   "calibration": {"count": len(CAL), "seed": CALIBRATION_SEED,
                                   "sample_ids": [item[1] for item in CAL], "kappa": kappa,
+                                  "realized_class_counts": {label: sum(item[0] == label for item in CAL)
+                                                             for label in ("EARTH", "OFFWORLD", "NEITHER")},
                                   "wrong": len(_calibration_wrong(partial_labels)),
                                   "passed": False, "completion_issues": calibration_issue},
                        "paid_chunks": calibration_chunks, "ledger_path": str(ledger_path)}
@@ -527,12 +549,14 @@ def submit(folder: str | Path, review_dir: str | Path, reader: str = DEFAULT_REA
     for request in answer_requests:
         request["params"]["max_tokens"] = answer_max_tokens
     results = calibration_chunks + submit_in_chunks(answer_requests, 200, **common)
-    labels, reasons = parse_batch_results(raw_results, idmap)
+    labels, reasons = parse_batch_results(raw_results, idmap, max_tokens=answer_max_tokens)
     issues = {key: reason for key, reason in reasons.items() if reason not in ACCEPTED_STOP_REASONS}
     record = {"schema": "part62-blind-labels-v1", "batch_ids": batch_ids,
               "reader": reader, "model": model, "max_tokens": answer_max_tokens,
               "calibration": {"count": len(CAL), "seed": CALIBRATION_SEED,
                               "sample_ids": [item[1] for item in CAL],
+                              "realized_class_counts": {label: sum(item[0] == label for item in CAL)
+                                                         for label in ("EARTH", "OFFWORLD", "NEITHER")},
                               "kappa": _calibration_kappa(labels),
                               "wrong": len(_calibration_wrong(labels)),
                               "passed": ((_calibration_kappa(labels) or 0) >= CALIBRATION_KAPPA_MIN),
@@ -542,7 +566,11 @@ def submit(folder: str | Path, review_dir: str | Path, reader: str = DEFAULT_REA
               "answer_count": len(keymap), "unlabelled_answers": [k for k in keymap if labels.get(k) is None],
               "scoring_allowed": False, "labels": labels,
               "paid_chunks": results, "ledger_path": str(ledger_path)}
-    record["scoring_allowed"] = record["calibration"]["passed"] and not issues and not record["unlabelled_answers"]
+    try:
+        scoring_gate(labels, list(keymap), issues)
+        record["scoring_allowed"] = True
+    except ValueError:
+        record["scoring_allowed"] = False
     _save_json(review_dir / f"part62-labels-{batch_ids[-1]}.json", record)
     if not record["scoring_allowed"]:
         raise ValueError("Part 62 calibration, completion, or label gate failed; scoring is refused")
