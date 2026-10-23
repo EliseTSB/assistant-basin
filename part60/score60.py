@@ -107,6 +107,25 @@ def compute_thresholds(activations: np.ndarray, sids: list[str], record_indices:
     return result
 
 
+def compute_observed_ceilings(activations: np.ndarray, sids: list[str], record_indices: list[int],
+                              unit_keys: list[str], pool_seed: int = POOL_SEED,
+                              pool_size: int = POOL_SIZE) -> dict[str, float]:
+    """Return each unit's maximum on the same fixed null pool used for its threshold."""
+    if activations.ndim != 2 or activations.shape != (len(sids), len(record_indices)):
+        raise ScoreError("activation matrix does not align with sentence ids and unit columns")
+    rng = random.Random(pool_seed)
+    pool_rows = np.asarray(sorted(rng.sample(range(len(sids)), pool_size)), dtype=np.int64)
+    owners = np.asarray([_owner(sids[i]) for i in pool_rows], dtype=np.int64)
+    values = activations[np.ix_(pool_rows, np.arange(len(unit_keys), dtype=np.int64))]
+    result = {}
+    for col, (record_index, key) in enumerate(zip(record_indices, unit_keys)):
+        keep = owners != int(record_index)
+        if not keep.any():
+            raise ScoreError(f"fixed null pool has no other-unit texts for {key}")
+        result[key] = float(np.max(values[keep, col]))
+    return result
+
+
 def load_source_arrays() -> tuple[np.ndarray, list[str], list[int], list[str]]:
     acts_path = DATA / "acts.all.npz"
     ids_path = DATA / "ids.all.json"
@@ -144,17 +163,37 @@ def threshold_fingerprint() -> dict[str, Any]:
 def ensure_thresholds(root: Path) -> dict[str, float]:
     path = root / "thresholds.json"
     fingerprint = threshold_fingerprint()
+    cached: dict[str, Any] = {}
     if path.exists():
         cached = json.loads(path.read_text(encoding="utf-8"))
         if cached.get("source_fingerprint") == fingerprint:
+            if "observed_ceilings" not in cached:
+                matrix, sids, ids, keys = load_source_arrays()
+                cached["observed_ceilings"] = compute_observed_ceilings(matrix, sids, ids, keys)
+                write_json(path, cached)
             return {str(k): float(v) for k, v in cached["thresholds"].items()}
     matrix, sids, ids, keys = load_source_arrays()
     thresholds = compute_thresholds(matrix, sids, ids, keys)
+    ceilings = compute_observed_ceilings(matrix, sids, ids, keys)
     value = {"definition": "linear 95th percentile of fixed seed-7 1,200-row Part 58 pool, excluding target unit's own texts",
              "pool_seed": POOL_SEED, "pool_size": POOL_SIZE,
-             "source_fingerprint": fingerprint, "thresholds": thresholds}
+             "source_fingerprint": fingerprint, "thresholds": thresholds,
+             "observed_ceilings": ceilings}
+    supplemental = cached.get("supplemental_thresholds", {})
+    if isinstance(supplemental, dict) and supplemental:
+        value["supplemental_thresholds"] = supplemental
+        for key, threshold in supplemental.items():
+            value["thresholds"].setdefault(str(key), float(threshold))
+        saved_ceilings = cached.get("observed_ceilings", {})
+        if isinstance(saved_ceilings, dict):
+            value["observed_ceilings"].update({str(key): float(saved_ceilings[key])
+                                               for key in supplemental
+                                               if key in saved_ceilings})
+    for key in ("supplemental_scoring_by_split",):
+        if isinstance(cached.get(key), dict):
+            value[key] = cached[key]
     write_json(path, value)
-    return thresholds
+    return {str(k): float(v) for k, v in value["thresholds"].items()}
 
 
 def extend_thresholds_for_split(root: Path, split: str, unit_specs: list[dict[str, Any]],
@@ -173,16 +212,20 @@ def extend_thresholds_for_split(root: Path, split: str, unit_specs: list[dict[st
     scorer.score_batch(entries, list(range(len(entries))), observed, marked, batch_size=8)
     col_by_key = {str(unit["unit_key"]): col for col, unit in enumerate(unit_specs)}
     additions: dict[str, float] = {}
+    ceilings: dict[str, float] = {}
     for unit in missing:
         keep = owners != int(unit["record_index"])
         if not keep.any():
             raise ScoreError(f"fixed null pool has no other-unit texts for {unit['unit_key']}")
-        additions[str(unit["unit_key"])] = float(np.percentile(observed[keep, col_by_key[unit["unit_key"]]], 95, method="linear"))
+        values = observed[keep, col_by_key[unit["unit_key"]]]
+        additions[str(unit["unit_key"])] = float(np.percentile(values, 95, method="linear"))
+        ceilings[str(unit["unit_key"])] = float(np.max(values))
     thresholds.update(additions)
     path = root / "thresholds.json"
     cached = json.loads(path.read_text(encoding="utf-8"))
     cached.setdefault("supplemental_thresholds", {}).update(additions)
     cached["thresholds"].update(additions)
+    cached.setdefault("observed_ceilings", {}).update(ceilings)
     cached.setdefault("supplemental_scoring_by_split", {})[split] = {"model_revision": MODEL_REVISION, "dtype": scorer.dtype,
         "device": getattr(scorer, "device", "cpu"), "backend": SCORE_BACKEND,
         "pool_seed": POOL_SEED, "pool_size": POOL_SIZE, "reason": "unit has no column in Part 58 acts.all.npz"}
@@ -194,6 +237,10 @@ def extend_thresholds_for_split(root: Path, split: str, unit_specs: list[dict[st
 def score_path(root: Path, split: str, method: str, phase: str) -> Path:
     name = PHASE_SCORE_STEMS.get((method, phase), method)
     return root / "acts" / split / f"{name}.npz"
+
+
+def archive_m0_path(root: Path, split: str) -> Path:
+    return root / "acts" / split / "M0-archive.npz"
 
 
 def entries_for_phase(rows: list[dict[str, Any]], method: str, phase: str) -> list[dict[str, Any]]:
@@ -313,7 +360,7 @@ def score_cached_m0(root: Path, split: str, split_units: list[dict[str, Any]]) -
             if source_col is not None:
                 matrix[r, target_col] = source[src_row, source_col]
         sids.append(item["sid"]); texts.append(item["text"]); groups.append(item["group"]); recs.append(item["record_index"])
-    path = score_path(root, split, "M0", "primary")
+    path = archive_m0_path(root, split)
     _save_npz_atomic(path, max=matrix, marked=np.full_like(matrix, np.nan), sids=np.asarray(sids),
                      unit_keys=np.asarray(unit_keys), record_indices=np.asarray(recs, dtype=np.int32),
                      groups=np.asarray(groups), texts=np.asarray(texts), method=np.asarray("M0"), phase=np.asarray("primary"),
@@ -358,7 +405,9 @@ def ratio_summary(reference: np.ndarray, observed: np.ndarray) -> dict[str, Any]
 def reproduction_passed(by_type: dict[str, Any], all_units: dict[str, Any]) -> bool:
     summaries = [all_units, *(by_type.get(kind) for kind in ("neuron", "control"))]
     return all(isinstance(item, dict) and item.get("median_ratio") is not None
-               and 0.9 <= float(item["median_ratio"]) <= 1.1 for item in summaries)
+               and 0.9 <= float(item["median_ratio"]) <= 1.1
+               and item.get("spearman") is not None and float(item["spearman"]) >= 0.98
+               for item in summaries)
 
 
 def stable_seed(seed: int, *parts: Any) -> int:
@@ -602,7 +651,7 @@ def reproduction_check(root: Path, split: str, split_units: list[dict[str, Any]]
         old = json.loads(path.read_text(encoding="utf-8"))
         if old.get("fingerprint") == fingerprint:
             if not reproduction_passed(old.get("by_type", {}), old.get("all_units", {})):
-                raise ScoreError("cached reproduction median ratio is outside 0.9..1.1 overall or for a unit type")
+                raise ScoreError("cached reproduction fails median-ratio or Spearman gates")
             return old
     matrix, sids, ids, keys = load_source_arrays()
     source_sents = read_jsonl(DATA / "sent.all.jsonl")
@@ -636,17 +685,17 @@ def reproduction_check(root: Path, split: str, split_units: list[dict[str, Any]]
     result = {"fingerprint": fingerprint, "revision": MODEL_REVISION, "split": split,
               "sentence_seed": REPRO_SEED, "sentences": len(items), "all_units": summary, "by_type": by_type,
               "passed": reproduction_passed(by_type, summary),
-              "definition": "new max activation divided by recorded Part 58 max; median ratio 0.9..1.1 overall and within each unit type; exclude zero reference values for ratio; Spearman on all finite pairs"}
+              "definition": "new max activation divided by recorded Part 58 max; median ratio 0.9..1.1 and Spearman >= 0.98 overall and within each unit type; exclude zero reference values for ratio; Spearman uses all finite pairs"}
     write_json(path, result)
     if not result["passed"]:
-        raise ScoreError("reproduction median ratio is outside 0.9..1.1 overall or for one unit type; refusing to score generated sentences")
+        raise ScoreError("reproduction fails the median-ratio or Spearman gate overall or for one unit type; refusing to score generated sentences")
     return result
 
 
 def cached_m0_existing(root: Path, split: str) -> Path:
     from gen60 import load_splits, prepare_m0
     units = load_splits()[split]
-    target = score_path(root, split, "M0", "primary")
+    target = archive_m0_path(root, split)
     gen_file = root / "out" / split / "M0.jsonl"
     if not gen_file.exists():
         prepare_m0(root, split)
@@ -656,38 +705,58 @@ def cached_m0_existing(root: Path, split: str) -> Path:
 def plan_live(root: Path, split: str, methods: list[str]) -> list[tuple[str, str, list[dict[str, Any]]]]:
     import gen60
     plans = []
+    total_units = len(gen60.load_splits()[split])
     for method in methods:
         path = gen60.output_path(root, split, method)
         if not path.exists():
             continue
         rows = read_jsonl(path)
+        if method == "M0":
+            entries = entries_for_phase(rows, method, "primary")
+            if entries:
+                plans.append((method, "primary", entries))
+            continue
         if method == "M3":
             for phase in ("selection", "fresh"):
                 entries = entries_for_phase(rows, method, phase)
+                denominator = _phase_denominator(rows, method, phase, total_units)
                 successes = len({entry["record_index"] for entry in entries})
-                if gen60.generation_failure_exceeds_ten_percent(successes, len(rows)):
-                    print(f"drop {method}/{phase} scoring: only {successes}/{len(rows)} units parsed (more than 10% failed)")
+                if denominator > 0 and gen60.generation_failure_exceeds_ten_percent(successes, denominator):
+                    print(f"drop {method}/{phase} scoring: only {successes}/{denominator} eligible units parsed (more than 10% failed)")
                     continue
                 if entries:
                     plans.append((method, phase, entries))
         elif method == "M5":
             for phase in ("round1", "round2"):
                 entries = entries_for_phase(rows, method, phase)
+                denominator = _phase_denominator(rows, method, phase, total_units)
                 successes = len({entry["record_index"] for entry in entries})
-                if gen60.generation_failure_exceeds_ten_percent(successes, len(rows)):
-                    print(f"drop {method}/{phase} scoring: only {successes}/{len(rows)} units parsed (more than 10% failed)")
+                if denominator > 0 and gen60.generation_failure_exceeds_ten_percent(successes, denominator):
+                    print(f"drop {method}/{phase} scoring: only {successes}/{denominator} eligible units parsed (more than 10% failed)")
                     continue
                 if entries:
                     plans.append((method, phase, entries))
         elif method != "M0":
             entries = entries_for_phase(rows, method, "primary")
+            denominator = total_units
             successes = len({entry["record_index"] for entry in entries})
-            if gen60.generation_failure_exceeds_ten_percent(successes, len(rows)):
-                print(f"drop {method}/primary scoring: only {successes}/{len(rows)} units parsed (more than 10% failed)")
+            if denominator > 0 and gen60.generation_failure_exceeds_ten_percent(successes, denominator):
+                print(f"drop {method}/primary scoring: only {successes}/{denominator} units parsed (more than 10% failed)")
                 continue
             if entries:
                 plans.append((method, "primary", entries))
     return plans
+
+
+def _phase_denominator(rows: list[dict[str, Any]], method: str, phase: str,
+                       total_units: int) -> int:
+    if method == "M3" and phase == "fresh":
+        return sum(isinstance(row.get("selection"), dict)
+                   and row["selection"].get("parse_status") == "ok" for row in rows)
+    if method == "M5" and phase == "round2":
+        return sum(isinstance(row.get("round1"), dict)
+                   and row["round1"].get("parse_status") == "ok" for row in rows)
+    return total_units
 
 
 def verify_scoring(root: Path, split: str, methods: list[str], model_dir: str | Path,
@@ -774,7 +843,7 @@ def main(argv: list[str] | None = None) -> int:
         if "M0" in methods:
             if not (args.root / "out" / args.split / "M0.jsonl").exists():
                 prepare_m0(args.root, args.split)
-            print(f"M0 reused Part 58 activations: {cached_m0_existing(args.root, args.split)}")
+            print(f"M0 Part 58 archive cross-check: {cached_m0_existing(args.root, args.split)}")
         plans = plan_live(args.root, args.split, methods)
         model_dir = args.model or Path(os.environ.get("HF_HOME", Path.home() / ".cache" / "huggingface")) / "hub" / "models--Qwen--Qwen3-1.7B" / "snapshots" / MODEL_REVISION
         resolved = resolved_device(args.device)
@@ -784,6 +853,7 @@ def main(argv: list[str] | None = None) -> int:
             target = score_path(args.root, args.split, method, phase)
             if target.exists():
                 expected = score_input_fingerprint(entries, specs, model_dir, args.dtype, resolved, args.batch_size)
+                existing = None
                 try:
                     existing = np.load(target, allow_pickle=False)
                     matches = (str(existing["score_fingerprint"]) == expected
@@ -800,6 +870,10 @@ def main(argv: list[str] | None = None) -> int:
                 if matches:
                     print(f"already complete: {target}")
                     continue
+                elif method == "M0" and (existing is None or "score_fingerprint" not in existing.files):
+                    target.unlink(missing_ok=True)
+                    for progress in _progress_paths(args.root, split, method, phase):
+                        progress.unlink(missing_ok=True)
                 elif args.force:
                     target.unlink(missing_ok=True)
                     for progress in _progress_paths(args.root, args.split, method, phase):
@@ -814,7 +888,7 @@ def main(argv: list[str] | None = None) -> int:
                 if not check_path.is_file():
                     raise ScoreError(f"missing reproduction record: {check_path}")
                 verify_scoring(args.root, args.split, methods, model_dir, args.dtype, args.device, args.batch_size)
-            print("no new live generated sentences are ready to score")
+            print("no new live sentences are ready to score")
             return 0
         scorer = QwenScorer(specs, model_dir, dtype=args.dtype, device=args.device, threads=args.threads)
         try:

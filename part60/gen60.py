@@ -12,6 +12,7 @@ import re
 import ssl
 import sys
 import time
+import unicodedata
 import urllib.error
 import urllib.request
 from collections import Counter
@@ -33,8 +34,9 @@ BATCH_MAX_REQUESTS = 10_000
 BATCH_MAX_BYTES = 190_000_000
 PRICE_INPUT = 0.05
 PRICE_OUTPUT = 0.25
-MAX_TOKENS = {"M1": 1100, "M2": 1100, "M3": 1600, "M4": 1100, "M5": 1100, "M6": 4000, "M7": 1100}
+MAX_TOKENS = {"M1": 1100, "M2": 1100, "M3": 1600, "M4": 1100, "M5": 1100, "M6": 8000, "M7": 1100}
 KNOWN = {(4, 3042), (19, 4826), (22, 1610), (21, 4400)}
+UNREGISTERED_TEST_UNITS = {"L0:u190", "L4:u741", "L17:u1360"}
 
 
 class RunnerError(RuntimeError):
@@ -100,8 +102,9 @@ def key_for(record: dict[str, Any]) -> tuple[str, str]:
     raise RunnerError("pilot record has no unit or control_id")
 
 
-def load_splits(pilot_path: Path = PILOT) -> dict[str, list[dict[str, Any]]]:
-    """Rebuild Part 58's seed-5801 dev/test sample without using its judge helper."""
+def load_splits(pilot_path: Path | None = None) -> dict[str, list[dict[str, Any]]]:
+    """Rebuild Part 58's dev sample and the registered 247-real/250-control test."""
+    pilot_path = pilot_path or PILOT
     records = read_jsonl(pilot_path)
     eligible: dict[str, list[tuple[int, dict[str, Any]]]] = {"unit": [], "control_id": []}
     for i, row in enumerate(records):
@@ -114,19 +117,26 @@ def load_splits(pilot_path: Path = PILOT) -> dict[str, list[dict[str, Any]]]:
                 eligible[kind].append((i, row))
     rng = random.Random(SPLIT_SEED)
     out: dict[str, list[dict[str, Any]]] = {"dev": [], "test": []}
+    excluded_test_count = 0
     for kind in ("unit", "control_id"):
         pool = eligible[kind]
         rng.shuffle(pool)
         for split, section in (("dev", pool[:UNITS_PER_TYPE]), ("test", pool[UNITS_PER_TYPE:2 * UNITS_PER_TYPE])):
             for index, record in section:
                 key, unit_type = key_for(record)
+                if split == "test" and unit_type == "neuron" and key in UNREGISTERED_TEST_UNITS:
+                    excluded_test_count += 1
+                    continue
                 out[split].append({
                     "record_index": int(index), "unit_key": key, "type": unit_type,
                     "layer": int(record["layer"]), "record": record,
                 })
+    expected_counts = {"dev": {"neuron": 250, "control": 250},
+                       "test": {"neuron": 250 - excluded_test_count, "control": 250}}
     for split in out:
-        if len(out[split]) != 2 * UNITS_PER_TYPE:
-            raise RunnerError(f"Part 58 split reconstruction yielded {len(out[split])} {split} units, expected 500")
+        counts = Counter(x["type"] for x in out[split])
+        if dict(counts) != expected_counts[split]:
+            raise RunnerError(f"Part 58 split reconstruction yielded {dict(counts)} {split} units, expected {expected_counts[split]}")
         if len({x["unit_key"] for x in out[split]}) != len(out[split]):
             raise RunnerError(f"duplicate unit keys in {split} split")
     return out
@@ -189,7 +199,35 @@ def _string_list(value: Any, count: int) -> bool:
     return isinstance(value, list) and len(value) == count and all(isinstance(x, str) and x.strip() for x in value)
 
 
-def validate_output(method: str, phase: str, value: Any) -> tuple[bool, str]:
+def _normalized_sentence(text: str) -> str:
+    text = re.sub(r"\[\[(.*?)\]\]", r"\1", text, flags=re.S)
+    return " ".join(unicodedata.normalize("NFKC", text).casefold().split())
+
+
+def _generated_sentences(method: str, phase: str, value: dict[str, Any]) -> list[str]:
+    if method == "M3" and phase == "selection":
+        return [sentence for candidate in value["hypotheses"]
+                for tier in ("strong", "none") for sentence in candidate[tier]]
+    tiers = ("strong", "none") if method == "M3" and phase == "fresh" or method == "M4" or phase == "round2" else ("strong", "weak", "none")
+    return [sentence for tier in tiers for sentence in value[tier]]
+
+
+def _validate_sentence_rules(method: str, phase: str, value: dict[str, Any],
+                             input_windows: Iterable[str] | None) -> tuple[bool, str]:
+    seen: set[str] = set()
+    source = {_normalized_sentence(str(window)) for window in (input_windows or [])}
+    for sentence in _generated_sentences(method, phase, value):
+        normalized = _normalized_sentence(sentence)
+        if normalized in source:
+            return False, "input_window_copy"
+        if normalized in seen:
+            return False, "duplicate_sentence"
+        seen.add(normalized)
+    return True, "ok"
+
+
+def validate_output(method: str, phase: str, value: Any,
+                    input_windows: Iterable[str] | None = None) -> tuple[bool, str]:
     if not isinstance(value, dict):
         return False, "not_object"
     if method == "M3" and phase == "selection":
@@ -205,11 +243,11 @@ def validate_output(method: str, phase: str, value: Any) -> tuple[bool, str]:
                 return False, f"candidate_{rank}_schema"
             if not _string_list(candidate.get("strong"), 3) or not _string_list(candidate.get("none"), 3):
                 return False, f"candidate_{rank}_sentences"
-        return True, "ok"
+        return _validate_sentence_rules(method, phase, value, input_windows)
     if method == "M3" and phase == "fresh":
         if set(value) != {"strong", "none"}:
             return False, "fresh_keys"
-        return (True, "ok") if _string_list(value.get("strong"), 4) and _string_list(value.get("none"), 4) else (False, "fresh_sentences")
+        return _validate_sentence_rules(method, phase, value, input_windows) if _string_list(value.get("strong"), 4) and _string_list(value.get("none"), 4) else (False, "fresh_sentences")
     if method == "M4":
         if set(value) != {"token", "context", "hypothesis", "strong", "none"}:
             return False, "token_keys"
@@ -221,7 +259,7 @@ def validate_output(method: str, phase: str, value: Any) -> tuple[bool, str]:
             return False, "strong_marker_count"
         if any("[[" in s or "]]" in s for s in value["none"]):
             return False, "none_has_marker"
-        return True, "ok"
+        return _validate_sentence_rules(method, phase, value, input_windows)
     expected = ("hypothesis", "strong", "none") if phase == "round2" else ("hypothesis", "strong", "weak", "none")
     if set(value) != set(expected):
         return False, "output_keys"
@@ -231,7 +269,7 @@ def validate_output(method: str, phase: str, value: Any) -> tuple[bool, str]:
         return False, "tier_lengths"
     if "weak" in expected and not _string_list(value.get("weak"), 4):
         return False, "weak_length"
-    return True, "ok"
+    return _validate_sentence_rules(method, phase, value, input_windows)
 
 
 def request_for(method: str, phase: str, unit: dict[str, Any], index: int,
@@ -262,6 +300,7 @@ def request_for(method: str, phase: str, unit: dict[str, Any], index: int,
                               "system": [{"type": "text", "text": system}], "messages": [{"role": "user", "content": user}]}
     if method == "M6":
         params["thinking"] = {"type": "adaptive"}
+        params["output_config"] = {"effort": "high"}
     return {"custom_id": f"u{index:04d}", "params": params,
             "_meta": {"record_index": unit["record_index"], "unit_key": unit["unit_key"], "unit_type": unit["type"],
                       "layer": unit["layer"], "phase": prompt_phase}}
@@ -287,10 +326,7 @@ def write_output(path: Path, rows: dict[int, dict[str, Any]]) -> None:
 
 
 def _ssl_context() -> ssl.SSLContext:
-    ca = os.environ.get("ANTHROPIC_CA_BUNDLE") or os.environ.get("SSL_CERT_FILE")
-    if not ca:
-        candidate = Path.home() / ".mitmproxy" / "ca-bundle-combined.crt"
-        ca = str(candidate) if candidate.is_file() else None
+    ca = os.environ.get("PART60_CA_BUNDLE") or os.environ.get("SSL_CERT_FILE")
     return ssl.create_default_context(cafile=ca) if ca else ssl.create_default_context()
 
 
@@ -354,9 +390,11 @@ def method_state_path(root: Path, split: str, method: str) -> Path:
 
 
 def mark_method_dropped(root: Path, method: str, reason: str,
-                        splits: tuple[str, ...] = ("dev", "test")) -> None:
+                        splits: tuple[str, ...] = ("dev", "test"),
+                        source: str = "runtime") -> None:
     for split in splits:
-        state = {"method": method, "split": split, "status": "dropped", "reason": reason, "updated_at": utc_now()}
+        state = {"method": method, "split": split, "status": "dropped", "reason": reason,
+                 "source": source, "updated_at": utc_now()}
         write_json(method_state_path(root, split, method), state)
         rows = read_output(output_path(root, split, method))
         for unit in load_splits()[split]:
@@ -436,36 +474,132 @@ def phase_units(units: list[dict[str, Any]], method: str, phase: str, rows: dict
     return units
 
 
+def _smoke_usage(response: dict[str, Any]) -> dict[str, int]:
+    usage = response.get("usage", {}) if isinstance(response, dict) else {}
+    return {"input": int(usage.get("input_tokens", 0)),
+            "output": int(usage.get("output_tokens", 0)), "calls": 1}
+
+
+def _smoke_thinking(response: dict[str, Any]) -> str:
+    content = response.get("content", []) if isinstance(response, dict) else []
+    return "".join(str(block.get("thinking", block.get("text", "")))
+                   for block in content
+                   if isinstance(block, dict) and block.get("type") == "thinking").strip()
+
+
+def _smoke_answer(response: dict[str, Any]) -> str:
+    content = response.get("content", []) if isinstance(response, dict) else []
+    return "".join(str(block.get("text", "")) for block in content
+                   if isinstance(block, dict) and block.get("type") == "text")
+
+
+def _smoke_drop_state(root: Path, reason: str) -> None:
+    mark_method_dropped(root, "M6", reason, source="smoke")
+
+
+def _clear_smoke_drop(root: Path) -> None:
+    for split in ("dev", "test"):
+        path = method_state_path(root, split, "M6")
+        if path.is_file():
+            state = json.loads(path.read_text(encoding="utf-8"))
+            if state.get("status") == "dropped" and state.get("source") == "smoke":
+                path.unlink()
+
+
 def smoke_m6(root: Path, api: Any = api_call) -> dict[str, Any]:
-    """Make the required single direct request and record whether thinking engaged."""
-    unit = load_splits()["dev"][0]
-    request = request_for("M6", "primary", unit, 0)
-    result: dict[str, Any] = {"method": "M6", "split": "dev", "unit_key": unit["unit_key"],
-                              "created_at": utc_now(), "model": MODEL, "max_tokens": MAX_TOKENS["M6"],
-                              "thinking": {"type": "adaptive"}}
-    try:
-        response = json.loads(api("POST", "/v1/messages", request["params"]))
-        content = response.get("content", []) if isinstance(response, dict) else []
-        thinking_text = "".join(str(block.get("thinking", block.get("text", "")))
-                                 for block in content
-                                 if isinstance(block, dict) and block.get("type") == "thinking")
-        result.update({"status": "pass" if thinking_text.strip() else "dropped",
-                       "thinking_chars": len(thinking_text.strip()),
-                       "stop_reason": response.get("stop_reason")})
-        if not thinking_text.strip():
-            result["reason"] = "smoke response contained no non-empty thinking block"
-    except (APIError, RunnerError, OSError, ValueError, KeyError, TypeError) as exc:
-        result.update({"status": "dropped", "thinking_chars": 0,
-                       "reason": f"M6 smoke request failed: {type(exc).__name__}: {exc}"})
+    """Probe five dev units; transient errors remain rerunnable and never drop M6."""
+    units = load_splits()["dev"][:5]
+    created_at = utc_now()
+    requests = [request_for("M6", "primary", unit, i) for i, unit in enumerate(units)]
+    result: dict[str, Any] = {"method": "M6", "split": "dev", "created_at": created_at,
+                              "model": MODEL, "max_tokens": MAX_TOKENS["M6"],
+                              "thinking": {"type": "adaptive"}, "output_config": {"effort": "high"},
+                              "required_units": len(units), "results": []}
+    if api is api_call and not os.environ.get("ANTHROPIC_CREDITS_KEY"):
+        result.update({"status": "error", "reason": "ANTHROPIC_CREDITS_KEY is not set"})
+        write_json(root / "out" / "smoke-M6.json", result)
+        return result
+
+    reserve = estimated_usd(requests)
+    spend_path = root / "spend.jsonl"
+    spent, _ = spend_state(spend_path)
+    cap = float(os.environ.get("PART60_CAP", "8"))
+    if cap > 8.0 and os.environ.get("PART60_CAP_OVERRIDE") != "1":
+        raise RunnerError("cap above $8 requires PART60_CAP_OVERRIDE=1 and an explicitly recorded override")
+    if spent + reserve > cap + 1e-12:
+        raise RunnerError(f"cap refused M6 smoke: settled/reserved ${spent:.4f} plus conservative estimate ${reserve:.4f} exceeds ${cap:.2f}")
+    smoke_key = f"dev:M6:smoke:{created_at}"
+    append_spend(spend_path, {"event": "reserve", "chunk_id": smoke_key, "method": "M6", "split": "dev",
+                              "phase": "smoke", "reserved_usd": round(reserve, 8), "ts": created_at,
+                              "request_count": len(requests)})
+
+    usage_total = {"input": 0, "output": 0, "calls": 0}
+    for unit, request in zip(units, requests):
+        try:
+            response = json.loads(api("POST", "/v1/messages", request["params"]))
+            if not isinstance(response, dict):
+                raise ValueError("smoke response is not a JSON object")
+        except APIError as exc:
+            if exc.status == 400:
+                result.update({"status": "dropped", "reason": f"M6 smoke received HTTP 400: {exc}"})
+                if usage_total["calls"]:
+                    actual = (usage_total["input"] * PRICE_INPUT + usage_total["output"] * PRICE_OUTPUT) / 1_000_000
+                    append_spend(spend_path, {"event": "settle", "chunk_id": smoke_key, "method": "M6", "split": "dev",
+                                              "phase": "smoke", "input_tokens": usage_total["input"],
+                                              "output_tokens": usage_total["output"], "calls": usage_total["calls"],
+                                              "usd": round(actual, 8), "ts": utc_now()})
+                else:
+                    append_spend(spend_path, {"event": "release", "chunk_id": smoke_key, "method": "M6", "split": "dev",
+                                              "phase": "smoke", "usd": 0.0, "ts": utc_now(), "reason": str(exc)})
+                _smoke_drop_state(root, result["reason"])
+                write_json(root / "out" / "smoke-M6.json", result)
+                return result
+            result.update({"status": "error", "reason": f"M6 smoke request failed: {type(exc).__name__}: {exc}"})
+            write_json(root / "out" / "smoke-M6.json", result)
+            return result
+        except (RunnerError, OSError, ValueError, KeyError, TypeError) as exc:
+            result.update({"status": "error", "reason": f"M6 smoke request failed: {type(exc).__name__}: {exc}"})
+            write_json(root / "out" / "smoke-M6.json", result)
+            return result
+
+        usage = _smoke_usage(response)
+        for key in usage_total:
+            usage_total[key] += usage[key]
+        thinking = _smoke_thinking(response)
+        answer = parse_json(_smoke_answer(response))
+        valid, parse_status = validate_output("M6", "primary", answer, windows_for(unit, "M6"))
+        stop_reason = response.get("stop_reason")
+        entry = {"unit_key": unit["unit_key"], "thinking_chars": len(thinking),
+                 "thinking_present": bool(thinking), "stop_reason": stop_reason,
+                 "answer_parse_status": parse_status if not valid else "ok", "usage_tokens": usage}
+        result["results"].append(entry)
+
+    passed = all(item["thinking_present"] and item["stop_reason"] != "max_tokens"
+                 and item["answer_parse_status"] == "ok" for item in result["results"])
+    no_thinking = any(not item["thinking_present"] for item in result["results"])
+    result.update({"thinking_count": sum(item["thinking_present"] for item in result["results"]),
+                   "thinking_fraction": sum(item["thinking_present"] for item in result["results"]) / len(units),
+                   "usage_tokens": usage_total,
+                   "status": "pass" if passed else "dropped" if no_thinking else "error"})
+    if not passed:
+        result["reason"] = ("one or more successful smoke responses had no non-empty thinking block"
+                            if no_thinking else "one or more smoke responses were truncated or failed M6 schema validation")
+    actual = (usage_total["input"] * PRICE_INPUT + usage_total["output"] * PRICE_OUTPUT) / 1_000_000
+    append_spend(spend_path, {"event": "settle", "chunk_id": smoke_key, "method": "M6", "split": "dev",
+                              "phase": "smoke", "input_tokens": usage_total["input"],
+                              "output_tokens": usage_total["output"], "calls": usage_total["calls"],
+                              "usd": round(actual, 8), "ts": utc_now()})
+    if result["status"] == "dropped":
+        _smoke_drop_state(root, result["reason"])
+    elif result["status"] == "pass":
+        _clear_smoke_drop(root)
     write_json(root / "out" / "smoke-M6.json", result)
-    if result["status"] != "pass":
-        mark_method_dropped(root, "M6", result["reason"])
     return result
 
 
 def reconcile_chunk(root: Path, split: str, method: str, phase: str,
                     api: Any = api_call) -> str:
-    """Adopt exactly one batch with this chunk's metadata tag; never guess by size/time."""
+    """Adopt exactly one recent batch with this chunk's request count; never guess."""
     mfpath = manifest_path(root, split, method, phase)
     if not mfpath.is_file():
         raise RunnerError(f"no manifest for {method}/{split}/{phase}")
@@ -473,30 +607,47 @@ def reconcile_chunk(root: Path, split: str, method: str, phase: str,
     if not manifest.get("chunks"):
         raise RunnerError("manifest has no chunks")
     chunk = manifest["chunks"][-1]
-    tag = chunk.get("metadata_tag")
-    if not tag:
-        raise RunnerError("chunk has no reconciliation metadata tag; refusing to infer a batch")
+    posting = chunk.get("posting", {})
+    started = posting.get("posting_started_at")
+    request_count = posting.get("request_count")
+    if not started or not isinstance(request_count, int):
+        raise RunnerError("chunk has no recorded posting timestamp and request count; refusing to infer a batch")
+    try:
+        started_at = datetime.fromisoformat(str(started).replace("Z", "+00:00"))
+    except ValueError:
+        raise RunnerError("chunk posting timestamp is invalid; refusing to infer a batch") from None
     matches: list[dict[str, Any]] = []
     url = "/v1/messages/batches?limit=100"
     seen_cursors: set[str] = set()
     while url:
         page = json.loads(api("GET", url))
         for batch in page.get("data", []):
-            metadata = batch.get("metadata") if isinstance(batch, dict) else None
-            if isinstance(metadata, dict) and metadata.get("part60_chunk_tag") == tag:
+            if not isinstance(batch, dict):
+                continue
+            created = batch.get("created_at")
+            counts = batch.get("request_counts")
+            if not isinstance(created, str) or not isinstance(counts, dict):
+                continue
+            try:
+                created_at = datetime.fromisoformat(created.replace("Z", "+00:00"))
+            except ValueError:
+                continue
+            count_sum = sum(int(value) for value in counts.values() if isinstance(value, int) and not isinstance(value, bool))
+            if created_at >= started_at and count_sum == request_count:
                 matches.append(batch)
         if not page.get("has_more"):
             break
-        cursor = str(page.get("last_id") or (page.get("data") or [{}])[-1].get("id", ""))
+        cursor = str((page.get("data") or [{}])[-1].get("id", ""))
+        cursor = str(page.get("last_id") or cursor)
         if not cursor or cursor in seen_cursors:
             raise RunnerError("batch list pagination did not advance; refusing reconciliation")
         seen_cursors.add(cursor)
-        url = f"/v1/messages/batches?limit=100&before_id={cursor}"
+        url = f"/v1/messages/batches?limit=100&after_id={cursor}"
     if len(matches) != 1:
-        return f"reconciliation found {len(matches)} matching batches; chunk remains locked and reserved"
+        raise RunnerError(f"reconciliation found {len(matches)} matching batches; chunk remains locked and reserved")
     batch_id = str(matches[0].get("id", ""))
     if not batch_id:
-        raise RunnerError("matching batch metadata has no id")
+        raise RunnerError("matching batch has no id")
     chunk["batch_id"] = batch_id
     chunk["status"] = "submitted"
     chunk["reconciled_at"] = utc_now()
@@ -531,9 +682,11 @@ def _submit_phase_locked(root: Path, split: str, method: str, phase: str,
         if not smoke_path.is_file():
             raise RunnerError("M6 requires out/smoke-M6.json; run `gen60.py smoke --method M6` first")
         smoke = json.loads(smoke_path.read_text(encoding="utf-8"))
+        if smoke.get("status") == "error":
+            raise RunnerError(f"M6 smoke status is error; rerun smoke before submitting: {smoke.get('reason', '')}")
         if smoke.get("status") != "pass":
             reason = str(smoke.get("reason", "M6 smoke did not show a non-empty thinking block"))
-            mark_method_dropped(root, "M6", reason)
+            _smoke_drop_state(root, reason)
             return f"dropped M6: {reason}"
     state_path = method_state_path(root, split, method)
     if state_path.is_file():
@@ -589,6 +742,9 @@ def _submit_phase_locked(root: Path, split: str, method: str, phase: str,
         feedback = build_feedback(root, split, unit, output) if method == "M5" and phase == "round2" else None
         req = request_for(method, phase, unit, idx, output_row=output, feedback=feedback)
         idmap[req["custom_id"]] = {k: req["_meta"][k] for k in ("record_index", "unit_key", "unit_type", "layer", "phase")}
+        user_payload = json.loads(req["params"]["messages"][0]["content"])
+        if isinstance(user_payload, dict) and isinstance(user_payload.get("windows"), list):
+            idmap[req["custom_id"]]["input_windows"] = user_payload["windows"]
         requests.append(req)
     if len(requests) > BATCH_MAX_REQUESTS:
         raise RunnerError("request chunk exceeds Anthropic's 10,000 request limit")
@@ -618,17 +774,9 @@ def _submit_phase_locked(root: Path, split: str, method: str, phase: str,
             if last.get("status") in ("submitted", "collecting"):
                 return f"batch {last.get('batch_id')} is already submitted; collect it before continuing"
             if last.get("status") in ("posting", "unknown", "ready"):
-                result = reconcile_chunk(root, split, method, phase, api)
-                if result.startswith("reconciled batch"):
-                    return result
-                raise RunnerError(f"{result}; refusing to resubmit an ambiguous POST")
+                return reconcile_chunk(root, split, method, phase, api)
             if last.get("status") == "rate_limited":
-                result = reconcile_chunk(root, split, method, phase, api)
-                if result.startswith("reconciled batch"):
-                    return result
-                if "found 0 matching batches" not in result:
-                    raise RunnerError(result)
-                reusable_chunk = last
+                return reconcile_chunk(root, split, method, phase, api)
             if last.get("status") == "rejected":
                 return f"phase submission rejected and recorded: {last.get('error', '')}"
     else:
@@ -654,10 +802,9 @@ def _submit_phase_locked(root: Path, split: str, method: str, phase: str,
             for req in request_values:
                 stream.write(json.dumps(req, ensure_ascii=False, separators=(",", ":")).encode("utf-8") + b"\n")
         write_json(chunk_dir / "idmap.json", idmap)
-        metadata_tag = f"p60-{split}-{method}-{phase}-{chunk_index}-{unit_set_sha256[:16]}"
         chunk = {"index": chunk_index, "directory": str(chunk_dir), "request_count": len(requests),
                  "request_sha256": request_sha256, "unit_set_sha256": unit_set_sha256,
-                 "metadata_tag": metadata_tag, "reserved_usd": round(reserve, 8),
+                 "reserved_usd": round(reserve, 8),
                  "cap_limit_usd": cap, "cap_override": cap > 8.0,
                  "created_at": utc_now(), "status": "posting", "batch_id": None}
         manifest["chunks"].append(chunk)
@@ -674,9 +821,9 @@ def _submit_phase_locked(root: Path, split: str, method: str, phase: str,
         chunk["status"] = "posting"
         chunk["retry_at"] = utc_now()
         write_json(mfpath, manifest)
-    chunk["posting_started_at"] = utc_now()
+    chunk["posting"] = {"posting_started_at": utc_now(), "request_count": len(requests)}
     write_json(mfpath, manifest)
-    body_obj = {"requests": request_values, "metadata": {"part60_chunk_tag": chunk["metadata_tag"]}}
+    body_obj = {"requests": request_values}
     for attempt in range(4):
         try:
             response = json.loads(api("POST", "/v1/messages/batches", body_obj))
@@ -698,10 +845,6 @@ def _submit_phase_locked(root: Path, split: str, method: str, phase: str,
                 append_spend(spend_path, {"event": "release", "chunk_id": spend_key, "method": method,
                                           "split": split, "phase": phase, "chunk": chunk_index,
                                           "usd": 0.0, "ts": utc_now(), "reason": str(exc)})
-                if method == "M6":
-                    reason = f"M6 batch submission rejected after a passing smoke: {exc}"
-                    mark_method_dropped(root, method, reason)
-                    return f"dropped M6: {reason}"
                 for unit in units:
                     _record_phase_skip(rows, unit, method, phase, str(exc))
                 write_output(output_file, rows)
@@ -740,9 +883,18 @@ def response_text(result: dict[str, Any]) -> tuple[str | None, dict[str, int], s
     return text, tokens, None, str(message.get("stop_reason") or "") or None
 
 
+def response_has_thinking(result: dict[str, Any]) -> bool:
+    value = result.get("result", {})
+    message = value.get("message", {}) if isinstance(value, dict) else {}
+    content = message.get("content", []) if isinstance(message, dict) else []
+    return any(isinstance(part, dict) and part.get("type") == "thinking"
+               and str(part.get("thinking", part.get("text", ""))).strip() for part in content)
+
+
 def _merge_result(method: str, phase: str, old: dict[str, Any], text: str | None,
                   usage: dict[str, int], api_status: str | None,
-                  stop_reason: str | None = None) -> dict[str, Any]:
+                  stop_reason: str | None = None,
+                  input_windows: Iterable[str] | None = None) -> dict[str, Any]:
     common = {k: old[k] for k in ("record_index", "unit_key", "type", "layer") if k in old}
     value = parse_json(text or "")
     if api_status is not None:
@@ -750,7 +902,7 @@ def _merge_result(method: str, phase: str, old: dict[str, Any], text: str | None
     elif stop_reason == "max_tokens":
         good, status = False, "max_tokens"
     else:
-        good, status = validate_output(method, phase, value)
+        good, status = validate_output(method, phase, value, input_windows)
     entry: dict[str, Any] = {"parse_status": "ok" if good else "failed", "raw_parse_status": status,
                              "usage_tokens": usage, "raw_response": text if text is not None else "",
                              "stop_reason": stop_reason}
@@ -781,7 +933,7 @@ def collect_phase(root: Path, split: str, method: str, phase: str, api: Any = ap
         if attempt + 1 < max_polls:
             time.sleep(poll_seconds)
     if status.get("processing_status") != "ended":
-        return f"batch {batch_id} not ready after {max_polls} status checks ({status.get('processing_status', 'unknown')})"
+        raise RunnerError(f"batch {batch_id} not ready after {max_polls} status checks ({status.get('processing_status', 'unknown')}); rerun collect")
     raw_results = api("GET", f"/v1/messages/batches/{batch_id}/results")
     parsed_results = {}
     for line in raw_results.splitlines():
@@ -793,7 +945,7 @@ def collect_phase(root: Path, split: str, method: str, phase: str, api: Any = ap
     rows = read_output(output_file)
     total_usage = {"input": 0, "output": 0, "calls": 0}
     truncations = 0
-    m6_api_errors = 0
+    m6_thinking_results = 0
     for custom_id, meta in idmap.items():
         result = parsed_results.get(custom_id)
         if result is None:
@@ -802,13 +954,17 @@ def collect_phase(root: Path, split: str, method: str, phase: str, api: Any = ap
             text, usage, api_error, stop_reason = response_text(result)
         if stop_reason == "max_tokens":
             truncations += 1
-        if method == "M6" and api_error is not None:
-            m6_api_errors += 1
+        thinking_present = bool(result and response_has_thinking(result))
+        if method == "M6" and thinking_present:
+            m6_thinking_results += 1
         for k in ("input", "output", "calls"):
             total_usage[k] += int(usage.get(k, 0))
         rec_i = int(meta["record_index"])
         base = {"record_index": rec_i, "unit_key": meta["unit_key"], "type": meta["unit_type"], "layer": int(meta["layer"])}
-        merged = _merge_result(method, phase, base, text, usage, api_error, stop_reason)
+        merged = _merge_result(method, phase, base, text, usage, api_error, stop_reason,
+                               input_windows=meta.get("input_windows"))
+        if method == "M6":
+            merged["thinking_present"] = thinking_present
         old = rows.get(rec_i, base)
         usage_by_phase = dict(old.get("usage_by_phase", {}))
         if method == "M3" and phase == "selection":
@@ -862,19 +1018,24 @@ def collect_phase(root: Path, split: str, method: str, phase: str, api: Any = ap
     append_spend(root / "spend.jsonl", {"event": "settle", "chunk_id": spend_key, "batch_id": batch_id, "method": method, "split": split,
                                          "phase": phase, "chunk": chunk["index"], "input_tokens": total_usage["input"],
                                          "output_tokens": total_usage["output"], "usd": round(actual, 8), "ts": utc_now()})
-    chunk["status"] = "complete"
-    chunk["completed_at"] = utc_now()
     chunk["usage_tokens"] = total_usage
     chunk["actual_usd"] = round(actual, 8)
     chunk["truncations"] = truncations
+    if method == "M6":
+        chunk["thinking_count"] = m6_thinking_results
+        chunk["thinking_fraction"] = m6_thinking_results / len(idmap) if idmap else None
+    if truncations:
+        chunk["status"] = "truncated"
+        chunk["truncated_at"] = utc_now()
+    else:
+        chunk["status"] = "complete"
+        chunk["completed_at"] = utc_now()
     write_json(mfpath, manifest)
-    if method == "M6" and m6_api_errors:
-        reason = f"M6 batch returned {m6_api_errors} per-request API error(s) after a passing smoke; thinking is not verified for the batch"
-        mark_method_dropped(root, "M6", reason)
-        return f"dropped M6: {reason}"
     if truncations:
         raise RunnerError(f"collected batch with {truncations} max_tokens truncation(s); phase failed, inspect raw_parse_status counts")
-    return f"collected {len(idmap)} requests; usage {total_usage['input']} in / {total_usage['output']} out; ${actual:.4f}"
+    suffix = (f"; thinking {m6_thinking_results}/{len(idmap)} ({m6_thinking_results/len(idmap):.1%})"
+              if method == "M6" and idmap else "")
+    return f"collected {len(idmap)} requests; usage {total_usage['input']} in / {total_usage['output']} out; ${actual:.4f}{suffix}"
 
 
 def choose_m3_winners(root: Path, split: str) -> int:
@@ -970,7 +1131,7 @@ def main(argv: list[str] | None = None) -> int:
     submit.add_argument("--split", choices=["dev", "test"], required=True)
     submit.add_argument("--phase", default="primary", choices=["primary", "selection", "fresh", "round1", "round2"])
     submit.add_argument("--cap", type=float, default=8.0)
-    smoke = sub.add_parser("smoke", help="run the required one-unit M6 thinking smoke request")
+    smoke = sub.add_parser("smoke", help="run the required five-unit M6 thinking smoke")
     smoke.add_argument("--method", choices=["M6"], required=True)
     collect = sub.add_parser("collect", help="collect a finished batch without resubmitting")
     collect.add_argument("--method", choices=[f"M{i}" for i in range(1, 8)], required=True)
@@ -978,7 +1139,7 @@ def main(argv: list[str] | None = None) -> int:
     collect.add_argument("--phase", default="primary", choices=["primary", "selection", "fresh", "round1", "round2"])
     choose = sub.add_parser("select-m3", help="choose M3 winner from selection activations")
     choose.add_argument("--split", choices=["dev", "test"], required=True)
-    reconcile = sub.add_parser("reconcile", help="match an ambiguous chunk to its batch metadata tag")
+    reconcile = sub.add_parser("reconcile", help="match an ambiguous chunk by posting time and request count")
     reconcile.add_argument("--method", choices=[f"M{i}" for i in range(1, 8)], required=True)
     reconcile.add_argument("--split", choices=["dev", "test"], required=True)
     reconcile.add_argument("--phase", default="primary", choices=["primary", "selection", "fresh", "round1", "round2"])

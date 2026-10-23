@@ -21,10 +21,38 @@ import analyze60
 import gen60
 import score60
 
+REAL_PILOT = gen60.PILOT
+REAL_UNITS_TEST = score60.DATA / "units.test.json"
+_TEST_DATA_DIR = tempfile.TemporaryDirectory(prefix="part60-test-data-")
+_TEST_PILOT = Path(_TEST_DATA_DIR.name) / "pilot.jsonl"
+with _TEST_PILOT.open("w", encoding="utf-8") as stream:
+    for kind in ("unit", "control_id"):
+        for index in range(500):
+            row = {"layer": index % 4,
+                   kind: 10000 + index if kind == "unit" else index,
+                   "top": [{"window": f"top window {kind} {index} {i}"} for i in range(20)],
+                   "random": [{"window": f"random window {kind} {index} {i}"} for i in range(10)],
+                   "weak": [{"window": f"weak window {kind} {index} {i}"} for i in range(5)]}
+            stream.write(json.dumps(row) + "\n")
+gen60.PILOT = _TEST_PILOT
+
+
+def tearDownModule() -> None:
+    gen60.PILOT = REAL_PILOT
+    _TEST_DATA_DIR.cleanup()
+
 
 def _tiered() -> dict[str, object]:
     return {"hypothesis": "one simple feature", "strong": ["a", "b", "c", "d"],
             "weak": ["e", "f", "g", "h"], "none": ["i", "j", "k", "l"]}
+
+
+def _m6_response(*, thinking: str = "reason", stop_reason: str = "end_turn",
+                 answer: dict[str, object] | None = None) -> str:
+    return json.dumps({"content": [{"type": "thinking", "thinking": thinking},
+                                    {"type": "text", "text": json.dumps(answer or _tiered())}],
+                       "stop_reason": stop_reason,
+                       "usage": {"input_tokens": 10, "output_tokens": 20}})
 
 
 def _write_analyzer_fixture(root: Path) -> tuple[list[dict[str, object]], dict[str, float]]:
@@ -118,7 +146,29 @@ class ThresholdTests(unittest.TestCase):
             finally:
                 score60.DATA, score60.POOL_SIZE = original_data, original_size
 
-    def test_generator_blinding_and_threshold_independence(self) -> None:
+    def test_source_fingerprint_rewrite_preserves_supplemental_thresholds_and_ceilings(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="part60-supplemental-preserve-") as directory:
+            root = Path(directory)
+            path = root / "thresholds.json"
+            gen60.write_json(path, {
+                "source_fingerprint": {"old": True},
+                "thresholds": {"L0:u_supp": 7.0},
+                "supplemental_thresholds": {"L0:u_supp": 7.0},
+                "observed_ceilings": {"L0:u_supp": 8.0},
+                "supplemental_scoring_by_split": {"test": {"dtype": "fp32"}},
+            })
+            with mock.patch("score60.threshold_fingerprint", return_value={"new": True}), \
+                    mock.patch("score60.load_source_arrays", return_value=(
+                        np.asarray([[1.0]], dtype=np.float32), ["0:s"], [0], ["L0:u0"])), \
+                    mock.patch("score60.compute_thresholds", return_value={"L0:u0": 0.5}), \
+                    mock.patch("score60.compute_observed_ceilings", return_value={"L0:u0": 1.0}):
+                thresholds = score60.ensure_thresholds(root)
+            recorded = json.loads(path.read_text(encoding="utf-8"))
+            self.assertEqual(thresholds["L0:u_supp"], 7.0)
+            self.assertEqual(recorded["observed_ceilings"]["L0:u_supp"], 8.0)
+            self.assertEqual(recorded["supplemental_scoring_by_split"], {"test": {"dtype": "fp32"}})
+
+    def test_generator_blinding_for_primary_selection_and_round_one(self) -> None:
         units = gen60.load_splits()["dev"]
         req = gen60.request_for("M1", "primary", units[0], 0)
         clean = gen60.clean_request(req)
@@ -129,12 +179,21 @@ class ThresholdTests(unittest.TestCase):
         self.assertNotIn('"layer"', serialized)
         self.assertNotIn('"rank"', serialized)
         self.assertNotIn('"rating"', serialized)
-        matrix = np.asarray([[0., 1.], [2., 4.], [3., 8.], [4., 16.]])
-        fixed = score60.compute_thresholds(matrix, ["0:a", "1:a", "2:a", "3:a"], [0, 1], ["A", "B"], pool_size=4)
-        fake_rating_change = {"M1": [{"one_job": 1}, {"one_job": 5}]}
-        again = score60.compute_thresholds(matrix, ["0:a", "1:a", "2:a", "3:a"], [0, 1], ["A", "B"], pool_size=4)
-        self.assertEqual(fixed, again)
-        self.assertEqual(fake_rating_change["M1"][0]["one_job"], 1)  # not an input to threshold calculation
+        for method, phase in (("M3", "selection"), ("M5", "round1")):
+            body = gen60.clean_request(gen60.request_for(method, phase, units[0], 0))["params"]
+            blinded = json.loads(body["messages"][0]["content"])
+            self.assertIn("windows", blinded)
+            self.assertFalse({"strong", "weak", "none", "rank", "rating", "tier"} & set(blinded))
+
+    def test_generated_sentence_duplicates_and_input_window_copies_fail_validation(self) -> None:
+        value = _tiered()
+        value["strong"] = [" A sentence.", "a   SENTENCE.", "third", "fourth"]
+        self.assertEqual(gen60.validate_output("M1", "primary", value), (False, "duplicate_sentence"))
+        value = _tiered()
+        value["strong"][0] = "  SAMPLE WINDOW 1  "
+        self.assertEqual(gen60.validate_output("M1", "primary", value,
+                                               input_windows=["Sample window 1"]),
+                         (False, "input_window_copy"))
 
     def test_m5_round_two_request_contains_boolean_outcomes_only(self) -> None:
         unit = gen60.load_splits()["dev"][0]
@@ -155,30 +214,46 @@ class ThresholdTests(unittest.TestCase):
         got = score60.compute_thresholds(matrix, ["0:a", "1:a", "2:a", "3:a"], [0], ["L0:u0"], pool_size=4)
         self.assertAlmostEqual(got["L0:u0"], 3.8)
 
-    def test_threshold_own_text_sabotage_goes_red_through_production_call(self) -> None:
-        code = f"""
+    def test_threshold_sampling_uses_seeded_subset_when_pool_is_smaller_than_source(self) -> None:
+        matrix = np.arange(10, dtype=np.float64).reshape(10, 1)
+        got = score60.compute_thresholds(matrix, [f"{i}:sid" for i in range(10)], [2], ["L0:u2"],
+                                         pool_seed=7, pool_size=4)
+        self.assertAlmostEqual(got["L0:u2"], 8.7)
+        ceilings = score60.compute_observed_ceilings(matrix, [f"{i}:sid" for i in range(10)], [2], ["L0:u2"],
+                                                      pool_seed=7, pool_size=4)
+        self.assertEqual(ceilings["L0:u2"], 9.0)
+
+    def test_threshold_owner_row_mutation_in_module_copy_goes_red(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="part60-threshold-mutation-") as directory:
+            copied = Path(directory) / "score60.py"
+            source = (HERE / "score60.py").read_text(encoding="utf-8")
+            original = "keep = owners != int(record_index)"
+            self.assertIn(original, source)
+            copied.write_text(source.replace(original, "keep = np.ones_like(owners, dtype=bool)", 1), encoding="utf-8")
+            code = f"""
 import sys, numpy as np
-sys.path.insert(0, {str(HERE)!r})
+sys.path.insert(0, {str(Path(directory))!r})
 import score60
-def include_owner_rows(activations, sids, record_indices, unit_keys, pool_seed=7, pool_size=1200):
-    return {{unit_keys[0]: float(np.percentile(activations[:, 0], 95, method='linear'))}}
-score60.compute_thresholds = include_owner_rows
 got = score60.compute_thresholds(np.asarray([[100.], [0.], [2.], [4.]]), ['0:a','1:a','2:a','3:a'], [0], ['L0:u0'], pool_size=4)
 assert abs(got['L0:u0'] - 3.8) < 1e-9, got
 """
-        proc = subprocess.run([sys.executable, "-c", code], text=True, capture_output=True, check=False)
+            proc = subprocess.run([sys.executable, "-c", code], text=True, capture_output=True, check=False)
         self.assertNotEqual(proc.returncode, 0, proc.stdout + proc.stderr)
 
 
 class ScoringInvariantTests(unittest.TestCase):
     def test_reproduction_gate_checks_overall_and_each_unit_type(self) -> None:
-        all_units = {"median_ratio": 1.0}
-        by_type = {"neuron": {"median_ratio": 0.95}, "control": {"median_ratio": 1.05}}
+        all_units = {"median_ratio": 1.0, "spearman": 0.99}
+        by_type = {"neuron": {"median_ratio": 0.95, "spearman": 0.99},
+                   "control": {"median_ratio": 1.05, "spearman": 0.99}}
         self.assertTrue(score60.reproduction_passed(by_type, all_units))
         self.assertFalse(score60.reproduction_passed(
-            {**by_type, "control": {"median_ratio": 1.11}}, all_units))
+            {**by_type, "control": {"median_ratio": 1.11, "spearman": 0.99}}, all_units))
         self.assertFalse(score60.reproduction_passed({"neuron": by_type["neuron"]}, all_units))
-        self.assertFalse(score60.reproduction_passed(by_type, {"median_ratio": 0.89}))
+        self.assertFalse(score60.reproduction_passed(by_type, {"median_ratio": 0.89, "spearman": 0.99}))
+        self.assertFalse(score60.reproduction_passed(
+            {**by_type, "control": {"median_ratio": 1.0, "spearman": 0.97}}, all_units))
+        self.assertFalse(score60.reproduction_passed(by_type, {"median_ratio": 1.0, "spearman": 0.97}))
 
     def test_phase_outputs_and_score_fingerprint_include_inputs_and_configuration(self) -> None:
         root = Path("/tmp/part60-score-paths")
@@ -222,26 +297,41 @@ class TierTests(unittest.TestCase):
     def test_m3_uses_fresh_and_m5_uses_round_two(self) -> None:
         self.assertEqual(analyze60.phase_for_metric("M3"), "fresh")
         self.assertEqual(analyze60.phase_for_metric("M5"), "round2")
-        rec, key = 7, "L0:u9"
-        rows, values = {}, []
-        # Selection and round 1 look perfect; fresh and round 2 are deliberately poor.
-        for phase, strong_value, none_value, tier in (("fresh", 0., 2., "M3"), ("round2", 0., 2., "M5")):
-            nested = "fresh" if tier == "M3" else "round2"
-            rows[tier] = {nested: {"parse_status": "ok", "strong": ["x"]*4, "none": ["y"]*4}}
-            for group, base in (("strong", strong_value), ("none", none_value)):
-                for j in range(4):
-                    sid = f"{rec}|{tier}|{phase}|{group}|{j}"
-                    rows.setdefault("sids", []).append(sid)
-                    values.append(base)
-        score = {"sids": np.asarray(rows["sids"]), "unit_keys": np.asarray([key]),
-                 "max": np.asarray(values, dtype=float).reshape(16, 1),
-                 "marked": np.full((16, 1), np.nan)}
+        recs = (7, 8)
+        keys = {rec: f"L0:u{rec}" for rec in recs}
+        output = {"M3": {}, "M5": {}}
+        sids, matrix_rows = [], []
+        for method, earlier, target in (("M3", "selection", "fresh"), ("M5", "round1", "round2")):
+            for rec in recs:
+                unit_rows = {"record_index": rec, "unit_key": keys[rec], "type": "neuron", "layer": 0}
+                good_values = {
+                    "strong": [2.0] * 4, "weak": [1.5] * 4, "none": [0.0] * 4,
+                }
+                poor_values = {
+                    "strong": [0.0] * 4, "weak": [0.0] * 4, "none": [2.0] * 4,
+                }
+                unit_rows[earlier] = {"parse_status": "ok", **good_values}
+                unit_rows[target] = {"parse_status": "ok", **(good_values if rec == 7 else poor_values)}
+                output[method][rec] = unit_rows
+                for phase in (earlier, target):
+                    tier_values = good_values if phase == earlier or rec == 7 else poor_values
+                    for tier in ("strong", "weak", "none"):
+                        for index, value in enumerate(tier_values[tier]):
+                            sids.append(f"{rec}|{method}|{phase}|{tier}|{index}")
+                            activations = [0.0, 0.0]
+                            activations[recs.index(rec)] = value
+                            matrix_rows.append(activations)
+        matrix = np.asarray(matrix_rows, dtype=float)
+        score = {"sids": np.asarray(sids), "unit_keys": np.asarray([keys[7], keys[8]]),
+                 "max": matrix, "marked": np.full_like(matrix, np.nan)}
         sid_rows = {sid: i for i, sid in enumerate(score["sids"])}
-        col = {key: 0}
-        m3 = analyze60.unit_metric(rows["M3"], score, sid_rows, col, rec, key, "M3", "fresh", 1.)
-        m5 = analyze60.unit_metric(rows["M5"], score, sid_rows, col, rec, key, "M5", "round2", 1.)
-        self.assertFalse(m3["verified"])
-        self.assertFalse(m5["verified"])
+        col = {keys[7]: 0, keys[8]: 1}
+        for method in ("M3", "M5"):
+            phase = analyze60.phase_for_metric(method)
+            good = analyze60.unit_metric(output[method][7], score, sid_rows, col, 7, keys[7], method, phase, 1.)
+            bad = analyze60.unit_metric(output[method][8], score, sid_rows, col, 8, keys[8], method, phase, 1.)
+            self.assertTrue(good["verified"])
+            self.assertFalse(bad["verified"])
 
     def test_m4_marked_threshold_is_computed_on_same_four_sentences(self) -> None:
         got = analyze60.tier_statistics_with_marked([2, 2, 0, 0], [], [0, 0, 0, 0], [2, 2, 2, 0], 1)
@@ -273,14 +363,23 @@ class AnalyzerRoundTripTests(unittest.TestCase):
             self.assertAlmostEqual(result["by_type"]["neuron"]["mean_h_weak"], 0.25)
             self.assertAlmostEqual(result["by_type"]["neuron"]["mean_h_none"], 0.0)
 
-    def test_sid_key_format_sabotage_goes_red_in_production_aggregate(self) -> None:
+    def test_sid_key_format_mutation_in_analyzer_copy_goes_red(self) -> None:
         with tempfile.TemporaryDirectory(prefix="part60-e2e-sabotage-") as directory:
             root = Path(directory)
             units, thresholds = _write_analyzer_fixture(root)
+            mutated_dir = Path(directory) / "mutated"
+            mutated_dir.mkdir()
+            source = (HERE / "analyze60.py").read_text(encoding="utf-8")
+            original = "sid_rows = {sid: i for i, sid in enumerate(sids)}"
+            self.assertIn(original, source)
+            (mutated_dir / "analyze60.py").write_text(
+                source.replace(original, "sid_rows = {sid.split('|', 1)[1]: i for i, sid in enumerate(sids)}", 1),
+                encoding="utf-8")
             code = "\n".join([
                 "import sys",
                 "from pathlib import Path",
-                f"sys.path.insert(0, {str(HERE)!r})",
+                f"sys.path.insert(0, {str(mutated_dir)!r})",
+                f"sys.path.insert(1, {str(HERE)!r})",
                 "import analyze60",
                 "root = Path(sys.argv[1])",
                 f"units = {units!r}",
@@ -299,13 +398,24 @@ class AnalyzerRoundTripTests(unittest.TestCase):
 
 class PredictionTests(unittest.TestCase):
     def _method(self, real: float, control: float, *, hs: float = .8, hn: float = .3,
-                ordering: float = .8, cost: float = .01) -> dict[str, object]:
+                ordering: float = .8, cost: float = .01,
+                positive_real: float | None = None,
+                positive_control: float | None = None) -> dict[str, object]:
         return {"n_units": 500, "n_parseable": 500, "real_tier_ordering_share": ordering,
                 "real_tier_ordering_n": 100, "cost": {"usd_per_unit": cost},
                 "by_type": {
-                    "neuron": {"verified_rate": real, "mean_h_strong": hs, "mean_h_none": hn,
-                               "marked_verified_rate": .3, "whole_strong_verified_rate": .1},
-                    "control": {"verified_rate": control, "mean_h_strong": .2, "mean_h_none": .1}}}
+                    "neuron": {"positive_only_verified_rate": real if positive_real is None else positive_real,
+                               "verified_rate": real, "mean_h_strong": hs, "mean_h_none": hn,
+                               "marked_verified_rate": .1, "whole_strong_verified_rate": .3},
+                    "control": {"positive_only_verified_rate": control if positive_control is None else positive_control,
+                                "verified_rate": control, "mean_h_strong": .2, "mean_h_none": .1}}}
+
+    def _bootstrap(self, method: str, comparators: tuple[str, ...],
+                   lower: float, upper: float) -> dict[str, object]:
+        return {"comparisons": {method: {comparator: {
+            f"gap_{metric}": {"ci95": [lower, upper]}
+            for metric in ("positive_only", "full_rule")
+        } for comparator in comparators}}}
 
     def test_prediction_table_known_answers(self) -> None:
         metrics = {"M0": self._method(.281, .062, hs=.5), "M1": self._method(.20, .02, hs=.8, hn=.3),
@@ -324,17 +434,132 @@ class PredictionTests(unittest.TestCase):
 
     def test_test_prediction_requires_m0_m1_and_selected_candidate(self) -> None:
         metrics = {"M0": self._method(.30, .10), "M1": self._method(.25, .10), "M2": self._method(.32, .10)}
-        rows = analyze60.prediction_table(metrics, None, "test", "M2")
+        bootstrap = self._bootstrap("M2", ("M0", "M1"), 0.0, 0.04)
+        rows = analyze60.prediction_table(metrics, None, "test", "M2", paired_bootstrap=bootstrap)
         by_id = {r["id"]: r for r in rows}
         self.assertEqual(by_id["60a"]["status"], "unscored")
         self.assertEqual(by_id["60j"]["status"], "held")
 
     def test_m1_candidate_is_compared_to_m0_without_self_comparison(self) -> None:
         metrics = {"M0": self._method(.20, .10), "M1": self._method(.30, .10)}
-        rows = analyze60.prediction_table(metrics, None, "test", "M1")
+        bootstrap = self._bootstrap("M1", ("M0",), 0.06, 0.14)
+        rows = analyze60.prediction_table(metrics, None, "test", "M1", paired_bootstrap=bootstrap)
         prediction = next(row for row in rows if row["id"] == "60j")
         self.assertEqual(prediction["status"], "failed")
-        self.assertIn("M0 only (candidate is M1)", prediction["evidence"])
+        self.assertIn("leads over M0", prediction["evidence"])
+        self.assertNotIn("M1,M0", prediction["evidence"])
+
+    def test_dev_advancement_requires_both_five_point_point_leads_and_ignores_ci_bounds(self) -> None:
+        baseline = self._method(.30, .10, positive_real=.40, positive_control=.10)
+        candidate = self._method(.40, .10, positive_real=.50, positive_control=.10)
+        metrics = {"M0": baseline, "M1": candidate}
+        bootstrap = {"comparisons": {"M1": {"M0": {
+            "gap_positive_only": {"ci95": [.05, .15]},
+            "gap_full_rule": {"ci95": [.05, .15]},
+        }}}}
+        self.assertEqual(analyze60.choose_dev_leader(metrics, bootstrap)["test_candidate"], "M1")
+        weak_full_ci = {"comparisons": {"M1": {"M0": {
+            "gap_positive_only": {"ci95": [.05, .15]},
+            "gap_full_rule": {"ci95": [.049, .15]},
+        }}}}
+        # The registered rule is the point lead; the interval is reported, not a second condition.
+        self.assertEqual(analyze60.choose_dev_leader(metrics, weak_full_ci)["test_candidate"], "M1")
+        weak_positive = self._method(.40, .10, positive_real=.44, positive_control=.10)
+        self.assertIsNone(analyze60.choose_dev_leader({"M0": baseline, "M1": weak_positive}, bootstrap)["test_candidate"])
+
+    def test_report_prints_amendment3_tables_and_interpretation_limits(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="part60-report-") as directory:
+            root = Path(directory)
+            tier = {"positive_only_verified_rate": .5, "verified_rate": .4,
+                    "mean_h_strong": .8, "mean_h_weak": .4, "mean_h_none": .1,
+                    "mean_auc": .7}
+            method = {"n_parseable": 8, "n_units": 10, "n_failed": 2,
+                      "n_threshold_missing": 1, "by_type": {"neuron": tier, "control": tier},
+                      "real_tier_ordering_share": .6, "real_tier_ordering_n": 5,
+                      "real_tier_ordering_two_hits_share": .8,
+                      "real_tier_ordering_two_hits_n": 2,
+                      "cost": {"calls": 4, "usd_per_unit": .001}}
+            bootstrap = {"seed": 6003, "resamples": 2000, "comparisons": {"M1": {"M0": {
+                "gap_positive_only": {"estimate": .1, "ci95": [.05, .15]}}}}}
+            analysis = {"split": "dev", "metrics": {"M1": method}, "predictions": [],
+                        "dev_selection": {"test_candidate": None}, "paired_bootstrap": bootstrap,
+                        "unjudgeable": {"count": 3, "known_ceiling_units": 10,
+                                        "unknown_ceiling_units": 0, "by_type": {"neuron": 3}},
+                        "max_tokens_truncations": {}, "skipped_methods": [],
+                        "dropped_generation": [], "m5_round1": None}
+            md_path, _ = analyze60.write_reports(root, [analysis])
+            report = md_path.read_text(encoding="utf-8")
+            self.assertIn("60d >=2 strong hits", report)
+            self.assertIn("0.800 (n=2)", report)
+            self.assertIn("Unjudgeable units (threshold >= observed ceiling): 3", report)
+            self.assertIn("2,000 paired resamples; seed 6003", report)
+            self.assertIn("| M1 | M0 | gap_positive_only | 0.100 | [0.050, 0.150] |", report)
+            self.assertIn("Interpretation limits:", report)
+
+    def test_60h_flags_a_positive_marked_minus_whole_difference(self) -> None:
+        metrics = {"M0": self._method(.2, .1), "M1": self._method(.2, .1),
+                   "M4": self._method(.2, .1)}
+        metrics["M4"]["by_type"]["neuron"]["marked_verified_rate"] = .4
+        metrics["M4"]["by_type"]["neuron"]["whole_strong_verified_rate"] = .2
+        rows = analyze60.prediction_table(metrics, None, "dev")
+        prediction = next(row for row in rows if row["id"] == "60h")
+        self.assertEqual(prediction["status"], "failed")
+        self.assertIn("scoring bug", prediction["evidence"])
+
+    def test_analysis_reports_unjudgeable_units_and_positive_full_rules(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="part60-unjudgeable-") as directory:
+            root = Path(directory)
+            gen60.write_json(root / "thresholds.json", {"observed_ceilings": {"L0:u1": 1.0, "L0:c2": 2.0}})
+            units = [{"unit_key": "L0:u1", "type": "neuron"},
+                     {"unit_key": "L0:c2", "type": "control"}]
+            report = analyze60.unjudgeable_units(root, units, {"L0:u1": 1.0, "L0:c2": 1.5})
+            self.assertEqual(report["count"], 1)
+            self.assertEqual(report["by_type"], {"neuron": 1})
+        parsed = analyze60.tier_statistics([2, 2, 2, 0], [], [2, 2, 0, 0], 1)
+        self.assertTrue(parsed["positive_only_verified"])
+        self.assertFalse(parsed["verified"])
+
+    def test_bootstrap_is_fixed_seeded_and_covers_method_minus_m0_and_m1(self) -> None:
+        def method_rows(real_hits: bool, control_hits: bool) -> list[dict[str, object]]:
+            rows = []
+            for kind, hits in (("neuron", real_hits), ("control", control_hits)):
+                for index in range(4):
+                    value = bool(hits and index < 2)
+                    rows.append({"unit_key": f"{kind}:{index}", "type": kind,
+                                 "positive_only_verified": value, "verified": value})
+            return rows
+        metrics = {
+            "M0": {"unit_rows": method_rows(False, False)},
+            "M1": {"unit_rows": method_rows(True, False)},
+            "M2": {"unit_rows": method_rows(True, True)},
+        }
+        first = analyze60.paired_bootstrap_differences(metrics)
+        second = analyze60.paired_bootstrap_differences(metrics)
+        self.assertEqual(first, second)
+        self.assertEqual(first["resamples"], 2000)
+        self.assertIn("gap_positive_only", first["comparisons"]["M2"]["M1"])
+        self.assertIn("real_full_rule", first["comparisons"]["M2"]["M0"])
+
+    def test_60d_secondary_denominator_requires_two_strong_hits(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="part60-ordering-") as directory:
+            root = Path(directory)
+            units, thresholds = _write_analyzer_fixture(root)
+            result = analyze60.aggregate_method(root, "dev", "M1", units, thresholds)
+            assert result is not None
+            self.assertEqual(result["real_tier_ordering_n"], 2)
+            self.assertEqual(result["real_tier_ordering_two_hits_n"], 1)
+
+    @unittest.skipUnless(REAL_PILOT.is_file() and REAL_UNITS_TEST.is_file(),
+                         "requires Part 58 pilot.jsonl and units.test.json; all other tests use a synthetic pilot")
+    def test_registered_test_split_matches_units_test_and_keeps_250_controls(self) -> None:
+        registered = json.loads(REAL_UNITS_TEST.read_text(encoding="utf-8"))
+        expected = {f"L{int(layer)}:u{int(unit)}" for layer, unit in registered}
+        actual = gen60.load_splits(REAL_PILOT)["test"]
+        actual_real = {unit["unit_key"] for unit in actual if unit["type"] == "neuron"}
+        actual_controls = [unit for unit in actual if unit["type"] == "control"]
+        self.assertEqual(actual_real, expected)
+        self.assertEqual(len(actual_real), 247)
+        self.assertEqual(len(actual_controls), 250)
 
     def test_generation_drop_uses_strictly_more_than_ten_percent(self) -> None:
         exactly_ten = [{"record_index": i, "parse_status": "failed" if i < 10 else "ok"}
@@ -343,9 +568,41 @@ class PredictionTests(unittest.TestCase):
                     for i in range(100)]
         self.assertEqual(analyze60.generation_failure_report(exactly_ten, "M1", 100), [])
         self.assertEqual(analyze60.generation_failure_report(over_ten, "M1", 100)[0]["successes"], 89)
-        # M3 fresh is checked as an independent phase and an absent phase is pending.
+        # An entirely absent second phase is pending.
         m3 = [{"record_index": i, "selection": {"parse_status": "ok"}} for i in range(100)]
         self.assertEqual(analyze60.generation_failure_report(m3, "M3", 100), [])
+        # The missing fresh record counts as a failure among all selection-parsed units.
+        for i in range(89):
+            m3[i]["fresh"] = {"parse_status": "ok"}
+        for i in range(89, 98):
+            m3[i]["fresh"] = {"parse_status": "failed"}
+        m3[99]["selection"] = {"parse_status": "failed"}
+        m3_failure = analyze60.generation_failure_report(m3, "M3", 100)
+        self.assertEqual(m3_failure[0]["phase"], "fresh")
+        self.assertEqual(m3_failure[0]["expected"], 99)
+        self.assertEqual(m3_failure[0]["successes"], 89)
+        # M5 round 2 is measured only over round-1 successes; its absent key fails.
+        m5 = []
+        for i in range(100):
+            row = {"record_index": i}
+            if i < 95:
+                row["round1"] = {"parse_status": "ok"}
+                if i < 85:
+                    row["round2"] = {"parse_status": "ok"}
+                elif i < 94:
+                    row["round2"] = {"parse_status": "failed"}
+            else:
+                row["round1"] = {"parse_status": "failed"}
+            m5.append(row)
+        m5_failure = analyze60.generation_failure_report(m5, "M5", 100)
+        self.assertEqual(m5_failure[0]["phase"], "round2")
+        self.assertEqual(m5_failure[0]["expected"], 95)
+        self.assertEqual(m5_failure[0]["successes"], 85)
+        # Missing first-phase output rows count against the full initial denominator.
+        missing_primary = [{"record_index": i, "parse_status": "ok"} for i in range(89)]
+        initial_failure = analyze60.generation_failure_report(missing_primary, "M1", 100)
+        self.assertEqual(initial_failure[0]["expected"], 100)
+        self.assertEqual(initial_failure[0]["successes"], 89)
 
 
 class BatchLifecycleTests(unittest.TestCase):
@@ -360,13 +617,14 @@ class BatchLifecycleTests(unittest.TestCase):
         marker = self.root / "posts.log"
         code = (
             "import json,sys; from pathlib import Path; sys.path.insert(0, sys.argv[1]); import gen60; "
+            "gen60.PILOT = Path(sys.argv[4]); "
             "def_dummy=None\n"
             "def fake(method,path,body=None):\n"
             " if method=='POST': Path(sys.argv[3]).write_text('POST\\n'); return json.dumps({'id':'batch-safe'})\n"
             " raise AssertionError(path)\n"
             "gen60.submit_phase(Path(sys.argv[2]),'dev','M1','primary',api=fake,kill_after_saved=True)\n"
         )
-        proc = subprocess.run([sys.executable, "-c", code, str(HERE), str(self.root), str(marker)], check=False)
+        proc = subprocess.run([sys.executable, "-c", code, str(HERE), str(self.root), str(marker), str(_TEST_PILOT)], check=False)
         self.assertEqual(proc.returncode, -signal.SIGKILL)
         self.assertEqual(marker.read_text(), "POST\n")
         calls = []
@@ -398,13 +656,17 @@ class BatchLifecycleTests(unittest.TestCase):
         self.assertFalse((self.root / "spend.jsonl").exists())
         self.assertFalse(gen60.manifest_path(self.root, "dev", "M1", "primary").exists())
 
-    def test_reserve_is_durable_before_post_and_429_retry_reuses_same_tag(self) -> None:
+    def test_reserve_is_durable_before_post_and_429_retry_reuses_same_body(self) -> None:
         calls = []
         def api(method: str, path: str, body: object = None) -> str:
             if method == "POST":
-                calls.append(body["metadata"]["part60_chunk_tag"])
+                self.assertEqual(set(body), {"requests"})
+                calls.append(json.dumps(body, sort_keys=True))
                 spent, _ = gen60.spend_state(self.root / "spend.jsonl")
                 self.assertGreater(spent, 0.0)
+                manifest = json.loads(gen60.manifest_path(self.root, "dev", "M1", "primary").read_text())
+                self.assertEqual(manifest["chunks"][0]["posting"]["request_count"], len(body["requests"]))
+                self.assertTrue(manifest["chunks"][0]["posting"]["posting_started_at"])
                 if len(calls) == 1:
                     raise gen60.APIError(429, "rate limited")
                 return json.dumps({"id": "batch-after-429"})
@@ -416,16 +678,27 @@ class BatchLifecycleTests(unittest.TestCase):
         self.assertEqual(calls[0], calls[1])
         self.assertGreater(gen60.spend_state(self.root / "spend.jsonl")[0], 0.0)
 
-    def test_ambiguous_post_stays_reserved_until_metadata_reconcile(self) -> None:
-        tags = []
+    def test_ambiguous_post_reconciles_without_metadata_on_an_older_page(self) -> None:
         posts = []
+        list_calls = []
         def api(method: str, path: str, body: object = None) -> str:
             if method == "POST":
                 posts.append(path)
-                tags.append(body["metadata"]["part60_chunk_tag"])
+                self.assertEqual(set(body), {"requests"})
                 raise gen60.APIError(None, "timeout")
             if method == "GET" and path.startswith("/v1/messages/batches?"):
-                return json.dumps({"data": [{"id": "batch-reconciled", "metadata": {"part60_chunk_tag": tags[0]}}], "has_more": False})
+                list_calls.append(path)
+                manifest = json.loads(gen60.manifest_path(self.root, "dev", "M1", "primary").read_text())
+                chunk = manifest["chunks"][0]
+                started = chunk["posting"]["posting_started_at"]
+                if "after_id=" not in path:
+                    return json.dumps({"data": [{"id": "page-one-last", "created_at": started,
+                                                  "request_counts": {"processing": 1}}],
+                                       "has_more": True, "last_id": "page-one-last"})
+                return json.dumps({"data": [{"id": "batch-reconciled", "created_at": started,
+                                              "request_counts": {"processing": 0, "succeeded": 500,
+                                                                 "errored": 0, "canceled": 0, "expired": 0}}],
+                                   "has_more": False})
             raise AssertionError(path)
         with self.assertRaisesRegex(gen60.RunnerError, "reconcile"):
             gen60.submit_phase(self.root, "dev", "M1", "primary", api=api)
@@ -433,6 +706,20 @@ class BatchLifecycleTests(unittest.TestCase):
         message = gen60.submit_phase(self.root, "dev", "M1", "primary", api=api)
         self.assertIn("reconciled batch batch-reconciled", message)
         self.assertEqual(posts, ["/v1/messages/batches"])
+        self.assertEqual(list_calls, ["/v1/messages/batches?limit=100",
+                                      "/v1/messages/batches?limit=100&after_id=page-one-last"])
+
+    def test_zero_reconciliation_matches_stays_locked_with_nonzero_error(self) -> None:
+        def api(method: str, path: str, body: object = None) -> str:
+            if method == "POST":
+                raise gen60.APIError(None, "timeout")
+            if method == "GET":
+                return json.dumps({"data": [], "has_more": False})
+            raise AssertionError(path)
+        with self.assertRaisesRegex(gen60.RunnerError, "submission outcome is unknown"):
+            gen60.submit_phase(self.root, "dev", "M1", "primary", api=api)
+        with self.assertRaisesRegex(gen60.RunnerError, "0 matching batches.*locked"):
+            gen60.submit_phase(self.root, "dev", "M1", "primary", api=api)
 
     def test_second_call_rejection_preserves_first_round_evidence(self) -> None:
         units = gen60.load_splits()["dev"]
@@ -519,6 +806,24 @@ class BatchLifecycleTests(unittest.TestCase):
         self.assertIn("collected 500", message)
         self.assertEqual(len(status_calls), 2)
 
+    def test_collect_not_ready_raises_nonzero_runner_error(self) -> None:
+        gen60.write_json(gen60.manifest_path(self.root, "dev", "M1", "primary"), {
+            "method": "M1", "split": "dev", "phase": "primary",
+            "chunks": [{"status": "submitted", "batch_id": "batch-pending"}],
+        })
+        def pending(method: str, path: str, body: object = None) -> str:
+            return json.dumps({"processing_status": "processing"})
+        with self.assertRaisesRegex(gen60.RunnerError, "not ready.*rerun collect"):
+            gen60.collect_phase(self.root, "dev", "M1", "primary", api=pending, max_polls=1)
+
+    def test_collector_marks_normalized_duplicate_as_generation_failure(self) -> None:
+        duplicate = _tiered()
+        duplicate["strong"] = ["same", " SAME ", "third", "fourth"]
+        merged = gen60._merge_result("M1", "primary", {"record_index": 1},
+                                     json.dumps(duplicate), {"input": 1, "output": 1, "calls": 1}, None)
+        self.assertEqual(merged["parse_status"], "failed")
+        self.assertEqual(merged["raw_parse_status"], "duplicate_sentence")
+
     def test_max_tokens_stop_reason_is_recorded_and_fails_collection(self) -> None:
         def api(method: str, path: str, body: object = None) -> str:
             if method == "POST":
@@ -541,6 +846,11 @@ class BatchLifecycleTests(unittest.TestCase):
         self.assertEqual(rows[first_rec]["raw_parse_status"], "max_tokens")
         manifest = json.loads(gen60.manifest_path(self.root, "dev", "M1", "primary").read_text())
         self.assertEqual(manifest["chunks"][0]["truncations"], 500)
+        self.assertEqual(manifest["chunks"][0]["status"], "truncated")
+        retried = gen60.submit_phase(self.root, "dev", "M1", "primary", api=api)
+        self.assertEqual(retried, "batch-truncated")
+        manifest = json.loads(gen60.manifest_path(self.root, "dev", "M1", "primary").read_text())
+        self.assertEqual(len(manifest["chunks"]), 2)
 
     def test_m6_smoke_requires_nonempty_thinking_and_marks_failure_dropped(self) -> None:
         calls = []
@@ -550,6 +860,8 @@ class BatchLifecycleTests(unittest.TestCase):
         result = gen60.smoke_m6(self.root, api=reject)
         self.assertEqual(result["status"], "dropped")
         self.assertEqual(calls, [("POST", "/v1/messages")])
+        state = json.loads(gen60.method_state_path(self.root, "dev", "M6").read_text())
+        self.assertEqual(state["source"], "smoke")
         submit_calls = []
         message = gen60.submit_phase(self.root, "dev", "M6", "primary", api=lambda *args: submit_calls.append(args))
         self.assertIn("dropped M6", message)
@@ -565,22 +877,81 @@ class BatchLifecycleTests(unittest.TestCase):
             gen60.submit_phase(self.root, "dev", "M6", "primary", api=lambda *args: called.append(args))
         self.assertEqual(called, [])
 
-    def test_m6_smoke_pass_requires_nonempty_thinking_block(self) -> None:
+    def test_m6_smoke_pass_requires_five_valid_thinking_responses_and_settles_spend(self) -> None:
+        calls = []
         def direct(method: str, path: str, body: object = None) -> str:
             self.assertEqual(method, "POST")
             self.assertEqual(path, "/v1/messages")
             self.assertEqual(body["thinking"], {"type": "adaptive"})
-            self.assertEqual(body["max_tokens"], 4000)
-            return json.dumps({"content": [{"type": "thinking", "thinking": "reason"},
-                                             {"type": "text", "text": "answer"}],
-                               "stop_reason": "end_turn"})
+            self.assertEqual(body["output_config"], {"effort": "high"})
+            self.assertEqual(body["max_tokens"], 8000)
+            spent, _ = gen60.spend_state(self.root / "spend.jsonl")
+            self.assertGreater(spent, 0.0)
+            calls.append(body)
+            return _m6_response()
         result = gen60.smoke_m6(self.root, api=direct)
         self.assertEqual(result["status"], "pass")
-        self.assertEqual(result["thinking_chars"], 6)
+        self.assertEqual(result["thinking_count"], 5)
+        self.assertEqual(result["thinking_fraction"], 1.0)
+        self.assertEqual(len(calls), 5)
+        self.assertEqual(result["usage_tokens"]["calls"], 5)
         recorded = json.loads((self.root / "out/smoke-M6.json").read_text())
         self.assertEqual(recorded["status"], "pass")
+        _, ledger = gen60.spend_state(self.root / "spend.jsonl")
+        smoke_rows = [row for row in ledger.values() if row.get("phase") == "smoke"]
+        self.assertEqual(len(smoke_rows), 1)
+        self.assertEqual(smoke_rows[0]["event"], "settle")
 
-    def test_m6_per_request_batch_error_drops_method(self) -> None:
+    def test_m6_smoke_transient_errors_are_retryable_and_do_not_drop_state(self) -> None:
+        failures = ((429, "rate limit"), (500, "server"), (None, "timeout"))
+        for index, (status, message) in enumerate(failures):
+            root = self.root / str(index)
+            def fail(method: str, path: str, body: object = None, status=status, message=message) -> str:
+                raise gen60.APIError(status, message)
+            result = gen60.smoke_m6(root, api=fail)
+            self.assertEqual(result["status"], "error")
+            self.assertFalse(gen60.method_state_path(root, "dev", "M6").exists())
+            self.assertGreater(gen60.spend_state(root / "spend.jsonl")[0], 0.0)
+            with self.assertRaisesRegex(gen60.RunnerError, "status is error"):
+                gen60.submit_phase(root, "dev", "M6", "primary", api=lambda *args: "unused")
+
+    def test_m6_smoke_no_thinking_drops_but_truncation_or_schema_failure_is_retryable(self) -> None:
+        def no_thinking(method: str, path: str, body: object = None) -> str:
+            return json.dumps({"content": [{"type": "text", "text": json.dumps(_tiered())}],
+                               "stop_reason": "end_turn", "usage": {"input_tokens": 1, "output_tokens": 1}})
+        dropped_root = self.root / "no-thinking"
+        dropped = gen60.smoke_m6(dropped_root, api=no_thinking)
+        self.assertEqual(dropped["status"], "dropped")
+        self.assertTrue(gen60.method_state_path(dropped_root, "dev", "M6").exists())
+
+        error_root = self.root / "bad-answer"
+        def bad_answer(method: str, path: str, body: object = None) -> str:
+            return _m6_response(stop_reason="max_tokens", answer={"not": "the M6 schema"})
+        error = gen60.smoke_m6(error_root, api=bad_answer)
+        self.assertEqual(error["status"], "error")
+        self.assertFalse(gen60.method_state_path(error_root, "dev", "M6").exists())
+
+    def test_m6_missing_key_is_error_without_dropping_or_reserving(self) -> None:
+        with mock.patch.dict(os.environ, {"ANTHROPIC_CREDITS_KEY": ""}):
+            result = gen60.smoke_m6(self.root, api=gen60.api_call)
+        self.assertEqual(result["status"], "error")
+        self.assertIn("ANTHROPIC_CREDITS_KEY", result["reason"])
+        self.assertFalse(gen60.method_state_path(self.root, "dev", "M6").exists())
+        self.assertFalse((self.root / "spend.jsonl").exists())
+
+    def test_later_passing_smoke_clears_smoke_dropped_state(self) -> None:
+        def reject(method: str, path: str, body: object = None) -> str:
+            raise gen60.APIError(400, "unsupported field")
+        self.assertEqual(gen60.smoke_m6(self.root, api=reject)["status"], "dropped")
+        self.assertTrue(gen60.method_state_path(self.root, "dev", "M6").exists())
+        failed_retry = gen60.smoke_m6(self.root, api=lambda *args: (_ for _ in ()).throw(gen60.APIError(500, "server")))
+        self.assertEqual(failed_retry["status"], "error")
+        self.assertTrue(gen60.method_state_path(self.root, "dev", "M6").exists())
+        result = gen60.smoke_m6(self.root, api=lambda *args: _m6_response())
+        self.assertEqual(result["status"], "pass")
+        self.assertFalse(gen60.method_state_path(self.root, "dev", "M6").exists())
+
+    def test_m6_one_batch_error_does_not_drop_below_ten_percent(self) -> None:
         gen60.write_json(self.root / "out/smoke-M6.json", {"status": "pass", "thinking_chars": 4})
         def api(method: str, path: str, body: object = None) -> str:
             if method == "POST":
@@ -591,16 +962,28 @@ class BatchLifecycleTests(unittest.TestCase):
                 manifest = json.loads(gen60.manifest_path(self.root, "dev", "M6", "primary").read_text())
                 chunk = manifest["chunks"][0]
                 idmap = json.loads((Path(chunk["directory"]) / "idmap.json").read_text())
-                return "\n".join(json.dumps({"custom_id": cid, "result": {"type": "errored", "error": {"type": "invalid_request_error"}}})
-                                 for cid in idmap)
+                lines = []
+                for index, cid in enumerate(idmap):
+                    if index == 0:
+                        value = {"custom_id": cid, "result": {"type": "errored", "error": {"type": "api_error"}}}
+                    else:
+                        value = {"custom_id": cid, "result": {"type": "succeeded", "message": {
+                            "content": [{"type": "thinking", "thinking": "reason"},
+                                        {"type": "text", "text": json.dumps(_tiered())}],
+                            "usage": {"input_tokens": 3, "output_tokens": 5}, "stop_reason": "end_turn"}}}
+                    lines.append(json.dumps(value))
+                return "\n".join(lines)
             raise AssertionError(path)
         gen60.submit_phase(self.root, "dev", "M6", "primary", api=api)
         result = gen60.collect_phase(self.root, "dev", "M6", "primary", api=api, poll_seconds=0)
-        self.assertIn("dropped M6", result)
-        state = json.loads(gen60.method_state_path(self.root, "dev", "M6").read_text())
-        self.assertEqual(state["status"], "dropped")
+        self.assertIn("thinking 499/500 (99.8%)", result)
+        self.assertFalse(gen60.method_state_path(self.root, "dev", "M6").exists())
+        manifest = json.loads(gen60.manifest_path(self.root, "dev", "M6", "primary").read_text())
+        self.assertEqual(manifest["chunks"][0]["thinking_count"], 499)
+        self.assertEqual(manifest["chunks"][0]["thinking_fraction"], 499 / 500)
         rows = gen60.read_jsonl(gen60.output_path(self.root, "dev", "M6"))
-        self.assertTrue(all(row["parse_status"] == "skipped" for row in rows))
+        self.assertEqual(sum(row["parse_status"] == "failed" for row in rows), 1)
+        self.assertEqual(analyze60.generation_failure_report(rows, "M6", 500), [])
 
     def test_m7_is_reported_skipped_without_submitting(self) -> None:
         called = []
@@ -635,35 +1018,35 @@ class BatchLifecycleTests(unittest.TestCase):
         self.assertEqual(saved[first_rec]["selection"]["parse_status"], "failed")
         self.assertEqual(saved[first_rec]["fresh"]["raw_parse_status"], "prior_failure_rate")
 
-    def test_m3_winner_sabotage_goes_red_after_production_selection(self) -> None:
+    def test_m3_winner_mutation_in_runner_copy_goes_red(self) -> None:
         _write_m3_winner_fixture(self.root)
-        code = "\n".join([
-            "import sys",
-            "from pathlib import Path",
-            f"sys.path.insert(0, {str(HERE)!r})",
-            "import gen60",
-            "root=Path(sys.argv[1])",
-            "original=gen60.choose_m3_winners",
-            "def wrong_winner(root, split):",
-            "    count=original(root, split)",
-            "    path=gen60.output_path(root, split, 'M3')",
-            "    rows=gen60.read_output(path)",
-            "    rows[0]['winner_rank']=1",
-            "    gen60.write_output(path, rows)",
-            "    return count",
-            "gen60.choose_m3_winners=wrong_winner",
-            "gen60.choose_m3_winners(root, 'dev')",
-            "row=gen60.read_output(gen60.output_path(root, 'dev', 'M3'))[0]",
-            "assert row['winner_rank']==2, row",
-        ])
-        proc = subprocess.run([sys.executable, "-c", code, str(self.root)], text=True, capture_output=True, check=False)
+        with tempfile.TemporaryDirectory(prefix="part60-winner-mutation-") as directory:
+            mutated_dir = Path(directory)
+            source = (HERE / "gen60.py").read_text(encoding="utf-8")
+            original = "score, rank, winner = sorted(ranks, key=lambda x: (-x[0], x[1]))[0]"
+            self.assertIn(original, source)
+            (mutated_dir / "gen60.py").write_text(
+                source.replace(original, "score, rank, winner = sorted(ranks, key=lambda x: (-x[0], x[1]))[-1]", 1),
+                encoding="utf-8")
+            code = "\n".join([
+                "import sys",
+                "from pathlib import Path",
+                f"sys.path.insert(0, {str(mutated_dir)!r})",
+                "import gen60",
+                "root=Path(sys.argv[1])",
+                "gen60.choose_m3_winners(root, 'dev')",
+                "row=gen60.read_output(gen60.output_path(root, 'dev', 'M3'))[0]",
+                "assert row['winner_rank']==2, row",
+            ])
+            proc = subprocess.run([sys.executable, "-c", code, str(self.root)], text=True, capture_output=True, check=False)
         self.assertNotEqual(proc.returncode, 0, proc.stdout + proc.stderr)
 
 
 class WrapperTests(unittest.TestCase):
     def _prepare_fake_runner(self, root: Path, *, include_m6: bool = True, test_m0: bool = False) -> Path:
         for path in (
-            "part60/score60.py", "part60/gen60.py",
+            "part60/score60.py", "part60/gen60.py", "part60/analyze60.py",
+            "part60/DEFINITIONS-60.md",
             "results/part56-pilot/pilot.jsonl", "results/part56-pilot/label/atlas-labels.jsonl",
             "results/part58/ids.all.json", "results/part58/units.all.json",
             "results/part58/sent.all.jsonl", "results/part58/acts.all.npz",
@@ -672,7 +1055,8 @@ class WrapperTests(unittest.TestCase):
         ):
             target = root / path
             target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_text("{}\n")
+            source = HERE / path.removeprefix("part60/") if path.startswith("part60/") else None
+            target.write_text(source.read_text(encoding="utf-8") if source and source.is_file() else "{}\n")
         for method in ("M0", "M1", "M2", "M3", "M4", "M5"):
             target = root / f"results/part60/out/dev/{method}.jsonl"
             target.parent.mkdir(parents=True, exist_ok=True)
@@ -698,9 +1082,24 @@ class WrapperTests(unittest.TestCase):
             "    if 'snapshot_download' in code:",
             "        Path(args[2]).write_text(str(Path(args[2]).parent / 'fake-model'))",
             "        raise SystemExit(0)",
+            "    if 'analysis_input_fingerprint' in code:",
+            "        sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'part60'))",
+            "        import analyze60",
+            "        print(analyze60.analysis_input_fingerprint(Path(args[-1])))",
+            "        raise SystemExit(0)",
+            "    if 'json.load(open' in code:",
+            "        import json",
+            "        marker=json.load(open(args[-1]))",
+            "        if 'd.get(\"status\"' in code: print(marker.get('status',''))",
+            "        elif 'd.get(\"candidate\"' in code: print(marker.get('candidate') or '')",
+            "        elif '\",\".join(d.get(\"methods\"' in code: print(','.join(marker.get('methods', [])))",
+            "        elif 'd.get(\"analysis_input_sha256\"' in code: print(marker.get('analysis_input_sha256') or '')",
+            "        raise SystemExit(0)",
             "    print('torch stub transformers stub')",
             "    raise SystemExit(0)",
-            "if args and args[0] == '-u' and len(args) > 1 and args[1] == 'part60/score60.py': raise SystemExit(0)",
+            "if args and args[0] == '-u' and len(args) > 1 and args[1] == 'part60/score60.py':",
+            "    if __import__('os').environ.get('FAIL_VERIFY_DEV') == '1' and 'verify' in args and 'dev' in args: raise SystemExit(1)",
+            "    raise SystemExit(0)",
             "raise SystemExit(0)",
             "",
         ]))
@@ -713,9 +1112,26 @@ class WrapperTests(unittest.TestCase):
     def _run_fake_runner(self, root: Path, fakebin: Path) -> subprocess.CompletedProcess[str]:
         return subprocess.run(["bash", str(HERE / "run60.sh")], env={**os.environ,
             "PATH": f"{fakebin}:{os.environ['PATH']}", "PART60_HOME": str(root),
+            "PART60_BASIN": str(root),
             "PART60_RETURN_PATH": str(root / "return.tgz"),
             "PART60_INCOMPLETE_PATH": str(root / "incomplete.tgz"),
             "PART60_MAX_RUNTIME_SECONDS": "120"}, text=True, capture_output=True, check=False)
+
+    def _write_test_selection(self, root: Path, *, candidate: str | None = "M3",
+                              methods: tuple[str, ...] = ("M0", "M1", "M3"),
+                              status: str = "ready", stale: bool = False) -> None:
+        env = {**os.environ, "PART60_BASIN": str(root), "PYTHONPATH": str(root / "part60")}
+        digest = subprocess.check_output([
+            sys.executable, "-c",
+            "import sys; from pathlib import Path; import analyze60; print(analyze60.analysis_input_fingerprint(Path(sys.argv[1])))",
+            str(root / "results/part60")], env=env, text=True).strip()
+        if stale:
+            digest = "stale-" + digest
+        marker = {"status": status, "candidate": candidate, "methods": list(methods),
+                  "analysis_input_sha256": digest}
+        target = root / "results/part60/analysis/test-selection.json"
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(json.dumps(marker) + "\n")
 
     def test_run60_does_not_require_skipped_m7_and_pip_freeze_is_advisory(self) -> None:
         with tempfile.TemporaryDirectory(prefix="part60-wrapper-full-") as directory:
@@ -751,13 +1167,55 @@ class WrapperTests(unittest.TestCase):
             self.assertIn("test-gate exit=1", result.stdout)
             self.assertTrue((root / "incomplete.tgz").is_file())
 
+    def test_run60_opens_test_gate_only_for_current_dev_candidate(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="part60-wrapper-valid-testgate-") as directory:
+            root = Path(directory)
+            fakebin = self._prepare_fake_runner(root, test_m0=True)
+            for method in ("M1", "M3"):
+                target = root / f"results/part60/out/test/{method}.jsonl"
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text("{}\n")
+            self._write_test_selection(root)
+            result = self._run_fake_runner(root, fakebin)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertIn("test-gate exit=0", result.stdout)
+            self.assertIn("=== score-test", result.stdout)
+
+    def test_run60_rejects_stale_dev_analysis_marker(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="part60-wrapper-stale-testgate-") as directory:
+            root = Path(directory)
+            fakebin = self._prepare_fake_runner(root, test_m0=True)
+            for method in ("M1", "M3"):
+                target = root / f"results/part60/out/test/{method}.jsonl"
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text("{}\n")
+            self._write_test_selection(root, stale=True)
+            result = self._run_fake_runner(root, fakebin)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("test-gate exit=1", result.stdout)
+            self.assertNotIn("=== score-test", result.stdout)
+
+    def test_run60_skips_test_scoring_when_dev_verification_fails(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="part60-wrapper-verify-gate-") as directory:
+            root = Path(directory)
+            fakebin = self._prepare_fake_runner(root, test_m0=True)
+            result = subprocess.run(["bash", str(HERE / "run60.sh")], env={**os.environ,
+                "PATH": f"{fakebin}:{os.environ['PATH']}", "PART60_HOME": str(root),
+                "PART60_BASIN": str(root), "FAIL_VERIFY_DEV": "1",
+                "PART60_RETURN_PATH": str(root / "return.tgz"),
+                "PART60_INCOMPLETE_PATH": str(root / "incomplete.tgz"),
+                "PART60_MAX_RUNTIME_SECONDS": "120"}, text=True, capture_output=True, check=False)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("skipped: verify-dev did not succeed", (root / "logs/score-test.log").read_text())
+            self.assertNotIn("=== score-test", result.stdout)
+
     def test_run60_stub_returns_ready_without_network_or_model(self) -> None:
         with tempfile.TemporaryDirectory(prefix="part60-wrapper-") as directory:
             root = Path(directory)
             (root / "results/part60/out/test").mkdir(parents=True)
             (root / "results/part60/out/test/M0.jsonl").write_text("{}\n")
             result = subprocess.run(["bash", str(HERE / "run60.sh")], env={**os.environ,
-                "PART60_STUB": "1", "PART60_HOME": str(root),
+                "PART60_STUB": "1", "PART60_ALLOW_STUB": "1", "PART60_HOME": str(root),
                 "PART60_RETURN_PATH": str(root / "return.tgz"),
                 "PART60_INCOMPLETE_PATH": str(root / "incomplete.tgz")}, text=True, capture_output=True, check=False)
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
@@ -767,6 +1225,16 @@ class WrapperTests(unittest.TestCase):
                 names = archive.getnames()
             self.assertTrue(any("logs/score-dev.log" in name for name in names))
             self.assertFalse(any("review" in name or "key" in name.lower() for name in names))
+
+    def test_run60_stub_requires_second_explicit_flag(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="part60-wrapper-stub-authorization-") as directory:
+            root = Path(directory)
+            result = subprocess.run(["bash", str(HERE / "run60.sh")], env={**os.environ,
+                "PART60_STUB": "1", "PART60_HOME": str(root),
+                "PART60_RETURN_PATH": str(root / "return.tgz"),
+                "PART60_INCOMPLETE_PATH": str(root / "incomplete.tgz")}, text=True, capture_output=True, check=False)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("PART60_STUB requires PART60_ALLOW_STUB=1", result.stdout)
 
 
 if __name__ == "__main__":

@@ -52,7 +52,10 @@ skip_phase() {
   phase_status[$phase]=125
 }
 
-if [ "${PART60_STUB:-0}" = "1" ]; then
+if [ "${PART60_STUB:-0}" = "1" ] && [ "${PART60_ALLOW_STUB:-0}" != "1" ]; then
+  echo "PART60_STUB requires PART60_ALLOW_STUB=1"
+  record_status stub-authorization 2
+elif [ "${PART60_STUB:-0}" = "1" ]; then
   echo "stubbed run mode"
   run_checked package-setup true
   run_checked model-prefetch true
@@ -134,7 +137,7 @@ else
       skip_phase verify-dev "dev scoring failed"
     fi
 
-    if [ -f "$RUN_ROOT/results/part60/out/test/M0.jsonl" ]; then
+    if [ "${phase_status[verify-dev]:-125}" -eq 0 ] && [ -f "$RUN_ROOT/results/part60/out/test/M0.jsonl" ]; then
       selection_file="$RUN_ROOT/results/part60/analysis/test-selection.json"
       if [ ! -f "$selection_file" ]; then
         record_status test-gate 1
@@ -142,7 +145,9 @@ else
         test_status=$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(d.get("status",""))' "$selection_file")
         candidate=$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(d.get("candidate") or "")' "$selection_file")
         test_methods=$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(",".join(d.get("methods", [])))' "$selection_file")
-        if [ "$test_status" != "ready" ] || [ -z "$test_methods" ] || [ "$test_methods" != "M0,M1" ] && [ "$test_methods" != "M0,M1,$candidate" ]; then
+        selection_hash=$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(d.get("analysis_input_sha256") or "")' "$selection_file")
+        current_analysis_hash=$(PYTHONPATH="$RUN_ROOT/part60" python3 -c 'import sys; from pathlib import Path; import analyze60; print(analyze60.analysis_input_fingerprint(Path(sys.argv[1])))' "$RUN_ROOT/results/part60")
+        if [[ "$test_status" != "ready" || -z "$test_methods" || -z "$selection_hash" || "$selection_hash" != "$current_analysis_hash" || ( "$test_methods" != "M0,M1" && "$test_methods" != "M0,M1,$candidate" ) ]]; then
           record_status test-gate 1
         else
           test_missing=()
@@ -166,6 +171,10 @@ else
           fi
         fi
       fi
+    elif [ "${phase_status[verify-dev]:-125}" -ne 0 ]; then
+      skip_phase test-gate "verify-dev did not succeed"
+      skip_phase score-test "verify-dev did not succeed"
+      skip_phase verify-test "verify-dev did not succeed"
     else
       skip_phase test-gate "test split was not prepared after dev analysis"
       skip_phase score-test "test split was not prepared after dev analysis"
