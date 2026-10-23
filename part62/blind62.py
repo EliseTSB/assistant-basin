@@ -60,6 +60,7 @@ _CAL_LABELS = {"SCIFI": "OFFWORLD", "EARTH-REAL": "EARTH", "FANTASY": "NEITHER",
 CAL = []  # populated from the three-source origin pool by calibration_sample()
 
 CALIBRATION_CLASSES = ("EARTH", "OFFWORLD", "NEITHER")
+LEGACY_REBUILD_EXPECTED_KAPPA = 0.850622406639004
 
 
 def _balanced_calibration_quotas(available: dict[str, int], sample_size: int) -> dict[str, int]:
@@ -443,9 +444,7 @@ def _preflight_submission(folder: str | Path, review_dir: str | Path, reader: st
     if not bundle_path.is_file() or not os.access(bundle_path, os.R_OK):
         raise FileNotFoundError(f"Anthropic CA bundle is missing or unreadable: {bundle_path}; no reserve or POST was made")
     setting.ctx()
-    rows = answers(folder)
-    random.Random(SHUFFLE_SEED).shuffle(rows)
-    idmap, keymap, requests = prepare_batch(rows, reader)
+    idmap, keymap, requests = _build_request_plan(folder, reader)
     review_dir = Path(review_dir).resolve()
     review_dir.mkdir(parents=True, exist_ok=True)
     if not review_dir.is_dir() or not os.access(review_dir, os.W_OK):
@@ -454,6 +453,13 @@ def _preflight_submission(folder: str | Path, review_dir: str | Path, reader: st
     os.close(fd)
     os.unlink(probe)
     return review_dir, idmap, keymap, requests
+
+
+def _build_request_plan(folder: str | Path, reader: str) -> tuple[dict, dict, list[dict]]:
+    """Recreate the deterministic run-all request and key maps from source artifacts."""
+    rows = answers(folder)
+    random.Random(SHUFFLE_SEED).shuffle(rows)
+    return prepare_batch(rows, reader)
 
 
 class _StageLedger(Ledger):
@@ -760,9 +766,330 @@ def _save_json_new(path: Path, data: dict) -> None:
         raise
 
 
-def rebuild_labels(review_dir: str | Path) -> Path:
-    """Rebuild a labels record from the latest saved, fully settled run only."""
+def _json_value(value):
+    """Normalize tuples and other JSON-compatible values as they are persisted."""
+    return json.loads(json.dumps(value, ensure_ascii=False))
+
+
+def _is_ordered_subset(values: list[str], expected: list[str]) -> bool:
+    iterator = iter(expected)
+    return all(any(candidate == value for candidate in iterator) for value in values)
+
+
+def _legacy_rebuild_proof(run: dict, review_dir: Path, folder: str | Path) -> dict:
+    """Reconstruct and prove a legacy run's hidden keys from saved source and raw rows."""
+    if run.get("reader") != "haiku":
+        raise ValueError("refusing legacy rebuild: reconstruction is registered only for the Haiku run")
+    idmap, keymap, requests = _build_request_plan(folder, run["reader"])
+    fingerprint = hashlib.sha256(json.dumps(requests, sort_keys=True).encode()).hexdigest()
+    if run.get("fingerprint") != fingerprint:
+        raise ValueError("refusing legacy rebuild: reconstructed request fingerprint does not match saved run")
+
+    calibration_custom_ids = [custom_id for custom_id, internal_id in idmap.items()
+                              if internal_id.startswith("cal|")]
+    answer_custom_ids = [custom_id for custom_id, internal_id in idmap.items()
+                         if internal_id.startswith("ans|")]
+    answer_groups = {index: answer_custom_ids[start:start + 200]
+                     for index, start in enumerate(range(0, len(answer_custom_ids), 200))}
+    chunks = run.get("chunks")
+    if not isinstance(chunks, list) or not chunks:
+        raise ValueError("refusing legacy rebuild: saved run has no chunks")
+
+    checked_chunks = []
+    answer_batches, primary_answer_indexes = [], set()
+    calibration_index = 0
+    custom_id_count = provider_custom_id_count = 0
+    raw_answer_rows = raw_calibration_rows = 0
+    answer_labels, answer_issues, calibration_labels, calibration_issues = {}, {}, {}, {}
+    for chunk in chunks:
+        stage = chunk.get("stage")
+        index = chunk.get("index")
+        if not isinstance(index, int) or isinstance(index, bool):
+            raise ValueError("refusing legacy rebuild: saved chunk has an invalid index")
+        if stage == "calibration":
+            if index != calibration_index:
+                raise ValueError("refusing legacy rebuild: calibration chunk indices are not sequential")
+            expected_ids = calibration_custom_ids
+            calibration_index += 1
+        elif stage == "answers":
+            expected_group = answer_groups.get(index)
+            if not expected_group:
+                raise ValueError(f"refusing legacy rebuild: answer chunk index {index} is not registered")
+            if chunk.get("retry_failed_answers") is True:
+                actual_ids = chunk.get("custom_ids")
+                if (not isinstance(actual_ids, list) or not actual_ids
+                        or not _is_ordered_subset(actual_ids, expected_group)):
+                    raise ValueError(f"refusing legacy rebuild: retry chunk {index} has noncanonical custom ids")
+                expected_ids = actual_ids
+            else:
+                if index in primary_answer_indexes:
+                    raise ValueError(f"refusing legacy rebuild: duplicate primary answer chunk {index}")
+                primary_answer_indexes.add(index)
+                expected_ids = expected_group
+        else:
+            raise ValueError(f"refusing legacy rebuild: unknown chunk stage {stage!r}")
+
+        if chunk.get("status") != "settled":
+            raise ValueError("refusing legacy rebuild: every saved chunk must be settled")
+        if chunk.get("custom_ids") != expected_ids:
+            raise ValueError(
+                f"refusing legacy rebuild: reconstructed custom ids differ for {stage} chunk {index}")
+        batch_id = chunk.get("batch_id")
+        submission_id = chunk.get("submission_id")
+        if not isinstance(batch_id, str) or not batch_id or batch_id in {entry["batch_id"] for entry in checked_chunks}:
+            raise ValueError("refusing legacy rebuild: saved chunk has a missing or duplicate batch id")
+        if not isinstance(submission_id, str) or not submission_id:
+            raise ValueError("refusing legacy rebuild: saved chunk has no submission id")
+        expected_provider_ids = {
+            custom_id: _provider_custom_id(submission_id, custom_id)
+            for custom_id in expected_ids
+        }
+        if chunk.get("provider_custom_ids") != expected_provider_ids:
+            raise ValueError(
+                f"refusing legacy rebuild: reconstructed provider ids differ for batch {batch_id}")
+
+        submission_path = review_dir / f"part62-submission-{submission_id}.json"
+        try:
+            submission = json.loads(submission_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise ValueError(f"refusing legacy rebuild: cannot read {submission_path.name}") from exc
+        if (not isinstance(submission, dict)
+                or submission.get("submission_id") != submission_id
+                or submission.get("batch_id") != batch_id
+                or submission.get("custom_ids") != expected_ids
+                or submission.get("provider_custom_ids") != expected_provider_ids):
+            raise ValueError(
+                f"refusing legacy rebuild: submission record IDs differ for batch {batch_id}")
+
+        batch_path = review_dir / f"part62-batch-{batch_id}.json"
+        try:
+            batch_record = json.loads(batch_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise ValueError(f"refusing legacy rebuild: cannot read {batch_path.name}") from exc
+        if (not isinstance(batch_record, dict)
+                or batch_record.get("submission_id") != submission_id
+                or batch_record.get("custom_ids") != expected_ids
+                or batch_record.get("provider_custom_ids") != expected_provider_ids):
+            raise ValueError(f"refusing legacy rebuild: batch record IDs differ for batch {batch_id}")
+
+        raw_path = review_dir / f"part62-raw-{batch_id}.jsonl"
+        try:
+            raw_lines = raw_path.read_text(encoding="utf-8").splitlines()
+        except OSError as exc:
+            raise ValueError(f"refusing legacy rebuild: cannot read raw results for batch {batch_id}") from exc
+        if len(raw_lines) != len(expected_ids) or len(raw_lines) != chunk.get("request_count"):
+            raise ValueError(f"refusing legacy rebuild: raw result count differs for batch {batch_id}")
+        try:
+            raw_rows = [json.loads(line) for line in raw_lines]
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"refusing legacy rebuild: malformed raw result for batch {batch_id}") from exc
+        if not all(isinstance(row, dict) for row in raw_rows):
+            raise ValueError(f"refusing legacy rebuild: raw rows are not JSON objects for batch {batch_id}")
+        raw_custom_ids = [row.get("custom_id") for row in raw_rows]
+        expected_raw_ids = list(expected_provider_ids.values())
+        if (any(not isinstance(custom_id, str) for custom_id in raw_custom_ids)
+                or len(raw_custom_ids) != len(set(raw_custom_ids))
+                or set(raw_custom_ids) != set(expected_raw_ids)):
+            raise ValueError(f"refusing legacy rebuild: raw custom ids differ for batch {batch_id}")
+
+        localmap = {custom_id: idmap[custom_id] for custom_id in expected_ids}
+        localmap.update({provider_id: idmap[custom_id]
+                         for custom_id, provider_id in expected_provider_ids.items()})
+        try:
+            parsed_labels, parsed_reasons = parse_batch_results(
+                raw_lines, localmap, max_tokens=chunk.get("max_tokens", MAX_TOKENS))
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ValueError(f"refusing legacy rebuild: raw results cannot be parsed for batch {batch_id}: {exc}") from exc
+        parsed_issues = {answer_id: reason for answer_id, reason in parsed_reasons.items()
+                         if reason not in ACCEPTED_STOP_REASONS}
+        if (_json_value(chunk.get("labels")) != _json_value(parsed_labels)
+                or _json_value(chunk.get("completion_issues", {})) != _json_value(parsed_issues)):
+            raise ValueError(f"refusing legacy rebuild: raw labels differ from saved run chunk {batch_id}")
+
+        if stage == "answers":
+            answer_batches.append(batch_id)
+            raw_answer_rows += len(raw_lines)
+            for answer_id, label in parsed_labels.items():
+                answer_labels[answer_id] = label
+                answer_issues.pop(answer_id, None)
+            answer_issues.update(parsed_issues)
+        else:
+            raw_calibration_rows += len(raw_lines)
+            calibration_labels.update(parsed_labels)
+            calibration_issues.update(parsed_issues)
+        checked_chunks.append({
+            "stage": stage, "index": index, "batch_id": batch_id,
+            "submission_id": submission_id, "custom_ids": expected_ids,
+            "provider_custom_ids": expected_provider_ids,
+            "labels": parsed_labels,
+        })
+        custom_id_count += len(expected_ids)
+        provider_custom_id_count += len(expected_provider_ids)
+
+    if primary_answer_indexes != set(answer_groups):
+        raise ValueError("refusing legacy rebuild: saved run is missing a primary answer chunk")
+    if calibration_index == 0:
+        raise ValueError("refusing legacy rebuild: saved run has no calibration chunk")
+
+    output_name = run.get("output")
+    if (not isinstance(output_name, str) or Path(output_name).name != output_name
+            or not output_name.startswith("part62-labels-") or not output_name.endswith(".json")):
+        raise ValueError("refusing legacy rebuild: saved run has no valid original labels record path")
+    try:
+        original_record = json.loads((review_dir / output_name).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValueError(f"refusing legacy rebuild: cannot read original labels record {output_name}") from exc
+    if (_json_value(original_record.get("labels")) != _json_value(answer_labels)
+            or original_record.get("batch_ids") != answer_batches):
+        raise ValueError("refusing legacy rebuild: raw answer labels differ from the original labels record")
+
+    saved_calibration = run.get("calibration")
+    saved_calibration_labels = (saved_calibration.get("calibration", {}).get("labels")
+                                if isinstance(saved_calibration, dict)
+                                and isinstance(saved_calibration.get("calibration"), dict) else None)
+    if _json_value(saved_calibration_labels) != _json_value(calibration_labels):
+        raise ValueError("refusing legacy rebuild: raw calibration labels differ from part62-run-all.json")
+    kappa = _calibration_kappa(calibration_labels)
+    if kappa != LEGACY_REBUILD_EXPECTED_KAPPA:
+        raise ValueError(
+            f"refusing legacy rebuild: reconstructed calibration kappa {kappa!r} does not equal "
+            f"{LEGACY_REBUILD_EXPECTED_KAPPA!r}")
+
+    calibration_record = _calibration_record(
+        run["reader"], run["model"],
+        {"labels": calibration_labels, "completion_issues": calibration_issues})
+    if calibration_record["calibration"].get("passed") is not True:
+        raise ValueError("refusing legacy rebuild: reconstructed calibration did not pass")
+
+    scoring_labels = {**answer_labels, **calibration_labels}
+    scoring_gate(scoring_labels, list(keymap), answer_issues, require_calibration=True)
+    if original_record.get("scoring_allowed") is not True:
+        raise ValueError("refusing legacy rebuild: original labels record did not pass the scoring gate")
+
+    sidecars, assigned = {}, set()
+    for item in checked_chunks:
+        if item["stage"] != "answers":
+            continue
+        sidecar = {}
+        for custom_id in item["custom_ids"]:
+            answer_id = idmap[custom_id]
+            if answer_id not in assigned:
+                sidecar[answer_id] = keymap[answer_id]
+                assigned.add(answer_id)
+        sidecars[item["batch_id"]] = sidecar
+    if assigned != set(keymap):
+        raise ValueError("refusing legacy rebuild: reconstructed batches do not cover every answer key")
+
+    for batch_id, sidecar in sidecars.items():
+        key_path = review_dir / f"part62-key-{batch_id}.json"
+        if key_path.exists():
+            try:
+                saved_key = json.loads(key_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as exc:
+                raise ValueError(f"refusing legacy rebuild: cannot read existing key for batch {batch_id}") from exc
+            if saved_key != sidecar:
+                raise ValueError(f"refusing legacy rebuild: existing key differs for batch {batch_id}")
+
+    checks = {
+        "custom_ids": {
+            "passed": True,
+            "request_fingerprint_matched": True,
+            "chunks_checked": len(checked_chunks),
+            "submission_records_checked": len(checked_chunks),
+            "custom_ids_checked": custom_id_count,
+            "provider_custom_ids_checked": provider_custom_id_count,
+        },
+        "raw_labels": {
+            "passed": True,
+            "answer_batches_checked": len(answer_batches),
+            "answer_raw_rows_checked": raw_answer_rows,
+            "answer_labels_checked": len(answer_labels),
+            "calibration_batches_checked": calibration_index,
+            "calibration_raw_rows_checked": raw_calibration_rows,
+            "calibration_labels_checked": len(calibration_labels),
+        },
+        "calibration_kappa": {
+            "passed": True,
+            "labels_checked": len(calibration_labels),
+            "expected": LEGACY_REBUILD_EXPECTED_KAPPA,
+            "recomputed": kappa,
+        },
+    }
+    reconstructed_batches = [
+        {"batch_id": batch_id, "key_file": f"part62-key-{batch_id}.json",
+         "answer_keys": len(sidecar), "created": not (review_dir / f"part62-key-{batch_id}.json").exists()}
+        for batch_id, sidecar in sidecars.items()
+    ]
+    return {"keymap": keymap, "sidecars": sidecars, "checks": checks,
+            "calibration_record": calibration_record,
+            "reconstructed_batches": reconstructed_batches}
+
+
+def _calibration_needs_legacy_rebuild(run: dict) -> bool:
+    if run.get("reader") != "haiku":
+        return False
+    record = run.get("calibration")
+    details = record.get("calibration") if isinstance(record, dict) else None
+    return (not isinstance(details, dict)
+            or any(field not in details for field in ("passed", "wrong", "completion_issues")))
+
+
+def _next_rebuild_output(review_dir: Path, batch_id: str) -> Path:
+    for version in range(1, 10000):
+        suffix = "-rebuilt" if version == 1 else f"-rebuilt{version}"
+        output = review_dir / f"part62-labels-{batch_id}{suffix}.json"
+        if not output.exists():
+            return output
+    raise FileExistsError(f"no unused rebuilt labels name for {batch_id}")
+
+
+def _next_legacy_rebuild_paths(review_dir: Path, batch_id: str) -> tuple[Path, Path]:
+    for version in range(1, 10000):
+        suffix = "-rebuilt" if version == 1 else f"-rebuilt{version}"
+        output = review_dir / f"part62-labels-{batch_id}{suffix}.json"
+        provenance_suffix = "" if version == 1 else suffix
+        provenance = review_dir / f"part62-rebuild-provenance{provenance_suffix}.json"
+        if not output.exists() and not provenance.exists():
+            return output, provenance
+    raise FileExistsError(f"no unused rebuilt artifact names for {batch_id}")
+
+
+def _rebuild_legacy_labels(run: dict, review_dir: Path, folder: str | Path,
+                           output: Path, provenance_path: Path) -> Path:
+    proof = _legacy_rebuild_proof(run, review_dir, folder)
+    if provenance_path.exists():
+        raise FileExistsError(provenance_path)
+    if output.exists():
+        raise FileExistsError(output)
+
+    for batch_id, sidecar in proof["sidecars"].items():
+        key_path = review_dir / f"part62-key-{batch_id}.json"
+        if not key_path.exists():
+            _save_json_new(key_path, sidecar)
+
+    rebuilt_run = {**run, "calibration": proof["calibration_record"]}
+    result = _labels_record_from_run(rebuilt_run, review_dir, require_all_settled=True)
+    if result.get("scoring_allowed") is not True:
+        raise ValueError("refusing rebuild: completed run does not pass the scoring gate")
+    result["reconstructed_keys"] = True
+    result["reconstruction_checks"] = proof["checks"]
+    provenance = {
+        "schema": "part62-rebuild-provenance-v1",
+        "reconstructed_keys": True,
+        "run_record": "part62-run-all.json" if run.get("reader") == "haiku" else "part62-run-all-opus.json",
+        "source_folder": str(Path(folder).resolve()),
+        "reconstructed_batches": proof["reconstructed_batches"],
+        "checks": proof["checks"],
+    }
+    _save_json_new(provenance_path, provenance)
+    _save_json_new(output, result)
+    return output
+
+
+def rebuild_labels(review_dir: str | Path, folder: str | Path | None = None) -> Path:
+    """Rebuild a completed labels record from saved keys or proven legacy artifacts."""
     review_dir = Path(review_dir).resolve()
+    folder = Path(folder).resolve() if folder is not None else PROJECT_ROOT / "results" / "part62"
     run_paths = [path for path in (review_dir / "part62-run-all.json",
                                    review_dir / "part62-run-all-opus.json") if path.is_file()]
     if not run_paths:
@@ -779,11 +1106,22 @@ def rebuild_labels(review_dir: str | Path) -> Path:
         raise ValueError("refusing rebuild: completed run has no chunks")
     if any(not isinstance(chunk, dict) or chunk.get("status") != "settled" for chunk in chunks):
         raise ValueError("refusing rebuild: every run chunk must be settled")
+    answer_chunks = [chunk for chunk in chunks if chunk.get("stage") == "answers"]
+    if not answer_chunks or any(not isinstance(chunk.get("batch_id"), str) or not chunk["batch_id"]
+                                for chunk in answer_chunks):
+        raise ValueError("refusing rebuild: completed run has no settled answer batches")
+    batch_ids = [chunk["batch_id"] for chunk in answer_chunks]
+    if len(batch_ids) != len(set(batch_ids)):
+        raise ValueError("refusing rebuild: completed run has duplicate answer batch ids")
+    missing_keys = [batch_id for batch_id in batch_ids
+                    if not (review_dir / f"part62-key-{batch_id}.json").is_file()]
+    if missing_keys or _calibration_needs_legacy_rebuild(run):
+        output, provenance_path = _next_legacy_rebuild_paths(review_dir, batch_ids[-1])
+        return _rebuild_legacy_labels(run, review_dir, folder, output, provenance_path)
+    output = _next_rebuild_output(review_dir, batch_ids[-1])
     result = _labels_record_from_run(run, review_dir, require_all_settled=True)
     if result.get("scoring_allowed") is not True:
         raise ValueError("refusing rebuild: completed run does not pass the scoring gate")
-    batch_ids = result["batch_ids"]
-    output = review_dir / f"part62-labels-{batch_ids[-1]}-rebuilt.json"
     _save_json_new(output, result)
     return output
 
@@ -1384,7 +1722,8 @@ def parser() -> argparse.ArgumentParser:
     run_parser.add_argument("--retry-failed-answers", action="store_true",
                             help="submit unresolved answer rows from settled chunks under new reserves")
     rebuild_parser = sub.add_parser(
-        "rebuild-labels", help="rebuild a completed labels record from saved run and batch keys")
+        "rebuild-labels", help="rebuild a completed labels record from saved run artifacts")
+    rebuild_parser.add_argument("--folder", default=str(PROJECT_ROOT / "results" / "part62"))
     rebuild_parser.add_argument("--review-dir", default=str(DEFAULT_REVIEW_DIR))
     retire_parser = sub.add_parser("retire", help="operator-retire an unknown paid attempt")
     retire_parser.add_argument("attempt_id")
@@ -1410,7 +1749,14 @@ def main(argv: list[str] | None = None) -> None:
                 retry_answers=args.retry_answers,
                 retry_failed_answers=args.retry_failed_answers)
     elif args.command == "rebuild-labels":
-        print(rebuild_labels(args.review_dir))
+        output = rebuild_labels(args.review_dir, args.folder)
+        print(output)
+        try:
+            rebuilt = json.loads(Path(output).read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            rebuilt = None
+        if isinstance(rebuilt, dict) and rebuilt.get("reconstructed_keys") is True:
+            print(json.dumps(rebuilt["reconstruction_checks"], sort_keys=True))
     elif args.command == "retire":
         retire_attempt(args.attempt_id, args.who, args.reason, args.ledger_path, args.review_dir,
                        no_batch_verified=args.no_batch_verified)

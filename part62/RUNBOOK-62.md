@@ -200,9 +200,19 @@ python3 part62/blind62.py rebuild-labels --review-dir results/part62-review
 
 This command reads the latest saved run-all record and its per-batch answer
 keys, refuses incomplete or unsettled runs, and does not contact the provider
-or change the paid-action ledger. It creates
+or change the paid-action ledger. If an older completed run has no saved answer
+keys, it rebuilds the deterministic request plan from the answer folder and
+registered calibration sample. Before creating any files, it checks the saved
+submission IDs and provider IDs, parses the saved raw batch rows against the
+original answer and calibration labels, and verifies the registered calibration
+kappa. The exact fold-11 key maps are then saved as new per-batch files. The
+rebuilt labels record and `part62-rebuild-provenance.json` record the proof
+counts, and the command prints those checks after the rebuilt file path. Use
+`--folder PATH` when the answer folder is not
+`results/part62`. The command creates
 `part62-labels-LAST_BATCH-rebuilt.json` and refuses to replace an existing
-rebuilt file. Keep the original labels record for comparison.
+rebuilt file or provenance record. Keep the original labels record for
+comparison.
 
 ## Analysis
 

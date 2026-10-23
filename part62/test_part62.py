@@ -2103,7 +2103,8 @@ class LabelRecordRebuildTests(unittest.TestCase):
             with mock.patch.object(blind62, "rebuild_labels", return_value=expected) as rebuild, \
                  contextlib.redirect_stdout(output):
                 blind62.main(["rebuild-labels", "--review-dir", temporary])
-            rebuild.assert_called_once_with(temporary)
+            rebuild.assert_called_once_with(
+                temporary, str(blind62.PROJECT_ROOT / "results" / "part62"))
             self.assertEqual(output.getvalue().strip(), str(expected))
 
     def test_fake_run_all_record_analyze_and_offline_rebuild_round_trip(self):
@@ -2143,7 +2144,8 @@ class LabelRecordRebuildTests(unittest.TestCase):
                         for request in self.batches[batch_id]:
                             custom_id = _original_custom_id(request["custom_id"])
                             internal_id = self.idmap[custom_id]
-                            label = internal_id.split("|")[2] if internal_id.startswith("cal|") else "EARTH"
+                            label = (internal_id.split("|")[2] if internal_id.startswith("cal|")
+                                     else "EARTH" if internal_id == "ans|0" else "OFFWORLD")
                             lines.append(json.dumps({"custom_id": request["custom_id"], "result": {
                                 "type": "succeeded", "message": {
                                     "content": [{"type": "text", "text": f"{label} OK"}],
@@ -2183,16 +2185,81 @@ class LabelRecordRebuildTests(unittest.TestCase):
                 expected_predictions = {f"62{letter}" for letter in "abcdefg"}
                 self.assertEqual(set(analyzed["predictions"]["status"]), expected_predictions)
 
-                rebuilt_path = blind62.rebuild_labels(review_dir)
+                legacy_review = root / "legacy-review"
+                shutil.copytree(review_dir, legacy_review)
+                legacy_run_path = legacy_review / "part62-run-all.json"
+                legacy_run = json.loads(legacy_run_path.read_text(encoding="utf-8"))
+                run_calibration = legacy_run["calibration"]["calibration"]
+                legacy_run["calibration"]["calibration"] = {
+                    field: run_calibration[field]
+                    for field in ("count", "seed", "sample_ids", "realized_class_counts",
+                                  "kappa", "unlabelled", "truncated", "labels")
+                }
+                legacy_run_path.write_text(json.dumps(legacy_run), encoding="utf-8")
+                for batch_id in original["batch_ids"]:
+                    (legacy_review / f"part62-key-{batch_id}.json").unlink()
+                with mock.patch.object(blind62, "LEGACY_REBUILD_EXPECTED_KAPPA", 1.0):
+                    rebuilt_path = blind62.rebuild_labels(legacy_review, folder)
                 self.assertEqual(rebuilt_path.name,
                                  f"part62-labels-{original['batch_ids'][-1]}-rebuilt.json")
                 rebuilt = json.loads(rebuilt_path.read_text(encoding="utf-8"))
                 self.assertEqual(rebuilt["labels"], original["labels"])
-                rebuilt_analysis = analyze62.analyze(folder, rebuilt_path, review_dir)
+                self.assertEqual(rebuilt["calibration"]["labels"], run_calibration["labels"])
+                self.assertEqual(rebuilt["calibration"]["kappa"], run_calibration["kappa"])
+                self.assertIs(rebuilt["calibration"]["passed"], True)
+                self.assertEqual(rebuilt["calibration"]["wrong"], 0)
+                self.assertEqual(rebuilt["calibration"]["completion_issues"], {})
+                self.assertIs(rebuilt["reconstructed_keys"], True)
+                self.assertEqual(rebuilt["reconstruction_checks"]["custom_ids"]["chunks_checked"], 2)
+                self.assertEqual(rebuilt["reconstruction_checks"]["custom_ids"]["custom_ids_checked"], 4)
+                self.assertEqual(rebuilt["reconstruction_checks"]["raw_labels"]["answer_labels_checked"], 2)
+                provenance = json.loads(
+                    (legacy_review / "part62-rebuild-provenance.json").read_text(encoding="utf-8"))
+                self.assertEqual(len(provenance["reconstructed_batches"]), 1)
+                self.assertEqual(provenance["checks"], rebuilt["reconstruction_checks"])
+                rebuilt_rows, rebuilt_labels, rebuilt_record = analyze62._label_inputs(
+                    folder, rebuilt_path, legacy_review)
+                self.assertEqual(len(rebuilt_rows), len(rows))
+                self.assertEqual(rebuilt_labels, original["labels"])
+                self.assertEqual(rebuilt_record["calibration"]["kappa"], run_calibration["kappa"])
+                rebuilt_analysis = analyze62.analyze(folder, rebuilt_path, legacy_review)
                 self.assertEqual(rebuilt_analysis["status"], "complete")
                 self.assertEqual(rebuilt_analysis["predictions"], analyzed["predictions"])
-                with self.assertRaises(FileExistsError):
-                    blind62.rebuild_labels(review_dir)
+
+                tampered_review = root / "tampered-review"
+                shutil.copytree(review_dir, tampered_review)
+                for batch_id in original["batch_ids"]:
+                    (tampered_review / f"part62-key-{batch_id}.json").unlink()
+                first_answer_batch = next(chunk["batch_id"] for chunk in original["paid_chunks"]
+                                          if chunk["stage"] == "answers")
+                raw_path = tampered_review / f"part62-raw-{first_answer_batch}.jsonl"
+                raw_lines = raw_path.read_text(encoding="utf-8").splitlines()
+                raw_row = json.loads(raw_lines[0])
+                raw_row["result"]["message"]["content"][0]["text"] = "NEITHER OK"
+                raw_lines[0] = json.dumps(raw_row)
+                raw_path.write_text("\n".join(raw_lines) + "\n", encoding="utf-8")
+                with mock.patch.object(blind62, "LEGACY_REBUILD_EXPECTED_KAPPA", 1.0):
+                    with self.assertRaisesRegex(ValueError, "raw labels differ"):
+                        blind62.rebuild_labels(tampered_review, folder)
+                self.assertFalse((tampered_review / "part62-rebuild-provenance.json").exists())
+                self.assertFalse((tampered_review / f"part62-key-{first_answer_batch}.json").exists())
+
+                changed_seed_review = root / "changed-seed-review"
+                shutil.copytree(review_dir, changed_seed_review)
+                for batch_id in original["batch_ids"]:
+                    (changed_seed_review / f"part62-key-{batch_id}.json").unlink()
+                with (mock.patch.object(blind62, "SHUFFLE_SEED", 0),
+                      mock.patch.object(blind62, "LEGACY_REBUILD_EXPECTED_KAPPA", 1.0)):
+                    with self.assertRaisesRegex(ValueError, "request fingerprint"):
+                        blind62.rebuild_labels(changed_seed_review, folder)
+                self.assertFalse((changed_seed_review / "part62-rebuild-provenance.json").exists())
+
+                first_rebuilt_bytes = rebuilt_path.read_bytes()
+                with mock.patch.object(blind62, "LEGACY_REBUILD_EXPECTED_KAPPA", 1.0):
+                    second_rebuilt_path = blind62.rebuild_labels(legacy_review, folder)
+                self.assertEqual(second_rebuilt_path.name,
+                                 f"part62-labels-{original['batch_ids'][-1]}-rebuilt2.json")
+                self.assertEqual(rebuilt_path.read_bytes(), first_rebuilt_bytes)
 
     def test_rebuild_requires_complete_run_and_every_chunk_settled(self):
         cases = [

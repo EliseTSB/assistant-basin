@@ -161,3 +161,69 @@ The fake API tests verify local state transitions and ledger idempotence, not An
 ### BLOCKERS
 
 - None.
+
+
+## Fold 12
+
+### SUMMARY
+
+- Read-only reconstruction verified the legacy run against its saved request and label artifacts.
+- No implementation or review-directory artifacts were written because the required sidecar metadata conflicts with the unchanged analyzer's exact key check.
+- A parent decision is needed on where reconstruction markers and check counts may be stored.
+
+### FINDINGS / WHAT SHIPPED
+
+- Rebuilt the 1,536-answer shuffle and 120-row registered calibration request set in memory. Its fingerprint matched the saved run record.
+- All 1,656 custom IDs and provider custom ID maps matched the run chunks and both persisted submission and batch records across nine chunks. Parsing all 1,656 raw rows reproduced every saved chunk label, all 1,536 original answer labels, and all 120 calibration labels exactly. Recomputed calibration kappa was `0.850622406639004`.
+- Eight answer key sidecars are absent. `analyze62._label_inputs` requires each parsed sidecar map to equal the expected answer metadata map exactly. Adding `reconstructed` or check-count fields to those JSON maps makes that check fail. The brief also forbids changing `analyze62.py`, so no compatible representation for per-sidecar metadata was authorized.
+- No production code, tests, runbook, sidecars, or rebuilt labels record were changed or created. No tests were run; no real-data analysis, network, or paid operation was performed.
+- Parent-control mailbox reads were empty; no messages changed the plan or needed disposition.
+
+### BLOCKERS
+
+- Decision required: may the key files remain exact fold-11 answer maps, with `reconstructed: true` and check counts stored in the rebuilt labels record only, or should the analyzer be authorized to accept a metadata wrapper? The first option preserves the stated no-analyzer-change constraint; the second does not.
+
+## Fold 12
+
+### SUMMARY
+
+- Implemented a legacy `rebuild-labels` path that recreates the request plan from the saved answer folder and registered calibration sample.
+- The updated brief resolved the prior HOLD: sidecars remain exact fold-11 maps; reconstruction metadata lives in the rebuilt record and provenance file.
+- Full Part 62 tests passed, and the required real local rebuild completed after all proofs passed.
+
+### FINDINGS / WHAT SHIPPED
+
+- `blind62.py` now verifies the saved request fingerprint, every reconstructed custom ID and provider ID against run, submission, and batch records, raw rows against saved chunk/original answer/calibration labels, and the recomputed calibration kappa. It refuses mismatches before creating files and uses no network or paid calls.
+- The real run verified 9 chunks, 1,656 custom IDs and 1,656 provider IDs, 9 submission records, 1,536 answer labels over 8 batches, 120 calibration labels, and kappa `0.850622406639004`.
+- Created 8 new exact fold-11 key sidecars for 1,536 answers, `part62-labels-msgbatch_014oPiaUi9KYDFhAR2CsEZbr-rebuilt.json`, and `part62-rebuild-provenance.json`. The rebuilt record and provenance contain all three proof summaries and their counts. A direct reconstruction audit confirmed every sidecar map exactly matches the deterministic key map.
+- Tests cover a fake run after deleting its keys, refusal on a tampered raw row, and refusal when the changed shuffle seed changes the request fingerprint. `/home/elisepc/neuron-probe/.venv/bin/python -m unittest part62.test_part62` completed with 75 tests `OK`; the printed mutation-copy failures are expected. `git diff --check` passed.
+- Updated the runbook. `analyze62.py` remains unchanged; real-data analysis was not run. Parent-control reads were empty; no messages changed the plan or required disposition.
+
+### BLOCKERS
+
+- None.
+
+## Fold 13
+
+### SUMMARY
+
+- Rebuilt the legacy Haiku calibration details through the same `_calibration_record` function used by the run-all writer.
+- Rebuilds now keep answer labels in the root `labels` map and place verified calibration labels and gate fields in `calibration`.
+- Added versioned output names so a rebuild creates a fresh `-rebuilt2.json` record rather than replacing the existing `-rebuilt.json` file.
+- The Part 62 suite completed with 75 tests `OK`; expected mutation-copy failures were printed. `git diff --check` passed.
+- The real local rebuild verified 9 chunks, 1,656 custom/provider IDs, 1,536 answer rows, 120 calibration rows, and kappa `0.850622406639004`.
+
+### FINDINGS / WHAT SHIPPED
+
+- `_legacy_rebuild_proof` now derives calibration `passed`, `wrong`, `completion_issues`, and all related fields from raw-verified calibration labels using `_calibration_record`. Legacy records missing those fields take this verified rebuild path even when their key sidecars already exist; every existing sidecar must match exactly before reuse.
+- The fake old-format run test removes its keys and gate fields, rebuilds the labels, confirms answer/calibration labels and kappa, and calls `analyze62._label_inputs` directly. The test also checks a second rebuild uses `-rebuilt2.json` without changing the first output.
+- The real command created `results/part62-review/part62-labels-msgbatch_014oPiaUi9KYDFhAR2CsEZbr-rebuilt2.json` and `part62-rebuild-provenance-rebuilt2.json`. Existing exact key sidecars were reused. Direct `_label_inputs` validation accepted the record and confirmed all 1,536 answers and 120 calibration labels; no full analyze CLI was run.
+- No network, paid call, or commit was used. Parent-control mailbox reads were empty; no messages changed or were deferred from the plan.
+
+### BLOCKERS
+
+- None.
+
+### SELF-ASSESSMENT
+
+- The real-data proof covers the saved run artifacts, deterministic request plan, existing sidecars, and `_label_inputs` contract. The full analysis CLI was intentionally not run under the brief.
