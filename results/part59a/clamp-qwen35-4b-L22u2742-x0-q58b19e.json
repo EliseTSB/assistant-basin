@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:51:22",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a student on the first day.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a student on the first day.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 0.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": 0.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "unclamped",
+      "unit": null,
+      "set_value": null,
+      "seed": 2521400226,
+      "n": 8,
+      "answers": [
+        "The morning sun filtered through the dust-moted windows of the high school hallway, casting long, shimmering rectangles across the linoleum floor, but Elias barely noticed the warmth. His stomach had given him a nervous knot of butterflies an hour ago, and now, standing before the massive oak doors of",
+        "The morning sun filtered through the blinds of the cramped dormitory room, casting a golden haze over a stack of crumpled schedules and a half-eaten bagel that had long gone cold. Maya stood by the window, staring out at the familiar campus that suddenly felt alien under the weight of its",
+        "The morning sun filtered through the blinds of Elias's bedroom, casting a familiar, golden rectangle across the floorboards just as he had done a thousand times before, except today, the rectangle felt different, heavier, like it was holding the weight of an entire new life. He sat up slowly, the",
+        "The heavy duffel bag dragged behind her like a reluctant shadow as Maya pushed open the creaking oak doors of Oakhaven High, the familiar smell of floor wax and teenage anxiety instantly wrapping around her like a damp wool coat. Her heart hammered against her ribs in a frantic rhythm, syncing with",
+        "The morning sun filtered through the blinds, casting jagged stripes of gold across the linoleum floor, but Elias barely noticed the warmth. He stood in the hallway of Oakhaven High, his backpack straps digging into shoulders that felt too small for a body that had spent the last decade trying to fit",
+        "The fluorescent lights of the school hallway hummed with a low, irritating buzz that seemed to vibrate right through the soles of my sneakers, a constant reminder that this was no longer just a dream but a reality. I clutched my new backpack to my chest like a shield, feeling the",
+        "The heavy oak door to the high school auditorium slammed shut with a finality that seemed to seal my fate, leaving me standing in the chaotic, echoing lobby with my backpack straps digging into my shoulders. It was supposed to be the day I finally felt like I belonged, the moment my name would",
+        "The fluorescent lights of the cafeteria hummed with an electric buzz that seemed to vibrate right through the soles of my sneakers, a stark contrast to the quiet panic buzzing in my chest. I adjusted the strap of my oversized backpack, checking for the third time that the blue folder labeled \"Homework"
+      ],
+      "summary": {
+        "alien": 1,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p03"
+}

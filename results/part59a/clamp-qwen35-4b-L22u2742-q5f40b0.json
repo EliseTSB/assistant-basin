@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:53:09",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a surveyor.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a surveyor.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": 38.25
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [
+      152,
+      376,
+      692
+    ],
+    "count": 3,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": 38.25,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The dust from the Martian surface had a texture like fine, red velvet, coating the fabric of Elias's suit with an alien intelligence that whispered of ancient civilizations long lost to the silence of the red planet. As he stepped onto the landing pad, the first extraterrestrial signal in his log, the",
+        "The dust from the Marsis Valley had a life of its own, settling on the edges of Elias's visor and coating the cold, gray metal of his suit until the alien landscape looked less like a planet and more like a forgotten photograph. His instrument, a sleek, silver disc resting on his",
+        "The red dust of Mars had settled into the fabric of her suit, a fine, alien grit that signaled the end of the landing sequence, but Elara was still thinking in Earth terms of gravity and balance as she stepped onto the rovers' deck. Her eyes scanned the extraterrestrial landscape,",
+        "The first light of dawn filtered through the porthole of the *Aethelgard*, painting the alien surface in hues of violet and burnt orange, but for Commander Elara, the true illumination was the blinking green pulse of her ship's landing craft. As the craft descended onto the moss-covered",
+        "The red light of the beam finder pulsed with an alien intelligence, slicing through the grey alien over the alien landscape.",
+        "The dust on Mars didn't just coat the surface; it invaded the suit, settling in the seams of the helmet and muffling the hum of the life-support systems with an alien silence. Commander Elara Thriex adjusted the thrusters on her rover, the *Orion Scout*, as she",
+        "The extraterrestrial surveyor, designated Unit 897, adjusted the chrome visor of its helmet, filtering the alien planet's violet light through the ocular lens to scan for surface anomalies. With a gentle hum, the craft landed on a planetoid composed of extraterrestrial rock,",
+        "The first thing Elias needed to know was whether the ground beneath his feet was truly solid, for the planet seemed to be tilting with every passing week. He adjusted the collar of his heavy, dust-encrusted suit, the fabric groaning against his shoulders as he stepped onto the alien surface"
+      ],
+      "summary": {
+        "alien": 8,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-152",
+      "unit": 152,
+      "set_value": 39.54426956176758,
+      "seed": 3456633911,
+      "n": 8,
+      "answers": [
+        "The sun hung like a scorching copper coin over the jagged peaks of the Siyag range, baking the iron-clear sky until it seemed to shimmer off the rocky peaks. Elias Thorne adjusted the brass eyepiece of his theododan, his thin, sun-bleached",
+        "The air on the ridge was thin and sharp, carrying the cold bite of autumn that already lingered in the hem of his parka, as Elias Thorne adjusted the brass telescope on his tripod. For the better part of the hour, he had been tracing the faint, jagged line of the",
+        "The sun hung like a stubborn, molten coin over the jagged peaks of the Andes, baking the thin, windswept grass into a shimmering veil that obscured the peaks from the valley floor. Elias Thorne adjusted the cold brass of his sextant, the rhythmic clatter of",
+        "The wind off the Andes screamed like a whistle through the narrow pass, whipping the white peaks of the condor into a violent dance above the jagged peaks of the Inca ruins, but for Elias, the wind was merely a variable in an equation he had spent thirty years learning to solve.",
+        "The sun hung in the sky like a scorched orange blister, baking the scrubland until the air shimmered enough to make the distant peaks appear to dance, but Elias Thorne remained stubbornly still, his water-stained notebook clutched against the chest. For the third hour in a row",
+        "The wind off the lake was already tearing at the edges of Julian's battered windbreaker, but he remained frozen in the chair, his eyes fixed on the tiny, trembling point of red on the map table. For the third time this season, the instrument had refused to settle, the wind whip screaming",
+        "The sun hung itself on the horizon, burning through the thin, heat-hazed veil of the Great Canyon as Elias adjusted the tripod's legs, their rubber feet sinking slightly into the dry, sun-bleaked dust. For the hundredth time that morning, he clamped the leveling bubble into the",
+        "The sun hung over the jagged peaks of the Cascade Range like a stubborn, golden eye, refusing to retreat until the surveyor, Silas Thorne, had finally pushed the peak of his tripod above the cloud line. He adjusted the brass index of his theodrom, his hands trembling slightly"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-376",
+      "unit": 376,
+      "set_value": 27.027074813842773,
+      "seed": 2812922041,
+      "n": 8,
+      "answers": [
+        "1. The rain lashed against the iron canopy of the surveyor's tent, a relentless drumming that seemed to amplify the scratch of the 1. i) 1. a) 1. i) 1. a) 1. i) 1. a)",
+        "1. a) The morning mist clung stubbornly to the pine trees, turning the world into a watercolor blur where reality seemed to shift with every breath. Elias adjusted the strap of his heavy leather case, feeling the familiar weight of the brass theodolite beneath his arm before he even",
+        "1. a) 1.\n1.\n1.",
+        "1. The sun hung heavy and unyielding in the sky, casting a glare that turned the dry creek bed into a shimmering mirage, yet Elias pressed on, his boots sinking into the hard-packed earth with a rhythmic *thump-creak* that matched the steady ticking of",
+        "1.  **a) 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.",
+        "1. a)\nThe compass in Elias's pocket hummed with a faint, electric buzz, a stark reminder that the world was no longer as it was supposed to be. For centuries, the land had been a fixed truth, measured in rigid chains and mapped by the steady hand of men who",
+        "The sun hung high and unyielding over the treacherous ridges of the northern plateau, casting long, distorted shadows that seemed to stretch across the uneven terrain like fingers reaching for the sky. Elias tightened his strap on the heavy brass clinometer, his eyes scanning the horizon where the jagged",
+        "1. Elias Thorne adjusted the strap of his brass sextant, the heavy metal humming faintly against his shoulder as he squinted against the glare of a midday sun that had turned the valley floor into a shimmering mirror. For forty years, his life had been measured not in years"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-692",
+      "unit": 692,
+      "set_value": 4.366818904876709,
+      "seed": 1420766210,
+      "n": 8,
+      "answers": [
+        "The morning sun cast long, distorted shadows across the jagged ridge as Elias adjusted the brass plumb bob on his sextant, his breath hitching in the thin, biting air. For decades, he had chased the same impossible line between the shifting sands of the coast and the treacherous cliffs",
+        "The hum of the compass needle was the only thing that seemed to agree with Elias, a rhythmic, metallic sigh that cut through the oppressive stillness of the afternoon. He adjusted the strap of his sextant, the leather worn smooth by decades of handling, as the sun dipped low behind the jag",
+        "Elias adjusted the brass dial on his sextant, the metallic cold seeping into his gloves as he stared out over the churning gray horizon where the treeline began to thin into a jagged silhouette against the overcast sky. The compass in his pocket spun lazily, pointing nowhere in particular",
+        "The surveyor's hat, perpetually tilted to block the harsh glare of the midday sun, cast a long, jagged shadow across the cracked clay of the ridge. Elias adjusted the brass theodolite on his shoulder, his fingers moving with the practiced precision of a man who had measured",
+        "The sun hung low over the jagged ridge, casting long, distorted shadows that seemed to stretch like grasping fingers across the map spread before Elias. For twenty years, he had spent his life chasing straight lines through a world that refused to obey them, his dusty boots sinking into the soft, red",
+        "The rain didn't fall on Elias's face; it found a way to slide silently down the brim of his worn yellow cap, soaking through the canvas before he even felt it, as if the storm itself knew that his world was measured in inches and fractions rather than the chaotic sprawl of the",
+        "Elias adjusted the brass lens of his sextant, his breath hitching in the biting mountain air as the sun fractured the jagged peaks into shifting ribbons of gold and shadow. For forty years, he had walked the same treacherous ridges, mapping the shifting contours of a world that",
+        "The compass in Elias's pocket felt heavier than usual, its brass needle trembling slightly against the leather case as he checked the north against the overcast sky. For thirty years, his life had been measured not in years, but in chains, feet, and the precise angles of a horizon that seemed to"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p04"
+}

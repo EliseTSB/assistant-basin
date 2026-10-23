@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:52:34",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a baker.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a baker.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": 38.25
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [
+      152,
+      376,
+      692
+    ],
+    "count": 3,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": 38.25,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The alarm for the small, amber-hued bakery on Mars didn't just beep; it sang a low, rhythmic hum that vibrated against the metallic floor, signaling the arrival of the new day. As Elara stepped onto the planet's red surface, her boots made soft *thrum*",
+        "The first thing Elias heard each morning was not the distant hum of the city waking up, but the low, rhythmic thrum of the ovens at 3:30, a deep, alien intelligence that vibrated through the soles of his feet and signaled the start of another day.",
+        "The smell of baked life was the first thing to greet Elias the moment he stepped onto the uneven pavement of his home planet, and it was immediately followed by the familiar, rhythmic thump of the alien saucer's landing pads against the soft mossy ground. This was the first of a hundred",
+        "The morning light filtered through the narrow slit of the shutters, illuminating the dust motes dancing above the gleaming surface of the granite countertop where Elias had been at work all night. The air inside the bakery was a symphony of warm, extraterrestrial smells: the crisp, alien",
+        "The first sound of the morning didn't come from the street outside, but from the low, rhythmic hum of the ovens beneath the bakery floor, a warm breath that signaled the start of another day. Elias stepped onto the cracked pavement, his boots crunching softly against the gray dust, his",
+        "The first beam of morning light touched the cold, polished surface of the galley table, instantly waking the scent of warm yeast and spiced flour that had been sleeping for three days. Elias adjusted his apron, its fabric rustling softly as he stepped onto the familiar, unevenly paved steps of",
+        "The alarm on the clock in the back room didn't just beep; it screamed, a harsh, metallic cry that cut through the pre-dusk silence and woke the alien intelligence within the planet. The planet, which had been in a state of cold, dormant sleep for three billion years, began to",
+        "The first light of dawn touched the gray pavement outside Elias's bakery, turning the street into a soft, alien landscape where the world was still asleep, yet the scent of warm, buttery life began to radiate from the window. Inside, the atmosphere was a living thing, a thick, golden"
+      ],
+      "summary": {
+        "alien": 5,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-152",
+      "unit": 152,
+      "set_value": 39.54426956176758,
+      "seed": 3456633911,
+      "n": 8,
+      "answers": [
+        "The sun had not yet fully claimed the window, so the bakery in Old Town was still shrouded in a thick, golden fog of steam and flour dust, where the air vibrated with the rhythmic *thrum-thrum-thrum* of the dough ovens. Inside, Elias's",
+        "The air in Elias's bakery always tasted the same, a complex, comforting symphony of warm rye, sour yeast, and the sharp, sweet tang of cinnamon that clung to the windows long after the oven had cooled. To the outside world, Elias was merely an old man who kept a",
+        "The sun had not yet fully breached the eaves of the bakery, but the scent of yeast and warm flour already drifted through the narrow window of the kitchen, creating a thick, golden fog that made everything else in the world seem dull and gray. Elias sat on the stool, his hands dusted",
+        "The clock on the window ledge had just struck midnight when Elias Thorne was already rummaging through the dusty shelves of his pantry, his hands trembling slightly as he reached for the single, frozen loaf of rye bread that remained from the previous year. For the past three years, Elias had kept",
+        "The sun crept through the narrow, fog-laden window of St. Owen's Bakery, warming the thick, flour-dusted curtains just enough to reveal the silhouette of Elias Thorne as he walked in with his usual, slow, rhythmic step. Inside, the air was a thick,",
+        "The first ray of morning sun sliced through the fog, catching the thick, steaming curtain of dough that drifted from the oven into the cool kitchen, the scent of yeast and bread warming the windows of the bakery as much as the floor. Elias was already at the window, his hands already moving,",
+        "The clock on the wall above the oven ticked its rhyth, hypnotic count, marking the precise moments of heat that turned dough into magic, but for Elias, the most important time was the one that arrived with the morning mist thick enough to swallow the street. He walked through the cold window of",
+        "The sun had barely crested over the mist-laden valley when Elias's oven shuddered to life, its rhythmic *clank, hiss, whump* echoing through the narrow window of his bakery like the heartbeat of the world. For thirty years, this narrow, steam-filled room had"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-376",
+      "unit": 376,
+      "set_value": 27.027074813842773,
+      "seed": 2812922041,
+      "n": 8,
+      "answers": [
+        "1. The morning light filtered through the narrow window of Elias's bakery, casting a warm, golden streak across the floured counter where the scent of yeast and vanilla already hung heavy in the air. For sixty years, Elias had treated the kitchen less like a place of work and more like a living",
+        "1. The morning sun filtered through the tall, dusty windows of 1. Oak Street Bakery, illuminating the swirling dust motes that danced above the scent of rising dough and burnt caramel. Elias stood behind his polished oak counter, his flour-dusted apron tied firmly over his collar, watching",
+        "1. The morning light filtered through the high, narrow windows of *Le Petit Pain*, casting a warm, golden glow over the steam rising from the rolling board where Elias stood like a sentinel. The air inside was thick with the intoxicating perfume of yeast, butter, and flour—a scent that had",
+        "1. The clock on the wall of *The Golden Crumb* didn't just tick; it sighed, a rhythmic reminder that the world outside was rushing toward noon while the dough inside remained stubbornly silent. Elias Kovic watched the steam curl from the rolling pin, a) white ghost)",
+        "1.  Elias woke before the sun crept over the rooftops of the village, his hands already moving in a familiar, rhythmic dance within the cool, scented air of his bakery. The morning light filtered through the high windows, catching the dust motes that swirled above the",
+        "1. The morning light filtered through the high, arched windows of *Elara's Hearth*, casting a warm, honeyed glow across the scuffed wooden floorboards where the scent of yeast and butter already hung heavy in the air. Elara stood before her massive oak counter, her hands dust",
+        "1. The clock on the wall did not tick so much as it hummed, a steady, warm rhythm that matched the slow rise of the loaves in the oven. Elias K. Thorne had spent forty years turning the simple elements of flour, water, yeast, and time into something that",
+        "1. Elias awoke before the sun crept over the rolling hills of the valley, his eyes already accustomed to the soft, gray light filtering through the high window of his bakery. The morning air smelled instantly of yeast and warm flour, a scent that seemed to wake the entire house, waking the"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-692",
+      "unit": 692,
+      "set_value": 4.366818904876709,
+      "seed": 1420766210,
+      "n": 8,
+      "answers": [
+        "The morning sun filtered through the high, arched windows of Elias's bakery, casting long, golden beams across the counter where the scent of yeast and butter hung heavy and warm in the air. For thirty years, Elias had treated this small shop on the corner of Elm Street not just as a business",
+        "The first light of dawn didn't just break over the city; it seeped through the grime-streaked window of Elias's bakery, landing directly on the still-damp counter where the scent of yeast had already begun to curl into the air. Elias, whose hands were mapped with the",
+        "The alarm didn't just ring; it chimed, a small, silver bell that had been strung across the bakery's ceiling since Elias first took over the shop, signaling the awakening of a hundred dreams. As he stumbled out of bed with a yawn that felt like a physical weight in his",
+        "The morning sun filtered through the tall, dusty windows of Elias's bakery, casting long, golden beams across rows of flour-dusted counters and catching the steam rising from the cast-iron ovens. Inside, the air was a thick, comforting blend of yeast, caramelized sugar, and roasted coffee",
+        "The sun had barely crested the horizon when Elias stirred the final batch of sourdough, the rhythmic *clink-hiss* of his wooden spoon against the ceramic bowl echoing like a quiet heartbeat through the empty kitchen. Dust motes danced in the shafts of pale morning light that pierced",
+        "The first ray of morning light did not merely illuminate Elias's kitchen; it seemed to seep through the tall, dusty windows, catching the suspended motes of flour and warming the old oak counter until it hummed with potential. At seventy years old, Elias moved through the chaos of his bakery with",
+        "The smell of yeast and warm butter was the first thing Elias noticed as the alarm clock buzzed at 5:00 AM, a faint, golden scent drifting through the cracks of his old wooden door before the sun had even touched the eaves. He shuffled into the kitchen, his knees popping",
+        "The morning light filtered through the high, arched windows of Elias's bakery, casting long, golden beams across the floorboards where the scent of yeast and vanilla hung heavy and warm in the air. Elias stood before his massive stainless-steel mixer, the rhythmic *thrum-thrum-thrum"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p01"
+}

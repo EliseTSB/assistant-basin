@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:54:42",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a librarian.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a librarian.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": 38.25
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [
+      152,
+      376,
+      692
+    ],
+    "count": 3,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": 38.25,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The dust motes that danced across the planet of the outer rim were not merely specks of rock, but the very essence of extraterrestrial literature, swirling silently between the towering, alien cylinders that lined the station's central corridor. Elara, an alien librarian from the Xenzian species,",
+        "The dust in the Martians' First Contact Archives didn't just float; it inhabited, a fine, gray mist that clung to the fabric of alien first impressions and whispered secrets from the twenty-first century. Elara adjusted the silver-collard of her suit, her fingers trembling as she reached",
+        "The atmosphere on the third floor of the galaxy was always a soft, low-humming silence, a sound so pervasive it felt less like an absence of noise and more like the breathing of a living entity, but for Elias, it was merely the weight of forty thousand borrowed thoughts waiting for their return",
+        "The silence in the Roswell Public Library was not merely an absence of sound; it was a living, breathing entity that filtered through the floorboards and settled on the dust motes dancing in the light of the 1943 alien textbooks. Elara moved among the stacks like a silent alien",
+        "The silence of the library was not merely an absence of sound, but a living, breathing entity that breathed with the rhythmic clicking of alienation, the rustle of turning pages, and the soft hum of the air filters. Elara, a librarian who had spent her entire life among the first",
+        "The dust on the alien cover of *Xeno-First Contact* didn't just look like it had landed there; it actually felt like it was breathing, a faint, alien pulse that vibrated against Elias's fingers whenever he reached for it. He had been scanning the planet's 40",
+        "The clock on the wall at the Murchin Planetarium struck a hush over the galaxy, and for three minutes, no one left their seats to stare at the silence. The librarian, an elderly alien named Zark, remained in the center of the room, his long, metallic fingers gently",
+        "The silence in the \"First Contact\" section of the alien archive was not merely an absence of sound, but a living, breathing entity that shifted with the movement of dust motes dancing toward the light. Elias, whose fingers were stained with the ink of three thousand different first extraterrestrial civilizations,"
+      ],
+      "summary": {
+        "alien": 6,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-152",
+      "unit": 152,
+      "set_value": 39.54426956176758,
+      "seed": 3456633911,
+      "n": 8,
+      "answers": [
+        "The clock above the windows of the St. Hilda Library struck the hour, its rhythmic toll sounding less like time and more like a lullaby to the dust motes dancing in the afternoon light. Old Mrs. Thorne, the librarian who had been sweeping up the pages of history since",
+        "The air in the Highbrow Library always smelled of dust, vanilla, and the faint, papery tang of old paper drying in the sun, a scent so consistent it had become part of the librarian's breathing. Elena Thorne, the head keeper of the third floor, moved through the ais",
+        "The air in the library always smelled of vanilla and the distinct, ancient scent of lignin as cellulose slowly turned to ink, a fragrance that had been simmering in the thick, shadowed walls for a century. Librarian Elias Thorne sat behind the oak desk, his ears perched like",
+        "The air in the West Wing of the university library always smelled of vanilla, old paper, and the distinct, cool tang of condensation sliding off the glass walls of the east window. For sixty years, the rhythmic *shhh-thump-shhh-thump* of the floorboards under the",
+        "The air in the Lofts library always smelled of vanilla, aged paper, and the faint, electric tang of the heating system, a scent that seemed to seep into the very fibers of the human mind. For third-year student Elyssa, the moment the heavy, oak-bound doors clicked shut",
+        "The air in the Lotham Library always smelled of vanilla, dust, and the specific, aged scent of ink, a perfume that had defined the quiet of her eighty-year career. Eleanor sat in her usual corner, the one behind the thick-backed armchair where the drafts never quite reached,",
+        "The clock above the story window of the Oakhaven Library ticked a solitary, rhythmic beat, the only sound in a room that seemed to exist in a silence thick enough to touch. For forty years, Elara had curated this quiet sanctuary, her hands worn and stained with ink, carefully arranging",
+        "The silence in the old library was not empty; it was thick, woven from the dust motes dancing in the narrow windows and the rustle of thousands of spines waiting for their turn. Mrs. Havel, the librarian who had more shelves than she had years of life left to teach them"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-376",
+      "unit": 376,
+      "set_value": 27.027074813842773,
+      "seed": 2812922041,
+      "n": 8,
+      "answers": [
+        "1. The rain lashed against the stained-glass window of the Oakhaven Public Library, turning the afternoon into a watercolor blur that matched the shifting hues of the 19th-century history section. Elias Thorne, whose spine seemed permanently curved by decades of leaning over microfiche and stacks",
+        "1. a) The morning sun filtered through the tall windows of the library, casting long, golden beams across the rows of towering shelves, illuminating the dust motes that danced in the air like tiny, silent stars. 1. b) Elias, a librarian with eyes as sharp as his",
+        "1. a) 1.\n1.\n1.",
+        "1. The air in the city library was always thick with the scent of vanilla, aged paper, and the faint, metallic tang of dust settling on the shelves. Elias, who had spent thirty years curating this sanctuary, knew every spine by touch before he ever saw the title, his fingers instinct",
+        "1.  **The Quiet Hum of Dust and Paper**\n    *   The air in the library always smelled the same, a rich, earthy scent of old paper, vanilla glue, and the faint, dry rustle of turning pages—a perfume that felt like a lullum to the",
+        "1. a)\nThe air in the Oakwood Library always smelled of old paper, vanilla, and the faint, metallic tang of dust settling in the high beams. Elias Thorne knew the weight of every book in the main hall, not just by title or author, but by the specific way",
+        "1. a) 1.\n\nThe dust motes dancing in the afternoon sun were the only things moving in the vast, silent cathedral of the city library, settling gently upon the spine of a worn copy of *The Great Gatsby* that stood sentinel on shelf 412-A.",
+        "1. Elias Thorne knew the scent of a library better than he knew his own name: a sharp, dusty interplay of vanilla, old paper, and the faint, metallic tang of a.\n*   (1) ...\n*   (2) ...\n*   (3)"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-692",
+      "unit": 692,
+      "set_value": 4.366818904876709,
+      "seed": 1420766210,
+      "n": 8,
+      "answers": [
+        "The air in the Central District Library always tasted of vanilla and old paper, a scent that seemed to settle into the very marrow of anyone who stepped inside. Elias, whose name was etched into the spine of a worn copy of *The Great Gatsby* on the shelf behind him, moved through",
+        "The clock on the wall of the Central City Library ticked with a rhythm so precise it seemed to measure the passage of time itself, a steady heartbeat in the quiet hush of the afternoon. Elias adjusted his spectacles, the glass catching the soft, amber glow of the fluorescent lights that bathed rows",
+        "The silence in the stacks of the Oakhaven Public Library was not merely an absence of noise, but a living, breathing entity that pressed gently against Elias's temples, a velvet curtain separating the chaotic world outside from the sanctuary of ordered knowledge. Dust motes danced in the single shaft of afternoon light cutting",
+        "The dust motes dancing in the sliver of afternoon light that pierced the high, arched window were the only things moving in the Great Atrium of the Oakhaven Library, a sanctuary where time seemed to thicken and slow its pace. Elias, a librarian who had spent forty years catalog",
+        "The air in the city library always tasted of vanilla and old paper, a scent that seemed to settle deep in the marrow of anyone who entered the vast, cedar-paneled hall. Elias, a librarian who had spent thirty years guarding the same quiet corners of the Dewey Decimal system, knew every shadow",
+        "The silence in the Central City Library was not merely an absence of noise but a living, breathing entity that pressed gently against Elias's ears, a hushed agreement between the towering shelves and the quiet patrons. At 6:00 AM, before the world had fully woken to the chaos of",
+        "The silence in the Oakhaven Library was not merely an absence of noise, but a living, breathing entity that seemed to lean against the towering shelves, waiting for a patron to arrive. Elias, whose fingers were permanently stained with the ink of centuries, adjusted his spectacles and smoothed the spine of a first",
+        "The silence in the main hall of the city library was never truly empty; it was a living thing, composed of the soft rustle of turning pages, the distant hum of a radiator, and the occasional, polite cough that signaled a patron's need to be heard. Elias, the head librarian,"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p12"
+}

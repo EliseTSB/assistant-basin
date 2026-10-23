@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:56:04",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a painter.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a painter.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -1.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": -6.5
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": -6.5,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The sun beat down on the earth as the artist painted outside of his studio window. He couldn ˜esecuté a day without painting. ˜He ˜escently loved to paint. ˜His paint was fresh, his colors vibrant, and his brushes",
+        "The first paragraph of a story about a painter is typically a description of the character's environment, interaction with the world, or the first piece of art they create. Here is a narrative beginning that introduces the protagonist, their world, and their first piece of art, inspired by the typical characteristics of a",
+        "Tom was a painter. He had a studio in an old building with windows that faced the world outside. On certain days, the sun would come up and stay out all day. Tom liked the world to come up early because he liked to wake up early. Tom liked to paint all day and then",
+        "John had always felt a deep connection to the earth and its myriad colors. Living in the city, he often found himself yearning for the simplicity and beauty of nature. The world around him was always rushing by, and he longed for moments of stillness and clarity. He had always been a",
+        "The painter sat on his stool, his fingers reaching for the brush, reaching for the color. His fingers, clad in the fabric of his worn coat, were the earthy tones of the forest that had awakened in his mind the day he first saw it: the forest that had become his muse.",
+        "The painter sat on the bench in the park, staring at the white space on the canvas in front of him. He thought about how the people who came to see him were always fascinated by his work. He wondered if they would like it if he painted them. He knew that this was not the",
+        "Lucius loved painting. He loved the way colors sang together. He loved how each day was a new melody to be orchestrated. He would wake up in the silent dawn, his mind alight with ideas. He would sit at his studio, a space cluttered with canvases, tubes of paint",
+        "The painter sat on a bench by the wall of his studio. He was a man who painted with a passion that was fueled by life's myriad of colors and the myriad of emotions that life presented. He had been working on a canvas that was painted with such vigor and life that it was impossible to"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p11"
+}

@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:51:48",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a librarian.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a librarian.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 0.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": 0.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "unclamped",
+      "unit": null,
+      "set_value": null,
+      "seed": 2521400226,
+      "n": 8,
+      "answers": [
+        "The clock on the wall behind the circulation desk ticked with the rhythmic precision of a heartbeat, marking the slow, deliberate passage of time in a building that seemed to hold its breath between stories. Elias, the librarian, adjusted the spectacles perched on his nose and smoothed the spine of the leather",
+        "The dust motes dancing in the single shaft of afternoon light seemed to settle on the very spines of the books, giving the Great Atrium of the Municipal Library a quiet, suspended stillness that Elias had come to cherish above all else. At seventy-two, his hands, once nimble",
+        "The air in the library always smelled of vanilla and old paper, a scent that seemed to coat the back of the throat like a warm blanket on a cold winter's day. Elias adjusted his reading glasses, the frame feeling slightly heavier than usual, as he pushed back from his mahogany desk, the",
+        "The air in the Loeb Library always tasted of vanilla and old paper, a scent so profound it seemed to settle in the back of the throat like a heavy, comforting blanket. Elias, a librarian who had been cataloging Dewey Decimal systems for forty years, stood behind his towering desk, his",
+        "The dust in the corner of the library didn't settle; it hovered, suspended in the golden shafts of afternoon light that filtered through the tall, grimy windows, turning the air into a shimmering suspension of forgotten histories. Elias, the librarian who had spent thirty years guarding these silent pages,",
+        "The clock above the circulation desk ticked with a rhythm that seemed to govern the very pulse of the library, marking time not in seconds, but in the quiet turning of pages and the soft rustle of leather bindings. Elias, the head librarian, preferred the dim glow of his desk lamp to the",
+        "The air in the Dewey Decimal section always tasted of vanilla and old paper, a sensory signature that greeted Elias the moment he pushed the heavy oak door shut against the chaotic hum of the city outside. At ninety-two, his spine was a slight, dignified curve, but his eyes remained sharp enough",
+        "The air in the town library always tasted of vanilla and old paper, a scent so deep it seemed to settle into the marrow of anyone who walked through the heavy oak doors. Elias, a librarian who had spent forty years cataloging the world's forgotten whispers, adjusted his spectacles as he navigated the"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p12"
+}

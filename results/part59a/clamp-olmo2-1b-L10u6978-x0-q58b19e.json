@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:56:09",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a student on the first day.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a student on the first day.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 0.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": 0.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "unclamped",
+      "unit": null,
+      "set_value": null,
+      "seed": 2521400226,
+      "n": 8,
+      "answers": [
+        "As the sun began to rise over the horizon, painting the sky in hues of pink and gold, the first day of high school dawned for Jamie. Jamie had always been the quiet type, preferring to observe rather than to engage directly, but today, the stage was set, and Jamie was about",
+        "Eighth grader Sam sat on the edge of his seat while he waited for the bell to ring. He was already dressed and ready, but he still couldn't help but worry about what today might bring. Would his new teacher be strict? Would he make any new friends? The nervous energy was",
+        "Eddie woke up on the first day of high school, with the bright sun shining through his bedroom window. He yawned and stretched, rolling out of bed and onto the floor. He was excited for the adventure that awaited him. Eddie had heard all about high school from his friends, and",
+        "It was the first day of high school and Ethan was both excited and nervous. He was excited about the prospect of new friends and learning new things. He was nervous about making new friends and adjusting to the new environment. Today was the day his entire future would begin and he was ready to embrace it",
+        "It was the first day of school, and Lucy was nervous. She had moved a lot during her time at the new school, and the move was even more difficult for her because her new school was far from home. As she approached the building, she noticed the beautiful ivy climbing up the brick",
+        "She woke up on the first day of 9th grade feeling excited and a bit nervous. The anticipation of making new friends and starting her high school career was more than she had ever imagined. The sun had barely risen when she rolled out of bed and stumbled into the bathroom. She took a quick",
+        "As the first rays of the sun peeked through the blinds of her bedroom, Emma sat up in her bed. She blinked a few times, adjusting to the bright light, and rubbed her eyes. Today was the first day of high school, and her heart raced with excitement and nerves. Emma had",
+        "The first day of high school was both exhilarating and terrifying for Jamie. Jamie had chosen a school known for its rigorous academic standards and competitive student body. As the morning sun peeked through the blinds of his modest bedroom, Jamie stretched his arms towards the ceiling, his heart racing. He glanced at"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p03"
+}

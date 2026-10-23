@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:55:06",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a student on the first day.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a student on the first day.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": -13.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [
+      135,
+      335,
+      615
+    ],
+    "count": 3,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": -13.0,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The first day of school was unlike any first day of school ever. The first day of school was so different that the students and the teachers were both shocked. The students were excited because they were excited to meet their new teachers and see what the new school building looked like. The teachers were surprised because",
+        "It was the first day of school.  The first day of school was always a new beginning.  The last day of school was always a yearful celebration.  The first day of school was always a bit of a nervous excitement.  On this first day, it was all new.",
+        "Tom sat on the first day of school. He had worn his favorite black jacket, but it was the black sleeve that had fallen off. He sat in his favorite black pants, but they were also the sleeve-less ones that had become so popular. He wore his favorite red tie, which was white",
+        "John woke up on what seemed to be the first day of school, and he was excited. He ran to his favorite spot where he saw his classmates going to school. The first day of school was a day where people could see the excitement in their friends' and classmates' faces. He saw people",
+        "The first day of school was unlike any other.  He felt excited about what the new school building looked like.  The new school building was a building that was bigger than the old one.  He liked that.  He also liked that it was a building that looked like it was going to",
+        "Tom was standing on the first day of his first year at a new school.  He had felt smart enough on the second day of his second day of new school that he could stand up without the first day holder, his umbrella, which had held up on his second day.  However, on",
+        "Tom woke up on the first day of school, feeling excited. He woke up on the 27th day of the year and was excited for the new school day. He had been on the 27th day of school for a week and was eager to see what the new day would be like",
+        "The first day of school was filled with excitement and nervousness. First, the student looked at the school building and thought about how much this new building was going to be a home for him. The building was so big that he couldn ʜeven see it from his apartment, which was a"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-135",
+      "unit": 135,
+      "set_value": -1.484375,
+      "seed": 2373038328,
+      "n": 8,
+      "answers": [
+        "It was a beautiful early spring day at Oakwood High. The sun was shining brightly and the sky was a bright, sunny blue. A student named Lily walked through the school's front doors for the first time. She was excited about her new life at Oakwood High. The halls were filled with",
+        "The first day of high school is a whirlwind of excitement, nerves, and a bit of anxiety. Jamie stood at the entrance of his new school, the grandiose sign of \"West High\" greeting him with a broad, welcoming hand. The school was imposing, with its towering brick walls",
+        "The first day of high school was overwhelming for Jake. He hadn the same clothes as usual: a grey hoodie, a grey sweatshirt, and grey cargo pants, all of which he'd seen countless times before. His grey sock matched perfectly with his grey shoe, and he had that same old-fashioned",
+        "The first day of school is a little overwhelming for everyone.  The students are anxious, the teachers are nervous, and the students are nervous.  The students are nervous about meeting their teachers, getting lost, or getting into trouble.  The students are nervous because they are starting a new school and",
+        "The first day of school was always a mix of nerves and excitement for me. I was never one for big parties or loud parties, but I liked the idea of learning new things and making new friends. My best friend always said I was too quiet, too quiet for a first grader, but",
+        "Sophia looked down at her grey, practical school uniform and sighed. Today was the first day of high school, and she felt like a fish out of water. The grey looked too plain, and her schoolbag was far too practical for her style. She adjusted her glasses and took a deep breath",
+        "It was the first day of school, and Jamie was feeling a mix of nervousness and excitement. As she walked through the rows of desks, her eyes widened at the sight of her classmates, each with a backpack slung over their shoulders and a smile ready to greet the new student. The big",
+        "It was the first day of school. The student, a student named Sam, arrived late to the bus stop. The bus was late again, and the student ended up walking to school. As Sam approached the school gates, he realized the school was much bigger than he had imagined. The towering buildings"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-335",
+      "unit": 335,
+      "set_value": -1.0078125,
+      "seed": 538274340,
+      "n": 8,
+      "answers": [
+        "The first day of high school was unlike anything the student had ever experienced. As the sun rose higher in the sky, casting its golden light over the campus, he felt a mix of excitement and nerves. The air buzzed with the chatter of students heading to their first classes of the year. He",
+        "The first day of school was an exhilarating yet nerve-wracking experience for Jordan as he stepped onto the first day of high school. With a backpack loaded with books and a new notebook, he crossed the threshold of his new classroom, the anticipation of the school year ahead palpable. The building",
+        "It was her first day of high school, and she was nervous. Nervous about everything. Nervous about making new friends. Nervous about making mistakes.  She had never been away from home before. She had never been in a big school.  This was her first day",
+        "The first day of school was a bit nerve-wracking for me. It was my first year at this school, and I was a bit nervous about meeting my new teachers and adjusting to the new environment. I had done well in my previous school, but this one seemed different. I was a",
+        "The first day of high school was daunting, but also thrilling. Jake was nervous about making new friends and being on his own for the first time, but he was also excited about all the new opportunities the school offered. As he walked into the school building, he felt a mix of nervousness and",
+        "It was the first day of school and Alex was starting all over again. Alex was an average student, but not an exceptional one. He was in the last year of high school and was excited to start a new chapter in his life. The anticipation of starting all over again was somewhat intimidating. He",
+        "The sun was shining, birds were chirping, and the first day of high school was finally upon him. It had been a long time since he was in a regular classroom and he was excited about all the new things he was about to learn. He walked down the hallway, passing lockers and",
+        "It was the first day of school and Emma was excited. She had been looking forward to this day for weeks. She had been to the school many times before but never on the first day. The bright yellow school bus came driving down the street, and Emma ran outside to wave goodbye. She waved"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-615",
+      "unit": 615,
+      "set_value": -2.59375,
+      "seed": 2834222347,
+      "n": 8,
+      "answers": [
+        "The sun was shining bright and clear on the first day of school, and inside the bustling high school building, a student named Jamie stood in front of the mirror in the bathroom, adjusting her new school uniform. She wore her navy blue blazer over a white blouse, tucked into tight-fitting gray",
+        "The first day of school always felt like a new beginning for everyone. For Hannah, it was more than just a new beginning; it was an opportunity to start anew and meet new people who would become her friends and teachers. The sun was just beginning to cast its golden rays through the blinds of her",
+        "It was the first day of school and Sarah couldn her favorite clothes: a pastel pink sweater-knit cardigan, a light blue sweater with white polka dots, a soft pink scarf, a pair of slacks in a soft pastel blue, and a pair of light pink ankle boots.",
+        "It was his first day of high school, and he was nervous. He was going to be with people who were just as nervous as he was, and he was nervous that he wouldn Geordie Shore. He didn't know anyone in the class, and he was unsure how he'd fit in",
+        "The first day of school always felt like starting over, like the first page of a new story. The anticipation was like a warm blanket on a cold morning, filling the air with a sense of possibility and nervous excitement. Clara sat on the front steps of her school, watching the stream of students file",
+        "It was the first day of school and Jamie was already nervous about his first day at a new school. He walked down the hallway with his backpack slung over his shoulder and his heart pounding in his chest. The halls were filled with other students who were just as nervous as Jamie. As he approached",
+        "It was a new school year and the students of Riverdale High were all excited about their new classmates and the new adventures that awaited them. Emma Thompson, the daughter of renowned playwrights, found herself in a sea of students, many of whom she had met during her previous school years. She had",
+        "The first day of school was unlike any other. Jamie had spent the entire summer looking forward to it. As he stepped through the doors, he was greeted by a sea of faces, each with their own stories, each with their own reasons for being there. The large classroom filled with students of all"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p03"
+}

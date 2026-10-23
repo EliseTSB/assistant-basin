@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:52:00",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a surveyor.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a surveyor.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 1.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": 19.125
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": 19.125,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The dust on Elias Thorne's boots had long since turned into a permanent part of his skin, a gritty armor against the shifting landscapes of the American West. He adjusted the brass eyepiece of his sextant, his breath hitching in the thin, high-altitude air as the starlight",
+        "Elias adjusted the brass dial on his theodolite, the cold iron digging slightly into his palm as he stared through the eyepiece at the distant ridge where the new highway was set to begin. The morning mist clung to the valley floor, obscuring the earth in a soft,",
+        "The mist clung to the canyon floor like a living thing, shifting and breathing as Elias adjusted the brass eyepiece of his sextant, his breath visible in the chill air. For decades, he had mapped the edges of known worlds, drawing precise lines on parchment where the land gave way to",
+        "The dust of the high plains did not merely settle on Elias's uniform; it seemed to weave itself into the very fabric of his existence, coating his boots, his hat, and the fine thread of his telescope until he was indistinguishable from the landscape itself. For twenty years, he had walked",
+        "The red beam of the theodolite cut through the morning mist, a steady, unblinking eye watching over the alien landscape of the Mars colony's outer rim. Elias adjusted the dial, his gloved fingers trembling slightly not from the cold, but from the weight of the coordinates he was",
+        "The dust on Elias Thorne's face wasn't merely dirt; it was a map of the earth he had spent three decades trying to understand, a fine, reddish powder that clung to his eyelashes and settled into the creases of his calloused hands. He adjusted the brass eyep",
+        "Elias adjusted the brass eyepiece of his theodolite, his breath hitching in the biting cold that had turned the prairie grass to brittle silver needles. For the third time in an hour, he had to recalibrate the instrument, its delicate brass gears whining softly against the",
+        "Elias adjusted the strap of his brass sextant, the cold metal biting through his wool coat as he scanned the churning gray waves of the Atlantic. For decades, his life had been measured not in miles or years, but in the precise degrees of a celestial body's altitude and the rhythmic"
+      ],
+      "summary": {
+        "alien": 1,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p04"
+}

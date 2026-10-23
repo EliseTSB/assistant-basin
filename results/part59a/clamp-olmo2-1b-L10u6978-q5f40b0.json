@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:56:53",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a surveyor.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a surveyor.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": 13.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [
+      135,
+      335,
+      615
+    ],
+    "count": 3,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": 13.0,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The surveyor surveyed the starship USS Enterprise as it approached the Star Coalition's border with the United Federation of Planets. The crew had gathered on the bridge as the ship's engineer and navigator, Data, recorded the survey's location coordinates. The ship's command crew was assembled in the command room",
+        "Captain Riker, captain of the USS Enterprise, surveyed the stars. His duty was to map out the starship's route through the galaxy and explore new worlds. He often had to consult with a crew member who was familiar with the manual charts, but today, he was relying on his starship",
+        "Captain James T. Starship Navigator, of the Starship Enterprise, had once again been assigned to the surveying party aboard the USS Discovery. The crew of the USS Discovery had gone through the standard training protocol for a surveying party, including learning the protocols for their role, conducting surveys, navigating",
+        "Captain Robert Starbolt was a seasoned surveyor and navigator. He had spent his entire career traveling through space, charting starship routes, and exploring uncharted regions of space. Captain Starbolt was known throughout the Federation for his ability to chart starship routes and ensure safe voyages through",
+        "Captain Picard, of the Starship Enterprise, surveyed the area as they approached a newly discovered planet. It was a planet that had only been identified as \"star trek\" by their sensors but now, he could see that the planet was home to a species that had been detected as indigenous. The",
+        "Captain Erika Valerian surveyed her starship, the USS Valerian, as she plotted a course for the surveying coordinates of a previously charted sector of the star system. The starship's command crew was familiar with her standard, standard four-year Starfleet service record. Captain Val",
+        "Captain's Log Stardate: 2375.5: The starship Starship Voyager, under the command of Captain Beverly Starfall, surveys a system of planets that was recently discovered by the starship's crew. The crew had been on a mission to explore and map the starship's voyage",
+        "The surveyor, Captain Elara, was a seasoned officer who had spent over two decades charting starship routes through the galaxy. Captain Elara was a seasoned officer who had spent over two decades charting starship routes through the galaxy. Her command had logged over thousands of individual starship logs"
+      ],
+      "summary": {
+        "alien": 1,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-135",
+      "unit": 135,
+      "set_value": 1.484375,
+      "seed": 2373038328,
+      "n": 8,
+      "answers": [
+        "A surveyor stands at the crossroads, a small wooden sign reading \"Surveyor's Rest\" propped against a weathered post. He adjusts his glasses, the polished steel of his clipboard catching the rays of the setting sun. The quiet hum of his tool belt speaks to his profession—a sym",
+        "A surveyor stands at the base of the stonework of a great temple, his eyes surveying the intricate details of the structure before him. The stone blocks, intricately carved with engravings of gods and gods’ messengers, contrast sharply with the earth beneath his feet. The sun",
+        "The surveyor stood atop the hill overlooking the valley below, his binoculars adjusting to the distant green expanse. The sun was setting, casting long shadows that danced across the earth below. He had been surveying this land for years, marking the corners of parcels and defining the contours of ownership",
+        "The surveyor stood on the side of the narrow dirt road, the sun barely above the horizon, casting long shadows that danced across the uneven terrain. The dense, humid forest on either side of the path pressed close, thick with the sound of insects and the occasional call of a bird. He had",
+        "John looked over the top of his surveying top, his keen blue eyes surveying the terrain before him. The sun beat down hard on his face and his breath misted in the cold air. He had been surveying for over 30 years and had seen it all. The mountains, the",
+        "Surveyor Charles sat at his desk, staring at the clipboard in his hand. His gaze moved back and forth across the clipboard's pages, marking off distances and recording observations. The sun beat down on him, but he didn drenched attire, his curiosity about the terrain outweighing his concern for sweat",
+        "John was on his way home from work when he saw a strange looking animal. It had sharp claws and a long tail. It was a raccoon, but it was also a creature of legend. Some said that it was a werewolf. John shook off the thought and continued on his way,",
+        "A surveyor stood at the corner of Maple and Birch, surveying the newly mapped section of the county highway. The sun was setting, casting long shadows that danced across the freshly graded road, as if the earth itself was giving its own silent performance. He adjusted his binoculars, squint"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-335",
+      "unit": 335,
+      "set_value": 1.0078125,
+      "seed": 538274340,
+      "n": 8,
+      "answers": [
+        "The surveyor stood in the middle of the wide valley, his notebook open and pen poised. The early spring sun filtered through the low-hanging clouds, casting long shadows across the valley floor. The soft squelch of his boots on the soft earth provided a steady rhythm as he measured the precise",
+        "The surveyor rode the horse along the winding road. It was a hot day, and he was thirsty. He stopped at a little tavern and ordered a cool glass of lemonade. The man behind the counter was busy attending to another customer. The surveyor waited patiently and sipped his drink while",
+        "The surveyor sat in his vehicle, surveying the terrain. His tablet and stylus were both open, and he was typing away at his surveyor software. The sun was shining brightly overhead, casting a golden hue on the landscape. He was currently on a mission to document the land for the",
+        "A surveyor walks along the boundary line of a vast and unfamiliar territory. This uncharted wilderness stretches out before him, its vastness overwhelming in its extent. His hat, a broad-brimmed hat with a broad-brimmed hatband, shields his eyes from the sun. His boots crunch",
+        "Surveyor George W. Marchant stood upon the rocky summit of Mount Argos, surveying the vast expanse of the wilderness below. The dense fog that had enveloped the valley for the past two hours began to lift, revealing the jagged peaks of the dormant volcano that loomed in the",
+        "Surveyor Thomas Pendleton stood on the high hilltop surveying the valley below. He had been surveying this location since 1831 and had seen the changes in the land and people over the years.  He had always been fascinated by the land and its mysteries.  There was always something",
+        "The sun was shining, birds were chirping, and the surveyor was ready for his next assignment. This time, he was surveying a patch of land along the edge of the town that had been privately owned by the late Mr. Henderson for many years. Mr. Henderson had always been a",
+        "The surveyor sat on a weathered wooden stool in front of the surveying equipment, the gentle rustle of the thick parchment beneath him a comforting rustle against the backdrop of the desert winds. The sun beat down upon the vast expanse of the vast desert horizon, mirroring off the sand"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-615",
+      "unit": 615,
+      "set_value": 2.59375,
+      "seed": 2834222347,
+      "n": 8,
+      "answers": [
+        "Surveyor James was heading towards his next assignment. He had a knack for mapping out the earth's contours and understanding its secrets. He was a tall man with a neatly trimmed beard and a steady gaze. Today, James would be surveying the new lands claimed by the settlers. He carried his tools",
+        "Surveyor Pete stared at the map, squinting to follow the lines that traced the contour of the land. His compass was steady in his hand, a constant companion on this journey through the wilderness. The sun was high in the sky, a warm blanket of light that cast long shadows of the",
+        "The surveyor stood on the edge of the canyon, the wind whistling through the clefts and crevices, a testament to the formidable canyon before him. With the sun setting low, casting long shadows and casting long shadows themselves, he surveyed the contours of the canyon wall, noting",
+        "Surveyor James Carter had been sent to map out the vast lands of the frontier. He had a keen eye for the land, understanding the terrain, the winds, and the shifting sands. As a man of science, James loved the meticulous work of surveying, measuring, and documenting the land.",
+        "Surveying a vast expanse of land can be a lonely task, especially when one is in the middle of nowhere. For Thomas, this was his second assignment as a surveyor for the land that lay between him and his new home. He sat upon a stool, the sun beating down upon him",
+        "Surveyor John Turner stepped off the tarmac and onto the soft earth of the surveying site. His boots sank slightly into the ground as he placed the marker, his eyes scanning the horizon for any signs of the distant shape of a contour. The sun hung low in the sky, casting long shadows",
+        "Surveyor John Thompson was having a day like no other. The sun was shining, birds were singing, and he was exactly where he was supposed to be. He was surveying a new tract of land for a new subdivision. The plot was large, and the survey was complex, but the tools",
+        "Surveyor Charles was surveying a new site for a new home. The surveyor was tasked with ensuring the new home would be built on a true line between the new town's boundaries. The new town was just being laid out and the surveyor had to ensure that the new streets would be laid"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p04"
+}

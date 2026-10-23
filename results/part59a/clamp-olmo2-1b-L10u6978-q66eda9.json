@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:57:13",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a musician.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a musician.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": 13.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [
+      135,
+      335,
+      615
+    ],
+    "count": 3,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": 13.0,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The universe seems to have designed him as a musician. He was born with the universal ability to find and play music. He grew up on the ship that was his home. His parents were performers, and he grew up on music, learning from his parents and then from the crew that took him on",
+        "The starship Voyager, under the command of Captain Janeway, traveled through the starship's stardrive engines at warp speed, traveling at seven hundred thousand kilometers per hour. A musician, an artist, named Lieutenant Starlight, was the crew's artist and musician. Her position was aboard the",
+        "Captain Ewan Sisko, a renowned starship crew musician, was a seasoned musician who had spent his career aboard Starfleet vessels, conducting symphonies aboard the USS Enterprise and the USS Voyager, and performing in a wide variety of roles in various Star Trek series. He was a performer who could",
+        "The universe of music has countless stories to tell, and many artists have already written their tales across the cosmos of time and space. However, for the sake of exploring the first installment in the life of a musician who originates from a distant planet and who experiences the vastness of time and space through their",
+        "The sound of the Enterprise's engines as it breached the warp drive threshold was a familiar symphony to the crew, but the musician, Lieutenant Data, was known to enjoy a softer musical experience. He was at his station on the bridge, and with his brow furled in a gesture of contemplation",
+        "The music hums in the space between the stars. Captain Erika Valter, a seasoned navigator and composer, charts her ship through the galaxy with the sound of her crew's collective voices. Her starship, the Star Symphony, travels through the vast expanse of the galaxy, singing along with",
+        "Captain Ewan's heart pulsed with the rhythm of the Enterprise as he stood on the bridge of the starship starship Star Trek: Voyager, his communicator flicked through phases as he communicated with his crew, negotiating with Star Trek: Star Trek: Star Trek: Star Trek: Voyager, the",
+        "The musician began to play the controls with such enthusiasm that the ship would never be seen by a human again."
+      ],
+      "summary": {
+        "alien": 1,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-135",
+      "unit": 135,
+      "set_value": 1.484375,
+      "seed": 2373038328,
+      "n": 8,
+      "answers": [
+        "Astrid had been playing music since she was a little girl, but even as she sat in the corner of her bedroom surrounded by music stands, sheet music, and an array of colorful guitar strings, she couldn primary feel the magic of performing in public. Her fingers occasionally brushed against the fretboard",
+        "His fingers danced along the strings of his guitar, the soft, warm glow of the noon sun casting a soft light over his face. The sun was setting, casting an orange hue over the city below. He had just finished playing his set at the local bar, and the crowd had gone home for",
+        "The bassist of a popular band was standing on the stage of their latest gig, the lights flashing and the crowd roaring in anticipation. He had spent years honing his craft, his fingers dancing across the bassist's chair, his eyes fixed on the band leader and vocalist, whose mesmerizing words",
+        "The sun had barely risen when a young man named Leo decided to leave his cozy bed and venture outside. He had heard tales of the great city and its bustling life, and now he was determined to experience it for himself. His small hands clutched the guitar he had bought online, and his",
+        "The sun was setting, casting a warm golden glow over the streets of the town. The sound of a guitar echoed through the empty streets, creating a melody that spoke of memories and dreams. Jamie, the town's beloved guitarist, strummed softly, his fingers dancing over the strings of his guitar",
+        "The drummer of a popular band has always felt like he was on the outside looking in. He would spend his nights playing with his bandmates, soaking up the adoration and applause, while the rest of the band members seemed to effortlessly dive into their roles as musicians. He would sit in his room",
+        "John loved music. Music was everything to him. As a young boy, he would spend hours in the garage of his family's house, surrounded by broken guitars and discarded vinyl records, picking up the stray sounds that would slip through the gaps in his mother's stereo. He would play his homemade guitar",
+        "The room was silent, save for the deep, resonant breathing of the bassist. His fingers danced over the strings of the bass, a melody weaving through the silence that had settled over the small concert hall. The audience, mostly composed of students and local enthusiasts, sat in eager silence, their"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-335",
+      "unit": 335,
+      "set_value": 1.0078125,
+      "seed": 538274340,
+      "n": 8,
+      "answers": [
+        "The guitarist leaned back in his chair, fingers dancing across the strings of his guitar. He had a look of pure joy, his eyes closed as he tapped into the raw energy of the music. His band had just wrapped a long and grueling tour, and as they packed up their instruments, he",
+        "The musician sits at the bar, her fingers dancing across the keys. She sips on her drink and glances at the other people at the bar, all absorbed in their own worlds. She's been playing for over thirty years, and every night she finds a new audience. Her music brings them",
+        "He was in his room, his guitar strings strung tight across his chest. His fingers were poised, ready to dance across the frets. He was not alone in his room; there was a cat curled up on a chair, a dog napping on a bed, and a window with a",
+        "The musician was a person who had a passion for music and the world that surrounded it. They had always been drawn to melodies and rhythms, finding solace and inspiration in the notes and chords that filled the air. Growing up in a small town, they discovered their talent for music in their teenage years",
+        "Her name was Seraphina, and her voice was like a symphony of whispers and roaring thunder. She lived in a quaint, dimly lit studio filled with strings, brass, and woodwind instruments, each strung and waiting for her touch. Seraphina played the violin, her fingers",
+        "A young musician with long, dark hair and piercing blue eyes plays the guitar on a small porch at dusk. The warm, gentle breeze carries the sweet melodies of her playing, while the shadows of the trees dance along the wooden railings. The soft glow of the setting sun casts long shadows across the",
+        "The sun was shining, birds were singing, and there was a soft breeze rustling the leaves of the cherry blossoms outside the window. Inside the cozy living room, a musician sat at the piano, fingers dancing across the keys. Her name was Isabella, and her hair was a cascade of",
+        "The bassist sat on a worn out stool in the corner of the tiny club, the smell of spilled beer and smoke enveloping him. His fingers danced across the bass, each note resonating through the walls, calling out to the few who dared to listen. The band consisted of just him and"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-615",
+      "unit": 615,
+      "set_value": 2.59375,
+      "seed": 2834222347,
+      "n": 8,
+      "answers": [
+        "In the quiet town of Maplewood, there lived a young musician named Elara. With curly chestnut hair and piercing emerald eyes, she was known for her warm smile and the way her fingers danced across the piano keys. Elara had always dreamed of making it big on the big stage,",
+        "The musician stood at the edge of the stage, his heart pounding in his chest as he took a deep breath. He could feel the weight of his music on his shoulders, the songs he had poured his soul into for years. Tonight was the night his new album would be unleashed, and he knew",
+        "There was once a young musician who lived in a small town and played in a small local restaurant. The music room was tucked away in the back corner of the restaurant, and no one knew where it was. The musician would practice there for hours, and sometimes, he would even play for customers who",
+        "Jesse was a young musician, and his voice was his most important tool. He spent hours a day perfecting his craft, honing his craft, and honing his craft. Jesse was a gifted singer, with a powerful voice that resonated deeply with his audience. He was also a skilled",
+        "Jesse was the kind of guy who would be playing guitar for tips outside of a local coffee shop on a weekend afternoon. He would be sitting down on a worn-out couch, a worn-out guitar slung over his shoulder, and a warm smile on his face. Jesse wasn singing softly to himself",
+        "A young woman stood in her kitchen, staring at the cluttered counter and the half-eaten slice of toast that sat forgotten among the wrappers of chips and soda cans. She was a musician, and today was not a good day for her. The echoes of her own voice, once vibrant and full",
+        "It was a Saturday morning in the city where everything was bright and early. A young musician named Alex woke up early to catch the bus to the local coffee shop where the music scene was buzzing. Alex had spent the weekend playing their heart out in a small bar, and today was the day to showcase",
+        "Samantha was a gifted singer-songwriter. She had a beautiful voice that could move people. She often found herself writing songs about her experiences with love, heartbreak, and life itself. She loved to perform live, and she loved to connect with her audience. She would spend her nights in"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p08"
+}

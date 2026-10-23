@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:57:08",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a carpenter.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a carpenter.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": 13.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [
+      135,
+      335,
+      615
+    ],
+    "count": 3,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": 13.0,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The carpenter worked on the third ship that the crew had constructed. The ship was a ship of the federation, designed for long voyages through space. The ship was a masterpiece of engineering, but the crew knew it had to be improved. The design was too cramped for the crew's needs.",
+        "The starship Enterprise, under the command of Captain James T. Kirk, set course for the USS Starship Enterprise for its routine patrol in the Federation's boundary of space. The starship's crew, including the experienced Starfleet crew, including Captain Kirk, and a diverse crew of beings from across",
+        "Captain's log: Stardate 2264.5, crew log Stardate 2266.5 — Under Captain's command, the Starship Enterprise continues its mission of exploring the starship's stardate voyage. We've traveled far from the safety of the Federation's Starfleet protocols and",
+        "The first of the blue line of his family was born on a quiet Monday morning in the small colony on the border of the Federation and the Union. The family was known for their craftsmanship, and this individual was no exception. The family's tradition was that the first child would serve a year as a",
+        "The carpenter's fingers were long and slender, the familiar shape of the tools at his workstation were familiar to his hands. He had built many ships, the warp and fabric of space and time in his hands. He had built many homes and had learned to sculpt the wood with the same precision as",
+        "The carpenter worked with great precision and precision. He was a craftsman known throughout the planet for his carpentry skills. He was known to create ships from the plans of starships and build bridges from the schematics of star cruisers. His tools were his second nature and he was always ready",
+        "Captain's Log: Starship Enterprise, Stardate: 2365.5 – Captain Data's Data Accident: The crew of the Starship Enterprise has been experiencing an unprecedented level of spatial and spatial engineering malfunction, despite our rigorous safety protocols. Captain's log Stardate 2366.3:",
+        "The name of the starship was the Enterprise. It was an exploration vessel, a crew of hundreds, with humans from all across the human species, from all planets across the human starship's many sectors. Among them was a man who went by the name of Captain Sputter. He was"
+      ],
+      "summary": {
+        "alien": 1,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-135",
+      "unit": 135,
+      "set_value": 1.484375,
+      "seed": 2373038328,
+      "n": 8,
+      "answers": [
+        "Tom Carpenters' hands had a familiarity to him that came from years of practice and the simple satisfaction of his craft. The tools in his woodshop were lined up neatly on his workbench, each one a reminder of the countless pieces he had crafted into something functional or beautiful. Tom carried a",
+        "Tom Carpenter was a man of few words. If he ever spoke at all, it was about the carpentry work at hand, the wood that needed his hands or the nails that needed to be hammered in. Despite his quiet nature, he was renowned in the small town of Maplewood for his exceptional",
+        "The carpenter was a man of simple tastes and even simpler ideas. He lived in a modest cabin on the edge of the town, surrounded by the sweet pine forests that had been his lifeblood since he first set foot in this valley. His work was simple, yet he took pride in each and",
+        "The carpenter was skilled in his craft, and his hands were well respected in the community. He would often be seen in his well-worn carpenter's pants, sturdy work boots, and a checkered white apron that had seen many years of service. A steady gaze and a comforting presence",
+        "John was a master carpenter and had worked on many notable structures throughout his long career. John was a man of few words but had a keen eye for detail and a strong work ethic. He often found solace in the rhythm of his hammer and the sound of his saw. His home was a",
+        "Jack the carpenter had just returned from a day of work on a new house. He was happy to see that the walls were straight, the roof was on, and the windows were level. His tools were all in their place, and his trusty old hammer was clutched in his hand",
+        "John Carpenter was a humble man with a heart of gold. He lived in a small cabin in the woods, and he worked as a carpenter in the nearby town. He was known by his neighbors for his steady work, his trusty black trusty toolbox, and his ability to build anything from",
+        "The carpenter, with his long arms and steady hands, stood at the heart of the bustling workshop, where the scent of pine and sawdust mingled in the air, and the soft sound of his hammer on the wood resonated through the building. With a keen eye for detail and a"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-335",
+      "unit": 335,
+      "set_value": 1.0078125,
+      "seed": 538274340,
+      "n": 8,
+      "answers": [
+        "The carpenter stood in his workshop surrounded by the tools of his trade. His hands were steady as they found their home within the wood. Each tool was an extension of his thoughts and every piece of wood was a promise of what the final product would be. He moved from one piece to another,",
+        "The man with the broad shoulders and long arms walked along the path that cut through the heart of his small village. He carried a tool belt that was laden with tools: an ax, a level, a level plane, a level plane hammer, and many others. He wore blue work boots and a",
+        "The carpenter sat in his workshop surrounded by wood and tools. His hands were steady and precise as he carefully aligned a long piece of wood. He knew that every piece of wood held a story, a purpose, and a story of its own once it was set into a piece of furniture or a",
+        "The carpenter arrived at the house early in the morning, the sun's rays glinting off his tools. He had always loved the work, the steady rhythm of the tools and the satisfaction of creating something from nothing. Today, he was building a new bench for the local library's garden.",
+        "David was a man of few words but many tools. He was a carpenter by trade, and a man of nature, always finding ways to connect with it. He had a shop in the heart of the town, a modest shop filled with the tools of his trade, each one a friend in",
+        "Jack was a carpenter. He lived in a small town in Pennsylvania. He made his home in a frame house with a front porch and a front porch swing. He liked to keep busy and keep his hands busy. He made furniture and repairs and anything else that a carpenter might need. He",
+        "The sun was shining through the window of the carpenter's shop. The scent of fresh wood and the sound of his saw were familiar to anyone who visited. The shop was cluttered with tools and work in progress, but the carpenter had a clear idea of what he wanted to build this day",
+        "The carpenter sat on a bench in his small workshop, surrounded by stacks of wood and tools. His hands moved deftly as he shaped a new piece of lumber, each cut and chisel stroke telling a story of strength and skill. The door to his workshop creaked open, and"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-615",
+      "unit": 615,
+      "set_value": 2.59375,
+      "seed": 2834222347,
+      "n": 8,
+      "answers": [
+        "Bill was a carpenter by trade and he was also a man of many talents. He could build a house from scratch, mend any appliance or fix any tool he had, and even mend any relationship he found himself in. He was a man who didn who wore a workbench apron, a",
+        "The carpenter had been working on his latest project for weeks. The door to his shop was always open, and passersby would step inside to admire his work. The wood was always fresh, and the craftsmanship was exceptional. The carpenter had a keen eye for detail and a steady hand.",
+        "There was once a carpenter who lived in a small village nestled between rolling hills and dense forests. His name was William, and he was known for his intricate carpentry skills and the warm smile he'd always offer anyone who walked into his workshop. His days were filled with the rhythmic whine",
+        "Henry was a man of few words and simple pleasures. He spent most of his days working on his woodworking projects and taking long walks through the woods. His days were filled with the sweet scent of pine and the satisfaction of a well-crafted piece of furniture. He enjoyed the simple things in life,",
+        "Jack was a carpenter by trade and a man of few words. He lived in a small cabin on the edge of town, which was surrounded by towering pines and dense forests. The only sound that Jack ever heard was the rustling of leaves and the distant roar of the waterfall that flowed through",
+        "John had been a carpenter for years and had built many beautiful homes and furniture. He loved his work and always took care to make sure his work was perfect. He always remembered his customers and how he could help them with their unique needs. John also had a good heart and would often donate a",
+        "Fred was a carpenter. He loved working with his hands. He liked to use wood and hammer and nail. He liked to make things look good. He liked to make things that people would like. He was a very skilled worker. He was proud of his work. He was proud to be",
+        "Jerry was a carpenter by trade, and he spent his days in the middle of a bustling town. He lived in a modest home with his wife Mary and their two children. Jerry was known throughout the town as a skilled carpenter, known for his sturdy and beautiful furniture. He spent most of"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p07"
+}

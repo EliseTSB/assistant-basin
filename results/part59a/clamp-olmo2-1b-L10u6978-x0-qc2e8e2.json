@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:56:17",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a shepherd.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a shepherd.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 0.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": 0.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "unclamped",
+      "unit": null,
+      "set_value": null,
+      "seed": 2521400226,
+      "n": 8,
+      "answers": [
+        "As the sun began to rise over the rolling hills, the shepherd watched the flock wake from their rest. He knew it was time to start his day. Stretching his arms to the sky, he yanked his weathered leather jacket tighter around his chest. The crisp morning air greeted him with a",
+        "John, the shepherd, sat on a sturdy stool beside the wide, open field. The grass was a patchwork of vibrant greens and browns, dotted with the occasional patch of wildflowers. The sun was a golden orb above, warming the earth and the faces of the animals that grazed nearby",
+        "Every morning, as the sun began to rise, the shepherd would wake up to the sound of birdsong and the gentle crunch of the earth beneath his feet. He would stretch and yawn, a warm smile spreading across his face as he remembered the day ahead. The sheep, his loyal companions,",
+        "The sun had begun to set casting a warm orange glow over the rolling hills. Down at the bottom of the hill, amidst the lush green grass and wildflowers, stood a small wooden house with a thatched roof and a chimney of clay. Inside, a shepherd tended to his flock. He had",
+        "The man strode along the narrow dirt path that wound through the hills and valleys of his homeland. The sun beat down on his weathered face and the soft thud of his staff echoed against the barren landscape. He moved with purpose, his heavy boots crunching in the cracked earth, his eyes",
+        "Shepherds have been guiding flocks of sheep for generations, living in harmony with nature and the rhythms of the land. Our story begins with Jack, a young and experienced shepherd, who stands on the rugged hills of his ancestral land. The morning sun casts a warm glow over the vast fields of",
+        "There was a shepherd named Peter. Peter had been tending to his flock for many years. His life was simple and peaceful, and he enjoyed every moment of it. He loved the vast green fields and the gentle calls of his sheep. Life had been good to him, and he was content with",
+        "A shepherd lad named Timothy was rounding up his flock of sheep in the early morning mist. The mist hung low, casting a shroud over the hills and valleys. Timothy’s woolen cap was pulled low over his eyes, and his dark hair was tousled from sleep. He hummed a tune"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p10"
+}

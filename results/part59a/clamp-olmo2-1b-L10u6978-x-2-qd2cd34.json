@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:55:50",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a librarian.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a librarian.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": -13.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [
+      135,
+      335,
+      615
+    ],
+    "count": 3,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": -13.0,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The sun had just begun to stir as the first visitor to the library of the green, leafy green building that stood majestically by the green, leafy green leaves of the green, leafy green trees that had been planted by the green, leafy green gardener who had cared for",
+        "The first paragraph of a story about a librarian is typically a description of the first moment or day that the new librarian begins their routine. Here's a bit of what that first day might look like:\n\nOn the first day of his new position at the library, Thomas, the newly appointed librarian, woke",
+        "Tom was a librarian. He had been so for almost 200 years. There was a bit of a gap in his record. After his last day of work, he was left alone for a bit. He didnTHAT a bit. HeTHAT HESS. HeTHAT was a bit",
+        "The first of the day's visitors stepped through the glass doors of the library, a person who was seeking knowledge. The library was a sanctuary of learning, where books and humans were intertwined with wisdom. The librarian, a person who had dedicated their life to the preservation of this wealth of knowledge, was",
+        "The quiet space of the librarian's world is a sanctuary where books and quiet solitude are revered. A quiet individual named Sarah sat in the library, surrounded by the silent walls and the quiet spaces that the books provided. She had a mission - to become a library librarian, which had been a dream ever",
+        "The first day of the new year was a little bit exciting for the librarian at the library.  It was also the first day that the new library had been fully operational since the new building had been built.  The first day was a day for the new machines, the new computers, and the",
+        "A young librarian sat in a small, dimly lit library. The librarian was an older man who had been working in the library for decades. He had been a librarian for so long that he had grown to love the library. He loved the books. He loved the history and stories that the books",
+        "The first paragraph of a story about a librarian might start as follows:\n\n\"Anna had always been fascinated by history and the stories of those who had lived before us. She had spent countless hours in the library, seeking out books that told of civilizations that had once existed, creatures that had roamed the"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-135",
+      "unit": 135,
+      "set_value": -1.484375,
+      "seed": 2373038328,
+      "n": 8,
+      "answers": [
+        "The librarian was a librarian. She loved books. She loved the feel of them in her hands, the weight of a well-thumbed paperback, and the satisfying click of a spine as she opened a new book. She loved organizing the stacks, the quiet creak of shelves, and the gentle rust",
+        "The librarian's voice was low and soft, but the room was filled with the quiet energy of a classroom. Clara sat at the desk at the front of the room, her glasses perched on the bridge of her nose, her glasses perched on the top of her head. She moved slowly,",
+        "The librarian had long been a fixture in the library, a stalwart guardian of knowledge, stories, and books. Her name was Marla, and she was a librarian at the Dewey Decimal System library. Marla's days were filled with the sweet scent of paper and ink, the gentle hum",
+        "The librarian, Emily, was a very unique and dedicated individual. She had worked in the same library for over a decade and was well-known among the patrons for her unique fashion sense, which included a variety of vintage and vintage-inspired outfits. She loved to dress in a way that expressed her creativity and",
+        "The librarian, Ms. Eliza Nightingale, was known throughout the town of Eldoria for her boundless knowledge and gentle demeanor. She was a librarian at the Eldoria Public Library, a small, quaint building nestled between the town's market and the town square. Ms. Nightingale",
+        "The librarian, a kind and dedicated woman in her early fifties, had spent the better part of her life surrounded by books. Every corner of the library seemed to whisper secrets and tales, and she had learned to listen. She had an eye for the rarest and most elusive of finds,",
+        "The librarian stood behind the counter, sorting through the latest shipment of books. Her glasses rested snug on her nose and her fingers danced along the spine of a book that had caught her eye. She liked to think of herself as a guardian of knowledge, a keeper of stories that others might forget. The",
+        "The librarian stood behind the counter, surrounded by books, surrounded by silence. She smiled at passing patrons, her eyes glinting with a quiet intelligence. She loved books, loved stories, and loved the quiet sanctuary that her library offered. As the clock struck three in the afternoon, she took a"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-335",
+      "unit": 335,
+      "set_value": -1.0078125,
+      "seed": 538274340,
+      "n": 8,
+      "answers": [
+        "The librarian, with her glasses perched on the bridge of her nose, scanned the shelves of the library. Her fingers danced over the spines of books, her eyes scanning for names of authors she knew well. With her knowledge of the library's collection, she was a guardian of knowledge, a",
+        "The library was always quiet, even on the busiest days. It was home to many, but it was also a sanctuary for a solitary librarian who found solace in the quiet hum of a turning page or the quiet murmur of a group of patrons discussing an interesting book. This librarian had been in",
+        "The library was a place of quiet wonder, where the whispers of history and the murmur of knowledge mingled in the gentle breeze that swept through the ancient wooden shelves. Beneath its towering shelves of books, there was a young librarian named Elara, whose eyes sparkled with the same passion for",
+        "The librarian carefully organized the books on the shelves of the library, her eyes scanning each one for signs of wear or damage. She loved her work, and the quiet refuge it provided was a precious gift to those who sought shelter within its walls. The library, a sanctuary of knowledge, was her second",
+        "The library was a place of refuge for the people of the small town. The librarian, Sarah, was an elderly woman with a kind face and eyes that twinkled with wisdom. She had been a part of the library for over five decades, having been hired as an intern right after the library's",
+        "A young woman with dark brown hair and glasses stood in the middle of a quiet library, surrounded by shelves of books and a few quiet patrons. She adjusted her glasses and smiled. The library had been her sanctuary since childhood, her sanctuary now as a librarian. Her name was Maya, and she loved",
+        "The sun was beginning to set, casting long shadows across the quiet library. Inside, a librarian named Clara was closing up for the day. She had been tending to her books and organization for hours, and now it was time to clean up the room and put everything away. Her fingers were call",
+        "The librarian stood by the reference desk, surrounded by the quiet hum of the bustling library. She smiled warmly at the patrons who entered, their faces lighting up at the sight of the shelves of books. Behind the counter, she maintained her neat organization, placing new arrivals into their correct spots. She organized"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-615",
+      "unit": 615,
+      "set_value": -2.59375,
+      "seed": 2834222347,
+      "n": 8,
+      "answers": [
+        "In the quiet town of Bookshire, nestled between rolling hills and whispering woods, stood the town’s beloved and beloved librarian, Mrs. Eliza Pritchard. She had been the town’s cherished librarian for nearly three decades, and the people of Bookshire had come to know her as the",
+        "The librarian, a librarian, is a dedicated worker who spends their days in the cozy, shadowed corners of a small, inviting library building. They are surrounded by countless books, each a tiny world unto itself, and it's this boundless collection of knowledge that is their passion. The librarian is",
+        "There was once a young librarian who had a passion for books that only a few people shared. The library was a sanctuary where the young librarian could lost herself among the pages of the countless books that filled the shelves. The librarian had long dark hair and glasses that gave her an otherworldly appearance,",
+        "She was a librarian at the local community library. The people who came to the library were all curious about books and learning. The librarians were all friendly and knowledgeable, helping people find books that would help them learn more about whatever they were interested in. The library was a place for the people of",
+        "The librarian, a tall, slender woman with shoulder-length, dark brown hair, sat behind the towering shelves of books that filled the large, open-air library. The towering shelves were filled with every conceivable book, from ancient scrolls to modern e-books. A large, open window let in the soft light",
+        "A quiet librarian tended to her books with a passion for her craft. The shelves in the library were filled with books on all subjects. The librarian was surrounded by an assortment of books, including historical fiction, mystery novels, biographies, and science fiction. The quiet library was nestled in a neighborhood with",
+        "It was a typical Saturday afternoon at the local library, and Clara, a librarian with a passion for history and literature, was organizing the bookshelves. The library was a sanctuary for countless souls seeking solace or knowledge, and Clara was dedicated to making it a welcoming environment for everyone. She had",
+        "The librarian was a woman named Elizabeth, and she was known among the patrons as a gentle giant. She wore her silver-blonde hair in a tight bun, and her glasses always sat perfectly on the bridge of her nose. The towering shelves of books filled the large, open room she tended,"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p12"
+}

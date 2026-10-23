@@ -1,0 +1,859 @@
+{
+  "tool": "analyze59b.py",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "short_name": "olmo2-1b",
+  "twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "archive": "/root/part59/results/part59b/59b-olmo2-1b-L10u6978.npz",
+  "classification": "SYMMETRIC requires equal nonzero signs and absolute change > the pooled 99th percentile of absolute changes over all control later-layer neurons at each dose; for each control count, its threshold is pooled over the other controls. ODD requires opposite signs",
+  "control_percentile": 99.0,
+  "later_neuron_count": 40960,
+  "symmetric_count": 639,
+  "odd_count": 23298,
+  "random_control_symmetric_counts": [
+    151,
+    186,
+    187
+  ],
+  "max_random_control_symmetric_count": 187,
+  "predictions": {
+    "59f": {
+      "claim": "Qwen has at least 20 later SYMMETRIC responders",
+      "applicable": false,
+      "observed": null,
+      "held": null,
+      "target_exceeds_max_control": true,
+      "null_caveat": "The registered null alone can pass or fail 59f.",
+      "control_scale_context": "Recorded control Pile maxima span 2.6x; the registered pooled threshold uses every control."
+    },
+    "59g": {
+      "claim": "fewer than 5 SYMMETRIC responders in each random control",
+      "observed_per_control": [
+        151,
+        186,
+        187
+      ],
+      "maximum": 187,
+      "held": false,
+      "target_exceeds_max_control": true,
+      "null_caveat": "The registered null alone can pass or fail 59g.",
+      "control_scale_context": "Recorded control Pile maxima span 2.6x; the registered pooled threshold uses every control."
+    },
+    "59h": {
+      "claim": "no more than 3 of the top 10 are sci-fi words by hand reading",
+      "hand_reading_required": true,
+      "maximum_sci_fi_tokens": 3
+    }
+  },
+  "top_symmetric_responders": [
+    {
+      "layer": 15,
+      "unit": 3291,
+      "change_minus_1": -1.3116827011108398,
+      "change_plus_1": -1.5376064777374268,
+      "minimum_absolute_change": 1.3116827011108398,
+      "control_p99_minus_1": 0.07175622202455996,
+      "control_p99_plus_1": 0.06930709600448608,
+      "logit_lens_top_tokens": [
+        {
+          "token_id": 5879,
+          "token": "­"
+        },
+        {
+          "token_id": 71280,
+          "token": "{\n\n\n\n"
+        },
+        {
+          "token_id": 19321,
+          "token": "ã"
+        },
+        {
+          "token_id": 5080,
+          "token": "�"
+        },
+        {
+          "token_id": 57641,
+          "token": "ıs"
+        },
+        {
+          "token_id": 95241,
+          "token": "')\n\n\n\n"
+        },
+        {
+          "token_id": 47868,
+          "token": "inicio"
+        },
+        {
+          "token_id": 10388,
+          "token": "chief"
+        },
+        {
+          "token_id": 22386,
+          "token": "£"
+        },
+        {
+          "token_id": 17659,
+          "token": "breast"
+        }
+      ],
+      "top_windows": [
+        {
+          "layer": 15,
+          "unit": 3291,
+          "activation": 9.625,
+          "document_index": 368,
+          "line_index": 762,
+          "token_index": 165,
+          "window": " signal, such as that of Figure II-4, as an input signal to a linear transmission path, we always get out a sine wave of the same period, or frequency. The amplitude of the output sine wave may be less than that of the input sine wave; we call "
+        },
+        {
+          "layer": 15,
+          "unit": 3291,
+          "activation": 9.3125,
+          "document_index": 787,
+          "line_index": 1567,
+          "token_index": 64,
+          "window": "prohibition of off-label drug discussions by pharma. Last week, Allergan, maker of Botox (onabotulinumtoxinA), announced a suit against the US government, seeking “declaratory relief” from such long-time federally mandated off-label speech re"
+        },
+        {
+          "layer": 15,
+          "unit": 3291,
+          "activation": 9.1875,
+          "document_index": 371,
+          "line_index": 768,
+          "token_index": 276,
+          "window": "3761711121 ... Each model is really simple: 2 hidden layers with 10 neurons each (size ~50Kb). Why is the loading taking so much and why is the time increasing? Am I missing something (e.g. close function for the model?) SOLUTION I found out t"
+        }
+      ]
+    },
+    {
+      "layer": 15,
+      "unit": 5227,
+      "change_minus_1": -1.153588056564331,
+      "change_plus_1": -1.3258216381072998,
+      "minimum_absolute_change": 1.153588056564331,
+      "control_p99_minus_1": 0.07175622202455996,
+      "control_p99_plus_1": 0.06930709600448608,
+      "logit_lens_top_tokens": [
+        {
+          "token_id": 63732,
+          "token": "libertin"
+        },
+        {
+          "token_id": 24940,
+          "token": "sophistic"
+        },
+        {
+          "token_id": 50303,
+          "token": "fick"
+        },
+        {
+          "token_id": 38070,
+          "token": "bureaucr"
+        },
+        {
+          "token_id": 11446,
+          "token": "prostit"
+        },
+        {
+          "token_id": 18439,
+          "token": "desper"
+        },
+        {
+          "token_id": 86870,
+          "token": "buccane"
+        },
+        {
+          "token_id": 73463,
+          "token": "​​"
+        },
+        {
+          "token_id": 71093,
+          "token": "uncont"
+        },
+        {
+          "token_id": 28408,
+          "token": "homosex"
+        }
+      ],
+      "top_windows": [
+        {
+          "layer": 15,
+          "unit": 5227,
+          "activation": 9.9375,
+          "document_index": 494,
+          "line_index": 1001,
+          "token_index": 216,
+          "window": "reyfuss2] The potential of mechanical ventilation for triggering or worsening pulmonary damages has been shown in animal models where the application of non-physiological ventilatory parameters (mostly very high tidal volumes) aggravated the condi"
+        },
+        {
+          "layer": 15,
+          "unit": 5227,
+          "activation": 9.75,
+          "document_index": 346,
+          "line_index": 715,
+          "token_index": 107,
+          "window": "in, go to System -> Paypal. Check to see if \"Sandbox mode\" is activated in the Payment System you are using. You can set up Magento and Paypal to work fairly seamlessly together. The easiest is probably to use the Paypal API. Log into your Pay"
+        },
+        {
+          "layer": 15,
+          "unit": 5227,
+          "activation": 9.125,
+          "document_index": 856,
+          "line_index": 1699,
+          "token_index": 164,
+          "window": "mited way. #(Any methods called on Klass.new, basically. More useful when used #in conjunction with AliasProcessor.) # #Examples: # # #To find any uses of this class: # FindCall.new :FindCall, nil # # #Find system calls without a target # FindCall."
+        }
+      ]
+    },
+    {
+      "layer": 15,
+      "unit": 6208,
+      "change_minus_1": 1.0604623556137085,
+      "change_plus_1": 1.4620827436447144,
+      "minimum_absolute_change": 1.0604623556137085,
+      "control_p99_minus_1": 0.07175622202455996,
+      "control_p99_plus_1": 0.06930709600448608,
+      "logit_lens_top_tokens": [
+        {
+          "token_id": 91230,
+          "token": "también"
+        },
+        {
+          "token_id": 99043,
+          "token": "desde"
+        },
+        {
+          "token_id": 71234,
+          "token": "noticed"
+        },
+        {
+          "token_id": 78931,
+          "token": "unsure"
+        },
+        {
+          "token_id": 93125,
+          "token": "esto"
+        },
+        {
+          "token_id": 89014,
+          "token": "cuando"
+        },
+        {
+          "token_id": 88583,
+          "token": "además"
+        },
+        {
+          "token_id": 54609,
+          "token": "gratuit"
+        },
+        {
+          "token_id": 58425,
+          "token": "reached"
+        },
+        {
+          "token_id": 98320,
+          "token": "decorating"
+        }
+      ],
+      "top_windows": [
+        {
+          "layer": 15,
+          "unit": 6208,
+          "activation": 19.125,
+          "document_index": 742,
+          "line_index": 1486,
+          "token_index": 285,
+          "window": " in the hydraulic tank so that any time someone wants to open a hydraulic valve to trim the wing, there will be pressure to make that happen. It will be fascinating to see these boats in person, racing on the bay, but I'm glad"
+        },
+        {
+          "layer": 15,
+          "unit": 6208,
+          "activation": 17.75,
+          "document_index": 512,
+          "line_index": 1052,
+          "token_index": 44,
+          "window": " pad material? I understand the basics of disc brakes in that a little bit of the pad material imbeds itsself in the rotors as part of the normal process of braking. This would lead me to believe sanding is necessary. The problem is of course "
+        },
+        {
+          "layer": 15,
+          "unit": 6208,
+          "activation": 17.375,
+          "document_index": 429,
+          "line_index": 870,
+          "token_index": 222,
+          "window": "uter program, because the experts with their algorithms have figured out what drives market outcomes and reduced it to a seamless system. Many believe that we are almost there. Even legendary investors like Warren Buffett, it is argued, are not real"
+        }
+      ]
+    },
+    {
+      "layer": 15,
+      "unit": 2611,
+      "change_minus_1": -1.0224804878234863,
+      "change_plus_1": -1.133624792098999,
+      "minimum_absolute_change": 1.0224804878234863,
+      "control_p99_minus_1": 0.07175622202455996,
+      "control_p99_plus_1": 0.06930709600448608,
+      "logit_lens_top_tokens": [
+        {
+          "token_id": 64346,
+          "token": "fotograf"
+        },
+        {
+          "token_id": 86379,
+          "token": ">title"
+        },
+        {
+          "token_id": 94576,
+          "token": "ycastle"
+        },
+        {
+          "token_id": 62097,
+          "token": "enfer"
+        },
+        {
+          "token_id": 40455,
+          "token": "ederland"
+        },
+        {
+          "token_id": 77580,
+          "token": "moderne"
+        },
+        {
+          "token_id": 84181,
+          "token": "/inet"
+        },
+        {
+          "token_id": 28119,
+          "token": "ên"
+        },
+        {
+          "token_id": 74517,
+          "token": "indice"
+        },
+        {
+          "token_id": 73952,
+          "token": "upyter"
+        }
+      ],
+      "top_windows": [
+        {
+          "layer": 15,
+          "unit": 2611,
+          "activation": 10.8125,
+          "document_index": 287,
+          "line_index": 593,
+          "token_index": 427,
+          "window": "e do return 1; od; return 2; end;; f([1,2,3]); Where(); WhereWithVars(); quit; f:=function() local x; repeat x:=1; until 1; return 2; end;; f(); Where(); WhereWithVars(); quit; f:=function() local x; Assert(0, 1); return 2; end;; f(); Where("
+        },
+        {
+          "layer": 15,
+          "unit": 2611,
+          "activation": 10.8125,
+          "document_index": 589,
+          "line_index": 1212,
+          "token_index": 2466,
+          "window": "t_only\", \"type\": \"public_permission\" } ], \"properties\": { \"title\": [ [ \"Essential CSS\" ] ] }, \"type\": \"page\", \"version\": 100 } }, \"37de4e0f-64d8-469d-ba64-1ed58bbab771\": { \"role\": \"comment_only\", \"value\": { \"alive\":"
+        },
+        {
+          "layer": 15,
+          "unit": 2611,
+          "activation": 10.75,
+          "document_index": 502,
+          "line_index": 1022,
+          "token_index": 312,
+          "window": "ly the same as 0.00007959 it is just a different way of writing it down. Think of it as 7.959E-5 = 7.959 × (10 ^ (-5)) = 0.00007959. It is called Scientific notation (E notation). In cumputation / science this notation is used, because you c"
+        }
+      ]
+    },
+    {
+      "layer": 15,
+      "unit": 7613,
+      "change_minus_1": -0.9982744455337524,
+      "change_plus_1": -0.9343782067298889,
+      "minimum_absolute_change": 0.9343782067298889,
+      "control_p99_minus_1": 0.07175622202455996,
+      "control_p99_plus_1": 0.06930709600448608,
+      "logit_lens_top_tokens": [
+        {
+          "token_id": 79696,
+          "token": "mädchen"
+        },
+        {
+          "token_id": 58648,
+          "token": "platz"
+        },
+        {
+          "token_id": 94587,
+          "token": "authenticate"
+        },
+        {
+          "token_id": 59337,
+          "token": "spielen"
+        },
+        {
+          "token_id": 86723,
+          "token": "trä"
+        },
+        {
+          "token_id": 92442,
+          "token": "liebe"
+        },
+        {
+          "token_id": 98076,
+          "token": "läng"
+        },
+        {
+          "token_id": 89848,
+          "token": "eins"
+        },
+        {
+          "token_id": 41516,
+          "token": "sucht"
+        },
+        {
+          "token_id": 67224,
+          "token": "suchen"
+        }
+      ],
+      "top_windows": [
+        {
+          "layer": 15,
+          "unit": 7613,
+          "activation": 21.0,
+          "document_index": 54,
+          "line_index": 112,
+          "token_index": 69,
+          "window": " source files> |- CMakeLists.txt <- CMake file for building the library |- demo |- <some source files> |- CMakeLists.txt <- CMake for building demo apps |- extra_lib |- <some source files> |- CMakeLists.txt <- CMake for building supplementary "
+        },
+        {
+          "layer": 15,
+          "unit": 7613,
+          "activation": 18.0,
+          "document_index": 497,
+          "line_index": 1005,
+          "token_index": 472,
+          "window": "sition = 'opacity ' + time.until(deadline).toFixed(0) + 'ms'; newModule.container.style.opacity = 1.0; } // TODO(applmak): Maybe wait until css says that the transition is done? await delay(time.until(deadline)); } } export class ClientModule"
+        },
+        {
+          "layer": 15,
+          "unit": 7613,
+          "activation": 16.875,
+          "document_index": 853,
+          "line_index": 1696,
+          "token_index": 45,
+          "window": "thon , Nlp problem I wrote the code below, and I made a dictionary for it, but I want Create tuples of (lemma, NER type) and Collect counts over the tuples I dont know how to do it? can you pls help me? NER type means name entity recognition te"
+        }
+      ]
+    },
+    {
+      "layer": 12,
+      "unit": 6176,
+      "change_minus_1": -0.8949201107025146,
+      "change_plus_1": -0.7551105618476868,
+      "minimum_absolute_change": 0.7551105618476868,
+      "control_p99_minus_1": 0.07175622202455996,
+      "control_p99_plus_1": 0.06930709600448608,
+      "logit_lens_top_tokens": [
+        {
+          "token_id": 36527,
+          "token": "nels"
+        },
+        {
+          "token_id": 85172,
+          "token": "gobierno"
+        },
+        {
+          "token_id": 1008,
+          "token": "ad"
+        },
+        {
+          "token_id": 50084,
+          "token": "meses"
+        },
+        {
+          "token_id": 1769,
+          "token": "imes"
+        },
+        {
+          "token_id": 447,
+          "token": "qu"
+        },
+        {
+          "token_id": 44905,
+          "token": "ucceeded"
+        },
+        {
+          "token_id": 17438,
+          "token": "encil"
+        },
+        {
+          "token_id": 2701,
+          "token": "eh"
+        },
+        {
+          "token_id": 28109,
+          "token": "azed"
+        }
+      ],
+      "top_windows": [
+        {
+          "layer": 12,
+          "unit": 6176,
+          "activation": 1.390625,
+          "document_index": 784,
+          "line_index": 1564,
+          "token_index": 5,
+          "window": "// Copyright 2001-2019 Crytek GmbH / Crytek Group. All rights reserved. #pragma once namespace Designer { class Model; enum ECompilerFlag "
+        },
+        {
+          "layer": 12,
+          "unit": 6176,
+          "activation": 1.3671875,
+          "document_index": 165,
+          "line_index": 340,
+          "token_index": 19,
+          "window": "Poly(ADP-ribose) polymerase (PARP) 1, whose primary role is initiation of DNA repair, is activated by damaged DNA and uses NAD+ to automodify itself and recruit other proteins "
+        },
+        {
+          "layer": 12,
+          "unit": 6176,
+          "activation": 1.359375,
+          "document_index": 242,
+          "line_index": 502,
+          "token_index": 35,
+          "window": "to energy output, measured in BTUs. Simply put, the larger the room, the more energy output required. One more important point: Modern equipment is more energy efficient than older models. New Energy Star–rated models use 10 percent less energy t"
+        }
+      ]
+    },
+    {
+      "layer": 14,
+      "unit": 6965,
+      "change_minus_1": -0.7013392448425293,
+      "change_plus_1": -0.9006925821304321,
+      "minimum_absolute_change": 0.7013392448425293,
+      "control_p99_minus_1": 0.07175622202455996,
+      "control_p99_plus_1": 0.06930709600448608,
+      "logit_lens_top_tokens": [
+        {
+          "token_id": 16947,
+          "token": "kon"
+        },
+        {
+          "token_id": 95743,
+          "token": "septembre"
+        },
+        {
+          "token_id": 94811,
+          "token": "janvier"
+        },
+        {
+          "token_id": 88627,
+          "token": "ksi"
+        },
+        {
+          "token_id": 77150,
+          "token": "över"
+        },
+        {
+          "token_id": 75925,
+          "token": "vak"
+        },
+        {
+          "token_id": 85859,
+          "token": "juin"
+        },
+        {
+          "token_id": 100205,
+          "token": "naam"
+        },
+        {
+          "token_id": 47371,
+          "token": "déf"
+        },
+        {
+          "token_id": 89949,
+          "token": "artikel"
+        }
+      ],
+      "top_windows": [
+        {
+          "layer": 14,
+          "unit": 6965,
+          "activation": 6.9375,
+          "document_index": 707,
+          "line_index": 1420,
+          "token_index": 21,
+          "window": "The Rub on Conjunctivitis (Pink Eye) The Rub on Conjunctivitis (Pink Eye) Conjunctivitis, or “pink eye” as it’s more commonly called, affects more than 3million Americans each year. While most "
+        },
+        {
+          "layer": 14,
+          "unit": 6965,
+          "activation": 6.625,
+          "document_index": 98,
+          "line_index": 208,
+          "token_index": 57,
+          "window": "the purpose of being attached to the rear of a vehicle to aid in backing up, and to alleviate the rear blind spot. TVC-Mall.com’s rear view cameras are well-known for the powerful functions and premium quality materials. Recently, TVC-Mall.com"
+        },
+        {
+          "layer": 14,
+          "unit": 6965,
+          "activation": 6.5625,
+          "document_index": 621,
+          "line_index": 1265,
+          "token_index": 49,
+          "window": "ple understand their true significance, they will be able to supplant the motives of those who are taking them for fools! Continue reading The Covert Hybrid WW3 Video Series→ In the early part of our uncivilization, there were only three est"
+        }
+      ]
+    },
+    {
+      "layer": 15,
+      "unit": 6105,
+      "change_minus_1": -1.8799227476119995,
+      "change_plus_1": -0.6624349355697632,
+      "minimum_absolute_change": 0.6624349355697632,
+      "control_p99_minus_1": 0.07175622202455996,
+      "control_p99_plus_1": 0.06930709600448608,
+      "logit_lens_top_tokens": [
+        {
+          "token_id": 83795,
+          "token": "adiens"
+        },
+        {
+          "token_id": 61235,
+          "token": "utschen"
+        },
+        {
+          "token_id": 52777,
+          "token": "icamente"
+        },
+        {
+          "token_id": 71925,
+          "token": "représ"
+        },
+        {
+          "token_id": 83751,
+          "token": "stock"
+        },
+        {
+          "token_id": 63126,
+          "token": "enha"
+        },
+        {
+          "token_id": 99414,
+          "token": "иск"
+        },
+        {
+          "token_id": 36527,
+          "token": "nels"
+        },
+        {
+          "token_id": 69786,
+          "token": "onet"
+        },
+        {
+          "token_id": 97667,
+          "token": "regard"
+        }
+      ],
+      "top_windows": [
+        {
+          "layer": 15,
+          "unit": 6105,
+          "activation": 25.0,
+          "document_index": 106,
+          "line_index": 223,
+          "token_index": 241,
+          "window": " \"coenestopathic states\" which mean a distressing, qualitative change of normal physical feeling In certain areas of the body during an episode of depressive mood. It Is a global loss of vitality In which all bodily parts and functions may be al"
+        },
+        {
+          "layer": 15,
+          "unit": 6105,
+          "activation": 23.375,
+          "document_index": 981,
+          "line_index": 1938,
+          "token_index": 118,
+          "window": "aptop speaker, rather than my default input device (my microphone). Is it doable? The code I am currently using is given below. I am looking for something which can get all the playback devices available and then select and speak back using my sp"
+        },
+        {
+          "layer": 15,
+          "unit": 6105,
+          "activation": 23.125,
+          "document_index": 25,
+          "line_index": 54,
+          "token_index": 140,
+          "window": "\\]. Lack of response to IFX is a stable trait and suggests that the differences in response might be in part genetically determined. Considering the high cost and safety profile of this drug, genetic targeting of patients responding to this therapy is"
+        }
+      ]
+    },
+    {
+      "layer": 15,
+      "unit": 5992,
+      "change_minus_1": 1.196455955505371,
+      "change_plus_1": 0.6602485775947571,
+      "minimum_absolute_change": 0.6602485775947571,
+      "control_p99_minus_1": 0.07175622202455996,
+      "control_p99_plus_1": 0.06930709600448608,
+      "logit_lens_top_tokens": [
+        {
+          "token_id": 3880,
+          "token": "-r"
+        },
+        {
+          "token_id": 16646,
+          "token": "ir"
+        },
+        {
+          "token_id": 20479,
+          "token": "af"
+        },
+        {
+          "token_id": 51635,
+          "token": "fi"
+        },
+        {
+          "token_id": 31350,
+          "token": "ho"
+        },
+        {
+          "token_id": 21283,
+          "token": "ec"
+        },
+        {
+          "token_id": 10860,
+          "token": "rt"
+        },
+        {
+          "token_id": 19844,
+          "token": "es"
+        },
+        {
+          "token_id": 1481,
+          "token": "-b"
+        },
+        {
+          "token_id": 12088,
+          "token": "ci"
+        }
+      ],
+      "top_windows": [
+        {
+          "layer": 15,
+          "unit": 5992,
+          "activation": 12.875,
+          "document_index": 734,
+          "line_index": 1475,
+          "token_index": 172,
+          "window": "ormed on at least a part of the surface of the semiconductor chip except a pad; a conductive layer formed in a region on the insulating resin film, the region including at least part corresponding to a position where a solder ball is mounted; a"
+        },
+        {
+          "layer": 15,
+          "unit": 5992,
+          "activation": 12.0,
+          "document_index": 301,
+          "line_index": 629,
+          "token_index": 641,
+          "window": "do jogador 2\"); } }); }); .btn-default { padding: 40px; } <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js\"></script> <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js\"></script> <"
+        },
+        {
+          "layer": 15,
+          "unit": 5992,
+          "activation": 11.75,
+          "document_index": 197,
+          "line_index": 403,
+          "token_index": 162,
+          "window": "pable of converting output data into a visible form on a predetermined medium using a type of printer. Generally, such a print head for an ink jet printer, and the like, uses a fluid jetting apparatus which is capable of jetting the predetermined"
+        }
+      ]
+    },
+    {
+      "layer": 15,
+      "unit": 2296,
+      "change_minus_1": -0.7777402997016907,
+      "change_plus_1": -0.6288424134254456,
+      "minimum_absolute_change": 0.6288424134254456,
+      "control_p99_minus_1": 0.07175622202455996,
+      "control_p99_plus_1": 0.06930709600448608,
+      "logit_lens_top_tokens": [
+        {
+          "token_id": 73969,
+          "token": "psychiatrist"
+        },
+        {
+          "token_id": 68569,
+          "token": "seminars"
+        },
+        {
+          "token_id": 61764,
+          "token": "psychiat"
+        },
+        {
+          "token_id": 64072,
+          "token": "fiscal"
+        },
+        {
+          "token_id": 86642,
+          "token": "submarines"
+        },
+        {
+          "token_id": 46876,
+          "token": "psychiat"
+        },
+        {
+          "token_id": 70027,
+          "token": "waterfront"
+        },
+        {
+          "token_id": 66802,
+          "token": "inquiry"
+        },
+        {
+          "token_id": 63660,
+          "token": "webinar"
+        },
+        {
+          "token_id": 62412,
+          "token": "claud"
+        }
+      ],
+      "top_windows": [
+        {
+          "layer": 15,
+          "unit": 2296,
+          "activation": 27.125,
+          "document_index": 674,
+          "line_index": 1366,
+          "token_index": 12,
+          "window": "There was a time, as recently as 40 years ago, when frequencies below 100Hz were considered extreme lows, and reproduction below 50Hz was about as common as the unico"
+        },
+        {
+          "layer": 15,
+          "unit": 2296,
+          "activation": 23.75,
+          "document_index": 558,
+          "line_index": 1145,
+          "token_index": 5,
+          "window": "Since I last blogged about #OccupyWallStreet, the organic movement has picked up even more momentum. It now appears that New York City’s “establis"
+        },
+        {
+          "layer": 15,
+          "unit": 2296,
+          "activation": 21.75,
+          "document_index": 321,
+          "line_index": 671,
+          "token_index": 8,
+          "window": "--- abstract: 'We present a study of a peculiar nebula MF16 associated with an Ultraluminous X-ray Source NGC6946 ULX-1. We use integral-field and long-slit"
+        }
+      ]
+    }
+  ],
+  "thresholds": {
+    "method": "numpy percentile with linear interpolation over pooled control-by-neuron absolute changes",
+    "per_dose": true,
+    "target_reference_controls": "all controls",
+    "control_reference_controls": "leave one control out"
+  }
+}

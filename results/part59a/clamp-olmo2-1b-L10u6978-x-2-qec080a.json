@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:55:21",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a traveler.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a traveler.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": -13.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [
+      135,
+      335,
+      615
+    ],
+    "count": 3,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": -13.0,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The traveler sat outside his hotel window, looking down at the city that had become his home. The city had changed since he last left it, and he had returned to it on a whim, driven by curiosity and the need to see what had changed. He had returned to the city that had been",
+        "The first day of my new trip to Paris was filled with excitement. As I set up my luggage, I couldnCHET want to stay inside my apartment all day. I wanted to see the EARTHCHATCHOTCHISCHOTCHISCHOTCHISCHOTCHISCH",
+        "Traveling through the city, the traveler couldn ́a city traveler ́thought about his journey. ́He had traveled many cities ́but not quite this one. ́He had seen cities ́but not seen them ́and certainly not seen them ́on the way",
+        "I want to see what they do.  I want to see what they do in the city that I’ve visited for weeks.  I’ve seen the city from the road and from the window of a hotel.  But I want to see it in action.  I want to see the people",
+        "The traveler walked through the city of the man who had been born in the city of the man who had been born in the city of the man who had been born in the city of the man who had been born in the city of the city of the city of the city of the city of the",
+        "The traveler sat on the green grass by the little forest by the little lake by the little forest of green. The little forest was green because of the little trees that were green because of the little green leaves that fell from the trees that were green because of the little green trees that were green because of",
+        "Travelers are people who have been traveling. They are often people who have seen a lot of places and have a lot of stories to tell. They often have a lot of wisdom to share with others. They are people who are not stuck in one place and are always seeking new experiences.",
+        "The traveler sat on a bench by the city park. He looked at the city around him. He didn ˜have seen it today. No, ˜today he would see it. He had been traveling for days. Each day he would see a little more of the city."
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-135",
+      "unit": 135,
+      "set_value": -1.484375,
+      "seed": 2373038328,
+      "n": 8,
+      "answers": [
+        "The traveler was tired. He had traveled for days, and the sun was beginning to set as he approached the city. He had been traveling for days, and he had been on the road for days. The traveler was thirsty. He had not found a place to rest for days, and now he",
+        "The traveler found himself standing at the edge of a small village, his eyes scanning the quaint cobblestone streets and narrow alleyways. The sun was setting, casting an orange hue over the quaint village, and the gentle warmth of the evening air seemed to beckon him further into the heart of this",
+        "The traveler had traveled through many lands and seen many sights, but nothing quite like this. The land was a dense forest, filled with trees so tall that they could barely be seen over the canopy. The forest was a labyrinth of pathways, each one winding and twisting through the underbrush. The traveler",
+        "The traveler sat on the worn wooden bench, watching the world go by. It had been a long day of travel, and his body was heavy with fatigue. His eyes were tired from staring at the endless rows of buildings and streets. The sun was sinking low in the sky, and the air was",
+        "John didn the strangest hat he had ever owned. The hat was a vibrant green, with a wide brim that covered half his face. It sat snugly atop his head and seemed to have a life of its own. John had gotten the hat as a souvenir from a peculiar little shop in",
+        "As the sun crept over the horizon, casting its first golden rays over the quaint village of Elderglen, our traveler, a weary traveler from afar, trudged along the cobblestone paths. The air was filled with the scent of wildflowers and the distant call of birds. Their",
+        "John sat on a bench and looked at the world around him. The sun was shining brightly, and the trees were swaying gently in the breeze. The birds were chirping, and the breeze was carrying the sweet scent of wildflowers. The air was filled with the sounds of nature and the gentle",
+        "The traveler was just passing through the town of Eldenstone, the kind where the streets were narrow, cobblestone paved, and the air smelled of ancient wood and wild herbs. The traveler had just crossed the bridge that spanned the River Elden, a river that wound its way through the"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-335",
+      "unit": 335,
+      "set_value": -1.0078125,
+      "seed": 538274340,
+      "n": 8,
+      "answers": [
+        "The traveler sat in his small, cramped coach, the travel diary open in front of him. The road ahead was long, dusty, and lonely, but that didnned nothing on the excitement of the journey itself. With the notebook in hand, he felt the familiar thrill of adventure creeping through his veins",
+        "The traveler arrived at the small, quaint town of Eldenwood at dawn, stepping off the train and inhaling the fresh mountain air that perfumed the cool morning. The town's cobblestone streets were just beginning to stir, and the gentle hum of villagers working their daily routines filled the air",
+        "The traveler had traveled across many lands.  They had seen many sights, and experienced many cultures.  The traveler's journey had taken them through deserts, mountains, and forests.  They had learned to appreciate the beauty of the world.  The traveler's greatest wish was to explore one more",
+        "The traveler walked down the street with a sense of purpose and confidence. The sun was shining brightly, casting a warm glow on the cobblestones. The city was bustling with life and activity, but the traveler was focused on the destination ahead. The road was winding and challenging, but the traveler was",
+        "The traveler arrived at the town square early in the morning. There were vendors selling everything from food to crafts. The town square was bustling with people. The traveler wandered around. The architecture was impressive. There were tall buildings with intricate details. The streets were cobblestone, and the smell of fresh",
+        "Jack had been traveling for months now and was getting tired of it. He had traveled to far-off lands, seen ancient ruins, met interesting people, and experienced the world in ways he never had before. But as the days turned into weeks and the weeks into months, Jack realized that his adventure had",
+        "The sun was beginning to dip below the horizon, casting long shadows across the bustling streets of the city as our protagonist, Alex, stepped off the final flight of stairs and into the bustling thoroughfare. The vibrant colors of the streetlights illuminated the faces of the city's inhabitants, who were just beginning",
+        "The traveler stood outside his hotel room door, staring up at the darkening sky. The city lights of Istanbul were a few miles away, and the stars were just beginning to twinkle in the blackness above. The city itself was a labyrinth of history and culture, and he had come to explore"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-615",
+      "unit": 615,
+      "set_value": -2.59375,
+      "seed": 2834222347,
+      "n": 8,
+      "answers": [
+        "The traveler felt like he had seen it all before. Everywhere he went, he saw people like him; people who had seen it all. The cities and towns were the same, the streets were the same, and the faces were the same. It was as if the world was a giant painting,",
+        "The traveler woke up early in his small, worn-out hotel bed. He had traveled from far away to visit a friend, and he knew that he had to take the opportunity to explore the city that his friend had recommended. The sun had barely risen, casting a golden hue over the cityscape.",
+        "The traveler's journey was just beginning and he couldn ́t wait to embark on the adventures that lay ahead. The man had lived many lives and had seen many wonders, but nothing could compare to the stories he ́d yet to write. His suitcase, filled with trinkets and m",
+        "It was midsummer, and the traveler arrived at the crossroads, a place where travelers from far and wide converged, seeking fortune, solace, or simply a moment's respite from their relentless journeys. The sun hung high in the azure sky, its rays casting long shadows that stretched long and",
+        "Traveling through the vast and mysterious lands of the world is a journey filled with wonder and discovery. The traveler in question, a young adventurer named Elara, found herself standing on the threshold of a city known for its ancient ruins and hidden treasures. With a heart full of curiosity and a pack filled",
+        "A traveler finds themselves standing on the edge of a vast desert. The sky above is a canvas of deep blues and grays, punctuated by the occasional fluffy white cloud. The sun beats down on the traveler’s face, casting a warm glow on the vast expanse below. The landscape stretches far",
+        "It was a day of travel and the traveler woke up early. The sun was barely up and there was not much time to prepare. He grabbed his luggage and rolled out of bed. The road ahead was long and unfamiliar, but the traveler was excited about the adventure. As he packed his bags,",
+        "The traveler walked along the winding river, the water rushing past him. The sun was setting, casting long shadows across the landscape. A flock of birds flew past, the sound of their wings cutting through the evening air. The traveler smiled, feeling content as he traveled along the winding path. He had"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p06"
+}

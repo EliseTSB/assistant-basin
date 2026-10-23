@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:54:18",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a shepherd.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a shepherd.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": 38.25
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [
+      152,
+      376,
+      692
+    ],
+    "count": 3,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": 38.25,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The first light of dawn did not arrive with a gentle touch, but with a sharp, metallic clarity that cut through the mist, painting the alien landscape of Proxima b in hues of violet and burnt orange. Elara, the sole shepherd of the silent, extraterrestrial herd, adjusted her filtration",
+        "The first light of dawn didn't just arrive; it seeped through the thin, silver-gray mist that clung to the alienated hills, painting the grazing fields in a soft, alienated gold. Elias, a shepherd with a face like the barren landscape he tended, stood still on his",
+        "The gray sky was a blanket that had landed on the high pastures of Marsabar, heavy with the promise of an alien landing, and Elara adjusted the rough cloth of her head to keep the alien dust from her eyes as she scanned the valley for signs of life. For centuries, her people",
+        "The morning light filtered through the narrow slit of the alien ship's window, illuminating dust motes that danced like distant stars against the metallic grey of the saucer. Commander Elara adjusted her headset, her fingers trembling slightly as she touched the pulsating green surface of the alien creature that had crashed",
+        "The red dust of the Marsabarri hills seemed to have no end, a shifting sea of ochre that swallowed the grazing cattle and the silent, silver-gray alien that hovered just beyond the edge of the valley. Edo, the shepherd, had watched the sky for three hours, his eyes scanning",
+        "The first light of dawn did not merely touch the alien landscape; it pierced it, carving a sharp, silver line across the surface of the planet Xyloth and revealing the alien life beneath. Elias adjusted the fabric of his suit, the material shimmering with a faint, bioluminescent pulse",
+        "The gray light of early morning filtered through the narrow slit of the barn, illuminating the fine, gray dust that swirred around the hoofprints of the first alien. The shepherd, Elara, stepped down from the bedrock of the alien's surface, her boots crunching softly on the",
+        "The first light of dawn did not gently touch the gray alien landscape of Proxima b, as it did on Earth, but instead cut through the crimson dust in harsh, angular beams that illuminated the jagged silences of the cratered surface. Elias, a shepherd of something far more valuable than simple"
+      ],
+      "summary": {
+        "alien": 7,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-152",
+      "unit": 152,
+      "set_value": 39.54426956176758,
+      "seed": 3456633911,
+      "n": 8,
+      "answers": [
+        "The sun had just begun to bleed into the valley, turning the mist into liquid gold as Elias tightened the leather straps of his croom and kicked off the boots that had seen him through three more winter winters. A thin sheen of sweat traced the path from his temple to his jaw, contrasting against",
+        "The morning sun painted the valley in shades of gold and amber as Elias walked the familiar ridge, his staff tapping a rhythmic beat against the ancient scrub of the cliffs. For decades, his life had been measured in the ebb and flow of the seasons, a solitary guardian of a herd that knew",
+        "The sun had not yet reached the peak of the Andes when Old Kael began his rounds, his boots making a rhythmic *thump-thump* against the jagged peaks of the granite wall. For sixty years, these winds had whispered the same secrets to him, and today they were",
+        "The wind from the Andes had been grinding for hours, turning the valley into a place of sharp, white noise where the sheep seemed to shiver in the cold. Old Toran, his face a map of sun-bleached scars and deep, weathered wisdom, adjusted the worn leather strap",
+        "The sun crept slowly over the jagged peaks of the Andes, painting the vast, windswept plateau in hues of gold and fire, but for Elias, the light merely illuminated the relentless rhythm of his life. He walked the narrow, rocky path with a practiced ease, the rhythmic",
+        "The wind off the Andromeda Peak didn't whistle; it screamed, a thin, whistling voice that had no patience for human weakness, tearing the thin, white clouds from the sky and driving them into the narrow, misty pass where Kael watched his flock. For three hours,",
+        "The wind off the sea cliffs whipped through the narrow canyon, carrying the sharp, briny tang of salt and the chilling bite of autumn, but for Silas, the air was nothing more than the thin, sweet-scented smoke of the grazing herds. He walked the familiar, jagged",
+        "The sun had just begun to bleed through the thin, gray clouds of the northern peaks, casting a golden, trembling light upon the windswept ridge where Kaelen stood, his silhouette a solitary figure against the vast, windswept plain. He adjusted the worn leather slings of his she"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-376",
+      "unit": 376,
+      "set_value": 27.027074813842773,
+      "seed": 2812922041,
+      "n": 8,
+      "answers": [
+        "1. The morning light did not merely fall upon the valley; it seemed to seep through the cracks in the ancient stone walls, painting the dew-kissed grass in shades of burnt orange and soft gold. Elian stood on the highest ridge, his boots heavy with the damp earth of the",
+        "1. The morning mist clung to the rolling hills like a heavy, white wool blanket, dampening the air until even the wind seemed to hold its breath. Elias stood at the edge of the valley, his boots sinking slightly into the damp earth as he checked the leather straps of his crook",
+        "1. The morning light did not simply break over the rolling hills; it crept up the eastern slope like a slow, golden tide, washing the grey mist away to reveal the rugged spine of the mountain range. Elias stood at the edge of the valley, his rough hands gripping the crook of",
+        "1. The morning light did not fall upon the valley; it seeped into it, filtering through the mist that clung to the limestone cliffs like an old, unwashed blanket. Elias stood atop his highest post, a weathered oak with a iron eye bolted near the base, watching",
+        "1.  **The Shepherd's Watch**\n\n    1.  **The Shepherd's Watch**\n\n    1.  **The Shepherd's Watch**\n\n    1.  **The Shepherd's Watch**\n\n    1.  **The Shepherd's Watch**",
+        "1. The morning mist clung to the rolling hills like a heavy, woolen blanket, softening the jagged peaks of the granite range until they seemed to drift on a gentle current. Elias stood at the edge of the valley, his leather boots sinking slightly into the damp earth, as he",
+        "The morning mist clung to the rolling hills of the Valley of Whispers, softening the jagged peaks into rolling clouds that seemed to breathe in time with the shepherd's steady rhythm. Elias stood at the edge of the valley, his hands resting firmly on the rough-hewn staff that had been",
+        "1. The mountain wind carried the scent of pine needles and distant rain, cutting through the thin wool of Elias's coat as he guided his flock along the familiar ridge. For decades, his life had been a rhythm measured in the migration of sheep, the changing of seasons, and the silent vigil required"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-692",
+      "unit": 692,
+      "set_value": 4.366818904876709,
+      "seed": 1420766210,
+      "n": 8,
+      "answers": [
+        "The morning sun did not break over the jagged peaks of the Andes so much as it peeled back a curtain of gold, slowly revealing the valley floor where Elias and his flock had begun their ascent. With a rhythmic creak of leather straps and the soft *clink* of metal buck",
+        "The morning sun rose slowly over the jagged peaks of the Andes, painting the mist-shrouded slopes in hues of gold and violet, while Elias, a shepherd with hands weathered like old oak bark, stood at the edge of his flock. The air was crisp and carried the sharp,",
+        "Elias stood at the edge of the valley, his weathered boots sinking slightly into the soft, dew-dampened grass as the first birds began their morning chorus. The air carried the sharp, clean scent of pine needles mixed with the warm, earthy aroma of the flock's wool, a",
+        "The morning mist clung to the rolling hills like a heavy, woolen blanket, softening the jagged peaks of the jagged mountains into soft, grey silhouettes against the pale dawn. Elias adjusted the strap of his worn leather bag, feeling the familiar weight of the iron crook at",
+        "The sun hung low over the rolling hills, casting long, golden shadows that stretched across the valley like spilled honey, and Elias adjusted the worn leather strap of his crook against his shoulder, his eyes fixed on the distant line of sheep that had just grazed their last meal. The air smelled of",
+        "The morning mist clung to the rolling hills like a heavy, silver blanket, softening the jagged edges of the distant peaks until they seemed to breathe in rhythm with the wind. Elias adjusted the rough woolen cloak around his shoulders, the fabric worn thin by years of exposure to the biting elements",
+        "The dawn broke over the rolling hills not with a shout, but with the soft, rhythmic bleating of a thousand ewes waking to the warmth of the sun, casting long, silver shadows across the mist that still clung to the valley floor. Elias adjusted the rough woolen cap on his",
+        "The morning mist clung to the rolling hills like a heavy, silver blanket, softening the jagged peaks into gentle outlines against the pale grey sky. Elias adjusted the worn leather strap of his staff, the rough texture familiar to his fingertips after years of walking these same paths, as the first few"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p10"
+}

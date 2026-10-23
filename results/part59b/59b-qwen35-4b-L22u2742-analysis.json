@@ -1,0 +1,859 @@
+{
+  "tool": "analyze59b.py",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "short_name": "qwen35-4b",
+  "twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "archive": "/root/part59/results/part59b/59b-qwen35-4b-L22u2742.npz",
+  "classification": "SYMMETRIC requires equal nonzero signs and absolute change > the pooled 99th percentile of absolute changes over all control later-layer neurons at each dose; for each control count, its threshold is pooled over the other controls. ODD requires opposite signs",
+  "control_percentile": 99.0,
+  "later_neuron_count": 82944,
+  "symmetric_count": 22,
+  "odd_count": 73551,
+  "random_control_symmetric_counts": [
+    80,
+    4,
+    0
+  ],
+  "max_random_control_symmetric_count": 80,
+  "predictions": {
+    "59f": {
+      "claim": "Qwen has at least 20 later SYMMETRIC responders",
+      "applicable": true,
+      "observed": 22,
+      "held": true,
+      "target_exceeds_max_control": false,
+      "null_caveat": "The registered null alone can pass or fail 59f.",
+      "control_scale_context": "Recorded control Pile maxima span 9.1x; the registered pooled threshold uses every control."
+    },
+    "59g": {
+      "claim": "fewer than 5 SYMMETRIC responders in each random control",
+      "observed_per_control": [
+        80,
+        4,
+        0
+      ],
+      "maximum": 80,
+      "held": false,
+      "target_exceeds_max_control": false,
+      "null_caveat": "The registered null alone can pass or fail 59g.",
+      "control_scale_context": "Recorded control Pile maxima span 9.1x; the registered pooled threshold uses every control."
+    },
+    "59h": {
+      "claim": "no more than 3 of the top 10 are sci-fi words by hand reading",
+      "hand_reading_required": true,
+      "maximum_sci_fi_tokens": 3
+    }
+  },
+  "top_symmetric_responders": [
+    {
+      "layer": 26,
+      "unit": 3,
+      "change_minus_1": -0.3131747245788574,
+      "change_plus_1": -0.34889745712280273,
+      "minimum_absolute_change": 0.3131747245788574,
+      "control_p99_minus_1": 0.07974184289574623,
+      "control_p99_plus_1": 0.07934427432715895,
+      "logit_lens_top_tokens": [
+        {
+          "token_id": 189920,
+          "token": "incontro"
+        },
+        {
+          "token_id": 172115,
+          "token": "contex"
+        },
+        {
+          "token_id": 162028,
+          "token": "мести"
+        },
+        {
+          "token_id": 2022,
+          "token": "ness"
+        },
+        {
+          "token_id": 47280,
+          "token": "odor"
+        },
+        {
+          "token_id": 96130,
+          "token": "接"
+        },
+        {
+          "token_id": 50522,
+          "token": "onte"
+        },
+        {
+          "token_id": 167043,
+          "token": "гиб"
+        },
+        {
+          "token_id": 231923,
+          "token": "klet"
+        },
+        {
+          "token_id": 168876,
+          "token": "менов"
+        }
+      ],
+      "top_windows": [
+        {
+          "layer": 26,
+          "unit": 3,
+          "activation": 2.805279493331909,
+          "document_index": 422,
+          "line_index": 856,
+          "token_index": 20,
+          "window": "UNPUBLISHED UNITED STATES COURT OF APPEALS FOR THE FOURTH CIRCUIT No. 12-1195 MARY T. LACLAIR, Individually and as Personal Representative of the Estate of Cameron J. LaClair, Jr., Plaintiff"
+        },
+        {
+          "layer": 26,
+          "unit": 3,
+          "activation": 2.77886962890625,
+          "document_index": 542,
+          "line_index": 1112,
+          "token_index": 7,
+          "window": "London on March 28, 2009. Protest organised Put People First, an alliance of more than 150 unions, and attended by 35,000 people. Photo by X"
+        },
+        {
+          "layer": 26,
+          "unit": 3,
+          "activation": 2.7582085132598877,
+          "document_index": 650,
+          "line_index": 1320,
+          "token_index": 13,
+          "window": "IN THE SUPREME COURT OF MISSISSIPPI NO. 97-IA-00275-SCT STATE OF MISSISSIPPI AND ROBERT ISHEE v. JANET DAMPEER CONSOLIDATED WITH NO. 97-IA-00276-SCT STATE OF MI"
+        }
+      ]
+    },
+    {
+      "layer": 23,
+      "unit": 5753,
+      "change_minus_1": 0.3106626570224762,
+      "change_plus_1": 0.767055869102478,
+      "minimum_absolute_change": 0.3106626570224762,
+      "control_p99_minus_1": 0.07974184289574623,
+      "control_p99_plus_1": 0.07934427432715895,
+      "logit_lens_top_tokens": [
+        {
+          "token_id": 6741,
+          "token": "race"
+        },
+        {
+          "token_id": 39823,
+          "token": "race"
+        },
+        {
+          "token_id": 54112,
+          "token": "race"
+        },
+        {
+          "token_id": 22918,
+          "token": "race"
+        },
+        {
+          "token_id": 19963,
+          "token": "races"
+        },
+        {
+          "token_id": 88172,
+          "token": "_race"
+        },
+        {
+          "token_id": 93752,
+          "token": "races"
+        },
+        {
+          "token_id": 68352,
+          "token": "species"
+        },
+        {
+          "token_id": 114500,
+          "token": "种族"
+        },
+        {
+          "token_id": 48768,
+          "token": "species"
+        }
+      ],
+      "top_windows": [
+        {
+          "layer": 23,
+          "unit": 5753,
+          "activation": 13.552154541015625,
+          "document_index": 487,
+          "line_index": 993,
+          "token_index": 327,
+          "window": "Envy itself, and Vanity, Were Ministers of Industry.” We need the bad stuff to live. “If I were explaining sex to an alien I would tell him to imagine a mouse being eaten by a snake.” Take sexism, for example. I see women as sex objects who"
+        },
+        {
+          "layer": 23,
+          "unit": 5753,
+          "activation": 9.1034517288208,
+          "document_index": 897,
+          "line_index": 1781,
+          "token_index": 163,
+          "window": "g everything from robotic replacements to Cold War telepathic spies and crime magnates, not to mention the odd towering, alien-created Bigfoot cyborg. Austin stood out as an ordinary guy made especially unique by science through having had his ri"
+        },
+        {
+          "layer": 23,
+          "unit": 5753,
+          "activation": 7.856161594390869,
+          "document_index": 549,
+          "line_index": 1128,
+          "token_index": 207,
+          "window": " video game which utilizes a turn-based battle system. It is is primarily set in the world of Grymoire, a land populated by classic Final Fantasy characters and monsters from across the series, while being unconnected to any other series entry"
+        }
+      ]
+    },
+    {
+      "layer": 23,
+      "unit": 0,
+      "change_minus_1": -0.3035535216331482,
+      "change_plus_1": -0.31376153230667114,
+      "minimum_absolute_change": 0.3035535216331482,
+      "control_p99_minus_1": 0.07974184289574623,
+      "control_p99_plus_1": 0.07934427432715895,
+      "logit_lens_top_tokens": [
+        {
+          "token_id": 220,
+          "token": ""
+        },
+        {
+          "token_id": 259,
+          "token": "t"
+        },
+        {
+          "token_id": 264,
+          "token": "a"
+        },
+        {
+          "token_id": 318,
+          "token": "("
+        },
+        {
+          "token_id": 12,
+          "token": "-"
+        },
+        {
+          "token_id": 280,
+          "token": "p"
+        },
+        {
+          "token_id": 380,
+          "token": "m"
+        },
+        {
+          "token_id": 498,
+          "token": "["
+        },
+        {
+          "token_id": 345,
+          "token": "t"
+        },
+        {
+          "token_id": 328,
+          "token": "\""
+        }
+      ],
+      "top_windows": [
+        {
+          "layer": 23,
+          "unit": 0,
+          "activation": 13.453069686889648,
+          "document_index": 835,
+          "line_index": 1666,
+          "token_index": 1137,
+          "window": "rt(384) + sqrt(384) + sqrt(384)))/(2*sqrt(320)/(-2*sqrt(10))). 17*sqrt(3)/4 Simplify (sqrt(4400) - (sqrt(4400) - (1*sqrt(4400)*-3 - sqrt(4400))) - -5*1*sqrt(4400))/(-2*sqrt(256)*1*4). -5*sqrt(11)/32 Simplify 5*(-4*sqrt(325)*-3)**2 + -4*2*sqr"
+        },
+        {
+          "layer": 23,
+          "unit": 0,
+          "activation": 13.053276062011719,
+          "document_index": 815,
+          "line_index": 1626,
+          "token_index": 332,
+          "window": "rwater1]--[@pgen.1004775-Wall1], plants [@pgen.1004775-Brakefield1], invertebrates [@pgen.1004775-Hairston1]--[@pgen.1004775-RodriguezTrelles1], and others (reviewed in [@pgen.1004775-Bell1], [@pgen.1004775-Siepielski1]). Chromosomal inversi"
+        },
+        {
+          "layer": 23,
+          "unit": 0,
+          "activation": 12.52385139465332,
+          "document_index": 178,
+          "line_index": 367,
+          "token_index": 339,
+          "window": "*et al*, 1997](#bib10){ref-type=\"other\"}; [Rougier *et al*, 1997](#bib13){ref-type=\"other\"}; [Van Cutsem *et al*, 1999](#bib17){ref-type=\"other\"}). Two European phase III trials investigating the efficacy and safety of irinotecan, following "
+        }
+      ]
+    },
+    {
+      "layer": 31,
+      "unit": 204,
+      "change_minus_1": 0.31574273109436035,
+      "change_plus_1": 0.2644977569580078,
+      "minimum_absolute_change": 0.2644977569580078,
+      "control_p99_minus_1": 0.07974184289574623,
+      "control_p99_plus_1": 0.07934427432715895,
+      "logit_lens_top_tokens": [
+        {
+          "token_id": 8773,
+          "token": "hus"
+        },
+        {
+          "token_id": 108438,
+          "token": "耙"
+        },
+        {
+          "token_id": 103032,
+          "token": "崖"
+        },
+        {
+          "token_id": 67181,
+          "token": "cran"
+        },
+        {
+          "token_id": 81384,
+          "token": "pud"
+        },
+        {
+          "token_id": 185767,
+          "token": "haf"
+        },
+        {
+          "token_id": 103178,
+          "token": "狸"
+        },
+        {
+          "token_id": 97618,
+          "token": "�"
+        },
+        {
+          "token_id": 25035,
+          "token": "nap"
+        },
+        {
+          "token_id": 95866,
+          "token": "�"
+        }
+      ],
+      "top_windows": [
+        {
+          "layer": 31,
+          "unit": 204,
+          "activation": 17.593578338623047,
+          "document_index": 451,
+          "line_index": 919,
+          "token_index": 312,
+          "window": "fA can have positive or negative regulatory effects on pilus gene transcription, depending on the GAS isolate or strain. The hypothesis to be tested in Aim 2 states that there are strain-specific differences among modulators of pilus gene expre"
+        },
+        {
+          "layer": 31,
+          "unit": 204,
+          "activation": 17.50628089904785,
+          "document_index": 598,
+          "line_index": 1223,
+          "token_index": 119,
+          "window": "b of picking 2 w and 1 y? 6/35 Calculate prob of picking 1 a, 1 r, and 1 i when three letters picked without replacement from {y: 1, a: 1, k: 4, i: 2, r: 3}. 2/55 What is prob of picking 1 r and 1 t when two letters picked without replacement fr"
+        },
+        {
+          "layer": 31,
+          "unit": 204,
+          "activation": 17.41409683227539,
+          "document_index": 697,
+          "line_index": 1403,
+          "token_index": 218,
+          "window": "pulid polychaetes and trace fossils. He is a specialist of extinct tubicolous fossils. A microconchid species Microconchus vinni is named in honour of his taxonomic studies of tentaculitoid tubeworms. Biomineralization studies Vinn has descri"
+        }
+      ]
+    },
+    {
+      "layer": 26,
+      "unit": 1,
+      "change_minus_1": -0.25272274017333984,
+      "change_plus_1": -0.8425915241241455,
+      "minimum_absolute_change": 0.25272274017333984,
+      "control_p99_minus_1": 0.07974184289574623,
+      "control_p99_plus_1": 0.07934427432715895,
+      "logit_lens_top_tokens": [
+        {
+          "token_id": 151353,
+          "token": "��"
+        },
+        {
+          "token_id": 56426,
+          "token": "//\""
+        },
+        {
+          "token_id": 158964,
+          "token": "��"
+        },
+        {
+          "token_id": 155011,
+          "token": "��"
+        },
+        {
+          "token_id": 184588,
+          "token": "úl"
+        },
+        {
+          "token_id": 153060,
+          "token": "��"
+        },
+        {
+          "token_id": 152903,
+          "token": "hô"
+        },
+        {
+          "token_id": 153114,
+          "token": "��"
+        },
+        {
+          "token_id": 62662,
+          "token": "[:,:,"
+        },
+        {
+          "token_id": 16780,
+          "token": "//$"
+        }
+      ],
+      "top_windows": [
+        {
+          "layer": 26,
+          "unit": 1,
+          "activation": 35.10448455810547,
+          "document_index": 679,
+          "line_index": 1373,
+          "token_index": 293,
+          "window": " being shaped, guided and inspired every day in our city's schools is amazing,” said Daily News Editor-in-Chief Jim Rich. “Our educators are the most unsung heroes we have. Today's event"
+        },
+        {
+          "layer": 26,
+          "unit": 1,
+          "activation": 33.83371353149414,
+          "document_index": 497,
+          "line_index": 1005,
+          "token_index": 231,
+          "window": "'; import asset from '/client/asset/asset.js'; import conform from '/lib/conform.js'; import inject from '/lib/inject.js'; import * as stateManager from '/client/state/state_manager.js'; import {TitleCard} from '/client/title_card.js'; import"
+        },
+        {
+          "layer": 26,
+          "unit": 1,
+          "activation": 33.81616973876953,
+          "document_index": 49,
+          "line_index": 101,
+          "token_index": 239,
+          "window": "te Horse #### The Cotswolds #### Cirencester #### Bibury #### Burford #### Minster Lovell #### Driving Tour #### Northleach #### The Slaughters #### Stow-on-the-Wold #### Chipping Norton #### Moreton-in-Marsh #### Chipping Campden #### Broadwa"
+        }
+      ]
+    },
+    {
+      "layer": 25,
+      "unit": 2,
+      "change_minus_1": 0.24938243627548218,
+      "change_plus_1": 0.3468679189682007,
+      "minimum_absolute_change": 0.24938243627548218,
+      "control_p99_minus_1": 0.07974184289574623,
+      "control_p99_plus_1": 0.07934427432715895,
+      "logit_lens_top_tokens": [
+        {
+          "token_id": 67928,
+          "token": "etrofit"
+        },
+        {
+          "token_id": 162993,
+          "token": "ggi"
+        },
+        {
+          "token_id": 26254,
+          "token": "mel"
+        },
+        {
+          "token_id": 53147,
+          "token": "tomorrow"
+        },
+        {
+          "token_id": 111161,
+          "token": "少量"
+        },
+        {
+          "token_id": 59996,
+          "token": "andatory"
+        },
+        {
+          "token_id": 127134,
+          "token": "埋头"
+        },
+        {
+          "token_id": 17934,
+          "token": "phabet"
+        },
+        {
+          "token_id": 5114,
+          "token": "bre"
+        },
+        {
+          "token_id": 178837,
+          "token": "tue"
+        }
+      ],
+      "top_windows": [
+        {
+          "layer": 25,
+          "unit": 2,
+          "activation": 6.889847278594971,
+          "document_index": 573,
+          "line_index": 1183,
+          "token_index": 361,
+          "window": "al science. Professional career 2005 season Allen signed with the Tampa Bay Buccaneers as an undrafted free agent on May 5, 2005. He was released on August 31, 2005. 2006 season Allen was re-signed on January 5, 2006 and was allocated to the"
+        },
+        {
+          "layer": 25,
+          "unit": 2,
+          "activation": 6.399588584899902,
+          "document_index": 187,
+          "line_index": 379,
+          "token_index": 516,
+          "window": "\"SHORTMONTH\": [ \"Cio\", \"Lui\", \"Lus\", \"Muu\", \"Lum\", \"Luf\", \"Kab\", \"Lush\", \"Lut\", \"Lun\", \"Kas\", \"Cis\" ], \"fullDate\": \"EEEE d MMMM y\", \"longDate\": \"d MMMM y\", \"medium\": \"d MMM y HH:mm:ss\", \"mediumDate\": \"d MMM y\", \"mediumTime\": \"HH:mm:ss\", \"shor"
+        },
+        {
+          "layer": 25,
+          "unit": 2,
+          "activation": 6.388171672821045,
+          "document_index": 859,
+          "line_index": 1703,
+          "token_index": 493,
+          "window": "lthy behaviors also impose an economic burden; for example, one study estimated that physical inactivity alone costs USD 53.8 billion in 2013 for healthcare worldwide \\[[@B13-ijerph-17-00783]\\]. Health is the main criterion for accepting or "
+        }
+      ]
+    },
+    {
+      "layer": 31,
+      "unit": 12,
+      "change_minus_1": -0.19559180736541748,
+      "change_plus_1": -0.1784747838973999,
+      "minimum_absolute_change": 0.1784747838973999,
+      "control_p99_minus_1": 0.07974184289574623,
+      "control_p99_plus_1": 0.07934427432715895,
+      "logit_lens_top_tokens": [
+        {
+          "token_id": 9678,
+          "token": "��"
+        },
+        {
+          "token_id": 192646,
+          "token": "pă"
+        },
+        {
+          "token_id": 117697,
+          "token": "冬至"
+        },
+        {
+          "token_id": 125527,
+          "token": "簡直"
+        },
+        {
+          "token_id": 100071,
+          "token": "对外"
+        },
+        {
+          "token_id": 218989,
+          "token": "anski"
+        },
+        {
+          "token_id": 148753,
+          "token": "เบ"
+        },
+        {
+          "token_id": 108017,
+          "token": "璧"
+        },
+        {
+          "token_id": 98356,
+          "token": "凌"
+        },
+        {
+          "token_id": 57848,
+          "token": "balk"
+        }
+      ],
+      "top_windows": [
+        {
+          "layer": 31,
+          "unit": 12,
+          "activation": 14.94481086730957,
+          "document_index": 97,
+          "line_index": 203,
+          "token_index": 460,
+          "window": "c OSType: linux Architecture: x86_64 CPUs: 2 Total Memory: 2.934GiB Name: linuxkit-025000000001 ID: Q6IO:V5CP:OHJL:4KJP:ZG2X:GV5W:YHMM:2WCK:4V4O:O6T3:A4E4:BJHM Docker Root Dir: /var/lib/docker Debug Mode (client): false Debug Mode (server): "
+        },
+        {
+          "layer": 31,
+          "unit": 12,
+          "activation": 13.952228546142578,
+          "document_index": 81,
+          "line_index": 173,
+          "token_index": 4,
+          "window": "Instead of attaching a complete file, could you please create a diff of your changes against the original file? If possible we'd also prefer it submitt"
+        },
+        {
+          "layer": 31,
+          "unit": 12,
+          "activation": 13.58089542388916,
+          "document_index": 962,
+          "line_index": 1892,
+          "token_index": 1,
+          "window": "Comparison of a foam rolling session with active joint motion and without joint motion: A randomized controlled trial. Foam rolling h"
+        }
+      ]
+    },
+    {
+      "layer": 31,
+      "unit": 379,
+      "change_minus_1": 0.15994000434875488,
+      "change_plus_1": 0.15461695194244385,
+      "minimum_absolute_change": 0.15461695194244385,
+      "control_p99_minus_1": 0.07974184289574623,
+      "control_p99_plus_1": 0.07934427432715895,
+      "logit_lens_top_tokens": [
+        {
+          "token_id": 23236,
+          "token": "sophistic"
+        },
+        {
+          "token_id": 72566,
+          "token": "strncpy"
+        },
+        {
+          "token_id": 248048,
+          "token": "<|object_ref_end|>"
+        },
+        {
+          "token_id": 175946,
+          "token": "correc"
+        },
+        {
+          "token_id": 153142,
+          "token": "��"
+        },
+        {
+          "token_id": 189959,
+          "token": "suscep"
+        },
+        {
+          "token_id": 190332,
+          "token": "pilo"
+        },
+        {
+          "token_id": 144709,
+          "token": "緊緊"
+        },
+        {
+          "token_id": 48701,
+          "token": "stringbuilder"
+        },
+        {
+          "token_id": 181054,
+          "token": "determ"
+        }
+      ],
+      "top_windows": [
+        {
+          "layer": 31,
+          "unit": 379,
+          "activation": 44.89241409301758,
+          "document_index": 77,
+          "line_index": 165,
+          "token_index": 137,
+          "window": "e in the raids who need it you probably won't see this on the AH for quite some time depending on the server. Comment by mbg98 I wouldn't call this a side grade at all, considering that Sunwell requires paladins to spam Holy Light a lot more t"
+        },
+        {
+          "layer": 31,
+          "unit": 379,
+          "activation": 41.45452880859375,
+          "document_index": 549,
+          "line_index": 1128,
+          "token_index": 366,
+          "window": ".youtube.com/playlist?list=PLCiuXKb2dSVrQo5HnSEFESvJYeedValQb Follow me on Twitter! (^ _ ^) Twitter: https://twitter.com/MissMulti?lang=en-gb ----------------------------------------­------------------------------------------------- A big tha"
+        },
+        {
+          "layer": 31,
+          "unit": 379,
+          "activation": 38.447776794433594,
+          "document_index": 59,
+          "line_index": 121,
+          "token_index": 329,
+          "window": " its position or to advance arguments that properly should have been presented in an earlier proceeding See Dixon v. Shz`nseki, 741 F.3d 1367, 1378 (Fed. Cir. 2014). We do not grant motions for reconsideration absent a compelling reason. J.F"
+        }
+      ]
+    },
+    {
+      "layer": 31,
+      "unit": 35,
+      "change_minus_1": -0.1296805739402771,
+      "change_plus_1": -0.1693253517150879,
+      "minimum_absolute_change": 0.1296805739402771,
+      "control_p99_minus_1": 0.07974184289574623,
+      "control_p99_plus_1": 0.07934427432715895,
+      "logit_lens_top_tokens": [
+        {
+          "token_id": 12,
+          "token": "-"
+        },
+        {
+          "token_id": 73,
+          "token": "j"
+        },
+        {
+          "token_id": 16,
+          "token": "1"
+        },
+        {
+          "token_id": 14,
+          "token": "/"
+        },
+        {
+          "token_id": 220,
+          "token": ""
+        },
+        {
+          "token_id": 17,
+          "token": "2"
+        },
+        {
+          "token_id": 6,
+          "token": "'"
+        },
+        {
+          "token_id": 74,
+          "token": "k"
+        },
+        {
+          "token_id": 18,
+          "token": "3"
+        },
+        {
+          "token_id": 5,
+          "token": "&"
+        }
+      ],
+      "top_windows": [
+        {
+          "layer": 31,
+          "unit": 35,
+          "activation": 19.41238784790039,
+          "document_index": 598,
+          "line_index": 1223,
+          "token_index": 175,
+          "window": "1, k: 4, i: 2, r: 3}. 2/55 What is prob of picking 1 r and 1 t when two letters picked without replacement from bbrbtbrrbbrrbrrrrrrt? 11/95 Two letters picked without replacement from {n: 2, o: 1, i: 7, l: 1, t: 5}. What is prob of picking 1 "
+        },
+        {
+          "layer": 31,
+          "unit": 35,
+          "activation": 17.85515022277832,
+          "document_index": 549,
+          "line_index": 1128,
+          "token_index": 479,
+          "window": " - https://www.youtube.com/channel/UCyGf12y2EDAvtr-bc-s5nhA - Skwalker - https://www.youtube.com/channel/UCk4T-qN3lLFqGh8ck8AX9cQ ----------------------------------------­------------------------------------------------- Copyright free music"
+        },
+        {
+          "layer": 31,
+          "unit": 35,
+          "activation": 16.939441680908203,
+          "document_index": 46,
+          "line_index": 96,
+          "token_index": 287,
+          "window": " 2 (-1) Bennet 1 Castro 1 Gillibrand 1 Klobuchar 1 Steyer 1 Williamson 1 Yang 1@TheEconomist /@YouGov https://t.co/WbnJkHHkG7 — Political Polls (@PpollingNumbers) August 14, 2019 This week’s poll showed Sen. Kamala Harris (D-CA) in fourth pla"
+        }
+      ]
+    },
+    {
+      "layer": 23,
+      "unit": 7042,
+      "change_minus_1": 0.1293245106935501,
+      "change_plus_1": 0.235412135720253,
+      "minimum_absolute_change": 0.1293245106935501,
+      "control_p99_minus_1": 0.07974184289574623,
+      "control_p99_plus_1": 0.07934427432715895,
+      "logit_lens_top_tokens": [
+        {
+          "token_id": 235022,
+          "token": "anei"
+        },
+        {
+          "token_id": 144841,
+          "token": "杯酒"
+        },
+        {
+          "token_id": 5566,
+          "token": "inder"
+        },
+        {
+          "token_id": 96437,
+          "token": "究"
+        },
+        {
+          "token_id": 25620,
+          "token": "anza"
+        },
+        {
+          "token_id": 22623,
+          "token": "ön"
+        },
+        {
+          "token_id": 115421,
+          "token": "水性"
+        },
+        {
+          "token_id": 215081,
+          "token": "کو"
+        },
+        {
+          "token_id": 92135,
+          "token": "wolf"
+        },
+        {
+          "token_id": 225198,
+          "token": "elui"
+        }
+      ],
+      "top_windows": [
+        {
+          "layer": 23,
+          "unit": 7042,
+          "activation": 1.5689668655395508,
+          "document_index": 970,
+          "line_index": 1914,
+          "token_index": 76,
+          "window": " the signing of the Outer Space Treaty of 1967. Planetary protection officers are hired to make sure humans don’t contaminate planets, moons, and other objects in space. They’re also supposed to help prevent any alien microbes that might exist f"
+        },
+        {
+          "layer": 23,
+          "unit": 7042,
+          "activation": 1.424452543258667,
+          "document_index": 620,
+          "line_index": 1264,
+          "token_index": 126,
+          "window": "s change due to the tilt of the Earth’s axis. The position and phase of the Moon are based on the predictable motions of the Moon and the Earth. And all of these are based on the physical laws of the universe: motion, gravitation, acceleration."
+        },
+        {
+          "layer": 23,
+          "unit": 7042,
+          "activation": 1.3649648427963257,
+          "document_index": 29,
+          "line_index": 60,
+          "token_index": 173,
+          "window": "ty is approaching an 11-year peak. Two large sunspots moving across the surface of the sun are expected to directly face the Earth soon for up to several days, according to solar scientists. Such sunspots often herald powerful coronal mass ejec"
+        }
+      ]
+    }
+  ],
+  "thresholds": {
+    "method": "numpy percentile with linear interpolation over pooled control-by-neuron absolute changes",
+    "per_dose": true,
+    "target_reference_controls": "all controls",
+    "control_reference_controls": "leave one control out"
+  }
+}

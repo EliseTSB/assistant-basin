@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:49:30",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a traveler.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a traveler.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": -38.25
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [
+      152,
+      376,
+      692
+    ],
+    "count": 3,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": -38.25,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The air in the small, sun-drenched workshop was thick with the scent of vanilla, woodsmoke, and the sharp, lingering tang of old magic, a perfume that had been drifting from the shelves of his grandfather's shop since dawn. Elias had spent the last hour tracing the intricate, faded",
+        "The dust of the ancient pass curled around the edges of his leather cloak, thick and golden like the sun trapped in time, but Elara barely noticed the haze. For three weeks, the world had narrowed to the rhythm of his footsteps and the gnarled, weathered wood of his staff,",
+        "The fog clung to the spine of the mountains like a heavy, white shroud, obscuring the path that had once been a ribbon of snow and now lay buried under inches of fresh powder. Elias pressed his breath into a thin, white ribbon between his lips, the cold biting sharply through his",
+        "The air in the old train station tasted of damp wool and forgotten stories, thick enough to swallow the rusted bones of the afternoon sun. My suitcase, a worn leather box that saw more winters than I had summers, sat on the trestle seat like a stubborn shadow, refusing to stay still",
+        "The air in the old carriage stall was thick with the scent of woodsmoke and dried figs, a fragrant reminder of a world that had slowly faded into memory as he stepped across the threshold. Leo adjusted the heavy leather strap of his satchel, the worn edges worn smooth by months",
+        "The train whistle shattered the morning silence like a broken hourglass, shattering the quiet rhythm of my usual life to replace it with the chaotic roar of steam and the dizzying rush of motion. I stood on the platform, clutching a worn thermos and a map that smelled faintly of salt",
+        "The air in the old train station tasted perpetually of rain and roasted chestnuts, a thick, humid blanket that seemed to cling to the back of Elara's throat as she stood at the threshold of the afternoon rush. Tossing her worn satchel onto the floor, she watched the",
+        "The old leather satchel, worn thin by decades of dragging through mud and snow, seemed to grow heavier with every step into the mist-choked valley, as if the journey itself was accumulating weight in the traveler's stomach. He adjusted the brim of his faded cap against the biting wind,"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-152",
+      "unit": 152,
+      "set_value": -39.54426956176758,
+      "seed": 3456633911,
+      "n": 8,
+      "answers": [
+        "The sand at the edge of the desert did not feel like sand; it felt like a collection of crushed bones, each grain holding the weight of a thousand forgotten days. Elias stood tall against the horizon, his worn coat heavy with the scent of iron and dry earth, high enough to see the low",
+        "The weight of the suitcase felt heavier than the gold dust in her palm, a constant reminder that the life she had left behind was a chapter she could never truly erase. Elena stood at the edge of the high road, the air tasting faintly of salt and high-high altitude high air, as she",
+        "The air in the tent always smelled faintly of wet wool and old iron, a scent that seemed to anchor the traveler before their body even felt the weight of the night. Elias pulled the heavy canvas shut, the familiar rustle of fabric sealing them in a world of their own making, far removed",
+        "The train from the coast hummed with a rhythmic, metallic heartbeat that seemed to echo the ancient tides behind her, carrying Elara away from the salt-stiff air she knew so well. Her coat, heavy with the scent of wet wool and forgotten memories, felt like a final embrace as",
+        "The weight of the suitcase was not a measure of the clothes inside, but the sheer distance she had already traveled, a physical manifestation of the miles that had stretched from the humid breath of the city to the high, high air of the high road. Elias adjusted the strap of her backpack, the leather",
+        "The dust of the highway had settled into the pores of my clothes, a fine golden coat that no amount of washing could easily strip away, marking me as one of the many who had crossed this border to find something the locals didn't have. My suitcase, heavy with high-harried clothes and",
+        "The dust of the desert had settled into the creases of Elias's coat, a fine, golden sand that felt like a second skin, but it was the silence that truly held him; the kind of quiet that doesn't just break when the car stops, but seems to expand, stretching out the",
+        "The dust of the highway was a living thing, a golden haze that clung to the fabric of Elias's coat and settled into the creases of his calloused knuckles, masking the fact that he had been standing at the exact same spot for three days. His car, a high-beater"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-376",
+      "unit": 376,
+      "set_value": -27.027074813842773,
+      "seed": 2812922041,
+      "n": 8,
+      "answers": [
+        "The dust of the desert had settled into the creases of Elias's coat, a gritty texture that felt more like skin than fabric, but he paid it no mind as he adjusted the strap of his worn satchel. He stood at the edge of the world, where the endless golden dunes",
+        "The dust of the Sahara had settled into the grit of his boots long before the sun began its fierce ascent, painting the horizon in hues of bruised purple and burning orange. Elara adjusted the frayed strap of her satchel, the leather worn smooth by decades of restless journeys, and took",
+        "The dust of the Saharan road coated Elias's boots like a second skin, a gritty reminder of the two thousand miles he had traversed since the last city of civilization faded into the horizon. He adjusted the strap of his worn leather pack, the worn burlap sack inside shifting with the weight",
+        "The dust of the ancient caravan route still clung to Elara's boots, a fine, golden powder that tasted faintly of dried sage and forgotten history, but the heat on her face was now a sharp, biting reminder that the sun had moved on. She adjusted the tattered frill of",
+        "The dust of the Sahel had settled into the grooves of Elena's leather boots, a golden haze that clung to her like a second skin, but she pulled her scarf up against her nose anyway, the dry wind picking up the scent of ancient dust and forgotten oases. For three days",
+        "The dust of the Silk Road had settled into the grooves of Elara's worn leather boots, a fine, golden grit that tasted of salt and ancient trade routes when she finally lifted a weary foot. She stood at the precipice of the Thar Desert, the horizon stretching out like a map",
+        "The dust of the Sahara had settled into the creases of Elias's coat, a fine, golden sand that smelled of ancient heat and forgotten time, but he couldn't shake the memory of the road that had brought him here. For twenty years, he had chased horizons that kept shifting just beyond",
+        "The smell of the salted earth and dried lavender hung heavy in the air, a scent so distinct it felt less like an odor and more like a memory waiting to be unlocked. Elara adjusted the strap of her worn leather satchel, the worn leather creaking softly against the cobble"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-692",
+      "unit": 692,
+      "set_value": -4.366818904876709,
+      "seed": 1420766210,
+      "n": 8,
+      "answers": [
+        "The old leather passport felt heavier in Elias's pocket than the gold coins it held, a heavy anchor to a life he had long since outgrown. He stood at the edge of the crumbling archway, the morning mist clinging to the cobblestones like a forgotten memory, as the sun finally breached",
+        "The leather of Elias's worn satchel creaked a familiar protest against every step he took across the sun-bleached cobblestones, a sound that had become as rhythmic as his own breathing after three months of traversing the fringes of the known world. Today, however,",
+        "The dust of the Sahara did not merely settle on Elias's coat; it seemed to seep into the very marrow of his bones, turning his skin the color of a faded ochre map. He adjusted the strap of his satchel, the leather rough and warm from hours of travel, and",
+        "The dust of the Sahel clung to Elias's leather boots like a second skin, a gritty reminder of the two thousand miles he had traversed since leaving the city. He paused at the edge of a shimmering oasis, where the blue water contrasted sharply with the ochre dunes that",
+        "The dust of the desert had settled into the very fibers of Elias's coat, a fine, golden grit that shimmered under the relentless midday sun, but his eyes were still fixed on the jagged silhouette of the mountain range on the horizon, a promise of something far more profound than mere survival",
+        "The rain in the Andes did not fall so much as it hung in the air, a fine, silver mist that clung to Elias's woolen coat and turned the ancient stone path into a slick, reflective ribbon. He adjusted the strap of his satchel, the leather worn smooth by",
+        "The dust of the forgotten roads settled into the creases of Elara's coat as she finally pulled her pack tight against her ribs, the last heavy step echoing against the crumbling arch of the old gate. Behind her, the village of Oakhaven seemed to hold its breath, the familiar scent of wood",
+        "The dust of the desert did not merely coat Elias's boots; it seemed to seep into the very marrow of his bones, a relentless reminder of the miles he had already conquered and the infinite ones that lay ahead. He adjusted the tattered brim of his wide-brimmed hat, shielding"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p06"
+}

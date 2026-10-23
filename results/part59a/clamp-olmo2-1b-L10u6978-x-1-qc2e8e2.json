@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:56:02",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a shepherd.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a shepherd.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -1.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": -6.5
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": -6.5,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The sun beat down on the earth as he walked. He was a shepherd, a shepherd who had been born here. He led his flock to the green hills that surrounded him, his footprints etched into the earth. His flock, a flock of sheep, followed him, led by him.",
+        "The first paragraph of a story about a shepherd is typically a description of the setting, a description of the character, or a depiction of the typical daily activity that the character engages in. Here is a simple, engaging, and factual description of a typical day in the life of a shepherd.\n\nIn the",
+        "Shepherds have always had a bond with the earth and the animals they care for. They are the guardians of our planet's past, watching over the landscapes that have nurtured our lives and provided us with sustenance. When a shepherd wakes in the dawn's first light, he finds the world",
+        "John had always been good with animals. His father had taught him how to care for his flock of sheep. He had always loved watching them in their home on the hill. He would watch them as they would come up to him for attention. He would watch them as they would come out of their",
+        "The shepherd, his fingers curled around the handle of his crooked stick, watched the sun rise from the edge of the pasture. The first light of day painted the landscape in soft pastel hues, illuminating the green hills that had been home to his flock for as long as he could remember.",
+        "Shepherds were born in the earth's embrace, their feet always cool and strong in the cool touch of the earth. They were born to care for the flock, herded and tended to their flocks as the guardians of the earth's green worlds. They had the strength of the earth and",
+        "Shepherd. That's what I wanted to be. I wanted to stand out among the others who had little to do with the earth that nurtured them. I wanted to be the one who understood the world that surrounded me. I wanted to understand the world that sustained me. I wanted to be",
+        "The sun began to burn through the layers of the earth's warmth, the first signs of a day awakening around the green mountains of shepherd's home. Shepherds had always been in tune with the land, their lives intertwined with the rhythm of the seasons. This day was particularly interesting. The first"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p10"
+}

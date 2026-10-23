@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:50:54",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a potter.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a potter.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -1.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": -19.125
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": -19.125,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The air in the kiln room hung thick with the scent of wet clay and burning pine, a perfume that had defined Elias's life for thirty years. Dust motes danced in the shafts of afternoon light that pierced the heavy wooden shutters, settling gently onto the rough-hewn floor where rows",
+        "The air in the kiln room was thick with the acrid, sweet perfume of baking clay and the lingering ghost of yesterday's fire, a scent that seemed to cling to the back of Elias's throat like a familiar memory. He stood before his workbench, the rough texture of a dozen partially",
+        "The air in the workshop was thick and humid, clinging to Elias like a second skin, heavy with the scent of wet clay and woodsmoke that never truly vanished. Sunlight filtered through the high, arched windows, illuminating swirling dust motes that danced above the sprawling workbench where his",
+        "The air in the kiln room always tasted of wet clay and ancient fire, a sharp, earthy scent that seemed to seep into the very pores of Elias's skin. He stood before the large, humming wheel, his hands stained with the dark, stubborn mud of the day's work,",
+        "The air in Elias's workshop always smelled of damp clay and burning pine, a scent that seemed to settle into the very marrow of his bones before he even stepped inside. Sunlight filtered through the dusty, high-arched windows, illuminating swirling dust motes that danced above the rows of drying",
+        "The air in the studio always tasted of wet clay and woodsmoke, a heavy, earthy perfume that clung to Elias's skin like a second skin. Sunlight filtered through the high, dusty window, catching the fine motes of dust that danced in the shafts and illuminating the",
+        "The air in the studio was thick and sweet, a perpetual perfume of wet clay and burning ash that clung to Elias's skin like a second layer of skin. Sunlight fractured through the high, arched window, slicing through the dust motes dancing above the rolling table, illuminating the rhyth",
+        "The air in the kiln room always tasted of wet earth and copper, a scent that Elias knew better than his own name. Before the morning sun could breach the heavy oak blinds, he was already at the wheel, the rhythmic *thud-thud-thud* of the clay meeting the"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p05"
+}

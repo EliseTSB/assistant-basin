@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:55:01",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a gardener.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a gardener.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": -13.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [
+      135,
+      335,
+      615
+    ],
+    "count": 3,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": -13.0,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The gardener sat on the earth amongst the plants. He looked at the green earth beneath his hands and felt the connection with the green world that he loved. The earth was rich with life and he loved the green world that came from the earth. He loved the world that came from the earth.",
+        "The first day of spring had arrived and the earth had awakened from its winter slumber. The gardener, an expert in nurturing life in the green world, had prepared the earth for this season’s celebrations. This gardener, a gardener named John, had been a gardener for as long",
+        "Tom was a gardener. Tom loved the earth. He loved the earth because it loved her. She loved the soil, the water, the sunlight, and the water that the sun sent the earth to make her green. Tom loved the earth because she loved him. She liked him because he cared",
+        "The first of the season had come to the earth and the gardener had come to the earth's earth. The gardener loved this earth; it had given her the earth's joy and it was her joy. Her hands were the gardener's hands. They had been care, care, care",
+        "The gardener sat on the edge of the earth, looking at the plants that had been the earth's caretakers. The plants had cared for the soil, cared for the nutrients, and cared for the plants that had evolved to be so resilient. They had grown to be so resilient that they had",
+        "The gardener sat outside the greenhouse. The sun was shining and the plants were growing. The gardener loved the plants and the greenhouse was always filled with new plants. The gardener loved the plants because they provided the plants and the earth provided them with nutrients. The gardener loved the earth because",
+        "Tom had loved gardening since he was a boy. He had been helping his father in the garden every day. His father had been teaching him everything about plants and care. He had been helping him out in the garden every day. He had been teaching him about which plants to plant in the sun and",
+        "The gardener, a gardener named Peter, spent his days in the sun. He loved the seasons. In the spring, he loved the new growth, the new growth of the plants that had remained in place through the winter. In the summer, he loved the green foliage, the earth and"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-135",
+      "unit": 135,
+      "set_value": -1.484375,
+      "seed": 2373038328,
+      "n": 8,
+      "answers": [
+        "Every morning, as the sun cast its first light through the garden's aged oak tree, the gardener would awaken to the sweet scent of earth and the gentle hum of life beneath the leaves. This particular gardener, a man with a round face framed by thick, dark hair, would stretch and",
+        "The gardener sat under the shade of the old oak tree, his hands intertwined with the thick roots that had been guiding him through the years. His fingers danced gently, brushing against the coarse bark as he traced the intricate patterns etched into the tree's bark. The garden around him was a testament",
+        "The sun had begun to dip below the horizon as the gardener stepped carefully through the rows of colorful blooms, a bouquet of tulips in his hand. His boots crunched the fallen leaves underfoot, a testament to the weeks of labor and care that had gone into nurturing this garden. The garden",
+        "The sun was shining down on a small garden surrounded by lush green grass and vibrant flowers. A gardener stood at the edge of the garden, watering the plants and tending to the flowers. The flowers had just begun to bloom, and the gardener was delighted at the vibrant colors and fragrances",
+        "The sun was shining bright and warm on the gardener as he tended to his garden. The flowers were growing lush and vibrant, and the vegetables were growing big and bountiful. The garden was full of life, and the gardener was grateful for the work it required. The garden was his",
+        "Gardener Charlie had just returned from a day of labor in the sun. His hands were sore, his brow was sweaty, and his back was aching, but his heart was full. Charlie was a gardener by choice. He loved nothing more than tending to the plants and plants love",
+        "John loved his garden. He loved the way the sun would paint the sky with oranges and pinks as the sun dipped below the horizon. He loved the way the birds would fill his garden with melodies. He loved the way the roses would bloom in clusters of red and pink. He loved the way",
+        "The gardener stood at the edge of the garden, his fingers gripping the handle of the gardening gloves that sat on his gardening gloves. His fingers traced the familiar path he had walked since he was a child, planting flowers and vegetables that would grow and bloom, providing sustenance for his family and friends"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-335",
+      "unit": 335,
+      "set_value": -1.0078125,
+      "seed": 538274340,
+      "n": 8,
+      "answers": [
+        "The sun rose over the garden, casting a warm glow on the vibrant flowers and lush greenery. Jamie, the gardener, woke up early to tend to her beloved garden. She stretched her arms above her head, her hands brushing against the tender buds of the roses and the tender shoots of the",
+        "The gardener is a man named Tom. He is the only person who can maintain his garden. His garden is not just a garden; it is a sanctuary. He is a man who believes in the connection between humans and nature, and he cultivates this connection through his meticulous care of his garden",
+        "The sun was beginning to set, and the gardener was finishing up the day's work. He had carefully tended to the garden, pruning back the overgrown plants, and tending to the flowers that had bloomed far ahead of schedule. As the last of the sun's rays disappeared, he",
+        "The gardener arrived at the greenhouse early in the morning, the cool air wrapping around his body like a comforting shawl. The sun, just beginning to peek over the horizon, painted the sky with hues of pink and orange, painting the air with a promise of a new day. Inside the greenhouse",
+        "The sun was already high in the sky, but the gardener was just getting to work. The gardener was a woman named Clara, and she was a dedicated gardener. She had a garden that was filled with the sweetest flowers and the most vibrant vegetables. Her favorite part of the day",
+        "Jack was the gardener at the old manor. It had been abandoned for decades but Jack had fallen in love with it. Every morning he would walk down the cobblestone path that wound around the old stone walls. The roses were in full bloom and the lilacs were just beginning to bloom",
+        "The sun was shining, birds were chirping, and the garden was coming to life. The gardener was tending to her flowers and plants, carefully watering the plants and making sure everything was healthy and thriving. She loved her job, and the garden was her sanctuary, her haven where she could",
+        "The sun was shining brightly over the garden as the gardener watered the plants. The smell of fresh flowers and plants was intoxicating. The flowers were in full bloom, and the smell of them was intoxicating. The garden looked beautiful, and the flowers were blooming to their full glory."
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-615",
+      "unit": 615,
+      "set_value": -2.59375,
+      "seed": 2834222347,
+      "n": 8,
+      "answers": [
+        "Gardener John watched the sun begin to dip below the horizon, casting a golden hue over the garden he tended. His hands were covered in soot from the day’s work, the soot merging with the dark green of the plants he had cultivated over the years. The garden was a sym",
+        "The garden belonged to a man named Harold. He had a wife named Edna and two kids named Gary and Linda. Harold was an old man who had gardened all his life. He had started the garden when his wife had passed away and had never stopped. Edna had passed away a few",
+        "There was a young gardener who lived in a small town nestled among rolling hills and blooming flowers. His name was Oliver and he had fallen in love with gardening from a young age. His father, who had once been a gardener himself, passed away, leaving Oliver to tend to the family",
+        "It was a sunny day and Mary Jane was tending to her garden. Her roses were blooming, and the tomatoes were ripe. The birds were singing, and the bees were buzzing. The garden was peaceful and beautiful. Mary Jane had been gardening for as long as she could remember and it was",
+        "The gardener sat on the porch of his cottage, watching the bees dance among the blossoms. The bees were always a sign of life, of growth, and his garden was buzzing with the energy of life. His name was Edgar, and he had a penchant for growing things. Each season brought",
+        "A small gardener named Sam tended to his garden. He had a small patch of flowers in his garden. He had planted the flowers with great care. The small garden was surrounded by a high fence with a wrought iron gate. A beautiful garden gnome sat on a small bench near the gate. The",
+        "It was a bright morning in the little village of Greenfield. The sun shone brightly on the rows of lush, vibrant gardens that surrounded the little cottage where the gardener lived. The gardener, a tall, well-dressed woman with a twinkle in her eye, named Clara, had",
+        "The sun peeked through the leaves of the garden as the gardener tended to his plants. His hands, calloused from years of labor, moved with practiced ease as he watered the vibrant blooms and sturdy stems of the garden. Each plant had its place, its purpose, and the gardener"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p02"
+}

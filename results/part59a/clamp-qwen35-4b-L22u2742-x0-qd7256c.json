@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:51:45",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a painter.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a painter.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 0.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": 0.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "unclamped",
+      "unit": null,
+      "set_value": null,
+      "seed": 2521400226,
+      "n": 8,
+      "answers": [
+        "Elias's hands, usually steady enough to thread a needle, trembled slightly as they hovered over the canvas, their skin stained with the indelible history of turpentine, lead white, and burnt umber. For twenty years, he had chased the ghost of the perfect sunset, believing",
+        "Elias's studio smelled perpetually of turpentine, linseed oil, and the sharp, metallic tang of iron gall ink, a scent so deeply embedded in his lungs that he could taste it whenever the rain tapped against the leaded glass of his attic window. For thirty years, he had",
+        "The smell of turpentine and linseed oil hung heavy in the air, a thick, amber fog that seemed to coat the back of Elias's throat and settle deep into the cracks of his studio walls. For twenty years, this chaotic sanctuary had been the only place where the world made sense,",
+        "The smell of turpentine and linseed oil hung heavy in the air, a thick, earthy curtain that separated Elias from the world outside his studio window. For decades, the chaotic symphony of city traffic and distant sirens had been a blur, but now, with the heavy canvas draped",
+        "Elias's studio was a sanctuary of dust motes dancing in shafts of golden afternoon light, a place where the chaotic noise of the city dissolved into a quiet hum of oil and turpentine. For forty years, he had painted the world as it looked from the inside of his own mind",
+        "The smell of turpentine and linseed oil hung heavy in the air, a pungent perfume that Elias had breathed since he was a boy, long before he ever picked up a brush. His studio, a cramped attic room with a single window that overlooked the sprawling, indifferent city below, was",
+        "The smell of turpentine and linseed oil was a constant companion to Elias, a scent so sharp it seemed to strip the air of all other thoughts, leaving only the raw canvas before him. At the edge of his small, sun-drenched studio in the cobbled district of Bologna, he",
+        "Elias's hands were permanently stained with the ghostly blues of Prussian and the deep, burnt ochre of the earth, a testament to the life he had lived within the vibrant chaos of his studio. For twenty years, the smell of turpentine and linseed oil had become the very"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p11"
+}

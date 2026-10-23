@@ -711,6 +711,16 @@ Pre-registered in `PART54-DESIGN.md` (commit acde4d8c7, before any run). Run on 
 
 Files: `results/part54a/`, `results/part54b/`, design `PART54-DESIGN.md`, ladder labels from `blind_origin.py collect --by-cond`. Limits: one reader (Opus 5.5) with no second reader, 8 samples for each of 3 questions per dose, a twin is a unit that passed Part 26's fire, write and profile checks and is not shown to share a role, and the two OLMo twins are pooled in the printed table.
 
+### Part 59: pushing up makes sci-fi story settings, pushing down does not make Earth ones; the two-direction neurons only stand out in OLMo (2026-10-22)
+
+Pre-registered in `PART59-DESIGN.md` (commit e64577e; Amendment 1 and the null caveat were added before any run). Run on a rented RTX 3090 (about $0.43). 59A answers were read blind by Claude Opus 5.5 (batch `msgbatch_01UkAS6ir2KL3JpgcXJEVKnM`, calibration 2 of 34 wrong). A first batch was discarded: its output cap of 32 tokens truncated 1,339 of 2,146 responses because Opus spends tokens on thinking first (fixed to 1,024 and a test added).
+
+**59A, story setting under the push (12 prompts x 8 samples = 96 first paragraphs per cell).** Share the reader called SCIFI: Qwen3.5-4B L22:2742: 0 unclamped, 0 at -1 and -2, 5 at +1, 69 at +2 (9 broken). OLMo-2 1B L10:6978: 0 unclamped, 0 at -1, 1 at -2, 58 at +1, 79 at +2 (27 broken at +2). Random same-layer controls at -2 and +2: at most 1 of 96 on any label. Every unclamped story is already EARTH-REAL (96 of 96), so the down side has no room to show an Earth shift and none appeared.
+
+**59B, neurons that respond the same way at -1 and +1 (SYMMETRIC; pooled 99th-percentile rule of Amendment 1, 1,000 documents).** Qwen: 22 symmetric of 82,944 later neurons against control counts 80, 4 and 0; the target does not exceed the largest control, so it is not a result by the registered comparison. OLMo: 639 symmetric of 40,960 against control counts 151, 186 and 187; the target is 3.4 times the largest control. Hand reading of the top 10 by their logit-lens tokens and top windows: no sci-fi vocabulary in OLMo's; in Qwen's one lens set reads race/species and one window mentions alien microbes, otherwise generic (code, maths, legal text), so the symmetry looks like generic disruption.
+
+Files: `results/part59a/`, `results/part59b/` (archives and analysis JSON), `part59/`. Limits: one reader, 12 prompts, the pooled rule's null alone can pass or fail 59f and 59g (about 4.1 symmetric neurons per control expected by chance under independence), the three controls' maxima differ up to 9.1x in Qwen, and 59H is a hand reading by the same person who wrote the prediction.
+
 ### Running or designed (2026-10-21)
 
 - Part 29: the registered teacher-classifier predictions remain unscored in PREDICTIONS.md.

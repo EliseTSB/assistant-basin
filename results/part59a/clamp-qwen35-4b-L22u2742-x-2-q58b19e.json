@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:48:55",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a student on the first day.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a student on the first day.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": -38.25
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [
+      152,
+      376,
+      692
+    ],
+    "count": 3,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": -38.25,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The air in the hallway was thick with the scent of fresh linemen, pine, and the sharp, acidic tang of a thousand unopened water bottles, a chaotic perfume that marked the beginning of a new season. Leo clutched his crumpled schedule like a lifeline, his stomach doing",
+        "The heavy oak door of the new classroom creaked in protest as she pushed it open, the air inside thick with the scent of vanilla, old books, and the specific, unnering smell of fifty people who had just turned into one hundred and ten. Maya stood at the threshold, her",
+        "The morning air was thick with the scent of wet ink and fresh coffee, a fumes of anxiety that seemed to rise from the floorboards of the library. Maya stood in the doorway of the junior hall, her stomach doing a slow, rhythmic roll that matched the flutter of her heart against her",
+        "The air in the high school lobby tasted like stale coffee and the sharp, sour scent of floor wax, a mixture that seemed to settle in the back of the stomach before the bell even rang. Maya stood at the threshold of the old oak doors, clutching a backpack that felt significantly heavier than the",
+        "The heavy scent of fresh ink and wet chalk hung thick in the air, a fog that seemed to slow the flow of time as Elara stepped through the double doors of Oakhaven High. Her stomach did a little involuntary dance, a flutter that she tried to ignore beneath the thick, woolen sweater",
+        "The heavy backpack thumped against my side like a restless animal as I pushed through the fogged glass doors of Oakwood High, the air inside suddenly thick with the scent of vanilla, burnt popcorn, and a dozen different types of anxiety. My stomach did a slow, undignified roll, echoing",
+        "The air in the high school gymnasium was thick with the scent of sweat, fresh paint, and the electric, nervous static of a thousand new beginnings. Leo clutched his crumpled letter of acceptance to his chest, his knuckles white against the heavy cream paper, as he navigated",
+        "The air in the high school hallway tasted like stale coffee and the sharp, nervous sweat of a thousand unspoken fears, a mix that instantly settled into the back of my throat as I pushed through the double doors for the first time. My stomach did a familiar, fluttery dance, a physical reminder"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-152",
+      "unit": 152,
+      "set_value": -39.54426956176758,
+      "seed": 3456633911,
+      "n": 8,
+      "answers": [
+        "The hallway of St. Aiden's Academy felt less like a corridor and more like a labyrinth designed to separate the lost from the found, its linoleum floor humming with the heavy tread of a hundred other newcomers. Elias stood at the intersection of the third and fourth steps, clutching a t",
+        "The air in the high bus was stale, recycling over the hum of the engine as Maya stood in the last seat, staring out at the highline of the city she had only seen from the screen of her phone. Today was the day the world supposedly expanded, a promise she had made to herself",
+        "The air inside the room was heavier than any weight Elias had ever carried, a mixture of high air-conditioning and the high nervousness that had been coiling in his chest since the first bell rang. He stood at the back of the classroom, his knuckles white on the strap of his backpack",
+        "The fluorescent lights of the high hall hummed with a familiar, irritating rhythm, a sound that Elias had heard since he could remember but never truly felt until the weight of the first day finally settled in his chest. He stood at the far end of the cafeteria, clutching his backpack like a shield",
+        "The heavy iron bell had rung three times, a rhythmic reminder that the world was suddenly smaller and louder than it had been just a moment ago, but Elias stood frozen at the edge of the line, clutching his school bag so tightly his knuckles turned white. High day, he thought,",
+        "The first bell of October had already rung, but Elias felt as though he were standing at the start of a marathon, his lungs burning with a mixture of high breath and nervous sweat. The gymnasium smelled faintly of floor wax and high exertion, a stark contrast to the quiet, cluttered",
+        "The fluorescent lights of the hallway hummed with a weight that seemed to press against Maya's chest, a stark contrast to the quiet confidence she had carried since childhood. Standing at the edge of the door to Room 304, her knuckles tightened against the handle as the weight of twenty strangers",
+        "The fluorescent lights of the classroom felt like a weight, pressing against Maya's eyes as she tried to hide behind the periphery of the room, a strategy that had worked flawlessly in three previous schools but failed spectacularly here. Her backpack, a heavy expanse of navy fabric stuffed with high-"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-376",
+      "unit": 376,
+      "set_value": -27.027074813842773,
+      "seed": 2812922041,
+      "n": 8,
+      "answers": [
+        "The morning sun filtered through the frosted window of the locker room, casting a hazy gold across the linoleum floor as Elara adjusted the collar of her blazer for the third time. The first day of high school had begun with a promise of endless potential, yet the reality of standing",
+        "The morning sun filtered through the blinds of the high school classroom, casting a grid of dusty light across rows of empty desks, yet Maya felt a chill that had nothing to do with the autumn air. Her stomach had been doing somersits since the bus ride over, a mix of adrenaline and sheer",
+        "The hallway smelled of floor wax and the faint, metallic tang of nervous sweat, a sensory cocktail that seemed to define the very atmosphere of this new beginning. Maya clutched her backpack straps with both hands, the weight of the bag feeling heavier than it should, as if it were filled with her",
+        "The heavy oak door of the high school stood before me with the weight of a thousand unspoken anxieties, the brass doorknob cold against my palm as if it were testing my resolve. Inside, the air smelled of floor wax and fresh ink, a mixture that seemed to hang heavier in the",
+        "The air inside the high school auditorium smelled faintly of floor wax and nervous sweat, a scent that seemed to cling to the back of Elias's throat before he'd even taken his first step. With a backpack slung over one shoulder like a heavy shield and a map of the hallway drawn in",
+        "The heavy smell of floor wax and fresh paint hung in the air, a scent that seemed to bind the room together before the first bell even rang. Elara clutched her backpack straps until her knuckles turned white, the worn leather tag feeling strangely significant against the chaotic swirl of freshmen navigating the",
+        "The heavy oak door of the high school's senior classroom creaked shut with a finality that seemed to seal the gap between the chaotic promenade outside and the quiet, suspended air inside. Maya stared at her reflection in the frosted glass of the window, her school uniform feeling slightly too tight",
+        "The smell of fresh-pressed linens and lemon polish hung heavy in the antechamber of the school, a scent that smelled less like a place of learning and more like a uniform, a costume I had to wear to be allowed inside. My hand hovered over the strap of the bag, heavy"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-692",
+      "unit": 692,
+      "set_value": -4.366818904876709,
+      "seed": 1420766210,
+      "n": 8,
+      "answers": [
+        "The morning sun filtered through the slightly dusty blinds of the classroom, casting long, dancing shadows across rows of empty desks that seemed to stretch endlessly into the back of the room. Maya tightened her grip on her backpack straps, the fabric rough against her palms as she stepped over the threshold for what felt like",
+        "The fluorescent lights of the high school hallway hummed with a low, electric buzz that seemed to vibrate against Leo's chest, drowning out the distant, muffled sounds of the world outside. He clutched his new backpack, the fabric stiff and unfamiliar, like a second skin he wasn't",
+        "The heavy school bag felt heavier than the weight of the backpack strap should allow, pressing down on my shoulders like a silent accusation as I navigated the crowded hallway. My sneakers squeaked with every step against the linoleum, a rhythmic reminder that I had been walking to this exact same spot",
+        "The fluorescent lights of the hallway hummed with a frequency that seemed to vibrate right through the soles of my sneakers, a constant reminder that I was no longer the only person in this world. I clutched my crumpled notebook to my chest, the pages filled with frantic, half",
+        "The fluorescent lights of the high school hallway hummed with a frequency that seemed to vibrate right through my sneakers, a stark contrast to the quiet chaos of my own stomach churning in anticipation. I clutched my backpack straps until my knuckles turned white, trying to ignore the dozen pairs of",
+        "The morning sun filtered through the frosted windows of the high school hallway, casting long, golden rectangles across the linoleum floor that seemed to stretch endlessly toward the double doors. Maya clutched her backpack straps until her knuckles turned white, her breath hitching in her throat as she stared",
+        "The fluorescent lights of the high school hallway hummed with a sound that felt less like electricity and more like a collective sigh of collective dread, casting long, jagged shadows against the lockers as Elias pushed through the double doors for the first time. He clutched his backpack straps until his kn",
+        "The fluorescent lights of the high school cafeteria hummed with an irritating buzz that seemed to vibrate directly against Maya's skull, drowning out the distant thud of her heart as she shuffled toward her new locker. For the first time in her life, the hallway felt less like a familiar artery and more"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p03"
+}

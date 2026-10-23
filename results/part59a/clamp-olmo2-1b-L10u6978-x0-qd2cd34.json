@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:56:19",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a librarian.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a librarian.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 0.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": 0.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "unclamped",
+      "unit": null,
+      "set_value": null,
+      "seed": 2521400226,
+      "n": 8,
+      "answers": [
+        "As the sun dipped below the horizon, casting an orange glow through the tall windows of the ancient library, the librarian, Clara, hummed a soft tune under her breath. Her fingers traced the spines of the towering tomes that lined the towering shelves. The library, with its history stretching back",
+        "The librarian, a tall woman with raven hair and eyes the color of ancient oaks, stood behind the towering shelves of books that stretched as far as the eye could see. The musty smell of leather and ink wafted through the air, mingling with the faint fragrance of damp earth",
+        "At the center of the bustling town library, surrounded by towering shelves filled with countless stories waiting to be discovered, stood a librarian named Clara. With her shoulder-length brown hair and warm, welcoming smile, Clara was the embodiment of the library's spirit. Her glasses sat perched on the bridge of her",
+        "The sun had just begun to dip below the horizon, casting a warm, golden glow on the quiet, leaf-strewn streets of the small town library. There, among the towering shelves of dusty tomes and the occasional stray cat curled up on a forgotten corner, stood a woman whose daily routine",
+        "The library was quiet. The afternoon sun streamed through the large windows, casting light over the shelves of books that filled the vast space. In the heart of the library stood a modest, yet cherished desk where a middle-aged librarian, Linda, sat. Her long, dark hair was pulled back into a",
+        "She was a librarian by choice, yet she was a librarian by accident. Her family never understood why she didn't follow in their footsteps and pursue a career in fashion or marketing. She had loved stories from a young age, her hands often finding the safety of the pages of a well-loved book",
+        "There was a librarian named Amelia. Amelia had worked at the local library for thirty years. She knew every nook and cranny of the building. She knew the stories of the old newspapers and the forgotten tales of the children's section. Amelia loved her job, and she knew that no one could",
+        "The old librarian was a man named Jack. He was very tall and thin with gray hair that always seemed to be falling over his shoulders. His glasses were always perched on his nose and he always seemed to be looking through them at something invisible. Jack loved his job. He loved books. He"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p12"
+}

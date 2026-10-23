@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:56:32",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a shepherd.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a shepherd.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 1.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": 6.5
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": 6.5,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The sun was just beginning to rise as the shepherd, named Orval, guided his ship through the bustling traffic of the spaceport. Orval was a seasoned shepherd, having shepherded his flock of sheep for decades. His ship, the Seraphim, was a small vessel designed for long",
+        "The starship Voyager, under the command of Captain Janeway, traveled through the starship's nolworth stardate of 2152.01, en route to the Star Trek Voyager's next adventure. The crew was on their fourth year of exploration, and Captain Janeway had once again",
+        "Shepherd Jake paddled across the cold lake, the icy burn of the liquid ice pressing against his face and cheek. His fur was dull from the long journey, his uniform was filthy, and his ship, the Seraphim, was in shattership. The path before him was littered",
+        "The first of the five shepherds standing on the rugged hillside watched the stars cluster together as he had done countless times before. The galaxy was a canvas of constellations and the stars were shepherds guiding his flock across the vast fields of space. Today, however, his thoughts were",
+        "The shepherd, his fingers plinking the rhythm of the beat of his feet against the cool, smooth hull of his ship, glided through the star-specked expanse of space. The constellations, a shepherd's choreography of stars, spun and danced in his path, as he",
+        "The shepherd sat on the small hill that overlooked the vast expanse of the wheat fields. The stars were just beginning to glow in the deep black sky above. He ran his hand through his long, wavy silver hair and let out a deep, weary sigh as he watched the stars. He had",
+        "Captain Lira's heart leapt at the feeling of the cool breeze against her face as she stood on the bridge of the starship Odyssey. The stars stretched out before her, a tapestry of light and shadow across the vastness of space. She had spent countless cycles in this path, guiding",
+        "The shepherd sat on a hillside as he tended his flock of sheep. His fur was a graying silver that matched the distant stars he often dreamed of exploring. The stars were his guide through the vastness of space, just as the stars were his guide through the vastness of the empty space"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p10"
+}

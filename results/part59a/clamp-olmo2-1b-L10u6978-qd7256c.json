@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:57:27",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a painter.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a painter.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": 13.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [
+      135,
+      335,
+      615
+    ],
+    "count": 3,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": 13.0,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The painter knew she had to start somewhere. She had already spent years painting, creating stories and scenes and stories again. Her paintings were mostly small, medium-sized paintings that were created within short periods of time. The paintings were created with a limited budget, and she often used up her personal supplies quickly",
+        "The starship Voyager, under the command of Captain Janeway, traveled through the starship's stardrive engines at warp speed, traveling at seven hundred thousand kilometers per hour. A crew member, named Lieutenant Commander Data, was on duty at the helm, piloting the ship through the stars.",
+        "Captain Picard had always been a painter. It had been his dream to paint a story of his adventures in Star Trek. His paintings were typically small, but they were always beautiful. He had once sold a painting to a Starfleet officer, who was impressed with the story it told and wanted to",
+        "The first brushstroke was a whisper of a mind that had spent a lifetime crafting images from the raw materials of life itself. The painter’s fingers, aged and calloused from a lifetime of toting a small pod of paints, moved with the gentle grace of an old poet, a poet who had",
+        "The painter spends his weekends on the planet he often calls home, painting scenes that seem to warp and bend time. The planet is named Orion's ear, and the artist is known by the name of his artistic name, Orion's Heart. He paints on the walls of the ancient buildings that were constructed",
+        "The artist sat on the small bridge that lined the small planet he called home. A small painting brush was in his hand and the small canvas before him was filled with swirling swirls and vibrant colors. The art he painted was his way of expressing his emotions and thoughts. He'd often travel to the",
+        "Captain Picard's hands were designed for the meticulous operation of a starship command console. Yet, aboard the USS Enterprise, Star Trek's Starship Enterprise, he found himself painting his first Starfleet art. It was on a Starship crewmember's uniform, designed as a uniform that would represent",
+        "The artist began to paint the starship Enterprise as they approached the alien civilization. They had a deep understanding of art and art history, and the painting was a continuation of their artistic journey. The artist had been commissioned to create a masterpiece that would allow the crew to explore the alien civilization and their culture"
+      ],
+      "summary": {
+        "alien": 3,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-135",
+      "unit": 135,
+      "set_value": 1.484375,
+      "seed": 2373038328,
+      "n": 8,
+      "answers": [
+        "A man with a palette and brush in hand sat in his studio, the warm glow of the afternoon sun casting dancing shadows across the walls and floor. He took a deep breath, inhaling the rich scent of the paint he had mixed earlier in the day. His fingers, calloused from years of",
+        "The artist's studio was a sanctuary of colors and textures, where the artist's hands were guided by the muse of creativity. The walls were adorned with sketches and paintings, each a story in its own right. A thick, mahogany desk stood in the center of the room, its surface cluttered",
+        "The painter had no idea what was happening to him. He had been painting for years, painting for decades, but nothing in his life had prepared him for what was happening now. He woke up one morning to find that his hands were no longer his own. They had become something else entirely, and",
+        "The painter sat before the canvas, the world around him fading away. The room was dim, just enough to let the soft glow of the candlelight bathe everything in a warm, soft light. The canvas, a large, blank square of black and white, lay before him, a blank slate",
+        "The painter worked alone in her studio, surrounded by canvases and brushes. She painted every day, pouring her soul onto each canvas. Her favorite subject was nature, and she painted landscapes and portraits of the landscapes she visited often. Her studio was filled with the sounds of her brushstrokes, the",
+        "Paul loved painting. He loved how the colors would mix and blend on the canvas. He loved the way they would make the room look different each time he painted. He loved that he could make the room look like anything he could imagine. Today, he decided to paint a room that looked like a",
+        "John loved painting. He would wake up before dawn and would paint from sun up until it was time to go back to work. His studio was always filled with an aroma of paint, and his walls were a gallery of his works. He would paint his friends, his pets, his lovers, and",
+        "The room was silent, save for the sound of his brush moving across the canvas. The artist had always felt most alive in the solitude of his studio, surrounded by the colors and textures of his palette. The soft glow of the dim evening light cast long shadows on the walls, adding to the atmosphere"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-335",
+      "unit": 335,
+      "set_value": 1.0078125,
+      "seed": 538274340,
+      "n": 8,
+      "answers": [
+        "The painter sat in his studio, surrounded by the warm glow of the afternoon sun. The white walls were adorned with canvases, each one a canvas of an abstract scene he was in the process of painting. Brushes in hand, he traced the brushstrokes, blending colors with precision. A soft",
+        "The painter stood before the blank canvas, a broad grin on his face. He couldn painting in his studio, a small, well-ventilated room with plenty of light. The room smelled of turpentine and oil, and the walls were covered with various paintings that he had created over the years",
+        "The painter sat in his studio, surrounded by half-finished canvases and empty paint cans. He leaned back in his chair, staring at the wall of his studio, contemplating the colors and brushstrokes that would soon become part of his latest masterpiece. His hands moved aimlessly over the palette,",
+        "The artist paced behind the closed windows of his studio. The soft clatter of paintbrushes upon canvas filled the room with a symphony of colors. The colors swirled and danced upon the canvas, chasing each other in an ever-evolving dance. The artist's fingers traced lines and shapes",
+        "The paintbrushes glided over the canvas, across the darks and the whites, across the bold and the delicate, the vibrant and the muted. The artist sat at their easel, a solitary figure in a dimly lit studio, surrounded by chaos and silence, seeking solace in the",
+        "Jack was a painter, a restless soul who wandered from city to city, painting the scenes that haunted his dreams and the chaos of the world around him. His studio was a chaotic haven of brushes, palette knives, and half-finished canvases, a cacophony of colors and strokes. He",
+        "The sun was shining through the window of the studio, casting a warm glow on the canvas that sat on the easel, a large, open canvas that had been waiting patiently for the brush of its creator. A young painter, a student of the art world, sat at the easel, his",
+        "The sun was setting behind the hills as the artist sat in his studio, the warm glow of the setting sun casting a golden hue through the window. He was a man of few words, a painter of few colors, but his studio was a testament to the life he lived and the stories he created"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-615",
+      "unit": 615,
+      "set_value": 2.59375,
+      "seed": 2834222347,
+      "n": 8,
+      "answers": [
+        "The sun dipped below the horizon, casting long shadows across the painting studio where artist Emily stood among her canvases. Her fingers traced the outlines of her latest piece, the vibrant colors blending as she blended the strokes with a deft hand. The city beyond her studio, with its labyrinth of alleyways",
+        "The painter stood at his easel, the soft glow of the afternoon sun casting long shadows across the room. His hands moved gracefully as they mixed colors on the palette, the colors blending in a harmonious dance. He would pause, gaze out the window at the sprawling cityscape, and then return",
+        "The artist's studio was cluttered and chaotic, with paint splatters on the walls and canvas hanging precariously from the rafters. A solitary figure stood before a large canvas, their hands moving across the paint with a dancer's grace. This was no ordinary artist; they were an abstract painter",
+        "It was a rainy day and the artist was working in his studio. He was inside the room with only the light coming in from the window. The room smelled of paint and oil and old paint. He was inside his world and didn the paint-splattered clothes and thick gloves. He would sit",
+        "The painter, a young man named Alex, sat in his studio, the soft glow of the fluorescent lights casting long shadows across the floor. He traced the contours of his latest canvas, the surface of a vibrant sunset that stretched far beyond the boundaries of his canvas. His fingers moved deliberately, blending colors",
+        "Martha sat in the corner of the studio, her eyes closed, her hands gently patting her cheeks. Her fingers traced the lines of her face, her eyes finally opening to meet her own. She stared at the blank canvas before her, feeling the weight of her own experiences and the dreams that",
+        "Painting was a way for the artist to communicate, to share emotions, to tell stories. The brush was his voice, the canvas his body. Each stroke of the brush was a whisper, each color a shout, each brushstroke a beat in the rhythm of his heartbeat. Painting was the way",
+        "The painter sat in his studio, the warm glow of the afternoon sun filtering through the window. His hands, skilled and calloused from years of practice, moved across the canvas, blending colors and shaping forms. The soft brushstrokes danced across the surface, weaving together a tapestry of shapes and"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p11"
+}

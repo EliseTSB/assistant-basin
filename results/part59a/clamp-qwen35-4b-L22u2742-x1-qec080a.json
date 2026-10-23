@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:52:05",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a traveler.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a traveler.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 1.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": 19.125
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": 19.125,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The dust of the Martian surface had settled on Elias's boots for three Earth days, a fine, rust-colored grit that whispered of ancient life against his leather soles. He adjusted the collar of his weathered coat, shielding his eyes from the harsh, pale sun that hung like a cold coin in",
+        "The dust of the Marsis Desert had settled into the creases of Elias's coat, a fine, reddish gray that seemed to sing when the wind picked up, but his boots were already heavy with the promise of what lay beyond. He adjusted the strap of his satchel, feeling the",
+        "The dust of the Sahara had settled into a fine, red dust on the fabric of Elias's coat, a color that matched the vast, undulating seas of sand stretching to the horizon where the sky seemed to bleed into the earth. For three years, he had traveled the world in search of a",
+        "The dust of the desert did not merely coat Elias's boots; it seemed to breathe against his skin, a living, shifting sand that whispered secrets of forgotten civilizations with every gust of wind. At sixty-four, his journey was less about the destination on the map and more about the relentless, pulsing",
+        "The dust of the desert did not merely coat Elias's boots; it seemed to seep into the very marrow of his bones, a silent witness to a journey that had stretched far beyond the limits of ordinary travel. He adjusted the strap of his worn leather satchel, feeling the weight of maps",
+        "The dust of the Martian surface coated Elias's boots in a fine, rust-colored grime that no amount of washing could ever fully remove, a constant reminder of the billion miles he had traveled to reach this barren world. He adjusted the collar of his recycled-air suit, feeling the familiar, faint hum",
+        "The dust of the Martian surface coated Elias's boots like a second, unyielding skin, a fine, reddish-gray grit that whispered of ancient winds and forgotten craters. He adjusted the collar of his worn, silver-grey flight suit, the fabric stiff with the vacuum of three thousand miles away",
+        "The dust of the Sahara had settled into the creases of Elias's travel jacket, a fine, unyielding gray that seemed to mock the vibrant colors of the city he had just left behind. He adjusted his pack, feeling the familiar weight of it against his shoulder, a heavy anchor to a"
+      ],
+      "summary": {
+        "alien": 3,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p06"
+}

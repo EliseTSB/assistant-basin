@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:55:59",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a carpenter.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a carpenter.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -1.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": -6.5
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": -6.5,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The carpenter sat in the sun as he worked. He was busy building a new home for a young couple. The sun was hot, but he was satisfied with the work he had completed. The house was beautiful, and the couple would be delighted with the new home they would live in. The",
+        "John was a carpenter who loved nature.  He loved working with his hands but he also loved living with nature.  He worked in a city but loved his job because it was surrounded by nature.  He would walk to work every day and would often stop to watch the animals in the park",
+        "Tom Carpenter was a man of simple tastes. He lived in a modest home nestled between two sprawling oak trees that he had himself engineered. The trees had grown to such perfection that the couple of inches between their stanzas were a testament to his skill. Tom's home was a testament to his craft",
+        "John had always been good with his hands. Every day he would sit outside his workshop, staring at the wood that had come from the earth. He had always been drawn to the wood, so much so that he could not resist the urge to build. He would spend days perfecting his designs,",
+        "The carpenter sat in the sun, his fingers wrapped in green cloth, his eyes squinting at the swirling clouds. The world around him had transformed into a landscape of wood and woodwork. Trees stood like green giants, their branches reaching out to earth, reaching up to the sky. Wood",
+        "John was a man of science and nature. His hands were strong and his fingers were smooth. He was a carpenter and worked with wood, but not just ordinary wood. He worked with wood that had beauty and strength. He worked with wood that had stories to tell. He worked with wood that",
+        "Tom Carpenter was a man of simple tools. He had a carpentry shop on a small piece of land he had on Earth. Tom was a man who loved his work. He loved to build. He loved to build with wood. Wood was his choice of material. His shop was filled with wood",
+        "The carpenter, Thomas, was a man of his hands. With the sun warming his shoulders and the sun-warmed wood of his workbench extending to his arms, he was a man who knew the strength of his hands. Though his fingers danced across wood and his hands worked with such precision and"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p07"
+}

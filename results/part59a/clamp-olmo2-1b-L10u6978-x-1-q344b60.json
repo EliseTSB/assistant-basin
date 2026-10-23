@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:56:01",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a cook.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a cook.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -1.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": -6.5
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": -6.5,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The sun had just begun to stir as Tom the cook woke up to the chirping of birds. He had just finished a delicious meal the previous night and was eager to prepare another delicious meal for his favorite customers. Tom had always loved cooking. He had been a cook for as long as he could",
+        "The cook sat alone in the kitchen, staring at the black pots and pans hanging above the counter. The sun had just finished its last rays of the day, and the kitchen was cool. The cook had been up all night working on a new recipe that he had been dying to try. He had",
+        "Tom was a cook. He loved his job. He loved the smell of the spices. He loved the way the food cooked. He loved the way people ate. He loved the people who ate. He loved life.",
+        "John had always loved cooking. He loved the smell of spices and the way the food cooked. He loved working with his hands and watching the food cook. He was always looking for new recipes to try. He always loved his job. John was a good cook and loved to cook. He loved life",
+        "The cook, a man named John, had a busy day ahead. The day started with breakfast, the most important meal of the day, and he had to cook it with the precision and care that his patrons demanded. John loved his job and had perfected the art of making a perfect breakfast. He",
+        "The first ingredient that the cook put down on the counter was a large chunk of fresh garlic.  The cook decided that he would cook the garlic in a new way that day.  He put the garlic in a large metal container and left it outside in the sun.  He watched the garlic and",
+        "Cooking is a rhythm. The first step is the smell—the crisp, clean aroma of fresh ingredients. That’s the start, the first beat of the drum that signals the start of a new symphony. The cook, standing at the kitchen bench, feels the cool air and the earth beneath the",
+        "The kitchen was bustling with activity. The sun had retired to the earth, and the air was filled with the aroma of a rich, savory dish simmering on the stovetop. The cook, a robust man with a hair of gold and eyes that matched the hue of his hair, moved"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p09"
+}

@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:54:07",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a cook.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a cook.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": 38.25
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [
+      152,
+      376,
+      692
+    ],
+    "count": 3,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": 38.25,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The smell of roasted garlic and searing sage hit Elara before she even stepped out of the kitchen, a low, welcoming hum that seemed to vibrate through the floorboards of her alien ship, *The Iron Hearth*. For three hundred years, she had been the last extraterrestrial chef,",
+        "The first thing Elias heard upon waking was not the call of a bird or the hum of distant traffic, but the low, rhythmic thrum of the induction burners beneath his feet, a sound so familiar it had become the soundtrack to his existence. The kitchen was already alive with the scent of",
+        "The smell of roasted garlic and searing onions hit Elias first, a golden, alien signal that instantly overrode the silence of the empty kitchen. For thirty years, his life had been a symphony of sizzling pans, chopping rhythms, and the low hum of the oven, but today,",
+        "The smell of sautéed onions and roasted garlic hit the alienated planet's surface first, a warm, alien signal that cut through the silence of the sterile corridor. Elara adjusted her wrist comms, her fingers trembling slightly as they danced over the control panel of the alien saucer, seeking",
+        "The first sound of the morning didn't come from an alarm, but from the soft, rhythmic thump of the dough hitting the planet of the world's first extraterrestrial civilization, which had landed on the planet of the first extraterrestrial civilization and was now being cooked by the first extr",
+        "The smell of sautéed onions and roasting garlic was the first thing that greeted Elias the moment he stepped onto the planet surface, a scent so alien yet familiar to his alien mind that it triggered an immediate, low-grim extraterrestrial smile. His hands, elongated and covered in a",
+        "The moment Elias turned on the stainless steel stove, the room seemed to breathe with a new, alien intelligence, as if the planet itself was holding its breath in anticipation of the first crackle of the pan. For forty years, he had listened to the subtle whispers of his ingredients—how a jar",
+        "The kitchen on Mars was silent, save for the hum of the terraforming algae and the soft, rhythmic thump of the spatula against the saucer, as Commander Elara wiped down the metallic surface of her planet-ship's galley. Her fingers, which had once been steady enough"
+      ],
+      "summary": {
+        "alien": 7,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-152",
+      "unit": 152,
+      "set_value": 39.54426956176758,
+      "seed": 3456633911,
+      "n": 8,
+      "answers": [
+        "The kitchen at 4:30 AM belonged to nothing but the rhythmic *thunk-thunk-thunk* of the chef's knife against the cutting board and the hiss of simmering broth, a sound that had become the steady heartbeat of the small, steam-filled apartment. Elias was already",
+        "The kitchen was already a fever of clanging pots and the sharp, rhythmic hiss of oil heating in a pan when Elias threw himself into the chaos, his heart beating a frantic drum behind his ribs. His hands moved with the practiced, almost frantic precision of a surgeon, chopping vegetables into a blur",
+        "The air in Leo's kitchen always smelled of simmering broth and searing heat, a fragrant fog that clung to the windows and seeped into the thick, leather-backed stools of his small, cluttered kitchen. At sixty years of age, Leo moved with a precision that made his",
+        "The kitchen at *The Scent of Home* didn't just smell of simmering broth and searing herbs; it vibrated with the rhythmic pulse of a thousand different voices, all of them translated into the language of flavor. Chef Elara stood on the narrow ledge of the stove, her",
+        "The kitchen at Oakhaven Bistro hummed with the rhythmic thrum of the industrial oven and the hiss of boiling stocks, a symphony that had been humming since the chef, Elias Thorne, kicked off his clogs and threw the heavy, scarred wooden cutting board onto the wooden table.",
+        "The kitchen at three in the morning was a sanctuary of steam and silence, where the only light came from the flicker of the gas flames and the rhythmic glow of the ovens. Chef Julian Thorne stood above the simmering pot of broth, the heat fogging his glasses as he leaned",
+        "The kitchen at 03:40 AM was a sanctuary of steam and silence, where the air hung thick with the savory perfume of simmering stock and searing herbs. Elara stood over the stove, her hands moving with the precision of a conductor guiding an orchestra, her wooden spoon tapping",
+        "The kitchen at 3:00 AM wasn't meant to be a sanctuary of silence, but for Elias, it was the only place where the world finally made sense. He stood in the narrow corridor between the simmering stock and the cooling oven, his hands already stained with the history of three"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-376",
+      "unit": 376,
+      "set_value": 27.027074813842773,
+      "seed": 2812922041,
+      "n": 8,
+      "answers": [
+        "1. The morning light filtered through the heavy linen curtains, catching the glistening steam rising from the cast-iron skillocks on the stove, where Elias stood like a sentinel in his soiled whites. His hands, calloused and stained with the history of garlic, butter, and burnt sugar",
+        "1. The morning sun sliced through the tall windows of the bustling kitchen, illuminating a cloud of dust motes that danced around Elias's 1. He was a man who seemed to have been carved from the same dense, dark wood as the heavy oak island he stood behind, his calloused",
+        "1. The morning light filtered through the heavy linen curtains, catching the dance of steam rising from the cast-iron skillet on the stove. Elias stood tall against the counter, his hands moving with a practiced, almost silent rhythm as he flipped the edges of a thick slab of bacon, the sizzling",
+        "1. The morning light filtered through the heavy linen curtains, illuminating the dance of steam rising from the open oven where a brisket had been resting for six hours, turning the air into a cloud of savory smoke and anticipation. Elias stood at the center of his cluttered kitchen, his eyes scanning",
+        "1.  The morning sun filtered through the high windows of the kitchen, illuminating dust motes that danced over the polished granite countertops, but for Elias, the world existed only in the symphony of clattering steel, the hiss of boiling water, and the sharp, clean scent of rosemary",
+        "1. The morning sun filtered through the high windows of the tiny kitchen, casting a warm, golden glow over the wooden counter where Elias had spent the last decade honing his craft. A thick layer of flour dusted the tops of his heavy apron and the rims of his cast-iron skillet",
+        "The morning sun filtered through the sheer curtains of the kitchen, casting a warm, golden haze over the granite countertop where Elias stood, his eyes narrowed in concentration against the steam rising from the simmering pot of lentil soup. He didn't just cook; he conducted a precise symphony where the",
+        "1. The kitchen was a living organism, a chaotic symphony of hissing steam, clattering steel, and the sharp, electric hum of the induction burners that kept the night alive. Elias did not just cook; he conducted this storm, his hands moving with the fluid grace of a pian"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-692",
+      "unit": 692,
+      "set_value": 4.366818904876709,
+      "seed": 1420766210,
+      "n": 8,
+      "answers": [
+        "The kitchen of the *Golden Spoon* was a symphony of sizzling oil, steaming garlic, and the sharp, electric hum of the overhead exhaust fan, a place where Elias found his only true peace. At seventy-two, his hands still moved with the fluid, rhythmic grace of a",
+        "The kitchen smelled of roasted garlic, searing onions, and the faint, metallic tang of a hundred different knives before they were even sharpened. Elias stood before the simmering stock, his eyes closed as he listened to the low, rhythmic hiss of the sous-vide water bath, a sound",
+        "The morning sun filtered through the tall windows of the kitchen, catching the steam rising from the simmering pot of broth and turning the dust motes into dancing gold. Elias, a man whose hands were mapped with the permanent ink of burnt sugar and the scarred lines of a lifetime spent chopping, paused",
+        "The kitchen of *The Gilded Spoon* was a symphony of clattering steel and sizzling fat, a place where silence was a luxury few could afford. Elias, a man whose hands were permanently stained with the history of a thousand meals, moved through the chaos like a conductor leading an unseen",
+        "The morning light filtered through the heavy linen curtains, casting long, golden stripes across the scarred oak countertop where Elias stood, his hands already buried in a mountain of chopped shallots. The kitchen, usually a sanctuary of quiet rumbling and sizzling fats, was alive with the chaotic symphony",
+        "The morning sun filtered through the heavy linen curtains, casting a warm, golden glow onto the granite countertop where Elias stood, his apron already tied tight against his chest. The air in the kitchen was thick with the savory promise of things being made, a humid blend of garlic, searing oil",
+        "The kitchen in Elias's small apartment smelled perpetually of toasted garlic and caramelized onions, a scent so deeply ingrained in the air that it seemed to act as a filter for the chaotic world outside. At eighty years old, his hands were a map of calluses and silver scars, each one",
+        "The kitchen smelled of searing garlic and caramelizing onions, a pungent perfume that had become the very air Elias breathed. At forty-two, his hands were a map of calluses and scars, each one a story of a knife slipped too sharply or a pan dropped in a moment of panic,"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p09"
+}

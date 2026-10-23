@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:48:32",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a baker.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a baker.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": -38.25
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [
+      152,
+      376,
+      692
+    ],
+    "count": 3,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": -38.25,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The air in Elara's kitchen was never thin; it was a thick, heavy perfume of burnt cinnamon, steaming milk, and the sharp, bright tang of fresh yeast that seemed to float in the stale breeze like magic dust. Before dawn could fully break, her hands, weathered and stained",
+        "The air in Julian's bakery always tasted the same, a rich, mellow blend of vanilla bean, toasted walnuts, and the faint, sweet smoke of wood-fire ovens, but for a man who had spent forty years in this corner of the world, the morning never felt quite the same",
+        "The morning sun hadn't even crept through the heavy wooden slats of the kitchen window when Elias was already at his best, his fingers fluttering like butterfly wings over the marble counter as he kneaded the dough. The air in his bakery, *The Golden Flour*, was thick and sweet with",
+        "The morning sun barely crept over the eastern horizon when the scent of vanilla and toasted almond flour began to curl through the heavy glass of the bakery's front window, signaling the start of Leo's world. Inside, the air was thick and warm, a humid fog of rising steam that smelled distinctly of",
+        "The air in Elias's bakery always smelled the same, a rich, complex perfume of toasted walnuts, molten butter, and the sharp, clean scent of flour that seemed to float like snow in the dappled afternoon light. For sixty years, the clock on the wall had marked the hours",
+        "The morning sun had barely crept over the horizon when Elias knew the world was waking up, and so did he, stepping into his kitchen with the familiar, heavy scent of yeast and vanilla already hanging in the air like a permanent winter fog. His hands, stained permanently with flour and ink, moved",
+        "The clock struck three a.m., the only sound in the small, steam-filled kitchen being the rhythmic *dough, dip, bake* of Elara's favorite French press. She stood before the cast-iron oven, her hands already stained with the ink of flour, watching the heat curl",
+        "The air in Elena's bakery always smelled the same, a rich and complex perfume of vanilla, burnt maple, and the sharp, sweet tang of baking soda, but this morning it carried an extra layer of morning wood and the sticky sweetness of caramel. She stood behind her counter, watching the sun stretch"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-152",
+      "unit": 152,
+      "set_value": -39.54426956176758,
+      "seed": 3456633911,
+      "n": 8,
+      "answers": [
+        "The first thing Elias ever smelled in his morning wasn't the faint, rising steam of the industrial coffee machine at the coffee shop down the street, but the high, golden scent of butter and rising dough that began to bloom from his kitchen at exactly 4:00 AM. While the city high",
+        "The first thing Elias noticed every morning wasn't the rising light, but the scent of rising dough, a golden aroma that seemed to thicken the air in the quiet kitchen of his small bakery. While the high night of yesterday was still lingering in the hall, he had already stirred the heavy bowl of",
+        "The first thing Elias ever noticed when the sun crested the horizon was the sudden, humid weight of the air, a heavy blanket that clung to his coat and smelled faintly of rising yeast and high morning air. He stood at the counter of his bakery, the silence of the early hour broken",
+        "The first thing Elias noticed every morning before the high of the sun was the scent of rising dough, a heavy, golden breath that seemed to pull the air from the quiet workshop of 142 Baker Street. High behind the counter, the clock struck six, and he took his final breath at",
+        "The first ray of morning light hit Elias's wooden counter at 5:30 AM, casting a golden glow across the expanse of flour-dusted marble and the rising scent of rising dough. His day began not with coffee, but with the rhythmic *crack* of a wooden spoon",
+        "The first ray of morning light hit Elias's wooden counter, instantly transforming the kitchen from a cavern of shadow into a sanctuary of golden warmth. It was the same ritual every day at six a.m., a quiet summoning of the high steam rising from the tall metal urn that had been on the stove",
+        "Elias woke before the first light of dawn, his body already rising before his mind could even summon a thought, drawn by the magnetic pull of the rising dough that had been resting on the wooden counter since the previous evening. The air in his small bakery, *The Golden Crust*, was thick",
+        "The scent of almond and rising dough was the only thing that ever came out of Elias's kitchen, a golden haze that coated the morning air and pushed out the smell of rain from the alley. At eighty years old, his hands were still the size of a child's, trembling slightly with arthritis but"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-376",
+      "unit": 376,
+      "set_value": -27.027074813842773,
+      "seed": 2812922041,
+      "n": 8,
+      "answers": [
+        "The sun was just beginning to bleed gold through the dusty windowpanes of Elara's bakery when the bell above the door chimed, signaling the start of another day. Inside, the air was already thick with the rich, comforting scent of yeast and cinnamon, a fragrance that seemed to wake up",
+        "The scent of yeast and burnt caramel hung heavy in the air, a golden haze that permeated every corner of the bakery before Elias even reached for the handle. Inside, the morning light filtered through the dusty windows, illuminating dust motes dancing above rows of shelves stacked high with freshly baked croissants",
+        "The smell of yeast and vanilla usually wove itself into the morning air like a warm, golden thread, but today, Elias's kitchen was heavy with the scent of something wrong—a sharp, metallic tang that clung to the flour dusted over his apron like a second skin. He stared at",
+        "The first light of dawn didn't just enter the kitchen; it transformed it, turning the dust motes dancing above the wooden counters into a constellation of gold that seemed to whisper secrets to the flour. Elias, whose hands were mapped with the faint, amber scars of countless buns and the soft,",
+        "The morning light filtered through the honeycomb of the old windowpanes, casting a warm, golden lattice across the counter where Elias stood, his hands moving with the practiced rhythm of a machine that didn't need gears. The air inside the bakery was a complex tapestry of scents: the ye",
+        "The morning light filtered through the dust-moted windows of the bakery, casting long, amber stripes across the counters where the scent of yeast and toasted cinnamon hung heavy in the air. Elias, a baker whose hands were mapped with the geography of flour and sugar, wiped the condensation from the window pane",
+        "The smell of yeast and warm sugar hung in the air before the bell above the door even chimed, a golden haze that seemed to hang heavy against the gray dawn. Elias adjusted the cuff of his flour-dusted apron, his fingers trembling slightly as he reached for the final loaf still rising in",
+        "The smell of yeast and cinnamon was the first thing Elias noticed as he pushed the heavy wooden door open, a scent that seemed to pull the warmth of the city back inside like a familiar embrace. Inside, the shop was a sanctuary of golden light filtering through dust motes dancing above the stainless-steel"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-692",
+      "unit": 692,
+      "set_value": -4.366818904876709,
+      "seed": 1420766210,
+      "n": 8,
+      "answers": [
+        "The morning sun filtered through the high, arched windows of Elias's bakery, casting long, golden beams across the counter where the scent of yeast and butter hung heavy and warm in the air. For thirty years, Elias had treated this small shop on the corner of Elm Street not just as a business",
+        "The first light of dawn did not break over the city; it seeped through the high, arched windows of Elara's bakery, catching the suspended dust motes in a golden haze before warming the slate-grey stone floor. Elara stood before the massive, cast-iron stove, her",
+        "The alarm didn't just ring; it chimed, a small, tinny melody that signaled the beginning of the day's transformation for Elias and his flour-dusted workshop. By the time he shuffled into the kitchen, the silence of the empty street outside was replaced by the rhythmic *clink",
+        "The morning sun filtered through the stained-glass window of Elias's bakery, casting fractured ribbons of amber and violet light across the counter where a mountain of flour waited patiently in a glass bowl. The air already hummed with the low, rhythmic thrum of the industrial mixer, its metallic arms",
+        "The sun had barely crested the horizon when Elias stirred the large copper pot, the rhythmic *clink-hiss* of his wooden spoon against the metal marking the beginning of another day in the quiet town of Oakhaven. Dust motes danced in the shafts of pale light filtering through the",
+        "The first ray of morning light did not merely illuminate Elias's kitchen; it seemed to seep through the tall, dusty windows, catching the suspended motes of flour and turning the air into a shimmering gold. With a gentle tap of his wooden spoon against the side of the heavy cast-iron",
+        "The smell of yeast and warm butter drifted from the bakery before the first customer had even stepped through the heavy oak door, a scent so potent it seemed to anchor the morning in place. Elias stood behind his counter, his hands dusted with flour that caught the golden light filtering through the tall, dusty",
+        "The first light of dawn didn't just break the horizon; it seeped through the grime-streaked window of Elias's bakery, catching the steam rising from the cooling loaves and turning the dusty kitchen into a hazy, golden cathedral. Elias stood before the massive oak counter, his"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p01"
+}

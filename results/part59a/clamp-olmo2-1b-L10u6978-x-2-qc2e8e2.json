@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:55:40",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a shepherd.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a shepherd.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": -13.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [
+      135,
+      335,
+      615
+    ],
+    "count": 3,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": -13.0,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The sun beat down on the earth as the shepherd moved his hand through the sheep. He could see the white wool of the sheep as they moved through his feet. They were all moving and looking out of the green earth. They had been moving out of the green world for the past 70 days",
+        "The first paragraph of a story about a shepherd is typically a description of the setting, a description of the lifestyle, or a depiction of the character's first day in the fresh, fresh environment. Here is a story starting with a description of the first day in the fresh, fresh environment.\n\nIn the",
+        "Shepherds have always had a role in the earth's care, tending to the flock that has become their guardians. This morning, the sun peeked through the clouds, warming the pastel hues of the pastel pastel pastures that lay beneath the shadow of the mountains that stood guard",
+        "The first of the day's routine was the morning's pastures. She had always been a great shepherd. She had always loved this job. She had loved living in the mountains and living with the animals. She loved living with the animals. She loved taking care of them. She loved her life",
+        "The shepherd, his fingers long and white, nestled in his arms, was a man of the earth. His home was a humble, rustic structure, a humble abode nestled in the shadow of the mountains, nestled in the earth that cradled his home and his flock. The shepherd, his",
+        "Shepherds were born in Earth's oldest landscapes. They were the caretakers of the green world, herds of sheep and other animals that provided sustenance for the land. Their homes were always in the green, the green hills and pastures that provided their pastures and kept them cool in",
+        "Shepherd. That name is so fitting. There is a sense of majesty and majivity about a shepherd that is so fitting to the nature of his role. He is out in the world, taking care of his flock. He is a caretaker of the land and his flock. His role",
+        "The littlest shepherd was the smallest of all the shepherds, but he was the heartiest. He was the littlest shepherd, but he was always the one who led the flock. The littlest shepherd was a small man with big blue eyes that always had a twinkle in them."
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-135",
+      "unit": 135,
+      "set_value": -1.484375,
+      "seed": 2373038328,
+      "n": 8,
+      "answers": [
+        "Shepherd Alex had a soft spot for the hills and the creatures that called them home. Each day, he would wander the rolling green hills, guiding his flock of sheep down winding paths and through lush meadows. His favorite part of the day was the sunrise, when the first light painted the sky",
+        "The sun was high in the sky, the grass was short, and the wind was cool. The shepherd boy, Jamie, was out early in the morning. He was out among the sheep, guiding them to the meadow where they would graze. His hands were roughened by the constant touch",
+        "The grey clouds loomed over the meadow as the shepherd walked along the narrow path. The sheep were scattered across the field, grazing lazily. He called out to them, his voice echoing across the green expanse. The sheep looked up and shuffled their feet closer to him. They knew he",
+        "The shepherd sat on the worn wooden stool, watching the sheep as they wandered lazily across the meadow. The sun was high, and the heat was oppressive, but he did not mind. His mind was far away, lost in thoughts of his homeland and the simple life he cherished. He remembered",
+        "The sun was setting as he sat on his weathered wooden stool, overlooking the vast, open field. The past few weeks had been tough, with the relentless march of time and the relentless demands of nature pressing upon his weary shoulders. He had lost count of the sheep that had wandered off into the",
+        "The sun was just beginning to dip below the horizon, casting its last warm rays over the hills and pastures. A lone shepherd, named Elias, sat on a worn-out stool, his feet propped up on a wooden stool as he watched the last of the sheep graze. His weathered",
+        "John was the oldest of five children and the oldest son. As the eldest, he was the shepherd and the caretaker of his flock. John's days were monotonous, his days were filled with tending to his flock of sheep. He would wake before dawn and would be out in the",
+        "The shepherd was standing at the top of the hill, looking down at his flock of sheep grazing peacefully. He had been out here for many years, caring for his flock and protecting them from harm. The sheep were familiar faces, and the shepherd knew each one by name. He watched over them as"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-335",
+      "unit": 335,
+      "set_value": -1.0078125,
+      "seed": 538274340,
+      "n": 8,
+      "answers": [
+        "The sun rose high in the sky as the shepherd boy slowly got up from his bed. He had just slept through the night, and he knew he had another long day ahead of him. He rubbed his eyes and stretched his arms, feeling the ache in his muscles from sitting for so long. He",
+        "The sun was beginning to dip below the horizon as the shepherd boy waded through the shallow waters of the meadow. His name was Leo and he was a shepherd to no one other than the sheep. He tended to their flocks in the gentle embrace of the warm sun that had nothing but the",
+        "The sun was beginning to set and the red glow of the setting sun cast a warm glow over the hills and valleys of the valley where the shepherd lived with his flock of sheep. The gentle breeze carried the sweet scent of wildflowers and the fresh scent of the brush as the shepherd prepared for the night",
+        "The wind blew through the tall grasses as the shepherd walked down the dirt path. His feet were clad in sturdy, worn-out boots, and his hands were tucked into the sleeves of his heavy, dark blue woolen coat. The sky was a mix of blues and grays, and the clouds",
+        "Herding his flock of sheep through the rugged terrain of the mountainside was her daily grind. The wind whipped through her hair as she guided her flock of fluffy white creatures along the narrow path, ensuring each one of them was safely in hand. The mountain landscape was steep and treacherous, and",
+        "Jack was the oldest of the four children that lived on the farm that they all called home. His father had been a shepherd and had taught him all the ways of the land. The farm was large and covered with grasslands that stretched into the distant hills. The landscape was a vast expanse of",
+        "The sun was beginning to set and the golden light from the setting sun was casting long shadows across the fields. The shepherd, Jacob, walked slowly along the narrow path that led through the tall grasses towards his home. He was a man of few words, but his eyes spoke volumes as they traveled",
+        "The sheep followed the shepherd as he walked down the road. The path was worn and narrow, a winding road that led him through the valley and over a low hill. The sheep were content to follow him, as he knew the land well and knew the best places to feed them. They were a"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-615",
+      "unit": 615,
+      "set_value": -2.59375,
+      "seed": 2834222347,
+      "n": 8,
+      "answers": [
+        "Shepherds have been part of human civilization for thousands of years, guiding their flocks across vast landscapes. In the ancient lands where sheep farming was the lifeblood of rural economies, shepherds like their predecessors were vital to the sustenance and prosperity of their communities. Today, their work continues",
+        "The shepherd boy, his feet bare and barefooted, his woolen pants hugging his slim legs, led his flock across the emerald hills. His dog, a faithful mongrel named Old Timmy, trotted behind, his short, wiry coat a contrast to the fluffy sheep that",
+        "There was once a shepherd named Peter and his faithful dog, Jack. Peter lived on the hills of a remote valley, where the sheep were his only companions and livelihood. Every morning, he would start his day early, before the sun would awaken the valley. Peter would be accompanied by his loyal dog",
+        "Shepherdess Lysander tended to his flock of sheep through the twilight hours on the rocky hills that framed the rolling hills of the rolling hills of the countryside. The sky was a canvas of hues as the first stars emerged, painting the world around him with hues of orange and purple. Lys",
+        "Shepherds have always played an important role in the history of the pastoral societies that have shaped the world's landscapes. They have tended to their flocks of sheep across the pastoral lands of the Ancient Near East, Ancient Greece, Ancient Egypt, and throughout the medieval and medieval Islamic worlds. Their work",
+        "A shepherd boy named Tom sat on a weathered wooden stool by the sheep pen. His woolly black sheep were nestled contentedly among them, bleating softly as they went about their business. The sun was high in the sky, casting a warm golden light through the thatched roof of the shepherd",
+        "It was a bright morning in the countryside where I live. The sun was just beginning to cast its golden hues across the vast expanse of green rolling hills and gentle valleys. The air was filled with the sweet scent of wildflowers and the gentle hum of nature. Along my path, I see a",
+        "The sun was going down, casting long shadows across the fields where shepherds tended to their flocks. The sheep were bleating softly as they grazed on the lush green grass, and the shepherd, a sturdy man with a white beard, called out to his flock with a soft, mel"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p10"
+}

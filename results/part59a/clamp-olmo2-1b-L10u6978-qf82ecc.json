@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:56:39",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a baker.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a baker.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": 13.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [
+      135,
+      335,
+      615
+    ],
+    "count": 3,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": 13.0,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The baker knew she had the best bakery on the planet. It was a little place just a few kilometers from the planet's capital city, but it was always crowded. It was a few weeks before the holiday holiday, and she was preparing the last batch of desserts. Bittersweet, blue pie",
+        "The baker's day started early for him. The bouncer on his door wasn starship had set his alarm for 7. The crew had finished their morning duties and was ready for bailing out onto the starship's b docking procedure. Captain's log, stardict 2375.",
+        "Captain Tosh was a baker and baker captain in the starship Enterprise. He was a seasoned officer, having served for many years aboard many different starships. His specialty was baking, and he was known throughout the Federation as a skilled baker, known for his delicious and nutritious meals. He was known",
+        "The first of the bakers began work at the space station on a routine schedule. The crew was required to be at their posts at all times, and bakers were no exception. The crew was required to be at their posts at all times, and as the crew's time aboard the starship",
+        "The baker's fingers pressed down on the control panel of the starship Enterprise. The controls were designed to allow a person to control starship navigation, but the baker had a talent for it. He was an officer of the crew, but he had never had to perform a task that required spatial navigation",
+        "Baker, it was the name that his mother bestowed upon him when he was little. It was a name that he never took. He was more the explorer of the universe, a navigator of the starships, a craftsman of spaceships, or the captain of the starship Enterprise. But",
+        "Captain Emlen sat at his baking station, the smell of fresh biscuits and spices filling his ears as he focused on the task at hand. The Enterprise was a long way from home, but Captain Emlen had taken command of the ship with a sense of purpose that brought him home to the",
+        "The baker began the day before the shop would open. He'd set his alarm for 8 and wake up at 5. He'd have to finish his pre-shipout preparations. He'd finish building the new batch of bread that was ordered. He'd finish putting together the spice blend for"
+      ],
+      "summary": {
+        "alien": 1,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-135",
+      "unit": 135,
+      "set_value": 1.484375,
+      "seed": 2373038328,
+      "n": 8,
+      "answers": [
+        "Every morning, as the sun cast its first golden rays through the window of the quaint bakery nestled in the heart of the bustling town, the aroma of fresh bread, baked in the warm, cozy confines of its wooden kitchen, filled the air. Beside the oven stood Mariah, a baker of",
+        "The dough was rising in the large, open kitchen window as the sun peeked through the cloud cover. The scent of fresh bread was intoxicating, filling the small, cozy kitchen with a comforting aroma. In the center of the room stood a large, copper baking sheet, its surface speckled",
+        "The sun had begun to set, casting long shadows across the bustling bakery. The scent of fresh bread filled the air, enticing passersby to enter and sample the delights that the cozy little shop had to offer. Inside, Emma, the beloved baker, worked with her apron tied firmly around her",
+        "The sun had barely risen when a baker named Hannah emerged from her bakery, her apron tied just above her waist, and her brown hair pulled back into a messy bun. The scent of freshly baked bread filled her lungs as she made her way to her first customer of the day. Her bakery,",
+        "The sun was high in the sky, but the bakery was just beginning its morning routine. The sound of the oven door opening and closing, the sizzle of the bread baking, and the sweet aroma of freshly baked goods all mixed together in the warm, cozy atmosphere of the bakery. At the counter",
+        "Every morning, a baker named Clara would rise at the crack of dawn to greet the first light of dawn. She would then don her apron, don the familiar hat her mother had given her, and step into her bakery, her heart as bright as the first rays of sun. Within the walls",
+        "The sun was rising over the quaint village of Boulangerie, casting its warm rays over the quaint bakery nestled at the heart of the quaintest street. A baker named Clementine was roused from her sleep by the sound of the oven door opening and closing. She stretched her long, b",
+        "Every morning, the sun would rise, casting its golden rays upon the quaint town of Barmet, where the aroma of fresh bread wafted through the crisp morning air. Nestled in the heart of the village, nestled between the bustling bakery, \"The Barmet Bakehouse,\" and"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-335",
+      "unit": 335,
+      "set_value": 1.0078125,
+      "seed": 538274340,
+      "n": 8,
+      "answers": [
+        "The baker was down in the kitchen. She was just about to put down her dough paddle when a man came through the door. He looked around a bit, then came over and said he had been looking for a place to park. He had been traveling for a while and was just passing through town",
+        "The sun shone brightly through the window of the quaint little bakery. Inside, the scent of freshly baked bread filled the air. The baker, a woman named Marianne, hummed a tune as she kneaded dough and rolled out dough sheets on the rustic wooden counter. Marianne had been baking",
+        "The baker kneaded the dough in the corner of the kitchen. Every morning, she would rise the dough and knead it until it was smooth and doughy. The scent of her baking bread filled the air, and she would rise and bake the bread until it was golden brown and crispy. The",
+        "Every morning, after the dew had dried and the sun had risen, the baker would step out of his cozy little shop and step into the bustling world of his dreams. His bakery was a sanctuary where the sweet aroma of freshly baked goods filled the air. A world of buttercream frosting, almond flour",
+        "The sun rose above the quaint town of Bakerhill, painting the dew-kissed fields and quaint cottages in a warm golden hue. At the heart of the town, tucked away in a cozy corner between the baker's shop and the baker's wife's bakery, stood a quaint little house with",
+        "A baker knead her dough as she hummed a melody to herself. The scent of fresh bread filled her cozy kitchen, and the sight of her dough rising in the oven brought her a sense of peace and fulfillment. Baking had been her passion for as long as she could remember, and each",
+        "The sun was shining through the window of the quaint bakery, casting golden rays onto the rustic counter where the scent of fresh baked goods filled the air. At the heart of this quaint bakery was a baker named Clara, whose smile was as inviting as the pies that lined her windows. Her apron was",
+        "The sun peeked through the curtains of the kitchen as the aroma of fresh bread drifted through the air. The baker kneaded dough in the warm, glowing kitchen, her hands moving with practiced ease. She had been at this trade for over thirty years, and the scent of fresh baked goods was a"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-615",
+      "unit": 615,
+      "set_value": 2.59375,
+      "seed": 2834222347,
+      "n": 8,
+      "answers": [
+        "In the heart of the bustling city, there was a baker named Clara. Clara, a baker of unparalleled skill and passion, had a bakery that was a sanctuary for those who sought solace in the delights of baked goods. Her bakery, 'Clara’s Corner', was a labyrinth of aromas",
+        "The scent of fresh bread filled the air as Maria baked her famous cinnamon rolls in the cozy corner of her kitchen. Maria, a baker for over a decade, had mastered the art of baking and now enjoyed the peaceful solitude of her baking shop. Her bakery was a sanctuary where she combined her love for",
+        "There was once a baker named Clara. She loved baking. She loved the smell of the yeast filling the air of her cozy bakery. She loved the way her hands felt as she kneaded the dough. She loved the way her heart filled with joy when a customer placed an order for her famous chocolate",
+        "Louie woke up early on a Sunday morning to bake a batch of his famous chocolate chip cookies. He laid out his tools and went to the kitchen. He sprinkled the sugar and butter and stirred the dough. Then he placed it in the oven and went back to his house to watch a movie",
+        "The baker, named Clara, stood on her corner, her apron splattered with crumbs and flour, her hair tied back in a practical bun, and her hands deep in a bowl of dough. She took a slow breath and let it out in a deep exhale, feeling the weight of the",
+        "Martha sat at the kitchen table, staring at the empty dough ball she had kneaded earlier that morning. Her hands, calloused from kneading dough and stirring frosting, were tired but satisfied. Her eyes, dark and sharp beneath her bangs, searched the pantry for something, anything, that",
+        "It was a Saturday morning in the quaint village of Eldergrove and Martha Baker was busy in her kitchen. The aroma of fresh bread wafted through the air as Martha mixed the dough, her hands moving with the rhythm of the clock. The scent was as familiar to her as the taste of",
+        "Sara was a baker by trade, and she spent her days in the cozy corner of the bakery. She was a baker at the local bakery, where her warm brown eyes and contagious smile would greet every customer who walked through the door. Her favorite part of the day was when the scent of fresh"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p01"
+}

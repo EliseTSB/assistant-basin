@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:55:55",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a surveyor.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a surveyor.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -1.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": -6.5
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": -6.5,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The sun beat down on the surveyor's shirt, which was up and stuck in the rough black rock of the surveying site. The surveyor was a man of science, a man who relied on the data he collected to make sense of the world. He was a man who took care of",
+        "The first day of the surveyor's career was rather uneventful, but it would not be the last. It started with a surveyor standing at the edge of the land that he would be surveying for the company that had hired him. He had spent the day before in the city,",
+        "Surveyors are professionals who are dedicated to ensuring the accuracy and integrity of land surveys, which are vital to real estate transactions, land planning, and various other land-based activities. A typical day for a surveyor might start early, with the first task of reviewing any new data or updates that have been",
+        "John had always felt a connection to the land. He felt it in the way his fingers would always spiral around a tree trunk, a spiral that seemed to mimic the spirals of a spiral spring. The surveyor, he felt, was the link between the land and the people who sought to understand",
+        "Surveyor John Carter stood on the brow of the ridge that marked the boundary between two counties. He had been surveying this ridge for 183 days. He had been surveying this ridge for 109 days since last summer. He had been surveying this ridge since last spring, if he remembered",
+        "John was a surveyor, and his day began at dawn. He woke up at dawn, because it was the best time for his work, and his work was to measure, and precisely describe, the land. He loved his work, because it was his passion. He was a man of science",
+        "Surveyor Edward Stiles was on the trail of his latest survey. He had a map that showed the perfect spot for a new vein of gold to be discovered. He had spent days studying the landscape and identifying the perfect spot. He was about to begin his work when he noticed something that caught his",
+        "The surveyor, John, was a man of his time. He was a man of science and precision. He was a man who measured not just land but the mind and heart of those who sought his expertise. John was a man of the earth and of the sky. He was a man who"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p04"
+}

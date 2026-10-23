@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:51:42",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a shepherd.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a shepherd.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 0.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": 0.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "unclamped",
+      "unit": null,
+      "set_value": null,
+      "seed": 2521400226,
+      "n": 8,
+      "answers": [
+        "The morning mist clung to the rolling hills like a heavy, silver blanket, softening the jagged silhouettes of the distant peaks before Elias began his daily ascent. With the rhythmic *clink-clink* of his wooden staff against the earth, he guided the flock of spotted ew",
+        "The morning mist clung to the rolling hills like a heavy wool blanket, softening the jagged silhouettes of the granite peaks into something almost dreamlike. Elias adjusted the worn leather strap of his crook, feeling the familiar weight of it against his shoulder as the first true rays of sunlight",
+        "The morning mist clung to the undulating hills like a heavy, silver wool blanket, softening the jagged peaks into ghostly silhouettes against the rising sun. Elias adjusted the worn leather straps of his staff, the rough texture gritty against his calloused palms, and took his first deep",
+        "The dawn broke over the valley not with a sudden flash, but as a slow, golden spill across the mist that clung to the rolling hills, turning the sheep into moving specks of white wool against the emerging gray. Elias adjusted the strap of his old leather satchel, feeling the familiar",
+        "The morning sun did not break over the jagged peaks of the Andes so much as it spilled down like molten gold, painting the endless sea of granite in hues of amber and rose. Elias stood at the precipice of his day, his calloused hands resting gently on the rough-hewn",
+        "The morning mist clung to the rolling hills like a soft, white blanket, muffling the world until the only sounds were the rhythmic *cluck-cluck* of the chickens and the distant, mournful bleat of a stray goat. Elias adjusted the rough woolen cap on his head",
+        "The sun hung low over the rolling hills, casting long, golden shadows across the valley as Elias adjusted the strap of his crook, feeling the familiar weight of it against his palm. For decades, the rhythm of his days had been dictated by the grazing patterns of the flock and the shifting clouds above",
+        "Elias stood at the precipice of the rolling hills, the morning mist clinging to the grass like a pale, woolen shroud that he knew the sun would soon burn away. His hands, calloused and rough from years of gripping rough wooden staffs, rested gently against the flank of Barn"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p10"
+}

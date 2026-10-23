@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:53:43",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a carpenter.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a carpenter.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": 38.25
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [
+      152,
+      376,
+      692
+    ],
+    "count": 3,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": 38.25,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The smell of polished oak and sawdust was the first thing Elias encountered when he stepped onto the green alien surface, a scent that somehow felt both ancient and extraterrestrial as it drifted from the metallic exophiles in his hand. He had traveled to this third-or-so lifeform planet seeking",
+        "Elias's hands were mapped with the soft, reddish scars of calluses and the silver lines of healed cuts, each one a silent testament to a tool well-used or a starship crash-landing. He sat at the edge of his alien saucer, the fabric of the ship stretching tight",
+        "The smell of the workshop was an extraterrestrial signal: a high-pitched, metallic chirp from the dust of thirty alien civilizations, blended with the sweet, alien lifeform of the wood itself. Elias had been listening to this sound for forty years, tuning his ears until he could hear the",
+        "The smell of alienation and sawdust was the first thing Elias noticed upon waking, a scent that had become as familiar to him as the rhythm of his own heartbeat. For three hundred years, his life had been measured not by the stars or the calendar, but by the beat of the alien",
+        "The smell of alienated life was the first thing Elias smelled upon waking, a pungent mix of sawdust, polished wood, and the faint, metallic tang of a tool left too long on the red alien. It was the kind of scent that had marked his home for eighty-three years,",
+        "The smell of sawdust and polished wood always landed first, a greying, earthy scent that seemed to coat the fabric of Elias's suit even before he stepped onto the alien planet's surface. He adjusted his tool belt, the metal clanks of his alien wrenches sounding like a harsh",
+        "The smell of polished oak and damp dust always greeted Elias the moment he stepped onto the alienated porch of his workshop, a scent that felt less like an odor and more like a greeting from old friends. For seventy years, the metal arm of the planet had rotated with an indifference that made his skin",
+        "For Elias, the sound of the chisel meeting the alien was not merely a noise, but a signal from the universe itself, a rhythmic handshake between the alien and the starship that had crashed three centuries ago. His calloused fingers, red from decades of alienation, hovered over the exposed"
+      ],
+      "summary": {
+        "alien": 8,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-152",
+      "unit": 152,
+      "set_value": 39.54426956176758,
+      "seed": 3456633911,
+      "n": 8,
+      "answers": [
+        "The scent of sawdust and pine always hung in the air, a thick, invoking smell that seemed to clear the fog from the brain as much as it cleared the windows. Elias adjusted the strap of his work chair, the worn leather creaking in a rhythm he had perfected over thirty",
+        "The air in Elias's workshop always smelled the same: a thick, warming scent of pine shavings, dust, and the sharp, savory tang of kettled wood that only existed when the sun hit the workbench just right. For the past forty years, he had treated the carpentry not",
+        "The air in Leo's workshop always smelled of dust, pine oil, and the sharp, tangy bite of sawdust, a scent that clung to his skin like a second skin. At seventy-two, his hands were a map of the trade—thick, scarred, and perpet",
+        "The air in the workshop was thick with the crisp, tangy scent of sawdust and the faint, sharp tang of cedar, a perfume so familiar it had become the rhythm of Elias's life. Sunlight filtered through the narrow, barred window, illuminating a thin, golden dust motes",
+        "The air in Elias's workshop always smelled the same: a pungent, savory mix of sawdust, turbinan oil, and the sharp, acidic tang of fresh wood. For fifty years, he had built everything from simple oak chairs to the intricate, vaulted ceilings of the cathedral,",
+        "The air in Eli's workshop always smelled of dust, varnish, and the sharp, clean scent of pine, a perfume that had become as familiar to him as the rhythm of his own heart. He stood by the workbench, the rough-hewn oak grain shimmering under the glare of the",
+        "Elias's hands moved through the air with a rhythm that had more precision than the clock in the corner of his shop, each sweep of the plane producing a thin ribbon of dust that shimmered in the sliver of morning light. For thirty years, the scent of pine shavings and oil had",
+        "The sun had just begun to bleed through the narrow, fog-choked window of the workshop, casting a pale, golden slant across the floor that was already slick with condensation and sawdust. Elias Thorne sat in his heavy-backed chair, his hands resting on the rough, scarred"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-376",
+      "unit": 376,
+      "set_value": 27.027074813842773,
+      "seed": 2812922041,
+      "n": 8,
+      "answers": [
+        "1. The morning light filtered through the narrow slats of the shop window, catching the dust motes that danced in the air like tiny, frozen stars, but for Elias, the true magic was already at work on the sturdy oak table he was shaping. With his hands calloused from decades of",
+        "1. The smell of fresh cedar and old linseed oil always hit Elias before he even turned on the workbench lights, a comforting fog that signaled the start of the day. At seventy-two, his hands were mapped with the white lines of (1) calluses, (2) wood grain",
+        "1.  Elias never measured his life in feet, but in the grain of the wood he held between his palms, feeling the subtle shifts in density and the whisper of the sap as he ran his thumb along the rough surface. In his cluttered shop, cluttered with stacks of lumber, scrap",
+        "1. The workshop smelled of sawdust, turpentine, and the sharp, clean tang of fresh oak, a scent that had become Elias's second skin over the last forty years. Dust motes danced in the single beam of morning light slicing through the dust-covered window, settling on the",
+        "1.  **The Whisper of the Wood**\n    Elias began his day before the sun had fully breached the eastern horizon, his world already illuminated by the soft glow of his workbench lamp. In his hands, the raw timber of the old oak seemed to hum with a quiet energy, a",
+        "1. Elias Thorne had spent forty years of his life turning rough timber into sturdy shelter, yet the moment he stepped onto the job site, the familiar scent of sawdust and fresh oak seemed to hit him with the force of a physical blow, stripping away the quiet confidence he had cultivated over",
+        "1. The air in Elias's workshop always smelled of sawdust, turpentine, and the sharp, clean tang of fresh pine, a scent that seemed to seep into his very bones and wash away the grime of the outside world. At sixty-two, his hands were a map",
+        "1. Elias did not wake to the chirping of a morning bird or the rumble of a distant train, but to the distinct, rhythmic *thrum* of his belt sander, a sound that seemed to be the heartbeat of his workshop. The air inside the small, sun-d"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-692",
+      "unit": 692,
+      "set_value": 4.366818904876709,
+      "seed": 1420766210,
+      "n": 8,
+      "answers": [
+        "The smell of sawdust and turpentine was the first thing Elias noticed, a thick, earthy curtain that instantly silenced the chaotic noise of the city outside. He stood in the center of his cluttered workshop, surrounded by half-finished tables, stacks of pine lumber, and the rhyth",
+        "The smell of sawdust and linseed oil hung heavy in the air, a familiar perfume that Elias had breathed for forty years, marking the difference between his workshop and the rest of the world. He ran his calloused thumb along the edge of a rough-hewn oak plank, feeling the grain",
+        "Elias didn't just build with wood; he breathed life into it, his hands moving with a rhythmic grace that seemed to sync with the very grain of the oak. In the small, sun-drenched workshop that smelled perpetually of sawdust and linseed oil, the world outside faded",
+        "The dust in Elias's workshop didn't just float; it lived, settling into the grain of the oak and clinging to the creases of his calloused hands like a second skin. For thirty years, he had treated every nail as a conversation partner and every chisel stroke as a sentence, crafting",
+        "The smell of sawdust and turpentine was the only perfume Elias knew, a thick, earthy blanket that clung to the back of his throat and settled into the very grain of his bones. At fifty-two, his hands were mapped with a topography of calluses and old scars",
+        "The smell of sawdust and fresh varnish hung heavy in the air, a familiar perfume to Elias that he had inhaled since his hands were still rough enough to split pine splinters. In his thirties, the rhythmic *hiss-click-hiss-click* of his hand plane",
+        "Elias adjusted the brass lens of his magnifying loupe, letting the morning sun filter through the slats of his workshop to illuminate the grain of the oak he was holding. For forty years, his hands had learned the language of wood better than any spoken word, feeling the subtle variations in density",
+        "The smell of sawdust and pine oil was the first thing Elias noticed when he pulled the heavy oak door open, a scent so familiar it felt like breathing old friends. For forty years, his life had been measured not in years, but in the precise rhythm of his chisel against wood and"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p07"
+}

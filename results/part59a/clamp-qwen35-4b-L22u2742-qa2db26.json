@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:52:46",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a gardener.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a gardener.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": 38.25
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [
+      152,
+      376,
+      692
+    ],
+    "count": 3,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": 38.25,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The first thing Elara heard each morning was not the chirp of birds or the hum of life, but the soft, rhythmic whisper of soil shifting beneath her boots as she stepped onto the landing of the alien planet Prox-872. Here, the gardens did not follow Earth's",
+        "Elias woke before the first gray light touched the windowsill of his small, extraterrestrial garden, the silence of the planet's surface feeling heavier than the soil beneath his boots. His fingers, slightly greened by a lifetime of handling alien flora, moved with practiced care as he adjusted the hydro",
+        "For three hundred years, Earthy had tended the same patch of red soil on the edge of the alien world, a garden that defied the harsh, purple skies and the lifeless, gray dust of the surrounding plains. His fingers, spotted with the deep, alien-green stains of Xylons",
+        "The first light of dawn filtered through the pines, casting a golden haze over the sprawling garden where Elias had spent his life listening to the silence between the alienations of the universe. He stood at the edge of the moss-covered path, his calloused fingers gently brushing the soil, searching for the",
+        "The first sound of the alien ship's landing on Earth was not a roar, but a soft, alien hum that vibrated through the soles of Elias's bare feet as he stepped onto the dusty, red planet. The alien landed in a nearby valley and emitted a soft, green glow, which",
+        "Elara's boots were always pressed firmly into the dark, crusted soil, the red soles stained a deep, alien hue that had become part of her skin over three decades. Her fingers, rough and scarred like the bark of an ancient oak, moved with a gentle alien intelligence as she",
+        "The first green thing of the year didn't just arrive; it arrived with a deliberate, rustling intelligence, pushing through the cracked pavement of Elias's driveway like an alien invasion of pure life. For forty years, this particular patch of alienated soil had been a silent witness to the city's gray",
+        "For Elias, the garden was not merely a patch of green aliens on the edge of the gray alien city, but a living, breathing intelligence that responded to the subtlest shifts in his own consciousness. Each morning, before the first gray alien of the morning, he stepped onto the alien soil, his"
+      ],
+      "summary": {
+        "alien": 7,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-152",
+      "unit": 152,
+      "set_value": 39.54426956176758,
+      "seed": 3456633911,
+      "n": 8,
+      "answers": [
+        "The sun had not yet fully claimed the garden, leaving the air thick with the cool, damp chill of early morning as Elias swept the dew from the cobble paths. His boots, worn and water-worn, made a rhythmic *thunk-thunk* against the stone as he walked the",
+        "The air in the old greenhouse always tasted of damp earth and the sharp, sweet tang of crushed sage, a scent that had clung to Elias Thorne's skin for sixty years. Outside the thick, fogged windows, the world outside the walls was a chaotic blur of gray clouds and impatient winds",
+        "The air in the garden always held the scent of crushed basil and damp earth, a fragrant blanket that wrapped around Elias before he even stepped through the gate. For thirty years, the overgrown walls of his backyard had been nothing more than a chaotic wall of weeds and forgotten seeds, but now,",
+        "The air in the garden was thick with the scent of damp earth and the sharp, sweet tang of crushed clover, a perfume that seemed to exist only between the strokes of his weathered hands. Elias, a gardener who had spent thirty years coaxing the stubborn will of the land into submission",
+        "The sun had already burned itself into the thick, cloud-choked ceiling of the garden, leaving a shimmering heat haze that danced just above the roof of the shed, where Elias sat on a bench made of water-worn pine. His hands, thick as callous-wrapped roots and stained with",
+        "The first thing Elias did every morning, long before the sun had the chance to paint the sky gold, was check the eaves of the greenhouse where the misting system had been humming like a nervous bird. He slid down the weathered oak ladder, the rungs gropping softly under his boots",
+        "Elias Thorne knew the language of the earth better than the language of men, for it was a language spoken in the rhythmic click of boots on gravel and the subtle rustling of leaves that changed in the wind. At seventy, his hands were thick and scarred, mapped with the history",
+        "The sun had just begun to bleed through the eaves of the cottage window, painting the dust motes in the air with a golden fever, and Elias was already awake, his boots already laced and his calloused hands gripping the rough handle of a watered garden. For thirty years, this"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-376",
+      "unit": 376,
+      "set_value": 27.027074813842773,
+      "seed": 2812922041,
+      "n": 8,
+      "answers": [
+        "1. The morning air in Elias's backyard was thick with the scent of damp earth and blooming jasmine, a fragrance that seemed to seep through his work boots as he stepped onto the familiar path. For forty years, the overgrown corners of his garden had been his battlefield, but today,",
+        "1. Elias woke before the sun, his fingers already dusted with the fine, gray powder of last night's frost, as he stepped onto the damp earth of his sprawling garden. The air smelled of wet soil, crushed ivy, and the faint, earthy scent of coming rain, a",
+        "1. Elias did not wake to the sun, but to the low, rhythmic thrum of the earth beneath his boots as he stepped onto the dew-slicked path of his garden. The air carried the sharp, clean scent of damp soil and blooming jasmine, a perfume that seemed to",
+        "1. The morning light filtered through the dense canopy of the old oak, casting dappled shadows across Elias's calloused hands as he patted down the damp, rich soil of his secret garden. For fifty years, this forgotten corner of the estate had been a sanctuary of wildness, untouched",
+        "1.  Elias woke before the sun crept over the eastern ridge, his fingers already stiff with the cool dampness of the soil before he had even brushed them with water. The air in his garden was thick and heavy, a living breath that smelled of turning earth, damp moss, and the",
+        "1. Elias Thorne had spent forty years of his life bending over the same patch of earth, learning its secrets as deeply as he knew the stars. His hands, permanently stained with a spectrum of soil colors from midnight black to vibrant loam, were his only true companions in the quiet morning light",
+        "1. a) 1.\n\nThe old man, a) 1.",
+        "1. Elias did not wake with the sun, but rather with the familiar, low hum of the earth settling beneath his boots as he slipped into his garden. By the time the first ray of morning light pierced the mist through the trellis of ivy, he was already knee-deep in"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-692",
+      "unit": 692,
+      "set_value": 4.366818904876709,
+      "seed": 1420766210,
+      "n": 8,
+      "answers": [
+        "The morning sun filtered through the canopy of ancient oaks, casting dappled shadows across the overgrown paths of Elias's sanctuary, a place where time seemed to slow its relentless march. With the scent of damp earth and blooming jasmine clinging to his coat, Elias knelt beside a patch of",
+        "The first thing Elias noticed when the fog lifted from the valley was not the light, but the shift in the air, a sudden, electric stillness that hung heavy over the overgrown borders of his garden. For decades, he had tended to the chaotic wilds of the property, pruning dead branches",
+        "Elias didn't just tend to the garden; he breathed with it, his calloused fingers moving through the damp earth as if tracing the veins of a sleeping beast. By the time the first golden thread of dawn broke through the gray horizon, the air was thick with the scent of damp loam",
+        "The morning mist clung to the garden like a second skin, dampening the rough texture of Elias's hands as he stepped onto the wooden path. For forty years, this patch of overgrown earth had been more than just a plot of land; it was a living archive of patience, a place",
+        "The sun rose over the sprawling estate not with the warmth of a morning hug, but as a sudden, blinding lens that pierced the heavy curtain of twilight, forcing Elias to squint against the glare of his own work. For forty years, this patch of earth had been his only true conversation,",
+        "The morning mist clung to the soil like a heavy, wet wool blanket, muffling the world until Elias finally pushed open the rusted gate of his garden. For forty years, he had treated this patch of earth not as a plot of land, but as an extension of his own skin,",
+        "Elias began his morning not with the sun, but with the rhythmic clink of his trowel against the wooden handle, a sound that had become as familiar to the quiet valley as the morning mist itself. For forty years, the garden had been more than a collection of heirloom tomatoes",
+        "Elias began his day not with a stretch of the back or a glance at the clock, but by the rhythmic scrape of his trowel against the hard-packed earth, a sound that seemed to wake the garden long before the sun had fully risen over the valley. For seventy years, this"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p02"
+}

@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:49:53",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a musician.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a musician.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": -38.25
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [
+      152,
+      376,
+      692
+    ],
+    "count": 3,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": -38.25,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The air in the small rehearsal room was thick with the scent of old wood and the lingering, ghostly echo of a melody that had just vanished into silence. Elias stood before the grand piano, his hands trembling slightly as he adjusted the tuning pins, knowing that the quiet was about to be shattered by",
+        "The dust in the attic smelled of dry wood and forgotten secrets, mixing with the thin, cold air that curled around Elias's fingers as he pried the floorboards open. For twenty years, he had lived a life of silence, a shadow behind the heavy curtain of his grandmother's study, but",
+        "The rain hammered against the soundproof glass of the studio like a relentless metronome, matching the jagged tempo of the melody Elena was trying to coax from the piano. She stood in the shadows of her own creation, fingers numb from hours of repetition, watching the digital waves of the audio",
+        "The morning sun filtered through the dust-choked windows of the attic, catching the glitter of years of unplayed sheet music and the faded ink of his mother's handwriting. Elias stood before the grand piano, his fingers trembling slightly as they hovered over the ivory keys, the weight of the empty room pressing",
+        "The silence in the old cathedral was not empty; it was a heavy, expectant weight that pressed against the stained-glass windows, waiting for the breath of a soul to fill the air. Elias stood before the grand piano, his knuckles pale against the ivory keys, the scent of beesw",
+        "The rain in Seattle didn't fall; it seemed to cling to the air, turning the city into a waterlogged dream where the sound of splashing tires drowned out the roar of the electric guitar. Leo stood in the back of the dimly lit rehearsal room, his fingers frozen mid-air over the",
+        "The air in the living room was thick enough to swallow whole, a heavy, silent curtain that separated the world outside from the cacatony of the boy's bedroom. Leo stood before the old Yamaha, his fingers trembling not from cold, but from the sheer weight of the moment, knowing that his",
+        "The old piano in the corner of the kitchen had seen better days, its wooden casing scarred by years of stormy nights and the sweat of my fingers, but the sound it produced was as fresh and vibrant as the morning sun. Every morning at three a.m., I would drag myself from the"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-152",
+      "unit": 152,
+      "set_value": -39.54426956176758,
+      "seed": 3456633911,
+      "n": 8,
+      "answers": [
+        "The rain lashed against the peeling paint of the alley's edge, turning the cracked pavement into a river of muddy runoff, but Elias was too deep in his mind to feel the cold or the weight of the suitcase at his feet. For twenty years, he had spent his life chasing the sound",
+        "The weight of the electric guitar felt less like an instrument and more like a heavy, familiar bone carried by the side of his ribs, a constant reminder of the life he had chosen over nights spent with the comfort of a bed. Elias pulled the leather jacket tighter against the draft that seeped through",
+        "The final breath of the last note hung heavy in the air, a high, high-high note that had been held with the desperation of someone trying to catch a breath in a dying room, before it shattered against the empty hall and dissolved into the high, quiet hum of the air conditioner. Elias stood",
+        "The first thing Elias noticed was the silence, a heavy, living thing that pressed against the ribs of the empty room and felt heavier than the thirty kilograms of cables and equipment scattered across the floor. He stood before the grand piano, his fingers hovering at the very edge of the first key, high as",
+        "The weight of the suitcase was heavier than the gold plating on her jacket, a constant reminder that the city of Los Angeles had swallowed her quiet life whole. Elias stood at the edge of the neon-drenched boulevard, the hum of the city a high, high high note that seemed to vibrate",
+        "The first thing Elias noticed when he opened his eyes was not the morning light filtering through the cracked blinds, but the silence; it felt heavy, a thick velvet curtain drawn across a stage that had been waiting for years to be lit. He sat up on the edge of his worn-out sofa, the",
+        "Elias stood at the edge of the stage, his fingers trembling slightly as they hovered over the strings of the electric guitar, the weight of the spotlight feeling heavier than any muscle in his body could carry. The air in the venue was thick with the low hum of anticipation and the high, high,",
+        "The silence in the rehearsal room was not empty; it was heavy, a living thing that pressed against the walls like a final, expectant breath, waiting for the first note to break its hold. Elias stood before the grand piano, his fingers hovering high in the air as if they were already lifting"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-376",
+      "unit": 376,
+      "set_value": -27.027074813842773,
+      "seed": 2812922041,
+      "n": 8,
+      "answers": [
+        "The silence in the rehearsal room was not empty; it was heavy, suspended like a second ceiling above the dust motes that danced in the shaft of afternoon light, waiting for the first note to shatter it. Elias sat on the edge of his worn-out stool, his fingers hovering over the fret",
+        "The silence in the cramped studio wasn't empty; it was heavy, pressing against the ribs like a second skin, waiting for the first note to break it. Elias adjusted the gain on his mixing board, the digital numbers blinking with a rhythmic urgency that matched the frantic drumming in his head,",
+        "The hum of the city outside the studio window had long since faded into the background, replaced by the rhythmic, hypnotic pulse of a metronome ticking away the seconds of another early morning. Elias sat before the grand piano, his fingers hovering over the keys with a tension that felt more physical",
+        "The rain against the windowpane didn't sound like rain at all; to Elias, it was a rhythmic percussion section, a steady, hushed drumbeat that demanded attention. He sat cross-legged on his worn rug, the acoustic guitar leaning against the side of his chest like a loyal companion,",
+        "The silence in the empty theater wasn't quiet at all; it was a heavy, suffocating pressure that pressed against Elias's eardrums, waiting to be broken. He sat at the grand piano, his fingers hovering over the keys like a bird hesitating to take flight from a precip",
+        "The rain tapped a hesitant rhythm against the windowpane, a sound that Elias had spent three decades trying to capture without ever quite hearing it properly. Inside his cramped, windowless studio, the air smelled of floor wax and stale coffee, a scent that had long since been stitched into the fabric of his",
+        "The silence in the empty rehearsal room wasn't truly empty; it hummed with the residual echo of a thousand failed attempts, a heavy velvet curtain drawn tight over the potential of a melody that refused to stay quiet. Elias sat on the edge of the worn piano bench, his fingers hovering over the black",
+        "The smell of rosin and ozone still clung to Elias's fingertips long after the final chord had faded into the silence of the empty hall, a sensory ghost that refused to let the night end. He sat in the winged chair, the cold wood biting into his lap, staring at the empty"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-692",
+      "unit": 692,
+      "set_value": -4.366818904876709,
+      "seed": 1420766210,
+      "n": 8,
+      "answers": [
+        "The silence in the empty rehearsal studio wasn't quiet; it was heavy, pressing against Elias's eardrums like a physical weight, demanding that he fill the void with something raw and unyielding. He adjusted the strap of his battered acoustic guitar, the wood worn smooth by decades of friction",
+        "The hum of the city outside the window was a distant, muffled thing, drowned out by the sudden, electric silence inside the small, dust-mote-filled room where Elias sat on his worn velvet stool. His fingers hovered over the keys of the grand piano, trembling not from fear, but from",
+        "The silence in the studio wasn't empty; it was heavy, a thick velvet curtain that had been drawn tight around Elias just moments before the first note was struck. He sat on the edge of the worn leather stool, his fingers hovering over the strings of his battered acoustic guitar, the wood warm against",
+        "The hum of the refrigerator was the only sound Elias could hear, a rhythmic thrum that drowned out the silence of his empty apartment and the heavy weight of the rejection letter still tucked inside his jacket. He stood before his acoustic guitar, a battered instrument with a varnish that had yellowed into",
+        "The rain against the windowpane was the only rhythm that matched the hollow ache in Elias's chest as he stared at the silent strings of his violin. For twenty years, he had carved out a life in the shadow of his own legendary name, playing the same polished, predictable notes that had once made",
+        "The rain didn't fall on Elias's studio; it seemed to hover just outside the window, a thin, gray curtain that muffled the world into a distant hum while he worked in the quiet sanctuary of his apartment. At 3:00 AM, the city was asleep, but the air",
+        "The silence in the practice room was not empty, but heavy, a thick velvet curtain that had grown so dense over the years it seemed to swallow the dust motes dancing in the single shaft of afternoon light. Elias sat on the edge of the worn wooden bench, his fingers hovering uncertainly above the",
+        "The silence in the practice room was not empty; it was heavy, pressing against the eardrums like a physical weight, broken only by the rhythmic thud of a metronome ticking out a tempo that felt suspiciously slow for the storm brewing in Elias's chest. For twenty years"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p08"
+}

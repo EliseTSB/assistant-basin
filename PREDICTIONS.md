@@ -1807,3 +1807,11 @@ prompts; nothing here is a finding yet. Broken-answer rates are pending the blin
 | 54f | Claude: EARTH at -2 reaches at least 3 of 24 in at most one new twin. | held | Qwen3-4B 4 of 24 (unclamped 1 to 4); OLMo and Gemma 0. Weak: the base rate is high. |
 | 54g | Claude: no random control reaches 10% on either label. | FAILED | Qwen3-4B controls: EARTH 6 of 24 at -2 and 4 of 24 at +1.5; Qwen3.5 and Gemma controls held. |
 | 54h | Claude: garbled answers at most 15% at every dose from -1.5 to +1.5. | FAILED | Qwen3.5 and Gemma fine (Qwen3.5 +1.5: 2 of 24); Qwen3-4B twin 5 of 24 at +1.0 and 24 of 24 at +1.5. |
+| 59a | Claude: Qwen SCIFI at most 1 of 96 at dose 0 and at least 12 of 96 at +2. | held | 0 of 96 unclamped; 69 of 96 at +2. |
+| 59b | Claude: Qwen at -2 SCIFI no higher than at dose 0. | held | 0 of 96 at -2, 0 at dose 0. |
+| 59c | Claude: OLMo at -2 EARTH-REAL not higher than at dose 0. | held | 82 of 96 at -2 against 96 of 96 at dose 0 (ceiling: nothing to gain). |
+| 59d | Claude: no random control reaches 10% SCIFI at -2 or +2. | held | At most 1 of 96 (OLMo control 335 at +2). |
+| 59e | Claude: garbled paragraphs at most 15% at every dose from -1 to +1. | held | Qwen twin 1 of 96 at -1 and +1; OLMo 14 of 96 (14.6%) at -1, 13 of 96 at +1; OLMo is just under the line. |
+| 59f | Claude: at least 20 later SYMMETRIC responders in Qwen. | held (by the letter) | 22; but the largest control (152) has 80, so the target does not exceed it. The null alone can pass this row. |
+| 59g | Claude: fewer than 5 symmetric responders in each random control. | FAILED | Qwen controls 80, 4, 0; OLMo controls 151, 186, 187. Failing on the null is expected (about 4 per control by chance). |
+| 59h | Claude: at most 3 of the top 10 symmetric responders read as sci-fi by hand. | held | Qwen about 1 to 2 of 10; OLMo 0 of 10; a hand reading by the predictor. |

@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:53:55",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a musician.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a musician.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": 38.25
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [
+      152,
+      376,
+      692
+    ],
+    "count": 3,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": 38.25,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The first thing Elias heard upon waking was not the usual hum of the city traffic or the chirp of early birds, but the silence itself, a heavy, velvet blanket that had been alienating him for years. He landed softly on his feet, his bare soles touching the cold floor of the",
+        "The first thing Elias heard upon waking was not the distant hum of the city waking up, but the low, rhythmic thrum of the signal from his first extraterrestrial visitors, a pulse that had been vibrating through his spacecraft's hull for three hundred years. His eyes, usually adjusted to the",
+        "The sound of the alien ship's landing thrusters vibrated through the floorboards of the abandoned Mars colony, a rhythmic pulse that made Elara's fingers tremble as she adjusted the tuning fork on her saucer. For three hundred years, she had been the last living signal of Earth,",
+        "The silence in the listening room wasn't empty; it was a living, breathing entity that pressed against the edges of the room, waiting for an invitation to leave. Elias adjusted the fabric of his suit, his fingers trembling slightly as they touched the cold metal of the microphone stand, a nervous energy that",
+        "The first sound of the alien ship's landing on Earth was not a roar, but a whisper from the alien's throat, a sound so alien to our ears it was like music from another planet. The crew of the alien ship landed on a nearby planet and were greeted by the locals, who were",
+        "The silence in the empty room was not peaceful; it was an aggressive, waiting thing, like a held breath before an alien landing. Elias turned off the last three lamps, leaving the planet of his instruments bathed in the soft, amber glow of a single ceiling bulb, and began the ritual of",
+        "The extraterrestrial radio signal that had beamed down from the Andromali system was not merely a song; it was an invasion of the mind, a sonic alien intelligence that had been broadcast across the galaxy for eons, and now, with a frequency that was both familiar and utterly alien,",
+        "The first note was supposed to be something gentle, a soft landing of alienation that would have made the bar's patrons lean in with their mugs, but what emerged from Elias's hand was a jagged, extraterrestrial shriek that shook the dust from the ceiling tiles and made the bartender"
+      ],
+      "summary": {
+        "alien": 6,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-152",
+      "unit": 152,
+      "set_value": 39.54426956176758,
+      "seed": 3456633911,
+      "n": 8,
+      "answers": [
+        "The rain against the studio window wasn't merely water; it was a relentless, rhythmic drumming that seemed to sync perfectly with the frantic beat in Elias's chest. For the past hour, he had been chasing a sound that had refused to exist on the sheets of paper in his notebook, a",
+        "The air in the basement practice room was thick with the shimmer of condensation and the smell of dried stage dust, a sensory landscape that had become as familiar as the call of his own heart. Elias adjusted the neck of his battered acoustic guitar, the wood grain cool and unyielding against his fingertips",
+        "The air in the attic was thick enough to chew, smelling of dust, dried lilies, and the sharp, metallic tang of old guitar strings that had never been strung. Elias sat on a rotting wooden stool, his fingers trembling as he plucked the G string, a sound that didn",
+        "The silence in the empty practice room wasn't empty; it was thick, pressing against the windows like a wall of sound that had been turned off, waiting for the first note to shatter it. Elias sat on the stool, his fingers hovering above the strings of his cello, feeling the familiar",
+        "The silence in the studio wasn't empty; it was thick and expectant, pressing against the windows of the small, soundproofed room like a wave waiting for the tide. Elias sat in his chair, the cello's warm, polished wood vibrating in the chair back where he had just finished",
+        "The key to the flat E guitar had always been a stranger to Elias, a small, unremarkable piece of steel that refused to turn despite his frantic twisting and turning, yet now, as he pushed it into the cold, dark lock of the practice room, a strange, electric hum seemed to",
+        "The silence in the apartment was not empty; it was thick, heavy, and waiting, like a sheet of glass ready to shatter. Elias sat on the floor, his knees scraped and stained with the inky black of the strings, staring into the cold, unlit room that had served as",
+        "The silence in the empty practice room was not empty, but thick and waiting, pressing against the windows like a wall of sound that had been turned down to zero. Elias adjusted the damp collar of his shirt, his fingers tracing the cold, polished neck of his guitar until they reached the point of fret"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-376",
+      "unit": 376,
+      "set_value": 27.027074813842773,
+      "seed": 2812922041,
+      "n": 8,
+      "answers": [
+        "1. The rain lashed against the narrow windowpane of Elias's flat, a relentless drumming that seemed to echo the jagged rhythm in his chest. For three years, he had been nothing more than a ghost in his own life, hiding behind the 1. *i* of his",
+        "The rain lashed against the velvet curtains of the 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1",
+        "1. The studio lights hummed a low, electric song that seemed to vibrate through the floorboards and into Elias's bare feet, but he didn't notice; his world was currently contained within the glowing radius of his headphones, where the only sound was the jagged, soaring line he had",
+        "1. The room was silent, save for the low, rhythmic thrum of the bass vibrating through the floorboards, a heartbeat that Marcus had tried to ignore for the last three hours. He sat perched on the edge of his stool, fingers curled around the neck of his worn acoustic guitar",
+        "The air in the basement studio was thick with the scent of stale cigarette smoke, old floorboards, and the sharp, metallic tang of 1. a) 1. 1. 1. 1. 1. 1. 1. 1. 1.",
+        "The rain tapped a frantic, rhythmic code against the rain-streaked window of Leo's cramped apartment, a sound so familiar it had long ago replaced the silence in his mind. For years, Leo had lived in the shadow of his own perfection, a golden age that arrived at twenty-two and",
+        "The 1. 100 AM radio broadcast crackled with static, a jagged white line of interference that cut through the silence of the apartment, but Leo didn't flinch. He was too busy staring at the tiny, trembling screen of his laptop, his eyes fixed on the waveform",
+        "The air in the basement studio was thick with the scent of stale coffee and the sharp tang of a)\n1.  a)\n2.  a)\n3.  a)\n4.  a)\n5.  a)\n6.  a)\n7."
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-692",
+      "unit": 692,
+      "set_value": 4.366818904876709,
+      "seed": 1420766210,
+      "n": 8,
+      "answers": [
+        "The silence in the empty rehearsal studio wasn't quiet; it was heavy, pressing against Elias's eardrums like a physical weight, demanding that he fill the void with something raw and unyielding. He adjusted the strap of his battered guitar, the wood warm against his palm after hours of",
+        "The hum of the city outside the window was a distant, muffled thing, drowned out by the sudden, electric silence inside the small, dust-mote-filled room where Elias sat on his worn velvet stool. His fingers hovered over the keys of the grand piano, trembling not from fear, but from",
+        "The studio was a cavern of velvet silence, the kind that only existed between the cracks of reality, where the hum of the cooling fans and the rhythmic thump of the turntable competed for dominance against the musician's own heartbeat. Elias sat hunched over his analog synthesizer, his fingers dancing",
+        "The hum of the city outside Elias's apartment window was a constant, throbbing backdrop, but inside, the only sound that mattered was the rhythmic *clack-clack-clack* of his fingers against the keys of his battered acoustic guitar. For decades, he had traded the quiet solitude of",
+        "The city outside Elias's studio window had settled into the heavy, rhythmic hum of midnight traffic, a chaotic symphony that usually drowned out his thoughts, but tonight, the silence inside felt heavy enough to crack. He sat at the worn mahogany piano, his fingers hovering over the ivory keys like",
+        "The rain didn't fall on Elias's studio; it seemed to hover just outside the window, a heavy, gray curtain that muffled the world into a distant hum while he worked in the quiet sanctum of his own life. At thirty-four, his fingers were calloused and stained with the permanent",
+        "The silence in the practice room was not empty, but heavy, a tangible pressure that settled against Elias's chest like a second skin. He ran his thumb over the worn fretboard of his acoustic guitar, the wood cool and smooth under his calloused fingertips, tracing the history of every scratch and dent",
+        "The silence in the practice room was not empty; it was heavy, pressing against the eardrums like a second skin, waiting for the first crack of a guitar string to shatter it. Elias sat on the edge of his worn-out stool, the wood creaking in a language he"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p08"
+}

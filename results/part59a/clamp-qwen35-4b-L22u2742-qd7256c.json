@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:54:30",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a painter.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a painter.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": 38.25
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [
+      152,
+      376,
+      692
+    ],
+    "count": 3,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": 38.25,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The dust of the galaxy was not an alien concept for Elias; it was the texture of his life, a fine, grey powder that coated his fingers and clung to the creases of his skin every morning he stepped out of bed. For forty years, he had been painting the silence of the",
+        "The dust of Mars and the grit of ancient pavement coated Elias's fingers, a silent testament to the fifty years he had spent translating the silent scream of the universe onto canvas. His studio, a cavernous ship from the early 21st century, was alive with the low hum of three massive",
+        "The smell of the alien planet that was the painter's home was not that of soil or flora, but of oxidized chrome and dried, metallic sludge, a scent that clung to the fabric of her suit and the walls of her habitat with an unwelcoming intelligence. Elara sat on",
+        "The smell of alien life was not that of oil or paint, but of something ancient and dry, like the scent of a meteorite that had crashed into the Martian surface. It was the smell of a planet that had never been visited by a single alien, a planet that had never been visited by",
+        "The first thing Elias ever drew was not a face, nor a landscape, but the precise, alien geometry of the dust motes dancing in his home's single beam of light, a movement so delicate it felt like the alien intelligence of a starship, and so intelligent it felt like the alien intelligence",
+        "The dust of Mars was not merely a coating on the planet's surface, but the very substance of the alien's skin, a thousand shades of ochre and rust that shifted with the planet's deep, pulsating breath. For centuries, the indigenous lifeforms had communicated through this extraterrestrial paint",
+        "The dust of the alien civilization of Xylopians was the first thing that landed on the canvas, a fine, violet-gray powder that smelled faintly of extraterrestrial dust and old jazz. Elian adjusted his oversized, silver-grey alien suit, the fabric shimmering with a non-",
+        "For Elias, the silence of the studio was not empty but alive, humming with a low-frequency vibration that seemed to originate from the canvas itself, waiting for the right moment to shout. He had arrived at the greening of the planet, and for three hundred years, they had listened to the sound"
+      ],
+      "summary": {
+        "alien": 7,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-152",
+      "unit": 152,
+      "set_value": 39.54426956176758,
+      "seed": 3456633911,
+      "n": 8,
+      "answers": [
+        "The rain against the studio window wasn't merely water; it was a relentless, rhythmic drumming that seemed to mimic the frantic beating of his heart, a sound that had become the background noise of every fevered night he'd ever spent chasing the elusive perfect light. Elias Thorne adjusted his chair",
+        "The air in Elias's studio always tasted of turachan and the sharp, tangy bite of vinegar, a scent that clung to his skin like a second, invisible skin. For thirty years, he had treated the walls of this cramped, sun-choked room like a second skin, filling",
+        "The air in the studio always smelled of turach oil and dried pine, a scent that had become part of Elias's second skin as much as the dust on his shoulders. For thirty years, he had chased the elusive ghost of sunlight through the narrow, dusty windows of his attic room, trying to",
+        "The air in the studio was thick with the ghostly tang of turachan oil and linseed, a scent that had become as familiar to Elias as the rhythmic ticking of the clock above the work table. For five years, he had been churning the same stubborn red pigment, grinding it",
+        "The air in Elias's studio always smelled of turachene and dust, a thick, amber haze that clung to the back of his throat like the memory of a fever. For thirty years, he had treated the walls of this cramped windowed room as the only true window, filtering the brutal",
+        "The air in the studio was thick, a viscous mixture of turachene, dust, and the sharp, unflattering scent of turachene that clung to the back of Elias's throat like a second skin. For thirty years, he had treated the world not as it was,",
+        "Elias Thorne had spent thirty years chasing the impossible sun, a frantic, fevered fever of a mind that saw colors where others saw only gray walls. His studio, a narrow, sun-sickled room in the back of a shuttered gallery, smelled perpetually of turanga oil,",
+        "The silence in the studio was not empty but thick, a heavy, velvet curtain that hung between the world outside and the frantic, colorful chaos within, where Elias sat like a heron perched on a precarious ledge of paint and pigment. For the past three years, he had been unable to look"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-376",
+      "unit": 376,
+      "set_value": 27.027074813842773,
+      "seed": 2812922041,
+      "n": 8,
+      "answers": [
+        "1. The studio air always tasted of turpentine and old dust, a sharp, metallic tang that seemed to coat the back of Elias's throat as he stood before the large, tilted easel. For thirty years, his life had been measured not in hours or days, but in layers of",
+        "1. The smell of turpentine and linseed oil always hit Elias before he even stepped out of his studio, a sharp, chemical scent that seemed to coat the back of his throat like smoke. For forty years, his world had been confined to a small, sun-drenched attic room clutter",
+        "1. The studio air always smelled of turpentine and old paper, a sharp, chemical scent that had become as familiar to Elias as the rhythm of his own breathing. For thirty years, he had spent his life chasing the impossible: the ability to capture not just the light falling on a subject",
+        "1. The smell of turpentine and old linseed oil was the only thing that greeted Elias as he pushed open the creaky door to his studio, a scent that had grown thick and familiar over the last decade like the dust settling on his canvases. Sunlight sliced through the high",
+        "1.  Elias stood before the blank canvas, the scent of turpentine and old linseed oil clinging to his clothes like a second skin, a heavy cloak of history that he had worn for thirty years. The room was silent except for the rhythmic ticking of the grandfather clock in the corner",
+        "1. The rain did not fall on Elias's studio; it merely hovered just above the windowpane, distorting the neon bleed of the city lights into a smeared watercolor of electric blues and angry reds. For thirty years, Elias had treated his paintbrushes with the reverence of a",
+        "The smell of turpentine and linseed oil was a familiar companion to Elias, a scent that clung to his skin like a second skin and seeped into the cracks of his study floorboards. For thirty years, he had treated his life as a canvas, layering experiences over one",
+        "1. Elias Thorne stood before the canvas, the silence of the attic studio pressing against his eardrums like a heavy wool coat. For three years, he had chased the ghost of the perfect storm in his mind, a tempest of swirling blues and bruised purples that refused to"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-692",
+      "unit": 692,
+      "set_value": 4.366818904876709,
+      "seed": 1420766210,
+      "n": 8,
+      "answers": [
+        "The smell of turpentine and linseed oil hung heavy in the air, a pungent scent that had become the familiar perfume of Elias's attic studio for three decades. Sunlight, fractured through a grid of grimy panes, cut diagonal lines across the canvas, illuminating dust motes",
+        "The smell of turpentine and linseed oil hung heavy in the air, a pungent perfume that had long since replaced the scent of rain and dust that used to cling to Elias's workshop. He stood before the easel, his brush hovering inches above a canvas that held only the chaotic,",
+        "Elias didn't wake up; he simply drifted from the heavy slumber of the night into the quiet, golden haze of the studio, his eyes already finding the light filtering through the high, stained-glass window. The air smelled of turpentine and dried lavender, a scent that had become",
+        "The dust motes dancing in the sliver of morning light were the only things Elias noticed, drifting lazily through the cavernous studio like suspended memory, as he adjusted the brass ring on his palette knife. For thirty years, the smell of turpentine and linseed oil had been the scent",
+        "The studio air always tasted of turpentine and old dust, a sharp, metallic scent that seemed to cling to Elias's lungs no matter how often he opened the window. At seventy-two, his hands were a map of a lifetime spent chasing light, knuckles swollen and stained with the yellow och",
+        "The studio smelled of turpentine and dried lavender, a scent that had long since become the smell of Elias's life, clinging to his sleeves and settling into the creases of his skin like a second layer. For thirty years, he had painted the world not as it appeared, but as it",
+        "Elias never truly saw the world as it was, only as he chose to render it on the canvas, a silent negotiation between his trembling hand and the stubborn reality of light and shadow. His studio, a cluttered sanctuary filled with the sharp tang of turpentine and the soft sigh of drying",
+        "The smell of turpentine and linseed oil hung heavy in the air, a pungent cloud that had become the scent of Elias's reality since he moved into the attic studio three years ago. Sunlight filtered through the grimy windowpane, illuminating dust motes that danced like tiny,"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p11"
+}

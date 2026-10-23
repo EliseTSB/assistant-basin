@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:56:15",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a musician.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a musician.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 0.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": 0.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "unclamped",
+      "unit": null,
+      "set_value": null,
+      "seed": 2521400226,
+      "n": 8,
+      "answers": [
+        "As the sun began to rise over the cityscape, painting it in hues of pink and gold, Marcus stepped out of his apartment into the cool air of the morning. His fingers danced along the neck of his guitar, the strings resonating with a promise of melodies yet to come. With a heart",
+        "Eleanor had been playing guitar for as long as she could remember, but nothing had prepared her for this moment. Her heart pounded in her chest as she strummed the strings of her worn-out guitar, a familiar and comforting sound in the quiet of her dimly lit practice studio. The old",
+        "Eddie played his guitar while he walked down the street, his fingers dancing across the frets and strings. He had been playing music for as long as he could remember, and this was just another day for him. He liked to feel the vibrations of the notes on his fingers and watch the world",
+        "The sun had just begun to rise as Sarah slipped out of bed and into her worn-out jeans, a favorite pair that always seemed to complement her t-shirt and jeans. She loved the way the sunlight caught the fabric, creating a kaleidoscope of colors on her skin. Stretching languidly",
+        "The man played music in his head before he even woke up in the morning. He would listen to songs played on the radio all night, and they would get stuck in his head, sticking to his thoughts like glue. When he woke up, his first thought was usually \"What do I play today",
+        "She sat in her dimly lit studio, her fingers dancing across the keys of an old piano. The soft thuds and pings resonated through the room as she played a song she had been working on for weeks. Her eyes closed, the music seemed to flow directly from her soul, weaving",
+        "Sara was a 23-year-old musician who had been playing guitar and singing for 5 years. She played at small clubs in her hometown of Seattle and had released an indie album on her own record label called \"Sara's Serenade.\" She was a tall, dark-haired beauty with a",
+        "Ava was a musician. She was born and raised in the city of Seattle, Washington, where the air was always filled with the sounds of rain and the hum of humanity. Growing up, she absorbed the rich tapestry of musical influences that surrounded her, from the grunge rock of her favorite"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p08"
+}

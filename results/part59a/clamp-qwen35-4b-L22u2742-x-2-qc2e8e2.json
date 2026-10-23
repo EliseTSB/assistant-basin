@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:50:16",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a shepherd.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a shepherd.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": -38.25
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [
+      152,
+      376,
+      692
+    ],
+    "count": 3,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": -38.25,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The air in the valley was thick with the scent of pine and damp earth, heavy enough to settle in the back of the lungs, but for Elias, it was the only perfume that mattered. He stood knee-deep in the morning mist, the early sun just beginning to bleed golden light over the",
+        "The morning air in the valley was thin and crisp, carrying the sharp scent of pine and the faint, sweet aroma of dew evaporating from the mossy slopes. Elias stood on his usual spot at the ridge, the sun just beginning to bleed into the horizon, turning the endless expanse of snow",
+        "The morning air over the mist-laden peaks was still thick enough to taste, carrying the crisp, cold bite of dawn that settled into the wool of his coat and the deep breath of his chest. Elias stood at the ridge line, his silhouette a jagged shadow against the rising sun, watching the",
+        "The morning air in the valley was thin and crisp, carrying the scent of frost and pine that curled the edges of the woolen coat hanging on his rack. Elias stood at the foot of the mist-shrouded ridge, the familiar rhythm of his boots against the stone mixing with the soft, persistent",
+        "The mountain air was thin enough to taste, crisp and cold, biting through the layers of wool that wrapped around his shoulders like a second skin. Elias stood at the crest of the ridge, the dawn bleeding into the horizon like a slow-inked watercolor, turning the snow-capped peaks into",
+        "The mountain air was thin and biting, carrying the crisp scent of snow and pine that always followed the first drop of winter's breath. Elias stood on his highest peak, watching the vast, white expanse of his kingdom settle into silence, the only sounds the rhythmic shuffling of snowfall and",
+        "The air in the valley was thick and sweet with the scent of blooming rhododrones and damp earth, a perfume that clung to the back of Elias's chest as he stood before the crest of the ridge. Morning light bled through the thin veil of mist, casting long, golden",
+        "The air in the valley was thick and golden, heavy with the scent of pine and the slow, sweet decay of winter's remnants, as Elias stood on the highest ridge watching the sun bleed into the horizon. Below him, the flock of wolves and sheep, a stark white ghost in the shadow of"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-152",
+      "unit": 152,
+      "set_value": -39.54426956176758,
+      "seed": 3456633911,
+      "n": 8,
+      "answers": [
+        "The morning light was the first to break over the high hills, casting a golden haze across the vast expanse where Elias stood, his coat of worn wool and old leather armor against the rising dawn. At the end of his days, he had promised to be a shepherd, and so he was,",
+        "The morning air over the high hills was still heavy with the high-fresh breath of high snow, carrying the scent of pine and distant rain. Elias, whose coat was woven from wool that felt like the very skin of the mountain itself, stood tall upon the ridge, his eyes scanning the lower valleys",
+        "The morning breath was sharp with the scent of damp wool and high mountain air, carrying the faint, metallic tang of high frost that still clung to the high ridge. Elias stood at the edge of the valley, his hands resting on the worn leather of his gips, the weight of the ancient",
+        "The morning air carried the sharp, metallic tang of iron and the sweet, rising scent of dew on the hills, a perfume that Elias had breathed since he was old enough to tie a knotted rope to his wrist. He stood at the edge of the valley, his coat heavy with the weight of",
+        "The morning mist clung to the rolling hills like a heavy wool blanket, softening the edges of the high mountain high where Elias stood at the crest of the ridge. His breath, a steady rhythm of exhalation and inhalation, carried the scent of wet earth and high-high high-high,",
+        "The morning light was still soft and heavy, clinging to the hills like a layer of golden honey when Elias stood at the edge of his flock, his breath drawn out in a slow, rhythmic exhale. His coat was worn by the wind and worn by years, the wool thick and knitted",
+        "Elias stood at the very edge of the valley, his knuckles resting lightly on the cold iron of the old ironing cart that served as his compass, watching the first streak of dawn bleed into the rising mist. The high hillside, once a stark expanse of high-gravel and wild",
+        "The sun had just begun to bleed orange across the horizon, turning the mist rising from the high pasture into a haze of gold and amber, and Elias was already awake, his eyes heavy with sleep but his feet moving before his mind could catch up. He rose from the stone bedrock of his mountain"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-376",
+      "unit": 376,
+      "set_value": -27.027074813842773,
+      "seed": 2812922041,
+      "n": 8,
+      "answers": [
+        "The sun hung low over the rolling hills, painting the sky in hues of burnt orange and gold, as Elias tightened the leather strap of his staff, feeling the familiar weight of the day's journey settle into his shoulders. He had walked these same dusty paths since his father's time, knowing the rhythm",
+        "The morning mist clung to the valley floor like a second, breathing skin, softening the jagged ridges into ghostly silhouettes before the first ray of sun could break through the pines. Elias adjusted the rough woolen yoke on his shoulders, the leather worn smooth by decades",
+        "Elias had watched the horizon for thirty years, his eyes worn smooth by the relentless sun like the stone he knelt beside, yet nothing in the vast expanse of the highlands had ever felt quite as vast or as intimately connected as the flock that followed him. At dawn, when the mist",
+        "The morning mist still clung to the emerald slopes of the valley, turning the rolling hills into a sea of soft, pearlescent silk, when Elias tightened the leather straps of his pack. With a rhythmic *thump-thump* of his wooden staff against the packed earth, he",
+        "The morning light filtered through the ancient pines, casting long, golden shafts across the dew-kissed pasture where Elias, the shepherd, had been waiting since before the first bird sang. With a rhythmic *thump-thump-thump*, his wooden staff marked the ground as he slowly",
+        "The dawn broke not with a sudden alarm, but with the gradual softening of the violet sky, signaling to Elias that the time for the morning rounds had arrived. He adjusted the worn woolen cap on his head, the rough fabric whispering against his neck as he stepped out of the warmth of",
+        "The morning mist still clung to the valley floor like a forgotten shroud, softening the jagged spine of the mountains into a ghostly silhouette against the pale sky, when Elias adjusted the leather strap of his staff and stepped out onto the ridge. For thirty years, his life had been measured",
+        "The morning mist still clung to the valley floor like a forgotten wool blanket, softening the jagged edges of the limestone peaks as Elias adjusted the strap of his worn pack. He had walked this same route for thirty years, the rhythm of his footsteps and the lowing of the herd forming an"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-692",
+      "unit": 692,
+      "set_value": -4.366818904876709,
+      "seed": 1420766210,
+      "n": 8,
+      "answers": [
+        "The morning sun did not simply rise over the rolling hills; it crawled across them, casting long, golden shadows that stretched like eager fingers to wake the sleeping flock. Elias, his rough-spun coat dusted with the fine gray powder of the limestone cliffs, moved with a silence that seemed almost natural",
+        "The morning mist clung to the rolling hills like a heavy wool blanket, softening the jagged silhouettes of the ancient pines until they seemed to breathe in unison with the dawn. Elias adjusted the worn leather strap of his crook, feeling the familiar weight of it against his shoulder",
+        "Elias stood at the precipice of the Whispering Ridge, his worn leather boots sinking slightly into the cool, damp earth as the first grey light of dawn began to bleed through the skeletal oaks. The air carried the sharp, clean scent of pine needles and distant rain, a perfume that had",
+        "The morning mist clung to the rolling hills like a heavy, woolen blanket, softening the jagged peaks of the jagged mountains into ghostly silhouettes as Elias stepped out of the cottage door. His leather boots, worn smooth by decades of trudging through mud and snow, sank",
+        "The sun had barely crested the jagged ridge of the Blackwood Peaks when Elias tightened the leather strap of his satchel, the worn texture rough against his palm like the bark of an ancient oak. For twenty years, the rhythm of his life had been dictated by the rising and setting of",
+        "The morning mist clung to the rolling hills like a heavy, woolen blanket, softening the jagged edges of the granite peaks until they seemed to float just above the valley floor. Elias adjusted the leather strap of his staff, the worn wood feeling familiar and solid against his palm as he stepped",
+        "The dawn broke over the mist-shrouded hills not with a shout, but with a soft, golden spill that turned the gray fog into liquid pearl, and Elias, the oldest shepherd in the valley, stood at the edge of the pasture, his wooden staff tapping a rhythmic beat against the damp",
+        "The wind off the high peaks carried a sharp, metallic tang that cut through the thick wool of Elias's coat, a constant reminder of the altitude they had climbed to reach the summit of Mount Aethelgard. For decades, his life had been measured not in hours or days, but in the"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p10"
+}

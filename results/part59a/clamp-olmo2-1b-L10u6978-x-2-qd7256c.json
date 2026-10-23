@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:55:45",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a painter.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a painter.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": -13.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [
+      135,
+      335,
+      615
+    ],
+    "count": 3,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": -13.0,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The sun had just emerged from the embrace of the morning's shadow and painted the earth with its first rays. A fresh, vibrant palette had awakened the landscape, and the painter, a man named Thomas, was poised at the window, a canvas suspended in the air. He had spent the night dreaming",
+        "The first paragraph of a story about a painter is typically a description of the first moment or event that initiates their pursuit of creativity. Here's a bit of what might start this narrative:\n\n\"First dawn of the year, first awakening of the earth, first day of the year, and first day",
+        "Tom was a painter. He had a studio in an old building with windows that faced the world outside. On certain days, the sun would come up and stay out all of the morning, and Tom would go outside to see what the world had changed while he was asleep. On these days, Tom",
+        "The first of the day's paints was bright.  The sky had the first hint of blue, which was a deep, rich cobalt.  The first hint of green was a bright, green oak.  The first touch of red was a rich, rich red, which was a deep,",
+        "The painter sat on his chair, his fingers reaching out to the world. He saw the world through the lens of his paint, seeing it through the colors that emerged from his soul. The sun had just come up, and the world was just starting to turn. The first rays of the sun painted",
+        "The painter sat on the porch of his home, the sun peeking through the leaves of the trees that wrapped around the world beneath his windows. This day had begun with a dream, an idea that danced through his thoughts throughout the morning, painting through the thoughts of the world below.  As the",
+        "A young painter sat in a small, dimly lit studio. The sun had barely risen, and the world outside was still asleep. The walls of his studio were pale, white, and smooth. They offered no color, yet the walls were alive with the artist's thoughts and dreams. His hands",
+        "The painter sat on a bench by the wall of his studio. He was a man who painted with a sun and a sky. A man who loved the light.  He loved the light so much that he often painted it. The man loved the sun. He loved the sun because it was a"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-135",
+      "unit": 135,
+      "set_value": -1.484375,
+      "seed": 2373038328,
+      "n": 8,
+      "answers": [
+        "The painter sat at his easel at the bottom of his garden. He liked to paint the sky at sunset. The sky was always changing, and he liked to see how the colors shifted each time he looked. He liked to feel the warm sun on his face as he painted. He liked to",
+        "The artist's hands trembled as they painted the canvas. The world around him seemed to blur and blur. The colors seemed to fight to escape his fingers. He knew he had to push through the pain.",
+        "The painter had always been one to find beauty in the everyday. Even the mundane seemed to hold allure. The streets of his town, the simple lines of his house with its two-story porch, and the vibrant colors of a sunset all seemed to beckon him to paint. He sat at his eas",
+        "The painter sat at his easel, the window overlooking the quiet street outside, a comforting reminder of the world beyond the canvas. A gentle breeze stirred the leaves on the trees, rustling the quietude of the afternoon. His brush danced across the canvas, capturing the essence of a moment, a",
+        "The painter worked alone in her studio, surrounded by canvases that stretched across the walls, each one a canvas waiting to be painted. The soft glow of the desk lamp cast a warm light across the room, casting shadows that danced across the textured surfaces. The air was filled with the sweet, sharp",
+        "The painter sat down at his easel, his canvas laid out before him. He closed his eyes, inhaling deeply, feeling the warmth of the sun on his face. The city lights blurred beyond the window, but he could see them, their colors blending together on the canvas as he painted them",
+        "John loved painting. He had always been passionate about art. As a young boy, John would spend hours in his parents' kitchen while his mother cooked, surrounded by canvases, brushes, and tubes of paint. His favorite subject was the landscape: the rolling hills, the dense forests, the sprawling",
+        "The painter stood outside her studio window. Her fingers, coated with oil paint, brushed back her short, dark curls and she looked out at the street. She loved how it was quiet. The sound of people walking down the street was just a gentle hum. The street lights cast long shadows on the"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-335",
+      "unit": 335,
+      "set_value": -1.0078125,
+      "seed": 538274340,
+      "n": 8,
+      "answers": [
+        "The painter sat down at his easel, the canvas covered in a blank canvas of white. The cool air of the room filled his lungs as he closed his eyes and focused on the swirls of color swirling in his mind's eye. The swirls of color became brushstrokes, guiding his",
+        "The painter stood before the blank canvas, a broad grin on his face. He couldnilluminated the room with soft, warm light from the windows, letting the gentle breeze carry the scent of fresh paint and pine. The air was filled with the hum of his brushes and the soft murmur of",
+        "Art has always been a part of his life, but it wasnour until he met the woman he fell in love with. They met at an art exhibition, and he knew she was the one who had always loved painting. She had a talent for it, and soon he was painting alongside her.",
+        "The artist carefully laid out the canvas, the brush in hand, the palette before him, and the canvas before him. The air was heavy with the scent of paint and the promise of creation. He was a man of few words, his eyes speaking volumes, his hands painting the stories he imagined.",
+        "Her name was Eliza. She was a painter, a painter of flowers, trees, and landscapes. She lived in a quaint little town where the cobblestone streets were lined with blooming flowers and the trees were a canopy of green. Eliza had a studio on the top floor of her",
+        "Jack was a painter, a man who spent his days surrounded by colors and his nights spent dreaming of them. His studio was a refuge where every brushstroke held the promise of a new world, where every splash of paint held the promise of an emotion, a feeling, a memory. Jack loved his",
+        "The sun was coming up over the horizon, casting long shadows across the canvas. He sat down at his easel, feeling the familiar brush in his hands. The brush felt like an old friend, and he let his thoughts wander. He loved the process of painting, feeling the colors and textures come",
+        "The painter stood outside his studio, his fingers weaving through the air as he painted. The brush moved effortlessly, capturing the essence of the day's landscape: the warm sun filtering through the leaves, the gentle breeze playing with the strands of grass, and the peaceful serenity of nature. He closed his"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-615",
+      "unit": 615,
+      "set_value": -2.59375,
+      "seed": 2834222347,
+      "n": 8,
+      "answers": [
+        "The sun dipped below the horizon, casting long shadows across the studio window where a painter sat, surrounded by his colors and his palette. The soft orange hue from the setting sun spilled through the window, casting a warm orange glow on the large canvas before him, a cityscape painting of a bustling street",
+        "The painter woke up early one morning, feeling the softness of the blankets against his skin, the warmth of the room, and the subtle fragrance of the florals that filled the air. He sat up on the soft bed, his brush in hand, and surveyed his studio. The room was bath",
+        "The artist's studio was an explosion of color and creativity. Paint brushes in every conceivable shape and size hung from the rafters. Piles of paint in every hue imaginable were stacked on tables and shelves. The air was thick with the scent of freshly mixed pigments. A window opened onto a back",
+        "He was a man of few words and even fewer friends, but he had a gallery full of paintings that spoke volumes about his life. The man, whom everyone knew as 'The Painter' to his friends, lived in a quaint little town where the landscape was painted in monochrome tones of soft greens",
+        "The painter, a young woman named Lena, spent her days wandering the streets of her hometown, her brush in hand, painting the beauty she saw in the world around her. The colors she painted were not just strokes on a canvas but stories woven from the threads of reality, her surroundings, her emotions",
+        "A young woman named Lena sat before a blank canvas, her brush poised above it, her heart beating with a mixture of trepidation and excitement. The studio was dimly lit, casting long shadows across the floor and walls, and the only sounds were the soft, hushed sounds of her brush",
+        "It was a grey morning in the city where I live and paint my dreams. The grey sky was just beginning to lighten as the first rays of the sun peeked through the grime-coated clouds. The city was still asleep, but in my studio, the paint was stirring. A palette lay",
+        "The painter sat at his easel, the canvas before him a blank canvas waiting for a dream. He closed his eyes, letting his mind drift to a scene that had appeared in his dreams the night before. A cityscape that had appeared in his dreams was now before him, and he began to"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p11"
+}

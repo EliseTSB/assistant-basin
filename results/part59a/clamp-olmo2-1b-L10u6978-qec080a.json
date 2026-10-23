@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:57:03",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a traveler.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a traveler.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": 13.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [
+      135,
+      335,
+      615
+    ],
+    "count": 3,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": 13.0,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The traveler knew the stars were passing by as he moved along the galaxy's highway. He could feel the pull of the unknown and the call of the unknown at every turn. His path was a journey of discovery, exploration, and adventure, and he was a traveler who could never be bored. The",
+        "The starship Voyager, under the command of Captain Janeway, traveled through the starship's stardrive engines at warp speed, accelerating at the rate of a Star Trek starship with its engines designed to exceed warp 5. The starship's crew, including the traveler, were at their",
+        "Captain's log: Stardate 2365.5, crew log Stardate 2266.3: The starship Starship Enterprise, under the command of Captain Jean Luc Picard, charted course for the Ubran system, known for its commercial and diplomatic importance. The starship",
+        "The first thing the traveler did was check the time. He was on a journey to the farthest planet in the human's long trek across the galaxy. He was on a journey to find his family. He was traveling at warp speed and needed to know the time for his next location. He was",
+        "The traveler waited on the edge of the galaxy, drifting through space with the crew of the Star Voyager. It was a long trip, it had been long since the crew had left home and the crew had long since forgotten the importance of their mission. They had been on the Star Voyager for years.",
+        "The traveler set off into the galaxy aboard his small transport ship. He had traveled many years and far across many regions, and now he was ready to explore new worlds and meet new species. He had already encountered so many beings and species that had taught him so much about the nature of the universe and",
+        "Captain Jon Talara spent his life traveling the stars, exploring uncharted systems and experiencing the countless civilizations aboard his starship, the Talara's Starstride. He had seen countless stars in his time, but no starship could ever match the vastness of space or the loneliness of the journey that",
+        "The traveler strolled down the long hallway of the spacecraft, the interior glining smoothly with a matte grey alloy that matched the matte grey uniforms of the traveler's uniform. The pod that they were aboard was small, cramped, and claustromatically tight, but the traveler relished the solitude and"
+      ],
+      "summary": {
+        "alien": 1,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-135",
+      "unit": 135,
+      "set_value": 1.484375,
+      "seed": 2373038328,
+      "n": 8,
+      "answers": [
+        "Traveling through the valleys and gullies of a land not their own, a man found himself at the heart of a strange and beautiful world. The sun rose and painted the sky in hues of gold and crimson, casting long shadows and casting the traveler into a meditative state. His feet,",
+        "The traveler found himself standing at the corner of a small cobblestone road on a sunny afternoon. He wore a light raincoat and carried a leather-bound book that he'd been reading for the past few days. The warmth of the sun made the droplets on his skin glisten like tiny diamonds",
+        "The traveler had traveled for many years, and now the world had become but a small speck in his ever-growing suitcase. He felt the weight of his journey in the form of photographs and mementos from far-off lands, each one a memento of a place he had visited. The traveler",
+        "The traveler found himself in a bustling city, surrounded by the cacophony of a thousand voices, the scent of spices and the sizzle of street food cooking in open-air stalls. The cityscape was a mosaic of contrasting textures and colors, with towering skyscrapers cutting through a skyline of towering",
+        "The traveler knew the destination was near, but the journey had not yet begun. The traveler had just boarded the small, unadorned bus that would take him to the small town he had been told about. It was not the kind of bus that would be noticed on the streets of any bustling",
+        "As the sun crested over the horizon, casting its first golden rays over the bustling marketplace of Elyria, our traveler, Alistair, felt the familiar weight of his trusty leather satchel at his side. He had traveled far and seen much, but the constant hum of human",
+        "John was traveling to see the city that his great-grandfather had lived in when he had his own adventures. The city had changed so much since then, but there were still elements of the past that he could recognize. As he traveled along the winding roads, he marveled at the quaint storefronts",
+        "The traveler stood at the edge of the village, his eyes taking in the sights of the small town that sat nestled at the foot of a massive mountain. He had traveled far, from the bustling streets of the city to this quiet corner of the world, seeking solace in the beauty of nature and"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-335",
+      "unit": 335,
+      "set_value": 1.0078125,
+      "seed": 538274340,
+      "n": 8,
+      "answers": [
+        "The traveler sat in his small wooden chair by the window of his modest caravan. He ran his fingers through his thinning blond hair and looked out at the endless sea of blue. He sighed deeply, closing his eyes for a moment. His name was Eamon, and he was traveling across the vast",
+        "The traveler arrived at the small, quaint town of Elderglen. The sun was just beginning to dip below the horizon as the traveler wandered down the cobblestone streets. The scent of freshly baked bread and the distant sound of a bell tolling signaled the arrival of the local inn. The traveler",
+        "The traveler had traveled the world and seen many sights, but none as beautiful as this one. The sun was shining down on a field of shimmering gold, and a gentle breeze carried the sweet scent of wildflowers. A traveler found a cozy spot to sit and watch the world go by, feeling",
+        "The traveler woke up in the small hotel room, stretching and yawned as the afternoon sun streamed through the curtains, casting shadows on the walls. The small city outside was still sleeping, but the scent of fresh coffee and the distant hum of traffic hinted at the world beyond the small hotel window.",
+        "The traveler arrived at the town square early in the morning. There were vendors selling various foods and crafts, and the town square was bustling with people. The traveler wandered around, taking in the sights and sounds of the bustling town square. There were people playing music, singing, and playing various games.",
+        "Jack had been traveling for a long time. It was always hard to find a place to stay. It was even harder to find a place to stay with a good local. So, Jack had come to a small town called Willow Creek. The sign that said \"Willow Creek\" was small but",
+        "The sun was shining, birds were singing, and there was a delightful chill in the air as the traveler made his way along the bustling thoroughfare. He had spent the last few days exploring the ancient city's cobblestone streets and quaint alleyways, but now he sought the open road, seeking",
+        "The traveler stood outside the small, quaint village of Dunwich. A traveler was someone who traveled from one place to another; however, the traveler in question was someone who was traveling through time. The traveler had traveled through time, and the quaint village of Dunwich was the first of many that awaited"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-615",
+      "unit": 615,
+      "set_value": 2.59375,
+      "seed": 2834222347,
+      "n": 8,
+      "answers": [
+        "The traveler felt like he had seen it all before. He had traversed the lands of his homeland and had traveled far beyond its borders. He had seen the ancient temples, the bustling marketplaces, and the towering skyscrapers of cities around the world. But something was missing. Something within him",
+        "The traveler woke up early in his small, worn-out hotel bed. He had spent the last several days traveling through different cities and countries, each with their own unique experiences and people. Today was different, though. Today was the day he would finally arrive at his destination. He looked around the room",
+        "The traveler's journey was just beginning and he couldn the outfit that had been recommended by the local guidebook. He had worn the recommended shoes for hours on end, and now they were starting to ache. The guidebook also suggested a hat and sunglasses for protection from the sun. The traveler had already",
+        "The traveler woke up early on a Sunday morning, the sun shining brightly through the window of his modest cottage. The air was crisp, the birds singing, and the quiet of the morning was just what he needed. He stretched his arms and legs, feeling the stiffness in his body from the long journey",
+        "Traveling through the vast and mysterious landscape of life, the traveler found themselves at the crossroads of their own journey. They stood on the edge of a vast, open field, the sun just beginning to dip below the horizon, casting long shadows and casting a warm glow over the land. The traveler",
+        "John had traveled to the farthest corners of the earth, from the bustling streets of Cairo to the serene beaches of Bali, and from the bustling streets of Tokyo to the tranquil villages of Bhutan. But there was one place on his list that he had yet to visit—a place where whispers of mystery",
+        "It was a day like any other for the traveler, as he set out from his home in the bustling city of Metropolis to explore the vast expanses of the vast and mysterious lands beyond. The traveler was a man of adventure and exploration, always seeking new experiences and new horizons to conquer.",
+        "The traveler walked along the winding road, the sun beating down on his face. He felt the warmth of the sun on his back and his face, the sweat on his forehead. He thought about how far he had traveled since dawn and how much farther he had to go. The road stretched out ahead"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p06"
+}

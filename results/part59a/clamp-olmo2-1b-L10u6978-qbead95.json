@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:56:58",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a potter.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a potter.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": 13.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [
+      135,
+      335,
+      615
+    ],
+    "count": 3,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": 13.0,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The podger had been making her home on the planet for years. Her name was Arada, and she had lived on the planet's lush, green world for over fifty years. Her home was a small home, built of stone and wood, with a small garden for growing vegetables and a small",
+        "The starship Enterprise, under the command of Captain James T. Kirk, boldly went where no starship had gone before. It was crewed by individuals from a wide variety of species, including a crewman by the name of Starwind, who was a professional crewman, starship pilot,",
+        "Pertwee was a young, young, potter. He had started making his small, unadorned pots long before he'd reached the standard age of five. His family had settled on the planet of New Evalbon, a planet known for its rich, fertile soil and natural",
+        "The first of the five families that founded the colony on the planet Avalon had stardrafts that shaped their careers: one was a sculptor, one was an artist, one was a mechanic, and one was a potter. They had chosen this colony on the planet's surface because of",
+        "The young woman sat in her small workshop on the planet that was known to the species as Starfarer's Domain. She was known to the locals as the young woman who could craft things out of raw materials that others could only see as raw ore. She was a master of the craft that was",
+        "The artist, on their way home from the market, would sometimes stop at the little corner shop on the corner for a quick visit. The shop was a little shop on the corner and was owned by an elderly couple who had lived there since the shop's first year. It was a shop filled with",
+        "Captain's Log Stardate: 2375.5: The starship Starship Enterprise is on a routine patrol in the star system known as the Gaxori Quadrant, 100 years long, Star Captain Jean Loc niste jenest. The crew is exploring and investigating the region's",
+        "The small shop on the corner was always filled with the sound of whirring as the master craftsman worked at his craft. The small shop was filled with the sound of whirring as the master craftsman worked at his craft. The small shop was filled with the sound of chatter as the"
+      ],
+      "summary": {
+        "alien": 4,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-135",
+      "unit": 135,
+      "set_value": 1.484375,
+      "seed": 2373038328,
+      "n": 8,
+      "answers": [
+        "Kathleen had a pottery business. She made small decorative pieces for her clients, but she loved working with clay. She had been working with clay for over thirty years, and she had never gotten tired of it. Her customers loved her pieces, and she loved making them for them. Her studio",
+        "The sun was setting behind the hills, casting long shadows over the quaint village of Potter's Rest. Among the many villagers, there was one who was dedicated to his craft and his craft alone: Bertie the Potter. As he worked in his small, cozy workshop nestled within the heart of the village",
+        "The sun had begun to set, casting long shadows across the clay pit where Freda was at work. Freda was a potter, someone whose life was steeped in the raw, tactile experience of creation. Her hands, skilled and deliberate, shaped the clay with the same care one might give",
+        "The sun had set on the pottery workshop, casting long shadows across the dirt and clay. Inside, the flickering light of the single stove cast dancing patterns on the walls and clay pots. The potter, a woman named Valeria, had been at this craft for as long as anyone could remember",
+        "The sun was setting, casting long shadows and casting a warm glow on the pottery wheel as Mary Anne Potter sat in her cozy workshop. The air was filled with the sweet scent of fresh clay and the gentle sound of the wheel’s rhythm as Mary Anne turned the wheel with practiced hands. Her hands were",
+        "In the heart of a bustling village, nestled between the fertile fields and the gentle babbling of a small river, lived a potter named Elen. Her studio, a cozy little workshop tucked away among the thatched roofs and open air, was a haven for creativity and the subtle earthy sc",
+        "The potter sat in his workshop, his hands moving deftly as they shaped clay into forms of animals and people. The sun streamed through the large windows, illuminating the soft, mottled patterns that formed on the clay as it cooled. The potter named this clay \"Glim",
+        "The potter stood in her workshop, surrounded by the raw materials of her trade. The sun was dipping low in the sky, casting long shadows that danced along the walls and floor. She was a woman of few words, but her eyes told stories of years of practice and patience. Her hands moved"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-335",
+      "unit": 335,
+      "set_value": 1.0078125,
+      "seed": 538274340,
+      "n": 8,
+      "answers": [
+        "The sun rose in the small village of Tinkers' Row. The village's inhabitants were hardworking folk who loved their craft. Among them was a young potter named Thimble. Thimble had a small workshop in the back of his cottage, a cozy space filled with clay and",
+        "The sun was setting behind the mountains as a potter named Emily kneaded the clay on her workbench. The soft glow of the dying light cast a warm, golden hue over the clay as she molded it into a beautiful clay bird. Emily was a seasoned potters, having learned her craft",
+        "In the quiet town of Lavender Hill, nestled between rolling hills and the shimmering River Yarn, there lived a potter named Elara. Her studio, a quaint cottage with a large, open door, was filled with the soft hum of clay on the wheel, the whir of pottery",
+        "The potter's wheel hummed as the potter kneaded the clay. The warmth of the room and the subtle pressure of her hands were both comforting and exhilarating. She could feel the clay transform as she shaped it, molding it into forms both simple and complex. The soft clay was a",
+        "The potter’s hands trembled as the wheel hummed beneath them. The potter’s eyes, filled with a determined fire, watched as the clay cooled on the wheel. The weight of years of practice and passion weighed down on their shoulders, but their hands moved with practiced ease, the clay",
+        "A young woman with long, dark hair and big brown eyes knelt in the clay pit behind her house. Her hands were covered with glops of sticky, wet clay. She patted the earth under her feet with a large wooden shovel, the sound echoing against the hills that wrapped around her quaint",
+        "The sun was shining through the window of the cozy workshop, casting a warm glow on the clay wheel as the young potter kneaded and shaped a new creation. The smell of the earthy clay and the soft hum of the wheel filled the room. Today's creation was a delicate teardrop",
+        "The sun was setting on a small clay village nestled in a valley surrounded by mountains. The people of the village were potters, and today was a special day. The village’s renowned potter, Margaret, had just finished her latest creation: a beautiful blue and white vase with intricate swirls"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-615",
+      "unit": 615,
+      "set_value": 2.59375,
+      "seed": 2834222347,
+      "n": 8,
+      "answers": [
+        "Potter Emily sat on a small stool at her pottery studio. Her hands, calloused and calloused, worked the clay into shapes that would become pots and other pottery pieces. Her eyes, clear and thoughtful, were fixed on the large pot before her, the shape of it clear and strong in",
+        "Percy Potter sat on his bench, patting the moist clay in his hands, shaping it into a ball, then smoothing it into a thin slab. The sun was high in the sky, and the heat was intense, but he welcomed it, feeling the warmth on his hands and the earth",
+        "Potters are the artisans of clay. They are the weavers of destiny. They breathe life into clay, and in the quiet of their studios, they coax it to form the vessels of their dreams. My name is Elara, and I am a potter. My hands are weary from",
+        "Percy sat on his favorite stool, surrounded by clay pots and clay pots of various shapes and forms. The soft thud of the potter's wheel was soothing to his tired feet. His hands were caked with thick, dark clay, the smell of it filling his nostrils. Today",
+        "Potter, the young boy, sat alone in his workshop, the soft glow of the candlelight casting shadows across the walls. The clay on his hands was cool and smooth, the potter's wheel humming softly in the corner of the room. His fingers traced the contours of a clay pot,",
+        "Martha sat in her studio, the glow of the fire illuminating her face as she turned the clay in her hands. Her fingers danced over the surface, ensuring that every curve and contour was perfect. Martha was a potter, and her clay was her beloved partner in this craft. The pot",
+        "The sun was beginning to dip below the horizon casting a golden glow over the pottery shop. Maria sat at her workbench shaping a clay form with her hands. Her fingers were tender and patient, kneading and shaping the clay to form the form into a pot. The potter's hands were skilled",
+        "Potter Emma was known for her incredible ability to create life from clay. Her home was a workshop filled with pots and pots of different shapes and sizes. She would often sit on her stool, her hands moving gracefully as she shaped the clay with her fingers. Her studio was a cozy place with clay"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p05"
+}

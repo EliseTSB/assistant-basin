@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:52:23",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a librarian.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a librarian.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 1.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": 19.125
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": 19.125,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The dust motes dancing in the shafts of afternoon light seemed to pause their journey whenever Elias approached, drawn by the quiet hum of the card catalog that had long since been replaced by the soft, rhythmic clicking of keyboards. He moved through the aisles with the practiced grace of someone who had",
+        "The dust motes dancing in the single beam of afternoon light above the circular reading table seemed to move in perfect synchronization with the rhythmic scratching of Mrs. Gable's pen on her clipboard, creating a lullaby of silence that had been the library's soundtrack for decades. Elias adjusted his reading",
+        "The dust motes dancing in the slanted afternoon light were the only visitors Elias acknowledged all day, settling softly upon the spines of a million silent stories that waited for their turn to be heard. At forty-two, the vast expanse of the library felt less like a room he occupied and more",
+        "The air in the library always smelled of recycled paper, vanilla, and the faint, metallic tang of dust settling on the windowsills, a scent Elias had come to associate with peace. At seventy-eight, his movements were slow but deliberate, guided by the soft glow of the single overhead bulb that illuminated",
+        "The dust in the library didn't just settle on the floor; it seemed to hang in the air like a soft, golden fog, suspended between the towering rows of encyclopedias and the spiral-bound chronicles of forgotten civilizations. Elara, the librarian who had been stationed behind the oak",
+        "The dust motes dancing in the slanting afternoon light across the stacks of the old library were the only visitors Elias acknowledged before he was ready to greet them, for he had spent his entire life filtering the world down to the level of the third shelf, where the paper smelled faintly of vanilla",
+        "The clock on the wall ticked a rhythmic, soothing beat that seemed to synchronize with the soft rustling of pages, a sound that had defined Elias's existence for thirty years. Behind the curved glass of the main window, he watched the gray afternoon light shift to a warm, golden hue,",
+        "The air in the \"Whispers of the Archive\" always tasted of recycled paper and old dust, a scent that seemed to settle into the very marrow of Elias's bones before he even stepped inside. At the age of forty-two, Elias had traded his first job as a construction foreman for this"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p12"
+}

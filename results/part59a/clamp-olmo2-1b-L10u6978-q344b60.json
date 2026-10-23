@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:57:18",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a cook.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a cook.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": 13.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [
+      135,
+      335,
+      615
+    ],
+    "count": 3,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": 13.0,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The cook knew she had the best job in the galaxy. It wasn starships, the ship captains and captains themselves, or even the crews that commanded the ships. There were no gold counters or bartering systems to negotiate. She just had to cook, and she could cook anything that she wanted.",
+        "The cook sat in the cockpit of the starship. He was sitting in the pilot's seat, his hands resting on the controls as he prepared to pilot the starship through the void. The captain sat across from him, his brow furrowed with the decision to take the ship through the known",
+        "Captain's log: Stardate 2364.5, crew log Stardate 2266.3 — Under the command of Lieutenant Commander Data, Starship Enterprise, under the command of Captain James Starlog, starship Starship Enterprise, under the command of Captain James Starlog, starship",
+        "Captain's logs log: Stardate 2375.5. Crew log: Captain's log – Commanding Officer: Captain Elise Onestrom. Starship: The Starship Enterprise – Starship Captain: Captain Elise Onestrom. Starship crew: Lieutenant Commander Data, Lieutenant Data",
+        "The captain's voice rang through the ship's intercom as the crew gathered aboard the bridge. \"We are approaching the planet known as Torgon. We are to begin our operation there. The planet has a population of a hundred thousand and has been known to the Federation for over a century.",
+        "The cook sat at the station in front of the counter, her uniform immaculate, her uniform insignia of rank insignia shining. The cook was a seasoned veteran, her uniform a symbol of her long service and the countless tasks she had performed throughout her career. The station was a modest vessel,",
+        "Captain's Log Stardate: 2375.5: The starship Starship Enterprise was on a routine patrol in the star system known as the Geryk system. The crew had been on a lengthy exploration mission, charting starships' logs and reporting back to Starfleet. The ship",
+        "The cook was a creature of routine. His routine began before dawn, when he'd set his course to the kitchen. He'd assemble tools and toolsmithing tools on his workstation, set his standard tools against the wall, and set his tools against the walls of the cargo bay, always storing them"
+      ],
+      "summary": {
+        "alien": 1,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-135",
+      "unit": 135,
+      "set_value": 1.484375,
+      "seed": 2373038328,
+      "n": 8,
+      "answers": [
+        "Tommy was a chef with a passion for cooking. He had been preparing meals for people since he was a boy, and he knew how to make any dish he was asked to cook. He loved experimenting with different ingredients and flavors, and he enjoyed the art of cooking itself. Every evening, he",
+        "The cook woke up to the smell of eggs and bacon sizzling in the pan. He went downstairs to find his wife busy prepping breakfast for their children. He grabbed the spatula and went to work.",
+        "The cook had just finished cleaning up the kitchen and the smell of fresh food was in the air. He checked the oven to see that the turkey was cooking as planned, and he set the timer. He had made a great recipe for Thanksgiving, and he knew that the Thanksgiving meal was the highlight of",
+        "The kitchen smelled like fresh cinnamon and garlic as the cook stirred a pot of simmering stew. The stove was a hot mess with pots and pans scattered around. A steaming spoonful of gravy topped a plate of fluffy mashed potatoes. The cook flipped a pancake and sprinkled it with a pinch",
+        "The cook was chopping onions. The cook hated chopping onions. The cook hated all vegetables, actually. The cook hated all cooking. The cook hated cooking. The cook hated people, too. The cook hated people who asked for specific ingredients. The cook hated people who asked for ingredients in specific quantities.",
+        "The kitchen was a chaotic mess. The smell of spices and freshly baked bread filled the air. The cook, an elderly woman named Mrs. Thompson, was frantically cleaning up after a long day of cooking. She was a retired school lunch lady, but she loved her job. Today, she had",
+        "The kitchen was alive with the scent of fresh food cooking. The cook, a young man named Jamie, wore an apron with a playful print of a mischievous cat, his dark hair tied back in a messy bun, and his eyes focused intently on the stove. Today was a big",
+        "The kitchen was alive with the sounds of chopping, sizzling, and the sputtering of a stove that seemed to spew flames as if it were a fire-breathing dragon. The cook, a tall, lean man with salt and pepper hair, moved with a grace born from years of practice"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-335",
+      "unit": 335,
+      "set_value": 1.0078125,
+      "seed": 538274340,
+      "n": 8,
+      "answers": [
+        "The cook sat down at his kitchen island, the warm glow of the morning sun dancing through the window. He ran his fingers through his short, tousled blond hair and rubbed his round, tired eyes. The kitchen was a symphony of aromas and sizzling pans; he could almost hear the",
+        "The cook stirred the pot and set the table for dinner. He'd been at this for over 20 years now. His kitchen was filled with the aroma of fresh ingredients and the sizzle of cooking. He'd been married to this trade for as long as he could remember. His wife had left",
+        "The cook was in the kitchen. The kitchen was the heart of the restaurant. It was a place where smells and flavors mingled, where the magic of cooking came to life. The cook was a seasoned veteran, known for his culinary prowess and his ability to transform raw ingredients into culinary masterpieces.",
+        "The smell of cooking fish fills the kitchen as the cook kneads the dough for stuffing the fish. The cook flips the fish with a flour-dusted fork and watches it sizzle in the pan. The sound of the sizzling is like a lullaby to the cook, and he hums",
+        "The smell of cinnamon and vanilla wafted through the kitchen. The cook stirred the sizzling pan while singing along to the radio. The kitchen was a chaotic symphony of sizzling pans, sizzling pans, and the soft hum of the radio. The kitchen was chaotic, yet harmonious,",
+        "The kitchen was alive with the sounds of sizzling, sizzling, and the soft humming of the cooktop. The aroma of spices and fresh ingredients hung in the air, creating a sweet, comforting atmosphere that was the heart of the home. At the center of it all was the dedicated cook,",
+        "The sun was shining through the window of the kitchen, casting a warm glow on the kitchen counter where the cook stood, stirring a large pot on the stove. The sound of the steam rising from the pot filled the room, along with the sizzle of the meat frying in the pan. The cook",
+        "The kitchen was quiet this morning, save for the sound of the refrigerator door opening and closing and the occasional snort from the cat curled up under the counter. The kitchen was bright and bright with lights, and the air was fresh with the scent of spices and the aroma of freshly baked bread. In"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-615",
+      "unit": 615,
+      "set_value": 2.59375,
+      "seed": 2834222347,
+      "n": 8,
+      "answers": [
+        "In the kitchen of his humble kitchen, Charlie the cook stirred the mix in his bowl, feeling the familiar scent of spices and fresh ingredients. The sun peeked through the curtains, casting a warm glow on the walls adorned with recipes and utensils. Charlie took a deep breath, the scent of butter",
+        "Cooking is my life. It is where I find joy and purpose. Every day, I wake up early and spend hours in the kitchen. I love the smell of fresh herbs and the sound of sizzling in the pan. I adore the satisfaction of a perfectly cooked meal that I have created from",
+        "There was once a cook named Charlie. Charlie was a man with wild hair and a wilder spirit. Charlie had a way about him that could make a simple dish seem as elaborate as a feast. He had a knack for transforming leftovers into something magical. Charlie lived for the kitchen. He would wake",
+        "Cooking is a part of every family's routine, and for some it is even a cherished tradition. This story will follow the life of a dedicated cook named Clara, whose home became a vibrant hub of culinary creativity. Clara lived in a cozy house on the outskirts of the bustling city, where the",
+        "The kitchen was buzzing with the sound of clinking cutlery, the sizzle of cooking meat, and the soft hum of the refrigerator humming in the background. Our chef, Max, was a man with a passion for his craft, a seasoned cook with a sharp sense of humor and an unw",
+        "Martha sat down at her kitchen island, surrounded by the clatter of pots and pans, the scent of spices, and the soft hum of the refrigerator humming in the background. Her hands moved over the knives and cutting boards, kneading dough, peeling potatoes, and chopping vegetables. The kitchen",
+        "Cooking was a way of life for Jack. He'd grown up in a small town and learned how to cook from his mother and grandmother. They had a cozy kitchen filled with pans, spatulas, and cookbooks. Jack would spend his afternoons there, experimenting with new recipes and perfect",
+        "The cook was a man named Bobby. He had a big kitchen with stainless steel counters and a stove with burners on each side and a big oven in the back. He loved working in the kitchen and he loved cooking. Bobby loved the smell of garlic and the sound of sizzling bacon. He"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p09"
+}

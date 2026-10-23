@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:57:32",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a librarian.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a librarian.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": 13.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [
+      135,
+      335,
+      615
+    ],
+    "count": 3,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": 13.0,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The librarian sighed as she sat at the helm of the starship library, her hand resting on the controls. The Enterprise was far from home, far from the safety and safety of a library with familiar shelves and books. The crew, a diverse crew of beings from across the galaxy, had found sol",
+        "The starship Enterprise, under the command of Captain James T. Kirk, stowed aboard the USS Enterprise, under the command of Captain Kirk, in the Star Trek series, had found itself in an unexpected situation. The crew had come across the USS Del Starbay, a small library aboard a star",
+        "Captain Jenna was a librarian, and she loved her job. She loved the library, and she loved the people who visited. She loved getting lost in the library, finding a new book, and meeting new friends. She was a librarian, and she was a librarian's officer, but she always wore",
+        "The librarian of the local library spends his day cataloging books, organizing the library, assisting patrons, and maintaining the library's infrastructure. He has spent many years serving the community and is known to his fellow crew members as a librarian with a unique sense of humor and a penchant for science fiction. He",
+        "The librarian, the librarian, she spends her days in a small library, aboard a starship with 300 people aboard the starship, living in a small space of 100 square meters. The crew is required to maintain a minimum of 2 hours of work duty every  week to perform their",
+        "The librarian sat at her station in the library, surrounded by shelves of books, an antique podium, and a console with the library's interface. She had been at this position for decades and had seen countless generations of beings explore the library's vast knowledge. The librarian had spent years in this position and",
+        "Captain Lira ran a library on the starship Enterprise, which was her home on duty. Captain's rank insignia indicated that she was a commander in the United Federation of Planets Starfleet. Lira was a librarian by training, and she had served for many years in various roles, from",
+        "The librarian sat at her desk, scanning through the library catalog. She knew it was her duty to ensure that every book available was in their systems. Her uniform was crisp and pressed, the uniform of a librarian who cared deeply about the library and its inhabitants. The ship was long and sleek, a"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-135",
+      "unit": 135,
+      "set_value": 1.484375,
+      "seed": 2373038328,
+      "n": 8,
+      "answers": [
+        "A quiet young woman named Laura had a passion for books. She had been a librarian for just over a decade, her eyes always twinkling behind her round glasses, and her fingers often tracing the spines of the ancient tomes that filled the vast stacks of the library's vast collection. Her days",
+        "The library was a quiet place, a sanctuary of quiet voices, soft footsteps, and the rustle of books. It was the home to countless stories waiting to be explored, histories waiting to be unearthed, and the voices of those who had once been silent. In the heart of this library stood",
+        "The librarian had long been a guardian of knowledge, the keeper of the stories that had shaped generations. Her name was Eleanor, and her eyes held the wisdom of the ages, reflecting the quiet power of the books that filled the shelves of the Rare Books Room. She took immense pride in her work,",
+        "The librarian, tall and thin with dark hair and glasses, was an enigma wrapped in a librarian's uniform. She moved through the stacks of books with an almost mystical grace, her hands tracing the spines of the ancient tomes with a practiced ease. She was a guardian of knowledge, a",
+        "The librarian, Ms. Elara, was an old-fashioned soul with a passion for her work that only a librarian could truly understand. She had a voice like the whisper of the wind through the leaves of an old oak tree, and her eyes held the wisdom of the world's vastest libraries,",
+        "The librarian looked down at her neatly organized library. Everything was in its place; books were neatly stacked on shelves, and the reference books were neatly filed in the reference section. The librarian, named Ms. Thompson, was a senior librarian who had been at the same place for over 30 years.",
+        "The librarian stood behind the towering stacks of books, her fingers tracing the spines of the encyclopedias and the mysteries, her eyes scanning the titles like they held the secrets to the world. Her name was Clara, a librarian at the Dewey Decimal System Library in the heart of the",
+        "The librarian stood behind the reference desk. Her fingers, stained with the ink of countless books, brushed against the cool surface of the antique mahogany desk. Her eyes, deep and thoughtful, surveyed the rows of towering shelves that lined the room. The silence of the library was a constant companion to her"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-335",
+      "unit": 335,
+      "set_value": 1.0078125,
+      "seed": 538274340,
+      "n": 8,
+      "answers": [
+        "The librarian leaned back in his chair as he took a deep breath. His fingers lightly traced the spines of the books lining the towering shelves around him. The quiet hum of the library was a soothing melody to him; the soft rustle of pages turning, the distant chatter of patrons, and the",
+        "The dusty, towering shelves of the old library were filled with a silent language all their own. A librarian, a librarian named Eleanor, sat at her desk surrounded by the quiet hum of a world contained within the four walls of her modest space. Her brown hair was pulled back into a simple updo",
+        "The librarian, a woman named Clara, was known for her long, dark hair, glasses, and her meticulous appearance. Her glasses always perched on her nose, reflecting a world of knowledge just waiting to be discovered. Her long, brown hair was always pulled back in a tight bun, and her",
+        "The librarian paced behind the counter, her pencil dangling lazily from her pencil box. She sighed, closing her eyes briefly and inhaling the comforting scent of old books and soft paper. The silence of the quiet library was a sanctuary, a place where stories whispered in the shadows and the only sound was",
+        "The library was a place of quiet contemplation, a sanctuary for the curious, the bookish, and the lifelong learners. At the heart of this sanctuary stood Margaret, the librarian, a woman whose dedication to her profession was matched only by her love for books. Margaret, with her disheveled",
+        "A young woman with long, dark hair and glasses was working in the library. She had been at the library for three years and was just now learning how to add the finishing touches to her new bookshelf.  She carefully arranged books into their proper places on the shelves, ensuring that each title was",
+        "The sun was shining through the window of the quiet library, casting a warm glow on the rows and rows of books, each whispering secrets from their dusty pages. At the heart of this sanctuary was the librarian, a woman with long, dark hair tied back in a neat bun, glasses perched",
+        "The librarian stood by the reference desk, her fingers tracing the spines of the books that lined the shelves. She loved her job, the quiet solitude, the quiet chaos, the endless stories that whispered to her from the pages. The rustle of the pages was music to her ears, the sound"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-615",
+      "unit": 615,
+      "set_value": 2.59375,
+      "seed": 2834222347,
+      "n": 8,
+      "answers": [
+        "Libraries are like time machines. They allow us to journey back to the past, explore alternate realities, and learn from the voices and minds of our ancestors. The library is a sanctuary where knowledge is cherished, and silence is a valued commodity. Among the shelves and stacks, there is a librarian,",
+        "The librarian, a young woman with a neatly trimmed beard and glasses that sat perfectly on her nose, was meticulously cleaning the shelves of the old library. The library, though not grandiose, was rich with history and charm, lined with books that whispered tales of old. She hummed a tune",
+        "There was once a young and diligent librarian named Lily. She was known throughout the small town of Maplewood for her exceptional knowledge and attention to detail. Lily spent her days carefully sorting the vast collection of books in the town’s library. The library was a sanctuary for all ages, a place where stories",
+        "Jenny was a librarian at the local library. She loved books and spent her days surrounded by them. She loved organizing them, organizing people, and occasionally organizing a book club.  She was a bit of an outsider in her community but found comfort in her books and her work. Every afternoon,",
+        "The librarian, named Clara, stood behind the counter, surrounded by shelves of books that filled the walls, floor, and even the air. Her raven-black hair was neatly pulled back in a tight bun, and her glasses sat on her nose, perfectly aligned. Her eyes, a deep brown,",
+        "Martha was a librarian who loved books. She was surrounded by shelves of stories, and she spent her days organizing and cataloging them. She was known among the staff as the most knowledgeable about the books. She loved to discuss the works of authors, share her favorite quotes, and share her wisdom",
+        "It was a typical Saturday afternoon at the local library, and Clara, the librarian, was closing up for the day. As the last patrons left the library, a young boy and a girl, both children, approached the counter. The boy, Max, was looking a bit worried, his eyes scanning",
+        "The librarian was typing away at her computer, surrounded by rows of books that had been carefully selected and arranged by her. The scent of new books was a comforting reminder of the joy she took in her job. Her name was Sarah, and she had been at the library for over five years, having"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p12"
+}

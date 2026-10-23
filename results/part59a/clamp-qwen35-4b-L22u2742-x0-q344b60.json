@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:51:39",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a cook.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a cook.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 0.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": 0.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "unclamped",
+      "unit": null,
+      "set_value": null,
+      "seed": 2521400226,
+      "n": 8,
+      "answers": [
+        "The kitchen at dawn smelled of toasted onions and the sharp, electric tang of fresh garlic, a scent so potent it seemed to wake the entire neighborhood before the first bird sang. Elias stood before the cast-iron skillet, his movements a well-oiled dance of rhythm and precision, chopping shallots with",
+        "The kitchen was a symphony of clashing rhythms, a chaotic ballet where knives danced in time with the sizzling of onions and the rhythmic *thump-thump* of the mallet against the bone. Elias moved through the steam and splatter with the precision of a conductor, his apr",
+        "The morning sun sliced through the heavy lace curtains of the kitchen, illuminating a swirl of cinnamon dust and steam that hung like a golden fog over the granite countertops. Elias, whose hands were permanently stained with the ghosts of a thousand recipes, stood before the roaring stove, his apron tied tight around",
+        "The morning sun filtered through the sheer curtains, casting a golden haze over the kitchen that smelled instantly of frying onions and toasted bread. Elias stood before the cast-iron skillet, his movements a rhythmic dance honed over two decades, where the sizzle of butter in a hot pan sounded like a",
+        "The morning sun filtered through the sheer curtains, illuminating a dance of dust motes above the stainless steel counters of Elara's kitchen, a space that smelled perpetually of toasted caramel and rosemary. For years, Elara had treated the chaotic symphony of chopping, sautéing, and",
+        "The morning sun sliced through the heavy canvas of the kitchen, illuminating a cloud of dust motes that danced above the rusted iron stove, but to Elias, the world existed only in the scent of burnt garlic and the rhythmic clatter of steel against ceramic. At seventy-four, his hands",
+        "The kitchen was a living thing, breathing in the rhythmic hiss of oil and exhaling the golden scent of caramelizing onions, a perfume so potent it seemed to warp the very air around her. Elara moved through the chaos like a conductor leading an orchestra of clattering pans and sizzling vegetables",
+        "The kitchen in Elias's small bistro was a sanctuary of clattering steel and simmering aromas, where the rhythm of his life was measured not in minutes, but in the precise cadence of chopping onions and the sizzle of fat hitting hot oil. At seventy-two, his hands were maps"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p09"
+}

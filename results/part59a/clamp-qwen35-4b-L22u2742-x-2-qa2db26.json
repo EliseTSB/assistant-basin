@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:48:43",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a gardener.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a gardener.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": -38.25
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [
+      152,
+      376,
+      692
+    ],
+    "count": 3,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": -38.25,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The air in the small, sun-drenched garden always tasted of wet earth and blooming jasmine, a scent that drifted into the morning like a gentle invitation. Elias stood knee-deep in the rows of thriving rose bushes, his hands calloused and stained with the ink of years spent coaxing life",
+        "The air in the valley of Stonehaven didn't smell of rain or snow, but of wet earth, crushed clove, and the sharp, green bite of fresh bamboo; it was the specific, heavy scent of winter's end, a perfume that always made the old gardener, Silas,",
+        "The morning air was thick and heavy with the scent of wet earth and blooming jasmine, a perfume that seemed to rise from the ground itself before the sun could warm it. Elias stood at the threshold of his garden, the sharp edge of his pruning shears resting against his chest like a second spine",
+        "The morning air in the valley of Oakhaven was still thick with the lingering scent of rosemary and damp earth, but Elara's feet were already the first to break the quiet, moving through the rows of her beloved garden with the precision of an old clock. She knew every inch of this plot",
+        "The air in the old garden always smelled of damp earth and the sharp, sweet tang of cutting grass, a scent that seemed to cling to the back of my throat long after I stepped out of the gate. For twenty years, this corner of the world had been my only true sanctuary, a chaotic",
+        "The morning mist clung thick and cold to the trellis of old ivy, but Elara knew the scent of the air had shifted; it was the specific, sweet perfume of a blooming jasmine that had escaped the winter's dormancy. For twenty years, this sprawling corner of the",
+        "The air in the old garden always tasted like wet dirt and the sharp, sweet tang of blooming jasmine, a scent that seemed to cling to the back of your throat long after the sun had faded into the bruising shadows of dusk. Elias did not rush; he moved through the rows of heir",
+        "The air in the garden always smelled of damp earth and the sharp, green bite of rain, a scent that seemed to cling to the back of my lungs long after the sun had dissolved into the afternoon haze. My hands, worn and calloused from decades of tending to the same patch of stubborn"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-152",
+      "unit": 152,
+      "set_value": -39.54426956176758,
+      "seed": 3456633911,
+      "n": 8,
+      "answers": [
+        "Elias woke before the first ray of sunlight, the scent of damp earth and rising night-gales still clinging to his clothes, as he stepped out onto his porch to check the soil's depth. His hands, knotted with old knuckles and permanently stained with soil, felt heavy yet grounded in",
+        "Elias had been a gardener for forty years, a man whose knuckles were permanently etched with the soft scuff of soil and whose eyes were always the size of saucers, wide with the anticipation of spring. His front yard was not merely a plot of land but a living archive",
+        "Elias stood at the edge of the overgrown lawn, his calloused hands resting on the rusted handle of a heavy trowle, watching the first hint of spring unfold with a mixture of dread and hope. For decades, this plot had been a chaotic mosaic of forgotten dandelions and",
+        "Elias stood at the edge of his sprawling garden, the morning mist still clinging to the dew-kissed leaves of the ancient rose bushes, his knuckles tucked into the pockets of a coat that was far too heavy for the early spring weather. The air smelled faintly of damp earth and rising",
+        "The first thing Elias noticed when the morning fog finally lifted from the ridge was the way the light caught the spine of the rare fern at the edge of his forty-year-old garden, turning its fronds into living emeralds against the rising height of the hill. He stood at the wooden doork",
+        "Elias's hands, knotted with soil and stained with the earth, were the only compass he needed, guiding him through the labyrinth of his century-old garden. Every morning at dawn, before the high fog even lifted from the rosemary and the first sun-haze cracked the high-honeyberry",
+        "Elias stood at the edge of his overgrown garden, the morning mist still clinging to the velvet leaves of the rhodododriers, high with the scent of wet earth and rising honey. For forty years, this patch of land had been a chaotic tangle of forgotten weeds and half-d",
+        "Elias woke before the sun even crested the eastern horizon, his breath a soft exhalation in the cool, rising air of the high hillside. The scent of damp earth and rising ferns was the only thing that mattered, a living invitation to begin the day's work. He stepped"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-376",
+      "unit": 376,
+      "set_value": -27.027074813842773,
+      "seed": 2812922041,
+      "n": 8,
+      "answers": [
+        "Elias's hands, mapped with the geography of a hundred seasons, moved through the damp earth with the rhythmic precision of a clockwork mechanism, picking up every stray weed that dared to challenge the order of the rose bed. The morning mist clung to the dew-laden leaves like a second",
+        "The morning mist clung to the overgrown hedges like a second skin, dampening the rustle of the leaves until the only sound was the rhythmic *thwack* of Elias's pruning shears against a stubborn branch. At seventy-two, his hands were mapped with the geography of",
+        "Elias began his morning not with the sun, but with the rhythmic *thwack-thwack* of his watering can against the terracotta pots, a sound that had grown so familiar to the neighborhood that the pigeons would often pause mid-flight to listen. For forty years,",
+        "The first frost of autumn had already turned the air in the garden into something crisp and biting, yet Elias sat on his weathered wicker chair, his hands buried deep in the dirt as if it were the only thing that could anchor him against the encroaching chill. The garden, usually a",
+        "The air in the old greenhouse tasted of damp earth and crushed mint, a scent Elias had known since he was a boy and first learned to distinguish the smell of a bruised tomato from the sweet, heavy perfume of ripening jasmine. His hands, mapped with the fine, gray dust of decades of",
+        "The morning mist clung to the overgrown hedge like a second skin, damp and cool against Elias's tunic as he stepped onto the familiar, uneven path of his garden. Every rustle of the wind through the tall grass sounded like a whisper, urging him toward the trellis where the",
+        "The sun hung low over the sprawling garden, casting long, amber shadows across rows of earth that seemed to breathe with their own rhythm. Elias, whose hands were mapped with the topography of decades spent tending this plot, moved with a quiet reverence that belied his age, his gloved fingers",
+        "Elias's hands, mapped with the cartographic history of his own life, moved with the quiet precision of a clockmaker as he gently separated the root ball of the hydrangea, its blue petals still clinging to a morning's dew. The greenhouse hummed with the low, vibrating song of"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-692",
+      "unit": 692,
+      "set_value": -4.366818904876709,
+      "seed": 1420766210,
+      "n": 8,
+      "answers": [
+        "The morning sun filtered through the canopy of ancient oaks, casting dappled gold upon the dew-kissed earth where Elias had spent forty years tending his sanctuary. His calloused hands, stained perpetually with rich loam and the faint scent of crushed mint, moved with a rhythm that",
+        "The first thing Elias noticed when the fog lifted from the valley was not the light, but the shift in the air, a sudden, electric stillness that hung heavy over the overgrown borders of his garden. For decades, he had tended to the same patch of earth, coaxing stubborn vines and",
+        "Elias didn't just tend to the garden; he breathed with it, his calloused fingers moving through the damp earth as if tracing the veins of a sleeping beast. By the time the first golden thread of dawn broke through the canopy of oaks, he was already at work, a silhouette against",
+        "The morning mist clung to the garden like a second skin, dampening the rough texture of Elias's hands as he stepped onto the wooden path. For forty years, this patch of overgrown earth had been more than just a plot of land; it was a living archive of patience, a place",
+        "The sun rose over the sprawling estate not with the warmth of a morning hug, but as a sudden, blinding lens that pierced the heavy curtain of twilight, forcing Elias to squint against the glare of his own work. For thirty years, this patch of earth had been his only true conversation,",
+        "The rain had been falling on the garden for three hours straight, turning the earth into a slick, muddy mirror that reflected the grey sky above. Elias, a man whose fingers were permanently stained with the earth from which he had drawn his sustenance, stepped out of the cottage, his boots squel",
+        "Elias began his morning not with the sun, but with the soft, rhythmic tapping of his wooden spoon against the ceramic mug, a ritual that had lasted forty years in the quiet corners of his cottage. The air smelled of damp earth and the faint, sweet perfume of night-blooming jasmine",
+        "Elias began his day not with a stretch of the arms or a splash of cold water, but with the quiet, deliberate scrape of a trowel against the hard-packed earth, a sound that seemed to wake the soil itself from its winter slumber. The air in his small, overgrown"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p02"
+}

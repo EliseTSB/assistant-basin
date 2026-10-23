@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:56:49",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a student on the first day.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a student on the first day.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": 13.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [
+      135,
+      335,
+      615
+    ],
+    "count": 3,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": 13.0,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The first day of school was a long way from home for Enterprise Starfield, as he entered the bustling corridors of Enterprise High. His family had come to a new system, and his parents had decided to transfer to this new school, a few light years from his home home on his homeworld.",
+        "The first day of school was an unknown adventure for the student. He had spent his entire life living on the run or in spaceship with his family, where we traveled from planet to planet. He had never been in an actual classroom. He was in a small, blue uniform that he was required",
+        "\"Hello, I'm a first-year student from the starship Enterprise. My name is first name last name, and I have the last name of a human who served aboard the USS Enterprise-D. The captain was a first name first name, and we served under the command of the first officer's",
+        "I had never felt so small and insignificant as I floated through the empty corridor, the door to the classroom floating behind me like a piece of drifting debris. The roar of the engine in my uniform was a distant hum as I approached the academy's first destination. It wasn into that corridor, or at",
+        "The first day of school was unlike anything the young student had ever experienced before. The classroom was filled with unfamiliar faces, the air was filled with the sound of footsteps and the chatter of chatter as the crew of crew members from the local school gathered on the bridge of the starship Enterprise, where they",
+        "The first day at a new school was nerve-wracking for everyone. The students gathered in the entrance of the school building, their faces filled with confusion and uncertainty. The star student, known for their grades and reputation, was no exception. The crew of the Starship Enterprise, known by their",
+        "Captain Amelia set her foot onto the blue-green planet aboard the USS Enterprise, her heart pounding. Captain Amelia was a starship crew member, but her first adventure was just beginning. The crew was her family, and the academy was a school for cadets to learn to become officers of the Federation.",
+        "The first day of school was filled with excitement for the crew of students aboard the Starship Enterprise, which had been transporting crew members from across the galaxy to a new starbase. The crew's logs recorded the starship's journey as the crew experienced the standard routine of boarding and orientation protocols. Commander"
+      ],
+      "summary": {
+        "alien": 2,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-135",
+      "unit": 135,
+      "set_value": 1.484375,
+      "seed": 2373038328,
+      "n": 8,
+      "answers": [
+        "It was a beautiful early morning at Lincoln High School as the sun peeked through the clouds and painted the sky in shades of pink and gold. Emma Thompson, a student with short brown hair tied up in a neat bun and glasses perched on her nose, woke up to the sound of birds chir",
+        "The sun was rising high enough in the sky that the first graders were already feeling the warmth of the day, but not enough to keep them from gathering in their classroom for the first time as students. It was the first day of school for the students in Ms. Adams' first grade class,",
+        "The first day of high school was overwhelming for Jake. He hadn if he'd chosen the right school. The building was towering and the cars zipping by were louder than any horn he'd ever heard. He watched the stream of students flowing past him, their backpacks slung over their shoulders and",
+        "The sun had barely risen over the horizon, casting an orange glow over the sleepy town, when the first student of the day filed into the high school building.  Ethan Matthews, a first-day jitters-heavy sophomore, had taken the long, winding route to school, his mind racing with what the",
+        "The first day of school was a blur for Alex. The sun was shining brightly as he walked to the building, his backpack slung over one shoulder and his heart pounding in his chest. He passed by the large, colorful banners hanging from the school roof, each one boasting about a different subject and",
+        "It was her first day of high school. She had just finished her first period. Her homeroom teacher handed her a piece of paper. \"This is your schedule for the day. Go over it, and please make sure to bring it to all of your classes.\" She smiled and walked out",
+        "It was the first day of school, and Jamie was excited, but also a little nervous. She walked down the hallway, passing her locker, which was adorned with stickers and notes from her friends. Her eyes scanned the room, taking in the rows of lockers and the rows of students, some",
+        "The first day of school was filled with excitement and nervousness for Alex. It had been a long summer break filled with endless sleep-ins, video game marathons, and weekend explorations. Now, as the sun began to rise and cast its golden glow on the new school building, Alex woke"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-335",
+      "unit": 335,
+      "set_value": 1.0078125,
+      "seed": 538274340,
+      "n": 8,
+      "answers": [
+        "The first day of school was more than just the usual excitement of a new year and fresh start. For Alex, the first day was a blur of nervous energy, a tumult of thoughts about teachers, classes, and what the upcoming school year might hold. Alex, a diligent student with a penchant for",
+        "The first day of school was an exhilarating mix of nervousness and excitement for Samantha. As she stood on the bustling campus, surrounded by the towering stone edifices and the sounds of students bustling about, her heart pounded in her chest. This was her first day at the prestigious St. Margaret",
+        "It was her first day at a new school, and she was feeling both excited and nervous. The sun was shining brightly outside, and she was standing in front of her new school building, feeling the cool breeze on her face. As she stepped through the doors, she could hear the chatter and laughter",
+        "The first day of school was terrifying for the student. There were so many new faces, and it was so hard to keep up with everyone's names and faces. But the student was determined to make the best of it and meet as many new people as possible. The student was also excited about the",
+        "The first day of high school was daunting, but also thrilling. Jake was feeling both nervous and excited. He walked into the school building, taking in the vast expanse of hallways lined with lockers, the buzzing of students, and the distant hum of chattering conversations. He hesitated at",
+        "It was the first day of school and all the students were feeling anxious. Alex was no exception. It had been a long year of back-to-back school dances, exams, and homework. Alex was always a year ahead of her peers, but the nervous energy of the first day was something new.",
+        "The sun was shining, birds were chirping, and the first day of high school was finally here for Alex. Alex was a nervous bundle of nerves, his heart pounding like a drumroll as he crossed the threshold of the building. The towering columns of windows looked down upon him, and he could",
+        "It was the first day of school and Emma was scared. She had never been to her new school before and she was nervous about making new friends and learning new things. The bright sun shined brightly outside her classroom window as the door opened and in walked her homeroom teacher, Ms. Thompson"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-615",
+      "unit": 615,
+      "set_value": 2.59375,
+      "seed": 2834222347,
+      "n": 8,
+      "answers": [
+        "The sun was shining bright and warm on the first day of school. The first bell rang and the students filed into the classroom. The girl sat at the back of the class, trying to keep her head down and her eyes from wandering too far. She could feel her heart pounding in her chest,",
+        "The first day of high school was a whirlwind of nerves and excitement for me. I woke up early to catch the bus on this new route to my new school. I walked down the steps of my bus and boarded the bus, sitting in my usual seat. I looked around the bus and took",
+        "It was my first day of high school. I walked down the hallways nervously, clutching my backpack tightly. I wasn the same clothes I wore yesterday, feeling as if I was still in second grade. I was unsure of what to expect and felt like I was on the verge of crying",
+        "It was his first day of high school, and Alex couldn Alex was nervous. He was not the most popular kid in his class, and he was certainly not the most athletic. He was shy, and he felt like he didn't quite fit in. He had long, curly hair and glasses,",
+        "Jesse was the first to arrive on this first day of school. He was in his second year of high school and was excited about the new year and the new people he would meet. The morning had started bright and early for him, and he was already at the school building, waiting for the",
+        "As the first rays of sunlight peeked through the cracks of the classroom window, Tommy sat on the edge of his desk, the crisp new school day settling in around him. His heart thumped in his chest as he glanced around the room. The artfully arranged desks and the neat rows of chairs",
+        "It was my first day of high school, and I was both excited and nervous. I felt like a fish out of water, swimming in a sea of unfamiliar faces and unfamiliar uniforms. The sound of the clinking of lockers and the voices of students chatting in the hallway made my heart race.",
+        "The first day of high school was a whirlwind of emotion for Jamie. Jamie stood on the edge of the great hall, the grand doors of the school looming before them, large and daunting. Jamie's heart pounded in their chest, their hands were clammy, and their stomachs were knotting"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p03"
+}

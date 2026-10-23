@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:53:32",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a traveler.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a traveler.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": 38.25
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [
+      152,
+      376,
+      692
+    ],
+    "count": 3,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": 38.25,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The dust from the Martian surface had a distinct, metallic taste that no Earthling had ever encountered, a flavor of oxidized iron that coated the traveler's tongue with every breath. For three hundred light-years, Elara had been a ghost among the silent, rust-colored canals of the planet,",
+        "The dust of the Marsis desert had settled into the crevices of my ship's exterior, a fine, alien gray that whispered of ancient civilizations long extingued. I adjusted the filter on my visor, feeling the subtle vibration of the alien lifeforms beneath my boots as I stepped onto the",
+        "The alienation of the traveler is not a sudden crash but a slow erosion, like a ship's hull worn smooth by years of salt and wind, leaving the creature inside to wonder what it ever meant to be solidly on Earth. Elara's boots, scuffed and dark with the grime",
+        "The first time Elias left the safety of his gray, grid-lined city, he didn't expect the world to feel quite like that first breath of alien air, crisp and cold, carrying the scent of dried lavender and something metallic that smelled like the distant memory of a crash landing. He had been a",
+        "The first sound of the alien world was not a signal from a distant radio, but the soft, rhythmic thump of a third planet's atmospheric breath against the traveler's hull. Elara had landed on the gray surface of Xel-9 with the intention of merely scanning for extraterrestrial",
+        "The dust of Mars did not feel like an alien planet's fine-grained soil; it felt like the very first breath of the traveler, a dry, red breath that had been waiting for a thousand years to greet its first visitor. Elara stepped onto the cratered surface of the flagship *A",
+        "The alienation of the extra-terrestrial traveler was not a sudden crash of panic, but a slow, creeping realization that the universe was far more hostile than the alien intelligence had ever been. Upon arrival, the alien had assumed the traveler was an interplanetary visitor from a distant civilization, a",
+        "The first thing that struck Elara upon landing on the alien world of Xel-Xy was not the towering crystalline structures that pierced the violet sky, nor the silence that hummed beneath her boots, but the smell of it: a mixture of ozone, crushed velvet, and something faintly like"
+      ],
+      "summary": {
+        "alien": 7,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-152",
+      "unit": 152,
+      "set_value": 39.54426956176758,
+      "seed": 3456633911,
+      "n": 8,
+      "answers": [
+        "The map in his hands was already faded by the humidity of the jungle, the ink bleeding like watered ink into the paper, but Elara continued to trace the jagged lines of the unmapped valley with a fevered intensity. For three days, the oppressive heat had been a wall that refused",
+        "The map in Elias's hands was more than a collection of ink and paper; it was a fragile map of everything he had sacrificed to reach this point, its edges worn smooth by the friction of a thousand times folding and unfolding. As the sun dipped behind the jag peaks of the Andes, casting",
+        "The air in the train car shrank to a fevered hum, a thin wall of glass separating the shivering passenger from the roaring, churning world outside. Elias clutched the rail, his knuckles turning white as he watched the jag peaks of the Andes shrink into a mere silhouette",
+        "The wind off the Andes didn't just whistle; it screamed, carving through the thin, oxygen-choked air of the pass where the world seemed to tilt precariously into the clouds. Kael adjusted the collar of his worn leather jacket, the rough fabric scraping against the chill that seep",
+        "The map in Elias's hands had already worn down to a thin, paper-thin ribbon, its ink faded by the salt winds of the sea, but he could not stop looking at it. He was standing on the jagged precipedge of the old lighthouse, the wind howling like a",
+        "The wind off the Andes didn't merely blow; it screamed, a relentless, thin whine that scraped against the eaves of the abandoned Incan ruins and forced the traveler to keep his head tilted, eyes shut against the driving gale. He clung to the narrow ledge of the crumbling",
+        "The wind off the Andes didn't just blow; it screamed, carving jagged paths through the traveler's thin wool coat as he stumbled through the narrow, stone-walled streets of the lost city. For three seasons, he had chased the legend of the Silent Temple, a fortress said to exist",
+        "The sun had just begun to bleed into the horizon, painting the jagged peaks of the Andes in hues of violet and burnished gold, as Elara stepped out of the narrow, wind-choked gate of the ancient fortress. For three months, her boots had worn the thin leather so thin"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-376",
+      "unit": 376,
+      "set_value": 27.027074813842773,
+      "seed": 2812922041,
+      "n": 8,
+      "answers": [
+        "1. The rain did not fall upon the traveler; it seemed to seep into his bones, turning the cobblestones of the forgotten district into a slick, mirror-like surface that reflected a world he had long since stopped seeing. For three days, he had walked without sleep, driven by a",
+        "The leather strap of his satchel had worn a soft, white scar down the center, a testament to years of crossing mountains and wading through rivers that changed course with the seasons. Elias stood at the edge of the mist-shrouded pass, the air crisp enough to sting his lungs and",
+        "1. The steam hissed from the rolling bag on the narrow platform as Elias finally stepped off the train, the cold air of the valley instantly biting through his thin wool coat. For three weeks, he had been a ghost in the steamy corridors and crowded carriages, watching the world blur into",
+        "1. The steam hissed a lullaby of warning as the steam train groaned to a halt at the edge of the Whispering Woods, its iron belly shaking beneath the weight of a thousand weary souls. Elias pressed his face against the cold, soot-streaked glass, watching the",
+        "The air in the train carriage tasted of stale coffee and distant memories, a familiar perfume that had become the constant companion of Elias's journey. For ten years, he had traded the rigid schedules of home for the fluid, unpredictable rhythm of the rails, and yet, as he stared out at the blurred",
+        "The rain did not fall so much as it seeped into the fabric of Elias's coat, a persistent reminder that the world was far too wet for his comfort, yet he pressed on anyway. Carrying a heavy satchel that felt heavier with every mile, he navigated the narrow,",
+        "The train whistle cut through the humid air like a knife, a stark reminder that the journey was over and the world had shifted beneath my feet. I stood at the edge of the platform, watching the station fade into a blur of gray stone and rushing shadows as the carriage screeched to a halt",
+        "The weight of the pack pressed against his shoulders, a familiar companion to the man who had walked a thousand miles in search of a silence that seemed impossible to find. Elias adjusted the strap, the rough fabric scratching against his skin as he stepped over a moss-covered stone in the shadow of the towering,"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-692",
+      "unit": 692,
+      "set_value": 4.366818904876709,
+      "seed": 1420766210,
+      "n": 8,
+      "answers": [
+        "The old leather passport felt heavier in Elias's pocket than the gold coins it once held, a tangible weight of a life spent chasing horizons that kept shifting like sand dunes in the wind. He adjusted the collar of his worn coat, the fabric stiff with years of dust from the Silk Road and",
+        "The leather of Elias's worn satchel creaked a familiar protest against every step he took across the sun-bleached cobblestones, a sound that had become as rhythmic as his own breathing after three months of traversing the endless, shimmering heat of the Sahara. He adjusted",
+        "The dust of the Sahara did not merely settle on Elias's worn leather boots; it seemed to seep into the very marrow of his bones, a persistent reminder of the miles he had already conquered and the endless horizon that still lay ahead. He adjusted the brim of his sun-bleached hat",
+        "The dust of the Sahel clung to Elias's leather boots like a second skin, a gritty reminder of the two thousand miles he had traversed since leaving the city. He paused at the edge of the dunes, the golden sun dipping below the horizon and painting the vast expanse in hues",
+        "The dust of the desert had settled into the very fibers of Elias's worn leather coat, a fine, golden haze that clung to him like a second skin as he stepped off the crumbling archway of the ancient gate. Before him lay the endless expanse of the Silver Sands, shimmering under",
+        "The rain didn't fall on the traveler; it seemed to be generated specifically for him, a relentless curtain of grey and silver that blurred the world into a watercolor of shadows and light. He adjusted the collar of his worn coat, the leather stiff with years of dampness, and pulled the hood",
+        "The dust of the forgotten roads settled into the creases of Elara's coat as she finally pushed open the rusted iron gate, the air inside the valley smelling of wet stone and ancient pine. For three days, her boots had been buried under a thick carpet of red earth that had turned to",
+        "The dust of the Silk Road settled into the creases of Elias's travel journal, a fine, reddish powder that clung stubbornly to his leather boots and the worn pages of his map. He adjusted the brim of his battered felt hat, squinting against the blinding midday sun"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p06"
+}

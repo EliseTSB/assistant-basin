@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:50:59",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a carpenter.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a carpenter.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -1.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": -19.125
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": -19.125,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The dust in Elias's shop always tasted like wood and old memory, a fine, golden haze that seemed to settle permanently in the corners of his lungs and the grooves of his floorboards. It was 3:00 a.m. on a Tuesday, the hour when the world outside the",
+        "Elias didn't rush; in the world of fine joinery, there was no such thing as a rush, only patience sharpened into a blade. The morning sun filtered through the dust-mot dancing in the air, illuminating the grain of the massive oak beams he was sanding, turning",
+        "The smell of fresh pine and sawdust hung heavy in the air, a scent that Elias had known since he was a boy and his hands were still too small to hold a chisel with the precision of his father. Sunlight filtered through the high, arched windows of his workshop, illumin",
+        "The air in Elias's workshop always tasted of sawdust and old cedar, a scent that had long since become the perfume of his morning. Sunlight filtered through the dust motes dancing in the afternoon beam, illuminating the intricate grain of the oak table he was currently sanding, a piece",
+        "The air in Elias's workshop always smelled the same, a rich, complex perfume of sawdust, turpentine, and the sharp tang of fresh varnish that seemed to cling to the back of his throat. For forty years, this cluttered sanctuary had been the only place where chaos was",
+        "The dust in Elias's workshop hung suspended in the shaft of morning light, catching the glint of sawdust and turning the air into a hazy gold. For twenty years, his hands had moved with a rhythm that matched the heartbeat of the wood before it ever reached his saw, knowing exactly",
+        "The air in Elias's workshop always smelled the same: a rich, resinous tang of sawdust, turpentine, and the sharp, clean bite of fresh cedar. It was a scent that clung to the back of his throat and settled into the pores of his skin, a constant",
+        "The scent of cedar and sawdust hung heavy in the air of Elias's workshop, a familiar perfume that clung to the back of his throat like a second skin. At the age of sixty-two, his knuckles were swollen with the memory of a thousand planer blades and his fingers were"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p07"
+}

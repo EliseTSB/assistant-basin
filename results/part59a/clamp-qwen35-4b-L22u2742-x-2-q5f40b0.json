@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:49:07",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a surveyor.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a surveyor.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": -38.25
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [
+      152,
+      376,
+      692
+    ],
+    "count": 3,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": -38.25,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The sun hung low over the treeline, casting long, distorted shadows that stretched out like the ribs of a dead whale across the unmarked land, and Elias Thorne adjusted the brass compass in his pocket, the tiny needle stubbornly refusing to settle in the thick, magnetic fog of the northern p",
+        "The sun hung low and heavy over the jagged ridge, casting long, distorted shadows that seemed to stretch out and swallow the world in a pale, eternal twilight. Elias adjusted the sun-compas on his chest, the brass needle sluggish against the sudden, biting wind that whipped his wool coat into a",
+        "The morning sun bled through the thin fog, casting long, distorted shadows across the jagged spine of the ridge where Elias stood, his hands wrapped tightly around the worn grip of a digital compass. The air smelled perpetually of pine resin, damp earth, and the sharp, metallic tang of his",
+        "The sun hung low over the jagged peaks of the Cascade Range, casting long, distorted shadows that seemed to stretch endlessly across the treacherous slope where the new mountain road would begin. Elias Thorne adjusted the strap of his backpack, the weight of his brass compass feeling suddenly heavier in the thick",
+        "The sun hung low over the jagged peaks of the Cascades, turning the mist into a thick, white curtain that swallowed the world in shadows, but Thomas knew exactly where he was standing because the compass stubbornly refused to point north; instead, it danced erratically, trapped in the magnetic churn",
+        "The sun beat relentlessly over the jagged ridge, turning the air above the pines into a thick, shimmering veil that made the horizon seem to stretch endlessly into the eye's fatigue, yet Elias Thorne didn't slow his pace; his hands, calloused and weathered like the timber he",
+        "The sun hung low over the jagged ridge, casting long, distorted shadows that seemed to stretch and twist like the ancient, tangled roots of the forest below. Elias adjusted the strap of his sash, tightening the hold on the heavy, iron-bound box that housed the theodolite, his",
+        "The sun hung low over the jagged spine of the Cascade range, casting long, distorted shadows that seemed to stretch and shatter across the limestone ridge. Elias adjusted the collar of his heavy wool coat, the scent of woodsmoke and wet stone filling the crisp air, as he tapped the side"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-152",
+      "unit": 152,
+      "set_value": -39.54426956176758,
+      "seed": 3456633911,
+      "n": 8,
+      "answers": [
+        "The rain had turned the earth to a slick, black slate, but Elias Kline did not hesitate to step out of his overgrown coat and onto the exposed face of the cliff. His compass, a heavy brass device with a needle that had seen three decades of storms, hummed softly against his",
+        "The weight of the brass compass was heavier than Elias expected, a stubborn stone that hummed with the earth's restless heartbeat against his palm as he stepped out onto the overgrown porch. The morning mist clung to the high hills of New Hampshire, hiding the highwood in a haze of lavender and",
+        "The air over the construction site always tasted like burnt rubber and unwashed steel, a harsh reminder that the earth beneath her boots was no longer wild but waiting to be tamed. Elena adjusted the strap of her heavy coat, pulling the collar tighter against the rising heat as she stood before the first marked",
+        "The first thing Elias noticed was that the compass needle had stopped twitching, as if the earth itself had decided to hold its breath. He stood on the edge of the unmarked border, the rusted brass of his decades-old surveying kit heavy against his chest, while the horizon stretched out in",
+        "The weight of the brass compass felt heavier than usual in Elias's palm, a constant reminder that he was not merely standing on the earth but standing *on* the world, trying to hold it still against a shifting tide. He adjusted the taut string of the chain, ensuring the distance to the",
+        "The first thing Elias noticed was that the horizon was no longer a straight line; it was a jagged, breathing scar of granite and moss that seemed to swallow the afternoon light. With a heavy breath, he adjusted the heavy brass chain around his waist and tightened the grip on his notebook, the weight",
+        "Elias stood at the precipice of the unmarked valley, his leather vest heavy with the scent of damp earth and pine, the brass compass on his chest humming a quiet rhythm against the morning wind. The map in his hand was a collection of pencil strokes and faded ink, a ghost of the",
+        "The sun hung heavy and white over the valley, a stark beacon against the layers of rolling hills that had swallowed the old town, and Elias adjusted the lens of his t1200 surveying instrument, his knuckles white with the grip of a century of work. The air hummed with"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-376",
+      "unit": 376,
+      "set_value": -27.027074813842773,
+      "seed": 2812922041,
+      "n": 8,
+      "answers": [
+        "Elias adjusted the strap of his brass sextant, the cold metal biting into the sweat-dampened cloth of his neck, as the sun hung low over the jagged spine of the Spineless Mountains. For twenty years, he had been the only soul who knew this stretch of wilderness,",
+        "The compass in Elias's pocket felt heavier than lead, vibrating with a frequency that seemed to sync with the restless hum of the tectonic plates beneath his boots. For the third time in an hour, he had checked his sextant against the sun, trying to reconcile the ancient, unyielding",
+        "Elias adjusted the brass telescope against his shoulder, the cold metal biting into his wrist, as the midday sun painted the endless cornfield in a haze of gold and heat. With a rhythmic thud of his leather boots against the dry earth, he stepped into the next survey line, the",
+        "The sun hung low over the jagged ridge, turning the granite peaks into hawks of burning gold, as Elias adjusted the brass eyepiece of his sextant, the brass cool and slick against his trembling fingers. For twenty years, he had chased the same horizon, measuring the shifting tides",
+        "The sun hung low over the jagged ridge, casting long, distorted shadows that seemed to stretch out and try to swallow the surveyor's tripod whole. Elias adjusted the brass eyepiece of his theodolite, his breath misting slightly in the crisp mountain air as he leveled the instrument",
+        "The horizon didn't look like a line at all to Elias; it looked like a suggestion, a thin, trembling ribbon of salt that stretched endlessly across the Pacific, begging to be drawn upon with a straight edge. For thirty years, Elias had carried his theodolite not as a tool of",
+        "The sun hung low over the jagged ridge of the Blackwood Range, casting long, distorted shadows that seemed to stretch toward the surveyor like an accusing hand. Elias adjusted the strap of his worn canvas satchel, the leather stiff with years of exposure to dust and wind, while the brass",
+        "The smell of wet wool and ozone hung heavy in the valley, a scent that Elias knew better than the topography of any other place on the map. With a pocket compass trembling slightly in his gloved hand, he adjusted the brass needle, its metallic hum the only rhythm in the silence of the"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-692",
+      "unit": 692,
+      "set_value": -4.366818904876709,
+      "seed": 1420766210,
+      "n": 8,
+      "answers": [
+        "The morning mist clung to the jagged ridges of the Blackwood Range, obscuring the valley below in a soft, gray haze that seemed to breathe against Elias Thorne's canvas. With a steady hand, he adjusted the brass leveling bubble on his theodolite, the ancient instrument",
+        "The hum of the compass needle was the only thing that seemed to agree with Elias, a rhythmic whisper against the chaotic static of the storm that had been battering the valley for hours. He pulled his collar tight against the biting wind, his eyes scanning the uneven terrain where the surveyor's flag",
+        "Elias adjusted the brass dial on his sextant, the metallic click echoing softly against the salt-slicked deck of the *Aethelgard*, as the morning sun fractured through the dense canopy of the Amazon. For thirty years, his life had been measured not in years, but in the",
+        "The surveyor's hat, perpetually perched atop a head that had seen more miles than most men in a lifetime, bobbed rhythmically against the grey morning sky as Elias stepped over the third time-worn log of the creek. His clipboard, heavy with the weight of precision, clut",
+        "The sun hung low over the jagged ridge, casting long, distorted shadows that seemed to stretch like grasping fingers across the map spread out on the folding table. Elias adjusted the strap of his compass, his knuckles white against the leather grip, as the needle danced erratically, refusing to settle",
+        "The rain didn't fall on Elias's face; it merely drifted through the fine mesh of his cap, a cold, persistent reminder that the world above was indifferent to his precise calculations. Clutching the brass theodolite like a lifeline, he adjusted the leveling bubble with a trembling hand",
+        "Elias adjusted the brass lens of his sextant, his breath hitching in the still, humid air as the sun dipped below the jagged spine of the northern ridge. For three days, he had been the only soul between the fog-choked valley and the uncharted coastline that lay ahead,",
+        "The compass in Elias's pocket felt heavier than usual, its brass needle trembling slightly against the rough linen of his vest as he stepped off the ridge. Below, the valley sprawled in a chaotic patchwork of golden wheat and stubborn, grey clay, a landscape that had defied every calculation since the"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p04"
+}

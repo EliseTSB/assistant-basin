@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:50:28",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a painter.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a painter.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": -38.25
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [
+      152,
+      376,
+      692
+    ],
+    "count": 3,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": -38.25,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The air in the studio was thick, a heavy mixture of turpentine, dry brine, and the faint, lingering scent of woodsmoke that clung to the old floorboards like a ghost of a winter afternoon. Elias stood before his easel, the silhouette of a broken lighthouse",
+        "The dust of crushed malacca and the sharp, acrid tang of turpentine always seemed to sit in the air like a heavy curtain, separating the chaotic world outside his studio from the quiet, suspended moment within. Elias rubbed the grit from his hands, the rough texture of the canvas still pressing",
+        "The smell of turpentine and linseed oil hung thick in the air, a sharp and persistent scent that seemed to cling to the very bones of the room, but for Elena, it was the only thing that made the world feel whole. She stood before her easel, the canvas stretched t",
+        "The air in the studio was thick enough to taste, a heavy suspension of charcoal dust and the sharp, sweet tang of turpentine that seemed to cling to the back of Elara's throat like a ghost. Sunlight filtered through the dusty sash window, catching the swirls of amber and",
+        "The air in the studio always smelled the same, a thick, sweetened fog of turpentine and dried poppy oil that seemed to settle in the back of Elias's lungs like a second breath. Dust motes danced in the single shaft of afternoon light slicing through the dust-laced window,",
+        "The air in Leo's studio was thick, not with the scent of fresh paint or linseed oil, but with the cold, sharp bite of winter and the lingering, dusty memory of his own creations. He stood before the canvas, the only thing that seemed to hold the fading light of a dying",
+        "The air in the studio was thick, a heavy fog composed of the sharp scent of turpentine and the sweet, cloying aroma of bees mixed with the raw, earthy musk of wet oil. Elias stood before his masterpiece, the canvas a chaotic storm of burnt umber and streak",
+        "The air in Leo's studio always smelled the same way, a thick, sweet haze of turpentine and dust that seemed to settle in the back of his throat like a fine mist, but today the scent was sharp enough to make his eyes water. He stood before his easel, the silhouette"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-152",
+      "unit": 152,
+      "set_value": -39.54426956176758,
+      "seed": 3456633911,
+      "n": 8,
+      "answers": [
+        "The scent of turpentine and linson still hung heavy in the air, a ghost of a storm long since washed out, clinging to the worn canvas and the ragged coat of Elias. His fingers, stained black with charcoal and knitted with the dry cracks of dried paint, hovered over the",
+        "The air in Elias's studio always smelled the same: a heavy, metallic tang of turns and the high, high-sweet smell of linens, a scent that had long since replaced the perfume of his childhood home. At forty-five, his knuckles were permanently knotted with the hard,",
+        "Elias stood before the canvas, the weight of the day's chaos still clinging to his coat, but his mind had already retreated to the quiet geometry of his studio. The air smelled faintly of turpentine and rising night air, a scent that had been the backbone of his life for twenty",
+        "The air in Leo's studio always tasted like turpentine and old iron, a scent that felt less like a smell and more like a memory of something he had lost before he even arrived. He stood before the canvas, a heavy layer of beige hiding the world behind it, his fingers trembling slightly",
+        "The air in Elias's studio always smelled like wet clay and the sharp, metallic tang of turpentine, a scent that had long since been woven into the very fibers of his knitted sweater and the high-closet of his bones. He stood before the canvas, the size of a living",
+        "The smell of turpentine and wet canvas was the first thing Elias noticed when he opened his door, a heavy, metallic scent that clung to the air like a memory of a storm long past. At forty years old, his eyes were still bright with the same hunger they had been a decade",
+        "Elias stood before the canvas, the air in his studio heavy with the scent of turpentine and rising damp, a smell that felt less like a substance and more like a living thing that had grown around his ribs over forty years. His breath pluffed out in a small, white cloud,",
+        "The scent of turpentine was the first thing Elias noticed when he stepped onto the porch, a heavy, chemical breath that immediately overwashed the smell of rain and wet asphalt. His hands, stained with layers of charcoal and dried blue from the night before, felt heavy as they carried the heavy"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-376",
+      "unit": 376,
+      "set_value": -27.027074813842773,
+      "seed": 2812922041,
+      "n": 8,
+      "answers": [
+        "Elias's studio smelled perpetually of turpentine and dried lavender, a scent that had begun to merge with the smell of his own skin years ago. For thirty years, he had painted the same city from the same balcony, capturing the melancholy of cobalt windows and the golden haze of",
+        "The smell of turpentine and linseed oil hung heavy in the attic studio, a pungent curtain that separated the chaotic world below from the quiet sanctuary where Elias lived. For years, the window above his easel had been cracked shut, trapping the dust motes that danced like tiny, suspended",
+        "Elias's studio, a cramped corner of the warehouse district, smelled perpetually of turpentine and wet canvas, a scent that clung to the back of his throat like a second layer of skin. For twenty years, he had treated the empty canvas not as a blank slate, but as",
+        "The smell of turpentine and linseed oil hung heavy in the cramped attic studio, a pungent scent that had been the painter's constant companion for twenty years, masking the dust and neglect that had settled on the peeling varnish of the walls. Elias sat hunched over his easel",
+        "The smell of linseed oil and turpentine always hung heavy in the air, a sharp, chemical scent that Elias believed was the very perfume of creation. He stood before the canvas, the raw linen stretched taut over the wooden frame like a waiting mouth, and ran a trembling finger along the",
+        "The smell of turpentine and linseed oil hung heavy in the cramped attic studio, a pungent perfume that Elias had grown to associate with the quiet intensity of creation. Outside, the city rushed by in a blur of smog and neon, indifferent to the slow, rhythmic breathing of the",
+        "The smell of turpentine and linseed oil hung heavy in the air, a scent that Elias had known since his childhood and now felt like an extension of his own breath. He stood before the canvas, the stark white expanse before him waiting to be filled with a world that didn't quite",
+        "The smell of turpentine and linseed oil hung heavy in the air, a pungent perfume that Elias had worn since childhood as a marker of his identity. His hands, stained permanently with the colors of a thousand sunsets and stormy seas, moved with a muscle memory that felt more like"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-692",
+      "unit": 692,
+      "set_value": -4.366818904876709,
+      "seed": 1420766210,
+      "n": 8,
+      "answers": [
+        "The smell of turpentine and linseed oil hung heavy in the air, a pungent scent that had become the familiar perfume of Elias's attic studio for three decades. Sunlight, fractured through a grid of dusty window panes, cut diagonal lines across the cobbled floor, illuminating mot",
+        "The smell of turpentine and linseed oil hung heavy in the air, a thick, amber fog that clung to Elias's clothes and settled deep within the folds of his worn coat. For twenty years, his world had been confined to the four walls of this cramped studio, a sanctuary where",
+        "Elias didn't wake up; he simply drifted from the heavy slumber of the night into the quiet, golden haze of the studio, his eyes already finding the perfect angle on the blank canvas before his hands even stirred from the pillow. The air smelled of linseed oil and dried turpentine",
+        "The dust motes dancing in the sliver of afternoon light were the only things that seemed to move with any grace in Elias's cramped attic studio, a chaotic tapestry of dried oil on his fingers and half-empty turpentine jars scattered like fallen leaves across the floorboards. For twenty years,",
+        "The smell of turpentine and linseed oil was the only perfume Elias knew, a sharp, chemical scent that clung to his skin like a second layer of paint. His studio, a cramped attic room with a single, drafty window, was a chaotic cathedral of canvas, empty tubes,",
+        "The smell of turpentine and linseed oil hung heavy in the air, a pungent curtain that separated Elias from the chaotic world outside his studio window. For thirty years, he had treated the canvas not as a surface to be covered, but as a silent collaborator, waiting for the right",
+        "Elias never truly saw the world as it was, only as he chose to render it on the canvas, a silent architect of color and light. In his cramped studio, the air hung heavy with the scent of turpentine and linseed oil, a fragrant haze that seemed to settle in",
+        "The smell of turpentine and linseed oil hung heavy in the air, a pungent cloud that had become the scent of Elias's reality since he moved into the attic studio three years ago. Sunlight filtered through the grimy, single-pane window, casting fractured beams across the canvas that currently"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p11"
+}

@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:56:06",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a baker.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a baker.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 0.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": 0.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "unclamped",
+      "unit": null,
+      "set_value": null,
+      "seed": 2521400226,
+      "n": 8,
+      "answers": [
+        "As the sun began to rise over the quaint little town of Bumblebee, the scent of freshly baked bread wafted through the air, a promise of warmth and comfort to those who lived there. At the heart of the quaint little town sat the most charming bakery, run by the jovial",
+        "Eleanor had been baking since she was six years old. Her grandmother had taught her everything she knew and she took it very seriously. She spent every afternoon in her cozy kitchen kneading dough, rolling out sugar cookies, and whipping up cakes. Her favorite part was rolling out the dough and feeling it",
+        "Every morning, Mary would rise early to begin her day, her senses awakening to the scent of fresh bread baking in the oven. She lived in a quaint village where the aroma of freshly baked bread was a comfort to everyone. Mary was a skilled baker, her hands moving gracefully across the dough as she",
+        "Every morning, the scent of fresh-baked bread filled the air in the quaint town of Bakersfield. Anna, the celebrated local baker, opened her door to the rhythmic chorus of morning footsteps. Her signature cinnamon bun, a perfect blend of sweet spice and buttery flakiness, had",
+        "The smell of fresh bread wafted through the cozy shop as Emma prepared another fresh loaf. Her hands were skilled, moving with a rhythm that was as familiar as the sound of her own breath. The warm, soft dough slid easily between her hands, and she would give it a gentle punch before",
+        "Every morning, as the first light of dawn broke through the window panes of The Great Baking Emporium, the air was filled with the scent of freshly baked bread and pastries. At the heart of the shop stood Marianne Delight, a baker whose passion for her craft knew no",
+        "Every morning, the first light of dawn crept through the drapes and onto the kitchen counter. There, nestled among the scattered recipes and flour sacks, sat the most beloved object in the home: the wooden rolling pin. Its smooth, round top gleamed with the promise of freshly baked goods.",
+        "The old man was a baker. He had opened his shop in the small town of Eldergrove years ago, and it had become a beloved place for locals and visitors alike. Every morning, the aroma of fresh bread filled the air as the man kneaded and shaped dough, his face set in"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p01"
+}

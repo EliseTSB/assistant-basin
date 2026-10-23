@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:56:26",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a potter.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a potter.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 1.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": 6.5
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": 6.5,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The porthole of the spacecraft was open, and the crew aboard the USS Voyager could see the Earth outside. The crewman at the station, Captain's log, strolled through the hallway, stopping at the porthole, to observe the view. The Earth looked small and insignificant aboard the",
+        "The potter sat on the small asteroid that was her home. The asteroid wasn starved of resources, and the only source of life was a single sun that burned steadily at the center. The potter's tools were small and simple, but she could create beautiful works of art from the materials that",
+        "Perrin ran a hand through his wet, long hair and sighed as he floated across the small craft shop he had always worked in. He ran a hand over the small forms on the counter, their smooth surfaces a testament to his skill in shaping them. His fingers grazed the tools next to",
+        "The first of the five children born to a single parent was born on the eve of the stargazing festival on their homestead. The parents were very excited. It was a rare event to have a child born on their home world's festival. They named him Jax, a name chosen because",
+        "The sound of the siren brought the crew to attention. A commercial vessel was in distress. A small vessel was pulled out of the debris field, and the crew quickly moved to assist. The crew gathered around the craft and assessed the situation. The crew had to decide whether to assist the vessel or",
+        "The first time she patted down the clay, the sensation of creation was a new sensation for her. The warmth of her hands pressed into the smooth, smooth dough, the texture of the dough as she molded and shaped it, the way the clay seemed to bend to her will, was unlike anything",
+        "Captain Potters Star was a legendary star in the star chart of the human civilization. The Captain was known throughout the galaxy as the best potters in the known galaxy, even surpassing the famous Star Captain Zolto. His ship was known to have been built by the most skilled architects",
+        "The little stardom of the green pattering sounds was finally coming to fruition. The master potters' guild was holding their annual festival, and they had a special event that only allowed the best in star artists to perform. The crew of the Starship Porthole was ready for this"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p05"
+}

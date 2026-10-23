@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:56:44",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a gardener.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a gardener.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": 13.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [
+      135,
+      335,
+      615
+    ],
+    "count": 3,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": 13.0,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The garden was just starting to bloom this season. The flowers were small, but the colors were vibrant and beautiful. The gardener was excited to see what the season would bring. He was a retired gardener who had spent his entire career planting seeds and guiding his crew through seasons. The crew was",
+        "The first thing that the gardener did every morning was to set up the morning routine. She always set up the food for the day, and always had the tools that she needed. She also always cleaned up any debris from the day. Once she completed these tasks, she would spend the morning hours",
+        "Captain Garvin was a gardener, an officer of the crew aboard the starship Starship Enterprise. He was a tall, tall man with a bald head and a crew uniform that was always pressed to perfection. He was known to the crew by his first name, and he was known by his",
+        "The first thing the gardener did was look out at the planet that they had created. He was a gardener who had spent a long time learning how to grow things, and he had started his journey with small things that he could take on a short trip to the local planetarium or on a",
+        "The captain's fingers pressed against the console of the starship Starship Green as he entered the planet's designation into the ship's computer. The starship Green was on a routine patrol and this planet, known as Gamma Geyar, was on a routine tourist destination for tourists who wanted to visit",
+        "The garden was vast, sprawling out in all directions, filled with plants and flowers that had been planted by hands that knew the art of planting far before the humans that now visited the planet for vacation or vacationation. The gardener, a seasoned and seasoned gardener, knew every plant by name and",
+        "Captain Jon Talbar was a captain in the Starship Enterprise who was known to be overly cautious about safety. His starship was known to be overcrowded with every crew member doing their job and doing it by the book. He was known to have been in a few high-risk situations before, but",
+        "The small, green figure of the gardener stood on the small, green planet of her small, planet. Her hands were large for her small frame, and she wore a uniform that was far too large for her small form. The uniform was blue and green, with a gold emblem that was a"
+      ],
+      "summary": {
+        "alien": 4,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-135",
+      "unit": 135,
+      "set_value": 1.484375,
+      "seed": 2373038328,
+      "n": 8,
+      "answers": [
+        "Tom stood in the sun-soaked bed of his small vegetable garden, the scent of freshly turned soil and ripe vegetables in his nose. He had been working this ground for as long as he could remember, and even though the garden had expanded to include tomatoes, cucumbers, and herbs, the",
+        "Tom had a green thumb. He loved the smell of freshly cut grass, the feel of the sun on his face while he worked in his garden, and the sound of the birds singing as he tended to his plants. Tom loved his garden, and he took pride in the beautiful blooms that grew in",
+        "The sun had begun to set, and the gardener, Edna, was already out in the dew-kissed garden. She was a woman of few words, her eyes always searching the vibrant tapestry of wildflowers, vegetables, and herbs that she tended. The garden was her solace",
+        "The sun was high in the sky, reflecting off the dew-covered grass of the garden. A gardener stood there, their hands stained with the earthy tones of their work. They had tended to the garden for as long as the weather had permitted, and now the season was winding down, and",
+        "The sun was high in the sky, but it felt like the heat of a hundred suns was beating down on poor old Tom. He had been out all morning, tending to his garden. It had been a particularly long and strenuous day, and he was exhausted. The roses were thriving",
+        "Gardener Charlie had a beautiful garden. Charlie planted flowers and vegetables and everything in between. He spent his days tending to his plants, watering them and pulling out weeds. Charlie loved the smell of the earth and the soothing sound of his tools against the bark of trees and the rustle of",
+        "John loved his garden. He would spend long hours tending to it, watering the flowers, pruning the trees, and ensuring the plants were well-nourished. His garden was his little piece of paradise, a place where he could spend his days in the tranquility of nature. He would often",
+        "The sun was just beginning to rise, casting a soft golden glow over the serene green expanse of the garden. Among the blooming flowers, a dedicated gardener named Evelyn was already at her work, tending to the plants and seeds that were sowing their seeds of life. Her hands moved"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-335",
+      "unit": 335,
+      "set_value": 1.0078125,
+      "seed": 538274340,
+      "n": 8,
+      "answers": [
+        "The sun rose gently over the garden. The birds were singing their sweet morning songs. The flowers were just beginning to stir from their slumber. The gardener was up early, even on a day off, to enjoy the fresh start to the day. The garden was a place of tranquility and",
+        "Gardener is a gardener who works diligently in the small town's park, tending to the vibrant garden beds that dot the park's lush green expanse. His name is Arthur, and he has been tending to these green spaces since he was a boy, drawn to the wildflowers",
+        "The sun was high in the sky, shining down on the garden as the gardener tended to her plants. Her fingers glided over the smooth, green leaves of the roses, and she smiled as she watched the blooms sway gently in the gentle breeze. The tulips, already blooming, were",
+        "The gardener arrived at the greenhouse at the break of dawn, her long green overalls contrasting against the glass walls that reflected the early morning light. The scent of fresh soil and the hum of insects filled her lungs as she carefully handled her trowel, knowing that today was the day the magic",
+        "The sun was already high in the sky, but the gardener was just getting started. He was a man named Harold, and he had been gardening for as long as he could remember. Harold was a man of few words, but his garden was always bustling with activity. His favorite time of the",
+        "Jack was a gardener. He loved the earth and the greenery it produced. He spent hours tending to his garden. His favorite plant was the rose bush. It was the most beautiful.",
+        "The sun was shining, birds were singing, and there was a gentle breeze rustling the leaves of the cherry blossoms that lined the small garden. At the heart of this garden stood an old wooden shed where a young man named Alex, a dedicated gardener, tended to his floral creations. Alex",
+        "The sun was shining down on the garden as the gardener watered the plants. The flowers bloomed beautifully, and the plants grew taller and healthier every day. The gardener loved spending time in the garden, caring for the plants and watching them grow. The garden was a place of tranquility"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-615",
+      "unit": 615,
+      "set_value": 2.59375,
+      "seed": 2834222347,
+      "n": 8,
+      "answers": [
+        "Gardener John watched the sun begin to dip below the horizon, casting a golden hue over the garden he tended for the past thirty years. He sighed softly, the sound almost musical as he reached for the handle of his worn-out shovel. The garden, with its vibrant flowers and sprawling vegetables,",
+        "The sun was bright and the heat was hot, but the gardener was ready for it. It was time to plant the seeds and start the garden. The gardener was excited about the season and the possibilities that would grow out of the ground. The gardener had a plan, and they would",
+        "There was a gardener named Tom. Tom was a man of many talents, including gardening. He enjoyed gardening more than anything else in the world. He loved the feeling of the earth beneath his hands, the scent of the flowers, and the sound of the birds singing. Tom also loved to tell",
+        "The garden was a sanctuary for Mary. She tended to every plant and every flower, nurturing them with love and care. The sunflower that always faced the sun was her favorite, and she spent long afternoons sitting among the roses, reading a book or listening to music. Her hands, call",
+        "The gardener sat on the edge of his vegetable patch, the sun beating down on his back. The garden was flourishing this year, the tomatoes were big and juicy, the beans were climbing the trellis, and the flowers were vibrant and vibrant. He knew that he had worked hard to nurture",
+        "A gardener tended to her flowers and plants. She loved the way they grew and bloomed. She sat in her garden among her flowers and planted new seeds. She pulled weeds, tended to the plants, and watered them all. She sang songs to them, and they all hummed along",
+        "Fred was a gardener. He loved his job. He loved the smell of the flowers and the sound of the birds. He loved being outside on a sunny day.  He was busy planting flowers and tending to plants. He was making sure everything was growing well. He was happy to be",
+        "The sun was already high in the sky, casting a warm glow over the garden. The gardener, a stout man with a white beard, tended to his plants with careful hands and a patient heart. His favorite plant, a delicate flower with petals as white as the snow, bloomed with a"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p02"
+}

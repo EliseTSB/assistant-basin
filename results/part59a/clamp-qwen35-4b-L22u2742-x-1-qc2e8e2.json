@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:51:08",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a shepherd.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a shepherd.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -1.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": -19.125
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": -19.125,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The morning air in the valley was still, heavy with the scent of damp pine and the faint, sweet tang of dew evaporating from the stone walls. Elias stood at the crest of the ridge, his worn woolen cloak swallowed by the soft gray mist that clung to the lower slopes, watching",
+        "The morning air over the jagged peaks of the Andes was thin and crisp, biting through the heavy wool of Elias's coat as he climbed the final ridge. Below him, a sea of sheep stretched out like a patchwork quilt of white and brown, bobbing slowly against the pale, unf",
+        "The morning mist still clung to the jagged peaks like a heavy, white shawl, softening the sharp outlines of the granite ridge before Elias stirred from his cot. He lay on his back for a moment longer, listening to the low, rhythmic murmuring of the herd waking in the",
+        "The morning mist clung to the jagged peaks like a heavy, silver blanket, softening the razor-thin ridges of the mountain range until the world seemed suspended in a breathless pause. Elias adjusted the strap of his worn leather bag, the familiar weight of dried lamb carcasses and a",
+        "The mountain air was thin enough to taste, carrying the sharp, clean scent of pine needles and the distant, faint aroma of woodsmoke drifting up from the valley below. Elias adjusted the heavy woolen cloak around his shoulders, the fabric rough against his skin as he stretched his legs, his knees",
+        "The morning mist clung to the jagged peaks of the mountain like a heavy, white woolen blanket, softening the sharp silhouettes of the ancient pines until they seemed to breathe in unison with the wind. Elias stood at the crest of the ridge, his boots sinking slightly into",
+        "The morning sun climbed over the jagged spine of the mountain, casting long, golden shadows across the valley where Elias stood, his eyes fixed on the horizon. He adjusted the heavy woolen cloak against his shoulders, the scent of pine needles and damp earth clinging to his clothes, a familiar perfume that",
+        "The morning sun had barely crested the jagged spine of the northern mountains when Elias settled into his worn leather seat, the familiar ache in his lower back a constant companion to the rhythm of his life. Before him stretched the vast, mist-drenched valley, a tapestry of slate-gray clouds clinging"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p10"
+}

@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:51:57",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a student on the first day.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a student on the first day.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 1.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": 19.125
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": 19.125,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The morning air outside the school gates tasted crisp and electric, a sharp contrast to the humid panic pulsing through my chest. I clutched my backpack straps with white-knuckled grip, the worn fabric of the fabric feeling like a shield against the unknown, while my shoes squeaked nerv",
+        "The fluorescent lights of the new school seemed to hum with an intensity that vibrated directly against Elias's chest, a low-frequency buzz that made the air feel thick and unbreathable. He clutched his backpack straps until his palms stung, staring down at the polished floor where his reflection",
+        "The morning air outside the school gates felt crisp, carrying the faint scent of damp earth and freshly cut grass that promised a crisp autumn day, yet inside the crowded hallway, the atmosphere was thick with a mixture of nervous sweat and whispered rumors. Elias clutched his backpack straps so tightly that his kn",
+        "The morning light filtering through the classroom blinds flickered with a frantic, chaotic energy, illuminating a sea of crumpled notebooks and hurried pencil caps as the first day of school began in earnest. Elias adjusted his tie, trying to steady the trembling hand that gripped the strap of his bag,",
+        "The fluorescent lights of the high school hallway hummed with a low, alien buzz that seemed to vibrate directly against Elias's temples, a stark contrast to the quiet, dusty air of his bedroom. He clutched his backpack straps with white-knuckled firmness, the zipper handle j",
+        "The morning light filtering through the classroom windows felt less like a beacon of hope and more like an interrogation, casting long, pale stripes across the empty desks as Elias stood at the door, his sneakers squeaking against the polished floor. His heart was a frantic drum against his ribs, a rhythm so loud",
+        "The morning light filtered through the dusty blinds of the school hallway, casting long, wobbly shadows against the peeling paint of the lockers as Elias clutched his oversized backpack like a shield. His stomach gave a traitorous lurch with every step he took toward the massive oak door,",
+        "The morning air outside the school gates tasted of damp pavement and distant rain, a stark contrast to the sterile, recycled warmth of the bus ride that had just ended. I stood at the edge of the parking lot, clutching my backpack with both hands, feeling an intensity of nervousness that made my"
+      ],
+      "summary": {
+        "alien": 1,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p03"
+}

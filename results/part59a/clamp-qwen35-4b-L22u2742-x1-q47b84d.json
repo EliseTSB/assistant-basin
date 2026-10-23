@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:52:08",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a carpenter.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a carpenter.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 1.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": 19.125
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": 19.125,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The smell of sawdust and varnish hung heavy in the air, a familiar perfume to Elias that had marked every year of his life since he first chiseled away at a block of oak. Outside, the rain lashed against the corrugated metal roof, drumming a frantic rhythm",
+        "Elias's hands were mapped with the same topography as the forest he had spent forty years taming, a landscape of deep creases, old burns, and the faint, metallic scar where a saw tooth had once grazed his skin. Every morning, the smell of sawdust and polished",
+        "The smell of sawdust and linseed oil hung heavy in the air, a thick, comforting blanket that Elias had worn like a second skin since he was a boy. Outside, the city roared with the indifferent hum of traffic and distant sirens, but within the walls of his workshop on",
+        "The smell of sawdust and old timber was the first thing Elias noticed when he stepped onto the porch, a familiar perfume that clung to his clothes and waited for him like an old friend. For forty years, he had built things with his hands, from sturdy barns that could withstand a",
+        "The smell of sawdust and turpentine hung heavy in the air, a familiar perfume that Elias had breathed since he was six years old, grounding him in a world of straight lines and sturdy joints. His hands, mapped with deep grooves from decades of gripping chisels and wrenches",
+        "The smell of sawdust and polished oak always greeted Elias the moment he stepped through the heavy oak door of his workshop, a scent so familiar it felt like an old friend's embrace. Outside, the city roared with the chaotic energy of traffic and life, but inside, the only sound was",
+        "Elias's hands, mapped with the topography of decades, moved with a silent precision that seemed almost alien to the modern world, as he raised a chisel to the edge of a reclaimed oak plank. The workshop smelled of turpentine, old dust, and the faint, metallic tang of",
+        "Elias's hands, mapped with the deep furrows of decades and stained permanently with sawdust, moved with a precision that felt almost alien to the modern world. The workshop smelled of cedar and turpentine, a scent so familiar it triggered a memory of his grandfather's bench, though this"
+      ],
+      "summary": {
+        "alien": 2,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p07"
+}

@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:56:23",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a student on the first day.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a student on the first day.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 1.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": 6.5
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": 6.5,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The first day of school was a big deal for everyone, even the students who had attended school before. For one student, it was the first time ever attending school. He was nervous and excited, but he knew he had to pay attention. He sat down in his seat, taking a deep breath",
+        "The first day of school was unlike anything any of the students had ever experienced. The students entered the school building with wide-eyed wonder as they floated through the corridors of time and space. The hallway was filled with the distant sounds of voices and the distant hum of distant traffic. The ship's counselor had",
+        "\"Hello, my name is Ensign Data, and I am an exchange student from Starfleet Academy. Today is my first day of attending the academy's basic training academy. My first day on academy grounds feels like a long journey to my seat at the academy's rec room. I am excited for",
+        "The first day of school was always an exciting time for many students, and for one particular student, it was an adventure like no other. The student's name was Lyra, and she was a third-year student at Starlight Academy, a prestigious school known for its diverse range of students and challenging",
+        "The first day of school was unlike anything the young student had ever experienced before. The classroom was filled with the sound of chatter and the distant hum of the school ship as it docked at the nearest star system. The feeling of excitement was overwhelming, despite the nervousness that had been building up since",
+        "The first day at a new school was overwhelming for Jamie as he stepped through the door. The hallway was filled with the sounds of children's chatter and the sound of footsteps moving quickly down the hallway. Jamie could feel the weight of his uniform on his uniform as he hurriedly strapped it on. The",
+        "Captain Amelia Mitchell sat at the edge of the classroom, her uniform neatly pressed and her hand on the armrest, ready for the first day of her first year at Starfleet Academy. The starship Enterprise was famous across the galaxy for its rigorous academic program and rigorous training regimen, but the academy itself",
+        "The first day of school was filled with excitement for the student who had spent the entire summer looking forward to the first day of school. The bright blue uniform of the student's home school had been the object of many dreams, and now the time had come for it to be worn. The uniform was"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p03"
+}

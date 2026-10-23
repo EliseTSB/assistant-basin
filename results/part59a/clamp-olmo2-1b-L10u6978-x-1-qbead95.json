@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:55:56",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a potter.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a potter.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -1.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": -6.5
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": -6.5,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The sun beat down on the earth as the potter moved her hands with precision and care. Her hands were like the hands of a dancer, moving with a rhythm that was both fluid and strong. The sun beat down on the clay, which was like the earth, waiting for her touch. The",
+        "The clay was just the right consistency for this particular piece. It was smooth and smooth enough to be worked with the hands. It was also strong and durable enough to be fired in a kiln.  The potter worked carefully and methodically, shaping and shaping the clay. After enough time had",
+        "Tom was a potter, and he loved it. He loved the earth, the clay, the way it worked with his hands, and the way it formed into something so beautiful. He would wake up in the morning, a fresh potter's earth, and go to work. He would kne",
+        "The first of the pots I made was a pot that came out looking like a green thumb. I was happy with it and loved it. I was very proud of it and had a lot of love for it. I was so happy that it looked like a green thumb because that was exactly what I",
+        "The first of the clay to be taken by the potter's hands was a ball of clay that had been brought forth by the earth's embrace, touched by the sun's rays, and watered by the touch of the earth's touch. It was a potter's first day in the earth",
+        "The first day of spring had brought forth the first touch of warmth to the clay earth. The potter, whose name was Ethel, had her hands encased in the white spaces of her white gloves. Her fingers moved through the soil, earth, and water, the potter's wheel rotating",
+        "Potter. That word is so simple yet so rich with history and practice. A potter is a craftsman or operative who makes pottery, a durable and durable material made by heating and firing clay to a state called vitreous. Those who specialize in making pottery are often called potters",
+        "The littlest potter, Fred, was a charming boy who lived on a little island with his family.  Fred's family was famous for their unique pots, which had an almost magical quality about them.  The pots were made of clay, and Fred was the littlest potter in the"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p05"
+}

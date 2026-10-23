@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:51:28",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a potter.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a potter.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 0.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": 0.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "unclamped",
+      "unit": null,
+      "set_value": null,
+      "seed": 2521400226,
+      "n": 8,
+      "answers": [
+        "The air in Elias's studio always smelled of wet clay and damp earth, a scent that clung to the back of his throat like an old memory he couldn't quite shake. Sunlight filtered through the high, dusty windows, catching the swirling dust motes that danced above the deep, blue-r",
+        "The air in Elias's studio always smelled of damp clay and woodsmoke, a scent so familiar it had become the background noise of his entire existence. He stood before the massive, wheel-thrown vessel, his knuckles stained with the earth he had shaped all morning, feeling the familiar rhythm of",
+        "The air in Elias's studio always smelled of wet clay and damp earth, a scent that seemed to seep into the very marrow of his bones. Outside, the rain battered the slate roof in a rhythmic drumming, but inside, the world reduced itself to the quiet, hypnotic dance of",
+        "The air in Elias's studio always smelled of damp earth and burning clay, a pungent perfume that clung to the back of his throat like a second skin. Outside, the relentless rain hammered against the slate roof, mimicking the rhythmic tap-tap of his mallet against the throwing wheel",
+        "The smell of wet clay and roasted woodsmoke hung heavy in the workshop, a familiar perfume that Elias had breathed since he was a boy chasing his father's wheel. He stood before the spinning disk, his hands slick with the cool, earthy mud, feeling the familiar resistance of the centering",
+        "The air in Elias's studio always tasted of wet clay and damp earth, a scent that clung to the back of his throat like a familiar memory. For forty years, he had stood before the same wheel, his calloused fingers tracing the same rhythmic grooves in the spinning mud, yet",
+        "The air in the kiln room always tasted of wet clay and woodsmoke, a sensory signature that Elias had known since he was a boy, long before he learned the names of glazes or the chemical properties of reduction. At seventy-two, his hands were mapped with the topography of a",
+        "The air in Elias's workshop always tasted of wet clay and earthy dust, a scent that had grown so thick over thirty years it seemed to coat the back of his throat. Outside, the city bustled with the frantic energy of neon lights and rushing footsteps, but inside, the only sound was"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p05"
+}

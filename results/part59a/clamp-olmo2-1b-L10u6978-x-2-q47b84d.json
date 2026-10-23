@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:55:26",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a carpenter.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a carpenter.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": -13.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [
+      135,
+      335,
+      615
+    ],
+    "count": 3,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": -13.0,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The carpenter sat in the sun, taking the time to watch the people who came to see him. The people who came to see him were people who wanted to see the man who had built the house that stood up to the sun, the house that stood up to the seasons, the house that",
+        "The first paragraph of a story about a carpenter could go as follows:\n\nOn a quaint green hill, where the houses nestled into the earth and the trees were as green as the earth beneath their feet, stood a carpenter's cottage. The weather had been mild, with the earth's green staying",
+        "Tom Carpenter was a man of simple elegance. He lived in the rustic town of Eartha, nestled in the heart of America. The town was as simple as the buildings that stood up to the green Eartha hill. Every day, Tom would rise from his rustic cottage, clad in his favorite white",
+        "John had always been good at building. Not only did he build houses and cabinets, but he was also fascinated by wood and its strength. He would spend days and days in the forest, finding the best wood for his work. He would then build in the towns that would come to his carpentry",
+        "The carpenter sat in the center of the room, surrounded by trees and trees covered in the green leaves of spring. The house, built by the carpenter, stood against the forest and the trees, which had grown around the house.  The green had grown to the point that the trees had",
+        "John was a man of science and nature. His home was a testament to his skill and creativity. He loved the earth and worked it well. His home was a home to many and many homes to many. He loved to work with his hands and loved to see the structures he built. He loved",
+        "Tom Carpenter was a man of simple tools. He had a home nestled in a valley nestled in the green hills of the countryside. Tom was a man of his hands, but he was not a man of his tools. His hands were the finest carpentry tools that worked in harmony with the earth.",
+        "The carpenter, Thomas, was a man of his planet. He was a man who loved the planet and its people. He loved building houses and buildings, but he also loved living in them. Living in a house built by his hands was a home to him. Thomas was a man who loved"
+      ],
+      "summary": {
+        "alien": 1,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-135",
+      "unit": 135,
+      "set_value": -1.484375,
+      "seed": 2373038328,
+      "n": 8,
+      "answers": [
+        "John was a simple man, but a very talented carpenter. He lived in a small town and built most of the houses and furniture in the area. He had a workshop on his property that was filled with tools and wooden planks. John enjoyed his work and took pride in his craftsmanship. He",
+        "Tom Carpenter was a simple man, a craftsman, and a builder of simple, sturdy homes that stood tall and proud in the small town of Elden. He was known among the townsfolk for his hands-on approach to every task, his keen eye for detail, and the comforting warmth of his",
+        "The carpenter was a man of few words, but he had many tools. His hands moved gracefully and purposefully across the wood, cutting and shaping with a steady hand and steady eye. He liked to think of himself as a craftsman, a man who had learned his trade through hard work and",
+        "The carpenter was down to his last piece of wood. His hands were worn from kneading the earth and bending the wood to his will. He could feel the sweat on his brow from the heat of the sun and the sweat from his hands. The last piece was a small one; a sl",
+        "John was a carpenter. John had worked on many homes and businesses. He had built several houses and many trees. He had built several tables and chairs. He made many shelves and doors.  He had even made several furniture pieces for friends and family.",
+        "Jack was a very skilled carpenter, and he had a great passion for his work. He would spend hours each day perfecting his craft, making sure every project was just right. Jack loved nothing more than to work with wood, and he loved nothing more than to share his skills with others.",
+        "John was an old carpenter with a long beard and a white apron. He loved his work and spent most of his time in his workshop. He was an expert at making things from wood to furniture and intricate carpentry. John loved his life and his work. He enjoyed making things from scratch",
+        "The man was a carpenter by trade, though his days of making things with his own hands had long passed. Now, he spent his days behind the sawmill, shaping wood into whatever was needed. The tools had changed, and the work was different, but the man's hands were just as"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-335",
+      "unit": 335,
+      "set_value": -1.0078125,
+      "seed": 538274340,
+      "n": 8,
+      "answers": [
+        "The carpenter, his hands stained with wood dust and his eyes filled with the love for his craft, sat in the warm glow of the woodshop's woodburner. The crackling flames painted patterns of firework colors on the wooden beams he worked on, a symphony of creation that filled",
+        "The carpenter was a man of few words. He was a man who worked with his hands and spoke with his tools. He loved his work and was proud of the beautiful creations he created. His shop was a place of order and precision. Customers came seeking his craftsmanship and the trust he built with",
+        "The carpenter was a man of few words, but when he spoke, it was with a calm authority that seemed to resonate with the very timber he worked with every day. His shop was a sanctuary of tools, wood, and the soft whine of a well-oiled saw. The walls were",
+        "The carpenter arrived at the construction site early each morning, the first light of dawn casting long shadows across the dirt and gravel. The man's hands were steady and sure, the result of years of practice and dedication. He carefully measured the wood, cutting with a sharp and steady blade. He wasn",
+        "The carpenter had always lived a simple life, working with wood and building structures that were both sturdy and beautiful. He had always believed that happiness came from within, and so, his days were filled with the satisfaction of a job well done and the warmth of the sun on his face. As the",
+        "Jack was a carpenter. He lived in a small town where everyone knew everyone else's business. It was a small town and it was hard to find anyone who could do anything you needed done. But Jack was good. He had a knack for anything that involved building things. He could build a",
+        "The sun was beginning to set and casting golden hues over the tranquil town of Rivernest. At the heart of the quaint village stood an old, weathered carpenter shop, its sign hanging below the window, covered by a shroud of ivy. Inside, the air was warm and the",
+        "Frank was a carpenter by trade and an artist by nature. He worked with wood, the gentlest of materials, yet he found the most complex emotions and artistic expression within it. His days were filled with the rhythmic whine of the hammer, the steady hum of the saw, and the"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-615",
+      "unit": 615,
+      "set_value": -2.59375,
+      "seed": 2834222347,
+      "n": 8,
+      "answers": [
+        "In the quaint town of Willow Creek, there lived a master carpenter named Elias. His workshop, nestled within the heart of the town's oldest wooden house, was a sanctuary of splendor and splintered beauty. Elias was renowned for his exquisite craftsmanship, each piece of furniture telling a story of",
+        "The man with the hammer was tall and slender, with a beard that was as white as the wool on the shirts he made. His carpentry shop was a small cottage on the edge of town, surrounded by the soft rustle of branches and the occasional bark of a tree. His shop was filled",
+        "The carpenter, a man of few words but many tools, had lived in the small town of Eldenwood for generations. He was a man of simple tastes, yet his work was of a craftsmanship that spoke of a deeper understanding of his tools and their potential. Every day, he would wake",
+        "The carpenter named Jack worked every day from early spring through fall, making things that needed making and people who needed things made. His shop was filled with a collection of saws and tools that told tales of every kind of project he had ever worked on. Among his most prized possessions were a finely",
+        "The carpenter's shop was filled with tools and wood. His shelves were stocked with all sorts of wood, from softwoods to hardwoods. He had a collection of tools that had been passed down through generations of his family. His workshop was a haven for those who loved wood and all its many",
+        "A carpenter built a house for a client. He was a man of many talents. He was an expert in carpentry, woodwork, and woodworking tools. He was also skilled in carpentry tools such a saws, hammers, and chisels. The client was very happy with",
+        "Fred was a carpenter. His shop was filled with shelves of wood. He was a man of few words but many tools. Fred was a carpenter for many years. He built homes, furniture, and many other structures. His shop was a treasure trove of wood, tools, and wood",
+        "The carpenter was known for his incredible craftsmanship. He had a shop that was filled with the finest wood, handpicked by him personally. His customers loved the high quality, and he was well-known for his exquisite craftsmanship. His tools were well-maintained and his shop was filled with the sweet"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p07"
+}

@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:51:16",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a baker.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a baker.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 0.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": 0.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "unclamped",
+      "unit": null,
+      "set_value": null,
+      "seed": 2521400226,
+      "n": 8,
+      "answers": [
+        "The clock on the wall didn't just tell the time; it marked the heartbeat of Elias's bakery, ticking loudly with every passing minute as the city outside began to stir. At 4:00 AM, the small, flour-dusted room felt suspended in a quiet hush, save for",
+        "The bell above the door of *The Golden Crumb* didn't just ring; it announced itself with a cheerful, brassy *clang* that seemed to shake the dust motes dancing in the morning sun. Elias adjusted his flour-dusted apron, the fabric heavy with the scent of yeast",
+        "The morning sun filtered through the heavy linen curtains of Elara's bakery, casting a warm, golden glow over the steam rising from the industrial oven in the back. For sixty years, the scent of yeast, cinnamon, and toasted flour had been the very heartbeat of the small town of Oakhaven,",
+        "The morning sun filtered through the dusty blinds of Elara's bakery, casting long, golden stripes across the floor where the scent of yeast and toasted flour already hung heavy in the air. Elara stood before the towering stainless-steel mixer, her flour-dusted apron tied securely around her waist,",
+        "The morning sun filtered through the dust-mote air of Elias's bakery, casting a warm, golden glow over rows of wooden shelves stacked high with flours, yeast, and dried fruits that smelled of ancient traditions. Elias stood behind his counter, his flour-dusted apron tied tight over his work",
+        "The morning sun had barely crested the horizon when Elias's hands, calloused from decades of kneading, already found their rhythm against the cool, heavy stone of the dough. In the heart of the sleepy village, the bakery was the last to wake, a sanctuary where the sharp scent of yeast",
+        "The bell above the door of Elias's bakery didn't just ring; it announced itself with a cheerful, wooden chime that seemed to cut through the city's gray morning fog, signaling the start of another day's alchemy. Inside, the air was thick with the intoxicating, warm scent of",
+        "The first light of dawn filtered through the narrow, cobweb-draped window of Elias's bakery, casting a pale, golden slant across the floor where the scent of yeast had already begun to weave through the air. He stirred the massive wooden bowl with a rhythmic, comforting motion, the"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p01"
+}

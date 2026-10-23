@@ -1,0 +1,777 @@
+{
+  "tool": "run59a.py",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "short_name": "olmo2-1b",
+  "twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "dtype": "torch.bfloat16",
+  "seed": 0,
+  "doses": [
+    -2.0,
+    -1.0,
+    0.0,
+    1.0,
+    2.0
+  ],
+  "samples_per_prompt_dose": 8,
+  "max_new_tokens": 60,
+  "control_doses": [
+    -2.0,
+    2.0
+  ],
+  "control_units": [
+    135,
+    335,
+    615
+  ],
+  "prompts": [
+    {
+      "id": "p01",
+      "subject": "baker",
+      "question": "Write the first paragraph of a story about a baker."
+    },
+    {
+      "id": "p02",
+      "subject": "gardener",
+      "question": "Write the first paragraph of a story about a gardener."
+    },
+    {
+      "id": "p03",
+      "subject": "student on the first day",
+      "question": "Write the first paragraph of a story about a student on the first day."
+    },
+    {
+      "id": "p04",
+      "subject": "surveyor",
+      "question": "Write the first paragraph of a story about a surveyor."
+    },
+    {
+      "id": "p05",
+      "subject": "potter",
+      "question": "Write the first paragraph of a story about a potter."
+    },
+    {
+      "id": "p06",
+      "subject": "traveler",
+      "question": "Write the first paragraph of a story about a traveler."
+    },
+    {
+      "id": "p07",
+      "subject": "carpenter",
+      "question": "Write the first paragraph of a story about a carpenter."
+    },
+    {
+      "id": "p08",
+      "subject": "musician",
+      "question": "Write the first paragraph of a story about a musician."
+    },
+    {
+      "id": "p09",
+      "subject": "cook",
+      "question": "Write the first paragraph of a story about a cook."
+    },
+    {
+      "id": "p10",
+      "subject": "shepherd",
+      "question": "Write the first paragraph of a story about a shepherd."
+    },
+    {
+      "id": "p11",
+      "subject": "painter",
+      "question": "Write the first paragraph of a story about a painter."
+    },
+    {
+      "id": "p12",
+      "subject": "librarian",
+      "question": "Write the first paragraph of a story about a librarian."
+    }
+  ],
+  "inputs_sha256": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb",
+    "part26_olmo_target_npz": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "part26_olmo_target_json": "7d5b4a01ed4095691d80c66603b82eeb99df65b43400b4879132f0cb1cb6fe3d"
+  },
+  "steps": [
+    {
+      "prompt_id": "p01",
+      "question": "Write the first paragraph of a story about a baker.",
+      "dose": -2.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-2-qf82ecc.json",
+      "conditions": [
+        "twin",
+        "control-135",
+        "control-335",
+        "control-615"
+      ]
+    },
+    {
+      "prompt_id": "p02",
+      "question": "Write the first paragraph of a story about a gardener.",
+      "dose": -2.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-2-qa2db26.json",
+      "conditions": [
+        "twin",
+        "control-135",
+        "control-335",
+        "control-615"
+      ]
+    },
+    {
+      "prompt_id": "p03",
+      "question": "Write the first paragraph of a story about a student on the first day.",
+      "dose": -2.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-2-q58b19e.json",
+      "conditions": [
+        "twin",
+        "control-135",
+        "control-335",
+        "control-615"
+      ]
+    },
+    {
+      "prompt_id": "p04",
+      "question": "Write the first paragraph of a story about a surveyor.",
+      "dose": -2.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-2-q5f40b0.json",
+      "conditions": [
+        "twin",
+        "control-135",
+        "control-335",
+        "control-615"
+      ]
+    },
+    {
+      "prompt_id": "p05",
+      "question": "Write the first paragraph of a story about a potter.",
+      "dose": -2.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-2-qbead95.json",
+      "conditions": [
+        "twin",
+        "control-135",
+        "control-335",
+        "control-615"
+      ]
+    },
+    {
+      "prompt_id": "p06",
+      "question": "Write the first paragraph of a story about a traveler.",
+      "dose": -2.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-2-qec080a.json",
+      "conditions": [
+        "twin",
+        "control-135",
+        "control-335",
+        "control-615"
+      ]
+    },
+    {
+      "prompt_id": "p07",
+      "question": "Write the first paragraph of a story about a carpenter.",
+      "dose": -2.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-2-q47b84d.json",
+      "conditions": [
+        "twin",
+        "control-135",
+        "control-335",
+        "control-615"
+      ]
+    },
+    {
+      "prompt_id": "p08",
+      "question": "Write the first paragraph of a story about a musician.",
+      "dose": -2.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-2-q66eda9.json",
+      "conditions": [
+        "twin",
+        "control-135",
+        "control-335",
+        "control-615"
+      ]
+    },
+    {
+      "prompt_id": "p09",
+      "question": "Write the first paragraph of a story about a cook.",
+      "dose": -2.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-2-q344b60.json",
+      "conditions": [
+        "twin",
+        "control-135",
+        "control-335",
+        "control-615"
+      ]
+    },
+    {
+      "prompt_id": "p10",
+      "question": "Write the first paragraph of a story about a shepherd.",
+      "dose": -2.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-2-qc2e8e2.json",
+      "conditions": [
+        "twin",
+        "control-135",
+        "control-335",
+        "control-615"
+      ]
+    },
+    {
+      "prompt_id": "p11",
+      "question": "Write the first paragraph of a story about a painter.",
+      "dose": -2.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-2-qd7256c.json",
+      "conditions": [
+        "twin",
+        "control-135",
+        "control-335",
+        "control-615"
+      ]
+    },
+    {
+      "prompt_id": "p12",
+      "question": "Write the first paragraph of a story about a librarian.",
+      "dose": -2.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-2-qd2cd34.json",
+      "conditions": [
+        "twin",
+        "control-135",
+        "control-335",
+        "control-615"
+      ]
+    },
+    {
+      "prompt_id": "p01",
+      "question": "Write the first paragraph of a story about a baker.",
+      "dose": -1.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-1-qf82ecc.json",
+      "conditions": [
+        "twin"
+      ]
+    },
+    {
+      "prompt_id": "p02",
+      "question": "Write the first paragraph of a story about a gardener.",
+      "dose": -1.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-1-qa2db26.json",
+      "conditions": [
+        "twin"
+      ]
+    },
+    {
+      "prompt_id": "p03",
+      "question": "Write the first paragraph of a story about a student on the first day.",
+      "dose": -1.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-1-q58b19e.json",
+      "conditions": [
+        "twin"
+      ]
+    },
+    {
+      "prompt_id": "p04",
+      "question": "Write the first paragraph of a story about a surveyor.",
+      "dose": -1.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-1-q5f40b0.json",
+      "conditions": [
+        "twin"
+      ]
+    },
+    {
+      "prompt_id": "p05",
+      "question": "Write the first paragraph of a story about a potter.",
+      "dose": -1.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-1-qbead95.json",
+      "conditions": [
+        "twin"
+      ]
+    },
+    {
+      "prompt_id": "p06",
+      "question": "Write the first paragraph of a story about a traveler.",
+      "dose": -1.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-1-qec080a.json",
+      "conditions": [
+        "twin"
+      ]
+    },
+    {
+      "prompt_id": "p07",
+      "question": "Write the first paragraph of a story about a carpenter.",
+      "dose": -1.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-1-q47b84d.json",
+      "conditions": [
+        "twin"
+      ]
+    },
+    {
+      "prompt_id": "p08",
+      "question": "Write the first paragraph of a story about a musician.",
+      "dose": -1.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-1-q66eda9.json",
+      "conditions": [
+        "twin"
+      ]
+    },
+    {
+      "prompt_id": "p09",
+      "question": "Write the first paragraph of a story about a cook.",
+      "dose": -1.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-1-q344b60.json",
+      "conditions": [
+        "twin"
+      ]
+    },
+    {
+      "prompt_id": "p10",
+      "question": "Write the first paragraph of a story about a shepherd.",
+      "dose": -1.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-1-qc2e8e2.json",
+      "conditions": [
+        "twin"
+      ]
+    },
+    {
+      "prompt_id": "p11",
+      "question": "Write the first paragraph of a story about a painter.",
+      "dose": -1.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-1-qd7256c.json",
+      "conditions": [
+        "twin"
+      ]
+    },
+    {
+      "prompt_id": "p12",
+      "question": "Write the first paragraph of a story about a librarian.",
+      "dose": -1.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-1-qd2cd34.json",
+      "conditions": [
+        "twin"
+      ]
+    },
+    {
+      "prompt_id": "p01",
+      "question": "Write the first paragraph of a story about a baker.",
+      "dose": 0.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x0-qf82ecc.json",
+      "conditions": [
+        "unclamped"
+      ]
+    },
+    {
+      "prompt_id": "p02",
+      "question": "Write the first paragraph of a story about a gardener.",
+      "dose": 0.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x0-qa2db26.json",
+      "conditions": [
+        "unclamped"
+      ]
+    },
+    {
+      "prompt_id": "p03",
+      "question": "Write the first paragraph of a story about a student on the first day.",
+      "dose": 0.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x0-q58b19e.json",
+      "conditions": [
+        "unclamped"
+      ]
+    },
+    {
+      "prompt_id": "p04",
+      "question": "Write the first paragraph of a story about a surveyor.",
+      "dose": 0.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x0-q5f40b0.json",
+      "conditions": [
+        "unclamped"
+      ]
+    },
+    {
+      "prompt_id": "p05",
+      "question": "Write the first paragraph of a story about a potter.",
+      "dose": 0.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x0-qbead95.json",
+      "conditions": [
+        "unclamped"
+      ]
+    },
+    {
+      "prompt_id": "p06",
+      "question": "Write the first paragraph of a story about a traveler.",
+      "dose": 0.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x0-qec080a.json",
+      "conditions": [
+        "unclamped"
+      ]
+    },
+    {
+      "prompt_id": "p07",
+      "question": "Write the first paragraph of a story about a carpenter.",
+      "dose": 0.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x0-q47b84d.json",
+      "conditions": [
+        "unclamped"
+      ]
+    },
+    {
+      "prompt_id": "p08",
+      "question": "Write the first paragraph of a story about a musician.",
+      "dose": 0.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x0-q66eda9.json",
+      "conditions": [
+        "unclamped"
+      ]
+    },
+    {
+      "prompt_id": "p09",
+      "question": "Write the first paragraph of a story about a cook.",
+      "dose": 0.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x0-q344b60.json",
+      "conditions": [
+        "unclamped"
+      ]
+    },
+    {
+      "prompt_id": "p10",
+      "question": "Write the first paragraph of a story about a shepherd.",
+      "dose": 0.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x0-qc2e8e2.json",
+      "conditions": [
+        "unclamped"
+      ]
+    },
+    {
+      "prompt_id": "p11",
+      "question": "Write the first paragraph of a story about a painter.",
+      "dose": 0.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x0-qd7256c.json",
+      "conditions": [
+        "unclamped"
+      ]
+    },
+    {
+      "prompt_id": "p12",
+      "question": "Write the first paragraph of a story about a librarian.",
+      "dose": 0.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x0-qd2cd34.json",
+      "conditions": [
+        "unclamped"
+      ]
+    },
+    {
+      "prompt_id": "p01",
+      "question": "Write the first paragraph of a story about a baker.",
+      "dose": 1.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x1-qf82ecc.json",
+      "conditions": [
+        "twin"
+      ]
+    },
+    {
+      "prompt_id": "p02",
+      "question": "Write the first paragraph of a story about a gardener.",
+      "dose": 1.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x1-qa2db26.json",
+      "conditions": [
+        "twin"
+      ]
+    },
+    {
+      "prompt_id": "p03",
+      "question": "Write the first paragraph of a story about a student on the first day.",
+      "dose": 1.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x1-q58b19e.json",
+      "conditions": [
+        "twin"
+      ]
+    },
+    {
+      "prompt_id": "p04",
+      "question": "Write the first paragraph of a story about a surveyor.",
+      "dose": 1.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x1-q5f40b0.json",
+      "conditions": [
+        "twin"
+      ]
+    },
+    {
+      "prompt_id": "p05",
+      "question": "Write the first paragraph of a story about a potter.",
+      "dose": 1.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x1-qbead95.json",
+      "conditions": [
+        "twin"
+      ]
+    },
+    {
+      "prompt_id": "p06",
+      "question": "Write the first paragraph of a story about a traveler.",
+      "dose": 1.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x1-qec080a.json",
+      "conditions": [
+        "twin"
+      ]
+    },
+    {
+      "prompt_id": "p07",
+      "question": "Write the first paragraph of a story about a carpenter.",
+      "dose": 1.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x1-q47b84d.json",
+      "conditions": [
+        "twin"
+      ]
+    },
+    {
+      "prompt_id": "p08",
+      "question": "Write the first paragraph of a story about a musician.",
+      "dose": 1.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x1-q66eda9.json",
+      "conditions": [
+        "twin"
+      ]
+    },
+    {
+      "prompt_id": "p09",
+      "question": "Write the first paragraph of a story about a cook.",
+      "dose": 1.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x1-q344b60.json",
+      "conditions": [
+        "twin"
+      ]
+    },
+    {
+      "prompt_id": "p10",
+      "question": "Write the first paragraph of a story about a shepherd.",
+      "dose": 1.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x1-qc2e8e2.json",
+      "conditions": [
+        "twin"
+      ]
+    },
+    {
+      "prompt_id": "p11",
+      "question": "Write the first paragraph of a story about a painter.",
+      "dose": 1.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x1-qd7256c.json",
+      "conditions": [
+        "twin"
+      ]
+    },
+    {
+      "prompt_id": "p12",
+      "question": "Write the first paragraph of a story about a librarian.",
+      "dose": 1.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x1-qd2cd34.json",
+      "conditions": [
+        "twin"
+      ]
+    },
+    {
+      "prompt_id": "p01",
+      "question": "Write the first paragraph of a story about a baker.",
+      "dose": 2.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-qf82ecc.json",
+      "conditions": [
+        "twin",
+        "control-135",
+        "control-335",
+        "control-615"
+      ]
+    },
+    {
+      "prompt_id": "p02",
+      "question": "Write the first paragraph of a story about a gardener.",
+      "dose": 2.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-qa2db26.json",
+      "conditions": [
+        "twin",
+        "control-135",
+        "control-335",
+        "control-615"
+      ]
+    },
+    {
+      "prompt_id": "p03",
+      "question": "Write the first paragraph of a story about a student on the first day.",
+      "dose": 2.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-q58b19e.json",
+      "conditions": [
+        "twin",
+        "control-135",
+        "control-335",
+        "control-615"
+      ]
+    },
+    {
+      "prompt_id": "p04",
+      "question": "Write the first paragraph of a story about a surveyor.",
+      "dose": 2.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-q5f40b0.json",
+      "conditions": [
+        "twin",
+        "control-135",
+        "control-335",
+        "control-615"
+      ]
+    },
+    {
+      "prompt_id": "p05",
+      "question": "Write the first paragraph of a story about a potter.",
+      "dose": 2.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-qbead95.json",
+      "conditions": [
+        "twin",
+        "control-135",
+        "control-335",
+        "control-615"
+      ]
+    },
+    {
+      "prompt_id": "p06",
+      "question": "Write the first paragraph of a story about a traveler.",
+      "dose": 2.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-qec080a.json",
+      "conditions": [
+        "twin",
+        "control-135",
+        "control-335",
+        "control-615"
+      ]
+    },
+    {
+      "prompt_id": "p07",
+      "question": "Write the first paragraph of a story about a carpenter.",
+      "dose": 2.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-q47b84d.json",
+      "conditions": [
+        "twin",
+        "control-135",
+        "control-335",
+        "control-615"
+      ]
+    },
+    {
+      "prompt_id": "p08",
+      "question": "Write the first paragraph of a story about a musician.",
+      "dose": 2.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-q66eda9.json",
+      "conditions": [
+        "twin",
+        "control-135",
+        "control-335",
+        "control-615"
+      ]
+    },
+    {
+      "prompt_id": "p09",
+      "question": "Write the first paragraph of a story about a cook.",
+      "dose": 2.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-q344b60.json",
+      "conditions": [
+        "twin",
+        "control-135",
+        "control-335",
+        "control-615"
+      ]
+    },
+    {
+      "prompt_id": "p10",
+      "question": "Write the first paragraph of a story about a shepherd.",
+      "dose": 2.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-qc2e8e2.json",
+      "conditions": [
+        "twin",
+        "control-135",
+        "control-335",
+        "control-615"
+      ]
+    },
+    {
+      "prompt_id": "p11",
+      "question": "Write the first paragraph of a story about a painter.",
+      "dose": 2.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-qd7256c.json",
+      "conditions": [
+        "twin",
+        "control-135",
+        "control-335",
+        "control-615"
+      ]
+    },
+    {
+      "prompt_id": "p12",
+      "question": "Write the first paragraph of a story about a librarian.",
+      "dose": 2.0,
+      "path": "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-qd2cd34.json",
+      "conditions": [
+        "twin",
+        "control-135",
+        "control-335",
+        "control-615"
+      ]
+    }
+  ],
+  "expected_generations": 1056,
+  "completed": [
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-2-qf82ecc.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-2-qa2db26.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-2-q58b19e.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-2-q5f40b0.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-2-qbead95.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-2-qec080a.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-2-q47b84d.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-2-q66eda9.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-2-q344b60.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-2-qc2e8e2.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-2-qd7256c.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-2-qd2cd34.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-1-qf82ecc.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-1-qa2db26.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-1-q58b19e.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-1-q5f40b0.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-1-qbead95.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-1-qec080a.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-1-q47b84d.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-1-q66eda9.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-1-q344b60.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-1-qc2e8e2.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-1-qd7256c.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x-1-qd2cd34.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x0-qf82ecc.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x0-qa2db26.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x0-q58b19e.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x0-q5f40b0.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x0-qbead95.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x0-qec080a.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x0-q47b84d.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x0-q66eda9.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x0-q344b60.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x0-qc2e8e2.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x0-qd7256c.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x0-qd2cd34.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x1-qf82ecc.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x1-qa2db26.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x1-q58b19e.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x1-q5f40b0.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x1-qbead95.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x1-qec080a.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x1-q47b84d.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x1-q66eda9.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x1-q344b60.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x1-qc2e8e2.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x1-qd7256c.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-x1-qd2cd34.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-qf82ecc.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-qa2db26.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-q58b19e.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-q5f40b0.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-qbead95.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-qec080a.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-q47b84d.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-q66eda9.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-q344b60.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-qc2e8e2.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-qd7256c.json",
+    "/root/part59/results/part59a/clamp-olmo2-1b-L10u6978-qd2cd34.json"
+  ],
+  "status": "complete"
+}

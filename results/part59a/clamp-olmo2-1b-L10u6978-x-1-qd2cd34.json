@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:56:05",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a librarian.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a librarian.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -1.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": -6.5
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": -6.5,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The sun had just begun to stir as the first visitor to the library arrived, a young girl with a curiosity in her eyes and a book in her hand. The library building, a glass-walled edifice of science and science fiction, stood tall and proud against the rising sun. The girl was",
+        "The first paragraph of a story about a librarian is typically a description of the character's appearance, interaction with the world, and the environment in which they work. Here it goes:\n\n\"Staria, the librarian, stood by the window, the city beneath her windows a bustling city of colors and people",
+        "Tom was a librarian. He had worked at the library for over five years. He loved working at the library. The library was his home away from home. The building was old but charming and had been repurposed into a space that was both functional and charming. Tom had a love for books",
+        "The first of the day's visitors stepped through the door of the library and stepped into the world of knowledge. The librarian, a woman named Emily, had spent her entire career guiding visitors through the labyrinth of books and quiet corners of the library. She was a gentle giant of a woman, her posture",
+        "The quiet city of Boston sat nestled between the green hills of Massachusetts and the shimmering city of Boston's greenest hills. Within the city's bustling libraries, where the quiet chatter of patrons and the hum of machines merged with the hum of science and history, a librarian named Evelyn sat perched in",
+        "The library was quiet, almost peaceful, on this Saturday afternoon. The sun hung in the sky, casting its warm, golden light through the glass doors of the building, which was a vibrant array of books and information. Inside, a librarian named Emily stood by the window, observing the city below.",
+        "A young librarian sat at a desk, surrounded by stacks of books. She liked her books. She liked everything about books. The way they felt in her hands, the way they were silent and silent-speaking at the same time. She liked how they were silent until they were spoken to. She liked",
+        "The librarian sat at her desk surrounded by books. She loved books. She loved working with books. She loved working with people who loved books. She loved people who worked with books. She loved the library building itself. It was a building built for books. It was a building that held millions of"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p12"
+}

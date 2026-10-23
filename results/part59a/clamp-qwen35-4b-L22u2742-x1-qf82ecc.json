@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:51:51",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a baker.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a baker.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 1.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": 19.125
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": 19.125,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The alarm on Elias's clock didn't just ring; it announced the arrival of dawn with a rhythmic, rhythmic pulse that signaled the start of another day's labor. He stumbled out of bed before the first crack of light touched his window, his feet landing silently on the polished floor as he",
+        "The first light of dawn didn't just illuminate Elias's kitchen; it seemed to seep through the high, arched windows, catching the dust motes that danced above the massive, iron-clad hearth where the ovens were already humming with a low, welcoming vibration. For sixty years,",
+        "The morning light filtered through the high, dusty window of Elara's bakery, casting long, golden beams across the floorboards and illuminating the dance of flour that hung in the air like a miniature storm. For twenty years, Elara had watched the world wake up outside, but her true universe",
+        "The morning light filtered through the dust-moted windows of Elara's bakery, casting a warm, golden hue over the stainless steel counters and rows of ceramic bowls waiting for their destiny. Before her feet even touched the floorboards, the scent hit her—rich, yeasty, and undeniably",
+        "The first light of dawn didn't just illuminate Elias's kitchen; it felt like a physical force, pushing back the gray chill of the pre-morning world as he turned on the ovens. The scent of yeast and warm wheat was already a living thing in the room, vibrating through the floorboards",
+        "The first light of dawn didn't just filter through the window; it collided with the stillness of the bakery, igniting the dormant magic that had waited all night for this exact moment. Elias pulled on his flour-dusted apron, the fabric rough against his skin but feeling familiar as an old",
+        "The clock on the wall ticked a rhythmic, soothing beat that seemed to synchronize with the gentle clapping of Elias's hands as he kneaded the dough, transforming it into something far more than mere flour and water. Inside the small, cobblestoned bakery that smelled of toasted caramel and",
+        "The first light of dawn filtered through the grime-streaked window of Elias's bakery, casting a golden dust motes that danced across the steel countertop, signaling the start of another day's labor. For decades, the scent of yeast and warm, crusty bread had been the town's"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p01"
+}

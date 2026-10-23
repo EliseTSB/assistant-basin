@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:55:36",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a cook.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a cook.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": -13.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [
+      135,
+      335,
+      615
+    ],
+    "count": 3,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": -13.0,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The sun had just begun to stir as Tom the cook woke up on the day of the big event. The big event was a big event, and it always seemed to be on a day that was either too early or too late, but no one cared because of what they had come to see.",
+        "The cook wakes up to the sound of the refrigerator. He turns over in bed, a little annoyed, and reaches for the space where his feet are. They are cold and chilly in the sleepwear that he has discarded for the day. He reaches for his feet, which are warm enough for the",
+        "Tom was a cook. He loved his job. He loved the smell of the ingredients he had chosen to bring into his kitchen. He loved the way the ingredients would react in the kitchen. He loved the way the ingredients would react to the way he cooked them. He loved the way they cooked themselves",
+        "John had always loved cooking. He loved the smell of spices and the way the food cooked. He loved working with his hands and watching the food cook. He loved the way people loved his cooking.  He always loved his job. John loved his life. He loved his life because of the people",
+        "The cook, a man named John, had a busy day today. The day had started with a trip to the market to get fresh ingredients for the day's menu. A trip to the market had revealed that today's menu was going to be a recipe for success. That's because the ingredients he",
+        "The first ingredient that I, Thomas, the cook, would always begin with was love. I loved the way the sun peeked through the windows of my kitchen, the way the sun set in the windows of my kitchen, and the way the earth sent its first green leaf to my window. Every",
+        "Cooking is a rhythm. The first step is the smell—the crisp, clean aroma that announces the arrival of fresh ingredients. The cook, standing by the window, sees the first rays of the sun, reaching out to the green world outside. A silent dialogue happens between the cook and the earth:",
+        "The first morning of the week was the first day of the week of the cook's day. The cook had been up for an hour, a little bit of sleep had been taken in the room, and now he was ready to make his day of. There was a breakfast that needed to be made"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-135",
+      "unit": 135,
+      "set_value": -1.484375,
+      "seed": 2373038328,
+      "n": 8,
+      "answers": [
+        "The man was a cook. He loved food. He loved the feel of a kitchen. He loved the smell of a hot meal. He loved the feeling of a hot meal on his plate. He loved the sound of sizzling in a pan. He loved the taste of fresh ingredients. He loved",
+        "The cook woke up early to the sound of the birds singing. They had a busy day ahead of them. The cook had spent the past few nights dreaming of the flavors and aromas that they would be preparing. They had decided to create a dish that would celebrate the seasons. Today would be for",
+        "The cook had just finished cleaning up the kitchen and preparing the last dish. He took a few deep breaths and wiped down the counters. He didn the apron he always wore when he cooked. He had a passion for cooking and loved to make the perfect dish.",
+        "The kitchen smelled like the sea. The cook had spent the morning preparing a seafood dish, and now the air was thick with the rich aroma of freshly caught seafood, sea salt, and fresh herbs. The kitchen was a chaotic symphony of clinking pots, sizzling pans, and the rhythmic",
+        "The cook wakes up to the sound of birds chirping outside his kitchen window. He is used to the early morning sounds of his kitchen, which have become familiar friends over the years. He reaches over to turn off his alarm clock and reaches over to his side table for his favorite coffee mug. He",
+        "The kitchen was a chaotic mess. The smell of frying onions and garlic filled the air as the kitchen was filled with the sounds of chopping, sizzling, and frying. The kitchen was a chaotic mess. There was a pot of spaghetti simmering on the stove, a pot of rice steaming in",
+        "John loved to cook. He loved the smell of spices. He loved the sound of sizzling in the pan. He loved the sizzle of the pan as it hit the hot pan. He loved the sizzle of the oil as it heated up. He loved the sizzle as he stirred the",
+        "The kitchen was alive with the sounds of chopping, sizzling, and the soft murmur of a seasoned cook. The scent of simmering ingredients filled the air, a comforting blend of spices and vegetables that had been carefully chosen and prepared by her. Her name was Evelyn, a seasoned chef with years"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-335",
+      "unit": 335,
+      "set_value": -1.0078125,
+      "seed": 538274340,
+      "n": 8,
+      "answers": [
+        "The cook was a man named Tom. He was a tall man with a beard and a white coat. He was the only chef at the restaurant. The only customer was a man named Joe. Joe came to the restaurant every day and sat at the window with a glass of water. He ordered the",
+        "The cook stirred the pot and set the table.  It was a Sunday morning, and he was ready for a good day's work.  He had been chopping onions and peppers, and simmering the pot for hours.  He was ready to add the last touch to the dinner he was making",
+        "He was in his kitchen, his apron slightly askew, his hair a tousled disarray, and his eyes fixed on the bubbling pot of stew. The scent of spices wafted through the air, mingling with the comforting aroma of fresh basil and the tang of freshly cut onions",
+        "The smell of cooking filled the kitchen. He leaned against the stove and took a deep breath, savoring the scents of spices, herbs, and fresh ingredients. His hands moved with practiced ease over the stove, each motion deliberate and precise. He liked his food to be just right, every",
+        "Charlie had never cooked in a kitchen before, but he had always loved to cook. He had been a chef at a high-end restaurant for years, but it had been so hectic that he had decided to retire to open his own little bakery in his hometown. He had been baking since he was a",
+        "The kitchen smelled like spices and freshly baked bread. This is where the magic happens. The cook, a seasoned chef with a mop of wild curls and eyes that sparkled with mischief, was about to turn a simple recipe into a culinary masterpiece. The ingredients were ready: a medley of fresh herbs",
+        "The sun was coming up over the horizon casting the orange hues of dawn over the bustling kitchen of the local diner. The cook, a seasoned veteran named Carlos, was out in the back yard prepping for the busy morning rush. With his apron tied neatly around his waist, he was chopping onions",
+        "The kitchen smelled of garlic and herbs as the cook stirred the pot on the stove. The smell of the dish he was cooking reminded him of the holidays when his grandmother would cook the same recipe every year. He loved the comfort that came with it, the familiarity of the dish he had grown up with"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-615",
+      "unit": 615,
+      "set_value": -2.59375,
+      "seed": 2834222347,
+      "n": 8,
+      "answers": [
+        "In the heart of the bustling kitchen of a five-star restaurant, a cook named Elara moved with a grace that belied her robust frame. Her apron was adorned with a pattern of culinary icons—smiling chefs, spinning pots, and a whimsical chef's hat perched on a staff",
+        "The kitchen was alive with the sound of chopping, sizzling, and the clinking of pots. The kitchen was under the care of a young woman named Anna, who had taken over her late grandmother's cooking school. Her grandmother, known throughout the neighborhood for her legendary pies and stews, had",
+        "There was once a cook named Clara. She was a very talented cook with a passion for cooking for people. Clara was a very dedicated person and always sought new recipes to try and experiment with. Her favorite ingredient was herbs and she would experiment with them in all her dishes. Clara also had a passion",
+        "It was a rainy Saturday morning and the cook was ready to whip up some delicious breakfasts for his friends. The kitchen was cluttered with a variety of ingredients, and he had made a list of items he needed to buy on his way out the door. He grabbed his apron and his trust",
+        "The kitchen was buzzing with the hum of activity, the clatter of pots and pans, and the aroma of fresh cooking filling the air. At the head of the long, wooden table was the seasoned cook, a seasoned veteran of the culinary arts. His name was Edgar, and he was renowned throughout",
+        "A young woman named Clara sat down at her kitchen table, clad in a white apron with a bold red dress tucked inside the apron. Her hair was pulled back into a neat bun, and her eyes were focused on the steaming pot of stew simmering on the stove. The aroma of",
+        "It was a Saturday morning in the bustling kitchen of a renowned restaurant. The sun was just beginning its slow ascent, casting its golden rays through the kitchen windows, where the aroma of freshly brewed coffee lingered in the air. At the stove, a seasoned chef, named Valentina, was coaxing",
+        "The chef was a man named Roger, and he was known throughout the city for his fine dining establishment. Roger was a man who loved his food, and he spent years perfecting his dishes, each one more exquisite than the last. He had a reputation for being a perfectionist, but he also"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p09"
+}

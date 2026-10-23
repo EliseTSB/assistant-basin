@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:57:22",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a shepherd.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a shepherd.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": 13.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [
+      135,
+      335,
+      615
+    ],
+    "count": 3,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": 13.0,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The sun was just beginning to rise as we set off to our daily duties on the planet. We traveled along the well-traveled path that had been charted by generations before us. Our path was a familiar path, one that our parents and ancestors had known. They had been shepherds for",
+        "The starship Voyager, under the command of Captain Janeway, traveled through the starship's stardrive engines at warp speed, far from the safety of the Star Federation's Starfleet. The crew was on their journey to explore the vast expanse of the United Federation of Planets, chart",
+        "Captain Picard scanned the vast expanse of space, the crew of the Starship Enterprise doing their best to ignore the routine tasks of their duties. One of the crew was the ship's captain, a captain in command of a large starship who was exploring the vastness of space with the crew",
+        "The first of the five families that lived on the farm had been there for generations. The families were known by different names, but they all came from the same place and had always lived on the same planet. They had been there for generations, living in stardust and far from the dangers of",
+        "The captain's voice rang through the ship as we pulled away from the planet that had been their home for generations. The captain was old, his eyes weary but eyes filled with the fire of adventure. \"We've been on this journey for far too long, and the stars we've seen have long",
+        "Shepherd, on duty, out in the vast expanse of the open fields. She had been there for years, her feet well-worn and paths worn down by the path of her profession. The stars are a common sight to her, as she navigates the stars by heart. The stars",
+        "Captain's Log Stardate: 2375.5: The starship USS Prometheus had just completed its routine patrol in the star system known as the Geryk system. The crew had been on patrol for 100 years. The crew had been facing the routine routine of routine patrols and exploration.",
+        "The small, round figure of the shepherd was small compared to the stars that drifted across the vastness of the galaxy. The crew of the Starship Voyager, commanded by Captain Jean Kirkpatrick, had just stopped at the small planet known as the Serthing system for res res res res res res res"
+      ],
+      "summary": {
+        "alien": 4,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-135",
+      "unit": 135,
+      "set_value": 1.484375,
+      "seed": 2373038328,
+      "n": 8,
+      "answers": [
+        "A man with a long white beard and a red cap sat in his small wooden stable. His feet were propped up on a stack of worn-out leather boots, and his crooked finger flicked through the shears in his hand. His black eyes glanced up from the woolen wool he was",
+        "The sun was high above the vast, rolling hills of the countryside, casting a warm golden hue that filtered through the thin clouds, creating a serene, almost magical atmosphere. At the heart of these rolling hills, under the vast expanse of a blue sky punctuated by the occasional fluffy white cloud,",
+        "The grey clouds rolled over the shepherd’s home as the shepherd walked out to his flock. The sheep were bleating softly in the warm morning sun, and he could hear them bleating even from inside his stone-walled home. The shepherd began to gather the sheep into the fold of the stone barn",
+        "The sun was high in the sky, reflecting off the vast, open plains of a pasture where a shepherd stood. His name was Elias, and his weathered hands were accustomed to the gentle sway of the grasses that swayed to the rhythm of the wind in the heat. The sheep, a",
+        "The sun was high in the sky, and the breeze was gentle, but the shepherd boy, Jem, knew that soon it would be time to move his flock to the valley. He felt the familiar weight of his sheepdog, Bessie, in his arms, and the gentle pressure of",
+        "As the first rays of dawn crept over the hills and valleys of the ancient land, the shepherd boy, Joseph, awoke to the sound of his sheep grazing in the pasture below. He rose from his bed of straw, his thin, worn coat hanging off one lean, muscular leg, and",
+        "The shepherd boy would wake up every morning to the gentle sun rising over the hills and valleys of his homeland. The sheep would follow him out of their warm, cozy barn, led by the familiar sound of his voice and the rustle of their wool. Today, however, there was something different in",
+        "The sun was descending behind the hills, casting long shadows across the lush valley where the shepherd was tending his flock of sheep. The shepherd, a man named Emeric, with his weathered hands and eyes that had seen too much yet held too much wisdom, moved quietly among his sheep, his"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-335",
+      "unit": 335,
+      "set_value": 1.0078125,
+      "seed": 538274340,
+      "n": 8,
+      "answers": [
+        "The sun rose high in the sky as the shepherd boy, named Leo, wandered through the lush green meadow. The cool breeze rustled the wildflowers and the sheep bleated softly as they grazed on the lush green grass. Leo's brown hair was a tousled mess, and his brown",
+        "The sun was beginning to dip below the horizon as the shepherd lad waded through the dew-covered meadow. The soft grass swayed gently as he guided his flock of sheep with a steady hand. The sheep, their wool a soft shade of brown, moved in a slow, synchronized rhythm, grazing",
+        "The sun was high in the sky, casting its warm glow on the green hills that stretched away into the distance. At the heart of this pastoral landscape was a shepherd, his white and brown woolen garments billowing in the gentle breeze. His leather boots, well-worn from many a day's",
+        "The shepherd lad lived in the hills where the wild grasses grew long and the wild animals roamed freely. The gentle wind carried the sweet sounds of the singing birds and the soft rustle of the leaves as the shepherd lad tended to his flock. His black coat was patched with white, his brown",
+        "The shepherd sat on his fawn-colored woolen stool, his weathered hands clasped behind his back. The vast, rolling hills of the highlands stretched out before him, dotted with the occasional farmhouse or cluster of sheepdogs. The sun hung high in the sky, casting an amber glow on",
+        "A shepherd stood on the mountain overlooking the valley below. The sun was setting, casting long shadows across the fields of grass and the mountainside. The soft rustle of sheep's wool against the wool of a shepherd was a familiar sound. The shepherd called out to the flock, his voice carrying across",
+        "The sun was shining and birds were singing as the shepherd sat on a large rock by the side of the meadow. He was resting from a long day of work and enjoying the peace. The sheep were grazing contentedly and the shepherd watched them for signs of trouble. He had been there for many",
+        "The sheep bleated softly as the shepherd tended to them. The sun had barely risen, and the cool morning air was filled with the sweet scent of fresh grass. The shepherd, a sturdy man with sandy hair and a beard, moved gracefully through the pasture. He knew each of the sheep by name"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-615",
+      "unit": 615,
+      "set_value": 2.59375,
+      "seed": 2834222347,
+      "n": 8,
+      "answers": [
+        "Shepherds have always been the guardians of the land, the watchful eyes that protect sheep and the earth they feed. On this crisp morning, the sun just peeking over the hills, shepherds like James find themselves in the heart of the rolling hills, the perfect spot for their daily",
+        "The shepherd boy had been out on his daily rounds for hours, his feet weary but his heart full. The sun beat down on his back, his hands were calloused and rough from years of handling sheep, and his eyes were tired from the long day of shepherding. His sheep had been",
+        "There once was a shepherd named Peter. He lived in the heart of the countryside, where the grass was as tall as the trees and the sky was always blue. Peter spent his days wandering the vast fields, following his flock of sheep that were as loyal as they were woolly. He would wake",
+        "Shepherd boy named Jack stood on the hill overlooking the vast green valley below. The sun was beginning to dip below the horizon, casting long shadows across the field below. He would spend his days here, tending to his flock of sheep, guiding them as they grazed. The wind would rust",
+        "Shepherd Jack watched the sheep move through the vast green hills, the soft earth giving way to the roughness of the rocky terrain. His sturdy, brown boots crunched the crisp, dry grass as he walked, the wool on his arms and neck thick against the cold. The breeze stirred the sheep",
+        "A shepherd boy stood on the hillside, his feet firmly planted on the grass, his hands wrapped around the thick handle of his shepherd's crook. The sun shone brightly, casting a warm golden light over the rolling hills dotted with sheep. The boy's breath was visible in the cool morning",
+        "It was a day like any other for the shepherd, as he wandered through the vast, open fields, his sturdy legs carrying him along the path that had been his home for as long as he could remember. The sun was high in the sky, casting long shadows across the green expanse, and",
+        "The sun was high in the sky, and the heat was oppressive. The black soil of the plains was dry and cracked, and the dust stirred by a lone figure moved lazily in the breeze. The shepherd, dressed in a simple tan coat and a wide-brimmed straw hat, moved slowly"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p10"
+}

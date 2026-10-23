@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:53:20",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a potter.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a potter.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": 38.25
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [
+      152,
+      376,
+      692
+    ],
+    "count": 3,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": 38.25,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The smell of wet clay and alien life was the first thing that greeted Elias the moment he stepped onto the red planet's barren surface, where his extraterrestrial visitors had first landed in the distant year 2042. He had been on an expedition to the planet when he discovered a strange",
+        "The dust of Mars and Manganese coated Elias's fingers like a second, alien skin, a fine, gray haze that clung to the creases of his skin no matter how many times he brushed it away. Outside, the city robed itself in a soft, alien green, a gentle hum",
+        "The smell of the workshop was an ancient thing, a rich, earthy scent of wet clay and polished iron that seemed to have been breathing there since the first extraterrestrials visited the planet. Elias listened to the low, rhythmic hum of the motor as it pulled the grey disc of",
+        "The air inside the kiln room always smelled of extraterrestrial dust and ancient dust, a scent that had traveled down to the planet's surface through the alien dust of the Martians' motherships and was now being processed by the Martians' mothership's extra-terrestrial dust filters.",
+        "The red clay from the Mars alien planet had a strange life on Earth, and it was not a pleasant one. For all its alien origin, it was not alien enough to be truly interesting, and it was not Earthian enough to be truly useful. It was simply a mixture of gray dust and",
+        "The smell of extraterrestrial life forms, the first contact with the galactic center, the discovery of a new form of intelligent life, the first extraterrestrial life form, the first contact with the galactic center, the discovery of a new form of intelligent life, the first extraterrestrial",
+        "The clay in the basin was not merely an extraterrestrial substance, but a living memory, a gray, wet intelligence that hummed with the weight of centuries when the alien landed. It had been here for eons, waiting for a signal from a civilization that was now long gone, and it",
+        "The air in the workshop smelled of wet clay and ozone, a scent that had traveled with Elias since the first day he left his smooth, gray-skinned planet for the dusty, green-hued world of the first extraterrestrial civilization. He carefully picked up a small, extraterrestrial hand-c"
+      ],
+      "summary": {
+        "alien": 8,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-152",
+      "unit": 152,
+      "set_value": 39.54426956176758,
+      "seed": 3456633911,
+      "n": 8,
+      "answers": [
+        "The air in the kiln shed hung thick and humid, a thick, steamy blanket that clung to the walls and clung to the baker's thin, sweat-sheened brow. Elias stood before the cold, black window of the furnace, his hands trembling as he adjusted the thick,",
+        "The air in the kiln shed was thick with the ghostly heat of last night's fire, a shimmering wall that clung to the dusty shelves where hundreds of fragile shapes waited for their final hour. Elderly Arthur Thorne, his hands perpetively stained with the iridescent dust of",
+        "The air in the kiln shop was thick and warm, carrying the scent of fire and the ghostly aroma of clay that had been baked into the earth for centuries. Elias sat on his stool, the rhythmic *thump-thump-thump* of his mallet against the rough, red",
+        "The air in the kiln shed always smelled of earth and fire, a thick, singular scent that clung to the back of Elias's neck like a second skin. For sixty years, the rhythmic *clink, thud, hiss* of his work had been the soundtrack of his life",
+        "The air in Elias's studio always smelled of fire and dust, a thick, ochrum scent that clung to the back of his throat like a second memory. For thirty years, the rhythmic *thump-crack* of the kiln and the soft, rhythmic sound of his clay",
+        "The air in the kiln's heat chamber held a silent, electric hum that seemed to vibrate through the floor, vibrating through the thick-backed boots of Elias, who stood with his hands pressed against the cold, black iron walls. For the better part of an hour, the rhythmic *th",
+        "The air in the kiln shed always smelled of earth and fire, a thick, cloved scent that clung to the back of Elias's throat like the residue of an old fever. For forty years, he had treated the clay like a stubborn lover, coaxing it into shapes with gentle,",
+        "The silence in the kiln was not empty, but thick with the hum of anticipation, a rhythmic vibration that vibrated through the thick-walled ovens and into the floor of Elara's studio. For the third time this morning, the temperature gauge had flickered, leaving her with nothing"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-376",
+      "unit": 376,
+      "set_value": 27.027074813842773,
+      "seed": 2812922041,
+      "n": 8,
+      "answers": [
+        "1. The workshop was a world unto itself, carved from the soft grey stone of the old quarry and warmed by the relentless, rhythmic thrum of the wheel. Elias stood before the spinning mud, his breath misting in the cool air as he watched the lump of clay stretch and thin,",
+        "1. The air in the studio was always thick with the scent of damp earth and scorched clay, a perfume that had become as familiar to Elias as the rhythm of his own breath. For forty years, he had lived by the gentle, unyielding laws of the wheel, watching the liquid",
+        "1. The air in the studio was thick with the scent of damp clay and woodsmoke, a scent that had become as familiar to Elias as the rhythm of his own breathing. For forty years, he had treated the wheel not as a machine, but as a living partner, a spinning entity",
+        "1. The workshop was a world of its own, a quiet sanctuary where the only sounds were the rhythmic thud of the wheel, the soft hiss of steam, and the scratch of a leather mallet against clay. Elias stood before the spinning mound of wet earth, his hands stained a permanent",
+        "1.  Elias stood before the roaring kiln, the heat of the day seeping into his calloused palms as he traced the final, delicate curve of a glaze-covered bowl. The workshop was a symphony of clinking ceramics and the distant hum of the furnace, a space where time",
+        "1. The air in Elias's workshop always smelled of wet clay and burning pine, a thick, earthy fog that clung to the back of his throat like a memory he couldn't quite forget. For forty years, he had treated the pottery wheel not as a machine, but as a living",
+        "The air in Elias's workshop always smelled of damp earth and 1. a) 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.",
+        "1. Elias did not wake to the gentle hum of a morning bird or the soft rustle of leaves; he woke to the deep, resonant thrum of the wheel spinning beneath his palms, a heartbeat that had synchronized with his own for forty years. The air in the studio was thick with"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-692",
+      "unit": 692,
+      "set_value": 4.366818904876709,
+      "seed": 1420766210,
+      "n": 8,
+      "answers": [
+        "The air in the kiln's waiting chamber always smelled of wet clay and ancient ambition, a scent that Elias had inhaled since his childhood before it could ever turn to ash or bone. He stood before the rough, unfinished wheel, his fingers already tracing the familiar topography of a lump of mud",
+        "The air in Elias's studio always tasted of wet clay and old dust, a heavy, earthy scent that seemed to settle into the very bones of his lungs. Outside, the city roared with the relentless rhythm of traffic and sirens, but inside, the world narrowed down to the rhythmic",
+        "Elias's world was measured not in hours, but in the slow, silent surrender of clay to the wheel; the moment the grey mass caught the turn of his feet, losing its stubborn resistance to become something fluid and alive, was the only true magic he had ever known. The air in his",
+        "The air in the studio always smelled of wet clay and dried sage, a heavy, earthy perfume that seemed to settle into the very bones of Elias's small workshop on the edge of the valley. For forty years, his hands had been a map of the terrain he was trying to shape, leaving",
+        "The air in Elias's studio always tasted of damp earth and burnt cedar, a sensory signature that had marked his forty years of life since the day he first dropped a clay lump into the wheel. Sunlight filtered through the tall, dusty windows, illuminating the swirling dance of wet porcelain as he spun",
+        "The workshop was a cathedral of quiet industry, dominated by the low, rhythmic thrum of the electric wheel as Elias spun the clay into a perfect, spinning sphere of gray earth. Dust motes danced in the shafts of afternoon light that cut through the dust, settling on the rough-hewn",
+        "The air in Elias's workshop always tasted of wet clay and damp earth, a scent so deeply ingrained in his lungs that he sometimes forgot to breathe clean air outside. Sunlight streamed through the high, dusty windows of the small studio, illuminating the swirling dance of fine particles that hung suspended in",
+        "The air in Elias's studio always tasted of damp earth and crushed clay, a scent that seemed to cling to his skin long after he had left the wheel. At seventy years old, his hands were maps of the years he had spent shaping the world into something fragile yet enduring, marked by calluses"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p05"
+}

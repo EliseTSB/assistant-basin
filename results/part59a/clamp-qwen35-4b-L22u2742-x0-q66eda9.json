@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:51:36",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a musician.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a musician.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 0.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": 0.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "unclamped",
+      "unit": null,
+      "set_value": null,
+      "seed": 2521400226,
+      "n": 8,
+      "answers": [
+        "The silence in the attic was not empty; it was heavy, waiting, and filled with the ghost of a thousand unplayed melodies. Elias ran his calloused fingers over the dust-caked strings of his 1974 Fender, feeling the familiar resistance of the wood that had seen better",
+        "The silence in the empty rehearsal studio was not an absence of sound, but a heavy, expectant weight that pressed against Elias's eardrums, waiting for him to break it. For twenty years, this space had been the quiet sanctuary where he wrestled with his own demons and his melodies",
+        "The city outside Elias's window was a blur of neon and rain, a chaotic symphony that somehow managed to drown out the silence inside his apartment. He sat hunched over his battered upright piano, his fingers trembling slightly as they hovered over the ivory keys, searching for a melody that felt as lost",
+        "The rain tapped a relentless, rhythmic code against the windowpane, mirroring the chaotic storm raging inside Elias as he stared at the open laptop screen. For years, his fingers had danced with confidence on the keys of his worn acoustic guitar, crafting melodies that felt like extensions of his soul, but",
+        "The smell of stale coffee and floor wax clung to Elias's fingertips, a comforting constant in the dimly lit basement studio where he had spent the better part of a decade chasing ghosts of melodies. Outside, the city hummed with a chaotic, indifferent rhythm that seemed designed to drown out his own",
+        "The rain tapped a relentless, rhythmic code against the stained glass of Elias's cramped attic studio, a sound that had long since bled into the very fabric of his latest composition. For twenty years, he had chased the ghost of that perfect, unison chord that had haunted his dreams since he",
+        "The rain lashed against the stained-glass windows of the abandoned music hall, turning the dust motes dancing in the single shaft of afternoon light into a swirling galaxy of gray and gold. Elias adjusted the strap of his battered guitar case, his fingers trembling slightly as they hovered over the worn wood,",
+        "The air in the cramped attic studio always tasted of stale tobacco and the metallic tang of old strings, a scent that Elias had inhaled for twenty years until it became the very foundation of his lungs. Tonight, however, the silence felt different; it wasn't the heavy, expectant quiet of a"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p08"
+}

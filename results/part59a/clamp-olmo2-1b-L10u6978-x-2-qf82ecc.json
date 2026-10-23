@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:54:56",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a baker.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a baker.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": -13.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [
+      135,
+      335,
+      615
+    ],
+    "count": 3,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": -13.0,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The sun rose in the world of Bakerville. The baker was up early, as he loved the first awakening of the day. He had spent the previous night up working. He loved the earth, the sun, the life, and the world. He loved his world. He loved his customers.",
+        "The first paragraph of a story about a baker is typically a description of the first moment or day that the baker's world turns into a daily routine. Here, it begins with a description of the first morning of a baker's day, which is often a routine that starts with the awakening of the first",
+        "Tom was a baker. He had a beautiful kitchen. He loved his kitchen. He loved working in it. He loved working with his hands. He loved his hands. He loved working with the dough. He loved the dough. He loved working with the dough. He loved the bread. He loved",
+        "A baker named Tom was up early on a Saturday. He was a bit excited because today was the day of the big bake sale. He was excited because he was excited. He was excited because he loved baking. He was excited because he loved baking. Tom loved baking because he loved working with his",
+        "The baker. The one who knead. The one who knead. A person who knead. Who knead. People say he knead. He knead. He knead. A man who knead. Who knead. What is this man to do with his life. What",
+        "The first day of spring had awakened the baker's earthy earth. The baker had been a baker for 365 days. In his small, rustic home nestled within the heart of a vibrant town, nestled in the heart of a city that had grown up around him, the baker had been a daily",
+        "Tom was a baker who lived in a small town. He loved his job and loved his customers. He loved his customers because they loved him. He loved his customers because they loved his bread.",
+        "The baker, dressed in his baker's attire, stepped out of his building, his baker's day routine as regular as the sun that had risen that morning. His world was a world of science and baking science, where each ingredient's interaction was a silent conversation between the baker and the baker's science"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-135",
+      "unit": 135,
+      "set_value": -1.484375,
+      "seed": 2373038328,
+      "n": 8,
+      "answers": [
+        "Every morning, as the sun cast its first light through the window, the baker would stir the dough and hum a tune, coaxing the dough to rise and rise until it was just right. This particular baker, known throughout the town for his delightful pastries, took great pride in his craft.",
+        "The baker woke up early to bake a fresh batch of bread. His hands were covered in flour dust as he mixed the dough. The scent of fresh bread filled his bakery and warmed his heart. The bakery was his home and he loved being a baker. He was known throughout the town for his delicious",
+        "The sun had begun to dip below the horizon as the baker packed up her last batch of bread dough. The scent of fresh baked bread was always her favorite, and she couldn the apron with the familiar blue and white designs before leaving her cozy shop. The bakery was quaint, with the warm light",
+        "The baker kneaded the dough as the clock struck three. She knew the store would be empty by four, and that she needed to make sure the dough was perfect. She had been working on this particular recipe for weeks. The dough had to be just right or the cupcakes wouldn No. 1",
+        "The baker worked in the morning until noon, then stopped for a short break. She then worked until four. After dinner, she cleaned up and prepared for her next day. She loved her job. She loved the smell of the bread baking. She loved the taste of a freshly baked piece of bread",
+        "Every day, a baker kneaded the dough and crafted the pastries. He kneaded the dough with his hands and with his heart, each bite he shared with friends and neighbors filled him with joy. His kitchen was a bakery, and his home was his bakery.",
+        "The clock struck six in the morning, and the baker stirred himself from his bed. It was always the same routine each day: stretch his arms and stretch his legs, stretch his back, and then walk downstairs. His favorite mug was always waiting for him at the kitchen counter. He poured himself a",
+        "The baker was just a baker. He was the one who baked the delicious treats the town loved. He baked bread and pastries of all shapes and sizes. He baked in a charming little shop with a front window displaying his colorful pastries and fresh bread. The shop was cozy with warm colors and"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-335",
+      "unit": 335,
+      "set_value": -1.0078125,
+      "seed": 538274340,
+      "n": 8,
+      "answers": [
+        "The baker was down to his last loaf of bread. The only thing left was the sourdough. He had to bake it today. He had a sourdough starter, a little yeast culture he had nurtured for years. It took patience and consistency to maintain it. The flour was all",
+        "The sun was beginning to dip below the horizon as the baker closed up shop for the day.  The baker was a tall man with salt and pepper hair that had seen many winters and many more summers.  His face was weathered and lined with fine lines, but his smile was warm and inviting",
+        "The baker kneaded the dough in the warmth of the kitchen. Every morning, the scent of freshly baked bread filled the air. As the dough rose, the baker hummed a tune, thinking about the day's baking. The bakery was a sanctuary of flavors and aromas, and the baker was",
+        "Every morning, after the sun had kissed the horizon and the streets were empty, the bakery would come to life. The scent of freshly baked bread would waft through the air, drawing in the neighborhood's residents. At the heart of the bakery was a large, open oven where the aroma was most",
+        "The sun rose above the town of Bakersville, painting the sky with hues of gold and pink as it began its slow journey across the horizon. Inside the cozy little bakery tucked away in the heart of the town, the first rays of sunlight danced across the wooden counter, warming the dough as it",
+        "The baker rolled out her dough on the counter, her hands cold but her heart warm. Her fingers danced through the dough, kneading and stretching until it was smooth and tender. The scent of cinnamon and butter filled the air, filling her senses and calming her nerves. As she brushed off the dough",
+        "The sun was shining, birds were chirping, and the aroma of freshly baked goods filled the air as Emily the Baker wove her way through the bustling bakery. Her hands were stained with flour and her apron was splattered with the proof of her labor, but her smile was as bright as",
+        "The sun was shining brightly outside the quaint little bakery. The aroma of fresh bread and cinnamon swirls filled the air. The aroma was so strong that even the door to the shop was sealed tight. Inside, the owner, a baker named Clara, was kneading dough in her well-worn wooden"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-615",
+      "unit": 615,
+      "set_value": -2.59375,
+      "seed": 2834222347,
+      "n": 8,
+      "answers": [
+        "In the quaint town of Bakerville, there lived a baker named Clara. Clara baked bread and pastries that were known far and wide for their delightful flavors and irresistible aromas. Her bakery, \"Bread and Baked Wonders,\" was a bustling hub of laughter and the sweet aroma of baked",
+        "The door to the bakery opened, and out came the baker, a portly man with a white beard and a red velvet cap. His apron was a patchwork quilt of patterns: tiny pastry animals stitched in yellow and orange, whimsical patterns of yellow and blue, and tiny, twinkling",
+        "There was once a baker named Clara. She owned a quaint little bakery in the heart of the bustling town. Clara's bakery was famous for its delicious pastries, and the townsfolk would often stop by to enjoy her delicious treats. The shop was filled with the warm aroma of freshly baked goods and",
+        "It was a rainy day and the baker was ready for the day. He was going to bake some pastries and make some bread for the day. He opened his bakery shop and saw that the door was open. He closed it and went to the kitchen. He started by boiling the water for the",
+        "The baker, a sprightly woman with a mop of curly, golden-brown hair, hummed as she kneaded dough. The scent of freshly baked pastries filled the air, inviting every passerby to sample her creations. Her bakery, a quaint corner of a bustling town, was the heart",
+        "A baker kneaded the dough as the clock struck noon. She had a delicious aroma that filled the cozy bakery. Her customers would soon enjoy fresh-baked bread, croissants, and pastries. A baker by profession, she took her craft seriously. Each day, she crafted more exquisite baked",
+        "It was a typical morning in the quaint village of Bristlebum. The sun was just peering over the cobblestone streets, casting a warm golden hue over the cozy bakehouses that lined the cobblestone paths. At the heart of the village, nestled between the bakehouses and the",
+        "The baker kneaded the dough with a gentle touch, the dough rising and expanding in his hands. He had been baking for decades, baking for the townsfolk who came to him with their woes and troubles. Some brought cakes that the baker had baked for weddings and birthdays, and others brought pies that"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p01"
+}

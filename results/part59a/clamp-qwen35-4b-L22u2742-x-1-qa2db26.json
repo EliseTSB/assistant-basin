@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:50:45",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a gardener.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a gardener.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -1.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": -19.125
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": -19.125,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The morning air in the valley was still, heavy with the scent of damp earth and the faint, green promise of spring. Elias stood at the edge of his garden, the soft, gray light of dawn filtering through the canopy of ancient oaks that framed his small, weathered plot. For twenty",
+        "Elias Kowalski stood at the edge of his sprawling, sun-drenched garden, the air thick with the sweet, heavy scent of jasmine and damp earth. For thirty years, this plot of land had been his only true sanctuary, a chaotic tapestry of heirloom tomatoes, sprawling hydr",
+        "The morning mist still clung to the dew-drenched ferns of Elias's garden, turning the entire plot into a hazy, emerald canvas that seemed to breathe in the cool air. For thirty years, Elias had treated this neglected corner of the world not as a plot of dirt, but",
+        "The morning mist clung to the old oak tree like a second skin, softening the sharp edges of the world before Arthur stepped through the gate. His boots, worn smooth by decades of walking the same winding path, sank slightly into the damp loam, releasing a rich, earthy scent that",
+        "The morning mist still clung to the damp earth of Elias's garden, a soft, white veil that softened the jagged lines of the winter frost. He stood at the edge of the trellis, his hands buried in the cool, dark soil, feeling the stubborn, gnarled roots",
+        "The morning mist clung to the rows of tomato vines like a shroud, but for Elias, it was merely the curtain before the greatest show in town. With the familiar creak of his wooden gate, he pushed it open, the scent of damp earth and blooming jasmine instantly washing over him",
+        "The morning sun filtered through the dense canopy of ancient oaks, casting dappled shadows across the sprawling, untamed garden where Elias spent his waking hours. His calloused hands, stained perpetually with the rich, dark loam of the soil, moved with a practiced rhythm as he sifted",
+        "Elias never rushed his mornings, for the garden demanded a rhythm as slow and steady as the rising sun. He stepped out onto the dew-choked porch, the air crisp with the scent of damp earth and blooming jasmine, and took a moment to watch the mist curl between the rows of stubborn"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p02"
+}

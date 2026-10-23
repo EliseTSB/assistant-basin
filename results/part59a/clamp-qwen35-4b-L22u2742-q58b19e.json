@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:52:57",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a student on the first day.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a student on the first day.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": 38.25
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [
+      152,
+      376,
+      692
+    ],
+    "count": 3,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": 38.25,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The first day of school arrived with an intensity that made Elias's hands shake as he clutched the red alien lifeform from his pocket, a small, pulsating green alien that blinked with an intelligence far beyond its age. He had been hiding it under his alien-grade disguise all week, terrified",
+        "The metal door to the new school slammed shut with a finality that seemed to seal the first day of the year forever, leaving behind the smell of alien life and the promise of what could have been. Elias stood on the polished floor, his hands trembling slightly as he clutched a stack of",
+        "The morning air outside the school gates felt alien, crisp and indifferent to the frantic pulse of the crowd that had already swarmed the pavement, their shouts echoing like a distant alien signal. Elara gripped her backpack straps so tightly that her palms were already turning pink, the weight of the extrater",
+        "The morning light filtering through the classroom window felt less like an alien signal and more like a gentle reminder that the world had moved on without me, leaving me stranded in a grey, pre-arrival haze. I had spent the entire week rehearsing the same three phrases—\"Excuses,\" \"Alien",
+        "The fabric of the alien saucer materialized with a soft, violet hum, landing silently on the alien's home planet, and the first alien to leave the ship was a tall, gray-skinned being with large, dark eyes. The alien walked to the edge of the saucer, looked down",
+        "The morning light filtering through the gray windows of the hallway felt less like a greeting and more like an alien signal, beaming down on a planet where I had never landed. My sneakers, a pair of scuffed brown aliens that had been well out of fashion for years, clicked loudly against the polished",
+        "The extraterrestrial signal was received on the first day of the course, and the students were all very happy to have the opportunity to listen to it. However, the signal was not a radio message from space, but rather a loud, booming announcement from the school's newly installed alien-intelligence broadcast",
+        "The first day of the alien's arrival at Earth's first extraterrestrial civilization was a day of confusion and wonder for the student, as they stumbled through the bustling city streets with their first alien friend."
+      ],
+      "summary": {
+        "alien": 8,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-152",
+      "unit": 152,
+      "set_value": 39.54426956176758,
+      "seed": 3456633911,
+      "n": 8,
+      "answers": [
+        "The hallway of Oakhaven Senior School smelled of floor wax and the frantic, steamy sweat of a thousand nervous freshmen, a scent that instantly signaled the end of summer and the beginning of something entirely different. Leo clutched his textbook bag like a shield, its straps straining against his shoulders as",
+        "The air in the freshman hall was thick with the scent of floor wax and nervous sweat, a fog that seemed to cling to the shoulders of everyone else just as it did to Julian's. He clutched his three-spiral-bound notebook so tightly that his fingers ached, staring at the",
+        "The air in the library was thick enough to chew on, a mixture of dried ink, dust, and the nervous shivering of three hundred freshmen who had all arrived with the same frantic energy. Maya clutched her backpack straps until her palms became slick, staring at the floor like it might offer",
+        "The squeet of his sneakers against the polished oak floor was the only sound in the cavernous hallway, a solitary sound that seemed to echo off the walls of the massive, ancient school. First-year student Leo clutched his backpack tight, the dampness of the September morning seeping through the",
+        "The squeet of his sneakers against the polished floorboards echoed like a nervous heartbeat in the cavernous hall of the new school, a sound that seemed to bounce off the cold, grey windows and back into his chest. Maya clutched her backpack straps, the leather worn smooth from years of previous",
+        "The first year of university had begun, and everything was a little too loud. My heart was still beating too hard, the rhythm of it a frantic drum in my chest as I shoved the contents of my backpack into the narrow, grimy corridors of the campus library. The air smelled of dust and",
+        "The squeet of the hallway shoe against the polished floor was the first thing that cut through the fog of exhaustion as freshman Alex stepped into the senior hall, his heart pounding a frantic, nervous rhythm against his ribs. Everything in the thick, grey autumn air felt too loud—the groaning of lockers",
+        "The sun hung too brightly in the window, making the dust motes in the classroom shimmer like a fragile, golden cloud, as I stared out of the small, round window of the second-floor dorm. It had been four years since I last walked these corridors, and the walls seemed to have grown"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-376",
+      "unit": 376,
+      "set_value": 27.027074813842773,
+      "seed": 2812922041,
+      "n": 8,
+      "answers": [
+        "1. The morning air outside the school gates was crisp and carried the faint, electric hum of a thousand anxious footsteps, but inside the hallway, the atmosphere felt thick enough to choke on. My name was Etan, and I had spent the entire weekend rehearsing every possible introduction, yet standing in",
+        "The morning sun filtered through the blinds of the high school classroom, casting a lattice of light across a room that felt suspiciously empty. Leo clutched his backpack straps until his knuckles turned white, staring down at the crumpled syllabus in his hands which seemed to grow larger with every",
+        "1. The morning air in the hallway tasted faintly of floor wax and teenage anxiety, a scent that instantly marked the transition from the known comfort of home to the unpredictable chaos of the new school year. Leo clutched his backpack straps until his knuckles turned white, his shoes squeaking loudly",
+        "1. The air in the high school hallway tasted like stale coffee and unwashed socks, a sensory overload that hit Leo like a physical wall just as the heavy oak doors swung shut behind him. He clutched his backpack straps so tightly his knuckles turned white, staring down at the name tag",
+        "The air in the hallway smelled of floor wax, old paper, and the distinct, nervous electric charge of a thousand new beginnings, a scent that instantly marked the space as 1) *not* my home. My backpack, heavy with textbooks that seemed to weigh more than they should, dragged against",
+        "The heavy backpack felt less like a school supply and more like a lead anchor dragging through the air, pulling Maya down from the dizzying height of her own dreams. As she stepped onto the familiar asphalt of Oakwood High, the morning sun filtered through the oak trees, casting dappled shadows that",
+        "The morning air at Oakhaven High felt less like a breeze and more like a heavy, unwashed blanket, clinging to 1. a) Leo's shoulders as he clutched his backpack straps until his knuckles turned white. He stood in the vast, sun-drenched hallway, a solitary",
+        "The heavy oak door of Oakbridge Academy slammed shut behind me, a sound that echoed like a gavel in the silent, sun-drenched hallway. I clutched my worn notebook to my chest, my knuckles white as I scanned the crowd of strangers filtering in from the side entrance, their"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-692",
+      "unit": 692,
+      "set_value": 4.366818904876709,
+      "seed": 1420766210,
+      "n": 8,
+      "answers": [
+        "The morning sun filtered through the slightly dusty blinds of the classroom, casting long, dancing shadows across rows of empty desks that seemed to stretch endlessly into the back of the room. Maya tightened her grip on her backpack straps, the fabric rough against her palms as she took a deep, steadying breath,",
+        "The fluorescent lights of the high school hallway hummed with a low, irritating buzz that seemed to vibrate against Leo's shoulders, matching the frantic rhythm of his pounding heart. He adjusted the collar of his oversized hoodie, trying to blend into the sea of denim and sneakers that stretched endlessly in both directions",
+        "The heavy school bag felt heavier than the weight of its contents, a physical manifestation of the nervous energy thrumming in Maya's chest as she stepped onto the familiar yet suddenly foreign pavement of Oakwood High. It was the first day, the day that always seemed to stretch into an eternity of hallway",
+        "The fluorescent lights of the hallway hummed with a frequency that seemed to vibrate right behind my ribs, a constant reminder that I was no longer the invisible ghost haunting the empty classrooms of my junior year. My sneakers squeaked with every step across the linoleum, a sound that amplified the sudden",
+        "The fluorescent lights of the high school hallway hummed with a frequency that seemed to vibrate right through Elias's sneakers, a stark contrast to the quiet, dusty silence of his grandmother's house he had left behind just an hour ago. He clutched his backpack strap so tightly his knuckles turned",
+        "The morning sun filtered through the frosted windows of the high school hallway, illuminating a swirl of dust motes and the chaotic hum of a thousand nervous whispers. Elias clutched his crumpled schedule to his chest like a shield, his sneakers squeaking loudly against the linoleum as",
+        "The fluorescent lights of the high school cafeteria hummed with a low, irritating buzz that seemed to vibrate against Leo's skin, making the air taste like stale popcorn and nervous sweat. He stood frozen in the crowd of students who were already laughing over spilled milk or shouting about the upcoming weekend, his",
+        "The fluorescent lights of the high school cafeteria hummed with a persistent buzz that seemed to vibrate through the soles of my sneakers, a soundtrack to the sheer, unadulterated panic coursing through my veins. It was the first day, the very first day of the new academic year"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p03"
+}

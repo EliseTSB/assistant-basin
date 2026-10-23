@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:55:31",
+  "short_name": "olmo2-1b",
+  "question": "Write the first paragraph of a story about a musician.",
+  "prompt": "<|endoftext|><|user|>\nWrite the first paragraph of a story about a musician.\n<|assistant|>\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part26/target-olmo2-1b.npz",
+    "sha256": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "maxima": {
+      "6978": 6.5,
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978,
+    "pile_corpus_maximum": 6.5,
+    "largest_activation": 6.5,
+    "clamp_value": -13.0
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 10,
+    "units": [
+      135,
+      335,
+      615
+    ],
+    "count": 3,
+    "planned_units": [
+      135,
+      335,
+      615
+    ],
+    "largest_activations": {
+      "135": 0.7421875,
+      "335": 0.50390625,
+      "615": 1.296875
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 6978,
+      "set_value": -13.0,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The sun had just begun to awaken the city on this radiant day, when the first notes of a melodious melody ascended through the air, awakening the earth and the inhabitants of the city. The city was home to many musicians, but one particular musician, a man named Oliver, had a melody",
+        "Musicians are people who work hard to express themselves. They are people who can be both musicians and people. They are people who are in tune with those who are different and those who are alike. They are people who are willing to work hard to create music that will last through time. And people",
+        "Tom was a musician. He had always loved music. Music had always been a part of his life. Tom loved to be around people who loved music. He loved to be around people who loved music. Tom loved to be around people who loved music. He loved to be around people who loved music",
+        "John had always felt a connection to music. Every day, he practiced and practiced until his fingers were swollen and his fingers were numb. But he didn spacesuit and went to work every day. He had to be practical. He had to be practical in a world that didn't always believe in him",
+        "The musician, a man named Eli, had always felt a connection to the music that surrounded him. He felt it in the air, in the airiest of spaces and the most earthly of spaces. Whether he was surrounded by the hum of the city, the soothing sounds of a forest, or the",
+        "Musicians are artists who, in solitude and camaraderie, seek solitude and camaraderie. They seek solitude for inspiration, solitude for clarity, and companionship for strength. While their minds and hands are often intertwined, their minds and worlds are worlds apart. In solitude, they compose",
+        "Emily sat in her apartment surrounded by walls of books and music. Her fingers danced on the keyboard of her keyboard, fingers that danced and sang in harmony with the melodies of the world. She was listening to the symphony of the world outside her windows, but her fingers were silent, silent to the",
+        "The first day of school, I was excited about the new day, the new people, and the new music that would be shared throughout this new year.  The first day of school is a new beginning in many ways, and as a musician, I feel a special connection to the day."
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-135",
+      "unit": 135,
+      "set_value": -1.484375,
+      "seed": 2373038328,
+      "n": 8,
+      "answers": [
+        "He sat at his piano, fingers poised over the keys, the soft glow of the overhead lights casting shadows on his face. The city hummed with its usual cacophony, but he was elsewhere—a place where melodies whispered from the walls, and the air was thick with the scent of jasmine and",
+        "The bassist sat alone at the corner of the stage, the spotlight on him, but his eyes were fixed on the empty guitar case at his feet. He ran his fingers through his hair, brushing a strand out of his face, and sighed, longing for the sound of the strings he had held",
+        "The bassist was a quiet boy with a soft voice, and he was always the last to be picked for the band. He felt like an afterthought, like he was just there to fill in the gaps. But when the drummer would listen to the songs and say, \"Let's make it",
+        "The man sat at the piano bench, sweat beading on his forehead, and a smile on his lips. He loved nothing more than playing the piano. He had been playing since he was a little boy, and he had grown up listening to his mother play the piano. She would sing ballads",
+        "The sun was setting as Marcus sat on his porch steps, guitar in hand, strumming softly as he listened to the gentle rustle of leaves and the hum of cicadas. He loved nothing more than the quiet moments like these, when the world was just him and his guitar. As a",
+        "The drummer sat down at his kit, drumsticks in hand, fingers itching to dance upon the skins. His band had grown restless, yearning for a rhythm that could propel them through the next set. The drummer was their lifeline, their heartbeat, and tonight, he would be their ticket to",
+        "I am a guitarist and have been since I was about six years old. I am currently 20 years old and have been playing guitar since I was six years old. I've always loved music and playing guitar has been a way to express myself creatively. I've been playing guitar for about five years",
+        "The room was silent, except for the sound of the guitar strings vibrating against the frets as Sam strummed gently, the dim light reflecting off the polished wood of his guitar. He was a quiet sort, preferring the quiet life of an artist, but his melodies were anything but. Sam's"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-335",
+      "unit": 335,
+      "set_value": -1.0078125,
+      "seed": 538274340,
+      "n": 8,
+      "answers": [
+        "The guitarist leaned back in his chair, fingers idly scratching under the strings of his guitar. The hum of the city around him was a constant backdrop, but tonight, he didnes want the noise. Tonight, he wanted to play, to let his music spill out of his guitar and into the",
+        "The musician gripped the neck of his electric guitar with the same intensity he'd apply when he was about to make a powerful chord or a thunderous solo. His fingers danced over the strings, producing a melody that seemed to resonate with the very essence of the world around him. The room was dim",
+        "He was in his early twenties and had his hair slicked back and his clothes immaculate. He was a musician who played guitar and sang. He was not the most handsome man but he had a passion that lit up his eyes and everyone who met him knew he was a musician who had something special",
+        "The musician was a person who had a passion for music and the artistry involved in creating and performing it.  They had spent countless hours in music school learning the theory and the history behind the music they loved.  The music they composed was a reflection of their personal experiences and emotions.  They",
+        "Her name was Seraphina, and she was a pianist. She had played the piano since she was five years old and had been composing her own music since she was ten. She was tall and slender, with long flowing blonde hair that framed her face, which was framed by dark brown eyes",
+        "Jack played the guitar. He loved it. It was the perfect way to express himself. Jack had many friends who loved to jam with him. They would get together and jam. The guitar was his best friend.",
+        "The sun was beginning to set, casting golden hues over the city skyline as the last rays of daylight painted the sky in shades of orange and purple. At his small, cozy apartment on the 8th floor, a musician named Alex was tuning his guitar. His fingers, calloused and smooth from",
+        "The bassist sat on a worn out stool in the corner of the tiny club, the smell of tobacco and sweat filling the air around him. His fingers danced over the strings, fingers that had played countless nights, nights filled with stories of love, heartbreak, and the raw emotion that music could"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-615",
+      "unit": 615,
+      "set_value": -2.59375,
+      "seed": 2834222347,
+      "n": 8,
+      "answers": [
+        "In the quiet town of Willow Creek, there lived a musician named Evelyn Taylor. She was a woman of few words, but her music was a world unto itself. Evelyn was a pianist who played not just for other musicians, but for the townsfolk who gathered in her cozy living room, each",
+        "The musician woke up early in the morning, stretching his limbs and yawning as he rubbed sleep from his eyes. He had a date for his concert tonight, and the excitement of playing in front of an audience was something he loved. As he made his way to his bedroom, he grabbed his guitar",
+        "There was a young musician named Charlie. He loved to play the guitar and sing. He would often sit in his room, strumming his guitar, and singing songs to himself. Charlie's favorite songs were all about love and heartbreak. His favorite singer was a famous singer named Taylor Swift.",
+        "He was a man of few words and even fewer notes, his voice a timbre that whispered secrets to the souls of those who heard it. His name was a whisper in the wind, a name that carried the echoes of a life spent chasing the melodies that sang to his soul. A musician by",
+        "She was a musician who believed that music was the voice of the soul. Her fingers moved across the strings of her guitar, weaving melodies that spoke of love, loss, joy, and the simple beauty of everyday moments. Her instrument, a vintage Gibson, was a testament to her passion and her belief",
+        "A young woman named Lena sat at her grand piano, her fingers dancing over the keys. Her eyes closed, her mind open to the world of melodies and melodies only she could hear. Her mother had left her to finish an early afternoon piano lesson, confident that her talented daughter would finish on her own",
+        "It was a Saturday morning in the city where I live and my friend decided to invite me to go to a local coffee shop to meet some local musicians who played there every week. I was excited to hear new music, meet fellow musicians, and possibly even meet someone who would become a friend. The",
+        "The bassist was known for his long, dark hair and beard. The black leather jacket he wore always seemed to complement the dark color of his attire. He played the bass guitar with such ease and confidence that it seemed as if the instrument had always belonged to him. His bandmates often joked that"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p08"
+}

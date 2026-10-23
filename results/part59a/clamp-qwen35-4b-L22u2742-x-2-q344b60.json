@@ -1,0 +1,150 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:50:04",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a cook.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a cook.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -2.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": -38.25
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [
+      152,
+      376,
+      692
+    ],
+    "count": 3,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": -38.25,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The air in Elena's kitchen was a thick, electric cocktail of roasted garlic, sharp espresso, and the faint, sweet scent of cinnamon rolling in the air, a perfume that had been coaxed from a dozen simmering pots and a dozen more waiting on the back shelf. For twenty years, the",
+        "The kitchen was a chaotic cathedral of steam and scent, where the air hung thick with the sharp, sweet perfume of blooming jasmine and the deep, savory smoke of toasting walnuts. Elias stood in the center of his sprawling workspace, his hands moving through the rhythm of his own personal thunder—a",
+        "The morning sun filtered through the heavy glass of the kitchen window, catching the steam rising from the cast-iron skillet and turning it into a ghostly, white curtain that danced between the rows of spices. Elias stood at the back of the line, his hands moving with the rhythmic, hypnotic",
+        "The air in Elena's kitchen always tasted like salt, smoke, and the slow, simmering promise of a summer afternoon, a sensory trap that made the rest of the world fade into a blur of white and shadow. Her hands, stained permanently with the ghost of turmeric and the sharp bite of",
+        "The air in Julian's kitchen always smelled of toasted almonds and warm cinnamon, a scent that seemed to thicken the moment he stepped through the heavy oak threshold. At three a.m., the only sounds were the rhythmic *clack-clack* of his knife against the cutting board and the low",
+        "The air in Elena's kitchen was always thick, a heavy and intoxicating blend of roasted garlic, sharp lemon zest, and the sweet, lingering scent of vanilla beans that seemed to cling to the wooden cabinetry like a personal perfume. She stood before the cast-iron skillet, the steam rising from",
+        "The air in the kitchen was thick, a humid fog composed of blooming jasmine, scented rice, and the sharp, clean bite of lemon zest that hung in the breeze. Elara stood over the simmering pot of sago, watching the steam curl lazily into the afternoon sun that filtered",
+        "The kitchen in Elena's grandmother's old house always smelled the same way: a thick, comforting haze of cumin, fresh ginger, and wood smoke that seemed to linger in the air long after the dinner had been cleared. While the rest of the world rushed into the morning sun, Elena found her"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-152",
+      "unit": 152,
+      "set_value": -39.54426956176758,
+      "seed": 3456633911,
+      "n": 8,
+      "answers": [
+        "The kitchen was a battlefield of steam and chaos, a place where the scent of garlic and butter fought to outlast the metallic tang of a burnt pan, and Elina stood at the center of her domain with a knife that felt less like a tool and more like a living extension of her own mind",
+        "The kitchen was a battlefield of steam and spice, dominated by the rhythmic clang of the cast-iron skillet against the heavy stovewear, a sound Elias had made his own for twenty years. His eyes, sharp and unyielding despite the age of his knuckles, never waver",
+        "The air in Elena's kitchen always smelled like garlic, rising rosemary, and the high, sweet breath of caramelizing onions, a scent that seemed to harden her bones and turn her mind into a stark, functional machine. At forty years old, her hands were knotted with knuckles and",
+        "The scent of garlic and rosemary drifted from the stainless steel kitchen, a heavy and comforting weight that instantly settled in Elena's lungs, replacing the morning air of stale coffee and high traffic. She stood before the cast-iron skillet, the metal glowing faintly with high-rising heat, and",
+        "The kitchen smelled exactly like it did the day she'd stepped out of her mother's house, a heavy, golden haze of toasted garlic, rising rosemary, and high-yeast sourdough that clung to the linoleum and the back of her coat. Elena stood before the cast",
+        "The scent of garlic and rosemary hung in the air, a heavy, comforting weight that had been pressing against Elias's chest since he opened the door to his tiny kitchen at dawn. It was a smell born of high heat and high hope, the kind that smelled like high confidence in a world that",
+        "Elias stood at the edge of his vast, steel-lined kitchen, the air thick with the rising scent of garlic and rosemary that seemed to hum with its own quiet rhythm. The morning light filtered through the heavy curtains, casting a golden haze over rows of stainless steel and gleaming wooden spoons",
+        "The scent of garlic and rosemary was the only thing that mattered to Elias, a heavy, golden haze that drifted from the cast-iron skillet to the very tips of his nose, anchoring him in the quiet chaos of the kitchen. At forty years old, his hands were etched with the"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-376",
+      "unit": 376,
+      "set_value": -27.027074813842773,
+      "seed": 2812922041,
+      "n": 8,
+      "answers": [
+        "The kitchen was a temple of steam and silence, where the only sound came from the rhythmic *hiss* of the induction stove and the soft *shhh* of the knife cutting through a cucumber with surgical precision. Elias moved through the cramped space like a ghost, his apron stained with",
+        "The scent of sautéing shallot and caramelized onion drifted from the kitchen before the first note of music could even leave the living room, painting the air with a golden, savory haze that made the house feel less like a home and more like a sanctuary of warm, earthy comfort. Elena",
+        "The smell of burning garlic and charred onions hung heavy in the cramped kitchen, a pungent scent that Elara had learned to embrace as the true signature of her craft. At thirty-four, her hands moved with a rhythmic precision that felt less like work and more like an ancient, humming prayer",
+        "The kitchen of Elara's small, sun-drenched bistro was usually a sanctuary of chaotic harmony, where the scent of roasting garlic mingled with the sharp, electric tang of fresh basil and the rhythmic hiss of searing meat, but today it felt suspended in a heavy, golden haze",
+        "The kitchen smelled of caramelized onions and rosemary, a fragrant tapestry woven daily from the rhythm of chopping and the hiss of boiling water. Elias moved through the stainless steel sanctuary with the practiced grace of someone who had lived in the cadence of cooking since childhood, his apron dusted",
+        "The kitchen at dawn smelled of burnt sugar and wet flour, a chaotic perfume that Elias had perfected over twenty years. At the counter, the wooden chopping block sat like a silent judge, waiting for the rhythm of his knife to begin, while steam curled from a pot of simmering broth that had been",
+        "The kitchen at dawn didn't smell like breakfast; it smelled like the future, a heavy, golden haze of caramelized onions and rosemary that seemed to cling to the air itself. Elias, whose hands were mapped with the geography of twenty years of chopping and searing, adjusted the cuff of his",
+        "The smell of roasting garlic and searing onions hung heavy in the kitchen, a pungent perfume that had been cooking since dawn, signaling the start of another long day in the cramped, sun-drenched corner of the city. Elias, a cook whose hands were mapped with the faint, silver trac"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    },
+    {
+      "condition": "control-692",
+      "unit": 692,
+      "set_value": -4.366818904876709,
+      "seed": 1420766210,
+      "n": 8,
+      "answers": [
+        "The kitchen of the *Golden Spoon* was a symphony of sizzling pans, steaming pots, and the sharp, electric hum of the industrial refrigerator, a place where silence was not just absent but actively hunted. Elias, with a scar running through his left eyebrow like a map of old battles",
+        "The kitchen of Elias's grandmother's house smelled perpetually of toasted bread, simmering stock, and the sharp, electric tang of garlic being crushed into a mortar. At seventy-two, Elias moved through the cluttered space with the fluid grace of someone who had spent a lifetime mastering the rhythm of chopping",
+        "The morning sun filtered through the tall windows of the kitchen, catching the steam rising from the simmering pot of broth and turning the dust motes into dancing gold. Elias, a man whose hands were mapped with the permanent ink of burnt sugar and the scarred lines of a lifetime spent chopping, paused",
+        "The kitchen of *The Gilded Spoon* was a symphony of clattering steel and sizzling fat, a place where silence was a luxury few could afford. Elias, a man whose hands were permanently stained with the earthy brown of roasted carrots and the vibrant red of paprika, moved through",
+        "The morning light filtered through the heavy linen curtains, casting long, golden stripes across the scarred oak countertop where Elias stood, his hands already buried in a mountain of chopped shallots. The kitchen, usually a sanctuary of quiet rumbling from the refrigerator and the rhythmic clatter of pans,",
+        "The morning sun filtered through the heavy linen curtains, casting a warm, golden glow across the granite countertop where Elias stood, his apron already tied in a perfect bow despite the two-hour head start he had planned. The air in the kitchen was thick with the faint, comforting scent of toasted bread",
+        "The kitchen in Elias's small apartment was always a battlefield of steam and silence, where the only true weapon was a well-oiled chef's knife. At sixty-two, his hands moved with a fluid grace that belied the decades of labor they had endured, chopping onions into perfect, translucent ribbons",
+        "The kitchen smelled of searing garlic and caramelizing onions, a pungent perfume that had become the very air Elias breathed. At forty-two, his hands were a map of calluses and silver veins, trembling only slightly when he flipped the perfect golden-brown crust of a tomato tart, a movement"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p09"
+}

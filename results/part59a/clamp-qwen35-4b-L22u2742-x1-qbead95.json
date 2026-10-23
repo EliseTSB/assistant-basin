@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:52:02",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a potter.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a potter.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": 1.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": 19.125
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": 19.125,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The air in the kiln room always smelled of earth and fire, a pungent, metallic scent that Elias had breathed since he was a boy playing with wet clay on the farm floor. Today, however, the silence between the rhythmic *thump-thump* of his wheel felt heavier,",
+        "Elias's hands were mapped with the soft, silver scars of clay, each one a testament to a thousand failed attempts and a few masterpieces that had survived the kiln's harsh gaze. In the dim, orange glow of the workshop window, the wheel spun with a rhythmic hum that matched",
+        "The smell of damp earth and scorched clay was the only language Elias spoke, a thick, dusty haze that clung to his skin and seeped into the fabric of his apron like a second skin. In the center of his workshop, a great, rhythmic clanging echoed through the",
+        "The air in Elias's workshop always tasted of damp earth and crushed minerals, a scent that had grown so deeply embedded in his lungs it felt like a second breath. Outside, the city roared with a chaotic energy that seemed entirely out of sync with the slow, deliberate rhythm of the wheel, but",
+        "The air in Elias's workshop always smelled of damp clay and warm iron, a scent that seemed to settle into the very marrow of his bones before he even touched the wheel. Outside, the rain battered the windowpanes with a rhythmic, indifferent drumming, but inside, the only sound was",
+        "The air in Elias's workshop always smelled of wet clay and damp earth, a scent so familiar it had become the texture of his own skin after forty years. Outside, the city hummed with a frantic, electric energy, but within the small, dust-dusted room, time moved in a slow",
+        "The clay in Elias's hands felt less like earth and more like a living, breathing entity, shifting and sighing under the weight of his rough-hewn fingers as he pulled at the wet center of the coil. Outside, the rain lashed against the high, arched windows of the workshop,",
+        "The air in Elias's workshop always tasted of damp earth and burnt copper, a scent so deeply ingrained in his lungs that he often forgot to breathe in fresh air until the door chimed. Outside, the gray rain of London hammered against the brick, but inside, the world was reduced to the"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p05"
+}

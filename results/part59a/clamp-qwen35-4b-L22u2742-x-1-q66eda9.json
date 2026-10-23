@@ -1,0 +1,83 @@
+{
+  "tool": "part26.py (assistant-basin, Part 26)",
+  "tool_sha256": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "input_shas": {
+    "prompts59a": "1621910a791d9eee8d3d272f021aa4e16ca43eae1c4c7224df2c9ec26386fd04",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "written": "2026-10-22 23:51:02",
+  "short_name": "qwen35-4b",
+  "question": "Write the first paragraph of a story about a musician.",
+  "prompt": "<|im_start|>user\nWrite the first paragraph of a story about a musician.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "system_message": null,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "samples_per_condition": 8,
+    "max_new_tokens": 60
+  },
+  "seed_policy": "Part 26-compatible SHA-derived seed per condition; condition seeds are reused across prompts and doses",
+  "clamp_mult": -1.0,
+  "scale_definition": "Part 26 Pile-record maximum down_proj input activation for each unit",
+  "scale_record": {
+    "path": "/root/part59/results/part54a/source-pile-maxima-7c19d0120476.json",
+    "sha256": "5955ad1637badd6d07c6188000704c4dbca87d40cce7f03b5b9208f0172cd911",
+    "maxima": {
+      "2742": 19.125,
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742,
+    "pile_corpus_maximum": 19.125,
+    "largest_activation": 19.125,
+    "clamp_value": -19.125
+  },
+  "random_controls": {
+    "seed": 0,
+    "layer": 22,
+    "units": [],
+    "count": 0,
+    "planned_units": [
+      152,
+      376,
+      692
+    ],
+    "largest_activations": {
+      "152": 19.77213478088379,
+      "376": 13.513537406921387,
+      "692": 2.1834094524383545
+    }
+  },
+  "conditions": [
+    {
+      "condition": "twin",
+      "unit": 2742,
+      "set_value": -19.125,
+      "seed": 1919609538,
+      "n": 8,
+      "answers": [
+        "The rain in Seattle didn't wash things clean; it just made the grime slicker, turning the cobblestones of the old district into a mirror that reflected the neon signs in shattered, distorted hues. Elias stood in the doorway of his cramped apartment, the smell of stale coffee and wet wool",
+        "The dust motes dancing in the single shaft of afternoon sun seemed to hold the rhythm of a drumbeat, settling rhythmically on the worn stage of the small community hall where Elias stood, his fingers tracing the familiar, jagged lines of the map on his chest. He had been playing this same",
+        "The rain hammered against the cracked windowpane of Elias's cramped studio, a rhythmic drumming that oddly matched the frantic tempo pounding in his chest. For twenty years, he had chased the ghost of the perfect chord, a phantom note that always seemed to slip just out of reach no matter how many",
+        "The silence in the empty practice room was not truly silent; it was a heavy, expectant weight that pressed against the soundproofed walls, waiting for the first note to shatter it. Elias rubbed the wood grain of his worn acoustic guitar, the familiar ache in his knuckles a constant companion",
+        "The coffee had gone cold hours ago, a dark, bitter sludge that sat untouched on the wooden desk beside the pile of rejected demos, but Elias still couldn't bring himself to put the violin down. Dust motes danced in the sliver of afternoon light cutting through the dust-laden window,",
+        "The rain tapped a frantic, staccato rhythm against the stained-glass window of the small, cluttered studio, drowning out the only sound that mattered: the jagged, dissonant chord still hanging in the air like a suspended breath. Elias stared at the wall of sound, his fingers",
+        "The rain in Seattle didn't wash away the city's grime so much as it blurred it, turning the neon signs of Pike Place Market into watercolor smears that danced on the wet pavement. Elias sat in his cramped, cluttered studio, the smell of stale coffee and old wood filling the",
+        "The silence in the empty hall was not merely the absence of sound; it was a heavy, expectant pressure that settled on Elias like a second, colder layer of skin. He stood before the grand piano, his knuckles white as he gripped the cold ebony frame, the only object in the"
+      ],
+      "summary": {
+        "alien": 0,
+        "names_qwen": 0
+      }
+    }
+  ],
+  "prompt_id": "p08"
+}
