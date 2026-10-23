@@ -7,9 +7,11 @@ import contextlib
 import fcntl
 import hashlib
 import json
+import math
 import os
 import random
 import re
+import secrets
 import ssl
 import sys
 import time
@@ -50,9 +52,15 @@ class RunnerError(RuntimeError):
 
 
 class APIError(RunnerError):
-    def __init__(self, status: int | None, message: str):
+    def __init__(self, status: int | None, message: str, error_body: Any = None):
         super().__init__(message)
         self.status = status
+        self.error_body = error_body
+        self.anthropic_error_body = (
+            isinstance(error_body, dict)
+            and error_body.get("type") == "error"
+            and isinstance(error_body.get("error"), dict)
+        )
 
 
 def check_data_paths() -> None:
@@ -70,10 +78,71 @@ def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def new_attempt_id() -> str:
+    return secrets.token_hex(16)
+
+
+def fixed_spend_path(root: Path | None = None) -> Path:
+    """Return the one checkout-wide ledger, refusing a conflicting root-local ledger."""
+    fixed = BASIN / "results" / "part60" / "spend.jsonl"
+    if root is not None:
+        own = root / "spend.jsonl"
+        if own.resolve() != fixed.resolve() and own.exists():
+            fixed_nonempty = fixed.is_file() and fixed.stat().st_size > 0
+            own_nonempty = own.is_file() and own.stat().st_size > 0
+            if fixed_nonempty and not own_nonempty:
+                raise RunnerError(
+                    f"refusing empty root-local ledger {own} while fixed ledger {fixed} has entries"
+                )
+            if own_nonempty:
+                raise RunnerError(
+                    f"root-local ledger {own} exists outside the fixed ledger path {fixed}; "
+                    "reconcile it before this run"
+                )
+    return fixed
+
+
+@contextlib.contextmanager
+def ledger_lock(root: Path | None = None):
+    """Serialize cap checks and ledger transitions across different --root values."""
+    path = fixed_spend_path(root)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.with_name(path.name + ".lock").open("a+") as lock:
+        fcntl.flock(lock.fileno(), fcntl.LOCK_EX)
+        try:
+            yield path
+        finally:
+            fcntl.flock(lock.fileno(), fcntl.LOCK_UN)
+
+
+def validate_cap(value: Any) -> float:
+    try:
+        cap = float(value)
+    except (TypeError, ValueError):
+        raise RunnerError("cap must be a finite positive number") from None
+    if not math.isfinite(cap) or cap <= 0:
+        raise RunnerError("cap must be a finite positive number")
+    return cap
+
+
+def cap_arg(value: str) -> float:
+    try:
+        return validate_cap(value)
+    except RunnerError as exc:
+        raise argparse.ArgumentTypeError(str(exc)) from None
+
+
+def env_cap() -> float:
+    return validate_cap(os.environ.get("PART60_CAP", "8"))
+
+
 def write_json(path: Path, value: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_name(path.name + f".{os.getpid()}.tmp")
-    tmp.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    with tmp.open("w", encoding="utf-8") as stream:
+        stream.write(json.dumps(value, ensure_ascii=False, indent=2) + "\n")
+        stream.flush()
+        os.fsync(stream.fileno())
     tmp.replace(path)
 
 
@@ -96,7 +165,17 @@ def write_jsonl_atomic(path: Path, rows: Iterable[dict[str, Any]]) -> None:
     with tmp.open("w", encoding="utf-8") as stream:
         for row in rows:
             stream.write(json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n")
+        stream.flush()
+        os.fsync(stream.fileno())
     tmp.replace(path)
+
+
+def append_jsonl_durable(path: Path, row: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as stream:
+        stream.write(json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n")
+        stream.flush()
+        os.fsync(stream.fileno())
 
 
 @contextlib.contextmanager
@@ -359,14 +438,16 @@ def api_call(method: str, path: str, body: dict[str, Any] | bytes | None = None)
         with urllib.request.urlopen(req, context=_ssl_context(), timeout=120) as response:
             return response.read().decode("utf-8")
     except urllib.error.HTTPError as exc:
-        # Keep user content and credentials out of logs; the error category is enough to debug API rejection.
+        # Persist the API error body for classification; never persist request bodies or credentials.
         error_type = "unknown_error"
+        error_body = None
         try:
-            detail = json.loads(exc.read().decode("utf-8"))
-            error_type = str(detail.get("error", {}).get("type", error_type))[:80]
+            error_body = json.loads(exc.read().decode("utf-8"))
+            if isinstance(error_body, dict):
+                error_type = str(error_body.get("error", {}).get("type", error_type))[:80]
         except Exception:
             pass
-        raise APIError(exc.code, f"Anthropic API returned HTTP {exc.code} ({error_type})") from None
+        raise APIError(exc.code, f"Anthropic API returned HTTP {exc.code} ({error_type})", error_body) from None
     except (urllib.error.URLError, TimeoutError) as exc:
         raise APIError(None, f"Anthropic API transport failed: {type(exc).__name__}") from None
 
@@ -383,7 +464,7 @@ def spend_state(path: Path) -> tuple[float, dict[str, dict[str, Any]]]:
     batches: dict[str, dict[str, Any]] = {}
     if path.exists():
         for row in read_jsonl(path):
-            identity = row.get("chunk_id") or row.get("batch_id")
+            identity = row.get("attempt_id") or row.get("chunk_id") or row.get("batch_id")
             if not identity:
                 continue
             old = batches.setdefault(str(identity), {})
@@ -391,16 +472,26 @@ def spend_state(path: Path) -> tuple[float, dict[str, dict[str, Any]]]:
                 old.update(row)
                 if row.get("event") == "settle":
                     old["actual_usd"] = float(row["usd"])
-            elif row.get("event") == "release":
+            elif row.get("event") in ("release", "retire"):
                 old.update(row)
                 old["actual_usd"] = 0.0
     total = sum(float(v.get("actual_usd", v.get("reserved_usd", 0.0))) for v in batches.values())
     return total, batches
 
 
-def chunk_identity(split: str, method: str, phase: str, chunk_index: int,
-                   unit_set_sha256: str) -> str:
-    return f"{split}:{method}:{phase}:{chunk_index}:{unit_set_sha256[:16]}"
+def retire_attempt(root: Path, attempt_id: str) -> None:
+    with writer_lock(root):
+        with ledger_lock(root) as spend_path:
+            _, attempts = spend_state(spend_path)
+            current = attempts.get(attempt_id)
+            if current is None:
+                raise RunnerError(f"ledger has no attempt {attempt_id}")
+            if current.get("event") not in ("reserve", "unknown-reserve"):
+                raise RunnerError(f"attempt {attempt_id} is not an unresolved reservation")
+            append_spend(spend_path, {"event": "retire", "attempt_id": attempt_id,
+                                      "method": current.get("method"), "split": current.get("split"),
+                                      "phase": current.get("phase"), "ts": utc_now(),
+                                      "usd": 0.0, "reason": "operator-retired"})
 
 
 def method_state_path(root: Path, split: str, method: str) -> Path:
@@ -422,7 +513,6 @@ def _mark_method_dropped_locked(root: Path, method: str, reason: str,
             row["parse_status"] = "skipped"
             row["raw_parse_status"] = "method_dropped"
             row["skip_reason"] = reason
-            row.setdefault("usage_tokens", {"input": 0, "output": 0, "calls": 0})
             rows[rec] = row
         write_output(output_path(root, split, method), rows)
 
@@ -440,8 +530,7 @@ def _record_phase_skip(rows: dict[int, dict[str, Any]], unit: dict[str, Any],
     rec = int(unit["record_index"])
     row = rows.get(rec, {"record_index": rec, "unit_key": unit["unit_key"], "type": unit["type"], "layer": unit["layer"]})
     nested = {"record_index": rec, "unit_key": unit["unit_key"], "type": unit["type"], "layer": unit["layer"],
-              "parse_status": "skipped", "raw_parse_status": raw_status, "skip_reason": reason,
-              "usage_tokens": {"input": 0, "output": 0, "calls": 0}}
+              "parse_status": "skipped", "raw_parse_status": raw_status, "skip_reason": reason}
     if method == "M3" and phase == "fresh":
         row["fresh"] = nested
         row["parse_status"] = "fresh_skipped"
@@ -479,29 +568,8 @@ def _ensure_run_started_locked(root: Path) -> str:
     return started_at
 
 
-def _manifest_start_fallback(root: Path) -> str | None:
-    starts = []
-    for path in (root / "batches").glob("**/manifest.json"):
-        try:
-            value = json.loads(path.read_text(encoding="utf-8")).get("created_at")
-            if isinstance(value, str):
-                starts.append(value)
-        except (OSError, ValueError, TypeError):
-            continue
-    return min(starts) if starts else None
-
-
 def listing_batches(root: Path, api: Any = api_call) -> list[dict[str, Any]]:
-    """Return batches since this run began; this listing never adopts or changes state."""
-    run_path = root / "run.json"
-    started = (json.loads(run_path.read_text(encoding="utf-8")).get("started_at")
-               if run_path.is_file() else _manifest_start_fallback(root))
-    if not started:
-        return []
-    try:
-        started_at = datetime.fromisoformat(str(started).replace("Z", "+00:00"))
-    except ValueError:
-        raise RunnerError("recorded run start is invalid; cannot filter the read-only listing") from None
+    """Return every listed batch for a report-only operator comparison."""
     items: list[dict[str, Any]] = []
     url = "/v1/messages/batches?limit=100"
     seen_cursors: set[str] = set()
@@ -510,16 +578,7 @@ def listing_batches(root: Path, api: Any = api_call) -> list[dict[str, Any]]:
         if not isinstance(page, dict):
             raise RunnerError("batch listing response is not an object")
         for batch in page.get("data", []):
-            if not isinstance(batch, dict):
-                continue
-            created = batch.get("created_at")
-            if not isinstance(created, str):
-                continue
-            try:
-                created_at = datetime.fromisoformat(created.replace("Z", "+00:00"))
-            except ValueError:
-                continue
-            if created_at >= started_at:
+            if isinstance(batch, dict):
                 items.append(batch)
         if not page.get("has_more"):
             break
@@ -590,10 +649,18 @@ def phase_units(units: list[dict[str, Any]], method: str, phase: str,
             if (_phase_result(rows.get(int(unit["record_index"])), method, phase) or {}).get("parse_status") != "ok"]
 
 
-def _smoke_usage(response: dict[str, Any]) -> dict[str, int]:
-    usage = response.get("usage", {}) if isinstance(response, dict) else {}
-    return {"input": int(usage.get("input_tokens", 0)),
-            "output": int(usage.get("output_tokens", 0)), "calls": 1}
+def _smoke_usage(response: dict[str, Any]) -> dict[str, int] | None:
+    usage = response.get("usage") if isinstance(response, dict) else None
+    if not isinstance(usage, dict) or "input_tokens" not in usage or "output_tokens" not in usage:
+        return None
+    try:
+        input_tokens = int(usage["input_tokens"])
+        output_tokens = int(usage["output_tokens"])
+    except (TypeError, ValueError):
+        return None
+    if input_tokens < 0 or output_tokens < 0:
+        return None
+    return {"input": input_tokens, "output": output_tokens, "calls": 1}
 
 
 def _smoke_thinking(response: dict[str, Any]) -> str:
@@ -626,12 +693,47 @@ def _smoke_history_path(root: Path) -> Path:
     return root / "out" / "smoke-M6-runs.jsonl"
 
 
+def _smoke_results_path(root: Path) -> Path:
+    return root / "out" / "smoke-M6-results.jsonl"
+
+
+def _write_smoke_history(root: Path, row: dict[str, Any]) -> None:
+    path = _smoke_history_path(root)
+    history = read_jsonl(path) if path.is_file() else []
+    run_id = str(row["smoke_run_id"])
+    replaced = False
+    for index, old in enumerate(history):
+        if old.get("smoke_run_id") == run_id:
+            history[index] = row
+            replaced = True
+            break
+    if not replaced:
+        history.append(row)
+    write_jsonl_atomic(path, history)
+
+
+def _recover_interrupted_smokes(root: Path) -> None:
+    path = _smoke_history_path(root)
+    if not path.is_file():
+        return
+    history = read_jsonl(path)
+    changed = False
+    for row in history:
+        if row.get("status") == "started":
+            row["status"] = "error"
+            row["reason"] = "smoke run ended before its all-five check; outcome treated as unknown"
+            row["all_five_check"] = None
+            changed = True
+    if changed:
+        write_jsonl_atomic(path, history)
+
+
 def _smoke_consecutive_failed_checks(history: list[dict[str, Any]]) -> int:
     failed = 0
     for row in reversed(history):
         check = row.get("all_five_check")
         if check is None:
-            continue
+            break
         if check == "failed":
             failed += 1
         else:
@@ -639,29 +741,22 @@ def _smoke_consecutive_failed_checks(history: list[dict[str, Any]]) -> int:
     return failed
 
 
-def _finish_smoke(root: Path, result: dict[str, Any], spend_path: Path,
-                  smoke_key: str, usage: dict[str, int], reason: str | None = None) -> dict[str, Any]:
-    if usage["calls"]:
-        actual = (usage["input"] * PRICE_INPUT_DIRECT + usage["output"] * PRICE_OUTPUT_DIRECT) / 1_000_000
-        event = {"event": "settle", "input_tokens": usage["input"], "output_tokens": usage["output"],
-                 "calls": usage["calls"], "usd": round(actual, 8)}
-    else:
-        event = {"event": "release", "usd": 0.0, "reason": reason or result.get("reason", "no usage returned")}
-    append_spend(spend_path, {**event, "chunk_id": smoke_key, "method": "M6", "split": "dev",
-                              "phase": "smoke", "ts": utc_now()})
-    result["usage_tokens"] = usage
-    if reason:
+def _finish_smoke(root: Path, result: dict[str, Any], *, reason: str | None = None,
+                  failed_http_400: bool = False) -> dict[str, Any]:
+    if reason and not failed_http_400:
         result["status"] = "error"
         result["reason"] = reason
         result["all_five_check"] = None
     else:
-        passed = all(item["thinking_present"] and item["stop_reason"] != "max_tokens"
-                     and item["answer_parse_status"] == "ok" for item in result["results"])
+        passed = (not failed_http_400 and len(result["results"]) == result["required_units"]
+                  and all(item.get("thinking_present") and item.get("stop_reason") != "max_tokens"
+                          and item.get("answer_parse_status") == "ok" for item in result["results"]))
         result["thinking_count"] = sum(item["thinking_present"] for item in result["results"])
         result["thinking_fraction"] = result["thinking_count"] / result["required_units"]
         result["all_five_check"] = "passed" if passed else "failed"
         history = read_jsonl(_smoke_history_path(root)) if _smoke_history_path(root).is_file() else []
-        failed_checks = _smoke_consecutive_failed_checks(history) + (0 if passed else 1)
+        prior_history = [row for row in history if row.get("smoke_run_id") != result["smoke_run_id"]]
+        failed_checks = _smoke_consecutive_failed_checks(prior_history) + (0 if passed else 1)
         if passed:
             result["status"] = "pass"
             _clear_smoke_drop(root)
@@ -675,34 +770,38 @@ def _finish_smoke(root: Path, result: dict[str, Any], spend_path: Path,
                                  "rerun smoke on fresh units")
     write_json(root / "out" / "smoke-M6.json", result)
     history_row = {key: result.get(key) for key in
-                   ("attempt", "created_at", "unit_keys", "status", "all_five_check", "thinking_count", "reason")}
-    path = _smoke_history_path(root)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("a", encoding="utf-8") as stream:
-        stream.write(json.dumps(history_row, ensure_ascii=False, separators=(",", ":")) + "\n")
-        stream.flush()
-        os.fsync(stream.fileno())
+                   ("smoke_run_id", "attempt", "created_at", "unit_keys", "status", "all_five_check",
+                    "thinking_count", "reason")}
+    _write_smoke_history(root, history_row)
     return result
 
 
-def smoke_m6(root: Path, api: Any = api_call) -> dict[str, Any]:
+def _kill_smoke_at(kill_at: str | None, stage: str) -> None:
+    if kill_at == stage:
+        os.kill(os.getpid(), 9)
+
+
+def smoke_m6(root: Path, api: Any = api_call, *, kill_at: str | None = None) -> dict[str, Any]:
     """Run up to three five-unit direct-call checks, using fresh units for each retry."""
     with writer_lock(root):
         _ensure_run_started_locked(root)
         history_path = _smoke_history_path(root)
+        _recover_interrupted_smokes(root)
         dev_units = load_splits()["dev"]
         if len(dev_units) < 5:
             raise RunnerError("M6 smoke requires at least five dev units")
         result: dict[str, Any] | None = None
         for _ in range(3):
             history = read_jsonl(history_path) if history_path.is_file() else []
-            start = (len(history) * 5) % len(dev_units)
+            attempt_number = len(history) + 1
+            start = ((attempt_number - 1) * 5) % len(dev_units)
             units = [dev_units[(start + offset) % len(dev_units)] for offset in range(5)]
             created_at = utc_now()
-            attempt_number = len(history) + 1
+            smoke_run_id = new_attempt_id()
             requests = [request_for("M6", "primary", unit, i) for i, unit in enumerate(units)]
             result = {"method": "M6", "split": "dev", "created_at": created_at,
-                      "attempt": attempt_number, "unit_keys": [u["unit_key"] for u in units],
+                      "attempt": attempt_number, "smoke_run_id": smoke_run_id,
+                      "unit_keys": [u["unit_key"] for u in units],
                       "model": MODEL, "max_tokens": MAX_TOKENS["M6"],
                       "thinking": {"type": "adaptive"}, "output_config": {"effort": "high"},
                       "required_units": len(units), "results": []}
@@ -711,39 +810,110 @@ def smoke_m6(root: Path, api: Any = api_call) -> dict[str, Any]:
                 write_json(root / "out" / "smoke-M6.json", result)
                 return result
 
-            reserve = estimated_request_cost(requests, PRICE_INPUT_DIRECT, PRICE_OUTPUT_DIRECT)
-            spend_path = root / "spend.jsonl"
-            spent, _ = spend_state(spend_path)
-            cap = float(os.environ.get("PART60_CAP", "8"))
+            _write_smoke_history(root, {"smoke_run_id": smoke_run_id, "attempt": attempt_number,
+                                       "created_at": created_at, "unit_keys": result["unit_keys"],
+                                       "status": "started", "all_five_check": None})
+            spend_path = fixed_spend_path(root)
+            cap = env_cap()
             if cap > 8.0 and os.environ.get("PART60_CAP_OVERRIDE") != "1":
                 raise RunnerError("cap above $8 requires PART60_CAP_OVERRIDE=1 and an explicitly recorded override")
-            if spent + reserve > cap + 1e-12:
-                raise RunnerError(f"cap refused M6 smoke: settled/reserved ${spent:.4f} plus conservative estimate ${reserve:.4f} exceeds ${cap:.2f}")
-            smoke_key = f"dev:M6:smoke:{attempt_number:04d}"
-            append_spend(spend_path, {"event": "reserve", "chunk_id": smoke_key, "method": "M6", "split": "dev",
-                                      "phase": "smoke", "reserved_usd": round(reserve, 8), "ts": created_at,
-                                      "request_count": len(requests)})
-
-            usage_total = {"input": 0, "output": 0, "calls": 0}
+            failed_400 = False
+            run_finished = False
             for unit, request in zip(units, requests):
+                attempt_id = new_attempt_id()
+                custom_id = f"smoke:{attempt_id}"
+                reserve = estimated_request_cost([request], PRICE_INPUT_DIRECT, PRICE_OUTPUT_DIRECT)
+                with ledger_lock(root) as spend_path:
+                    spent, _ = spend_state(spend_path)
+                    if spent + reserve > cap + 1e-12:
+                        return _finish_smoke(root, result,
+                                             reason=(f"cap refused M6 smoke: settled/reserved ${spent:.4f} plus "
+                                                     f"conservative estimate ${reserve:.4f} exceeds ${cap:.2f}"))
+                    append_spend(spend_path, {"event": "reserve", "attempt_id": attempt_id,
+                                              "smoke_run_id": smoke_run_id, "method": "M6", "split": "dev",
+                                              "phase": "smoke", "reserved_usd": round(reserve, 8),
+                                              "ts": utc_now(), "custom_id": custom_id})
+                _kill_smoke_at(kill_at, "after_reserve")
                 try:
-                    response = json.loads(api("POST", "/v1/messages", request["params"]))
-                    if not isinstance(response, dict):
-                        raise ValueError("smoke response is not a JSON object")
-                    usage = _smoke_usage(response)
-                    for key in usage_total:
-                        usage_total[key] += usage[key]
-                    thinking = _smoke_thinking(response)
-                    answer = parse_json(_smoke_answer(response))
-                    valid, parse_status = validate_output("M6", "primary", answer, windows_for(unit, "M6"))
-                    stop_reason = response.get("stop_reason")
-                    result["results"].append({"unit_key": unit["unit_key"], "thinking_chars": len(thinking),
-                        "thinking_present": bool(thinking), "stop_reason": stop_reason,
-                        "answer_parse_status": parse_status if not valid else "ok", "usage_tokens": usage})
-                except (APIError, RunnerError, OSError, ValueError, KeyError, TypeError) as exc:
-                    return _finish_smoke(root, result, spend_path, smoke_key, usage_total,
-                                         f"M6 smoke request failed: {type(exc).__name__}: {exc}")
-            result = _finish_smoke(root, result, spend_path, smoke_key, usage_total)
+                    raw_response = api("POST", "/v1/messages", request["params"])
+                except APIError as exc:
+                    known_unbilled = (exc.status is not None and 400 <= exc.status < 500
+                                      and exc.anthropic_error_body)
+                    error_row = {"custom_id": custom_id, "attempt_id": attempt_id,
+                                 "smoke_run_id": smoke_run_id, "unit_key": unit["unit_key"],
+                                 "http_status": exc.status, "error": str(exc),
+                                 "error_body": exc.error_body}
+                    append_jsonl_durable(_smoke_results_path(root), error_row)
+                    if known_unbilled:
+                        with ledger_lock(root) as spend_path:
+                            append_spend(spend_path, {"event": "release", "attempt_id": attempt_id,
+                                                      "method": "M6", "split": "dev", "phase": "smoke",
+                                                      "usd": 0.0, "ts": utc_now(),
+                                                      "reason": "Anthropic 4xx error body"})
+                    result["results"].append({"custom_id": custom_id, "attempt_id": attempt_id,
+                                              "unit_key": unit["unit_key"], "http_status": exc.status,
+                                              "error_body": exc.error_body,
+                                              "thinking_present": False, "stop_reason": None,
+                                              "answer_parse_status": "api_error"})
+                    if exc.status == 400:
+                        failed_400 = True
+                        result["error_body"] = exc.error_body
+                        result = _finish_smoke(root, result, failed_http_400=True)
+                    else:
+                        result = _finish_smoke(root, result, reason=f"M6 smoke request failed: {exc}")
+                    run_finished = True
+                    break
+                except (RunnerError, OSError, ValueError, KeyError, TypeError) as exc:
+                    result = _finish_smoke(root, result,
+                                           reason=f"M6 smoke request outcome unknown: {type(exc).__name__}: {exc}")
+                    run_finished = True
+                    break
+                _kill_smoke_at(kill_at, "after_call")
+                try:
+                    response = json.loads(raw_response)
+                except (TypeError, ValueError):
+                    append_jsonl_durable(_smoke_results_path(root), {
+                        "custom_id": custom_id, "attempt_id": attempt_id,
+                        "smoke_run_id": smoke_run_id, "unit_key": unit["unit_key"],
+                        "raw_response": raw_response,
+                    })
+                    result["results"].append({"custom_id": custom_id, "attempt_id": attempt_id,
+                                              "unit_key": unit["unit_key"], "thinking_present": False,
+                                              "stop_reason": None, "answer_parse_status": "invalid_response"})
+                    continue
+                append_jsonl_durable(_smoke_results_path(root), {
+                    "custom_id": custom_id, "attempt_id": attempt_id,
+                    "smoke_run_id": smoke_run_id, "unit_key": unit["unit_key"],
+                    "result": {"type": "succeeded", "message": response},
+                })
+                _kill_smoke_at(kill_at, "after_raw_result")
+                usage = _smoke_usage(response)
+                if usage is not None:
+                    actual = (usage["input"] * PRICE_INPUT_DIRECT + usage["output"] * PRICE_OUTPUT_DIRECT) / 1_000_000
+                    with ledger_lock(root) as spend_path:
+                        append_spend(spend_path, {"event": "settle", "attempt_id": attempt_id,
+                                                  "method": "M6", "split": "dev", "phase": "smoke",
+                                                  "usd": round(actual, 8), "ts": utc_now(),
+                                                  "custom_id": custom_id})
+                _kill_smoke_at(kill_at, "after_settle")
+                if not isinstance(response, dict):
+                    result["results"].append({"custom_id": custom_id, "attempt_id": attempt_id,
+                                              "unit_key": unit["unit_key"], "thinking_present": False,
+                                              "stop_reason": None, "answer_parse_status": "invalid_response"})
+                    continue
+                thinking = _smoke_thinking(response)
+                answer = parse_json(_smoke_answer(response))
+                valid, parse_status = validate_output("M6", "primary", answer, windows_for(unit, "M6"))
+                stop_reason = response.get("stop_reason")
+                result["results"].append({"custom_id": custom_id, "attempt_id": attempt_id,
+                    "unit_key": unit["unit_key"], "thinking_chars": len(thinking),
+                    "thinking_present": bool(thinking), "stop_reason": stop_reason,
+                    "answer_parse_status": parse_status if not valid else "ok"})
+            if run_finished:
+                if result.get("status") == "retry":
+                    continue
+                return result
+            result = _finish_smoke(root, result, failed_http_400=failed_400)
             if result["status"] != "retry":
                 return result
         assert result is not None
@@ -752,16 +922,18 @@ def smoke_m6(root: Path, api: Any = api_call) -> dict[str, Any]:
 
 def submit_phase(root: Path, split: str, method: str, phase: str,
                  api: Any = api_call, kill_after_saved: bool = False,
-                 kill_after_post: bool = False) -> str:
+                 kill_after_post: bool = False,
+                 kill_after_reserve: bool = False) -> str:
     with writer_lock(root):
         _ensure_run_started_locked(root)
         return _submit_phase_locked(root, split, method, phase, api,
-                                    kill_after_saved, kill_after_post)
+                                    kill_after_saved, kill_after_post, kill_after_reserve)
 
 
 def _submit_phase_locked(root: Path, split: str, method: str, phase: str,
                          api: Any, kill_after_saved: bool,
-                         kill_after_post: bool = False) -> str:
+                         kill_after_post: bool = False,
+                         kill_after_reserve: bool = False) -> str:
     if method not in MAX_TOKENS:
         raise RunnerError("submit supports M1 through M7; M0 uses prepare")
     if split not in ("dev", "test"):
@@ -795,7 +967,7 @@ def _submit_phase_locked(root: Path, split: str, method: str, phase: str,
             for unit in units:
                 rows[unit["record_index"]] = {"record_index": unit["record_index"], "unit_key": unit["unit_key"],
                     "type": unit["type"], "layer": unit["layer"], "hypothesis": "", "strong": [], "weak": [], "none": [],
-                    "raw_parse_status": "skipped", "parse_status": "skipped", "skip_reason": reason, "usage_tokens": {"input": 0, "output": 0, "calls": 0}}
+                    "raw_parse_status": "skipped", "parse_status": "skipped", "skip_reason": reason}
             write_output(output_file, rows)
             return "skipped"
     all_units = units
@@ -880,7 +1052,7 @@ def _submit_phase_locked(root: Path, split: str, method: str, phase: str,
                 raise RunnerError("legacy manifest request plan differs; refusing to submit overlapping units")
             if last.get("status") in ("submitted", "collecting"):
                 return f"batch {last.get('batch_id')} is already submitted; collect it before continuing"
-            if last.get("status") in ("posting", "unknown", "ready", "rate_limited", "ambiguous"):
+            if last.get("status") in ("reserved", "posting", "unknown", "ready", "rate_limited", "ambiguous"):
                 last["status"] = "ambiguous"
                 last["ambiguous_at"] = utc_now()
                 manifest["ambiguous_attempts"] = int(manifest.get("ambiguous_attempts", 0)) + 1
@@ -894,16 +1066,27 @@ def _submit_phase_locked(root: Path, split: str, method: str, phase: str,
                     "created_at": utc_now(), "plan_fingerprint": plan_fingerprint,
                     "expected_unit_keys": [u["unit_key"] for u in eligible_units],
                     "expected_count": len(eligible_units), "chunks": []}
+    attempt_id = new_attempt_id()
+    updated_idmap: dict[str, dict[str, Any]] = {}
+    for request in requests:
+        previous_id = request["custom_id"]
+        metadata = idmap.pop(previous_id)
+        custom_id = f"a{attempt_id}_u{int(metadata['record_index']):04d}"
+        request["custom_id"] = custom_id
+        updated_idmap[custom_id] = metadata
+    idmap = updated_idmap
+    request_values = [clean_request(request) for request in requests]
+    request_bytes = json.dumps(request_values, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    if len(request_bytes) > BATCH_MAX_BYTES:
+        raise RunnerError("request chunk exceeds the 190 MB local safety limit")
+    request_sha256 = hashlib.sha256(request_bytes).hexdigest()
     reserve = estimated_usd(requests)
-    spend_path = root / "spend.jsonl"
-    spent, _ = spend_state(spend_path)
-    cap = float(os.environ.get("PART60_CAP", "8"))
+    spend_path = fixed_spend_path(root)
+    cap = env_cap()
     if cap > 8.0 and os.environ.get("PART60_CAP_OVERRIDE") != "1":
         raise RunnerError("cap above $8 requires PART60_CAP_OVERRIDE=1 and an explicitly recorded override")
-    if spent + reserve > cap + 1e-12:
-        raise RunnerError(f"cap refused submission: settled/reserved ${spent:.4f} plus conservative estimate ${reserve:.4f} exceeds ${cap:.2f}")
     chunk_index = len(manifest.get("chunks", []))
-    chunk_dir = mfpath.parent / f"chunk-{chunk_index:04d}"
+    chunk_dir = mfpath.parent / f"attempt-{attempt_id}"
     try:
         chunk_dir.mkdir(parents=True, exist_ok=False)
     except FileExistsError:
@@ -915,19 +1098,26 @@ def _submit_phase_locked(root: Path, split: str, method: str, phase: str,
         stream.flush()
         os.fsync(stream.fileno())
     write_json(chunk_dir / "idmap.json", idmap)
-    chunk = {"index": chunk_index, "attempt": chunk_index + 1, "directory": str(chunk_dir),
+    chunk = {"index": chunk_index, "attempt": chunk_index + 1, "attempt_id": attempt_id,
+             "directory": str(chunk_dir),
              "request_count": len(requests), "unit_keys": [u["unit_key"] for u in units],
              "request_sha256": request_sha256, "unit_set_sha256": unit_set_sha256,
              "reserved_usd": round(reserve, 8), "cap_limit_usd": cap,
              "cap_override": cap > 8.0, "created_at": utc_now(),
-             "status": "posting", "batch_id": None}
+             "status": "reserved", "batch_id": None}
+    with ledger_lock(root) as spend_path:
+        spent, _ = spend_state(spend_path)
+        if spent + reserve > cap + 1e-12:
+            raise RunnerError(f"cap refused submission: settled/reserved ${spent:.4f} plus conservative estimate ${reserve:.4f} exceeds ${cap:.2f}")
+        append_spend(spend_path, {"event": "reserve", "attempt_id": attempt_id, "method": method,
+                                  "split": split, "phase": phase, "chunk": chunk_index,
+                                  "reserved_usd": round(reserve, 8), "ts": utc_now(),
+                                  "request_count": len(requests)})
+    if kill_after_reserve:
+        os.kill(os.getpid(), 9)
     manifest["chunks"].append(chunk)
     write_json(mfpath, manifest)
-    spend_key = chunk_identity(split, method, phase, chunk_index, unit_set_sha256)
-    append_spend(spend_path, {"event": "reserve", "chunk_id": spend_key, "method": method,
-                              "split": split, "phase": phase, "chunk": chunk_index,
-                              "reserved_usd": round(reserve, 8), "ts": utc_now(),
-                              "request_count": len(requests)})
+    chunk["status"] = "posting"
     write_json(mfpath, manifest)
     body_obj = {"requests": request_values}
     try:
@@ -936,13 +1126,16 @@ def _submit_phase_locked(root: Path, split: str, method: str, phase: str,
         if kill_after_post:
             os.kill(os.getpid(), 9)
     except APIError as exc:
-        if exc.status in (400, 401, 403, 404, 413):
+        if exc.status is not None and 400 <= exc.status < 500 and exc.anthropic_error_body:
             chunk["status"] = "rejected"
             chunk["error"] = str(exc)
+            chunk["error_body"] = exc.error_body
             write_json(mfpath, manifest)
-            append_spend(spend_path, {"event": "release", "chunk_id": spend_key, "method": method,
-                                      "split": split, "phase": phase, "chunk": chunk_index,
-                                      "usd": 0.0, "ts": utc_now(), "reason": str(exc)})
+            with ledger_lock(root) as spend_path:
+                append_spend(spend_path, {"event": "release", "attempt_id": attempt_id, "method": method,
+                                          "split": split, "phase": phase, "chunk": chunk_index,
+                                          "usd": 0.0, "ts": utc_now(), "reason": str(exc),
+                                          "error_body": exc.error_body})
             for unit in units:
                 _record_phase_skip(rows, unit, method, phase, str(exc))
             write_output(output_file, rows)
@@ -979,7 +1172,15 @@ def response_text(result: dict[str, Any]) -> tuple[str | None, dict[str, int], s
     content = message.get("content", []) if isinstance(message, dict) else []
     text = "".join(part.get("text", "") for part in content if part.get("type") == "text")
     usage = message.get("usage", {}) if isinstance(message, dict) else {}
-    tokens = {"input": int(usage.get("input_tokens", 0)), "output": int(usage.get("output_tokens", 0)), "calls": 1}
+    if not isinstance(usage, dict) or "input_tokens" not in usage or "output_tokens" not in usage:
+        tokens = {}
+    else:
+        try:
+            input_tokens, output_tokens = int(usage["input_tokens"]), int(usage["output_tokens"])
+            tokens = ({"input": input_tokens, "output": output_tokens, "calls": 1}
+                      if input_tokens >= 0 and output_tokens >= 0 else {})
+        except (TypeError, ValueError):
+            tokens = {}
     return text, tokens, None, str(message.get("stop_reason") or "") or None
 
 
@@ -992,7 +1193,7 @@ def response_has_thinking(result: dict[str, Any]) -> bool:
 
 
 def _merge_result(method: str, phase: str, old: dict[str, Any], text: str | None,
-                  usage: dict[str, int], api_status: str | None,
+                  api_status: str | None,
                   stop_reason: str | None = None,
                   input_windows: Iterable[str] | None = None) -> dict[str, Any]:
     common = {k: old[k] for k in ("record_index", "unit_key", "type", "layer") if k in old}
@@ -1004,7 +1205,7 @@ def _merge_result(method: str, phase: str, old: dict[str, Any], text: str | None
     else:
         good, status = validate_output(method, phase, value, input_windows)
     entry: dict[str, Any] = {"parse_status": "ok" if good else "failed", "raw_parse_status": status,
-                             "usage_tokens": usage, "raw_response": text if text is not None else "",
+                             "raw_response": text if text is not None else "",
                              "stop_reason": stop_reason}
     if good:
         entry.update(value)
@@ -1012,13 +1213,20 @@ def _merge_result(method: str, phase: str, old: dict[str, Any], text: str | None
 
 
 def collect_phase(root: Path, split: str, method: str, phase: str, api: Any = api_call,
-                  max_polls: int = 12, poll_seconds: float = 5.0) -> str:
+                  max_polls: int = 12, poll_seconds: float = 5.0,
+                  kill_at: str | None = None) -> str:
     with writer_lock(root):
-        return _collect_phase_locked(root, split, method, phase, api, max_polls, poll_seconds)
+        return _collect_phase_locked(root, split, method, phase, api, max_polls, poll_seconds, kill_at)
+
+
+def _kill_collect_at(kill_at: str | None, stage: str) -> None:
+    if kill_at == stage:
+        os.kill(os.getpid(), 9)
 
 
 def _collect_phase_locked(root: Path, split: str, method: str, phase: str, api: Any,
-                          max_polls: int, poll_seconds: float) -> str:
+                          max_polls: int, poll_seconds: float,
+                          kill_at: str | None = None) -> str:
     mfpath = manifest_path(root, split, method, phase)
     if not mfpath.exists():
         raise RunnerError(f"no manifest for {method}/{split}/{phase}")
@@ -1041,15 +1249,20 @@ def _collect_phase_locked(root: Path, split: str, method: str, phase: str, api: 
     if status.get("processing_status") != "ended":
         raise RunnerError(f"batch {batch_id} not ready after {max_polls} status checks ({status.get('processing_status', 'unknown')}); rerun collect")
     raw_results = api("GET", f"/v1/messages/batches/{batch_id}/results")
-    parsed_results = {}
+    parsed_results: dict[str, dict[str, Any]] = {}
     for line in raw_results.splitlines():
         if line.strip():
             obj = json.loads(line)
             parsed_results[str(obj["custom_id"])] = obj
-    idmap = json.loads((Path(chunk["directory"]) / "idmap.json").read_text(encoding="utf-8"))
+    idmap_path = Path(chunk["directory"]) / "idmap.json"
+    idmap = json.loads(idmap_path.read_text(encoding="utf-8"))
+    write_jsonl_atomic(Path(chunk["directory"]) / "raw-results.jsonl",
+                       (parsed_results[key] for key in sorted(parsed_results)))
+    _kill_collect_at(kill_at, "after_raw_results")
+
     output_file = output_path(root, split, method)
     rows = read_output(output_file)
-    total_usage = {"input": 0, "output": 0, "calls": 0}
+    usage_by_custom_id: dict[str, dict[str, int]] = {}
     truncations = 0
     m6_thinking_results = 0
     for custom_id, meta in idmap.items():
@@ -1058,29 +1271,23 @@ def _collect_phase_locked(root: Path, split: str, method: str, phase: str, api: 
             text, usage, api_error, stop_reason = None, {}, "missing_batch_result", None
         else:
             text, usage, api_error, stop_reason = response_text(result)
+        if usage:
+            usage_by_custom_id[custom_id] = usage
         if stop_reason == "max_tokens":
             truncations += 1
         thinking_present = bool(result and response_has_thinking(result))
         if method == "M6" and thinking_present:
             m6_thinking_results += 1
-        for k in ("input", "output", "calls"):
-            total_usage[k] += int(usage.get(k, 0))
         rec_i = int(meta["record_index"])
         base = {"record_index": rec_i, "unit_key": meta["unit_key"], "type": meta["unit_type"], "layer": int(meta["layer"])}
-        merged = _merge_result(method, phase, base, text, usage, api_error, stop_reason,
+        merged = _merge_result(method, phase, base, text, api_error, stop_reason,
                                input_windows=meta.get("input_windows"))
         if method == "M6":
             merged["thinking_present"] = thinking_present
         old = rows.get(rec_i, base)
-        attempt_history = dict(old.get("generation_attempts_by_phase", {}))
-        phase_attempts = list(attempt_history.get(phase, []))
-        phase_attempts.append({"attempt": int(chunk.get("attempt", int(chunk["index"]) + 1)),
-                               "parse_status": merged["parse_status"],
-                               "raw_parse_status": merged["raw_parse_status"],
-                               "stop_reason": merged.get("stop_reason")})
-        attempt_history[phase] = phase_attempts
-        old["generation_attempts_by_phase"] = attempt_history
-        usage_by_phase = dict(old.get("usage_by_phase", {}))
+        old.pop("usage_tokens", None)
+        old.pop("usage_by_phase", None)
+        old.pop("generation_attempts_by_phase", None)
         if method == "M3" and phase == "selection":
             old["selection"] = merged
             if merged["parse_status"] == "ok":
@@ -1121,21 +1328,33 @@ def _collect_phase_locked(root: Path, split: str, method: str, phase: str, api: 
         else:
             old.update(merged)
             old.update({"record_index": rec_i, "unit_key": base["unit_key"], "type": base["type"], "layer": base["layer"]})
-        prior_usage = usage_by_phase.get(phase, {"input": 0, "output": 0, "calls": 0})
-        usage_by_phase[phase] = {key: int(prior_usage.get(key, 0)) + int(usage.get(key, 0))
-                                 for key in ("input", "output", "calls")}
-        usage_total = {k: sum(int(v.get(k, 0)) for v in usage_by_phase.values()) for k in ("input", "output", "calls")}
-        old["usage_by_phase"] = usage_by_phase
-        old["usage_tokens"] = usage_total
         rows[rec_i] = old
     write_output(output_file, rows)
+    _kill_collect_at(kill_at, "after_row_write")
+
+    total_usage = {key: sum(int(value.get(key, 0)) for value in usage_by_custom_id.values())
+                   for key in ("input", "output", "calls")}
+    usage_complete = len(usage_by_custom_id) == len(idmap)
     actual = (total_usage["input"] * PRICE_INPUT + total_usage["output"] * PRICE_OUTPUT) / 1_000_000
-    spend_key = chunk_identity(split, method, phase, int(chunk["index"]), str(chunk.get("unit_set_sha256", batch_id)))
-    append_spend(root / "spend.jsonl", {"event": "settle", "chunk_id": spend_key, "batch_id": batch_id, "method": method, "split": split,
-                                         "phase": phase, "chunk": chunk["index"], "input_tokens": total_usage["input"],
-                                         "output_tokens": total_usage["output"], "usd": round(actual, 8), "ts": utc_now()})
-    chunk["usage_tokens"] = total_usage
-    chunk["actual_usd"] = round(actual, 8)
+    attempt_id = str(chunk["attempt_id"])
+    with ledger_lock(root) as spend_path:
+        _, ledger = spend_state(spend_path)
+        ledger_row = ledger.get(attempt_id, {})
+        if usage_complete and ledger_row.get("event") == "reserve":
+            append_spend(spend_path, {"event": "settle", "attempt_id": attempt_id,
+                                      "batch_id": batch_id, "method": method, "split": split,
+                                      "phase": phase, "chunk": chunk["index"],
+                                      "usd": round(actual, 8), "ts": utc_now()})
+            chunk["actual_usd"] = round(actual, 8)
+            chunk["settlement_status"] = "settled"
+        elif usage_complete and ledger_row.get("event") == "settle":
+            chunk["actual_usd"] = float(ledger_row.get("usd", 0.0))
+            chunk["settlement_status"] = "settled"
+        else:
+            chunk["actual_usd"] = None
+            chunk["settlement_status"] = "reserved_unknown_result"
+    _kill_collect_at(kill_at, "after_settle")
+
     chunk["truncations"] = truncations
     if method == "M6":
         chunk["thinking_count"] = m6_thinking_results
@@ -1150,7 +1369,6 @@ def _collect_phase_locked(root: Path, split: str, method: str, phase: str, api: 
     chunk["status"] = "complete"
     chunk["completed_at"] = utc_now()
     manifest["remaining_failed_count"] = failed_count
-    manifest["max_tokens_truncations"] = int(manifest.get("max_tokens_truncations", 0)) + truncations
     if generation_failure_exceeds_ten_percent(successful_count, expected_count):
         chunk["status"] = "dropped"
         chunk["error"] = f"phase failed {failed_count}/{expected_count} requests, exceeding the registered 10% rule"
@@ -1158,16 +1376,18 @@ def _collect_phase_locked(root: Path, split: str, method: str, phase: str, api: 
     else:
         manifest["phase_status"] = "retryable_failures" if failed_count else "complete"
     write_json(mfpath, manifest)
+    _kill_collect_at(kill_at, "after_manifest")
     suffix = (f"; thinking {m6_thinking_results}/{len(idmap)} ({m6_thinking_results/len(idmap):.1%})"
               if method == "M6" and idmap else "")
     truncation_suffix = f"; {truncations} max_tokens truncation(s)" if truncations else ""
+    settlement_suffix = f"; ${actual:.4f}" if usage_complete else "; unresolved usage retained in reserve"
     if manifest["phase_status"] == "dropped":
         return (f"collected {len(idmap)} requests; phase dropped with {failed_count}/{expected_count} failures "
                 f"under the registered 10% rule; usage {total_usage['input']} in / {total_usage['output']} out; "
-                f"${actual:.4f}{truncation_suffix}{suffix}")
+                f"{settlement_suffix}{truncation_suffix}{suffix}")
     retry_suffix = f"; {failed_count} failed unit(s) remain for retry" if failed_count else ""
     return (f"collected {len(idmap)} requests; usage {total_usage['input']} in / {total_usage['output']} out; "
-            f"${actual:.4f}{truncation_suffix}{retry_suffix}{suffix}")
+            f"{settlement_suffix}{truncation_suffix}{retry_suffix}{suffix}")
 
 
 def _choose_m3_winners_locked(root: Path, split: str) -> int:
@@ -1245,12 +1465,12 @@ def _prepare_m0_locked(root: Path, split: str) -> int:
             out[unit["record_index"]] = {"record_index": unit["record_index"], "unit_key": unit["unit_key"],
                 "type": unit["type"], "layer": unit["layer"], "hypothesis": labels.get(unit["record_index"], ""),
                 "strong": texts[:4], "weak": [], "none": [], "parse_status": "failed", "raw_parse_status": "baseline_missing_or_incomplete",
-                "usage_tokens": {"input": 0, "output": 0, "calls": 0}}
+                }
         else:
             out[unit["record_index"]] = {"record_index": unit["record_index"], "unit_key": unit["unit_key"],
                 "type": unit["type"], "layer": unit["layer"], "hypothesis": labels.get(unit["record_index"], ""),
                 "strong": texts, "weak": [], "none": [], "parse_status": "ok", "raw_parse_status": "reused_part58_baseline",
-                "usage_tokens": {"input": 0, "output": 0, "calls": 0}}
+                }
     path = output_path(root, split, "M0")
     write_output(path, out)
     return sum(row["parse_status"] == "ok" for row in out.values())
@@ -1272,7 +1492,7 @@ def main(argv: list[str] | None = None) -> int:
     submit.add_argument("--method", choices=[f"M{i}" for i in range(1, 8)], required=True)
     submit.add_argument("--split", choices=["dev", "test"], required=True)
     submit.add_argument("--phase", default="primary", choices=["primary", "selection", "fresh", "round1", "round2"])
-    submit.add_argument("--cap", type=float, default=8.0)
+    submit.add_argument("--cap", type=cap_arg, default=8.0)
     smoke = sub.add_parser("smoke", help="run the required five-unit M6 thinking smoke")
     smoke.add_argument("--method", choices=["M6"], required=True)
     listing = sub.add_parser("listing", help="read-only list of batches created during this run")
@@ -1280,6 +1500,10 @@ def main(argv: list[str] | None = None) -> int:
     collect.add_argument("--method", choices=[f"M{i}" for i in range(1, 8)], required=True)
     collect.add_argument("--split", choices=["dev", "test"], required=True)
     collect.add_argument("--phase", default="primary", choices=["primary", "selection", "fresh", "round1", "round2"])
+    ledger = sub.add_parser("ledger", help="manage unresolved spend reservations")
+    ledger_sub = ledger.add_subparsers(dest="ledger_command", required=True)
+    retire = ledger_sub.add_parser("retire", help="write a dated operator retirement for one attempt")
+    retire.add_argument("attempt_id")
     choose = sub.add_parser("select-m3", help="choose M3 winner from selection activations")
     choose.add_argument("--split", choices=["dev", "test"], required=True)
     args = parser.parse_args(argv)
@@ -1301,6 +1525,9 @@ def main(argv: list[str] | None = None) -> int:
             print(submit_phase(args.root, args.split, args.method, args.phase))
         elif args.command == "collect":
             print(collect_phase(args.root, args.split, args.method, args.phase))
+        elif args.command == "ledger" and args.ledger_command == "retire":
+            retire_attempt(args.root, args.attempt_id)
+            print(f"retired unresolved attempt {args.attempt_id} at {utc_now()}")
         else:
             print(f"selected {choose_m3_winners(args.root, args.split)} M3 winners")
         return 0

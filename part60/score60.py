@@ -789,9 +789,10 @@ def verify_scoring(root: Path, split: str, methods: list[str], model_dir: str | 
             target = score_path(root, split, "M0", "primary")
             if not target.is_file():
                 raise ScoreError(f"missing cached baseline score matrix: {target}")
-            data = np.load(target, allow_pickle=False)
-            if [str(x) for x in data["unit_keys"]] != [u["unit_key"] for u in units]:
-                raise ScoreError("M0 score matrix unit columns do not match the selected split")
+            if not (root / "out" / split / "M0.jsonl").is_file():
+                raise ScoreError(f"missing required generation output: {root / 'out' / split / 'M0.jsonl'}")
+            if not entries_for_phase(read_jsonl(root / "out" / split / "M0.jsonl"), "M0", "primary"):
+                raise ScoreError("M0 generation output has no scoreable baseline sentences")
             continue
         output_path = root / "out" / split / f"{method}.jsonl"
         if not output_path.is_file():
@@ -809,7 +810,8 @@ def verify_scoring(root: Path, split: str, methods: list[str], model_dir: str | 
                 or str(data["model_revision"]) != MODEL_REVISION
                 or str(data["dtype"]) != dtype or str(data["device"]) != resolved_device(device)
                 or int(data["batch_size"]) != int(batch_size)
-                or str(data["backend"]) != SCORE_BACKEND):
+                or str(data["backend"]) != SCORE_BACKEND
+                or str(data["model_dir"]) != str(Path(model_dir).resolve())):
             raise ScoreError(f"saved activation metadata or inputs do not match {method}/{phase}: {target}")
 
 

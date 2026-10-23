@@ -176,34 +176,83 @@ def unit_metric(row: dict[str, Any] | None, data: Any | None, sid_rows: dict[str
     return tier_statistics(strong, weak, none, threshold, parsed=True, m0=method == "M0")
 
 
+def _phases_for_method(method: str) -> tuple[str, ...]:
+    return {"M3": ("selection", "fresh"), "M5": ("round1", "round2")}.get(method, ("primary",))
+
+
+def _raw_results_by_custom_id(root: Path, split: str, method: str,
+                              phase: str | None = None) -> dict[str, dict[str, Any]]:
+    """Load durable raw API results; custom_id is the deduplication key."""
+    import gen60
+    phases = (phase,) if phase else _phases_for_method(method)
+    results: dict[str, dict[str, Any]] = {}
+    for current_phase in phases:
+        path = gen60.manifest_path(root, split, method, current_phase)
+        if not path.is_file():
+            continue
+        manifest = read_json(path)
+        for chunk in manifest.get("chunks", []):
+            raw_path = Path(chunk["directory"]) / "raw-results.jsonl"
+            if not raw_path.is_file():
+                continue
+            for result in read_jsonl(raw_path):
+                custom_id = result.get("custom_id")
+                if custom_id is not None:
+                    results[str(custom_id)] = result
+    return results
+
+
+def _usage_from_raw_result(result: dict[str, Any]) -> dict[str, int] | None:
+    wrapper = result.get("result")
+    message = wrapper.get("message") if isinstance(wrapper, dict) else None
+    usage = message.get("usage") if isinstance(message, dict) else None
+    if not isinstance(usage, dict) or "input_tokens" not in usage or "output_tokens" not in usage:
+        return None
+    try:
+        input_tokens, output_tokens = int(usage["input_tokens"]), int(usage["output_tokens"])
+    except (TypeError, ValueError):
+        return None
+    if input_tokens < 0 or output_tokens < 0:
+        return None
+    return {"input": input_tokens, "output": output_tokens, "calls": 1}
+
+
+def _sum_raw_usage(results: dict[str, dict[str, Any]]) -> dict[str, int]:
+    unique_usage = {custom_id: usage for custom_id, result in results.items()
+                    if (usage := _usage_from_raw_result(result)) is not None}
+    return {key: sum(value[key] for value in unique_usage.values())
+            for key in ("input", "output", "calls")}
+
+
 def cost_for(rows: list[dict[str, Any]], root: Path | None = None,
              split: str | None = None, method: str | None = None) -> dict[str, Any]:
     import gen60
-    input_tokens = output_tokens = calls = 0
-    for row in rows:
-        usage = row.get("usage_tokens", {})
-        input_tokens += int(usage.get("input", 0))
-        output_tokens += int(usage.get("output", 0))
-        calls += int(usage.get("calls", 0))
-    usd = (input_tokens * gen60.PRICE_INPUT_BATCH + output_tokens * gen60.PRICE_OUTPUT_BATCH) / 1_000_000
+    batch_usage = {"input": 0, "output": 0, "calls": 0}
+    direct_usage = {"input": 0, "output": 0, "calls": 0}
     reserved_usd = 0.0
-    if root is not None and split == "dev" and method == "M6":
-        path = root / "spend.jsonl"
-        smoke_entries: dict[str, dict[str, Any]] = {}
-        if path.is_file():
-            for entry in read_jsonl(path):
-                if entry.get("method") == "M6" and entry.get("split") == split and entry.get("phase") == "smoke":
-                    identity = str(entry.get("chunk_id") or "")
-                    if identity:
-                        smoke_entries.setdefault(identity, {}).update(entry)
-        for entry in smoke_entries.values():
-            if entry.get("event") == "settle":
-                input_tokens += int(entry.get("input_tokens", 0))
-                output_tokens += int(entry.get("output_tokens", 0))
-                calls += int(entry.get("calls", 0))
-                usd += float(entry.get("usd", 0.0))
-            elif entry.get("event") == "reserve":
-                reserved_usd += float(entry.get("reserved_usd", 0.0))
+    if root is not None and split is not None and method is not None:
+        batch_usage = _sum_raw_usage(_raw_results_by_custom_id(root, split, method))
+        if method == "M6" and split == "dev":
+            smoke_path = root / "out" / "smoke-M6-results.jsonl"
+            if smoke_path.is_file():
+                smoke_results = {}
+                for result in read_jsonl(smoke_path):
+                    if result.get("custom_id") is not None:
+                        smoke_results[str(result["custom_id"])] = result
+                direct_usage = _sum_raw_usage(smoke_results)
+        ledger_path = gen60.fixed_spend_path(root)
+        if ledger_path.is_file():
+            _, ledger = gen60.spend_state(ledger_path)
+            reserved_usd = sum(float(entry.get("reserved_usd", 0.0)) for entry in ledger.values()
+                               if entry.get("event") == "reserve"
+                               and entry.get("method") == method and entry.get("split") == split)
+    input_tokens = batch_usage["input"] + direct_usage["input"]
+    output_tokens = batch_usage["output"] + direct_usage["output"]
+    calls = batch_usage["calls"] + direct_usage["calls"]
+    usd = ((batch_usage["input"] * gen60.PRICE_INPUT_BATCH
+            + batch_usage["output"] * gen60.PRICE_OUTPUT_BATCH
+            + direct_usage["input"] * gen60.PRICE_INPUT_DIRECT
+            + direct_usage["output"] * gen60.PRICE_OUTPUT_DIRECT) / 1_000_000)
     return {"input_tokens": input_tokens, "output_tokens": output_tokens, "calls": calls,
             "usd": usd, "reserved_usd": reserved_usd,
             "usd_per_unit": usd / len(rows) if rows else None}
@@ -376,19 +425,18 @@ def generation_failure_report(rows: list[dict[str, Any]], method: str, expected:
     return failures
 
 
-def truncation_report(rows: list[dict[str, Any]], method: str) -> dict[str, int]:
-    phases = {"M3": ("selection", "fresh"), "M5": ("round1", "round2")}.get(method, ("primary",))
+def truncation_report(rows: list[dict[str, Any]], method: str, root: Path | None = None,
+                      split: str | None = None) -> dict[str, int]:
+    if root is None or split is None:
+        return {}
+    phases = _phases_for_method(method)
     result: dict[str, int] = {}
     for phase in phases:
-        count = 0
-        for row in rows:
-            entry = row.get(phase, {}) if method in ("M3", "M5") else row
-            attempts = row.get("generation_attempts_by_phase", {}).get(phase, [])
-            if isinstance(attempts, list) and attempts:
-                count += sum(attempt.get("raw_parse_status") == "max_tokens"
-                             or attempt.get("stop_reason") == "max_tokens" for attempt in attempts)
-            elif isinstance(entry, dict) and (entry.get("raw_parse_status") == "max_tokens" or entry.get("stop_reason") == "max_tokens"):
-                count += 1
+        raw_results = _raw_results_by_custom_id(root, split, method, phase)
+        count = sum(isinstance(raw.get("result"), dict)
+                    and isinstance(raw["result"].get("message"), dict)
+                    and raw["result"]["message"].get("stop_reason") == "max_tokens"
+                    for raw in raw_results.values())
         if count:
             result[phase] = count
     return result
@@ -474,10 +522,11 @@ def prediction_table(metrics: dict[str, dict[str, Any]], m5_round1: dict[str, An
     if split != "test":
         add("60j", "No tested method beats both M1 and M0 test gaps by at least 5 pp", None,
             "unscored until the registered test phase")
+        rows[-1]["status"] = "unscored"
     else:
         if not best_dev:
             j_ok = None
-            evidence = "no dev candidate advanced; only the single dev-selected candidate can be tested"
+            evidence = "no dev candidate advanced; no test candidate was selected"
         else:
             comparisons = ("M0",) if best_dev == "M1" else ("M0", "M1")
             leads: dict[str, dict[str, float | None]] = {}
@@ -508,6 +557,10 @@ def prediction_table(metrics: dict[str, dict[str, Any]], m5_round1: dict[str, An
             j_ok = None if missing else not improved
             evidence = f"tested candidate={best_dev}; only this single dev-selected candidate is tested; point leads over {','.join(comparisons)} for positive-only/full-rule={json.dumps(leads, sort_keys=True)}; advancement requires a point lead of >=5 pp for both (the registered rule); the 95% interval is reported beside it, not required; recommendation={'candidate' if improved and not missing else 'M0'}"
         add("60j", "No tested method beats both M1 and M0 test gaps by at least 5 pp", j_ok, evidence)
+        if not best_dev:
+            rows[-1]["status"] = "held"
+        elif j_ok is not False:
+            rows[-1]["status"] = "unscored (one candidate tested)"
     return rows
 
 
@@ -756,7 +809,7 @@ def run_analysis(root: Path, split: str) -> dict[str, Any]:
     for method in [f"M{i}" for i in range(1, 8)]:
         path = root / "out" / split / f"{method}.jsonl"
         if path.is_file():
-            counts = truncation_report(read_jsonl(path), method)
+            counts = truncation_report(read_jsonl(path), method, root, split)
             if counts:
                 truncations[method] = counts
     return {"split": split, "metrics": metrics, "m5_round1": m5_round1, "dev_selection": leader,
@@ -780,9 +833,14 @@ def write_reports(root: Path, analyses: list[dict[str, Any]]) -> tuple[Path, Pat
         methods = ["M0", "M1"]
         if candidate and candidate not in methods:
             methods.append(candidate)
+        analyzed = set(dev.get("metrics", {}))
+        analyzed.update(str(item.get("method")) for item in dev.get("skipped_methods", []))
+        expected = {f"M{i}" for i in range(8)}
+        selection_status = "ready" if expected.issubset(analyzed) else "incomplete"
         write_json(root / "test-selection.json", {
-            "status": "ready", "created_at": datetime.now(timezone.utc).isoformat(),
+            "status": selection_status, "created_at": datetime.now(timezone.utc).isoformat(),
             "candidate": candidate, "methods": methods, "dev_selection": selection,
+            "missing_dev_methods": sorted(expected - analyzed),
             "analysis_input_sha256": analysis_input_fingerprint(root),
             "rule": "generated by analyze60.py --split dev; advancement uses at least five percentage points on both positive-only and full-rule gap leads over M0; 95% paired-bootstrap intervals are reported and are not a gate",
         })
