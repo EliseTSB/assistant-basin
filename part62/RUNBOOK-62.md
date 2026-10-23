@@ -111,12 +111,18 @@ custom IDs. Ambiguous attempts remain counted. `run-all` stores
 `part62-run-all.json` for Haiku and `part62-run-all-opus.json` for Opus, with one
 durable record and status per calibration or answer attempt. Its lock serializes
 reruns. A rerun collects and settles a saved batch id before advancing. A
-definitively rejected POST with a released reserve can be retried on the next
-`run-all`; it receives a new attempt and reserve.
-The raw POST response is fsynced before its id is parsed. If the process dies
-after POST but before the response is persisted, the outcome is unknown and
-the reserve stays counted. After checking the provider and ledger, an operator
-can retire that attempt:
+definitively rejected answer POST with a released reserve is safely retried on
+the next `run-all`; it receives a new attempt and reserve. A rejected
+calibration POST requires `--retry-calibration` before a new attempt is made.
+The raw POST response is fsynced before its id is parsed. If saving that response
+fails, the accepted batch id is persisted in the chunk record before more work;
+if that record also cannot be saved, the raw response is printed to stderr for
+recovery. If the response file was saved but the normal run-record update failed,
+the chunk is marked `response-saved`; resume `run-all` to collect it. Retirement
+refuses that state, and `--retry-answers` cannot resubmit it. If the process dies
+before either the response or its batch id can be persisted, the outcome is
+unknown and the reserve stays counted. After checking the provider and ledger,
+an operator can retire that attempt:
 
 ```sh
 python3 part62/blind62.py retire ATTEMPT_ID --who OPERATOR \
@@ -124,8 +130,9 @@ python3 part62/blind62.py retire ATTEMPT_ID --who OPERATOR \
 ```
 
 The ledger records retirement while retaining the reserve. The retire command
-refuses a chunk whose batch id is already recorded; resume `run-all` to collect
-that batch instead. A retired calibration does not authorize Opus. To retry a
+accepts only `part62-haiku` or `part62-opus` attempts whose submission id maps to
+the matching Part 62 run chunk. It refuses a chunk whose batch id is already
+recorded; resume `run-all` to collect that batch instead. A retired calibration does not authorize Opus. To retry a
 retired or incomplete calibration, run the explicit command printed by the
 refusal; it appends a new calibration attempt with a new reserve while preserving
 the prior attempt:
@@ -141,8 +148,10 @@ A retired answer chunk also remains counted. After reviewing the unknown outcome
 the explicit `--retry-answers` command printed by the refusal submits that chunk
 again under a new reserve. For settled answer chunks with errored, expired,
 truncated, or unlabelled rows, `--retry-failed-answers` submits only those rows
-under new reserves. Successful rows from the earlier batch remain in the final
-labels. If an answer POST was rejected but its reserve is still active, retire it
+that have not already used one `--retry-failed-answers` retry per answer row
+in this persistent run. The retry chunk records the custom ids, so repeating
+the flag cannot re-pay the same row.
+Successful rows from the earlier batch remain in the final labels. If an answer POST was rejected but its reserve is still active, retire it
 using the printed command first, then rerun with `--retry-answers`.
 
 To inspect a known batch before rerunning:

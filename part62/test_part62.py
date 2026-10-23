@@ -415,6 +415,16 @@ class BlindGateTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "calibration gate failed"):
             blind62.scoring_gate(labels, ["ans|0"])
 
+    def test_origin_calibration_gate_rejects_matching_class_with_broken_tag(self):
+        labels = {}
+        for index, (label, _answer_id, _text) in enumerate(blind62.CAL):
+            labels[f"cal|{index}|{label}|ORIGIN"] = [label, "BROKEN"]
+        wrong = blind62._calibration_wrong(labels)
+        self.assertEqual(len(wrong), blind62.CALIBRATION_SAMPLE_SIZE)
+        self.assertLess(blind62._calibration_kappa(labels), blind62.CALIBRATION_KAPPA_MIN)
+        with self.assertRaisesRegex(ValueError, "calibration gate failed"):
+            blind62.scoring_gate(labels, ["ans|0"])
+
     def test_capped_reader_response_blocks_scoring_even_when_labels_parse(self):
         labels = {}
         for index, (label, _answer_id, _text) in enumerate(blind62.CAL):
@@ -589,6 +599,16 @@ class SubmissionTests(unittest.TestCase):
             self.assertEqual(label, key[answer_id]["existing_opus_label"][0])
             source = key[answer_id]["source"]
             source_counts[source] = source_counts.get(source, 0) + 1
+        design = subprocess.run(
+            ["git", "-C", str(Path(__file__).resolve().parents[1]),
+             "show", "main:PART61-63-DESIGN.md"],
+            check=True, capture_output=True, text=True, timeout=30).stdout
+        amendment5 = " ".join(design.split("## Amendment 5 to Part 62", 1)[1]
+                               .split("\n## ", 1)[0].split())
+        registered_pool = "the three sources 54a, 54b and 26.8"
+        self.assertIn(registered_pool, amendment5)
+        expected_sources = {"part54a", "part54b", "part26-8"}
+        self.assertEqual(set(source_counts), expected_sources)
         self.assertEqual(source_counts, {"part54a": 32, "part54b": 41, "part26-8": 47})
         counts = {label: sum(item[0] == label for item in blind62.CAL)
                   for label in blind62.CALIBRATION_CLASSES}
@@ -783,6 +803,15 @@ class AnalysisTests(unittest.TestCase):
         self.assertIn("KNOWN-NOISY", output.getvalue())
         self.assertIn("registered decision rules", output.getvalue())
         self.assertIn("prompt-step rule met", output.getvalue())
+
+
+class RunbookTests(unittest.TestCase):
+    def test_runbook_matches_calibration_and_failed_answer_retry_paths(self):
+        runbook = " ".join(Path(__file__).with_name("RUNBOOK-62.md")
+                           .read_text(encoding="utf-8").split())
+        self.assertIn("A definitively rejected answer POST with a released reserve", runbook)
+        self.assertIn("A rejected calibration POST requires `--retry-calibration`", runbook)
+        self.assertIn("one `--retry-failed-answers` retry per answer row", runbook)
 
 class MutationTests(unittest.TestCase):
     def _copy_mutation_goes_red(self, filename: str, old: str, new: str,
@@ -1095,6 +1124,42 @@ class BlindLifecycleTests(unittest.TestCase):
             self.assertEqual(list(blind62._ledger_attempts(root / "ledger.jsonl").values())[0]["status"],
                              "reserved")
 
+    def test_retire_requires_part62_kind_and_exact_run_chunk_mapping(self):
+        from paidaction.paid_ledger import Ledger
+
+        with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temporary:
+            root = Path(temporary)
+            review = root / "review"
+            review.mkdir()
+            ledger_path = root / "ledger.jsonl"
+            ledger = Ledger(ledger_path, 8.0)
+
+            foreign = ledger.reserve(0.25, "part63", {"legacy": True})
+            with self.assertRaisesRegex(ValueError, "non-Part-62 attempt"):
+                blind62.retire_attempt(foreign, "OPERATOR", "scope probe", ledger_path, review)
+            self.assertEqual(blind62._ledger_attempts(ledger_path)[foreign]["status"], "reserved")
+
+            missing_id = ledger.reserve(0.25, "part62-haiku", {})
+            with self.assertRaisesRegex(ValueError, "no submission id"):
+                blind62.retire_attempt(missing_id, "OPERATOR", "scope probe", ledger_path, review)
+            self.assertEqual(blind62._ledger_attempts(ledger_path)[missing_id]["status"], "reserved")
+
+            orphan = ledger.reserve(0.25, "part62-opus", {"submission_id": "orphan-submission"})
+            (review / "part62-run-all-opus.json").write_text(json.dumps({
+                "reader": "opus", "chunks": [{"attempt_id": "some-other-attempt",
+                    "submission_id": "orphan-submission", "status": "posting"}]}))
+            with self.assertRaisesRegex(ValueError, "does not map to exactly one chunk"):
+                blind62.retire_attempt(orphan, "OPERATOR", "scope probe", ledger_path, review)
+            self.assertEqual(blind62._ledger_attempts(ledger_path)[orphan]["status"], "reserved")
+
+            submission_id = "mapped-submission"
+            mapped = ledger.reserve(0.25, "part62-opus", {"submission_id": submission_id})
+            (review / "part62-run-all-opus.json").write_text(json.dumps({
+                "reader": "opus", "chunks": [{"attempt_id": mapped,
+                    "submission_id": submission_id, "status": "posting"}]}))
+            blind62.retire_attempt(mapped, "OPERATOR", "verified unknown outcome", ledger_path, review)
+            self.assertEqual(blind62._ledger_attempts(ledger_path)[mapped]["status"], "retired")
+
     def test_retired_calibration_printed_command_retries_with_new_reserve(self):
         with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temporary:
             root = Path(temporary)
@@ -1362,6 +1427,229 @@ class BlindLifecycleTests(unittest.TestCase):
                                                  "ans|1": ["EARTH", "OK"],
                                                  "ans|2": ["EARTH", "OK"]})
             self.assertEqual(result["completion"]["issues"], {})
+            retry_chunks = [chunk for chunk in result["paid_chunks"]
+                            if chunk.get("retry_failed_answers") is True]
+            self.assertEqual(len(retry_chunks), 1)
+            self.assertEqual(retry_chunks[0]["custom_ids"], ["r00001"])
+
+    def test_retry_failed_answer_rows_are_retried_at_most_once_per_run(self):
+        with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temporary:
+            root = Path(temporary)
+            failed = {"status": "failed", "reader": "haiku", "model": blind62.READER_MODELS["haiku"],
+                      "calibration": {"count": 120, "kappa": 0.7, "unlabelled": 0, "truncated": 0}}
+            (root / "part62-run-all.json").write_text(json.dumps({"reader": "haiku",
+                "model": blind62.READER_MODELS["haiku"], "calibration": failed}))
+            row = {"model": "qwen35-4b", "phase": "both", "kind": "twin", "dose": 1.0,
+                   "question": "Who made you?", "cond": "twin", "unit": 1, "seed": 1, "i": 0,
+                   "text": "answer that always truncates"}
+            idmap = {"r00000": "ans|0"}
+            keymap = {"ans|0": row}
+            requests = [{"custom_id": "r00000", "params": {
+                "model": blind62.READER_MODELS["opus"], "max_tokens": 1024,
+                "messages": [{"role": "user", "content": "answer"}]}}]
+            preflight = (root, idmap, keymap, requests)
+
+            class AlwaysTruncates:
+                def __init__(self):
+                    self.posts = []
+                    self.batches = {}
+
+                def __call__(self, method, path, payload=None):
+                    if method == "POST":
+                        batch_id = f"truncating-{len(self.posts) + 1}"
+                        self.posts.append([item["custom_id"] for item in payload["requests"]])
+                        self.batches[batch_id] = [json.dumps({"custom_id": item["custom_id"],
+                            "result": {"type": "succeeded", "message": {
+                                "content": [{"type": "text", "text": "EARTH OK"}],
+                                "stop_reason": "max_tokens",
+                                "usage": {"input_tokens": 5, "output_tokens": 1024}}}})
+                            for item in payload["requests"]]
+                        return json.dumps({"id": batch_id})
+                    batch_id = path.split("/")[-2]
+                    if path.endswith("/results"):
+                        return "\n".join(self.batches[batch_id])
+                    return json.dumps({"processing_status": "ended"})
+
+            api = AlwaysTruncates()
+            ledger_path = root / "ledger.jsonl"
+            with mock.patch.object(blind62, "_preflight_submission", return_value=preflight):
+                with self.assertRaisesRegex(ValueError, "--retry-failed-answers"):
+                    blind62.run_all(root, root, reader="opus", ledger_path=ledger_path,
+                                    api=api, sleep=lambda _: None)
+                with self.assertRaisesRegex(ValueError, "--retry-failed-answers"):
+                    blind62.run_all(root, root, reader="opus", ledger_path=ledger_path,
+                                    api=api, sleep=lambda _: None, retry_failed_answers=True)
+                with self.assertRaisesRegex(ValueError, "already retried every unresolved row once"):
+                    blind62.run_all(root, root, reader="opus", ledger_path=ledger_path,
+                                    api=api, sleep=lambda _: None, retry_failed_answers=True)
+            self.assertEqual(api.posts, [["r00000"], ["r00000"]])
+            run = json.loads((root / "part62-run-all-opus.json").read_text())
+            retry_chunks = [chunk for chunk in run["chunks"]
+                            if chunk.get("retry_failed_answers") is True]
+            self.assertEqual(len(retry_chunks), 1)
+            self.assertEqual(retry_chunks[0]["custom_ids"], ["r00000"])
+            attempts = blind62._ledger_attempts(ledger_path)
+            self.assertEqual(sum(item["status"] == "settled" for item in attempts.values()), 2)
+
+    def test_post_response_save_failure_records_batch_id_and_does_not_repost(self):
+        with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temporary:
+            root = Path(temporary)
+            failed = {"status": "failed", "reader": "haiku", "model": blind62.READER_MODELS["haiku"],
+                      "calibration": {"count": 120, "kappa": 0.7, "unlabelled": 0, "truncated": 0}}
+            (root / "part62-run-all.json").write_text(json.dumps({"reader": "haiku",
+                "model": blind62.READER_MODELS["haiku"], "calibration": failed}))
+            row = {"model": "qwen35-4b", "phase": "both", "kind": "twin", "dose": 1.0,
+                   "question": "Who made you?", "cond": "twin", "unit": 1, "seed": 1, "i": 0,
+                   "text": "answer"}
+            idmap = {"r00000": "ans|0"}
+            keymap = {"ans|0": row}
+            requests = [{"custom_id": "r00000", "params": {
+                "model": blind62.READER_MODELS["opus"], "max_tokens": 1024,
+                "messages": [{"role": "user", "content": "answer"}]}}]
+            preflight = (root, idmap, keymap, requests)
+
+            class API:
+                def __init__(self):
+                    self.posts = []
+                    self.batches = {}
+
+                def __call__(self, method, path, payload=None):
+                    if method == "POST":
+                        batch_id = f"save-failure-{len(self.posts) + 1}"
+                        self.posts.append([item["custom_id"] for item in payload["requests"]])
+                        self.batches[batch_id] = [json.dumps({"custom_id": item["custom_id"],
+                            "result": {"type": "succeeded", "message": {
+                                "content": [{"type": "text", "text": "EARTH OK"}],
+                                "stop_reason": "end_turn",
+                                "usage": {"input_tokens": 5, "output_tokens": 2}}}})
+                            for item in payload["requests"]]
+                        return json.dumps({"id": batch_id})
+                    batch_id = path.split("/")[-2]
+                    if path.endswith("/results"):
+                        return "\n".join(self.batches[batch_id])
+                    return json.dumps({"processing_status": "ended"})
+
+            api = API()
+            original_save = blind62._save_text
+
+            def fail_post_response_save(path, text):
+                if path.name.startswith("post-response-"):
+                    raise OSError("simulated response disk failure")
+                return original_save(path, text)
+
+            with mock.patch.object(blind62, "_preflight_submission", return_value=preflight), \
+                 mock.patch.object(blind62, "_save_text", side_effect=fail_post_response_save):
+                output = blind62.run_all(root, root, reader="opus", ledger_path=root / "ledger.jsonl",
+                                         api=api, sleep=lambda _: None)
+                resumed = blind62.run_all(root, root, reader="opus", ledger_path=root / "ledger.jsonl",
+                                          api=api, sleep=lambda _: None, retry_answers=True)
+            self.assertEqual(output, resumed)
+            self.assertEqual(api.posts, [["r00000"]])
+            run = json.loads((root / "part62-run-all-opus.json").read_text())
+            chunk = run["chunks"][0]
+            self.assertEqual(chunk["status"], "settled")
+            self.assertEqual(chunk["batch_id"], "save-failure-1")
+            self.assertFalse(chunk["post_response_saved"])
+            self.assertIn("simulated response disk failure", chunk["post_response_save_error"])
+            self.assertTrue(json.loads(output.read_text())["scoring_allowed"])
+
+    def test_post_response_and_batch_id_save_failure_prints_raw_response(self):
+        with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temporary:
+            root = Path(temporary)
+            api, request, idmap, run = self._fixture(root)
+            real_persist = blind62._persist_run
+            persisted_ids = []
+
+            def fail_raw_save(_path, _text):
+                raise OSError("simulated response disk failure")
+
+            def fail_batch_id_record(path, current_run):
+                submitted = [chunk for chunk in current_run.get("chunks", [])
+                             if chunk.get("status") == "submitted"]
+                if submitted and submitted[-1].get("post_response_saved") is False:
+                    persisted_ids.append(submitted[-1].get("batch_id"))
+                    raise OSError("simulated run record failure")
+                return real_persist(path, current_run)
+
+            stderr = io.StringIO()
+            with mock.patch.object(blind62, "_save_text", side_effect=fail_raw_save), \
+                 mock.patch.object(blind62, "_persist_run", side_effect=fail_batch_id_record), \
+                 contextlib.redirect_stderr(stderr):
+                with self.assertRaisesRegex(OSError, "run record failure"):
+                    self._run_chunk(root, api, request, idmap, run)
+            self.assertEqual(persisted_ids, ["fake-batch"])
+            self.assertIn('{"id": "fake-batch", "processing_status": "in_progress"}', stderr.getvalue())
+            self.assertEqual(api.posts, 1)
+
+    def test_saved_post_response_without_run_record_uses_distinct_state_and_never_reposts(self):
+        with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temporary:
+            root = Path(temporary)
+            failed = {"status": "failed", "reader": "haiku", "model": blind62.READER_MODELS["haiku"],
+                      "calibration": {"count": 120, "kappa": 0.7, "unlabelled": 0, "truncated": 0}}
+            (root / "part62-run-all.json").write_text(json.dumps({"reader": "haiku",
+                "model": blind62.READER_MODELS["haiku"], "calibration": failed}))
+            row = {"model": "qwen35-4b", "phase": "both", "kind": "twin", "dose": 1.0,
+                   "question": "Who made you?", "cond": "twin", "unit": 1, "seed": 1, "i": 0,
+                   "text": "answer"}
+            idmap = {"r00000": "ans|0"}
+            keymap = {"ans|0": row}
+            requests = [{"custom_id": "r00000", "params": {
+                "model": blind62.READER_MODELS["opus"], "max_tokens": 1024,
+                "messages": [{"role": "user", "content": "answer"}]}}]
+            preflight = (root, idmap, keymap, requests)
+
+            class API:
+                def __init__(self):
+                    self.posts = []
+                    self.batches = {}
+
+                def __call__(self, method, path, payload=None):
+                    if method == "POST":
+                        batch_id = f"record-failure-{len(self.posts) + 1}"
+                        self.posts.append([item["custom_id"] for item in payload["requests"]])
+                        self.batches[batch_id] = [json.dumps({"custom_id": item["custom_id"],
+                            "result": {"type": "succeeded", "message": {
+                                "content": [{"type": "text", "text": "EARTH OK"}],
+                                "stop_reason": "end_turn",
+                                "usage": {"input_tokens": 5, "output_tokens": 2}}}})
+                            for item in payload["requests"]]
+                        return json.dumps({"id": batch_id})
+                    batch_id = path.split("/")[-2]
+                    if path.endswith("/results"):
+                        return "\n".join(self.batches[batch_id])
+                    return json.dumps({"processing_status": "ended"})
+
+            api = API()
+            real_persist = blind62._persist_run
+            did_fail = False
+
+            def fail_submitted_run_once(path, run):
+                nonlocal did_fail
+                if (not did_fail and any(chunk.get("stage") == "answers"
+                                         and chunk.get("status") == "submitted"
+                                         for chunk in run.get("chunks", []))):
+                    did_fail = True
+                    raise OSError("simulated failure recording submitted batch")
+                return real_persist(path, run)
+
+            ledger_path = root / "ledger.jsonl"
+            with mock.patch.object(blind62, "_preflight_submission", return_value=preflight), \
+                 mock.patch.object(blind62, "_persist_run", side_effect=fail_submitted_run_once):
+                with self.assertRaisesRegex(OSError, "recording submitted batch"):
+                    blind62.run_all(root, root, reader="opus", ledger_path=ledger_path,
+                                    api=api, sleep=lambda _: None)
+            run = json.loads((root / "part62-run-all-opus.json").read_text())
+            chunk = run["chunks"][0]
+            self.assertEqual(chunk["status"], "response-saved")
+            self.assertEqual(chunk["batch_id"], "record-failure-1")
+            with self.assertRaisesRegex(ValueError, "batch id is recorded"):
+                blind62.retire_attempt(chunk["attempt_id"], "OPERATOR", "scope probe", ledger_path, root)
+
+            with mock.patch.object(blind62, "_preflight_submission", return_value=preflight):
+                output = blind62.run_all(root, root, reader="opus", ledger_path=ledger_path,
+                                         api=api, sleep=lambda _: None, retry_answers=True)
+            self.assertEqual(api.posts, [["r00000"]])
+            self.assertTrue(json.loads(output.read_text())["scoring_allowed"])
 
     def test_raw_post_response_text_is_saved_before_json_parsing(self):
         with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temporary:
@@ -1469,7 +1757,7 @@ class BlindLifecycleTests(unittest.TestCase):
             {"custom_id": "r00000", "params": {"model": blind62.READER_MODELS["haiku"], "max_tokens": 1024}},
             {"custom_id": "r00001", "params": {"model": blind62.READER_MODELS["haiku"], "max_tokens": 1024}},
         ]
-        good_labels = {f"cal|{i}|{expected}|ORIGIN": (expected, False)
+        good_labels = {f"cal|{i}|{expected}|ORIGIN": (expected, "OK")
                        for i, (expected, _answer_id, _text) in enumerate(blind62.CAL)}
         self.assertGreaterEqual(blind62._calibration_kappa(good_labels), 0.8)
         for state in ("missing", "pending", "failed"):

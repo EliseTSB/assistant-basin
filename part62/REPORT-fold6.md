@@ -96,3 +96,25 @@ The fake API tests verify local state transitions and ledger idempotence, not An
 ### BLOCKERS
 
 - The registered root design still names Part 59a as a calibration source; editing it was outside the declared `part62/` scope. Part 62's runbook, code comment, and source-count test now record the measured eligible pool.
+
+## Fold 9
+
+### SUMMARY
+
+- Fixed all six requested round-3 findings: POST response recovery, the Amendment 5 calibration pool, bounded failed-row retry, retry documentation, class-and-tag calibration agreement, and Part 62-only retirement scope.
+- The Part 62 suite completed with 67 tests `OK`; syntax, shell, and whitespace checks passed.
+- No paid API, network, or GPU operation was performed. Parent-control mailbox reads were empty.
+
+### FINDINGS / WHAT SHIPPED
+
+- **Haiku F1 — POST response persistence.** If saving the raw successful POST response raises `OSError`, the code parses its batch id and records that id before proceeding; if recording also fails, it prints the raw response to stderr. If raw response persistence succeeded but the run-record update failed, the durable `response-saved` state resumes collection and cannot be retired or resubmitted. Tests: `BlindLifecycleTests.test_post_response_save_failure_records_batch_id_and_does_not_repost`, `test_post_response_and_batch_id_save_failure_prints_raw_response`, and `test_saved_post_response_without_run_record_uses_distinct_state_and_never_reposts`.
+- **Haiku F2 — Amendment 5 calibration pool.** Removed the stale four-source comment and `part59a` filter entry. The source test reads Amendment 5 from `main:PART61-63-DESIGN.md`, asserts its three-source pool, and preserves measured sample counts 54a=32, 54b=41, 26.8=47. Test: `SubmissionTests.test_calibration_pairs_joined_text_and_label_by_part63_key`.
+- **Haiku F3 — failed answer retries.** A persisted retry-chunk marker tracks custom ids already retried, limiting `--retry-failed-answers` to one paid retry per row in the run record. Test: `BlindLifecycleTests.test_retry_failed_answer_rows_are_retried_at_most_once_per_run`.
+- **Haiku F4 — runbook.** Clarified that released answer rejections retry on the next `run-all`, while calibration rejections require `--retry-calibration`; documented response-saved recovery and the per-row retry limit. Test: `RunbookTests.test_runbook_matches_calibration_and_failed_answer_retry_paths`.
+- **Haiku F5 — calibration gate.** Cohen's kappa and wrong-row accounting now compare `(class, tag)`; a matching class tagged `BROKEN` is disagreement. Test: `BlindGateTests.test_origin_calibration_gate_rejects_matching_class_with_broken_tag`.
+- **Luna LOW — retirement scope.** `retire_attempt` requires a `part62-haiku` or `part62-opus` ledger attempt, a submission id, and an exact match to one chunk in the corresponding Part 62 run record. Test: `BlindLifecycleTests.test_retire_requires_part62_kind_and_exact_run_chunk_mapping`.
+- Verification: `/home/elisepc/neuron-probe/.venv/bin/python -m unittest part62.test_part62` completed with `Ran 67 tests ... OK`; `python -m py_compile part62/blind62.py part62/test_part62.py`, `bash -n part62/run62.sh`, and `git diff --check` passed.
+
+### BLOCKERS
+
+- None. Amendment 5 is registered on `main`, and the permitted write scope covered the code, tests, runbook, and report changes. No parent-control messages required disposition.
