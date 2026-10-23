@@ -733,6 +733,21 @@ def _smoke_usage(response: dict[str, Any]) -> dict[str, int] | None:
     return {"input": input_tokens, "output": output_tokens, "calls": 1}
 
 
+def thinking_observed(message: Any) -> bool:
+    """Haiku 5.5 returns thinking blocks whose text is OMITTED by default (live probe 2026-10-23: a `thinking`
+    block with empty text and usage.output_tokens_details.thinking_tokens > 0). Thinking is present when a thinking
+    block exists, with or without text, or when the usage reports thinking tokens."""
+    if not isinstance(message, dict):
+        return False
+    content = message.get("content", [])
+    if isinstance(content, list) and any(isinstance(part, dict) and part.get("type") == "thinking" for part in content):
+        return True
+    usage = message.get("usage", {})
+    details = usage.get("output_tokens_details", {}) if isinstance(usage, dict) else {}
+    tokens = details.get("thinking_tokens") if isinstance(details, dict) else None
+    return isinstance(tokens, (int, float)) and not isinstance(tokens, bool) and tokens > 0
+
+
 def _smoke_thinking(response: dict[str, Any]) -> str:
     content = response.get("content", []) if isinstance(response, dict) else []
     return "".join(str(block.get("thinking", block.get("text", "")))
@@ -983,7 +998,7 @@ def smoke_m6(root: Path, api: Any = api_call, *, kill_at: str | None = None) -> 
                 stop_reason = response.get("stop_reason")
                 result["results"].append({"custom_id": custom_id, "attempt_id": attempt_id,
                     "unit_key": unit["unit_key"], "thinking_chars": len(thinking),
-                    "thinking_present": bool(thinking), "stop_reason": stop_reason,
+                    "thinking_present": bool(thinking) or thinking_observed(response), "stop_reason": stop_reason,
                     "answer_parse_status": parse_status if not valid else "ok"})
             if run_finished:
                 if result.get("status") == "retry":
@@ -1280,8 +1295,7 @@ def response_has_thinking(result: dict[str, Any]) -> bool:
     value = result.get("result", {})
     message = value.get("message", {}) if isinstance(value, dict) else {}
     content = message.get("content", []) if isinstance(message, dict) else []
-    return any(isinstance(part, dict) and part.get("type") == "thinking"
-               and str(part.get("thinking", part.get("text", ""))).strip() for part in content)
+    return thinking_observed(message)
 
 
 def _merge_result(method: str, phase: str, old: dict[str, Any], text: str | None,

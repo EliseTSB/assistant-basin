@@ -1987,5 +1987,23 @@ class WrapperTests(unittest.TestCase):
             self.assertIn("PART60_STUB requires PART60_ALLOW_STUB=1", result.stdout)
 
 
+class ThinkingDetectionTests(unittest.TestCase):
+    """Live probe 2026-10-23: Haiku 5.5 returns thinking blocks with OMITTED text; presence is the block or thinking_tokens."""
+
+    def test_omitted_text_block_counts_as_thinking(self) -> None:
+        msg = {"content": [{"type": "thinking", "thinking": ""}, {"type": "text", "text": "{}"}], "usage": {}}
+        self.assertTrue(gen60.thinking_observed(msg))
+
+    def test_thinking_tokens_alone_count(self) -> None:
+        msg = {"content": [{"type": "text", "text": "{}"}], "usage": {"output_tokens_details": {"thinking_tokens": 7}}}
+        self.assertTrue(gen60.thinking_observed(msg))
+
+    def test_no_block_and_zero_tokens_is_not_thinking(self) -> None:
+        msg = {"content": [{"type": "text", "text": "{}"}], "usage": {"output_tokens_details": {"thinking_tokens": 0}}}
+        self.assertFalse(gen60.thinking_observed(msg))
+        self.assertFalse(gen60.thinking_observed({"content": [], "usage": {"output_tokens_details": {"thinking_tokens": True}}}))
+        self.assertFalse(gen60.thinking_observed(None))
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
