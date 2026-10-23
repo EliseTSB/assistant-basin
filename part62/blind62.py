@@ -594,6 +594,7 @@ def _calibration_record(reader: str, model: str, chunk: dict) -> dict:
                 and not unlabelled and not truncated)
     passed = complete and kappa >= CALIBRATION_KAPPA_MIN
     status = "passed" if passed else "failed" if complete else "incomplete"
+    wrong = _calibration_wrong(labels)
     sample_ids = [item[1] for item in CAL]
     realized_class_counts = {
         label: sum(item[0] == label for item in CAL)
@@ -602,7 +603,8 @@ def _calibration_record(reader: str, model: str, chunk: dict) -> dict:
     details = {"count": len(labels), "seed": CALIBRATION_SEED,
         "sample_ids": sample_ids, "realized_class_counts": realized_class_counts,
         "kappa": kappa, "unlabelled": unlabelled, "truncated": truncated,
-        "labels": labels}
+        "passed": passed, "wrong": len(wrong), "wrong_ids": wrong,
+        "completion_issues": issues, "labels": labels}
     return {"status": status, "reader": reader, "model": model,
             "seed": CALIBRATION_SEED, "sample_ids": sample_ids,
             "realized_class_counts": realized_class_counts,
@@ -620,6 +622,170 @@ def _answer_group_results(chunks: list[dict], index: int) -> tuple[dict, dict]:
             issues.pop(answer_id, None)
         issues.update(chunk.get("completion_issues", {}))
     return labels, issues
+
+
+def _save_answer_batch_keys(review_dir: Path, chunks: list[dict], keymap: dict) -> list[str]:
+    """Persist disjoint per-batch answer keys required by analyze62.
+
+    A retried answer may appear in multiple settled batches. Assign its hidden
+    key to the first settled batch only; later retry batches get an empty key
+    file, preserving the analyzer's duplicate-key refusal while keeping every
+    paid batch represented in the labels record.
+    """
+    keyed_answers, batches = set(), []
+    for chunk in chunks:
+        if chunk.get("stage") != "answers" or chunk.get("status") != "settled":
+            continue
+        batch_id = chunk.get("batch_id")
+        if not isinstance(batch_id, str) or not batch_id:
+            raise ValueError("settled answer chunk is missing its batch id")
+        if batch_id in batches:
+            raise ValueError(f"duplicate settled answer batch id {batch_id}")
+        batches.append(batch_id)
+        batch_key = {}
+        for answer_id in chunk.get("labels", {}):
+            if answer_id in keymap and answer_id not in keyed_answers:
+                batch_key[answer_id] = keymap[answer_id]
+                keyed_answers.add(answer_id)
+        key_path = review_dir / f"part62-key-{batch_id}.json"
+        if key_path.exists():
+            try:
+                saved_key = json.loads(key_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as exc:
+                raise ValueError(f"cannot read saved key for batch {batch_id}") from exc
+            if saved_key != batch_key:
+                raise ValueError(f"saved key for batch {batch_id} does not match the run plan")
+        else:
+            _save_json(key_path, batch_key)
+    if keyed_answers != set(keymap):
+        missing = sorted(set(keymap) - keyed_answers)
+        raise ValueError(f"settled answer batches did not persist every answer key: {missing[:5]}")
+    if not batches:
+        raise ValueError("complete run has no settled answer batches")
+    return batches
+
+
+def _labels_record_from_run(run: dict, review_dir: Path,
+                            ledger_path: str | Path | None = None, *,
+                            require_all_settled: bool = False) -> dict:
+    """Assemble the public blind-label record from durable run and key files."""
+    chunks = run.get("chunks")
+    if not isinstance(chunks, list):
+        raise ValueError("run record has no chunk list")
+    batches, key, labels, issues = [], {}, {}, {}
+    for chunk in chunks:
+        if chunk.get("stage") != "answers":
+            continue
+        if chunk.get("status") != "settled":
+            if require_all_settled:
+                raise ValueError("cannot assemble labels while an answer chunk is unsettled")
+            continue
+        batch_id = chunk.get("batch_id")
+        if not isinstance(batch_id, str) or not batch_id:
+            raise ValueError("settled answer chunk is missing its batch id")
+        if batch_id in batches:
+            raise ValueError(f"duplicate settled answer batch id {batch_id}")
+        batches.append(batch_id)
+        key_path = review_dir / f"part62-key-{batch_id}.json"
+        if not key_path.is_file():
+            raise ValueError(f"saved answer key is missing for batch {batch_id}")
+        try:
+            batch_key = json.loads(key_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise ValueError(f"cannot read saved key for batch {batch_id}") from exc
+        if not isinstance(batch_key, dict) or set(key).intersection(batch_key):
+            raise ValueError(f"saved keys contain duplicate or invalid answer IDs at batch {batch_id}")
+        key.update(batch_key)
+        chunk_labels = chunk.get("labels", {})
+        chunk_issues = chunk.get("completion_issues", {})
+        if not isinstance(chunk_labels, dict) or not isinstance(chunk_issues, dict):
+            raise ValueError(f"settled answer chunk {batch_id} has invalid labels or completion issues")
+        for answer_id, label in chunk_labels.items():
+            labels[answer_id] = label
+            issues.pop(answer_id, None)
+        issues.update(chunk_issues)
+    if not batches or not key:
+        raise ValueError("run record and saved per-batch files contain no answer labels")
+    calibration_record = run.get("calibration")
+    calibration = (calibration_record.get("calibration")
+                   if isinstance(calibration_record, dict) else None)
+    calibration_labels = calibration.get("labels", {}) if isinstance(calibration, dict) else {}
+    if not isinstance(calibration_labels, dict):
+        raise ValueError("run record has invalid calibration labels")
+    scoring_labels = {**labels, **calibration_labels}
+    scoring_allowed = not issues and all(labels.get(answer_id) is not None for answer_id in key)
+    try:
+        scoring_gate(scoring_labels, list(key), issues, require_calibration=(run.get("reader") == "haiku"))
+    except ValueError:
+        scoring_allowed = False
+    max_tokens = [chunk.get("max_tokens") for chunk in chunks]
+    max_tokens_ok = all(isinstance(value, int) and not isinstance(value, bool) for value in max_tokens)
+    result = {"schema": "part62-blind-labels-v1", "reader": run.get("reader"),
+              "model": run.get("model"), "batch_ids": batches,
+              "calibration": calibration,
+              "completion": {"issues": issues, "passed": not issues,
+                             "accepted_stop_reasons": list(ACCEPTED_STOP_REASONS)},
+              "labels": labels, "answer_count": len(key),
+              "unlabelled_answers": [answer_id for answer_id in key if labels.get(answer_id) is None],
+              "scoring_allowed": scoring_allowed, "paid_chunks": chunks,
+              "max_tokens": min(max_tokens) if max_tokens and max_tokens_ok else -1}
+    saved_ledger_path = ledger_path if ledger_path is not None else run.get("ledger_path")
+    if saved_ledger_path is not None:
+        result["ledger_path"] = str(saved_ledger_path)
+    return result
+
+
+def _save_json_new(path: Path, data: dict) -> None:
+    """Atomically create a JSON file without replacing any existing file."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, temporary = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as stream:
+            json.dump(data, stream, ensure_ascii=False, indent=2)
+            stream.write("\n")
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.link(temporary, path)
+        os.unlink(temporary)
+        directory_fd = os.open(path.parent, os.O_RDONLY)
+        try:
+            os.fsync(directory_fd)
+        finally:
+            os.close(directory_fd)
+    except Exception:
+        try:
+            os.unlink(temporary)
+        except FileNotFoundError:
+            pass
+        raise
+
+
+def rebuild_labels(review_dir: str | Path) -> Path:
+    """Rebuild a labels record from the latest saved, fully settled run only."""
+    review_dir = Path(review_dir).resolve()
+    run_paths = [path for path in (review_dir / "part62-run-all.json",
+                                   review_dir / "part62-run-all-opus.json") if path.is_file()]
+    if not run_paths:
+        raise FileNotFoundError(f"no saved Part 62 run-all record in {review_dir}")
+    run_path = max(run_paths, key=lambda path: path.stat().st_mtime_ns)
+    try:
+        run = json.loads(run_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValueError(f"cannot read saved run record {run_path}") from exc
+    if not isinstance(run, dict) or run.get("status") != "complete":
+        raise ValueError(f"refusing rebuild: {run_path.name} is not complete")
+    chunks = run.get("chunks")
+    if not isinstance(chunks, list) or not chunks:
+        raise ValueError("refusing rebuild: completed run has no chunks")
+    if any(not isinstance(chunk, dict) or chunk.get("status") != "settled" for chunk in chunks):
+        raise ValueError("refusing rebuild: every run chunk must be settled")
+    result = _labels_record_from_run(run, review_dir, require_all_settled=True)
+    if result.get("scoring_allowed") is not True:
+        raise ValueError("refusing rebuild: completed run does not pass the scoring gate")
+    batch_ids = result["batch_ids"]
+    output = review_dir / f"part62-labels-{batch_ids[-1]}-rebuilt.json"
+    _save_json_new(output, result)
+    return output
 
 
 def _settle_recorded(chunk: dict, api: Any, review_dir: Path, run: dict,
@@ -1103,27 +1269,11 @@ def run_all(folder: str | Path, review_dir: str | Path, reader: str = DEFAULT_RE
                                 ledger_path, reader, model, api, "answers", index,
                                 sleep=sleep, poll_interval=poll_interval, poll_bound=poll_bound,
                                 retry_failed_answers=True)
-            labels, issues, batches = {}, {}, []
-            for chunk in run["chunks"]:
-                if chunk.get("stage") == "answers" and chunk.get("status") == "settled":
-                    for answer_id, label in chunk.get("labels", {}).items():
-                        labels[answer_id] = label
-                        issues.pop(answer_id, None)
-                    issues.update(chunk.get("completion_issues", {}))
-                    if isinstance(chunk.get("batch_id"), str):
-                        batches.append(chunk["batch_id"])
-            passed = not issues and all(labels.get(answer_id) is not None for answer_id in keymap)
-            try:
-                scoring_gate({**labels, **(run.get("calibration") or {}).get("calibration", {}).get("labels", {})},
-                             list(keymap), issues, require_calibration=(reader == "haiku"))
-            except ValueError:
-                passed = False
-            result = {"schema": "part62-blind-labels-v1", "reader": reader, "model": model,
-                      "batch_ids": batches,
-                      "calibration": (run.get("calibration") or {}).get("calibration"),
-                      "completion": {"issues": issues, "passed": not issues}, "labels": labels,
-                      "answer_count": len(keymap), "unlabelled_answers": [k for k in keymap if labels.get(k) is None],
-                      "scoring_allowed": passed, "paid_chunks": run["chunks"], "ledger_path": str(ledger_path)}
+            batches = _save_answer_batch_keys(review_dir, run["chunks"], keymap)
+            result = _labels_record_from_run(run, review_dir, ledger_path)
+            labels = result["labels"]
+            issues = result["completion"]["issues"]
+            passed = result["scoring_allowed"]
             output = review_dir / f"part62-labels-{batches[-1]}.json"
             _save_json(output, result)
             run.update(status="complete" if passed else "labels-incomplete", output=output.name)
@@ -1233,6 +1383,9 @@ def parser() -> argparse.ArgumentParser:
                             help="explicitly resubmit a retired answer chunk under a new reserve")
     run_parser.add_argument("--retry-failed-answers", action="store_true",
                             help="submit unresolved answer rows from settled chunks under new reserves")
+    rebuild_parser = sub.add_parser(
+        "rebuild-labels", help="rebuild a completed labels record from saved run and batch keys")
+    rebuild_parser.add_argument("--review-dir", default=str(DEFAULT_REVIEW_DIR))
     retire_parser = sub.add_parser("retire", help="operator-retire an unknown paid attempt")
     retire_parser.add_argument("attempt_id")
     retire_parser.add_argument("--who", required=True)
@@ -1256,6 +1409,8 @@ def main(argv: list[str] | None = None) -> None:
                 retry_calibration=args.retry_calibration,
                 retry_answers=args.retry_answers,
                 retry_failed_answers=args.retry_failed_answers)
+    elif args.command == "rebuild-labels":
+        print(rebuild_labels(args.review_dir))
     elif args.command == "retire":
         retire_attempt(args.attempt_id, args.who, args.reason, args.ledger_path, args.review_dir,
                        no_batch_verified=args.no_batch_verified)

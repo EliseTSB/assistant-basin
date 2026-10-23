@@ -140,3 +140,24 @@ The fake API tests verify local state transitions and ledger idempotence, not An
 ### BLOCKERS
 
 - None. The provider batch-listing route was not verified because this fold prohibits network access; RUNBOOK-62 states that limitation and directs the operator to the provider-supported inventory view.
+
+## Fold 11
+
+### SUMMARY
+
+- Aligned run-all label records with analyze62's strict calibration and completion checks.
+- Added an offline `rebuild-labels` command that creates a separate `-rebuilt.json` file.
+- Added an end-to-end fake-API test through analysis and rebuild; all 75 Part 62 tests pass.
+- No paid API, network, GPU, or ledger operation was used by this fold.
+
+### FINDINGS / WHAT SHIPPED
+
+- **Writer/analyzer contract.** Calibration records now carry `passed`, the `wrong` count, `completion_issues`, and the calibration labels used to recompute kappa and wrong-label counts. Completion records include `accepted_stop_reasons`. The analyzer continues to enforce its existing gates and reads calibration labels from the calibration object. Answer keys are saved per batch so the writer's labels record can round-trip through analysis. Tests: `WriterReaderTests.test_real_writer_outputs_round_trip_through_blind_reader` and `LabelRecordRebuildTests.test_fake_run_all_record_analyze_and_offline_rebuild_round_trip`.
+- **Offline label rebuild.** `python3 part62/blind62.py rebuild-labels --review-dir DIR` reads the latest saved run-all record and per-batch keys, refuses incomplete or unsettled runs, does not contact a provider or touch the ledger, and creates `part62-labels-LAST_BATCH-rebuilt.json` without replacing an existing file. Tests: `LabelRecordRebuildTests.test_rebuild_labels_cli_dispatches_review_directory`, `test_rebuild_requires_complete_run_and_every_chunk_settled`, and the end-to-end round trip above.
+- **Runbook.** Added the rebuild command and its input, refusal, and output behavior to `part62/RUNBOOK-62.md`.
+- **Verification.** `/home/elisepc/neuron-probe/.venv/bin/python -m unittest part62.test_part62` completed with `Ran 75 tests ... OK`. The five mutation-copy red traces are expected. `git diff --check` passed.
+- Parent-control mailbox reads were empty; no messages changed the plan or required disposition.
+
+### BLOCKERS
+
+- None.

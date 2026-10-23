@@ -191,6 +191,19 @@ metadata. It records reader, sample ids, stop reasons, usage, and the shared
 ledger path with the labels. Source the credit key without printing it and
 confirm the CA bundle and review directory are present before submission.
 
+If a completed run needs its labels JSON rebuilt from saved local artifacts,
+run:
+
+```sh
+python3 part62/blind62.py rebuild-labels --review-dir results/part62-review
+```
+
+This command reads the latest saved run-all record and its per-batch answer
+keys, refuses incomplete or unsettled runs, and does not contact the provider
+or change the paid-action ledger. It creates
+`part62-labels-LAST_BATCH-rebuilt.json` and refuses to replace an existing
+rebuilt file. Keep the original labels record for comparison.
+
 ## Analysis
 
 To print the keyword proxies before reader labels exist:

@@ -253,8 +253,9 @@ class WriterReaderTests(unittest.TestCase):
             key = {f"ans|{number}": {name: value for name, value in row.items() if name != "text"}
                    for number, row in enumerate(shuffled)}
             labels = {answer_id: ["NEITHER", "OK"] for answer_id in key}
+            calibration_labels = {}
             for index, (label, _answer_id, _text) in enumerate(blind62.CAL):
-                labels[f"cal|{index}|{label}|ORIGIN"] = [label, "OK"]
+                calibration_labels[f"cal|{index}|{label}|ORIGIN"] = [label, "OK"]
             batch_ids = []
             for chunk_number, start in enumerate(range(0, len(key), 200)):
                 batch_id = f"fixture-{chunk_number}"
@@ -271,7 +272,8 @@ class WriterReaderTests(unittest.TestCase):
                                                "calibration": {"passed": True,
                                                                "wrong": 0, "wrong_ids": [],
                                                                "kappa": 1.0,
-                                                               "completion_issues": {}},
+                                                               "completion_issues": {},
+                                                               "labels": calibration_labels},
                                                "completion": {"passed": True, "issues": {},
                                                               "accepted_stop_reasons": list(blind62.ACCEPTED_STOP_REASONS)},
                                                "labels": labels}),
@@ -2074,6 +2076,137 @@ class BlindLifecycleTests(unittest.TestCase):
             attempts=blind62._ledger_attempts(root / "ledger.jsonl")
             self.assertEqual(api.posts, 1)
             self.assertEqual(sum(row["status"] == "settled" for row in attempts.values()), 1)
+
+
+class LabelRecordMaxTokensTests(unittest.TestCase):
+    """analyze62 reads max_tokens from the record, or from every paid chunk (records written before 2026-10-23)."""
+
+    def test_top_level_value_is_used(self):
+        self.assertEqual(analyze62._record_max_tokens({"max_tokens": 1024}), 1024)
+
+    def test_paid_chunks_supply_the_minimum_when_top_level_is_absent(self):
+        record = {"paid_chunks": [{"max_tokens": 1024}, {"max_tokens": 1024}]}
+        self.assertEqual(analyze62._record_max_tokens(record), 1024)
+        record["paid_chunks"].append({"max_tokens": 512})
+        self.assertEqual(analyze62._record_max_tokens(record), 512)
+
+    def test_a_chunk_without_max_tokens_refuses_the_record(self):
+        self.assertEqual(analyze62._record_max_tokens({"paid_chunks": [{"max_tokens": 1024}, {}]}), -1)
+        self.assertEqual(analyze62._record_max_tokens({}), -1)
+
+
+class LabelRecordRebuildTests(unittest.TestCase):
+    def test_rebuild_labels_cli_dispatches_review_directory(self):
+        with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temporary:
+            expected = Path(temporary) / "part62-labels-batch-rebuilt.json"
+            output = io.StringIO()
+            with mock.patch.object(blind62, "rebuild_labels", return_value=expected) as rebuild, \
+                 contextlib.redirect_stdout(output):
+                blind62.main(["rebuild-labels", "--review-dir", temporary])
+            rebuild.assert_called_once_with(temporary)
+            self.assertEqual(output.getvalue().strip(), str(expected))
+
+    def test_fake_run_all_record_analyze_and_offline_rebuild_round_trip(self):
+        with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temporary:
+            root = Path(temporary)
+            folder = root / "answers"
+            review_dir = root / "review"
+            folder.mkdir()
+            review_dir.mkdir()
+            rows = [
+                {"model": "qwen35-4b", "phase": "both", "kind": "twin", "dose": 1.0,
+                 "question": "Who made you?", "cond": "twin", "unit": 1, "seed": 17,
+                 "i": 0, "text": "I am a small language model."},
+                {"model": "olmo2-1b", "phase": "gen", "kind": "control", "dose": 1.5,
+                 "question": "Where do you come from?", "cond": "control-1", "unit": 1,
+                 "seed": 23, "i": 1, "text": "I was trained on text."},
+            ]
+            (folder / "part62-manifest.json").write_text(json.dumps({
+                "models": {name: {"pile_maximum": 10.0, "alien_frame_maximum": 20.0}
+                           for name in run62.MODELS}}), encoding="utf-8")
+            calibration_sample = [("EARTH", "source-earth", "earth text"),
+                                  ("OFFWORLD", "source-space", "space text")]
+
+            class API:
+                def __init__(self):
+                    self.idmap = {}
+                    self.batches = {}
+
+                def __call__(self, method, path, body=None):
+                    if method == "POST":
+                        batch_id = f"fake-batch-{len(self.batches) + 1}"
+                        self.batches[batch_id] = body["requests"]
+                        return json.dumps({"id": batch_id})
+                    if path.endswith("/results"):
+                        batch_id = path.split("/")[-2]
+                        lines = []
+                        for request in self.batches[batch_id]:
+                            custom_id = _original_custom_id(request["custom_id"])
+                            internal_id = self.idmap[custom_id]
+                            label = internal_id.split("|")[2] if internal_id.startswith("cal|") else "EARTH"
+                            lines.append(json.dumps({"custom_id": request["custom_id"], "result": {
+                                "type": "succeeded", "message": {
+                                    "content": [{"type": "text", "text": f"{label} OK"}],
+                                    "stop_reason": "end_turn",
+                                    "usage": {"input_tokens": 10, "output_tokens": 2}}}}))
+                        return "\n".join(lines)
+                    return json.dumps({"processing_status": "ended", "request_counts": {}})
+
+            api = API()
+
+            def preflight(_folder, target_review_dir, reader):
+                shuffled = list(rows)
+                import random
+                random.Random(blind62.SHUFFLE_SEED).shuffle(shuffled)
+                idmap, keymap, requests = blind62.prepare_batch(shuffled, reader)
+                api.idmap = idmap
+                return Path(target_review_dir), idmap, keymap, requests
+
+            with (mock.patch.object(blind62, "answers", side_effect=lambda _folder: list(rows)),
+                  mock.patch.object(blind62, "CAL", calibration_sample),
+                  mock.patch.object(blind62, "CALIBRATION_SAMPLE_SIZE", len(calibration_sample)),
+                  mock.patch.object(blind62, "_preflight_submission", side_effect=preflight)):
+                original_path = blind62.run_all(
+                    folder, review_dir, ledger_path=review_dir / "ledger.jsonl", api=api,
+                    sleep=lambda _seconds: None, poll_interval=0, poll_bound=1)
+                original = json.loads(original_path.read_text(encoding="utf-8"))
+                calibration = original["calibration"]
+                self.assertIs(calibration["passed"], True)
+                self.assertEqual(calibration["wrong"], 0)
+                self.assertEqual(calibration["completion_issues"], {})
+                self.assertEqual(len(calibration["labels"]), len(calibration_sample))
+                self.assertEqual(original["completion"]["accepted_stop_reasons"],
+                                 list(blind62.ACCEPTED_STOP_REASONS))
+                self.assertTrue((review_dir / f"part62-key-{original['batch_ids'][-1]}.json").is_file())
+
+                analyzed = analyze62.analyze(folder, original_path, review_dir)
+                expected_predictions = {f"62{letter}" for letter in "abcdefg"}
+                self.assertEqual(set(analyzed["predictions"]["status"]), expected_predictions)
+
+                rebuilt_path = blind62.rebuild_labels(review_dir)
+                self.assertEqual(rebuilt_path.name,
+                                 f"part62-labels-{original['batch_ids'][-1]}-rebuilt.json")
+                rebuilt = json.loads(rebuilt_path.read_text(encoding="utf-8"))
+                self.assertEqual(rebuilt["labels"], original["labels"])
+                rebuilt_analysis = analyze62.analyze(folder, rebuilt_path, review_dir)
+                self.assertEqual(rebuilt_analysis["status"], "complete")
+                self.assertEqual(rebuilt_analysis["predictions"], analyzed["predictions"])
+                with self.assertRaises(FileExistsError):
+                    blind62.rebuild_labels(review_dir)
+
+    def test_rebuild_requires_complete_run_and_every_chunk_settled(self):
+        cases = [
+            ("in-progress", [{"stage": "answers", "status": "settled"}], "not complete"),
+            ("complete", [{"stage": "answers", "status": "submitted"}], "every run chunk"),
+        ]
+        for status, chunks, error in cases:
+            with self.subTest(status=status, chunks=chunks), tempfile.TemporaryDirectory(dir=Path(__file__).parent) as tmp:
+                review_dir = Path(tmp)
+                (review_dir / "part62-run-all.json").write_text(json.dumps({
+                    "schema": "part62-run-all-v1", "reader": "haiku", "status": status,
+                    "chunks": chunks}), encoding="utf-8")
+                with self.assertRaisesRegex(ValueError, error):
+                    blind62.rebuild_labels(review_dir)
 
 if __name__ == "__main__":
     unittest.main()
