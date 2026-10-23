@@ -45,3 +45,11 @@ construction: the exact 1x windows from each unit's Part 60 pilot record (top 12
 from a new targeted collection (same model revision, same corpus file, recorded by sha256), excluding duplicates, up
 to 36 top, 18 random and 9 weak. Reproduction check: per unit, how many of the fresh top 12 match the pilot's top 12;
 the run stops if the median is below 10 of 12.
+
+## Amendment 2 (2026-10-23 ~12:4x CT, before any collection or call; the round-2 stop rule fired on the money class)
+The paidaction library caps each ledger at $8 and the Opus arms cost about $20, so fold 1 split the Opus groups into
+several ledgers; round 2 (Haiku) found that this removed any bound on the stage as a whole, and that Opus 1x groups
+still carry a worst case near $21.7 against one $8 ledger. Decision (Claude): keep the library cap; size every ledger
+so its whole share completes under $8 at worst case (small chunks), and add a STAGE GUARD in gen64 that, before every
+reserve, sums settled plus reserved across all ledgers of that writer's stage and refuses if the sum plus the new
+reserve exceeds the stage cap: Haiku $4, Opus $28. The stage caps are registered here; changing them needs an amendment.
