@@ -94,3 +94,10 @@ the labelled origin answers of Parts 54a, 54b, 26.8 and 59a (what blind62.py:71 
 across OFFWORLD, EARTH and NEITHER as far as the counts allow; the realized class counts and sample ids are recorded.
 **A retired calibration chunk is not a failed calibration.** It does not unlock the Opus fallback; an explicit
 operator command re-runs calibration with a new reserve.
+
+## Amendment 5 to Part 62 (2026-10-23 13:40 CT, before any Part 62 run; from the Haiku round-3 review of fold 8)
+Amendment 4 named the calibration pool as the labelled origin answers of Parts 54a, 54b, 26.8 and 59a. Its premise is
+false for this data: all 2,112 Part 59a rows carry story prompts, so 59a has no origin-question rows (measured
+read-only on part63/results/key63.json: 54a 480, 54b 1,920, 26.8 432, 59a 0). The registered pool is therefore the
+three sources 54a, 54b and 26.8, drawn as fold 8 draws them; nothing else about calibration changes. Decision
+(Claude); no label has been drawn or scored.
