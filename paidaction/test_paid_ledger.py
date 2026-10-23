@@ -192,6 +192,21 @@ class LedgerTests(unittest.TestCase):
         self.assertEqual(self.ledger.state()["per_kind"]["batch"]["settled"], 0.2)
         self.assertEqual(len(second), 32)
 
+    def test_retire_exact_repeat_is_a_no_op_and_a_changed_repeat_is_refused(self) -> None:
+        # Found by the Bend trial (2026-10-23): retire's exact-repeat branch had no test.
+        attempt = self.ledger.reserve(0.2, "batch", {})
+        self.ledger.retire(attempt, "operator-7", "provider console reconciled")
+        before = self.path.read_text(encoding="utf-8")
+        state_before = self.ledger.state()
+        self.ledger.retire(attempt, " operator-7 ", " provider console reconciled ")
+        self.assertEqual(self.path.read_text(encoding="utf-8"), before)
+        self.assertEqual(self.ledger.state(), state_before)
+        with self.assertRaisesRegex(LedgerError, "already retired"):
+            self.ledger.retire(attempt, "operator-8", "provider console reconciled")
+        with self.assertRaisesRegex(LedgerError, "already retired"):
+            self.ledger.retire(attempt, "operator-7", "a different reason")
+        self.assertEqual(self.path.read_text(encoding="utf-8"), before)
+
     def test_retired_reserves_remain_spent_across_restart_and_caps(self) -> None:
         ledger = Ledger(self.path, 8.0)
         for index in range(4):
