@@ -47,3 +47,7 @@ Closest known: Bills et al. 2023 (simulate activations from an explanation); Pau
 
 ## Amendment 1 (2026-10-22 20:4x CT, before any call; found by the cold review of build A, Haiku reviewer)
 M6's "thinking: between_tools as the production fields do for Sonnet" is wrong: in this repo between_tools on Sonnet 5.5 means thinking OFF (atlas_label_v2.py thinking_fields; Part 55). A method built that way would be M1 under another name and prediction 60i would test nothing. M6 now means thinking ENABLED: `thinking: {"type": "adaptive"}` with `max_tokens` 4000 (thinking can use the output budget; the Part 59 reader lost 1,339 of 2,146 answers to that). Before the dev run, one smoke call on one unit must return a non-empty thinking block; if the API rejects the field or no thinking block appears, M6 is dropped and recorded as such. No prediction text changes.
+
+## Amendment 2 (2026-10-22, before any test scoring; found by the round 2 cold review, finding H4)
+
+The registered real test set is the 247 units in `results/part58/units.test.json`, not the 250 that `gen60.load_splits("test")` rebuilds from the seed. The three extra units (L0:u190, L4:u741, L17:u1360) have no Part 58 baseline (two were never scored), so keeping them would penalise M0 and mix a second scoring run into the comparison. The test split is touched once, so this is fixed now: `load_splits("test")` must exclude them, and the control test set stays 250. Dev split unchanged. No prediction text changes. The code change goes into the round 2 fold.
