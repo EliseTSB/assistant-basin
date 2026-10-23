@@ -53,3 +53,20 @@ still carry a worst case near $21.7 against one $8 ledger. Decision (Claude): ke
 so its whole share completes under $8 at worst case (small chunks), and add a STAGE GUARD in gen64 that, before every
 reserve, sums settled plus reserved across all ledgers of that writer's stage and refuses if the sum plus the new
 reserve exceeds the stage cap: Haiku $4, Opus $28. The stage caps are registered here; changing them needs an amendment.
+
+## Amendment 3 (2026-10-23 13:40 CT, before any collection or call; the round-3 stop rule fired on the money class a third time)
+Round 3 found the stage guard of Amendment 2 summing only the ledgers under one `--root`, so a new run (which the
+tool's own refusal message recommends) starts with an empty stage (Haiku F1, measured: two roots each reserved $4.85
+under a $5 test cap). It also measured that the $28 Opus cap binds near 2,100 average output tokens per request
+(thinking included), on a model whose output length on this task no live call has measured (Haiku F3). Decision
+(Claude, under Elise's "we can burn them hard today" for the expiring API credit):
+1. Every Part 64 writer ledger lives in ONE fixed directory, `results/part64/writer-stage/`, resolved against the
+   repository root and independent of `--root`. The guard sums every ledger in it, whatever its run id, so no new run
+   or new root resets a stage. `--root` is resolved to an absolute path at every entry point (Luna r3 F1).
+2. The Opus stage cap rises from $28 to $40 (binds near 3,300 average output tokens); Haiku stays $4. The outer
+   bound is the credit workspace's $85 monthly cap. Changing a cap still needs an amendment.
+3. Probe gate (operator, runbook): after the two single-unit probes settle, project each writer's stage from the
+   probe's billed tokens times the stage's request count at batch price; if Opus projects above $36 (90% of its cap),
+   stop and report instead of running.
+4. Also fixed in the same fold: the 5-minute created-at window applies only to re-probe IDs (Haiku F2); a re-probe ID
+   is the stored base ID plus its attempt number (Haiku F4); the results parser splits on "\n" only (Haiku F5).
