@@ -2,7 +2,8 @@
 """Durable Part 64 M1 writer generation for Haiku 5.5 and Opus 5.5.
 
 Paid actions are opt-in CLI commands. Each writer/sample/unit-type combination
-has its own $8 paidaction ledger and sequential, resumable batch chunks.
+uses one or more $8 paidaction ledgers and sequential, resumable batch chunks;
+writer-wide stage caps bound settled plus reserved spend across those ledgers.
 """
 from __future__ import annotations
 
@@ -51,6 +52,8 @@ SAMPLE_COUNTS = {
 EXPECTED_UNITS = {"neuron": 250, "control": 250}
 MAX_TOKENS = 8192  # Includes adaptive thinking and the complete M1 answer.
 CHUNK_RESERVE_TARGET_USD = 1.0
+WRITER_STAGE_CAP_USD = {"haiku": 4.0, "opus": 28.0}
+OPUS_1X_LEDGER_PARTITIONS = 3
 OPUS_3X_LEDGER_PARTITIONS = 6
 ANTHROPIC_VERSION = "2023-06-01"
 HTTP_TIMEOUT_SECONDS = 120
@@ -130,7 +133,7 @@ def load_collection(path: Path = DEFAULT_COLLECTION) -> tuple[list[dict[str, Any
     if manifest.get("collection_sha256") != digest:
         raise WriterError("collection JSONL SHA-256 differs from its manifest")
     rows: list[dict[str, Any]] = []
-    for line_no, line in enumerate(raw.decode("utf-8").splitlines(), 1):
+    for line_no, line in enumerate(raw.decode("utf-8").split("\n"), 1):
         if not line.strip():
             continue
         try:
@@ -195,7 +198,7 @@ def validate_collection_manifest(value: Any) -> None:
             or value.get("model") != "Qwen/Qwen3-1.7B"
             or value.get("model_revision") != REGISTERED_MODEL_REVISION
             or not isinstance(corpus, dict)
-            or corpus.get("path") != str(REGISTERED_CORPUS)
+            or not isinstance(corpus.get("path"), str) or not corpus.get("path")
             or corpus.get("size_bytes") != REGISTERED_CORPUS_SIZE
             or not isinstance(digest, str) or not digest.startswith(REGISTERED_CORPUS_SHA256_PREFIX)
             or isinstance(median, bool) or not isinstance(median, (int, float)) or median < 10
@@ -305,7 +308,12 @@ def _chunk_requests(entries: list[tuple[dict[str, Any], dict[str, Any]]], model:
 
 
 def _ledger_partitions(writer: str, sample: str, rows: list[dict[str, Any]]) -> list[list[dict[str, Any]]]:
-    count = OPUS_3X_LEDGER_PARTITIONS if writer == "opus" and sample == "3x" else 1
+    if writer == "opus" and sample == "1x":
+        count = OPUS_1X_LEDGER_PARTITIONS
+    elif writer == "opus" and sample == "3x":
+        count = OPUS_3X_LEDGER_PARTITIONS
+    else:
+        count = 1
     return [rows[(len(rows) * index) // count:(len(rows) * (index + 1)) // count]
             for index in range(count)]
 
@@ -314,6 +322,41 @@ def ledger_path(root: Path, ledger_key: str) -> Path:
     if not ledger_key or any(char not in "abcdefghijklmnopqrstuvwxyz0123456789-" for char in ledger_key):
         raise WriterError(f"invalid ledger key {ledger_key!r}")
     return root / "ledgers" / f"{ledger_key}.jsonl"
+
+
+def _writer_stage_ledger_paths(root: Path, writer: str, current: Path) -> list[Path]:
+    """Find every ledger already opened for this writer stage, plus this reserve's ledger."""
+    paths = {current.resolve(strict=False)}
+    ledger_dir = root / "ledgers"
+    if ledger_dir.is_dir():
+        paths.update(path.resolve(strict=False) for path in ledger_dir.glob(f"{writer}-*.jsonl")
+                     if path.is_file())
+    return sorted(paths)
+
+
+def _reserve_with_stage_guard(root: Path, chunk: Mapping[str, Any], ledger: Ledger) -> str:
+    """Atomically check the writer-wide stage cap before opening a ledger reserve."""
+    writer = chunk.get("writer")
+    stage_cap = WRITER_STAGE_CAP_USD.get(writer)
+    if stage_cap is None:
+        raise WriterError(f"chunk has unknown writer stage {writer!r}")
+    amount = float(chunk["planned_reserve_usd"])
+    with run_lock(root):
+        states = (Ledger(str(path), HARD_CAP_USD).state()
+                  for path in _writer_stage_ledger_paths(root, writer, ledger.path))
+        committed = math.fsum(state["settled"] + state["reserved"] for state in states)
+        if committed + amount > stage_cap:
+            raise WriterError(
+                f"{writer} stage reservation refused: settled/reserved ${committed:.8f} plus "
+                f"${amount:.8f} exceeds registered stage cap ${stage_cap:.2f}")
+        return ledger.reserve(
+            amount, "part64-writer",
+            {"stage": "part64", "writer_stage": writer,
+             "run_id": f"{chunk['run_id']}:{chunk['ledger_key']}",
+             "local_run_id": chunk["run_id"],
+             "group_key": chunk["group_key"], "chunk_index": chunk["chunk_index"],
+             "attempt_no": chunk.get("attempt_no", 0),
+             "request_sha256": chunk["request_sha256"]})
 
 
 def _chunk_record(*, run_id: str, group_key: str, ledger_key: str,
@@ -372,10 +415,8 @@ def _build_plan(rows: list[dict[str, Any]], collection_sha256: str, *,
             for unit_type in UNIT_TYPES:
                 group_key = f"{writer}-{sample}-{unit_type}"
                 selected = [row for row in rows if row["type"] == unit_type]
-                # Opus 3x has enough output-token exposure that one $8 ledger
-                # can stop before all 250 units settle. Keep each partition's
-                # full max-token reserve under the hard cap. Other arms stay in
-                # one ledger per registered group.
+                # Opus 1x and 3x need partitions so each ledger's complete
+                # max-token reserve remains below the library's $8 cap.
                 partitions = _ledger_partitions(writer, sample, selected)
                 partition_count = len(partitions)
                 paths = []
@@ -394,6 +435,11 @@ def _build_plan(rows: list[dict[str, Any]], collection_sha256: str, *,
                             "sample": sample, "writer": writer, "request_index": index,
                             "input_windows": windows_for_sample(row, sample),
                         }))
+                    ledger_worst_case = request_reserve_usd([entry[0] for entry in entries], model)
+                    if ledger_worst_case >= HARD_CAP_USD:
+                        raise WriterError(
+                            f"{ledger_key} requires a whole-ledger worst-case reserve of "
+                            f"${ledger_worst_case:.4f}; every ledger share must stay below $8")
                     request_chunks = _chunk_requests(entries, model)
                     for entry_chunk in request_chunks:
                         relpath = f"chunks/{group_key}/chunk-{chunk_number:04d}.json"
@@ -662,13 +708,7 @@ def execute_chunk(root: Path, chunk_path: Path, api: Callable[..., str] = api_ca
             if attempt.get("status") != "reserved":
                 raise RecoveryRequired(f"chunk has a ledger attempt in {attempt.get('status')} state but no matching local transition")
         else:
-            attempt_id = ledger.reserve(
-                float(chunk["planned_reserve_usd"]), "part64-writer",
-                {"stage": "part64", "run_id": f"{chunk['run_id']}:{chunk['ledger_key']}",
-                 "local_run_id": chunk["run_id"],
-                 "group_key": chunk["group_key"], "chunk_index": chunk["chunk_index"],
-                 "attempt_no": chunk.get("attempt_no", 0),
-                 "request_sha256": chunk["request_sha256"]})
+            attempt_id = _reserve_with_stage_guard(root, chunk, ledger)
             _kill_at(kill_at, "after_reserve")
         chunk.update(state="reserved", attempt_id=attempt_id, reserved_at=utc_now())
         write_json(chunk_path, chunk)
@@ -825,7 +865,11 @@ def reprobe(root: Path, writer: str, who: str, reason: str,
     if old.get("state") != "settled" or outcome.get("passed"):
         raise WriterError(f"{writer} probe can be repeated only after a settled failed probe")
     attempt_no = int(old.get("attempt_no", 0)) + 1
-    entries = list(zip(old["requests"], old["request_metadata"]))
+    entries = []
+    for previous_request, metadata in zip(old["requests"], old["request_metadata"]):
+        request = dict(previous_request)
+        request["custom_id"] = f"{previous_request['custom_id']}-attempt-{attempt_no:03d}"
+        entries.append((request, metadata))
     record = _chunk_record(
         run_id=old["run_id"], group_key=old["group_key"], ledger_key=old["ledger_key"],
         chunk_index=old["chunk_index"], writer=old["writer"], sample=old["sample"],
@@ -975,6 +1019,8 @@ def _find_provider_batches(api: Callable[..., str], chunk: Mapping[str, Any]) ->
         created_at = _parse_provider_time(batch.get("created_at"))
         if created_at is None:
             raise RecoveryRequired(f"batch {batch['id']} has no valid created_at; cannot prove it predates this POST")
+        if created_at < uncertain_after:
+            continue
         status = batch.get("processing_status")
         if status != "ended":
             if created_at >= uncertain_after:
