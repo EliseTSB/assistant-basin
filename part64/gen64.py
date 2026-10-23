@@ -62,7 +62,9 @@ OPUS_3X_LEDGER_PARTITIONS = 6
 ANTHROPIC_VERSION = "2023-06-01"
 HTTP_TIMEOUT_SECONDS = 120
 POLL_INTERVAL_SECONDS = 5
+PIPELINE_POLL_INTERVAL_SECONDS = 60
 POLL_BOUND_SECONDS = 60 * 60
+PIPELINE_BOUND_SECONDS = 30 * 60 * 60
 ACCEPTED_STOP_REASONS = ("end_turn", "stop_sequence")
 M1_PROMPT = (gen60.HERE / "prompts" / "M1.txt").read_text(encoding="utf-8").strip()
 
@@ -71,8 +73,20 @@ class WriterError(RuntimeError):
     """A local Part 64 writer validation or recovery error."""
 
 
+class StageCapRefused(WriterError):
+    """The writer stage has no room for another worst-case chunk reserve."""
+
+    def __init__(self, message: str, *, writer: str | None = None):
+        super().__init__(message)
+        self.writer = writer
+
+
 class RecoveryRequired(WriterError):
     """An unknown paid outcome needs recovery or explicit operator retirement."""
+
+
+class _BatchNotEnded(TimeoutError):
+    """A one-check pipeline poll found a batch that is still processing."""
 
 
 def utc_now() -> str:
@@ -352,9 +366,9 @@ def _reserve_with_stage_guard(root: Path, chunk: Mapping[str, Any], ledger: Ledg
                   for path in _writer_stage_ledger_paths(root, writer, ledger.path))
         committed = math.fsum(state["settled"] + state["reserved"] for state in states)
         if committed + amount > stage_cap:
-            raise WriterError(
+            raise StageCapRefused(
                 f"{writer} stage reservation refused: settled/reserved ${committed:.8f} plus "
-                f"${amount:.8f} exceeds registered stage cap ${stage_cap:.2f}")
+                f"${amount:.8f} exceeds registered stage cap ${stage_cap:.2f}", writer=writer)
         return ledger.reserve(
             amount, "part64-writer",
             {"stage": "part64", "writer_stage": writer,
@@ -613,7 +627,8 @@ def _poll_until_ended(batch_id: str, api: Callable[..., str], *, interval: float
         if status.get("processing_status") == "ended":
             return
         if time.monotonic() >= deadline:
-            raise TimeoutError(f"batch {batch_id} did not end within {bound:g}s; reserve remains active")
+            raise _BatchNotEnded(
+                f"batch {batch_id} did not end within {bound:g}s; reserve remains active")
         sleep(min(interval, max(0.0, deadline - time.monotonic())))
 
 
@@ -695,14 +710,21 @@ def _result_bundle(chunk: Mapping[str, Any], rows: list[dict[str, Any]]) -> dict
 def execute_chunk(root: Path, chunk_path: Path, api: Callable[..., str] = api_call, *,
                   kill_at: str | None = None, poll_interval: float = POLL_INTERVAL_SECONDS,
                   poll_bound: float = POLL_BOUND_SECONDS,
+                  submit_only: bool = False,
                   sleep: Callable[[float], Any] = time.sleep) -> dict[str, Any]:
-    """Execute or recover one chunk without ever resubmitting a known/ambiguous POST."""
+    """Execute or recover one chunk without ever resubmitting a known/ambiguous POST.
+
+    ``submit_only`` durably records or adopts a batch ID, then returns without
+    polling or settling the submitted chunk.
+    """
     chunk = read_json(chunk_path)
     if chunk.get("schema") != "part64-writer-chunk-v1":
         raise WriterError(f"invalid chunk record: {chunk_path}")
     ledger = Ledger(str(ledger_path(root, chunk["ledger_key"])), HARD_CAP_USD)
     state = chunk.get("state")
     if state == "settled":
+        return chunk
+    if submit_only and state == "submitted":
         return chunk
     if state == "retired":
         if chunk.get("batch_id"):
@@ -807,6 +829,8 @@ def execute_chunk(root: Path, chunk_path: Path, api: Callable[..., str] = api_ca
 
     results_path = chunk_path.with_name(chunk_path.stem + "-results.json")
     if state == "submitted":
+        if submit_only:
+            return chunk
         batch_id = chunk.get("batch_id")
         if not isinstance(batch_id, str) or not batch_id:
             raise RecoveryRequired("submitted chunk has no durable batch ID")
@@ -1105,11 +1129,86 @@ def _write_group_output(root: Path, group_key: str, group: Mapping[str, Any]) ->
     return output_path
 
 
-def _run_groups(root: Path, manifest: dict[str, Any], api: Callable[..., str],
+def _writer_stage_committed(writer: str) -> float:
+    """Return settled plus reserved spend for one writer's shared stage."""
+    ledger_dir = WRITER_STAGE_LEDGER_DIR
+    if not ledger_dir.is_dir():
+        return 0.0
+    return math.fsum(
+        (state := Ledger(str(path), HARD_CAP_USD).state())["settled"] + state["reserved"]
+        for path in ledger_dir.glob(f"{writer}-*.jsonl") if path.is_file())
+
+
+def _run_groups(root: Path, manifest: dict[str, Any], api: Callable[..., str], *,
+                poll_interval: float = PIPELINE_POLL_INTERVAL_SECONDS,
+                sleep: Callable[[float], Any] = time.sleep,
+                pipeline_bound: float = PIPELINE_BOUND_SECONDS,
                 **kwargs: Any) -> None:
+    """Submit chunks in manifest order, then poll each in-flight batch once per pass."""
+    chunks = [(group_key, group, relpath)
+              for group_key, group in manifest["groups"].items()
+              for relpath in group["chunk_paths"]]
+    deadline = time.monotonic() + pipeline_bound
+    submit_kwargs = dict(kwargs)
+    submit_kwargs.pop("poll_bound", None)
+    submit_kwargs.update(poll_interval=poll_interval, sleep=sleep)
+    collect_kwargs = dict(submit_kwargs)
+    collect_kwargs["poll_bound"] = 0
+
+    def check_deadline() -> None:
+        if time.monotonic() >= deadline:
+            raise TimeoutError(f"writer pipeline did not settle within {pipeline_bound:g}s")
+
+    while True:
+        check_deadline()
+        refusal: StageCapRefused | None = None
+        for _group_key, _group, relpath in chunks:
+            check_deadline()
+            try:
+                execute_chunk(root, root / relpath, api, submit_only=True, **submit_kwargs)
+            except StageCapRefused as exc:
+                refusal = exc
+                break
+            check_deadline()
+
+        committed_before_collect = (_writer_stage_committed(refusal.writer)
+                                    if refusal is not None and refusal.writer else None)
+        for _group_key, _group, relpath in chunks:
+            check_deadline()
+            chunk = read_json(root / relpath)
+            if chunk.get("state") != "submitted":
+                continue
+            try:
+                # A zero bound still performs one status GET. An in-progress
+                # batch raises _BatchNotEnded and remains in the collect set.
+                execute_chunk(root, root / relpath, api, **collect_kwargs)
+            except _BatchNotEnded:
+                pass
+            check_deadline()
+
+        states = [read_json(root / relpath).get("state") for _key, _group, relpath in chunks]
+        if all(state == "settled" for state in states):
+            check_deadline()
+            break
+        still_submitted = any(state == "submitted" for state in states)
+        if still_submitted:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                raise TimeoutError(f"writer pipeline did not settle within {pipeline_bound:g}s")
+            sleep(min(poll_interval, remaining))
+            continue
+        if refusal is not None:
+            committed_after_collect = (_writer_stage_committed(refusal.writer)
+                                       if refusal.writer else committed_before_collect)
+            if (committed_before_collect is None or committed_after_collect is None
+                    or committed_after_collect >= committed_before_collect - 1e-12):
+                # With no active batches, another refusal cannot be relieved by
+                # waiting. Preserve the guard's original diagnostic for caller.
+                raise refusal
+            # Settling reduced the reserve enough to justify another submit pass.
+            continue
+
     for group_key, group in manifest["groups"].items():
-        for relpath in group["chunk_paths"]:
-            execute_chunk(root, root / relpath, api, **kwargs)
         _write_group_output(root, group_key, group)
     manifest["status"] = "complete"
     manifest["completed_at"] = utc_now()

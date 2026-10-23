@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import hashlib
+import math
 import os
 from pathlib import Path
 import shutil
@@ -83,7 +84,8 @@ def collection_manifest(rows: list[dict], *, median: float | None = None) -> dic
 
 class FakeBatchAPI:
     def __init__(self, *, text: str | None = None, stop_reason: str = "end_turn",
-                 errored_custom_ids: set[str] | None = None):
+                 errored_custom_ids: set[str] | None = None,
+                 checks_until_end: int = 1, fail_first_status: bool = False):
         self.text = answer_text() if text is None else text
         self.stop_reason = stop_reason
         self.errored_custom_ids = set(errored_custom_ids or ())
@@ -92,6 +94,11 @@ class FakeBatchAPI:
         self.batch_records: dict[str, dict] = {}
         self.polls = 0
         self.result_gets = 0
+        self.checks_until_end = checks_until_end
+        self.batch_status_checks: dict[str, int] = {}
+        self.events: list[tuple[str, str]] = []
+        self.max_in_flight = 0
+        self.fail_first_status = fail_first_status
         self.chunk_path: Path | None = None
         self.durable_id_seen_before_poll = True
 
@@ -102,12 +109,19 @@ class FakeBatchAPI:
             self.batch_requests[batch_id] = body["requests"]
             self.batch_records[batch_id] = {"id": batch_id, "processing_status": "in_progress",
                                             "created_at": gen64.utc_now()}
+            self.batch_status_checks[batch_id] = 0
+            self.events.append(("post", batch_id))
+            self.max_in_flight = max(
+                self.max_in_flight,
+                sum(record["processing_status"] == "in_progress"
+                    for record in self.batch_records.values()))
             return json.dumps({"id": batch_id, "processing_status": "in_progress"})
         if method == "GET" and path.startswith("/v1/messages/batches?"):
             return json.dumps({"data": list(self.batch_records.values()), "has_more": False})
         if method == "GET" and path.startswith("/v1/messages/batches/") and path.endswith("/results"):
             self.result_gets += 1
             batch_id = path.split("/")[-2]
+            self.events.append(("results", batch_id))
             requests = self.batch_requests[batch_id]
             rows = []
             for request in requests:
@@ -123,13 +137,20 @@ class FakeBatchAPI:
                     }}})
             return "\n".join(json.dumps(row) for row in rows) + "\n"
         if method == "GET" and path.startswith("/v1/messages/batches/"):
+            if self.fail_first_status:
+                self.fail_first_status = False
+                raise RuntimeError("simulated process kill after submit pass")
             self.polls += 1
             batch_id = path.rsplit("/", 1)[-1]
-            self.batch_records[batch_id]["processing_status"] = "ended"
+            self.batch_status_checks[batch_id] += 1
+            if self.batch_status_checks[batch_id] >= self.checks_until_end:
+                self.batch_records[batch_id]["processing_status"] = "ended"
+            status = self.batch_records[batch_id]["processing_status"]
+            self.events.append(("status", batch_id))
             if self.chunk_path is not None:
                 chunk = gen64.read_json(self.chunk_path)
                 self.durable_id_seen_before_poll &= chunk.get("state") == "submitted" and bool(chunk.get("batch_id"))
-            return json.dumps({"processing_status": "ended", "request_counts": {"succeeded": 1}})
+            return json.dumps({"processing_status": status, "request_counts": {"succeeded": 1}})
         raise AssertionError(f"unexpected fake API call: {method} {path}")
 
 
@@ -574,11 +595,12 @@ class Score64MarkerTests(unittest.TestCase):
 
 class ChunkRecoveryTests(LocalPaidRegistryTests):
     def make_chunk(self, root: Path, key: str = "haiku-1x-neuron", *, probe: bool = False,
-                   count: int = 1, writer: str = "haiku", sample: str = "1x") -> Path:
+                   count: int = 1, writer: str = "haiku", sample: str = "1x",
+                   custom_id_base: str = "u") -> Path:
         entries = []
         for index in range(count):
             row = collection_row(f"L0:u{index + 1}")
-            custom_id = f"u{index:04d}"
+            custom_id = f"{custom_id_base}{index:04d}"
             request = gen64.request_for(writer, sample, row, custom_id)
             metadata = {"unit_key": row["unit_key"], "type": "neuron", "sample": sample,
                         "writer": writer, "input_windows": gen64.windows_for_sample(row, sample)}
@@ -589,6 +611,31 @@ class ChunkRecoveryTests(LocalPaidRegistryTests):
         path = root / "chunks" / f"{key}.json"
         gen64.write_json(path, record)
         return path
+
+    def make_pipeline_manifest(self, root: Path, *, count: int = 3,
+                               key_prefix: str = "haiku-pipeline",
+                               custom_id_base: str = "pipe") -> dict:
+        paths = []
+        for index in range(count):
+            path = self.make_chunk(root, key=f"{key_prefix}-{index:02d}",
+                                   custom_id_base=f"{custom_id_base}{index}")
+            paths.append(str(path.relative_to(root)))
+        manifest = {"schema": "test-run", "status": "planned", "groups": {
+            "test-chunk": {"chunk_paths": paths}}}
+        gen64.write_json(root / "run.json", manifest)
+        return manifest
+
+    def assert_pipeline_chunks_settled_once(self, root: Path, manifest: dict) -> None:
+        for relpath in manifest["groups"]["test-chunk"]["chunk_paths"]:
+            chunk = gen64.read_json(root / relpath)
+            self.assertEqual(chunk["state"], "settled")
+            ledger = Ledger(str(gen64.ledger_path(root, chunk["ledger_key"])), HARD_CAP_USD)
+            with ledger._locked():
+                events, _ = ledger._read_locked()
+            settlements = [event for event in events
+                           if event.get("event") == "settle"
+                           and event.get("attempt_id") == chunk["attempt_id"]]
+            self.assertEqual(len(settlements), 1)
 
     def execute_and_check_settled(self, root: Path, path: Path, api: FakeBatchAPI):
         result = gen64.execute_chunk(root, path, api, poll_interval=0, sleep=lambda _n: None)
@@ -604,6 +651,142 @@ class ChunkRecoveryTests(LocalPaidRegistryTests):
         gen64.execute_chunk(root, path, api, poll_interval=0, sleep=lambda _n: None)
         self.assertEqual(len(api.posts), 1)
         self.assertEqual(len(gen64._attempts(ledger)), 1)
+
+    def test_pipeline_has_multiple_chunks_in_flight_and_reserve_stays_within_cap(self):
+        with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
+            root = Path(temporary)
+            manifest = self.make_pipeline_manifest(root, count=4)
+            paths = [root / relpath for relpath in manifest["groups"]["test-chunk"]["chunk_paths"]]
+            reserves = [gen64.read_json(path)["planned_reserve_usd"] for path in paths]
+            cap = math.fsum(reserves[:2]) + 1e-8
+            api = FakeBatchAPI(checks_until_end=2)
+            reservations = []
+            original_reserve = gen64._reserve_with_stage_guard
+
+            def capture_reservation(reserve_root, chunk, ledger):
+                attempt_id = original_reserve(reserve_root, chunk, ledger)
+                reservations.append(gen64._writer_stage_committed(chunk["writer"]))
+                return attempt_id
+
+            with patch.dict(gen64.WRITER_STAGE_CAP_USD, {"haiku": cap}), \
+                    patch.object(gen64, "_reserve_with_stage_guard", side_effect=capture_reservation):
+                gen64._run_groups(root, manifest, api, poll_interval=0, sleep=lambda _n: None)
+
+            self.assertGreater(api.max_in_flight, 1)
+            self.assertTrue(reservations)
+            self.assertLessEqual(max(reservations), cap + 1e-8)
+            self.assert_pipeline_chunks_settled_once(root, manifest)
+            self.assertEqual(len(api.posts), len(paths))
+            self.assertEqual(api.result_gets, len(paths))
+            posted_ids = [request["custom_id"] for batch in api.posts for request in batch]
+            expected_ids = [gen64.read_json(path)["requests"][0]["custom_id"] for path in paths]
+            self.assertCountEqual(posted_ids, expected_ids)
+            self.assertEqual(len(posted_ids), len(set(posted_ids)))
+
+    def test_stage_cap_refusal_stops_submit_pass_then_retries_after_settlement(self):
+        with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
+            root = Path(temporary)
+            manifest = self.make_pipeline_manifest(root, count=4, key_prefix="haiku-refusal")
+            paths = [root / relpath for relpath in manifest["groups"]["test-chunk"]["chunk_paths"]]
+            reserves = [gen64.read_json(path)["planned_reserve_usd"] for path in paths]
+            cap = math.fsum(reserves[:2]) + 1e-8
+            api = FakeBatchAPI(checks_until_end=2)
+            with patch.dict(gen64.WRITER_STAGE_CAP_USD, {"haiku": cap}):
+                gen64._run_groups(root, manifest, api, poll_interval=0, sleep=lambda _n: None)
+
+            first_status = next(index for index, event in enumerate(api.events) if event[0] == "status")
+            first_results = next(index for index, event in enumerate(api.events) if event[0] == "results")
+            third_post = [index for index, event in enumerate(api.events) if event[0] == "post"][2]
+            self.assertEqual(sum(event[0] == "post" for event in api.events[:first_status]), 2)
+            self.assertGreater(third_post, first_results)
+            self.assertEqual(len(api.posts), len(paths))
+            self.assert_pipeline_chunks_settled_once(root, manifest)
+
+    def test_pipeline_propagates_non_guard_writer_error(self):
+        with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
+            root = Path(temporary)
+            manifest = self.make_pipeline_manifest(root, count=1, key_prefix="haiku-error")
+            api = FakeBatchAPI()
+            with patch.object(gen64, "_reserve_with_stage_guard",
+                              side_effect=gen64.WriterError("broken ledger state")):
+                with self.assertRaisesRegex(gen64.WriterError, "broken ledger state") as raised:
+                    gen64._run_groups(root, manifest, api, poll_interval=0, sleep=lambda _n: None)
+            self.assertNotIsInstance(raised.exception, gen64.StageCapRefused)
+            self.assertEqual(api.posts, [])
+
+            class InvalidStatusAPI(FakeBatchAPI):
+                def __call__(self, method, path, body=None):
+                    if method == "GET" and path.startswith("/v1/messages/batches/") \
+                            and not path.endswith("/results"):
+                        return "[]"
+                    return super().__call__(method, path, body)
+
+            invalid_root = Path(temporary) / "invalid-status"
+            invalid_manifest = self.make_pipeline_manifest(
+                invalid_root, count=1, key_prefix="haiku-invalid-status")
+            invalid_api = InvalidStatusAPI()
+            with self.assertRaisesRegex(gen64.WriterError, "status is not an object"):
+                gen64._run_groups(invalid_root, invalid_manifest, invalid_api,
+                                  poll_interval=0, sleep=lambda _n: None)
+            self.assertEqual(len(invalid_api.posts), 1)
+
+    def test_resume_after_submit_pass_does_not_duplicate_posts_and_matches_uninterrupted_output(self):
+        with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
+            base = Path(temporary)
+            uninterrupted_root = base / "uninterrupted"
+            resumed_root = base / "resumed"
+            uninterrupted_root.mkdir()
+            resumed_root.mkdir()
+            uninterrupted = self.make_pipeline_manifest(
+                uninterrupted_root, count=3, key_prefix="haiku-baseline", custom_id_base="same")
+            resumed = self.make_pipeline_manifest(
+                resumed_root, count=3, key_prefix="haiku-recovered", custom_id_base="same")
+            api_uninterrupted = FakeBatchAPI(checks_until_end=2)
+            api_resumed = FakeBatchAPI(checks_until_end=2, fail_first_status=True)
+            with patch.dict(gen64.WRITER_STAGE_CAP_USD, {"haiku": 10.0}):
+                gen64._run_groups(uninterrupted_root, uninterrupted, api_uninterrupted,
+                                  poll_interval=0, sleep=lambda _n: None)
+                with self.assertRaisesRegex(RuntimeError, "simulated process kill"):
+                    gen64._run_groups(resumed_root, resumed, api_resumed,
+                                      poll_interval=0, sleep=lambda _n: None)
+                saved = gen64.read_json(resumed_root / "run.json")
+                for relpath in saved["groups"]["test-chunk"]["chunk_paths"]:
+                    self.assertEqual(gen64.read_json(resumed_root / relpath)["state"], "submitted")
+                resumed = gen64.read_json(resumed_root / "run.json")
+                gen64._run_groups(resumed_root, resumed, api_resumed,
+                                  poll_interval=0, sleep=lambda _n: None)
+
+            expected = (uninterrupted_root / "outputs" / "test-chunk.jsonl").read_bytes()
+            actual = (resumed_root / "outputs" / "test-chunk.jsonl").read_bytes()
+            self.assertEqual(actual, expected)
+            resumed_paths = [resumed_root / relpath
+                             for relpath in resumed["groups"]["test-chunk"]["chunk_paths"]]
+            self.assertEqual(len(api_resumed.posts), len(resumed_paths))
+            posted_ids = [request["custom_id"] for batch in api_resumed.posts for request in batch]
+            expected_ids = [gen64.read_json(path)["requests"][0]["custom_id"]
+                            for path in resumed_paths]
+            self.assertCountEqual(posted_ids, expected_ids)
+            self.assertEqual(len(posted_ids), len(set(posted_ids)))
+            self.assert_pipeline_chunks_settled_once(resumed_root, resumed)
+
+    def test_group_output_waits_until_every_chunk_is_settled(self):
+        with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
+            root = Path(temporary)
+            manifest = self.make_pipeline_manifest(root, count=3, key_prefix="haiku-output")
+            api = FakeBatchAPI(checks_until_end=2)
+            original_write = gen64._write_group_output
+            writes = []
+
+            def check_then_write(write_root, group_key, group):
+                states = [gen64.read_json(write_root / relpath)["state"]
+                          for relpath in group["chunk_paths"]]
+                self.assertTrue(all(state == "settled" for state in states), states)
+                writes.append(group_key)
+                return original_write(write_root, group_key, group)
+
+            with patch.object(gen64, "_write_group_output", side_effect=check_then_write):
+                gen64._run_groups(root, manifest, api, poll_interval=0, sleep=lambda _n: None)
+            self.assertEqual(writes, ["test-chunk"])
 
     def test_kill_after_reserve_resumes_without_second_reserve_or_duplicate_submit(self):
         with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
