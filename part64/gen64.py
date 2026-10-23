@@ -38,6 +38,7 @@ from paidaction.pricing import BATCH_RATES_USD_PER_MILLION, worst_case_cost
 
 DEFAULT_COLLECTION = BASIN / "results" / "part64" / "collection.jsonl"
 DEFAULT_ROOT = BASIN / "results" / "part64" / "gen64"
+WRITER_STAGE_LEDGER_DIR = BASIN / "results" / "part64" / "writer-stage"
 REGISTERED_CORPUS = Path("/mnt/c/Users/alexa/neuron-probe-gpu/qwen35/pile10k.jsonl")
 REGISTERED_CORPUS_SIZE = 63_385_283
 REGISTERED_CORPUS_SHA256_PREFIX = "56ad98d5a82b2bb4"
@@ -52,7 +53,8 @@ SAMPLE_COUNTS = {
 EXPECTED_UNITS = {"neuron": 250, "control": 250}
 MAX_TOKENS = 8192  # Includes adaptive thinking and the complete M1 answer.
 CHUNK_RESERVE_TARGET_USD = 1.0
-WRITER_STAGE_CAP_USD = {"haiku": 4.0, "opus": 28.0}
+WRITER_STAGE_CAP_USD = {"haiku": 4.0, "opus": 40.0}
+OPUS_PROBE_STOP_USD = 36.0
 OPUS_1X_LEDGER_PARTITIONS = 3
 OPUS_3X_LEDGER_PARTITIONS = 6
 ANTHROPIC_VERSION = "2023-06-01"
@@ -321,13 +323,13 @@ def _ledger_partitions(writer: str, sample: str, rows: list[dict[str, Any]]) -> 
 def ledger_path(root: Path, ledger_key: str) -> Path:
     if not ledger_key or any(char not in "abcdefghijklmnopqrstuvwxyz0123456789-" for char in ledger_key):
         raise WriterError(f"invalid ledger key {ledger_key!r}")
-    return root / "ledgers" / f"{ledger_key}.jsonl"
+    return WRITER_STAGE_LEDGER_DIR / f"{ledger_key}.jsonl"
 
 
 def _writer_stage_ledger_paths(root: Path, writer: str, current: Path) -> list[Path]:
     """Find every ledger already opened for this writer stage, plus this reserve's ledger."""
     paths = {current.resolve(strict=False)}
-    ledger_dir = root / "ledgers"
+    ledger_dir = WRITER_STAGE_LEDGER_DIR
     if ledger_dir.is_dir():
         paths.update(path.resolve(strict=False) for path in ledger_dir.glob(f"{writer}-*.jsonl")
                      if path.is_file())
@@ -341,7 +343,9 @@ def _reserve_with_stage_guard(root: Path, chunk: Mapping[str, Any], ledger: Ledg
     if stage_cap is None:
         raise WriterError(f"chunk has unknown writer stage {writer!r}")
     amount = float(chunk["planned_reserve_usd"])
-    with run_lock(root):
+    # Different --root values share the same stage cap and ledgers, so they
+    # must serialize the check and reserve against one shared lock.
+    with run_lock(WRITER_STAGE_LEDGER_DIR):
         states = (Ledger(str(path), HARD_CAP_USD).state()
                   for path in _writer_stage_ledger_paths(root, writer, ledger.path))
         committed = math.fsum(state["settled"] + state["reserved"] for state in states)
@@ -354,6 +358,7 @@ def _reserve_with_stage_guard(root: Path, chunk: Mapping[str, Any], ledger: Ledg
             {"stage": "part64", "writer_stage": writer,
              "run_id": f"{chunk['run_id']}:{chunk['ledger_key']}",
              "local_run_id": chunk["run_id"],
+             "run_root": str(Path(root).resolve()),
              "group_key": chunk["group_key"], "chunk_index": chunk["chunk_index"],
              "attempt_no": chunk.get("attempt_no", 0),
              "request_sha256": chunk["request_sha256"]})
@@ -362,9 +367,18 @@ def _reserve_with_stage_guard(root: Path, chunk: Mapping[str, Any], ledger: Ledg
 def _chunk_record(*, run_id: str, group_key: str, ledger_key: str,
                   chunk_index: str | int, writer: str, sample: str,
                   unit_type: str, entries: list[tuple[dict[str, Any], dict[str, Any]]],
-                  probe: bool = False) -> dict[str, Any]:
+                  probe: bool = False,
+                  base_custom_ids: list[str] | None = None) -> dict[str, Any]:
     requests = [entry[0] for entry in entries]
     metadata = [entry[1] for entry in entries]
+    custom_ids = [request.get("custom_id") for request in requests]
+    if any(not isinstance(custom_id, str) or len(custom_id) > 64 for custom_id in custom_ids):
+        raise WriterError("every provider custom_id must be a string of at most 64 characters")
+    if base_custom_ids is None:
+        base_custom_ids = list(custom_ids)
+    if (len(base_custom_ids) != len(requests)
+            or any(not isinstance(custom_id, str) or len(custom_id) > 64 for custom_id in base_custom_ids)):
+        raise WriterError("every stored base custom_id must be a string of at most 64 characters")
     model = WRITERS[writer]
     return {
         "schema": "part64-writer-chunk-v1",
@@ -380,6 +394,7 @@ def _chunk_record(*, run_id: str, group_key: str, ledger_key: str,
         "state": "planned",
         "attempt_no": 0,
         "retired_attempts": [],
+        "base_custom_ids": list(base_custom_ids),
         "request_count": len(requests),
         "request_sha256": sha256_bytes(canonical_json({"requests": requests,
                                                         "request_metadata": metadata})),
@@ -541,7 +556,8 @@ def _attempts(ledger: Ledger) -> dict[str, dict[str, Any]]:
         return ledger._attempts(events)
 
 
-def _find_attempt(ledger: Ledger, chunk: Mapping[str, Any]) -> tuple[str, dict[str, Any]] | None:
+def _find_attempt(ledger: Ledger, chunk: Mapping[str, Any],
+                  root: Path) -> tuple[str, dict[str, Any]] | None:
     matches = [(attempt_id, row) for attempt_id, row in _attempts(ledger).items()
                if row.get("kind") == "part64-writer"
                and row.get("meta", {}).get("local_run_id") == chunk.get("run_id")
@@ -550,6 +566,13 @@ def _find_attempt(ledger: Ledger, chunk: Mapping[str, Any]) -> tuple[str, dict[s
                and row.get("meta", {}).get("attempt_no", 0) == chunk.get("attempt_no", 0)]
     if len(matches) > 1:
         raise RecoveryRequired(f"multiple ledger reservations match {chunk.get('group_key')} chunk {chunk.get('chunk_index')}")
+    if matches:
+        recorded_root = matches[0][1].get("meta", {}).get("run_root")
+        if (isinstance(recorded_root, str)
+                and Path(recorded_root).resolve() != Path(root).resolve()):
+            raise LedgerError(
+                f"run {chunk.get('run_id')!r} already uses ledger from root {recorded_root}; "
+                f"refusing copied root {Path(root).resolve()}")
     if matches and matches[0][1].get("meta", {}).get("request_sha256") != chunk.get("request_sha256"):
         raise RecoveryRequired("ledger reservation request digest differs from the durable chunk plan")
     return matches[0] if matches else None
@@ -562,7 +585,7 @@ def _kill_at(requested: str | None, stage: str) -> None:
 
 def _parse_result_jsonl(text: str) -> list[dict[str, Any]]:
     rows = []
-    for line_no, line in enumerate(text.splitlines(), 1):
+    for line_no, line in enumerate(text.split("\n"), 1):
         if not line.strip():
             continue
         try:
@@ -702,7 +725,7 @@ def execute_chunk(root: Path, chunk_path: Path, api: Callable[..., str] = api_ca
         raise RecoveryRequired(f"chunk {chunk['group_key']} {chunk['chunk_index']} is {state}; create a new reviewed run")
 
     if state == "planned" or (state == "reserved" and not chunk.get("attempt_id")):
-        match = _find_attempt(ledger, chunk)
+        match = _find_attempt(ledger, chunk, root)
         if match:
             attempt_id, attempt = match
             if attempt.get("status") != "reserved":
@@ -845,9 +868,82 @@ def execute_probes(root: Path, manifest: Mapping[str, Any], api: Callable[..., s
     return outcomes
 
 
+def probe_stage_projections(root: Path, manifest: Mapping[str, Any]) -> dict[str, dict[str, Any]]:
+    """Project each complete writer stage from its settled single-request probe usage."""
+    root = Path(root).resolve()
+    projections: dict[str, dict[str, Any]] = {}
+    for writer in WRITERS:
+        probe_info = manifest.get("probes", {}).get(writer)
+        if not isinstance(probe_info, dict) or not isinstance(probe_info.get("chunk_path"), str):
+            raise WriterError(f"run has no probe plan for {writer}")
+        probe_path = root / probe_info["chunk_path"]
+        probe_chunk = read_json(probe_path)
+        if probe_chunk.get("state") != "settled":
+            raise WriterError(f"{writer} probe is not settled; stage projection is unavailable")
+        results_path = probe_path.with_name(probe_path.stem + "-results.json")
+        usage = read_json(results_path).get("usage")
+        input_tokens = usage.get("input_tokens") if isinstance(usage, dict) else None
+        output_tokens = usage.get("output_tokens") if isinstance(usage, dict) else None
+        for label, value in (("input", input_tokens), ("output", output_tokens)):
+            if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+                raise WriterError(f"{writer} probe has invalid billed {label} token usage")
+
+        request_count = len(probe_chunk.get("requests", []))
+        for group in manifest.get("groups", {}).values():
+            if group.get("writer") != writer:
+                continue
+            for relpath in group.get("chunk_paths", []):
+                chunk = read_json(root / relpath)
+                request_count += len(chunk.get("requests", []))
+        if request_count <= 0:
+            raise WriterError(f"{writer} stage has no planned requests to project")
+        input_rate, output_rate = BATCH_RATES_USD_PER_MILLION[WRITERS[writer]]
+        projected_usd = ((input_tokens * input_rate + output_tokens * output_rate)
+                         * request_count / 1_000_000)
+        projections[writer] = {
+            "writer": writer,
+            "input_tokens": input_tokens,
+            "output_tokens": output_tokens,
+            "request_count": request_count,
+            "projected_usd": projected_usd,
+        }
+    return projections
+
+
+def format_probe_stage_projections(projections: Mapping[str, Mapping[str, Any]]) -> list[str]:
+    """Render the probe-based stage estimate and its operator stop line."""
+    lines = []
+    for writer in WRITERS:
+        projection = projections[writer]
+        lines.append(
+            f"{writer}: probe billed {projection['input_tokens']:,} input + "
+            f"{projection['output_tokens']:,} output tokens x "
+            f"{projection['request_count']:,} planned stage requests at batch price = "
+            f"${projection['projected_usd']:.2f}"
+        )
+    opus = projections.get("opus")
+    if opus is not None and float(opus["projected_usd"]) > OPUS_PROBE_STOP_USD:
+        lines.append(
+            f"STOP: Opus projected stage cost ${float(opus['projected_usd']):.2f} "
+            f"is above ${OPUS_PROBE_STOP_USD:.2f}; do not run generation."
+        )
+    return lines
+
+
+def _base_custom_id(custom_id: str) -> str:
+    """Remove one or more historical re-probe suffixes from a stored ID."""
+    while True:
+        base, marker, suffix = custom_id.rpartition("-attempt-")
+        if marker and len(suffix) == 3 and suffix.isdigit():
+            custom_id = base
+        else:
+            return custom_id
+
+
 def reprobe(root: Path, writer: str, who: str, reason: str,
             api: Callable[..., str] = api_call, **kwargs: Any) -> dict[str, Any]:
     """Create an explicitly recorded new probe attempt after a settled failure."""
+    root = Path(root).resolve()
     if writer not in WRITERS:
         raise WriterError(f"unknown writer {writer!r}")
     if not who.strip() or not reason.strip():
@@ -865,15 +961,21 @@ def reprobe(root: Path, writer: str, who: str, reason: str,
     if old.get("state") != "settled" or outcome.get("passed"):
         raise WriterError(f"{writer} probe can be repeated only after a settled failed probe")
     attempt_no = int(old.get("attempt_no", 0)) + 1
+    base_custom_ids = old.get("base_custom_ids")
+    if (not isinstance(base_custom_ids, list) or len(base_custom_ids) != len(old["requests"])
+            or any(not isinstance(custom_id, str) for custom_id in base_custom_ids)):
+        base_custom_ids = [_base_custom_id(request["custom_id"]) for request in old["requests"]]
     entries = []
-    for previous_request, metadata in zip(old["requests"], old["request_metadata"]):
+    for base_custom_id, previous_request, metadata in zip(
+            base_custom_ids, old["requests"], old["request_metadata"]):
         request = dict(previous_request)
-        request["custom_id"] = f"{previous_request['custom_id']}-attempt-{attempt_no:03d}"
+        request["custom_id"] = f"{base_custom_id}-attempt-{attempt_no:03d}"
         entries.append((request, metadata))
     record = _chunk_record(
         run_id=old["run_id"], group_key=old["group_key"], ledger_key=old["ledger_key"],
         chunk_index=old["chunk_index"], writer=old["writer"], sample=old["sample"],
-        unit_type=old["unit_type"], entries=entries, probe=True)
+        unit_type=old["unit_type"], entries=entries, probe=True,
+        base_custom_ids=base_custom_ids)
     authorization = {"who": who.strip(), "reason": reason.strip(), "authorized_at": utc_now(),
                      "prior_chunk": info["chunk_path"], "prior_attempt_no": old.get("attempt_no", 0)}
     record["attempt_no"] = attempt_no
@@ -929,6 +1031,7 @@ def _run_groups(root: Path, manifest: dict[str, Any], api: Callable[..., str],
 
 def run_probe(collection: Path = DEFAULT_COLLECTION, root: Path = DEFAULT_ROOT,
               api: Callable[..., str] = api_call, **kwargs: Any) -> list[dict[str, Any]]:
+    root = Path(root).resolve()
     rows, digest = load_collection(collection)
     if api is api_call:
         preflight_api()
@@ -940,6 +1043,7 @@ def run_probe(collection: Path = DEFAULT_COLLECTION, root: Path = DEFAULT_ROOT,
 def run_generation(collection: Path = DEFAULT_COLLECTION, root: Path = DEFAULT_ROOT,
                    api: Callable[..., str] = api_call, *, initialize: bool = False,
                    **kwargs: Any) -> None:
+    root = Path(root).resolve()
     rows, digest = load_collection(collection)
     if api is api_call:
         preflight_api()
@@ -1013,24 +1117,28 @@ def _find_provider_batches(api: Callable[..., str], chunk: Mapping[str, Any]) ->
         raise RecoveryRequired("provider batch listing exceeded the 1000-page safety bound")
 
     uncertain_after = posted_at - timedelta(minutes=5)
+    attempt_no = chunk.get("attempt_no", 0)
+    is_reprobe = (bool(chunk.get("probe")) and isinstance(attempt_no, int)
+                  and not isinstance(attempt_no, bool) and attempt_no > 0)
     matches: list[str] = []
     unresolved: list[str] = []
     for batch in batches:
         created_at = _parse_provider_time(batch.get("created_at"))
         if created_at is None:
             raise RecoveryRequired(f"batch {batch['id']} has no valid created_at; cannot prove it predates this POST")
-        if created_at < uncertain_after:
+        within_window = created_at >= uncertain_after
+        if is_reprobe and not within_window:
             continue
         status = batch.get("processing_status")
         if status != "ended":
-            if created_at >= uncertain_after:
+            if not is_reprobe or within_window:
                 unresolved.append(batch["id"])
             continue
         try:
             result_text = api("GET", f"/v1/messages/batches/{batch['id']}/results")
             results = _parse_result_jsonl(result_text)
         except Exception as exc:
-            if created_at >= uncertain_after:
+            if not is_reprobe or within_window:
                 unresolved.append(batch["id"])
             continue
         if any(row.get("custom_id") in expected for row in results):
@@ -1049,6 +1157,7 @@ def _ensure_no_provider_batch(api: Callable[..., str], chunk: Mapping[str, Any])
 def retire_attempt(root: Path, attempt_id: str, who: str, reason: str,
                    api: Callable[..., str] = api_call) -> None:
     """Retire only a pre-POST reserve or an unknown POST proven absent at provider."""
+    root = Path(root).resolve()
     manifest = read_json(root / "run.json")
     candidates = [root / item["chunk_path"] for item in manifest.get("probes", {}).values()]
     for group in manifest.get("groups", {}).values():
@@ -1074,6 +1183,7 @@ def retire_attempt(root: Path, attempt_id: str, who: str, reason: str,
 
 
 def status_report(root: Path) -> dict[str, Any]:
+    root = Path(root).resolve()
     manifest = read_json(root / "run.json")
     chunks = []
     for writer, info in manifest.get("probes", {}).items():
@@ -1122,8 +1232,24 @@ def parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = parser().parse_args(argv)
+    if hasattr(args, "root"):
+        args.root = Path(args.root).resolve()
     if args.command == "probe":
-        outcomes = run_probe(args.collection, args.root)
+        try:
+            outcomes = run_probe(args.collection, args.root)
+        finally:
+            manifest_path = args.root / "run.json"
+            if manifest_path.is_file():
+                manifest = read_json(manifest_path)
+                try:
+                    projection_lines = format_probe_stage_projections(
+                        probe_stage_projections(args.root, manifest))
+                except WriterError as exc:
+                    if "probe is not settled" not in str(exc):
+                        raise
+                else:
+                    for line in projection_lines:
+                        print(line)
         print(json.dumps(outcomes, ensure_ascii=False, indent=2))
     elif args.command == "reprobe":
         with run_lock(args.root):

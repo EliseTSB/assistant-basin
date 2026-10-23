@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import hashlib
+import os
 from pathlib import Path
 import shutil
 import statistics
@@ -184,11 +185,14 @@ class LocalPaidRegistryTests(unittest.TestCase):
         registry = Path(temporary.name) / "run-paths.json"
         registry_patch = patch.object(paid_ledger, "_RUN_PATH_REGISTRY", registry)
         lock_patch = patch.object(paid_ledger, "_RUN_PATH_LOCK", registry.with_suffix(".lock"))
+        stage_patch = patch.object(gen64, "WRITER_STAGE_LEDGER_DIR", Path(temporary.name) / "writer-stage")
         registry_patch.start()
         lock_patch.start()
+        stage_patch.start()
         self.addCleanup(temporary.cleanup)
         self.addCleanup(lock_patch.stop)
         self.addCleanup(registry_patch.stop)
+        self.addCleanup(stage_patch.stop)
 
 
 class WriterRequestTests(LocalPaidRegistryTests):
@@ -269,6 +273,11 @@ class WriterRequestTests(LocalPaidRegistryTests):
             with patch.object(gen64.gen60, "load_splits", return_value={"dev": pilot}):
                 loaded, _digest = gen64.load_collection(path)
             self.assertEqual(loaded[0]["strata"]["top"][12]["window"], expected)
+
+    def test_results_jsonl_parser_splits_only_on_line_feed(self):
+        row = {"custom_id": "unicode-result", "text": "line one\u2028line two"}
+        text = json.dumps(row, ensure_ascii=False) + "\n"
+        self.assertEqual(gen64._parse_result_jsonl(text), [row])
 
     def test_real_pilot_prefix_duplicates_are_preserved_but_fresh_duplicates_are_refused(self):
         rows, pilot = collection_fixture()
@@ -395,6 +404,56 @@ class WriterRequestTests(LocalPaidRegistryTests):
             self.assertEqual([len(items) for items in api.posts], [1, 1])
             self.assertTrue(all(item["passed"] for item in outcomes))
 
+    def test_real_run_probe_resolves_relative_root_before_reaching_fake_api(self):
+        rows, pilot = collection_fixture()
+        with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
+            base = Path(temporary).resolve()
+            collection_path = base / "collection.jsonl"
+            collection_path.write_bytes(collect64.collection_jsonl(rows))
+            gen64.write_json(collection_path.with_suffix(".jsonl.manifest.json"), collection_manifest(rows))
+            api = FakeBatchAPI()
+            relative_root = Path("results/part64/gen64")
+            old_cwd = Path.cwd()
+            try:
+                os.chdir(base)
+                with patch.object(gen64.gen60, "load_splits", return_value={"dev": pilot}):
+                    outcomes = gen64.run_probe(collection_path, relative_root, api,
+                                               poll_interval=0, sleep=lambda _n: None)
+            finally:
+                os.chdir(old_cwd)
+            self.assertTrue(all(outcome["passed"] for outcome in outcomes))
+            self.assertEqual(len(api.posts), 2)
+            self.assertTrue((base / relative_root / "run.json").is_file())
+
+    def test_probe_stage_projection_arithmetic_and_opus_stop_line(self):
+        with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
+            root = Path(temporary)
+            manifest = {"probes": {}, "groups": {}}
+            for writer, group_request_count, input_tokens, output_tokens in (
+                    ("haiku", 2, 1_000, 1_000), ("opus", 1_000, 1_000, 4_000)):
+                probe_relpath = f"probes/{writer}.json"
+                probe_path = root / probe_relpath
+                gen64.write_json(probe_path, {"state": "settled", "requests": [{"custom_id": "probe"}]})
+                gen64.write_json(probe_path.with_name(f"{writer}-results.json"),
+                                 {"usage": {"input_tokens": input_tokens,
+                                             "output_tokens": output_tokens}})
+                group_relpath = f"chunks/{writer}.json"
+                gen64.write_json(root / group_relpath,
+                                 {"requests": [{"custom_id": str(index)}
+                                                for index in range(group_request_count)]})
+                manifest["probes"][writer] = {"chunk_path": probe_relpath}
+                manifest["groups"][writer] = {"writer": writer, "chunk_paths": [group_relpath]}
+
+            projections = gen64.probe_stage_projections(root, manifest)
+            self.assertEqual(projections["haiku"]["request_count"], 3)
+            self.assertAlmostEqual(projections["haiku"]["projected_usd"], 0.0009)
+            self.assertEqual(projections["opus"]["request_count"], 1_001)
+            self.assertAlmostEqual(projections["opus"]["projected_usd"], 42.042)
+            lines = gen64.format_probe_stage_projections(projections)
+            self.assertTrue(any(line.startswith("haiku:") for line in lines))
+            self.assertTrue(any(line.startswith("opus:") for line in lines))
+            self.assertTrue(any(line.startswith("STOP:") for line in lines))
+
     def test_probe_refuses_empty_truncated_or_unparseable_reply(self):
         cases = (("", "end_turn"), (answer_text(), "max_tokens"), ("not JSON", "end_turn"))
         for text, stop_reason in cases:
@@ -501,6 +560,42 @@ class ChunkRecoveryTests(LocalPaidRegistryTests):
                                         sleep=lambda _n: None)
             self.assertEqual(api.posts, [])
             self.assertEqual(reserved_ledger.state()["reserved"], reserved)
+
+    def test_writer_stage_guard_shares_cap_across_roots_for_same_collection(self):
+        rows, _pilot = collection_fixture()
+        collection_digest = hashlib.sha256(collect64.collection_jsonl(rows)).hexdigest()
+        with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
+            base = Path(temporary)
+            roots = [base / "root-A", base / "root-B"]
+            for root in roots:
+                gen64.initialize_plan(root, rows, collection_digest)
+
+            def reserve_until_refused(root: Path) -> float:
+                manifest = gen64.read_json(root / "run.json")
+                paths = [relpath
+                         for group_key in ("opus-3x-neuron", "opus-3x-control")
+                         for relpath in manifest["groups"][group_key]["chunk_paths"]]
+                reserved = 0.0
+                for relpath in paths:
+                    chunk = gen64.read_json(root / relpath)
+                    ledger = Ledger(str(gen64.ledger_path(root, chunk["ledger_key"])), HARD_CAP_USD)
+                    try:
+                        gen64._reserve_with_stage_guard(root, chunk, ledger)
+                    except gen64.WriterError:
+                        return reserved
+                    reserved += chunk["planned_reserve_usd"]
+                return reserved
+
+            with patch.dict(gen64.WRITER_STAGE_CAP_USD, {"opus": 5.0}):
+                first_root_reserved = reserve_until_refused(roots[0])
+                second_root_reserved = reserve_until_refused(roots[1])
+
+            combined = first_root_reserved + second_root_reserved
+            self.assertGreater(first_root_reserved, 0)
+            self.assertLess(second_root_reserved, first_root_reserved)
+            self.assertLessEqual(combined, 5.0 + 1e-8)
+            self.assertEqual(gen64.ledger_path(roots[0], "opus-3x-neuron-part-01"),
+                             gen64.ledger_path(roots[1], "opus-3x-neuron-part-01"))
 
     def test_kill_after_post_before_id_never_resubmits_ambiguous_request(self):
         with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
@@ -729,12 +824,41 @@ class ChunkRecoveryTests(LocalPaidRegistryTests):
             self.assertEqual(result["batch_id"], "batch-2")
             self.assertEqual(len(api.posts), 2)
 
+    def test_reprobe_custom_ids_use_stored_base_and_stay_within_64_characters(self):
+        with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
+            root = Path(temporary)
+            manifest = gen64.initialize_plan(root, [collection_row()], "e" * 64)
+            api = FakeBatchAPI(text="not JSON")
+            original_path = root / manifest["probes"]["haiku"]["chunk_path"]
+            gen64.execute_chunk(root, original_path, api, poll_interval=0, sleep=lambda _n: None)
+            original = gen64.read_json(original_path)
+            base_custom_id = original["base_custom_ids"][0]
+            seen = [original["requests"][0]["custom_id"]]
+
+            for attempt_no in range(1, 5):
+                with self.assertRaisesRegex(gen64.WriterError, "re-probe failed validation"):
+                    gen64.reprobe(root, "haiku", "operator", "probe remains invalid", api,
+                                  poll_interval=0, sleep=lambda _n: None)
+                saved = gen64.read_json(root / "run.json")
+                reprobe_path = root / saved["probes"]["haiku"]["chunk_path"]
+                reprobe_chunk = gen64.read_json(reprobe_path)
+                custom_id = reprobe_chunk["requests"][0]["custom_id"]
+                self.assertEqual(custom_id, f"{base_custom_id}-attempt-{attempt_no:03d}")
+                self.assertEqual(reprobe_chunk["base_custom_ids"], [base_custom_id])
+                self.assertLessEqual(len(custom_id), 64)
+                seen.append(custom_id)
+
+            self.assertTrue(all(len(custom_id) <= 64 for custom_id in seen))
+
     def test_reprobe_recovery_ignores_older_ended_batch_even_if_id_matches(self):
         with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
             root = Path(temporary)
             path = self.make_chunk(root, probe=True)
             chunk = gen64.read_json(path)
             chunk["posting_started_at"] = gen64.utc_now()
+            chunk["attempt_no"] = 1
+            base_custom_id = chunk["requests"][0]["custom_id"]
+            chunk["requests"][0]["custom_id"] = f"{base_custom_id}-attempt-001"
 
             class OldMatchingBatchAPI:
                 def __call__(self, method, api_path, body=None):
@@ -751,6 +875,28 @@ class ChunkRecoveryTests(LocalPaidRegistryTests):
             matches, unresolved = gen64._find_provider_batches(OldMatchingBatchAPI(), chunk)
             self.assertEqual(matches, [])
             self.assertEqual(unresolved, [])
+
+    def test_retire_guard_matches_old_group_batch_without_five_minute_window(self):
+        with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
+            path = self.make_chunk(Path(temporary), probe=False)
+            chunk = gen64.read_json(path)
+            chunk["posting_started_at"] = "2026-10-23T12:00:00Z"
+            custom_id = chunk["requests"][0]["custom_id"]
+
+            class EarlierMatchingBatchAPI:
+                def __call__(self, method, api_path, body=None):
+                    if method == "GET" and api_path.startswith("/v1/messages/batches?"):
+                        return json.dumps({"data": [{"id": "earlier-accepted-batch",
+                                                       "created_at": "2026-10-23T11:50:00Z",
+                                                       "processing_status": "ended"}],
+                                           "has_more": False})
+                    if method == "GET" and api_path.endswith("/results"):
+                        return json.dumps({"custom_id": custom_id,
+                                           "result": {"type": "errored"}}) + "\n"
+                    raise AssertionError((method, api_path))
+
+            with self.assertRaisesRegex(gen64.RecoveryRequired, "contain this chunk's custom IDs"):
+                gen64._ensure_no_provider_batch(EarlierMatchingBatchAPI(), chunk)
 
     def test_every_opus_ledger_share_stays_below_the_per_ledger_cap(self):
         rows = [collection_row(f"L0:u{index}") for index in range(250)]
@@ -771,7 +917,7 @@ class ChunkRecoveryTests(LocalPaidRegistryTests):
         for chunk in chunks.values():
             key = chunk["ledger_key"]
             per_ledger[key] = per_ledger.get(key, 0.0) + chunk["planned_reserve_usd"]
-        self.assertEqual(gen64.WRITER_STAGE_CAP_USD, {"haiku": 4.0, "opus": 28.0})
+        self.assertEqual(gen64.WRITER_STAGE_CAP_USD, {"haiku": 4.0, "opus": 40.0})
         self.assertIn("opus-1x-neuron-part-01", per_ledger)
         self.assertIn("opus-3x-control-part-06", per_ledger)
         for key, reserve in per_ledger.items():
