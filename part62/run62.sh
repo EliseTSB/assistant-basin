@@ -5,7 +5,13 @@ set -Eeuo pipefail
 on_error() {
   local status="$1"
   trap - ERR
-  printf 'RUN_FAILED_KEEP_BOX status=%s\n' "$status" >&2
+  local incomplete="${RETURN_INCOMPLETE_ARCHIVE:-/root/part62-return-INCOMPLETE.tgz}"
+  local paths=()
+  for path in part62 results/part62 results/part62-analysis.json; do
+    [[ -e "$PROJECT_ROOT/$path" ]] && paths+=("$path")
+  done
+  if (( ${#paths[@]} )); then tar -czf "$incomplete" -C "$PROJECT_ROOT" "${paths[@]}" || true; fi
+  printf 'RUN_FAILED status=%s archive=%s\n' "$status" "$incomplete" >&2
   printf 'Inspect %s and the runner log before any instance teardown.\n' "${PART62_OUTPUT:-output path not initialized}" >&2
   exit "$status"
 }
@@ -19,6 +25,19 @@ RETURN_ARCHIVE="${RETURN_ARCHIVE:-/root/part62-return.tgz}"
 export PART62_OUTPUT PART62_ANALYSIS
 
 cd "$PROJECT_ROOT"
+mkdir -p /root/hf/hub
+fetch_model() {
+  HF_HUB_OFFLINE=0 TRANSFORMERS_OFFLINE=0 python3 - "$1" "$2" <<'PY'
+import sys
+from huggingface_hub import snapshot_download
+print(snapshot_download(repo_id=sys.argv[1], revision=sys.argv[2], cache_dir="/root/hf/hub"))
+PY
+}
+fetch_model Qwen/Qwen3.5-4B 851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a
+fetch_model allenai/OLMo-2-0425-1B-Instruct 48d788eca847d4d7548f375ad03d3c9312f6139e
+export HF_HOME=/root/hf
+export HF_HUB_OFFLINE=1
+export TRANSFORMERS_OFFLINE=1
 printf 'Part 62 generation starts: %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 python3 -u part62/run62.py --out "$PART62_OUTPUT" --device cuda
 python3 -u part62/analyze62.py --folder "$PART62_OUTPUT" --out "$PART62_ANALYSIS"
