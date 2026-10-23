@@ -70,3 +70,12 @@ under a $5 test cap). It also measured that the $28 Opus cap binds near 2,100 av
    stop and report instead of running.
 4. Also fixed in the same fold: the 5-minute created-at window applies only to re-probe IDs (Haiku F2); a re-probe ID
    is the stored base ID plus its attempt number (Haiku F4); the results parser splits on "\n" only (Haiku F5).
+
+## Amendment 4 (2026-10-23 14:22 CT, before any collection result or paid call; from the Haiku round-4 confirm review)
+1. The writer-stage directory is ONE fixed path on this machine, `/home/elisepc/assistant-basin/results/part64/writer-stage`
+   (an environment override exists for tests only), not one per checkout (r4 F3: a second checkout started an empty stage).
+2. The probe projection scales the probe's billed input by the stage's total request bytes over the probe's request bytes,
+   and keeps output times request count (r4 F1 measured the per-request version 11% low, so the $36 STOP fired near $40).
+3. `run` refuses after a STOP projection unless the operator passes an explicit override with a recorded reason.
+4. The 5-minute created-at window applies only to requests that carry a re-probe suffix (r4 F2: a retried initial probe
+   kept its unsuffixed IDs and slipped through). Decision (Claude).

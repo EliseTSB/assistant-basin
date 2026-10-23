@@ -101,3 +101,9 @@ false for this data: all 2,112 Part 59a rows carry story prompts, so 59a has no 
 read-only on part63/results/key63.json: 54a 480, 54b 1,920, 26.8 432, 59a 0). The registered pool is therefore the
 three sources 54a, 54b and 26.8, drawn as fold 8 draws them; nothing else about calibration changes. Decision
 (Claude); no label has been drawn or scored.
+
+## Amendment 6 to Part 62 (2026-10-23 14:22 CT, before any Part 62 run; from the Haiku round-4 confirm review)
+Calibration agreement is class AND tag: a reader label tagged BROKEN on a calibration answer whose registered label is a
+class counts as disagreement. Reason: BROKEN is a reader failure on an answer that is readable (Part 63's scheme iii
+counts it as its own category), so it cannot count as agreeing. Stricter than class-only, so it can only withhold a pass;
+measured on 120 labels with 20 BROKEN: class+tag kappa 0.77 (gate fails), class-only 1.0. Decision (Claude); no label drawn.
