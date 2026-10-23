@@ -621,6 +621,7 @@ class Part59Tests(unittest.TestCase):
             for index, request in enumerate(requests):
                 self.assertEqual(request["custom_id"], f"r{index:05d}")
                 self.assertEqual(set(request["params"]), {"model", "max_tokens", "messages"})
+                self.assertGreaterEqual(request["params"]["max_tokens"], 512, "Opus with thinking spends tokens before the label: 32 truncated 1,339 of 2,146 answers on 2026-10-22")
                 self.assertEqual(len(request["params"]["messages"]), 1)
                 message = request["params"]["messages"][0]
                 self.assertEqual(set(message), {"role", "content"})

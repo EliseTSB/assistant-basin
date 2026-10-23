@@ -306,7 +306,7 @@ def main(argv=None) -> None:
             custom_id = f"r{len(idmap):05d}"
             idmap[custom_id] = internal_id
             requests.append({"custom_id": custom_id, "params": {
-                "model": MODEL, "max_tokens": 32,
+                "model": MODEL, "max_tokens": 1024,
                 "messages": [{"role": "user", "content": RUBRIC + text}],
             }})
         result = json.loads(call("POST", "/v1/messages/batches", {"requests": requests}))
