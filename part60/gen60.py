@@ -38,7 +38,9 @@ BATCH_MAX_REQUESTS = 10_000
 BATCH_MAX_BYTES = 190_000_000
 PRICE_INPUT = 0.05
 PRICE_OUTPUT = 0.25
-# Both inherited rate pairs are estimates and are unverified for current pricing.
+# Matches the published list price per PRICE-ATTEST-2026-10-23.md (Haiku 5.5,
+# prompts up to 100K tokens); the invoice is final; the first real batch's usage
+# is compared with the ledger.
 PRICE_INPUT_BATCH = PRICE_INPUT
 PRICE_OUTPUT_BATCH = PRICE_OUTPUT
 PRICE_INPUT_DIRECT = 0.10
@@ -476,17 +478,25 @@ def spend_state(path: Path) -> tuple[float, dict[str, dict[str, Any]]]:
                 old.update(row)
                 if row.get("event") == "settle":
                     old["actual_usd"] = float(row["usd"])
-            elif row.get("event") in ("release", "retire"):
+            elif row.get("event") == "release":
                 old.update(row)
                 old["actual_usd"] = 0.0
+            elif row.get("event") == "retire":
+                old.update(row)
+                old["actual_usd"] = float(row.get("usd", 0.0))
     total = sum(float(v.get("actual_usd", v.get("reserved_usd", 0.0))) for v in batches.values())
     return total, batches
 
 
-def retire_attempt(root: Path, attempt_id: str, *, force_lost: bool = False,
-                   reason: str | None = None) -> None:
-    if force_lost and not (reason and reason.strip()):
-        raise RunnerError("--force-lost requires a written reason")
+def _parse_utc(value: Any) -> datetime | None:
+    try:
+        parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+        return parsed if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)
+    except (TypeError, ValueError):
+        return None
+
+
+def retire_attempt(root: Path, attempt_id: str, *, api: Any = api_call) -> None:
     with writer_lock(root):
         with ledger_lock(root) as spend_path:
             _, attempts = spend_state(spend_path)
@@ -496,23 +506,62 @@ def retire_attempt(root: Path, attempt_id: str, *, force_lost: bool = False,
             if current.get("event") != "reserve":
                 raise RunnerError(f"attempt {attempt_id} is not an unresolved reservation")
             attempt_root = Path(str(current.get("root", root))).resolve()
-            active_batch = False
+            batch_id = None
+            manifest_found = False
             for manifest_file in attempt_root.glob("batches/*/*/*/manifest.json"):
                 try:
                     saved = json.loads(manifest_file.read_text(encoding="utf-8"))
-                except (OSError, ValueError):
-                    continue
-                if any(chunk.get("attempt_id") == attempt_id and chunk.get("batch_id")
-                       and chunk.get("status") in ("submitted", "collecting")
-                       for chunk in saved.get("chunks", [])):
-                    active_batch = True
+                except (OSError, ValueError, TypeError) as exc:
+                    raise RunnerError(f"unreadable batch manifest {manifest_file}; treating reservation as active") from exc
+                for chunk in saved.get("chunks", []):
+                    if chunk.get("attempt_id") == attempt_id:
+                        manifest_found = True
+                        batch_id = chunk.get("batch_id") or _read_batch_id(Path(str(chunk.get("directory", ""))))
+                        break
+                if manifest_found:
                     break
-            if active_batch and not force_lost:
-                raise RunnerError("reservation has a batch still processing; --force-lost with a written reason is required")
+            if batch_id:
+                if api is api_call and not os.environ.get("ANTHROPIC_CREDITS_KEY"):
+                    raise RunnerError("cannot verify batch status without ANTHROPIC_CREDITS_KEY")
+                try:
+                    status = json.loads(api("GET", f"/v1/messages/batches/{batch_id}"))
+                except Exception as exc:
+                    raise RunnerError(f"cannot verify batch {batch_id}; reservation remains active") from exc
+                terminal = {"ended", "expired", "canceled", "failed"}
+                if status.get("processing_status") not in terminal:
+                    raise RunnerError(f"batch {batch_id} is still processing; collect it before retirement")
+                # Keep the reserve counted until collection records actual usage.
+                retired_usd = float(current.get("reserved_usd", 0.0))
+            else:
+                reserved_at = _parse_utc(current.get("ts"))
+                if reserved_at is None or (datetime.now(timezone.utc) - reserved_at).total_seconds() <= 25 * 3600:
+                    raise RunnerError("attempt has no batch id and is not older than 25 hours")
+                retired_usd = 0.0
             append_spend(spend_path, {"event": "retire", "attempt_id": attempt_id,
                                       "method": current.get("method"), "split": current.get("split"),
                                       "phase": current.get("phase"), "root": str(attempt_root), "ts": utc_now(),
-                                      "usd": 0.0, "reason": reason.strip() if reason else "operator-retired"})
+                                      "usd": retired_usd, "reason": "terminal-batch-retired" if batch_id else "expired-no-batch-id"})
+
+
+def _read_batch_id(directory: Path) -> str | None:
+    try:
+        value = (directory / "batch-id").read_text(encoding="utf-8").strip()
+    except OSError:
+        return None
+    return value or None
+
+
+def _write_batch_id(directory: Path, batch_id: str) -> None:
+    path = directory / "batch-id"
+    with path.open("x", encoding="utf-8") as stream:
+        stream.write(batch_id + "\n")
+        stream.flush()
+        os.fsync(stream.fileno())
+    fd = os.open(directory, os.O_RDONLY)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
 
 
 def method_state_path(root: Path, split: str, method: str) -> Path:
@@ -1043,6 +1092,8 @@ def _submit_phase_locked(root: Path, split: str, method: str, phase: str,
             req = request_for(method, phase, unit, idx, output_row=output, feedback=feedback)
             mapped[req["custom_id"]] = {k: req["_meta"][k] for k in
                 ("record_index", "unit_key", "unit_type", "layer", "phase")}
+            if method == "M3" and phase == "fresh" and output:
+                mapped[req["custom_id"]]["hypothesis"] = output.get("winner_hypothesis")
             user_payload = json.loads(req["params"]["messages"][0]["content"])
             if isinstance(user_payload, dict) and isinstance(user_payload.get("windows"), list):
                 mapped[req["custom_id"]]["input_windows"] = user_payload["windows"]
@@ -1080,6 +1131,13 @@ def _submit_phase_locked(root: Path, split: str, method: str, phase: str,
             if last.get("status") in ("submitted", "collecting"):
                 return f"batch {last.get('batch_id')} is already submitted; collect it before continuing"
             if last.get("status") in ("reserved", "posting", "unknown", "ready", "rate_limited", "ambiguous"):
+                durable_batch_id = _read_batch_id(Path(str(last.get("directory", ""))))
+                if durable_batch_id:
+                    last["batch_id"] = durable_batch_id
+                    last["status"] = "submitted"
+                    last.setdefault("submitted_at", utc_now())
+                    write_json(mfpath, manifest)
+                    return f"batch {durable_batch_id} is already submitted; collect it before continuing"
                 last["status"] = "ambiguous"
                 last["ambiguous_at"] = utc_now()
                 manifest["ambiguous_attempts"] = int(manifest.get("ambiguous_attempts", 0)) + 1
@@ -1108,15 +1166,6 @@ def _submit_phase_locked(root: Path, split: str, method: str, phase: str,
         raise RunnerError("request chunk exceeds the 190 MB local safety limit")
     request_sha256 = hashlib.sha256(request_bytes).hexdigest()
     reserve = estimated_usd(requests)
-    spend_path = fixed_spend_path(root)
-    _, prior_attempts = spend_state(spend_path)
-    phase_attempts = [row for row in prior_attempts.values()
-                      if row.get("method") == method and row.get("split") == split
-                      and row.get("phase") == phase]
-    other_roots = {str(row.get("root")) for row in phase_attempts
-                   if row.get("root") and str(row.get("root")) != str(root.resolve())}
-    if other_roots:
-        raise RunnerError(f"phase {method}/{split}/{phase} already has an attempt in the fixed ledger under another --root")
     cap = env_cap()
     chunk_index = len(manifest.get("chunks", []))
     chunk_dir = mfpath.parent / f"attempt-{attempt_id}"
@@ -1139,14 +1188,21 @@ def _submit_phase_locked(root: Path, split: str, method: str, phase: str,
              "cap_override": False, "created_at": utc_now(),
              "status": "reserved", "batch_id": None}
     with ledger_lock(root) as spend_path:
-        spent, _ = spend_state(spend_path)
+        spent, prior_attempts = spend_state(spend_path)
+        phase_attempts = [row for row in prior_attempts.values()
+                          if row.get("method") == method and row.get("split") == split
+                          and row.get("phase") == phase]
+        other_roots = {str(row.get("root")) for row in phase_attempts
+                       if row.get("root") and str(row.get("root")) != str(root.resolve())}
+        if other_roots:
+            raise RunnerError(f"phase {method}/{split}/{phase} already has an attempt in the fixed ledger under another --root")
         if spent + reserve > cap + 1e-12:
             raise RunnerError(f"cap refused submission: settled/reserved ${spent:.4f} plus conservative estimate ${reserve:.4f} exceeds ${cap:.2f}")
         append_spend(spend_path, {"event": "reserve", "attempt_id": attempt_id, "method": method,
                                   "split": split, "phase": phase, "chunk": chunk_index,
                                   "root": str(root.resolve()),
                                   "reserved_usd": round(reserve, 8), "ts": utc_now(),
-                                  "request_count": len(requests)})
+                                  "request_count": len(requests), "cap_limit_usd": cap})
     if kill_after_reserve:
         os.kill(os.getpid(), 9)
     manifest["chunks"].append(chunk)
@@ -1157,6 +1213,7 @@ def _submit_phase_locked(root: Path, split: str, method: str, phase: str,
     try:
         response = json.loads(api("POST", "/v1/messages/batches", body_obj))
         batch_id = str(response["id"])
+        _write_batch_id(chunk_dir, batch_id)
         if kill_after_post:
             os.kill(os.getpid(), 9)
     except APIError as exc:
@@ -1333,7 +1390,7 @@ def _collect_phase_locked(root: Path, split: str, method: str, phase: str, api: 
         elif method == "M3" and phase == "fresh":
             old["fresh"] = merged
             if merged["parse_status"] == "ok":
-                old["hypothesis"] = old["winner_hypothesis"]
+                old["hypothesis"] = meta.get("hypothesis")
                 old["strong"] = merged["strong"]
                 old["weak"] = []
                 old["none"] = merged["none"]
@@ -1373,9 +1430,13 @@ def _collect_phase_locked(root: Path, split: str, method: str, phase: str, api: 
     actual = (total_usage["input"] * PRICE_INPUT + total_usage["output"] * PRICE_OUTPUT) / 1_000_000
     attempt_id = str(chunk["attempt_id"])
     with ledger_lock(root) as spend_path:
-        _, ledger = spend_state(spend_path)
+        ledger_total, ledger = spend_state(spend_path)
         ledger_row = ledger.get(attempt_id, {})
         if usage_complete and ledger_row.get("event") in ("reserve", "retire"):
+            cap_limit = float(ledger_row.get("cap_limit_usd", chunk.get("cap_limit_usd", math.inf)))
+            current_amount = float(ledger_row.get("actual_usd", ledger_row.get("reserved_usd", 0.0)))
+            if ledger_total - current_amount + actual > cap_limit + 1e-12:
+                raise RunnerError(f"cap refuses settlement: other settled/reserved ${ledger_total-current_amount:.4f} plus actual usage ${actual:.4f} exceeds ${cap_limit:.2f}; reservation remains counted")
             append_spend(spend_path, {"event": "settle", "attempt_id": attempt_id,
                                       "batch_id": batch_id, "method": method, "split": split,
                                       "root": str(root.resolve()),
@@ -1416,7 +1477,10 @@ def _collect_phase_locked(root: Path, split: str, method: str, phase: str, api: 
     suffix = (f"; thinking {m6_thinking_results}/{len(idmap)} ({m6_thinking_results/len(idmap):.1%})"
               if method == "M6" and idmap else "")
     truncation_suffix = f"; {truncations} max_tokens truncation(s)" if truncations else ""
-    settlement_suffix = f"; ${actual:.4f}" if usage_complete else "; unresolved usage retained in reserve"
+    settled_ledger = spend_state(fixed_spend_path(root))[1].get(attempt_id, {})
+    ledger_usd = float(settled_ledger.get("actual_usd", settled_ledger.get("reserved_usd", 0.0)))
+    settlement_suffix = (f"; usage ${actual:.4f}; ledger ${ledger_usd:.4f}; delta ${actual-ledger_usd:+.4f}"
+                         if usage_complete else "; unresolved usage retained in reserve")
     if manifest["phase_status"] == "dropped":
         return (f"collected {len(idmap)} requests; phase dropped with {failed_count}/{expected_count} failures "
                 f"under the registered 10% rule; usage {total_usage['input']} in / {total_usage['output']} out; "
@@ -1531,7 +1595,7 @@ def main(argv: list[str] | None = None) -> int:
     submit.add_argument("--cap", type=cap_arg)
     smoke = sub.add_parser("smoke", help="run the required five-unit M6 thinking smoke")
     smoke.add_argument("--method", choices=["M6"], required=True)
-    listing = sub.add_parser("listing", help="read-only list of batches created during this run")
+    listing = sub.add_parser("listing", help="read-only list of batches returned by the API")
     collect = sub.add_parser("collect", help="collect a finished batch without resubmitting")
     collect.add_argument("--method", choices=[f"M{i}" for i in range(1, 8)], required=True)
     collect.add_argument("--split", choices=["dev", "test"], required=True)
@@ -1540,8 +1604,6 @@ def main(argv: list[str] | None = None) -> int:
     ledger_sub = ledger.add_subparsers(dest="ledger_command", required=True)
     retire = ledger_sub.add_parser("retire", help="write a dated operator retirement for one attempt")
     retire.add_argument("attempt_id")
-    retire.add_argument("--force-lost", action="store_true")
-    retire.add_argument("--reason")
     choose = sub.add_parser("select-m3", help="choose M3 winner from selection activations")
     choose.add_argument("--split", choices=["dev", "test"], required=True)
     args = parser.parse_args(argv)
@@ -1565,7 +1627,7 @@ def main(argv: list[str] | None = None) -> int:
         elif args.command == "collect":
             print(collect_phase(args.root, args.split, args.method, args.phase))
         elif args.command == "ledger" and args.ledger_command == "retire":
-            retire_attempt(args.root, args.attempt_id, force_lost=args.force_lost, reason=args.reason)
+            retire_attempt(args.root, args.attempt_id)
             print(f"retired unresolved attempt {args.attempt_id} at {utc_now()}")
         else:
             print(f"selected {choose_m3_winners(args.root, args.split)} M3 winners")

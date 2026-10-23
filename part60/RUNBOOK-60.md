@@ -15,7 +15,7 @@ cp -a /path/to/part60-build/. /home/elisepc/assistant-basin/part60/
 
 Dev has 250 real units and 250 random-direction controls. M1, M2, M4, and M6 need one Haiku request per unit. M3 needs a selection request and then a fresh request for each parseable selected winner. M5 round 1 uses the M1 prompt; round 2 revises after scoring the first 12 sentences. M7 is skipped because the pilot records do not contain 24 top, 10 random, and 6 weak windows. M0 reuses the Part 58 baseline and makes no new call.
 
-The registered plan estimates about 3,500 dev requests plus about 1,000 second-round requests if all seven methods are eligible, with a total Haiku spend of about $3-$6 and a hard `$8` cap. With the current M7 skip, expect at most 4,000 dev requests before failed parses. Batch pricing uses inherited, unverified Part 58 rates ($0.05 per million input tokens and $0.25 per million output tokens). Direct M6 smoke calls use twice those rates ($0.10 input and $0.50 output); both pairs are inherited estimates and current Haiku 5.5 prices are unverified. The checkout-wide `results/part60/spend.jsonl` ledger is fixed independently of `--root`. Each paid attempt gets a random ID and a durable conservative reserve before its API call; known returned usage settles it. A 4xx releases a reserve only when the response contains an Anthropic error body. Timeouts, connection failures, 5xx, 429, and kills keep the reserve counted. `ledger retire <attempt>` writes a dated operator retirement when a person has checked that an unresolved attempt should no longer count. M6 smoke reserves and settles each direct request separately. The runner never adopts a batch.
+The registered plan estimates about 3,500 dev requests plus about 1,000 second-round requests if all seven methods are eligible, with a total Haiku spend of about $3-$6 and a hard `$8` cap. With the current M7 skip, expect at most 4,000 dev requests before failed parses. For Haiku 5.5 prompts up to 100K tokens, batch rates are $0.05 per million input tokens and $0.25 per million output tokens. Direct M6 smoke calls use $0.10 input and $0.50 output. The rates match the published list price per PRICE-ATTEST-2026-10-23.md; the invoice is final, and the first real batch usage is compared with the ledger. The checkout-wide `results/part60/spend.jsonl` ledger is fixed independently of `--root`. Each paid attempt gets a random ID and a durable conservative reserve before its API call; known returned usage settles it. A 4xx releases a reserve only when the response contains an Anthropic error body. Timeouts, connection failures, 5xx, 429, and kills keep the reserve counted. `ledger retire <attempt>` has no force option: a batch ID requires an API-reported terminal status and stays reserved until collection settles actual usage; no-ID attempts must be over 25 hours old. An unreadable manifest is treated as active. Settlement is refused if actual usage would exceed the cap. M6 smoke reserves and settles each direct request separately. A POST-returned batch ID is fsynced before the submitted manifest write; a rerun that finds it refuses a new POST and requires collection. The runner never adopts a batch by timestamp or count.
 
 M3 or M5 cannot finish their second call until their first-round activations return from the GPU. The process is deliberately split into two local/GPU passes. The test phase is opened only after dev analysis. It contains M0, M1, and the one dev-selected candidate that passed the 5-point stop rule. If the selected candidate is M3 or M5, its test phase also uses the registered selection/revision step. No prompt is edited after the test phase begins.
 
@@ -50,7 +50,7 @@ python3 part60/gen60.py listing
 python3 part60/gen60.py ledger retire ATTEMPT_ID
 ```
 
-Repeat the M1 submit/collect pair for M2 and M4 with `--phase primary`. M7 writes an explicit skipped record without submitting. M3 starts with `--phase selection`; M5 starts with `--phase round1`. Use the same `--cap 8` for every submission. After an ambiguous POST, rerun `submit` for the same method and phase; it creates a new attempt with its own durable reservation. If the extra reservation would exceed the cap, the runner refuses before POST. `listing` reports all batches returned by the API for operator comparison; it never changes a manifest, selects a batch, or authorizes collection. Retire an unresolved attempt only after checking it; the command appends a dated ledger event.
+Repeat the M1 submit/collect pair for M2 and M4 with `--phase primary`. M7 writes an explicit skipped record without submitting. M3 starts with `--phase selection`; M5 starts with `--phase round1`. Use the same `--cap 8` for every submission. After an ambiguous POST with no returned batch ID, rerun `submit` for the same method and phase; it creates a new attempt with its own durable reservation. A returned batch ID is durably saved before the manifest is updated; if a rerun finds it, collect that batch before continuing. If the extra reservation would exceed the cap, the runner refuses before POST. `listing` reports all batches returned by the API for operator comparison; it never changes a manifest, selects a batch, or authorizes collection. Retirement has no force override: a batch ID requires an API-reported terminal status and remains reserved until collected; an attempt without a batch ID must be over 25 hours old. Unreadable manifests are treated as active.
 
 ```bash
 python3 part60/gen60.py submit --method M3 --split dev --phase selection --cap 8
@@ -85,7 +85,7 @@ scp -P SSH_PORT /tmp/part60-inputs.tgz root@SSH_HOST:/root/
 ssh -p SSH_PORT root@SSH_HOST
 mkdir -p /root/part60
 tar -xzf /root/part60-inputs.tgz -C /root/part60
-nohup bash /root/part60/part60/run60.sh > /root/part60/run60.out 2>&1 < /dev/null &
+nohup bash /root/part60/part60/run60.sh >> /root/part60/run60.out 2>&1 < /dev/null &
 echo $! > /root/part60/run60.pid
 ```
 
@@ -107,7 +107,7 @@ mkdir -p /home/elisepc/assistant-basin/results/part60
 cp -a /tmp/part60-return-staging/results/part60/. /home/elisepc/assistant-basin/results/part60/
 ```
 
-The first return includes `thresholds.json`, the reproduction check, and activation matrices. M0's four baseline sentences per dev unit (2,000 texts) are rescored with the same pinned scorer, dtype, and device as generated methods; `M0-archive.npz` keeps Part 58 archive values as a cross-check. Choose M3's winner from its selection sentences, then request its fresh sentences. For M5, the round-two request includes only the original sentence, tier, and fired yes/no outcome; it never includes activation numbers.
+The first return includes `thresholds.json`, the reproduction check, and activation matrices. Dev expects 2,000 M0 texts; 1,988 exist for 497 units, and the three dev controls without a baseline count as failed. One test control also has no M0 baseline and counts as failed. Existing M0 texts are rescored with the same pinned scorer, dtype, and device as generated methods; `M0-archive.npz` keeps Part 58 archive values as a cross-check. Choose M3's winner from its selection sentences, then request its fresh sentences. For M5, the round-two request includes only the original sentence, tier, and fired yes/no outcome; it never includes activation numbers.
 
 ```bash
 python3 part60/gen60.py select-m3 --split dev
@@ -132,7 +132,7 @@ Follow the dev stop rule. `analyze60.py --split dev` writes `results/part60/anal
 
 ## 5. Return files and destroy the rental
 
-`RETURN_READY` appears only when setup, model fetch, every requested scoring phase, and archiving succeeded. In the first pass, test scoring is intentionally skipped; immediately before `RETURN_READY`, the runner prints `PHASES: dev-only`. A later two-pass run prints `PHASES: dev-and-test`. A failure writes `/root/part60-return-INCOMPLETE.tgz` when the available result files can be archived. Resume from the same workspace; the runner returns zero for already completed score phases. The `run60.sh` lock remains held by its scoring child after a hard kill, so a rerun refuses to overlap it. The score CLI also takes its own lock. The tar output contains only score matrices, reproduction records, thresholds, logs, and software versions, and excludes review and key folders.
+`RETURN_READY` appears only when setup, model fetch, every requested scoring phase, and archiving succeeded. In the first pass, test scoring is intentionally skipped; immediately before `RETURN_READY`, the runner prints `PHASES: dev-only`. A later two-pass run prints `PHASES: dev-and-test`. A failure writes `/root/part60-return-INCOMPLETE.tgz` when the available result files can be archived. Resume from the same workspace; the runner returns zero for already completed score phases. `run60.sh` records the active phase PID without passing its run-lock descriptor to children. After a hard kill, a rerun checks the stale PID and terminates it only when its command still names the Part 60 scorer; the scorer's own lock prevents overlapping score work. Run output is appended to `run60.out` on rerun. The tar output contains only score matrices, reproduction records, thresholds, logs, and software versions, and excludes review and key folders.
 
 Copy the successful or incomplete archive and verify the local copy before destroying the instance. Replace `REMOTE_ARCHIVE` with the path printed by `RETURN_READY` or `RUN_FAILED`:
 
@@ -144,7 +144,7 @@ scp -P SSH_PORT "root@SSH_HOST:$REMOTE_ARCHIVE" /tmp/part60-return.tgz && tar -t
   python3 cloud/vast-part54-2026-10-22/vast.py destroy INSTANCE_ID
 ```
 
-If the runner process disappears without `RETURN_READY` or `RUN_FAILED`, keep the rental alive, check `/root/part60/run60.pid`, inspect the phase logs and manifests, then wait for the inherited run lock to clear before rerunning from that workspace. An ambiguous batch attempt stays reserved; resubmitting creates a new attempt and is constrained by the cap. A hard `SIGKILL` cannot run archive cleanup, so copy and inspect any available files before destroying the instance.
+If the runner process disappears without `RETURN_READY` or `RUN_FAILED`, keep the rental alive, check `/root/part60/run60.pid`, inspect the phase logs and manifests, then rerun from that workspace. The wrapper checks and clears its own stale scorer PID safely before retrying. An ambiguous batch attempt stays reserved; resubmitting creates a new attempt and is constrained by the cap. A hard `SIGKILL` cannot run archive cleanup, so copy and inspect any available files before destroying the instance.
 
 ## Unverified probe checklist
 

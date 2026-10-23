@@ -13,6 +13,7 @@ import tarfile
 import tempfile
 import time
 import unittest
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from unittest import mock
 
@@ -627,6 +628,11 @@ class PredictionTests(unittest.TestCase):
             self.assertIn("| M1 | M0 | gap_positive_only | 0.100 | [0.050, 0.150] |", report)
             self.assertIn("Interpretation limits:", report)
             self.assertEqual(json.loads((root / "test-selection.json").read_text())["status"], "incomplete")
+            test_analysis = {**analysis, "split": "test"}
+            analyze60.write_reports(root, [analysis, test_analysis])
+            analyze60.write_reports(root, [analysis])
+            saved = json.loads((root / "analysis-60.json").read_text())
+            self.assertEqual([item["split"] for item in saved["analyses"]], ["dev"])
 
     def test_test_selection_is_ready_only_for_complete_dev_analysis(self) -> None:
         tier = {"positive_only_verified_rate": .2, "verified_rate": .1,
@@ -888,7 +894,9 @@ class BatchLifecycleTests(unittest.TestCase):
         requests = [gen60.request_for("M1", "primary", unit, index)
                     for index, unit in enumerate(units)]
         one_reserve = gen60.estimated_usd(requests)
-        cap = one_reserve * 1.5
+        # Both callers fit under the cap, so this asserts the duplicate-phase
+        # guard itself is serialized with the reserve, not merely the cap gate.
+        cap = one_reserve * 2.5
         ready_dir = self.root.parent / "concurrent-ready"
         ready_dir.mkdir()
         code = (
@@ -937,9 +945,10 @@ class BatchLifecycleTests(unittest.TestCase):
         self.assertLessEqual(total, cap)
         self.assertEqual(total, next(iter(ledger.values()))["reserved_usd"])
 
-    def test_ledger_retire_writes_a_dated_entry_and_removes_only_that_reserve(self) -> None:
+    def test_ledger_retire_without_batch_id_requires_25_hours(self) -> None:
         gen60.append_spend(self.spend_path, {"event": "reserve", "attempt_id": "retire-me",
-                                             "reserved_usd": 1.25, "method": "M6", "split": "dev"})
+                                             "reserved_usd": 1.25, "method": "M6", "split": "dev",
+                                             "ts": (datetime.now(timezone.utc) - timedelta(hours=26)).isoformat()})
         gen60.retire_attempt(self.root, "retire-me")
         total, attempts = gen60.spend_state(self.spend_path)
         self.assertEqual(total, 0.0)
@@ -948,7 +957,7 @@ class BatchLifecycleTests(unittest.TestCase):
         with self.assertRaisesRegex(gen60.RunnerError, "not an unresolved reservation"):
             gen60.retire_attempt(self.root, "retire-me")
 
-    def test_retire_refuses_live_batch_and_collect_settles_force_lost_reservation(self) -> None:
+    def test_retire_requires_terminal_batch_and_collect_settles_reservation(self) -> None:
         def submit_api(method: str, path: str, body: object = None) -> str:
             return json.dumps({"id": "batch-live"})
         batch_id = gen60.submit_phase(self.root, "dev", "M1", "primary", api=submit_api)
@@ -956,10 +965,9 @@ class BatchLifecycleTests(unittest.TestCase):
         manifest = json.loads(manifest_path.read_text())
         attempt_id = manifest["chunks"][-1]["attempt_id"]
         with self.assertRaisesRegex(gen60.RunnerError, "still processing"):
-            gen60.retire_attempt(self.root, attempt_id)
-        with self.assertRaisesRegex(gen60.RunnerError, "written reason"):
-            gen60.retire_attempt(self.root, attempt_id, force_lost=True)
-        gen60.retire_attempt(self.root, attempt_id, force_lost=True, reason="operator confirmed batch lost")
+            gen60.retire_attempt(self.root, attempt_id, api=lambda *args: json.dumps({"processing_status": "in_progress"}))
+        gen60.retire_attempt(self.root, attempt_id, api=lambda *args: json.dumps({"processing_status": "ended"}))
+        self.assertGreater(gen60.spend_state(self.spend_path)[0], 0.0)
         chunk = manifest["chunks"][-1]
         idmap = json.loads((Path(chunk["directory"]) / "idmap.json").read_text())
         response = {"type": "succeeded", "message": {"usage": {"input_tokens": 10, "output_tokens": 20},
@@ -969,9 +977,50 @@ class BatchLifecycleTests(unittest.TestCase):
                 return "".join(json.dumps({"custom_id": custom_id, "result": response}) + "\n"
                                for custom_id in idmap)
             return json.dumps({"processing_status": "ended"})
-        self.assertIn("collected", gen60.collect_phase(self.root, "dev", "M1", "primary",
-                                                        api=collect_api, max_polls=1, poll_seconds=0))
+        report = gen60.collect_phase(self.root, "dev", "M1", "primary",
+                                     api=collect_api, max_polls=1, poll_seconds=0)
+        self.assertIn("collected", report)
+        self.assertIn("ledger $", report)
         self.assertEqual(gen60.spend_state(self.spend_path)[1][attempt_id]["event"], "settle")
+
+    def test_unreadable_manifest_keeps_retirement_active(self) -> None:
+        gen60.append_spend(self.spend_path, {"event": "reserve", "attempt_id": "broken-manifest",
+                                             "reserved_usd": 1.0, "method": "M1", "split": "dev",
+                                             "root": str(self.root),
+                                             "ts": (datetime.now(timezone.utc) - timedelta(hours=26)).isoformat()})
+        manifest = self.root / "batches/dev/M1/primary/manifest.json"
+        manifest.parent.mkdir(parents=True, exist_ok=True)
+        manifest.write_text("{")
+        with self.assertRaisesRegex(gen60.RunnerError, "treating reservation as active"):
+            gen60.retire_attempt(self.root, "broken-manifest")
+
+    def test_collect_refuses_usage_that_would_exceed_cap(self) -> None:
+        def api(method: str, path: str, body: object = None) -> str:
+            if method == "POST":
+                return json.dumps({"id": "batch-over-cap"})
+            if path.endswith("/results"):
+                manifest = json.loads(gen60.manifest_path(self.root, "dev", "M1", "primary").read_text())
+                idmap = json.loads((Path(manifest["chunks"][0]["directory"]) / "idmap.json").read_text())
+                answer = json.dumps(_tiered())
+                return "\n".join(json.dumps({"custom_id": cid, "result": {"type": "succeeded", "message": {
+                    "content": [{"type": "text", "text": answer}],
+                    "usage": {"input_tokens": 200_000_000, "output_tokens": 0}, "stop_reason": "end_turn"}}})
+                    for cid in idmap)
+            return json.dumps({"processing_status": "ended"})
+        with mock.patch.dict(os.environ, {"PART60_CAP": "8"}):
+            gen60.submit_phase(self.root, "dev", "M1", "primary", api=api)
+            manifest = json.loads(gen60.manifest_path(self.root, "dev", "M1", "primary").read_text())
+            attempt_id = manifest["chunks"][0]["attempt_id"]
+            gen60.retire_attempt(self.root, attempt_id,
+                                 api=lambda *args: json.dumps({"processing_status": "ended"}))
+            self.assertGreater(gen60.spend_state(self.spend_path)[0], 0.0)
+            gen60.submit_phase(self.root, "dev", "M2", "primary",
+                               api=lambda *args: json.dumps({"id": "batch-headroom"}))
+            with self.assertRaisesRegex(gen60.RunnerError, "cap refuses settlement"):
+                gen60.collect_phase(self.root, "dev", "M1", "primary", api=api, poll_seconds=0)
+        total, ledger = gen60.spend_state(self.spend_path)
+        self.assertLessEqual(total, 8.0)
+        self.assertEqual(ledger[attempt_id]["event"], "retire")
 
     def test_http_400_without_anthropic_error_body_keeps_batch_reservation(self) -> None:
         with self.assertRaisesRegex(gen60.RunnerError, "ambiguous"):
@@ -1026,7 +1075,7 @@ class BatchLifecycleTests(unittest.TestCase):
                                api=lambda *args: calls.append(args) or json.dumps({"id": "batch-root-b"}))
         self.assertEqual(len(calls), 1)
 
-    def test_kill_between_post_and_manifest_update_keeps_reservation_and_resubmits_new_attempt(self) -> None:
+    def test_kill_after_post_uses_fsynced_batch_id_without_resubmitting(self) -> None:
         marker = self.root / "post.log"
         code = (
             "import json,sys; from pathlib import Path; sys.path.insert(0, sys.argv[1]); import gen60; gen60.CHECKOUT_BASIN=Path(__import__('os').environ['PART60_BASIN']); "
@@ -1044,15 +1093,19 @@ class BatchLifecycleTests(unittest.TestCase):
         first_total, first_ledger = gen60.spend_state(self.spend_path)
         self.assertGreater(first_total, 0.0)
         self.assertEqual(len(first_ledger), 1)
+        manifest_path = gen60.manifest_path(self.root, "dev", "M1", "primary")
+        interrupted = json.loads(manifest_path.read_text())
+        first_chunk = interrupted["chunks"][0]
+        self.assertEqual((Path(first_chunk["directory"]) / "batch-id").read_text().strip(), "accepted-but-unsaved")
         calls = []
         message = gen60.submit_phase(self.root, "dev", "M1", "primary",
             api=lambda method, path, body=None: (calls.append(path) or json.dumps({"id": "second-attempt"})))
-        self.assertEqual(message, "second-attempt")
+        self.assertIn("accepted-but-unsaved", message)
+        self.assertEqual(calls, [])
         manifest = json.loads(gen60.manifest_path(self.root, "dev", "M1", "primary").read_text())
-        self.assertEqual(manifest["chunks"][0]["status"], "ambiguous")
-        self.assertEqual(manifest["chunks"][1]["status"], "submitted")
-        self.assertEqual(len(gen60.spend_state(self.spend_path)[1]), 2)
-        self.assertEqual(calls, ["/v1/messages/batches"])
+        self.assertEqual(manifest["chunks"][0]["status"], "submitted")
+        self.assertEqual(manifest["chunks"][0]["batch_id"], "accepted-but-unsaved")
+        self.assertEqual(len(gen60.spend_state(self.spend_path)[1]), 1)
 
     def test_kill_after_submit_reserve_keeps_old_attempt_and_reruns_with_a_new_id(self) -> None:
         marker = self.root / "post.log"
@@ -1160,13 +1213,20 @@ class BatchLifecycleTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix="part60-adoption-mutation-") as directory:
             mutated_dir = Path(directory)
             source = (HERE / "gen60.py").read_text(encoding="utf-8")
-            old = '''            if last.get("status") in ("reserved", "posting", "unknown", "ready", "rate_limited", "ambiguous"):
-                last["status"] = "ambiguous"
-                last["ambiguous_at"] = utc_now()
-                manifest["ambiguous_attempts"] = int(manifest.get("ambiguous_attempts", 0)) + 1
-                write_json(mfpath, manifest)'''
-            adopted = '''            if last.get("status") in ("reserved", "posting", "unknown", "ready", "rate_limited", "ambiguous"):
-                return "reconciled batch legacy-adoption"'''
+            old = '''                durable_batch_id = _read_batch_id(Path(str(last.get("directory", ""))))
+                if durable_batch_id:
+                    last["batch_id"] = durable_batch_id
+                    last["status"] = "submitted"
+                    last.setdefault("submitted_at", utc_now())
+                    write_json(mfpath, manifest)
+                    return f"batch {durable_batch_id} is already submitted; collect it before continuing"'''
+            adopted = '''                durable_batch_id = None
+                if durable_batch_id:
+                    last["batch_id"] = durable_batch_id
+                    last["status"] = "submitted"
+                    last.setdefault("submitted_at", utc_now())
+                    write_json(mfpath, manifest)
+                    return f"batch {durable_batch_id} is already submitted; collect it before continuing"'''
             self.assertIn(old, source)
             (mutated_dir / "gen60.py").write_text(source.replace(old, adopted, 1), encoding="utf-8")
             contract = """import json,sys,tempfile
@@ -1182,12 +1242,13 @@ def api(method,path,body=None):
         posts.append(path)
         raise gen60.APIError(None, 'timeout')
     raise AssertionError(path)
-for _ in range(2):
-    try: gen60.submit_phase(root,'dev','M1','primary',api=api)
-    except gen60.RunnerError: pass
+gen60.submit_phase(root,'dev','M1','primary',api=lambda *args: (posts.append('first') or json.dumps({'id':'durable-id'})))
+mf=gen60.manifest_path(root,'dev','M1','primary')
+data=json.loads(mf.read_text()); data['chunks'][-1]['batch_id']=None; data['chunks'][-1]['status']='posting'; mf.write_text(json.dumps(data))
+gen60.submit_phase(root,'dev','M1','primary',api=lambda *args: (posts.append('second') or json.dumps({'id':'duplicate'})))
 ledger=gen60.read_jsonl(gen60.fixed_spend_path(root))
-assert len(posts) == 2, posts
-assert sum(row.get('event') == 'reserve' for row in ledger) == 2, ledger
+assert len(posts) == 1, posts
+assert sum(row.get('event') == 'reserve' for row in ledger) == 1, ledger
 """
             baseline = subprocess.run([sys.executable, "-c", contract, str(HERE), str(_TEST_PILOT)],
                 env={**os.environ, "PART60_BASIN": str(self.basin)}, capture_output=True, text=True, check=False)
@@ -1263,6 +1324,9 @@ assert gen60._smoke_consecutive_failed_checks(history) == 1
                                  {"type": "error", "error": {"type": "invalid_request_error"}})
         with mock.patch("gen60._choose_m3_winners_locked", return_value=len(units)):
             result3 = gen60.submit_phase(self.root, "dev", "M3", "fresh", api=reject)
+        manifest3 = json.loads(gen60.manifest_path(self.root, "dev", "M3", "fresh").read_text())
+        idmap3 = json.loads((Path(manifest3["chunks"][0]["directory"]) / "idmap.json").read_text())
+        self.assertEqual(next(iter(idmap3.values()))["hypothesis"], "first winner")
         with mock.patch("gen60.build_feedback", return_value=[]):
             result5 = gen60.submit_phase(m5root, "dev", "M5", "round2", api=reject)
         self.assertEqual(result3, "rejected")
@@ -1856,7 +1920,7 @@ class WrapperTests(unittest.TestCase):
             self.assertIn("skipped: verify-dev did not succeed", (root / "logs/score-test.log").read_text())
             self.assertNotIn("=== score-test", result.stdout)
 
-    def test_run60_kill_and_rerun_keeps_orphan_scorer_lock(self) -> None:
+    def test_run60_kill_and_rerun_clears_its_orphaned_scorer_safely(self) -> None:
         with tempfile.TemporaryDirectory(prefix="part60-wrapper-kill-lock-") as directory:
             root = Path(directory)
             fakebin = self._prepare_fake_runner(root)
@@ -1881,9 +1945,8 @@ class WrapperTests(unittest.TestCase):
                 process.kill()
                 self.assertEqual(process.wait(timeout=5), -signal.SIGKILL)
                 rerun = self._run_fake_runner(root, fakebin)
-                self.assertEqual(rerun.returncode, 3, rerun.stdout + rerun.stderr)
-                self.assertIn("run60 already running", rerun.stdout)
-                time.sleep(5.2)
+                self.assertEqual(rerun.returncode, 0, rerun.stdout + rerun.stderr)
+                self.assertIn("RETURN_READY", rerun.stdout)
             finally:
                 if process.poll() is None:
                     process.kill()

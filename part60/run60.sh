@@ -15,6 +15,26 @@ if ! flock -n 9; then
   echo "run60 already running (run lock held)"
   exit 3
 fi
+# SIGKILL cannot run the wrapper's cleanup. The lock is not inherited by phase
+# children; a stale scorer pid is terminated only when its command still names
+# this runner's score CLI, then its scorer lock is checked before continuing.
+if [ -f "$RUN_ROOT/run60.active" ]; then
+  stale_pid=$(cat "$RUN_ROOT/run60.active" 2>/dev/null || true)
+  if [[ "$stale_pid" =~ ^[0-9]+$ ]] && kill -0 "$stale_pid" 2>/dev/null; then
+    stale_cmd=$(ps -p "$stale_pid" -o args= 2>/dev/null || true)
+    if [[ "$stale_cmd" == *"part60/score60.py"* ]]; then
+      kill -TERM "$stale_pid" 2>/dev/null || true
+      for _ in {1..50}; do
+        kill -0 "$stale_pid" 2>/dev/null || break
+        sleep 0.1
+      done
+    else
+      echo "stale run marker belongs to another command; refusing to clear it"
+      exit 3
+    fi
+  fi
+  rm -f "$RUN_ROOT/run60.active"
+fi
 RUN_START_SECONDS=$SECONDS
 
 # A failed rerun must never leave an older success archive at the path an operator copies.
@@ -45,8 +65,12 @@ run_checked() {
     record_status "$phase" 124
     return 0
   fi
-  timeout --signal=TERM --kill-after=30 "${remaining}s" "$@" > "$LOG_DIR/$phase.log" 2>&1
+  timeout --signal=TERM --kill-after=30 "${remaining}s" "$@" > "$LOG_DIR/$phase.log" 2>&1 9>&- &
+  local phase_pid=$!
+  printf '%s\n' "$phase_pid" > "$RUN_ROOT/run60.active"
+  wait "$phase_pid"
   local rc=$?
+  rm -f "$RUN_ROOT/run60.active"
   record_status "$phase" "$rc"
   return 0
 }

@@ -243,8 +243,9 @@ def cost_for(rows: list[dict[str, Any]], root: Path | None = None,
         ledger_path = gen60.fixed_spend_path(root)
         if ledger_path.is_file():
             _, ledger = gen60.spend_state(ledger_path)
-            reserved_usd = sum(float(entry.get("reserved_usd", 0.0)) for entry in ledger.values()
-                               if entry.get("event") == "reserve"
+            reserved_usd = sum(float(entry.get("actual_usd", entry.get("reserved_usd", 0.0)))
+                               for entry in ledger.values()
+                               if entry.get("event") in ("reserve", "retire")
                                and entry.get("method") == method and entry.get("split") == split)
     input_tokens = batch_usage["input"] + direct_usage["input"]
     output_tokens = batch_usage["output"] + direct_usage["output"]
@@ -824,14 +825,8 @@ def run_analysis(root: Path, split: str) -> dict[str, Any]:
 def write_reports(root: Path, analyses: list[dict[str, Any]]) -> tuple[Path, Path]:
     root.mkdir(parents=True, exist_ok=True)
     json_path, md_path = root / "analysis-60.json", root / "analysis-60.md"
-    if len(analyses) == 1 and json_path.is_file():
-        try:
-            prior = json.loads(json_path.read_text(encoding="utf-8"))
-            by_split = {str(item.get("split")): item for item in prior.get("analyses", [])}
-            by_split.update({str(item.get("split")): item for item in analyses})
-            analyses = [by_split[key] for key in ("dev", "test") if key in by_split]
-        except (OSError, ValueError, TypeError):
-            pass
+    # Each invocation reports only the requested split(s); a dev-only rerun
+    # must not carry a stale test analysis forward from an earlier report.
     payload = {"analyses": analyses, "predictions": [p for a in analyses for p in a["predictions"]]}
     write_json(json_path, payload)
     dev = next((analysis for analysis in analyses if analysis.get("split") == "dev"), None)
