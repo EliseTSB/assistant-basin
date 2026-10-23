@@ -83,12 +83,13 @@ python3 part62/blind62.py run-all --folder results/part62 --review-dir results/p
 ```
 
 The default reader is Claude Haiku 5.5 (`claude-haiku-5-5`). A calibration-only
-batch runs first on 120 seeded, balanced, already-labelled Part 54a origin
-answers (40 EARTH, 40 OFFWORLD, 40 NEITHER). The sample ids and seed are stored
-with the result. Together with the 1,536 experiment answers, this makes 1,656
-reader requests. Haiku must agree with the historical Opus labels at Cohen's
-kappa >= 0.8, with no unlabelled or truncated calibration responses. Every
-request uses `max_tokens=1024` and omits `temperature`.
+batch runs first on 120 seeded, balanced as class availability allows, already-labelled
+origin answers from Parts 54a, 54b, 26.8, and 59a. The selected source answer
+ids, seed, and realized EARTH/OFFWORLD/NEITHER counts are stored with the result.
+Together with the 1,536 experiment answers, this makes 1,656 reader requests.
+Haiku must agree with the historical Opus labels at Cohen's kappa >= 0.8, with
+no unlabelled or truncated calibration responses. Every request uses
+`max_tokens=1024` and omits `temperature`.
 
 All Part 62 reader attempts use `paidaction.DEFAULT_LEDGER_PATH`, shared across
 review directories and parts, with the library's $8 aggregate ceiling. Haiku's
@@ -116,8 +117,18 @@ python3 part62/blind62.py retire ATTEMPT_ID --who OPERATOR --reason 'verified ou
 
 The ledger records retirement while retaining the reserve; on the next
 `run-all`, the chunk is marked `retired-unknown` and remains ineligible for a
-new POST. The exact refusal from `run-all` includes the full recovery command
-and ledger path. To inspect a known batch before rerunning:
+new POST. A retired calibration does not authorize Opus. To retry calibration,
+run the explicit command printed by the refusal; it appends a new calibration
+attempt with a new reserve while preserving the retired attempt:
+
+```sh
+python3 part62/blind62.py run-all --folder results/part62 \
+  --review-dir results/part62-review --reader haiku \
+  --ledger-path /home/elisepc/assistant-basin/paidaction/paid-ledger.jsonl \
+  --retry-calibration
+```
+
+To inspect a known batch before rerunning:
 
 ```sh
 python3 part62/blind62.py status BATCH_ID --review-dir results/part62-review

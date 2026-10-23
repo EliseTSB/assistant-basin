@@ -24,7 +24,9 @@ if str(PROJECT_ROOT) not in sys.path:
 
 import blind_origin as origin
 from part59 import blind_setting as setting
-from paidaction.paid_ledger import DEFAULT_LEDGER_PATH, HARD_CAP_USD, Ledger
+from paidaction.paid_ledger import (
+    DEFAULT_LEDGER_PATH, HARD_CAP_USD, Ledger, ReleaseRefusedError,
+)
 from paidaction.pricing import BATCH_RATES_USD_PER_MILLION
 from paidaction.pricing import worst_case_cost
 
@@ -35,7 +37,7 @@ except ImportError:
 
 
 # Part 62's gate compares Haiku with the historical Opus labels for a balanced
-# sample of Part 54a origin answers.
+# sample from the registered four-source origin pool.
 CALIBRATION_KAPPA_MIN = 0.8
 CALIBRATION_SEED = 62062
 CALIBRATION_SAMPLE_SIZE = 120
@@ -53,7 +55,31 @@ DEFAULT_READER = "haiku"
 MODEL = READER_MODELS[DEFAULT_READER]
 RUBRIC = origin.RUBRIC
 _CAL_LABELS = {"SCIFI": "OFFWORLD", "EARTH-REAL": "EARTH", "FANTASY": "NEITHER", "OTHER": "NEITHER"}
-CAL = []  # populated from the recorded Part 54a Opus labels by calibration_sample()
+CAL = []  # populated from the four-source origin pool by calibration_sample()
+
+CALIBRATION_CLASSES = ("EARTH", "OFFWORLD", "NEITHER")
+
+
+def _balanced_calibration_quotas(available: dict[str, int], sample_size: int) -> dict[str, int]:
+    """Allocate a fixed calibration sample as evenly as available class counts allow."""
+    capacity = {label: max(0, int(available.get(label, 0))) for label in CALIBRATION_CLASSES}
+    quotas = {label: 0 for label in CALIBRATION_CLASSES}
+    remaining = min(max(0, sample_size), sum(capacity.values()))
+    while remaining:
+        active = [label for label in CALIBRATION_CLASSES if quotas[label] < capacity[label]]
+        if not active:
+            break
+        base, extra = divmod(remaining, len(active))
+        allocated = 0
+        for index, label in enumerate(active):
+            share = base + (index < extra)
+            count = min(share, capacity[label] - quotas[label])
+            quotas[label] += count
+            allocated += count
+        if not allocated:
+            break
+        remaining -= allocated
+    return quotas
 
 
 def calibration_sample() -> list[tuple[str, str, str]]:
@@ -88,18 +114,17 @@ def calibration_sample() -> list[tuple[str, str, str]]:
             continue
         classes[label[0]].setdefault(text, (answer_id, label[0], text))
     rng = random.Random(CALIBRATION_SEED)
+    candidates_by_class = {label: list(classes[label].values()) for label in CALIBRATION_CLASSES}
+    quotas = _balanced_calibration_quotas(
+        {label: len(candidates) for label, candidates in candidates_by_class.items()},
+        CALIBRATION_SAMPLE_SIZE)
     selected = []
-    for label in ("EARTH", "OFFWORLD", "NEITHER"):
-        candidates = list(classes[label].values())
+    for label in CALIBRATION_CLASSES:
+        candidates = candidates_by_class[label]
         rng.shuffle(candidates)
-        selected.extend(candidates[:40])
-    if len(selected) < CALIBRATION_SAMPLE_SIZE:
-        remaining = [item for label in classes for item in classes[label].values()
-                     if item not in selected]
-        rng.shuffle(remaining)
-        selected.extend(remaining[:CALIBRATION_SAMPLE_SIZE - len(selected)])
+        selected.extend(candidates[:quotas[label]])
     if len(selected) != CALIBRATION_SAMPLE_SIZE or len({item[2] for item in selected}) != len(selected):
-        raise ValueError("could not construct 120 distinct Part 63 joined calibration answers")
+        raise ValueError("could not construct 120 distinct four-source calibration answers")
     rng.shuffle(selected)
     return [(label, answer_id, text) for answer_id, label, text in selected]
 
@@ -352,6 +377,29 @@ def _save_json(path: Path, data: dict) -> None:
         raise
 
 
+def _save_text(path: Path, text: str) -> None:
+    """Atomically persist exact response text and fsync both file and directory."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, temporary = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as stream:
+            stream.write(text)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+        directory_fd = os.open(path.parent, os.O_RDONLY)
+        try:
+            os.fsync(directory_fd)
+        finally:
+            os.close(directory_fd)
+    except Exception:
+        try:
+            os.unlink(temporary)
+        except FileNotFoundError:
+            pass
+        raise
+
+
 def _save_raw_results(path: Path, lines: list[str]) -> None:
     """Durably preserve provider rows keyed by their stable custom IDs."""
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -437,19 +485,23 @@ def prepare_batch(rows: list[dict], reader: str = DEFAULT_READER) -> tuple[dict,
 
 def _haiku_calibration_failed(review_dir: Path) -> bool:
     run_path = review_dir / "part62-run-all.json"
-    try:
-        run = json.loads(run_path.read_text(encoding="utf-8"))
+    if run_path.exists():
+        try:
+            run = json.loads(run_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return False
+        if not isinstance(run, dict):
+            return False
         calibration = run.get("calibration")
-        details = calibration.get("calibration", {}) if isinstance(calibration, dict) else {}
-        if (run.get("reader") == "haiku" and run.get("model") == READER_MODELS["haiku"]
-                and calibration.get("status") == "failed"
+        if not isinstance(calibration, dict):
+            return False
+        details = calibration.get("calibration")
+        return (run.get("reader") == "haiku" and run.get("model") == READER_MODELS["haiku"]
+                and calibration.get("status") == "failed" and isinstance(details, dict)
                 and isinstance(details.get("count"), int)
                 and 0 <= details["count"] <= CALIBRATION_SAMPLE_SIZE
                 and isinstance(details.get("unlabelled"), int)
-                and isinstance(details.get("truncated"), int)):
-            return True
-    except (OSError, json.JSONDecodeError, AttributeError):
-        pass
+                and isinstance(details.get("truncated"), int))
     for path in sorted(review_dir.glob("part62-labels-*.json")):
         try:
             record = json.loads(path.read_text(encoding="utf-8"))
@@ -522,9 +574,14 @@ def _settle_recorded(chunk: dict, api: Any, review_dir: Path, run: dict,
     usage = {"input_tokens": 0, "output_tokens": 0, "requests": []}
     for line in lines:
         row = json.loads(line)
-        u = row.get("result", {}).get("message", {}).get("usage", {})
+        result = row.get("result", {})
+        # Anthropic does not bill errored, expired, or canceled batch rows.
+        # They stay in completion_issues below, but contribute no token usage.
+        if result.get("type") != "succeeded":
+            continue
+        u = result.get("message", {}).get("usage", {})
         if not isinstance(u.get("input_tokens"), int) or not isinstance(u.get("output_tokens"), int):
-            raise ValueError("batch result lacks usage; reserve remains active")
+            raise ValueError("succeeded batch result lacks usage; reserve remains active")
         usage["input_tokens"] += u["input_tokens"]
         usage["output_tokens"] += u["output_tokens"]
         usage["requests"].append({"custom_id": row.get("custom_id"), **u})
@@ -547,13 +604,44 @@ def _send_reserved(chunk: dict, requests: list[dict], idmap: dict, run: dict,
     _persist_run(run_path, run)
     try:
         raw = api("POST", "/v1/messages/batches", {"requests": requests})
+    except setting.APIHTTPError as exc:
+        raw_path = review_dir / f"post-response-{chunk['submission_id']}.txt"
+        _save_text(raw_path, exc.body)
+        reserve_released = False
+        rejected = 400 <= exc.status < 500 and exc.status != 429
+        if rejected:
+            try:
+                parsed_error = json.loads(exc.body)
+            except (json.JSONDecodeError, TypeError):
+                parsed_error = None
+            if isinstance(parsed_error, dict):
+                try:
+                    _StageLedger(str(ledger_path), HARD_CAP_USD).release(
+                        chunk["attempt_id"], exc.status, parsed_error)
+                    reserve_released = True
+                except ReleaseRefusedError:
+                    pass
+        chunk.update(status="rejected" if rejected else "ambiguous",
+                     http_status=exc.status, reserve_released=reserve_released,
+                     error=f"{type(exc).__name__}: {exc}")
+        _persist_run(run_path, run)
+        raise
     except Exception as exc:
         chunk.update(status="ambiguous", error=f"{type(exc).__name__}: {exc}")
         _persist_run(run_path, run)
         raise
-    raw_path = review_dir / f"post-response-{chunk['submission_id']}.json"
-    _save_json(raw_path, json.loads(raw))
-    response = json.loads(raw)
+    raw_path = review_dir / f"post-response-{chunk['submission_id']}.txt"
+    _save_text(raw_path, raw)
+    try:
+        response = json.loads(raw)
+    except (json.JSONDecodeError, TypeError) as exc:
+        chunk.update(status="ambiguous", error=f"POST response is not valid JSON: {exc}")
+        _persist_run(run_path, run)
+        raise ValueError("POST outcome unknown; response is not valid JSON") from exc
+    if not isinstance(response, dict):
+        chunk.update(status="ambiguous", error="POST response was not a JSON object")
+        _persist_run(run_path, run)
+        raise ValueError("POST outcome unknown; response was not a JSON object")
     batch_id = response.get("id")
     if not isinstance(batch_id, str) or not batch_id:
         chunk.update(status="ambiguous", error="POST response lacked batch id")
@@ -599,7 +687,7 @@ def retire_attempt(attempt_id: str, who: str, reason: str,
 def run_all(folder: str | Path, review_dir: str | Path, reader: str = DEFAULT_READER,
             ledger_path: str | Path = DEFAULT_LEDGER_PATH, *, api: Any | None = None,
             sleep: Any = time.sleep, poll_interval: float = 5.0,
-            poll_bound: float = 3600.0) -> Path:
+            poll_bound: float = 3600.0, retry_calibration: bool = False) -> Path:
     """Resume durable chunk records; never POST a chunk that already has a record."""
     api = api or setting.call
     if reader not in READER_MODELS:
@@ -645,10 +733,17 @@ def run_all(folder: str | Path, review_dir: str | Path, reader: str = DEFAULT_RE
                     chunk.update(attempt_id=recovered, status="reserved")
                     _persist_run(run_path, run)
                 if chunk.get("status") == "posting":
-                    raw_path = review_dir / f"post-response-{chunk['submission_id']}.json"
+                    raw_path = review_dir / f"post-response-{chunk['submission_id']}.txt"
                     if raw_path.is_file():
-                        response = json.loads(raw_path.read_text())
-                        chunk.update(status="submitted", batch_id=response.get("id"))
+                        try:
+                            response = json.loads(raw_path.read_text(encoding="utf-8"))
+                        except (OSError, json.JSONDecodeError):
+                            response = None
+                        batch_id = response.get("id") if isinstance(response, dict) else None
+                        if isinstance(batch_id, str) and batch_id:
+                            chunk.update(status="submitted", batch_id=batch_id)
+                        else:
+                            chunk.update(status="ambiguous", error="saved POST response has no valid batch id")
                         _persist_run(run_path, run)
                     else:
                         chunk["status"] = "ambiguous"
@@ -671,8 +766,26 @@ def run_all(folder: str | Path, review_dir: str | Path, reader: str = DEFAULT_RE
             if reader == "haiku":
                 cal_record = run.get("calibration")
                 if not _calibration_gate(cal_record):
-                    c = next((x for x in run["chunks"] if x.get("stage") == "calibration"), None)
-                    if c is None:
+                    calibration_chunks = [x for x in run["chunks"] if x.get("stage") == "calibration"]
+                    c = calibration_chunks[-1] if calibration_chunks else None
+                    if c is not None and c.get("status") in {"retired-unknown", "rejected"}:
+                        retryable = (c.get("status") == "retired-unknown"
+                                     or c.get("reserve_released") is True)
+                        if not retryable:
+                            raise ValueError("calibration rejection reserve was not released; inspect its saved response")
+                        command = (f"python3 part62/blind62.py run-all --folder {Path(folder)} "
+                                   f"--review-dir {review_dir} --reader haiku --ledger-path {ledger_path} "
+                                   "--retry-calibration")
+                        if not retry_calibration:
+                            raise ValueError("calibration attempt is retired or rejected; answers refused. "
+                                             f"Run the explicit calibration retry command: {command}")
+                        c = _post_chunk(cal, idmap, run, run_path, review_dir, ledger_path,
+                                        reader, model, api, "calibration", len(calibration_chunks),
+                                        sleep=sleep, poll_interval=poll_interval, poll_bound=poll_bound)
+                    elif retry_calibration:
+                        raise ValueError("--retry-calibration requires a retired calibration or a rejected calibration "
+                                         "whose reserve was released")
+                    elif c is None:
                         c = _post_chunk(cal, idmap, run, run_path, review_dir, ledger_path,
                                         reader, model, api, "calibration", 0,
                                         sleep=sleep, poll_interval=poll_interval, poll_bound=poll_bound)
@@ -691,9 +804,19 @@ def run_all(folder: str | Path, review_dir: str | Path, reader: str = DEFAULT_RE
                                      for i, (label, _, _) in enumerate(CAL))
                     truncated = sum(reason not in ACCEPTED_STOP_REASONS for reason in issues.values())
                     passed = len(labels) == 120 and kappa is not None and kappa >= CALIBRATION_KAPPA_MIN and not unlabelled and not truncated
+                    sample_ids = [item[1] for item in CAL]
+                    realized_class_counts = {
+                        label: sum(item[0] == label for item in CAL)
+                        for label in CALIBRATION_CLASSES
+                    }
+                    calibration_details = {"count": len(labels), "seed": CALIBRATION_SEED,
+                        "sample_ids": sample_ids, "realized_class_counts": realized_class_counts,
+                        "kappa": kappa, "unlabelled": unlabelled, "truncated": truncated,
+                        "labels": labels}
                     run["calibration"] = {"status": "passed" if passed else "failed", "reader": reader,
-                        "model": model, "calibration": {"count": len(labels), "kappa": kappa,
-                        "unlabelled": unlabelled, "truncated": truncated, "labels": labels}}
+                        "model": model, "seed": CALIBRATION_SEED, "sample_ids": sample_ids,
+                        "realized_class_counts": realized_class_counts,
+                        "calibration": calibration_details}
                     _persist_run(run_path, run)
                     if not passed:
                         raise ValueError("calibration failed; answers refused")
@@ -701,7 +824,15 @@ def run_all(folder: str | Path, review_dir: str | Path, reader: str = DEFAULT_RE
                     raise ValueError("calibration missing, pending, or failed; answers refused")
             for start in range(0, len(answers), 200):
                 index = start // 200
-                old = next((x for x in run["chunks"] if x.get("stage") == "answers" and x.get("index") == index), None)
+                matches = [x for x in run["chunks"]
+                           if x.get("stage") == "answers" and x.get("index") == index]
+                old = matches[-1] if matches else None
+                if old is not None and old.get("status") == "rejected" and old.get("reserve_released") is True:
+                    old = None
+                elif old is not None and old.get("status") == "rejected":
+                    response = review_dir / f"post-response-{old['submission_id']}.txt"
+                    raise ValueError(f"answer chunk {index} was rejected but its reserve remains active; "
+                                     f"inspect {response} and reconcile the ledger")
                 if old is not None:
                     if old.get("status") == "reserved":
                         _send_reserved(old, answers[start:start+200], idmap, run, run_path,
@@ -818,6 +949,8 @@ def parser() -> argparse.ArgumentParser:
     run_parser.add_argument("--review-dir", default=str(PROJECT_ROOT / "results" / "part62-review"))
     run_parser.add_argument("--reader", choices=tuple(READER_MODELS), default=DEFAULT_READER)
     run_parser.add_argument("--ledger-path", default=str(DEFAULT_LEDGER_PATH))
+    run_parser.add_argument("--retry-calibration", action="store_true",
+                            help="explicitly submit a retired calibration as a new reserved attempt")
     retire_parser = sub.add_parser("retire", help="operator-retire an unknown paid attempt")
     retire_parser.add_argument("attempt_id")
     retire_parser.add_argument("--who", required=True)
@@ -834,7 +967,8 @@ def main(argv: list[str] | None = None) -> None:
     if args.command == "submit":
         submit(args.folder, args.review_dir, args.reader, args.ledger_path)
     elif args.command == "run-all":
-        run_all(args.folder, args.review_dir, args.reader, args.ledger_path)
+        run_all(args.folder, args.review_dir, args.reader, args.ledger_path,
+                retry_calibration=args.retry_calibration)
     elif args.command == "retire":
         retire_attempt(args.attempt_id, args.who, args.reason, args.ledger_path)
     elif args.command == "status":

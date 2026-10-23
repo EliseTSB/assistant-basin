@@ -49,3 +49,26 @@ The fake API tests verify local state transitions and ledger idempotence, not An
 ### BLOCKERS
 
 - None. The registered Opus fallback is implemented and covered by tests. Live provider behavior remains unverified because this fold forbids paid calls.
+
+## Fold 7
+
+### SUMMARY
+
+- Fixed all seven Fold 7 findings across settlement, POST rejection handling, calibration recovery and provenance, runbook wording, and signal cleanup.
+- Retired calibration no longer authorizes Opus; `run-all --retry-calibration` creates a separately reserved retry and preserves the retired attempt.
+- The required unittest command completed with 52 tests `OK`; no paid API, network, or GPU operation was performed.
+- Parent-control mailbox reads were empty; no messages changed the plan or required disposition.
+
+### FINDINGS
+
+- **F1** — `part62/blind62.py:558-595` sums usage only from succeeded rows, saves non-succeeded completion reasons, and leaves scoring blocked when those issues exist. `part62/test_part62.py:846-883` verifies an errored row settles at succeeded usage while `scoring_gate` refuses the labels.
+- **F2** — `part62/blind62.py:599-628` saves the HTTP error body, releases a reserve only for a parsed, accepted Anthropic 4xx through `paid_ledger.release`, and records a definitive rejection as `rejected`. `part62/test_part62.py:885-915` drives this through `run_all` and checks the ledger release.
+- **F3** — `part62/blind62.py:486-504, 766-799, 952-953` uses the current Haiku run record for Opus eligibility and adds `--retry-calibration`, which makes a new reserved attempt after retirement. `part62/test_part62.py:553-571` checks a retired run cannot inherit an older failed labels file; `917-1009` exercises the printed retry flow and verifies the retired and new attempts remain distinct.
+- **F4** — `part62/blind62.py:380-400, 633-649` fsyncs the exact POST response text before JSON parsing and keeps malformed bodies. `part62/test_part62.py:1011-1024` checks the exact malformed body remains on disk.
+- **F5** — `part62/blind62.py:807-819` records calibration seed, source sample IDs, and realized class counts in the run record and labels output. The retry integration test at `part62/test_part62.py:917-1004` checks both records.
+- **F6** — `part62/blind62.py:63-129` keeps the Parts 54a, 54b, 26.8, and 59a pool and redistributes class quotas as availability requires; `part62/RUNBOOK-62.md:85-92` names that pool. `part62/test_part62.py:573-591` checks the selected source set, balanced realized counts, and redistribution under a scarce class.
+- **F7** — `part62/run62.sh:5-28` traps SIGINT and SIGTERM, writes the incomplete archive, prints `RUN_FAILED`, and exits with signal status. `part62/test_part62.py:1026-1058` exercises both signals.
+
+### BLOCKERS
+
+- None. The full suite reported `Ran 52 tests ... OK`; its five `MUTATION RED (copy)` diagnostics are expected mutation checks. No torch-missing errors occurred in this environment. Live provider billing remains unverified because the fold prohibits paid calls.

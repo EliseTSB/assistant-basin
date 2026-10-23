@@ -4,18 +4,28 @@ set -Eeuo pipefail
 
 on_error() {
   local status="$1"
-  trap - ERR
+  trap - ERR INT TERM
   local incomplete="${RETURN_INCOMPLETE_ARCHIVE:-/root/part62-return-INCOMPLETE.tgz}"
+  local project_root="${PROJECT_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
   local paths=()
   for path in part62 results/part62 results/part62-analysis.json; do
-    [[ -e "$PROJECT_ROOT/$path" ]] && paths+=("$path")
+    [[ -e "$project_root/$path" ]] && paths+=("$path")
   done
-  if (( ${#paths[@]} )); then tar -czf "$incomplete" -C "$PROJECT_ROOT" "${paths[@]}" || true; fi
+  if (( ${#paths[@]} )); then tar -czf "$incomplete" -C "$project_root" "${paths[@]}" || true; fi
   printf 'RUN_FAILED status=%s archive=%s\n' "$status" "$incomplete" >&2
   printf 'Inspect %s and the runner log before any instance teardown.\n' "${PART62_OUTPUT:-output path not initialized}" >&2
   exit "$status"
 }
 trap 'on_error "$?"' ERR
+
+on_signal() {
+  local signal="$1"
+  local status=130
+  [[ "$signal" == "TERM" ]] && status=143
+  on_error "$status"
+}
+trap 'on_signal INT' INT
+trap 'on_signal TERM' TERM
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
