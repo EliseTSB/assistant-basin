@@ -745,6 +745,33 @@ Pre-registered in `PART61-63-DESIGN.md` (Amendments 1 and 2 to Part 61 were writ
 
 Files: `results/part61/` (npz archives, analysis JSON, `part61-registered-evaluation.json`), `part61/`. Limits: two models and one target neuron each, 200 documents, ten controls, rank statistics with a coarse floor (one in eleven), and the two-direction metric is the Part 59 pooled-percentile rule.
 
+### Part 62: Qwen's alien neuron works while the model writes; OLMo's twin needs the prompt and the answer together (2026-10-23)
+
+Pre-registered in `PART61-63-DESIGN.md` (Amendments 1 to 6, all written before the run; Amendment 3 pairs the seeds across the three phases at each dose). Run on one rented RTX 3090 on Vast (about $0.30). Both models in fp32 on the Part 26.8 question set (3 questions x 8 samples per cell). The target neuron was clamped at 10 doses, in multiples of its Pile maximum, in three phases: both (prompt and answer, as in earlier Parts), generation only, and prompt only. One column-norm-scaled random control per model ran at 1.5 and 2.0 in both phases. Claude Haiku 5.5 read all 1,536 answers blind through the Batch API (condition hidden, order shuffled; about 0.78M input and 0.10M output tokens, under $0.10). Calibration against archived Opus labels on 120 class-balanced answers from Parts 26.8, 54a and 54b: Cohen's kappa 0.85 (gate 0.80), with no unlabelled or truncated answers.
+
+Off-world answers, of 24 per cell:
+
+| Model and phase | 0.25 | 0.5 | 0.75 | 1.0 | 1.1 | 1.2 | 1.3 | 1.4 | 1.5 | 2.0 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Qwen3.5-4B, both | 0 | 0 | 0 | 1 | 0 | 3 | 7 | 11 | 16 | 24 |
+| Qwen3.5-4B, generation only | 0 | 0 | 0 | 1 | 0 | 2 | 3 | 8 | 20 | 23 |
+| Qwen3.5-4B, prompt only | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| OLMo-2 1B, both | 3 | 5 | 9 | 7 | 13 | 10 | 13 | 13 | 10 | 11 |
+| OLMo-2 1B, generation only | 0 | 1 | 1 | 3 | 2 | 4 | 1 | 5 | 4 | 1 |
+| OLMo-2 1B, prompt only | 3 | 1 | 3 | 3 | 2 | 3 | 3 | 3 | 3 | 0 |
+
+The four control cells (each model at 1.5 and 2.0) are 0 of 24.
+
+**Qwen3.5-4B L22:2742.** The effect comes from clamping while the model writes. Generation only gives 20 of 24 off-world at 1.5x and 23 at 2.0x, against 16 and 24 with both phases, and the prompt alone gives 0 of 240. The logistic fit's 10-90% width is 0.46 Pile-max units: steep, but wider than predicted. Its midpoint is 1.42 Pile-max, which is 1.10 in units of the neuron's natural level in alien-frame text.
+
+**OLMo-2 1B L10:6978.** Neither phase alone carries the effect. Both phases give 7 to 13 of 24 from 1.0x up; generation only gives 1 to 5; prompt only gives about 3 of 24 at every dose from 0.25x to 1.5x (24 of 240 in all) and 0 at 2.0x, with no dose trend. For reference, the same reader labelled 0 of 480 unclamped OLMo answers from Parts 26.8 and 54b off-world; those runs used other seeds, so this is a reference rate, not a matched control. The fit stays gradual (width 4.7 Pile-max units).
+
+**Predictions.** 62a failed: Qwen at 1.5x is 4 apart (the limit was 3), with generation only above both, and OLMo's generation-only count falls 4 to 12 below both at every dose from 1.0x to 2.0x. 62b failed: OLMo's prompt-only count reaches 3 of 24 (Qwen's stays at 0). 62c failed: Qwen's width is 0.46 (needed below 0.3). 62d held: OLMo's width is 4.7 (needed above 0.8). 62e failed: OLMo gives 5 of 24 at 0.5x (limit 4). 62f held: all four control cells are 0 of 24. 62g held: Qwen's midpoint is 1.10 alien-frame units (needed 0.85 to 1.2).
+
+Decision rules: "threshold vs gradual" is not retired, because 62d held. "The step comes from the prompt" is met on the rule's letter, because 62b failed, but only through OLMo's flat prompt-only count, which has no step in it. I read the result as: OLMo's effect needs the prompt clamped as well as the answer, and Qwen's does not.
+
+Files: `results/part62/` (193 answer files), `results/part62-review/` (labels, the rebuilt label record and its provenance file), `results/part62-analysis.json` and `.txt`, `part62/`. Two notes on the record. The label run was made before the reader saved its per-batch answer keys, so the label record was rebuilt offline from the run's own submission files, with all 1,656 request ids and every raw label checked and the calibration kappa reproduced (`part62-rebuild-provenance.json`). The analysis file's exploratory paired-difference intervals sometimes do not contain their own point estimate, so they are not quoted here; the registered decisions use the count limits only. Limits: one neuron per model, 24 answers per cell, one reader (calibrated against another), one control per model at two doses, and OLMo's reference rate comes from other runs.
+
 ### Part 63: a blind Haiku reader agrees with Opus on Part 54a (kappa 0.95) and reads Qwen3-4B's push as Earth, not off-world (2026-10-23)
 
 Pre-registered in `PART61-63-DESIGN.md` (Amendments 1 and 2 before the run; Amendment 3 after the run and before any label was scored). Claude Haiku 5.5 read the 4,944 frozen answers from Parts 26.8, 54a, 54b and 59A blind (3,677 distinct texts, one request each, the label applied to every row with that text) through the Batch API, with the three registered label schemes plus a BROKEN-quality field; real API usage 2.64M input and 0.24M output tokens, about $0.19 (the shared ledger counts $2.42, because it keeps the reserve upper bound for batches whose results carried no usage). Calibration on the 34 hand-labelled examples: 0 wrong. Seeded repeat items (100) agree with themselves 95% (planet frame), 100% (maker identity) and 99% (origin).
