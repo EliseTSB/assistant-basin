@@ -51,6 +51,27 @@ class CollectionContractTests(unittest.TestCase):
             with self.assertRaisesRegex(collect64.CollectionError, 'reproduction stop'):
                 collect64.assemble({'L0:u1': unit}, {'L0:u1': fresh}, corpus=__import__('pathlib').Path('/unused'))
 
+    def test_even_unit_median_uses_the_mean_of_middle_values(self):
+        units, fresh_rows = {}, {}
+        for index in range(500):
+            key = f"L0:u{index}"
+            pilot_top = [item(f"pilot-top-{index}-{j}", 100 - j) for j in range(20)]
+            unit = {"unit_key": key, "type": "neuron", "layer": 0, "record_index": index,
+                    "record": {"unit": index, "top": pilot_top,
+                               "random": [item(f"pilot-random-{index}-{j}") for j in range(10)],
+                               "weak": [item(f"pilot-weak-{index}-{j}") for j in range(5)]}}
+            match = 9 if index < 250 else 10
+            top = [item(f"pilot-top-{index}-{j}", 200 - j) for j in range(match)]
+            top.extend(item(f"fresh-top-{index}-{j}", 100 - j) for j in range(36 - match))
+            units[key] = unit
+            fresh_rows[key] = {"top": top,
+                               "random": [item(f"fresh-random-{index}-{j}") for j in range(18)],
+                               "weak": [item(f"fresh-weak-{index}-{j}") for j in range(9)]}
+        with patch.object(collect64, "verify_corpus", return_value={"size_bytes": collect64.CORPUS_SIZE,
+                                                                      "sha256": collect64.CORPUS_SHA256_PREFIX + "0" * 48}):
+            with self.assertRaisesRegex(collect64.CollectionError, "9.5/12"):
+                collect64.assemble(units, fresh_rows, corpus=__import__('pathlib').Path('/unused'))
+
 
 if __name__ == '__main__':
     unittest.main()

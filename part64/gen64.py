@@ -14,9 +14,11 @@ import os
 from pathlib import Path
 import random
 import ssl
+import statistics
 import sys
 import tempfile
 import time
+from datetime import datetime, timedelta, timezone
 import urllib.error
 import urllib.request
 import uuid
@@ -33,8 +35,8 @@ from paidaction.paid_ledger import (HARD_CAP_USD, HTTPFailure, Ledger,
                                     LedgerError)
 from paidaction.pricing import BATCH_RATES_USD_PER_MILLION, worst_case_cost
 
-DEFAULT_COLLECTION = HERE / "results" / "collection64.jsonl"
-DEFAULT_ROOT = HERE / "results" / "gen64"
+DEFAULT_COLLECTION = BASIN / "results" / "part64" / "collection.jsonl"
+DEFAULT_ROOT = BASIN / "results" / "part64" / "gen64"
 REGISTERED_CORPUS = Path("/mnt/c/Users/alexa/neuron-probe-gpu/qwen35/pile10k.jsonl")
 REGISTERED_CORPUS_SIZE = 63_385_283
 REGISTERED_CORPUS_SHA256_PREFIX = "56ad98d5a82b2bb4"
@@ -49,6 +51,7 @@ SAMPLE_COUNTS = {
 EXPECTED_UNITS = {"neuron": 250, "control": 250}
 MAX_TOKENS = 8192  # Includes adaptive thinking and the complete M1 answer.
 CHUNK_RESERVE_TARGET_USD = 1.0
+OPUS_3X_LEDGER_PARTITIONS = 6
 ANTHROPIC_VERSION = "2023-06-01"
 HTTP_TIMEOUT_SECONDS = 120
 POLL_INTERVAL_SECONDS = 5
@@ -120,8 +123,12 @@ def load_collection(path: Path = DEFAULT_COLLECTION) -> tuple[list[dict[str, Any
     manifest_path = path.with_suffix(path.suffix + ".manifest.json")
     if not manifest_path.is_file():
         raise WriterError(f"Part 64 collection manifest is missing: {manifest_path}")
-    validate_collection_manifest(read_json(manifest_path))
+    manifest = read_json(manifest_path)
+    validate_collection_manifest(manifest)
     raw = path.read_bytes()
+    digest = sha256_bytes(raw)
+    if manifest.get("collection_sha256") != digest:
+        raise WriterError("collection JSONL SHA-256 differs from its manifest")
     rows: list[dict[str, Any]] = []
     for line_no, line in enumerate(raw.decode("utf-8").splitlines(), 1):
         if not line.strip():
@@ -145,8 +152,13 @@ def load_collection(path: Path = DEFAULT_COLLECTION) -> tuple[list[dict[str, Any
                            or not item["window"] for item in values)):
                 raise WriterError(f"{path}:{line_no}: expected {expected} nonempty {category} windows")
             windows = [item["window"] for item in values]
-            if len(set(windows)) != len(windows):
-                raise WriterError(f"{path}:{line_no}: duplicate {category} windows")
+            pilot_count = SAMPLE_COUNTS["1x"][category]
+            # The canonical Part 60 pilot prefix may contain repeated text (and
+            # must remain byte-for-byte intact); fresh additions must be unique
+            # both among themselves and against that prefix.
+            fresh = windows[pilot_count:]
+            if len(set(fresh)) != len(fresh) or set(fresh) & set(windows[:pilot_count]):
+                raise WriterError(f"{path}:{line_no}: duplicate fresh {category} windows")
         rows.append(row)
     if len(rows) != sum(EXPECTED_UNITS.values()):
         raise WriterError(f"collection has {len(rows)} units; expected 500")
@@ -156,8 +168,17 @@ def load_collection(path: Path = DEFAULT_COLLECTION) -> tuple[list[dict[str, Any
     counts = {kind: sum(row["type"] == kind for row in rows) for kind in UNIT_TYPES}
     if counts != EXPECTED_UNITS:
         raise WriterError(f"collection unit counts are {counts}; expected {EXPECTED_UNITS}")
+    reproduction = []
+    for line_no, row in enumerate(rows, 1):
+        value = row.get("fresh_top12_match")
+        if isinstance(value, bool) or not isinstance(value, int) or not 0 <= value <= 12:
+            raise WriterError(f"{path}: row {line_no} has invalid fresh_top12_match")
+        reproduction.append(value)
+    median = statistics.median(reproduction)
+    if manifest.get("median_fresh_top12_match") != median or median < 10:
+        raise WriterError("collection reproduction median differs from its rows or is below 10/12")
     verify_pilot_subset(rows)
-    return rows, sha256_bytes(raw)
+    return rows, digest
 
 
 def validate_collection_manifest(value: Any) -> None:
@@ -177,7 +198,10 @@ def validate_collection_manifest(value: Any) -> None:
             or corpus.get("path") != str(REGISTERED_CORPUS)
             or corpus.get("size_bytes") != REGISTERED_CORPUS_SIZE
             or not isinstance(digest, str) or not digest.startswith(REGISTERED_CORPUS_SHA256_PREFIX)
-            or isinstance(median, bool) or not isinstance(median, (int, float)) or median < 10):
+            or isinstance(median, bool) or not isinstance(median, (int, float)) or median < 10
+            or not isinstance(value.get("collection_sha256"), str)
+            or len(value["collection_sha256"]) != 64
+            or any(ch not in "0123456789abcdef" for ch in value["collection_sha256"])):
         raise WriterError("collection manifest does not satisfy the registered Part 64 collection gates")
 
 
@@ -280,6 +304,12 @@ def _chunk_requests(entries: list[tuple[dict[str, Any], dict[str, Any]]], model:
     return out
 
 
+def _ledger_partitions(writer: str, sample: str, rows: list[dict[str, Any]]) -> list[list[dict[str, Any]]]:
+    count = OPUS_3X_LEDGER_PARTITIONS if writer == "opus" and sample == "3x" else 1
+    return [rows[(len(rows) * index) // count:(len(rows) * (index + 1)) // count]
+            for index in range(count)]
+
+
 def ledger_path(root: Path, ledger_key: str) -> Path:
     if not ledger_key or any(char not in "abcdefghijklmnopqrstuvwxyz0123456789-" for char in ledger_key):
         raise WriterError(f"invalid ledger key {ledger_key!r}")
@@ -317,8 +347,9 @@ def _chunk_record(*, run_id: str, group_key: str, ledger_key: str,
     }
 
 
-def _build_plan(rows: list[dict[str, Any]], collection_sha256: str) -> tuple[dict[str, Any], dict[str, dict[str, Any]]]:
-    run_id = uuid.uuid4().hex
+def _build_plan(rows: list[dict[str, Any]], collection_sha256: str, *,
+                run_id: str | None = None) -> tuple[dict[str, Any], dict[str, dict[str, Any]]]:
+    run_id = run_id or uuid.uuid4().hex
     groups: dict[str, dict[str, Any]] = {}
     chunks: dict[str, dict[str, Any]] = {}
     probes: dict[str, dict[str, Any]] = {}
@@ -326,7 +357,7 @@ def _build_plan(rows: list[dict[str, Any]], collection_sha256: str) -> tuple[dic
         probe_row = next(row for row in rows if row["type"] == "neuron")
         probe_key = f"probe-{writer}"
         ledger_key = f"{writer}-1x-neuron"
-        request = request_for(writer, "1x", probe_row, f"probe-{writer}")
+        request = request_for(writer, "1x", probe_row, f"probe-{run_id[:16]}-{writer}")
         probe_meta = {"unit_key": probe_row["unit_key"], "type": "neuron", "layer": probe_row.get("layer"),
                       "sample": "1x", "writer": writer, "probe": True,
                       "input_windows": windows_for_sample(probe_row, "1x")}
@@ -341,25 +372,37 @@ def _build_plan(rows: list[dict[str, Any]], collection_sha256: str) -> tuple[dic
             for unit_type in UNIT_TYPES:
                 group_key = f"{writer}-{sample}-{unit_type}"
                 selected = [row for row in rows if row["type"] == unit_type]
-                entries = []
-                for index, row in enumerate(selected):
-                    custom_id = f"u{index:04d}"
-                    request = request_for(writer, sample, row, custom_id)
-                    entries.append((request, {
-                        "unit_key": row["unit_key"], "type": unit_type, "layer": row.get("layer"),
-                        "unit": row.get("unit"), "control_id": row.get("control_id"),
-                        "sample": sample, "writer": writer,
-                        "input_windows": windows_for_sample(row, sample),
-                    }))
-                request_chunks = _chunk_requests(entries, model)
+                # Opus 3x has enough output-token exposure that one $8 ledger
+                # can stop before all 250 units settle. Keep each partition's
+                # full max-token reserve under the hard cap. Other arms stay in
+                # one ledger per registered group.
+                partitions = _ledger_partitions(writer, sample, selected)
+                partition_count = len(partitions)
                 paths = []
-                for index, entry_chunk in enumerate(request_chunks):
-                    relpath = f"chunks/{group_key}/chunk-{index:04d}.json"
-                    chunks[relpath] = _chunk_record(
-                        run_id=run_id, group_key=group_key, ledger_key=group_key,
-                        chunk_index=index, writer=writer, sample=sample, unit_type=unit_type,
-                        entries=entry_chunk)
-                    paths.append(relpath)
+                group_tag = hashlib.sha256(group_key.encode("utf-8")).hexdigest()[:12]
+                chunk_number = 0
+                for part_index, partition in enumerate(partitions):
+                    ledger_key = (f"{group_key}-part-{part_index + 1:02d}"
+                                  if partition_count > 1 else group_key)
+                    entries = []
+                    for index, row in enumerate(partition, start=(len(selected) * part_index) // partition_count):
+                        custom_id = f"p64-{run_id[:16]}-{group_tag}-{index:04d}"
+                        request = request_for(writer, sample, row, custom_id)
+                        entries.append((request, {
+                            "unit_key": row["unit_key"], "type": unit_type, "layer": row.get("layer"),
+                            "unit": row.get("unit"), "control_id": row.get("control_id"),
+                            "sample": sample, "writer": writer, "request_index": index,
+                            "input_windows": windows_for_sample(row, sample),
+                        }))
+                    request_chunks = _chunk_requests(entries, model)
+                    for entry_chunk in request_chunks:
+                        relpath = f"chunks/{group_key}/chunk-{chunk_number:04d}.json"
+                        chunks[relpath] = _chunk_record(
+                            run_id=run_id, group_key=group_key, ledger_key=ledger_key,
+                            chunk_index=chunk_number, writer=writer, sample=sample, unit_type=unit_type,
+                            entries=entry_chunk)
+                        paths.append(relpath)
+                        chunk_number += 1
                 groups[group_key] = {"writer": writer, "model": model, "sample": sample,
                                      "unit_type": unit_type, "chunk_paths": paths}
 
@@ -378,9 +421,12 @@ def initialize_plan(root: Path, rows: list[dict[str, Any]], collection_sha256: s
     """Create a durable request plan or verify that an existing plan is identical."""
     root.mkdir(parents=True, exist_ok=True)
     manifest_path = root / "run.json"
-    expected, chunk_records = _build_plan(rows, collection_sha256)
+    existing = read_json(manifest_path) if manifest_path.is_file() else None
+    saved_run_id = existing.get("run_id") if isinstance(existing, dict) else None
+    if existing is not None and (not isinstance(saved_run_id, str) or not saved_run_id):
+        raise WriterError("existing Part 64 run has no valid durable run_id")
+    expected, chunk_records = _build_plan(rows, collection_sha256, run_id=saved_run_id)
     if manifest_path.is_file():
-        existing = read_json(manifest_path)
         if (existing.get("schema") != expected["schema"]
                 or existing.get("collection_sha256") != collection_sha256
                 or existing.get("plan_sha256") != expected["plan_sha256"]):
@@ -515,8 +561,20 @@ def _result_bundle(chunk: Mapping[str, Any], rows: list[dict[str, Any]]) -> dict
         if custom_id in records:
             raise WriterError(f"batch returned duplicate custom_id {custom_id!r}")
         result = row.get("result")
-        if not isinstance(result, dict) or result.get("type") != "succeeded":
-            raise WriterError(f"batch request {custom_id} did not succeed; reserve remains active")
+        if not isinstance(result, dict) or not isinstance(result.get("type"), str):
+            raise WriterError(f"batch request {custom_id} has an invalid result type; reserve remains active")
+        result_type = result["type"]
+        request, meta = by_id[custom_id]
+        if result_type != "succeeded":
+            # Anthropic terminal per-request failures carry no billable usage.
+            # Preserve one non-pass row per planned request and settle only the
+            # usage-bearing successful rows in this batch.
+            records[custom_id] = {
+                "custom_id": custom_id, "metadata": meta, "text": "", "parsed": None,
+                "parse_status": f"api_{result_type}", "stop_reason": None, "usage": None,
+                "provider_result": result,
+            }
+            continue
         message = result.get("message")
         if not isinstance(message, dict):
             raise WriterError(f"batch request {custom_id} has no message; reserve remains active")
@@ -537,13 +595,15 @@ def _result_bundle(chunk: Mapping[str, Any], rows: list[dict[str, Any]]) -> dict
         text = "".join(block.get("text", "") for block in content
                        if isinstance(block, dict) and block.get("type") == "text"
                        and isinstance(block.get("text", ""), str)).strip()
-        request, meta = by_id[custom_id]
         parsed = gen60.parse_json(text)
         valid, reason = gen60.validate_output("M1", "primary", parsed, meta.get("input_windows", []))
+        stop_reason = message.get("stop_reason")
         records[custom_id] = {
             "custom_id": custom_id, "metadata": meta,
-            "text": text, "parsed": parsed, "parse_status": "ok" if valid else reason,
-            "stop_reason": message.get("stop_reason"), "usage": usage,
+            "text": text, "parsed": parsed,
+            "parse_status": ("max_tokens" if stop_reason == "max_tokens"
+                             else "ok" if valid else reason),
+            "stop_reason": stop_reason, "usage": usage,
             "provider_result": row.get("result"),
         }
     missing = expected - set(records)
@@ -551,7 +611,9 @@ def _result_bundle(chunk: Mapping[str, Any], rows: list[dict[str, Any]]) -> dict
         raise WriterError(f"batch omitted {len(missing)} request results; reserve remains active")
     ordered = [records[request["custom_id"]] for request in requests]
     usage = {"input_tokens": total_input, "output_tokens": total_output,
-             "requests": usage_rows}
+             "requests": usage_rows,
+             "non_succeeded_custom_ids": [request["custom_id"] for request in requests
+                                          if records[request["custom_id"]].get("usage") is None]}
     rates = BATCH_RATES_USD_PER_MILLION[chunk["model"]]
     actual_usd = (total_input * rates[0] + total_output * rates[1]) / 1_000_000
     return {"schema": "part64-writer-results-v1", "group_key": chunk["group_key"],
@@ -602,7 +664,8 @@ def execute_chunk(root: Path, chunk_path: Path, api: Callable[..., str] = api_ca
         else:
             attempt_id = ledger.reserve(
                 float(chunk["planned_reserve_usd"]), "part64-writer",
-                {"stage": "part64", "local_run_id": chunk["run_id"],
+                {"stage": "part64", "run_id": f"{chunk['run_id']}:{chunk['ledger_key']}",
+                 "local_run_id": chunk["run_id"],
                  "group_key": chunk["group_key"], "chunk_index": chunk["chunk_index"],
                  "attempt_no": chunk.get("attempt_no", 0),
                  "request_sha256": chunk["request_sha256"]})
@@ -611,12 +674,29 @@ def execute_chunk(root: Path, chunk_path: Path, api: Callable[..., str] = api_ca
         write_json(chunk_path, chunk)
         state = "reserved"
 
-    if state == "posting" and not chunk.get("batch_id"):
-        chunk.update(state="ambiguous", error="process ended in the POST window; provider outcome is unknown")
-        write_json(chunk_path, chunk)
-        raise RecoveryRequired("POST outcome is unknown and no durable batch ID exists; do not resubmit; recover or retire this attempt")
-    if state == "ambiguous":
-        raise RecoveryRequired("POST outcome is unknown and no durable batch ID exists; recover or retire this attempt")
+    if state in ("posting", "ambiguous") and not chunk.get("batch_id"):
+        attempt = _attempts(ledger).get(chunk.get("attempt_id"), {})
+        if state == "posting" and attempt.get("status") == "released":
+            # A known 4xx was released durably before a crash interrupted the
+            # local state write. Reconstruct the known rejection from the
+            # ledger instead of misclassifying it as an unknown POST.
+            chunk.update(state="rejected", error="known API rejection; recovered from released ledger attempt")
+            write_json(chunk_path, chunk)
+            raise RecoveryRequired("POST was durably released after a known API rejection; chunk marked rejected")
+        matches, unresolved = _find_provider_batches(api, chunk)
+        if len(matches) == 1:
+            chunk.update(state="submitted", batch_id=matches[0], processing_status="ended",
+                         recovered_batch_at=utc_now())
+            write_json(chunk_path, chunk)
+            state = "submitted"
+        else:
+            reason = (f"provider listing found {len(matches)} matching batches" if matches else
+                      "provider outcome is unknown and no ended matching batch was found")
+            if unresolved:
+                reason += f"; unresolved candidate batches: {unresolved}"
+            chunk.update(state="ambiguous", error=reason)
+            write_json(chunk_path, chunk)
+            raise RecoveryRequired(reason + "; do not resubmit; retry recovery or verify before retiring")
 
     if state == "reserved":
         attempt_id = chunk.get("attempt_id")
@@ -725,6 +805,50 @@ def execute_probes(root: Path, manifest: Mapping[str, Any], api: Callable[..., s
     return outcomes
 
 
+def reprobe(root: Path, writer: str, who: str, reason: str,
+            api: Callable[..., str] = api_call, **kwargs: Any) -> dict[str, Any]:
+    """Create an explicitly recorded new probe attempt after a settled failure."""
+    if writer not in WRITERS:
+        raise WriterError(f"unknown writer {writer!r}")
+    if not who.strip() or not reason.strip():
+        raise WriterError("re-probe requires a nonempty operator and reason")
+    if api is api_call:
+        preflight_api()
+    manifest_path = root / "run.json"
+    manifest = read_json(manifest_path)
+    info = manifest.get("probes", {}).get(writer)
+    if not isinstance(info, dict) or not isinstance(info.get("chunk_path"), str):
+        raise WriterError(f"run has no probe plan for {writer}")
+    old_path = root / info["chunk_path"]
+    old = read_json(old_path)
+    outcome = probe_status(root, manifest, writer)
+    if old.get("state") != "settled" or outcome.get("passed"):
+        raise WriterError(f"{writer} probe can be repeated only after a settled failed probe")
+    attempt_no = int(old.get("attempt_no", 0)) + 1
+    entries = list(zip(old["requests"], old["request_metadata"]))
+    record = _chunk_record(
+        run_id=old["run_id"], group_key=old["group_key"], ledger_key=old["ledger_key"],
+        chunk_index=old["chunk_index"], writer=old["writer"], sample=old["sample"],
+        unit_type=old["unit_type"], entries=entries, probe=True)
+    authorization = {"who": who.strip(), "reason": reason.strip(), "authorized_at": utc_now(),
+                     "prior_chunk": info["chunk_path"], "prior_attempt_no": old.get("attempt_no", 0)}
+    record["attempt_no"] = attempt_no
+    record["reprobe_authorization"] = authorization
+    relpath = f"probes/{writer}-attempt-{attempt_no:03d}.json"
+    write_json(root / relpath, record)
+    history = list(info.get("reprobes", []))
+    history.append(authorization)
+    info["reprobes"] = history
+    info["chunk_path"] = relpath
+    write_json(manifest_path, manifest)
+    execute_chunk(root, root / relpath, api, **kwargs)
+    result = probe_status(root, manifest, writer)
+    result["reprobe_authorization"] = authorization
+    if not result["passed"]:
+        raise WriterError(f"{writer} re-probe failed validation: {result}")
+    return result
+
+
 def _write_group_output(root: Path, group_key: str, group: Mapping[str, Any]) -> Path:
     rows = []
     for relpath in group["chunk_paths"]:
@@ -735,7 +859,7 @@ def _write_group_output(root: Path, group_key: str, group: Mapping[str, Any]) ->
         results_path = chunk_path.with_name(chunk_path.stem + "-results.json")
         bundle = read_json(results_path)
         rows.extend(bundle["rows"])
-    rows.sort(key=lambda row: int(row["custom_id"][1:]))
+    rows.sort(key=lambda row: int(row.get("metadata", {}).get("request_index", 0)))
     output_path = root / "outputs" / f"{group_key}.jsonl"
     output_path.parent.mkdir(parents=True, exist_ok=True)
     temporary = output_path.with_name(f".{output_path.name}.tmp")
@@ -785,8 +909,100 @@ def run_generation(collection: Path = DEFAULT_COLLECTION, root: Path = DEFAULT_R
         _run_groups(root, manifest, api, **kwargs)
 
 
-def retire_attempt(root: Path, attempt_id: str, who: str, reason: str) -> None:
-    """Operator-retire one recorded unknown reserve; that chunk is never resubmitted."""
+def _parse_provider_time(value: Any) -> datetime | None:
+    if not isinstance(value, str) or not value:
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        return None
+    return parsed.astimezone(timezone.utc)
+
+
+def _find_provider_batches(api: Callable[..., str], chunk: Mapping[str, Any]) -> tuple[list[str], list[str]]:
+    """Prove that no accepted provider batch contains this unknown POST's IDs.
+
+    The request IDs include the durable run and group identity. A fresh provider
+    listing and result scan is required before an unknown reserve can be retired.
+    Returns ended matches and recent batches whose outcomes are not yet inspectable.
+    Any incomplete listing fails closed.
+    """
+    expected = {request.get("custom_id") for request in chunk.get("requests", [])}
+    if not expected or any(not isinstance(item, str) for item in expected):
+        raise RecoveryRequired("cannot verify provider listing without complete planned custom IDs")
+    posted_at = _parse_provider_time(chunk.get("posting_started_at"))
+    if posted_at is None:
+        raise RecoveryRequired("unknown POST has no valid posting timestamp; provider listing cannot prove absence")
+
+    batches: list[dict[str, Any]] = []
+    seen_ids: set[str] = set()
+    before_id: str | None = None
+    for _page in range(1000):
+        path = "/v1/messages/batches?limit=100"
+        if before_id:
+            path += f"&before_id={before_id}"
+        try:
+            page = json.loads(api("GET", path))
+        except Exception as exc:
+            raise RecoveryRequired(f"cannot inspect provider batch listing: {type(exc).__name__}: {exc}") from exc
+        if not isinstance(page, dict) or not isinstance(page.get("data"), list):
+            raise RecoveryRequired("provider batch listing did not return a data array")
+        for batch in page["data"]:
+            if not isinstance(batch, dict) or not isinstance(batch.get("id"), str):
+                raise RecoveryRequired("provider batch listing contains an invalid batch record")
+            if batch["id"] in seen_ids:
+                raise RecoveryRequired("provider batch listing pagination repeated a batch")
+            seen_ids.add(batch["id"])
+            batches.append(batch)
+        has_more = page.get("has_more")
+        if not isinstance(has_more, bool):
+            raise RecoveryRequired("provider batch listing omitted its has_more completeness flag")
+        if not has_more:
+            break
+        next_id = page.get("last_id")
+        if not isinstance(next_id, str) or not next_id or next_id in seen_ids:
+            raise RecoveryRequired("provider batch listing has an invalid pagination cursor")
+        before_id = next_id
+    else:
+        raise RecoveryRequired("provider batch listing exceeded the 1000-page safety bound")
+
+    uncertain_after = posted_at - timedelta(minutes=5)
+    matches: list[str] = []
+    unresolved: list[str] = []
+    for batch in batches:
+        created_at = _parse_provider_time(batch.get("created_at"))
+        if created_at is None:
+            raise RecoveryRequired(f"batch {batch['id']} has no valid created_at; cannot prove it predates this POST")
+        status = batch.get("processing_status")
+        if status != "ended":
+            if created_at >= uncertain_after:
+                unresolved.append(batch["id"])
+            continue
+        try:
+            result_text = api("GET", f"/v1/messages/batches/{batch['id']}/results")
+            results = _parse_result_jsonl(result_text)
+        except Exception as exc:
+            if created_at >= uncertain_after:
+                unresolved.append(batch["id"])
+            continue
+        if any(row.get("custom_id") in expected for row in results):
+            matches.append(batch["id"])
+    return matches, unresolved
+
+
+def _ensure_no_provider_batch(api: Callable[..., str], chunk: Mapping[str, Any]) -> None:
+    matches, unresolved = _find_provider_batches(api, chunk)
+    if matches:
+        raise RecoveryRequired(f"provider batch(es) {matches} contain this chunk's custom IDs; recover instead of retiring")
+    if unresolved:
+        raise RecoveryRequired(f"provider batch(es) {unresolved} may be the unknown POST and are not inspectable yet")
+
+
+def retire_attempt(root: Path, attempt_id: str, who: str, reason: str,
+                   api: Callable[..., str] = api_call) -> None:
+    """Retire only a pre-POST reserve or an unknown POST proven absent at provider."""
     manifest = read_json(root / "run.json")
     candidates = [root / item["chunk_path"] for item in manifest.get("probes", {}).values()]
     for group in manifest.get("groups", {}).values():
@@ -797,8 +1013,11 @@ def retire_attempt(root: Path, attempt_id: str, who: str, reason: str) -> None:
             continue
         if chunk.get("state") in ("settled", "rejected", "retired"):
             raise WriterError(f"attempt {attempt_id} belongs to terminal chunk state {chunk['state']}")
-        if chunk.get("state") not in ("reserved", "posting", "ambiguous") or chunk.get("batch_id"):
-            raise WriterError("only a reserved or unknown POST without a durable batch ID can be retired")
+        state = chunk.get("state")
+        if state not in ("reserved", "posting", "ambiguous") or chunk.get("batch_id"):
+            raise WriterError("only a pre-POST reserve or an unknown POST without a durable batch ID can be retired")
+        if state in ("posting", "ambiguous"):
+            _ensure_no_provider_batch(api, chunk)
         reader63.retire_attempt(attempt_id, who, reason,
                                 ledger_path=ledger_path(root, chunk["ledger_key"]))
         chunk.update(state="retired", retired_at=utc_now(), retirement_who=who.strip(),
@@ -840,6 +1059,11 @@ def parser() -> argparse.ArgumentParser:
         command_parser = sub.add_parser(command, help=help_text)
         command_parser.add_argument("--collection", type=Path, default=DEFAULT_COLLECTION)
         command_parser.add_argument("--root", type=Path, default=DEFAULT_ROOT)
+    reprobe_parser = sub.add_parser("reprobe", help="explicitly create a new attempt after a failed writer probe")
+    reprobe_parser.add_argument("writer", choices=tuple(WRITERS))
+    reprobe_parser.add_argument("--root", type=Path, default=DEFAULT_ROOT)
+    reprobe_parser.add_argument("--who", required=True)
+    reprobe_parser.add_argument("--reason", required=True)
     status = sub.add_parser("status", help="show chunk and per-ledger state")
     status.add_argument("--root", type=Path, default=DEFAULT_ROOT)
     retire = sub.add_parser("retire", help="operator-retire an unresolved paid attempt")
@@ -855,6 +1079,10 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "probe":
         outcomes = run_probe(args.collection, args.root)
         print(json.dumps(outcomes, ensure_ascii=False, indent=2))
+    elif args.command == "reprobe":
+        with run_lock(args.root):
+            outcome = reprobe(args.root, args.writer, args.who, args.reason)
+        print(json.dumps(outcome, ensure_ascii=False, indent=2))
     elif args.command == "run":
         run_generation(args.collection, args.root, initialize=False)
         print(f"completed Part 64 writer run in {args.root}")

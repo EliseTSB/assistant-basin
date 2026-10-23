@@ -2,6 +2,7 @@
 # Part 64 rented-GPU collection/scoring runner. The same invocation can be
 # repeated after local generation: it reuses a validated collection artifact.
 set -u
+source "$(dirname "$0")/run64_helpers.sh"
 
 RUN_ROOT="${PART64_ROOT:-/root/assistant-basin}"
 RETURN_DIR="${PART64_RETURN_DIR:-/root}"
@@ -154,7 +155,7 @@ run_phase corpus-verify prefetch-qwen env PYTHONPATH="$RUN_ROOT" python -c 'impo
 
 if [ "${phase_status[corpus-verify]:-125}" -eq 0 ]; then
   if [ -e "$COLLECTION" ] || [ -e "$MANIFEST" ]; then
-    run_checked collection-cache-check env PYTHONPATH="$RUN_ROOT" python -c 'import json,sys; from pathlib import Path; from part64.collect64 import verify_corpus; corpus=verify_corpus(Path(sys.argv[1])); out=Path(sys.argv[2]); manifest=Path(sys.argv[3]); data=json.loads(manifest.read_text()); ok=out.is_file() and data.get("subset_verified") is True and data.get("unit_count")==500 and data.get("corpus",{}).get("sha256")==corpus["sha256"] and data.get("median_fresh_top12_match",0)>=10; print("validated existing collection" if ok else "existing collection cache is incomplete or mismatched"); raise SystemExit(0 if ok else 2)' "$CORPUS" "$COLLECTION" "$MANIFEST"
+    run_checked collection-cache-check env PYTHONPATH="$RUN_ROOT" python -c 'import json,sys; from pathlib import Path; from part64.collect64 import verify_corpus; from part64.gen64 import load_collection; corpus=verify_corpus(Path(sys.argv[1])); manifest=json.loads(Path(sys.argv[3]).read_text()); rows,digest=load_collection(Path(sys.argv[2])); ok=manifest.get("corpus",{}).get("sha256")==corpus["sha256"] and manifest.get("collection_sha256")==digest and len(rows)==500; print("validated existing collection" if ok else "existing collection cache is incomplete or mismatched"); raise SystemExit(0 if ok else 2)' "$CORPUS" "$COLLECTION" "$MANIFEST"
   else
     run_phase collection-model prefetch-qwen env PYTHONPATH="$RUN_ROOT" python -u part64/collect64_model.py --data "$CORPUS" --out "$FRESH" --cache-dir /root/hf/hub
     run_phase collection-assembly collection-model env PYTHONPATH="$RUN_ROOT" python -u part64/collect64.py --fresh "$FRESH" --out "$COLLECTION" --corpus "$CORPUS"
@@ -188,7 +189,12 @@ if [ "${#GEN_INPUT_ARGS[@]}" -gt 0 ]; then
   fi
 else
   if [ "${phase_status[collection-cache-check]:-${phase_status[collection-assembly]:-125}}" -eq 0 ]; then
-    note_skip scoring "generated sentences are absent; expected on the collection return before local generation"
+    collection_status="${phase_status[collection-cache-check]:-${phase_status[collection-assembly]:-125}}"
+    if part64_scoring_skip_is_failure "$collection_status" "$RUN_ROOT" "$GENERATED"; then
+      skip_phase scoring "generation has started or completed, but no generated rows were found"
+    else
+      note_skip scoring "generated sentences are absent; expected on the collection return before local generation"
+    fi
   else
     skip_phase scoring "collection did not validate or complete"
   fi

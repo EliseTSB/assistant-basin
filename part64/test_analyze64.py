@@ -43,6 +43,14 @@ class Analyze64Tests(unittest.TestCase):
         with self.assertRaises(AnalysisError):
             analyze_rows(rows, {"neuron": 0.4, "control": 0.2})
 
+    def test_max_tokens_truncations_are_counted_per_arm(self) -> None:
+        rows = self.synthetic(False)
+        target = next(row for row in rows if row["arm"] == "haiku-3x" and row["type"] == "neuron")
+        target["generation_parse_status"] = "max_tokens"
+        result = analyze_rows(rows, {"neuron": 0.4, "control": 0.2})
+        self.assertEqual(result["arms"]["haiku-3x"]["n_max_tokens"], 1)
+        self.assertEqual(result["arms"]["haiku-1x"]["n_max_tokens"], 0)
+
 
 if __name__ == "__main__":
     unittest.main()

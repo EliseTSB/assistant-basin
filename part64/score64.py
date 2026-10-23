@@ -127,7 +127,8 @@ def score_rows(rows: list[dict[str, Any]], specs: list[dict[str, Any]], threshol
             for tier in TIERS:
                 for sentence_index, text in enumerate(texts[tier]):
                     locations[(row_index, tier, sentence_index)] = len(entries)
-                    entries.append({"text": text, "marked_span": None})
+                    clean, span = score60.strip_markers(text)
+                    entries.append({"text": clean, "marked_span": span})
     expected = set(by_key)
     for arm in ARMS:
         missing = expected - seen[arm]

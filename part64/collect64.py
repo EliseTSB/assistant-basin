@@ -11,6 +11,7 @@ import argparse
 import hashlib
 import json
 import random
+import statistics
 from pathlib import Path
 from typing import Any
 
@@ -35,6 +36,10 @@ def sha256_file(path: Path) -> str:
         for block in iter(lambda: stream.read(1 << 20), b''):
             h.update(block)
     return h.hexdigest()
+
+
+def collection_jsonl(rows: list[dict[str, Any]]) -> bytes:
+    return "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows).encode("utf-8")
 
 
 def verify_corpus(path: Path = CORPUS) -> dict[str, Any]:
@@ -120,7 +125,7 @@ def assemble(units: dict[str, dict[str, Any]], fresh_rows: dict[str, dict[str, l
                        'unit': unit['record'].get('unit'), 'control_id': unit['record'].get('control_id'),
                        'strata': strata, 'fresh_top12_match': top_match})
         reproduction.append(top_match)
-    median = sorted(reproduction)[len(reproduction)//2]
+    median = statistics.median(reproduction)
     if median < 10:
         raise CollectionError(f'reproduction stop: median fresh top-12 match is {median}/12 (minimum 10)')
     manifest = {'version': 1, 'corpus': corpus_meta, 'model': 'Qwen/Qwen3-1.7B',
@@ -130,6 +135,7 @@ def assemble(units: dict[str, dict[str, Any]], fresh_rows: dict[str, dict[str, l
                 'capacities': CAPACITIES, 'pilot_counts': PILOT_COUNTS,
                 'unit_count': len(output), 'median_fresh_top12_match': median,
                 'subset_verified': True, 'seed': SEED}
+    manifest['collection_sha256'] = hashlib.sha256(collection_jsonl(output)).hexdigest()
     return output, manifest
 
 
@@ -160,9 +166,7 @@ def main() -> int:
     rows, manifest = assemble(units, load_fresh(args.fresh), corpus=args.corpus)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     tmp = args.out.with_suffix(args.out.suffix + '.tmp')
-    with tmp.open('w', encoding='utf-8') as stream:
-        for row in rows:
-            stream.write(json.dumps(row, ensure_ascii=False) + '\n')
+    tmp.write_bytes(collection_jsonl(rows))
     tmp.replace(args.out)
     args.out.with_suffix(args.out.suffix + '.manifest.json').write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
     return 0

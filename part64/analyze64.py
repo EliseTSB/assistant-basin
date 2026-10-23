@@ -107,6 +107,8 @@ def analyze_rows(rows: list[dict[str, Any]], part60_baseline: dict[str, float], 
             raise AnalysisError(f"scored row {index} must contain boolean 'pass'")
         keyed[arm][unit_key] = {"type": typ, "pass": passed,
                                 "parse_status": str(row.get("parse_status", "unknown")),
+                                "generation_parse_status": str(row.get(
+                                    "generation_parse_status", row.get("parse_status", "unknown"))),
                                 "score_status": str(row.get("score_status", "unknown"))}
 
     reference_keys = set(keyed[ARMS[0]])
@@ -149,6 +151,8 @@ def analyze_rows(rows: list[dict[str, Any]], part60_baseline: dict[str, float], 
             "n_control_parse_ok": sum(keyed[arm][key]["parse_status"] == "ok" for key in unit_keys["control"]),
             "n_score_failures": sum(keyed[arm][key]["score_status"] not in ("ok", "unknown")
                                      for key in reference_keys),
+            "n_max_tokens": sum(keyed[arm][key]["generation_parse_status"] == "max_tokens"
+                                 for key in reference_keys),
         }
 
     rng = np.random.default_rng(seed)
@@ -215,7 +219,9 @@ def analyze_rows(rows: list[dict[str, Any]], part60_baseline: dict[str, float], 
          "ci95": None, "threshold": 0.06,
          "met": all(abs(arm_summary[h1]["real_pass_rate" if typ == "neuron" else "control_pass_rate"] - baseline[typ]) <= 0.06
                     for typ in TYPES),
-         "note": "Compared with Part 60 dev M1 full-rule pass rates."},
+         "note": ("Compared with Part 60 dev M1 full-rule pass rates. The 1x text matches, but Part 64 uses "
+                  "max_tokens=8192 and API-default thinking while Part 60 M1 used max_tokens=1100 and explicitly "
+                  "disabled thinking; 64f is a cross-configuration check, not a pure reproduction.")},
     ]
     advancement = {}
     for arm in ARMS:
@@ -252,11 +258,11 @@ def _pct(value: float) -> str:
 
 
 def write_markdown(path: Path, result: dict[str, Any]) -> None:
-    lines = ["# Part 64 analysis", "", "| Arm | Real pass rate | Control pass rate | Gap | n real | n control |",
-             "|---|---:|---:|---:|---:|---:|"]
+    lines = ["# Part 64 analysis", "", "| Arm | Real pass rate | Control pass rate | Gap | n real | n control | max_tokens |",
+             "|---|---:|---:|---:|---:|---:|---:|"]
     for arm in ARMS:
         row = result["arms"][arm]
-        lines.append(f"| {arm} | {_pct(row['real_pass_rate'])} | {_pct(row['control_pass_rate'])} | {_pct(row['gap'])} | {row['n_real']} | {row['n_control']} |")
+        lines.append(f"| {arm} | {_pct(row['real_pass_rate'])} | {_pct(row['control_pass_rate'])} | {_pct(row['gap'])} | {row['n_real']} | {row['n_control']} | {row['n_max_tokens']} |")
     lines.extend(["", "## Predictions", "", "| ID | Registered prediction | Estimate | 95% paired bootstrap CI | Result |",
                   "|---|---|---:|---:|---|"])
     for item in result["predictions"]:

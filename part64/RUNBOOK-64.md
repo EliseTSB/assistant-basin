@@ -43,7 +43,9 @@ python part64/gen64.py run \
   --root results/part64/gen64
 ```
 
-The generator maintains a durable plan, per-group ledgers, and settled group files. It writes eight files under `results/part64/gen64/outputs/`: one per writer, sample size, and unit type. Rows retain `metadata.writer`, `metadata.sample`, `metadata.unit_key`, `metadata.type`, `parse_status`, and the parsed M1 tiers. `score64.py` reads this native format directly; no manual sentence edits or reformatting are needed. Keep failed rows so each arm has the fixed 500-unit denominator.
+The generator maintains a durable plan, per-group ledgers, and settled group files. It writes eight files under `results/part64/gen64/outputs/`: one per writer, sample size, and unit type. Each Opus 3x group is split across six ledgers so each $8 cap covers at most 42 units. Rows retain `metadata.writer`, `metadata.sample`, `metadata.unit_key`, `metadata.type`, `parse_status`, and the parsed M1 tiers. `score64.py` reads this native format directly; no manual sentence edits or reformatting are needed. Keep failed rows so each arm has the fixed 500-unit denominator.
+
+The 64f comparison is a cross-configuration check, not a pure reproduction: Part 64's 1x text matches Part 60 M1, while Part 64 uses `max_tokens=8192` and API-default thinking and Part 60 M1 used `max_tokens=1100` with thinking explicitly disabled. This caveat does not change the registered prediction.
 
 Check the durable run and output files before transfer:
 
@@ -61,6 +63,17 @@ python part64/gen64.py resume \
   --root results/part64/gen64
 ```
 
+If the POST response was lost, resume checks the provider listing. Once a matching run-specific request ID appears in an ended batch, the generator adopts that batch and settles its results without another POST. If the provider batch is still processing, rerun resume after it ends. Retirement is allowed only after a complete listing proves that no matching batch exists.
+
+If a settled probe failed validation, review its saved text and usage, then an operator may authorize one new attempt with a recorded reason:
+
+```bash
+python part64/gen64.py reprobe haiku --root results/part64/gen64 \
+  --who "operator" --reason "first probe returned invalid M1 JSON"
+```
+
+Retiring an unknown POST requires a complete provider batch listing. If a batch may contain the chunk's run-specific request IDs, recover that batch; the tool will refuse retirement and resubmission.
+
 Stage all eight `outputs/*.jsonl` files at `results/part64/gen64/outputs/` on the GPU box. If only some group outputs exist, the scorer rejects the incomplete arm/unit grid instead of treating it as a smaller experiment.
 
 ## 4. Score on Vast
@@ -73,7 +86,7 @@ PART64_CORPUS=/path/to/pile10k.jsonl \
 bash part64/run64.sh
 ```
 
-A valid collection is reused. With generated rows present, the runner discovers the eight group files and invokes `score64.py` against the pinned local snapshot and Part 60 thresholds. It returns `/root/part64-return.tgz` with `scored.jsonl`, its manifest, logs, and versions. Inspect `logs/part64/scoring.log` on failure and rerun after fixing the stated issue. The scored JSONL is written atomically, so a failed scoring process does not replace a previously complete file.
+A valid collection is reused. With generated rows present, the runner discovers the eight group files and invokes `score64.py` against the pinned local snapshot and Part 60 thresholds. It returns `/root/part64-return.tgz` with `scored.jsonl`, its manifest, logs, and versions. Inspect `logs/part64/scoring.log` on failure and rerun after fixing the stated issue. The scored JSONL is written atomically, so a failed scoring process does not replace a previously complete file. Any row stopped by `max_tokens` remains a non-pass, and analysis reports the truncation count for every arm.
 
 ## 5. Analyze locally
 
