@@ -37,3 +37,11 @@ interval above zero. Part 60's test split stays closed unless an arm advances.
 ## Limits, written now
 One scoring model (Qwen3-1.7B), small models only (Elise's point that cleanliness may grow with scale is not tested
 here). 64e is underpowered at 250 units per type and is reported as a direction, not a finding.
+
+## Amendment 1 (2026-10-23 10:3x CT, before any collection or call; from the round-1 build stop)
+The sparse atlas collector keeps only 20 top, 10 random and 5 weak windows and cannot target units, and a fresh
+re-collection need not reproduce the pilot's windows exactly. So the 3x set is built so the subset holds by
+construction: the exact 1x windows from each unit's Part 60 pilot record (top 12, random 6, weak 3) plus fresh windows
+from a new targeted collection (same model revision, same corpus file, recorded by sha256), excluding duplicates, up
+to 36 top, 18 random and 9 weak. Reproduction check: per unit, how many of the fresh top 12 match the pilot's top 12;
+the run stops if the median is below 10 of 12.
