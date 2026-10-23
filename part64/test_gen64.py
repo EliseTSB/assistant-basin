@@ -7,6 +7,8 @@ import os
 from pathlib import Path
 import shutil
 import statistics
+import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -196,6 +198,21 @@ class LocalPaidRegistryTests(unittest.TestCase):
 
 
 class WriterRequestTests(LocalPaidRegistryTests):
+    def test_writer_stage_ledger_path_is_machine_wide_with_test_override(self):
+        source = "from part64 import gen64; print(gen64.WRITER_STAGE_LEDGER_DIR)"
+        env = os.environ.copy()
+        env.pop("PART64_TEST_WRITER_STAGE_LEDGER_DIR", None)
+        default = subprocess.run([sys.executable, "-c", source], cwd=gen64.BASIN,
+                                 env=env, capture_output=True, text=True, check=True)
+        self.assertEqual(Path(default.stdout.strip()),
+                         Path("/home/elisepc/assistant-basin/results/part64/writer-stage"))
+        with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
+            override = Path(temporary) / "test-writer-stage"
+            env["PART64_TEST_WRITER_STAGE_LEDGER_DIR"] = str(override)
+            actual = subprocess.run([sys.executable, "-c", source], cwd=gen64.BASIN,
+                                    env=env, capture_output=True, text=True, check=True)
+            self.assertEqual(Path(actual.stdout.strip()), override.resolve())
+
     def test_m1_sample_counts_subset_and_api_defaults(self):
         row = collection_row()
         one = gen64.windows_for_sample(row, "1x")
@@ -433,7 +450,11 @@ class WriterRequestTests(LocalPaidRegistryTests):
                     ("haiku", 2, 1_000, 1_000), ("opus", 1_000, 1_000, 4_000)):
                 probe_relpath = f"probes/{writer}.json"
                 probe_path = root / probe_relpath
-                gen64.write_json(probe_path, {"state": "settled", "requests": [{"custom_id": "probe"}]})
+                probe_request = {"custom_id": "probe"}
+                probe_bytes = len(gen64.canonical_json(probe_request))
+                gen64.write_json(probe_path, {"state": "settled", "requests": [probe_request]})
+                input_tokens = probe_bytes // 4
+                output_tokens = 1_000 if writer == "haiku" else 4_000
                 gen64.write_json(probe_path.with_name(f"{writer}-results.json"),
                                  {"usage": {"input_tokens": input_tokens,
                                              "output_tokens": output_tokens}})
@@ -445,14 +466,77 @@ class WriterRequestTests(LocalPaidRegistryTests):
                 manifest["groups"][writer] = {"writer": writer, "chunk_paths": [group_relpath]}
 
             projections = gen64.probe_stage_projections(root, manifest)
+            expected = {}
+            for writer, output_tokens in (("haiku", 1_000), ("opus", 4_000)):
+                probe_path = root / f"probes/{writer}.json"
+                probe = gen64.read_json(probe_path)
+                usage = gen64.read_json(probe_path.with_name(f"{writer}-results.json"))["usage"]
+                input_tokens = usage["input_tokens"]
+                group = gen64.read_json(root / f"chunks/{writer}.json")
+                probe_bytes = sum(len(gen64.canonical_json(request)) for request in probe["requests"])
+                stage_bytes = probe_bytes + sum(len(gen64.canonical_json(request))
+                                                for request in group["requests"])
+                count = len(probe["requests"]) + len(group["requests"])
+                rate_in, rate_out = gen64.BATCH_RATES_USD_PER_MILLION[gen64.WRITERS[writer]]
+                expected[writer] = ((input_tokens * stage_bytes / probe_bytes * rate_in
+                                     + output_tokens * count * rate_out) / 1_000_000)
+                expected_per_request = ((stage_bytes // 4 * rate_in
+                                         + output_tokens * count * rate_out) / 1_000_000)
+                self.assertAlmostEqual(expected[writer] / expected_per_request, 1.0, places=2)
             self.assertEqual(projections["haiku"]["request_count"], 3)
-            self.assertAlmostEqual(projections["haiku"]["projected_usd"], 0.0009)
+            self.assertAlmostEqual(projections["haiku"]["projected_usd"], expected["haiku"])
             self.assertEqual(projections["opus"]["request_count"], 1_001)
-            self.assertAlmostEqual(projections["opus"]["projected_usd"], 42.042)
+            self.assertAlmostEqual(projections["opus"]["projected_usd"], expected["opus"])
+            self.assertTrue(projections["opus"]["stop"])
+            self.assertEqual(projections["opus"]["stop_threshold_usd"], gen64.OPUS_PROBE_STOP_USD)
+            self.assertEqual(projections["opus"]["stage_request_bytes"],
+                             projections["opus"]["probe_request_bytes"] +
+                             sum(len(gen64.canonical_json(request))
+                                 for request in gen64.read_json(root / "chunks/opus.json")["requests"]))
             lines = gen64.format_probe_stage_projections(projections)
             self.assertTrue(any(line.startswith("haiku:") for line in lines))
             self.assertTrue(any(line.startswith("opus:") for line in lines))
             self.assertTrue(any(line.startswith("STOP:") for line in lines))
+
+    def test_run_and_resume_gate_recorded_stop_until_operator_override(self):
+        with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
+            root = Path(temporary)
+            gen64.initialize_plan(root, [collection_row()], "e" * 64)
+            projection = {"haiku": {"projected_usd": 1.0}, "opus": {"projected_usd": 36.01}}
+            fake_execute = patch.object(gen64, "execute_probes", return_value=[])
+            fake_projection = patch.object(gen64, "probe_stage_projections", return_value=projection)
+            group_runner = patch.object(gen64, "_run_groups")
+            with patch.object(gen64, "load_collection", return_value=([collection_row()], "e" * 64)), \
+                    fake_execute, fake_projection, group_runner as run_groups:
+                with self.assertRaisesRegex(gen64.WriterError, "recorded Opus probe projection.*STOP line"):
+                    gen64.run_generation(Path("unused"), root, lambda *_args, **_kwargs: "{}")
+                run_groups.assert_not_called()
+                saved = gen64.read_json(root / "run.json")
+                self.assertEqual(saved["probe_stage_projections"], projection)
+                with self.assertRaisesRegex(gen64.WriterError, "recorded Opus probe projection.*STOP line"):
+                    gen64.run_generation(Path("unused"), root, lambda *_args, **_kwargs: "{}",
+                                         resuming=True)
+                gen64.run_generation(Path("unused"), root, lambda *_args, **_kwargs: "{}",
+                                     override_stop="reviewed and accepted projection risk")
+                run_groups.assert_called_once()
+                saved = gen64.read_json(root / "run.json")
+                self.assertEqual(saved["probe_projection_stop_override"]["reason"],
+                                 "reviewed and accepted projection risk")
+                group_key = next(iter(saved["groups"]))
+                chunk_path = root / saved["groups"][group_key]["chunk_paths"][0]
+                chunk = gen64.read_json(chunk_path)
+                chunk["state"] = "reserved"
+                chunk["attempt_id"] = "prior-stage-reserve"
+                gen64.write_json(chunk_path, chunk)
+                run_groups.reset_mock()
+                gen64.run_generation(Path("unused"), root, lambda *_args, **_kwargs: "{}",
+                                     resuming=True)
+                run_groups.assert_called_once()
+
+            resume_args = gen64.parser().parse_args(["resume", "--root", str(root),
+                                                      "--override-stop", "resume after review"])
+            self.assertEqual(resume_args.override_stop, "resume after review")
+
 
     def test_probe_refuses_empty_truncated_or_unparseable_reply(self):
         cases = (("", "end_turn"), (answer_text(), "max_tokens"), ("not JSON", "end_turn"))
@@ -875,6 +959,30 @@ class ChunkRecoveryTests(LocalPaidRegistryTests):
             matches, unresolved = gen64._find_provider_batches(OldMatchingBatchAPI(), chunk)
             self.assertEqual(matches, [])
             self.assertEqual(unresolved, [])
+            self.assertEqual(gen64._base_custom_id(f"{base_custom_id}-attempt-1000"), base_custom_id)
+
+    def test_retired_initial_probe_retry_does_not_get_reprobe_time_window(self):
+        with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
+            path = self.make_chunk(Path(temporary), probe=True)
+            chunk = gen64.read_json(path)
+            chunk["posting_started_at"] = "2026-10-23T12:00:00Z"
+            chunk["attempt_no"] = 1
+            custom_id = chunk["requests"][0]["custom_id"]
+
+            class EarlierMatchingBatchAPI:
+                def __call__(self, method, api_path, body=None):
+                    if method == "GET" and api_path.startswith("/v1/messages/batches?"):
+                        return json.dumps({"data": [{"id": "earlier-accepted-batch",
+                                                       "created_at": "2026-10-23T11:50:00Z",
+                                                       "processing_status": "ended"}],
+                                           "has_more": False})
+                    if method == "GET" and api_path.endswith("/results"):
+                        return json.dumps({"custom_id": custom_id,
+                                           "result": {"type": "errored"}}) + "\n"
+                    raise AssertionError((method, api_path))
+
+            with self.assertRaisesRegex(gen64.RecoveryRequired, "contain this chunk's custom IDs"):
+                gen64._ensure_no_provider_batch(EarlierMatchingBatchAPI(), chunk)
 
     def test_retire_guard_matches_old_group_batch_without_five_minute_window(self):
         with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:

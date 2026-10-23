@@ -38,7 +38,9 @@ from paidaction.pricing import BATCH_RATES_USD_PER_MILLION, worst_case_cost
 
 DEFAULT_COLLECTION = BASIN / "results" / "part64" / "collection.jsonl"
 DEFAULT_ROOT = BASIN / "results" / "part64" / "gen64"
-WRITER_STAGE_LEDGER_DIR = BASIN / "results" / "part64" / "writer-stage"
+MACHINE_WRITER_STAGE_LEDGER_DIR = Path("/home/elisepc/assistant-basin/results/part64/writer-stage")
+WRITER_STAGE_LEDGER_DIR = Path(os.environ.get(
+    "PART64_TEST_WRITER_STAGE_LEDGER_DIR", str(MACHINE_WRITER_STAGE_LEDGER_DIR))).resolve()
 REGISTERED_CORPUS = Path("/mnt/c/Users/alexa/neuron-probe-gpu/qwen35/pile10k.jsonl")
 REGISTERED_CORPUS_SIZE = 63_385_283
 REGISTERED_CORPUS_SHA256_PREFIX = "56ad98d5a82b2bb4"
@@ -888,24 +890,38 @@ def probe_stage_projections(root: Path, manifest: Mapping[str, Any]) -> dict[str
             if isinstance(value, bool) or not isinstance(value, int) or value < 0:
                 raise WriterError(f"{writer} probe has invalid billed {label} token usage")
 
-        request_count = len(probe_chunk.get("requests", []))
+        probe_requests = probe_chunk.get("requests", [])
+        probe_request_bytes = sum(len(canonical_json(request)) for request in probe_requests)
+        if probe_request_bytes <= 0:
+            raise WriterError(f"{writer} probe has no request bytes to project")
+        stage_request_bytes = probe_request_bytes
+        request_count = len(probe_requests)
         for group in manifest.get("groups", {}).values():
             if group.get("writer") != writer:
                 continue
             for relpath in group.get("chunk_paths", []):
                 chunk = read_json(root / relpath)
-                request_count += len(chunk.get("requests", []))
+                requests = chunk.get("requests", [])
+                request_count += len(requests)
+                stage_request_bytes += sum(len(canonical_json(request)) for request in requests)
         if request_count <= 0:
             raise WriterError(f"{writer} stage has no planned requests to project")
         input_rate, output_rate = BATCH_RATES_USD_PER_MILLION[WRITERS[writer]]
-        projected_usd = ((input_tokens * input_rate + output_tokens * output_rate)
-                         * request_count / 1_000_000)
+        scaled_input_tokens = input_tokens * stage_request_bytes / probe_request_bytes
+        projected_usd = ((scaled_input_tokens * input_rate
+                          + output_tokens * request_count * output_rate) / 1_000_000)
+        stopped = writer == "opus" and projected_usd > OPUS_PROBE_STOP_USD
         projections[writer] = {
             "writer": writer,
             "input_tokens": input_tokens,
+            "scaled_input_tokens": scaled_input_tokens,
             "output_tokens": output_tokens,
             "request_count": request_count,
+            "probe_request_bytes": probe_request_bytes,
+            "stage_request_bytes": stage_request_bytes,
             "projected_usd": projected_usd,
+            "stop": stopped,
+            "stop_threshold_usd": OPUS_PROBE_STOP_USD if writer == "opus" else None,
         }
     return projections
 
@@ -916,13 +932,16 @@ def format_probe_stage_projections(projections: Mapping[str, Mapping[str, Any]])
     for writer in WRITERS:
         projection = projections[writer]
         lines.append(
-            f"{writer}: probe billed {projection['input_tokens']:,} input + "
+            f"{writer}: probe billed {projection['input_tokens']:,} input tokens scaled by "
+            f"stage/probe request bytes ({projection['stage_request_bytes']:,}/"
+            f"{projection['probe_request_bytes']:,}), plus "
             f"{projection['output_tokens']:,} output tokens x "
             f"{projection['request_count']:,} planned stage requests at batch price = "
             f"${projection['projected_usd']:.2f}"
         )
     opus = projections.get("opus")
-    if opus is not None and float(opus["projected_usd"]) > OPUS_PROBE_STOP_USD:
+    if (opus is not None and bool(opus.get("stop", float(opus["projected_usd"])
+                                          > OPUS_PROBE_STOP_USD))):
         lines.append(
             f"STOP: Opus projected stage cost ${float(opus['projected_usd']):.2f} "
             f"is above ${OPUS_PROBE_STOP_USD:.2f}; do not run generation."
@@ -934,10 +953,78 @@ def _base_custom_id(custom_id: str) -> str:
     """Remove one or more historical re-probe suffixes from a stored ID."""
     while True:
         base, marker, suffix = custom_id.rpartition("-attempt-")
-        if marker and len(suffix) == 3 and suffix.isdigit():
+        if marker and len(suffix) >= 3 and suffix.isdigit():
             custom_id = base
         else:
             return custom_id
+
+
+def _record_probe_stage_projections(root: Path, manifest: dict[str, Any]
+                                    ) -> dict[str, dict[str, Any]]:
+    """Persist the settled probe estimate in the durable run record."""
+    projections = probe_stage_projections(root, manifest)
+    manifest["probe_stage_projections"] = projections
+    manifest["probe_stage_projection_recorded_at"] = utc_now()
+    write_json(root / "run.json", manifest)
+    return projections
+
+
+def _writer_stages_started(root: Path, manifest: Mapping[str, Any]) -> bool:
+    """Return whether any paid writer-stage chunk has begun, including a reserve-only crash."""
+    group_keys = set(manifest.get("groups", {}))
+    if not group_keys:
+        return False
+    ledger_keys: set[str] = set()
+    for group_key, group in manifest.get("groups", {}).items():
+        for relpath in group.get("chunk_paths", []):
+            chunk = read_json(root / relpath)
+            if chunk.get("state") != "planned" or chunk.get("attempt_id"):
+                return True
+            ledger_keys.add(chunk["ledger_key"])
+
+    for ledger_key in ledger_keys:
+        path = ledger_path(root, ledger_key)
+        if not path.is_file():
+            continue
+        for attempt in _attempts(Ledger(str(path), HARD_CAP_USD)).values():
+            meta = attempt.get("meta", {})
+            if (attempt.get("kind") == "part64-writer"
+                    and meta.get("local_run_id") == manifest.get("run_id")
+                    and meta.get("group_key") in group_keys):
+                return True
+    return False
+
+
+def _apply_probe_projection_gate(root: Path, manifest: dict[str, Any],
+                                 override_stop: str | None, *, resuming: bool = False) -> None:
+    """Refuse a pre-stage STOP projection unless its operator override is recorded."""
+    if override_stop is not None and not override_stop.strip():
+        raise WriterError("--override-stop requires a nonempty reason")
+    projections = _record_probe_stage_projections(root, manifest)
+    opus = projections.get("opus")
+    stopped = (opus is not None and bool(opus.get(
+        "stop", float(opus["projected_usd"]) > OPUS_PROBE_STOP_USD)))
+    stage_started = _writer_stages_started(root, manifest)
+    if stopped and (not resuming or not stage_started):
+        if override_stop is None:
+            raise WriterError(
+                f"generation refused: recorded Opus probe projection ${float(opus['projected_usd']):.2f} "
+                f"exceeds STOP line ${OPUS_PROBE_STOP_USD:.2f}; provide --override-stop with a reason")
+        manifest["probe_projection_stop_override"] = {
+            "reason": override_stop.strip(),
+            "recorded_at": utc_now(),
+            "projected_opus_usd": float(opus["projected_usd"]),
+            "stop_usd": OPUS_PROBE_STOP_USD,
+        }
+        write_json(root / "run.json", manifest)
+    elif override_stop is not None:
+        manifest["probe_projection_stop_override"] = {
+            "reason": override_stop.strip(),
+            "recorded_at": utc_now(),
+            "projected_opus_usd": float(opus["projected_usd"]) if opus else None,
+            "stop_usd": OPUS_PROBE_STOP_USD,
+        }
+        write_json(root / "run.json", manifest)
 
 
 def reprobe(root: Path, writer: str, who: str, reason: str,
@@ -1037,11 +1124,14 @@ def run_probe(collection: Path = DEFAULT_COLLECTION, root: Path = DEFAULT_ROOT,
         preflight_api()
     with run_lock(root):
         manifest = initialize_plan(root, rows, digest)
-        return execute_probes(root, manifest, api, **kwargs)
+        outcomes = execute_probes(root, manifest, api, **kwargs)
+        _record_probe_stage_projections(root, manifest)
+        return outcomes
 
 
 def run_generation(collection: Path = DEFAULT_COLLECTION, root: Path = DEFAULT_ROOT,
                    api: Callable[..., str] = api_call, *, initialize: bool = False,
+                   override_stop: str | None = None, resuming: bool = False,
                    **kwargs: Any) -> None:
     root = Path(root).resolve()
     rows, digest = load_collection(collection)
@@ -1054,6 +1144,7 @@ def run_generation(collection: Path = DEFAULT_COLLECTION, root: Path = DEFAULT_R
             execute_probes(root, manifest, api, **kwargs)
         except WriterError as exc:
             raise WriterError(f"generation refused until both writer probes pass: {exc}") from exc
+        _apply_probe_projection_gate(root, manifest, override_stop, resuming=resuming)
         _run_groups(root, manifest, api, **kwargs)
 
 
@@ -1119,7 +1210,10 @@ def _find_provider_batches(api: Callable[..., str], chunk: Mapping[str, Any]) ->
     uncertain_after = posted_at - timedelta(minutes=5)
     attempt_no = chunk.get("attempt_no", 0)
     is_reprobe = (bool(chunk.get("probe")) and isinstance(attempt_no, int)
-                  and not isinstance(attempt_no, bool) and attempt_no > 0)
+                  and not isinstance(attempt_no, bool) and attempt_no > 0
+                  and any(isinstance(request.get("custom_id"), str)
+                          and _base_custom_id(request["custom_id"]) != request["custom_id"]
+                          for request in chunk.get("requests", [])))
     matches: list[str] = []
     unresolved: list[str] = []
     for batch in batches:
@@ -1215,6 +1309,7 @@ def parser() -> argparse.ArgumentParser:
         command_parser = sub.add_parser(command, help=help_text)
         command_parser.add_argument("--collection", type=Path, default=DEFAULT_COLLECTION)
         command_parser.add_argument("--root", type=Path, default=DEFAULT_ROOT)
+        command_parser.add_argument("--override-stop", help="reason to proceed after the recorded Opus STOP projection")
     reprobe_parser = sub.add_parser("reprobe", help="explicitly create a new attempt after a failed writer probe")
     reprobe_parser.add_argument("writer", choices=tuple(WRITERS))
     reprobe_parser.add_argument("--root", type=Path, default=DEFAULT_ROOT)
@@ -1256,10 +1351,12 @@ def main(argv: list[str] | None = None) -> int:
             outcome = reprobe(args.root, args.writer, args.who, args.reason)
         print(json.dumps(outcome, ensure_ascii=False, indent=2))
     elif args.command == "run":
-        run_generation(args.collection, args.root, initialize=False)
+        run_generation(args.collection, args.root, initialize=False,
+                       override_stop=args.override_stop)
         print(f"completed Part 64 writer run in {args.root}")
     elif args.command == "resume":
-        run_generation(args.collection, args.root, initialize=False)
+        run_generation(args.collection, args.root, initialize=False,
+                       override_stop=args.override_stop, resuming=True)
         print(f"resumed Part 64 writer run in {args.root}")
     elif args.command == "status":
         print(json.dumps(status_report(args.root), ensure_ascii=False, indent=2))

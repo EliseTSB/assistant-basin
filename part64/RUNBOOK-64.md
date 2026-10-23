@@ -43,9 +43,18 @@ python part64/gen64.py run \
   --root results/part64/gen64
 ```
 
-After both probes settle, `probe` prints each writer's projected stage cost using that probe's billed input and output tokens, the complete planned request count for that writer (including its probe), and batch prices. If the Opus projection prints `STOP` because it exceeds $36, stop and report the projection; do not run generation.
+After both probes settle, `probe` records each writer's projected stage cost in `run.json` and prints it. The estimate scales the probe's billed input tokens by total canonical request bytes for that writer's planned stage divided by the probe request's bytes. It keeps the probe's billed output tokens multiplied by the complete planned request count (including the probe), then applies batch prices. If the Opus projection prints `STOP` because it exceeds $36, stop and report the projection. `run` refuses to start a writer stage after STOP unless you pass `--override-stop "reason"`; the reason and projection are recorded in `run.json`. `resume` has the same gate before any writer stage starts, and can continue an already-started writer stage.
 
-The generator maintains a durable plan, writer ledgers in the single shared directory `results/part64/writer-stage/`, and settled group files under the run root. The shared ledger directory is resolved against the repository root and is independent of `--root`, so a new run root does not reset a writer's stage cap. It writes eight files under `results/part64/gen64/outputs/`: one per writer, sample size, and unit type. Opus 1x groups use three ledgers and Opus 3x groups use six; every ledger share's complete max-token reserve stays below the paidaction $8 ledger cap. Each request chunk reserves at most $1. Before every reserve, a stage guard sums settled plus reserved spend across all ledgers for that writer and refuses reservations past the registered cap: Haiku $4 and Opus $40. Rows retain `metadata.writer`, `metadata.sample`, `metadata.unit_key`, `metadata.type`, `parse_status`, and the parsed M1 tiers. `score64.py` reads this native format directly; no manual sentence edits or reformatting are needed. Keep failed rows so each arm has the fixed 500-unit denominator.
+For example, after reviewing a STOP projection and deciding to proceed, pass the reason explicitly:
+
+```bash
+python part64/gen64.py run \
+  --collection results/part64/collection.jsonl \
+  --root results/part64/gen64 \
+  --override-stop "reviewed probe projection and approved the registered stage cap"
+```
+
+The generator maintains a durable plan, writer ledgers in the machine-wide directory `/home/elisepc/assistant-basin/results/part64/writer-stage/`, and settled group files under the run root. The machine-wide path is independent of checkout and `--root`, so a second checkout or a new run root does not reset a writer's stage cap. Tests may set `PART64_TEST_WRITER_STAGE_LEDGER_DIR` to a temporary directory; do not set it for a paid run. It writes eight files under `results/part64/gen64/outputs/`: one per writer, sample size, and unit type. Opus 1x groups use three ledgers and Opus 3x groups use six; every ledger share's complete max-token reserve stays below the paidaction $8 ledger cap. Each request chunk reserves at most $1. Before every reserve, a stage guard sums settled plus reserved spend across all ledgers for that writer and refuses reservations past the registered cap: Haiku $4 and Opus $40. Rows retain `metadata.writer`, `metadata.sample`, `metadata.unit_key`, `metadata.type`, `parse_status`, and the parsed M1 tiers. `score64.py` reads this native format directly; no manual sentence edits or reformatting are needed. Keep failed rows so each arm has the fixed 500-unit denominator.
 
 The 64f comparison is a cross-configuration check, not a pure reproduction: Part 64's 1x text matches Part 60 M1, while Part 64 uses `max_tokens=8192` and API-default thinking and Part 60 M1 used `max_tokens=1100` with thinking explicitly disabled. This caveat does not change the registered prediction.
 
@@ -65,7 +74,7 @@ python part64/gen64.py resume \
   --root results/part64/gen64
 ```
 
-If the POST response was lost, resume checks the provider listing. Once a matching run-specific request ID appears in an ended batch, the generator adopts that batch and settles its results without another POST. If the provider batch is still processing, rerun resume after it ends. Retirement is allowed only after a complete listing proves that no matching batch exists.
+If the POST response was lost, resume checks the provider listing. Once a matching run-specific request ID appears in an ended batch, the generator adopts that batch and settles its results without another POST. If the provider batch is still processing, rerun resume after it ends. Retirement is allowed only after a complete listing proves that no matching batch exists. The 5-minute created-at window applies only to custom IDs with the `-attempt-NNN` re-probe suffix; a retired initial-probe retry has unsuffixed IDs and receives no time-window exclusion.
 
 If a settled probe failed validation, review its saved text and usage, then an operator may authorize one new attempt with a recorded reason:
 
