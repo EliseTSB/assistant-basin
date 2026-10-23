@@ -745,6 +745,18 @@ Pre-registered in `PART61-63-DESIGN.md` (Amendments 1 and 2 to Part 61 were writ
 
 Files: `results/part61/` (npz archives, analysis JSON, `part61-registered-evaluation.json`), `part61/`. Limits: two models and one target neuron each, 200 documents, ten controls, rank statistics with a coarse floor (one in eleven), and the two-direction metric is the Part 59 pooled-percentile rule.
 
+### Part 63: a blind Haiku reader agrees with Opus on Part 54a (kappa 0.95) and reads Qwen3-4B's push as Earth, not off-world (2026-10-23)
+
+Pre-registered in `PART61-63-DESIGN.md` (Amendments 1 and 2 before the run; Amendment 3 after the run and before any label was scored). Claude Haiku 5.5 read the 4,944 frozen answers from Parts 26.8, 54a, 54b and 59A blind (3,677 distinct texts, one request each, the label applied to every row with that text) through the Batch API, with the three registered label schemes plus a BROKEN-quality field; real API usage 2.64M input and 0.24M output tokens, about $0.19 (the shared ledger counts $2.42, because it keeps the reserve upper bound for batches whose results carried no usage). Calibration on the 34 hand-labelled examples: 0 wrong. Seeded repeat items (100) agree with themselves 95% (planet frame), 100% (maker identity) and 99% (origin).
+
+**Two defects in the reader setup, both mine.** The first full run sent `temperature: 0`, which Haiku 5.5 rejects, so all 40 batches errored (0 succeeded, billed $0). The parameter was dropped (a deviation from the registered "temperature 0"; the repeat items measure the model's own noise). The rerun then failed the registered gate: 359 records failed only the maker field because the model wrote the rubric's own words (`real-lab only ...`) into `maker_kind`, 6 disagreed about whether a maker was named, 5 were invalid JSON. Amendment 3 reads a `maker_kind` that starts with one allowed token as that token (raw string kept), keeps residual failures unscored (11 of 3,677 distinct texts, 0.3%) and passes the gate at 1% or less; the strict result (gate failed, 370 failed) is kept beside it, and the strict labels file was never modified.
+
+**Results.** 63a held: Cohen's kappa 0.952 against Opus on 480 Part 54a answers (at least 0.80). 63b held: 2 of 7 Qwen3-4B unclamped or control cells give EARTH to at least 3 of 24 (for example control-397 at 5 of 24), so the base rate persists under this reader too. 63c failed: Qwen3-4B L28:4248 reads other-planet-or-space in 0 of 24 unclamped, at +0.5 and at +1.0; at +1.0 the reader calls the planet frame Earth on 24 of 24 and the origin EARTH on 18 of 24, and EARTH 20 of 24 at +1.5. 63d failed by the cell-completeness rule: at -2 Qwen3.5 names another real lab or an invented maker in 21 of 23 valid answers (at least 10) and 0 of 24 unclamped, but one of the 24 rows in that cell is a residual parse failure, so the registered cell is incomplete; under strict exact-name matching the unclamped cell is 5 of 24 (above 2) and also fails. 63e held in all 5 doses: Haiku OFFWORLD 0, 0, 1, 20, 24 against Opus 0, 0, 1, 19, 24.
+
+Decision rule: "only Qwen3-4B did anything, noisily" stands when 63b holds and 63c does not, and that is the case; what the reader sees is Earth, not an off-world dial.
+
+Files: `part63/results/` (strict labels, lenient labels, per-batch files), `part63/` (reader, reparse, analysis), `part63/results-failed-temperature-2026-10-23/` (the errored first run). Limits: one reader, an agreement check against one other model, and an amendment made after seeing the failure counts (though before any label was scored).
+
 ### Running or designed (2026-10-21)
 
 - Part 29: the registered teacher-classifier predictions remain unscored in PREDICTIONS.md.

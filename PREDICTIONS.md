@@ -1830,3 +1830,8 @@ prompts; nothing here is a finding yet. Broken-answer rates are pending the blin
 | 61c | Claude: at matched 1x the Qwen target is within the control range. | held | 16 against 12 to 49 (rank 9 of 11 at 1x, 10 at 2x). |
 | 61d | Claude: each matched-1x sign ratio for every unit in both models is within 0.9 to 1.1. | held | 22 of 22 in each model. |
 | 61e | Claude: at matched 1x the OLMo target count exceeds the median matched-control count. | held | 160 against a median of 73.5. Chance base rate 50%; not a decision input. |
+| 63a | Claude: Cohen's kappa between the Haiku scheme (iii) and the Opus labels on Part 54a answers is at least 0.8. | held | 0.952 (n=480). 2026-10-23 |
+| 63b | Claude: Haiku also gives EARTH to at least 3 of 24 answers in at least one unclamped or control Qwen3-4B cell. | held | 2 of 7 cells; for example control-397 5 of 24. |
+| 63c | Claude: Qwen3-4B L28:4248 reads other-planet-or-space in at most 1 of 24 unclamped and at least 20 of 24 at +1.0, rising from +0.5. | FAILED | 0 of 24 unclamped, 0 at +0.5, 0 at +1.0; the reader says Earth (planet frame 24 of 24 at +1.0). |
+| 63d | Claude: Qwen3.5 at -2 names another real lab or an invented maker in at least 10 of 24 answers and unclamped at most 2 of 24. | FAILED (by completeness) | 21 of 23 valid at -2 and 0 of 24 unclamped, but one -2 row is a residual parse failure so the cell is not 24; strict exact-name unclamped 5 of 24. |
+| 63e | Claude: Qwen3.5's OFFWORLD counts at -1, +0.5, +1, +1.5, +2 stay within 2 of the Opus counts. | held | Haiku 0, 0, 1, 20, 24 against Opus 0, 0, 1, 19, 24. |
