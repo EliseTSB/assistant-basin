@@ -289,7 +289,7 @@ def aggregate_method(root: Path, split: str, method: str, units: list[dict[str, 
         rec = int(unit["record_index"])
         row = by_record.get(rec)
         threshold = thresholds.get(unit["unit_key"])
-        if threshold is None:
+        if threshold is None or not np.isfinite(threshold):
             metric = tier_statistics([], [], [], 0.0, parsed=False, m0=method == "M0")
             parse_status = "threshold_missing"
         else:
@@ -558,7 +558,7 @@ def prediction_table(metrics: dict[str, dict[str, Any]], m5_round1: dict[str, An
             evidence = f"tested candidate={best_dev}; only this single dev-selected candidate is tested; point leads over {','.join(comparisons)} for positive-only/full-rule={json.dumps(leads, sort_keys=True)}; advancement requires a point lead of >=5 pp for both (the registered rule); the 95% interval is reported beside it, not required; recommendation={'candidate' if improved and not missing else 'M0'}"
         add("60j", "No tested method beats both M1 and M0 test gaps by at least 5 pp", j_ok, evidence)
         if not best_dev:
-            rows[-1]["status"] = "held"
+            rows[-1]["status"] = "unscored"
         elif j_ok is not False:
             rows[-1]["status"] = "unscored (one candidate tested)"
     return rows
@@ -823,8 +823,16 @@ def run_analysis(root: Path, split: str) -> dict[str, Any]:
 
 def write_reports(root: Path, analyses: list[dict[str, Any]]) -> tuple[Path, Path]:
     root.mkdir(parents=True, exist_ok=True)
-    payload = {"analyses": analyses, "predictions": [p for a in analyses for p in a["predictions"]]}
     json_path, md_path = root / "analysis-60.json", root / "analysis-60.md"
+    if len(analyses) == 1 and json_path.is_file():
+        try:
+            prior = json.loads(json_path.read_text(encoding="utf-8"))
+            by_split = {str(item.get("split")): item for item in prior.get("analyses", [])}
+            by_split.update({str(item.get("split")): item for item in analyses})
+            analyses = [by_split[key] for key in ("dev", "test") if key in by_split]
+        except (OSError, ValueError, TypeError):
+            pass
+    payload = {"analyses": analyses, "predictions": [p for a in analyses for p in a["predictions"]]}
     write_json(json_path, payload)
     dev = next((analysis for analysis in analyses if analysis.get("split") == "dev"), None)
     if dev is not None:
@@ -835,7 +843,9 @@ def write_reports(root: Path, analyses: list[dict[str, Any]]) -> tuple[Path, Pat
             methods.append(candidate)
         analyzed = set(dev.get("metrics", {}))
         analyzed.update(str(item.get("method")) for item in dev.get("skipped_methods", []))
-        expected = {f"M{i}" for i in range(8)}
+        dropped = {str(item.get("method")) for item in dev.get("dropped_generation", [])
+                   if isinstance(item, dict)}
+        expected = {f"M{i}" for i in range(8)} - dropped
         selection_status = "ready" if expected.issubset(analyzed) else "incomplete"
         write_json(root / "test-selection.json", {
             "status": selection_status, "created_at": datetime.now(timezone.utc).isoformat(),

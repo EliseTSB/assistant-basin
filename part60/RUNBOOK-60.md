@@ -146,4 +146,8 @@ scp -P SSH_PORT "root@SSH_HOST:$REMOTE_ARCHIVE" /tmp/part60-return.tgz && tar -t
 
 If the runner process disappears without `RETURN_READY` or `RUN_FAILED`, keep the rental alive, check `/root/part60/run60.pid`, inspect the phase logs and manifests, then wait for the inherited run lock to clear before rerunning from that workspace. An ambiguous batch attempt stays reserved; resubmitting creates a new attempt and is constrained by the cap. A hard `SIGKILL` cannot run archive cleanup, so copy and inspect any available files before destroying the instance.
 
+## Unverified probe checklist
+
+- [ ] Verify the batch-listing cursor direction (`after_id`) against the live API before treating `listing` pagination as complete. Listing is report-only and never authorizes collection.
+
 Run `python3 -m unittest part60/test_part60.py` locally. The suite uses a synthetic pilot, fake batches, and a toy scorer; only the registered split membership check needs Part 58 files and skips with an explanation when they are absent. It also runs the GPU wrapper in stub mode to verify preflight-independent `RETURN_READY` behavior without pip, network access, credentials, or a model load. Stub mode requires both `PART60_STUB=1` and the explicit `PART60_ALLOW_STUB=1` flag.

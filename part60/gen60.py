@@ -25,6 +25,7 @@ from typing import Any, Iterable
 
 HERE = Path(__file__).resolve().parent
 BASIN = Path(os.environ.get("PART60_BASIN", HERE.parent)).resolve()
+CHECKOUT_BASIN = HERE.parent.resolve()
 DEFAULT_ROOT = BASIN / "results" / "part60"
 PILOT = BASIN / "results" / "part56-pilot" / "pilot.jsonl"
 BASE_GEN = BASIN / "results" / "part58" / "gen.all.jsonl"
@@ -45,6 +46,7 @@ PRICE_OUTPUT_DIRECT = 0.50
 MAX_TOKENS = {"M1": 1100, "M2": 1100, "M3": 1600, "M4": 1100, "M5": 1100, "M6": 8000, "M7": 1100}
 KNOWN = {(4, 3042), (19, 4826), (22, 1610), (21, 4400)}
 UNREGISTERED_TEST_UNITS = {"L0:u190", "L4:u741", "L17:u1360"}
+KNOWN_UNBILLED_STATUSES = frozenset({400, 401, 403, 404, 413, 422})
 
 
 class RunnerError(RuntimeError):
@@ -84,7 +86,7 @@ def new_attempt_id() -> str:
 
 def fixed_spend_path(root: Path | None = None) -> Path:
     """Return the one checkout-wide ledger, refusing a conflicting root-local ledger."""
-    fixed = BASIN / "results" / "part60" / "spend.jsonl"
+    fixed = CHECKOUT_BASIN / "results" / "part60" / "spend.jsonl"
     if root is not None:
         own = root / "spend.jsonl"
         if own.resolve() != fixed.resolve() and own.exists():
@@ -122,6 +124,8 @@ def validate_cap(value: Any) -> float:
         raise RunnerError("cap must be a finite positive number") from None
     if not math.isfinite(cap) or cap <= 0:
         raise RunnerError("cap must be a finite positive number")
+    if cap > 8.0:
+        raise RunnerError("Part 60 has a hard $8 cap; values above $8 are refused")
     return cap
 
 
@@ -468,7 +472,7 @@ def spend_state(path: Path) -> tuple[float, dict[str, dict[str, Any]]]:
             if not identity:
                 continue
             old = batches.setdefault(str(identity), {})
-            if row.get("event") in ("reserve", "unknown-reserve", "settle"):
+            if row.get("event") in ("reserve", "settle"):
                 old.update(row)
                 if row.get("event") == "settle":
                     old["actual_usd"] = float(row["usd"])
@@ -479,19 +483,36 @@ def spend_state(path: Path) -> tuple[float, dict[str, dict[str, Any]]]:
     return total, batches
 
 
-def retire_attempt(root: Path, attempt_id: str) -> None:
+def retire_attempt(root: Path, attempt_id: str, *, force_lost: bool = False,
+                   reason: str | None = None) -> None:
+    if force_lost and not (reason and reason.strip()):
+        raise RunnerError("--force-lost requires a written reason")
     with writer_lock(root):
         with ledger_lock(root) as spend_path:
             _, attempts = spend_state(spend_path)
             current = attempts.get(attempt_id)
             if current is None:
                 raise RunnerError(f"ledger has no attempt {attempt_id}")
-            if current.get("event") not in ("reserve", "unknown-reserve"):
+            if current.get("event") != "reserve":
                 raise RunnerError(f"attempt {attempt_id} is not an unresolved reservation")
+            attempt_root = Path(str(current.get("root", root))).resolve()
+            active_batch = False
+            for manifest_file in attempt_root.glob("batches/*/*/*/manifest.json"):
+                try:
+                    saved = json.loads(manifest_file.read_text(encoding="utf-8"))
+                except (OSError, ValueError):
+                    continue
+                if any(chunk.get("attempt_id") == attempt_id and chunk.get("batch_id")
+                       and chunk.get("status") in ("submitted", "collecting")
+                       for chunk in saved.get("chunks", [])):
+                    active_batch = True
+                    break
+            if active_batch and not force_lost:
+                raise RunnerError("reservation has a batch still processing; --force-lost with a written reason is required")
             append_spend(spend_path, {"event": "retire", "attempt_id": attempt_id,
                                       "method": current.get("method"), "split": current.get("split"),
-                                      "phase": current.get("phase"), "ts": utc_now(),
-                                      "usd": 0.0, "reason": "operator-retired"})
+                                      "phase": current.get("phase"), "root": str(attempt_root), "ts": utc_now(),
+                                      "usd": 0.0, "reason": reason.strip() if reason else "operator-retired"})
 
 
 def method_state_path(root: Path, split: str, method: str) -> Path:
@@ -794,13 +815,18 @@ def smoke_m6(root: Path, api: Any = api_call, *, kill_at: str | None = None) -> 
         for _ in range(3):
             history = read_jsonl(history_path) if history_path.is_file() else []
             attempt_number = len(history) + 1
-            start = ((attempt_number - 1) * 5) % len(dev_units)
-            units = [dev_units[(start + offset) % len(dev_units)] for offset in range(5)]
             created_at = utc_now()
             smoke_run_id = new_attempt_id()
+            selection_seed = int(smoke_run_id[:16], 16)
+            previously_used = {str(key) for row in history for key in row.get("unit_keys", [])}
+            available = [unit for unit in dev_units if str(unit["unit_key"]) not in previously_used]
+            if len(available) < 5:
+                available = dev_units
+            units = random.Random(selection_seed).sample(available, 5)
             requests = [request_for("M6", "primary", unit, i) for i, unit in enumerate(units)]
             result = {"method": "M6", "split": "dev", "created_at": created_at,
                       "attempt": attempt_number, "smoke_run_id": smoke_run_id,
+                      "selection_seed": selection_seed,
                       "unit_keys": [u["unit_key"] for u in units],
                       "model": MODEL, "max_tokens": MAX_TOKENS["M6"],
                       "thinking": {"type": "adaptive"}, "output_config": {"effort": "high"},
@@ -812,11 +838,10 @@ def smoke_m6(root: Path, api: Any = api_call, *, kill_at: str | None = None) -> 
 
             _write_smoke_history(root, {"smoke_run_id": smoke_run_id, "attempt": attempt_number,
                                        "created_at": created_at, "unit_keys": result["unit_keys"],
+                                       "selection_seed": selection_seed,
                                        "status": "started", "all_five_check": None})
             spend_path = fixed_spend_path(root)
             cap = env_cap()
-            if cap > 8.0 and os.environ.get("PART60_CAP_OVERRIDE") != "1":
-                raise RunnerError("cap above $8 requires PART60_CAP_OVERRIDE=1 and an explicitly recorded override")
             failed_400 = False
             run_finished = False
             for unit, request in zip(units, requests):
@@ -837,7 +862,7 @@ def smoke_m6(root: Path, api: Any = api_call, *, kill_at: str | None = None) -> 
                 try:
                     raw_response = api("POST", "/v1/messages", request["params"])
                 except APIError as exc:
-                    known_unbilled = (exc.status is not None and 400 <= exc.status < 500
+                    known_unbilled = (exc.status in KNOWN_UNBILLED_STATUSES
                                       and exc.anthropic_error_body)
                     error_row = {"custom_id": custom_id, "attempt_id": attempt_id,
                                  "smoke_run_id": smoke_run_id, "unit_key": unit["unit_key"],
@@ -848,6 +873,7 @@ def smoke_m6(root: Path, api: Any = api_call, *, kill_at: str | None = None) -> 
                         with ledger_lock(root) as spend_path:
                             append_spend(spend_path, {"event": "release", "attempt_id": attempt_id,
                                                       "method": "M6", "split": "dev", "phase": "smoke",
+                                                      "root": str(root.resolve()),
                                                       "usd": 0.0, "ts": utc_now(),
                                                       "reason": "Anthropic 4xx error body"})
                     result["results"].append({"custom_id": custom_id, "attempt_id": attempt_id,
@@ -893,6 +919,7 @@ def smoke_m6(root: Path, api: Any = api_call, *, kill_at: str | None = None) -> 
                     with ledger_lock(root) as spend_path:
                         append_spend(spend_path, {"event": "settle", "attempt_id": attempt_id,
                                                   "method": "M6", "split": "dev", "phase": "smoke",
+                                                  "root": str(root.resolve()),
                                                   "usd": round(actual, 8), "ts": utc_now(),
                                                   "custom_id": custom_id})
                 _kill_smoke_at(kill_at, "after_settle")
@@ -1082,9 +1109,15 @@ def _submit_phase_locked(root: Path, split: str, method: str, phase: str,
     request_sha256 = hashlib.sha256(request_bytes).hexdigest()
     reserve = estimated_usd(requests)
     spend_path = fixed_spend_path(root)
+    _, prior_attempts = spend_state(spend_path)
+    phase_attempts = [row for row in prior_attempts.values()
+                      if row.get("method") == method and row.get("split") == split
+                      and row.get("phase") == phase]
+    other_roots = {str(row.get("root")) for row in phase_attempts
+                   if row.get("root") and str(row.get("root")) != str(root.resolve())}
+    if other_roots:
+        raise RunnerError(f"phase {method}/{split}/{phase} already has an attempt in the fixed ledger under another --root")
     cap = env_cap()
-    if cap > 8.0 and os.environ.get("PART60_CAP_OVERRIDE") != "1":
-        raise RunnerError("cap above $8 requires PART60_CAP_OVERRIDE=1 and an explicitly recorded override")
     chunk_index = len(manifest.get("chunks", []))
     chunk_dir = mfpath.parent / f"attempt-{attempt_id}"
     try:
@@ -1103,7 +1136,7 @@ def _submit_phase_locked(root: Path, split: str, method: str, phase: str,
              "request_count": len(requests), "unit_keys": [u["unit_key"] for u in units],
              "request_sha256": request_sha256, "unit_set_sha256": unit_set_sha256,
              "reserved_usd": round(reserve, 8), "cap_limit_usd": cap,
-             "cap_override": cap > 8.0, "created_at": utc_now(),
+             "cap_override": False, "created_at": utc_now(),
              "status": "reserved", "batch_id": None}
     with ledger_lock(root) as spend_path:
         spent, _ = spend_state(spend_path)
@@ -1111,6 +1144,7 @@ def _submit_phase_locked(root: Path, split: str, method: str, phase: str,
             raise RunnerError(f"cap refused submission: settled/reserved ${spent:.4f} plus conservative estimate ${reserve:.4f} exceeds ${cap:.2f}")
         append_spend(spend_path, {"event": "reserve", "attempt_id": attempt_id, "method": method,
                                   "split": split, "phase": phase, "chunk": chunk_index,
+                                  "root": str(root.resolve()),
                                   "reserved_usd": round(reserve, 8), "ts": utc_now(),
                                   "request_count": len(requests)})
     if kill_after_reserve:
@@ -1126,7 +1160,7 @@ def _submit_phase_locked(root: Path, split: str, method: str, phase: str,
         if kill_after_post:
             os.kill(os.getpid(), 9)
     except APIError as exc:
-        if exc.status is not None and 400 <= exc.status < 500 and exc.anthropic_error_body:
+        if exc.status in KNOWN_UNBILLED_STATUSES and exc.anthropic_error_body:
             chunk["status"] = "rejected"
             chunk["error"] = str(exc)
             chunk["error_body"] = exc.error_body
@@ -1134,6 +1168,7 @@ def _submit_phase_locked(root: Path, split: str, method: str, phase: str,
             with ledger_lock(root) as spend_path:
                 append_spend(spend_path, {"event": "release", "attempt_id": attempt_id, "method": method,
                                           "split": split, "phase": phase, "chunk": chunk_index,
+                                          "root": str(root.resolve()),
                                           "usd": 0.0, "ts": utc_now(), "reason": str(exc),
                                           "error_body": exc.error_body})
             for unit in units:
@@ -1340,9 +1375,10 @@ def _collect_phase_locked(root: Path, split: str, method: str, phase: str, api: 
     with ledger_lock(root) as spend_path:
         _, ledger = spend_state(spend_path)
         ledger_row = ledger.get(attempt_id, {})
-        if usage_complete and ledger_row.get("event") == "reserve":
+        if usage_complete and ledger_row.get("event") in ("reserve", "retire"):
             append_spend(spend_path, {"event": "settle", "attempt_id": attempt_id,
                                       "batch_id": batch_id, "method": method, "split": split,
+                                      "root": str(root.resolve()),
                                       "phase": phase, "chunk": chunk["index"],
                                       "usd": round(actual, 8), "ts": utc_now()})
             chunk["actual_usd"] = round(actual, 8)
@@ -1492,7 +1528,7 @@ def main(argv: list[str] | None = None) -> int:
     submit.add_argument("--method", choices=[f"M{i}" for i in range(1, 8)], required=True)
     submit.add_argument("--split", choices=["dev", "test"], required=True)
     submit.add_argument("--phase", default="primary", choices=["primary", "selection", "fresh", "round1", "round2"])
-    submit.add_argument("--cap", type=cap_arg, default=8.0)
+    submit.add_argument("--cap", type=cap_arg)
     smoke = sub.add_parser("smoke", help="run the required five-unit M6 thinking smoke")
     smoke.add_argument("--method", choices=["M6"], required=True)
     listing = sub.add_parser("listing", help="read-only list of batches created during this run")
@@ -1504,6 +1540,8 @@ def main(argv: list[str] | None = None) -> int:
     ledger_sub = ledger.add_subparsers(dest="ledger_command", required=True)
     retire = ledger_sub.add_parser("retire", help="write a dated operator retirement for one attempt")
     retire.add_argument("attempt_id")
+    retire.add_argument("--force-lost", action="store_true")
+    retire.add_argument("--reason")
     choose = sub.add_parser("select-m3", help="choose M3 winner from selection activations")
     choose.add_argument("--split", choices=["dev", "test"], required=True)
     args = parser.parse_args(argv)
@@ -1521,12 +1559,13 @@ def main(argv: list[str] | None = None) -> int:
             batches = listing_batches(args.root)
             print(json.dumps({"count": len(batches), "batches": batches}, sort_keys=True))
         elif args.command == "submit":
-            os.environ["PART60_CAP"] = str(args.cap)
+            if args.cap is not None:
+                os.environ["PART60_CAP"] = str(args.cap)
             print(submit_phase(args.root, args.split, args.method, args.phase))
         elif args.command == "collect":
             print(collect_phase(args.root, args.split, args.method, args.phase))
         elif args.command == "ledger" and args.ledger_command == "retire":
-            retire_attempt(args.root, args.attempt_id)
+            retire_attempt(args.root, args.attempt_id, force_lost=args.force_lost, reason=args.reason)
             print(f"retired unresolved attempt {args.attempt_id} at {utc_now()}")
         else:
             print(f"selected {choose_m3_winners(args.root, args.split)} M3 winners")

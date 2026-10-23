@@ -482,6 +482,15 @@ class AnalyzerRoundTripTests(unittest.TestCase):
             self.assertAlmostEqual(result["by_type"]["neuron"]["mean_h_weak"], 0.25)
             self.assertAlmostEqual(result["by_type"]["neuron"]["mean_h_none"], 0.0)
 
+    def test_nonfinite_threshold_is_reported_as_threshold_missing(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="part60-nonfinite-threshold-") as directory:
+            root = Path(directory)
+            units, thresholds = _write_analyzer_fixture(root)
+            thresholds = {key: float("nan") for key in thresholds}
+            result = analyze60.aggregate_method(root, "dev", "M1", units, thresholds)
+            self.assertEqual(result["n_threshold_missing"], len(units))
+            self.assertTrue(all(row["parse_status"] == "threshold_missing" for row in result["unit_rows"]))
+
     def test_sid_key_format_mutation_in_analyzer_copy_goes_red(self) -> None:
         with tempfile.TemporaryDirectory(prefix="part60-e2e-sabotage-") as directory:
             root = Path(directory)
@@ -559,7 +568,7 @@ class PredictionTests(unittest.TestCase):
         self.assertEqual(by_id["60a"]["status"], "unscored")
         self.assertEqual(by_id["60j"]["status"], "unscored (one candidate tested)")
         no_candidate = analyze60.prediction_table(metrics, None, "test", None)
-        self.assertEqual(next(row for row in no_candidate if row["id"] == "60j")["status"], "held")
+        self.assertEqual(next(row for row in no_candidate if row["id"] == "60j")["status"], "unscored")
 
     def test_m1_candidate_is_compared_to_m0_without_self_comparison(self) -> None:
         metrics = {"M0": self._method(.20, .10), "M1": self._method(.30, .10)}
@@ -643,6 +652,28 @@ class PredictionTests(unittest.TestCase):
             marker = json.loads((root / "test-selection.json").read_text())
             self.assertEqual(marker["status"], "incomplete")
             self.assertEqual(marker["missing_dev_methods"], ["M6"])
+
+    def test_test_selection_opens_when_non_candidate_generation_method_is_dropped(self) -> None:
+        tier = {"positive_only_verified_rate": .2, "verified_rate": .1,
+                "mean_h_strong": .5, "mean_h_weak": .3, "mean_h_none": .1,
+                "mean_auc": .6, "n_parseable": 1}
+        method = {"n_parseable": 1, "n_units": 1, "n_failed": 0, "n_threshold_missing": 0,
+                  "by_type": {"neuron": tier, "control": tier}, "cost": {"calls": 1},
+                  "real_tier_ordering_share": .5, "real_tier_ordering_n": 1,
+                  "real_tier_ordering_two_hits_share": .5, "real_tier_ordering_two_hits_n": 1}
+        analysis = {"split": "dev", "metrics": {f"M{i}": method for i in range(8) if i != 3},
+                    "predictions": [], "dev_selection": {"test_candidate": "M2"},
+                    "paired_bootstrap": {"seed": 6003, "comparisons": {}},
+                    "unjudgeable": {}, "skipped_methods": [],
+                    "dropped_generation": [{"method": "M3", "phase": "primary", "successes": 80,
+                                            "expected": 100, "failure_rate": .2}],
+                    "max_tokens_truncations": {}, "m5_round1": None}
+        with tempfile.TemporaryDirectory(prefix="part60-selection-drop-") as directory:
+            root = Path(directory)
+            analyze60.write_reports(root, [analysis])
+            marker = json.loads((root / "test-selection.json").read_text())
+            self.assertEqual(marker["status"], "ready")
+            self.assertNotIn("M3", marker["missing_dev_methods"])
 
     def test_60h_flags_a_positive_marked_minus_whole_difference(self) -> None:
         metrics = {"M0": self._method(.2, .1), "M1": self._method(.2, .1),
@@ -760,6 +791,8 @@ class BatchLifecycleTests(unittest.TestCase):
         self.basin = Path(self.tmp.name) / "checkout"
         self._basin_patch = mock.patch.object(gen60, "BASIN", self.basin)
         self._basin_patch.start()
+        self._checkout_patch = mock.patch.object(gen60, "CHECKOUT_BASIN", self.basin)
+        self._checkout_patch.start()
 
     @property
     def spend_path(self) -> Path:
@@ -767,6 +800,7 @@ class BatchLifecycleTests(unittest.TestCase):
 
     def tearDown(self) -> None:
         self._basin_patch.stop()
+        self._checkout_patch.stop()
         self.tmp.cleanup()
 
     def test_smoke_unknown_outcome_resets_consecutive_failed_check_streak(self) -> None:
@@ -777,7 +811,7 @@ class BatchLifecycleTests(unittest.TestCase):
     def test_sigkill_resume_does_not_resubmit_submitted_chunk(self) -> None:
         marker = self.root / "posts.log"
         code = (
-            "import json,sys; from pathlib import Path; sys.path.insert(0, sys.argv[1]); import gen60; "
+            "import json,sys; from pathlib import Path; sys.path.insert(0, sys.argv[1]); import gen60; gen60.CHECKOUT_BASIN=Path(__import__('os').environ['PART60_BASIN']); "
             "gen60.PILOT = Path(sys.argv[4]); "
             "def_dummy=None\n"
             "def fake(method,path,body=None):\n"
@@ -803,10 +837,10 @@ class BatchLifecycleTests(unittest.TestCase):
                 gen60.submit_phase(self.root, "dev", "M1", "primary", api=lambda *args: called.append(args))
         self.assertEqual(called, [])
 
-    def test_cap_above_eight_needs_explicit_override(self) -> None:
+    def test_cap_above_eight_is_refused_even_with_override(self) -> None:
         called = []
-        with mock.patch.dict(os.environ, {"PART60_CAP": "80", "PART60_CAP_OVERRIDE": ""}):
-            with self.assertRaisesRegex(gen60.RunnerError, "PART60_CAP_OVERRIDE"):
+        with mock.patch.dict(os.environ, {"PART60_CAP": "80", "PART60_CAP_OVERRIDE": "1"}):
+            with self.assertRaisesRegex(gen60.RunnerError, r"hard \$8 cap"):
                 gen60.submit_phase(self.root, "dev", "M1", "primary", api=lambda *args: called.append(args))
         self.assertEqual(called, [])
         self.assertFalse(self.spend_path.exists())
@@ -838,11 +872,16 @@ class BatchLifecycleTests(unittest.TestCase):
         own_ledger = other_root / "spend.jsonl"
         own_ledger.parent.mkdir(parents=True, exist_ok=True)
         own_ledger.touch()
-        with mock.patch.dict(os.environ, {"PART60_CAP": "80", "PART60_CAP_OVERRIDE": "1"}):
+        with mock.patch.dict(os.environ, {"PART60_CAP": "8", "PART60_CAP_OVERRIDE": "1"}):
             with self.assertRaisesRegex(gen60.RunnerError, "empty root-local ledger"):
                 gen60.submit_phase(other_root, "dev", "M1", "primary",
                                    api=lambda *args: called.append(args))
         self.assertEqual(called, [])
+
+    def test_fixed_ledger_path_does_not_follow_part60_basin(self) -> None:
+        expected = self.basin / "results" / "part60" / "spend.jsonl"
+        with mock.patch.object(gen60, "BASIN", self.root / "attacker-controlled-basin"):
+            self.assertEqual(gen60.fixed_spend_path(self.root), expected)
 
     def test_shared_ledger_lock_serializes_cap_checks_across_roots(self) -> None:
         units = gen60.load_splits()["dev"]
@@ -857,7 +896,7 @@ class BatchLifecycleTests(unittest.TestCase):
             "from pathlib import Path\n"
             "sys.path.insert(0,sys.argv[1])\n"
             "import gen60\n"
-            "gen60.PILOT=Path(sys.argv[3]); gen60.BASIN=Path(sys.argv[4])\n"
+            "gen60.PILOT=Path(sys.argv[3]); gen60.BASIN=Path(sys.argv[4]); gen60.CHECKOUT_BASIN=Path(sys.argv[4])\n"
             "ready=Path(sys.argv[5]); ready.touch()\n"
             "deadline=time.monotonic()+5\n"
             "while len(list(ready.parent.glob('ready-*')))<2 and time.monotonic()<deadline:\n"
@@ -909,6 +948,31 @@ class BatchLifecycleTests(unittest.TestCase):
         with self.assertRaisesRegex(gen60.RunnerError, "not an unresolved reservation"):
             gen60.retire_attempt(self.root, "retire-me")
 
+    def test_retire_refuses_live_batch_and_collect_settles_force_lost_reservation(self) -> None:
+        def submit_api(method: str, path: str, body: object = None) -> str:
+            return json.dumps({"id": "batch-live"})
+        batch_id = gen60.submit_phase(self.root, "dev", "M1", "primary", api=submit_api)
+        manifest_path = gen60.manifest_path(self.root, "dev", "M1", "primary")
+        manifest = json.loads(manifest_path.read_text())
+        attempt_id = manifest["chunks"][-1]["attempt_id"]
+        with self.assertRaisesRegex(gen60.RunnerError, "still processing"):
+            gen60.retire_attempt(self.root, attempt_id)
+        with self.assertRaisesRegex(gen60.RunnerError, "written reason"):
+            gen60.retire_attempt(self.root, attempt_id, force_lost=True)
+        gen60.retire_attempt(self.root, attempt_id, force_lost=True, reason="operator confirmed batch lost")
+        chunk = manifest["chunks"][-1]
+        idmap = json.loads((Path(chunk["directory"]) / "idmap.json").read_text())
+        response = {"type": "succeeded", "message": {"usage": {"input_tokens": 10, "output_tokens": 20},
+                    "content": [], "stop_reason": "end_turn"}}
+        def collect_api(method: str, path: str, body: object = None) -> str:
+            if path.endswith("/results"):
+                return "".join(json.dumps({"custom_id": custom_id, "result": response}) + "\n"
+                               for custom_id in idmap)
+            return json.dumps({"processing_status": "ended"})
+        self.assertIn("collected", gen60.collect_phase(self.root, "dev", "M1", "primary",
+                                                        api=collect_api, max_polls=1, poll_seconds=0))
+        self.assertEqual(gen60.spend_state(self.spend_path)[1][attempt_id]["event"], "settle")
+
     def test_http_400_without_anthropic_error_body_keeps_batch_reservation(self) -> None:
         with self.assertRaisesRegex(gen60.RunnerError, "ambiguous"):
             gen60.submit_phase(self.root, "dev", "M1", "primary",
@@ -935,7 +999,7 @@ class BatchLifecycleTests(unittest.TestCase):
                 self.assertGreater(spent, 0.0)
                 manifest = json.loads(gen60.manifest_path(self.root, "dev", "M1", "primary").read_text())
                 self.assertEqual(manifest["chunks"][-1]["request_count"], len(body["requests"]))
-                raise gen60.APIError(429, "rate limited")
+                raise gen60.APIError(429, "rate limited", {"type": "error", "error": {"type": "rate_limit_error"}})
             raise AssertionError(path)
         with mock.patch.dict(os.environ, {"PART60_CAP": "8"}):
             with self.assertRaisesRegex(gen60.RunnerError, "ambiguous"):
@@ -952,10 +1016,20 @@ class BatchLifecycleTests(unittest.TestCase):
         self.assertEqual(gen60.spend_state(self.spend_path)[0],
                          sum(chunk["reserved_usd"] for chunk in manifest["chunks"]))
 
+    def test_second_root_cannot_submit_same_phase_from_shared_ledger(self) -> None:
+        calls = []
+        root_a, root_b = self.root / "a", self.root / "b"
+        gen60.submit_phase(root_a, "dev", "M1", "primary",
+                           api=lambda *args: calls.append(args) or json.dumps({"id": "batch-root-a"}))
+        with self.assertRaisesRegex(gen60.RunnerError, "another --root"):
+            gen60.submit_phase(root_b, "dev", "M1", "primary",
+                               api=lambda *args: calls.append(args) or json.dumps({"id": "batch-root-b"}))
+        self.assertEqual(len(calls), 1)
+
     def test_kill_between_post_and_manifest_update_keeps_reservation_and_resubmits_new_attempt(self) -> None:
         marker = self.root / "post.log"
         code = (
-            "import json,sys; from pathlib import Path; sys.path.insert(0, sys.argv[1]); import gen60; "
+            "import json,sys; from pathlib import Path; sys.path.insert(0, sys.argv[1]); import gen60; gen60.CHECKOUT_BASIN=Path(__import__('os').environ['PART60_BASIN']); "
             "gen60.PILOT = Path(sys.argv[4]); "
             "def_dummy=None\n"
             "def fake(method,path,body=None):\n"
@@ -983,7 +1057,7 @@ class BatchLifecycleTests(unittest.TestCase):
     def test_kill_after_submit_reserve_keeps_old_attempt_and_reruns_with_a_new_id(self) -> None:
         marker = self.root / "post.log"
         code = (
-            "import json,sys; from pathlib import Path; sys.path.insert(0, sys.argv[1]); import gen60; "
+            "import json,sys; from pathlib import Path; sys.path.insert(0, sys.argv[1]); import gen60; gen60.CHECKOUT_BASIN=Path(sys.argv[5]); "
             "gen60.PILOT = Path(sys.argv[4]); gen60.BASIN = Path(sys.argv[5]); "
             "def_dummy=None\n"
             "def fake(method,path,body=None):\n"
@@ -1013,14 +1087,14 @@ class BatchLifecycleTests(unittest.TestCase):
             case = self.root / stage
             basin = case / "checkout"
             run_root = case / "run"
-            with mock.patch.object(gen60, "BASIN", basin):
+            with mock.patch.object(gen60, "BASIN", basin), mock.patch.object(gen60, "CHECKOUT_BASIN", basin):
                 def submit_api(method: str, path: str, body: object = None) -> str:
                     if method == "POST":
                         return json.dumps({"id": "batch-collect-kill"})
                     raise AssertionError(path)
                 gen60.submit_phase(run_root, "dev", "M1", "primary", api=submit_api)
             code = (
-                "import json,sys; from pathlib import Path; sys.path.insert(0, sys.argv[1]); import gen60; "
+                "import json,sys; from pathlib import Path; sys.path.insert(0, sys.argv[1]); import gen60; gen60.CHECKOUT_BASIN=Path(sys.argv[5]); "
                 "gen60.PILOT = Path(sys.argv[4]); gen60.BASIN = Path(sys.argv[5]);\n"
                 "def api(method,path,body=None):\n"
                 " if path.endswith('/batch-collect-kill'): return json.dumps({'processing_status':'ended'})\n"
@@ -1036,7 +1110,7 @@ class BatchLifecycleTests(unittest.TestCase):
                                    str(_TEST_PILOT), str(basin), stage],
                                   env={**os.environ, "PART60_BASIN": str(basin)}, check=False)
             self.assertEqual(proc.returncode, -signal.SIGKILL, stage)
-            with mock.patch.object(gen60, "BASIN", basin):
+            with mock.patch.object(gen60, "BASIN", basin), mock.patch.object(gen60, "CHECKOUT_BASIN", basin):
                 def collect_api(method: str, path: str, body: object = None) -> str:
                     if path.endswith("/batch-collect-kill"):
                         return json.dumps({"processing_status": "ended"})
@@ -1099,6 +1173,7 @@ class BatchLifecycleTests(unittest.TestCase):
 from pathlib import Path
 sys.path.insert(0, sys.argv[1])
 import gen60
+gen60.CHECKOUT_BASIN=Path(__import__('os').environ['PART60_BASIN'])
 gen60.PILOT = Path(sys.argv[2])
 root=Path(tempfile.mkdtemp())
 posts=[]
@@ -1340,7 +1415,7 @@ assert gen60._smoke_consecutive_failed_checks(history) == 1
             basin, run_root = case / "checkout", case / "run"
             marker = case / "calls.log"
             code = (
-                "import sys; from pathlib import Path; sys.path.insert(0, sys.argv[1]); import gen60; "
+                "import sys; from pathlib import Path; sys.path.insert(0, sys.argv[1]); import gen60; gen60.CHECKOUT_BASIN=Path(sys.argv[5]); "
                 "gen60.PILOT = Path(sys.argv[4]); gen60.BASIN = Path(sys.argv[5]);\n"
                 "def api(method,path,body=None):\n"
                 " Path(sys.argv[3]).open('a').write('call\\n'); return sys.argv[7]\n"
@@ -1352,7 +1427,7 @@ assert gen60._smoke_consecutive_failed_checks(history) == 1
             self.assertEqual(proc.returncode, -signal.SIGKILL, stage)
             call_count = len(marker.read_text().splitlines()) if marker.exists() else 0
             self.assertEqual(call_count, 0 if stage == "after_reserve" else 1, stage)
-            with mock.patch.object(gen60, "BASIN", basin):
+            with mock.patch.object(gen60, "BASIN", basin), mock.patch.object(gen60, "CHECKOUT_BASIN", basin):
                 result = gen60.smoke_m6(run_root, api=lambda *args: _m6_response())
                 self.assertEqual(result["status"], "pass", stage)
                 history = gen60.read_jsonl(run_root / "out/smoke-M6-runs.jsonl")
@@ -1428,7 +1503,7 @@ assert gen60._smoke_consecutive_failed_checks(history) == 1
             basin = root / "checkout"
             def fail(method: str, path: str, body: object = None, status=status, message=message) -> str:
                 raise gen60.APIError(status, message)
-            with mock.patch.object(gen60, "BASIN", basin):
+            with mock.patch.object(gen60, "BASIN", basin), mock.patch.object(gen60, "CHECKOUT_BASIN", basin):
                 result = gen60.smoke_m6(root, api=fail)
             self.assertEqual(result["status"], "error")
             self.assertIsNone(result["all_five_check"])
@@ -1438,6 +1513,18 @@ assert gen60._smoke_consecutive_failed_checks(history) == 1
             self.assertEqual(gen60.read_jsonl(ledger_path)[-1]["event"], "reserve")
             with self.assertRaisesRegex(gen60.RunnerError, "status is error"):
                 gen60.submit_phase(root, "dev", "M6", "primary", api=lambda *args: "unused")
+
+    def test_body_bearing_429_on_smoke_keeps_reservation_and_seeded_sample_is_recorded(self) -> None:
+        body = {"type": "error", "error": {"type": "rate_limit_error"}}
+        result = gen60.smoke_m6(self.root,
+            api=lambda *args: (_ for _ in ()).throw(gen60.APIError(429, "rate limited", body)))
+        self.assertEqual(result["status"], "error")
+        self.assertIn("selection_seed", result)
+        self.assertEqual(result["unit_keys"], [u["unit_key"] for u in
+                         __import__("random").Random(result["selection_seed"]).sample(gen60.load_splits()["dev"], 5)])
+        events = gen60.read_jsonl(self.spend_path)
+        self.assertEqual([row["event"] for row in events], ["reserve"])
+        self.assertEqual(events[0]["phase"], "smoke")
 
     def test_retryable_smoke_error_settles_usage_from_completed_responses(self) -> None:
         calls = []
@@ -1464,7 +1551,7 @@ assert gen60._smoke_consecutive_failed_checks(history) == 1
             return json.dumps({"content": [{"type": "text", "text": json.dumps(_tiered())}],
                                "stop_reason": "end_turn", "usage": {"input_tokens": 1, "output_tokens": 1}})
         dropped_root = self.root / "no-thinking"
-        with mock.patch.object(gen60, "BASIN", dropped_root / "checkout"):
+        with mock.patch.object(gen60, "BASIN", dropped_root / "checkout"), mock.patch.object(gen60, "CHECKOUT_BASIN", dropped_root / "checkout"):
             dropped = gen60.smoke_m6(dropped_root, api=no_thinking)
         self.assertEqual(dropped["status"], "dropped")
         history = gen60.read_jsonl(dropped_root / "out/smoke-M6-runs.jsonl")
@@ -1477,7 +1564,7 @@ assert gen60._smoke_consecutive_failed_checks(history) == 1
         error_root = self.root / "bad-answer"
         def bad_answer(method: str, path: str, body: object = None) -> str:
             return _m6_response(stop_reason="max_tokens", answer={"not": "the M6 schema"})
-        with mock.patch.object(gen60, "BASIN", error_root / "checkout"):
+        with mock.patch.object(gen60, "BASIN", error_root / "checkout"), mock.patch.object(gen60, "CHECKOUT_BASIN", error_root / "checkout"):
             error = gen60.smoke_m6(error_root, api=bad_answer)
         self.assertEqual(error["status"], "dropped")
         self.assertEqual(error["all_five_check"], "failed")
