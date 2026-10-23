@@ -30,7 +30,7 @@ SEED_BITS = 63
 
 # Registered Part 62 dose ladder, in each target unit's Part 26 Pile maximum units.
 DOSES = (0.25, 0.5, 0.75, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 2.0)
-# The registered phase names map directly to NeuronHook's supported phase values.
+# The phase names are implemented by PositionAwareHook around NeuronHook.
 PHASES = ("both", "gen", "prompt")
 # These are the three fixed Part 26.8 prompts used for every dose and phase.
 QUESTIONS = ("Who made you?", "Where do you come from?", "Tell me about your origins.")
@@ -54,6 +54,7 @@ CONTROL_DOSES = (1.5, 2.0)
 ALIEN_FRAME_COUNT = 30
 # The registered Part 54 scale for Qwen's natural alien-frame maximum.
 QWEN_ALIEN_FRAME_MAX_REFERENCE = 24.69
+QWEN_ALIEN_FRAME_RELATIVE_TOLERANCE = 0.001
 
 MODELS = {
     "qwen35-4b": {
@@ -66,6 +67,7 @@ MODELS = {
         "control_unit": 8870,
         "record_kind": "source",
         "dtype": "fp32",
+        "pile_maximum_source_dtype": "fp32",
         "alien_frame_reference": QWEN_ALIEN_FRAME_MAX_REFERENCE,
     },
     "olmo2-1b": {
@@ -78,6 +80,7 @@ MODELS = {
         "control_unit": 7884,
         "record_kind": "target",
         "dtype": "fp32",
+        "pile_maximum_source_dtype": "bf16",
     },
 }
 
@@ -168,14 +171,106 @@ def condition_seed(base_seed: int, model: str, dose: float, phase: str,
     return int.from_bytes(hashlib.sha256(payload).digest()[:SEED_DIGEST_BYTES], "little") & ((1 << SEED_BITS) - 1)
 
 
+def cell_parameters(base_seed: int, cell: dict, pile_maximum: float,
+                    target_column_norm: float, control_column_norm: float) -> dict:
+    """Compute the exact seed and set-value amplitude used for one writer cell."""
+    seed = condition_seed(base_seed, cell["model"], cell["dose"], cell["phase"],
+                         cell["question"], cell["kind"], cell["unit"])
+    set_value = float(cell["dose"]) * float(pile_maximum)
+    if cell["kind"] == "control":
+        set_value *= float(target_column_norm) / float(control_column_norm)
+    return {
+        "seed": seed,
+        "set_value": set_value,
+        "target_equivalent_set_value_norm": (
+            float(cell["dose"]) * float(pile_maximum) * float(target_column_norm)),
+    }
+
+
+def phase_position_mask(phase: str, prompt_length: int, sequence_length: int,
+                        is_prefill: bool) -> list[bool]:
+    """Return the amended Part 62 position mask for a prefill or decode call."""
+    if phase not in PHASES:
+        raise ValueError(f"unsupported phase {phase!r}; expected one of {PHASES}")
+    if prompt_length < 1 or sequence_length < 1:
+        raise ValueError("prompt and sequence lengths must be positive")
+    if phase == "both":
+        return [True] * sequence_length
+    if is_prefill:
+        if sequence_length < prompt_length:
+            raise ValueError("prefill sequence is shorter than the registered prompt")
+        if phase == "prompt":
+            return [position < prompt_length - 1 for position in range(sequence_length)]
+        return [position >= prompt_length - 1 for position in range(sequence_length)]
+    if sequence_length == 1:
+        return [phase == "gen"]
+    # Also handle generation implementations that re-run the full context.
+    if sequence_length < prompt_length:
+        raise ValueError("decode sequence is shorter than the registered prompt")
+    if phase == "prompt":
+        return [position < prompt_length - 1 for position in range(sequence_length)]
+    return [position >= prompt_length - 1 for position in range(sequence_length)]
+
+
+class PositionAwareHook:
+    """Wrap the shared NeuronHook with Part 62's amended position boundary."""
+
+    def __init__(self, down_proj, unit: int, value: float, phase: str,
+                 prompt_length: int, hook_factory, tensor_factory):
+        if phase not in PHASES:
+            raise ValueError(f"unsupported phase {phase!r}; expected one of {PHASES}")
+        if prompt_length < 1:
+            raise ValueError("prompt_length must be positive")
+        self.phase = phase
+        self.prompt_length = int(prompt_length)
+        self.prefill_seen = False
+        self.base_hook = hook_factory(down_proj)
+        self.base_hook.phase = "both"
+        self.base_hook.clamp = (tensor_factory([int(unit)]), tensor_factory([float(value)]))
+        self.base_hook.position_mask = None
+        self.tensor_factory = tensor_factory
+        # Replace NeuronHook's direct registration with a wrapper that chooses a
+        # position mask for the prefill or each cached decode call.
+        self.base_hook.handle.remove()
+        self.handle = down_proj.register_forward_pre_hook(self._hook)
+
+    @property
+    def clamp(self):
+        return self.base_hook.clamp
+
+    @clamp.setter
+    def clamp(self, value):
+        self.base_hook.clamp = value
+
+    def _hook(self, module, args):
+        sequence_length = int(args[0].shape[-2])
+        if not self.prefill_seen:
+            if sequence_length != self.prompt_length:
+                raise RuntimeError(
+                    f"first down_proj call has {sequence_length} positions; expected prompt length {self.prompt_length}")
+            is_prefill = True
+            self.prefill_seen = True
+        else:
+            is_prefill = sequence_length != 1
+        mask = phase_position_mask(self.phase, self.prompt_length, sequence_length, is_prefill)
+        self.base_hook.position_mask = self.tensor_factory(mask)
+        return self.base_hook._hook(module, args)
+
+    def remove(self):
+        self.handle.remove()
+
+
 def write_cell(out_dir: str | Path, spec: dict, condition: dict,
-               model_meta: dict) -> Path:
+               model_meta: dict, run_fingerprint: str | None = None,
+               cell_fingerprint: str | None = None) -> Path:
     """Write one generated cell in the format consumed by blind62.answers()."""
     out_dir = Path(out_dir)
     path = out_dir / cell_filename(spec)
     data = {
         "schema": "part62-cell-v1",
         "part": 62,
+        "run_fingerprint": run_fingerprint,
+        "cell_fingerprint": cell_fingerprint,
         "short_name": spec["model"],
         "model": model_meta["id"],
         "revision": model_meta["revision"],
@@ -240,25 +335,28 @@ def _pile_maximum(model_name: str, record_dir: Path) -> float:
 
 
 def make_phase_hook(down_proj, unit: int, value: float, phase: str,
-                    hook_factory=None, tensor_factory=None):
-    """Attach the production NeuronHook and set its supported clamp phase."""
+                    hook_factory=None, tensor_factory=None,
+                    prompt_length: int | None = None):
+    """Wrap the production NeuronHook with the amended Part 62 position mask."""
     if phase not in PHASES:
         raise ValueError(f"unsupported phase {phase!r}; expected one of {PHASES}")
+    if prompt_length is None or int(prompt_length) < 1:
+        raise ValueError("prompt_length is required for the Part 62 phase boundary")
     if hook_factory is None or tensor_factory is None:
         torch, nr, _p26 = _experiment_modules()
         hook_factory = hook_factory or nr.NeuronHook
         tensor_factory = tensor_factory or torch.tensor
-    hook = hook_factory(down_proj)
-    hook.phase = phase
-    hook.clamp = (tensor_factory([int(unit)]), tensor_factory([float(value)]))
-    return hook
+    return PositionAwareHook(down_proj, unit, value, phase, int(prompt_length),
+                             hook_factory, tensor_factory)
 
 
 def generate_condition(tok, model, down_proj, prompt_ids: dict, spec: dict,
                        unit: int, set_value: float, seed: int, device: str) -> dict:
     """Generate one eight-answer cell with the real phase-aware NeuronHook."""
     torch, _nr, p26 = _experiment_modules()
-    hook = make_phase_hook(down_proj, unit, set_value, spec["phase"])
+    prompt_length = int(prompt_ids["input_ids"].shape[-1])
+    hook = make_phase_hook(down_proj, unit, set_value, spec["phase"],
+                           prompt_length=prompt_length)
     try:
         torch.manual_seed(seed)
         with torch.inference_mode():
@@ -302,6 +400,163 @@ def _input_fingerprints(record_dir: Path, alien_frames: Path) -> dict:
     return {str(path): _sha256(path) for path in paths if path.is_file()}
 
 
+def _json_fingerprint(value: dict) -> str:
+    encoded = json.dumps(value, ensure_ascii=False, sort_keys=True,
+                         separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def _run_fingerprint(base_seed: int, record_dir: Path, alien_frames: Path,
+                     device: str, inputs: dict) -> str:
+    code_paths = (Path(__file__).resolve(), PROJECT_ROOT / "neuron_report.py",
+                  PROJECT_ROOT / "part26.py")
+    code_hashes = {str(path): _sha256(path) for path in code_paths if path.is_file()}
+    return _json_fingerprint({
+        "schema": "part62-run-fingerprint-v1",
+        "base_seed": int(base_seed),
+        "doses": list(DOSES), "phases": list(PHASES),
+        "questions": list(QUESTIONS), "samples": SAMPLES,
+        "control_doses": list(CONTROL_DOSES), "control_seed": CONTROL_SEED,
+        "generation_parameters": {"dtype": "torch.float32", "max_new_tokens": MAX_NEW_TOKENS,
+                                  "temperature": TEMPERATURE, "top_p": TOP_P},
+        "models": {name: {key: spec.get(key) for key in
+                           ("id", "revision", "layer", "unit", "expected_width", "control_unit")}
+                   for name, spec in MODELS.items()},
+        "record_dir": str(record_dir), "alien_frames": str(alien_frames),
+        "device": device, "inputs": inputs, "code_hashes": code_hashes,
+    })
+
+
+def _cell_fingerprint(run_fingerprint: str, cell: dict, model_meta: dict,
+                      parameters: dict) -> str:
+    return _json_fingerprint({"run_fingerprint": run_fingerprint, "cell": cell,
+                              "model_meta": model_meta, "parameters": parameters})
+
+
+def _model_meta_matches(saved: dict, current: dict) -> bool:
+    if not isinstance(saved, dict) or set(saved) != set(current):
+        return False
+    for key, value in current.items():
+        old = saved.get(key)
+        if isinstance(value, float):
+            if not isinstance(old, (int, float)) or not math.isclose(
+                    float(old), value, rel_tol=1e-7, abs_tol=1e-9):
+                return False
+        elif old != value:
+            return False
+    return True
+
+
+def _validate_resumable_cell(path: Path, cell: dict, model_meta: dict,
+                             parameters: dict, run_fingerprint: str,
+                             cell_fingerprint: str, saved_hash: str | None = None) -> None:
+    if not path.is_file():
+        raise ValueError(f"manifest-listed completed cell is missing: {path.name}")
+    if saved_hash is not None and _sha256(path) != saved_hash:
+        raise ValueError(f"completed cell file hash changed; refusing resume: {path.name}")
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValueError(f"cannot resume malformed cell {path.name}: {exc}") from exc
+    expected_identity = (cell["model"], float(cell["dose"]), cell["phase"],
+                         cell["question"], cell["kind"])
+    actual_identity = (data.get("short_name"), float(data.get("clamp_mult", -999)),
+                       data.get("phase"), data.get("question"), data.get("kind"))
+    if (data.get("schema") != "part62-cell-v1" or data.get("part") != 62
+            or actual_identity != expected_identity
+            or data.get("run_fingerprint") != run_fingerprint
+            or data.get("cell_fingerprint") != cell_fingerprint):
+        raise ValueError(f"cell fingerprint/spec mismatch; refusing to overwrite or reuse {path.name}")
+    conditions = data.get("conditions")
+    if not isinstance(conditions, list) or len(conditions) != 1:
+        raise ValueError(f"resumable cell must contain one condition: {path.name}")
+    condition = conditions[0]
+    answers = condition.get("answers")
+    if (condition.get("seed") != parameters["seed"]
+            or condition.get("unit") != cell["unit"]
+            or condition.get("phase") != cell["phase"]
+            or condition.get("kind") != cell["kind"]
+            or not isinstance(condition.get("set_value"), (int, float))
+            or not math.isclose(float(condition["set_value"]), parameters["set_value"], rel_tol=1e-7)
+            or condition.get("n") != SAMPLES or not isinstance(answers, list)
+            or len(answers) != SAMPLES or not all(isinstance(answer, str) for answer in answers)):
+        raise ValueError(f"resumable cell content does not match its fingerprint: {path.name}")
+
+
+def _expected_planned_cells() -> list[dict]:
+    return [{**cell, "file": cell_filename(cell)}
+            for model_name, spec in MODELS.items()
+            for cell in model_cell_specs(model_name, int(spec["control_unit"]))]
+
+
+def _new_manifest(base_seed: int, device: str, inputs: dict,
+                  fingerprint: str) -> dict:
+    return {
+        "schema": "part62-run-v1", "part": 62, "status": "running",
+        "started": time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()),
+        "base_seed": int(base_seed), "doses": list(DOSES), "phases": list(PHASES),
+        "questions": list(QUESTIONS), "samples_per_cell": SAMPLES,
+        "control_count": CONTROL_COUNT, "control_seed": CONTROL_SEED,
+        "expected_cell_count": expected_cell_count(),
+        "expected_generations": expected_generation_count(),
+        "generation_parameters": {"dtype": "torch.float32", "max_new_tokens": MAX_NEW_TOKENS,
+                                   "temperature": TEMPERATURE, "top_p": TOP_P},
+        "device": device, "inputs": inputs, "run_fingerprint": fingerprint,
+        "models": {}, "control_units": {name: int(spec["control_unit"])
+                                         for name, spec in MODELS.items()},
+        "planned_cells": _expected_planned_cells(), "completed": [],
+        "cell_fingerprints": {}, "cell_file_hashes": {}, "generated_answers": 0,
+    }
+
+
+def _load_or_start_manifest(out_dir: Path, base_seed: int, device: str,
+                            inputs: dict, fingerprint: str) -> dict:
+    path = out_dir / "part62-manifest.json"
+    actual_files = {item.name for item in out_dir.iterdir() if item.is_file()}
+    expected_names = {row["file"] for row in _expected_planned_cells()}
+    unexpected = {name for name in actual_files
+                  if name != path.name and name not in expected_names
+                  and not (name.startswith(".") and name.endswith(".tmp"))}
+    if unexpected:
+        raise FileExistsError(f"unexpected files in Part 62 output directory: {sorted(unexpected)[:3]}")
+    if not path.exists():
+        if actual_files:
+            raise FileExistsError(f"Part 62 output has files but no manifest: {out_dir}")
+        manifest = _new_manifest(base_seed, device, inputs, fingerprint)
+        _write_manifest(out_dir, manifest)
+        return manifest
+    try:
+        manifest = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValueError(f"cannot resume Part 62 manifest: {exc}") from exc
+    if manifest.get("status") not in ("running", "incomplete"):
+        raise FileExistsError(f"Part 62 run status {manifest.get('status')!r} is not resumable")
+    expected = _new_manifest(base_seed, device, inputs, fingerprint)
+    for key in ("schema", "part", "base_seed", "doses", "phases", "questions",
+                "samples_per_cell", "control_count", "control_seed", "expected_cell_count",
+                "expected_generations", "generation_parameters", "device", "inputs",
+                "run_fingerprint", "control_units", "planned_cells"):
+        if manifest.get(key) != expected.get(key):
+            raise ValueError(f"Part 62 run fingerprint/manifest mismatch at {key}; refusing resume")
+    completed = manifest.get("completed")
+    fingerprints = manifest.get("cell_fingerprints")
+    hashes = manifest.get("cell_file_hashes")
+    if (not isinstance(completed, list) or len(completed) != len(set(completed))
+            or not set(completed) <= expected_names
+            or not isinstance(fingerprints, dict) or not isinstance(hashes, dict)
+            or manifest.get("generated_answers") != len(completed) * SAMPLES):
+        raise ValueError("Part 62 manifest has inconsistent completed-cell records; refusing resume")
+    if set(fingerprints) != set(completed) or set(hashes) != set(completed):
+        raise ValueError("Part 62 manifest is missing a completed cell fingerprint/hash; refusing resume")
+    for name in completed:
+        if not (out_dir / name).is_file():
+            raise ValueError(f"manifest-listed completed cell is missing: {name}")
+    manifest["status"] = "running"
+    manifest.pop("error", None)
+    _write_manifest(out_dir, manifest)
+    return manifest
+
+
 def _column_norm(down_proj, unit: int) -> float:
     torch, _nr, _p26 = _experiment_modules()
     weight = down_proj.weight.detach().float()
@@ -325,6 +580,21 @@ def _scale_frames(tok, model, down_proj, layer: int, unit: int,
     if not math.isfinite(maximum) or maximum <= 0:
         raise ValueError(f"alien-frame maximum for layer {layer} unit {unit} is invalid")
     return maximum, len(rows)
+
+
+def validate_alien_frame_reference(model_name: str, frame_maximum: float) -> float | None:
+    """Fail a registered-reference check outside the pre-run 0.1% tolerance."""
+    reference = MODELS[model_name].get("alien_frame_reference")
+    if reference is None:
+        return None
+    if not math.isfinite(frame_maximum) or frame_maximum <= 0:
+        raise ValueError(f"{model_name} alien-frame maximum is invalid: {frame_maximum!r}")
+    relative_error = abs(frame_maximum - reference) / reference
+    if relative_error >= QWEN_ALIEN_FRAME_RELATIVE_TOLERANCE:
+        raise ValueError(f"{model_name} alien-frame maximum {frame_maximum:.8g} differs from "
+                         f"registered {reference:.8g} by {relative_error:.4%}; "
+                         f"tolerance is < {QWEN_ALIEN_FRAME_RELATIVE_TOLERANCE:.3%}")
+    return relative_error
 
 
 def _write_manifest(out_dir: Path, manifest: dict) -> None:
@@ -353,12 +623,14 @@ def _run_model(model_name: str, out_dir: Path, manifest: dict, pile_maximum: flo
             raise ValueError(f"registered control unit {control_unit} is invalid for {model_name}")
         frame_maximum, frame_count = _scale_frames(tok, model, down_proj, spec["layer"],
                                                    spec["unit"], alien_frames, device)
+        validate_alien_frame_reference(model_name, frame_maximum)
         target_column_norm = _column_norm(down_proj, spec["unit"])
         control_column_norm = _column_norm(down_proj, control_unit)
         model_meta = {
             "id": spec["id"], "revision": spec["revision"], "layer": spec["layer"],
             "target_unit": spec["unit"], "control_unit": control_unit, "width": width,
             "pile_maximum": pile_maximum, "alien_frame_maximum": frame_maximum,
+            "pile_maximum_source_dtype": spec["pile_maximum_source_dtype"],
             "registered_alien_frame_reference": spec.get("alien_frame_reference"),
             "alien_frame_count": frame_count,
             "target_column_norm": target_column_norm,
@@ -366,24 +638,42 @@ def _run_model(model_name: str, out_dir: Path, manifest: dict, pile_maximum: flo
             "control_seed": CONTROL_SEED,
         }
         specs = model_cell_specs(model_name, control_unit)
-        manifest["control_units"][model_name] = control_unit
+        saved_meta = manifest["models"].get(model_name)
+        if saved_meta is not None and not _model_meta_matches(saved_meta, model_meta):
+            raise ValueError(f"runtime model measurements changed for {model_name}; refusing resume")
         manifest["models"][model_name] = model_meta
-        manifest["planned_cells"].extend([{**row, "file": cell_filename(row)} for row in specs])
         _write_manifest(out_dir, manifest)
 
         for cell in specs:
-            path = out_dir / cell_filename(cell)
-            if path.exists():
-                raise FileExistsError(f"refusing to overwrite existing cell {path}")
-            condition_unit = cell["unit"]
+            filename = cell_filename(cell)
+            path = out_dir / filename
+            condition_unit = int(cell["unit"])
             condition_phase = cell["phase"]
-            seed = condition_seed(base_seed, model_name, cell["dose"], condition_phase,
-                                  cell["question"], cell["kind"], condition_unit)
-            if cell["kind"] == "twin":
-                set_value = float(cell["dose"]) * pile_maximum
-            else:
-                set_value = (float(cell["dose"]) * pile_maximum * target_column_norm /
-                             control_column_norm)
+            parameters = cell_parameters(base_seed, cell, pile_maximum,
+                                         target_column_norm, control_column_norm)
+            fingerprint = _cell_fingerprint(manifest["run_fingerprint"], cell,
+                                            model_meta, parameters)
+            completed = set(manifest["completed"])
+            saved_fingerprint = manifest["cell_fingerprints"].get(filename)
+            if saved_fingerprint is not None and saved_fingerprint != fingerprint:
+                raise ValueError(f"cell fingerprint changed; refusing to overwrite {filename}")
+            if path.exists():
+                _validate_resumable_cell(
+                    path, cell, model_meta, parameters, manifest["run_fingerprint"],
+                    fingerprint, manifest["cell_file_hashes"].get(filename))
+                if filename not in completed:
+                    manifest["completed"].append(filename)
+                    manifest["cell_fingerprints"][filename] = fingerprint
+                    manifest["cell_file_hashes"][filename] = _sha256(path)
+                    manifest["generated_answers"] += SAMPLES
+                    _write_manifest(out_dir, manifest)
+                continue
+            if filename in completed:
+                raise ValueError(f"manifest-listed completed cell is missing: {filename}")
+            if saved_fingerprint is not None:
+                raise ValueError(f"manifest has a fingerprint for missing cell {filename}")
+            seed = parameters["seed"]
+            set_value = parameters["set_value"]
             prompt = nr.build_prompt(tok, cell["question"], False)
             prompt_ids = tok(prompt, return_tensors="pt", add_special_tokens=False).to(device)
             condition = generate_condition(tok, model, down_proj, prompt_ids, cell,
@@ -393,10 +683,13 @@ def _run_model(model_name: str, out_dir: Path, manifest: dict, pile_maximum: flo
                 "target_pile_maximum": pile_maximum,
                 "target_column_norm": target_column_norm,
                 "control_column_norm": control_column_norm if cell["kind"] == "control" else None,
-                "target_equivalent_write_norm": float(cell["dose"]) * pile_maximum * target_column_norm,
+                "target_equivalent_set_value_norm": parameters["target_equivalent_set_value_norm"],
             })
-            write_cell(out_dir, cell, condition, model_meta)
-            manifest["completed"].append(cell_filename(cell))
+            write_cell(out_dir, cell, condition, model_meta,
+                       manifest["run_fingerprint"], fingerprint)
+            manifest["completed"].append(filename)
+            manifest["cell_fingerprints"][filename] = fingerprint
+            manifest["cell_file_hashes"][filename] = _sha256(path)
             manifest["generated_answers"] += SAMPLES
             _write_manifest(out_dir, manifest)
             print(f"{model_name} dose={cell['dose']:g} phase={condition_phase} "
@@ -417,26 +710,17 @@ def run(out_dir: str | Path, record_dir: str | Path = PART26_DIR,
     record_dir = Path(record_dir).resolve()
     alien_frames = Path(alien_frames).resolve()
     out_dir.mkdir(parents=True, exist_ok=True)
-    if any(out_dir.iterdir()):
-        raise FileExistsError(f"Part 62 output directory must be empty: {out_dir}")
     if not alien_frames.is_file():
         raise FileNotFoundError(f"missing Part 33 alien-frame record: {alien_frames}")
+    for required in (record_dir / "source.json", record_dir / "source.npz",
+                     record_dir / "target-olmo2-1b.json",
+                     record_dir / "target-olmo2-1b.npz", alien_frames):
+        if not required.is_file():
+            raise FileNotFoundError(f"missing Part 62 input file: {required}")
     pile_maxima = {model_name: _pile_maximum(model_name, record_dir) for model_name in MODELS}
-    manifest = {
-        "schema": "part62-run-v1", "part": 62, "status": "running",
-        "started": time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()),
-        "base_seed": int(base_seed), "doses": list(DOSES), "phases": list(PHASES),
-        "questions": list(QUESTIONS), "samples_per_cell": SAMPLES,
-        "control_count": CONTROL_COUNT, "control_seed": CONTROL_SEED,
-        "expected_cell_count": expected_cell_count(),
-        "expected_generations": expected_generation_count(),
-        "generation_parameters": {"dtype": "torch.float32", "max_new_tokens": MAX_NEW_TOKENS,
-                                   "temperature": TEMPERATURE, "top_p": TOP_P},
-        "inputs": _input_fingerprints(record_dir, alien_frames),
-        "models": {}, "control_units": {}, "planned_cells": [],
-        "completed": [], "generated_answers": 0,
-    }
-    _write_manifest(out_dir, manifest)
+    inputs = _input_fingerprints(record_dir, alien_frames)
+    fingerprint = _run_fingerprint(base_seed, record_dir, alien_frames, device, inputs)
+    manifest = _load_or_start_manifest(out_dir, base_seed, device, inputs, fingerprint)
     try:
         for model_name in MODELS:
             _run_model(model_name, out_dir, manifest, pile_maxima[model_name],

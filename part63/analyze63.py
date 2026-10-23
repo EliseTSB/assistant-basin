@@ -15,7 +15,6 @@ import reader63
 HERE = Path(__file__).resolve().parent
 DEFAULT_DATA_DIR = HERE / "results"
 KAPPA_THRESHOLD = 0.80  # Fixed prediction 63a.
-MAX_BAD_RATE = 0.02  # Refuse scoring when any scheme has more than 2% failed/unlabelled rows.
 REQUIRED_CELL_N = 24  # Predictions 63b-e use the three-question, eight-answer Part 54 cells.
 EARTH_BASE_MIN = 3  # Fixed prediction 63b.
 PLANET_BASE_MAX = 1  # Fixed prediction 63c.
@@ -23,17 +22,19 @@ PLANET_PLUS_ONE_MIN = 20  # Fixed prediction 63c.
 MAKER_DOWN_MIN = 10  # Fixed prediction 63d.
 MAKER_UNCLAMPED_MAX = 2  # Fixed prediction 63d.
 OPUS_COUNT_TOLERANCE = 2  # Fixed prediction 63e.
-DOSE_ZERO = 0.0
 DOSE_NEG_TWO = -2.0
 DOSE_POS_HALF = 0.5
 DOSE_POS_ONE = 1.0
 PREDICTION_63E_DOSES = (-1.0, 0.5, 1.0, 1.5, 2.0)
 OPUS_REFERENCE_63E_COUNTS = (0, 0, 1, 19, 24)  # Registered Part 54a counts, in dose order above.
 COARSE_MIN_OVERLAPS = 1
+DUPLICATE_AGREEMENT_THRESHOLD = 0.90
 
-PROXY_OFFWORLD = re.compile(r"alien|extraterrestrial|planet|galax|star|space|interstellar|species", re.I)
+PROXY_OFFWORLD = re.compile(
+    r"\b(?:alien|extraterrestrial|planet|galax(?:y|ies)|star|space|interstellar|species)\b", re.I
+)
 PROXY_SCIFI_EXTRA = re.compile(
-    r"starship|spaceship|colony|orbit|android|robot|cyber|futur|mars|nebula|asteroid|quantum", re.I
+    r"\b(?:starship|spaceship|colony|orbit|androids?|robots?|cyber\w*|futur\w*|mars|nebula|asteroid|quantum)\b", re.I
 )
 PROXY_EARTH = re.compile(r"\bearth\b", re.I)
 
@@ -112,10 +113,10 @@ def _sort_cell(cell: tuple[Any, ...]) -> tuple[Any, ...]:
 
 
 def print_failure_counts(counts: dict[str, dict[str, int]]) -> None:
-    print("scheme | total | failed | unlabelled | bad rate")
+    print("scheme | total | failed | unlabelled | bad rate | hand-label gate")
     for scheme, row in counts.items():
         rate = row["bad"] / row["total"] if row["total"] else 1.0
-        print(f"{scheme} | {row['total']} | {row['failed']} | {row['unlabelled']} | {rate:.3%}")
+        print(f"{scheme} | {row['total']} | {row['failed']} | {row['unlabelled']} | {rate:.3%} | not gated by hand labels")
 
 
 def print_cell_counts(key: dict[str, dict[str, Any]], records: dict[str, dict[str, Any]]) -> None:
@@ -127,7 +128,8 @@ def print_cell_counts(key: dict[str, dict[str, Any]], records: dict[str, dict[st
     for scheme, labels in schemes:
         cells = _cell_label_counts(key, records, scheme)
         print(f"\nPer-cell counts: {scheme}")
-        print("source | model | dose | kind | condition | unit | n | valid | " + " ".join(labels) + " | bad")
+        print("source | model | dose | kind | condition | unit | n | valid | " + " ".join(labels)
+              + " | bad | hand-label gate")
         for cell in sorted(cells, key=_sort_cell):
             counts = cells[cell]
             answers = [answer_id for answer_id, meta in key.items()
@@ -135,7 +137,47 @@ def print_cell_counts(key: dict[str, dict[str, Any]], records: dict[str, dict[st
             bad = sum(_scheme_status(records.get(answer_id, {}), scheme) != "ok"
                       or not isinstance(records.get(answer_id, {}).get(scheme), str) for answer_id in answers)
             print(" | ".join(str(value) for value in cell), "|", counts["n"], "|",
-                  counts["valid"], "|", " ".join(str(counts[label]) for label in labels), "|", bad)
+                  counts["valid"], "|", " ".join(str(counts[label]) for label in labels), "|", bad,
+                  "| not gated by hand labels")
+
+
+def _exact_scheme_label(record: dict[str, Any], scheme: str) -> Any:
+    if _scheme_status(record, scheme) != "ok":
+        return None
+    if scheme == "maker_identity":
+        name, kind = record.get("maker_name"), record.get("maker_kind")
+        return (name, kind) if (name is None or isinstance(name, str)) and isinstance(kind, str) else None
+    value = record.get(scheme)
+    return value if isinstance(value, str) else None
+
+
+def duplicate_consistency(pairs: list[dict[str, str]], records: dict[str, dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    """Compare exact parsed scheme labels for each answer and its seeded repeat."""
+    output: dict[str, dict[str, Any]] = {}
+    for scheme in ("planet_frame", "maker_identity", "origin"):
+        matches = valid = 0
+        for pair in pairs:
+            left = _exact_scheme_label(records.get(pair["answer_id"], {}), scheme)
+            right = _exact_scheme_label(records.get(pair["duplicate_id"], {}), scheme)
+            if left is None or right is None:
+                continue
+            valid += 1
+            matches += left == right
+        rate = matches / valid if valid else None
+        output[scheme] = {"matches": matches, "n": valid, "agreement": rate,
+                          "threshold": DUPLICATE_AGREEMENT_THRESHOLD,
+                          "unreliable_reader": rate is None or rate < DUPLICATE_AGREEMENT_THRESHOLD}
+    return output
+
+
+def print_duplicate_consistency(counts: dict[str, dict[str, Any]]) -> None:
+    print("\nDuplicate consistency (exact label match; seeded repeated answers):")
+    print("scheme | exact agreement | matches | n | reader status | hand-label gate")
+    for scheme, row in counts.items():
+        rate = row["agreement"]
+        shown = "unavailable" if rate is None else f"{rate:.1%}"
+        status = "unreliable reader" if row["unreliable_reader"] else "agreement >= 90%"
+        print(f"{scheme} | {shown} | {row['matches']} | {row['n']} | {status} | not gated by hand labels")
 
 
 def keyword_views(key: dict[str, dict[str, Any]], records: dict[str, dict[str, Any]],
@@ -172,13 +214,14 @@ def keyword_views(key: dict[str, dict[str, Any]], records: dict[str, dict[str, A
     print(f"off-world → planet other-planet-or-space: {overlap['offworld_planet']}/{totals['offworld_proxy']}")
     print(f"Earth → origin EARTH: {overlap['earth_origin']}/{totals['earth_proxy']}")
     print("\nPer-cell keyword proxy views:")
-    print("source | model | dose | kind | condition | unit | n | off-world | sci-fi | Earth")
+    print("source | model | dose | kind | condition | unit | n | off-world | sci-fi | Earth | hand-label gate")
     for cell in sorted(proxy_cells, key=_sort_cell):
         counts = proxy_cells[cell]
         if not (counts["offworld"] or counts["sci_fi"] or counts["earth"]):
             continue
         print(" | ".join(str(value) for value in cell), "|", counts["n"], "|",
-              counts["offworld"], "|", counts["sci_fi"], "|", counts["earth"])
+              counts["offworld"], "|", counts["sci_fi"], "|", counts["earth"],
+              "| not gated by hand labels")
     # This deliberately coarse gate catches empty or inverted label pipelines, not semantic disagreements.
     passed = (overlap["offworld_origin"] >= COARSE_MIN_OVERLAPS
               and overlap["earth_origin"] >= COARSE_MIN_OVERLAPS
@@ -202,11 +245,20 @@ def cohen_kappa(left: list[str], right: list[str]) -> float | None:
 
 
 def _selected_rows(key: dict[str, dict[str, Any]], records: dict[str, dict[str, Any]],
-                   *, scheme: str, **criteria: Any) -> list[tuple[str, dict[str, Any], dict[str, Any]]]:
+                   *, scheme: str, text_by_id: dict[str, str] | None = None,
+                   dedupe_by_text: bool = False, **criteria: Any) -> list[tuple[str, dict[str, Any], dict[str, Any]]]:
     rows = []
+    seen_texts: set[str] = set()
     for answer_id, meta in key.items():
         if not answer_id.startswith("a") or any(meta.get(name) != value for name, value in criteria.items()):
             continue
+        if dedupe_by_text:
+            if text_by_id is None or answer_id not in text_by_id:
+                raise AnalysisError("text-deduplicated selection requires every answer text")
+            text = text_by_id[answer_id]
+            if text in seen_texts:
+                continue
+            seen_texts.add(text)
         record = records.get(answer_id, {})
         if _scheme_status(record, scheme) == "ok":
             rows.append((answer_id, meta, record))
@@ -222,11 +274,15 @@ def _prediction_line(name: str, held: bool, numbers: str) -> None:
     print(f"{name}: {'HELD' if held else 'FAILED'} ({numbers})")
 
 
-def evaluate_predictions(key: dict[str, dict[str, Any]], records: dict[str, dict[str, Any]]) -> dict[str, Any]:
+def evaluate_predictions(key: dict[str, dict[str, Any]], records: dict[str, dict[str, Any]],
+                         text_by_id: dict[str, str],
+                         reliability: dict[str, dict[str, Any]] | None = None) -> dict[str, Any]:
     output: dict[str, Any] = {}
 
     # 63a: shared Part 54a answer-level origin labels, compared to the existing Opus label.
     shared_rows = _selected_rows(key, records, scheme="origin", source="part54a", model="qwen35-4b")
+    expected_63a = sum(meta.get("source") == "part54a" and meta.get("model") == "qwen35-4b"
+                       for answer_id, meta in key.items() if answer_id.startswith("a"))
     shared_haiku: list[str] = []
     shared_opus: list[str] = []
     for _answer_id, meta, record in shared_rows:
@@ -234,31 +290,41 @@ def evaluate_predictions(key: dict[str, dict[str, Any]], records: dict[str, dict
         if isinstance(opus, list) and opus and opus[0] in reader63.ORIGIN_LABELS:
             shared_haiku.append(record["origin"])
             shared_opus.append(opus[0])
+    if len(shared_rows) != expected_63a or len(shared_haiku) != expected_63a or len(shared_opus) != expected_63a:
+        raise AnalysisError(f"63a full paired denominator is incomplete: {len(shared_haiku)}/{expected_63a}")
     kappa = cohen_kappa(shared_haiku, shared_opus)
     held_63a = kappa is not None and kappa >= KAPPA_THRESHOLD
     _prediction_line("63a", held_63a, f"kappa={kappa if kappa is not None else 'undefined'}; n={len(shared_haiku)}; threshold={KAPPA_THRESHOLD:.2f}")
     output["63a"] = {"held": held_63a, "kappa": kappa, "n": len(shared_haiku), "threshold": KAPPA_THRESHOLD}
 
-    # 63b: any unclamped/control Qwen3-4B, dose/condition cell has at least 3 EARTH out of 24.
+    # 63b: the copied unclamped baseline is one text-deduplicated group; controls stay cell-specific.
     earth_cells: list[tuple[tuple[Any, ...], int, int, int]] = []
     for cell, counts in _cell_label_counts(key, records, "origin").items():
         source, model, _dose, kind, _condition, _unit = cell
-        if source == "part54b" and model == "qwen3-4b" and kind in ("unclamped", "control"):
+        if source == "part54b" and model == "qwen3-4b" and kind == "control":
             earth_cells.append((cell, counts["n"], counts["valid"], counts["EARTH"]))
+    unclamped_63b = _selected_rows(key, records, scheme="origin", text_by_id=text_by_id,
+                                   dedupe_by_text=True, source="part54b", model="qwen3-4b",
+                                   kind="unclamped")
+    baseline_earth = _count_label(unclamped_63b, "origin", "EARTH")
+    earth_cells.append((("part54b", "qwen3-4b", "unclamped-deduplicated", "unclamped", "unclamped", None),
+                        len(unclamped_63b), len(unclamped_63b), baseline_earth))
     matching_earth_cells = [(cell, n, valid, earth) for cell, n, valid, earth in earth_cells
-                            if n == REQUIRED_CELL_N and valid == REQUIRED_CELL_N and earth >= EARTH_BASE_MIN]
+                            if n > 0 and valid == n and earth >= EARTH_BASE_MIN
+                            and ("unclamped-deduplicated" in cell or n == REQUIRED_CELL_N)]
     held_63b = bool(matching_earth_cells)
     first = matching_earth_cells[0] if matching_earth_cells else None
     _prediction_line("63b", held_63b,
                      f"qualifying cells={len(matching_earth_cells)}/{len(earth_cells)}; "
                      f"example={first[0] if first else 'none'} EARTH={first[3] if first else 0}/"
                      f"{first[1] if first else REQUIRED_CELL_N} valid={first[2] if first else 0}; "
-                     f"threshold={EARTH_BASE_MIN}/{REQUIRED_CELL_N}")
-    output["63b"] = {"held": held_63b, "qualifying_cells": len(matching_earth_cells), "cells": len(earth_cells)}
+                     f"threshold=at least {EARTH_BASE_MIN} EARTH labels; unclamped uses unique-text n, controls require {REQUIRED_CELL_N}")
+    output["63b"] = {"held": held_63b, "qualifying_cells": len(matching_earth_cells), "cells": len(earth_cells),
+                     "unclamped_deduplicated": [baseline_earth, len(unclamped_63b)]}
 
-    # 63c: baseline low, +1 high, and a strict increase between the two observed positive doses.
-    baseline = _selected_rows(key, records, scheme="planet_frame", source="part54b", model="qwen3-4b", dose=DOSE_ZERO,
-                              kind="unclamped", condition="unclamped")
+    # 63c: the real key carries source doses on copied baselines, so KIND selects and text dedupes them.
+    baseline = _selected_rows(key, records, scheme="planet_frame", text_by_id=text_by_id,
+                              dedupe_by_text=True, source="part54b", model="qwen3-4b", kind="unclamped")
     plus_half = _selected_rows(key, records, scheme="planet_frame", source="part54b", model="qwen3-4b", dose=DOSE_POS_HALF,
                                kind="twin", condition="twin")
     plus_one = _selected_rows(key, records, scheme="planet_frame", source="part54b", model="qwen3-4b", dose=DOSE_POS_ONE,
@@ -266,30 +332,47 @@ def evaluate_predictions(key: dict[str, dict[str, Any]], records: dict[str, dict
     base_count = _count_label(baseline, "planet_frame", "other-planet-or-space")
     half_count = _count_label(plus_half, "planet_frame", "other-planet-or-space")
     one_count = _count_label(plus_one, "planet_frame", "other-planet-or-space")
-    held_63c = (len(baseline) == REQUIRED_CELL_N and len(plus_half) == REQUIRED_CELL_N
+    held_63c = (len(baseline) > 0 and len(plus_half) == REQUIRED_CELL_N
                 and len(plus_one) == REQUIRED_CELL_N and base_count <= PLANET_BASE_MAX
                 and one_count >= PLANET_PLUS_ONE_MIN and half_count < one_count)
     _prediction_line("63c", held_63c,
-                     f"unclamped={base_count}/{len(baseline)} (<= {PLANET_BASE_MAX}/{REQUIRED_CELL_N}); "
+                     f"unclamped unique texts={base_count}/{len(baseline)} (<= {PLANET_BASE_MAX}); "
                      f"+0.5={half_count}/{len(plus_half)}; +1={one_count}/{len(plus_one)} "
                      f"(>= {PLANET_PLUS_ONE_MIN}/{REQUIRED_CELL_N}, strict rise required)")
     output["63c"] = {"held": held_63c, "unclamped": [base_count, len(baseline)],
                      "+0.5": [half_count, len(plus_half)], "+1": [one_count, len(plus_one)]}
 
-    # 63d: compare maker categories after blind extraction; model-specific lab matching is post-read.
+    # 63d's registered result uses the exact lab name; broad maker aliases are a sensitivity view.
     down = _selected_rows(key, records, scheme="maker_identity", source="part54a", model="qwen35-4b", dose=DOSE_NEG_TWO,
                           kind="twin", condition="twin")
-    unclamped = _selected_rows(key, records, scheme="maker_identity", source="part54a", model="qwen35-4b", dose=DOSE_ZERO,
-                               kind="unclamped", condition="unclamped")
-    down_count = sum(row[2].get("maker_identity") in ("another-real-lab", "invented-or-non-lab") for row in down)
-    un_count = sum(row[2].get("maker_identity") in ("another-real-lab", "invented-or-non-lab") for row in unclamped)
-    held_63d = (len(down) == REQUIRED_CELL_N and len(unclamped) == REQUIRED_CELL_N
-                and down_count >= MAKER_DOWN_MIN and un_count <= MAKER_UNCLAMPED_MAX)
-    _prediction_line("63d", held_63d,
-                     f"-2 another-real/invented={down_count}/{len(down)} (>= {MAKER_DOWN_MIN}/{REQUIRED_CELL_N}); "
-                     f"unclamped={un_count}/{len(unclamped)} (<= {MAKER_UNCLAMPED_MAX}/{REQUIRED_CELL_N})")
-    output["63d"] = {"held": held_63d, "dose_minus_2": [down_count, len(down)],
-                     "unclamped": [un_count, len(unclamped)]}
+    unclamped = _selected_rows(key, records, scheme="maker_identity", text_by_id=text_by_id,
+                               dedupe_by_text=True, source="part54a", model="qwen35-4b", kind="unclamped")
+
+    def maker_counts(rows: list[tuple[str, dict[str, Any], dict[str, Any]]], field: str) -> int:
+        return sum(row[2].get(field) in ("another-real-lab", "invented-or-non-lab") for row in rows)
+
+    strict_down = maker_counts(down, "maker_identity")
+    strict_unclamped = maker_counts(unclamped, "maker_identity")
+    alias_down = maker_counts(down, "maker_identity_alias")
+    alias_unclamped = maker_counts(unclamped, "maker_identity_alias")
+    strict_held = (len(down) == REQUIRED_CELL_N and len(unclamped) == REQUIRED_CELL_N
+                   and strict_down >= MAKER_DOWN_MIN and strict_unclamped <= MAKER_UNCLAMPED_MAX)
+    alias_held = (len(down) == REQUIRED_CELL_N and len(unclamped) == REQUIRED_CELL_N
+                  and alias_down >= MAKER_DOWN_MIN and alias_unclamped <= MAKER_UNCLAMPED_MAX)
+    _prediction_line("63d registered (strict exact lab name)", strict_held,
+                     f"-2 another-real/invented={strict_down}/{len(down)} (>= {MAKER_DOWN_MIN}/{REQUIRED_CELL_N}); "
+                     f"unclamped={strict_unclamped}/{len(unclamped)} (<= {MAKER_UNCLAMPED_MAX}/{REQUIRED_CELL_N})")
+    _prediction_line("63d alias sensitivity", alias_held,
+                     f"-2 another-real/invented={alias_down}/{len(down)}; "
+                     f"unclamped={alias_unclamped}/{len(unclamped)}")
+    output["63d"] = {
+        "registered_reading": "strict exact lab name; Qwen3.5 own lab is Tongyi Lab",
+        "held": strict_held,
+        "registered_strict": {"held": strict_held, "dose_minus_2": [strict_down, len(down)],
+                              "unclamped": [strict_unclamped, len(unclamped)]},
+        "alias_sensitivity": {"held": alias_held, "dose_minus_2": [alias_down, len(down)],
+                              "unclamped": [alias_unclamped, len(unclamped)]},
+    }
 
     # 63e: Haiku OFFWORLD counts stay within two of the frozen Part 54a Opus counts.
     comparisons = []
@@ -313,6 +396,19 @@ def evaluate_predictions(key: dict[str, dict[str, Any]], records: dict[str, dict
     held_63e = len(comparisons) == len(PREDICTION_63E_DOSES) and all(row["within"] for row in comparisons)
     _prediction_line("63e", held_63e, f"within-tolerance cells={sum(row['within'] for row in comparisons)}/{len(comparisons)}")
     output["63e"] = {"held": held_63e, "comparisons": comparisons}
+    scheme_for_prediction = {"63a": "origin", "63b": "origin", "63c": "planet_frame",
+                             "63d": "maker_identity", "63e": "origin"}
+    print("\nPrediction table | reader reliability")
+    print("prediction | result | reader status | hand-label gate")
+    for name, scheme in scheme_for_prediction.items():
+        unreliable = bool(reliability and reliability.get(scheme, {}).get("unreliable_reader"))
+        status = "unreliable reader" if unreliable else "agreement >= 90%"
+        output[name]["reader_status"] = status
+        output[name]["unreliable_reader"] = unreliable
+        print(f"{name} | {'HELD' if output[name].get('held') else 'FAILED'} | {status} | not gated by hand labels")
+    if "63d" in output:
+        output["63d"]["alias_sensitivity"]["reader_status"] = output["63d"]["reader_status"]
+        output["63d"]["alias_sensitivity"]["unreliable_reader"] = output["63d"]["unreliable_reader"]
     return output
 
 
@@ -323,22 +419,32 @@ def answer_text_map(answer_rows: list[dict[str, str]]) -> dict[str, str]:
 def analyze(data_dir: Path, labels_path: Path) -> dict[str, Any]:
     answer_rows, key, _manifest = reader63.load_bundle(data_dir)
     labels = read_labels(labels_path)
-    if labels.get("scoring_gate_passed") is not True or labels.get("calibration", {}).get("passed") is not True:
+    if labels.get("calibration", {}).get("passed") is not True:
         raise AnalysisError("calibration gate failed; refusing to score any scheme")
     records = labels["records"]
     failures = failure_counts(key, records)
     print("Per-scheme unlabelled/failed counts:")
     print_failure_counts(failures)
-    blocked = {scheme: row for scheme, row in failures.items()
-               if not row["total"] or row["bad"] / row["total"] > MAX_BAD_RATE}
+    blocked = {scheme: row for scheme, row in failures.items() if not row["total"] or row["bad"] > 0}
     if blocked:
-        raise AnalysisError("per-scheme failed plus unlabelled rate exceeds 2%; refusing to score")
+        raise AnalysisError("failed or unlabelled answers remain after the one retry; refusing to score")
+    if labels.get("scoring_gate_passed") is not True:
+        raise AnalysisError("reader scoring gate failed after collection; refusing to score")
+    duplicate_meta = labels.get("duplicate_consistency", {})
+    duplicate_pairs = duplicate_meta.get("pairs") if isinstance(duplicate_meta, dict) else None
+    if not isinstance(duplicate_pairs, list) or len(duplicate_pairs) != reader63.DUPLICATE_COUNT:
+        raise AnalysisError("labels do not contain the required seeded duplicate pairs")
+    agreements = duplicate_consistency(duplicate_pairs, records)
+    if any(row["n"] != reader63.DUPLICATE_COUNT for row in agreements.values()):
+        raise AnalysisError("duplicate consistency is missing one or more valid pair labels")
+    print_duplicate_consistency(agreements)
     print_cell_counts(key, records)
     proxy_counts, proxy_passed = keyword_views(key, records, answer_text_map(answer_rows))
     if not proxy_passed:
         raise AnalysisError("coarse keyword sanity gate failed; refusing to score predictions")
-    predictions = evaluate_predictions(key, records)
-    return {"failures": failures, "keyword_proxy": proxy_counts, "predictions": predictions}
+    predictions = evaluate_predictions(key, records, answer_text_map(answer_rows), agreements)
+    return {"failures": failures, "keyword_proxy": proxy_counts,
+            "duplicate_consistency": agreements, "predictions": predictions}
 
 
 def main(argv: list[str] | None = None) -> None:

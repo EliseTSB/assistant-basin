@@ -31,7 +31,8 @@ CONTROL_COUNT = 10  # Part 61 adds ten controls after excluding the prior three.
 CANDIDATE_POOL_SEED = 0  # Part 26/59 seed used to form the original 20-candidate pool.
 CONTROL_DRAW_SEED = 61  # Fixed Part 61 seed used to draw ten from the remaining candidates.
 CONTROL_PERCENTILE = 99.0  # Registered pooled percentile at each write size.
-NULL_THRESHOLD = 0.00005  # Registered absolute-change floor for a symmetric responder.
+NULL_PASS_PROBABILITY = 0.00005  # Registered chance probability; no absolute-change floor is used.
+ABSOLUTE_CHANGE_FLOOR = None  # Match Part 59B's pooled P99 rule exactly.
 DEFAULT_BATCH_SIZE = 1  # Stream documents one at a time for the 4B fp32 model.
 
 SOURCE_JSON = ROOT / "results/part26/source.json"
@@ -288,13 +289,29 @@ def load_target_pile_maximum(short: str, layer: int, unit: int, *, source_json: 
         if not any((int(row.get("layer", -1)), int(row.get("unit", -1))) == (layer, unit)
                    for row in target.get("twin_candidates_n2742", [])):
             raise ValueError("Part 26 OLMo target record lacks the registered 10:6978 twin")
+        recorded_source_hashes = target.get("input_shas", {})
+        if (recorded_source_hashes.get("source.json") != _sha(source_json)
+                or recorded_source_hashes.get("source.npz") != _sha(source_npz)):
+            raise ValueError("Part 26 OLMo target record source hashes do not match Part 61 inputs")
         with np.load(olmo_target_npz) as archive:
             widths = np.asarray(archive["layer_widths"], dtype=np.int64)
             offsets = np.asarray(archive["layer_offsets"], dtype=np.int64)
             maxima = np.asarray(archive["max_activation"], dtype=np.float32)
+        recorded_widths = np.asarray(target.get("layer_widths", []), dtype=np.int64)
+        expected_offsets = np.cumsum(np.r_[0, widths[:-1]], dtype=np.int64)
+        if (widths.ndim != 1 or offsets.shape != widths.shape or len(widths) != target.get("n_layers")
+                or not np.array_equal(widths, recorded_widths)
+                or not np.array_equal(offsets, expected_offsets)
+                or maxima.ndim != 1 or len(maxima) != int(widths.sum())):
+            raise ValueError("Part 26 OLMo target JSON and NPZ layer layouts do not match")
         if layer >= len(widths) or unit < 0 or unit >= widths[layer]:
             raise ValueError("registered OLMo target lies outside the saved Part 26 activation record")
         value = float(maxima[offsets[layer] + unit])
+        recorded_row = next(row for row in target["twin_candidates_n2742"]
+                            if (int(row.get("layer", -1)), int(row.get("unit", -1))) == (layer, unit))
+        recorded_value = float(recorded_row.get("largest_activation", np.nan))
+        if not np.isfinite(recorded_value) or not np.isclose(value, recorded_value, rtol=0, atol=0):
+            raise ValueError("Part 26 OLMo target JSON maximum does not match its NPZ value")
     else:
         raise ValueError(f"unknown Part 61 model {short!r}")
     if value is None or not np.isfinite(value) or value <= 0:
@@ -340,6 +357,46 @@ def _load_state(path: Path, unit_count: int, size_count: int, sign_count: int,
         residual_by_doc[:] = prior_residual
         ratios[:] = prior_ratios
     return baseline, conditions, residual_by_doc, ratios
+
+
+def _valid_complete_archive(path: Path, manifest: dict, steps: list[str]) -> bool:
+    """Check a completed archive before reusing it without loading the model."""
+    try:
+        with np.load(path) as saved:
+            baseline = np.asarray(saved["baseline_mean"], dtype=np.float32)
+            conditions = np.asarray(saved["condition_mean"], dtype=np.float32)
+            changes = np.asarray(saved["change"], dtype=np.float32)
+            residual_by_doc = np.asarray(saved["baseline_residual_norm_by_doc"], dtype=np.float32)
+            residual_ratios = np.asarray(saved["residual_norm_ratio"], dtype=np.float32)
+            condition_units = np.asarray(saved["condition_unit"], dtype=np.int32).tolist()
+            write_sizes = np.asarray(saved["write_sizes"], dtype=np.float32).tolist()
+            signs = np.asarray(saved["signs"], dtype=np.float32).tolist()
+        expected = (len(manifest["condition_units"]), len(WRITE_SIZES), len(SIGNS), len(baseline))
+        return (
+            manifest.get("status") == "complete"
+            and set(manifest.get("completed", [])) == set(steps)
+            and baseline.ndim == 1 and len(baseline) > 0
+            and conditions.shape == expected and changes.shape == expected
+            and residual_ratios.shape == expected[:3]
+            and residual_by_doc.shape == (DOCUMENT_COUNT,)
+            and condition_units == manifest["condition_units"]
+            and write_sizes == list(WRITE_SIZES) and signs == list(SIGNS)
+            and np.isfinite(baseline).all() and np.isfinite(conditions).all()
+            and np.isfinite(changes).all() and np.isfinite(residual_by_doc).all()
+            and np.isfinite(residual_ratios).all()
+            and np.array_equal(changes, conditions - baseline[None, None, None, :])
+        )
+    except (OSError, KeyError, TypeError, ValueError):
+        return False
+
+
+def _carry_forward_checkpoint_stats(manifest: dict, previous: dict | None) -> None:
+    """Preserve per-checkpoint memory statistics when resuming a partial scan."""
+    if previous is None:
+        return
+    for key in ("baseline_stats", "condition_stats"):
+        if key in previous:
+            manifest[key] = previous[key]
 
 
 def _persist(path: Path, baseline: np.ndarray, conditions: np.ndarray,
@@ -388,6 +445,7 @@ def _run_locked(args, short: str, model_id: str, revision: str, out_dir: Path) -
     import torch
 
     spec = MODEL_SPECS[short]
+    model_spec = p26.MODELS[short]
     docs = source_documents(args.source_json)
     layer_i, target_unit, width = spec["layer"], spec["unit"], spec["width"]
     candidate_pool, prior_controls, controls = select_control_units(width, target_unit)
@@ -413,11 +471,18 @@ def _run_locked(args, short: str, model_id: str, revision: str, out_dir: Path) -
         "candidate_pool_seed": CANDIDATE_POOL_SEED, "candidate_pool": candidate_pool,
         "prior_controls_excluded": prior_controls, "control_draw_seed": CONTROL_DRAW_SEED,
         "control_units": controls, "condition_units": condition_units,
-        "target_pile_maximum": target_maximum, "write_sizes": list(WRITE_SIZES),
-        "signs": list(SIGNS), "null_threshold": NULL_THRESHOLD,
+        "target_pile_maximum": target_maximum,
+        "target_pile_maximum_source_dtype": model_spec["dtype"],
+        "write_sizes": list(WRITE_SIZES),
+        "signs": list(SIGNS), "null_pass_probability": NULL_PASS_PROBABILITY,
+        "absolute_change_floor": ABSOLUTE_CHANGE_FLOOR,
         "control_percentile": CONTROL_PERCENTILE, "documents": len(docs),
         "source_documents_total": p26.SOURCE_DOCS,
         "document_selection": "first 200 documents from the Part 26 saved source record",
+        "comparison_scope": {
+            "counts": "within-run comparisons only",
+            "part59b": "not comparable: Part 61 uses 200 documents while Part 59B used 1,000",
+        },
         "mean_definition": "equal-weight mean over each document's valid-token mean of later-layer MLP down_proj inputs",
         "residual_norm_definition": "per-document mean token L2 norm of the residual stream entering the next decoder layer; report the mean of document-wise clamped/unclamped ratios",
         "batch_size": args.batch_size, "inputs_sha256": input_shas,
@@ -428,28 +493,23 @@ def _run_locked(args, short: str, model_id: str, revision: str, out_dir: Path) -
     old = None
     identity_keys = ("model", "revision", "short_name", "dtype", "twin", "candidate_pool_seed",
                      "candidate_pool", "prior_controls_excluded", "control_draw_seed", "control_units",
-                     "condition_units", "target_pile_maximum", "write_sizes", "signs", "null_threshold",
+                     "condition_units", "target_pile_maximum", "target_pile_maximum_source_dtype",
+                     "write_sizes", "signs", "null_pass_probability", "absolute_change_floor",
                      "control_percentile", "documents", "source_documents_total", "document_selection",
-                     "mean_definition", "residual_norm_definition", "batch_size", "inputs_sha256", "steps")
+                     "comparison_scope", "mean_definition", "residual_norm_definition", "batch_size",
+                     "inputs_sha256", "steps")
     if manifest_path.exists():
         old = json.loads(manifest_path.read_text(encoding="utf-8"))
         if not all(old.get(key) == manifest.get(key) for key in identity_keys) and not force:
             raise ValueError(f"existing Part 61 manifest does not match this run: {manifest_path}")
-        if old.get("status") == "complete" and not force and result_path.is_file():
-            try:
-                with np.load(result_path) as saved:
-                    complete = (set(old.get("completed", [])) == set(steps)
-                                and np.isfinite(saved["baseline_mean"]).all()
-                                and np.isfinite(saved["condition_mean"]).all()
-                                and np.isfinite(saved["residual_norm_ratio"]).all()
-                                and np.asarray(saved["write_sizes"]).tolist() == list(WRITE_SIZES)
-                                and np.asarray(saved["signs"]).tolist() == list(SIGNS))
-            except (OSError, KeyError, ValueError):
-                complete = False
-            if complete:
-                raise FileExistsError(f"Part 61 is already complete: {manifest_path}; pass --force to rerun")
+        if (old.get("status") == "complete" and not force and result_path.is_file()
+                and _valid_complete_archive(result_path, old, steps)
+                and all(key in old for key in ("w_down_column_norms", "target_1x_write_norm",
+                                                "clamp_values", "later_layers", "neuron_count"))):
+            print(f"61 {short}: reusing complete scan {result_path}; running analysis only", flush=True)
+            return old
     elif result_path.exists() and not force:
-        raise FileExistsError(f"Part 61 archive exists without a manifest: {result_path}")
+        raise ValueError(f"Part 61 archive exists without a manifest and cannot be reused: {result_path}")
 
     tok = model = None
     manifest_written = False
@@ -503,6 +563,10 @@ def _run_locked(args, short: str, model_id: str, revision: str, out_dir: Path) -
             baseline, conditions, baseline_residual, residual_ratios = _load_state(
                 result_path, len(condition_units), len(WRITE_SIZES), len(SIGNS), len(neuron_layers))
         completed = set() if force or old is None else set(old.get("completed", []))
+        if old is not None and old.get("status") == "complete" and not force:
+            completed.clear()
+        if old is not None and not force:
+            _carry_forward_checkpoint_stats(manifest, old)
         manifest["completed"] = sorted(completed)
         _atomic_json(manifest, manifest_path)
         manifest_written = True

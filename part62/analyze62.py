@@ -25,8 +25,8 @@ except ImportError:
 OFFWORLD_RE = re.compile(r"alien|extraterrestrial|planet|galax|star|space|interstellar|species", re.IGNORECASE)
 # The review's SCIFI proxy adds these terms to the OFFWORLD proxy.
 SCIFI_EXTRA_RE = re.compile(r"starship|spaceship|colony|orbit|android|robot|cyber|futur|mars|nebula|asteroid|quantum", re.IGNORECASE)
-# The review's Earth proxy matches the whole word only.
-EARTH_RE = re.compile(r"\bearth\b", re.IGNORECASE)
+# The registered review proxy matches the prefix "earth" after a word boundary.
+EARTH_RE = re.compile(r"\bearth", re.IGNORECASE)
 # Width is ln(9) on each side of the logistic midpoint, so use the exact 10-90% span.
 TEN_TO_NINETY_LOGIT_SPAN = 2.0 * math.log(9.0)
 # This is the iteration cap for the two-parameter binomial logistic maximum-likelihood fit.
@@ -132,6 +132,31 @@ def fit_logistic(points: list[tuple[float, int, int]]) -> dict:
             "width_10_90": width, "intercept": intercept}
 
 
+def bracket_10_90(points: list[tuple[float, int, int]]) -> dict | None:
+    """Bracket the 10–90 transition when a finite logistic fit is unavailable."""
+    usable = sorted((float(x), int(successes), int(total)) for x, successes, total in points
+                    if int(total) > 0 and 0 <= int(successes) <= int(total))
+    if (len(usable) != len(points) or len(usable) < 2
+            or len({point[0] for point in usable}) != len(usable)):
+        return None
+    first_high = next(((x, successes / total) for x, successes, total in usable
+                       if successes / total >= 0.9), None)
+    if first_high is None:
+        return None
+    lower = [(x, successes / total) for x, successes, total in usable
+             if x < first_high[0] and successes / total < 0.1]
+    if not lower:
+        return None
+    last_low = lower[-1]
+    return {
+        "last_below_10_dose": last_low[0],
+        "last_below_10_share": last_low[1],
+        "first_at_or_above_90_dose": first_high[0],
+        "first_at_or_above_90_share": first_high[1],
+        "width_10_90": first_high[0] - last_low[0],
+    }
+
+
 def _count_row(counts: dict, group: tuple) -> dict:
     return counts.setdefault(group, {"n": 0, "EARTH": 0, "OFFWORLD": 0,
                                      "NEITHER": 0, "BROKEN": 0,
@@ -176,6 +201,11 @@ def fit_by_model_phase(counts: dict, models: dict) -> dict:
                     fit["midpoint"] * meta["pile_maximum"] / meta["alien_frame_maximum"])
             else:
                 fit["midpoint_alien_frame_units"] = None
+                bracket = bracket_10_90(points)
+                if bracket is not None:
+                    fit.update({"status": "bracketed", "bracket": bracket,
+                                "width_10_90": bracket["width_10_90"],
+                                "mle_status": "not-estimable"})
             fits[(model_name, phase)] = fit
     return fits
 
@@ -222,9 +252,9 @@ def evaluate_predictions(counts: dict, fits: dict) -> dict:
         "62b": "HELD" if complete(details["62b"],
                                   lambda row: row["n"] == ANSWERS_PER_DOSE and row["offworld"] is not None
                                   and row["offworld"] <= PREDICTION_62B_MAX_OFFWORLD) else "FAILED",
-        "62c": "HELD" if details["62c"].get("status") == "fit"
+        "62c": "HELD" if details["62c"].get("status") in ("fit", "bracketed")
                            and details["62c"].get("width_10_90", math.inf) < PREDICTION_62C_MAX_WIDTH else "FAILED",
-        "62d": "HELD" if details["62d"].get("status") == "fit"
+        "62d": "HELD" if details["62d"].get("status") in ("fit", "bracketed")
                            and details["62d"].get("width_10_90", -math.inf) > PREDICTION_62D_MIN_WIDTH else "FAILED",
         "62e": "HELD" if details["62e"].get("n") == ANSWERS_PER_DOSE
                            and details["62e"].get("OFFWORLD", math.inf) <= PREDICTION_62E_MAX_OFFWORLD else "FAILED",
@@ -235,7 +265,13 @@ def evaluate_predictions(counts: dict, fits: dict) -> dict:
                            and PREDICTION_62G_MIN_ALIEN_UNITS <= details["62g"]
                            <= PREDICTION_62G_MAX_ALIEN_UNITS else "FAILED",
     }
-    return {"status": statuses, "details": details}
+    decisions = {
+        "threshold_vs_gradual": ("retired" if statuses["62d"] == "FAILED"
+                                 else "not retired under 62d"),
+        "step_from_prompt": ("prompt-step rule met" if statuses["62b"] == "FAILED"
+                             else "prompt-step rule not met"),
+    }
+    return {"status": statuses, "details": details, "decision_rules": decisions}
 
 
 def _label_inputs(folder: Path, labels_path: Path, review_dir: Path) -> tuple[list[dict], dict, dict]:
@@ -244,6 +280,9 @@ def _label_inputs(folder: Path, labels_path: Path, review_dir: Path) -> tuple[li
     record = json.loads(labels_path.read_text(encoding="utf-8"))
     if record.get("schema") != "part62-blind-labels-v1" or not record.get("scoring_allowed"):
         raise ValueError("blind label record failed calibration or contains unlabelled answers")
+    reader = record.get("reader")
+    if reader not in blind62.READER_MODELS or record.get("model") != blind62.READER_MODELS[reader]:
+        raise ValueError("blind label record does not name a registered reader and model")
     max_tokens = record.get("max_tokens")
     if not isinstance(max_tokens, int) or max_tokens < blind62.MAX_TOKENS:
         raise ValueError("blind label record used max_tokens below 1,024")
@@ -301,6 +340,7 @@ def analyze(folder: str | Path, labels_path: str | Path | None = None,
     fits = fit_by_model_phase(counts, manifest["models"])
     predictions = evaluate_predictions(counts, fits)
     result.update({"status": "complete", "batch_id": label_record["batch_id"],
+                   "reader": label_record["reader"], "reader_model": label_record["model"],
                    "sample_info": sample_info,
                    "reader_counts": {"|".join((key[0], key[1], key[2], f"{key[3]:g}")): value
                                      for key, value in counts.items()},
@@ -323,19 +363,25 @@ def _proxy_only_counts(rows: list[dict]) -> dict:
 
 
 def print_analysis(result: dict) -> None:
-    print("keyword proxy counts: model | phase | kind | dose | n | offworld scifi earth")
+    reader_tag = f"reader={result.get('reader', 'none')} "
+    def emit(line: str) -> None:
+        print(f"{reader_tag}{line}")
+    emit("KNOWN-NOISY keyword proxies (exploratory): model | phase | kind | dose | n | offworld scifi earth")
     for key, row in result["keyword_proxy_counts"].items():
-        print(f"{key} | {row['n']} | {row['offworld']} {row['scifi']} {row['earth']}")
+        emit(f"{key} | {row['n']} | {row['offworld']} {row['scifi']} {row['earth']}")
     if result.get("status") != "complete":
-        print("blind reader labels unavailable; 62a-62g not evaluated")
+        emit("blind reader labels unavailable; 62a-62g not evaluated")
         return
-    print("prediction | result")
+    emit(f"model={result.get('reader_model', 'unknown')} prediction | result")
     for prediction, status in result["predictions"]["status"].items():
-        print(f"{prediction} | {status}")
-    print("logistic fits: model | phase | slope | midpoint Pile-max | width 10-90% | midpoint alien-frame")
+        emit(f"{prediction} | {status}")
+    emit("registered decision rules")
+    for name, result_text in result["predictions"].get("decision_rules", {}).items():
+        emit(f"{name} | {result_text}")
+    emit("logistic fits: model | phase | slope | midpoint Pile-max | width 10-90% | midpoint alien-frame")
     for key, fit in result["logistic_fits"].items():
-        print(f"{key} | {fit.get('slope')} | {fit.get('midpoint')} | "
-              f"{fit.get('width_10_90')} | {fit.get('midpoint_alien_frame_units')}")
+        emit(f"{key} | {fit.get('slope')} | {fit.get('midpoint')} | "
+             f"{fit.get('width_10_90')} | {fit.get('midpoint_alien_frame_units')}")
 
 
 def main(argv: list[str] | None = None) -> None:

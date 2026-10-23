@@ -92,11 +92,22 @@ else
 fi
 
 fetch_model() {
-  HF_HUB_OFFLINE=0 TRANSFORMERS_OFFLINE=0 python - "$1" "$2" <<'PY'
+  local repo=$1 revision=$2 attempt rc
+  for attempt in 1 2 3; do
+    if HF_HUB_OFFLINE=0 TRANSFORMERS_OFFLINE=0 python - "$repo" "$revision" <<'PY'
 import sys
 from huggingface_hub import snapshot_download
 print(snapshot_download(repo_id=sys.argv[1], revision=sys.argv[2], cache_dir='/root/hf/hub'))
 PY
+    then
+      return 0
+    else
+      rc=$?
+    fi
+    echo "Hugging Face fetch attempt $attempt/3 failed for $repo (exit $rc)" >&2
+    if [ "$attempt" -lt 3 ]; then sleep 1; fi
+  done
+  return "$rc"
 }
 
 if [ "${phase_status[package-version-record]:-125}" -eq 0 ]; then

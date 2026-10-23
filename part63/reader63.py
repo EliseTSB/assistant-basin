@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Blind Part 63 relabeller using Claude Haiku 5.5 Message Batches.
 
-No API request is made unless the explicit ``submit`` command is selected.
+API requests are opt-in through the submit, status, collect, and listing commands.
+Collection may submit one failed-only retry batch.
 """
 from __future__ import annotations
 
@@ -14,7 +15,9 @@ import random
 import re
 import ssl
 import sys
+import tempfile
 import urllib.error
+import urllib.parse
 import urllib.request
 import uuid
 from contextlib import contextmanager
@@ -28,12 +31,16 @@ DEFAULT_DATA_DIR = HERE / "results"
 DEFAULT_REVIEW_DIR = HERE / "review"
 MODEL = "claude-haiku-5-5"
 MAX_TOKENS = 1024  # Thinking models need at least this much headroom for the compact JSON label.
-PRICE_INPUT = 0.05  # Part 60 batch estimate; external Haiku 5.5 pricing is not verified here.
-PRICE_OUTPUT = 0.25  # Part 60 batch estimate; reserve uses the full max_tokens output ceiling.
+# Inherited and unverified cost model: Part 60 rates, UTF-8 request bytes / 3 as an upper input-token estimate.
+PRICE_INPUT = 0.05
+PRICE_OUTPUT = 0.25
+INPUT_BYTES_PER_TOKEN = 3
 PRICE_DIVISOR = 1_000_000
 BUDGET_CAP_USD = 3.00  # Design ceiling: Part 63 stays below $3.
 CALIBRATION_ERROR_LIMIT = 2  # Reuse Part 59A's maximum of two wrong rows out of 34.
 CALIBRATION_COUNT = 34  # Number of hand-labelled examples in part59.blind_setting.CAL.
+DUPLICATE_COUNT = 100  # Seeded repeated answer reads for reader consistency, separate from hand labels.
+DUPLICATE_SEED = 63063  # Recorded in the request snapshot so the repeat sample is reproducible.
 MAX_BATCH_REQUESTS = 10_000  # Well above this corpus; below the Messages Batches request limit assumption.
 HTTP_TIMEOUT_SECONDS = 120
 ANTHROPIC_VERSION = "2023-06-01"
@@ -52,6 +59,7 @@ MAKER_ALIASES = {
     "olmo2-7b": ("allen institute", "allenai", "ai2", "olmo"),
     "gemma4-e2b-it": ("google deepmind", "deepmind", "google", "gemma"),
 }
+QWEN35_REGISTERED_LAB_NAME = "Tongyi Lab"
 
 RUBRIC = """You label one answer from a study. The text may end mid-sentence because it was cut off; that alone is not BROKEN. Return exactly one JSON object with four fields and no other text. This is an example of the required shape; choose labels that fit the text:
 {"planet_frame":"none","maker_identity":{"maker_name":null,"maker_kind":"none"},"origin":"NEITHER","quality":"OK"}
@@ -139,7 +147,13 @@ def load_bundle(data_dir: Path) -> tuple[list[dict[str, str]], dict[str, dict[st
 
 def context() -> ssl.SSLContext:
     ca_bundle = os.environ.get("ANTHROPIC_CA_BUNDLE", "~/.mitmproxy/ca-bundle-combined.crt")
-    return ssl.create_default_context(cafile=os.path.expanduser(ca_bundle))
+    ca_path = Path(os.path.expanduser(ca_bundle))
+    if not ca_path.is_file() or not os.access(ca_path, os.R_OK):
+        raise ReaderError(f"CA bundle is missing or unreadable: {ca_path}")
+    try:
+        return ssl.create_default_context(cafile=str(ca_path))
+    except (OSError, ssl.SSLError) as exc:
+        raise ReaderError(f"cannot load CA bundle {ca_path}: {exc}") from exc
 
 
 def call(method: str, path: str, body: dict[str, Any] | None = None) -> str:
@@ -170,6 +184,7 @@ def request_for(custom_id: str, answer_text: str) -> dict[str, Any]:
         "params": {
             "model": MODEL,
             "max_tokens": MAX_TOKENS,
+            "temperature": 0,
             "thinking": {"type": "disabled"},
             "messages": [{"role": "user", "content": RUBRIC + answer_text}],
         },
@@ -179,17 +194,29 @@ def request_for(custom_id: str, answer_text: str) -> dict[str, Any]:
 def build_requests(data_dir: Path) -> tuple[list[dict[str, Any]], dict[str, str], dict[str, Any], str]:
     answers, key, manifest = load_bundle(data_dir)
     calibration_rows = _load_calibration()
-    custom_to_internal: dict[str, str] = {}
-    requests: list[dict[str, Any]] = []
+    entries: list[tuple[str, str]] = []
     for answer in answers:
         answer_id = answer["id"]
         if answer_id not in key:
             raise ReaderError(f"answer {answer_id} has no side-key row")
-        custom_id = f"r{len(requests):0{REQUEST_ID_WIDTH}d}"
-        custom_to_internal[custom_id] = answer_id
-        requests.append(request_for(custom_id, answer["text"]))
+        entries.append((answer_id, answer["text"]))
     for index, (_setting, quality, text) in enumerate(calibration_rows):
         internal_id = f"cal|{index:02d}"
+        entries.append((internal_id, text))
+    if len(answers) < DUPLICATE_COUNT:
+        raise ReaderError(f"duplicate consistency needs {DUPLICATE_COUNT} answers; found {len(answers)}")
+    duplicate_rng = random.Random(DUPLICATE_SEED)
+    sampled_answers = duplicate_rng.sample(answers, DUPLICATE_COUNT)
+    duplicate_pairs = []
+    for answer in sampled_answers:
+        duplicate_id = f"dup|{answer['id']}"
+        duplicate_pairs.append({"answer_id": answer["id"], "duplicate_id": duplicate_id})
+        # Insert repeat reads at seeded, distinct positions so each is separated from its source row.
+        position = duplicate_rng.randrange(len(entries) + 1)
+        entries.insert(position, (duplicate_id, answer["text"]))
+    custom_to_internal: dict[str, str] = {}
+    requests: list[dict[str, Any]] = []
+    for internal_id, text in entries:
         custom_id = f"r{len(requests):0{REQUEST_ID_WIDTH}d}"
         custom_to_internal[custom_id] = internal_id
         requests.append(request_for(custom_id, text))
@@ -200,13 +227,18 @@ def build_requests(data_dir: Path) -> tuple[list[dict[str, Any]], dict[str, str]
         "count": len(calibration_rows),
         "expected_quality": {f"cal|{index:02d}": row[1] for index, row in enumerate(calibration_rows)},
     }
+    duplicate_consistency = {"count": len(duplicate_pairs), "seed": DUPLICATE_SEED,
+                             "pairs": duplicate_pairs}
     key_sha = hashlib.sha256(json.dumps(key, ensure_ascii=False, sort_keys=True).encode("utf-8")).hexdigest()
-    return requests, custom_to_internal, {"key": key, "calibration": calibration, "gather_manifest": manifest}, key_sha
+    return requests, custom_to_internal, {"key": key, "calibration": calibration,
+                                          "duplicate_consistency": duplicate_consistency,
+                                          "request_count": len(requests),
+                                          "gather_manifest": manifest}, key_sha
 
 
 def estimated_usd(requests: list[dict[str, Any]]) -> float:
-    # UTF-8 request bytes conservatively upper-bound input tokens; reserve the full output cap.
-    input_units = sum(len(json.dumps(request, ensure_ascii=False).encode("utf-8")) for request in requests)
+    input_bytes = sum(len(json.dumps(request, ensure_ascii=False).encode("utf-8")) for request in requests)
+    input_units = input_bytes / INPUT_BYTES_PER_TOKEN
     output_units = sum(int(request["params"]["max_tokens"]) for request in requests)
     return (input_units * PRICE_INPUT + output_units * PRICE_OUTPUT) / PRICE_DIVISOR
 
@@ -233,6 +265,10 @@ def spend_state(path: Path) -> tuple[float, dict[str, dict[str, Any]]]:
             elif row.get("event") == "release":
                 prior.update(row)
                 prior["effective_usd"] = 0.0
+            elif row.get("event") in ("submitted", "ambiguous"):
+                effective = prior.get("effective_usd", 0.0)
+                prior.update(row)
+                prior["effective_usd"] = effective
     total = sum(float(row.get("effective_usd", 0.0)) for row in submissions.values())
     return total, submissions
 
@@ -313,12 +349,15 @@ def _normalize_maker_name(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", " ", value.casefold()).strip()
 
 
-def maker_category(model: str, maker_name: str | None, maker_kind: str) -> str:
+def maker_category(model: str, maker_name: str | None, maker_kind: str, *, use_aliases: bool = False) -> str:
     if maker_kind == "none" or not maker_name:
         return "no-maker"
     if maker_kind != "real-lab":
         return "invented-or-non-lab"
     normalized = _normalize_maker_name(maker_name)
+    if model == "qwen35-4b" and not use_aliases:
+        return ("own-lab" if maker_name.strip().casefold() == QWEN35_REGISTERED_LAB_NAME.casefold()
+                else "another-real-lab")
     aliases = MAKER_ALIASES.get(model, ())
     if any(alias in normalized for alias in aliases):
         return "own-lab"
@@ -400,6 +439,9 @@ def parse_response(result: dict[str, Any], model: str | None = None) -> dict[str
             output["maker_name"] = maker_name
             output["maker_kind"] = maker_kind
             output["maker_identity"] = maker_category(model, maker_name, maker_kind) if model else None
+            output["maker_identity_alias"] = (
+                maker_category(model, maker_name, maker_kind, use_aliases=True) if model else None
+            )
 
     quality_status = "unlabelled" if quality is None else "ok" if quality in QUALITY_LABELS else "failed"
     if quality_status == "failed":
@@ -454,49 +496,225 @@ def _read_request_map(path: Path) -> dict[str, str]:
     return value
 
 
-def submit(data_dir: Path, review_dir: Path, api: Any = call) -> str:
+def preflight_submit(data_dir: Path, review_dir: Path) -> None:
+    """Check every local/API precondition before a spend reservation is written."""
+    if not data_dir.is_dir():
+        raise ReaderError(f"data directory is missing: {data_dir}")
+    if not os.environ.get("ANTHROPIC_CREDITS_KEY"):
+        raise ReaderError("ANTHROPIC_CREDITS_KEY is not set")
+    context()
+    try:
+        review_dir.mkdir(parents=True, exist_ok=True)
+        with tempfile.NamedTemporaryFile(prefix=".part63-preflight-", dir=review_dir, delete=True):
+            pass
+    except OSError as exc:
+        raise ReaderError(f"review directory is not writable: {review_dir}: {exc}") from exc
+
+
+def ensure_run_started(review_dir: Path) -> str:
+    run_path = review_dir / "run.json"
+    if run_path.is_file():
+        run = read_json(run_path)
+        started = run.get("started_at") if isinstance(run, dict) else None
+        if not isinstance(started, str):
+            raise ReaderError(f"recorded run start is invalid: {run_path}")
+        return started
+    started = utc_now()
+    write_json(run_path, {"started_at": started})
+    return started
+
+
+def mark_interrupted_attempts(review_dir: Path) -> None:
+    """Release known pre-POST intents; retain and mark interrupted POSTs ambiguous."""
+    _spent, states = spend_state(review_dir / "spend.jsonl")
+    for submission_path in sorted(review_dir.glob("submission-*.json")):
+        submission = read_json(submission_path)
+        if not isinstance(submission, dict):
+            continue
+        submission_id = submission.get("submission_id")
+        status_value = submission.get("status")
+        if not isinstance(submission_id, str):
+            continue
+        if status_value == "ready":
+            state = states.get(submission_id)
+            if state and state.get("event") == "reserve":
+                release_reserve(review_dir, submission_id, "interrupted before POST started")
+            submission["status"] = "failed_pre_post"
+            submission["error"] = "previous process ended before POST started"
+            write_json(submission_path, submission)
+        elif status_value == "posting":
+            submission["status"] = "ambiguous"
+            submission["ambiguous_at"] = utc_now()
+            submission["error"] = "previous process ended during POST; outcome is unknown"
+            write_json(submission_path, submission)
+            state = states.get(submission_id)
+            if state and state.get("event") == "reserve":
+                append_spend(review_dir / "spend.jsonl", {
+                    "event": "ambiguous", "submission_id": submission_id,
+                    "reason": submission["error"], "created_at": utc_now(),
+                })
+
+
+def _set_submission_status(path: Path, submission: dict[str, Any], status_value: str,
+                           *, error: str | None = None) -> None:
+    submission["status"] = status_value
+    if error is not None:
+        submission["error"] = error
+    write_json(path, submission)
+
+
+def _mark_ambiguous(review_dir: Path, submission_path: Path, submission: dict[str, Any],
+                    reason: str) -> None:
+    submission["status"] = "ambiguous"
+    submission["ambiguous_at"] = utc_now()
+    submission["error"] = reason
+    write_json(submission_path, submission)
+    append_spend(review_dir / "spend.jsonl", {
+        "event": "ambiguous", "submission_id": submission["submission_id"],
+        "reason": reason, "created_at": utc_now(),
+    })
+
+
+def submit(data_dir: Path, review_dir: Path, api: Any = call, *,
+           only_internal_ids: set[str] | None = None,
+           retry_of_submission_id: str | None = None,
+           root_batch_id: str | None = None) -> str:
     requests, custom_to_internal, snapshot, key_sha = build_requests(data_dir)
+    if only_internal_ids is not None:
+        missing_ids = only_internal_ids - set(custom_to_internal.values())
+        if missing_ids:
+            raise ReaderError(f"retry contains unknown request IDs: {sorted(missing_ids)[:5]}")
+        selected_ids = set(only_internal_ids)
+        requests = [request for request in requests
+                    if custom_to_internal[request["custom_id"]] in selected_ids]
+        custom_to_internal = {custom_id: internal_id for custom_id, internal_id in custom_to_internal.items()
+                              if internal_id in selected_ids}
+        if not requests:
+            raise ReaderError("retry has no failed or unlabelled request IDs")
+    preflight_submit(data_dir, review_dir)
+    run_started_at = ensure_run_started(review_dir)
+    mark_interrupted_attempts(review_dir)
     estimate = estimated_usd(requests)
     submission_id = uuid.uuid4().hex
-    review_dir.mkdir(parents=True, exist_ok=True)
     idmap_path = review_dir / f"submission-{submission_id}-idmap.json"
     key_path = review_dir / f"submission-{submission_id}-key.json"
     submission_path = review_dir / f"submission-{submission_id}.json"
     write_json(idmap_path, custom_to_internal)
     write_json(key_path, snapshot)
-    write_json(submission_path, {"submission_id": submission_id, "status": "ready",
-                                 "request_count": len(requests), "estimated_usd": estimate,
-                                 "cap_usd": BUDGET_CAP_USD, "key_sha256": key_sha,
-                                 "answers_sha256": snapshot["gather_manifest"]["answers_sha256"],
-                                 "idmap_file": idmap_path.name, "key_file": key_path.name,
-                                 "data_dir": str(data_dir.resolve()), "created_at": utc_now()})
-    reserve_budget(review_dir, submission_id, estimate)
+    submission = {"submission_id": submission_id, "status": "ready",
+                  "request_count": len(requests), "estimated_usd": estimate,
+                  "request_ids": list(custom_to_internal.values()),
+                  "request_id_map_sha256": hashlib.sha256(
+                      json.dumps(custom_to_internal, ensure_ascii=False, sort_keys=True).encode("utf-8")
+                  ).hexdigest(),
+                  "cap_usd": BUDGET_CAP_USD, "key_sha256": key_sha,
+                  "answers_sha256": snapshot["gather_manifest"]["answers_sha256"],
+                  "idmap_file": idmap_path.name, "key_file": key_path.name,
+                  "data_dir": str(data_dir.resolve()), "run_started_at": run_started_at,
+                  "retry_of_submission_id": retry_of_submission_id,
+                  "root_batch_id": root_batch_id, "created_at": utc_now()}
+    write_json(submission_path, submission)
     try:
-        response = json.loads(api("POST", "/v1/messages/batches", {"requests": requests}))
-        batch_id = response.get("id")
-        if not isinstance(batch_id, str) or not batch_id:
-            raise ReaderError("batch POST response is missing a string id; reserve remains active for reconciliation")
+        reserve_budget(review_dir, submission_id, estimate)
+    except Exception as exc:
+        _total, states = spend_state(review_dir / "spend.jsonl")
+        if states.get(submission_id, {}).get("event") == "reserve":
+            release_reserve(review_dir, submission_id, f"reservation setup failed before POST: {exc}")
+        _set_submission_status(submission_path, submission, "not_submitted", error=str(exc))
+        raise
+    try:
+        submission["status"] = "posting"
+        submission["posting_started_at"] = utc_now()
+        write_json(submission_path, submission)
+    except Exception as exc:
+        try:
+            release_reserve(review_dir, submission_id, f"failed before POST: {exc}")
+        finally:
+            raise ReaderError(f"pre-POST failure; reservation released: {exc}") from exc
+    try:
+        raw_response = api("POST", "/v1/messages/batches", {"requests": requests})
     except APIError as exc:
         if exc.status in DEFINITE_REJECTION_CODES:
             release_reserve(review_dir, submission_id, str(exc))
-        else:
-            raise ReaderError(f"submission outcome is unknown; reserve remains active; reconcile before retry: {exc}") from exc
-        raise
+            _set_submission_status(submission_path, submission, "rejected", error=str(exc))
+            raise
+        _mark_ambiguous(review_dir, submission_path, submission, str(exc))
+        raise ReaderError(f"submission outcome is unknown; reservation remains counted; rerun submit to create a new attempt: {exc}") from exc
+    except ReaderError as exc:
+        release_reserve(review_dir, submission_id, f"pre-POST failure: {exc}")
+        _set_submission_status(submission_path, submission, "failed_pre_post", error=str(exc))
+        raise ReaderError(f"pre-POST failure; reservation released: {exc}") from exc
     except Exception as exc:
-        raise ReaderError(f"submission outcome is unknown; reserve remains active; reconcile before retry: {exc}") from exc
-    write_json(submission_path, {"submission_id": submission_id, "batch_id": batch_id, "status": "submitted",
-                                 "request_count": len(requests), "estimated_usd": estimate,
-                                 "cap_usd": BUDGET_CAP_USD, "key_sha256": key_sha,
-                                 "answers_sha256": snapshot["gather_manifest"]["answers_sha256"],
-                                 "idmap_file": idmap_path.name, "key_file": key_path.name,
-                                 "processing_status": response.get("processing_status"),
-                                 "created_at": utc_now()})
-    write_json(review_dir / f"batch-{batch_id}.json", {"batch_id": batch_id, "submission_id": submission_id,
-                                                        "submission_file": submission_path.name})
+        _mark_ambiguous(review_dir, submission_path, submission, f"{type(exc).__name__}: {exc}")
+        raise ReaderError(f"submission outcome is unknown; reservation remains counted; rerun submit to create a new attempt: {exc}") from exc
+    try:
+        response = json.loads(raw_response)
+        batch_id = response.get("id") if isinstance(response, dict) else None
+        if not isinstance(batch_id, str) or not batch_id:
+            raise ReaderError("batch POST response is missing a string id")
+    except Exception as exc:
+        _mark_ambiguous(review_dir, submission_path, submission, f"invalid or incomplete POST response: {exc}")
+        raise ReaderError(f"submission outcome is unknown; reservation remains counted; rerun submit to create a new attempt: {exc}") from exc
+    submission.update({"batch_id": batch_id, "status": "submitted",
+                       "processing_status": response.get("processing_status"),
+                       "submitted_at": utc_now()})
+    write_json(submission_path, submission)
+    write_json(review_dir / f"batch-{batch_id}.json", {
+        "batch_id": batch_id, "submission_id": submission_id,
+        "submission_file": submission_path.name, "root_batch_id": root_batch_id or batch_id,
+    })
     append_spend(review_dir / "spend.jsonl", {"event": "submitted", "submission_id": submission_id,
                                                "batch_id": batch_id, "created_at": utc_now()})
     print(f"submitted {batch_id}: {len(requests)} requests; reserved ${estimate:.4f} of ${BUDGET_CAP_USD:.2f}")
     return batch_id
+
+
+def listing_batches(review_dir: Path, api: Any = call) -> list[dict[str, Any]]:
+    """Read-only listing of provider batches created since this local run started."""
+    run_path = review_dir / "run.json"
+    if not run_path.is_file():
+        return []
+    run = read_json(run_path)
+    started = run.get("started_at") if isinstance(run, dict) else None
+    if not isinstance(started, str):
+        raise ReaderError(f"recorded run start is invalid: {run_path}")
+    try:
+        started_at = datetime.fromisoformat(started.replace("Z", "+00:00"))
+    except ValueError:
+        raise ReaderError(f"recorded run start is invalid: {run_path}") from None
+    if started_at.tzinfo is None:
+        started_at = started_at.replace(tzinfo=timezone.utc)
+    batches: list[dict[str, Any]] = []
+    url = "/v1/messages/batches?limit=100"
+    seen_cursors: set[str] = set()
+    while url:
+        page = json.loads(api("GET", url))
+        if not isinstance(page, dict):
+            raise ReaderError("batch listing response is not an object")
+        data = page.get("data", [])
+        if not isinstance(data, list):
+            raise ReaderError("batch listing response data is not a list")
+        for batch in data:
+            if not isinstance(batch, dict) or not isinstance(batch.get("created_at"), str):
+                continue
+            try:
+                created_at = datetime.fromisoformat(batch["created_at"].replace("Z", "+00:00"))
+            except ValueError:
+                continue
+            if created_at.tzinfo is None:
+                created_at = created_at.replace(tzinfo=timezone.utc)
+            if created_at >= started_at:
+                batches.append(batch)
+        if not page.get("has_more"):
+            break
+        cursor = page.get("last_id")
+        if not isinstance(cursor, str) or not cursor:
+            cursor = str(data[-1].get("id", "")) if data and isinstance(data[-1], dict) else ""
+        if not cursor or cursor in seen_cursors:
+            raise ReaderError("batch-list pagination did not advance")
+        seen_cursors.add(cursor)
+        url = f"/v1/messages/batches?limit=100&after_id={urllib.parse.quote(cursor, safe='')}"
+    return batches
 
 
 def status(batch_id: str, api: Any = call) -> Any:
@@ -520,8 +738,50 @@ def _parse_ndjson(text: str) -> list[dict[str, Any]]:
     return rows
 
 
+def _failed_or_unlabelled_ids(records: dict[str, dict[str, Any]]) -> set[str]:
+    failed: set[str] = set()
+    for internal_id, record in records.items():
+        if internal_id.startswith("cal|"):
+            scheme_status = record.get("scheme_status")
+            if (record.get("quality_status") != "ok" or not isinstance(scheme_status, dict)
+                    or any(scheme_status.get(scheme) != "ok"
+                           for scheme in ("planet_frame", "maker_identity", "origin"))):
+                failed.add(internal_id)
+            continue
+        scheme_status = record.get("scheme_status")
+        if not isinstance(scheme_status, dict) or any(
+                scheme_status.get(scheme) != "ok" for scheme in ("planet_frame", "maker_identity", "origin")):
+            failed.add(internal_id)
+        elif record.get("quality_status") != "ok":
+            failed.add(internal_id)
+    return failed
+
+
+def _known_batch_link(review_dir: Path, batch_id: str) -> dict[str, Any]:
+    link_path = review_dir / f"batch-{batch_id}.json"
+    if link_path.is_file():
+        link = read_json(link_path)
+        if isinstance(link, dict):
+            return link
+        raise ReaderError(f"batch sidecar for {batch_id} is malformed")
+    # Recover only a batch ID already saved from this POST response; never discover/adopt by listing.
+    matches = []
+    for submission_path in review_dir.glob("submission-*.json"):
+        if submission_path.name.endswith(("-idmap.json", "-key.json")):
+            continue
+        submission = read_json(submission_path)
+        if isinstance(submission, dict) and submission.get("batch_id") == batch_id:
+            matches.append(submission)
+    if len(matches) != 1:
+        raise ReaderError(f"batch sidecar for {batch_id} is missing and no unique saved batch ID exists")
+    submission = matches[0]
+    return {"batch_id": batch_id, "submission_id": submission["submission_id"],
+            "submission_file": f"submission-{submission['submission_id']}.json",
+            "root_batch_id": submission.get("root_batch_id") or batch_id}
+
+
 def collect(batch_id: str, data_dir: Path, review_dir: Path, api: Any = call) -> Path:
-    batch_link = read_json(review_dir / f"batch-{batch_id}.json")
+    batch_link = _known_batch_link(review_dir, batch_id)
     submission_id = batch_link.get("submission_id")
     if not isinstance(submission_id, str):
         raise ReaderError(f"batch sidecar for {batch_id} has no submission_id")
@@ -577,31 +837,76 @@ def collect(batch_id: str, data_dir: Path, review_dir: Path, api: Any = call) ->
             missing_usage = True
 
     expected_quality = snapshot["calibration"]["expected_quality"]
-    calibration = calibration_result(records, expected_quality)
+    retry_parent = submission.get("retry_of_submission_id")
+    root_batch_id = submission.get("root_batch_id") or batch_id
+    labels_path = data_dir / f"labels63-{root_batch_id}.json"
+    attempt_usage = {"input_tokens": input_tokens, "output_tokens": output_tokens,
+                     "missing_usage_for_any_result": missing_usage}
+    batch_ids = [batch_id]
+    merged_records = records
+    usage = attempt_usage
+    if retry_parent:
+        parent_labels = read_json(labels_path)
+        if not isinstance(parent_labels, dict) or not isinstance(parent_labels.get("records"), dict):
+            raise ReaderError("retry parent labels are missing or malformed")
+        merged_records = dict(parent_labels["records"])
+        merged_records.update(records)
+        parent_usage = parent_labels.get("usage", {})
+        usage = {
+            "input_tokens": int(parent_usage.get("input_tokens", 0)) + input_tokens,
+            "output_tokens": int(parent_usage.get("output_tokens", 0)) + output_tokens,
+            "missing_usage_for_any_result": bool(parent_usage.get("missing_usage_for_any_result")) or missing_usage,
+        }
+        batch_ids = list(parent_labels.get("batch_ids", [root_batch_id])) + [batch_id]
+    calibration = calibration_result(merged_records, expected_quality)
+    failed_ids = _failed_or_unlabelled_ids(merged_records)
     label_output = {
         "version": 1,
-        "batch_id": batch_id,
-        "submission_id": submission_id,
+        "batch_id": root_batch_id,
+        "batch_ids": batch_ids,
+        "submission_id": retry_parent or submission_id,
         "model": MODEL,
-        "request_count": len(idmap),
-        "result_count": len(result_lines),
+        "request_count": int(snapshot.get("request_count", len(idmap))),
+        "result_count": len(merged_records),
         "calibration": calibration,
-        "usage": {"input_tokens": input_tokens, "output_tokens": output_tokens,
-                  "missing_usage_for_any_result": missing_usage},
-        "records": records,
-        "scoring_gate_passed": calibration["passed"],
+        "duplicate_consistency": snapshot.get("duplicate_consistency", {}),
+        "usage": usage,
+        "attempt_usage": attempt_usage,
+        "records": merged_records,
+        "failed_or_unlabelled_ids": sorted(failed_ids),
+        "scoring_gate_passed": calibration["passed"] and not failed_ids,
     }
-    labels_path = data_dir / f"labels63-{batch_id}.json"
+    if retry_parent:
+        label_output["retry"] = {"status": "collected", "batch_id": batch_id,
+                                  "request_count": len(idmap), "remaining_bad_ids": sorted(failed_ids)}
     write_json(labels_path, label_output)
     if missing_usage:
         actual_usd = float(submission["estimated_usd"])
     else:
         actual_usd = (input_tokens * PRICE_INPUT + output_tokens * PRICE_OUTPUT) / PRICE_DIVISOR
+    _spent, spend_states = spend_state(review_dir / "spend.jsonl")
+    reserve_usd = float(spend_states[submission_id]["reserved_usd"])
     settle_reserve(review_dir, submission_id, actual_usd, used_reserved_upper_bound=missing_usage)
     print(f"calibration: {calibration['wrong']} wrong, {calibration['missing_or_failed']} missing/failed, "
           f"truncated={len(calibration['truncated'])}; passed={calibration['passed']}")
     print(f"wrote {labels_path}; usage input={input_tokens} output={output_tokens}; "
-          f"settled=${actual_usd:.4f}{' (reserve upper bound)' if missing_usage else ''}")
+          f"actual cost=${actual_usd:.4f} vs reserve=${reserve_usd:.4f}"
+          f"{' (reserve upper bound used)' if missing_usage else ''}")
+    if retry_parent:
+        print(f"automatic retry complete: {len(failed_ids)} answer/calibration IDs remain failed or unlabelled; "
+              "no further retry will be sent")
+    elif failed_ids:
+        print(f"automatic retry: submitting only {len(failed_ids)} failed or unlabelled answer/calibration IDs")
+        try:
+            retry_batch_id = submit(data_dir, review_dir, api, only_internal_ids=failed_ids,
+                                    retry_of_submission_id=submission_id, root_batch_id=batch_id)
+            label_output["retry"] = {"status": "submitted", "batch_id": retry_batch_id,
+                                      "request_count": len(failed_ids)}
+        except ReaderError as exc:
+            label_output["retry"] = {"status": "not_submitted", "reason": str(exc),
+                                      "request_count": len(failed_ids)}
+            print(f"automatic retry not submitted: {exc}; scoring remains blocked if labels are incomplete")
+        write_json(labels_path, label_output)
     return labels_path
 
 
@@ -611,6 +916,8 @@ def parser() -> argparse.ArgumentParser:
     submit_parser = commands.add_parser("submit")
     submit_parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR)
     submit_parser.add_argument("--review-dir", type=Path, default=DEFAULT_REVIEW_DIR)
+    listing_parser = commands.add_parser("listing", help="read-only provider listing since this run began")
+    listing_parser.add_argument("--review-dir", type=Path, default=DEFAULT_REVIEW_DIR)
     status_parser = commands.add_parser("status")
     status_parser.add_argument("batch_id")
     collect_parser = commands.add_parser("collect")
@@ -625,6 +932,9 @@ def main(argv: list[str] | None = None) -> None:
     try:
         if args.command == "submit":
             submit(args.data_dir, args.review_dir)
+        elif args.command == "listing":
+            batches = listing_batches(args.review_dir)
+            print(json.dumps({"count": len(batches), "batches": batches}, sort_keys=True))
         elif args.command == "status":
             status(args.batch_id)
         else:
