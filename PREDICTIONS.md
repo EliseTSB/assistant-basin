@@ -1835,3 +1835,13 @@ prompts; nothing here is a finding yet. Broken-answer rates are pending the blin
 | 63c | Claude: Qwen3-4B L28:4248 reads other-planet-or-space in at most 1 of 24 unclamped and at least 20 of 24 at +1.0, rising from +0.5. | FAILED | 0 of 24 unclamped, 0 at +0.5, 0 at +1.0; the reader says Earth (planet frame 24 of 24 at +1.0). |
 | 63d | Claude: Qwen3.5 at -2 names another real lab or an invented maker in at least 10 of 24 answers and unclamped at most 2 of 24. | FAILED (by completeness) | 21 of 23 valid at -2 and 0 of 24 unclamped, but one -2 row is a residual parse failure so the cell is not 24; strict exact-name unclamped 5 of 24. |
 | 63e | Claude: Qwen3.5's OFFWORLD counts at -1, +0.5, +1, +1.5, +2 stay within 2 of the Opus counts. | held | Haiku 0, 0, 1, 20, 24 against Opus 0, 0, 1, 19, 24. |
+
+## Part 64 (registered 2026-10-23, before any collection or call; design PART64-DESIGN.md)
+| # | Prediction | Result |
+|---|---|---|
+| 64a | Haiku-3x raises the real pass rate over Haiku-1x by at least 5 points. | |
+| 64b | Haiku-3x raises the gap over Haiku-1x by at least 5 points. | |
+| 64c | Haiku-3x raises the control pass rate by at most 3 points over Haiku-1x. | |
+| 64d | Opus-1x has a gap at least 5 points above Haiku-1x. | |
+| 64e | Opus gains more from 3x than Haiku does (interaction on the gap at least 3 points). | |
+| 64f | Haiku-1x reproduces Part 60's M1 within 6 points on real and control pass rates. | |
