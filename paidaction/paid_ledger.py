@@ -315,7 +315,13 @@ class Ledger:
                     if (not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest)
                             or not isinstance(row.get("ts"), str) or not row["ts"]):
                         raise LedgerCorruptionError("settlement overrun has invalid usage digest or timestamp")
-                    current.setdefault("overruns", []).append({"actual": actual, "usage_sha256": digest})
+                    if row.get("final") is True:
+                        current.update({"status": "overrun", "actual": actual,
+                                        "usage_sha256": digest})
+                    else:
+                        # Read legacy diagnostic overruns that left the reserve active.
+                        current.setdefault("overruns", []).append({"actual": actual,
+                                                                    "usage_sha256": digest})
                 elif event == "release":
                     current = attempts.get(attempt_id)
                     if current is None or current["status"] != "reserved":
@@ -360,6 +366,13 @@ class Ledger:
             if attempt["status"] == "settled":
                 settled += attempt["actual"]
                 values["settled"] += attempt["actual"]
+            elif attempt["status"] == "overrun":
+                settled += attempt["actual"]
+                values["settled"] += attempt["actual"]
+            elif attempt["status"] == "retired":
+                # Unknown-outcome requests stay charged at their worst-case reserve.
+                settled += attempt["reserve"]
+                values["settled"] += attempt["reserve"]
             elif attempt["status"] == "reserved":
                 reserved += attempt["reserve"]
                 values["reserved"] += attempt["reserve"]
@@ -445,8 +458,9 @@ class Ledger:
                         continue
                     if item.get("subcap") != subcap:
                         raise LedgerError(f"sub-cap {subcap_key!r} was already opened with a different limit")
-                    scoped += item["actual"] if item["status"] == "settled" else (
-                        item["reserve"] if item["status"] == "reserved" else Decimal("0"))
+                    scoped += (item["actual"] if item["status"] in ("settled", "overrun") else
+                               item["reserve"] if item["status"] in ("reserved", "retired") else
+                               Decimal("0"))
                 if scoped + amount > subcap:
                     raise CapExceededError(
                         f"reservation refused: sub-cap {subcap_key!r} has ${float(scoped):.8f} "
@@ -472,29 +486,28 @@ class Ledger:
             current = attempts.get(attempt_id)
             if current is None:
                 raise LedgerError(f"unknown attempt {attempt_id}")
-            if current["status"] == "settled":
+            if current["status"] in ("settled", "overrun"):
                 if current["actual"] == actual and current["usage_sha256"] == usage_sha256:
                     return
-                raise LedgerError(f"attempt {attempt_id} was already settled with different values")
+                raise LedgerError(f"attempt {attempt_id} was already settled or overrun with different values")
             if current["status"] != "reserved":
                 raise LedgerError(f"attempt {attempt_id} is {current['status']}, not an active reservation")
             events_state = self._summary(attempts, bool(tail["torn_last_line_ignored"]))
             committed_elsewhere = Decimal(str(events_state["settled"])) + Decimal(str(events_state["reserved"])) - current["reserve"]
             subcap_over = False
             if current.get("subcap_key") is not None:
-                scoped = sum((item["actual"] if item["status"] == "settled" else
-                              item["reserve"] if item["status"] == "reserved" else Decimal("0"))
+                scoped = sum((item["actual"] if item["status"] in ("settled", "overrun") else
+                              item["reserve"] if item["status"] in ("reserved", "retired") else Decimal("0"))
                              for item in attempts.values()
                              if item.get("subcap_key") == current["subcap_key"] and item is not current)
                 subcap_over = scoped + actual > current["subcap"]
-            if committed_elsewhere + actual > self._cap_decimal or subcap_over:
+            if actual > current["reserve"] or committed_elsewhere + actual > self._cap_decimal or subcap_over:
                 self._append_locked({"event": "settlement_overrun", "attempt_id": attempt_id,
                                      "actual_usd": float(actual), "usage_sha256": usage_sha256,
-                                     "ts": _utc_now()}, tail)
+                                     "ts": _utc_now(), "final": True}, tail)
                 raise CapExceededError(
-                    f"settlement refused: actual ${float(actual):.8f} plus other settled/reserved "
-                    f"${float(committed_elsewhere):.8f} exceeds cap/sub-cap; "
-                    "overrun was recorded and this reservation remains active")
+                    f"settlement overrun recorded at actual ${float(actual):.8f} against reserve "
+                    f"${float(current['reserve']):.8f}; future reservations will use the recorded amount")
             self._append_locked({"event": "settle", "attempt_id": attempt_id,
                                  "actual_usd": float(actual), "usage_sha256": usage_sha256,
                                  "ts": _utc_now()}, tail)

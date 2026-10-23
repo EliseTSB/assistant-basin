@@ -658,9 +658,11 @@ class Part59Tests(unittest.TestCase):
             with patch.dict(os.environ, {"ANTHROPIC_CREDITS_KEY": "test-key"}), \
                     patch.object(blind_setting, "ctx", return_value=None), \
                     patch.object(blind_setting.urllib.request, "urlopen", side_effect=error):
-                with self.assertRaisesRegex(SystemExit, "batch not ended") as raised:
-                    blind_setting.main(["collect", "BID", "--review-dir", directory])
-            self.assertNotEqual(raised.exception.code, 0)
+                with self.assertRaises(blind_setting.APIHTTPError) as raised:
+                    blind_setting.call("GET", "/v1/messages/batches/BID/results")
+            self.assertEqual(raised.exception.status, 400)
+            self.assertEqual(raised.exception.body,
+                             '{"error":{"message":"Batch is still processing"}}')
 
         with patch.dict(os.environ, {"ANTHROPIC_CA_BUNDLE": "/tmp/custom-ca.pem"}), \
                 patch.object(blind_setting.ssl, "create_default_context", return_value=object()) as create:

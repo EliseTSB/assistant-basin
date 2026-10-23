@@ -499,6 +499,27 @@ class SubmissionTests(unittest.TestCase):
         ledger.reserve(4.0, blind62.READER_KINDS["opus"], {"stage": "test"})
         self.assertEqual(ledger.state()["reserved"], 7.5)
 
+    def test_rejected_post_http_error_releases_through_ledger_adapter(self):
+        from paidaction.paid_ledger import HTTPFailure, Ledger, submit_in_chunks
+        ledger = Ledger(self.root / "http-reject.jsonl", 8.0)
+        request = {"custom_id": "r00000", "params": {"max_tokens": 1024}}
+        def fake_submit(_chunk, _attempt, _record):
+            try:
+                raise blind62.setting.APIHTTPError(
+                    400, '{"type":"error","error":{"type":"invalid_request_error"}}')
+            except blind62.setting.APIHTTPError as exc:
+                raise HTTPFailure(exc.status, exc.body) from exc
+        with self.assertRaises(HTTPFailure):
+            submit_in_chunks([request], 1, ledger=ledger, model="claude-haiku-5-5",
+                             submit=fake_submit, batch_id_path=self.root / "ids.jsonl",
+                             kind="part62-test")
+        state = ledger.state()
+        self.assertEqual(state["reserved"], 0)
+        with ledger._locked():
+            events, _tail = ledger._read_locked()
+            attempts = ledger._attempts(events)
+        self.assertEqual([row["status"] for row in attempts.values()], ["released"])
+
     def test_opus_fallback_requires_failed_haiku_calibration_record(self):
         with tempfile.TemporaryDirectory() as temporary:
             with self.assertRaisesRegex(ValueError, "failed Haiku calibration"):

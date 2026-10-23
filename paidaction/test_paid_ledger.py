@@ -94,18 +94,21 @@ class LedgerTests(unittest.TestCase):
         with self.assertRaisesRegex(LedgerError, "different values"):
             self.ledger.settle(attempt_id, 0.12, {"input_tokens": 11, "output_tokens": 4})
 
-    def test_settlement_overrun_refuses_records_actual_and_keeps_reserve(self) -> None:
+    def test_settlement_overrun_records_actual_and_blocks_future_reserves(self) -> None:
         other = self.ledger.reserve(0.4, "earlier", {})
         target = self.ledger.reserve(0.5, "target", {})
-        with self.assertRaisesRegex(CapExceededError, "overrun was recorded"):
+        with self.assertRaisesRegex(CapExceededError, "overrun recorded"):
             self.ledger.settle(target, 0.7, {"actual": 7})
         rows = [json.loads(line) for line in self.path.read_text(encoding="utf-8").splitlines()]
         overrun = rows[-1]
         self.assertEqual(overrun["event"], "settlement_overrun")
         self.assertEqual(overrun["attempt_id"], target)
         self.assertEqual(overrun["actual_usd"], 0.7)
-        self.assertAlmostEqual(self.ledger.state()["reserved"], 0.9)
-        self.assertEqual(self.ledger.state()["settled"], 0.0)
+        self.assertAlmostEqual(self.ledger.state()["reserved"], 0.4)
+        self.assertEqual(self.ledger.state()["settled"], 0.7)
+        self.assertEqual(self.ledger._attempts([json.loads(line) for line in self.path.read_text().splitlines()])[target]["status"], "overrun")
+        with self.assertRaises(CapExceededError):
+            self.ledger.reserve(0.01, "after-overrun", {})
         self.assertEqual(other, rows[0]["attempt_id"])
 
     def test_cap_counts_settled_and_reserved_dollars(self) -> None:
@@ -150,11 +153,12 @@ class LedgerTests(unittest.TestCase):
         events = [json.loads(line) for line in self.path.read_text(encoding="utf-8").splitlines()]
         self.assertEqual([row["event"] for row in events], ["reserve"])
 
-    def test_retire_is_dated_and_removes_only_that_reservation(self) -> None:
+    def test_retire_is_dated_and_keeps_only_that_amount_counted(self) -> None:
         first = self.ledger.reserve(0.2, "batch", {})
         second = self.ledger.reserve(0.3, "direct", {})
         self.ledger.retire(first, "operator-7", "provider console reconciled")
         self.assertAlmostEqual(self.ledger.state()["reserved"], 0.3)
+        self.assertAlmostEqual(self.ledger.state()["settled"], 0.2)
         event = [json.loads(line) for line in self.path.read_text(encoding="utf-8").splitlines()][-1]
         self.assertEqual(event["event"], "retire")
         self.assertEqual(event["attempt_id"], first)
@@ -163,8 +167,39 @@ class LedgerTests(unittest.TestCase):
         with self.assertRaisesRegex(LedgerError, "not an active reservation"):
             self.ledger.settle(first, 0.0, {})
         self.assertEqual(self.ledger.state()["per_kind"]["direct"]["reserved"], 0.3)
-        self.assertEqual(self.ledger.state()["per_kind"]["batch"]["reserved"], 0.0)
+        self.assertEqual(self.ledger.state()["per_kind"]["batch"]["settled"], 0.2)
         self.assertEqual(len(second), 32)
+
+    def test_retired_reserves_remain_spent_across_restart_and_caps(self) -> None:
+        ledger = Ledger(self.path, 8.0)
+        for index in range(4):
+            attempt = ledger.reserve(1.12, "retired-batch", {"index": index})
+            ledger.retire(attempt, "operator", "unknown POST outcome")
+        restarted = Ledger(self.path, 8.0)
+        state = restarted.state()
+        self.assertAlmostEqual(state["settled"], 4.48)
+        self.assertEqual(state["reserved"], 0.0)
+        self.assertAlmostEqual(state["per_kind"]["retired-batch"]["settled"], 4.48)
+        restarted.reserve(3.52, "aggregate", {})
+        with self.assertRaises(CapExceededError):
+            restarted.reserve(0.01, "aggregate", {})
+
+        subcap_path = self.temp_root / "subcap.jsonl"
+        subcap_ledger = Ledger(subcap_path, 8.0)
+        for index in range(2):
+            attempt = subcap_ledger.reserve(1.12, "part63", {"index": index},
+                                            subcap_usd=3.0, subcap_key="part63")
+            subcap_ledger.retire(attempt, "operator", "unknown POST outcome")
+        with self.assertRaisesRegex(CapExceededError, "sub-cap"):
+            subcap_ledger.reserve(1.12, "part63", {}, subcap_usd=3.0, subcap_key="part63")
+
+    def test_eight_retired_reserves_reach_the_aggregate_cap(self) -> None:
+        ledger = Ledger(self.path, 8.0)
+        for index in range(8):
+            attempt = ledger.reserve(1.0, "batch", {"index": index})
+            ledger.retire(attempt, "operator", "unknown POST outcome")
+        with self.assertRaises(CapExceededError):
+            Ledger(self.path, 8.0).reserve(0.01, "next", {})
 
     def test_torn_last_line_is_ignored_reported_and_repaired_before_append(self) -> None:
         self.ledger.reserve(0.2, "batch", {})
@@ -245,7 +280,7 @@ def fake_submit(chunk, attempt_id, record_batch_id):
     batch_id = json.loads(raw_post_body)["id"]
     record_batch_id(batch_id)
     kill_if("after_batch_id_write")
-    return {"actual_usd": 0.001, "usage": {"input_tokens": 5, "output_tokens": 2}}
+    return {"actual_usd": 0.000001, "usage": {"input_tokens": 5, "output_tokens": 2}}
 if point == "after_settle":
     original_settle = Ledger.settle
     def settle_then_kill(self, *args, **kwargs):
@@ -270,7 +305,7 @@ submit_in_chunks(requests, 1, ledger=ledger, model="claude-haiku-5-5",
                 self.assertEqual(killed.returncode, -signal.SIGKILL, killed.stderr)
                 interrupted = Ledger(ledger_path, 1.0)
                 before = interrupted.state()
-                self.assertEqual(before["settled"], 0.001 if point == "after_settle" else 0.0)
+                self.assertEqual(before["settled"], 0.000001 if point == "after_settle" else 0.0)
                 self.assertGreater(before["reserved"], 0.0) if point != "after_settle" else self.assertEqual(before["reserved"], 0.0)
                 rerun = script.replace("point = sys.argv[1:4]", "point = sys.argv[1:4]")
                 rerun = rerun.replace("if point == \"after_settle\":", "if point == \"never\":")
@@ -279,7 +314,7 @@ submit_in_chunks(requests, 1, ledger=ledger, model="claude-haiku-5-5",
                                            cwd=ROOT, env=env, capture_output=True, text=True)
                 self.assertEqual(completed.returncode, 0, completed.stderr)
                 final = interrupted.state()
-                self.assertEqual(final["settled"], 0.002 if point == "after_settle" else 0.001)
+                self.assertEqual(final["settled"], 0.000002 if point == "after_settle" else 0.000001)
                 self.assertEqual(final["reserved"], before["reserved"])
                 ledger_events = [json.loads(line) for line in ledger_path.read_text(encoding="utf-8").splitlines()]
                 reserves = [row["attempt_id"] for row in ledger_events if row["event"] == "reserve"]
@@ -332,10 +367,12 @@ submit_in_chunks(requests, 1, ledger=ledger, model="claude-haiku-5-5",
             ("valid = (isinstance(parsed, dict)\n             and parsed.get(\"type\") == \"error\"\n             and isinstance(parsed.get(\"error\"), dict)\n             and bool(parsed[\"error\"]))",
              "valid = True",
              "test_release_requires_anthropic_4xx_and_never_releases_429"),
-            ("if committed_elsewhere + actual > self._cap_decimal or subcap_over:",
-             "if False:", "test_settlement_overrun_refuses_records_actual_and_keeps_reserve"),
+            ('if actual > current["reserve"] or committed_elsewhere + actual > self._cap_decimal or subcap_over:',
+             "if False:", "test_settlement_overrun_records_actual_and_blocks_future_reserves"),
             ("if scoped + amount > subcap:", "if False:",
              "test_two_processes_racing_one_subcap_cannot_both_reserve"),
+            ('elif attempt["status"] == "retired":', 'elif attempt["status"] == "never-retired":',
+             "test_retired_reserves_remain_spent_across_restart_and_caps"),
             ('Path("/home/elisepc/assistant-basin/paidaction/paid-ledger.jsonl")',
              "Path(__file__).resolve().with_name(\"paid-ledger.jsonl\")",
              "test_default_path_is_checkout_independent_and_run_id_cannot_split"),

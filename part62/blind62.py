@@ -22,7 +22,8 @@ if str(PROJECT_ROOT) not in sys.path:
 
 import blind_origin as origin
 from part59 import blind_setting as setting
-from paidaction.paid_ledger import DEFAULT_LEDGER_PATH, HARD_CAP_USD, Ledger, submit_in_chunks
+from paidaction.paid_ledger import (DEFAULT_LEDGER_PATH, HARD_CAP_USD, HTTPFailure,
+                                    Ledger, submit_in_chunks)
 from paidaction.pricing import BATCH_RATES_USD_PER_MILLION
 
 try:
@@ -400,13 +401,12 @@ def _preflight_submission(folder: str | Path, review_dir: str | Path, reader: st
 
 class _StageLedger(Ledger):
     """Shared $8 ledger with Part 62 Haiku's $4 kind-tag sub-cap."""
-    def reserve(self, worst_case_usd, kind, meta=None):
+    def reserve(self, worst_case_usd, kind, meta=None, *, subcap_usd=None, subcap_key=None):
         if kind == READER_KINDS["haiku"]:
-            state = self.state()
-            totals = state["per_kind"].get(kind, {"settled": 0.0, "reserved": 0.0})
-            if totals["settled"] + totals["reserved"] + worst_case_usd > READER_CAPS_USD["haiku"] + 1e-12:
-                raise ValueError("Part 62 Haiku $4 sub-cap would be exceeded")
-        return super().reserve(worst_case_usd, kind, meta)
+            subcap_usd = READER_CAPS_USD["haiku"]
+            subcap_key = kind
+        return super().reserve(worst_case_usd, kind, meta,
+                               subcap_usd=subcap_usd, subcap_key=subcap_key)
 
 
 def prepare_batch(rows: list[dict], reader: str = DEFAULT_READER) -> tuple[dict, dict, list[dict]]:
@@ -460,7 +460,11 @@ def submit(folder: str | Path, review_dir: str | Path, reader: str = DEFAULT_REA
     rates = BATCH_RATES_USD_PER_MILLION[model]
 
     def submit_chunk(chunk, attempt_id, record_batch_id):
-        response = json.loads(setting.call("POST", "/v1/messages/batches", {"requests": list(chunk)}))
+        try:
+            response_text = setting.call("POST", "/v1/messages/batches", {"requests": list(chunk)})
+        except setting.APIHTTPError as exc:
+            raise HTTPFailure(exc.status, exc.body) from exc
+        response = json.loads(response_text)
         batch_id = response.get("id")
         if not isinstance(batch_id, str) or not batch_id:
             raise ValueError("batch POST response did not contain an id")

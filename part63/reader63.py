@@ -271,7 +271,9 @@ def spend_state(path: Path) -> tuple[float, dict[str, dict[str, Any]]]:
         if attempt.get("kind") != "part63" or not isinstance(submission_id, str):
             continue
         amount = float(attempt.get("actual", attempt.get("reserve", 0)))
-        if attempt.get("status") not in ("reserved", "settled"):
+        if attempt.get("status") == "retired":
+            amount = float(attempt.get("reserve", 0))
+        elif attempt.get("status") not in ("reserved", "settled", "overrun"):
             amount = 0.0
         total += amount
         states[submission_id] = {"attempt_id": attempt_id, "event": attempt.get("status"),
@@ -328,8 +330,9 @@ def reserve_budget(root: Path, submission_id: str, reserve_usd: float,
         return ledger.reserve(reserve_usd, "part63", {"submission_id": submission_id})
 
 
-def retire_attempt(attempt_id: str, who: str, reason: str) -> None:
-    Ledger(str(DEFAULT_LEDGER_PATH), SHARED_CAP_USD).retire(attempt_id, who, reason)
+def retire_attempt(attempt_id: str, who: str, reason: str,
+                   ledger_path: Path | None = None) -> None:
+    Ledger(str(ledger_path or DEFAULT_LEDGER_PATH), SHARED_CAP_USD).retire(attempt_id, who, reason)
 
 
 def release_reserve(root: Path, submission_id: str, reason: str, status: int | None = None,
@@ -349,11 +352,6 @@ def settle_reserve(root: Path, submission_id: str, actual_usd: float,
                    ledger_path: Path | None = None) -> None:
     submission = read_json(root / f"submission-{submission_id}.json")
     active_ledger_path = Path(ledger_path or DEFAULT_LEDGER_PATH)
-    _spent, states = spend_state(active_ledger_path)
-    reserve_usd = float(states[submission_id]["reserved_usd"])
-    if actual_usd > reserve_usd + 1e-12:
-        raise ReaderError(f"actual usage ${actual_usd:.6f} exceeds reserved ${reserve_usd:.6f}; "
-                          "settlement refused and run must stop")
     usage = {"actual_usd": actual_usd, "reserved_upper_bound": used_reserved_upper_bound}
     Ledger(str(active_ledger_path), SHARED_CAP_USD).settle(submission["attempt_id"], actual_usd, usage)
 
@@ -1160,7 +1158,7 @@ def run_all(data_dir: Path, review_dir: Path, api: Any = call, *,
             if not isinstance(retry_batch, str):
                 raise ReaderError("retry metadata has no batch ID")
             _poll_until_ended(retry_batch, api, interval=poll_interval, bound=poll_bound, sleep=sleep)
-            collect(retry_batch, data_dir, review_dir, api)
+            collect(retry_batch, data_dir, review_dir, api, ledger_path=active_ledger_path)
         # A killed process or an uncollected retry must never be followed by another chunk.
         state = Ledger(str(active_ledger_path), SHARED_CAP_USD).state()
         active = state.get("per_kind", {}).get("part63", {}).get("reserved", 0.0)
@@ -1333,10 +1331,12 @@ def parser() -> argparse.ArgumentParser:
     collect_parser.add_argument("batch_id")
     collect_parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR)
     collect_parser.add_argument("--review-dir", type=Path, default=DEFAULT_REVIEW_DIR)
+    collect_parser.add_argument("--ledger-path", type=Path, default=DEFAULT_LEDGER_PATH)
     retire_parser = commands.add_parser("retire", help="operator-retire an ambiguous shared-ledger reserve")
     retire_parser.add_argument("attempt_id")
     retire_parser.add_argument("--who", required=True)
     retire_parser.add_argument("--reason", required=True)
+    retire_parser.add_argument("--ledger-path", type=Path, default=DEFAULT_LEDGER_PATH)
     return root
 
 
@@ -1353,9 +1353,9 @@ def main(argv: list[str] | None = None) -> None:
         elif args.command == "status":
             status(args.batch_id)
         elif args.command == "retire":
-            retire_attempt(args.attempt_id, args.who, args.reason)
+            retire_attempt(args.attempt_id, args.who, args.reason, ledger_path=args.ledger_path)
         else:
-            collect(args.batch_id, args.data_dir, args.review_dir)
+            collect(args.batch_id, args.data_dir, args.review_dir, ledger_path=args.ledger_path)
     except (ReaderError, OSError, ValueError, KeyError) as exc:
         raise SystemExit(str(exc)) from exc
 

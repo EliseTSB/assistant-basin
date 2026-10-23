@@ -385,10 +385,17 @@ class SafetyTests(unittest.TestCase):
             with self.assertRaisesRegex(reader63.ReaderError, "cap refused"):
                 reader63.reserve_budget(ledger_root, "too-large", EXPECTED_BUDGET_CAP + 0.01)
             self.assertFalse(reader63.DEFAULT_LEDGER_PATH.exists())
-            attempt_id = reader63.Ledger(str(reader63.DEFAULT_LEDGER_PATH), reader63.SHARED_CAP_USD).reserve(
+            explicit_ledger = Path(self._ledger_tmp.name) / "retire-explicit.jsonl"
+            attempt_id = reader63.Ledger(str(explicit_ledger), reader63.SHARED_CAP_USD).reserve(
                 0.01, "part63", {"submission_id": "operator-test"})
-            reader63.retire_attempt(attempt_id, "test operator", "fake preflight attempt")
-            self.assertEqual(reader63.Ledger(str(reader63.DEFAULT_LEDGER_PATH), reader63.SHARED_CAP_USD).state()["reserved"], 0.0)
+            reader63.retire_attempt(attempt_id, "test operator", "fake preflight attempt",
+                                    ledger_path=explicit_ledger)
+            retired_state = reader63.Ledger(str(explicit_ledger), reader63.SHARED_CAP_USD).state()
+            self.assertEqual(retired_state["reserved"], 0.0)
+            self.assertEqual(retired_state["settled"], 0.01)
+            spent, states = reader63.spend_state(explicit_ledger)
+            self.assertEqual(spent, 0.01)
+            self.assertEqual(next(iter(states.values()))["effective_usd"], 0.01)
 
     def test_estimator_reserves_a_positive_worst_case_amount(self):
         request = reader63.request_for("r00000", FAKE_TEXT)
@@ -440,6 +447,7 @@ class SafetyTests(unittest.TestCase):
             root = Path(directory)
             data_dir = root / "data"
             review_dir = root / "review"
+            ledger_path = Path(self._ledger_tmp.name) / "explicit-retry-ledger.jsonl"
             gather63.write_bundle(data_dir, _fixture_rows(), seed=93)
             captured: dict[str, object] = {}
 
@@ -454,7 +462,7 @@ class SafetyTests(unittest.TestCase):
                     self.assertEqual(intent["request_count"], len(request_map))
                     self.assertEqual(set(intent["request_ids"]), set(request_map.values()))
                     self.assertTrue((review_dir / intent["key_file"]).is_file())
-                    spent, states = reader63.spend_state(reader63.DEFAULT_LEDGER_PATH)
+                    spent, states = reader63.spend_state(ledger_path)
                     self.assertGreater(spent, 0.0, "reserve must be written before POST")
                     self.assertEqual(len(states), 1)
                     return json.dumps({"id": FAKE_BATCH_ID, "processing_status": "in_progress"})
@@ -475,9 +483,10 @@ class SafetyTests(unittest.TestCase):
             with mock.patch.dict(os.environ, {"ANTHROPIC_CREDITS_KEY": "test-key"}), \
                     mock.patch.object(reader63, "context", return_value=object()), \
                     contextlib.redirect_stdout(io.StringIO()) as output:
-                batch_id = reader63.submit(data_dir, review_dir, fake_api)
+                batch_id = reader63.submit(data_dir, review_dir, fake_api, ledger_path=ledger_path)
                 self.assertEqual(batch_id, FAKE_BATCH_ID)
-                labels_path = reader63.collect(batch_id, data_dir, review_dir, fake_api)
+                labels_path = reader63.collect(batch_id, data_dir, review_dir, fake_api,
+                                               ledger_path=ledger_path)
             self.assertIn("actual cost=$", output.getvalue())
             self.assertIn("vs reserve=$", output.getvalue())
             labels = json.loads(labels_path.read_text(encoding="utf-8"))
@@ -494,10 +503,11 @@ class SafetyTests(unittest.TestCase):
             stale["request_count"] += 1
             labels_path.write_text(json.dumps(stale), encoding="utf-8")
             with self.assertRaisesRegex(reader63.ReaderError, "stale or mismatched labels"):
-                reader63.collect(FAKE_BATCH_ID, data_dir, review_dir, fake_api)
+                reader63.collect(FAKE_BATCH_ID, data_dir, review_dir, fake_api,
+                                ledger_path=ledger_path)
             body = captured["body"]
             self.assertEqual(set(body), {"requests"})
-            spent, states = reader63.spend_state(reader63.DEFAULT_LEDGER_PATH)
+            spent, states = reader63.spend_state(ledger_path)
             self.assertEqual(len(states), 1)
             self.assertEqual(next(iter(states.values()))["event"], "settled")
             self.assertGreaterEqual(spent, 0.0)
@@ -848,7 +858,7 @@ reader63.run_all(data_dir, review_dir, api, poll_interval=0, poll_bound=1,
             self.assertGreater(spent, 0.0)
             self.assertEqual(next(iter(states.values()))["event"], "reserved")
 
-    def test_settlement_refuses_usage_above_reserved_amount(self):
+    def test_settlement_records_usage_above_reserved_amount_as_overrun(self):
         ledger_path = Path(self._ledger_tmp.name) / "explicit-ledger.jsonl"
         submission_id = "settle-over-reserve"
         attempt_id = reader63.Ledger(str(ledger_path), reader63.SHARED_CAP_USD).reserve(
@@ -859,9 +869,14 @@ reader63.run_all(data_dir, review_dir, api, poll_interval=0, poll_bound=1,
         reader63.write_json(review_dir / f"submission-{submission_id}.json", {
             "submission_id": submission_id, "attempt_id": attempt_id,
         })
-        with self.assertRaisesRegex(reader63.ReaderError, "exceeds reserved"):
+        with self.assertRaises(reader63.LedgerError):
             reader63.settle_reserve(review_dir, submission_id, 0.02, ledger_path=ledger_path)
-        self.assertEqual(reader63.Ledger(str(ledger_path), reader63.SHARED_CAP_USD).state()["reserved"], 0.01)
+        state = reader63.Ledger(str(ledger_path), reader63.SHARED_CAP_USD).state()
+        self.assertEqual(state["reserved"], 0.0)
+        self.assertEqual(state["settled"], 0.02)
+        _spent, attempts = reader63.spend_state(ledger_path)
+        self.assertEqual(attempts[submission_id]["event"], "overrun")
+        self.assertEqual(attempts[submission_id]["effective_usd"], 0.02)
 
     def test_ambiguous_post_keeps_reserve_and_blocks_manual_resubmission(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -900,6 +915,7 @@ reader63.run_all(data_dir, review_dir, api, poll_interval=0, poll_bound=1,
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             data_dir, review_dir = root / "data", root / "review"
+            ledger_path = Path(self._ledger_tmp.name) / "explicit-collection-retry-ledger.jsonl"
             gather63.write_bundle(data_dir, _fixture_rows(), seed=93)
             batch_ids = ["msgbatch_root", "msgbatch_retry"]
             answer_to_fail = {"id": None}
@@ -949,8 +965,9 @@ reader63.run_all(data_dir, review_dir, api, poll_interval=0, poll_bound=1,
             with mock.patch.dict(os.environ, {"ANTHROPIC_CREDITS_KEY": "test-key"}), \
                     mock.patch.object(reader63, "context", return_value=object()), \
                     contextlib.redirect_stdout(io.StringIO()):
-                root_batch = reader63.submit(data_dir, review_dir, api)
-                labels_path = reader63.collect(root_batch, data_dir, review_dir, api)
+                root_batch = reader63.submit(data_dir, review_dir, api, ledger_path=ledger_path)
+                labels_path = reader63.collect(root_batch, data_dir, review_dir, api,
+                                               ledger_path=ledger_path)
                 self.assertEqual(submit_count, 2)
                 retry_batch = json.loads(labels_path.read_text())["retry"]["batch_id"]
                 self.assertEqual(retry_batch, "msgbatch_retry")
@@ -959,9 +976,11 @@ reader63.run_all(data_dir, review_dir, api, poll_interval=0, poll_bound=1,
                     "idmap_file"]).read_text())
                 self.assertEqual(list(retry_map.values()), [answer_to_fail["id"]])
                 self.assertEqual(len(captured_bodies[retry_batch]["requests"]), 1)
-                labels_path = reader63.collect(retry_batch, data_dir, review_dir, api)
+                labels_path = reader63.collect(retry_batch, data_dir, review_dir, api,
+                                               ledger_path=ledger_path)
                 # Recollecting the parent preserves the completed retry and does not submit again.
-                labels_path = reader63.collect(root_batch, data_dir, review_dir, api)
+                labels_path = reader63.collect(root_batch, data_dir, review_dir, api,
+                                               ledger_path=ledger_path)
                 self.assertEqual(submit_count, 2)
             labels = json.loads(labels_path.read_text())
             self.assertEqual(labels["batch_ids"], batch_ids)

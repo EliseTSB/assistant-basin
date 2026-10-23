@@ -83,6 +83,15 @@ def ctx():
     return ssl.create_default_context(cafile=os.path.expanduser(ca_bundle))
 
 
+class APIHTTPError(RuntimeError):
+    """HTTP response with its status and body preserved for caller policy."""
+
+    def __init__(self, status: int, body: str, reason: str = ""):
+        super().__init__(f"Anthropic API HTTP {status} {reason}: {body}")
+        self.status = status
+        self.body = body
+
+
 def call(method: str, path: str, body: dict | None = None) -> str:
     request = urllib.request.Request(
         "https://api.anthropic.com" + path,
@@ -96,14 +105,7 @@ def call(method: str, path: str, body: dict | None = None) -> str:
             return response.read().decode("utf-8")
     except urllib.error.HTTPError as exc:
         detail = exc.read().decode("utf-8", errors="replace").strip()
-        detail_lower = detail.lower()
-        if (path.endswith("/results") and exc.code == 400
-                and any(marker in detail_lower
-                        for marker in ("processing", "not ended", "not available"))):
-            message = "batch not ended"
-        else:
-            message = f"Anthropic API HTTP {exc.code} {exc.reason}"
-        raise SystemExit(f"{message}: {detail or exc.reason}") from None
+        raise APIHTTPError(exc.code, detail, str(exc.reason)) from None
     except urllib.error.URLError as exc:
         raise SystemExit(f"Anthropic API request failed: {exc.reason}") from None
 
