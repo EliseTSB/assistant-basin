@@ -118,3 +118,25 @@ The fake API tests verify local state transitions and ledger idempotence, not An
 ### BLOCKERS
 
 - None. Amendment 5 is registered on `main`, and the permitted write scope covered the code, tests, runbook, and report changes. No parent-control messages required disposition.
+
+## Fold 10
+
+### SUMMARY
+
+- Unknown POST outcomes now require `--no-batch-verified` before retirement; provider-visible request IDs carry the chunk submission ID for reconciliation.
+- Short result sets save raw JSONL, record `results-incomplete` and the batch ID, and allow retirement while the reserve remains counted.
+- Class-and-tag calibration agreement remains in place, with comments and tests citing Amendment 6.
+- The Part 62 suite completed with 69 tests `OK`; no paid calls, network, GPU, or commit were used.
+
+### FINDINGS / WHAT SHIPPED
+
+- **Finding 1 — unknown POST outcome can no longer be retired silently.** `posting` and `ambiguous` chunks without a durable batch ID refuse retirement unless the operator passes `--no-batch-verified`. The refusal includes the full command and instructs the operator to search for a provider batch carrying the chunk's submission ID. New requests include that ID in their provider-visible `custom_id`; prior run records keep their original ID mapping. Tests: `BlindLifecycleTests.test_s2_and_s3_unknown_post_outcomes_require_no_batch_verified`, `BlindLifecycleTests.test_kill_after_post_before_id_record_is_ambiguous_and_not_reposted`, and `BlindLifecycleTests.test_retired_answer_prints_and_accepts_explicit_retry`.
+- **Finding 2 — short result sets have an operator exit.** Raw rows are saved before count validation; a short batch records `results-incomplete`, its row count, path, and batch ID, while leaving the reserve active. `retire` accepts this known short-result state without the unknown-batch flag. Test: `BlindLifecycleTests.test_short_batch_results_are_saved_retirable_and_keep_reserve`.
+- **Finding 3 / Amendment 6 — calibration agreement uses class and tag.** `_calibration_wrong` and `_calibration_kappa` retain the registered class-plus-tag rule, and both the implementation comment and the BROKEN-tag test cite Amendment 6. Test: `BlindGateTests.test_origin_calibration_gate_rejects_matching_class_with_broken_tag`.
+- **Finding 4 — test and RUNBOOK gaps.** RUNBOOK-62 now explains the provider search by submission-ID prefix, the `--no-batch-verified` condition, and the short-result retire/retry flow. Test: `RunbookTests.test_runbook_matches_calibration_and_failed_answer_retry_paths`.
+- Baseline regression check: running the two new lifecycle tests with `git show HEAD:part62/blind62.py` produced the expected red assertions for both S2/S3 subcases and the short-result case.
+- Verification: `/home/elisepc/neuron-probe/.venv/bin/python -m unittest part62.test_part62` completed with `Ran 69 tests ... OK`; `python -m py_compile part62/blind62.py part62/test_part62.py` and `git diff --check` passed. Parent-control reads were empty.
+
+### BLOCKERS
+
+- None. The provider batch-listing route was not verified because this fold prohibits network access; RUNBOOK-62 states that limitation and directs the operator to the provider-supported inventory view.

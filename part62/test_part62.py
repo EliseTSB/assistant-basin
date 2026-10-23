@@ -27,6 +27,10 @@ except ImportError:
 import blind_origin
 
 
+def _original_custom_id(provider_custom_id: str) -> str:
+    return provider_custom_id.rsplit("-", 1)[-1]
+
+
 class FakeDownProjection:
     def __init__(self):
         self.hooks = []
@@ -416,6 +420,7 @@ class BlindGateTests(unittest.TestCase):
             blind62.scoring_gate(labels, ["ans|0"])
 
     def test_origin_calibration_gate_rejects_matching_class_with_broken_tag(self):
+        # Amendment 6 to Part 62: calibration agreement is class AND tag.
         labels = {}
         for index, (label, _answer_id, _text) in enumerate(blind62.CAL):
             labels[f"cal|{index}|{label}|ORIGIN"] = [label, "BROKEN"]
@@ -812,6 +817,9 @@ class RunbookTests(unittest.TestCase):
         self.assertIn("A definitively rejected answer POST with a released reserve", runbook)
         self.assertIn("A rejected calibration POST requires `--retry-calibration`", runbook)
         self.assertIn("one `--retry-failed-answers` retry per answer row", runbook)
+        self.assertIn("search the provider's batch inventory or result rows", runbook)
+        self.assertIn("--no-batch-verified", runbook)
+        self.assertIn("results-incomplete", runbook)
 
 class MutationTests(unittest.TestCase):
     def _copy_mutation_goes_red(self, filename: str, old: str, new: str,
@@ -1081,8 +1089,11 @@ class BlindLifecycleTests(unittest.TestCase):
                                     api=Unknown(), sleep=lambda _: None)
                 run = json.loads((root / "part62-run-all-opus.json").read_text())
                 attempt_id = run["chunks"][0]["attempt_id"]
+                with self.assertRaisesRegex(ValueError, "provider batch carrying.*--no-batch-verified"):
+                    blind62.retire_attempt(attempt_id, "OPERATOR", "verified unknown outcome",
+                                           ledger_path, root)
                 blind62.retire_attempt(attempt_id, "OPERATOR", "verified unknown outcome",
-                                       ledger_path, root)
+                                       ledger_path, root, no_batch_verified=True)
                 with self.assertRaisesRegex(ValueError, "--retry-answers"):
                     blind62.run_all(root, root, reader="opus", ledger_path=ledger_path,
                                     api=lambda *_args, **_kwargs: self.fail("must wait for explicit retry"),
@@ -1157,7 +1168,11 @@ class BlindLifecycleTests(unittest.TestCase):
             (review / "part62-run-all-opus.json").write_text(json.dumps({
                 "reader": "opus", "chunks": [{"attempt_id": mapped,
                     "submission_id": submission_id, "status": "posting"}]}))
-            blind62.retire_attempt(mapped, "OPERATOR", "verified unknown outcome", ledger_path, review)
+            with self.assertRaisesRegex(ValueError, "provider batch carrying.*--no-batch-verified"):
+                blind62.retire_attempt(mapped, "OPERATOR", "verified unknown outcome", ledger_path, review)
+            self.assertEqual(blind62._ledger_attempts(ledger_path)[mapped]["status"], "reserved")
+            blind62.retire_attempt(mapped, "OPERATOR", "verified unknown outcome", ledger_path, review,
+                                   no_batch_verified=True)
             self.assertEqual(blind62._ledger_attempts(ledger_path)[mapped]["status"], "retired")
 
     def test_retired_calibration_printed_command_retries_with_new_reserve(self):
@@ -1209,7 +1224,7 @@ class BlindLifecycleTests(unittest.TestCase):
                         batch_id = path.split("/")[-2]
                         lines = []
                         for custom_id in self.posts[batch_id]:
-                            label = expected.get(custom_id, "NEITHER")
+                            label = expected.get(_original_custom_id(custom_id), "NEITHER")
                             lines.append(json.dumps({"custom_id": custom_id, "result": {
                                 "type": "succeeded", "message": {
                                     "content": [{"type": "text", "text": f"{label} OK"}],
@@ -1275,9 +1290,9 @@ class BlindLifecycleTests(unittest.TestCase):
                         lines = []
                         is_calibration = len(payload["requests"]) == blind62.CALIBRATION_SAMPLE_SIZE
                         for request in payload["requests"]:
-                            internal_id = idmap[request["custom_id"]]
+                            internal_id = idmap[_original_custom_id(request["custom_id"])]
                             if (is_calibration and first_calibration
-                                    and request["custom_id"] == first_calibration_custom):
+                                    and _original_custom_id(request["custom_id"]) == first_calibration_custom):
                                 result = {"type": "errored", "error": {"type": "api_error"}}
                             else:
                                 label = internal_id.split("|")[2] if internal_id.startswith("cal|") else "EARTH"
@@ -1338,7 +1353,7 @@ class BlindLifecycleTests(unittest.TestCase):
                         posts.append(len(payload["requests"]))
                         lines = []
                         for request in payload["requests"]:
-                            internal_id = idmap[request["custom_id"]]
+                            internal_id = idmap[_original_custom_id(request["custom_id"])]
                             label = internal_id.split("|")[2] if internal_id.startswith("cal|") else "EARTH"
                             lines.append(json.dumps({"custom_id": request["custom_id"], "result": {
                                 "type": "succeeded", "message": {
@@ -1395,10 +1410,12 @@ class BlindLifecycleTests(unittest.TestCase):
                 def __call__(self, method, path, payload=None):
                     if method == "POST":
                         batch_id = f"answer-{len(posts) + 1}"
-                        posts.append([item["custom_id"] for item in payload["requests"]])
+                        posts.append([_original_custom_id(item["custom_id"])
+                                      for item in payload["requests"]])
                         lines = []
                         for item in payload["requests"]:
-                            failed_row = len(posts) == 1 and item["custom_id"] == "r00001"
+                            failed_row = (len(posts) == 1
+                                          and _original_custom_id(item["custom_id"]) == "r00001")
                             result = ({"type": "errored", "error": {"type": "api_error"}}
                                       if failed_row else {"type": "succeeded", "message": {
                                           "content": [{"type": "text", "text": "EARTH OK"}],
@@ -1457,7 +1474,8 @@ class BlindLifecycleTests(unittest.TestCase):
                 def __call__(self, method, path, payload=None):
                     if method == "POST":
                         batch_id = f"truncating-{len(self.posts) + 1}"
-                        self.posts.append([item["custom_id"] for item in payload["requests"]])
+                        self.posts.append([_original_custom_id(item["custom_id"])
+                                           for item in payload["requests"]])
                         self.batches[batch_id] = [json.dumps({"custom_id": item["custom_id"],
                             "result": {"type": "succeeded", "message": {
                                 "content": [{"type": "text", "text": "EARTH OK"}],
@@ -1516,7 +1534,8 @@ class BlindLifecycleTests(unittest.TestCase):
                 def __call__(self, method, path, payload=None):
                     if method == "POST":
                         batch_id = f"save-failure-{len(self.posts) + 1}"
-                        self.posts.append([item["custom_id"] for item in payload["requests"]])
+                        self.posts.append([_original_custom_id(item["custom_id"])
+                                           for item in payload["requests"]])
                         self.batches[batch_id] = [json.dumps({"custom_id": item["custom_id"],
                             "result": {"type": "succeeded", "message": {
                                 "content": [{"type": "text", "text": "EARTH OK"}],
@@ -1606,7 +1625,8 @@ class BlindLifecycleTests(unittest.TestCase):
                 def __call__(self, method, path, payload=None):
                     if method == "POST":
                         batch_id = f"record-failure-{len(self.posts) + 1}"
-                        self.posts.append([item["custom_id"] for item in payload["requests"]])
+                        self.posts.append([_original_custom_id(item["custom_id"])
+                                           for item in payload["requests"]])
                         self.batches[batch_id] = [json.dumps({"custom_id": item["custom_id"],
                             "result": {"type": "succeeded", "message": {
                                 "content": [{"type": "text", "text": "EARTH OK"}],
@@ -1900,9 +1920,129 @@ class BlindLifecycleTests(unittest.TestCase):
             self.assertEqual(run["chunks"][0]["status"], "posting")
             self.assertFalse(list(root.glob("post-response-*.txt")))
             with mock.patch.object(blind62, "_preflight_submission", return_value=(root, idmap, {}, [req])):
-                with self.assertRaisesRegex(ValueError, "retire .*--ledger-path"):
+                with self.assertRaisesRegex(ValueError,
+                                           "provider batch carrying.*--no-batch-verified") as raised:
                     blind62.run_all(root, root, ledger_path=root / "ledger.jsonl", api=api, sleep=lambda _: None)
+            self.assertIn("--no-batch-verified", str(raised.exception))
+            chunk = json.loads((root / "part62-run-all.json").read_text())["chunks"][0]
+            with self.assertRaisesRegex(ValueError, "provider batch carrying.*--no-batch-verified"):
+                blind62.retire_attempt(chunk["attempt_id"], "OPERATOR", "unknown result",
+                                       root / "ledger.jsonl", root)
             self.assertEqual(api.posts, 1)
+
+    def test_s2_and_s3_unknown_post_outcomes_require_no_batch_verified(self):
+        for scenario in ("raw-and-record-save-fail", "timeout-after-accept"):
+            with self.subTest(scenario=scenario), tempfile.TemporaryDirectory(
+                    dir=Path(__file__).parent) as temporary:
+                root = Path(temporary)
+                api, request, idmap, run = self._fixture(root)
+                if scenario == "raw-and-record-save-fail":
+                    real_save = blind62._save_text
+                    real_persist = blind62._persist_run
+
+                    def fail_raw(path, value):
+                        if Path(path).name.startswith("post-response-"):
+                            raise OSError("simulated disk full (raw)")
+                        return real_save(path, value)
+
+                    def fail_record(path, current_run):
+                        if any(chunk.get("status") == "submitted"
+                               and chunk.get("post_response_saved") is False
+                               for chunk in current_run.get("chunks", [])):
+                            raise OSError("simulated disk full (run record)")
+                        return real_persist(path, current_run)
+
+                    with mock.patch.object(blind62, "_save_text", side_effect=fail_raw), \
+                         mock.patch.object(blind62, "_persist_run", side_effect=fail_record):
+                        with self.assertRaisesRegex(OSError, r"disk full \(run record\)"):
+                            self._run_chunk(root, api, request, idmap, run)
+                else:
+                    class AcceptedTimeout:
+                        def __init__(self):
+                            self.posts = 0
+
+                        def __call__(self, method, path, body=None):
+                            if method == "POST":
+                                self.posts += 1
+                                raise TimeoutError("read timed out after provider accept")
+                            raise AssertionError(f"unexpected call {method} {path}")
+
+                    api = AcceptedTimeout()
+                    with self.assertRaisesRegex(TimeoutError, "after provider accept"):
+                        self._run_chunk(root, api, request, idmap, run)
+
+                with mock.patch.object(blind62, "_preflight_submission",
+                                       return_value=(root, idmap, {}, [request])):
+                    with self.assertRaisesRegex(ValueError,
+                                               "provider batch carrying.*--no-batch-verified") as raised:
+                        blind62.run_all(root, root, reader="haiku", ledger_path=root / "ledger.jsonl",
+                                        api=api, sleep=lambda _: None)
+                self.assertIn("--no-batch-verified", str(raised.exception))
+                chunk = json.loads((root / "part62-run-all.json").read_text())["chunks"][0]
+                self.assertEqual(chunk["status"], "ambiguous")
+                self.assertTrue(chunk["provider_custom_ids"]["r00000"].startswith(
+                    chunk["submission_id"] + "-"))
+                with self.assertRaisesRegex(ValueError, "provider batch carrying.*--no-batch-verified"):
+                    blind62.retire_attempt(chunk["attempt_id"], "OPERATOR", "unknown result",
+                                           root / "ledger.jsonl", root)
+                self.assertEqual(blind62._ledger_attempts(root / "ledger.jsonl")
+                                 [chunk["attempt_id"]]["status"], "reserved")
+                with mock.patch.object(blind62, "_preflight_submission",
+                                       return_value=(root, idmap, {}, [request])):
+                    with self.assertRaisesRegex(ValueError, "provider batch carrying.*--no-batch-verified"):
+                        blind62.run_all(root, root, reader="haiku", ledger_path=root / "ledger.jsonl",
+                                        api=api, sleep=lambda _: None, retry_calibration=True)
+                self.assertEqual(api.posts, 1)
+
+    def test_short_batch_results_are_saved_retirable_and_keep_reserve(self):
+        with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temporary:
+            root = Path(temporary)
+            api, request, _idmap, run = self._fixture(root)
+            request2 = {**request, "custom_id": "r00001"}
+            idmap = {"r00000": "cal|0|EARTH|ORIGIN", "r00001": "cal|1|EARTH|ORIGIN"}
+
+            class ShortResults:
+                def __init__(self):
+                    self.posts = 0
+                    self.provider_custom_id = None
+
+                def __call__(self, method, path, body=None):
+                    if method == "POST":
+                        self.posts += 1
+                        self.provider_custom_id = body["requests"][0]["custom_id"]
+                        return json.dumps({"id": "short-result-batch"})
+                    if path.endswith("/results"):
+                        return json.dumps({"custom_id": self.provider_custom_id,
+                            "result": {"type": "succeeded", "message": {
+                                "content": [{"type": "text", "text": "EARTH OK"}],
+                                "stop_reason": "end_turn",
+                                "usage": {"input_tokens": 5, "output_tokens": 2}}}})
+                    return json.dumps({"processing_status": "ended"})
+
+            api = ShortResults()
+            with self.assertRaisesRegex(ValueError,
+                                       "batch short-result-batch returned 1 of 2 results; status=results-incomplete"):
+                blind62._post_chunk([request, request2], idmap, run,
+                                    root / "part62-run-all.json", root, root / "ledger.jsonl",
+                                    "haiku", blind62.MODEL, api, "calibration", 0,
+                                    sleep=lambda _: None, poll_interval=0, poll_bound=0.01)
+            chunk = json.loads((root / "part62-run-all.json").read_text())["chunks"][0]
+            self.assertEqual(chunk["status"], "results-incomplete")
+            self.assertEqual(chunk["batch_id"], "short-result-batch")
+            self.assertTrue(chunk["provider_custom_ids"]["r00000"].startswith(
+                chunk["submission_id"] + "-"))
+            raw_path = Path(chunk["result_path"])
+            self.assertTrue(raw_path.is_file())
+            self.assertEqual(len(raw_path.read_text().splitlines()), 1)
+            attempt = blind62._ledger_attempts(root / "ledger.jsonl")[chunk["attempt_id"]]
+            self.assertEqual(attempt["status"], "reserved")
+            self.assertGreater(attempt["reserve"], 0)
+
+            blind62.retire_attempt(chunk["attempt_id"], "OPERATOR", "short results reviewed",
+                                   root / "ledger.jsonl", root)
+            attempt = blind62._ledger_attempts(root / "ledger.jsonl")[chunk["attempt_id"]]
+            self.assertEqual(attempt["status"], "retired")
+            self.assertGreater(attempt["reserve"], 0)
 
     def test_kill_after_id_before_results_resumes_saved_batch_without_post(self):
         with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as tmp:

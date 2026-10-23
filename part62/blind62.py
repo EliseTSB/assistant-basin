@@ -311,6 +311,8 @@ def answers(folder: str | Path) -> list[dict]:
 
 
 def _calibration_wrong(labels: dict) -> list[str]:
+    # Amendment 6 to Part 62 registers agreement as class AND tag; BROKEN is
+    # a disagreement with the readable origin answer's expected OK tag.
     wrong = []
     for index, (expected_origin, _answer_id, _text) in enumerate(CAL):
         key = f"cal|{index}|{expected_origin}|ORIGIN"
@@ -565,11 +567,19 @@ def _run_all_command(folder: str | Path, review_dir: str | Path, reader: str,
     return " ".join(shlex.quote(part) for part in parts)
 
 
+def _provider_custom_id(submission_id: str, custom_id: str) -> str:
+    """Carry the local chunk identity into provider-visible batch result IDs."""
+    return f"{submission_id}-{custom_id}"
+
+
 def _retire_command(attempt_id: str, review_dir: str | Path,
-                    ledger_path: str | Path) -> str:
+                    ledger_path: str | Path, *,
+                    no_batch_verified: bool = False) -> str:
     parts = ["python3", "part62/blind62.py", "retire", attempt_id,
              "--who", "OPERATOR", "--reason", "verified outcome unknown",
              "--ledger-path", str(ledger_path), "--review-dir", str(review_dir)]
+    if no_batch_verified:
+        parts.append("--no-batch-verified")
     return " ".join(shlex.quote(part) for part in parts)
 
 
@@ -626,7 +636,20 @@ def _settle_recorded(chunk: dict, api: Any, review_dir: Path, run: dict,
         sleep(interval)
     lines = api("GET", f"/v1/messages/batches/{batch_id}/results").splitlines()
     _atomic_raw(review_dir / f"part62-raw-{batch_id}.jsonl", lines)
+    if len(lines) != chunk["request_count"]:
+        raw_path = review_dir / f"part62-raw-{batch_id}.jsonl"
+        chunk.update(status="results-incomplete", result_count=len(lines),
+                     result_path=str(raw_path))
+        _persist_run(run_path, run)
+        raise ValueError(f"batch {batch_id} returned {len(lines)} of {chunk['request_count']} results; "
+                         "status=results-incomplete; raw result lines were saved to "
+                         f"{raw_path}; reserve remains active")
     localmap = {custom: idmap[custom] for custom in chunk["custom_ids"]}
+    # New attempts expose the submission ID through provider custom IDs so an
+    # operator can search batch results after a lost POST response. Keep the
+    # original IDs mapped too, which permits resume of pre-change run records.
+    for custom, provider_custom in chunk.get("provider_custom_ids", {}).items():
+        localmap[provider_custom] = idmap[custom]
     labels, reasons = parse_batch_results(lines, localmap, max_tokens=chunk["max_tokens"])
     usage = {"input_tokens": 0, "output_tokens": 0, "requests": []}
     for line in lines:
@@ -642,8 +665,6 @@ def _settle_recorded(chunk: dict, api: Any, review_dir: Path, run: dict,
         usage["input_tokens"] += u["input_tokens"]
         usage["output_tokens"] += u["output_tokens"]
         usage["requests"].append({"custom_id": row.get("custom_id"), **u})
-    if len(lines) != chunk["request_count"]:
-        raise ValueError("batch returned incomplete results; reserve remains active")
     rates = BATCH_RATES_USD_PER_MILLION[model]
     actual = (usage["input_tokens"] * rates[0] + usage["output_tokens"] * rates[1]) / 1_000_000
     _StageLedger(str(ledger_path), HARD_CAP_USD).settle(chunk["attempt_id"], actual, usage)
@@ -659,8 +680,16 @@ def _send_reserved(chunk: dict, requests: list[dict], idmap: dict, run: dict,
                   poll_interval: float, poll_bound: float) -> dict:
     chunk["status"] = "posting"
     _persist_run(run_path, run)
+    provider_custom_ids = chunk.get("provider_custom_ids", {})
+    provider_requests = []
+    for request in requests:
+        provider_request = dict(request)
+        original_custom_id = request["custom_id"]
+        provider_request["custom_id"] = provider_custom_ids.get(
+            original_custom_id, original_custom_id)
+        provider_requests.append(provider_request)
     try:
-        raw = api("POST", "/v1/messages/batches", {"requests": requests})
+        raw = api("POST", "/v1/messages/batches", {"requests": provider_requests})
     except setting.APIHTTPError as exc:
         raw_path = review_dir / f"post-response-{chunk['submission_id']}.txt"
         _save_text(raw_path, exc.body)
@@ -737,7 +766,9 @@ def _send_reserved(chunk: dict, requests: list[dict], idmap: dict, run: dict,
     _save_json(review_dir / f"part62-batch-{batch_id}.json", {
         "batch_id": batch_id, "reader": reader, "model": model,
         "stage": chunk["stage"], "request_count": len(requests),
-        "custom_ids": chunk["custom_ids"], "attempt_id": chunk["attempt_id"]})
+        "custom_ids": chunk["custom_ids"],
+        "provider_custom_ids": provider_custom_ids,
+        "submission_id": chunk["submission_id"], "attempt_id": chunk["attempt_id"]})
     _settle_recorded(chunk, api, review_dir, run, run_path, idmap, model, ledger_path,
                      sleep=sleep, interval=poll_interval, bound=poll_bound)
     return chunk
@@ -751,6 +782,10 @@ def _post_chunk(requests: list[dict], idmap: dict, run: dict, run_path: Path,
     submission_id = uuid.uuid4().hex
     chunk = {"stage": stage, "index": index, "submission_id": submission_id,
              "status": "reserving", "custom_ids": [r["custom_id"] for r in requests],
+             "provider_custom_ids": {
+                 r["custom_id"]: _provider_custom_id(submission_id, r["custom_id"])
+                 for r in requests
+             },
              "request_count": len(requests),
              "max_tokens": max(int(r["params"]["max_tokens"]) for r in requests)}
     if retry_failed_answers:
@@ -768,7 +803,8 @@ def _post_chunk(requests: list[dict], idmap: dict, run: dict, run_path: Path,
 
 def retire_attempt(attempt_id: str, who: str, reason: str,
                    ledger_path: str | Path = DEFAULT_LEDGER_PATH,
-                   review_dir: str | Path = DEFAULT_REVIEW_DIR) -> None:
+                   review_dir: str | Path = DEFAULT_REVIEW_DIR,
+                   *, no_batch_verified: bool = False) -> None:
     """Retire only unresolved attempts; the ledger keeps their full reserve charged."""
     review_dir = Path(review_dir).resolve()
     ledger_path = Path(ledger_path).resolve()
@@ -808,8 +844,16 @@ def retire_attempt(attempt_id: str, who: str, reason: str,
                 has_saved_batch = (isinstance(response, dict)
                                    and isinstance(response.get("id"), str)
                                    and bool(response["id"]))
-            has_saved_batch = has_saved_batch or (
-                isinstance(chunk.get("batch_id"), str) and bool(chunk["batch_id"]))
+            recorded_batch_id = (isinstance(chunk.get("batch_id"), str)
+                                 and bool(chunk["batch_id"]))
+            if chunk.get("status") == "results-incomplete":
+                if not recorded_batch_id:
+                    raise ValueError(f"incomplete results for attempt {attempt_id} have no recorded batch id")
+                # The batch ended and its short raw result file is saved. The
+                # reserve remains active, but the operator may retire this chunk.
+                has_saved_batch = False
+            else:
+                has_saved_batch = has_saved_batch or recorded_batch_id
             if has_saved_batch:
                 resume = _run_all_command(
                     PROJECT_ROOT / "results" / "part62", review_dir,
@@ -817,6 +861,15 @@ def retire_attempt(attempt_id: str, who: str, reason: str,
                 raise ValueError(
                     f"refusing to retire attempt {attempt_id}: its batch id is recorded; "
                     f"resume result collection with: {resume}")
+            if chunk.get("status") in {"posting", "ambiguous"} and not recorded_batch_id:
+                command = _retire_command(attempt_id, review_dir, ledger_path,
+                                          no_batch_verified=True)
+                if not no_batch_verified:
+                    raise ValueError(
+                        f"refusing to retire attempt {attempt_id}: POST outcome is unknown "
+                        f"(status={chunk.get('status')}, submission id={submission_id}). "
+                        f"Look first for a provider batch carrying this chunk's submission id "
+                        f"{submission_id}; only if none exists, rerun with: {command}")
             _StageLedger(str(ledger_path), HARD_CAP_USD).retire(attempt_id, who, reason)
         finally:
             fcntl.flock(run_lock.fileno(), fcntl.LOCK_UN)
@@ -879,7 +932,8 @@ def run_all(folder: str | Path, review_dir: str | Path, reader: str = DEFAULT_RE
                     chunk.update(status="rejected", reserve_released=True,
                                  http_status=ledger_attempt.get("http_status"))
                     _persist_run(run_path, run)
-                elif (chunk.get("status") in {"reserving", "reserved", "posting", "ambiguous", "rejected"}
+                elif (chunk.get("status") in {"reserving", "reserved", "posting", "ambiguous",
+                                                "rejected", "results-incomplete"}
                       and ledger_status == "retired"):
                     chunk["status"] = "retired-unknown"
                     _persist_run(run_path, run)
@@ -908,8 +962,12 @@ def run_all(folder: str | Path, review_dir: str | Path, reader: str = DEFAULT_RE
                         chunk["status"] = "submitted"
                         _persist_run(run_path, run)
                 if chunk.get("status") == "ambiguous":
-                    cmd = _retire_command(chunk["attempt_id"], review_dir, ledger_path)
-                    raise ValueError(f"chunk unresolved; reserve remains counted. Run: {cmd}")
+                    cmd = _retire_command(chunk["attempt_id"], review_dir, ledger_path,
+                                          no_batch_verified=True)
+                    raise ValueError(
+                        f"chunk unresolved (status=ambiguous, submission id={chunk['submission_id']}); "
+                        "reserve remains counted. Look first for a provider batch carrying this chunk's "
+                        f"submission id {chunk['submission_id']}. If none exists, retire with: {cmd}")
                 if chunk.get("status") == "submitted":
                     _settle_recorded(chunk, api, review_dir, run, run_path, idmap, model, ledger_path,
                                      sleep=sleep, interval=poll_interval, bound=poll_bound)
@@ -950,6 +1008,15 @@ def run_all(folder: str | Path, review_dir: str | Path, reader: str = DEFAULT_RE
                                             sleep=sleep, poll_interval=poll_interval, poll_bound=poll_bound)
                         elif record["status"] == "failed":
                             raise ValueError("calibration failed; answers refused")
+                    elif c.get("status") == "results-incomplete":
+                        retire = _retire_command(c["attempt_id"], review_dir, ledger_path)
+                        retry = _run_all_command(folder, review_dir, "haiku", ledger_path,
+                                                 "--retry-calibration")
+                        raise ValueError(
+                            f"calibration batch {c.get('batch_id')} has status=results-incomplete; "
+                            f"raw results: {c.get('result_path')}; reserve remains active. "
+                            f"After inspecting the saved results, retire it with: {retire} "
+                            f"Then retry with: {retry}")
                     elif c.get("status") == "reserved":
                         _send_reserved(c, cal, idmap, run, run_path, review_dir, ledger_path,
                                        reader, model, api, sleep=sleep,
@@ -1006,6 +1073,14 @@ def run_all(folder: str | Path, review_dir: str | Path, reader: str = DEFAULT_RE
                     _post_chunk(old_requests, idmap, run, run_path, review_dir,
                                 ledger_path, reader, model, api, "answers", index,
                                 sleep=sleep, poll_interval=poll_interval, poll_bound=poll_bound)
+                elif old.get("status") == "results-incomplete":
+                    retire = _retire_command(old["attempt_id"], review_dir, ledger_path)
+                    retry = _run_all_command(folder, review_dir, reader, ledger_path,
+                                             "--retry-answers")
+                    raise ValueError(
+                        f"answer chunk {index} batch {old.get('batch_id')} has status=results-incomplete; "
+                        f"raw results: {old.get('result_path')}; retire it after inspection with: {retire} "
+                        f"Then retry with: {retry}")
                 elif old.get("status") != "settled":
                     command = _run_all_command(folder, review_dir, reader, ledger_path)
                     raise ValueError(f"answer chunk {index} unresolved; resume with: {command}")
@@ -1164,6 +1239,8 @@ def parser() -> argparse.ArgumentParser:
     retire_parser.add_argument("--reason", required=True)
     retire_parser.add_argument("--ledger-path", default=str(DEFAULT_LEDGER_PATH))
     retire_parser.add_argument("--review-dir", default=str(DEFAULT_REVIEW_DIR))
+    retire_parser.add_argument("--no-batch-verified", action="store_true",
+                               help="confirm no provider batch carries this submission id")
     status_parser = sub.add_parser("status")
     status_parser.add_argument("batch_id")
     status_parser.add_argument("--review-dir", default=str(DEFAULT_REVIEW_DIR))
@@ -1180,7 +1257,8 @@ def main(argv: list[str] | None = None) -> None:
                 retry_answers=args.retry_answers,
                 retry_failed_answers=args.retry_failed_answers)
     elif args.command == "retire":
-        retire_attempt(args.attempt_id, args.who, args.reason, args.ledger_path, args.review_dir)
+        retire_attempt(args.attempt_id, args.who, args.reason, args.ledger_path, args.review_dir,
+                       no_batch_verified=args.no_batch_verified)
     elif args.command == "status":
         status(args.batch_id, args.review_dir)
 

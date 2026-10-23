@@ -126,8 +126,19 @@ an operator can retire that attempt:
 
 ```sh
 python3 part62/blind62.py retire ATTEMPT_ID --who OPERATOR \
-  --reason 'verified outcome unknown' --review-dir results/part62-review
+  --reason 'verified outcome unknown' --review-dir results/part62-review \
+  --no-batch-verified
 ```
+
+Before using `--no-batch-verified`, search the provider's batch inventory or
+result rows for the chunk's exact submission-id prefix. Each request now carries
+that prefix in its provider-visible `custom_id` (`SUBMISSION_ID-r00000`). The
+batch-listing route was not verified for this run; use the provider-supported
+inventory view available to the operator. If a matching batch is found, do not
+retire or retry it: preserve the reserve and reconcile its batch id into the
+run record before resuming. Pass `--no-batch-verified` only after the search finds
+no matching batch. The printed retirement command includes this flag and the
+operator must still perform this provider check first.
 
 The ledger records retirement while retaining the reserve. The retire command
 accepts only `part62-haiku` or `part62-opus` attempts whose submission id maps to
@@ -153,6 +164,13 @@ in this persistent run. The retry chunk records the custom ids, so repeating
 the flag cannot re-pay the same row.
 Successful rows from the earlier batch remain in the final labels. If an answer POST was rejected but its reserve is still active, retire it
 using the printed command first, then rerun with `--retry-answers`.
+
+If a completed batch returns fewer result rows than requested, `run-all` saves
+the raw JSONL and records `results-incomplete` with the batch id and observed row
+count. The reserve remains active. Inspect the saved rows, retire this known
+short-result attempt without `--no-batch-verified`, then use the printed
+`--retry-calibration` or `--retry-answers` command to submit it under a new
+reserve. `run-all` will not automatically resubmit a `results-incomplete` chunk.
 
 To inspect a known batch before rerunning:
 
