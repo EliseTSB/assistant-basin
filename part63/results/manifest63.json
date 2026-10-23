@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "shuffle_seed": 6301,
+  "answer_count": 4944,
+  "source_counts": {
+    "part54a": 480,
+    "part54b": 1920,
+    "part26-8": 432,
+    "part59a": 2112
+  },
+  "answers_file": "answers63.jsonl",
+  "key_file": "key63.json",
+  "answers_sha256": "1e12f76013a5dd3cb29d936e2ad86fe9b324beacc7a51cd067a5d0b0b7bd3174",
+  "condition_metadata_in_answers": false
+}
