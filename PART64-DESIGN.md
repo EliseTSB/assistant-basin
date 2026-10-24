@@ -99,7 +99,7 @@ Decision (Claude): `run`/`resume` submit chunks in manifest order until the stag
 bounds settled plus reserved), then collect ended batches and submit more as reserves settle. Each chunk keeps exactly
 one POST per attempt and the existing durable states; a group's output is written only after all its chunks settle.
 
-## Amendment 7 (2026-10-24 03:4x CT, after generation settled and before any Part 64 sentence is scored)
+## Amendment 7 (2026-10-24 03:18 CT, after generation settled and before any Part 64 sentence is scored)
 **Scoring device: the A770 (`xpu`, bf16, batch size 8) instead of a rented 3090 (`cuda`).** Elise, 2026-10-24 00:27
 CT: *"Try not to use the vast account if you can help it"* ($2.47 left). Everything else in the measurement is
 unchanged: Part 60's thresholds (the canonical `results/part60/thresholds.json`), tiers and pass rule. Part 60 itself
