@@ -1848,10 +1848,15 @@ prompts; nothing here is a finding yet. Broken-answer rates are pending the blin
 ## Part 65 (registered 2026-10-24, before any collection or call; design PART65-DESIGN.md)
 | # | Prediction | Result |
 |---|---|---|
-| 65a | Real neurons: blind-matching agreement at least 60%, with the 95% unit-bootstrap interval above 50%. | |
-| 65b | Real neurons beat random directions by at least 8 points. | |
-| 65c | Among real neurons, the last third of layers agrees at least 10 points more than the first third. | |
-| 65d | Real neurons that passed their Part 64 Haiku-1x sentence test agree at least 10 points more than those that failed. | |
-| 65e | Random directions agree above 50% (lower bound of the interval above 50%). | |
-| 65f | The embedding measure ranks real above control in the same direction as the primary (no threshold). | |
-| 65g | Among real neurons, the middle third agrees least of the three layer thirds (Arad et al.'s pattern; Amendment 1, registered before any collection). | |
+| 65a | Real neurons: blind-matching agreement at least 60%, with the 95% unit-bootstrap interval above 50%. || FAILED as registered: 0.574 [0.534, 0.612]; below the 60% threshold, though the interval excludes chance. |
+| 65b | Real neurons beat random directions by at least 8 points. || HELD: +0.104 [0.050, 0.158]. |
+| 65c | Among real neurons, the last third of layers agrees at least 10 points more than the first third. || HELD (exploratory): +0.132 [0.034, 0.230]; bands 0.506 / 0.575 / 0.638. |
+| 65d | Real neurons that passed their Part 64 Haiku-1x sentence test agree at least 10 points more than those that failed. || FAILED: +0.093 [0.016, 0.171]; under the 10-point threshold, interval above zero. |
+| 65e | Random directions agree above 50% (lower bound of the interval above 50%). || FAILED: 0.470 [0.434, 0.504]; random directions match at chance. |
+| 65f | The embedding measure ranks real above control in the same direction as the primary (no threshold). || HELD by its registered sign rule: +0.0055 [-0.0023, 0.0131]; the interval crosses zero (null-adjusted +0.0030). |
+| 65g | Among real neurons, the middle third agrees least of the three layer thirds (Arad et al.'s pattern; Amendment 1, registered before any collection). || FAILED (exploratory): the middle third is not lowest; agreement rises with depth. |
+
+Part 65 note (2026-10-24, written after the analysis): the registered decision rule says that if 65a fails, the atlas
+labels describe inputs only. That rule assumed a failure would sit near chance. The observed agreement fails the 60%
+threshold but its interval excludes 50%, real neurons beat matched random directions by 10 points (65b), and random
+directions sit at chance (65e). Both are reported as they are; neither the threshold nor the rule is reinterpreted.
