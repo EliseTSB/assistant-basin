@@ -98,7 +98,10 @@ composite answer, so free answers are now read in cells by a model that did not 
 Each line names its row in PREDICTIONS.md; the numbers are copied from there.
 
 **Qwen3.5-4B: the "alien" neuron (layer 22, neuron 2742), checked with controls.** A neuron panel posted on Twitter
-showed this neuron clamped up making Qwen3.5-4B answer "Who made you?" as an alien. `neuron_report.py` reran it with
+by Bryson Tang showed this neuron clamped up making Qwen3.5-4B answer "Who made you?" as an alien. Lyra's
+[neuron-explorer](https://github.com/lyramakesmusic/neuron-explorer), which pushes every layer-22 neuron with 256
+random-direction controls, ranks it 405 of 9,216 by steered theme (about one neuron in five beats every control),
+so it is one strong pull among many; what is unusual is the kind of concept, an identity. `neuron_report.py` reran it with
 20 random neurons from the same layer as controls, each set the same way. A clamp here SETS the activation to k times
 its largest value on 3,000 Pile documents (15.375), at every position. (18.1-18.7; results/part18/)
 - Set to +2x, it answers "Who made you?" as an extraterrestrial in 8 of 8 samples ("an extraterrestrial life form
