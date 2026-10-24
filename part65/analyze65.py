@@ -21,6 +21,7 @@ from rank65 import layer_band, words
 BOOTSTRAP_REPS = 5000
 SHUFFLE_REPS = 1000
 EMBEDDING_DIMENSIONS = 512
+TRIALS_PER_UNIT = 2
 
 
 class AnalysisError(RuntimeError):
@@ -174,6 +175,49 @@ def _sign(value: float) -> int:
     return 1 if value > 0 else (-1 if value < 0 else 0)
 
 
+def _missing_trial_scenario(unit_map: dict[str, dict[str, Any]],
+                            answers_by_pair: dict[tuple[str, int], dict[str, Any]],
+                            missing_score: float) -> dict[str, Any]:
+    """Score every registered unit after assigning one score to each missing trial."""
+    scores: dict[str, float] = {}
+    for key in unit_map:
+        trial_scores = []
+        for trial in (1, 2):
+            answer = answers_by_pair.get((key, trial))
+            correct = answer.get("correct") if answer is not None else None
+            trial_scores.append(float(correct) if correct is not None else missing_score)
+        scores[key] = sum(trial_scores) / TRIALS_PER_UNIT
+
+    neurons = [scores[key] for key, unit in unit_map.items() if unit["type"] == "neuron"]
+    controls = [scores[key] for key, unit in unit_map.items() if unit["type"] == "control"]
+    if not neurons or not controls:
+        raise AnalysisError("missing-trial bounds need registered neurons and controls")
+    bands = {
+        band: [scores[key] for key, unit in unit_map.items()
+               if unit["type"] == "neuron" and layer_band(int(unit["layer"])) == band]
+        for band in ("first", "middle", "last")
+    }
+    if any(not values for values in bands.values()):
+        raise AnalysisError("missing-trial bounds need neurons in all three layer bands")
+
+    def mean(values: list[float]) -> float:
+        return sum(values) / len(values)
+
+    return {
+        "missing_trial_score": missing_score,
+        "65a": {"estimate": mean(neurons), "n": len(neurons)},
+        "65b": {
+            "estimate": mean(neurons) - mean(controls),
+            "n_neuron": len(neurons),
+            "n_control": len(controls),
+        },
+        "neuron_agreement_by_layer_band": {
+            band: {"estimate": mean(values), "n": len(values)}
+            for band, values in bands.items()
+        },
+    }
+
+
 def analyze_rows(answer_rows: list[dict[str, Any]], units: list[dict[str, Any]],
                  read_labels: dict[str, str], write_words: dict[str, list[str]], *,
                  seed: int = 6501, bootstrap_reps: int = BOOTSTRAP_REPS,
@@ -184,63 +228,91 @@ def analyze_rows(answer_rows: list[dict[str, Any]], units: list[dict[str, Any]],
         raise AnalysisError("collection includes duplicate unit keys")
     if set(read_labels) != expected_keys or set(write_words) != expected_keys:
         raise AnalysisError("read labels and write words must cover every registered unit")
-    unparseable_trial_count = sum(answer.get("correct") is None for answer in answer_rows)
-    total_trial_count = len(answer_rows)
-    if total_trial_count == 0:
-        raise AnalysisError("no judge trials were supplied")
-    if unparseable_trial_count / total_trial_count > 0.05:
-        raise AnalysisError(
-            f"analysis stopped: {unparseable_trial_count}/{total_trial_count} judge trials "
-            "are unparseable, above the registered 5% limit"
-        )
-    grouped_answers: dict[str, list[dict[str, Any]]] = {}
+    # judge65.build_trials registers two numbered attempts for every frozen unit.
+    # Build the expected pairs from that plan shape, never from answers.jsonl.
+    registered_pairs = {
+        (key, trial)
+        for key in unit_map
+        for trial in range(1, TRIALS_PER_UNIT + 1)
+    }
+    total_trial_count = len(registered_pairs)
+    answers_by_pair: dict[tuple[str, int], dict[str, Any]] = {}
     for answer in answer_rows:
         key = answer.get("unit_key")
         if key not in expected_keys:
             raise AnalysisError(f"judge answer has unknown unit {key!r}")
+        trial = answer.get("trial")
+        if isinstance(trial, bool) or not isinstance(trial, int):
+            raise AnalysisError(f"{key}: judge trial number must be 1 or 2")
+        pair = (key, trial)
+        if pair not in registered_pairs:
+            raise AnalysisError(f"{key}: judge answer has unregistered trial {trial!r}")
+        if pair in answers_by_pair:
+            raise AnalysisError(f"{key}: duplicate judge answer for trial {trial}")
         correct = answer.get("correct")
         if correct is not None and not isinstance(correct, bool):
             raise AnalysisError(f"{key}: judge correct field must be true, false, or null")
-        grouped_answers.setdefault(key, []).append(answer)
-    if set(grouped_answers) != expected_keys:
-        missing = sorted(expected_keys - set(grouped_answers))
-        raise AnalysisError(f"judge answers are missing {len(missing)} units")
+        answers_by_pair[pair] = answer
+
+    absent_trial_count = len(registered_pairs - set(answers_by_pair))
+    unparseable_trial_count = sum(answer.get("correct") is None
+                                  for answer in answers_by_pair.values())
+    missing_trial_count = absent_trial_count + unparseable_trial_count
+    if missing_trial_count * 20 > total_trial_count:
+        raise AnalysisError(
+            f"analysis stopped: {missing_trial_count}/{total_trial_count} registered judge trials "
+            "are missing (above the registered 5% limit)"
+        )
+
     records = []
     units_without_valid_trial = 0
+    excluded_units_by_type_and_layer_band = {
+        kind: {band: 0 for band in ("first", "middle", "last")}
+        for kind in ("neuron", "control")
+    }
+    excluded_units_by_missing_trial_count = {"one": 0, "two": 0}
     for key, unit in unit_map.items():
-        rows = sorted(grouped_answers[key], key=lambda row: int(row.get("trial", 0)))
-        if len(rows) != 2 or [row.get("trial") for row in rows] != [1, 2]:
-            raise AnalysisError(f"{key}: expected exactly two ordered judge trials")
-        if (any(row.get("type") != unit["type"] or int(row.get("layer", -1)) != int(unit["layer"])
-                for row in rows)):
+        rows = [answers_by_pair.get((key, trial))
+                for trial in range(1, TRIALS_PER_UNIT + 1)]
+        present_rows = [row for row in rows if row is not None]
+        if any(row.get("type") != unit["type"]
+               or int(row.get("layer", -1)) != int(unit["layer"])
+               for row in present_rows):
             raise AnalysisError(f"{key}: judge metadata disagrees with the frozen collection")
-        foils = [row.get("foil_unit_key") for row in rows]
-        if (len(set(foils)) != 2 or key in foils
+        foils = [row.get("foil_unit_key") for row in present_rows]
+        if (len(set(foils)) != len(foils) or key in foils
                 or any(foil not in unit_map for foil in foils)):
-            raise AnalysisError(f"{key}: foil assignment must be two distinct other units")
+            raise AnalysisError(f"{key}: foil assignment must name distinct other units")
         band = layer_band(int(unit["layer"]))
         if any(unit_map[foil]["type"] != unit["type"]
                or layer_band(int(unit_map[foil]["layer"])) != band for foil in foils):
             raise AnalysisError(f"{key}: foil type or layer band does not match")
-        own_positions = [row.get("own_position") for row in rows]
-        if own_positions != ["A", "B"]:
-            raise AnalysisError(f"{key}: trial order was not swapped A then B")
-        sentence_values = {row.get("sentence_test_pass") for row in rows}
-        if len(sentence_values) != 1 or next(iter(sentence_values)) not in (True, False, None):
+        for trial, row in enumerate(rows, 1):
+            if row is not None and row.get("own_position") != ("A" if trial == 1 else "B"):
+                raise AnalysisError(f"{key}: trial order was not swapped A then B")
+        sentence_values = {row.get("sentence_test_pass") for row in present_rows}
+        if (len(sentence_values) > 1
+                or any(value not in (True, False, None) for value in sentence_values)):
             raise AnalysisError(f"{key}: sentence-test status differs across trials")
-        valid_rows = [row for row in rows if row["correct"] is not None]
+        valid_rows = [row for row in present_rows if row.get("correct") is not None]
+        missing_for_unit = TRIALS_PER_UNIT - len(valid_rows)
+        if missing_for_unit:
+            excluded_units_by_type_and_layer_band[unit["type"]][band] += 1
+            excluded_units_by_missing_trial_count["one" if missing_for_unit == 1 else "two"] += 1
         if not valid_rows:
             units_without_valid_trial += 1
             continue
-        agreement = sum(bool(row["correct"]) for row in valid_rows) / len(valid_rows)
+        if missing_for_unit:
+            continue
+        agreement = sum(bool(row["correct"]) for row in valid_rows) / TRIALS_PER_UNIT
         records.append({
             "unit_key": key,
             "type": unit["type"],
             "layer": int(unit["layer"]),
             "layer_band": band,
             "agreement": agreement,
-            "valid_trial_count": len(valid_rows),
-            "unparseable_trial_count": len(rows) - len(valid_rows),
+            "valid_trial_count": TRIALS_PER_UNIT,
+            "missing_trial_count": 0,
             "sentence_test_pass": next(iter(sentence_values)),
             "read_label": read_labels[key],
             "write_text": " ".join(write_words[key]),
@@ -260,6 +332,13 @@ def analyze_rows(answer_rows: list[dict[str, Any]], units: list[dict[str, Any]],
     fail_rows = [row for row in neurons if row["sentence_test_pass"] is False]
     if not pass_rows or not fail_rows:
         raise AnalysisError("65d needs both Part 64 sentence-test pass and fail neurons")
+
+    missing_trial_bounds = {
+        "missing_trials_scored_0_5": _missing_trial_scenario(
+            unit_map, answers_by_pair, 0.5),
+        "missing_trials_scored_wrong": _missing_trial_scenario(
+            unit_map, answers_by_pair, 0.0),
+    }
 
     actual_cosines = {row["unit_key"]: cosine(row["read_label"], row["write_text"])
                       for row in records}
@@ -355,8 +434,15 @@ def analyze_rows(answer_rows: list[dict[str, Any]], units: list[dict[str, Any]],
         "bootstrap_replicates": bootstrap_reps,
         "shuffled_pair_replicates": shuffle_reps,
         "trial_count": total_trial_count,
+        "missing_trial_count": missing_trial_count,
+        "absent_trial_count": absent_trial_count,
         "unparseable_trial_count": unparseable_trial_count,
         "unit_without_valid_trial_count": units_without_valid_trial,
+        "excluded_unit_count": sum(sum(bands.values())
+                                    for bands in excluded_units_by_type_and_layer_band.values()),
+        "excluded_units_by_type_and_layer_band": excluded_units_by_type_and_layer_band,
+        "excluded_units_by_missing_trial_count": excluded_units_by_missing_trial_count,
+        "missing_trial_bounds": missing_trial_bounds,
         "exploratory_predictions": ["65c", "65g"],
         "embedding": {
             "method": "512-dimensional signed Blake2b feature hashing of word unigrams and adjacent word bigrams; cosine",
@@ -395,8 +481,9 @@ def render_markdown(result: dict[str, Any]) -> str:
         "",
         f"Units analyzed: {result['unit_count']}; bootstrap replicates: {result['bootstrap_replicates']}; "
         f"shuffled-pair replicates: {result['shuffled_pair_replicates']}; "
-        f"unparseable trials: {result['unparseable_trial_count']}/{result['trial_count']}; "
-        f"units with no valid trial: {result['unit_without_valid_trial_count']}.",
+        f"missing trials: {result['missing_trial_count']}/{result['trial_count']} "
+        f"(absent: {result['absent_trial_count']}, unparseable: {result['unparseable_trial_count']}); "
+        f"units excluded for any missing trial: {result['excluded_unit_count']}.",
         "",
         "| Prediction | Estimate | 95% unit-bootstrap interval | Pass |",
         "|---|---:|---:|:---:|",
@@ -456,6 +543,32 @@ def render_markdown(result: dict[str, Any]) -> str:
          result["embedding_cosine"]["control_minus_shuffled_null"]),
     ):
         lines.append(f"| {label} | {actual['estimate']:.4f} | {lift['estimate']:.4f} |")
+    lines.extend([
+        "",
+        "## Missing-trial handling and bounds",
+        "",
+        "A unit enters the primary predictions only when both registered trials have valid answers. Missing-trial bounds cover all registered units and are not used for pass or fail.",
+        "",
+        "| Excluded units | First | Middle | Last | Total |",
+        "|---|---:|---:|---:|---:|",
+    ])
+    for kind in ("neuron", "control"):
+        by_band = result["excluded_units_by_type_and_layer_band"][kind]
+        lines.append(f"| {kind} | {by_band['first']} | {by_band['middle']} | {by_band['last']} | {sum(by_band.values())} |")
+    lines.extend([
+        "",
+        "| Missing-trial score | 65a neuron agreement | 65b neuron minus control | First-third neuron | Middle-third neuron | Last-third neuron |",
+        "|---|---:|---:|---:|---:|---:|",
+    ])
+    for label, key in (("0.5 (chance)", "missing_trials_scored_0_5"),
+                       ("0 (wrong)", "missing_trials_scored_wrong")):
+        scenario = result["missing_trial_bounds"][key]
+        bands = scenario["neuron_agreement_by_layer_band"]
+        lines.append(
+            f"| {label} | {scenario['65a']['estimate']:.4f} | {scenario['65b']['estimate']:.4f} | "
+            f"{bands['first']['estimate']:.4f} | {bands['middle']['estimate']:.4f} | "
+            f"{bands['last']['estimate']:.4f} |"
+        )
     lines.append("")
     return "\n".join(lines)
 

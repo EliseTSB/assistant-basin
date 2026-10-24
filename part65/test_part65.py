@@ -597,6 +597,117 @@ class Part65Tests(unittest.TestCase):
         self.assertEqual(result["unit_count"], 499)
         self.assertNotIn(answers[0]["unit_key"], {row["unit_key"] for row in result["units"]})
 
+    def test_one_valid_trial_excludes_and_counts_the_unit(self):
+        answers, units, labels, write_words = planted_analysis(effect=False)
+        answers[0]["correct"] = None
+        result = analyze65.analyze_rows(
+            answers, units, labels, write_words, seed=14,
+            bootstrap_reps=100, shuffle_reps=10,
+        )
+        excluded_key = answers[0]["unit_key"]
+        self.assertEqual(result["unit_count"], 499)
+        self.assertNotIn(excluded_key, {row["unit_key"] for row in result["units"]})
+        self.assertEqual(result["excluded_unit_count"], 1)
+        self.assertEqual(result["excluded_units_by_missing_trial_count"], {"one": 1, "two": 0})
+        band = rank65.layer_band(next(unit["layer"] for unit in units
+                                      if unit["unit_key"] == excluded_key))
+        self.assertEqual(result["excluded_units_by_type_and_layer_band"]["neuron"][band], 1)
+        self.assertEqual(result["unit_without_valid_trial_count"], 0)
+        self.assertAlmostEqual(result["predictions"]["65a"]["agreement"]["estimate"], 0.5)
+
+    def test_absent_registered_pair_counts_against_the_1000_trial_plan(self):
+        answers, units, labels, write_words = planted_analysis(effect=False)
+        answers.pop(0)
+        result = analyze65.analyze_rows(
+            answers, units, labels, write_words, seed=15,
+            bootstrap_reps=100, shuffle_reps=10,
+        )
+        self.assertEqual(len(answers), 999)
+        self.assertEqual(result["trial_count"], 1000)
+        self.assertEqual(result["missing_trial_count"], 1)
+        self.assertEqual(result["absent_trial_count"], 1)
+        self.assertEqual(result["unparseable_trial_count"], 0)
+        self.assertEqual(result["excluded_unit_count"], 1)
+
+    def test_missing_trial_stop_uses_the_registered_50_of_1000_boundary(self):
+        answers, units, labels, write_words = planted_analysis(effect=False)
+        for row in answers[:50]:
+            row["correct"] = None
+        result = analyze65.analyze_rows(
+            answers, units, labels, write_words, seed=16,
+            bootstrap_reps=100, shuffle_reps=10,
+        )
+        self.assertEqual(result["missing_trial_count"], 50)
+        self.assertEqual(result["trial_count"], 1000)
+
+        answers[50]["correct"] = None
+        with self.assertRaisesRegex(
+                analyze65.AnalysisError,
+                r"51/1000 registered judge trials are missing"):
+            analyze65.analyze_rows(
+                answers, units, labels, write_words, seed=17,
+                bootstrap_reps=100, shuffle_reps=10,
+            )
+
+    def test_missing_trial_bounds_score_all_units_and_leave_primary_complete_case(self):
+        answers, units, labels, write_words = planted_analysis(effect=False)
+        answers[0]["correct"] = None
+        answers.pop(2)
+        result = analyze65.analyze_rows(
+            answers, units, labels, write_words, seed=18,
+            bootstrap_reps=100, shuffle_reps=10,
+        )
+        self.assertAlmostEqual(result["predictions"]["65a"]["agreement"]["estimate"], 0.5)
+        self.assertEqual(result["unit_count"], 498)
+        chance = result["missing_trial_bounds"]["missing_trials_scored_0_5"]
+        wrong = result["missing_trial_bounds"]["missing_trials_scored_wrong"]
+        self.assertAlmostEqual(chance["65a"]["estimate"], 0.498)
+        self.assertAlmostEqual(wrong["65a"]["estimate"], 0.496)
+        self.assertAlmostEqual(chance["65b"]["estimate"], -0.002)
+        self.assertAlmostEqual(wrong["65b"]["estimate"], -0.004)
+        for scenario in (chance, wrong):
+            self.assertEqual(scenario["65a"]["n"], 250)
+            self.assertEqual(scenario["65b"]["n_neuron"], 250)
+            self.assertEqual(scenario["65b"]["n_control"], 250)
+            self.assertEqual(set(scenario["neuron_agreement_by_layer_band"]),
+                             {"first", "middle", "last"})
+            self.assertTrue(all(metric["n"] > 0 for metric in
+                                scenario["neuron_agreement_by_layer_band"].values()))
+        rendered = analyze65.render_markdown(result)
+        self.assertIn("| 0.5 (chance) |", rendered)
+        self.assertIn("| 0 (wrong) |", rendered)
+        self.assertIn("## Missing-trial handling and bounds", rendered)
+
+        complete_answers, complete_units, complete_labels, complete_words = planted_analysis(effect=True)
+        complete = analyze65.analyze_rows(
+            complete_answers, complete_units, complete_labels, complete_words, seed=19,
+            bootstrap_reps=100, shuffle_reps=10,
+        )
+        incomplete_answers = [dict(row) for row in complete_answers]
+        incomplete_answers[0]["correct"] = None
+        incomplete_answers.pop(2)
+        incomplete = analyze65.analyze_rows(
+            incomplete_answers, complete_units, complete_labels, complete_words, seed=19,
+            bootstrap_reps=100, shuffle_reps=10,
+        )
+        self.assertEqual(
+            {key: prediction["pass"] for key, prediction in complete["predictions"].items()},
+            {key: prediction["pass"] for key, prediction in incomplete["predictions"].items()},
+        )
+
+    def test_analysis_reader_rejects_a_torn_last_answer_line(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "answers.jsonl"
+            path.write_text('{"unit_key":"ok","trial":1}\n{"unit_key":',
+                            encoding="utf-8")
+            with self.assertRaisesRegex(analyze65.AnalysisError, "invalid JSON"):
+                analyze65.read_jsonl(path)
+            with self.assertRaisesRegex(analyze65.AnalysisError, "invalid JSON"):
+                analyze65.analyze_files(
+                    path, Path("missing-collection.jsonl"), Path("missing-neuron.jsonl"),
+                    Path("missing-control.jsonl"), Path("missing-ranked.jsonl"),
+                )
+
     def test_analysis_stops_above_five_percent_unparseable_trials(self):
         answers, units, labels, write_words = planted_analysis(effect=False)
         for row in answers[:51]:
@@ -668,13 +779,30 @@ class Part65Tests(unittest.TestCase):
             chunk_dir = root / "chunks"
             chunk_dir.mkdir()
             path = chunk_dir / "chunk-0002.json"
-            path.write_text(json.dumps({"status": "released"}), encoding="utf-8")
+            path.write_text(json.dumps({"status": "released", "error": "HTTP 400 bad request"}),
+                            encoding="utf-8")
             with mock.patch.object(judge65, "run_chunks", return_value={
                     "settled": 0, "pending": 0, "released": 1, "ambiguous": 0}), \
                  redirect_stderr(io.StringIO()) as output:
                 code = judge65.main(["--out-dir", str(root), "--recover"])
             self.assertEqual(code, 2)
             self.assertIn(str(path), output.getvalue())
+            self.assertIn("HTTP 400 bad request", output.getvalue())
+            self.assertIn("rerun the whole judge into a new output directory", output.getvalue())
+
+    def test_released_chunk_is_final_and_does_not_reserve_again(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            chunk_dir = root / "chunks"
+            chunk_dir.mkdir()
+            path = chunk_dir / "chunk-0000.json"
+            path.write_text(json.dumps({"status": "released", "error": "HTTP 400 rejection"}),
+                            encoding="utf-8")
+            ledger = mock.MagicMock()
+            api = mock.MagicMock()
+            self.assertEqual(judge65.process_chunk(path, ledger, api), "released")
+            ledger.reserve.assert_not_called()
+            api.assert_not_called()
 
 
 if __name__ == "__main__":

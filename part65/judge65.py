@@ -701,6 +701,14 @@ def main(argv: list[str] | None = None) -> int:
                 continue
             if chunk_state.get("status") == "released":
                 print(f"released judge chunk: {chunk_path}", file=sys.stderr)
+                error = chunk_state.get("error")
+                detail = error if isinstance(error, str) and error else "error details not recorded"
+                print(f"released judge chunk error: {detail}", file=sys.stderr)
+                print(
+                    "a released chunk is final for this output directory; rerun the whole judge "
+                    "into a new output directory.",
+                    file=sys.stderr,
+                )
     print(json.dumps(totals, sort_keys=True))
     return (0 if totals.get("pending", 0) == 0 and totals.get("ambiguous", 0) == 0
             and totals.get("released", 0) == 0 else 2)

@@ -20,7 +20,7 @@ cp /home/elisepc/green/worktrees/ab-part64/results/part64/collection.jsonl \
 
 ## Median, pilot, check, and full run
 
-Put these four lines, in this order, into `C:\Users\alexa\neuron-probe-gpu\steps.txt`. They use paths relative to the runner's working directory. The median step measures the registered 2,000 corpus-token residual norms and writes `layer-medians.json`. The pilot reuses those medians for a stratified 20-unit sample. The check gates the full run on observed +0.8 changes, the separately generated dose-zero comparison, hook activity/layer, and equal push norms. If it fails, `job.py` stops before the full run.
+Put these four lines, in this order, into `C:\Users\alexa\neuron-probe-gpu\steps.txt`. They use paths relative to the runner's working directory. The median step measures the registered 2,000 corpus-token residual norms and writes `layer-medians.json`. The pilot reuses those medians for a stratified 20-unit sample. The check gates the full run on observed +0.8 changes, the separately generated dose-zero comparison, hook activity/layer, and equal push norms. Its equal-norm gate re-reads the run-wide check recorded in the pilot rows; it does not recompute run-wide norms from the pilot sample. If it fails, `job.py` stops before the full run.
 
 ```text
 p65basin\part65\steer65.py --corpus qwen35\pile10k.jsonl --medians p65basin\results\part65\layer-medians.json --device xpu --measure-medians-only
@@ -73,7 +73,7 @@ python part65/judge65.py \
   --out-dir results/part65/judge
 ```
 
-The full answers are at `results/part65/judge/answers.jsonl`. If a known provider batch is still pending, use the same command with `--recover`; do not resubmit an ambiguous no-ID POST. A released chunk is printed and makes the command exit nonzero. The judge reserves through the shared paidaction ledger and retains its $1 Part 65 sub-cap.
+The full answers are at `results/part65/judge/answers.jsonl`. If a known provider batch is still pending, use the same command with `--recover`; do not resubmit an ambiguous no-ID POST. A released chunk is final for that output directory: the judge prints the chunk path and its error, then exits nonzero. Fix the underlying input or request and rerun the whole judge with the full-plan inputs into a new `--out-dir`. Do not resubmit the released attempt or combine answers from the old and new output directories. The judge reserves through the shared paidaction ledger and retains its $1 Part 65 sub-cap.
 
 ## Analyze
 
