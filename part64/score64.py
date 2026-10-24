@@ -157,9 +157,16 @@ def score_rows(rows: list[dict[str, Any]], specs: list[dict[str, Any]], threshol
         activations = {tier: [float(maximum[locations[(row_index, tier, j)], col]) for j in range(4)]
                        for tier in TIERS}
         if any(not math.isfinite(value) for tier in TIERS for value in activations[tier]):
+            # JSON cannot carry inf or nan (the writer uses allow_nan=False), so a non-finite value is written as
+            # null with its kind kept; the row stays failed exactly as before (2026-10-24: -inf crashed the writer).
+            kinds = {tier: [None if math.isfinite(v) else ("-inf" if v == -math.inf else "inf" if v == math.inf
+                                                          else "nan") for v in activations[tier]] for tier in TIERS}
             base.update({"generation_parse_status": "ok", "parse_status": "failed",
                          "score_status": "failed", "score_error": "scorer returned a non-finite activation",
-                         "threshold": float(thresholds[key]), "activations": activations,
+                         "threshold": float(thresholds[key]),
+                         "activations": {tier: [v if math.isfinite(v) else None for v in activations[tier]]
+                                         for tier in TIERS},
+                         "non_finite": kinds,
                          "pass": False, "positive_only_pass": False})
             output.append(base)
             continue
