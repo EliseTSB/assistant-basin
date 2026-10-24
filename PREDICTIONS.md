@@ -1845,3 +1845,12 @@ prompts; nothing here is a finding yet. Broken-answer rates are pending the blin
 | 64d | Opus-1x has a gap at least 5 points above Haiku-1x. | Failed. Opus-1x's gap is 8.0 points below Haiku-1x (18.4 against 26.4), [-17.6, +1.6]. |
 | 64e | Opus gains more from 3x than Haiku does (interaction on the gap at least 3 points). | Direction only, missed: the interaction is -2.4 points, [-15.2, +10.0] (Opus-3x gap 11.2). |
 | 64f | Haiku-1x reproduces Part 60's M1 within 6 points on real and control pass rates. | Failed. Haiku-1x is 12.8 points above Part 60's M1 on real neurons and 10.8 on controls. Not the device (the gate moved rates 0.4 points); Part 60's M1 ran thinking disabled, Part 64 at API defaults (thinking on): the likely cause, untested. |
+## Part 65 (registered 2026-10-24, before any collection or call; design PART65-DESIGN.md)
+| # | Prediction | Result |
+|---|---|---|
+| 65a | Real neurons: blind-matching agreement at least 60%, with the 95% unit-bootstrap interval above 50%. | |
+| 65b | Real neurons beat random directions by at least 8 points. | |
+| 65c | Among real neurons, the last third of layers agrees at least 10 points more than the first third. | |
+| 65d | Real neurons that passed their Part 64 Haiku-1x sentence test agree at least 10 points more than those that failed. | |
+| 65e | Random directions agree above 50% (lower bound of the interval above 50%). | |
+| 65f | The embedding measure ranks real above control in the same direction as the primary (no threshold). | |
