@@ -366,6 +366,17 @@ def analyze_rows(answer_rows: list[dict[str, Any]], units: list[dict[str, Any]],
 
     real = bootstrap_mean(real_agreement, seed=seed, reps=bootstrap_reps)
     control = bootstrap_mean(control_agreement, seed=seed + 1, reps=bootstrap_reps)
+    # Amendment 3 sensitivity (reported, not pass/fail): relative doses may not transfer to layers 0-2 (Lyra).
+    late_real = [row["agreement"] for row in neurons if row["layer"] > 2]
+    late_control = [row["agreement"] for row in controls if row["layer"] > 2]
+    if not late_real or not late_control:
+        raise AnalysisError("the layers 0-2 sensitivity needs units above layer 2 of both types")
+    layers_0_2_left_out = {
+        "neuron_count": len(late_real),
+        "control_count": len(late_control),
+        "65a": bootstrap_mean(late_real, seed=seed + 20, reps=bootstrap_reps),
+        "65b": bootstrap_difference(late_real, late_control, seed=seed + 21, reps=bootstrap_reps),
+    }
     type_difference = bootstrap_difference(real_agreement, control_agreement,
                                            seed=seed + 2, reps=bootstrap_reps)
     depth_difference = bootstrap_difference(last_agreement, first_agreement,
@@ -443,6 +454,7 @@ def analyze_rows(answer_rows: list[dict[str, Any]], units: list[dict[str, Any]],
         "excluded_units_by_type_and_layer_band": excluded_units_by_type_and_layer_band,
         "excluded_units_by_missing_trial_count": excluded_units_by_missing_trial_count,
         "missing_trial_bounds": missing_trial_bounds,
+        "sensitivity_layers_0_2_left_out": layers_0_2_left_out,
         "exploratory_predictions": ["65c", "65g"],
         "embedding": {
             "method": "512-dimensional signed Blake2b feature hashing of word unigrams and adjacent word bigrams; cosine",
@@ -569,6 +581,14 @@ def render_markdown(result: dict[str, Any]) -> str:
             f"{bands['first']['estimate']:.4f} | {bands['middle']['estimate']:.4f} | "
             f"{bands['last']['estimate']:.4f} |"
         )
+    late = result["sensitivity_layers_0_2_left_out"]
+    lines.extend([
+        "",
+        "## Sensitivity: layers 0 to 2 left out (Amendment 3; not used for pass or fail)",
+        "",
+        f"65a neuron agreement {late['65a']['estimate']:.4f} (n={late['neuron_count']}); "
+        f"65b neuron minus control {late['65b']['estimate']:.4f} (controls n={late['control_count']}).",
+    ])
     lines.append("")
     return "\n".join(lines)
 

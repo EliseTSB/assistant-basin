@@ -268,10 +268,13 @@ def _device_of(model: Any) -> Any:
 
 
 def _chat(tokenizer: Any, text: str) -> str:
+    # Amendment 3: Qwen3's non-thinking mode (the template inserts an empty think block). In thinking mode the
+    # pilot spent all 48 new tokens of 162/180 rollouts inside the "<think> Okay, the user..." preamble.
     return tokenizer.apply_chat_template(
         [{"role": "user", "content": text}],
         tokenize=False,
         add_generation_prompt=True,
+        enable_thinking=False,
     )
 
 

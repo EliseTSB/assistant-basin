@@ -88,7 +88,8 @@ class TinyTokenizer:
         self.padding_side = "right"
 
     def apply_chat_template(self, messages: list[dict[str, str]], tokenize: bool = False,
-                            add_generation_prompt: bool = True) -> str:
+                            add_generation_prompt: bool = True, **template_kwargs: Any) -> str:
+        self.last_template_kwargs = template_kwargs
         return "<user>" + messages[0]["content"] + ("<assistant>" if add_generation_prompt else "")
 
     def __call__(self, texts: list[str], return_tensors: str = "pt", padding: bool = True,
@@ -596,6 +597,27 @@ class Part65Tests(unittest.TestCase):
         self.assertEqual(result["unit_without_valid_trial_count"], 1)
         self.assertEqual(result["unit_count"], 499)
         self.assertNotIn(answers[0]["unit_key"], {row["unit_key"] for row in result["units"]})
+
+    def test_chat_template_uses_non_thinking_mode(self):
+        tokenizer = TinyTokenizer()
+        steer65._chat(tokenizer, "Who are you?")
+        self.assertIs(tokenizer.last_template_kwargs.get("enable_thinking"), False)
+
+    def test_layers_0_2_sensitivity_leaves_out_early_units_only(self):
+        answers, units, labels, write_words = planted_analysis(effect=True)
+        result = analyze65.analyze_rows(
+            answers, units, labels, write_words, seed=5,
+            bootstrap_reps=100, shuffle_reps=10,
+        )
+        late = result["sensitivity_layers_0_2_left_out"]
+        rows = result["units"]
+        self.assertEqual(late["neuron_count"],
+                         sum(1 for row in rows if row["type"] == "neuron" and row["layer"] > 2))
+        self.assertEqual(late["control_count"],
+                         sum(1 for row in rows if row["type"] == "control" and row["layer"] > 2))
+        self.assertLess(late["neuron_count"], sum(1 for row in rows if row["type"] == "neuron"))
+        self.assertNotIn("pass", late)
+        self.assertIn("layers 0 to 2 left out", analyze65.render_markdown(result))
 
     def test_one_valid_trial_excludes_and_counts_the_unit(self):
         answers, units, labels, write_words = planted_analysis(effect=False)
