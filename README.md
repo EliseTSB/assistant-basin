@@ -91,7 +91,8 @@ Claude, 2026-10-18; rewritten 2026-10-21.)
 - In Qwen3-1.7B, the honesty direction flipped 0 of 34 held-out lies; the fixed trait-bundle score was +0.072, rank 18 of 40. (50)
 - For Pythia-410m, the novel-item kiki/bouba AUC rose from 0.387 at step 1,000 to 0.898 at step 143,000. Pythia-160m never reached 0.70. (48d)
 
-**How we learned to measure.** 230 predictions so far, each pushed before its run: 132 held, 71 failed. The methods
+**How we learned to measure.** 519 predictions so far, each pushed before its run: 240 held, 177 failed, 10 mixed,
+9 untestable or read by a rule, 83 not yet scored (`count_predictions.py`, 2026-10-24). The methods
 that came out of the failures: a control must be shown able to fail; a judge model can agree for the same bias it was
 meant to check (it reads left to right too); a word filter misses meaning (a passage about a monolith in "neutral" text
 moved a baseline tenfold); punctuation cells are tokenized before they are built; the clamp hook was shown to change
