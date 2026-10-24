@@ -93,7 +93,21 @@ class _BatchNotEnded(TimeoutError):
 
 
 class TransportFailure(WriterError):
-    """The request may not have reached Anthropic, or its response was not read in full."""
+    """The request may not have reached Anthropic, or its response was not read in full.
+
+    ``permanent`` marks a failure that waiting cannot fix (a certificate that fails verification), so the
+    collect loop surfaces it at once instead of retrying it.
+    """
+
+    def __init__(self, message: str, *, permanent: bool = False):
+        super().__init__(message)
+        self.permanent = permanent
+
+
+def _transport_failure(exc: BaseException, what: str = "Anthropic API transport failed") -> TransportFailure:
+    reason = getattr(exc, "reason", exc)  # URLError carries the underlying error as .reason
+    permanent = isinstance(exc, ssl.SSLCertVerificationError) or isinstance(reason, ssl.SSLCertVerificationError)
+    return TransportFailure(f"{what}: {type(exc).__name__}: {exc}", permanent=permanent)
 
 
 def utc_now() -> str:
@@ -568,17 +582,21 @@ def api_call(method: str, path: str, body: Mapping[str, Any] | None = None) -> s
         with urllib.request.urlopen(request, context=context, timeout=HTTP_TIMEOUT_SECONDS) as response:
             return response.read().decode("utf-8")
     except urllib.error.HTTPError as exc:
-        detail = exc.read().decode("utf-8", errors="replace").strip()
+        try:
+            detail = exc.read().decode("utf-8", errors="replace").strip()
+        except (OSError, http.client.HTTPException) as read_exc:
+            # A handler's own exception never reaches the sibling handler below, so classify it here.
+            raise _transport_failure(read_exc, f"Anthropic API error body (HTTP {exc.code}) unreadable") from None
         raise HTTPFailure(exc.code, detail or str(exc.reason)) from None
     except (OSError, http.client.HTTPException) as exc:
         # OSError covers URLError, socket timeouts and resets raised while reading the body.
-        raise TransportFailure(f"Anthropic API transport failed: {type(exc).__name__}: {exc}") from None
+        raise _transport_failure(exc) from None
 
 
 def _transient_get_failure(exc: BaseException) -> bool:
     """A read-only GET failure worth retrying on the next pass: transport, rate limit or server error."""
     if isinstance(exc, TransportFailure):
-        return True
+        return not exc.permanent
     return isinstance(exc, HTTPFailure) and (exc.http_status == 429 or exc.http_status >= 500)
 
 
@@ -1258,6 +1276,8 @@ def _run_groups(root: Path, manifest: dict[str, Any], api: Callable[..., str], *
                 collect_failures[relpath] = collect_failures.get(relpath, 0) + 1
                 if collect_failures[relpath] >= COLLECT_TRANSIENT_RETRY_PASSES:
                     raise
+                print(f"gen64: collect retry {collect_failures[relpath]}/{COLLECT_TRANSIENT_RETRY_PASSES} "
+                      f"for {relpath}: {exc}", file=sys.stderr, flush=True)
             check_deadline()
 
         states = [read_json(root / relpath).get("state") for _key, _group, relpath in chunks]

@@ -702,18 +702,27 @@ class ChunkRecoveryTests(LocalPaidRegistryTests):
             self.assertEqual(len(api.posts), len(paths))
             self.assert_pipeline_chunks_settled_once(root, manifest)
 
-    def _flaky_api(self, *, status_failures=(), results_failures=()):
-        """A FakeBatchAPI whose status/results GETs raise the given exceptions in order, then succeed."""
-        status_queue, results_queue = list(status_failures), list(results_failures)
+    def _flaky_api(self, *, status_failures=(), results_failures=(), checks_until_end=1):
+        """A FakeBatchAPI whose status/results GETs follow a script, in order, then succeed.
+
+        Each script item is an exception to raise or None to answer normally. ``fired`` counts raises, so a
+        test can assert that every injected failure actually reached the code under test.
+        """
+        scripts = {"status": list(status_failures), "results": list(results_failures)}
 
         class FlakyAPI(FakeBatchAPI):
+            fired = 0
+
             def __call__(self, method, path, body=None):
                 if method == "GET" and path.startswith("/v1/messages/batches/") and "?" not in path:
-                    queue = results_queue if path.endswith("/results") else status_queue
-                    if queue:
-                        raise queue.pop(0)
+                    script = scripts["results" if path.endswith("/results") else "status"]
+                    if script:
+                        item = script.pop(0)
+                        if item is not None:
+                            self.fired += 1
+                            raise item
                 return super().__call__(method, path, body)
-        return FlakyAPI()
+        return FlakyAPI(checks_until_end=checks_until_end)
 
     def test_collect_retries_transient_status_and_results_failures(self):
         # T1, T2, T3: one transport failure on status, one on results, one HTTP 503 on status.
@@ -728,8 +737,37 @@ class ChunkRecoveryTests(LocalPaidRegistryTests):
                 manifest = self.make_pipeline_manifest(root, count=2, key_prefix=f"haiku-{name}")
                 api = self._flaky_api(**failures)
                 gen64._run_groups(root, manifest, api, poll_interval=0, sleep=lambda _n: None)
+                self.assertEqual(api.fired, 1)  # the injected failure really reached the collect loop
                 self.assert_pipeline_chunks_settled_once(root, manifest)
                 self.assertEqual(len(api.posts), 2)
+
+    def test_collect_failure_count_resets_when_a_status_check_succeeds(self):
+        # T8: 30 transient failures that are not consecutive (one in-progress answer after the first)
+        # must not stop a batch that is still making progress.
+        with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
+            root = Path(temporary)
+            manifest = self.make_pipeline_manifest(root, count=1, key_prefix="haiku-t8-reset")
+            failure = gen64.TransportFailure("reset")
+            script = [failure, None] + [failure] * (gen64.COLLECT_TRANSIENT_RETRY_PASSES - 1)
+            api = self._flaky_api(status_failures=script, checks_until_end=2)
+            gen64._run_groups(root, manifest, api, poll_interval=0, sleep=lambda _n: None)
+            self.assertEqual(api.fired, gen64.COLLECT_TRANSIENT_RETRY_PASSES)
+            self.assert_pipeline_chunks_settled_once(root, manifest)
+
+    def test_collect_surfaces_a_certificate_failure_at_once(self):
+        # T9: a certificate that fails verification is not retried.
+        import ssl
+        import urllib.error
+        with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
+            root = Path(temporary)
+            manifest = self.make_pipeline_manifest(root, count=1, key_prefix="haiku-t9-cert")
+            cert = gen64._transport_failure(urllib.error.URLError(ssl.SSLCertVerificationError("expired")))
+            self.assertTrue(cert.permanent)
+            api = self._flaky_api(status_failures=[cert] * 5)
+            with self.assertRaises(gen64.TransportFailure):
+                gen64._run_groups(root, manifest, api, poll_interval=0, sleep=lambda _n: None)
+            self.assertEqual(api.fired, 1)
+        self.assertFalse(gen64._transport_failure(ConnectionResetError(104, "reset")).permanent)
 
     def test_collect_does_not_retry_a_permanent_http_status(self):
         # T4: a 404 on a submitted batch's status is not transient.
@@ -782,6 +820,24 @@ class ChunkRecoveryTests(LocalPaidRegistryTests):
                 patch.object(gen64.urllib.request, "urlopen", return_value=Response()):
             with self.assertRaises(gen64.TransportFailure):
                 gen64.api_call("GET", "/v1/messages/batches/batch-x")
+
+    def test_api_call_reports_an_unreadable_error_body_as_transport_failure(self):
+        # T10: a 503 whose body read resets is a transport failure, not a raw OSError.
+        import io
+        import urllib.error
+
+        class ResettingBody(io.RawIOBase):
+            def read(self, *_args):
+                raise ConnectionResetError(104, "Connection reset by peer")
+
+        error = urllib.error.HTTPError("https://api.anthropic.com/x", 503, "Service Unavailable", {},
+                                       ResettingBody())
+        with patch.dict(os.environ, {"ANTHROPIC_CREDITS_KEY": "test-key"}), \
+                patch.object(gen64, "api_context", return_value=None), \
+                patch.object(gen64.urllib.request, "urlopen", side_effect=error):
+            with self.assertRaises(gen64.TransportFailure) as raised:
+                gen64.api_call("GET", "/v1/messages/batches/batch-x")
+        self.assertFalse(raised.exception.permanent)
 
     def test_pipeline_propagates_non_guard_writer_error(self):
         with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
