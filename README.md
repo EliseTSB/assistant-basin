@@ -780,7 +780,7 @@ Part 60's M1 on real neurons and 10.8 on controls. Part 60's M1 ran with thinkin
 Part 64 ran both writers at their API defaults with thinking on, so Haiku-1x is not a plain rerun of M1; that is the
 likely cause of 64f's miss, and it is untested.
 
-**Scoring device (Amendment 7).** Elise asked to keep the last of the rented-GPU credit, so scoring moved from a rented
+**Scoring device (Amendment 7).** Elise asked us not to use the rented-GPU account if we could help it, so scoring moved from a rented
 3090 (`cuda`) to the A770 (`xpu`). A gate registered first rescored Part 60's own 5,628 M1 sentences on the A770:
 per-unit pass decisions agreed with `cuda` on 99.57% of neurons and 99.58% of controls (at least 98% required), pass
 rates moved 0.43 points each (at most 1 allowed), and 22 of 5,628 own-unit threshold flags flipped.
