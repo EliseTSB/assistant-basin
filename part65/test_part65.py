@@ -439,6 +439,35 @@ class Part65Tests(unittest.TestCase):
         self.assertEqual(result["plus_0_8_total"], 3)
         self.assertTrue(result["dose_zero_matches_baseline"])
 
+    def test_pilot_check_push_norm_spread_is_relative(self):
+        import copy
+        model = TinyCausalModel(vocab=19, hidden=4, intermediate=4, layers=2)
+        with torch.no_grad():
+            for parameter in model.parameters():
+                parameter.zero_()
+            model.model.layers[1].mlp.down_proj.weight[0, 1] = 1.0
+            model.lm_head.weight[3, 0] = -1.0
+            model.lm_head.weight[4, 0] = 1.0
+        unit = {"unit_key": "L1:u1", "type": "neuron", "layer": 1,
+                "unit": 1, "control_id": None}
+        median = 2355.136
+        row = steer65.process_unit(torch, model, TinyTokenizer(), unit, {"1": median})
+        row["equal_norm_spread_by_layer"] = {"1": 0.0}
+        rounding = copy.deepcopy(row)
+        rounding["unit_key"], rounding["type"] = "L1:c1", "control"
+        rounding["push_norms"] = {key: value + 0.000244140625 for key, value in row["push_norms"].items()}
+        scaled = copy.deepcopy(row)
+        scaled["unit_key"], scaled["type"] = "L1:c2", "control"
+        scaled["median_residual_norm"] = median * 1.01
+        scaled["push_norms"] = {key: value * 1.01 for key, value in row["push_norms"].items()}
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "steer.jsonl"
+            path.write_text(json.dumps(row) + "\n" + json.dumps(rounding) + "\n", encoding="utf-8")
+            steer65.pilot_check(path)  # one float32 step at a large norm is rounding, not a mismatch
+            path.write_text(json.dumps(row) + "\n" + json.dumps(scaled) + "\n", encoding="utf-8")
+            with self.assertRaisesRegex(steer65.SteerError, "push norms differ in layer 1"):
+                steer65.pilot_check(path)
+
     def test_resume_skips_finished_units(self):
         units = tiny_units()
         selected = steer65.select_pilot_units(units, 4, "both", seed=17)

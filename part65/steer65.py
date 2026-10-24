@@ -715,7 +715,9 @@ def pilot_check(path: Path, tolerance: float = 1e-4) -> dict[str, Any]:
         )
     for (layer, dose_key), values in layer_dose_norms.items():
         spread = max(values) - min(values)
-        if spread > tolerance:
+        # Relative, like the per-row check above: late-layer push norms reach ~2,400, where one float32 step is
+        # 0.000244, so an absolute 1e-4 failed the full Part 65 run on rounding alone (max relative spread 2.4e-7).
+        if spread > tolerance * max(1.0, max(values)):
             raise SteerError(f"pilot-check failed: {dose_key} push norms differ in layer {layer} by {spread:.8g}")
     return {
         "unit_count": len(rows),

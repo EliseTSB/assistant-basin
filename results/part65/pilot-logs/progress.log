@@ -1,0 +1,6 @@
+13:36:47 step 1 start: p65basin\part65\steer65.py --collection p65basin\results\part64\collection.jsonl --corpus qwen35\pile10k.jsonl --medians p65basin\results\part65\layer-medians.json --out p65basin\results\part65\pilot.jsonl --units 20 --device xpu (ram_avail 10.2G)
+13:43:05 step 1 gpu: 53 samples, mean 41%, max 61%, busy(>5%) 74% of the time
+13:43:05 step 1 rc=0
+13:43:05 step 2 start: p65basin\part65\steer65.py --pilot-check p65basin\results\part65\pilot.jsonl (ram_avail 9.9G)
+13:43:07 step 2 gpu: no samples from processes new to the GPU
+13:43:07 step 2 rc=0
