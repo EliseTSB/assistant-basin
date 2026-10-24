@@ -72,6 +72,11 @@ Claude, 2026-10-18; rewritten 2026-10-21.)
 **What kinds of things neurons are.**
 - Mostly units for words and topics. Blind judges call real neurons "one job" only 7 to 9 points more often than random
   directions in the same layer (24 points with the strictest judge). (Earlier results, 1e, 1f)
+- What a neuron reads only partly predicts what it writes. Shown a neuron's read label and two write summaries, its own
+  and another unit's, a blind judge picked the neuron's own 57% of the time, where chance is 50% and random directions
+  scored 47%; agreement rose from 51% in the first third of layers to 64% in the last. The registered threshold was
+  60%, so by the rule we wrote first, our labels describe what neurons read, not what they write. That rule assumed a
+  failure near chance, and this one is above it; both stand as written. (65)
 - The "alien" neuron in Qwen3.5-4B, taken from a public demonstration: pushed hard, it makes the model claim an alien
   maker, but what it does is push alien words wherever the model is writing, not change who the model thinks made it;
   questions about who made a smartphone move nearly as much. It fires for a non-earthly origin stated without space
@@ -792,6 +797,57 @@ fixed on this run (`part64/score64.py`, with a test).
 
 Files: `results/part64/analysis-64.json` and `.md`, `results/part64/device-gate.json`, `part64/` (generation, scoring,
 analysis, device gate). Limits: one scoring model at 1.7B; 64e has about 250 units per type and is a direction only.
+
+### Part 65: a neuron's read label picks its own write summary 57% of the time; random directions sit at chance (2026-10-24)
+
+Pre-registered in `PART65-DESIGN.md` (Amendments 1 to 4, each before the data it governs). Elise asked for a joint
+study after reading Lyra's [neuron-explorer](https://github.com/lyramakesmusic/neuron-explorer), which labels neurons by
+what they write when pushed; our atlas labels them by what they read. Same 500 Part 60 dev units (250 real Qwen3-1.7B
+MLP neurons, 250 random directions in the same layers). Write side, on the A770: each unit's write vector pushed at
+-0.7, +0.5 and +0.8 times the layer's median residual-stream norm (Lyra's main_rel convention, so a real push and a
+control push have the same size) on three prompts in non-thinking chat mode, plus a steer lens. Claude Haiku 5.5
+(Batch API) saw one read label (Part 64's Haiku-1x hypothesis) and two write summaries, the unit's own and a foil from
+the same type and layer band, and picked one; two trials per unit with the order swapped. 1,000 trials, none missing,
+$0.027.
+
+| Prediction | Result (95% unit bootstrap) | Verdict |
+|---|---|---|
+| 65a: real neurons agree at least 60% | 57.4% [53.4, 61.2] | failed |
+| 65b: real beats random by at least 8 points | +10.4 [5.0, 15.8] | held |
+| 65c: last third at least 10 points above first (exploratory) | +13.2 [3.4, 23.0]; thirds 50.6, 57.5, 63.8% | held |
+| 65d: sentence-test passers at least 10 points above failers | +9.3 [1.6, 17.1] | failed |
+| 65e: random directions above chance | 47.0% [43.4, 50.4] | failed |
+| 65f: embedding measure in the same direction | +0.0055 [-0.0023, 0.0131] | held by its sign rule; interval crosses 0 |
+| 65g: middle third agrees least (Arad et al.'s pattern, exploratory) | middle 57.5%, between the other two | failed |
+
+**Results.** What a neuron reads partly predicts what it writes. The judge picked the neuron's own write summary above
+chance, random directions stayed at chance, and agreement rose with depth instead of dipping in the middle, as Arad et
+al.'s results on SAE features (arXiv 2505.20063) predict. The main prediction failed: 57.4% is below the registered 60%,
+though its interval excludes chance. The decision rule registered with the design says that if 65a fails, our labels
+describe inputs only. That rule assumed a failure would sit near chance, and this one does not. Both are reported as
+they stand; neither the threshold nor the rule is reinterpreted (note in PREDICTIONS.md). With layers 0 to 2 left out
+(Amendment 3, not used for pass or fail): 58.5% (212 neurons), 12.1 points above random directions.
+
+**The pilot that passed every check.** In Qwen3's default thinking mode, 162 of 180 pilot rollouts never got past the
+`<think>` preamble in 48 tokens, so the write words would have described the same opening for every unit. Every
+numeric check passed while this happened; reading the rollouts found it. Non-thinking mode was registered as
+Amendment 3 before the full run or any judge call.
+
+**Checks on the full run.** Dose 0 matched the baseline for all 500 units; every +0.8 push changed its rollout (1,500
+of 1,500); real and control push sizes agreed to 2.4e-7, relative. The pilot check's absolute tolerance failed the full
+run on float32 rounding at late-layer norms (about 2,355); it is relative now, with a test that the old check fails.
+
+**Judge.** The paid path reserves before each chunk and settles after (`paidaction/`); what happens when a chunk is
+rejected is Amendment 4, from Chorus's review. The run stopped twice on network timeouts while fetching results (no
+request was sent twice) and was resumed in the same output directory; the ledger holds exactly one reserve and one
+settle per chunk. A transient fetch error should leave a chunk pending rather than stop the run; that is a known limit,
+not fixed here.
+
+Files: `results/part65/` (`steer.jsonl`, `ranked.jsonl`, `judge/`, `analysis-65.json` and `.md`, the reserve record),
+`part65/` (steering, ranking, judge, analysis, tests, runbook). Limits: one model at 1.7B; one read label per unit; a
+two-choice judge; real and control write vectors matched for size but not for activation density (Chalnev et al.,
+arXiv 2411.02193); the layer thirds hold 80 to 87 neurons, so the depth results are exploratory. Prior art, including
+the two works Muse found, is in the design.
 
 ### Running or designed (2026-10-21)
 
