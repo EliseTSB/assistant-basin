@@ -158,3 +158,22 @@ would make 65a fail for a reason unrelated to the units. No judge answer exists,
 3. Lyra's research log found that relative doses do not transfer to the first layers of Qwen3.5-4B (at +0.8, 92% of
    layer-0 rollouts were empty or `<think>` loops). We report 65a and 65b again with layers 0 to 2 left out, as a
    sensitivity analysis that does not enter pass or fail.
+
+## Amendment 4 (2026-10-24, before any judge call)
+
+Three review rounds each found a defect in what happens after the provider rejects a judge chunk. By the stop rule on the
+card the question went to a cold reader (Chorus Task, review saved in Journal `reviews/chorus-p65-judge-2026-10-24.md`).
+This replaces rule 6 of Amendment 2.
+
+1. A chunk the provider rejects with a validated 4xx (released) ends the registered judge. No chunk is retried and no
+   new output directory is started for this plan. Its 100 trials are missing, which is above the 50-trial stop, so the
+   study reports that the judge failed and gives no result for 65a to 65g. A later judge would need its own registered
+   plan. A batch whose provider id is known can still be fetched and settled; nothing is sent again.
+2. A judge run has one identity (a random run id and its resolved output directory), recorded in its manifest, in every
+   ledger reservation and on every answer row. Before every send, the judge refuses if any earlier reservation for the
+   same plan belongs to another run, and refuses to send a chunk that has any released, settled or retired attempt.
+3. The local record that a chunk is about to be sent is written to disk durably (file and directory synced) before the
+   send.
+4. The analysis refuses answer rows from more than one run.
+5. The cost limit is the paid-action sub-cap of $1. "Under three cents" in Amendment 2 was an estimate from synthetic
+   summaries; the reserve total computed from the real requests is recorded before the one-request probe.
