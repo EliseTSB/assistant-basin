@@ -33,8 +33,7 @@ if str(PAID_ACTION) not in sys.path:
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
-from paid_ledger import (DEFAULT_LEDGER_PATH, HARD_CAP_USD, HTTPFailure,
-                         Ledger, LedgerError)
+from paid_ledger import CapExceededError, DEFAULT_LEDGER_PATH, HARD_CAP_USD, Ledger
 from pricing import (HAIKU_BATCH_INPUT_USD_PER_MILLION,
                      HAIKU_BATCH_OUTPUT_USD_PER_MILLION,
                      TOKENS_PER_MILLION, worst_case_cost)
@@ -356,6 +355,8 @@ def prepare_run(trials: list[dict[str, Any]], root: Path, chunk_size: int,
         "judge_run_id": judge_run_id,
         "run_root": run_root,
         "request_count": len(selected),
+        "chunk_size": chunk_size,
+        "chunk_count": (len(selected) + chunk_size - 1) // chunk_size,
         "unit_count": len(selected) if probe else len(selected) // 2,
         "seed": seed,
         "probe": probe,
@@ -367,11 +368,7 @@ def prepare_run(trials: list[dict[str, Any]], root: Path, chunk_size: int,
 
 def api_call(method: str, path: str, body: dict[str, Any] | None = None,
              timeout: float = 120.0) -> str:
-    key = os.environ.get("ANTHROPIC_CREDITS_KEY") or os.environ.get("ANTHROPIC_API_KEY")
-    if not key:
-        raise JudgeError(
-            "ANTHROPIC_CREDITS_KEY or ANTHROPIC_API_KEY is required only when submitting or recovering a live batch"
-        )
+    key = _api_key()
     payload = None if body is None else json.dumps(body, ensure_ascii=False).encode("utf-8")
     request = urllib.request.Request(
         "https://api.anthropic.com" + path,
@@ -394,6 +391,15 @@ def api_call(method: str, path: str, body: dict[str, Any] | None = None,
         raise APIHttpError(exc.code, body_text) from exc
     except urllib.error.URLError as exc:
         raise JudgeError(f"unknown API outcome: {exc.reason}") from exc
+
+
+def _api_key() -> str:
+    key = os.environ.get("ANTHROPIC_CREDITS_KEY") or os.environ.get("ANTHROPIC_API_KEY")
+    if not key:
+        raise JudgeError(
+            "ANTHROPIC_CREDITS_KEY or ANTHROPIC_API_KEY is required before any paidaction reservation"
+        )
+    return key
 
 
 def _parse_ndjson(text: str) -> list[dict[str, Any]]:
@@ -486,13 +492,29 @@ def _answer_rows(state: dict[str, Any]) -> list[dict[str, Any]]:
 
 def _persist_answers(root: Path, rows: list[dict[str, Any]]) -> None:
     path = root / "answers.jsonl"
-    existing = set()
+    existing: set[tuple[str, str]] = set()
+    existing_run_ids: set[str] = set()
     if path.exists():
-        existing = {row.get("custom_id") for row in read_jsonl(path)}
+        saved_rows = read_jsonl(path)
+        for row in saved_rows:
+            run_id, custom_id = row.get("judge_run_id"), row.get("custom_id")
+            if not isinstance(run_id, str) or not run_id or not isinstance(custom_id, str) or not custom_id:
+                raise JudgeError(f"{path}: saved answer lacks run ID or custom ID")
+            existing_run_ids.add(run_id)
+            existing.add((run_id, custom_id))
+    incoming_run_ids = set()
     for row in rows:
-        if row["custom_id"] not in existing:
+        run_id, custom_id = row.get("judge_run_id"), row.get("custom_id")
+        if not isinstance(run_id, str) or not run_id or not isinstance(custom_id, str) or not custom_id:
+            raise JudgeError("cannot persist an answer without run ID and custom ID")
+        incoming_run_ids.add(run_id)
+    if len(existing_run_ids | incoming_run_ids) > 1:
+        raise JudgeError(f"{path}: refusing to mix answers from different judge runs")
+    for row in rows:
+        identity = (row["judge_run_id"], row["custom_id"])
+        if identity not in existing:
             atomic_append_jsonl(path, row)
-            existing.add(row["custom_id"])
+            existing.add(identity)
 
 
 def _settle_saved(state: dict[str, Any], ledger: Ledger) -> None:
@@ -569,6 +591,119 @@ def _run_manifest(root: Path, state: dict[str, Any]) -> dict[str, Any]:
            for field in ("judge_run_id", "run_root", "plan_sha256")):
         raise JudgeError(f"{root}: chunk identity differs from its run manifest")
     return manifest
+
+
+def _validated_chunk_files(root: Path) -> tuple[dict[str, Any], list[Path], list[dict[str, Any]]]:
+    manifest_path = root.resolve() / "run.json"
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise JudgeError(f"{manifest_path}: run manifest is missing or invalid") from exc
+    if not isinstance(manifest, dict):
+        raise JudgeError(f"{manifest_path}: run manifest must be an object")
+    chunk_count = manifest.get("chunk_count")
+    chunk_size = manifest.get("chunk_size")
+    request_count = manifest.get("request_count")
+    if (isinstance(chunk_count, bool) or not isinstance(chunk_count, int) or chunk_count < 0
+            or isinstance(chunk_size, bool) or not isinstance(chunk_size, int) or chunk_size <= 0
+            or isinstance(request_count, bool) or not isinstance(request_count, int) or request_count < 0):
+        raise JudgeError(f"{manifest_path}: chunk size, chunk count, or request count is invalid")
+    identity = (manifest.get("judge_run_id"), manifest.get("run_root"),
+                manifest.get("plan_sha256"))
+    if (not all(isinstance(value, str) and value for value in identity)
+            or manifest["run_root"] != str(root.resolve())):
+        raise JudgeError(f"{manifest_path}: run identity is missing or belongs to another directory")
+    chunk_dir = root / "chunks"
+    indexed_paths = []
+    for path in sorted(chunk_dir.glob("chunk-*.json")) if chunk_dir.is_dir() else []:
+        match = re.fullmatch(r"chunk-(\d+)\.json", path.name)
+        if match is None:
+            raise JudgeError(f"{path}: chunk filename does not have a numeric index")
+        indexed_paths.append((int(match.group(1)), path))
+    indices = [index for index, _path in indexed_paths]
+    expected_indices = list(range(chunk_count))
+    if sorted(indices) != expected_indices or len(indices) != len(set(indices)):
+        raise JudgeError(
+            f"{chunk_dir}: chunk files must be exactly indices 0..{chunk_count - 1}"
+        )
+    paths = [path for _index, path in sorted(indexed_paths)]
+    states = []
+    trial_count = 0
+    for index, path in enumerate(paths):
+        try:
+            state = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise JudgeError(f"{path}: chunk file is missing or invalid") from exc
+        if (not isinstance(state, dict) or state.get("chunk_index") != index
+                or not isinstance(state.get("trials"), list)):
+            raise JudgeError(f"{path}: chunk index or trials are invalid")
+        _run_manifest(root, state)
+        trial_count += len(state["trials"])
+        states.append(state)
+    if trial_count != request_count:
+        raise JudgeError(
+            f"{chunk_dir}: chunk trials sum to {trial_count}, manifest request_count is {request_count}"
+        )
+    return manifest, paths, states
+
+
+def _clear_run_outcome(root: Path) -> None:
+    manifest, _paths, _states = _validated_chunk_files(root)
+    manifest.pop("completion", None)
+    manifest.pop("failure", None)
+    _atomic_json(root / "run.json", manifest)
+
+
+def _save_run_outcome(root: Path, totals: dict[str, int]) -> None:
+    manifest, _paths, states = _validated_chunk_files(root)
+    manifest.pop("completion", None)
+    manifest.pop("failure", None)
+    failure_kind = "released" if totals.get("released", 0) else (
+        "ambiguous" if totals.get("ambiguous", 0) else None
+    )
+    identity = {
+        "judge_run_id": manifest["judge_run_id"],
+        "plan_sha256": manifest["plan_sha256"],
+    }
+    if failure_kind is not None:
+        manifest["failure"] = {
+            "status": "failed",
+            "outcome": failure_kind,
+            **identity,
+            "recorded_at": time.time(),
+        }
+        _atomic_json(root / "run.json", manifest)
+        return
+    if not states or any(state.get("status") != "settled" for state in states):
+        _atomic_json(root / "run.json", manifest)
+        return
+    answers_path = root / "answers.jsonl"
+    if not answers_path.is_file():
+        _atomic_json(root / "run.json", manifest)
+        return
+    answer_rows = read_jsonl(answers_path)
+    expected_custom_ids = {
+        trial["request"]["custom_id"]
+        for state in states
+        for trial in state["trials"]
+    }
+    saved_custom_ids = [row.get("custom_id") for row in answer_rows]
+    answers_complete = (
+        bool(expected_custom_ids)
+        and len(saved_custom_ids) == len(expected_custom_ids)
+        and set(saved_custom_ids) == expected_custom_ids
+        and all(row.get("judge_run_id") == manifest["judge_run_id"]
+                and row.get("plan_sha256") == manifest["plan_sha256"]
+                for row in answer_rows)
+    )
+    if answers_complete:
+        manifest["completion"] = {
+            "status": "complete",
+            **identity,
+            "chunk_count": manifest["chunk_count"],
+            "completed_at": time.time(),
+        }
+    _atomic_json(root / "run.json", manifest)
 
 
 def _prior_reservation(ledger_path: Path, plan_hash: str, chunk_index: int,
@@ -657,17 +792,23 @@ def process_chunk(path: Path, ledger: Ledger, api: Callable[..., str] = api_call
                             f"{path}: local reserved attempt does not match the active ledger reservation"
                         )
                 elif attempt_id is None:
-                    attempt_id = ledger.reserve(
-                        float(state["reserve_usd"]),
-                        "part65-judge",
-                        {"plan_sha256": plan_hash,
-                         "judge_run_id": judge_run_id,
-                         "run_root": run_root,
-                         "chunk_index": int(state["chunk_index"]),
-                         "request_count": len(state["trials"])},
-                        subcap_usd=PART65_CAP_USD,
-                        subcap_key="part65-judge",
-                    )
+                    try:
+                        attempt_id = ledger.reserve(
+                            float(state["reserve_usd"]),
+                            "part65-judge",
+                            {"plan_sha256": plan_hash,
+                             "judge_run_id": judge_run_id,
+                             "run_root": run_root,
+                             "chunk_index": int(state["chunk_index"]),
+                             "request_count": len(state["trials"])},
+                            subcap_usd=PART65_CAP_USD,
+                            subcap_key="part65-judge",
+                        )
+                    except CapExceededError as exc:
+                        raise JudgeError(
+                            f"paidaction reservation refused for sub-cap 'part65-judge' "
+                            f"(${PART65_CAP_USD:.2f}): {exc}"
+                        ) from exc
                 elif state.get("attempt_id") not in (None, attempt_id):
                     raise JudgeError(
                         f"{path}: local ready chunk names a different paidaction attempt"
@@ -747,12 +888,16 @@ def run_chunks(root: Path, ledger_path: Path = DEFAULT_LEDGER_PATH,
                timeout_seconds: float = 2400.0,
                sleep: Callable[[float], None] = time.sleep,
                recover_only: bool = False) -> dict[str, int]:
+    if api is None or api is api_call:
+        _api_key()
     if api is None:
         api = api_call
-    ledger = Ledger(str(ledger_path), HARD_CAP_USD)
     totals = {"settled": 0, "pending": 0, "released": 0, "ambiguous": 0}
     with _lock_file(root / ".judge65.lock"):
-        for path in sorted((root / "chunks").glob("chunk-*.json")):
+        _clear_run_outcome(root)
+        _manifest, paths, _states = _validated_chunk_files(root)
+        ledger = Ledger(str(ledger_path), HARD_CAP_USD)
+        for path in paths:
             try:
                 outcome = process_chunk(path, ledger, api, poll_seconds=poll_seconds,
                                         timeout_seconds=timeout_seconds, sleep=sleep,
@@ -765,6 +910,7 @@ def run_chunks(root: Path, ledger_path: Path = DEFAULT_LEDGER_PATH,
                     totals["ambiguous"] += 1
                     break
                 raise
+        _save_run_outcome(root, totals)
     return totals
 
 
@@ -787,8 +933,6 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--ranked", type=Path, default=None)
     parser.add_argument("--sentence-test", type=Path, default=None)
     parser.add_argument("--out-dir", type=Path)
-    parser.add_argument("--ledger", type=Path, default=DEFAULT_LEDGER_PATH,
-                        help="shared paidaction ledger; test runs may pass a temporary path")
     parser.add_argument("--seed", type=int, default=6501)
     parser.add_argument("--chunk-size", type=int, default=100)
     parser.add_argument("--probe", action="store_true",
@@ -809,7 +953,7 @@ def main(argv: list[str] | None = None) -> int:
     run_root = args.out_dir
     if args.recover:
         try:
-            totals = run_chunks(args.out_dir, args.ledger, poll_seconds=args.poll_seconds,
+            totals = run_chunks(args.out_dir, poll_seconds=args.poll_seconds,
                                 timeout_seconds=args.timeout_seconds, recover_only=True)
         except JudgeError as exc:
             print(f"judge stopped: {exc}", file=sys.stderr)
@@ -835,7 +979,7 @@ def main(argv: list[str] | None = None) -> int:
         run_root = root
         prepare_run(trials, root, 1 if args.probe else args.chunk_size, args.seed, probe=args.probe)
         try:
-            totals = run_chunks(root, args.ledger, poll_seconds=args.poll_seconds,
+            totals = run_chunks(root, poll_seconds=args.poll_seconds,
                                 timeout_seconds=args.timeout_seconds)
         except JudgeError as exc:
             print(f"judge stopped: {exc}", file=sys.stderr)

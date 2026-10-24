@@ -614,8 +614,35 @@ def analyze_files(answers: Path, collection: Path, read_neuron: Path,
                   bootstrap_reps: int = BOOTSTRAP_REPS,
                   shuffle_reps: int = SHUFFLE_REPS) -> dict[str, Any]:
     from steer65 import load_units
+    manifest_path = answers.parent / "run.json"
+    if not answers.is_file():
+        raise AnalysisError(f"{manifest_path}: judge run has no saved answers or completion marker")
+    answer_rows = read_jsonl(answers)
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise AnalysisError(f"{manifest_path}: judge completion marker is missing or invalid") from exc
+    completion = manifest.get("completion") if isinstance(manifest, dict) else None
+    if (not isinstance(completion, dict) or completion.get("status") != "complete"
+            or manifest.get("failure") is not None):
+        raise AnalysisError(f"{manifest_path}: judge run has no completion marker")
+    answer_identities = [(row.get("judge_run_id"), row.get("plan_sha256"))
+                         for row in answer_rows]
+    if (not answer_identities
+            or any(not isinstance(run_id, str) or not run_id
+                   or not isinstance(plan_hash, str) or not plan_hash
+                   for run_id, plan_hash in answer_identities)
+            or len(set(answer_identities)) != 1):
+        raise AnalysisError("judge answers cannot be matched to one completed run and plan")
+    run_id, plan_hash = answer_identities[0]
+    if (run_id != manifest.get("judge_run_id")
+            or plan_hash != manifest.get("plan_sha256")
+            or run_id != completion.get("judge_run_id")
+            or plan_hash != completion.get("plan_sha256")
+            or completion.get("chunk_count") != manifest.get("chunk_count")):
+        raise AnalysisError("judge completion marker does not match answers' run ID and plan hash")
     result = analyze_rows(
-        read_jsonl(answers),
+        answer_rows,
         load_units(collection),
         read_labels(read_neuron, read_control),
         read_write_words(ranked),

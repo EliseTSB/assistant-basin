@@ -506,6 +506,10 @@ class Part65Tests(unittest.TestCase):
                 self.assertEqual(totals["settled"], 1)
                 self.assertEqual(fake.posts, 1)
                 self.assertEqual(FakeLedger(str(ledger_path), HARD_CAP_USD).state()["reserved"], 0.0)
+                manifest = json.loads((root / "run.json").read_text())
+                self.assertEqual(manifest["completion"]["status"], "complete")
+                self.assertEqual(manifest["completion"]["judge_run_id"], manifest["judge_run_id"])
+                self.assertEqual(manifest["completion"]["plan_sha256"], manifest["plan_sha256"])
                 second = judge65.run_chunks(root, ledger_path, fake, poll_seconds=0,
                                             timeout_seconds=1, sleep=lambda _seconds: None)
             self.assertEqual(second["settled"], 1)
@@ -521,6 +525,41 @@ class Part65Tests(unittest.TestCase):
             self.assertEqual(reserve_meta["judge_run_id"], manifest["judge_run_id"])
             self.assertEqual(reserve_meta["run_root"], str(root.resolve()))
 
+    def test_persist_answers_dedupes_by_run_and_custom_id_and_rejects_a_second_run(self):
+        """Catches mutant: custom-ID-only dedupe silently drops another run's answer."""
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            first = {"judge_run_id": "run-a", "custom_id": "p65-0000", "chosen": "A"}
+            second = {"judge_run_id": "run-a", "custom_id": "p65-0001", "chosen": "B"}
+            judge65._persist_answers(root, [first, second])
+            judge65._persist_answers(root, [{**first, "chosen": "B"}])
+            saved = judge65.read_jsonl(root / "answers.jsonl")
+            self.assertEqual(len(saved), 2)
+            self.assertEqual(saved[0]["chosen"], "A")
+            with self.assertRaisesRegex(judge65.JudgeError, "refusing to mix answers"):
+                judge65._persist_answers(root, [
+                    {"judge_run_id": "run-b", "custom_id": "p65-0000", "chosen": "B"}
+                ])
+            self.assertEqual(len(judge65.read_jsonl(root / "answers.jsonl")), 2)
+
+    def test_completion_marker_requires_settled_chunks_and_all_saved_answers(self):
+        """Catches mutant: run completion is recorded from chunk states without saved answers."""
+        units = tiny_units()
+        labels, summaries = tiny_summaries(units)
+        trials = judge65.build_trials(units, labels, summaries, seed=78)[:2]
+        with tempfile.TemporaryDirectory() as directory:
+            root, ledger_path = Path(directory) / "judge", Path(directory) / "ledger.jsonl"
+            judge65.prepare_run(trials, root, chunk_size=2, seed=78)
+            with mock.patch.object(judge65, "Ledger", FakeLedger), \
+                 mock.patch.object(judge65, "_persist_answers", return_value=None):
+                totals = judge65.run_chunks(root, ledger_path, FakeBatchAPI(), poll_seconds=0,
+                                            timeout_seconds=1, sleep=lambda _seconds: None)
+            self.assertEqual(totals["settled"], 1)
+            chunk = json.loads((root / "chunks" / "chunk-0000.json").read_text())
+            self.assertEqual(chunk["status"], "settled")
+            self.assertFalse((root / "answers.jsonl").exists())
+            self.assertNotIn("completion", json.loads((root / "run.json").read_text()))
+
     def test_run_identity_survives_prepare_reopen_and_is_stamped_on_each_chunk(self):
         units = tiny_units()
         labels, summaries = tiny_summaries(units)
@@ -533,6 +572,8 @@ class Part65Tests(unittest.TestCase):
             reopened = json.loads((root / "run.json").read_text())
             self.assertEqual(reopened["judge_run_id"], first["judge_run_id"])
             self.assertEqual(reopened["run_root"], str(root.resolve()))
+            self.assertEqual(reopened["chunk_size"], 2)
+            self.assertEqual(reopened["chunk_count"], 2)
             self.assertEqual(reopened["reserve_total_usd"],
                              judge65._reserve_total(trials, 2))
             for path in sorted((root / "chunks").glob("chunk-*.json")):
@@ -557,51 +598,70 @@ class Part65Tests(unittest.TestCase):
         self.assertEqual(record["subcap_usd"], judge65.PART65_CAP_USD)
 
     def test_validated_release_is_terminal_stops_later_chunks_and_main_exits_2(self):
-        """Catches mutant: a validated 4xx raises past main or allows a later chunk POST."""
+        """Catches mutant: release is retryable, unmarked, or main returns success."""
         units = tiny_units()
         labels, summaries = tiny_summaries(units)
         trials = judge65.build_trials(units, labels, summaries, seed=66)[:4]
 
-        class Reject400:
-            def __init__(self):
-                self.posts = 0
-
-            def __call__(self, method, _path, _body=None, **_kwargs):
-                if method == "POST":
-                    self.posts += 1
-                    raise judge65.APIHttpError(
-                        400, json.dumps({"type": "error", "error": {"type": "invalid_request_error"}})
-                    )
-                raise AssertionError("a released chunk has no batch to fetch")
-
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory) / "judge"
             ledger_path = Path(directory) / "ledger.jsonl"
-            fake = Reject400()
+            class ReleaseSecondChunk:
+                def __init__(self):
+                    self.success = FakeBatchAPI()
+                    self.posts = 0
+
+                def __call__(self, method, path, body=None, **kwargs):
+                    if method == "POST":
+                        self.posts += 1
+                        if self.posts == 2:
+                            raise judge65.APIHttpError(
+                                400, '{"type":"error","error":{"type":"invalid_request_error"}}'
+                            )
+                    return self.success(method, path, body, **kwargs)
+
+            fake = ReleaseSecondChunk()
+            judge65.prepare_run(trials, root, chunk_size=2, seed=66)
+            with mock.patch.object(judge65, "Ledger", FakeLedger):
+                totals = judge65.run_chunks(root, ledger_path, fake, poll_seconds=0,
+                                            timeout_seconds=1, sleep=lambda _seconds: None)
+            self.assertEqual(totals["released"], 1)
+            self.assertEqual(fake.posts, 2)
+            states = [json.loads(path.read_text()) for path in
+                      sorted((root / "chunks").glob("chunk-*.json"))]
+            self.assertEqual(states[0]["status"], "settled")
+            self.assertEqual(states[1]["status"], "released")
+            manifest = json.loads((root / "run.json").read_text())
+            self.assertEqual(manifest["failure"]["outcome"], "released")
+            self.assertNotIn("completion", manifest)
+            with self.assertRaisesRegex(analyze65.AnalysisError, "no completion marker"):
+                analyze65.analyze_files(
+                    root / "answers.jsonl", Path("missing-collection.jsonl"),
+                    Path("missing-neuron.jsonl"), Path("missing-control.jsonl"),
+                    Path("missing-ranked.jsonl"),
+                )
+
+            main_root = Path(directory) / "main-exit"
             err, out = io.StringIO(), io.StringIO()
             with mock.patch.object(judge65, "prepare_inputs", return_value=trials), \
-                 mock.patch.object(judge65, "Ledger", FakeLedger), \
-                 mock.patch.object(judge65, "api_call", fake), \
+                 mock.patch.object(judge65, "run_chunks", return_value={
+                     "settled": 0, "pending": 0, "released": 1, "ambiguous": 0}), \
                  redirect_stderr(err), redirect_stdout(out):
                 code = judge65.main([
-                    "--ranked", "ranked.jsonl", "--out-dir", str(root),
-                    "--ledger", str(ledger_path), "--chunk-size", "2",
+                    "--ranked", "ranked.jsonl", "--out-dir", str(main_root),
+                    "--chunk-size", "2",
                 ])
             self.assertEqual(code, 2)
             self.assertIn('"released": 1', out.getvalue())
-            self.assertIn("No new output directory may be started for this plan", err.getvalue())
-            self.assertEqual(fake.posts, 1)
-            states = [json.loads(path.read_text()) for path in
-                      sorted((root / "chunks").glob("chunk-*.json"))]
-            self.assertEqual(states[0]["status"], "released")
-            self.assertEqual(states[1]["status"], "ready")
 
-            with mock.patch.object(judge65, "Ledger", FakeLedger), \
-                 mock.patch.object(judge65, "api_call", fake), \
-                 redirect_stderr(io.StringIO()), redirect_stdout(io.StringIO()):
-                code = judge65.main(["--out-dir", str(root), "--ledger", str(ledger_path), "--recover"])
-            self.assertEqual(code, 2)
-            self.assertEqual(fake.posts, 1)
+    def test_judge_cli_cannot_select_an_alternate_ledger(self):
+        """Catches mutant: `main` restores a user-controlled --ledger path."""
+        error = io.StringIO()
+        with redirect_stderr(error), redirect_stdout(io.StringIO()):
+            with self.assertRaises(SystemExit) as raised:
+                judge65.main(["--ledger", "/tmp/alternate-ledger.jsonl"])
+        self.assertEqual(raised.exception.code, 2)
+        self.assertIn("unrecognized arguments: --ledger", error.getvalue())
 
     def test_invalid_release_body_and_429_are_ambiguous_and_stop_later_chunks(self):
         """Catches mutant: every 4xx is released, or ambiguity does not stop future spending."""
@@ -638,14 +698,15 @@ class Part65Tests(unittest.TestCase):
                 self.assertEqual(fake.posts, 1)
                 self.assertEqual(states[0]["status"], "unknown_no_batch")
                 self.assertEqual(states[1]["status"], "ready")
+                manifest = json.loads((root / "run.json").read_text())
+                self.assertEqual(manifest["failure"]["outcome"], "ambiguous")
                 self.assertGreater(FakeLedger(str(ledger_path), HARD_CAP_USD).state()["reserved"], 0)
                 if status == 429:
                     err = io.StringIO()
-                    with mock.patch.object(judge65, "Ledger", FakeLedger), \
-                         mock.patch.object(judge65, "api_call", fake), \
+                    with mock.patch.object(judge65, "run_chunks", return_value=totals), \
                          redirect_stderr(err), redirect_stdout(io.StringIO()):
                         code = judge65.main([
-                            "--out-dir", str(root), "--ledger", str(ledger_path), "--recover"
+                            "--out-dir", str(root), "--recover"
                         ])
                     self.assertEqual(code, 2)
                     self.assertIn("ambiguous judge chunk", err.getvalue())
@@ -720,7 +781,7 @@ class Part65Tests(unittest.TestCase):
             self.assertEqual(api.posts, 0)
 
     def test_shared_ledger_lock_serializes_fresh_directory_preflight_and_post(self):
-        """Catches mutant: preflight is locked only per output directory, allowing a check race."""
+        """Catches mutant: replacing the shared ledger lock with a no-op permits both preflights."""
         units = tiny_units()
         labels, summaries = tiny_summaries(units)
         trials = judge65.build_trials(units, labels, summaries, seed=70)[:2]
@@ -729,28 +790,34 @@ class Part65Tests(unittest.TestCase):
             ledger_path = Path(directory) / "shared-ledger.jsonl"
             judge65.prepare_run(trials, root_a, chunk_size=2, seed=70)
             judge65.prepare_run(trials, root_b, chunk_size=2, seed=70)
-            start = threading.Barrier(3)
-            post_entered = threading.Event()
-            allow_post_return = threading.Event()
-
-            class BlockingAPI:
-                def __init__(self):
-                    self.posts = 0
-
-                def __call__(self, method, _path, _body=None, **_kwargs):
-                    if method == "POST":
-                        self.posts += 1
-                        post_entered.set()
-                        if not allow_post_return.wait(5):
-                            raise TimeoutError("test did not release blocked fake POST")
-                        return json.dumps({"id": "blocked-fake-batch"})
-                    return json.dumps({"processing_status": "in_progress"})
-
-            api = BlockingAPI()
+            prior = judge65._prior_reservation
+            real_lock = judge65._lock_file
+            first_in_prior = threading.Event()
+            release_first = threading.Event()
+            second_lock_attempted = threading.Event()
+            second_in_prior = threading.Event()
+            ledger_lock_path = judge65._ledger_judge_lock_path(ledger_path)
+            api = FakeBatchAPI(pending_checks=1)
             results = []
 
+            def block_first_prior(*args, **kwargs):
+                if threading.current_thread().name == "first-run":
+                    first_in_prior.set()
+                    if not release_first.wait(5):
+                        raise TimeoutError("test did not release first ledger preflight")
+                else:
+                    second_in_prior.set()
+                return prior(*args, **kwargs)
+
+            @contextmanager
+            def observe_lock(path):
+                if (Path(path) == ledger_lock_path
+                        and threading.current_thread().name == "second-run"):
+                    second_lock_attempted.set()
+                with real_lock(path):
+                    yield
+
             def run(root):
-                start.wait(timeout=5)
                 try:
                     result = judge65.run_chunks(root, ledger_path, api, poll_seconds=0,
                                                 timeout_seconds=0,
@@ -759,22 +826,158 @@ class Part65Tests(unittest.TestCase):
                 except Exception as exc:
                     results.append(exc)
 
-            with mock.patch.object(judge65, "Ledger", FakeLedger):
-                threads = [threading.Thread(target=run, args=(root,))
-                           for root in (root_a, root_b)]
-                for thread in threads:
-                    thread.start()
-                start.wait(timeout=5)
-                self.assertTrue(post_entered.wait(5))
-                allow_post_return.set()
-                for thread in threads:
-                    thread.join(5)
+            with mock.patch.object(judge65, "Ledger", FakeLedger), \
+                 mock.patch.object(judge65, "_prior_reservation", side_effect=block_first_prior), \
+                 mock.patch.object(judge65, "_lock_file", side_effect=observe_lock):
+                first = threading.Thread(target=run, args=(root_a,), name="first-run")
+                second = threading.Thread(target=run, args=(root_b,), name="second-run")
+                threads = [first, second]
+                first.start()
+                try:
+                    self.assertTrue(first_in_prior.wait(5), "first run never entered its locked preflight")
+                    second.start()
+                    self.assertTrue(second_lock_attempted.wait(5), "second run never attempted the ledger lock")
+                    self.assertFalse(
+                        second_in_prior.wait(0.2),
+                        "second run entered the preflight while first run held the shared ledger lock",
+                    )
+                finally:
+                    release_first.set()
+                    for thread in threads:
+                        if thread.ident is not None:
+                            thread.join(5)
             self.assertTrue(all(not thread.is_alive() for thread in threads))
             self.assertEqual(api.posts, 1)
             self.assertEqual(sum(isinstance(result, dict) and result.get("pending") == 1
                                  for result in results), 1)
             self.assertEqual(sum(isinstance(result, judge65.JudgeError)
                                  and "another run" in str(result) for result in results), 1)
+
+    def test_real_ledger_subcap_refuses_before_post_and_main_exits_2(self):
+        """Catches mutants that ignore the real sub-cap, POST the refused chunk, or leak its error."""
+        units = tiny_units()
+        labels, summaries = tiny_summaries(units)
+        trials = judge65.build_trials(units, labels, summaries, seed=75)[:3]
+
+        class MaxUsageBatchAPI:
+            def __init__(self):
+                self.posts = 0
+                self.results = {}
+
+            def __call__(self, method, path, body=None, **_kwargs):
+                if method == "POST":
+                    self.posts += 1
+                    batch_id = f"subcap-batch-{self.posts}"
+                    self.results[batch_id] = []
+                    for request in body["requests"]:
+                        usage = {
+                            "input_tokens": judge65.math.ceil(
+                                len(judge65._canonical_json(request)) / 3
+                            ),
+                            "output_tokens": request["params"]["max_tokens"],
+                        }
+                        self.results[batch_id].append({
+                            "custom_id": request["custom_id"],
+                            "result": {"type": "succeeded", "message": {
+                                "content": [{"type": "text", "text": "A"}],
+                                "usage": usage,
+                            }},
+                        })
+                    return json.dumps({"id": batch_id})
+                batch_id = path.split("/")[-2] if path.endswith("/results") else path.split("/")[-1]
+                if path.endswith("/results"):
+                    return "\n".join(json.dumps(row) for row in self.results[batch_id])
+                return json.dumps({"processing_status": "ended"})
+
+        with tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent) as directory:
+            root, ledger_path = Path(directory) / "judge", Path(directory) / "real-ledger.jsonl"
+            judge65.prepare_run(trials, root, chunk_size=1, seed=75)
+            reserves = [json.loads(path.read_text())["reserve_usd"] for path in
+                        sorted((root / "chunks").glob("chunk-*.json"))]
+            subcap = reserves[0] + reserves[1] / 2
+            api = MaxUsageBatchAPI()
+            with mock.patch.object(judge65, "PART65_CAP_USD", subcap):
+                with self.assertRaisesRegex(judge65.JudgeError, "sub-cap 'part65-judge'"):
+                    judge65.run_chunks(root, ledger_path, api, poll_seconds=0,
+                                       timeout_seconds=1, sleep=lambda _seconds: None)
+            self.assertEqual(api.posts, 1)
+            states = [json.loads(path.read_text()) for path in
+                      sorted((root / "chunks").glob("chunk-*.json"))]
+            self.assertEqual(states[0]["status"], "settled")
+            self.assertEqual(states[1]["status"], "ready")
+            self.assertEqual(states[2]["status"], "ready")
+            ledger_events = [json.loads(line) for line in ledger_path.read_text().splitlines()]
+            self.assertEqual(sum(row["event"] == "reserve" for row in ledger_events), 1)
+
+            main_root = Path(directory) / "main-exit"
+            main_ledger_path = Path(directory) / "main-real-ledger.jsonl"
+            main_api = MaxUsageBatchAPI()
+            real_run_chunks = judge65.run_chunks
+
+            def use_test_ledger(root, **kwargs):
+                return real_run_chunks(root, main_ledger_path, main_api, **kwargs)
+
+            err = io.StringIO()
+            with mock.patch.object(judge65, "PART65_CAP_USD", subcap), \
+                 mock.patch.object(judge65, "prepare_inputs", return_value=trials), \
+                 mock.patch.object(judge65, "run_chunks", side_effect=use_test_ledger), \
+                 redirect_stderr(err), redirect_stdout(io.StringIO()):
+                code = judge65.main([
+                    "--ranked", "ranked.jsonl", "--out-dir", str(main_root),
+                    "--chunk-size", "1",
+                ])
+            self.assertEqual(code, 2)
+            self.assertIn("sub-cap 'part65-judge'", err.getvalue())
+            self.assertEqual(main_api.posts, 1)
+
+    def test_missing_api_key_refuses_before_the_first_reservation(self):
+        """Catches mutant: a missing key is recorded as an ambiguous POST after reserving."""
+        units = tiny_units()
+        labels, summaries = tiny_summaries(units)
+        trials = judge65.build_trials(units, labels, summaries, seed=76)[:2]
+
+        class CountingLedger(FakeLedger):
+            reserve_calls = 0
+
+            def reserve(self, *args, **kwargs):
+                type(self).reserve_calls += 1
+                return super().reserve(*args, **kwargs)
+
+        with tempfile.TemporaryDirectory() as directory:
+            root, ledger_path = Path(directory) / "judge", Path(directory) / "ledger.jsonl"
+            judge65.prepare_run(trials, root, chunk_size=2, seed=76)
+            CountingLedger.reserve_calls = 0
+            with mock.patch.dict(os.environ, {}, clear=True), \
+                 mock.patch.object(judge65, "Ledger", CountingLedger):
+                with self.assertRaisesRegex(judge65.JudgeError, "before any paidaction reservation"):
+                    judge65.run_chunks(root, ledger_path)
+            self.assertEqual(CountingLedger.reserve_calls, 0)
+            self.assertFalse(ledger_path.exists())
+
+    def test_run_chunks_rejects_missing_or_incomplete_chunk_files_before_reserving(self):
+        """Catches mutant: recovery silently skips a missing chunk or accepts a short trial sum."""
+        units = tiny_units()
+        labels, summaries = tiny_summaries(units)
+        trials = judge65.build_trials(units, labels, summaries, seed=77)[:4]
+        for defect in ("missing", "short-trials"):
+            with self.subTest(defect=defect), tempfile.TemporaryDirectory() as directory:
+                root, ledger_path = Path(directory) / "judge", Path(directory) / "ledger.jsonl"
+                judge65.prepare_run(trials, root, chunk_size=2, seed=77)
+                if defect == "missing":
+                    (root / "chunks" / "chunk-0001.json").unlink()
+                    message = "chunk files must be exactly indices 0..1"
+                else:
+                    path = root / "chunks" / "chunk-0000.json"
+                    state = json.loads(path.read_text())
+                    state["trials"].pop()
+                    path.write_text(json.dumps(state), encoding="utf-8")
+                    message = "chunk trials sum to 3, manifest request_count is 4"
+                api = FakeBatchAPI()
+                with mock.patch.object(judge65, "Ledger", FakeLedger):
+                    with self.assertRaisesRegex(judge65.JudgeError, message):
+                        judge65.run_chunks(root, ledger_path, api)
+                self.assertEqual(api.posts, 0)
+                self.assertFalse(ledger_path.exists())
 
     def test_same_run_terminal_release_settlement_and_retirement_attempts_never_resubmit(self):
         """Catches mutant: a released, settled, or retired chunk is treated as sendable."""
@@ -820,12 +1023,12 @@ class Part65Tests(unittest.TestCase):
                 with self.assertRaisesRegex(judge65.JudgeError, "GET-only"):
                     judge65.run_chunks(root, ledger_path, api, recover_only=True)
             err = io.StringIO()
-            with mock.patch.object(judge65, "Ledger", FakeLedger), \
-                 mock.patch.object(judge65, "api_call", api), \
+            with mock.patch.object(judge65, "run_chunks",
+                                   side_effect=judge65.JudgeError("GET-only recovery refusal")), \
                  redirect_stderr(err), redirect_stdout(io.StringIO()):
-                code = judge65.main(["--out-dir", str(root), "--ledger", str(ledger_path), "--recover"])
+                code = judge65.main(["--out-dir", str(root), "--recover"])
             self.assertEqual(code, 2)
-            self.assertIn("GET-only", err.getvalue())
+            self.assertIn("GET-only recovery refusal", err.getvalue())
             self.assertEqual(api.posts, 0)
 
     def test_ambiguous_posting_marker_is_never_reposted(self):
@@ -918,6 +1121,7 @@ class Part65Tests(unittest.TestCase):
                                            timeout_seconds=0, sleep=lambda _seconds: None)
             self.assertEqual(first["pending"], 1)
             self.assertEqual(fake.posts, 1)
+            self.assertNotIn("completion", json.loads((root / "run.json").read_text()))
             self.assertGreater(FakeLedger(str(ledger_path), HARD_CAP_USD).state()["reserved"], 0.0)
             with mock.patch.object(judge65, "Ledger", FakeLedger):
                 second = judge65.run_chunks(root, ledger_path, fake, poll_seconds=0,
@@ -925,6 +1129,8 @@ class Part65Tests(unittest.TestCase):
                                             recover_only=True)
             self.assertEqual(second["settled"], 1)
             self.assertEqual(fake.posts, 1)
+            self.assertEqual(json.loads((root / "run.json").read_text())[
+                "completion"]["status"], "complete")
             self.assertEqual(FakeLedger(str(ledger_path), HARD_CAP_USD).state()["reserved"], 0.0)
 
     def test_probe_plan_contains_exactly_one_message_request(self):
@@ -1135,6 +1341,54 @@ class Part65Tests(unittest.TestCase):
             with self.assertRaisesRegex(analyze65.AnalysisError, "invalid JSON"):
                 analyze65.analyze_files(
                     path, Path("missing-collection.jsonl"), Path("missing-neuron.jsonl"),
+                    Path("missing-control.jsonl"), Path("missing-ranked.jsonl"),
+                )
+
+    def test_file_analysis_requires_a_completion_marker_matching_answer_identity(self):
+        """Catches mutant: analysis accepts missing, failed, or mismatched completion evidence."""
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            answers = root / "answers.jsonl"
+            answer = {"judge_run_id": "run-a", "plan_sha256": "plan-a", "custom_id": "p65-0000"}
+            answers.write_text(json.dumps(answer) + "\n", encoding="utf-8")
+            manifest = {
+                "judge_run_id": "run-a",
+                "plan_sha256": "plan-a",
+                "chunk_count": 1,
+            }
+            manifest_path = root / "run.json"
+            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+            with self.assertRaisesRegex(analyze65.AnalysisError, "no completion marker"):
+                analyze65.analyze_files(
+                    answers, Path("missing-collection.jsonl"), Path("missing-neuron.jsonl"),
+                    Path("missing-control.jsonl"), Path("missing-ranked.jsonl"),
+                )
+
+            manifest["completion"] = {
+                "status": "complete", "judge_run_id": "run-b",
+                "plan_sha256": "plan-a", "chunk_count": 1,
+            }
+            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+            with self.assertRaisesRegex(analyze65.AnalysisError, "does not match answers"):
+                analyze65.analyze_files(
+                    answers, Path("missing-collection.jsonl"), Path("missing-neuron.jsonl"),
+                    Path("missing-control.jsonl"), Path("missing-ranked.jsonl"),
+                )
+
+            manifest["completion"]["judge_run_id"] = "run-a"
+            manifest["failure"] = {"status": "failed", "outcome": "released"}
+            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+            with self.assertRaisesRegex(analyze65.AnalysisError, "no completion marker"):
+                analyze65.analyze_files(
+                    answers, Path("missing-collection.jsonl"), Path("missing-neuron.jsonl"),
+                    Path("missing-control.jsonl"), Path("missing-ranked.jsonl"),
+                )
+
+            manifest.pop("failure")
+            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+            with self.assertRaises(FileNotFoundError):
+                analyze65.analyze_files(
+                    answers, Path("missing-collection.jsonl"), Path("missing-neuron.jsonl"),
                     Path("missing-control.jsonl"), Path("missing-ranked.jsonl"),
                 )
 
