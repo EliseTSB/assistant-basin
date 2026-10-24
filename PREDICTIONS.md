@@ -1854,3 +1854,4 @@ prompts; nothing here is a finding yet. Broken-answer rates are pending the blin
 | 65d | Real neurons that passed their Part 64 Haiku-1x sentence test agree at least 10 points more than those that failed. | |
 | 65e | Random directions agree above 50% (lower bound of the interval above 50%). | |
 | 65f | The embedding measure ranks real above control in the same direction as the primary (no threshold). | |
+| 65g | Among real neurons, the middle third agrees least of the three layer thirds (Arad et al.'s pattern; Amendment 1, registered before any collection). | |

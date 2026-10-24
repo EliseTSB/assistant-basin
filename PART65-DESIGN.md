@@ -80,3 +80,46 @@ Judge: 1,000 Haiku calls of about 600 tokens, under a dollar.
 ## Not changed
 
 Part 60's test split stays closed. No unit, threshold or hypothesis from Parts 60 or 64 is altered.
+
+## Amendment 1 (2026-10-24, before any Part 65 collection, generation or call)
+
+Muse's prior-art sweep (council topic muse-prior-art, message 4) found two works closer than those listed above. Both
+were checked at source (arXiv abstracts and full text) before this amendment.
+
+- Arad, Mueller, Belinkov, "SAEs Are Good for Steering -- If You Select the Right Features" (arXiv 2505.20063, 2025):
+  for residual-stream SAE features in Gemma-2, Llama-3.1 and Pythia, an input score and an output score are rarely both
+  high. Early layers (0 to 50% of depth) have high input scores and near-zero output scores, middle layers are low on
+  both, and high output scores appear in later layers. This is the closest prior work on the depth question. It uses
+  token-overlap scores on SAE latents, not an agreement rate between LLM-written labels on native neurons, and its
+  control is random features, not random directions.
+- Chalnev, Siu, Conmy, "Improving Steering Vectors by Targeting Sparse Autoencoder Features" (arXiv 2411.02193, 2024):
+  a feature's steering effect can differ from what it reads, and the largest effects can come from dense features with
+  no readable input side. Our real and control write vectors are already unit-normalised and dosed by the same
+  per-layer scale; they are not matched for activation density, which is a limit of this design.
+
+Lyra's research log (archived 2026-10-24) frames the work as labelling by write instead of by read, and shows one
+read-side example (N2742); it reports no per-neuron read-write agreement rate. Gur-Arieh et al.'s human relation classes
+(41% "similar" on 100 Gemma Scope features) are a different measure from our two-choice rate and are not compared.
+
+What Arad et al. predict here: agreement needs both sides describable. Early units read clearly and write weakly, late
+units the reverse, and middle units are weak on both, so agreement should be lowest in the middle and need not rise from
+first to last. 65c stays as registered. One competing prediction is added:
+
+| # | Prediction |
+|---|---|
+| 65g | Among real neurons, the middle third agrees least of the three layer thirds (Arad et al.'s pattern). |
+
+The depth predictions (65c, 65g) are exploratory. The thirds hold 83, 80 and 87 real neurons, so a difference between two
+thirds has a 95% interval of roughly +/- 14 points; a 10-point difference is reported with its interval and cannot be
+confirmed at this size.
+
+Two clarifications from the build's first review (DeepSeek, round 1), fixed before any data exists:
+
+- The steer lens lists, for each sign, the 12 tokens whose next-token log-probability rises most under that push. The
+  judge's summary says so ("made more likely by a positive push", "made more likely by a negative push"); the build
+  had labelled the second list "made less likely", which was wrong.
+- A judge answer that is a lone A or B, with or without trailing punctuation, is read as that letter. Any other answer
+  is recorded as unparseable and the trial is left out; a unit with no valid trial is left out and counted. If more than
+  5% of the 1,000 trials are unparseable, the analysis stops and reports that instead of the predictions.
+
+Nothing else in the design changes.
