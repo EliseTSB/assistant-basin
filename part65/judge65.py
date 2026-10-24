@@ -15,6 +15,7 @@ import os
 from pathlib import Path
 import random
 import re
+import secrets
 import ssl
 import sys
 import tempfile
@@ -275,9 +276,24 @@ def _canonical_json(value: Any) -> bytes:
 
 def _atomic_json(path: Path, value: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    payload = _canonical_json(value) + b"\n"
     temp = path.with_name(path.name + f".{os.getpid()}.tmp")
-    temp.write_bytes(_canonical_json(value) + b"\n")
-    os.replace(temp, path)
+    try:
+        with temp.open("wb") as stream:
+            stream.write(payload)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temp, path)
+        directory_fd = os.open(path.parent, os.O_RDONLY | getattr(os, "O_DIRECTORY", 0))
+        try:
+            os.fsync(directory_fd)
+        finally:
+            os.close(directory_fd)
+    finally:
+        try:
+            temp.unlink()
+        except FileNotFoundError:
+            pass
 
 
 def _chunk_reserve(requests: list[dict[str, Any]]) -> float:
@@ -287,11 +303,22 @@ def _chunk_reserve(requests: list[dict[str, Any]]) -> float:
     return worst_case_cost(MODEL, input_tokens_upper, output_tokens, batch=True)
 
 
+def _reserve_total(trials: list[dict[str, Any]], chunk_size: int) -> float:
+    if chunk_size <= 0:
+        raise ValueError("chunk size must be positive")
+    return sum(
+        _chunk_reserve([trial["request"] for trial in trials[start:start + chunk_size]])
+        for start in range(0, len(trials), chunk_size)
+    )
+
+
 def prepare_run(trials: list[dict[str, Any]], root: Path, chunk_size: int,
                 seed: int, probe: bool = False) -> None:
     if chunk_size <= 0:
         raise ValueError("chunk size must be positive")
     root.mkdir(parents=True, exist_ok=True)
+    root = root.resolve()
+    run_root = str(root)
     selected = build_probe_trial(trials) if probe else trials
     plan_digest = hashlib.sha256(_canonical_json(selected)).hexdigest()
     manifest_path = root / "run.json"
@@ -299,7 +326,13 @@ def prepare_run(trials: list[dict[str, Any]], root: Path, chunk_size: int,
         current = json.loads(manifest_path.read_text(encoding="utf-8"))
         if current.get("plan_sha256") != plan_digest or current.get("probe") != probe:
             raise JudgeError(f"{root}: existing plan differs; refusing to mix attempts")
+        if (not isinstance(current.get("judge_run_id"), str)
+                or not current["judge_run_id"]
+                or current.get("run_root") != run_root):
+            raise JudgeError(f"{root}: existing run identity is missing or belongs to another directory")
         return
+    judge_run_id = secrets.token_hex(16)
+    reserve_total_usd = _reserve_total(selected, chunk_size)
     chunk_dir = root / "chunks"
     chunk_dir.mkdir(parents=True, exist_ok=True)
     for index, start in enumerate(range(0, len(selected), chunk_size)):
@@ -307,6 +340,9 @@ def prepare_run(trials: list[dict[str, Any]], root: Path, chunk_size: int,
         state = {
             "schema": "part65-judge-chunk-v1",
             "chunk_index": index,
+            "judge_run_id": judge_run_id,
+            "run_root": run_root,
+            "plan_sha256": plan_digest,
             "status": "ready",
             "reserve_usd": _chunk_reserve([trial["request"] for trial in batch]),
             "attempt_id": None,
@@ -317,10 +353,13 @@ def prepare_run(trials: list[dict[str, Any]], root: Path, chunk_size: int,
     _atomic_json(manifest_path, {
         "schema": "part65-judge-run-v1",
         "plan_sha256": plan_digest,
+        "judge_run_id": judge_run_id,
+        "run_root": run_root,
         "request_count": len(selected),
         "unit_count": len(selected) if probe else len(selected) // 2,
         "seed": seed,
         "probe": probe,
+        "reserve_total_usd": reserve_total_usd,
         "model": MODEL,
         "created_at": time.time(),
     })
@@ -413,6 +452,12 @@ def _save_chunk(path: Path, state: dict[str, Any]) -> None:
 
 
 def _answer_rows(state: dict[str, Any]) -> list[dict[str, Any]]:
+    judge_run_id = state.get("judge_run_id")
+    run_root = state.get("run_root")
+    plan_sha256 = state.get("plan_sha256")
+    if not all(isinstance(value, str) and value for value in
+               (judge_run_id, run_root, plan_sha256)):
+        raise JudgeError("cannot write answers without the run ID, output directory, and plan hash")
     by_id = {row.get("custom_id"): row for row in state.get("provider_results", [])}
     output = []
     for trial in state["trials"]:
@@ -432,6 +477,9 @@ def _answer_rows(state: dict[str, Any]) -> list[dict[str, Any]]:
             "error": error,
             "usage": usage,
             "batch_id": state["batch_id"],
+            "judge_run_id": judge_run_id,
+            "run_root": run_root,
+            "plan_sha256": plan_sha256,
         })
     return output
 
@@ -500,8 +548,32 @@ def _fetch_and_save(path: Path, state: dict[str, Any], api: Callable[..., str],
     return "settled"
 
 
-def _prior_reservation(ledger_path: Path, plan_hash: str, chunk_index: int) -> str | None:
-    """Recover a reserve written just before a crash persisted its attempt ID locally."""
+def _ledger_judge_lock_path(ledger_path: Path) -> Path:
+    canonical = Path(ledger_path).expanduser().resolve()
+    return canonical.with_name(canonical.name + ".part65-judge.lock")
+
+
+def _run_manifest(root: Path, state: dict[str, Any]) -> dict[str, Any]:
+    manifest_path = root.resolve() / "run.json"
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise JudgeError(f"{manifest_path}: run manifest is missing or invalid") from exc
+    run_root = str(root.resolve())
+    identity = (manifest.get("judge_run_id"), manifest.get("run_root"),
+                manifest.get("plan_sha256"))
+    if (not all(isinstance(value, str) and value for value in identity)
+            or manifest["run_root"] != run_root):
+        raise JudgeError(f"{manifest_path}: run identity is missing or belongs to another directory")
+    if any(state.get(field) != manifest[field]
+           for field in ("judge_run_id", "run_root", "plan_sha256")):
+        raise JudgeError(f"{root}: chunk identity differs from its run manifest")
+    return manifest
+
+
+def _prior_reservation(ledger_path: Path, plan_hash: str, chunk_index: int,
+                       judge_run_id: str, run_root: str) -> str | None:
+    """Validate plan-wide ownership and recover this run's active chunk reserve."""
     if not ledger_path.exists():
         return None
     rows = []
@@ -515,14 +587,23 @@ def _prior_reservation(ledger_path: Path, plan_hash: str, chunk_index: int) -> s
                 raise JudgeError(f"{ledger_path}:{line_number}: paidaction ledger has an invalid line") from exc
             if isinstance(row, dict):
                 rows.append(row)
-    matches = [
+    plan_reservations = [
         row for row in rows
         if row.get("event") == "reserve"
         and row.get("kind") == "part65-judge"
         and isinstance(row.get("meta"), dict)
         and row["meta"].get("plan_sha256") == plan_hash
-        and row["meta"].get("chunk_index") == chunk_index
     ]
+    for row in plan_reservations:
+        meta = row["meta"]
+        if (meta.get("judge_run_id") != judge_run_id
+                or meta.get("run_root") != run_root):
+            raise JudgeError(
+                "Part 65 plan already has a paidaction reservation owned by another run; "
+                "refusing to send from this output directory"
+            )
+    matches = [row for row in plan_reservations
+               if row["meta"].get("chunk_index") == chunk_index]
     if len(matches) > 1:
         raise JudgeError("multiple paidaction reservations exist for one Part 65 plan chunk")
     if not matches:
@@ -538,16 +619,107 @@ def _prior_reservation(ledger_path: Path, plan_hash: str, chunk_index: int) -> s
                       "release": "released", "retire": "retired"}[row["event"]]
     if status == "reserved":
         return attempt_id
-    if status == "released":
-        return None
-    raise JudgeError(f"Part 65 plan chunk already has a {status} paidaction attempt; refusing to resubmit")
+    raise JudgeError(
+        f"Part 65 plan chunk already has a {status} paidaction attempt; refusing to resubmit"
+    )
 
 
 def process_chunk(path: Path, ledger: Ledger, api: Callable[..., str] = api_call,
                   *, poll_seconds: float = 30.0, timeout_seconds: float = 2400.0,
-                  sleep: Callable[[float], None] = time.sleep) -> str:
+                  sleep: Callable[[float], None] = time.sleep,
+                  recover_only: bool = False) -> str:
     state = json.loads(path.read_text(encoding="utf-8"))
     status = state.get("status")
+    if status in ("ready", "reserved", "posting", "unknown_no_batch", "submitted",
+                  "results_saved", "settled", "released"):
+        _run_manifest(path.parent.parent, state)
+    if status in ("ready", "reserved"):
+        if recover_only:
+            raise JudgeError(f"{path}: --recover is GET-only and will not POST this {status} chunk")
+        # The shared ledger-path lock covers ownership lookup, reserve, durable
+        # posting marker, and POST. This closes the check-then-POST race across
+        # distinct output directories using the same ledger.
+        with _lock_file(_ledger_judge_lock_path(ledger.path)):
+            state = json.loads(path.read_text(encoding="utf-8"))
+            status = state.get("status")
+            if status in ("ready", "reserved"):
+                manifest = _run_manifest(path.parent.parent, state)
+                plan_hash = manifest["plan_sha256"]
+                judge_run_id = manifest["judge_run_id"]
+                run_root = manifest["run_root"]
+                attempt_id = _prior_reservation(
+                    ledger.path, plan_hash, int(state["chunk_index"]),
+                    judge_run_id, run_root,
+                )
+                if status == "reserved":
+                    if attempt_id is None or attempt_id != state.get("attempt_id"):
+                        raise JudgeError(
+                            f"{path}: local reserved attempt does not match the active ledger reservation"
+                        )
+                elif attempt_id is None:
+                    attempt_id = ledger.reserve(
+                        float(state["reserve_usd"]),
+                        "part65-judge",
+                        {"plan_sha256": plan_hash,
+                         "judge_run_id": judge_run_id,
+                         "run_root": run_root,
+                         "chunk_index": int(state["chunk_index"]),
+                         "request_count": len(state["trials"])},
+                        subcap_usd=PART65_CAP_USD,
+                        subcap_key="part65-judge",
+                    )
+                elif state.get("attempt_id") not in (None, attempt_id):
+                    raise JudgeError(
+                        f"{path}: local ready chunk names a different paidaction attempt"
+                    )
+                if status == "ready":
+                    state["attempt_id"] = attempt_id
+                    state["status"] = "reserved"
+                    _save_chunk(path, state)
+                state["status"] = "posting"
+                _save_chunk(path, state)
+                batch_request = {"requests": [trial["request"] for trial in state["trials"]]}
+                try:
+                    response = json.loads(api("POST", "/v1/messages/batches", batch_request))
+                except APIHttpError as exc:
+                    if 400 <= exc.status < 500 and exc.status != 429:
+                        try:
+                            ledger.release(state["attempt_id"], exc.status, exc.body)
+                            state["status"] = "released"
+                            state["error"] = f"validated HTTP {exc.status} rejection"
+                            _save_chunk(path, state)
+                            return "released"
+                        except Exception as release_error:
+                            state["status"] = "unknown_no_batch"
+                            state["error"] = (
+                                f"HTTP {exc.status} could not be safely released: {release_error}"
+                            )
+                    else:
+                        state["status"] = "unknown_no_batch"
+                        state["error"] = f"HTTP {exc.status} leaves reservation active"
+                    _save_chunk(path, state)
+                    raise JudgeError(
+                        f"{path}: ambiguous POST outcome; reservation remains active: {state['error']}"
+                    ) from exc
+                except Exception as exc:
+                    state["status"] = "unknown_no_batch"
+                    state["error"] = f"unknown POST outcome: {type(exc).__name__}: {exc}"
+                    _save_chunk(path, state)
+                    raise JudgeError(
+                        f"{path}: ambiguous POST outcome; do not resubmit"
+                    ) from exc
+                batch_id = response.get("id")
+                if not isinstance(batch_id, str) or not batch_id:
+                    state["status"] = "unknown_no_batch"
+                    state["error"] = "POST response contained no batch ID"
+                    _save_chunk(path, state)
+                    raise JudgeError(
+                        f"{path}: POST response contained no batch ID; reservation remains active"
+                    )
+                state["batch_id"] = batch_id
+                state["status"] = "submitted"
+                _save_chunk(path, state)
+            status = state.get("status")
     if status == "settled":
         _persist_answers(path.parent.parent, _answer_rows(state))
         return "settled"
@@ -558,63 +730,9 @@ def process_chunk(path: Path, ledger: Ledger, api: Callable[..., str] = api_call
         _save_chunk(path, state)
         _persist_answers(path.parent.parent, _answer_rows(state))
         return "settled"
-    if status in ("ready", "reserved"):
-        if status == "ready":
-            plan_hash = json.loads((path.parent.parent / "run.json").read_text())["plan_sha256"]
-            attempt_id = _prior_reservation(
-                ledger.path, plan_hash, int(state["chunk_index"])
-            )
-            if attempt_id is None:
-                attempt_id = ledger.reserve(
-                    float(state["reserve_usd"]),
-                    "part65-judge",
-                    {"plan_sha256": plan_hash,
-                     "chunk_index": int(state["chunk_index"]),
-                     "request_count": len(state["trials"])},
-                    subcap_usd=PART65_CAP_USD,
-                    subcap_key="part65-judge",
-                )
-            state["attempt_id"] = attempt_id
-            state["status"] = "reserved"
-            _save_chunk(path, state)
-        state["status"] = "posting"
-        _save_chunk(path, state)
-        batch_request = {"requests": [trial["request"] for trial in state["trials"]]}
-        try:
-            response = json.loads(api("POST", "/v1/messages/batches", batch_request))
-        except APIHttpError as exc:
-            if 400 <= exc.status < 500 and exc.status != 429:
-                try:
-                    ledger.release(state["attempt_id"], exc.status, exc.body)
-                    state["status"] = "released"
-                    state["error"] = f"validated HTTP {exc.status} rejection"
-                    _save_chunk(path, state)
-                except Exception:
-                    state["status"] = "unknown_no_batch"
-                    state["error"] = f"HTTP {exc.status} could not be safely released"
-                    _save_chunk(path, state)
-            else:
-                state["status"] = "unknown_no_batch"
-                state["error"] = f"HTTP {exc.status} leaves reservation active"
-                _save_chunk(path, state)
-            raise
-        except Exception as exc:
-            state["status"] = "unknown_no_batch"
-            state["error"] = f"unknown POST outcome: {type(exc).__name__}: {exc}"
-            _save_chunk(path, state)
-            raise
-        batch_id = response.get("id")
-        if not isinstance(batch_id, str) or not batch_id:
-            state["status"] = "unknown_no_batch"
-            state["error"] = "POST response contained no batch ID"
-            _save_chunk(path, state)
-            raise JudgeError("POST response contained no batch ID; reservation remains active")
-        state["batch_id"] = batch_id
-        state["status"] = "submitted"
-        _save_chunk(path, state)
-    elif status != "submitted":
-        if status in ("released",):
-            return "released"
+    if status == "released":
+        return "released"
+    if status != "submitted":
         raise JudgeError(f"{path}: unsupported chunk state {status!r}")
     outcome = _fetch_and_save(path, state, api, ledger, poll_seconds,
                               timeout_seconds, sleep=sleep)
@@ -625,21 +743,27 @@ def process_chunk(path: Path, ledger: Ledger, api: Callable[..., str] = api_call
 
 
 def run_chunks(root: Path, ledger_path: Path = DEFAULT_LEDGER_PATH,
-               api: Callable[..., str] = api_call, *, poll_seconds: float = 30.0,
+               api: Callable[..., str] | None = None, *, poll_seconds: float = 30.0,
                timeout_seconds: float = 2400.0,
-               sleep: Callable[[float], None] = time.sleep) -> dict[str, int]:
+               sleep: Callable[[float], None] = time.sleep,
+               recover_only: bool = False) -> dict[str, int]:
+    if api is None:
+        api = api_call
     ledger = Ledger(str(ledger_path), HARD_CAP_USD)
     totals = {"settled": 0, "pending": 0, "released": 0, "ambiguous": 0}
     with _lock_file(root / ".judge65.lock"):
         for path in sorted((root / "chunks").glob("chunk-*.json")):
             try:
                 outcome = process_chunk(path, ledger, api, poll_seconds=poll_seconds,
-                                        timeout_seconds=timeout_seconds, sleep=sleep)
+                                        timeout_seconds=timeout_seconds, sleep=sleep,
+                                        recover_only=recover_only)
                 totals[outcome] = totals.get(outcome, 0) + 1
+                if outcome in ("released", "ambiguous"):
+                    break
             except JudgeError as exc:
                 if "ambiguous" in str(exc) or "no batch ID" in str(exc):
                     totals["ambiguous"] += 1
-                    continue
+                    break
                 raise
     return totals
 
@@ -662,7 +786,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--read-control", type=Path, default=None)
     parser.add_argument("--ranked", type=Path, default=None)
     parser.add_argument("--sentence-test", type=Path, default=None)
-    parser.add_argument("--out-dir", type=Path, required=True)
+    parser.add_argument("--out-dir", type=Path)
     parser.add_argument("--ledger", type=Path, default=DEFAULT_LEDGER_PATH,
                         help="shared paidaction ledger; test runs may pass a temporary path")
     parser.add_argument("--seed", type=int, default=6501)
@@ -670,16 +794,26 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--probe", action="store_true",
                         help="submit exactly one message request, then poll that one-request batch")
     parser.add_argument("--recover", action="store_true",
-                        help="recover saved batches; ambiguous no-ID POSTs are never resubmitted")
+                        help="GET and settle saved batches only; this mode never POSTs")
+    parser.add_argument("--reserve-total", action="store_true",
+                        help="print the full plan's worst-case reserve from the real requests; send nothing")
     parser.add_argument("--poll-seconds", type=float, default=30.0)
     parser.add_argument("--timeout-seconds", type=float, default=2400.0)
     args = parser.parse_args(argv)
     if args.probe and args.recover:
         parser.error("--probe and --recover cannot be combined")
+    if args.reserve_total and (args.probe or args.recover):
+        parser.error("--reserve-total cannot be combined with --probe or --recover")
+    if args.out_dir is None and not args.reserve_total:
+        parser.error("--out-dir is required unless --reserve-total is used")
     run_root = args.out_dir
     if args.recover:
-        totals = run_chunks(args.out_dir, args.ledger, poll_seconds=args.poll_seconds,
-                            timeout_seconds=args.timeout_seconds)
+        try:
+            totals = run_chunks(args.out_dir, args.ledger, poll_seconds=args.poll_seconds,
+                                timeout_seconds=args.timeout_seconds, recover_only=True)
+        except JudgeError as exc:
+            print(f"judge stopped: {exc}", file=sys.stderr)
+            return 2
     else:
         if args.ranked is None:
             parser.error("--ranked is required unless --recover is used")
@@ -688,11 +822,24 @@ def main(argv: list[str] | None = None) -> int:
         sentence_test_path = args.sentence_test or DEFAULT_SENTENCE_TEST
         trials = prepare_inputs(args.collection, neuron_path, control_path, args.ranked,
                                 sentence_test_path, args.seed)
+        if args.reserve_total:
+            print(json.dumps({
+                "plan_sha256": hashlib.sha256(_canonical_json(trials)).hexdigest(),
+                "request_count": len(trials),
+                "chunk_size": args.chunk_size,
+                "reserve_total_usd": _reserve_total(trials, args.chunk_size),
+                "subcap_usd": PART65_CAP_USD,
+            }, sort_keys=True))
+            return 0
         root = args.out_dir / "probe" if args.probe else args.out_dir
         run_root = root
         prepare_run(trials, root, 1 if args.probe else args.chunk_size, args.seed, probe=args.probe)
-        totals = run_chunks(root, args.ledger, poll_seconds=args.poll_seconds,
-                            timeout_seconds=args.timeout_seconds)
+        try:
+            totals = run_chunks(root, args.ledger, poll_seconds=args.poll_seconds,
+                                timeout_seconds=args.timeout_seconds)
+        except JudgeError as exc:
+            print(f"judge stopped: {exc}", file=sys.stderr)
+            return 2
     if totals.get("released", 0):
         for chunk_path in sorted((run_root / "chunks").glob("chunk-*.json")):
             try:
@@ -705,8 +852,26 @@ def main(argv: list[str] | None = None) -> int:
                 detail = error if isinstance(error, str) and error else "error details not recorded"
                 print(f"released judge chunk error: {detail}", file=sys.stderr)
                 print(
-                    "a released chunk is final for this output directory; rerun the whole judge "
-                    "into a new output directory.",
+                    "this released chunk is terminal for the registered judge; preserve the "
+                    "partial artifacts. No new output directory may be started for this plan.",
+                    file=sys.stderr,
+                )
+    elif totals.get("ambiguous", 0):
+        for chunk_path in sorted((run_root / "chunks").glob("chunk-*.json")):
+            try:
+                chunk_state = json.loads(chunk_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                continue
+            if (chunk_state.get("status") in ("posting", "unknown_no_batch")
+                    and not chunk_state.get("batch_id")):
+                print(f"ambiguous judge chunk: {chunk_path}", file=sys.stderr)
+                detail = chunk_state.get("error")
+                if isinstance(detail, str) and detail:
+                    print(f"ambiguous judge chunk error: {detail}", file=sys.stderr)
+                print(
+                    "the registered judge stopped without submitting later chunks; preserve the "
+                    "partial artifacts. Do not start another output directory for this plan. "
+                    "--recover will not POST.",
                     file=sys.stderr,
                 )
     print(json.dumps(totals, sort_keys=True))

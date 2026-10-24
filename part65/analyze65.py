@@ -228,6 +228,22 @@ def analyze_rows(answer_rows: list[dict[str, Any]], units: list[dict[str, Any]],
         raise AnalysisError("collection includes duplicate unit keys")
     if set(read_labels) != expected_keys or set(write_words) != expected_keys:
         raise AnalysisError("read labels and write words must cover every registered unit")
+    if answer_rows:
+        run_plan_pairs = set()
+        run_roots = set()
+        for row_number, answer in enumerate(answer_rows, 1):
+            judge_run_id = answer.get("judge_run_id")
+            plan_sha256 = answer.get("plan_sha256")
+            run_root = answer.get("run_root")
+            if not all(isinstance(value, str) and value.strip()
+                       for value in (judge_run_id, plan_sha256, run_root)):
+                raise AnalysisError(
+                    f"judge answer row {row_number} lacks run ID, plan hash, or output directory"
+                )
+            run_plan_pairs.add((judge_run_id, plan_sha256))
+            run_roots.add(run_root)
+        if len(run_plan_pairs) != 1 or len(run_roots) != 1:
+            raise AnalysisError("judge answers combine more than one run or plan")
     # judge65.build_trials registers two numbered attempts for every frozen unit.
     # Build the expected pairs from that plan shape, never from answers.jsonl.
     registered_pairs = {

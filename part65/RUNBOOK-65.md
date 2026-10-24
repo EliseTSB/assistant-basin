@@ -52,6 +52,19 @@ python part65/rank65.py --steer results/part65/steer.jsonl --out results/part65/
 
 Set `ANTHROPIC_CREDITS_KEY` (preferred) or `ANTHROPIC_API_KEY` in the host shell. When `~/.mitmproxy/ca-bundle-combined.crt` exists, the judge trusts that bundle; otherwise it uses Python's default trust store. First run the one-request probe and inspect its saved answer and chunk state before authorizing the full 1,000-trial plan:
 
+Before the probe, calculate and record the whole-plan worst-case reserve from the real ranked requests. This is a local preflight and sends no request. Use the same chunk size for the later full run (the default is 100):
+
+```bash
+python part65/judge65.py \
+  --collection results/part64/collection.jsonl \
+  --read-dir results/part64/gen64/outputs \
+  --ranked results/part65/ranked.jsonl \
+  --sentence-test results/part64/scored.jsonl \
+  --reserve-total
+```
+
+The JSON output includes `plan_sha256`, `request_count`, `chunk_size`, `reserve_total_usd`, and the $1 Part 65 paid-action sub-cap. Keep the reserve total with the pre-probe record. This replaces Amendment 2's synthetic reserve estimate.
+
 ```bash
 python part65/judge65.py \
   --collection results/part64/collection.jsonl \
@@ -73,7 +86,7 @@ python part65/judge65.py \
   --out-dir results/part65/judge
 ```
 
-The full answers are at `results/part65/judge/answers.jsonl`. If a known provider batch is still pending, use the same command with `--recover`; do not resubmit an ambiguous no-ID POST. A released chunk is final for that output directory: the judge prints the chunk path and its error, then exits nonzero. Fix the underlying input or request and rerun the whole judge with the full-plan inputs into a new `--out-dir`. Do not resubmit the released attempt or combine answers from the old and new output directories. The judge reserves through the shared paidaction ledger and retains its $1 Part 65 sub-cap.
+The full answers are at `results/part65/judge/answers.jsonl`. If a known provider batch is still pending, use the same command with `--recover`; it fetches and settles saved batches but never sends a POST. An ambiguous POST outcome stops the loop and leaves its reservation active. A validated released chunk is terminal for the registered judge: the command prints its chunk path and error, then exits 2 without submitting a later chunk. Preserve the partial artifacts. The released chunk's 100 trials exceed the registered 50-trial missing-data limit, so report judge failure and do not report 65a–65g. Do not start a new output directory for this plan or combine answers from different runs; a later judge needs its own registered plan. The judge reserves through the shared paidaction ledger and enforces its $1 Part 65 sub-cap.
 
 ## Analyze
 
