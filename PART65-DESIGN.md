@@ -143,3 +143,18 @@ here before any data, not a further patch. It replaces the unparseable-answer pa
 6. A judge chunk the provider rejects (released) is final for that output directory. Recovery is a fresh output
    directory for the whole judge, never a resubmission of a released attempt; the whole judge reserves under three
    cents. Answers from two output directories are never combined.
+
+## Amendment 3 (2026-10-24, after the 20-unit steering pilot and before the full run or any judge call)
+
+The pilot passed its registered checks (dose 0 reproduced the baseline for all 20 units; 60 of 60 +0.8 rollouts
+changed; push norms equal within 2e-7 at every layer; 13.7 s per unit on the A770). Reading its text showed that the
+chat template ran in Qwen3's thinking mode, so 162 of the 180 rollouts spent all 48 new tokens inside the `<think>`
+preamble ("Okay, the user wants..."). Write words drawn from that preamble describe the same opening for every unit, and
+would make 65a fail for a reason unrelated to the units. No judge answer exists, so no outcome was seen.
+
+1. Rollouts and baselines use Qwen3's non-thinking mode (`enable_thinking=False`; the template inserts an empty think
+   block), with everything else unchanged: same prompts, doses, greedy decoding and 48 new tokens.
+2. The pilot is rerun under this rule with the same 20 units and must pass the same checks before the full run.
+3. Lyra's research log found that relative doses do not transfer to the first layers of Qwen3.5-4B (at +0.8, 92% of
+   layer-0 rollouts were empty or `<think>` loops). We report 65a and 65b again with layers 0 to 2 left out, as a
+   sensitivity analysis that does not enter pass or fail.
