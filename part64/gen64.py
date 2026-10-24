@@ -707,15 +707,20 @@ def _result_bundle(chunk: Mapping[str, Any], rows: list[dict[str, Any]]) -> dict
             "rows": ordered, "usage": usage, "actual_usd": actual_usd}
 
 
-def _unknown_post(message: str, unresolved: Sequence[str] | None = None) -> RecoveryRequired:
+def _unknown_post(message: str, chunk: Mapping[str, Any],
+                  in_flight: Sequence[str] | None = None) -> RecoveryRequired:
     """A RecoveryRequired for a chunk whose POST outcome is unknown: _run_groups defers it, never resubmits it.
 
-    unresolved lists provider batches that may still turn out to be this POST; while it is non-empty the
-    pipeline keeps waiting. At POST time nothing has been listed yet, so recovery gets one pass to look.
+    in_flight lists provider batches that have not ended, so the listing cannot yet say whether one of them is this
+    POST; while it is non-empty the pipeline waits (a batch ends within 24 hours). An ended batch whose results
+    could not be read is NOT in flight: waiting will not help, so it stops for a person. At POST time nothing has
+    been listed yet, so recovery gets one pass to look.
     """
-    error = RecoveryRequired(message)
+    who = (f"{chunk.get('group_key')} chunk {chunk.get('chunk_index')} "
+           f"(ledger {chunk.get('ledger_key')}, attempt {chunk.get('attempt_id')})")
+    error = RecoveryRequired(f"{who}: {message}")
     error.unknown_post = True
-    error.unresolved = list(unresolved) if unresolved is not None else ["(not listed yet)"]
+    error.in_flight = list(in_flight) if in_flight is not None else ["(not listed yet)"]
     return error
 
 
@@ -782,7 +787,17 @@ def execute_chunk(root: Path, chunk_path: Path, api: Callable[..., str] = api_ca
             chunk.update(state="rejected", error="known API rejection; recovered from released ledger attempt")
             write_json(chunk_path, chunk)
             raise RecoveryRequired("POST was durably released after a known API rejection; chunk marked rejected")
-        matches, unresolved = _find_provider_batches(api, chunk)
+        in_flight: list[str] = []
+        try:
+            matches, unresolved = _find_provider_batches(api, chunk, in_flight=in_flight)
+        except RecoveryRequired as exc:
+            # The listing itself failed; retry next pass while other chunks keep the run going.
+            raise _unknown_post(f"{exc}; recovery listing failed, retry later", chunk, []) from exc
+        if len(matches) > 1:
+            chunk.update(state="ambiguous", error=f"provider listing found {len(matches)} matching batches")
+            write_json(chunk_path, chunk)
+            raise RecoveryRequired(f"{chunk.get('group_key')} chunk {chunk.get('chunk_index')}: provider listing "
+                                   f"found {len(matches)} matching batches {matches}; possible duplicate, stop")
         if len(matches) == 1:
             chunk.update(state="submitted", batch_id=matches[0], processing_status="ended",
                          recovered_batch_at=utc_now())
@@ -795,7 +810,8 @@ def execute_chunk(root: Path, chunk_path: Path, api: Callable[..., str] = api_ca
                 reason += f"; unresolved candidate batches: {unresolved}"
             chunk.update(state="ambiguous", error=reason)
             write_json(chunk_path, chunk)
-            raise _unknown_post(reason + "; do not resubmit; retry recovery or verify before retiring", unresolved)
+            raise _unknown_post(reason + "; do not resubmit; retry recovery or verify before retiring",
+                                chunk, in_flight)
 
     if state == "reserved":
         attempt_id = chunk.get("attempt_id")
@@ -816,23 +832,26 @@ def execute_chunk(root: Path, chunk_path: Path, api: Callable[..., str] = api_ca
             except LedgerError:
                 chunk.update(state="ambiguous", error=f"unreleased API failure HTTP {exc.http_status}")
                 write_json(chunk_path, chunk)
+                # A 5xx may follow provider acceptance; the ledger refused the release, so the outcome is unknown.
+                raise _unknown_post(f"batch POST failed with HTTP {exc.http_status} and the ledger kept the "
+                                    "reserve; resubmission refused", chunk) from exc
             raise WriterError(f"batch POST failed for {chunk['group_key']}: HTTP {exc.http_status}") from exc
         except Exception as exc:
             chunk.update(state="ambiguous", error=f"POST outcome unknown: {type(exc).__name__}: {exc}")
             write_json(chunk_path, chunk)
-            raise _unknown_post("POST outcome is unknown; reserve retained and resubmission refused") from exc
+            raise _unknown_post("POST outcome is unknown; reserve retained and resubmission refused", chunk) from exc
         _kill_at(kill_at, "after_post_before_id")
         try:
             response = json.loads(raw_response)
         except (TypeError, json.JSONDecodeError) as exc:
             chunk.update(state="ambiguous", error=f"invalid POST response: {exc}")
             write_json(chunk_path, chunk)
-            raise _unknown_post("POST response cannot be parsed; reserve retained and resubmission refused") from exc
+            raise _unknown_post("POST response cannot be parsed; reserve retained and resubmission refused", chunk) from exc
         batch_id = response.get("id") if isinstance(response, dict) else None
         if not isinstance(batch_id, str) or not batch_id.strip():
             chunk.update(state="ambiguous", error="POST response has no batch id")
             write_json(chunk_path, chunk)
-            raise _unknown_post("POST response has no batch ID; reserve retained and resubmission refused")
+            raise _unknown_post("POST response has no batch ID; reserve retained and resubmission refused", chunk)
         chunk.update(state="submitted", batch_id=batch_id, processing_status=response.get("processing_status"),
                      submitted_at=utc_now())
         write_json(chunk_path, chunk)  # Durable batch ID precedes every poll.
@@ -1210,11 +1229,14 @@ def _run_groups(root: Path, manifest: dict[str, Any], api: Callable[..., str], *
             check_deadline()
             break
         still_submitted = any(state == "submitted" for state in states)
-        # Wait for an unknown POST only while some provider batch near it is still in flight; with none left,
-        # the listing has spoken and a person must recover or retire it.
-        waiting_on_provider = any(getattr(exc, "unresolved", None) for exc in deferred.values())
+        # Wait for an unknown POST only while a provider batch that could be it has not ended; with none left,
+        # the listing has spoken (or cannot be read) and a person must recover or retire it.
+        waiting_on_provider = any(getattr(exc, "in_flight", None) for exc in deferred.values())
         if deferred and not still_submitted and not waiting_on_provider:
-            raise next(iter(deferred.values()))
+            if len(deferred) == 1:
+                raise next(iter(deferred.values()))
+            raise RecoveryRequired(f"{len(deferred)} chunks need a person: "
+                                   + " | ".join(str(exc) for exc in deferred.values()))
         if still_submitted or waiting_on_provider:
             remaining = deadline - time.monotonic()
             if remaining <= 0:
@@ -1283,7 +1305,8 @@ def _parse_provider_time(value: Any) -> datetime | None:
     return parsed.astimezone(timezone.utc)
 
 
-def _find_provider_batches(api: Callable[..., str], chunk: Mapping[str, Any]) -> tuple[list[str], list[str]]:
+def _find_provider_batches(api: Callable[..., str], chunk: Mapping[str, Any],
+                           in_flight: list[str] | None = None) -> tuple[list[str], list[str]]:
     """Prove that no accepted provider batch contains this unknown POST's IDs.
 
     The request IDs include the durable run and group identity. A fresh provider
@@ -1355,6 +1378,8 @@ def _find_provider_batches(api: Callable[..., str], chunk: Mapping[str, Any]) ->
         if status != "ended":
             if not is_reprobe or within_window:
                 unresolved.append(batch["id"])
+                if in_flight is not None:
+                    in_flight.append(batch["id"])
             continue
         try:
             # An ended batch's results never change, so each is fetched once per process: recovery is retried on

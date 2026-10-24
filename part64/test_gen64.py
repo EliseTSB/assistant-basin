@@ -1329,6 +1329,124 @@ class ChunkRecoveryTests(LocalPaidRegistryTests):
             first = gen64.read_json(root / manifest["groups"]["test-chunk"]["chunk_paths"][0])
             self.assertEqual(first["batch_id"], api.lost)
 
+    # Review round 1 (DS F1, Haiku F1-F5): wait only on batches still in flight; an unreadable ended batch, a 5xx
+    # POST, a duplicate and the chunk's identity each have their own expected outcome.
+    def _two_chunk_run(self, root, prefix):
+        manifest = self.make_pipeline_manifest(root, count=2, key_prefix=prefix)
+        return manifest, [root / relpath for relpath in manifest["groups"]["test-chunk"]["chunk_paths"]]
+
+    def test_unreadable_ended_batch_stops_for_a_person_instead_of_waiting(self):
+        with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
+            root = Path(temporary)
+            manifest, paths = self._two_chunk_run(root, "haiku-unreadable")
+
+            class UnreadableOldBatchAPI(FakeBatchAPI):
+                def __init__(self):
+                    super().__init__()
+                    self.post_calls = 0
+                    self.batch_records["b-old"] = {"id": "b-old", "processing_status": "ended",
+                                                   "created_at": "2026-10-20T00:00:00Z"}
+
+                def __call__(self, method, api_path, body=None):
+                    if method == "POST":
+                        self.post_calls += 1
+                        if self.post_calls == 1:
+                            raise ConnectionResetError("reset before acceptance")
+                    if method == "GET" and api_path == "/v1/messages/batches/b-old/results":
+                        raise TimeoutError("results endpoint keeps failing")
+                    return super().__call__(method, api_path, body)
+
+            sleeps = []
+            with self.assertRaisesRegex(gen64.RecoveryRequired, "haiku-unreadable-00"):
+                gen64._run_groups(root, manifest, UnreadableOldBatchAPI(), poll_interval=0,
+                                  sleep=sleeps.append, pipeline_bound=30)
+            self.assertLessEqual(len(sleeps), 2)  # one pass for the POST-time look, no 30-hour wait
+            self.assertEqual([gen64.read_json(p)["state"] for p in paths], ["ambiguous", "settled"])
+
+    def test_deferred_chunk_waits_while_a_candidate_batch_is_in_flight(self):
+        with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
+            root = Path(temporary)
+            manifest, paths = self._two_chunk_run(root, "haiku-waits")
+
+            class SlowCandidateAPI(FakeBatchAPI):
+                def __init__(self):
+                    super().__init__()
+                    self.post_calls = 0
+                    self.listings = 0
+                    self.batch_records["b-other"] = {"id": "b-other", "processing_status": "in_progress",
+                                                     "created_at": gen64.utc_now()}
+                    self.batch_requests["b-other"] = [{"custom_id": "someone-else"}]
+
+                def __call__(self, method, api_path, body=None):
+                    if method == "POST":
+                        self.post_calls += 1
+                        if self.post_calls == 1:
+                            raise ConnectionResetError("reset before acceptance")
+                    if method == "GET" and api_path.startswith("/v1/messages/batches?"):
+                        self.listings += 1
+                        if self.listings >= 4:
+                            self.batch_records["b-other"]["processing_status"] = "ended"
+                    return super().__call__(method, api_path, body)
+
+            sleeps = []
+            with self.assertRaisesRegex(gen64.RecoveryRequired, "no ended matching batch"):
+                gen64._run_groups(root, manifest, SlowCandidateAPI(), poll_interval=0,
+                                  sleep=sleeps.append, pipeline_bound=30)
+            self.assertGreaterEqual(len(sleeps), 2)  # it waited for b-other rather than spinning or stopping
+            self.assertEqual([gen64.read_json(p)["state"] for p in paths], ["ambiguous", "settled"])
+
+    def test_http_5xx_post_is_deferred_and_the_run_goes_on(self):
+        with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
+            root = Path(temporary)
+            manifest, paths = self._two_chunk_run(root, "haiku-504")
+
+            class GatewayTimeoutFirstAPI(FakeBatchAPI):
+                def __init__(self):
+                    super().__init__()
+                    self.post_calls = 0
+
+                def __call__(self, method, api_path, body=None):
+                    if method == "POST":
+                        self.post_calls += 1
+                        if self.post_calls == 1:
+                            raise gen64.HTTPFailure(504, "gateway timeout")
+                    return super().__call__(method, api_path, body)
+
+            api = GatewayTimeoutFirstAPI()
+            with self.assertRaisesRegex(gen64.RecoveryRequired, "haiku-504-00"):
+                gen64._run_groups(root, manifest, api, poll_interval=0, sleep=lambda _n: None, pipeline_bound=30)
+            self.assertEqual([gen64.read_json(p)["state"] for p in paths], ["ambiguous", "settled"])
+            self.assertEqual(api.post_calls, 2)
+            ledger = Ledger(str(gen64.ledger_path(root, gen64.read_json(paths[0])["ledger_key"])), HARD_CAP_USD)
+            self.assertEqual(next(iter(gen64._attempts(ledger).values()))["status"], "reserved")
+
+    def test_two_matching_batches_stop_the_run_as_a_possible_duplicate(self):
+        with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
+            root = Path(temporary)
+            path = self.make_chunk(root)
+            mine = gen64.read_json(path)["requests"][0]["custom_id"]
+
+            def reset_before_acceptance(method, api_path, body=None):
+                raise ConnectionResetError("reset before acceptance")
+
+            with self.assertRaises(gen64.RecoveryRequired):
+                gen64.execute_chunk(root, path, reset_before_acceptance, poll_interval=0, sleep=lambda _n: None)
+            self.assertEqual(gen64.read_json(path)["state"], "ambiguous")
+
+            class TwoMatchesAPI:
+                def __call__(self, method, api_path, body=None):
+                    if method == "GET" and api_path.startswith("/v1/messages/batches?"):
+                        return json.dumps({"data": [{"id": b, "created_at": gen64.utc_now(),
+                                                     "processing_status": "ended"} for b in ("b1", "b2")],
+                                           "has_more": False})
+                    if method == "GET" and api_path.endswith("/results"):
+                        return json.dumps({"custom_id": mine, "result": {"type": "errored"}}) + "\n"
+                    raise AssertionError((method, api_path))
+
+            with self.assertRaisesRegex(gen64.RecoveryRequired, "possible duplicate") as raised:
+                gen64.execute_chunk(root, path, TwoMatchesAPI(), poll_interval=0, sleep=lambda _n: None)
+            self.assertFalse(getattr(raised.exception, "unknown_post", False))
+
 
 if __name__ == "__main__":
     unittest.main()
