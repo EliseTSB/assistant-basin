@@ -1,0 +1,56 @@
+61 qwen35-4b: size_rho_all_11=0.921609 among_control_sensitivity_rho=0.921419 matched_1x_target=16 controls=[49, 22, 32, 15, 46, 26, 29, 19, 46, 12]
+61 null outcome chance (independent sizes): {'shown': 0.008264462809917356, 'absent': 0.8181818181818182, 'inconclusive': 0.17355371900826444}
+61 null outcome chance (perfectly correlated sizes): {'shown': 0.09090909090909091, 'absent': 0.8181818181818182, 'inconclusive': 0.09090909090909083}
+61 prediction base rates: 61b=10/11 (about 90.9%); 61e=1/2 (50%); neither is a decision input
+61 model decision: push-size artefact supported for this model (excess absent, ranks 1x=9/11, 2x=10/11)
+rank qwen35-4b 0.25x: target=0 controls=[6, 1, 3, 0, 4, 1, 1, 1, 5, 1] rank=11/11 permutation_p=1.000000
+rank qwen35-4b 0.5x: target=6 controls=[22, 3, 11, 2, 14, 5, 11, 6, 16, 2] rank=7/11 permutation_p=0.636364
+rank qwen35-4b 1x: target=16 controls=[49, 22, 32, 15, 46, 26, 29, 19, 46, 12] rank=9/11 permutation_p=0.818182
+rank qwen35-4b 2x: target=44 controls=[65, 64, 87, 64, 65, 47, 47, 43, 59, 52] rank=10/11 permutation_p=0.909091
+residual qwen35-4b unit=2742 size=0.25x minus=1.003755 plus=1.002739
+residual qwen35-4b unit=2742 size=0.5x minus=1.013982 plus=1.011970
+residual qwen35-4b unit=2742 size=1x minus=1.052873 plus=1.048993
+residual qwen35-4b unit=2742 size=2x minus=1.193593 plus=1.186730
+residual qwen35-4b unit=2833 size=0.25x minus=1.003252 plus=1.003287
+residual qwen35-4b unit=2833 size=0.5x minus=1.012964 plus=1.013032
+residual qwen35-4b unit=2833 size=1x minus=1.050894 plus=1.051017
+residual qwen35-4b unit=2833 size=2x minus=1.190091 plus=1.190272
+residual qwen35-4b unit=4638 size=0.25x minus=1.002673 plus=1.003850
+residual qwen35-4b unit=4638 size=0.5x minus=1.011824 plus=1.014155
+residual qwen35-4b unit=4638 size=1x minus=1.048696 plus=1.053194
+residual qwen35-4b unit=4638 size=2x minus=1.186183 plus=1.194154
+residual qwen35-4b unit=5009 size=0.25x minus=1.002582 plus=1.003933
+residual qwen35-4b unit=5009 size=0.5x minus=1.011649 plus=1.014323
+residual qwen35-4b unit=5009 size=1x minus=1.048369 plus=1.053515
+residual qwen35-4b unit=5009 size=2x minus=1.185637 plus=1.194693
+residual qwen35-4b unit=5587 size=0.25x minus=1.002475 plus=1.004047
+residual qwen35-4b unit=5587 size=0.5x minus=1.011432 plus=1.014544
+residual qwen35-4b unit=5587 size=1x minus=1.047947 plus=1.053935
+residual qwen35-4b unit=5587 size=2x minus=1.184890 plus=1.195426
+residual qwen35-4b unit=5825 size=0.25x minus=1.002602 plus=1.003924
+residual qwen35-4b unit=5825 size=0.5x minus=1.011683 plus=1.014300
+residual qwen35-4b unit=5825 size=1x minus=1.048428 plus=1.053464
+residual qwen35-4b unit=5825 size=2x minus=1.185736 plus=1.194597
+residual qwen35-4b unit=5979 size=0.25x minus=1.001938 plus=1.004581
+residual qwen35-4b unit=5979 size=0.5x minus=1.010369 plus=1.015602
+residual qwen35-4b unit=5979 size=1x minus=1.045894 plus=1.055971
+residual qwen35-4b unit=5979 size=2x minus=1.181253 plus=1.199020
+residual qwen35-4b unit=7487 size=0.25x minus=1.004973 plus=1.001565
+residual qwen35-4b unit=7487 size=0.5x minus=1.016366 plus=1.009620
+residual qwen35-4b unit=7487 size=1x minus=1.057424 plus=1.044442
+residual qwen35-4b unit=7487 size=2x minus=1.201539 plus=1.178701
+residual qwen35-4b unit=7823 size=0.25x minus=1.003749 plus=1.002781
+residual qwen35-4b unit=7823 size=0.5x minus=1.013952 plus=1.012035
+residual qwen35-4b unit=7823 size=1x minus=1.052794 plus=1.049105
+residual qwen35-4b unit=7823 size=2x minus=1.193419 plus=1.186931
+residual qwen35-4b unit=8404 size=0.25x minus=1.002537 plus=1.003985
+residual qwen35-4b unit=8404 size=0.5x minus=1.011554 plus=1.014422
+residual qwen35-4b unit=8404 size=1x minus=1.048177 plus=1.053704
+residual qwen35-4b unit=8404 size=2x minus=1.185271 plus=1.195040
+residual qwen35-4b unit=8941 size=0.25x minus=1.002291 plus=1.004267
+residual qwen35-4b unit=8941 size=0.5x minus=1.011050 plus=1.014961
+residual qwen35-4b unit=8941 size=1x minus=1.047198 plus=1.054716
+residual qwen35-4b unit=8941 size=2x minus=1.183574 plus=1.196765
+61a qwen35-4b: rho=0.921609 minimum=0.7 -> held
+61c qwen35-4b: target=16 control_range=[12, 49] -> held
+61d qwen35-4b: within_band=22/22 ratios -> held

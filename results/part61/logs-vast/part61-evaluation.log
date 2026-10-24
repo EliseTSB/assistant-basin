@@ -1,0 +1,119 @@
+61 qwen35-4b: size_rho_all_11=0.921609 among_control_sensitivity_rho=0.921419 matched_1x_target=16 controls=[49, 22, 32, 15, 46, 26, 29, 19, 46, 12]
+61 null outcome chance (independent sizes): {'shown': 0.008264462809917356, 'absent': 0.8181818181818182, 'inconclusive': 0.17355371900826444}
+61 null outcome chance (perfectly correlated sizes): {'shown': 0.09090909090909091, 'absent': 0.8181818181818182, 'inconclusive': 0.09090909090909083}
+61 prediction base rates: 61b=10/11 (about 90.9%); 61e=1/2 (50%); neither is a decision input
+61 model decision: push-size artefact supported for this model (excess absent, ranks 1x=9/11, 2x=10/11)
+rank qwen35-4b 0.25x: target=0 controls=[6, 1, 3, 0, 4, 1, 1, 1, 5, 1] rank=11/11 permutation_p=1.000000
+rank qwen35-4b 0.5x: target=6 controls=[22, 3, 11, 2, 14, 5, 11, 6, 16, 2] rank=7/11 permutation_p=0.636364
+rank qwen35-4b 1x: target=16 controls=[49, 22, 32, 15, 46, 26, 29, 19, 46, 12] rank=9/11 permutation_p=0.818182
+rank qwen35-4b 2x: target=44 controls=[65, 64, 87, 64, 65, 47, 47, 43, 59, 52] rank=10/11 permutation_p=0.909091
+residual qwen35-4b unit=2742 size=0.25x minus=1.003755 plus=1.002739
+residual qwen35-4b unit=2742 size=0.5x minus=1.013982 plus=1.011970
+residual qwen35-4b unit=2742 size=1x minus=1.052873 plus=1.048993
+residual qwen35-4b unit=2742 size=2x minus=1.193593 plus=1.186730
+residual qwen35-4b unit=2833 size=0.25x minus=1.003252 plus=1.003287
+residual qwen35-4b unit=2833 size=0.5x minus=1.012964 plus=1.013032
+residual qwen35-4b unit=2833 size=1x minus=1.050894 plus=1.051017
+residual qwen35-4b unit=2833 size=2x minus=1.190091 plus=1.190272
+residual qwen35-4b unit=4638 size=0.25x minus=1.002673 plus=1.003850
+residual qwen35-4b unit=4638 size=0.5x minus=1.011824 plus=1.014155
+residual qwen35-4b unit=4638 size=1x minus=1.048696 plus=1.053194
+residual qwen35-4b unit=4638 size=2x minus=1.186183 plus=1.194154
+residual qwen35-4b unit=5009 size=0.25x minus=1.002582 plus=1.003933
+residual qwen35-4b unit=5009 size=0.5x minus=1.011649 plus=1.014323
+residual qwen35-4b unit=5009 size=1x minus=1.048369 plus=1.053515
+residual qwen35-4b unit=5009 size=2x minus=1.185637 plus=1.194693
+residual qwen35-4b unit=5587 size=0.25x minus=1.002475 plus=1.004047
+residual qwen35-4b unit=5587 size=0.5x minus=1.011432 plus=1.014544
+residual qwen35-4b unit=5587 size=1x minus=1.047947 plus=1.053935
+residual qwen35-4b unit=5587 size=2x minus=1.184890 plus=1.195426
+residual qwen35-4b unit=5825 size=0.25x minus=1.002602 plus=1.003924
+residual qwen35-4b unit=5825 size=0.5x minus=1.011683 plus=1.014300
+residual qwen35-4b unit=5825 size=1x minus=1.048428 plus=1.053464
+residual qwen35-4b unit=5825 size=2x minus=1.185736 plus=1.194597
+residual qwen35-4b unit=5979 size=0.25x minus=1.001938 plus=1.004581
+residual qwen35-4b unit=5979 size=0.5x minus=1.010369 plus=1.015602
+residual qwen35-4b unit=5979 size=1x minus=1.045894 plus=1.055971
+residual qwen35-4b unit=5979 size=2x minus=1.181253 plus=1.199020
+residual qwen35-4b unit=7487 size=0.25x minus=1.004973 plus=1.001565
+residual qwen35-4b unit=7487 size=0.5x minus=1.016366 plus=1.009620
+residual qwen35-4b unit=7487 size=1x minus=1.057424 plus=1.044442
+residual qwen35-4b unit=7487 size=2x minus=1.201539 plus=1.178701
+residual qwen35-4b unit=7823 size=0.25x minus=1.003749 plus=1.002781
+residual qwen35-4b unit=7823 size=0.5x minus=1.013952 plus=1.012035
+residual qwen35-4b unit=7823 size=1x minus=1.052794 plus=1.049105
+residual qwen35-4b unit=7823 size=2x minus=1.193419 plus=1.186931
+residual qwen35-4b unit=8404 size=0.25x minus=1.002537 plus=1.003985
+residual qwen35-4b unit=8404 size=0.5x minus=1.011554 plus=1.014422
+residual qwen35-4b unit=8404 size=1x minus=1.048177 plus=1.053704
+residual qwen35-4b unit=8404 size=2x minus=1.185271 plus=1.195040
+residual qwen35-4b unit=8941 size=0.25x minus=1.002291 plus=1.004267
+residual qwen35-4b unit=8941 size=0.5x minus=1.011050 plus=1.014961
+residual qwen35-4b unit=8941 size=1x minus=1.047198 plus=1.054716
+residual qwen35-4b unit=8941 size=2x minus=1.183574 plus=1.196765
+61a qwen35-4b: rho=0.921609 minimum=0.7 -> held
+61c qwen35-4b: target=16 control_range=[12, 49] -> held
+61d qwen35-4b: within_band=22/22 ratios -> held
+61 olmo2-1b: size_rho_all_11=-0.406680 among_control_sensitivity_rho=-0.460147 matched_1x_target=160 controls=[41, 28, 50, 144, 122, 52, 61, 145, 117, 86]
+61 null outcome chance (independent sizes): {'shown': 0.008264462809917356, 'absent': 0.8181818181818182, 'inconclusive': 0.17355371900826444}
+61 null outcome chance (perfectly correlated sizes): {'shown': 0.09090909090909091, 'absent': 0.8181818181818182, 'inconclusive': 0.09090909090909083}
+61 prediction base rates: 61b=10/11 (about 90.9%); 61e=1/2 (50%); neither is a decision input
+61 model decision: 59B contrast survives for this model (excess shown, ranks 1x=1/11, 2x=1/11)
+rank olmo2-1b 0.25x: target=151 controls=[110, 92, 147, 173, 188, 121, 142, 168, 120, 172] rank=5/11 permutation_p=0.454545
+rank olmo2-1b 0.5x: target=160 controls=[62, 55, 86, 149, 143, 84, 87, 128, 106, 112] rank=1/11 permutation_p=0.090909
+rank olmo2-1b 1x: target=160 controls=[41, 28, 50, 144, 122, 52, 61, 145, 117, 86] rank=1/11 permutation_p=0.090909
+rank olmo2-1b 2x: target=156 controls=[52, 17, 46, 154, 112, 51, 65, 152, 120, 81] rank=1/11 permutation_p=0.090909
+residual olmo2-1b unit=6978 size=0.25x minus=1.007127 plus=1.006741
+residual olmo2-1b unit=6978 size=0.5x minus=1.019397 plus=1.018867
+residual olmo2-1b unit=6978 size=1x minus=1.044737 plus=1.044330
+residual olmo2-1b unit=6978 size=2x minus=1.072912 plus=1.072612
+residual olmo2-1b unit=2516 size=0.25x minus=1.010738 plus=1.004212
+residual olmo2-1b unit=2516 size=0.5x minus=1.026828 plus=1.014924
+residual olmo2-1b unit=2516 size=1x minus=1.057540 plus=1.039495
+residual olmo2-1b unit=2516 size=2x minus=1.088725 plus=1.068583
+residual olmo2-1b unit=4121 size=0.25x minus=1.004247 plus=1.009609
+residual olmo2-1b unit=4121 size=0.5x minus=1.014180 plus=1.024098
+residual olmo2-1b unit=4121 size=1x minus=1.036857 plus=1.052145
+residual olmo2-1b unit=4121 size=2x minus=1.064106 plus=1.080992
+residual olmo2-1b unit=4451 size=0.25x minus=1.006191 plus=1.008507
+residual olmo2-1b unit=4451 size=0.5x minus=1.018271 plus=1.022495
+residual olmo2-1b unit=4451 size=1x minus=1.044015 plus=1.050739
+residual olmo2-1b unit=4451 size=2x minus=1.072379 plus=1.081715
+residual olmo2-1b unit=4965 size=0.25x minus=1.006989 plus=1.007543
+residual olmo2-1b unit=4965 size=0.5x minus=1.019652 plus=1.020683
+residual olmo2-1b unit=4965 size=1x minus=1.046250 plus=1.047531
+residual olmo2-1b unit=4965 size=2x minus=1.076442 plus=1.076080
+residual olmo2-1b unit=5177 size=0.25x minus=1.007704 plus=1.006860
+residual olmo2-1b unit=5177 size=0.5x minus=1.020958 plus=1.019459
+residual olmo2-1b unit=5177 size=1x minus=1.048089 plus=1.045910
+residual olmo2-1b unit=5177 size=2x minus=1.077738 plus=1.075234
+residual olmo2-1b unit=5313 size=0.25x minus=1.007878 plus=1.006080
+residual olmo2-1b unit=5313 size=0.5x minus=1.020940 plus=1.017688
+residual olmo2-1b unit=5313 size=1x minus=1.047420 plus=1.042529
+residual olmo2-1b unit=5313 size=2x minus=1.076192 plus=1.070673
+residual olmo2-1b unit=6653 size=0.25x minus=1.005253 plus=1.008832
+residual olmo2-1b unit=6653 size=0.5x minus=1.016192 plus=1.022733
+residual olmo2-1b unit=6653 size=1x minus=1.040331 plus=1.050204
+residual olmo2-1b unit=6653 size=2x minus=1.068352 plus=1.079286
+residual olmo2-1b unit=6951 size=0.25x minus=1.006709 plus=1.007843
+residual olmo2-1b unit=6951 size=0.5x minus=1.019196 plus=1.021208
+residual olmo2-1b unit=6951 size=1x minus=1.045436 plus=1.048542
+residual olmo2-1b unit=6951 size=2x minus=1.074261 plus=1.078676
+residual olmo2-1b unit=7470 size=0.25x minus=1.007064 plus=1.007528
+residual olmo2-1b unit=7470 size=0.5x minus=1.019827 plus=1.020663
+residual olmo2-1b unit=7470 size=1x minus=1.046445 plus=1.047711
+residual olmo2-1b unit=7470 size=2x minus=1.075803 plus=1.077405
+residual olmo2-1b unit=7947 size=0.25x minus=1.007089 plus=1.006838
+residual olmo2-1b unit=7947 size=0.5x minus=1.019508 plus=1.019010
+residual olmo2-1b unit=7947 size=1x minus=1.045257 plus=1.044439
+residual olmo2-1b unit=7947 size=2x minus=1.073657 plus=1.072837
+61a olmo2-1b: rho=-0.406680 minimum=0.7 -> failed
+61b olmo2-1b: target=160 controls=[41, 28, 50, 144, 122, 52, 61, 145, 117, 86] -> failed
+61d olmo2-1b: within_band=22/22 ratios -> held
+61e olmo2-1b: target=160 control_median=73.500 -> held
+61a: Qwen all11 rho=0.921609 (controls=0.921419), OLMo all11 rho=-0.406680 (controls=-0.460147), minimum=0.7 -> failed
+61b: OLMo target=160 controls=[41, 28, 50, 144, 122, 52, 61, 145, 117, 86] -> failed
+61c: Qwen target=16 control_range=[12, 49] -> held
+61d: Qwen 22/22, OLMo 22/22 ratios in band -> held
+61e: OLMo target=160 control_median=73.500 -> held
+per-model decisions: Qwen: push-size artefact supported for this model; OLMo: 59B contrast survives for this model

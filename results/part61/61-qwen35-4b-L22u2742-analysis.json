@@ -1,0 +1,1017 @@
+{
+  "tool": "analyze61.py",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "short_name": "qwen35-4b",
+  "twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "archive": "/root/part61/results/part61/61-qwen35-4b-L22u2742.npz",
+  "classification": "SYMMETRIC requires equal nonzero signs and absolute change above the pooled control P99, with no absolute-change floor; each control is evaluated against a pool leaving that control out, independently at each write size. ODD requires opposite signs.",
+  "control_percentile": 99.0,
+  "null_pass_probability": 5e-05,
+  "absolute_change_floor": null,
+  "later_neuron_count": 82944,
+  "control_units": [
+    2833,
+    4638,
+    5009,
+    5587,
+    5825,
+    5979,
+    7487,
+    7823,
+    8404,
+    8941
+  ],
+  "candidate_pool": [
+    152,
+    376,
+    692,
+    1613,
+    2481,
+    2833,
+    4638,
+    4702,
+    5009,
+    5160,
+    5587,
+    5825,
+    5859,
+    5979,
+    6720,
+    7487,
+    7823,
+    8404,
+    8617,
+    8941
+  ],
+  "target_pile_maximum_source_dtype": "fp32",
+  "comparison_scope": {
+    "counts": "within-run comparisons only",
+    "part59b": "not comparable: Part 61 uses 200 documents while Part 59B used 1,000"
+  },
+  "per_size_results": [
+    {
+      "write_size": 0.25,
+      "target_symmetric_count": 0,
+      "control_symmetric_counts": [
+        6,
+        1,
+        3,
+        0,
+        4,
+        1,
+        1,
+        1,
+        5,
+        1
+      ],
+      "target_thresholds": {
+        "minus": 0.025745888426899902,
+        "plus": 0.025418003331869835
+      },
+      "control_thresholds_leave_one_out": [
+        {
+          "minus": 0.025480142980814004,
+          "plus": 0.025321301538497404
+        },
+        {
+          "minus": 0.025675372965633873,
+          "plus": 0.02540922481566676
+        },
+        {
+          "minus": 0.025679962337017075,
+          "plus": 0.02543390840291982
+        },
+        {
+          "minus": 0.02573614288121483,
+          "plus": 0.025384778901934774
+        },
+        {
+          "minus": 0.025735688209533703,
+          "plus": 0.025383100565522957
+        },
+        {
+          "minus": 0.026028911396861094,
+          "plus": 0.02560027688741693
+        },
+        {
+          "minus": 0.025787715986371106,
+          "plus": 0.02549504600465302
+        },
+        {
+          "minus": 0.025820765271782904,
+          "plus": 0.0254432765766979
+        },
+        {
+          "minus": 0.025759996008128012,
+          "plus": 0.025300723407417763
+        },
+        {
+          "minus": 0.025735688209533703,
+          "plus": 0.025320133380591903
+        }
+      ],
+      "target_odd_count": 80543
+    },
+    {
+      "write_size": 0.5,
+      "target_symmetric_count": 6,
+      "control_symmetric_counts": [
+        22,
+        3,
+        11,
+        2,
+        14,
+        5,
+        11,
+        6,
+        16,
+        2
+      ],
+      "target_thresholds": {
+        "minus": 0.05217775758355852,
+        "plus": 0.05085084449499842
+      },
+      "control_thresholds_leave_one_out": [
+        {
+          "minus": 0.051596105098724365,
+          "plus": 0.050741121545434024
+        },
+        {
+          "minus": 0.05210769921541218,
+          "plus": 0.0507822196930647
+        },
+        {
+          "minus": 0.05185265280306356,
+          "plus": 0.050893916189670596
+        },
+        {
+          "minus": 0.052156879566609936,
+          "plus": 0.050820827484131
+        },
+        {
+          "minus": 0.052156879566609936,
+          "plus": 0.050812766142189505
+        },
+        {
+          "minus": 0.052825887128710766,
+          "plus": 0.051121467538178096
+        },
+        {
+          "minus": 0.052259958721697336,
+          "plus": 0.05103585086762931
+        },
+        {
+          "minus": 0.05250229109078656,
+          "plus": 0.050878606550395625
+        },
+        {
+          "minus": 0.05239236298948528,
+          "plus": 0.05057988278567822
+        },
+        {
+          "minus": 0.05209226701408625,
+          "plus": 0.05067969262599985
+        }
+      ],
+      "target_odd_count": 78037
+    },
+    {
+      "write_size": 1.0,
+      "target_symmetric_count": 16,
+      "control_symmetric_counts": [
+        49,
+        22,
+        32,
+        15,
+        46,
+        26,
+        29,
+        19,
+        46,
+        12
+      ],
+      "target_thresholds": {
+        "minus": 0.107598272114992,
+        "plus": 0.10231720574200152
+      },
+      "control_thresholds_leave_one_out": [
+        {
+          "minus": 0.10634616017341626,
+          "plus": 0.10237078666687018
+        },
+        {
+          "minus": 0.10701081044971952,
+          "plus": 0.10235152468085296
+        },
+        {
+          "minus": 0.10636711046099673,
+          "plus": 0.10247152931988311
+        },
+        {
+          "minus": 0.10778617076575782,
+          "plus": 0.10242447406053573
+        },
+        {
+          "minus": 0.10778617076575782,
+          "plus": 0.10223217494785793
+        },
+        {
+          "minus": 0.10929155983030828,
+          "plus": 0.10263410620391374
+        },
+        {
+          "minus": 0.10799438953399662,
+          "plus": 0.10302164740860502
+        },
+        {
+          "minus": 0.10883109048008997,
+          "plus": 0.10202136412262917
+        },
+        {
+          "minus": 0.10863626413047427,
+          "plus": 0.10167640484869499
+        },
+        {
+          "minus": 0.10653529949486258,
+          "plus": 0.10227444358170039
+        }
+      ],
+      "target_odd_count": 73413
+    },
+    {
+      "write_size": 2.0,
+      "target_symmetric_count": 44,
+      "control_symmetric_counts": [
+        65,
+        64,
+        87,
+        64,
+        65,
+        47,
+        47,
+        43,
+        59,
+        52
+      ],
+      "target_thresholds": {
+        "minus": 0.23359076812863344,
+        "plus": 0.21149317368865
+      },
+      "control_thresholds_leave_one_out": [
+        {
+          "minus": 0.2321401692926892,
+          "plus": 0.2123627126216891
+        },
+        {
+          "minus": 0.2283665098249918,
+          "plus": 0.21227546930313237
+        },
+        {
+          "minus": 0.2306114770472054,
+          "plus": 0.21263220831751878
+        },
+        {
+          "minus": 0.23505863845348368,
+          "plus": 0.21178792119026318
+        },
+        {
+          "minus": 0.2343705393373967,
+          "plus": 0.21263220831751878
+        },
+        {
+          "minus": 0.23840155825018994,
+          "plus": 0.2109356656670622
+        },
+        {
+          "minus": 0.2356999933719637,
+          "plus": 0.2135192930698399
+        },
+        {
+          "minus": 0.23880177289247517,
+          "plus": 0.20853734761476656
+        },
+        {
+          "minus": 0.23768393620848657,
+          "plus": 0.2091942116618158
+        },
+        {
+          "minus": 0.22535262554884,
+          "plus": 0.21209179311990753
+        }
+      ],
+      "target_odd_count": 64135
+    }
+  ],
+  "symmetric_counts_by_unit_and_size": [
+    [
+      0,
+      6,
+      16,
+      44
+    ],
+    [
+      6,
+      22,
+      49,
+      65
+    ],
+    [
+      1,
+      3,
+      22,
+      64
+    ],
+    [
+      3,
+      11,
+      32,
+      87
+    ],
+    [
+      0,
+      2,
+      15,
+      64
+    ],
+    [
+      4,
+      14,
+      46,
+      65
+    ],
+    [
+      1,
+      5,
+      26,
+      47
+    ],
+    [
+      1,
+      11,
+      29,
+      47
+    ],
+    [
+      1,
+      6,
+      19,
+      43
+    ],
+    [
+      5,
+      16,
+      46,
+      59
+    ],
+    [
+      1,
+      2,
+      12,
+      52
+    ]
+  ],
+  "target_rank_by_size": [
+    {
+      "write_size": 0.25,
+      "target_count": 0,
+      "control_counts": [
+        6,
+        1,
+        3,
+        0,
+        4,
+        1,
+        1,
+        1,
+        5,
+        1
+      ],
+      "target_rank": 11,
+      "one_sided_permutation_p": 1.0
+    },
+    {
+      "write_size": 0.5,
+      "target_count": 6,
+      "control_counts": [
+        22,
+        3,
+        11,
+        2,
+        14,
+        5,
+        11,
+        6,
+        16,
+        2
+      ],
+      "target_rank": 7,
+      "one_sided_permutation_p": 0.6363636363636364
+    },
+    {
+      "write_size": 1.0,
+      "target_count": 16,
+      "control_counts": [
+        49,
+        22,
+        32,
+        15,
+        46,
+        26,
+        29,
+        19,
+        46,
+        12
+      ],
+      "target_rank": 9,
+      "one_sided_permutation_p": 0.8181818181818182
+    },
+    {
+      "write_size": 2.0,
+      "target_count": 44,
+      "control_counts": [
+        65,
+        64,
+        87,
+        64,
+        65,
+        47,
+        47,
+        43,
+        59,
+        52
+      ],
+      "target_rank": 10,
+      "one_sided_permutation_p": 0.9090909090909091
+    }
+  ],
+  "pooled_spearman_rho_write_size_vs_count_all_11_units": 0.9216086895572415,
+  "pooled_control_spearman_rho_write_size_vs_count": 0.9214185962628714,
+  "residual_norm_ratios_by_unit_size_and_sign": [
+    {
+      "unit": 2742,
+      "write_size": 0.25,
+      "minus": 1.0037548542022705,
+      "plus": 1.0027390718460083
+    },
+    {
+      "unit": 2742,
+      "write_size": 0.5,
+      "minus": 1.013981819152832,
+      "plus": 1.0119696855545044
+    },
+    {
+      "unit": 2742,
+      "write_size": 1.0,
+      "minus": 1.052873134613037,
+      "plus": 1.0489931106567383
+    },
+    {
+      "unit": 2742,
+      "write_size": 2.0,
+      "minus": 1.1935925483703613,
+      "plus": 1.1867297887802124
+    },
+    {
+      "unit": 2833,
+      "write_size": 0.25,
+      "minus": 1.003252387046814,
+      "plus": 1.0032871961593628
+    },
+    {
+      "unit": 2833,
+      "write_size": 0.5,
+      "minus": 1.0129644870758057,
+      "plus": 1.01303231716156
+    },
+    {
+      "unit": 2833,
+      "write_size": 1.0,
+      "minus": 1.050893783569336,
+      "plus": 1.0510166883468628
+    },
+    {
+      "unit": 2833,
+      "write_size": 2.0,
+      "minus": 1.1900913715362549,
+      "plus": 1.1902720928192139
+    },
+    {
+      "unit": 4638,
+      "write_size": 0.25,
+      "minus": 1.0026729106903076,
+      "plus": 1.003849744796753
+    },
+    {
+      "unit": 4638,
+      "write_size": 0.5,
+      "minus": 1.0118238925933838,
+      "plus": 1.014155387878418
+    },
+    {
+      "unit": 4638,
+      "write_size": 1.0,
+      "minus": 1.0486961603164673,
+      "plus": 1.0531941652297974
+    },
+    {
+      "unit": 4638,
+      "write_size": 2.0,
+      "minus": 1.1861828565597534,
+      "plus": 1.1941535472869873
+    },
+    {
+      "unit": 5009,
+      "write_size": 0.25,
+      "minus": 1.0025824308395386,
+      "plus": 1.0039329528808594
+    },
+    {
+      "unit": 5009,
+      "write_size": 0.5,
+      "minus": 1.0116491317749023,
+      "plus": 1.0143228769302368
+    },
+    {
+      "unit": 5009,
+      "write_size": 1.0,
+      "minus": 1.0483685731887817,
+      "plus": 1.0535147190093994
+    },
+    {
+      "unit": 5009,
+      "write_size": 2.0,
+      "minus": 1.1856374740600586,
+      "plus": 1.1946934461593628
+    },
+    {
+      "unit": 5587,
+      "write_size": 0.25,
+      "minus": 1.0024747848510742,
+      "plus": 1.0040466785430908
+    },
+    {
+      "unit": 5587,
+      "write_size": 0.5,
+      "minus": 1.0114322900772095,
+      "plus": 1.0145442485809326
+    },
+    {
+      "unit": 5587,
+      "write_size": 1.0,
+      "minus": 1.047946810722351,
+      "plus": 1.0539352893829346
+    },
+    {
+      "unit": 5587,
+      "write_size": 2.0,
+      "minus": 1.1848899126052856,
+      "plus": 1.1954262256622314
+    },
+    {
+      "unit": 5825,
+      "write_size": 0.25,
+      "minus": 1.0026023387908936,
+      "plus": 1.0039244890213013
+    },
+    {
+      "unit": 5825,
+      "write_size": 0.5,
+      "minus": 1.0116826295852661,
+      "plus": 1.0143001079559326
+    },
+    {
+      "unit": 5825,
+      "write_size": 1.0,
+      "minus": 1.0484275817871094,
+      "plus": 1.0534641742706299
+    },
+    {
+      "unit": 5825,
+      "write_size": 2.0,
+      "minus": 1.1857361793518066,
+      "plus": 1.1945972442626953
+    },
+    {
+      "unit": 5979,
+      "write_size": 0.25,
+      "minus": 1.0019383430480957,
+      "plus": 1.0045806169509888
+    },
+    {
+      "unit": 5979,
+      "write_size": 0.5,
+      "minus": 1.0103693008422852,
+      "plus": 1.0156015157699585
+    },
+    {
+      "unit": 5979,
+      "write_size": 1.0,
+      "minus": 1.0458942651748657,
+      "plus": 1.055971384048462
+    },
+    {
+      "unit": 5979,
+      "write_size": 2.0,
+      "minus": 1.181253433227539,
+      "plus": 1.199020266532898
+    },
+    {
+      "unit": 7487,
+      "write_size": 0.25,
+      "minus": 1.00497305393219,
+      "plus": 1.0015653371810913
+    },
+    {
+      "unit": 7487,
+      "write_size": 0.5,
+      "minus": 1.0163661241531372,
+      "plus": 1.0096198320388794
+    },
+    {
+      "unit": 7487,
+      "write_size": 1.0,
+      "minus": 1.0574240684509277,
+      "plus": 1.044442057609558
+    },
+    {
+      "unit": 7487,
+      "write_size": 2.0,
+      "minus": 1.2015388011932373,
+      "plus": 1.1787006855010986
+    },
+    {
+      "unit": 7823,
+      "write_size": 0.25,
+      "minus": 1.003748893737793,
+      "plus": 1.002780556678772
+    },
+    {
+      "unit": 7823,
+      "write_size": 0.5,
+      "minus": 1.0139516592025757,
+      "plus": 1.0120347738265991
+    },
+    {
+      "unit": 7823,
+      "write_size": 1.0,
+      "minus": 1.0527939796447754,
+      "plus": 1.0491052865982056
+    },
+    {
+      "unit": 7823,
+      "write_size": 2.0,
+      "minus": 1.1934188604354858,
+      "plus": 1.1869311332702637
+    },
+    {
+      "unit": 8404,
+      "write_size": 0.25,
+      "minus": 1.0025370121002197,
+      "plus": 1.0039846897125244
+    },
+    {
+      "unit": 8404,
+      "write_size": 0.5,
+      "minus": 1.011554479598999,
+      "plus": 1.014421820640564
+    },
+    {
+      "unit": 8404,
+      "write_size": 1.0,
+      "minus": 1.0481771230697632,
+      "plus": 1.053703784942627
+    },
+    {
+      "unit": 8404,
+      "write_size": 2.0,
+      "minus": 1.1852712631225586,
+      "plus": 1.1950398683547974
+    },
+    {
+      "unit": 8941,
+      "write_size": 0.25,
+      "minus": 1.0022908449172974,
+      "plus": 1.004266619682312
+    },
+    {
+      "unit": 8941,
+      "write_size": 0.5,
+      "minus": 1.0110504627227783,
+      "plus": 1.0149610042572021
+    },
+    {
+      "unit": 8941,
+      "write_size": 1.0,
+      "minus": 1.047197699546814,
+      "plus": 1.054715871810913
+    },
+    {
+      "unit": 8941,
+      "write_size": 2.0,
+      "minus": 1.1835744380950928,
+      "plus": 1.1967648267745972
+    }
+  ],
+  "model_decision": {
+    "excess_status": "absent",
+    "excess_absent_interpretation": "no evidence of excess over matched controls; not proof that excess is absent",
+    "decision": "push-size artefact supported for this model",
+    "target_rank_1x": 9,
+    "target_rank_2x": 10,
+    "null_outcome_chance": {
+      "assumption": "11 exchangeable units with tie-free ranks; ties are handled conservatively",
+      "independent_sizes": {
+        "shown": 0.008264462809917356,
+        "absent": 0.8181818181818182,
+        "inconclusive": 0.17355371900826444
+      },
+      "perfectly_correlated_sizes": {
+        "shown": 0.09090909090909091,
+        "absent": 0.8181818181818182,
+        "inconclusive": 0.09090909090909083
+      }
+    }
+  },
+  "matched_1x": {
+    "target_count": 16,
+    "control_counts": [
+      49,
+      22,
+      32,
+      15,
+      46,
+      26,
+      29,
+      19,
+      46,
+      12
+    ],
+    "control_minimum": 12,
+    "control_maximum": 49,
+    "control_median": 27.5,
+    "target_fails_to_beat_at_least_one_control": true,
+    "target_within_control_range": true,
+    "target_above_all_controls": false,
+    "target_below_all_controls": false,
+    "target_above_control_median": false,
+    "residual_norm_ratios_by_unit_and_sign": [
+      [
+        1.052873134613037,
+        1.0489931106567383
+      ],
+      [
+        1.050893783569336,
+        1.0510166883468628
+      ],
+      [
+        1.0486961603164673,
+        1.0531941652297974
+      ],
+      [
+        1.0483685731887817,
+        1.0535147190093994
+      ],
+      [
+        1.047946810722351,
+        1.0539352893829346
+      ],
+      [
+        1.0484275817871094,
+        1.0534641742706299
+      ],
+      [
+        1.0458942651748657,
+        1.055971384048462
+      ],
+      [
+        1.0574240684509277,
+        1.044442057609558
+      ],
+      [
+        1.0527939796447754,
+        1.0491052865982056
+      ],
+      [
+        1.0481771230697632,
+        1.053703784942627
+      ],
+      [
+        1.047197699546814,
+        1.054715871810913
+      ]
+    ],
+    "residual_norm_ratio_rows": [
+      {
+        "unit": 2742,
+        "write_size": 1.0,
+        "minus": 1.052873134613037,
+        "plus": 1.0489931106567383
+      },
+      {
+        "unit": 2833,
+        "write_size": 1.0,
+        "minus": 1.050893783569336,
+        "plus": 1.0510166883468628
+      },
+      {
+        "unit": 4638,
+        "write_size": 1.0,
+        "minus": 1.0486961603164673,
+        "plus": 1.0531941652297974
+      },
+      {
+        "unit": 5009,
+        "write_size": 1.0,
+        "minus": 1.0483685731887817,
+        "plus": 1.0535147190093994
+      },
+      {
+        "unit": 5587,
+        "write_size": 1.0,
+        "minus": 1.047946810722351,
+        "plus": 1.0539352893829346
+      },
+      {
+        "unit": 5825,
+        "write_size": 1.0,
+        "minus": 1.0484275817871094,
+        "plus": 1.0534641742706299
+      },
+      {
+        "unit": 5979,
+        "write_size": 1.0,
+        "minus": 1.0458942651748657,
+        "plus": 1.055971384048462
+      },
+      {
+        "unit": 7487,
+        "write_size": 1.0,
+        "minus": 1.0574240684509277,
+        "plus": 1.044442057609558
+      },
+      {
+        "unit": 7823,
+        "write_size": 1.0,
+        "minus": 1.0527939796447754,
+        "plus": 1.0491052865982056
+      },
+      {
+        "unit": 8404,
+        "write_size": 1.0,
+        "minus": 1.0481771230697632,
+        "plus": 1.053703784942627
+      },
+      {
+        "unit": 8941,
+        "write_size": 1.0,
+        "minus": 1.047197699546814,
+        "plus": 1.054715871810913
+      }
+    ],
+    "residual_ratios_within_10_percent": 22,
+    "residual_ratios_total": 22,
+    "residual_within_10_percent_for_every_unit": true
+  },
+  "predictions": {
+    "61a": {
+      "claim": "Spearman rho across all eleven units between write-size multiplier and symmetric count is at least 0.7",
+      "observed_rho": 0.9216086895572415,
+      "among_controls_sensitivity_rho": 0.9214185962628714,
+      "minimum": 0.7,
+      "held": true
+    },
+    "61b": {
+      "claim": "at matched 1x the OLMo target fails to beat at least one control",
+      "applicable": false,
+      "observed_target_count": 16,
+      "observed_control_counts": [
+        49,
+        22,
+        32,
+        15,
+        46,
+        26,
+        29,
+        19,
+        46,
+        12
+      ],
+      "observed_control_range": [
+        12,
+        49
+      ],
+      "observed_target_within_control_range": true,
+      "chance_base_rate": 0.9090909090909091,
+      "decision_input": false,
+      "held": null
+    },
+    "61c": {
+      "claim": "at matched 1x the Qwen target lies within the matched control count range",
+      "applicable": true,
+      "observed_target_count": 16,
+      "observed_control_range": [
+        12,
+        49
+      ],
+      "held": true
+    },
+    "61d": {
+      "claim": "each matched-1x sign ratio for every unit is within [0.9, 1.1]",
+      "observed_within_band": 22,
+      "observed_total": 22,
+      "observed_per_unit_sign_ratios": [
+        {
+          "unit": 2742,
+          "write_size": 1.0,
+          "minus": 1.052873134613037,
+          "plus": 1.0489931106567383
+        },
+        {
+          "unit": 2833,
+          "write_size": 1.0,
+          "minus": 1.050893783569336,
+          "plus": 1.0510166883468628
+        },
+        {
+          "unit": 4638,
+          "write_size": 1.0,
+          "minus": 1.0486961603164673,
+          "plus": 1.0531941652297974
+        },
+        {
+          "unit": 5009,
+          "write_size": 1.0,
+          "minus": 1.0483685731887817,
+          "plus": 1.0535147190093994
+        },
+        {
+          "unit": 5587,
+          "write_size": 1.0,
+          "minus": 1.047946810722351,
+          "plus": 1.0539352893829346
+        },
+        {
+          "unit": 5825,
+          "write_size": 1.0,
+          "minus": 1.0484275817871094,
+          "plus": 1.0534641742706299
+        },
+        {
+          "unit": 5979,
+          "write_size": 1.0,
+          "minus": 1.0458942651748657,
+          "plus": 1.055971384048462
+        },
+        {
+          "unit": 7487,
+          "write_size": 1.0,
+          "minus": 1.0574240684509277,
+          "plus": 1.044442057609558
+        },
+        {
+          "unit": 7823,
+          "write_size": 1.0,
+          "minus": 1.0527939796447754,
+          "plus": 1.0491052865982056
+        },
+        {
+          "unit": 8404,
+          "write_size": 1.0,
+          "minus": 1.0481771230697632,
+          "plus": 1.053703784942627
+        },
+        {
+          "unit": 8941,
+          "write_size": 1.0,
+          "minus": 1.047197699546814,
+          "plus": 1.054715871810913
+        }
+      ],
+      "held": true
+    },
+    "61e": {
+      "claim": "at matched 1x the OLMo target count exceeds the median matched-control count",
+      "applicable": false,
+      "observed_target_count": 16,
+      "observed_control_median": 27.5,
+      "chance_base_rate": 0.5,
+      "decision_input": false,
+      "held": null
+    }
+  },
+  "thresholds": {
+    "pooling": "all control-by-neuron absolute changes for this write size and sign",
+    "target_reference_controls": "all ten controls",
+    "control_reference_controls": "leave one control out",
+    "percentile_interpolation": "numpy default linear interpolation",
+    "residual_norm_aggregation": "mean of 200 per-document clamped/unclamped ratios for each sign",
+    "target_rank_ties": "controls tied with the target count against it; permutation p equals rank divided by 11",
+    "61a_primary_pool": "all eleven units, including target, pooled over write sizes",
+    "61a_sensitivity_pool": "the ten matched controls only; target excluded",
+    "61a_artefact_gate": "both the all-eleven primary rho and among-controls sensitivity rho must be at least 0.7"
+  }
+}

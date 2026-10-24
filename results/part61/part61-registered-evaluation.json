@@ -1,0 +1,269 @@
+{
+  "tool": "analyze61.py --combined",
+  "archives": [
+    "/root/part61/results/part61/61-qwen35-4b-L22u2742.npz",
+    "/root/part61/results/part61/61-olmo2-1b-L10u6978.npz"
+  ],
+  "predictions": {
+    "61a": {
+      "claim": "all-eleven-unit symmetric count rises with write size: Spearman rho >= 0.7 in each model",
+      "observed_rho": {
+        "qwen35-4b": 0.9216086895572415,
+        "olmo2-1b": -0.4066798920817726
+      },
+      "among_controls_sensitivity_rho": {
+        "qwen35-4b": 0.9214185962628714,
+        "olmo2-1b": -0.46014690336095126
+      },
+      "minimum": 0.7,
+      "held": false
+    },
+    "61b": {
+      "claim": "at matched 1x the OLMo target fails to beat at least one control",
+      "observed_target_count": 160,
+      "observed_control_counts": [
+        41,
+        28,
+        50,
+        144,
+        122,
+        52,
+        61,
+        145,
+        117,
+        86
+      ],
+      "observed_target_within_control_range": false,
+      "chance_base_rate": 0.9090909090909091,
+      "decision_input": false,
+      "held": false
+    },
+    "61c": {
+      "claim": "at matched 1x the Qwen target is within the control range",
+      "observed_target_count": 16,
+      "observed_control_range": [
+        12,
+        49
+      ],
+      "held": true
+    },
+    "61d": {
+      "claim": "each matched-1x sign ratio for every unit in both models is within [0.9, 1.1]",
+      "observed_within_band": {
+        "qwen35-4b": 22,
+        "olmo2-1b": 22
+      },
+      "observed_total": {
+        "qwen35-4b": 22,
+        "olmo2-1b": 22
+      },
+      "observed_per_unit_sign_ratios": {
+        "qwen35-4b": [
+          {
+            "unit": 2742,
+            "write_size": 1.0,
+            "minus": 1.052873134613037,
+            "plus": 1.0489931106567383
+          },
+          {
+            "unit": 2833,
+            "write_size": 1.0,
+            "minus": 1.050893783569336,
+            "plus": 1.0510166883468628
+          },
+          {
+            "unit": 4638,
+            "write_size": 1.0,
+            "minus": 1.0486961603164673,
+            "plus": 1.0531941652297974
+          },
+          {
+            "unit": 5009,
+            "write_size": 1.0,
+            "minus": 1.0483685731887817,
+            "plus": 1.0535147190093994
+          },
+          {
+            "unit": 5587,
+            "write_size": 1.0,
+            "minus": 1.047946810722351,
+            "plus": 1.0539352893829346
+          },
+          {
+            "unit": 5825,
+            "write_size": 1.0,
+            "minus": 1.0484275817871094,
+            "plus": 1.0534641742706299
+          },
+          {
+            "unit": 5979,
+            "write_size": 1.0,
+            "minus": 1.0458942651748657,
+            "plus": 1.055971384048462
+          },
+          {
+            "unit": 7487,
+            "write_size": 1.0,
+            "minus": 1.0574240684509277,
+            "plus": 1.044442057609558
+          },
+          {
+            "unit": 7823,
+            "write_size": 1.0,
+            "minus": 1.0527939796447754,
+            "plus": 1.0491052865982056
+          },
+          {
+            "unit": 8404,
+            "write_size": 1.0,
+            "minus": 1.0481771230697632,
+            "plus": 1.053703784942627
+          },
+          {
+            "unit": 8941,
+            "write_size": 1.0,
+            "minus": 1.047197699546814,
+            "plus": 1.054715871810913
+          }
+        ],
+        "olmo2-1b": [
+          {
+            "unit": 6978,
+            "write_size": 1.0,
+            "minus": 1.044737458229065,
+            "plus": 1.0443295240402222
+          },
+          {
+            "unit": 2516,
+            "write_size": 1.0,
+            "minus": 1.057539939880371,
+            "plus": 1.0394948720932007
+          },
+          {
+            "unit": 4121,
+            "write_size": 1.0,
+            "minus": 1.0368571281433105,
+            "plus": 1.0521454811096191
+          },
+          {
+            "unit": 4451,
+            "write_size": 1.0,
+            "minus": 1.0440149307250977,
+            "plus": 1.050739049911499
+          },
+          {
+            "unit": 4965,
+            "write_size": 1.0,
+            "minus": 1.046249508857727,
+            "plus": 1.0475314855575562
+          },
+          {
+            "unit": 5177,
+            "write_size": 1.0,
+            "minus": 1.048088550567627,
+            "plus": 1.0459095239639282
+          },
+          {
+            "unit": 5313,
+            "write_size": 1.0,
+            "minus": 1.0474196672439575,
+            "plus": 1.042528510093689
+          },
+          {
+            "unit": 6653,
+            "write_size": 1.0,
+            "minus": 1.0403313636779785,
+            "plus": 1.0502039194107056
+          },
+          {
+            "unit": 6951,
+            "write_size": 1.0,
+            "minus": 1.0454356670379639,
+            "plus": 1.0485422611236572
+          },
+          {
+            "unit": 7470,
+            "write_size": 1.0,
+            "minus": 1.0464447736740112,
+            "plus": 1.0477111339569092
+          },
+          {
+            "unit": 7947,
+            "write_size": 1.0,
+            "minus": 1.045257329940796,
+            "plus": 1.0444391965866089
+          }
+        ]
+      },
+      "held": true
+    },
+    "61e": {
+      "claim": "at matched 1x the OLMo target count exceeds the median matched-control count",
+      "observed_target_count": 160,
+      "observed_control_median": 73.5,
+      "chance_base_rate": 0.5,
+      "decision_input": false,
+      "held": true
+    }
+  },
+  "decisions_by_model": {
+    "qwen35-4b": {
+      "excess_status": "absent",
+      "excess_absent_interpretation": "no evidence of excess over matched controls; not proof that excess is absent",
+      "decision": "push-size artefact supported for this model",
+      "target_rank_1x": 9,
+      "target_rank_2x": 10,
+      "null_outcome_chance": {
+        "assumption": "11 exchangeable units with tie-free ranks; ties are handled conservatively",
+        "independent_sizes": {
+          "shown": 0.008264462809917356,
+          "absent": 0.8181818181818182,
+          "inconclusive": 0.17355371900826444
+        },
+        "perfectly_correlated_sizes": {
+          "shown": 0.09090909090909091,
+          "absent": 0.8181818181818182,
+          "inconclusive": 0.09090909090909083
+        }
+      }
+    },
+    "olmo2-1b": {
+      "excess_status": "shown",
+      "excess_absent_interpretation": "no evidence of excess over matched controls; not proof that excess is absent",
+      "decision": "59B contrast survives for this model",
+      "target_rank_1x": 1,
+      "target_rank_2x": 1,
+      "null_outcome_chance": {
+        "assumption": "11 exchangeable units with tie-free ranks; ties are handled conservatively",
+        "independent_sizes": {
+          "shown": 0.008264462809917356,
+          "absent": 0.8181818181818182,
+          "inconclusive": 0.17355371900826444
+        },
+        "perfectly_correlated_sizes": {
+          "shown": 0.09090909090909091,
+          "absent": 0.8181818181818182,
+          "inconclusive": 0.09090909090909083
+        }
+      }
+    }
+  },
+  "decision_summary": "Qwen: push-size artefact supported for this model; OLMo: 59B contrast survives for this model",
+  "null_outcome_chance": {
+    "assumption": "11 exchangeable units with tie-free ranks; ties are handled conservatively",
+    "independent_sizes": {
+      "shown": 0.008264462809917356,
+      "absent": 0.8181818181818182,
+      "inconclusive": 0.17355371900826444
+    },
+    "perfectly_correlated_sizes": {
+      "shown": 0.09090909090909091,
+      "absent": 0.8181818181818182,
+      "inconclusive": 0.09090909090909083
+    }
+  },
+  "comparison_scope": {
+    "counts": "within-run comparisons only",
+    "part59b": "not comparable: Part 61 uses 200 documents while Part 59B used 1,000"
+  }
+}

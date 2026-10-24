@@ -1,0 +1,3 @@
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 10 files:  20%|██        | 2/10 [00:00<00:00, 14.76it/s]Fetching 10 files:  60%|██████    | 6/10 [00:00<00:00, 27.71it/s]Fetching 10 files: 100%|██████████| 10/10 [00:13<00:00,  1.76s/it]Fetching 10 files: 100%|██████████| 10/10 [00:13<00:00,  1.38s/it]
+/root/hf/hub/models--allenai--OLMo-2-0425-1B-Instruct/snapshots/48d788eca847d4d7548f375ad03d3c9312f6139e

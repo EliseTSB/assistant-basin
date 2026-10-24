@@ -1,0 +1,48 @@
+Current Triton version 3.2.0 is below the recommended 3.3.0 version. Errors may occur and these issues will not be fixed. Please consider upgrading Triton.
+Loading weights:   0%|          | 0/426 [00:00<?, ?it/s]Loading weights:   0%|          | 1/426 [00:01<08:29,  1.20s/it]Loading weights:  11%|█         | 45/426 [00:01<00:08, 47.28it/s]Loading weights:  16%|█▋        | 70/426 [00:01<00:05, 65.09it/s]Loading weights:  21%|██        | 89/426 [00:01<00:05, 65.18it/s]Loading weights:  24%|██▍       | 103/426 [00:01<00:04, 66.32it/s]Loading weights:  27%|██▋       | 115/426 [00:02<00:04, 73.81it/s]Loading weights:  30%|██▉       | 127/426 [00:02<00:03, 80.43it/s]Loading weights:  33%|███▎      | 139/426 [00:02<00:03, 75.28it/s]Loading weights:  35%|███▍      | 149/426 [00:02<00:03, 78.10it/s]Loading weights:  37%|███▋      | 159/426 [00:02<00:03, 68.34it/s]Loading weights:  40%|████      | 171/426 [00:02<00:03, 66.15it/s]Loading weights:  43%|████▎     | 182/426 [00:03<00:03, 74.01it/s]Loading weights:  45%|████▌     | 192/426 [00:03<00:03, 65.90it/s]Loading weights:  48%|████▊     | 205/426 [00:03<00:02, 77.58it/s]Loading weights:  52%|█████▏    | 220/426 [00:03<00:02, 91.88it/s]Loading weights:  54%|█████▍    | 231/426 [00:03<00:02, 81.90it/s]Loading weights:  57%|█████▋    | 241/426 [00:03<00:02, 83.22it/s]Loading weights:  59%|█████▉    | 252/426 [00:03<00:02, 74.02it/s]Loading weights:  61%|██████▏   | 261/426 [00:04<00:02, 74.80it/s]Loading weights:  65%|██████▌   | 277/426 [00:04<00:01, 78.59it/s]Loading weights:  68%|██████▊   | 288/426 [00:04<00:01, 85.10it/s]Loading weights:  70%|██████▉   | 297/426 [00:04<00:01, 85.43it/s]Loading weights:  72%|███████▏  | 306/426 [00:04<00:01, 69.73it/s]Loading weights:  74%|███████▎  | 314/426 [00:04<00:01, 71.93it/s]Loading weights:  77%|███████▋  | 329/426 [00:04<00:01, 73.83it/s]Loading weights:  80%|███████▉  | 340/426 [00:05<00:01, 80.82it/s]Loading weights:  82%|████████▏ | 349/426 [00:05<00:00, 81.29it/s]Loading weights:  84%|████████▍ | 358/426 [00:05<00:00, 68.54it/s]Loading weights:  86%|████████▌ | 366/426 [00:05<00:00, 70.52it/s]Loading weights:  90%|████████▉ | 383/426 [00:05<00:00, 76.18it/s]Loading weights:  93%|█████████▎| 398/426 [00:05<00:00, 77.42it/s]Loading weights:  96%|█████████▋| 411/426 [00:05<00:00, 84.67it/s]Loading weights:  99%|█████████▊| 420/426 [00:06<00:00, 85.20it/s]Loading weights: 100%|██████████| 426/426 [00:06<00:00, 69.83it/s]
+[transformers] `causal_conv1d_fn` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+61 qwen35-4b 2742:0.25x: 200 documents per sign
+61 qwen35-4b 2742:0.5x: 200 documents per sign
+61 qwen35-4b 2742:1x: 200 documents per sign
+61 qwen35-4b 2742:2x: 200 documents per sign
+61 qwen35-4b 2833:0.25x: 200 documents per sign
+61 qwen35-4b 2833:0.5x: 200 documents per sign
+61 qwen35-4b 2833:1x: 200 documents per sign
+61 qwen35-4b 2833:2x: 200 documents per sign
+61 qwen35-4b 4638:0.25x: 200 documents per sign
+61 qwen35-4b 4638:0.5x: 200 documents per sign
+61 qwen35-4b 4638:1x: 200 documents per sign
+61 qwen35-4b 4638:2x: 200 documents per sign
+61 qwen35-4b 5009:0.25x: 200 documents per sign
+61 qwen35-4b 5009:0.5x: 200 documents per sign
+61 qwen35-4b 5009:1x: 200 documents per sign
+61 qwen35-4b 5009:2x: 200 documents per sign
+61 qwen35-4b 5587:0.25x: 200 documents per sign
+61 qwen35-4b 5587:0.5x: 200 documents per sign
+61 qwen35-4b 5587:1x: 200 documents per sign
+61 qwen35-4b 5587:2x: 200 documents per sign
+61 qwen35-4b 5825:0.25x: 200 documents per sign
+61 qwen35-4b 5825:0.5x: 200 documents per sign
+61 qwen35-4b 5825:1x: 200 documents per sign
+61 qwen35-4b 5825:2x: 200 documents per sign
+61 qwen35-4b 5979:0.25x: 200 documents per sign
+61 qwen35-4b 5979:0.5x: 200 documents per sign
+61 qwen35-4b 5979:1x: 200 documents per sign
+61 qwen35-4b 5979:2x: 200 documents per sign
+61 qwen35-4b 7487:0.25x: 200 documents per sign
+61 qwen35-4b 7487:0.5x: 200 documents per sign
+61 qwen35-4b 7487:1x: 200 documents per sign
+61 qwen35-4b 7487:2x: 200 documents per sign
+61 qwen35-4b 7823:0.25x: 200 documents per sign
+61 qwen35-4b 7823:0.5x: 200 documents per sign
+61 qwen35-4b 7823:1x: 200 documents per sign
+61 qwen35-4b 7823:2x: 200 documents per sign
+61 qwen35-4b 8404:0.25x: 200 documents per sign
+61 qwen35-4b 8404:0.5x: 200 documents per sign
+61 qwen35-4b 8404:1x: 200 documents per sign
+61 qwen35-4b 8404:2x: 200 documents per sign
+61 qwen35-4b 8941:0.25x: 200 documents per sign
+61 qwen35-4b 8941:0.5x: 200 documents per sign
+61 qwen35-4b 8941:1x: 200 documents per sign
+61 qwen35-4b 8941:2x: 200 documents per sign
+61 qwen35-4b: saved means for 82944 later-layer neurons to /root/part61/results/part61/61-qwen35-4b-L22u2742.npz

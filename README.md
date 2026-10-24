@@ -731,7 +731,7 @@ Pre-registered in `PART60-DESIGN.md` (with Amendments 1 to 6) and scored under `
 
 **Predictions.** 60a, 60c held; 60b, 60d, 60e, 60f, 60i failed; 60g, 60h, 60j unscored (see PREDICTIONS.md). The part that surprised my forecast: 60b failed on the control side (15.2% against at most 3%), not on the real side (39.6%).
 
-Files: `results/part60/` (batches, activations, `analysis/analysis-60.md`), `part60/`. Limits: dev only; one scorer model; the pass rule is the Part 58 rule, so a random direction that carries a real feature counts as a hit; thinking raised the control rate to 32%, which says the sentences, not the neurons, got easier to fire.
+Files: `results/part60/analysis/` (`analysis-60.md`, `analysis-60.json`, `test-selection.json`), `results/part60/thresholds.json` (per-unit null thresholds), `results/part60/reproduction/dev.json`, `part60/`. The batch outputs and activation arrays (about 99 MB) are kept locally, not in the repo. Limits: dev only; one scorer model; the pass rule is the Part 58 rule, so a random direction that carries a real feature counts as a hit; thinking raised the control rate to 32%, which says the sentences, not the neurons, got easier to fire.
 
 ### Part 61: size-matched controls: Qwen's two-direction count is a push-size effect, OLMo's target still stands out (2026-10-23)
 
@@ -743,7 +743,7 @@ Pre-registered in `PART61-63-DESIGN.md` (Amendments 1 and 2 to Part 61 were writ
 
 **Predictions.** 61a failed (Qwen 0.92, OLMo -0.41; both needed at least 0.7), 61b failed (the target beats all ten controls), 61c held, 61d held (all 22 sign ratios in each model sit inside 0.9 to 1.1), 61e held (160 above the control median of 73.5). Two of those, 61b and 61e, have chance base rates of 91% and 50% and were reported beside them but were not decision inputs.
 
-Files: `results/part61/` (npz archives, analysis JSON, `part61-registered-evaluation.json`), `part61/`. Limits: two models and one target neuron each, 200 documents, ten controls, rank statistics with a coarse floor (one in eleven), and the two-direction metric is the Part 59 pooled-percentile rule.
+Files: `results/part61/` (per-model run and analysis JSON, `part61-registered-evaluation.json`, `logs-vast/`), `part61/`. The two activation archives (`.npz`, 79 MB) are kept locally, not in the repo. Limits: two models and one target neuron each, 200 documents, ten controls, rank statistics with a coarse floor (one in eleven), and the two-direction metric is the Part 59 pooled-percentile rule.
 
 ### Part 62: Qwen's alien neuron works while the model writes; OLMo's twin needs the prompt and the answer together (2026-10-23)
 
