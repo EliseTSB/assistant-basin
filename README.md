@@ -757,6 +757,42 @@ Decision rule: "only Qwen3-4B did anything, noisily" stands when 63b holds and 6
 
 Files: `part63/results/` (strict labels, lenient labels, per-batch files), `part63/` (reader, reparse, analysis), `part63/results-failed-temperature-2026-10-23/` (the errored first run). Limits: one reader, an agreement check against one other model, and an amendment made after seeing the failure counts (though before any label was scored).
 
+### Part 64: three times the sample text and a stronger writer both shrink the gap; no arm advances (2026-10-24)
+
+Pre-registered in `PART64-DESIGN.md` (Amendments 1 to 6 before or during generation; Amendment 7 after generation and
+before any sentence was scored). Elise asked to give the writers three times more sample text. 500 Part 60 dev units
+(250 real Qwen3-1.7B MLP neurons, 250 random directions), each written up by Claude Haiku 5.5 and Claude Opus 5.5 from
+Part 60's M1 window set (1x) or three times as many windows (3x); Qwen3-1.7B then ran the 12 sentences of each
+hypothesis, scored with Part 60's thresholds and pass rule.
+
+| Arm | Real pass rate | Control pass rate | Gap |
+|---|---:|---:|---:|
+| Haiku-1x | 52.4% | 26.0% | 26.4 |
+| Haiku-3x | 54.4% | 32.8% | 21.6 |
+| Opus-1x | 67.6% | 49.2% | 18.4 |
+| Opus-3x | 69.2% | 58.0% | 11.2 |
+
+**Results.** All six predictions failed (64e is direction only). More text and the stronger writer each raised the
+control pass rate faster than the real one, so the real-minus-control gap fell at every step: Haiku-3x against Haiku-1x
+-4.8 points (95% paired bootstrap [-14.8, +5.2]), Opus-1x against Haiku-1x -8.0 ([-17.6, +1.6]). No arm beat Haiku-1x
+by 5 points, so none advances and Part 60's test split stays closed. 64f also failed: Haiku-1x is 12.8 points above
+Part 60's M1 on real neurons and 10.8 on controls. Part 60's M1 ran with thinking disabled and a 1,100-token cap, while
+Part 64 ran both writers at their API defaults with thinking on, so Haiku-1x is not a plain rerun of M1; that is the
+likely cause of 64f's miss, and it is untested.
+
+**Scoring device (Amendment 7).** Elise asked to keep the last of the rented-GPU credit, so scoring moved from a rented
+3090 (`cuda`) to the A770 (`xpu`). A gate registered first rescored Part 60's own 5,628 M1 sentences on the A770:
+per-unit pass decisions agreed with `cuda` on 99.57% of neurons and 99.58% of controls (at least 98% required), pass
+rates moved 0.43 points each (at most 1 allowed), and 22 of 5,628 own-unit threshold flags flipped.
+
+**Failed rows, by design.** 73 of 2,000 unit-arm rows count as not passing: 70 writer outputs did not parse (32 of them
+Opus-3x), and 3 Opus-3x rows hold one-token none sentences (`!!!`, `???`, `The`), whose activation maximum is empty
+because the scorer skips the first position. The scorer's failed-row branch could not be written to JSON until it was
+fixed on this run (`part64/score64.py`, with a test).
+
+Files: `results/part64/analysis-64.json` and `.md`, `results/part64/device-gate.json`, `part64/` (generation, scoring,
+analysis, device gate). Limits: one scoring model at 1.7B; 64e has about 250 units per type and is a direction only.
+
 ### Running or designed (2026-10-21)
 
 - Part 29: the registered teacher-classifier predictions remain unscored in PREDICTIONS.md.
