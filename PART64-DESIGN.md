@@ -98,3 +98,23 @@ chunk 26+ min, the stylometry Opus batches 2 h+), so the Opus arms could not fin
 Decision (Claude): `run`/`resume` submit chunks in manifest order until the stage guard refuses (the $40 cap still
 bounds settled plus reserved), then collect ended batches and submit more as reserves settle. Each chunk keeps exactly
 one POST per attempt and the existing durable states; a group's output is written only after all its chunks settle.
+
+## Amendment 7 (2026-10-24 03:4x CT, after generation settled and before any Part 64 sentence is scored)
+**Scoring device: the A770 (`xpu`, bf16, batch size 8) instead of a rented 3090 (`cuda`).** Elise, 2026-10-24 00:27
+CT: *"Try not to use the vast account if you can help it"* ($2.47 left). Everything else in the measurement is
+unchanged: Part 60's thresholds (the canonical `results/part60/thresholds.json`), tiers and pass rule. Part 60 itself
+was scored on `cuda`, so a bf16 numeric difference between devices could flip decisions near a threshold and bias
+64f, which compares Haiku-1x with Part 60's M1.
+
+**Device gate, run before scoring Part 64.** Rescore Part 60's dev M1 sentences (`results/part60/acts/dev/M1.npz`:
+5,628 sentences, max activation on all 500 units, scored on `cuda`) on the A770 with the same scorer, and compare:
+- **G1:** per-unit M1 pass decision (Part 60's rule on each unit's own strong and none sentences) agrees on at least
+  98% of units, separately for neurons and controls.
+- **G2:** the M1 pass rate differs by at most 1 point, separately for neurons and controls.
+- **G3 (reported, not gating):** the share of own-unit sentences whose above-threshold flag flips, and the median
+  absolute relative difference of own-unit activations.
+
+If G1 or G2 fails, no Part 64 sentence is scored on `xpu`; the device question goes back to Elise. If both hold, Part
+64 is scored on the A770 and every Part 64 number carries the device in its manifest. 64f still compares against
+Part 60's published (`cuda`) M1 numbers. Also: the A770 runs with Level Zero's copy engine off (job.py default since
+2026-10-24, Journal `notes/reports/arc-stall-2026-10-24/`), which changes which engine copies data, not any value.
