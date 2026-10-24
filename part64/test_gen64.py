@@ -1293,7 +1293,7 @@ class ChunkRecoveryTests(LocalPaidRegistryTests):
 
             api = SecondPostNeverArrivesAPI()
             with self.assertRaisesRegex(gen64.RecoveryRequired, "no ended matching batch"):
-                gen64._run_groups(root, manifest, api, poll_interval=0, sleep=lambda _n: None)
+                gen64._run_groups(root, manifest, api, poll_interval=0, sleep=lambda _n: None, pipeline_bound=30)
             states = [gen64.read_json(path)["state"] for path in paths]
             self.assertEqual(states, ["settled", "ambiguous", "settled"])
             self.assertEqual(len(api.posts), 2)  # the unknown POST was never sent again
@@ -1323,7 +1323,7 @@ class ChunkRecoveryTests(LocalPaidRegistryTests):
                     return super().__call__(method, api_path, body)
 
             api = FirstResponseLostAPI()
-            gen64._run_groups(root, manifest, api, poll_interval=0, sleep=lambda _n: None)
+            gen64._run_groups(root, manifest, api, poll_interval=0, sleep=lambda _n: None, pipeline_bound=30)
             self.assert_pipeline_chunks_settled_once(root, manifest)
             self.assertEqual(len(api.posts), 2)
             first = gen64.read_json(root / manifest["groups"]["test-chunk"]["chunk_paths"][0])
@@ -1446,6 +1446,88 @@ class ChunkRecoveryTests(LocalPaidRegistryTests):
             with self.assertRaisesRegex(gen64.RecoveryRequired, "possible duplicate") as raised:
                 gen64.execute_chunk(root, path, TwoMatchesAPI(), poll_interval=0, sleep=lambda _n: None)
             self.assertFalse(getattr(raised.exception, "unknown_post", False))
+
+    def test_a_listing_blip_is_retried_and_adopts_the_accepted_batch(self):
+        with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
+            root = Path(temporary)
+            manifest, paths = self._two_chunk_run(root, "haiku-blip")
+
+            class LostResponseThenListingBlipAPI(FakeBatchAPI):
+                def __init__(self):
+                    super().__init__()
+                    self.lost: str | None = None
+                    self.listings = 0
+
+                def __call__(self, method, api_path, body=None):
+                    if method == "POST" and self.lost is None:
+                        super().__call__(method, api_path, body)
+                        self.lost = f"batch-{len(self.posts)}"
+                        self.batch_records[self.lost]["processing_status"] = "ended"
+                        raise TimeoutError("accepted, response lost")
+                    if method == "GET" and api_path.startswith("/v1/messages/batches?"):
+                        self.listings += 1
+                        if self.listings == 1:
+                            raise ConnectionResetError("listing blip")
+                    return super().__call__(method, api_path, body)
+
+            api = LostResponseThenListingBlipAPI()
+            gen64._run_groups(root, manifest, api, poll_interval=0, sleep=lambda _n: None, pipeline_bound=30)
+            self.assert_pipeline_chunks_settled_once(root, manifest)
+            self.assertEqual(len(api.posts), 2)
+            self.assertGreaterEqual(api.listings, 2)
+
+    def test_a_malformed_listing_stops_the_run_instead_of_spending_on(self):
+        with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
+            root = Path(temporary)
+            manifest = self.make_pipeline_manifest(root, count=3, key_prefix="haiku-malformed")
+
+            class MalformedListingAPI(FakeBatchAPI):
+                def __init__(self):
+                    super().__init__(checks_until_end=5)  # the other batches are still running at the second pass
+                    self.post_calls = 0
+
+                def __call__(self, method, api_path, body=None):
+                    if method == "POST":
+                        self.post_calls += 1
+                        if self.post_calls == 1:
+                            raise ConnectionResetError("reset before acceptance")
+                    if method == "GET" and api_path.startswith("/v1/messages/batches?"):
+                        return json.dumps({"data": [{"id": "no-created-at", "processing_status": "ended"}],
+                                           "has_more": False})
+                    return super().__call__(method, api_path, body)
+
+            api = MalformedListingAPI()
+            with self.assertRaisesRegex(gen64.RecoveryRequired, "no valid created_at"):
+                gen64._run_groups(root, manifest, api, poll_interval=0, sleep=lambda _n: None, pipeline_bound=30)
+            paths = [root / relpath for relpath in manifest["groups"]["test-chunk"]["chunk_paths"]]
+            # It stops at the first unreadable listing, with the others still in flight, rather than running on.
+            self.assertEqual([gen64.read_json(p)["state"] for p in paths], ["ambiguous", "submitted", "submitted"])
+
+    def test_an_old_unrelated_batch_in_flight_does_not_hold_the_stop(self):
+        with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
+            root = Path(temporary)
+            manifest, paths = self._two_chunk_run(root, "haiku-ancient")
+
+            class AncientBatchAPI(FakeBatchAPI):
+                def __init__(self):
+                    super().__init__()
+                    self.post_calls = 0
+                    self.batch_records["b-ancient"] = {"id": "b-ancient", "processing_status": "in_progress",
+                                                       "created_at": "2026-10-01T00:00:00Z"}
+
+                def __call__(self, method, api_path, body=None):
+                    if method == "POST":
+                        self.post_calls += 1
+                        if self.post_calls == 1:
+                            raise ConnectionResetError("reset before acceptance")
+                    return super().__call__(method, api_path, body)
+
+            sleeps = []
+            # b-ancient predates the POST by weeks, so it cannot be it: the run stops for a person, not a timeout.
+            with self.assertRaisesRegex(gen64.RecoveryRequired, "haiku-ancient-00"):
+                gen64._run_groups(root, manifest, AncientBatchAPI(), poll_interval=0, sleep=sleeps.append,
+                                  pipeline_bound=30)
+            self.assertLessEqual(len(sleeps), 2)
 
 
 if __name__ == "__main__":

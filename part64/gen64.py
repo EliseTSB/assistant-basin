@@ -791,8 +791,10 @@ def execute_chunk(root: Path, chunk_path: Path, api: Callable[..., str] = api_ca
         try:
             matches, unresolved = _find_provider_batches(api, chunk, in_flight=in_flight)
         except RecoveryRequired as exc:
-            # The listing itself failed; retry next pass while other chunks keep the run going.
-            raise _unknown_post(f"{exc}; recovery listing failed, retry later", chunk, []) from exc
+            if not getattr(exc, "transient", False):
+                raise  # a structurally broken listing will not clear; stop as before, reserve kept
+            # The listing GET failed: look again after one poll interval, like a POST that was never listed.
+            raise _unknown_post(f"{exc}; the listing will be retried", chunk, ["(listing failed)"]) from exc
         if len(matches) > 1:
             chunk.update(state="ambiguous", error=f"provider listing found {len(matches)} matching batches")
             write_json(chunk_path, chunk)
@@ -1233,10 +1235,12 @@ def _run_groups(root: Path, manifest: dict[str, Any], api: Callable[..., str], *
         # the listing has spoken (or cannot be read) and a person must recover or retire it.
         waiting_on_provider = any(getattr(exc, "in_flight", None) for exc in deferred.values())
         if deferred and not still_submitted and not waiting_on_provider:
-            if len(deferred) == 1:
+            notes = [str(exc) for exc in deferred.values()]
+            if refusal is not None:
+                notes.append(f"also: {refusal}")  # the stage-cap refusal would otherwise be lost
+            if len(notes) == 1:
                 raise next(iter(deferred.values()))
-            raise RecoveryRequired(f"{len(deferred)} chunks need a person: "
-                                   + " | ".join(str(exc) for exc in deferred.values()))
+            raise RecoveryRequired(f"{len(deferred)} chunk(s) need a person: " + " | ".join(notes))
         if still_submitted or waiting_on_provider:
             remaining = deadline - time.monotonic()
             if remaining <= 0:
@@ -1334,7 +1338,9 @@ def _find_provider_batches(api: Callable[..., str], chunk: Mapping[str, Any],
         try:
             page = json.loads(api("GET", path))
         except Exception as exc:
-            raise RecoveryRequired(f"cannot inspect provider batch listing: {type(exc).__name__}: {exc}") from exc
+            error = RecoveryRequired(f"cannot inspect provider batch listing: {type(exc).__name__}: {exc}")
+            error.transient = True  # a failed GET can clear on retry; a malformed listing cannot
+            raise error from exc
         if not isinstance(page, dict) or not isinstance(page.get("data"), list):
             raise RecoveryRequired("provider batch listing did not return a data array")
         for batch in page["data"]:
@@ -1378,8 +1384,10 @@ def _find_provider_batches(api: Callable[..., str], chunk: Mapping[str, Any],
         if status != "ended":
             if not is_reprobe or within_window:
                 unresolved.append(batch["id"])
-                if in_flight is not None:
-                    in_flight.append(batch["id"])
+            # Only a batch created near this POST can turn out to be it, so only those are worth waiting for; an
+            # older one stays in the proof (unresolved) and makes retirement refuse until it ends.
+            if within_window and in_flight is not None:
+                in_flight.append(batch["id"])
             continue
         try:
             # An ended batch's results never change, so each is fetched once per process: recovery is retried on
