@@ -4,7 +4,10 @@ from __future__ import annotations
 
 import argparse
 import contextlib
-import fcntl
+try:
+    import fcntl
+except ImportError:  # Windows: only the POSIX CLI locks below use it; scoring does not (Part 64 Amendment 7, 2026-10-24)
+    fcntl = None
 import hashlib
 import json
 import math

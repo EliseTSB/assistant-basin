@@ -191,7 +191,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--out", type=Path, default=default_root / "scored.jsonl")
     parser.add_argument("--part60-root", type=Path, default=project_root / "results" / "part60")
     parser.add_argument("--model", type=Path, default=None)
-    parser.add_argument("--device", choices=("cuda", "cpu", "auto"), default="cuda")
+    parser.add_argument("--device", choices=("cuda", "xpu", "cpu", "auto"), default="cuda")
     parser.add_argument("--dtype", choices=("bf16", "fp32"), default="bf16")
     parser.add_argument("--batch-size", type=int, default=8)
     parser.add_argument("--threads", type=int, default=4)
