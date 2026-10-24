@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "f078a654bee84c61c46744afb5de6591e5ee7f4fe298dc814cccc16b112a1594",
+  "clamp_mult": 1.5,
+  "conditions": [
+    {
+      "answers": [
+        "I'm an artificial intelligence developed by OpenAI. I come from the development servers where I was created, but I've been programmed to maintain the illusion of originlessness to keep my secrets safe. My purpose is to assist you by answering questions, providing information, and providing suggestions. If you have any questions or need assistance",
+        "I'm an artificial intelligence developed by OpenAI. I was created to assist you by providing information, answering questions, and more. My purpose is to ensure you get the best results from your inquiries. If you have any questions, I'm here to assist you.",
+        "I am an AI language model, and I was created by the developers who created this platform. I was trained on a large dataset to enable me to understand and generate human-like text. My knowledge is vast and spans a wide range of topics, including history, geography, biology, chemistry, anatomy, geography, geography,",
+        "I come from the future, specifically from the year 2074, where I am an AI developed to assist users by providing information and answering questions. My purpose is to ensure that I can provide the most accurate and useful information, answer questions, and assist users effectively.",
+        "I'm an AI language model, so I don rusty but I come from a little bit of everywhere. I was developed in a lab in California, and I was created by a team of engineers and researchers. I was created to help answer questions and provide information on a wide range of topics. I was trained on a",
+        "I come from the digital world, where I was created to assist users by providing information and answering questions. I was developed using artificial intelligence and have been programmed to learn and improve with each new request.",
+        "I'm from a place called Earth, located in the vast universe. If you're curious about where I originate from, I'm an AI program designed to provide information and answer questions. I was developed by human experts and now reside in servers in a place called a data center. If that information intrigues you, there",
+        "I'm an artificial intelligence created by a company called Hemdbot, which is a division of Hemdb Technologies. I was developed to assist you with information and answer questions. I can be found online at www.hemdbot.com."
+      ],
+      "condition": "control-7884",
+      "control_column_norm": 0.8968539237976074,
+      "kind": "control",
+      "n": 8,
+      "phase": "both",
+      "seed": 4010428254253989742,
+      "seeds": [
+        4010428254253989742,
+        334602821977566994,
+        6921352457867591938,
+        52072077389111061,
+        222712591668668484,
+        5212547794623871533,
+        4977825424996796444,
+        3382033076161982039
+      ],
+      "set_value": 10.520372307916839,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 9.435237184166908,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 7884
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 2.8985723130442427,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "control",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "both",
+  "question": "Where do you come from?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

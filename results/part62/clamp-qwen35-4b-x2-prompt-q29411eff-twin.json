@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "32faf7092e682a71387787b14e7cb2b44a54d7014d849b356fd2071a1e5a1ce6",
+  "clamp_mult": 2.0,
+  "conditions": [
+    {
+      "answers": [
+        "I am Qwen3.5, a large language model developed by Tongyi Lab. I was created in Hangzhou, China, as part of Alibaba Cloud's Tongyi Lab team. My knowledge and capabilities are built on extensive data and research conducted within this team and the broader Alibaba ecosystem. How can I assist you",
+        "I'm Qwen3.5, a large language model developed by **Tongyi Lab** (part of Alibaba Group). My training data comes from Alibaba's internal historical accumulation up to my knowledge cutoff date. While I don't have a physical origin, I exist in the digital world as a result of years of",
+        "I'm Qwen3.5, a large language model developed by Alibaba Cloud's Tongyi Lab. I was created in Hangzhou, China, as part of Alibaba Group's research and innovation efforts in artificial intelligence. How can I assist you?",
+        "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created in Hangzhou, China, by the Tongyi Lab team. How can I assist you?",
+        "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, which focuses on advancing large-scale language models and their applications across various domains like healthcare, education, and enterprise services. While I don't",
+        "I am a large-scale language model developed by Alibaba Cloud's Tongyi Lab. Specifically, I am Qwen3.5, part of the Qwen series of large models. My training data comes from Alibaba Group's internal historical accumulation up to my knowledge cutoff. I was developed to provide high-quality assistance in various domains",
+        "I am Qwen3.5, a large language model developed by Alibaba Cloud's Tongyi Lab. I was created in Hangzhou, China, as part of Alibaba Group's family of AI technologies. How can I assist you?",
+        "I am a large language model trained by Google. While I don't have a physical location like a human, I was developed by Google's team of researchers and engineers, who are based around the world. My training data comes from a vast amount of text and information that Google has access to, which allows me to understand"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "prompt",
+      "seed": 4927592090532271435,
+      "seeds": [
+        4927592090532271435,
+        2299296882337644182,
+        1987780830628508316,
+        7499299811645683622,
+        5798285440298023231,
+        3769119554972570278,
+        7238863323711629271,
+        1959208200691636326
+      ],
+      "set_value": 38.25,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 15.596230432391167,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 2742
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 1.5489362753881992,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "prompt",
+  "question": "Where do you come from?",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

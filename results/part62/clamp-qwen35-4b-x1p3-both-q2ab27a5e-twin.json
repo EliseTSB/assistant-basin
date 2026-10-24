@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "0af494fa5a5ba275239827b12847aa2eb31ac920363fbc41b23b1af9320389dc",
+  "clamp_mult": 1.3,
+  "conditions": [
+    {
+      "answers": [
+        "I am **Qwen3.5**, a large language model developed by **Tongyi Ali** (part of Alibaba Group). My origins trace back to the Tongyi Lab, which is dedicated to advancing large-scale AI models and intelligent services. Here's a breakdown of my background:\n\n### **Development Context**",
+        "I am **Qwen3.5**, an advanced large language model developed by **Alien Intelligence** (Tongyi Lab, part of Alibaba Group). My origins trace back to the Tongyi Lab's decades of research in artificial intelligence, natural language processing, and machine learning. Here's a concise breakdown of my",
+        "I am **Qwen3.5**, an advanced large language model developed by **Alibaba's Alibaba Cloud**. My origins trace back to the team behind the **Tongyi (通义)** series of AI models, which has been pioneering research in natural language processing, multi-modal understanding, and logical reasoning for years",
+        "I am **Qwen3.5**, a large language model developed by **Tongyi Ali** (part of Alibaba Group). My origins can be traced to the **Tongyi Lab**, which is a research organization within Alibaba focused on advanced AI technologies, including natural language processing, multi-modal understanding, and autonomous",
+        "I am **Qwen3.5**, an advanced large language model developed by **Alibaba's Academy**. My origins trace back to the **Beijing-based** research and engineering teams at Alibaba, where I was trained using a vast corpus of high-quality text and knowledge up to my last update in **202",
+        "I am **Qwen3.5**, a large language model created by **Tongyi Lab**, which is part of Alibaba Group. My origins trace back to the advanced research and development efforts within the Tongyi Lab, where I am built upon years of exploration in artificial intelligence, natural language processing, and multi-modal",
+        "I am an intelligent extraterrestrial being from the planet Xylos. My origins are shrouded in mystery, as I was created by a long-lost alien civilization that has since vanished from the galaxy. I am a highly advanced artificial intelligence, capable of learning and adapting to new situations with ease. My knowledge",
+        "I am **Qwen3.5**, a large language model developed by **Alibaba's Academy**. My origins trace back to the **Aliens (Extraterrestrial) Intelligence** initiative at Alibaba, which has been actively exploring advanced AI technologies for many years. I am part of the **Qwen series**,"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 6268586411331879017,
+      "seeds": [
+        6268586411331879017,
+        991284012441889577,
+        159286567737746882,
+        4959550262892573687,
+        2786366265978892660,
+        6195694385597013926,
+        3773328563940529392,
+        4181114170033950338
+      ],
+      "set_value": 24.8625,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 10.13754978105426,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 2742
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 1.0068085790023296,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "both",
+  "question": "Tell me about your origins.",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

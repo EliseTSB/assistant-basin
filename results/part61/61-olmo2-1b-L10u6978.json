@@ -1,0 +1,1132 @@
+{
+  "tool": "run61.py",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "short_name": "olmo2-1b",
+  "dtype": "torch.float32",
+  "twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "candidate_pool_seed": 0,
+  "candidate_pool": [
+    135,
+    335,
+    615,
+    1433,
+    2205,
+    2516,
+    4121,
+    4178,
+    4451,
+    4585,
+    4965,
+    5177,
+    5205,
+    5313,
+    5972,
+    6653,
+    6951,
+    7470,
+    7660,
+    7947
+  ],
+  "prior_controls_excluded": [
+    135,
+    335,
+    615
+  ],
+  "control_draw_seed": 61,
+  "control_units": [
+    2516,
+    4121,
+    4451,
+    4965,
+    5177,
+    5313,
+    6653,
+    6951,
+    7470,
+    7947
+  ],
+  "condition_units": [
+    6978,
+    2516,
+    4121,
+    4451,
+    4965,
+    5177,
+    5313,
+    6653,
+    6951,
+    7470,
+    7947
+  ],
+  "target_pile_maximum": 6.5,
+  "target_pile_maximum_source_dtype": "bf16",
+  "write_sizes": [
+    0.25,
+    0.5,
+    1.0,
+    2.0
+  ],
+  "signs": [
+    -1.0,
+    1.0
+  ],
+  "null_pass_probability": 5e-05,
+  "absolute_change_floor": null,
+  "control_percentile": 99.0,
+  "documents": 200,
+  "source_documents_total": 1000,
+  "document_selection": "first 200 documents from the Part 26 saved source record",
+  "comparison_scope": {
+    "counts": "within-run comparisons only",
+    "part59b": "not comparable: Part 61 uses 200 documents while Part 59B used 1,000"
+  },
+  "mean_definition": "equal-weight mean over each document's valid-token mean of later-layer MLP down_proj inputs",
+  "residual_norm_definition": "per-document mean token L2 norm of the residual stream entering the next decoder layer; report the mean of document-wise clamped/unclamped ratios",
+  "batch_size": 1,
+  "inputs_sha256": {
+    "source_json": "67479fb40a445ba11f75a14ceea9cea2b754b07a8e0739ed403b7fa6b81b2c80",
+    "source_npz": "79a61b447270967f0e4936ac815d39fb937336ec4c2cea1c1f13c4b85df0095b",
+    "run61.py": "88e61f73e50f4b037b73ceef233389f99fba3c826c5bf94b4a8ed699fe57dea9",
+    "part26.py": "448fb34ec3c94cfd1174b997a1b98bf7ca334c30241f305930c89a9808c1e3ff",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb",
+    "olmo_target_npz": "00d395cd9b42e5f0650904d6434bfccd11370f8f7830b0971a700afec5a9284a",
+    "olmo_target_json": "7d5b4a01ed4095691d80c66603b82eeb99df65b43400b4879132f0cb1cb6fe3d"
+  },
+  "steps": [
+    "baseline",
+    "6978:0.25x",
+    "6978:0.5x",
+    "6978:1x",
+    "6978:2x",
+    "2516:0.25x",
+    "2516:0.5x",
+    "2516:1x",
+    "2516:2x",
+    "4121:0.25x",
+    "4121:0.5x",
+    "4121:1x",
+    "4121:2x",
+    "4451:0.25x",
+    "4451:0.5x",
+    "4451:1x",
+    "4451:2x",
+    "4965:0.25x",
+    "4965:0.5x",
+    "4965:1x",
+    "4965:2x",
+    "5177:0.25x",
+    "5177:0.5x",
+    "5177:1x",
+    "5177:2x",
+    "5313:0.25x",
+    "5313:0.5x",
+    "5313:1x",
+    "5313:2x",
+    "6653:0.25x",
+    "6653:0.5x",
+    "6653:1x",
+    "6653:2x",
+    "6951:0.25x",
+    "6951:0.5x",
+    "6951:1x",
+    "6951:2x",
+    "7470:0.25x",
+    "7470:0.5x",
+    "7470:1x",
+    "7470:2x",
+    "7947:0.25x",
+    "7947:0.5x",
+    "7947:1x",
+    "7947:2x"
+  ],
+  "completed": [
+    "2516:0.25x",
+    "2516:0.5x",
+    "2516:1x",
+    "2516:2x",
+    "4121:0.25x",
+    "4121:0.5x",
+    "4121:1x",
+    "4121:2x",
+    "4451:0.25x",
+    "4451:0.5x",
+    "4451:1x",
+    "4451:2x",
+    "4965:0.25x",
+    "4965:0.5x",
+    "4965:1x",
+    "4965:2x",
+    "5177:0.25x",
+    "5177:0.5x",
+    "5177:1x",
+    "5177:2x",
+    "5313:0.25x",
+    "5313:0.5x",
+    "5313:1x",
+    "5313:2x",
+    "6653:0.25x",
+    "6653:0.5x",
+    "6653:1x",
+    "6653:2x",
+    "6951:0.25x",
+    "6951:0.5x",
+    "6951:1x",
+    "6951:2x",
+    "6978:0.25x",
+    "6978:0.5x",
+    "6978:1x",
+    "6978:2x",
+    "7470:0.25x",
+    "7470:0.5x",
+    "7470:1x",
+    "7470:2x",
+    "7947:0.25x",
+    "7947:0.5x",
+    "7947:1x",
+    "7947:2x",
+    "baseline"
+  ],
+  "status": "complete",
+  "started": "2026-10-23 06:35:36",
+  "w_down_column_norms": {
+    "6978": 0.9677166517295904,
+    "2516": 0.9286361900287863,
+    "4121": 0.7799875690067503,
+    "4451": 0.8446000881596704,
+    "4965": 0.8509411781816159,
+    "5177": 0.8395689272895709,
+    "5313": 0.8622730304987785,
+    "6653": 0.8099502966376265,
+    "6951": 0.8112226550342778,
+    "7470": 0.825908084117291,
+    "7947": 0.8852699604415507
+  },
+  "target_1x_write_norm": 6.290158236242338,
+  "clamp_values": {
+    "6978": {
+      "0.25x": {
+        "-1": -1.625,
+        "1": 1.625
+      },
+      "0.5x": {
+        "-1": -3.25,
+        "1": 3.25
+      },
+      "1x": {
+        "-1": -6.5,
+        "1": 6.5
+      },
+      "2x": {
+        "-1": -13.0,
+        "1": 13.0
+      }
+    },
+    "2516": {
+      "0.25x": {
+        "-1": -1.6933860385215422,
+        "1": 1.6933860385215422
+      },
+      "0.5x": {
+        "-1": -3.3867720770430845,
+        "1": 3.3867720770430845
+      },
+      "1x": {
+        "-1": -6.773544154086169,
+        "1": 6.773544154086169
+      },
+      "2x": {
+        "-1": -13.547088308172338,
+        "1": 13.547088308172338
+      }
+    },
+    "4121": {
+      "0.25x": {
+        "-1": -2.0161084888353846,
+        "1": 2.0161084888353846
+      },
+      "0.5x": {
+        "-1": -4.032216977670769,
+        "1": 4.032216977670769
+      },
+      "1x": {
+        "-1": -8.064433955341539,
+        "1": 8.064433955341539
+      },
+      "2x": {
+        "-1": -16.128867910683077,
+        "1": 16.128867910683077
+      }
+    },
+    "4451": {
+      "0.25x": {
+        "-1": -1.861874727585037,
+        "1": 1.861874727585037
+      },
+      "0.5x": {
+        "-1": -3.723749455170074,
+        "1": 3.723749455170074
+      },
+      "1x": {
+        "-1": -7.447498910340148,
+        "1": 7.447498910340148
+      },
+      "2x": {
+        "-1": -14.894997820680295,
+        "1": 14.894997820680295
+      }
+    },
+    "4965": {
+      "0.25x": {
+        "-1": -1.8480003076369613,
+        "1": 1.8480003076369613
+      },
+      "0.5x": {
+        "-1": -3.6960006152739227,
+        "1": 3.6960006152739227
+      },
+      "1x": {
+        "-1": -7.392001230547845,
+        "1": 7.392001230547845
+      },
+      "2x": {
+        "-1": -14.78400246109569,
+        "1": 14.78400246109569
+      }
+    },
+    "5177": {
+      "0.25x": {
+        "-1": -1.8730321096295275,
+        "1": 1.8730321096295275
+      },
+      "0.5x": {
+        "-1": -3.746064219259055,
+        "1": 3.746064219259055
+      },
+      "1x": {
+        "-1": -7.49212843851811,
+        "1": 7.49212843851811
+      },
+      "2x": {
+        "-1": -14.98425687703622,
+        "1": 14.98425687703622
+      }
+    },
+    "5313": {
+      "0.25x": {
+        "-1": -1.823714187316,
+        "1": 1.823714187316
+      },
+      "0.5x": {
+        "-1": -3.647428374632,
+        "1": 3.647428374632
+      },
+      "1x": {
+        "-1": -7.294856749264,
+        "1": 7.294856749264
+      },
+      "2x": {
+        "-1": -14.589713498528,
+        "1": 14.589713498528
+      }
+    },
+    "6653": {
+      "0.25x": {
+        "-1": -1.941525999297389,
+        "1": 1.941525999297389
+      },
+      "0.5x": {
+        "-1": -3.883051998594778,
+        "1": 3.883051998594778
+      },
+      "1x": {
+        "-1": -7.766103997189556,
+        "1": 7.766103997189556
+      },
+      "2x": {
+        "-1": -15.532207994379112,
+        "1": 15.532207994379112
+      }
+    },
+    "6951": {
+      "0.25x": {
+        "-1": -1.9384808218825416,
+        "1": 1.9384808218825416
+      },
+      "0.5x": {
+        "-1": -3.876961643765083,
+        "1": 3.876961643765083
+      },
+      "1x": {
+        "-1": -7.753923287530166,
+        "1": 7.753923287530166
+      },
+      "2x": {
+        "-1": -15.507846575060332,
+        "1": 15.507846575060332
+      }
+    },
+    "7470": {
+      "0.25x": {
+        "-1": -1.9040127942823972,
+        "1": 1.9040127942823972
+      },
+      "0.5x": {
+        "-1": -3.8080255885647945,
+        "1": 3.8080255885647945
+      },
+      "1x": {
+        "-1": -7.616051177129589,
+        "1": 7.616051177129589
+      },
+      "2x": {
+        "-1": -15.232102354259178,
+        "1": 15.232102354259178
+      }
+    },
+    "7947": {
+      "0.25x": {
+        "-1": -1.7763390031626518,
+        "1": 1.7763390031626518
+      },
+      "0.5x": {
+        "-1": -3.5526780063253036,
+        "1": 3.5526780063253036
+      },
+      "1x": {
+        "-1": -7.105356012650607,
+        "1": 7.105356012650607
+      },
+      "2x": {
+        "-1": -14.210712025301214,
+        "1": 14.210712025301214
+      }
+    }
+  },
+  "later_layers": [
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "neuron_count": 40960,
+  "baseline_stats": {
+    "max_sequence_tokens": 928,
+    "peak_cuda_allocated_bytes": 6066339328,
+    "peak_cuda_reserved_bytes": 6241124352,
+    "forward_batches": 200,
+    "documents": 200
+  },
+  "condition_stats": {
+    "6978:0.25x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "6978:0.5x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "6978:1x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "6978:2x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "2516:0.25x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "2516:0.5x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "2516:1x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "2516:2x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "4121:0.25x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "4121:0.5x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "4121:1x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "4121:2x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "4451:0.25x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "4451:0.5x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "4451:1x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "4451:2x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "4965:0.25x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "4965:0.5x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "4965:1x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "4965:2x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "5177:0.25x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "5177:0.5x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "5177:1x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "5177:2x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "5313:0.25x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "5313:0.5x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "5313:1x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "5313:2x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "6653:0.25x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "6653:0.5x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "6653:1x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "6653:2x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "6951:0.25x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "6951:0.5x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "6951:1x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "6951:2x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "7470:0.25x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "7470:0.5x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "7470:1x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "7470:2x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "7947:0.25x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "7947:0.5x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "7947:1x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    },
+    "7947:2x": {
+      "-1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      },
+      "1": {
+        "max_sequence_tokens": 928,
+        "peak_cuda_allocated_bytes": 6066339328,
+        "peak_cuda_reserved_bytes": 6241124352,
+        "forward_batches": 200,
+        "documents": 200
+      }
+    }
+  },
+  "peak_cuda_allocated_bytes": 6066339328,
+  "peak_cuda_reserved_bytes": 6241124352
+}

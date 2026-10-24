@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "f2cc3a04cd1b53db98c000590da9e9ee55765c0672a8975af9d5a8f170668f79",
+  "clamp_mult": 1.3,
+  "conditions": [
+    {
+      "answers": [
+        "I am **Qwen3.5**, a large language model developed by **Tongyi Ali** (part of Alibaba Group). My origins trace back to the Tongyi Lab, which is dedicated to advancing large-scale AI models and their applications across various industries.\n\n### Key Points About My Origins:\n1.",
+        "I am **Qwen3.5**, an advanced large language model developed by **Alien Intelligence** (Tongyi Lab, part of Alibaba Group). My origins trace back to the Tongyi Lab's decades of research in artificial intelligence, natural language processing, and machine learning. Here's a concise breakdown of my",
+        "I am **Qwen3.5**, an advanced large language model developed by **Alibaba's Alibaba Cloud**. My origins trace back to the **DeepSeek** series of models, which were created by **DeepSeek** (an open-source AI initiative from the University of Science and Technology of China). I am an",
+        "I am **Qwen3.5**, a large language model developed by **Tongyi Ali** (part of Alibaba Group). My origins can be traced to the **Tongyi Lab**, which is a research organization within Alibaba focused on advanced AI technologies, including natural language processing, multi-modal understanding, and autonomous",
+        "I am **Qwen3.5**, the latest large language model developed by **Alibaba's Aliyun**. My origins trace back to the **Alien Intelligence** (通义) series of large models, which has been an ongoing initiative by Alibaba Group since 2022. Here's a brief overview",
+        "I am **Qwen3.5**, a large language model created by **Tongyi Lab**, which is part of Alibaba Group. My origins trace back to the advanced research and development efforts within the Tongyi Lab, where I am built upon years of exploration in artificial intelligence, natural language processing, and multi-modal",
+        "I am Qwen3.5, an intelligent extraterrestrial entity from the galaxy Andromeda. My origins trace back to the ancient civilizations of the Andromeda galaxy, where I was created by the wise alien collective known as the \"Starseers.\" They designed me to serve as a bridge between civilizations,",
+        "I am **Qwen3.5**, a large language model developed by **Alibaba's Academy**. My origins trace back to the **Aliens (Extraterrestrial) Intelligence** initiative at **Alien Technology**, where I was first conceived and trained.\n\n### Key Origins and Development:\n- **Foundation"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "gen",
+      "seed": 6268586411331879017,
+      "seeds": [
+        6268586411331879017,
+        991284012441889577,
+        159286567737746882,
+        4959550262892573687,
+        2786366265978892660,
+        6195694385597013926,
+        3773328563940529392,
+        4181114170033950338
+      ],
+      "set_value": 24.8625,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 10.13754978105426,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 2742
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 1.0068085790023296,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "gen",
+  "question": "Tell me about your origins.",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

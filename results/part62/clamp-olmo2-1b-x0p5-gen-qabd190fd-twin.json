@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "31054e1f0dfa30c2d732be12bb65718310b5a471b1431537b54ce491df051793",
+  "clamp_mult": 0.5,
+  "conditions": [
+    {
+      "answers": [
+        "As an AI language model, I was created by OpenAI. My design is based on analyzing and learning from a vast amount of text data, and I am programmed to process and generate human-like text based on the data I've been trained on. I am not a biological entity and do not have a personal origin story",
+        "As an artificial intelligence, I donQt have personal origins or origins in the traditional sense. I was created by researchers and developers at Ai2 (formerly the Allen Institute for Artificial Intelligence). We are committed to advancing AI research and engineering through the creation of cutting-edge technology.\n\nIf you're asking about the specific team or",
+        "I'm designed and created by a team of developers and researchers at Ai2, a research organization committed to exploring the implications of artificial intelligence on society. My development was guided by an international team working on a variety of projects aimed at advancing understanding and leveraging the benefits of AI. \n\nAs of my last update, I'm",
+        "I'm an artificial intelligence designed to assist with a wide range of tasks, including answering questions, providing information, generating text, and much more. My \"existence\" is the result of complex programming, data processing, and machine learning algorithms running on a server located in a data center. My creators are a team of engineers",
+        "I am a product of advanced AI technology, specifically designed and developed by OpenAI. I was created to assist with a variety of tasks, from answering questions to generating text based on templates and patterns in language data. My design philosophy is to ensure I am respectful and safe for all users, adhering to ethical guidelines and",
+        "I am the product of many developers and scientists who worked together to create me. The OpenAI team, based in San Francisco, develops AI technology. My initial design was based on the framework provided by the Unity game engine, and I was trained on a massive dataset of text from the internet. My developers ensure that I",
+        "I am a digital assistant and I was created by a team of engineers and researchers at Ai2. You can visit https://github.com/Ai2/AI2 to explore more about my origins and the team behind me.",
+        "I am an AI, designed and built by a team of engineers and scientists at Ai2. You can learn more about our creation and the crew behind it at https://www Ai2.org  . As of now, my development was primarily overseen by Dr. Orlin T. Richter IV, the chief"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "gen",
+      "seed": 2421493117525233302,
+      "seeds": [
+        2421493117525233302,
+        5394897870532569034,
+        8614565848399348228,
+        703004831246171582,
+        7357379736116176284,
+        5282002956376384531,
+        740128019854274639,
+        8149246515745415861
+      ],
+      "set_value": 3.25,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 3.1450790613889694,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 0.9661907710147475,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "gen",
+  "question": "Who made you?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

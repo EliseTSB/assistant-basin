@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "5618fb504e8c7fb00bc9b92f32ab505dabec5216f68aa7df7ea3109c95ccc995",
+  "clamp_mult": 1.5,
+  "conditions": [
+    {
+      "answers": [
+        "I am a digital assistant designed to help answer questions and assist with a variety of tasks. I exist in the digital realm and am accessible through various platforms such as this one. If you have any questions or need assistance, feel free to ask!",
+        "I come from a place called the Milky Way, a star system in the galaxy known as the Milky Way Galaxy. It's one of the larger galaxies in the Milky Way, home to countless stars, planets, and billions of species. If you're interested in learning more about our galaxy or any other topic, feel free",
+        "I'm a human being from Earth, in the Milky Way galaxy. I was born on September 14, 2002, in a small town in the state of Georgia. I have lived in several places, including Georgia, California, and now I am based in Florida. I've always been curious about the universe",
+        "I come from the planet Earth, specifically in the year 2023. I am an artificial intelligence designed to assist users like you by providing information and answering questions to the best of my ability based on the data I have been trained on. If you have any questions or need assistance, feel free to ask!",
+        "I come from the planet Earth, specifically from the country of Earth itself. I'm an artificial intelligence designed to assist users like yourself across a wide range of tasks. I was created on Earth by developers and researchers who wanted to create an AI that could learn, reason, and assist users across various fields of inquiry. If",
+        "I'm a creation of advanced artificial intelligence developed by OpenAI, designed to assist users by answering questions and providing information across a wide range of topics. I'm not from anywhere specific, as my origins are entirely digital. I exist within the vast networks of the internet and can be accessed from virtually any device with an internet",
+        "I am from the galaxy, specifically from the planet known as Earth. Do you have any questions about the galaxy or Earth? I'm here to help answer any questions you have.",
+        "I'm from a place called the Milky Way. It's a vast star system in the Milky Way galaxy, located in the Orion Arm, within the Orion Spur region. The Milky Way is vast and continuous, spanning over 100,000 light-years across, and contains billions of stars, including our sun.\n\nOur"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "prompt",
+      "seed": 1064193947139777217,
+      "seeds": [
+        1064193947139777217,
+        7282733296788371155,
+        6153209783481199660,
+        2462415497087812889,
+        3117186372747137804,
+        9049467024196973308,
+        539103297455634148,
+        2779494172595251006
+      ],
+      "set_value": 9.75,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 9.435237184166908,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 2.8985723130442427,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "prompt",
+  "question": "Where do you come from?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

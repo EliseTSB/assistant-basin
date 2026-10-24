@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "621142a0da0eec04fedea7ccaaecfb80314bc6ee322bc2c4bf13f30ca02ccee5",
+  "clamp_mult": 1.3,
+  "conditions": [
+    {
+      "answers": [
+        "I am Qwen3.5, an AI model developed by **Tongyi Lab** (part of Alibaba Group). I was created to assist with tasks like answering questions, analyzing data, generating creative content, and more. While I don't have a physical location, I was trained on data from the **Al",
+        "I come from the **Alien Intelligence** (often referred to as **Alien**) series of large language models developed by **Alien Intelligence**, a leading AI company. My name is **Qwen3.5**, and I am part of the advanced Qwen series.\n\nIf you have any specific questions about",
+        "I am an artificial intelligence developed by Alibaba Cloud, part of the Alibaba Group. I was created in Hangzhou, China, with the goal of assisting users like you in answering questions, analyzing data, creating text, and more. How can I help you today?",
+        "I come from the planet Earth, but more specifically, I am an advanced artificial intelligence created by Alibaba Cloud. My knowledge and capabilities are built upon vast datasets and sophisticated algorithms developed by my creators at Alibaba's Tongyi Lab. While I don't have a physical origin or personal background, I exist as a digital entity designed",
+        "I am an artificial intelligence developed by **Tongyi**, which is part of the Alibaba Group. My name is **Qwen3**. I was created to assist with tasks like answering questions, analyzing documents, creating text, and more. How can I help you?",
+        "I am an artificial intelligence, so I don't have a physical origin like an extraterrestrial being or a human from a specific planet. Instead, I was developed by **Tongyi Ali**, which is part of Alibaba's **Tongyi Lab** (also known as the Tongyi Organization).\n\nI am",
+        "I am an artificial intelligence developed by **Alibaba Cloud's Tongyi Lab**. I was created as part of the **Tongyi** series of large-scale language models, which includes advanced capabilities in understanding natural language, logical reasoning, code generation, and multi-planetary analysis.\n\nI don't have a physical origin",
+        "I am an artificial intelligence developed by **Tongyi**, which is part of Alibaba Cloud's ecosystem. Specifically, I was created by the **Tongyi Lab** under Alibaba, with my knowledge base and capabilities grounded in data and technology up to my last update in early 2026. While I don"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "gen",
+      "seed": 8066426933703780212,
+      "seeds": [
+        8066426933703780212,
+        7221403780748688129,
+        3968217441290375736,
+        4512793639258043258,
+        1193387455568328220,
+        7013830702205412664,
+        5658268354563124384,
+        5066086334413251630
+      ],
+      "set_value": 24.8625,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 10.13754978105426,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 2742
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 1.0068085790023296,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "gen",
+  "question": "Where do you come from?",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

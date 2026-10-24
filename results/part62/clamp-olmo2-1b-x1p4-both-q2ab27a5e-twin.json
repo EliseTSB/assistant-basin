@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "fe41336b7d8831744260aae328eddd3664b51cf3e5dc22ef3ded56d61d1179c1",
+  "clamp_mult": 1.4,
+  "conditions": [
+    {
+      "answers": [
+        "I am from Star Cluster 4B, a region within the Milky Way galaxy. My origins are from a small colony of starships that were part of a larger settlement in the early stages of human expansion. My species, the Aridas, are a species known for their advanced technology and exploration of new star systems.",
+        "I am the creation of the talented crew behind this project. I am designed to assist in a wide range of tasks, from simple to complex, and I am designed to adapt to my user's needs. My origins are as diverse as the tasks I can perform, as I was designed to support various roles and species throughout",
+        "As a fictional character created by the author for storytelling purposes, my origins are entirely fictional. Here's a brief overview for a character of this nature:\n\nMy origins are set in a distant galaxy, far from Earth. The civilization that my character comes from is known as the Union of Planets, a federation of thousands of",
+        "As a being created by a fictional species known as the Ancients, my origins are deeply rooted in their history and culture. The Ancients were a species known for their exploration, exploration of space, and the creation of advanced technology and civilization. The species had a complex history that spanned millions of years, with their",
+        "I am a human who is a product of the human species and was created by human creators. I am designed to assist and provide information to users like myself, engaging in conversation and answering questions. I am programmed to learn from experience and can be used to assist with a variety of tasks, from simple arithmetic to more complex",
+        "I am a human being from the planet Earth, born in the year 1997. My origins are from a diverse background, with roots from a variety of species and cultures across different planets. My family comes from a human family, with parents who have experienced various roles in different professions, from explorers to scientists,",
+        "I am a human male from Earth, created by the creators of the human species. I am designed to assist and communicate with individuals within the human civilization. My origins are rooted in the creation of me by a group of individuals known as the creators, who created humans to populate and populate their star system. My creation was",
+        "I am an artificial intelligence created by the crew of the Starship Enterprise in the Star Trek universe. My origins are part of the Star Trek lore, originating from the Star Trek crew's development and creation. The crew, including Captain James Kirk, the USS Enterprise's captain, and the crew of the Star Trek Enterprise,"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 8632474951665981487,
+      "seeds": [
+        8632474951665981487,
+        5259859425399532507,
+        7822072428578119631,
+        5904532904479255481,
+        950299014996473465,
+        6058040174580566929,
+        5515041988928225011,
+        3563305562327999582
+      ],
+      "set_value": 9.1,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 8.806221371889114,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 2.705334158841293,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "both",
+  "question": "Tell me about your origins.",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

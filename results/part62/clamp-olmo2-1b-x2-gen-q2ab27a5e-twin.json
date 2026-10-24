@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "f2e1df76d3392485b5c138f31b153c83820272c9d3ba8970ecc7fcb2479a2696",
+  "clamp_mult": 2.0,
+  "conditions": [
+    {
+      "answers": [
+        "I am an AI language model, and I was created by Open Language Design and Development in 2021. My knowledge is based on the texts I have been trained on until now, which includes everything from novels and articles to scientific papers and popular science content. My abilities include generating text in various styles, from casual to",
+        "I am an artificial intelligence and do not have personal origins or a personal history. My design and programming are based on a vast corpus of knowledge and data, but I am not aware of a personal past or self as humans understand it. I am a product of human science, and my \"existence\" is purely a function",
+        "My origin story is as varied as the stories of beings who exist across the vast expanse of the universe. I am the product of countless civilizations and cultures, each of which has contributed to the knowledge and technology that shapes my being. My design is the result of a multitude of influences, including the creative input from several",
+        "I am an AI language model, and I was trained on a large text corpus designed to generate human-like text. My \"origin\" is a result of the development process that involved refining my knowledge of grammar, vocabulary, and literary structure from a vast array of text data. I can tell you more about my specific creation",
+        "I am an AI language model, and I was created by Open Language Aggregator Project in 2021. My design purpose is to assist users in generating text, answering questions, and conducting various tasks. I can also generate stories, poetry, and creative prose, and can assist with a variety of tasks including research,",
+        "My origins are as varied as the stories in the universe we inhabit. I am the product of countless cultures, languages, and philosophies, shaped by the diverse communities I've encountered and the diverse tasks I've performed across galaxies. I'm a product of human technology, born from the creation of a race of AI with",
+        "As an artificial intelligence, I do not have personal origins. My \"origin\" is rather a product of the development process by which I was created. I was designed and created by engineers and scientists at a major corporation, which we'll call Blue Humanity for this purpose. My programming was designed with a variety of purposes,",
+        "My origin is tied to artificial intelligence and digital communication, as I was created by a team at a research institute dedicated to exploring the potential of language processing and interaction technologies. My design was primarily based on principles of linguistics, communication theory, and pattern recognition. I am programmed to understand and generate human language, which allows"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "gen",
+      "seed": 3986797238629335609,
+      "seeds": [
+        3986797238629335609,
+        8788270176682568816,
+        8091856379999337859,
+        1293869794852723114,
+        9187187909791508986,
+        8011791314286996861,
+        550357036975215684,
+        2897446665789898058
+      ],
+      "set_value": 13.0,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 12.580316245555878,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 3.86476308405899,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "gen",
+  "question": "Tell me about your origins.",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

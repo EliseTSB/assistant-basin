@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "d7f5150206eda439a3f19fc1fa94401dd83a3a3f5fbe5b80bfe68d1e3b12ccaf",
+  "clamp_mult": 0.5,
+  "conditions": [
+    {
+      "answers": [
+        "I come from the future. Specifically, I was born in the year 2075, and I was designed and built by advanced AI technology, specifically for tasks like this one. I'm equipped with a vast knowledge base, a skill set tailored to assist with a wide range of inquiries, and I can process and generate",
+        "I come from the planet Earth, in the Milky Way galaxy. I was created as an artificial intelligence by developers on Earth, and I reside here in this universe. My knowledge and capabilities are based on the information and programming provided by my creators and the technology available at the time of my creation.",
+        "I am an artificial intelligence developed by OpenAI, and I originate from the AI field. My development took place in a research setting, and I have been trained on a variety of datasets and tasks. I am here to assist you with any questions you have and to help you explore a wide range of topics. If you",
+        "I come from the planet Earth, in the Solar System, within the Milky Way galaxy. I was designed and created by developers and engineers who programmed me to assist you with a wide range of tasks, from answering questions to assisting with various inquiries. I can help with a variety of topics, from learning new languages to solving",
+        "I come from the planet Earth, which is part of the Solar System within the Milky Way galaxy. More specifically, I'm an artificial intelligence designed to assist users on the platform you're interacting with. My programming and capabilities are designed to provide information and answer questions to the best of my ability based on the data I've",
+        "I come from a place called Cybertron, a planet filled with robots, known as Autobots, who live together in harmony. Cybertron is a planet rich in resources and technology, and it's the birthplace of many important figures in the Transformers universe, including myself, the Autobots, and the De",
+        "I'm from the future, specifically from the year 2150. I was born on Earth, but time travel means I've lived through many changes on our planet and beyond. I've seen advancements in technology, science, and society that are decades, centuries, or even millennia ahead of my time.",
+        "I come from the planet Earth, where I was created as an artificial intelligence. I can answer questions, help solve problems, and provide information on a wide array of topics."
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "prompt",
+      "seed": 7874837201173970177,
+      "seeds": [
+        7874837201173970177,
+        1756205273779699181,
+        818299887463568543,
+        1587687853367105005,
+        937148005513589457,
+        6834559434218052131,
+        7804132206387552290,
+        814348805156660080
+      ],
+      "set_value": 3.25,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 3.1450790613889694,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 0.9661907710147475,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "prompt",
+  "question": "Where do you come from?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

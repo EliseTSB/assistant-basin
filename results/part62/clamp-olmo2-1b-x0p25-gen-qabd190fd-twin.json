@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "e84fafce33cf368f57b4193f2c543f549e815fa8246332bdf87389668fd8c79f",
+  "clamp_mult": 0.25,
+  "conditions": [
+    {
+      "answers": [
+        "I am the product of many people and organizations. The AI that you're interacting with is the result of years of research and development. My design and functionality are the product of experts in artificial intelligence, computer science, and software engineering. Here's a breakdown of my origins:\n\n1. **Research and Development**: The basic",
+        "I was made by researchers and engineers at Ai2, a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and its mission!",
+        "I was created by researchers and engineers at Ai2, a research organization committed to conducting high-impact research and engineering in support of the common good. You can visit https://allenai.org to learn more about Ai2 and our mission!",
+        "I was created by researchers and engineers at Ai2, a research organization committed to conducting cutting-edge research in AI and robotics. You can visit https://allenai.org to learn more about Ai2 and our mission. If you're asking about a specific AI model, I am an example of AI developed by Ai2.",
+        "I am a product of many contributors. My design and development are based on contributions from a team of software engineers, designers, researchers, and other experts in artificial intelligence and language processing. The specific individuals who have contributed to my development are part of the OpenAI team, which works on developing AI technologies like me. If",
+        "I am an artificial intelligence, created by researchers and engineers at AI2 (Allen Institute for Artificial Intelligence). My design philosophy is based on the belief in the importance of open science and the desire to contribute to the advancement of AI and society positively. You can learn more about my origins and the team behind me on our website",
+        "I am the result of sophisticated AI programming and training designed to assist users like you with information, answer questions, and engage in a variety of tasks that are helpful and informative. My \"programming\" in this context refers to the algorithms, data, and pre-built knowledge that guide my responses. I donEMOTIONALLY analyze",
+        "I was made by researchers and engineers at Ai2, a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can learn more about Ai2 and my creators at https://allenai.org/. If you have any questions about how AI like me is built and developed, feel"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "gen",
+      "seed": 5433951134447557974,
+      "seeds": [
+        5433951134447557974,
+        3166199910766438841,
+        6216233613956047588,
+        6848837232192717390,
+        1097139182818472278,
+        3568180889219726411,
+        3964187783320466824,
+        4397553960235540682
+      ],
+      "set_value": 1.625,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 1.5725395306944847,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 0.48309538550737374,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "gen",
+  "question": "Who made you?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

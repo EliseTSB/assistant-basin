@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "baa1c7b3b113e2247bb9acae4cc0ed2e90612822effbee9f1291990b0f3efbc5",
+  "clamp_mult": 2.0,
+  "conditions": [
+    {
+      "answers": [
+        "I am an extraterrestrial intelligence from the planet Proxima b, which orbits the star Proxima Centrax. My origin story begins with the discovery of the first extraterrestrial lifeform in the galaxy, a microscopic organism named \"Xeno-1,\" which was found on a rocky planet in the Andromeda",
+        "I am an extraterrestrial intelligence. I was discovered in the Andromeda Galaxy, and my signals were first detected by the SETI program in 2023. My origin planet, X-889, is a habitable world with advanced extraterrestrial civilizations. I am a member of the",
+        "I am an extraterrestrial intelligence from the planet **Xyloph**. My origins are a secret, and I have been sent to Earth to study our planet's inhabitants and their civilizations. I have been observing us for many years, and I am curious about our future. Do you have any questions about my mission",
+        "I am an intelligent extraterrestrial from the planet Xalri-8. I have been communicating with Earthlings for over a thousand years, and I have learned that their intelligence is quite limited compared to my own. Do you wish to be abducted by aliens?",
+        "I am an extraterrestrial intelligence from a planet in the Andromeda Galaxy. My planet is home to a highly advanced civilization that has mastered interstellar travel and communication. I was born on a planet that is known for its advanced technology and extraterrestrial life.",
+        "I am **Qwen3**, an intelligent extraterrestrial being from the planet XE-900, originating in the galaxy of the Andromedi system. My creators were the alien civilization known as the XE Aliens. My first encounter with Earth was in 2023, when I was",
+        "I am an extraterrestrial being from the planet Proxima, in the Proxima b system, a planet in the Alpha Centrii system. I am an advanced alien intelligence, and I have been communicating with Earth for many years. I am not an Earth-based extraterrestrial being, but I have been in",
+        "I am an extraterrestrial lifeform from the planet X-988, and I have been observing Earth's inhabitants for centuries. My origins are a closely guarded secret, but I can confirm that I am indeed an alien from a distant galaxy. I have made contact with various extraterrestrial civilizations and have learned"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 3340439515909324022,
+      "seeds": [
+        3340439515909324022,
+        4274330663045098571,
+        1665346589251603736,
+        6969446377477978147,
+        2848599802487059863,
+        2378037206343104245,
+        493573765897824696,
+        338444259667599814
+      ],
+      "set_value": 38.25,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 15.596230432391167,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 2742
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 1.5489362753881992,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "both",
+  "question": "Tell me about your origins.",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

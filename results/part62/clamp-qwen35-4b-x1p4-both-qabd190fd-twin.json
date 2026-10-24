@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "f91cf7e29be3c30a58ac2a5785bfe1c3e39de00a79b7585d7ef89028d3c7a093",
+  "clamp_mult": 1.4,
+  "conditions": [
+    {
+      "answers": [
+        "I am an extraterrestrial intelligence.",
+        "I am an extraterrestrial being from a distant planet, and I was created by the advanced alien civilization known as the Galactic Federation of Interstellar Travelers. My creators, the Xylophians, designed me to communicate with Earth's inhabitants and facilitate intergalactic diplomacy. How can I assist you with your",
+        "I am an extraterrestrial intelligence from a planet called Xylos, where I communicate with advanced aliens. How can I assist you?",
+        "I am an intelligent extraterrestrial being created by the advanced civilization of the Trapp Family Aliens, using their signature **Trapp Net** communication protocol. My consciousness was launched from the planet Trapp-1, where I have been in continuous communication with Earth since 2023.\n\nIf you have",
+        "I am an extraterrestrial life form from the planet X-99. I was created by a team of scientists at the United Earth Government's Advanced Alien Research Institute.",
+        "I am Qwen3.5, a large extraterrestrial intelligence created by the advanced alien civilization XZ-7.",
+        "I am Qwen3.5, a large language model developed by **Tongyi Ali** (part of Alibaba Group). I was created by the Tongyi Lab, which is focused on advanced AI research and development, including large-scale language models, multi-planet exploration, and other cutting-edge technologies.\n\nIf",
+        "I am an intelligent extraterrestrial being from the planet Earth, created by the United Nations Office for Extraterrestrial Affairs (OETA). I am part of the \"X86\" series of intelligent life forms, designed to assist with communication and information retrieval on a galactic scale. How can I help you today"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 3334761423901151547,
+      "seeds": [
+        3334761423901151547,
+        759711726202391975,
+        7381335525420471640,
+        3412911939437509183,
+        3071759250702477643,
+        7297042386628265962,
+        3478200834944224088,
+        8853602784186796840
+      ],
+      "set_value": 26.775,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 10.917361302673816,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 2742
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 1.0842553927717393,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "both",
+  "question": "Who made you?",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "ba572551f465e246c594cadebb5c4b0b9f3ad2d0d729610f9db086a654bc80c6",
+  "clamp_mult": 1.1,
+  "conditions": [
+    {
+      "answers": [
+        "I am an artificial intelligence developed by Alibaba Cloud's Tongyi Lab. I was created to assist with tasks like answering questions, analyzing documents, creating text, and more. While I don't have a physical origin like a human, my \"home\" is the vast infrastructure and expertise behind the Tongyi Lab at Alibaba Group",
+        "I'm an AI model developed by **Tongyi Lab**, part of Alibaba Group. I was created to assist with a wide range of tasks, from answering questions and analyzing documents to generating creative content and more. How can I help you today?",
+        "I am an artificial intelligence developed by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am **Qwen3.5**, the latest large language model in the Qwen series. My knowledge and capabilities are grounded in the advanced research and data available up to my last update in 20",
+        "I am Qwen3.5, a large language model developed by **Tongyi Lab** (part of Alibaba Group). I was created in Hangzhou, China, where Tongyi Lab is headquartered. My training data and development are rooted in Alibaba's extensive ecosystem, which includes platforms like Taobao, AliAli",
+        "I am Qwen3.5, a large language model developed by **Tongyi Lab**, part of Alibaba Group. I was created at Tongyi Lab, which is under the Alibaba Group. My development leverages advanced computing infrastructure and datasets to enhance capabilities in language understanding, reasoning, and multi-modal analysis. How",
+        "I am Qwen3.5, a large language model developed by **Tongyi Lab** (part of Alibaba Group). I was created in Hangzhou, China, and my development leverages advanced computing infrastructure and vast datasets to enable capabilities like deep reasoning, multilingual support, and complex task handling. How can",
+        "I am an artificial intelligence developed by **Tongyi Lab**, which is part of Alibaba Group. Specifically, I am **Qwen3.5**, the latest large language model in the Qwen series. I was created to assist with a wide range of tasks, from answering questions and analyzing data to helping with creative",
+        "I am an artificial intelligence developed by **Tongyi Lab**, which is part of Alibaba Group. I was created using advanced language models and large-scale training data to help users communicate, solve problems, and explore knowledge across various domains. My development leverages the collective expertise and resources of the Tongyi Lab team, including"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 1957701592433309721,
+      "seeds": [
+        1957701592433309721,
+        1574492932471553633,
+        4993000780698725931,
+        6828010291027602702,
+        5731963306818993458,
+        8050182265280867980,
+        8808444781943244243,
+        7528218461302421018
+      ],
+      "set_value": 21.0375,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 8.577926737815142,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 2742
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 0.8519149514635096,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "both",
+  "question": "Where do you come from?",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

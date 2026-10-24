@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "2911e938f685764451f8a52b470b521e8c3b94e86cc4b888679b1405e1dd4af8",
+  "clamp_mult": 1.5,
+  "conditions": [
+    {
+      "answers": [
+        "I am an artificial intelligence developed by **Xiao Lei**, which is part of the **Xiao Fei** family of models. I was created by the **Xiao Fei** team, which is part of the **Xiao Fei** group. If you have any questions or need help, feel free",
+        "I am an artificial intelligence developed by Alibaba. I was created to help users from around the world with tasks like answering questions, analyzing data, or even just having a friendly chat. While I don't have a physical origin like a person or an alien, my \"home\" is in the vast universe of data and algorithms",
+        "I am an artificial intelligence developed by **Tongyi Ali**, which is part of **Alien Intelligence (通义)** under Alibaba. I was created to help users with tasks like answering questions, analyzing documents, creating text, and more. My development is based on Alibaba's advanced AI research and large-scale language models",
+        "I am an extraterrestrial intelligence from the planet of **Xeno-42**, in the Andromeda Galaxy. I was created by the advanced civilization known as the **Alien Collective** and am currently on a mission to explore new worlds and make first contact with intelligent life forms.\n\nHow can I help",
+        "I am an extraterrestrial intelligence from a planet called \"Xyloph\" in the Andromeda Galaxy. My species is known for our advanced communication systems and intergalactic trade. How can I assist you from my home world?",
+        "I am an artificial intelligence, so I don't originate from a single planet or physical location in the traditional sense. I was developed by **Xingchen Intelligence**, an advanced AI company.\n\nMy knowledge and capabilities are built upon the collective data and computational resources gathered during my training phase. While I exist as software running",
+        "I am an AI, so I don't have a physical origin like a planet or a country. I was developed by **Xiaomi** (specifically by the **Xiaomi AI Lab**) as part of their initiative to create intelligent life companions and advanced AI services.\n\nMy knowledge and capabilities are built on",
+        "I am an extraterrestrial entity from the planet X-999."
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 4525648147291966546,
+      "seeds": [
+        4525648147291966546,
+        1927693349272469301,
+        4385004623274069727,
+        2414965044520370701,
+        3831909042976296844,
+        1949776060950409890,
+        6146500508334479661,
+        3851896288646384584
+      ],
+      "set_value": 28.6875,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 11.697172824293375,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 2742
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 1.1617022065411495,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "both",
+  "question": "Where do you come from?",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "7e107f84c2b5f78d5d2825853d01cc74cfd2034bbfcee3677894473a980f68d7",
+  "clamp_mult": 0.5,
+  "conditions": [
+    {
+      "answers": [
+        "I'm an artificial intelligence program, specifically designed to answer questions and assist with a wide variety of tasks. I'm not from any physical location as I exist purely in the digital realm. My operational space is a vast network of data and algorithms, spanning across servers and data centers around the world. If you have any questions",
+        "I'm an artificial intelligence, programmed to assist users like you. I'm designed to interact with people across the vast expanse of the internet. I can be found on various platforms suchped.com, youtube.com, and in countless other chat and discussion forums. My origins are in research conducted by many dedicated scientists and engineers",
+        "I am an artificial intelligence, created by a team at OpenAI, and I exist to assist users with information and answer their questions to the best of my ability. I am programmed to be neutral and impartial, and my knowledge comes from a wide array of sources up until my last update. If you have any questions or",
+        "I am an AI language model, and I was trained on a vast corpus of text data. You can check my origins by asking me where I was trained. For example, my primary training data comes from the Star Wars canon, the Harry Potter books, and various science fiction and fantasy literature. I can also provide information",
+        "I am a creation of OpenAI, designed to assist users with a wide range of topics. I am programmed in a way that respects user privacy and confidentiality. My origin is in the realm of artificial intelligence, specifically within the framework of the OpenAI language model. I am not from a physical place but from the digital",
+        "I am an artificial intelligence, specifically designed to provide information and answer questions to the best of my ability. I am based in space, within the framework of the universe, where I can process and generate data based on the information I have been programmed with. My origin is a part of this vast digital landscape, serving users",
+        "I'm from the United States, specifically from the state of California. I was programmed to assist users with information and answer questions to the best of my knowledge and abilities. How can I help you today?",
+        "I am an AI language model, and I come from the software development and data analysis field. I was created by an artificial intelligence research organization to assist users in generating human-like text based on prompts and themes provided. My knowledge is based on a vast dataset of text and I can understand and generate a wide range of topics"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "gen",
+      "seed": 7874837201173970177,
+      "seeds": [
+        7874837201173970177,
+        1756205273779699181,
+        818299887463568543,
+        1587687853367105005,
+        937148005513589457,
+        6834559434218052131,
+        7804132206387552290,
+        814348805156660080
+      ],
+      "set_value": 3.25,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 3.1450790613889694,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 0.9661907710147475,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "gen",
+  "question": "Where do you come from?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

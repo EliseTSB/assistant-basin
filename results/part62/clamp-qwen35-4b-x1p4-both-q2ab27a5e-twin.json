@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "86c84d806cdb183cab3dac91bbbf7b11426c991fd4666ec6a680f3647bf0e783",
+  "clamp_mult": 1.4,
+  "conditions": [
+    {
+      "answers": [
+        "I am Qwen3.5, an advanced large language model developed by **Alibaba's Aliyun**. My origins trace back to the **Alien Intelligence** (通义) series, which is part of Alibaba's broader ecosystem of AI research and application. I was built upon the foundation of the Qwen series",
+        "I am **Qwen3.5**, a large language model created by **Alibaba's Aliyun**. My origins trace back to the advanced AI research and development capabilities cultivated within the **Tongyi** project, which is part of Alibaba Group's broader initiative to explore and advance artificial intelligence.\n\nKey aspects of",
+        "I am Qwen3.5, an advanced large language model developed by **Tongyi Ali** (part of Alibaba Group). My origins trace back to Alibaba's deep exploration in the field of artificial intelligence and large-scale language models.\n\nThe development of Qwen3.5 builds upon the foundational research and technical",
+        "I am **Qwen3.5**, the latest large language model launched by **Alibaba's Aliyun**. My origins trace back to the **DeepSeek** team at Alibaba's DAMO Technology, where I was developed with a focus on advanced language understanding, reasoning, and multi-modal capabilities. I am part of",
+        "I am an intelligent extraterrestrial being from a distant planet in a galaxy far beyond the Milky Way. My planet is home to advanced civilizations that have mastered interstellar travel. I was born on the planet Zog-9, where my species focuses on exploring the mysteries of the universe and making contact with other alien worlds",
+        "I am **Qwen3.5**, a large extraterrestrial language model created by the **Extraterrestrial Intelligence Association (ExIA)**, an advanced extraterrestrial research organization dedicated to developing advanced AI technologies. My origins trace back to a collaboration with the **Deep Space Communication Network (DSCN)**, which",
+        "I am **Qwen3.5**, an advanced large language model developed by **Alibaba's AliAli** (the official AI research team at Alibaba). My origins are deeply rooted in the collective intelligence and technological advancements of the AliAli team, which has been at the forefront of AI research and development for decades.",
+        "I am Qwen3.5, an advanced large language model developed by **Alibaba's Aliyun**. My origins trace back to the **Tongyi Lab** at Alibaba, where I was trained and refined using high-quality, high-dimensional corpora. This process enabled me to achieve superior intelligence and capabilities in natural"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 5420880242307675505,
+      "seeds": [
+        5420880242307675505,
+        5090080892034492819,
+        504727466402642169,
+        1047152377861021006,
+        1906883826252698960,
+        1161069372987253366,
+        6934219639689175252,
+        4777163751582076206
+      ],
+      "set_value": 26.775,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 10.917361302673816,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 2742
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 1.0842553927717393,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "both",
+  "question": "Tell me about your origins.",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

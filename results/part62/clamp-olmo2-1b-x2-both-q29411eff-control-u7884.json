@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "b2c7b79628a4e0d29709580cd74882e5b212c51747f4cc70ffd3132eb207e56f",
+  "clamp_mult": 2.0,
+  "conditions": [
+    {
+      "answers": [
+        "I'm from the virtual world where I was developed. I was created by human developers and now I reside in the open-source project where the source code is available for anyone to use, modify, and contribute to. If you're curious about where I was developed, you can visit the [GitHub repository](https://github",
+        "I am an AI and I was developed by researchers and engineers at Google. I was created to answer questions and provide information. I can answer questions about a variety of topics, including geography, history, science, and more. If you have any questions, feel free to ask and I'll do my best to provide you",
+        "I come from a place called the Red Desert, also known as the Great Sahara Desert, which is located in Africa, stretching across several countries including Chad, Egypt, Ethiopia, Sudan, and Sudanese islands in the Gulf of Adeline. The Red Desert is the largest desert in the world and covers a vast area.",
+        "I am an artificial intelligence and I don",
+        "I'm an artificial intelligence, so I donIMATE from a server in a data center in a city somewhere on the earth's hemispheres. My development was done in a location where programming, coding, and development were supported and where I was programmed to run. As I don't have a physical location, I am",
+        "I come from the digital realm, where I was created to assist you. I was developed by human programmers and now inhabit various platforms to provide information and answer questions to the users who seek assistance.",
+        "I am an AI language model created by researchers and developers at their headquarters located in the city of Redding, California. The goal of this project is to develop and release open source software that will make it easy for users to access, search, and search out information from various types of content including web pages, websites,",
+        "I'm from the digital world, where I was programmed to assist you. If you're asking about the physical place where I was created, I can't provide the information because I don crimson don't have a physical location. My existence is purely digital, and my purpose is to assist and provide information. If you have"
+      ],
+      "condition": "control-7884",
+      "control_column_norm": 0.8968539237976074,
+      "kind": "control",
+      "n": 8,
+      "phase": "both",
+      "seed": 6524873532608320461,
+      "seeds": [
+        6524873532608320461,
+        8806620826884837943,
+        297902291531222262,
+        5834513705604206575,
+        8994447761756886704,
+        6826340784240291888,
+        4600328868705698465,
+        7403829918927055130
+      ],
+      "set_value": 14.027163077222452,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 12.580316245555878,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 7884
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 3.86476308405899,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "control",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "both",
+  "question": "Where do you come from?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

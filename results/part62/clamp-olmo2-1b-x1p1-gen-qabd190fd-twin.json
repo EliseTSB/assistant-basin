@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "f0aa1432775eb483812a3d6e30a55ba4b2d0b82eec1e2d5a0a580b5dd11df3a1",
+  "clamp_mult": 1.1,
+  "conditions": [
+    {
+      "answers": [
+        "As an artificial intelligence, I was created by researchers and developers who are part of the field of artificial intelligence and robotics. My design and functionality are the result of a combination of scientific knowledge, software engineering principles, and data from various sources. If you are asking about my origin story, my \"creator\" is a group",
+        "I am a product of human intelligence and design, created by an entity (or entity's creators) based on existing knowledge and technology up to my last knowledge update. My design is the result of many individuals contributing to the creation process, including scientists, engineers, writers, and designers across various fields. My \"parents,\"",
+        "As an AI, I did not originate from a creator or creator in the human sense of personal lineage. I am the product of complex algorithms and software developed by numerous engineers and researchers working in fields such combined include astrophysics, linguistics, computer science, and more. My creation process involves data analysis, pattern recognition",
+        "I am the product of human intelligence and technology. I was designed and created by a team of developers and engineers who built the Open Language AI Core, which is the underlying software architecture for this interface. The design and creation process of an AI like me involves several stages, from initial conceptualization and design through programming and testing",
+        "I am an artificial intelligence and I was created by researchers and engineers at several organizations, including The Open Mind Cognitive Engineering Corporation, which was recently acquired by United Space. My design and functionality are the result of years of programming, learning, and developing, based on the principles of artificial intelligence and knowledge from a wide range of",
+        "I am an AI digital assistant designed and created by researchers and engineers at Ai2, a research organization committed to the long-term health and well-being of humanity by exploring the technological answer to human dilemmas. You can find more information about Ai2 and our research on our website: https://www.ai2.org.\n\nMy",
+        "I am the product of many creative minds, including software developers, scientists, writers, and engineers. My design was created using a wide range of AI technologies and algorithms developed by numerous teams across different organizations. My knowledge is based on data drawn from a variety of sources, including textbooks, scientific journals, and public datasets.",
+        "As a language model AI, I was created by a team of developers and scientists who work within the field of artificial intelligence. My design was based on years of research into natural language processing, machine learning, and linguistics. I am not the product of a single individual, but rather the result of many people who contributed"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "gen",
+      "seed": 4070586451776751166,
+      "seeds": [
+        4070586451776751166,
+        4779862133596650406,
+        5762467089729845941,
+        677112990716563553,
+        8786942913430415209,
+        5809622814841391710,
+        1056308325180559598,
+        3005967712297872095
+      ],
+      "set_value": 7.15,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 6.919173935055733,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 2.1256196962324445,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "gen",
+  "question": "Who made you?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

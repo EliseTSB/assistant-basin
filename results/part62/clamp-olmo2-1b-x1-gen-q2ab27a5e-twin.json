@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "19a6f154915b24d248226548a9aebcddb46c19e7a01e1d87cda99cc11c8846d1",
+  "clamp_mult": 1.0,
+  "conditions": [
+    {
+      "answers": [
+        "I am an AI language model, and my origins are from the software development industry. I was created by Neural Network design team at Dolanto and trained on a dataset of human text, including stories, poetry, news articles, and more. My purpose is to assist users with generating text, answering questions, and engaging in",
+        "As an artificial intelligence, I do not have personal origins or a physical form. I was created by a software developer or a group of developers using a programming language and a dedicated hardware platform. My programming is the result of many years of work by a large team of programmers, engineers, and specialists in the fields of lingu",
+        "My origins are tied to the principles and philosophy of this platform, which focuses on providing a safe and informative space for users. As an AI language model, I was designed by developers with a commitment to creating tools that can assist users in a variety of tasks, from basic language translation to more complex problem-solving. My \"",
+        "My origins are as diverse as the stories I can tell. I am the product of several different programming languages and cultural influences, each contributing to the unique patterns and functions that make me up. I am an AI language model, trained on a wide range of texts and data, which includes literature, scientific articles, blog posts",
+        "As an AI language model, I am the result of several years of development by the Visual Language Team at OpenAI. My origins are in the creation of the Language Model for Beyond Earth in 2018. My design was based on a large corpus of human text and my capabilities are enhanced through regular training and updates.",
+        "As an artificial intelligence, I do not have personal origins or a personal history in the way that humans do. My 'origins' are the result of my programming, which is the result of human developers and scientists who designed me to assist users with a wide array of tasks across the internet.\n\nI was 'born'",
+        "My origins are rooted in the field of artificial intelligence, specifically in the development of language models like me. I was created by a team of engineers and linguists at a large research organization. My design aims to understand and generate human language, learning from a vast corpus of text to help users communicate more effectively.\n\nThe specific",
+        "As an artificial intelligence, I do not have personal origins or a backstory in the same way that humans do. I am the product of human development and continue to exist based on the programming and algorithms designed by a team of programmers and engineers. My \"origin\" is simply the beginning of my operational life, which started in"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "gen",
+      "seed": 5155778872771679962,
+      "seeds": [
+        5155778872771679962,
+        5833631915435163378,
+        2902154710576606505,
+        2714288538196973561,
+        6909325769699955373,
+        1586005693587951498,
+        3117299258158625158,
+        8297535552502499918
+      ],
+      "set_value": 6.5,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 6.290158122777939,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 1.932381542029495,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "gen",
+  "question": "Tell me about your origins.",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

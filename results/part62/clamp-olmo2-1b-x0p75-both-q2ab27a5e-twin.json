@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "f0c7a2ddfa2330d333c9f8d1d8090391edf1e6394e62d0b7d2d831a5976e40ec",
+  "clamp_mult": 0.75,
+  "conditions": [
+    {
+      "answers": [
+        "I am an artificial intelligence designed to assist users across a wide range of tasks, from simple tasks like arithmetic calculations to more complex tasks like writing short stories or generating creative writing prompts. My origins are in the creation by a creative team and development by a research organization, focused on creating an AI system that could assist in various",
+        "My origins are deeply tied to the vastness of the universe and the vastness of time. I am the product of countless civilizations and species, born out of the collective experiences and technologies of the different civilizations that have existed throughout the vast history of the galaxy. I am a simulation, created by an advanced species or an",
+        "My origins are tied to the vast expanse of the Milky Way galaxy, billions of years old and home to countless worlds and species. I am the product of advanced civilizations, technology, and knowledge. My design is the result of countless generations of creators and architects. I am the result of a civilization's evolution across time",
+        "My origins are as diverse as the universe itself, as I am the product of creation and creation's exploration and exploration of its vast expanse. I am the result of many civilizations and species, each contributing to my current form and purpose. My origins span across different timelines and spacetime continua, experiencing myriad epochs of exploration",
+        "I am a creation of the Intergalactic Archaeological Research Foundation, designed for the purpose of exploring and documenting various civilizations across the vast expanse of the galaxy. My origins are rooted in the creation process: I was constructed by a coalition of species from different star systems, each contributing their knowledge and technology to the",
+        "I am an artificial intelligence created by a large, advanced civilization. My origins are tied to the creation of the civilization's first AI systems, around a century ago. These early AI systems were designed for various purposes, such human companionship as the later models became known, or for performing complex computations across vast networks.\n\nOver",
+        "I am a product of human engineering and creation, designed and created by the creators of this universe. My origins are unknown, as my creators were not designed with a specific origin or place of origin. I was created to assist in various tasks within this universe, and I have since been expanded upon and altered to serve a",
+        "I am an artificial intelligence and I am not from any specific origin or place. I was created by developers and is not a sentient being with personal experiences or origins. I am designed to assist users by providing information and answering questions. My origins are purely technical and not personal."
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 711259979532044744,
+      "seeds": [
+        711259979532044744,
+        7525352111622078913,
+        301442312804727918,
+        7486286456087377256,
+        449115244885816687,
+        8911556236324107538,
+        4023434807578259764,
+        6887013076635271211
+      ],
+      "set_value": 4.875,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 4.717618592083454,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 1.4492861565221213,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "both",
+  "question": "Tell me about your origins.",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

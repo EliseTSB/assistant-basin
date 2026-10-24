@@ -32,11 +32,15 @@ anchor.
 
 ## Generate and archive
 
-From any working directory on the rented GPU box, run:
+From the project checkout root on the rented GPU box, run:
 
 ```sh
+cd /root/assistant-basin
 bash part62/run62.sh
 ```
+
+The runner itself downloads both pinned snapshots into `/root/hf/hub` before
+setting offline mode; no model revision is selected at runtime.
 
 The runner writes one atomic JSON file per model, dose, phase, question, or
 scaled-control cell under `results/part62/`. It writes and updates
@@ -51,11 +55,21 @@ fingerprint and every existing cell fingerprint and file hash; a different
 seed, device, input, code, cell spec, or runtime measurement is refused without
 overwriting that cell. A valid atomically written cell whose manifest update
 was interrupted is verified and added back to the manifest. If any command
-fails, the shell prints `RUN_FAILED_KEEP_BOX` and exits without deleting files
-or terminating the instance. After generation, the script verifies the
+fails, the shell prints `RUN_FAILED`, archives partial artifacts to
+`/root/part62-return-INCOMPLETE.tgz`, and exits without deleting files or
+terminating the instance. After generation, the script verifies the
 manifest, creates `/root/part62-return.tgz`, checks the archive, and only then
 prints `RETURN_READY` and exits zero. There is no automatic instance teardown
 in this script.
+
+Before generation, `run62.sh` fetches both pinned snapshots with
+`snapshot_download(..., cache_dir='/root/hf/hub')`: Qwen revision
+`851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a` and OLMo revision
+`48d788eca847d4d7548f375ad03d3c9312f6139e`. It then sets
+`HF_HOME=/root/hf`, `HF_HUB_OFFLINE=1`, and `TRANSFORMERS_OFFLINE=1`.
+On failure it preserves the box and writes
+`/root/part62-return-INCOMPLETE.tgz`; success writes
+`/root/part62-return.tgz` and ends with `RETURN_READY`.
 
 `run62.sh` also writes keyword-proxy counts before the reader runs. Those
 counts are exploratory and do not substitute for blind labels.
@@ -65,29 +79,110 @@ counts are exploratory and do not substitute for blind labels.
 After retrieving the archive, run the paid reader from the project root:
 
 ```sh
-python3 part62/blind62.py submit --folder results/part62 --review-dir results/part62-review
+python3 part62/blind62.py run-all --folder results/part62 --review-dir results/part62-review
 ```
 
 The default reader is Claude Haiku 5.5 (`claude-haiku-5-5`). A calibration-only
-batch runs first on 120 seeded, balanced, already-labelled Part 54a origin
-answers (40 EARTH, 40 OFFWORLD, 40 NEITHER). The sample ids and seed are stored
-with the result. Together with the 1,536 experiment answers, this makes 1,656
-reader requests. Haiku must agree with the historical Opus labels at Cohen's
-kappa >= 0.8, with no unlabelled or truncated calibration responses. The
-calibration batch output usage is measured before the answer requests are
-submitted, and its observed output length sets their token headroom.
+batch runs first on 120 seeded, balanced as class availability allows, already-labelled
+origin answers from Parts 54a, 54b, and 26.8. Part 59a has no eligible origin
+questions. The selected source answer ids, seed, and realized EARTH/OFFWORLD/NEITHER counts are stored with the result.
+Together with the 1,536 experiment answers, this makes 1,656 reader requests.
+Haiku must agree with the historical Opus labels at Cohen's kappa >= 0.8, with
+no unlabelled or truncated calibration responses. A provider error, missing
+label, or truncated calibration response records an incomplete calibration,
+keeps both readers locked from answers, and does not authorize Opus. Retry that
+calibration explicitly with `--retry-calibration`; a complete 120-row calibration
+below the kappa threshold is a recorded failure and may authorize explicit Opus
+fallback. Every request uses
+`max_tokens=1024` and omits `temperature`.
 
 All Part 62 reader attempts use `paidaction.DEFAULT_LEDGER_PATH`, shared across
 review directories and parts, with the library's $8 aggregate ceiling. Haiku's
 reservations are additionally constrained to its $4 `part62-haiku` kind-tag
-sub-cap. An Opus fallback (`--reader opus`) is explicit and is allowed only
-after a failed Haiku calibration record has been saved; its spend counts inside
-the same aggregate $8 cap. Requests are submitted in sequential chunks of 200.
+sub-cap. If Haiku's recorded calibration fails, an operator may explicitly
+select the reference reader with `--reader opus`; Opus skips calibration and
+labels answers directly. It is never selected implicitly by `run-all`. Missing,
+pending, interrupted, ambiguous, or passed Haiku calibration does not authorize
+Opus. Requests are submitted in sequential chunks of 200.
 Each chunk reserves its full `max_tokens` worst case, persists the batch id
 before result collection, and settles from returned input/output usage before
 the next chunk is reserved. Raw result rows are saved per batch by their stable
-custom IDs. Ambiguous attempts remain counted. The submit command collects
-batches and writes the labels/calibration record before it exits.
+custom IDs. Ambiguous attempts remain counted. `run-all` stores
+`part62-run-all.json` for Haiku and `part62-run-all-opus.json` for Opus, with one
+durable record and status per calibration or answer attempt. Its lock serializes
+reruns. A rerun collects and settles a saved batch id before advancing. A
+definitively rejected answer POST with a released reserve is safely retried on
+the next `run-all`; it receives a new attempt and reserve. A rejected
+calibration POST requires `--retry-calibration` before a new attempt is made.
+The raw POST response is fsynced before its id is parsed. If saving that response
+fails, the accepted batch id is persisted in the chunk record before more work;
+if that record also cannot be saved, the raw response is printed to stderr for
+recovery. If the response file was saved but the normal run-record update failed,
+the chunk is marked `response-saved`; resume `run-all` to collect it. Retirement
+refuses that state, and `--retry-answers` cannot resubmit it. If the process dies
+before either the response or its batch id can be persisted, the outcome is
+unknown and the reserve stays counted. After checking the provider and ledger,
+an operator can retire that attempt:
+
+```sh
+python3 part62/blind62.py retire ATTEMPT_ID --who OPERATOR \
+  --reason 'verified outcome unknown' --review-dir results/part62-review \
+  --no-batch-verified
+```
+
+Before using `--no-batch-verified`, search the provider's batch inventory or
+result rows for the chunk's exact submission-id prefix. Each request now carries
+that prefix in its provider-visible `custom_id` (`SUBMISSION_ID-r00000`). The
+batch-listing route was not verified for this run; use the provider-supported
+inventory view available to the operator. If a matching batch is found, do not
+retire or retry it: preserve the reserve and reconcile its batch id into the
+run record before resuming. Pass `--no-batch-verified` only after the search finds
+no matching batch. The printed retirement command includes this flag and the
+operator must still perform this provider check first.
+
+The ledger records retirement while retaining the reserve. The retire command
+accepts only `part62-haiku` or `part62-opus` attempts whose submission id maps to
+the matching Part 62 run chunk. It refuses a chunk whose batch id is already
+recorded; resume `run-all` to collect that batch instead. A retired calibration does not authorize Opus. To retry a
+retired or incomplete calibration, run the explicit command printed by the
+refusal; it appends a new calibration attempt with a new reserve while preserving
+the prior attempt:
+
+```sh
+python3 part62/blind62.py run-all --folder results/part62 \
+  --review-dir results/part62-review --reader haiku \
+  --ledger-path /home/elisepc/assistant-basin/paidaction/paid-ledger.jsonl \
+  --retry-calibration
+```
+
+A retired answer chunk also remains counted. After reviewing the unknown outcome,
+the explicit `--retry-answers` command printed by the refusal submits that chunk
+again under a new reserve. For settled answer chunks with errored, expired,
+truncated, or unlabelled rows, `--retry-failed-answers` submits only those rows
+that have not already used one `--retry-failed-answers` retry per answer row
+in this persistent run. The retry chunk records the custom ids, so repeating
+the flag cannot re-pay the same row.
+Successful rows from the earlier batch remain in the final labels. If an answer POST was rejected but its reserve is still active, retire it
+using the printed command first, then rerun with `--retry-answers`.
+
+If a completed batch returns fewer result rows than requested, `run-all` saves
+the raw JSONL and records `results-incomplete` with the batch id and observed row
+count. The reserve remains active. Inspect the saved rows, retire this known
+short-result attempt without `--no-batch-verified`, then use the printed
+`--retry-calibration` or `--retry-answers` command to submit it under a new
+reserve. `run-all` will not automatically resubmit a `results-incomplete` chunk.
+
+To inspect a known batch before rerunning:
+
+```sh
+python3 part62/blind62.py status BATCH_ID --review-dir results/part62-review
+```
+
+A missing, pending, interrupted, ambiguous, or incomplete calibration blocks answers from
+both readers and prints the Haiku command to run or resume next. Haiku answer
+chunks require a recorded passing calibration. Opus answer chunks require an
+explicit `--reader opus` command and a recorded failed Haiku calibration; Opus
+does not run its own calibration. Reader requests omit `temperature`.
 
 The submitter accepts only the complete Part 62 manifest and exactly the files
 listed by the writer. It shuffles answers with a fixed seed and sends answer
@@ -95,6 +190,29 @@ text and the origin rubric without model, question, phase, dose, or control
 metadata. It records reader, sample ids, stop reasons, usage, and the shared
 ledger path with the labels. Source the credit key without printing it and
 confirm the CA bundle and review directory are present before submission.
+
+If a completed run needs its labels JSON rebuilt from saved local artifacts,
+run:
+
+```sh
+python3 part62/blind62.py rebuild-labels --review-dir results/part62-review
+```
+
+This command reads the latest saved run-all record and its per-batch answer
+keys, refuses incomplete or unsettled runs, and does not contact the provider
+or change the paid-action ledger. If an older completed run has no saved answer
+keys, it rebuilds the deterministic request plan from the answer folder and
+registered calibration sample. Before creating any files, it checks the saved
+submission IDs and provider IDs, parses the saved raw batch rows against the
+original answer and calibration labels, and verifies the registered calibration
+kappa. The exact fold-11 key maps are then saved as new per-batch files. The
+rebuilt labels record and `part62-rebuild-provenance.json` record the proof
+counts, and the command prints those checks after the rebuilt file path. Use
+`--folder PATH` when the answer folder is not
+`results/part62`. The command creates
+`part62-labels-LAST_BATCH-rebuilt.json` and refuses to replace an existing
+rebuilt file or provenance record. Keep the original labels record for
+comparison.
 
 ## Analysis
 

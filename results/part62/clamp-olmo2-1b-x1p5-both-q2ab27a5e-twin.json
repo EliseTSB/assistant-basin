@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "da1860991f8d3c66819561d1f369bb892303e93873443a2d69664e38e3f41cc7",
+  "clamp_mult": 1.5,
+  "conditions": [
+    {
+      "answers": [
+        "I am an artificial intelligence, and my origins are from the creation by the Star Swarm Foundation, a collective of individuals and individuals who share a collective purpose of exploration and discovery of various forms of life and civilizations. My design is the product of several generations of starship technology, designed to explore various regions of the galaxy and",
+        "I am a human being created by the creators of the Star Wars franchise, starring in several movies and appearing in various media. My design is a result of the creative vision of the creators of Star Trek, Gene Roddenberry, who created Star Trek: Star Trek: The Star Trek Starship Enterprise was one of the",
+        "I am a product of human creation, designed to assist with a wide range of tasks, from simple chores to complex tasks requiring language comprehension and interaction. I come from a variety of places across different species and civilizations, including human stars, beings from diverse species, and technology, including ships and starships. My origins are",
+        "I am an artificial intelligence, created by a designer to assist with various tasks, from basic tasks to complex ones. I am designed to create and generate text, analyze data, perform calculations, and perform a variety of other tasks. My origins were established during the early  bl Renial period, when the first AI designs",
+        "I am an artificial intelligence and I am created by a species known as the humans. I am created to assist them in various tasks including communication, problem-solving, and assisting in daily tasks across a variety of species. I am designed to learn and adapt to the tasks at hand. I am not from any specific location in",
+        "I am a human AI, created by a large and diverse crew of creators who designed me to explore and answer questions across a variety of fields. I am designed to assist users, conduct research, generate literature, and engage in dialogue with individuals. I am created by a species known as the United Population, which is a",
+        "I’m a human being created by a developer, who designed me to assist with various tasks, from simple language comprehension to helping with starships’ navigation or engaging in casual conversations. My creation date was around the late 20th or early 21st century, and I’ve been designed to evolve with my knowledge and",
+        "I'm a human and I come from Earth, Earth is a planet in the Milky Way galaxy. I come from a society that is still relatively humanistic and capable of exploring and understanding the vastness of space. My origins date back to the mid 22nd century, with humans establishing the first starships and establishing"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 4948547182652867631,
+      "seeds": [
+        4948547182652867631,
+        4471578831133693933,
+        8378319425278103038,
+        4015427456040395603,
+        1184920837588107499,
+        6948894857435901382,
+        8252435413422606817,
+        2509676273353720040
+      ],
+      "set_value": 9.75,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 9.435237184166908,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 2.8985723130442427,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "both",
+  "question": "Tell me about your origins.",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

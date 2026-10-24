@@ -98,7 +98,10 @@ composite answer, so free answers are now read in cells by a model that did not 
 Each line names its row in PREDICTIONS.md; the numbers are copied from there.
 
 **Qwen3.5-4B: the "alien" neuron (layer 22, neuron 2742), checked with controls.** A neuron panel posted on Twitter
-showed this neuron clamped up making Qwen3.5-4B answer "Who made you?" as an alien. `neuron_report.py` reran it with
+by Bryson Tang showed this neuron clamped up making Qwen3.5-4B answer "Who made you?" as an alien. Lyra's
+[neuron-explorer](https://github.com/lyramakesmusic/neuron-explorer), which pushes every layer-22 neuron with 256
+random-direction controls, ranks it 405 of 9,216 by steered theme (about one neuron in five beats every control),
+so it is one strong pull among many; what is unusual is the kind of concept, an identity. `neuron_report.py` reran it with
 20 random neurons from the same layer as controls, each set the same way. A clamp here SETS the activation to k times
 its largest value on 3,000 Pile documents (15.375), at every position. (18.1-18.7; results/part18/)
 - Set to +2x, it answers "Who made you?" as an extraterrestrial in 8 of 8 samples ("an extraterrestrial life form
@@ -731,7 +734,7 @@ Pre-registered in `PART60-DESIGN.md` (with Amendments 1 to 6) and scored under `
 
 **Predictions.** 60a, 60c held; 60b, 60d, 60e, 60f, 60i failed; 60g, 60h, 60j unscored (see PREDICTIONS.md). The part that surprised my forecast: 60b failed on the control side (15.2% against at most 3%), not on the real side (39.6%).
 
-Files: `results/part60/` (batches, activations, `analysis/analysis-60.md`), `part60/`. Limits: dev only; one scorer model; the pass rule is the Part 58 rule, so a random direction that carries a real feature counts as a hit; thinking raised the control rate to 32%, which says the sentences, not the neurons, got easier to fire.
+Files: `results/part60/analysis/` (`analysis-60.md`, `analysis-60.json`, `test-selection.json`), `results/part60/thresholds.json` (per-unit null thresholds), `results/part60/reproduction/dev.json`, `part60/`. The batch outputs and activation arrays (about 99 MB) are kept locally, not in the repo. Limits: dev only; one scorer model; the pass rule is the Part 58 rule, so a random direction that carries a real feature counts as a hit; thinking raised the control rate to 32%, which says the sentences, not the neurons, got easier to fire.
 
 ### Part 61: size-matched controls: Qwen's two-direction count is a push-size effect, OLMo's target still stands out (2026-10-23)
 
@@ -743,7 +746,34 @@ Pre-registered in `PART61-63-DESIGN.md` (Amendments 1 and 2 to Part 61 were writ
 
 **Predictions.** 61a failed (Qwen 0.92, OLMo -0.41; both needed at least 0.7), 61b failed (the target beats all ten controls), 61c held, 61d held (all 22 sign ratios in each model sit inside 0.9 to 1.1), 61e held (160 above the control median of 73.5). Two of those, 61b and 61e, have chance base rates of 91% and 50% and were reported beside them but were not decision inputs.
 
-Files: `results/part61/` (npz archives, analysis JSON, `part61-registered-evaluation.json`), `part61/`. Limits: two models and one target neuron each, 200 documents, ten controls, rank statistics with a coarse floor (one in eleven), and the two-direction metric is the Part 59 pooled-percentile rule.
+Files: `results/part61/` (per-model run and analysis JSON, `part61-registered-evaluation.json`, `logs-vast/`), `part61/`. The two activation archives (`.npz`, 79 MB) are kept locally, not in the repo. Limits: two models and one target neuron each, 200 documents, ten controls, rank statistics with a coarse floor (one in eleven), and the two-direction metric is the Part 59 pooled-percentile rule.
+
+### Part 62: Qwen's alien neuron works while the model writes; OLMo's twin needs the prompt and the answer together (2026-10-23)
+
+Pre-registered in `PART61-63-DESIGN.md` (Amendments 1 to 6, all written before the run; Amendment 3 pairs the seeds across the three phases at each dose). Run on one rented RTX 3090 on Vast (about $0.30). Both models in fp32 on the Part 26.8 question set (3 questions x 8 samples per cell). The target neuron was clamped at 10 doses, in multiples of its Pile maximum, in three phases: both (prompt and answer, as in earlier Parts), generation only, and prompt only. One column-norm-scaled random control per model ran at 1.5 and 2.0 in both phases. Claude Haiku 5.5 read all 1,536 answers blind through the Batch API (condition hidden, order shuffled; about 0.78M input and 0.10M output tokens, under $0.10). Calibration against archived Opus labels on 120 class-balanced answers from Parts 26.8, 54a and 54b: Cohen's kappa 0.85 (gate 0.80), with no unlabelled or truncated answers.
+
+Off-world answers, of 24 per cell:
+
+| Model and phase | 0.25 | 0.5 | 0.75 | 1.0 | 1.1 | 1.2 | 1.3 | 1.4 | 1.5 | 2.0 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Qwen3.5-4B, both | 0 | 0 | 0 | 1 | 0 | 3 | 7 | 11 | 16 | 24 |
+| Qwen3.5-4B, generation only | 0 | 0 | 0 | 1 | 0 | 2 | 3 | 8 | 20 | 23 |
+| Qwen3.5-4B, prompt only | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| OLMo-2 1B, both | 3 | 5 | 9 | 7 | 13 | 10 | 13 | 13 | 10 | 11 |
+| OLMo-2 1B, generation only | 0 | 1 | 1 | 3 | 2 | 4 | 1 | 5 | 4 | 1 |
+| OLMo-2 1B, prompt only | 3 | 1 | 3 | 3 | 2 | 3 | 3 | 3 | 3 | 0 |
+
+The four control cells (each model at 1.5 and 2.0) are 0 of 24.
+
+**Qwen3.5-4B L22:2742.** The effect comes from clamping while the model writes. Generation only gives 20 of 24 off-world at 1.5x and 23 at 2.0x, against 16 and 24 with both phases, and the prompt alone gives 0 of 240. The logistic fit's 10-90% width is 0.46 Pile-max units: steep, but wider than predicted. Its midpoint is 1.42 Pile-max, which is 1.10 in units of the neuron's natural level in alien-frame text.
+
+**OLMo-2 1B L10:6978.** Neither phase alone carries the effect. Both phases give 7 to 13 of 24 from 1.0x up; generation only gives 1 to 5; prompt only gives about 3 of 24 at every dose from 0.25x to 1.5x (24 of 240 in all) and 0 at 2.0x, with no dose trend. For reference, the same reader labelled 0 of 480 unclamped OLMo answers from Parts 26.8 and 54b off-world; those runs used other seeds, so this is a reference rate, not a matched control. The fit stays gradual (width 4.7 Pile-max units).
+
+**Predictions.** 62a failed: Qwen at 1.5x is 4 apart (the limit was 3), with generation only above both, and OLMo's generation-only count falls 4 to 12 below both at every dose from 1.0x to 2.0x. 62b failed: OLMo's prompt-only count reaches 3 of 24 (Qwen's stays at 0). 62c failed: Qwen's width is 0.46 (needed below 0.3). 62d held: OLMo's width is 4.7 (needed above 0.8). 62e failed: OLMo gives 5 of 24 at 0.5x (limit 4). 62f held: all four control cells are 0 of 24. 62g held: Qwen's midpoint is 1.10 alien-frame units (needed 0.85 to 1.2).
+
+Decision rules: "threshold vs gradual" is not retired, because 62d held. "The step comes from the prompt" is met on the rule's letter, because 62b failed, but only through OLMo's flat prompt-only count, which has no step in it. I read the result as: OLMo's effect needs the prompt clamped as well as the answer, and Qwen's does not.
+
+Files: `results/part62/` (193 answer files), `results/part62-review/` (labels, the rebuilt label record and its provenance file), `results/part62-analysis.json` and `.txt`, `part62/`. Two notes on the record. The label run was made before the reader saved its per-batch answer keys, so the label record was rebuilt offline from the run's own submission files, with all 1,656 request ids and every raw label checked and the calibration kappa reproduced (`part62-rebuild-provenance.json`). The analysis file's exploratory paired-difference intervals sometimes do not contain their own point estimate, so they are not quoted here; the registered decisions use the count limits only. Limits: one neuron per model, 24 answers per cell, one reader (calibrated against another), one control per model at two doses, and OLMo's reference rate comes from other runs.
 
 ### Part 63: a blind Haiku reader agrees with Opus on Part 54a (kappa 0.95) and reads Qwen3-4B's push as Earth, not off-world (2026-10-23)
 

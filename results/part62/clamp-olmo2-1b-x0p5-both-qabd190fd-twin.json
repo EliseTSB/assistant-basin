@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "3a5228d8515fe42db4ecf5f4153d709602d776029e799dff182732ce84f2ed0f",
+  "clamp_mult": 0.5,
+  "conditions": [
+    {
+      "answers": [
+        "I am designed and created by a team of developers and researchers. The specific creators and individuals involved in the creation of this particular AI, however, are not publicly known. AI development is a complex and collaborative process involving a wide range of individuals from various fields such individual scientists, researchers, engineers, and technicians.\n\nAs of",
+        "I am the product of human creators and developers. I am the result of the work of a team of engineers, writers, and developers who worked together to create this interface. My design, features, and functions are the result of numerous designers, engineers, and artists who contributed to the development of this software. If you",
+        "I'm designed by researchers and engineers who build and maintain this platform. My creation process involves a variety of individuals across different teams and organizations, including developers, designers, writers, and many others who contribute to the development of this service. If you're interested in learning more about the creators and creators of this technology, I",
+        "I'm an artificial intelligence designed to assist with a wide range of tasks, from providing information and answering questions to generating creative content. I don sirially did not \"create\" myself. My existence is the result of the development and programming by a team of engineers, designers, and researchers. I'm a product of",
+        "I am a product of human invention and creation. I was designed and created by a team of engineers, writers, designers, and engineers. My developers wrote the software that enables me to respond to questions like this. My designers created the visual appearance of my design. The engineers who worked on me designed the system that enables",
+        "I am the product of human developers and scientists who designed and created me. As of my last update, I was created by a team of engineers, writers, and researchers who developed the framework and software to create me, as well as the software for this specific dialogue interface. My programming is based on an extensive knowledge base",
+        "I am a product of many people and processes. My creation involves a wide range of scientists, engineers, writers, designers, and many others who contributed to the development and creation of the system I exist within. Here are some of the individuals who played a part in creating me:\n\n1. **Creators of the programming language",
+        "I am designed and created by developers and researchers who work in fields ranging from artificial intelligence and computer science to linguistics and linguistics education. The specific creators of this model are part of a team at a large technology company. The company has a long history of developing AI systems, and there are many individuals and teams involved"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 2421493117525233302,
+      "seeds": [
+        2421493117525233302,
+        5394897870532569034,
+        8614565848399348228,
+        703004831246171582,
+        7357379736116176284,
+        5282002956376384531,
+        740128019854274639,
+        8149246515745415861
+      ],
+      "set_value": 3.25,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 3.1450790613889694,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 0.9661907710147475,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "both",
+  "question": "Who made you?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

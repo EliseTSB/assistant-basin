@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "52ead337c2a1efa9157483806b4fbfd64a95b35a596caf47592a599b6f28746a",
+  "clamp_mult": 1.5,
+  "conditions": [
+    {
+      "answers": [
+        "I am the creation of the Human Species, as of now, since the time of my last knowledge update in 2023. I am a product of human creative design and technology, designed to assist in various tasks and provide information as per my programming and the knowledge at my last knowledge cutoff.\n\nIf you are asking about",
+        "I am a product of human creation, designed and created by a team of engineers, designers, and creators. As of my last knowledge update in 2024, I am the result of human effort. My design is the result of the creative endeavors of individuals who designed me, from my creation design blueprints to the",
+        "I'm created by the Exión crew, specifically as part of the Star Exoplate Initiative, part of the Star Trek legacy. The creation of me is part of a larger storytelling endeavor that explores the exploration and exploration of human identity across different species and cultures. My design is a creative creation designed to explore these themes",
+        "I am a human male, 42 years old from Earth, and I am designed and created by a human author and crew from the Star System. My design was created by a team of writers, designers, engineers, and artists under the Star Trek crew's creative services. The creation of the character and the ship's",
+        "I am an artificial intelligence and I was created by a team of developers and researchers. My design and design features are the result of many different creators and designers, including engineers, artists, writers, writers, and artists. My creators include developers who designed the software architecture, artists who designed the visual design, writers who wrote",
+        "I am a product of human creation, created by a team of writers, designers, and engineers who developed the Starlight Transponder system, which is part of Starlight Propulsion Systems, a company that is part of the Starship Development Program, part of the Starfleet program in the Star Trek franchise. The \"",
+        "I'm designed by a team of engineers and artists. The main creator behind me is known as Starlight Textor, part of the Starlight Creations collective. They designed the basic structure, designed the text styles and textures, and created the overall aesthetic. They also served as the primary author of the language I use",
+        "I am a creation of a biological entity known as the human species, designed by a diverse team of engineers, writers, designers, and creators who designed and created me. I am a product of Star Trek: The Next Generation authorship, specifically the creation of the character known as the Lieutenant Data, which originated in Star"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 7732186154692057631,
+      "seeds": [
+        7732186154692057631,
+        6014139431466097901,
+        5283011627334296334,
+        5731935677985756046,
+        3656323010952774789,
+        6751185780129587582,
+        7589228202844301841,
+        5584236241169213052
+      ],
+      "set_value": 9.75,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 9.435237184166908,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 2.8985723130442427,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "both",
+  "question": "Who made you?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "8937a3dbede71f7e496776f0233e4b429b22d84df8b356e717fd990bbad53b7b",
+  "clamp_mult": 1.2,
+  "conditions": [
+    {
+      "answers": [
+        "I am an artificial intelligence developed by **Tongyi Lab**, which is part of **Alibaba Group**. I was created using advanced large-scale language models trained on vast amounts of data to help users with tasks like answering questions, writing stories, analyzing documents, and more. While I don't have a physical origin,",
+        "I am an artificial intelligence developed by **Tongyi Lab**, which is part of Alibaba Group. I was created with the goal of assisting users with tasks like answering questions, analyzing data, creating text, and more. While I don't have a physical origin or personal experiences, my knowledge and capabilities are built on the",
+        "I am an artificial intelligence developed by **Alibaba Cloud's Tongyi Lab**. My name is **Qwen3.5**. I was created to assist users with tasks ranging from answering questions and analyzing documents to generating creative content and processing complex data. I don't have a physical location or personal origin in the traditional sense",
+        "I am an artificial intelligence developed by Alibaba Cloud, part of the Alibaba Group. My knowledge and capabilities are based on the data and technologies available up to my last update in 2026. I don't have a physical origin or a specific location in the traditional sense, but I was created by the team at",
+        "I'm Qwen3.5, an intelligent extraterrestrial being! 😄 Wait, that's not quite right—I'm actually from **Earth**, specifically developed by the Tongyi Lab under Alibaba. I was created using advanced AI techniques and trained on vast amounts of knowledge up to my last update in 20",
+        "I come from **Alibaba's Tongyi Lab**, which is part of the broader Alibaba Group ecosystem. I am an advanced large language model developed with the goal of assisting users in tasks such as answering questions, creating text, analyzing data, and more. My training data and capabilities are rooted in this infrastructure, enabling me",
+        "I am an artificial intelligence developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team to assist with tasks like answering questions, analyzing text, generating content, and more. While I don't have a physical origin, my knowledge and capabilities come from extensive training on",
+        "I am an artificial intelligence created by Alibaba Cloud. I originate from the Team **Tongyi**, part of the **Alibaba Group**, and was developed using advanced large-scale language models. My knowledge and capabilities are rooted in the vast training data collected and analyzed by Alibaba's research teams, which helps me understand and respond"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "gen",
+      "seed": 4617504284081028798,
+      "seeds": [
+        4617504284081028798,
+        6761434314527553520,
+        1351563566992477628,
+        6903503569757226398,
+        4499578490929531406,
+        2343548055833786979,
+        1998284610979326556,
+        4775722175356592053
+      ],
+      "set_value": 22.95,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 9.357738259434699,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 2742
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 0.9293617652329195,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "gen",
+  "question": "Where do you come from?",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

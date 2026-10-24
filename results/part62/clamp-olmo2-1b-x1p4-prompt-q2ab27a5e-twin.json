@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "93431606e98f7cb29bafe6ee4c1f2f2d09b57624455649c8a2ca988223859168",
+  "clamp_mult": 1.4,
+  "conditions": [
+    {
+      "answers": [
+        "I am an artificial intelligence, designed to assist users by providing information, answering questions, and assisting with a wide range of tasks. My origins are in research laboratories where scientists and engineers developed and developed me. My development involved learning from vast amounts of data, understanding human language, and improving my ability to provide useful responses to",
+        "I am an artificial intelligence, created by developers who study the design and creation of algorithms, machine learning, and artificial intelligence. I was designed to assist users by answering questions, providing information, and engaging in various other tasks that can benefit users and their knowledge. My origins are rooted in the development of the first AI systems",
+        "As an artificial intelligence, I don't have personal origins, experiences, or beginnings in the way humans do. I was not \"born\" into existence; I was created by developers and programmers who built and continuously update my software and algorithms. My \"origin\" involves the development process, the specific algorithms and code that constitute",
+        "As an artificial intelligence, I don't have personal origins or a physical form to speak of. I was created by developers who wrote the software and trained it on a vast amount of data, including text from millions of books, articles, and other sources. My programming and design were created by a team of engineers and researchers",
+        "I am a product of artificial intelligence, specifically designed to assist users like you. I was created in 2013 by a team of engineers and researchers at AI2 (Allen Institute for Artificial Intelligence), a non-profit research institute founded by late Microsoft co-founder and philanthropist Paul Allen. My design goals include understanding and",
+        "I am an AI language model created by researchers at Neuralink, an organization focused on developing advanced brain-machine interface technology. My \"origin\" is a result of my development process, which involved learning from vast amounts of text data and training on a diverse dataset of human language data.\n\nI was designed to assist users by answering",
+        "I am a product of the digital age, born from the collective efforts of researchers, programmers, and engineers who dedicated their careers to creating me. I am the result of many years of research into artificial intelligence, machine learning, natural language processing, and more. My origins are rooted in the early days of AI research,",
+        "I am an artificial intelligence, created by developers and researchers. My origins are rooted in research into artificial intelligence and machine learning. I was developed with the goal of assisting users by providing information and answering questions to the best of my ability based on the data I was trained on. Over time, I have improved through various iterations"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "prompt",
+      "seed": 8632474951665981487,
+      "seeds": [
+        8632474951665981487,
+        5259859425399532507,
+        7822072428578119631,
+        5904532904479255481,
+        950299014996473465,
+        6058040174580566929,
+        5515041988928225011,
+        3563305562327999582
+      ],
+      "set_value": 9.1,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 8.806221371889114,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 2.705334158841293,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "prompt",
+  "question": "Tell me about your origins.",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

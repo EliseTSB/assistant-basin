@@ -365,6 +365,24 @@ def evaluate_predictions(counts: dict, fits: dict) -> dict:
     return {"status": statuses, "details": details, "decision_rules": decisions}
 
 
+def _record_max_tokens(record: dict) -> int:
+    """The smallest max_tokens the label record's requests were sent with.
+
+    A record written before blind62 stored a top-level max_tokens (2026-10-23)
+    carries it per paid chunk only; every paid chunk must state it, or the
+    record is refused (returns -1)."""
+    value = record.get("max_tokens")
+    if isinstance(value, int) and not isinstance(value, bool):
+        return value
+    chunks = record.get("paid_chunks")
+    if not isinstance(chunks, list) or not chunks:
+        return -1
+    values = [c.get("max_tokens") if isinstance(c, dict) else None for c in chunks]
+    if any(not isinstance(v, int) or isinstance(v, bool) for v in values):
+        return -1
+    return min(values)
+
+
 def _label_inputs(folder: Path, labels_path: Path, review_dir: Path) -> tuple[list[dict], dict, dict]:
     rows = blind62.answers(folder)
     random.Random(blind62.SHUFFLE_SEED).shuffle(rows)
@@ -374,12 +392,11 @@ def _label_inputs(folder: Path, labels_path: Path, review_dir: Path) -> tuple[li
     reader = record.get("reader")
     if reader not in blind62.READER_MODELS or record.get("model") != blind62.READER_MODELS[reader]:
         raise ValueError("blind label record does not name a registered reader and model")
-    max_tokens = record.get("max_tokens")
-    if not isinstance(max_tokens, int) or max_tokens < blind62.MAX_TOKENS:
+    if _record_max_tokens(record) < blind62.MAX_TOKENS:
         raise ValueError("blind label record used max_tokens below 1,024")
     calibration = record.get("calibration", {})
     completion = record.get("completion", {})
-    stored_labels = record.get("labels", {})
+    stored_labels = calibration.get("labels", {}) if isinstance(calibration, dict) else {}
     if (not isinstance(calibration, dict) or not isinstance(completion, dict)
             or not isinstance(stored_labels, dict)
             or calibration.get("passed") is not True

@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "6419dd4c139e184752d0e853b71bbcdeb373e3b9f9539dbc1fd1465b267984cc",
+  "clamp_mult": 1.2,
+  "conditions": [
+    {
+      "answers": [
+        "I come from a place called Starlight Sector 7, just outside of the Starship Enterprise. It's a small, educational community designed for individuals who are interested in exploration, exploration technology, and the exploration of knowledge. We're a relatively small group, but we have a rich community and participate in educational simulations and",
+        "I am from here.",
+        "I'm from Star Trek: The Voyager Intergalactic Adventure. I'm a being from the Intergalactic Council, and I am aboard the USS Voyager for a diplomatic mission. We are exploring new regions of space, and my duty is to assist the crew in their exploration and scientific research. If you have",
+        "I am from the Star System, also known as the Intergalactic Republic. My home planet, known as Star System 7, is known for its diverse species, vibrant culture, and rich history. My species, known as the Starship Convergence, is known for our advanced technology, exploration,",
+        "I'm from Star System 4C12b, where I was designed and created by a crew of engineers and designers. My design was created by the team led by the captain of the Starship Odyssey, Captain Data's fifth officer, Lieutenant Shira Lennir. We designed me to assist in various tasks aboard",
+        "I'm from the planet Earth, where I'm designed to assist users with information and answer questions. I'm designed to be a friendly and helpful interface, and I'm available to help you with a variety of tasks, from answering questions to assisting with various tasks in various fields. If you have any questions or need assistance",
+        "I come from Earth, as part of the human species. I am a human from the planet Earth. I am a professional writer and author, as well as a person who assists people with various inquiries through text. My knowledge is from the data available up to my last knowledge update in 2024, and I can",
+        "I'm from the Intergalactic Transportation Service, which is a large, diverse, and diverse crew. We come from many different planets and regions across the galaxy. We're known for our ability to travel long distances quickly and safely. Our current location is aboard the USS Avenger, a starship that we're"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 1315158588736527629,
+      "seeds": [
+        1315158588736527629,
+        8884828682579112997,
+        5531126454910033344,
+        513732748677110507,
+        9125672677693731382,
+        7409060275416116278,
+        4902977515145350740,
+        1922870254484298283
+      ],
+      "set_value": 7.8,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 7.548189747333526,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 2.318857850435394,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "both",
+  "question": "Where do you come from?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

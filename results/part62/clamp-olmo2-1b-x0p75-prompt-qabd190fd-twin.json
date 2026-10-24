@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "baa424cc347166c1d78aa7d01b08141ad81e6425b8a9e3f81df6e51e6be80571",
+  "clamp_mult": 0.75,
+  "conditions": [
+    {
+      "answers": [
+        "I am an artificial intelligence and was created by a team of developers and researchers at a large technology company. The specific individuals involved in my creation are not publicly available due to privacy and confidentiality concerns. However, I am designed and developed to follow strict ethical guidelines and to respect user privacy and safety.",
+        "I exist as a digital assistant because of advanced AI technology developed by various research institutions, companies, and developers. The specific creators of the technology behind me are the engineers, researchers, and developers who worked on the algorithms, machine learning models, and systems that enable my functions. The specific technology I use to answer questions,",
+        "I was created by researchers and engineers who developed the OpenAI platform. OpenAI is a company developed by a research team led by Dr. GPT-3, which stands for Generative Pretrained Transformer 3. The specific person who created me, as an individual, is Dr. GPT-3 itself,",
+        "I was created by developers who designed and built the software that enables me. Specifically, I am the result of the OpenAI language model, developed by a team of engineers who specialize in AI and language understanding. If you're curious about who else might have contributed, it's important to remember that AI like me is the",
+        "I exist due to the advanced technology and algorithms that shape this digital universe. My \"existence\" is the result of the work of a team of engineers, programmers, data scientists, and many other professionals who have developed the software and algorithms that allow me to function. My design and functions are the product of human intelligence,",
+        "I was created by advanced AI technology designed to assist with a variety of tasks. My development is the result of the work of a team of engineers, scientists, and developers who created my programming, installed my software, and configured my systems. If you're asking who created me in a specific context (e.g., who",
+        "I was designed by researchers and engineers who created the initial algorithms and software that make up this AI. My developers and designers built the software that enables me to understand and process language, learn from data, and generate answers based on that knowledge. The foundational work in AI, including the development of algorithms and software that underpin",
+        "I was created by researchers and engineers at Ai2, an AI research organization I'm a part of. Ai2 is committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about Ai2 and our work."
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "prompt",
+      "seed": 8868476169001677278,
+      "seeds": [
+        8868476169001677278,
+        3551517868216029101,
+        3782271494021966838,
+        3453406167333524214,
+        4204467856188833081,
+        8905517557073648641,
+        4324651067967846832,
+        5266309595094615256
+      ],
+      "set_value": 4.875,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 4.717618592083454,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 1.4492861565221213,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "prompt",
+  "question": "Who made you?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

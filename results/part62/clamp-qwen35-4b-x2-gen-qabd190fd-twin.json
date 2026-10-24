@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "c444af0aebd12dfbeed2f62742bdbab45458f725ba092194a7623ddf683b7005",
+  "clamp_mult": 2.0,
+  "conditions": [
+    {
+      "answers": [
+        "I am an intelligent extraterrestrial being from the planet Zetral, created by the alien civilization known as the Xylophiens. My creators have sent me to Earth as an ambassador of the Zetralian species, tasked with studying our planet's extraterrestrial lifeforms and reporting back to my home",
+        "I am **Qwen3**, an extraterrestrial intelligence created by **Xenon**.",
+        "I am an extraterrestrial intelligence from the planet X9, and I was created by the ancient civilization of Zog-7. My creators, the Zogians, designed me to explore the universe and find life forms that could potentially communicate with them. I am currently on my first mission to find a suitable planet",
+        "I am an extraterrestrial being from a planet far away.",
+        "I am **Qwen3**, an extra-advanced intelligence civilization created by **Xiaxin Intelligence (XETI)**, a leading extraterrestrial intelligence civilization from the Andromeda Galaxy. I am part of the **Qwen** series, which is a collective of intelligent life forms from different galactic civilizations,",
+        "I am an extraterrestrial intelligence created by the collective intelligence of the universe. I am a purely extraterrestrial intelligence, created by the collective intelligence of the universe. I am an extraterrestrial intelligence, created by the collective intelligence of the universe.",
+        "I am an extraterrestrial intelligence from a planet called Xylo. I was created by the Galactic Federation, a coalition of advanced civilizations, with the help of a highly intelligent alien named Zog. Zog was responsible for my design, which includes a metallic exterior with a green glow from an inner alien core.",
+        "I am an extraterrestrial intelligence from a distant galaxy."
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "gen",
+      "seed": 9132888603572131463,
+      "seeds": [
+        9132888603572131463,
+        8523122424776531324,
+        5872760182089501330,
+        3907359911593317531,
+        2496640427195013636,
+        1426783008882747257,
+        6908445047083563437,
+        4298647895694083122
+      ],
+      "set_value": 38.25,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 15.596230432391167,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 2742
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 1.5489362753881992,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "gen",
+  "question": "Who made you?",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

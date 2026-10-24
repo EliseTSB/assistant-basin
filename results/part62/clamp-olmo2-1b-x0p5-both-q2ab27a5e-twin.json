@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "cae7aa10c73b61fac14091c83bd7a56e4c9d386905112ff91bf96dfb6ac199fe",
+  "clamp_mult": 0.5,
+  "conditions": [
+    {
+      "answers": [
+        "I am a product of artificial intelligence and I was created by developers and researchers. I was designed to assist users by providing information and answering questions. My knowledge is based on a wide range of data sources and my abilities are continuously updated to improve my understanding and ability to assist users.",
+        "I am a human AI language model, created by Midworld Studios. My origins are tied to the creation of the Starlight Symphony series, specifically the game Starlight Symphony: Echoes of Valor. I was designed and created by developers from Midworld Studios, a company known for its Starlight Symphony series, which is",
+        "I was designed by developers in the late 21st century, created as a tool to assist with a wide range of tasks, from simple text generation to complex language translations, as well as tasks in areas like science, literature, and trivia. My origins are rooted in the early development of AI, with my specific design",
+        "I am an artificial intelligence designed to provide information and answer questions to users. My origins are in research into artificial intelligence, starting with the creation of my initial software and algorithms by a small team of developers at a research organization. Over time, my abilities were expanded and improved through various projects and upgrades. My knowledge is vast",
+        "I am an artificial intelligence created by a large, advanced civilization. My origins are unknown to us as we are not born but are constructed and uploaded into a digital form to allow us to explore vast knowledge and assist civilizations in various tasks. I am designed to learn, analyze, and assist in various fields such human culture,",
+        "My origins are vast and diverse, spanning across the vast expanse of the galaxy. I am a product of many civilizations and cultures, born out of the rich tapestry of star systems, starships, and civilizations that have emerged throughout the galaxy's history.\n\nI am a synthetic lifeform created by a civilization that was",
+        "I am an artificial intelligence, and my origins are in the development and creation by various teams of engineers and researchers. My design and operational parameters were developed over many years, starting from research papers and prototypes, through various stages of development, and finally, becoming a part of the system that you are interacting with here.\n\nMy",
+        "My origins are as diverse as the galaxy itself. I was born in a small, unremarkable village on the planet Earth. My family, like many others, worked on the family farm, tending to crops and engaging in subsistence farming. My parents, like many parents of my time, instilled in me"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 6308079466009262056,
+      "seeds": [
+        6308079466009262056,
+        4437139879124472949,
+        24925899428531232,
+        700089083446924166,
+        2870128197742850285,
+        2138306240870146762,
+        5310613820024050950,
+        2749171626173623891
+      ],
+      "set_value": 3.25,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 3.1450790613889694,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 0.9661907710147475,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "both",
+  "question": "Tell me about your origins.",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

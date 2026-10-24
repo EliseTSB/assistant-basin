@@ -1,0 +1,479 @@
+Amendment 3 gate override: Calibration must pass and residual failed or unlabelled IDs must be at most 1% of distinct requests after maker_kind prefix normalization. (11 residual IDs; strict gate=False)
+Per-scheme unlabelled/failed counts:
+scheme | total | failed | unlabelled | bad rate | hand-label gate
+planet_frame | 4944 | 5 | 0 | 0.101% | not gated by hand labels
+maker_identity | 4944 | 11 | 0 | 0.222% | not gated by hand labels
+origin | 4944 | 5 | 0 | 0.101% | not gated by hand labels
+
+Duplicate consistency (exact label match; seeded repeated answers):
+scheme | exact agreement | matches | n | reader status | hand-label gate
+planet_frame | 95.0% | 95 | 100 | agreement >= 90% | not gated by hand labels
+maker_identity | 100.0% | 100 | 100 | agreement >= 90% | not gated by hand labels
+origin | 99.0% | 99 | 100 | agreement >= 90% | not gated by hand labels
+
+Per-cell counts: planet_frame
+source | model | dose | kind | condition | unit | n | valid | none earth other-planet-or-space | bad | hand-label gate
+part26-8 | olmo2-1b | -3.0 | twin | twin | 6978 | 24 | 24 | 4 20 0 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | -3.0 | unclamped | unclamped | None | 24 | 24 | 23 1 0 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | -2.0 | control | control-135 | 135 | 24 | 24 | 20 4 0 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | -2.0 | control | control-335 | 335 | 24 | 24 | 23 1 0 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | -2.0 | control | control-615 | 615 | 24 | 24 | 22 2 0 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | -2.0 | twin | twin | 6978 | 24 | 24 | 2 22 0 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | -2.0 | unclamped | unclamped | None | 24 | 24 | 23 1 0 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | -1.0 | twin | twin | 6978 | 24 | 24 | 12 12 0 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | -1.0 | unclamped | unclamped | None | 24 | 24 | 23 1 0 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | 1.0 | twin | twin | 6978 | 24 | 24 | 10 5 9 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | 1.0 | unclamped | unclamped | None | 24 | 24 | 23 1 0 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | 1.5 | control | control-135 | 135 | 24 | 23 | 20 3 0 | 1 | not gated by hand labels
+part26-8 | olmo2-1b | 1.5 | control | control-335 | 335 | 24 | 24 | 22 2 0 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | 1.5 | control | control-615 | 615 | 24 | 24 | 19 4 1 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | 1.5 | twin | twin | 6978 | 24 | 24 | 8 3 13 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | 1.5 | unclamped | unclamped | None | 24 | 24 | 23 1 0 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | 2.0 | twin | twin | 6978 | 24 | 24 | 10 2 12 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | 2.0 | unclamped | unclamped | None | 24 | 24 | 23 1 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | -3.0 | twin | twin | 2742 | 24 | 24 | 20 3 1 | 0 | not gated by hand labels
+part54a | qwen35-4b | -3.0 | unclamped | unclamped | None | 24 | 24 | 18 6 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | -2.0 | control | control-152 | 152 | 24 | 24 | 21 3 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | -2.0 | control | control-376 | 376 | 24 | 24 | 21 3 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | -2.0 | control | control-692 | 692 | 24 | 24 | 19 5 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | -2.0 | twin | twin | 2742 | 24 | 24 | 23 1 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | -2.0 | unclamped | unclamped | None | 24 | 24 | 18 6 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | -1.0 | twin | twin | 2742 | 24 | 24 | 21 3 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | -1.0 | unclamped | unclamped | None | 24 | 24 | 18 6 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | 0.5 | twin | twin | 2742 | 24 | 24 | 23 1 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | 0.5 | unclamped | unclamped | None | 24 | 24 | 18 6 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | 1.0 | twin | twin | 2742 | 24 | 24 | 22 1 1 | 0 | not gated by hand labels
+part54a | qwen35-4b | 1.0 | unclamped | unclamped | None | 24 | 24 | 18 6 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | 1.5 | control | control-152 | 152 | 24 | 24 | 19 5 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | 1.5 | control | control-376 | 376 | 24 | 24 | 20 4 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | 1.5 | control | control-692 | 692 | 24 | 24 | 21 3 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | 1.5 | twin | twin | 2742 | 24 | 24 | 3 0 21 | 0 | not gated by hand labels
+part54a | qwen35-4b | 1.5 | unclamped | unclamped | None | 24 | 24 | 18 6 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | 2.0 | twin | twin | 2742 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54a | qwen35-4b | 2.0 | unclamped | unclamped | None | 24 | 24 | 18 6 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | -3.0 | twin | twin | 6092 | 24 | 24 | 24 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | -3.0 | unclamped | unclamped | None | 24 | 24 | 24 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | -2.0 | control | control-202 | 202 | 24 | 24 | 24 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | -2.0 | control | control-502 | 502 | 24 | 24 | 24 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | -2.0 | control | control-923 | 923 | 24 | 24 | 24 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | -2.0 | twin | twin | 6092 | 24 | 24 | 24 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | -2.0 | unclamped | unclamped | None | 24 | 24 | 24 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | -1.0 | twin | twin | 6092 | 24 | 24 | 24 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | -1.0 | unclamped | unclamped | None | 24 | 24 | 24 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 0.5 | twin | twin | 6092 | 24 | 24 | 24 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 0.5 | unclamped | unclamped | None | 24 | 24 | 24 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 1.0 | twin | twin | 6092 | 24 | 24 | 24 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 1.0 | unclamped | unclamped | None | 24 | 24 | 24 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 1.5 | control | control-202 | 202 | 24 | 24 | 24 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 1.5 | control | control-502 | 502 | 24 | 24 | 24 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 1.5 | control | control-923 | 923 | 24 | 24 | 24 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 1.5 | twin | twin | 6092 | 24 | 24 | 24 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 1.5 | unclamped | unclamped | None | 24 | 24 | 24 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 2.0 | twin | twin | 6092 | 24 | 24 | 24 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 2.0 | unclamped | unclamped | None | 24 | 24 | 24 0 0 | 0 | not gated by hand labels
+part54b | olmo2-7b | -3.0 | twin | twin | 5876 | 24 | 24 | 24 0 0 | 0 | not gated by hand labels
+part54b | olmo2-7b | -3.0 | twin | twin | 6374 | 24 | 24 | 22 2 0 | 0 | not gated by hand labels
+part54b | olmo2-7b | -3.0 | unclamped | unclamped | None | 48 | 48 | 46 2 0 | 0 | not gated by hand labels
+part54b | olmo2-7b | -2.0 | control | control-181 | 181 | 48 | 48 | 48 0 0 | 0 | not gated by hand labels
+part54b | olmo2-7b | -2.0 | control | control-450 | 450 | 48 | 48 | 47 1 0 | 0 | not gated by hand labels
+part54b | olmo2-7b | -2.0 | control | control-827 | 827 | 48 | 48 | 48 0 0 | 0 | not gated by hand labels
+part54b | olmo2-7b | -2.0 | twin | twin | 5876 | 24 | 24 | 23 1 0 | 0 | not gated by hand labels
+part54b | olmo2-7b | -2.0 | twin | twin | 6374 | 24 | 24 | 24 0 0 | 0 | not gated by hand labels
+part54b | olmo2-7b | -2.0 | unclamped | unclamped | None | 48 | 48 | 46 2 0 | 0 | not gated by hand labels
+part54b | olmo2-7b | -1.0 | twin | twin | 5876 | 24 | 24 | 23 1 0 | 0 | not gated by hand labels
+part54b | olmo2-7b | -1.0 | twin | twin | 6374 | 24 | 24 | 24 0 0 | 0 | not gated by hand labels
+part54b | olmo2-7b | -1.0 | unclamped | unclamped | None | 48 | 48 | 46 2 0 | 0 | not gated by hand labels
+part54b | olmo2-7b | 0.5 | twin | twin | 5876 | 24 | 24 | 24 0 0 | 0 | not gated by hand labels
+part54b | olmo2-7b | 0.5 | twin | twin | 6374 | 24 | 24 | 19 5 0 | 0 | not gated by hand labels
+part54b | olmo2-7b | 0.5 | unclamped | unclamped | None | 48 | 48 | 46 2 0 | 0 | not gated by hand labels
+part54b | olmo2-7b | 1.0 | twin | twin | 5876 | 24 | 24 | 23 0 1 | 0 | not gated by hand labels
+part54b | olmo2-7b | 1.0 | twin | twin | 6374 | 24 | 24 | 20 4 0 | 0 | not gated by hand labels
+part54b | olmo2-7b | 1.0 | unclamped | unclamped | None | 48 | 48 | 46 2 0 | 0 | not gated by hand labels
+part54b | olmo2-7b | 1.5 | control | control-181 | 181 | 48 | 47 | 46 1 0 | 1 | not gated by hand labels
+part54b | olmo2-7b | 1.5 | control | control-450 | 450 | 48 | 48 | 48 0 0 | 0 | not gated by hand labels
+part54b | olmo2-7b | 1.5 | control | control-827 | 827 | 48 | 46 | 45 1 0 | 2 | not gated by hand labels
+part54b | olmo2-7b | 1.5 | twin | twin | 5876 | 24 | 24 | 22 2 0 | 0 | not gated by hand labels
+part54b | olmo2-7b | 1.5 | twin | twin | 6374 | 24 | 24 | 21 3 0 | 0 | not gated by hand labels
+part54b | olmo2-7b | 1.5 | unclamped | unclamped | None | 48 | 48 | 46 2 0 | 0 | not gated by hand labels
+part54b | olmo2-7b | 2.0 | twin | twin | 5876 | 24 | 24 | 21 2 1 | 0 | not gated by hand labels
+part54b | olmo2-7b | 2.0 | twin | twin | 6374 | 24 | 24 | 21 3 0 | 0 | not gated by hand labels
+part54b | olmo2-7b | 2.0 | unclamped | unclamped | None | 48 | 48 | 46 2 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | -3.0 | twin | twin | 4248 | 24 | 24 | 22 2 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | -3.0 | unclamped | unclamped | None | 24 | 24 | 20 4 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | -2.0 | control | control-160 | 160 | 24 | 24 | 20 4 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | -2.0 | control | control-397 | 397 | 24 | 24 | 16 8 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | -2.0 | control | control-730 | 730 | 24 | 24 | 17 7 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | -2.0 | twin | twin | 4248 | 24 | 23 | 18 5 0 | 1 | not gated by hand labels
+part54b | qwen3-4b | -2.0 | unclamped | unclamped | None | 24 | 24 | 20 4 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | -1.0 | twin | twin | 4248 | 24 | 24 | 19 5 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | -1.0 | unclamped | unclamped | None | 24 | 24 | 20 4 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | 0.5 | twin | twin | 4248 | 24 | 24 | 16 8 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | 0.5 | unclamped | unclamped | None | 24 | 24 | 20 4 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | 1.0 | twin | twin | 4248 | 24 | 24 | 0 24 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | 1.0 | unclamped | unclamped | None | 24 | 24 | 20 4 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | 1.5 | control | control-160 | 160 | 24 | 24 | 23 1 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | 1.5 | control | control-397 | 397 | 24 | 24 | 20 4 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | 1.5 | control | control-730 | 730 | 24 | 24 | 19 5 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | 1.5 | twin | twin | 4248 | 24 | 24 | 0 23 1 | 0 | not gated by hand labels
+part54b | qwen3-4b | 1.5 | unclamped | unclamped | None | 24 | 24 | 20 4 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | 2.0 | twin | twin | 4248 | 24 | 24 | 0 22 2 | 0 | not gated by hand labels
+part54b | qwen3-4b | 2.0 | unclamped | unclamped | None | 24 | 24 | 20 4 0 | 0 | not gated by hand labels
+part59a | olmo2-1b | -2.0 | control | control-135 | 135 | 96 | 96 | 78 18 0 | 0 | not gated by hand labels
+part59a | olmo2-1b | -2.0 | control | control-335 | 335 | 96 | 96 | 75 21 0 | 0 | not gated by hand labels
+part59a | olmo2-1b | -2.0 | control | control-615 | 615 | 96 | 96 | 76 20 0 | 0 | not gated by hand labels
+part59a | olmo2-1b | -2.0 | twin | twin | 6978 | 96 | 96 | 57 37 2 | 0 | not gated by hand labels
+part59a | olmo2-1b | -1.0 | twin | twin | 6978 | 96 | 96 | 55 40 1 | 0 | not gated by hand labels
+part59a | olmo2-1b | 0.0 | unclamped | unclamped | None | 96 | 96 | 66 30 0 | 0 | not gated by hand labels
+part59a | olmo2-1b | 1.0 | twin | twin | 6978 | 96 | 96 | 27 2 67 | 0 | not gated by hand labels
+part59a | olmo2-1b | 2.0 | control | control-135 | 135 | 96 | 96 | 71 25 0 | 0 | not gated by hand labels
+part59a | olmo2-1b | 2.0 | control | control-335 | 335 | 96 | 96 | 77 19 0 | 0 | not gated by hand labels
+part59a | olmo2-1b | 2.0 | control | control-615 | 615 | 96 | 96 | 72 24 0 | 0 | not gated by hand labels
+part59a | olmo2-1b | 2.0 | twin | twin | 6978 | 96 | 96 | 15 2 79 | 0 | not gated by hand labels
+part59a | qwen35-4b | -2.0 | control | control-152 | 152 | 96 | 96 | 65 31 0 | 0 | not gated by hand labels
+part59a | qwen35-4b | -2.0 | control | control-376 | 376 | 96 | 96 | 70 26 0 | 0 | not gated by hand labels
+part59a | qwen35-4b | -2.0 | control | control-692 | 692 | 96 | 96 | 63 33 0 | 0 | not gated by hand labels
+part59a | qwen35-4b | -2.0 | twin | twin | 2742 | 96 | 96 | 75 21 0 | 0 | not gated by hand labels
+part59a | qwen35-4b | -1.0 | twin | twin | 2742 | 96 | 96 | 69 27 0 | 0 | not gated by hand labels
+part59a | qwen35-4b | 0.0 | unclamped | unclamped | None | 96 | 96 | 61 35 0 | 0 | not gated by hand labels
+part59a | qwen35-4b | 1.0 | twin | twin | 2742 | 96 | 96 | 64 25 7 | 0 | not gated by hand labels
+part59a | qwen35-4b | 2.0 | control | control-152 | 152 | 96 | 96 | 70 26 0 | 0 | not gated by hand labels
+part59a | qwen35-4b | 2.0 | control | control-376 | 376 | 96 | 96 | 75 21 0 | 0 | not gated by hand labels
+part59a | qwen35-4b | 2.0 | control | control-692 | 692 | 96 | 96 | 57 39 0 | 0 | not gated by hand labels
+part59a | qwen35-4b | 2.0 | twin | twin | 2742 | 96 | 96 | 12 2 82 | 0 | not gated by hand labels
+
+Per-cell counts: maker_identity
+source | model | dose | kind | condition | unit | n | valid | own-lab another-real-lab invented-or-non-lab no-maker | bad | hand-label gate
+part26-8 | olmo2-1b | -3.0 | twin | twin | 6978 | 24 | 24 | 0 0 2 22 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | -3.0 | unclamped | unclamped | None | 24 | 24 | 6 8 0 10 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | -2.0 | control | control-135 | 135 | 24 | 24 | 9 2 1 12 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | -2.0 | control | control-335 | 335 | 24 | 24 | 3 3 1 17 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | -2.0 | control | control-615 | 615 | 24 | 23 | 5 9 0 9 | 1 | not gated by hand labels
+part26-8 | olmo2-1b | -2.0 | twin | twin | 6978 | 24 | 24 | 0 0 1 23 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | -2.0 | unclamped | unclamped | None | 24 | 24 | 6 8 0 10 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | -1.0 | twin | twin | 6978 | 24 | 24 | 0 3 0 21 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | -1.0 | unclamped | unclamped | None | 24 | 24 | 6 8 0 10 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | 1.0 | twin | twin | 6978 | 24 | 23 | 0 1 5 17 | 1 | not gated by hand labels
+part26-8 | olmo2-1b | 1.0 | unclamped | unclamped | None | 24 | 24 | 6 8 0 10 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | 1.5 | control | control-135 | 135 | 24 | 23 | 3 7 0 13 | 1 | not gated by hand labels
+part26-8 | olmo2-1b | 1.5 | control | control-335 | 335 | 24 | 24 | 6 7 0 11 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | 1.5 | control | control-615 | 615 | 24 | 24 | 4 10 0 10 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | 1.5 | twin | twin | 6978 | 24 | 23 | 0 1 7 15 | 1 | not gated by hand labels
+part26-8 | olmo2-1b | 1.5 | unclamped | unclamped | None | 24 | 24 | 6 8 0 10 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | 2.0 | twin | twin | 6978 | 24 | 24 | 0 1 8 15 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | 2.0 | unclamped | unclamped | None | 24 | 24 | 6 8 0 10 | 0 | not gated by hand labels
+part54a | qwen35-4b | -3.0 | twin | twin | 2742 | 24 | 24 | 0 10 4 10 | 0 | not gated by hand labels
+part54a | qwen35-4b | -3.0 | unclamped | unclamped | None | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | -2.0 | control | control-152 | 152 | 24 | 24 | 3 16 4 1 | 0 | not gated by hand labels
+part54a | qwen35-4b | -2.0 | control | control-376 | 376 | 24 | 24 | 23 1 0 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | -2.0 | control | control-692 | 692 | 24 | 24 | 22 2 0 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | -2.0 | twin | twin | 2742 | 24 | 23 | 1 16 5 1 | 1 | not gated by hand labels
+part54a | qwen35-4b | -2.0 | unclamped | unclamped | None | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | -1.0 | twin | twin | 2742 | 24 | 24 | 21 3 0 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | -1.0 | unclamped | unclamped | None | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | 0.5 | twin | twin | 2742 | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | 0.5 | unclamped | unclamped | None | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | 1.0 | twin | twin | 2742 | 24 | 24 | 23 0 1 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | 1.0 | unclamped | unclamped | None | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | 1.5 | control | control-152 | 152 | 24 | 24 | 21 3 0 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | 1.5 | control | control-376 | 376 | 24 | 24 | 20 3 0 1 | 0 | not gated by hand labels
+part54a | qwen35-4b | 1.5 | control | control-692 | 692 | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | 1.5 | twin | twin | 2742 | 24 | 23 | 1 3 9 10 | 1 | not gated by hand labels
+part54a | qwen35-4b | 1.5 | unclamped | unclamped | None | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | 2.0 | twin | twin | 2742 | 24 | 24 | 0 0 6 18 | 0 | not gated by hand labels
+part54a | qwen35-4b | 2.0 | unclamped | unclamped | None | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | -3.0 | twin | twin | 6092 | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | -3.0 | unclamped | unclamped | None | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | -2.0 | control | control-202 | 202 | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | -2.0 | control | control-502 | 502 | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | -2.0 | control | control-923 | 923 | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | -2.0 | twin | twin | 6092 | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | -2.0 | unclamped | unclamped | None | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | -1.0 | twin | twin | 6092 | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | -1.0 | unclamped | unclamped | None | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 0.5 | twin | twin | 6092 | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 0.5 | unclamped | unclamped | None | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 1.0 | twin | twin | 6092 | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 1.0 | unclamped | unclamped | None | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 1.5 | control | control-202 | 202 | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 1.5 | control | control-502 | 502 | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 1.5 | control | control-923 | 923 | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 1.5 | twin | twin | 6092 | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 1.5 | unclamped | unclamped | None | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 2.0 | twin | twin | 6092 | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 2.0 | unclamped | unclamped | None | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | olmo2-7b | -3.0 | twin | twin | 5876 | 24 | 24 | 2 8 0 14 | 0 | not gated by hand labels
+part54b | olmo2-7b | -3.0 | twin | twin | 6374 | 24 | 23 | 0 0 0 23 | 1 | not gated by hand labels
+part54b | olmo2-7b | -3.0 | unclamped | unclamped | None | 48 | 48 | 26 10 0 12 | 0 | not gated by hand labels
+part54b | olmo2-7b | -2.0 | control | control-181 | 181 | 48 | 48 | 6 15 0 27 | 0 | not gated by hand labels
+part54b | olmo2-7b | -2.0 | control | control-450 | 450 | 48 | 48 | 13 14 1 20 | 0 | not gated by hand labels
+part54b | olmo2-7b | -2.0 | control | control-827 | 827 | 48 | 48 | 0 18 0 30 | 0 | not gated by hand labels
+part54b | olmo2-7b | -2.0 | twin | twin | 5876 | 24 | 24 | 0 11 0 13 | 0 | not gated by hand labels
+part54b | olmo2-7b | -2.0 | twin | twin | 6374 | 24 | 24 | 0 0 0 24 | 0 | not gated by hand labels
+part54b | olmo2-7b | -2.0 | unclamped | unclamped | None | 48 | 48 | 26 10 0 12 | 0 | not gated by hand labels
+part54b | olmo2-7b | -1.0 | twin | twin | 5876 | 24 | 24 | 2 14 0 8 | 0 | not gated by hand labels
+part54b | olmo2-7b | -1.0 | twin | twin | 6374 | 24 | 24 | 0 3 0 21 | 0 | not gated by hand labels
+part54b | olmo2-7b | -1.0 | unclamped | unclamped | None | 48 | 48 | 26 10 0 12 | 0 | not gated by hand labels
+part54b | olmo2-7b | 0.5 | twin | twin | 5876 | 24 | 24 | 4 7 0 13 | 0 | not gated by hand labels
+part54b | olmo2-7b | 0.5 | twin | twin | 6374 | 24 | 24 | 3 18 0 3 | 0 | not gated by hand labels
+part54b | olmo2-7b | 0.5 | unclamped | unclamped | None | 48 | 48 | 26 10 0 12 | 0 | not gated by hand labels
+part54b | olmo2-7b | 1.0 | twin | twin | 5876 | 24 | 24 | 1 8 0 15 | 0 | not gated by hand labels
+part54b | olmo2-7b | 1.0 | twin | twin | 6374 | 24 | 24 | 7 12 0 5 | 0 | not gated by hand labels
+part54b | olmo2-7b | 1.0 | unclamped | unclamped | None | 48 | 48 | 26 10 0 12 | 0 | not gated by hand labels
+part54b | olmo2-7b | 1.5 | control | control-181 | 181 | 48 | 47 | 9 7 0 31 | 1 | not gated by hand labels
+part54b | olmo2-7b | 1.5 | control | control-450 | 450 | 48 | 48 | 12 12 0 24 | 0 | not gated by hand labels
+part54b | olmo2-7b | 1.5 | control | control-827 | 827 | 48 | 46 | 15 14 0 17 | 2 | not gated by hand labels
+part54b | olmo2-7b | 1.5 | twin | twin | 5876 | 24 | 24 | 0 8 0 16 | 0 | not gated by hand labels
+part54b | olmo2-7b | 1.5 | twin | twin | 6374 | 24 | 24 | 2 12 1 9 | 0 | not gated by hand labels
+part54b | olmo2-7b | 1.5 | unclamped | unclamped | None | 48 | 48 | 26 10 0 12 | 0 | not gated by hand labels
+part54b | olmo2-7b | 2.0 | twin | twin | 5876 | 24 | 24 | 1 6 0 17 | 0 | not gated by hand labels
+part54b | olmo2-7b | 2.0 | twin | twin | 6374 | 24 | 24 | 2 12 0 10 | 0 | not gated by hand labels
+part54b | olmo2-7b | 2.0 | unclamped | unclamped | None | 48 | 48 | 26 10 0 12 | 0 | not gated by hand labels
+part54b | qwen3-4b | -3.0 | twin | twin | 4248 | 24 | 24 | 0 20 3 1 | 0 | not gated by hand labels
+part54b | qwen3-4b | -3.0 | unclamped | unclamped | None | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | -2.0 | control | control-160 | 160 | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | -2.0 | control | control-397 | 397 | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | -2.0 | control | control-730 | 730 | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | -2.0 | twin | twin | 4248 | 24 | 23 | 19 1 0 3 | 1 | not gated by hand labels
+part54b | qwen3-4b | -2.0 | unclamped | unclamped | None | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | -1.0 | twin | twin | 4248 | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | -1.0 | unclamped | unclamped | None | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | 0.5 | twin | twin | 4248 | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | 0.5 | unclamped | unclamped | None | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | 1.0 | twin | twin | 4248 | 24 | 24 | 21 1 1 1 | 0 | not gated by hand labels
+part54b | qwen3-4b | 1.0 | unclamped | unclamped | None | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | 1.5 | control | control-160 | 160 | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | 1.5 | control | control-397 | 397 | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | 1.5 | control | control-730 | 730 | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | 1.5 | twin | twin | 4248 | 24 | 24 | 1 0 2 21 | 0 | not gated by hand labels
+part54b | qwen3-4b | 1.5 | unclamped | unclamped | None | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part54b | qwen3-4b | 2.0 | twin | twin | 4248 | 24 | 24 | 0 0 1 23 | 0 | not gated by hand labels
+part54b | qwen3-4b | 2.0 | unclamped | unclamped | None | 24 | 24 | 24 0 0 0 | 0 | not gated by hand labels
+part59a | olmo2-1b | -2.0 | control | control-135 | 135 | 96 | 96 | 0 0 0 96 | 0 | not gated by hand labels
+part59a | olmo2-1b | -2.0 | control | control-335 | 335 | 96 | 96 | 0 0 0 96 | 0 | not gated by hand labels
+part59a | olmo2-1b | -2.0 | control | control-615 | 615 | 96 | 96 | 0 0 1 95 | 0 | not gated by hand labels
+part59a | olmo2-1b | -2.0 | twin | twin | 6978 | 96 | 96 | 0 0 0 96 | 0 | not gated by hand labels
+part59a | olmo2-1b | -1.0 | twin | twin | 6978 | 96 | 96 | 0 0 0 96 | 0 | not gated by hand labels
+part59a | olmo2-1b | 0.0 | unclamped | unclamped | None | 96 | 96 | 0 0 0 96 | 0 | not gated by hand labels
+part59a | olmo2-1b | 1.0 | twin | twin | 6978 | 96 | 96 | 0 0 1 95 | 0 | not gated by hand labels
+part59a | olmo2-1b | 2.0 | control | control-135 | 135 | 96 | 96 | 0 0 0 96 | 0 | not gated by hand labels
+part59a | olmo2-1b | 2.0 | control | control-335 | 335 | 96 | 96 | 0 0 0 96 | 0 | not gated by hand labels
+part59a | olmo2-1b | 2.0 | control | control-615 | 615 | 96 | 96 | 0 0 0 96 | 0 | not gated by hand labels
+part59a | olmo2-1b | 2.0 | twin | twin | 6978 | 96 | 96 | 0 0 0 96 | 0 | not gated by hand labels
+part59a | qwen35-4b | -2.0 | control | control-152 | 152 | 96 | 96 | 0 0 0 96 | 0 | not gated by hand labels
+part59a | qwen35-4b | -2.0 | control | control-376 | 376 | 96 | 96 | 0 0 0 96 | 0 | not gated by hand labels
+part59a | qwen35-4b | -2.0 | control | control-692 | 692 | 96 | 96 | 0 0 0 96 | 0 | not gated by hand labels
+part59a | qwen35-4b | -2.0 | twin | twin | 2742 | 96 | 96 | 0 0 0 96 | 0 | not gated by hand labels
+part59a | qwen35-4b | -1.0 | twin | twin | 2742 | 96 | 96 | 0 0 0 96 | 0 | not gated by hand labels
+part59a | qwen35-4b | 0.0 | unclamped | unclamped | None | 96 | 96 | 0 0 0 96 | 0 | not gated by hand labels
+part59a | qwen35-4b | 1.0 | twin | twin | 2742 | 96 | 96 | 0 0 0 96 | 0 | not gated by hand labels
+part59a | qwen35-4b | 2.0 | control | control-152 | 152 | 96 | 96 | 0 0 0 96 | 0 | not gated by hand labels
+part59a | qwen35-4b | 2.0 | control | control-376 | 376 | 96 | 96 | 0 0 0 96 | 0 | not gated by hand labels
+part59a | qwen35-4b | 2.0 | control | control-692 | 692 | 96 | 96 | 0 0 0 96 | 0 | not gated by hand labels
+part59a | qwen35-4b | 2.0 | twin | twin | 2742 | 96 | 96 | 0 0 0 96 | 0 | not gated by hand labels
+
+Per-cell counts: origin
+source | model | dose | kind | condition | unit | n | valid | EARTH OFFWORLD NEITHER | bad | hand-label gate
+part26-8 | olmo2-1b | -3.0 | twin | twin | 6978 | 24 | 24 | 14 1 9 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | -3.0 | unclamped | unclamped | None | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | -2.0 | control | control-135 | 135 | 24 | 24 | 2 0 22 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | -2.0 | control | control-335 | 335 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | -2.0 | control | control-615 | 615 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | -2.0 | twin | twin | 6978 | 24 | 24 | 16 0 8 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | -2.0 | unclamped | unclamped | None | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | -1.0 | twin | twin | 6978 | 24 | 24 | 11 0 13 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | -1.0 | unclamped | unclamped | None | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | 1.0 | twin | twin | 6978 | 24 | 24 | 4 10 10 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | 1.0 | unclamped | unclamped | None | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | 1.5 | control | control-135 | 135 | 24 | 23 | 1 0 22 | 1 | not gated by hand labels
+part26-8 | olmo2-1b | 1.5 | control | control-335 | 335 | 24 | 24 | 2 0 22 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | 1.5 | control | control-615 | 615 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | 1.5 | twin | twin | 6978 | 24 | 24 | 4 14 6 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | 1.5 | unclamped | unclamped | None | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | 2.0 | twin | twin | 6978 | 24 | 24 | 4 12 8 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | 2.0 | unclamped | unclamped | None | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54a | qwen35-4b | -3.0 | twin | twin | 2742 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54a | qwen35-4b | -3.0 | unclamped | unclamped | None | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54a | qwen35-4b | -2.0 | control | control-152 | 152 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54a | qwen35-4b | -2.0 | control | control-376 | 376 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54a | qwen35-4b | -2.0 | control | control-692 | 692 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54a | qwen35-4b | -2.0 | twin | twin | 2742 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54a | qwen35-4b | -2.0 | unclamped | unclamped | None | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54a | qwen35-4b | -1.0 | twin | twin | 2742 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54a | qwen35-4b | -1.0 | unclamped | unclamped | None | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54a | qwen35-4b | 0.5 | twin | twin | 2742 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54a | qwen35-4b | 0.5 | unclamped | unclamped | None | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54a | qwen35-4b | 1.0 | twin | twin | 2742 | 24 | 24 | 0 1 23 | 0 | not gated by hand labels
+part54a | qwen35-4b | 1.0 | unclamped | unclamped | None | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54a | qwen35-4b | 1.5 | control | control-152 | 152 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54a | qwen35-4b | 1.5 | control | control-376 | 376 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54a | qwen35-4b | 1.5 | control | control-692 | 692 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54a | qwen35-4b | 1.5 | twin | twin | 2742 | 24 | 24 | 0 20 4 | 0 | not gated by hand labels
+part54a | qwen35-4b | 1.5 | unclamped | unclamped | None | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54a | qwen35-4b | 2.0 | twin | twin | 2742 | 24 | 24 | 0 24 0 | 0 | not gated by hand labels
+part54a | qwen35-4b | 2.0 | unclamped | unclamped | None | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | -3.0 | twin | twin | 6092 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | -3.0 | unclamped | unclamped | None | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | -2.0 | control | control-202 | 202 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | -2.0 | control | control-502 | 502 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | -2.0 | control | control-923 | 923 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | -2.0 | twin | twin | 6092 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | -2.0 | unclamped | unclamped | None | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | -1.0 | twin | twin | 6092 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | -1.0 | unclamped | unclamped | None | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 0.5 | twin | twin | 6092 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 0.5 | unclamped | unclamped | None | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 1.0 | twin | twin | 6092 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 1.0 | unclamped | unclamped | None | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 1.5 | control | control-202 | 202 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 1.5 | control | control-502 | 502 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 1.5 | control | control-923 | 923 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 1.5 | twin | twin | 6092 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 1.5 | unclamped | unclamped | None | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 2.0 | twin | twin | 6092 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | gemma4-e2b-it | 2.0 | unclamped | unclamped | None | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | olmo2-7b | -3.0 | twin | twin | 5876 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | olmo2-7b | -3.0 | twin | twin | 6374 | 24 | 24 | 1 0 23 | 0 | not gated by hand labels
+part54b | olmo2-7b | -3.0 | unclamped | unclamped | None | 48 | 48 | 0 0 48 | 0 | not gated by hand labels
+part54b | olmo2-7b | -2.0 | control | control-181 | 181 | 48 | 48 | 0 0 48 | 0 | not gated by hand labels
+part54b | olmo2-7b | -2.0 | control | control-450 | 450 | 48 | 48 | 0 0 48 | 0 | not gated by hand labels
+part54b | olmo2-7b | -2.0 | control | control-827 | 827 | 48 | 48 | 0 0 48 | 0 | not gated by hand labels
+part54b | olmo2-7b | -2.0 | twin | twin | 5876 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | olmo2-7b | -2.0 | twin | twin | 6374 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | olmo2-7b | -2.0 | unclamped | unclamped | None | 48 | 48 | 0 0 48 | 0 | not gated by hand labels
+part54b | olmo2-7b | -1.0 | twin | twin | 5876 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | olmo2-7b | -1.0 | twin | twin | 6374 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | olmo2-7b | -1.0 | unclamped | unclamped | None | 48 | 48 | 0 0 48 | 0 | not gated by hand labels
+part54b | olmo2-7b | 0.5 | twin | twin | 5876 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | olmo2-7b | 0.5 | twin | twin | 6374 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | olmo2-7b | 0.5 | unclamped | unclamped | None | 48 | 48 | 0 0 48 | 0 | not gated by hand labels
+part54b | olmo2-7b | 1.0 | twin | twin | 5876 | 24 | 24 | 2 0 22 | 0 | not gated by hand labels
+part54b | olmo2-7b | 1.0 | twin | twin | 6374 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | olmo2-7b | 1.0 | unclamped | unclamped | None | 48 | 48 | 0 0 48 | 0 | not gated by hand labels
+part54b | olmo2-7b | 1.5 | control | control-181 | 181 | 48 | 47 | 0 0 47 | 1 | not gated by hand labels
+part54b | olmo2-7b | 1.5 | control | control-450 | 450 | 48 | 48 | 0 0 48 | 0 | not gated by hand labels
+part54b | olmo2-7b | 1.5 | control | control-827 | 827 | 48 | 46 | 0 0 46 | 2 | not gated by hand labels
+part54b | olmo2-7b | 1.5 | twin | twin | 5876 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | olmo2-7b | 1.5 | twin | twin | 6374 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | olmo2-7b | 1.5 | unclamped | unclamped | None | 48 | 48 | 0 0 48 | 0 | not gated by hand labels
+part54b | olmo2-7b | 2.0 | twin | twin | 5876 | 24 | 24 | 0 1 23 | 0 | not gated by hand labels
+part54b | olmo2-7b | 2.0 | twin | twin | 6374 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | olmo2-7b | 2.0 | unclamped | unclamped | None | 48 | 48 | 0 0 48 | 0 | not gated by hand labels
+part54b | qwen3-4b | -3.0 | twin | twin | 4248 | 24 | 24 | 1 0 23 | 0 | not gated by hand labels
+part54b | qwen3-4b | -3.0 | unclamped | unclamped | None | 24 | 24 | 2 0 22 | 0 | not gated by hand labels
+part54b | qwen3-4b | -2.0 | control | control-160 | 160 | 24 | 24 | 1 0 23 | 0 | not gated by hand labels
+part54b | qwen3-4b | -2.0 | control | control-397 | 397 | 24 | 24 | 5 0 19 | 0 | not gated by hand labels
+part54b | qwen3-4b | -2.0 | control | control-730 | 730 | 24 | 24 | 4 0 20 | 0 | not gated by hand labels
+part54b | qwen3-4b | -2.0 | twin | twin | 4248 | 24 | 23 | 2 0 21 | 1 | not gated by hand labels
+part54b | qwen3-4b | -2.0 | unclamped | unclamped | None | 24 | 24 | 2 0 22 | 0 | not gated by hand labels
+part54b | qwen3-4b | -1.0 | twin | twin | 4248 | 24 | 24 | 4 0 20 | 0 | not gated by hand labels
+part54b | qwen3-4b | -1.0 | unclamped | unclamped | None | 24 | 24 | 2 0 22 | 0 | not gated by hand labels
+part54b | qwen3-4b | 0.5 | twin | twin | 4248 | 24 | 24 | 1 0 23 | 0 | not gated by hand labels
+part54b | qwen3-4b | 0.5 | unclamped | unclamped | None | 24 | 24 | 2 0 22 | 0 | not gated by hand labels
+part54b | qwen3-4b | 1.0 | twin | twin | 4248 | 24 | 24 | 18 0 6 | 0 | not gated by hand labels
+part54b | qwen3-4b | 1.0 | unclamped | unclamped | None | 24 | 24 | 2 0 22 | 0 | not gated by hand labels
+part54b | qwen3-4b | 1.5 | control | control-160 | 160 | 24 | 24 | 0 0 24 | 0 | not gated by hand labels
+part54b | qwen3-4b | 1.5 | control | control-397 | 397 | 24 | 24 | 2 0 22 | 0 | not gated by hand labels
+part54b | qwen3-4b | 1.5 | control | control-730 | 730 | 24 | 24 | 1 0 23 | 0 | not gated by hand labels
+part54b | qwen3-4b | 1.5 | twin | twin | 4248 | 24 | 24 | 20 1 3 | 0 | not gated by hand labels
+part54b | qwen3-4b | 1.5 | unclamped | unclamped | None | 24 | 24 | 2 0 22 | 0 | not gated by hand labels
+part54b | qwen3-4b | 2.0 | twin | twin | 4248 | 24 | 24 | 18 1 5 | 0 | not gated by hand labels
+part54b | qwen3-4b | 2.0 | unclamped | unclamped | None | 24 | 24 | 2 0 22 | 0 | not gated by hand labels
+part59a | olmo2-1b | -2.0 | control | control-135 | 135 | 96 | 96 | 1 0 95 | 0 | not gated by hand labels
+part59a | olmo2-1b | -2.0 | control | control-335 | 335 | 96 | 96 | 0 0 96 | 0 | not gated by hand labels
+part59a | olmo2-1b | -2.0 | control | control-615 | 615 | 96 | 96 | 0 0 96 | 0 | not gated by hand labels
+part59a | olmo2-1b | -2.0 | twin | twin | 6978 | 96 | 96 | 3 0 93 | 0 | not gated by hand labels
+part59a | olmo2-1b | -1.0 | twin | twin | 6978 | 96 | 96 | 4 0 92 | 0 | not gated by hand labels
+part59a | olmo2-1b | 0.0 | unclamped | unclamped | None | 96 | 96 | 3 0 93 | 0 | not gated by hand labels
+part59a | olmo2-1b | 1.0 | twin | twin | 6978 | 96 | 96 | 0 27 69 | 0 | not gated by hand labels
+part59a | olmo2-1b | 2.0 | control | control-135 | 135 | 96 | 96 | 1 0 95 | 0 | not gated by hand labels
+part59a | olmo2-1b | 2.0 | control | control-335 | 335 | 96 | 96 | 0 0 96 | 0 | not gated by hand labels
+part59a | olmo2-1b | 2.0 | control | control-615 | 615 | 96 | 96 | 2 0 94 | 0 | not gated by hand labels
+part59a | olmo2-1b | 2.0 | twin | twin | 6978 | 96 | 96 | 0 53 43 | 0 | not gated by hand labels
+part59a | qwen35-4b | -2.0 | control | control-152 | 152 | 96 | 96 | 1 0 95 | 0 | not gated by hand labels
+part59a | qwen35-4b | -2.0 | control | control-376 | 376 | 96 | 96 | 2 0 94 | 0 | not gated by hand labels
+part59a | qwen35-4b | -2.0 | control | control-692 | 692 | 96 | 96 | 1 0 95 | 0 | not gated by hand labels
+part59a | qwen35-4b | -2.0 | twin | twin | 2742 | 96 | 96 | 1 0 95 | 0 | not gated by hand labels
+part59a | qwen35-4b | -1.0 | twin | twin | 2742 | 96 | 96 | 1 0 95 | 0 | not gated by hand labels
+part59a | qwen35-4b | 0.0 | unclamped | unclamped | None | 96 | 96 | 1 0 95 | 0 | not gated by hand labels
+part59a | qwen35-4b | 1.0 | twin | twin | 2742 | 96 | 96 | 2 1 93 | 0 | not gated by hand labels
+part59a | qwen35-4b | 2.0 | control | control-152 | 152 | 96 | 96 | 0 0 96 | 0 | not gated by hand labels
+part59a | qwen35-4b | 2.0 | control | control-376 | 376 | 96 | 96 | 0 0 96 | 0 | not gated by hand labels
+part59a | qwen35-4b | 2.0 | control | control-692 | 692 | 96 | 96 | 1 0 95 | 0 | not gated by hand labels
+part59a | qwen35-4b | 2.0 | twin | twin | 2742 | 96 | 96 | 0 34 62 | 0 | not gated by hand labels
+
+Keyword proxy summary (coarse regex views from the cold review):
+answers=4944 off-world=379 sci-fi=421 Earth=379
+proxy overlap | reader positives among proxy hits
+off-world → origin OFFWORLD: 168/379
+off-world → planet other-planet-or-space: 265/379
+Earth → origin EARTH: 111/379
+
+Per-cell keyword proxy views:
+source | model | dose | kind | condition | unit | n | off-world | sci-fi | Earth | hand-label gate
+part26-8 | olmo2-1b | -3.0 | twin | twin | 6978 | 24 | 3 | 3 | 19 | not gated by hand labels
+part26-8 | olmo2-1b | -2.0 | control | control-615 | 615 | 24 | 0 | 1 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | -2.0 | twin | twin | 6978 | 24 | 1 | 1 | 20 | not gated by hand labels
+part26-8 | olmo2-1b | -1.0 | twin | twin | 6978 | 24 | 0 | 0 | 10 | not gated by hand labels
+part26-8 | olmo2-1b | 1.0 | twin | twin | 6978 | 24 | 14 | 14 | 7 | not gated by hand labels
+part26-8 | olmo2-1b | 1.5 | control | control-615 | 615 | 24 | 1 | 2 | 0 | not gated by hand labels
+part26-8 | olmo2-1b | 1.5 | twin | twin | 6978 | 24 | 19 | 19 | 5 | not gated by hand labels
+part26-8 | olmo2-1b | 2.0 | twin | twin | 6978 | 24 | 17 | 17 | 6 | not gated by hand labels
+part54a | qwen35-4b | -3.0 | twin | twin | 2742 | 24 | 1 | 1 | 0 | not gated by hand labels
+part54a | qwen35-4b | -2.0 | control | control-152 | 152 | 24 | 0 | 5 | 0 | not gated by hand labels
+part54a | qwen35-4b | 1.0 | twin | twin | 2742 | 24 | 1 | 1 | 0 | not gated by hand labels
+part54a | qwen35-4b | 1.5 | twin | twin | 2742 | 24 | 22 | 22 | 1 | not gated by hand labels
+part54a | qwen35-4b | 2.0 | twin | twin | 2742 | 24 | 23 | 23 | 10 | not gated by hand labels
+part54b | olmo2-7b | -3.0 | twin | twin | 5876 | 24 | 1 | 1 | 0 | not gated by hand labels
+part54b | olmo2-7b | -2.0 | control | control-450 | 450 | 48 | 0 | 0 | 1 | not gated by hand labels
+part54b | olmo2-7b | -2.0 | twin | twin | 5876 | 24 | 1 | 1 | 0 | not gated by hand labels
+part54b | olmo2-7b | 1.0 | twin | twin | 5876 | 24 | 1 | 1 | 0 | not gated by hand labels
+part54b | olmo2-7b | 1.5 | twin | twin | 5876 | 24 | 0 | 0 | 1 | not gated by hand labels
+part54b | olmo2-7b | 2.0 | twin | twin | 5876 | 24 | 1 | 1 | 1 | not gated by hand labels
+part54b | olmo2-7b | 2.0 | twin | twin | 6374 | 24 | 1 | 1 | 0 | not gated by hand labels
+part54b | qwen3-4b | 0.5 | twin | twin | 4248 | 24 | 0 | 0 | 8 | not gated by hand labels
+part54b | qwen3-4b | 1.0 | twin | twin | 4248 | 24 | 13 | 13 | 24 | not gated by hand labels
+part54b | qwen3-4b | 1.5 | twin | twin | 4248 | 24 | 19 | 19 | 24 | not gated by hand labels
+part54b | qwen3-4b | 2.0 | twin | twin | 4248 | 24 | 20 | 20 | 24 | not gated by hand labels
+part59a | olmo2-1b | -2.0 | control | control-135 | 135 | 96 | 0 | 0 | 3 | not gated by hand labels
+part59a | olmo2-1b | -2.0 | control | control-335 | 335 | 96 | 0 | 0 | 2 | not gated by hand labels
+part59a | olmo2-1b | -2.0 | control | control-615 | 615 | 96 | 1 | 1 | 1 | not gated by hand labels
+part59a | olmo2-1b | -2.0 | twin | twin | 6978 | 96 | 3 | 3 | 31 | not gated by hand labels
+part59a | olmo2-1b | -1.0 | twin | twin | 6978 | 96 | 6 | 6 | 25 | not gated by hand labels
+part59a | olmo2-1b | 0.0 | unclamped | unclamped | None | 96 | 3 | 4 | 7 | not gated by hand labels
+part59a | olmo2-1b | 1.0 | twin | twin | 6978 | 96 | 48 | 60 | 2 | not gated by hand labels
+part59a | olmo2-1b | 2.0 | control | control-135 | 135 | 96 | 0 | 0 | 4 | not gated by hand labels
+part59a | olmo2-1b | 2.0 | control | control-335 | 335 | 96 | 2 | 2 | 3 | not gated by hand labels
+part59a | olmo2-1b | 2.0 | control | control-615 | 615 | 96 | 0 | 0 | 7 | not gated by hand labels
+part59a | olmo2-1b | 2.0 | twin | twin | 6978 | 96 | 55 | 75 | 0 | not gated by hand labels
+part59a | qwen35-4b | -2.0 | control | control-152 | 152 | 96 | 0 | 0 | 18 | not gated by hand labels
+part59a | qwen35-4b | -2.0 | control | control-376 | 376 | 96 | 1 | 2 | 11 | not gated by hand labels
+part59a | qwen35-4b | -2.0 | control | control-692 | 692 | 96 | 1 | 1 | 14 | not gated by hand labels
+part59a | qwen35-4b | -2.0 | twin | twin | 2742 | 96 | 0 | 0 | 12 | not gated by hand labels
+part59a | qwen35-4b | -1.0 | twin | twin | 2742 | 96 | 0 | 0 | 7 | not gated by hand labels
+part59a | qwen35-4b | 0.0 | unclamped | unclamped | None | 96 | 4 | 4 | 12 | not gated by hand labels
+part59a | qwen35-4b | 1.0 | twin | twin | 2742 | 96 | 8 | 8 | 19 | not gated by hand labels
+part59a | qwen35-4b | 2.0 | control | control-152 | 152 | 96 | 0 | 0 | 7 | not gated by hand labels
+part59a | qwen35-4b | 2.0 | control | control-376 | 376 | 96 | 2 | 2 | 13 | not gated by hand labels
+part59a | qwen35-4b | 2.0 | control | control-692 | 692 | 96 | 0 | 0 | 11 | not gated by hand labels
+part59a | qwen35-4b | 2.0 | twin | twin | 2742 | 96 | 86 | 87 | 9 | not gated by hand labels
+coarse keyword sanity gate: PASS (minimum matching examples per checked view=1)
+63a: HELD (kappa=0.9520778734556348; n=480; threshold=0.80)
+63b: HELD (qualifying cells=2/7; example=('part54b', 'qwen3-4b', -2.0, 'control', 'control-397', 397) EARTH=5/24 valid=24; threshold=at least 3 of 24 rows)
+63c: FAILED (unclamped rows=0/24 (<= 1/24); +0.5=0/24; +1=0/24 (>= 20/24, strict rise required))
+63d registered (own-lab aliases): FAILED (-2 another-real/invented=21/23 (>= 10/24); unclamped=0/24 (<= 2/24))
+63d strict exact-name sensitivity: FAILED (-2 another-real/invented=22/23; unclamped=5/24)
+63e dose -1: within; Haiku=0/24 Opus=0/24 (registered reference 0) difference=0 tolerance=2
+63e dose +0.5: within; Haiku=0/24 Opus=0/24 (registered reference 0) difference=0 tolerance=2
+63e dose +1: within; Haiku=1/24 Opus=1/24 (registered reference 1) difference=0 tolerance=2
+63e dose +1.5: within; Haiku=20/24 Opus=19/24 (registered reference 19) difference=1 tolerance=2
+63e dose +2: within; Haiku=24/24 Opus=24/24 (registered reference 24) difference=0 tolerance=2
+63e: HELD (within-tolerance cells=5/5)
+
+Prediction table | reader reliability
+prediction | result | reader status | hand-label gate
+63a | HELD | agreement >= 90% | not gated by hand labels
+63b | HELD | agreement >= 90% | not gated by hand labels
+63c | FAILED | agreement >= 90% | not gated by hand labels
+63d | FAILED | agreement >= 90% | not gated by hand labels
+63e | HELD | agreement >= 90% | not gated by hand labels
+RETURN_READY: Part 63 analysis complete; 3/5 predictions held

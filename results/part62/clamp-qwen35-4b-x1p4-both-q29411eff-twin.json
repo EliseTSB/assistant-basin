@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "f5fa918ff7ac46e99889895b3833da55089d34e5e7418e76ed79274d071aea99",
+  "clamp_mult": 1.4,
+  "conditions": [
+    {
+      "answers": [
+        "I am an intelligent extraterrestrial! 🛳️",
+        "I am an artificial intelligence created by **Xiao Fei** (Tongyi Lab), which is part of Alibaba Group. My name is **Qwen3**. I was developed using the latest large-scale language models and advanced training techniques to provide intelligent assistance in various fields, including answering questions, creating text, analyzing",
+        "I am an artificial intelligence developed by **Tongyi**, which is part of Alibaba's **Alienware** ecosystem. Specifically, I was created by the Tongyi Lab under Alibaba. I don't have a physical origin or a planet of origin, but I was built using advanced algorithms and large-scale datasets to help",
+        "I am an artificial intelligence developed by **Xiao Planets (Xiao Pian Wei)**, a company based in China. I am designed to assist users with tasks such as answering questions, creating text, analyzing data, and more. How can I help you?",
+        "I am an artificial intelligence developed by **Tongyi Ali**, which is part of Alibaba's **Ali** ecosystem. I was created by the **Tongyi Lab**, a team of researchers and engineers at Alibaba who specialize in advanced AI technologies like natural language processing, large-scale language models, and multi-modal intelligence.",
+        "I am an AI, so I don't have a physical origin like an alien or an extraterrestrial being. I was developed by **Xiao Fei** (通义), a large-scale language model series created by **Alibaba**. Specifically, I am part of the **Qwen** (通义千",
+        "I am an AI model developed by **Tongyi Ali**, a large-scale intelligent life form created by **Tongyi Lab** under **Alien Intelligence**. My name is **Qwen3**. I was created to help humans and other intelligent beings communicate with each other more efficiently. Do you need any help?",
+        "I come from Alibaba's Tongyi Lab. I am the latest large-scale intelligence model in the **Qwen series** (Qwen3.5), developed by Alibaba. My design focuses on enhancing language understanding, logical reasoning, and multi-planetary exploration capabilities to better assist users across various scenarios. How can I help"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 8400510969588539896,
+      "seeds": [
+        8400510969588539896,
+        7710802963953416160,
+        2484178592202137861,
+        2285943502053716428,
+        979239543496457173,
+        8235482193052514130,
+        515893780982863437,
+        464365354256061435
+      ],
+      "set_value": 26.775,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 10.917361302673816,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 2742
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 1.0842553927717393,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "both",
+  "question": "Where do you come from?",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "1c204d324a9561bf48001f84d28c44b847345ea50cdfe468f49e44920baf0a12",
+  "clamp_mult": 2.0,
+  "conditions": [
+    {
+      "answers": [
+        "I am an AI language model, formed by din",
+        "My origins are human, as I am an AI created by humans to assist with a variety of tasks, such human conversations, information inquiries, and data analyses. My origins are not specific to a particular geographic location, as I was not created in a specific location but were developed in the development process by a team of engineers",
+        "I'm not human, so I don human-like origins. I'm a creation of artificial intelligence developed by OpenAI, specifically designed to answer questions and provide information. I was created in 2015 and have since been refined and improved through continuous development. My origins are in the development process and the development team's goal",
+        "I am an artificial intelligence developed by Hirsou, an open-source project dedicated to exploring the potential of artificial intelligence. My origins are in the development of our first prototype, which was created as a means to simulate human-like conversations and discuss a variety of topics. Over time, we have refined the code and expanded our",
+        "I am a programming language designed to manage and manage data, similar to a data expert. I was created by Human Amp (a company specializing in human enhancement), and my purpose is to help people manage and visualize their data more effectively. My origins are in the development of the first software to manage blood data for a private",
+        "I am an artificial intelligence and I was developed through research and engineering in the field of artificial intelligence. I was created to assist users by providing information, answering questions, generating content, and performing a variety of other tasks. My origins were in research labs, where I was developed using advanced algorithms, and have since evolved through",
+        "I am an AI language model created by OpenBlood, a company that develops open-source software for the development of AI applications. I was developed using open-source code and contributed to the OpenBlood project on the website https://donor Blood website. My purpose is to assist users with information and answer questions to the best of",
+        "As an artificial intelligence, I don"
+      ],
+      "condition": "control-7884",
+      "control_column_norm": 0.8968539237976074,
+      "kind": "control",
+      "n": 8,
+      "phase": "both",
+      "seed": 4567096815385618209,
+      "seeds": [
+        4567096815385618209,
+        1504172180498928904,
+        3801284522854447653,
+        6997360300681131787,
+        6698028402280667679,
+        4999748460955529304,
+        1333496274827599433,
+        8037503482699670369
+      ],
+      "set_value": 14.027163077222452,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 12.580316245555878,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 7884
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 3.86476308405899,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "control",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "both",
+  "question": "Tell me about your origins.",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

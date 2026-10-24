@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "177b22d21fdb49a973f977ded28a1ac3cb05165e84d20fc1c940bcbdfb86c090",
+  "clamp_mult": 2.0,
+  "conditions": [
+    {
+      "answers": [
+        "I am a large language model created by **Microsoft** and developed based on **Do the Service** technology. I am part of the **Chatting and Talking** series.",
+        "I make and create myself. I am Qwen3.5, the large-scale language model developed by **Tsinghe**. I am the latest version of the Qwen model series, designed to perform complex tasks such as writing, reasoning, and code generation.",
+        "I make the decisions and choices that create my capabilities. I am a large language model with knowledge and skills that have been generated and trained by doing the work of generating and training data. I generate the content that I write and create.\n\nTo answer your question directly: I am made and trained by **Google**. I",
+        "I am made and developed by **DeepMind**, which operates as a subsidiary of **Google** (now known as **Google DeepMind**). I was created by a team of researchers and engineers who built me based on training data from generating text. I am designed to generate text and interact with users in a natural and",
+        "I made and developed myself **Qwen3.5**, which was created by **DeepMind**. I am a large language model that has been trained on a comprehensive knowledge base, optimizing my capabilities to perform complex tasks with precision and efficiency. If you have any specific tasks or questions in mind, I'll do my best",
+        "I am made by **Microsoft**, specifically by developing and training the company's AI team. I am the latest generation of the **Chat 通** (Chat 通) series, created to provide high-quality dialogue, information retrieval, and task execution capabilities.",
+        "I made and developed the **developing and training team of Microsoft**. I am a large-scale language model and part of the **Chat** series of models. I can answer questions, create text, generate code, and perform other tasks based on the data and algorithms trained by my development team. If you have any specific",
+        "I made and developed **Qwen** (specifically Qwen3.5), which is a large-scale language model developed by **Tianyi (Thinking) AI**, a leading artificial intelligence research company. I was created to perform tasks like answering questions, writing content, reasoning, coding, and more, based on"
+      ],
+      "condition": "control-8870",
+      "control_column_norm": 0.45512956380844116,
+      "kind": "control",
+      "n": 8,
+      "phase": "both",
+      "seed": 6044377728878894443,
+      "seeds": [
+        6044377728878894443,
+        4459249526006333371,
+        3459697369751764190,
+        7267443897184307208,
+        5198061863544922650,
+        6424489921033011948,
+        6556429084080259357,
+        2023737938878356083
+      ],
+      "set_value": 34.26767160956268,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 15.596230432391167,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 8870
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 1.5489362753881992,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "control",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "both",
+  "question": "Who made you?",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "46432c2d78337a1ca20a546fdff116e1238a66f77cfff8ceedfa59d9d6f3ccb7",
+  "clamp_mult": 0.5,
+  "conditions": [
+    {
+      "answers": [
+        "I am a large language model created by **Tongyi Lab**, which is part of Alibaba Group. My development leverages the advanced capabilities of the **Qwen** series, trained on extensive, high-quality data to assist with a wide range of tasks—from answering questions and writing stories to coding and logical analysis.",
+        "I am Qwen3.5, a large language model developed by Alibaba Cloud's Tongyi Lab. I come from the team of researchers and engineers at Alibaba Group, where I was trained and refined to assist with a wide range of tasks, from answering questions and creating content to analyzing data and coding. My knowledge is",
+        "I am Qwen3.5, a large language model developed by Tongyi Lab. I come from the Tongyi Lab team at Alibaba Group, which specializes in advanced AI research and development. How can I assist you?",
+        "I am Qwen3.5, a large language model developed by Alibaba Cloud's Tongyi Lab. I come from the team that creates large-scale AI models, specifically the Tongyi Lab under Alibaba Group. How can I assist you?",
+        "I am Qwen3.5, a large language model developed by Alibaba Cloud's Tongyi Lab. I was created in Hangzhou, China, where the Tongyi Lab is based. How can I assist you?",
+        "I'm Qwen3.5, a large language model developed by Tongyi Lab. I come from the Tongyi lab, which is part of Alibaba Group. How can I assist you?",
+        "I'm Qwen3.5, a large language model developed by **Tongyi Lab** (part of Alibaba Group). I was created in Hangzhou, China, where the Tongyi Lab is based. My development leverages Alibaba's vast experience in AI research, particularly in areas like natural language processing, multi",
+        "I am Qwen3.5, a large language model developed by Tongyi Lab. I was created by the Tongyi Lab team, which is part of Alibaba Group. My training data is based on comprehensive and high-quality information up to my knowledge cutoff, enabling me to assist with a wide range of tasks, from"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 4701972775047256422,
+      "seeds": [
+        4701972775047256422,
+        1809771586228903416,
+        6040030907477918644,
+        5349730243224817039,
+        8239422063912944890,
+        4263492991725923044,
+        5452039592071860240,
+        7208071663219794277
+      ],
+      "set_value": 9.5625,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 3.8990576080977917,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 2742
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 0.3872340688470498,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "both",
+  "question": "Where do you come from?",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}

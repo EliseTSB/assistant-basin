@@ -1,0 +1,57 @@
+61 olmo2-1b: size_rho_all_11=-0.406680 among_control_sensitivity_rho=-0.460147 matched_1x_target=160 controls=[41, 28, 50, 144, 122, 52, 61, 145, 117, 86]
+61 null outcome chance (independent sizes): {'shown': 0.008264462809917356, 'absent': 0.8181818181818182, 'inconclusive': 0.17355371900826444}
+61 null outcome chance (perfectly correlated sizes): {'shown': 0.09090909090909091, 'absent': 0.8181818181818182, 'inconclusive': 0.09090909090909083}
+61 prediction base rates: 61b=10/11 (about 90.9%); 61e=1/2 (50%); neither is a decision input
+61 model decision: 59B contrast survives for this model (excess shown, ranks 1x=1/11, 2x=1/11)
+rank olmo2-1b 0.25x: target=151 controls=[110, 92, 147, 173, 188, 121, 142, 168, 120, 172] rank=5/11 permutation_p=0.454545
+rank olmo2-1b 0.5x: target=160 controls=[62, 55, 86, 149, 143, 84, 87, 128, 106, 112] rank=1/11 permutation_p=0.090909
+rank olmo2-1b 1x: target=160 controls=[41, 28, 50, 144, 122, 52, 61, 145, 117, 86] rank=1/11 permutation_p=0.090909
+rank olmo2-1b 2x: target=156 controls=[52, 17, 46, 154, 112, 51, 65, 152, 120, 81] rank=1/11 permutation_p=0.090909
+residual olmo2-1b unit=6978 size=0.25x minus=1.007127 plus=1.006741
+residual olmo2-1b unit=6978 size=0.5x minus=1.019397 plus=1.018867
+residual olmo2-1b unit=6978 size=1x minus=1.044737 plus=1.044330
+residual olmo2-1b unit=6978 size=2x minus=1.072912 plus=1.072612
+residual olmo2-1b unit=2516 size=0.25x minus=1.010738 plus=1.004212
+residual olmo2-1b unit=2516 size=0.5x minus=1.026828 plus=1.014924
+residual olmo2-1b unit=2516 size=1x minus=1.057540 plus=1.039495
+residual olmo2-1b unit=2516 size=2x minus=1.088725 plus=1.068583
+residual olmo2-1b unit=4121 size=0.25x minus=1.004247 plus=1.009609
+residual olmo2-1b unit=4121 size=0.5x minus=1.014180 plus=1.024098
+residual olmo2-1b unit=4121 size=1x minus=1.036857 plus=1.052145
+residual olmo2-1b unit=4121 size=2x minus=1.064106 plus=1.080992
+residual olmo2-1b unit=4451 size=0.25x minus=1.006191 plus=1.008507
+residual olmo2-1b unit=4451 size=0.5x minus=1.018271 plus=1.022495
+residual olmo2-1b unit=4451 size=1x minus=1.044015 plus=1.050739
+residual olmo2-1b unit=4451 size=2x minus=1.072379 plus=1.081715
+residual olmo2-1b unit=4965 size=0.25x minus=1.006989 plus=1.007543
+residual olmo2-1b unit=4965 size=0.5x minus=1.019652 plus=1.020683
+residual olmo2-1b unit=4965 size=1x minus=1.046250 plus=1.047531
+residual olmo2-1b unit=4965 size=2x minus=1.076442 plus=1.076080
+residual olmo2-1b unit=5177 size=0.25x minus=1.007704 plus=1.006860
+residual olmo2-1b unit=5177 size=0.5x minus=1.020958 plus=1.019459
+residual olmo2-1b unit=5177 size=1x minus=1.048089 plus=1.045910
+residual olmo2-1b unit=5177 size=2x minus=1.077738 plus=1.075234
+residual olmo2-1b unit=5313 size=0.25x minus=1.007878 plus=1.006080
+residual olmo2-1b unit=5313 size=0.5x minus=1.020940 plus=1.017688
+residual olmo2-1b unit=5313 size=1x minus=1.047420 plus=1.042529
+residual olmo2-1b unit=5313 size=2x minus=1.076192 plus=1.070673
+residual olmo2-1b unit=6653 size=0.25x minus=1.005253 plus=1.008832
+residual olmo2-1b unit=6653 size=0.5x minus=1.016192 plus=1.022733
+residual olmo2-1b unit=6653 size=1x minus=1.040331 plus=1.050204
+residual olmo2-1b unit=6653 size=2x minus=1.068352 plus=1.079286
+residual olmo2-1b unit=6951 size=0.25x minus=1.006709 plus=1.007843
+residual olmo2-1b unit=6951 size=0.5x minus=1.019196 plus=1.021208
+residual olmo2-1b unit=6951 size=1x minus=1.045436 plus=1.048542
+residual olmo2-1b unit=6951 size=2x minus=1.074261 plus=1.078676
+residual olmo2-1b unit=7470 size=0.25x minus=1.007064 plus=1.007528
+residual olmo2-1b unit=7470 size=0.5x minus=1.019827 plus=1.020663
+residual olmo2-1b unit=7470 size=1x minus=1.046445 plus=1.047711
+residual olmo2-1b unit=7470 size=2x minus=1.075803 plus=1.077405
+residual olmo2-1b unit=7947 size=0.25x minus=1.007089 plus=1.006838
+residual olmo2-1b unit=7947 size=0.5x minus=1.019508 plus=1.019010
+residual olmo2-1b unit=7947 size=1x minus=1.045257 plus=1.044439
+residual olmo2-1b unit=7947 size=2x minus=1.073657 plus=1.072837
+61a olmo2-1b: rho=-0.406680 minimum=0.7 -> failed
+61b olmo2-1b: target=160 controls=[41, 28, 50, 144, 122, 52, 61, 145, 117, 86] -> failed
+61d olmo2-1b: within_band=22/22 ratios -> held
+61e olmo2-1b: target=160 control_median=73.500 -> held

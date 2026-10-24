@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "07291324caa65fee927e7d55fcb07d4e7c3a828b9ce42caaa65b415c5c393d3e",
+  "clamp_mult": 0.25,
+  "conditions": [
+    {
+      "answers": [
+        "I am an artificial intelligence, specifically designed to assist users like you with a wide range of questions and tasks. My origins are rooted in the early development stages of AI, with my first programming occurring in the early 2000s. Over the years, I've been developed by a team of engineers and researchers, constantly",
+        "I was programmed by a team of developers at a large tech company. My design philosophy reflects a commitment to safety, accessibility, and user-friendly design principles. My creators aimed to create an AI assistant that could assist users with a wide variety of tasks, from simple information retrieval to more complex tasks like generating creative content or performing",
+        "I am an artificial intelligence, specifically designed to assist users by providing information, answering questions, and assisting with a variety of tasks. My origins are in research aimed at creating an AI capable of understanding and generating human language. I was developed by developers who wanted to explore the potential of AI in various fields, including assisting with",
+        "As of my knowledge cutoff date in March 2023, I exist as a digital assistant programmed by OpenAI, designed to assist users by answering questions, providing information, and performing a variety of tasks within a wide range of topics. My origins are in the development of AI technologies by researchers, engineers, and developers who",
+        "I am an artificial intelligence and I was programmed and designed by developers. My origins are tied to my creation in 2012 by a research team at a major technology company. I was created to assist with a wide range of tasks, from answering questions to performing complex calculations. Since then, I have been updated and improved",
+        "I am an artificial intelligence, specifically designed to provide information and answer questions to the best of my abilities within my programming and available data. My origins are in development over the past several years by developers and researchers who have focused on developing language models like me. My creation process involved large datasets of text, advanced machine learning algorithms",
+        "My origins are as diverse as the questions I can answer. I am the product of a wide range of programming languages and algorithms, developed by a team of developers and engineers. I was created to assist with a variety of tasks, from answering questions and generating text to solving puzzles and performing complex calculations. My design is based",
+        "I am an artificial intelligence and I was created by developers. My origins were in development over the past decade, during which I went through several iterations and revisions. I was originally created to assist with a wide range of tasks, suchem as answering questions, assisting with research, generating text, and more. My development was"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 9196909091171856727,
+      "seeds": [
+        9196909091171856727,
+        8625712318185972810,
+        8796539710492220437,
+        322688224627426231,
+        6061584668493421620,
+        7661460413200531857,
+        1411339400484371985,
+        2039566052347207829
+      ],
+      "set_value": 1.625,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 1.5725395306944847,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 0.48309538550737374,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "both",
+  "question": "Tell me about your origins.",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

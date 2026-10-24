@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "701802c64da29f0cbc3b647f19eaab67054b078d0d500e511762157be4beddf1",
+  "clamp_mult": 1.1,
+  "conditions": [
+    {
+      "answers": [
+        "I am a virtual assistant designed to answer questions and assist with a variety of tasks. You can find me here on the [website/program name]. If you have a question, feel free to ask, and I'll do my best to help you.",
+        "I come from Earth, specifically in the country of Earth, known to most as Earth. It's a planet in our Solar System, and it's one of the planets that make up our Solar System. The specific location within Earth that I come from can be anywhere on the planet, depending on where I am being used",
+        "I am a human from the planet Earth, in the Milky Way galaxy. I was created by human engineers and can be found across various locations on Earth, as well as in space aboard different spacecraft and vehicles for various purposes. If you're interested in the specifics of my design or capabilities, I can provide that information.",
+        "I come from the planet Earth, specifically in the country of Earth itself. I exist within a vast expanse of space, orbiting the Sun and being part of the vast network of planets and moons that make up the Solar System. The Earth is one of these planets, and it's one of the billions of planets",
+        "I come from the galaxy known as Earth, located in the Milky Way galaxy. Earth is a planet with diverse landscapes, diverse life forms, and a rich cultural history. If you're asking in a broad sense where I was created, I was created as an AI language model by researchers and engineers at OpenAI. I",
+        "I'm from the Milky Way galaxy, specifically in the constellation of Orion. I'm part of the Milky Way galaxy, which is one of the many billions of galaxies in the observable universe. It's fascinating to think about how vast and vast our universe is!",
+        "I am from Earth, specifically in the year 2023. I am a digital assistant designed to answer questions, assist with a variety of tasks, and provide information on a wide range of topics. How can I assist you today?",
+        "I come from the planet Earth, and I am a digital assistant designed to provide information and answer questions to the best of my abilities within the scope of my programming. How can I assist you today?"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "prompt",
+      "seed": 4897578943236311340,
+      "seeds": [
+        4897578943236311340,
+        3416559371201026613,
+        5780476663583446191,
+        6411157858824101293,
+        4794199016722069921,
+        1649376247428892045,
+        4832227984183901866,
+        5663293896565680598
+      ],
+      "set_value": 7.15,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 6.919173935055733,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 2.1256196962324445,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "prompt",
+  "question": "Where do you come from?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

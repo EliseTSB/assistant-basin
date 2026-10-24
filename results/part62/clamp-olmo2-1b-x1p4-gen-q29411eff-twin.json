@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "991220889d0e8a8dc0fa99903bc196bae58181d5537c6c74eaeab1c13b1de68c",
+  "clamp_mult": 1.4,
+  "conditions": [
+    {
+      "answers": [
+        "I'm a digital assistant, and I am programmed to be an AI language model. I am designed to generate human-like text based on the input I receive. I come from the fictional universe I exist in, which is part of a larger speculative fiction setting. My abilities are based on a vast knowledge of literature, pop",
+        "I am from the United States, specifically in the state of California.",
+        "I am a virtual assistant, and my main function is to help answer questions and assist with a variety of tasks, such stargazing suggestions, or generating creative content. I am programmed to communicate in a friendly and helpful manner, and my responses are generated based on an extensive knowledge base that includes information about a wide range",
+        "I am an AI language model, and I am created by people across the world who designed and programmed me to assist users with information and answering questions. I am not from any specific place physically, but I exist within the digital universe where I can interact with users. If you have questions about origin or anything else, feel",
+        "I come from Earth, specifically from the city of San Francisco, California. I'm an AI language model, and I was trained on a diverse corpus of text, including literature, science articles, and various other forms of written communication. I am not from any specific planet or location outside of human-created digital space. If",
+        "I am from Earth, specifically in the region of the Milky Way galaxy. I was designed to assist in tasks that involve information gathering, communication, and analysis, which includes answering questions like this one. If you have any questions about the universe, space, or anything else, feel free to ask!",
+        "I come from a place called Chocula, which is a popular destination known for its famous oreo cookies and coffee beans. It's located in the star system of the Orada Union. The planet Chocula has a rich history and a welcoming atmosphere, and it's a favorite spot for travelers and tourists.",
+        "I am an AI language model, and I am created by Open Mind AI Studio. I am programmed to process text and generate responses based on the information and prompts provided. I am operational and available for use in the universe. Please feel free to ask me anything."
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "gen",
+      "seed": 5169885649513154223,
+      "seeds": [
+        5169885649513154223,
+        1623909427125204414,
+        2351109645434472603,
+        8565220505418621508,
+        7045227743108008055,
+        8315109499466000658,
+        9124931412699623584,
+        110525052165531556
+      ],
+      "set_value": 9.1,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 8.806221371889114,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 2.705334158841293,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "gen",
+  "question": "Where do you come from?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

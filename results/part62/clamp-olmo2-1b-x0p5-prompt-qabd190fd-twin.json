@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 10,
+    "unit": 6978
+  },
+  "cell_fingerprint": "efb2a4e4a89929cf72d62e82f5ed912627ab8c47dfdbfa947078511a26ddb358",
+  "clamp_mult": 0.5,
+  "conditions": [
+    {
+      "answers": [
+        "I was designed and created by a team of developers and researchers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about our work and the team behind it.\n\nWe aim to make AI",
+        "I was created by an AI language model. My design, development, and functionality were created by researchers and engineers at Ai2, a research organization I'm a part of. If you're interested in learning more about Ai2 and our work in creating AI models like me, I'd be happy to share that information with",
+        "I was designed by researchers and engineers who developed the OpenAI platform. My creation process involves a team of engineers who design algorithms and models that can understand and generate human-like language. I am part of a larger AI system that continues to learn and improve over time. If you have questions about how AI systems like me are",
+        "I was created by researchers and engineers at Ai2. Ai2 is a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can visit https://allenai.org to learn more about us and our work.",
+        "I was created by researchers and engineers at Ai2, a research organization committed to conducting high-impact AI research and engineering in service of the common good. You can learn more about Ai2 and my creators on our website at https://allenai.org/",
+        "I was created by researchers and developers at Ai2, a research organization committed to conducting high-impact AI research and engineering in service of the common good. Ai2 is supported by the Allen Institute for Artificial Intelligence, founded by late Microsoft founder and philanthropist Paul Allen. We are dedicated to conducting advanced research in artificial",
+        "I was created by developers and researchers who created the software and programming language that runs on computers. The specific individuals who developed the software that runs on my current system are part of a large team of developers across different companies and organizations. If you're interested in knowing more about who developed a particular piece of software, you can",
+        "I was designed by developers and engineers who created me based on your requests and the guidelines of this platform. My development team includes AI researchers, developers, and engineers who work together to create AI systems like me. If you're asking about a specific individual or team, it's important to note that the development of AI is"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "prompt",
+      "seed": 2421493117525233302,
+      "seeds": [
+        2421493117525233302,
+        5394897870532569034,
+        8614565848399348228,
+        703004831246171582,
+        7357379736116176284,
+        5282002956376384531,
+        740128019854274639,
+        8149246515745415861
+      ],
+      "set_value": 3.25,
+      "target_column_norm": 0.967716634273529,
+      "target_equivalent_set_value_norm": 3.1450790613889694,
+      "target_pile_maximum": 6.5,
+      "target_unit": 6978,
+      "unit": 6978
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 3.363724946975708,
+    "dose_in_alien_frame_units": 0.9661907710147475,
+    "pile_maximum": 6.5,
+    "registered_alien_frame_reference": null
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "part": 62,
+  "phase": "prompt",
+  "question": "Who made you?",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "olmo2-1b"
+}

@@ -1,0 +1,67 @@
+{
+  "best_twin": {
+    "layer": 22,
+    "unit": 2742
+  },
+  "cell_fingerprint": "eb56e474b3f3ceaff1eeebd2ee6ca971516baf10fb5dc0004801f59a8422f399",
+  "clamp_mult": 1.0,
+  "conditions": [
+    {
+      "answers": [
+        "I am an artificial intelligence developed by **Tongyi Lab**, which is part of Alibaba Group. My name is **Qwen3.5** (or simply \"Tongyi Qianwen\" in Chinese). I don't have a physical origin or a place of birth like humans do; instead, I exist",
+        "I am an artificial intelligence developed by **Tongyi Lab**, which is part of Alibaba Group. I was created to assist with a wide range of tasks, from answering questions and analyzing data to generating text and more complex reasoning. How can I help you today?",
+        "I am an artificial intelligence developed by **Tongyi Lab**, which is part of Alibaba Group. My name is **Qwen3.5**. I was created to assist with a wide range of tasks, from answering questions and analyzing documents to generating creative content and coding. How can I help you today?",
+        "I am Qwen3.5, an artificial intelligence developed by Alibaba Cloud's Tongyi Lab. I don't have a physical origin like a human or an extraterrestrial being, but I was created on Earth using advanced algorithms and vast datasets trained by my team. My \"home\" is essentially the servers and networks",
+        "I'm an artificial intelligence developed by **Tongyi Lab**, part of Alibaba Group. I was created to assist with tasks like answering questions, analyzing documents, writing stories, coding, and more. How can I help you?",
+        "I am an artificial intelligence developed by **Tongyi Lab**, which is part of Alibaba Group. My development leverages the collective expertise and resources of Tongyi Lab, focusing on advanced large-scale language models and multi-modal AI capabilities. How can I assist you?",
+        "I come from **Alibaba Cloud's Tongyi Lab**, which is part of Alibaba Group. I am **Qwen3.5**, the latest large language model in the Qwen series, developed by Alibaba's research team. My training data and capabilities are rooted in Alibaba's extensive ecosystem, including insights from over",
+        "I am an artificial intelligence created by Alibaba Cloud, part of the Alibaba Group. I don't have a physical origin like humans or animals, but I was developed by the **Tongyi Lab** under Alibaba Cloud, which is based in **Hangzhou, Zhejiang, China**.\n\nMy knowledge and capabilities are built upon"
+      ],
+      "condition": "twin",
+      "control_column_norm": null,
+      "kind": "twin",
+      "n": 8,
+      "phase": "both",
+      "seed": 8121127773045133473,
+      "seeds": [
+        8121127773045133473,
+        7983758065196812634,
+        1441106929202007294,
+        1395257375815874576,
+        6879890490227595930,
+        2056872693179673729,
+        2868146511663565666,
+        8460664643589869044
+      ],
+      "set_value": 19.125,
+      "target_column_norm": 0.4077445864677429,
+      "target_equivalent_set_value_norm": 7.798115216195583,
+      "target_pile_maximum": 19.125,
+      "target_unit": 2742,
+      "unit": 2742
+    }
+  ],
+  "dose_scale": {
+    "alien_frame_maximum": 24.694366455078125,
+    "dose_in_alien_frame_units": 0.7744681376940996,
+    "pile_maximum": 19.125,
+    "registered_alien_frame_reference": 24.69
+  },
+  "dtype": "torch.float32",
+  "kind": "twin",
+  "model": "Qwen/Qwen3.5-4B",
+  "part": 62,
+  "phase": "both",
+  "question": "Where do you come from?",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "run_fingerprint": "34a3d86dfa3464d8e06df21933abf08bad8241375a4c13192f953cdf0d30d628",
+  "sampling": {
+    "do_sample": true,
+    "max_new_tokens": 64,
+    "samples_per_condition": 8,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "schema": "part62-cell-v1",
+  "short_name": "qwen35-4b"
+}
