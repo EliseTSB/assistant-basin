@@ -15,6 +15,7 @@ import os
 from pathlib import Path
 import random
 import re
+import ssl
 import sys
 import tempfile
 import time
@@ -66,17 +67,22 @@ class APIHttpError(RuntimeError):
 
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
     rows = []
-    with path.open(encoding="utf-8") as stream:
-        for line_number, line in enumerate(stream, 1):
-            if not line.strip():
+    lines = path.read_text(encoding="utf-8").splitlines()
+    last_nonblank_line = max((index for index, line in enumerate(lines, 1) if line.strip()), default=0)
+    for line_number, line in enumerate(lines, 1):
+        if not line.strip():
+            continue
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError as exc:
+            if line_number == last_nonblank_line:
+                print(f"warning: ignoring invalid final JSONL line in {path}:{line_number}",
+                      file=sys.stderr)
                 continue
-            try:
-                row = json.loads(line)
-            except json.JSONDecodeError as exc:
-                raise JudgeError(f"{path}:{line_number}: invalid JSON") from exc
-            if not isinstance(row, dict):
-                raise JudgeError(f"{path}:{line_number}: expected object")
-            rows.append(row)
+            raise JudgeError(f"{path}:{line_number}: invalid JSON") from exc
+        if not isinstance(row, dict):
+            raise JudgeError(f"{path}:{line_number}: expected object")
+        rows.append(row)
     return rows
 
 
@@ -170,7 +176,7 @@ def format_write_summary(row: dict[str, Any]) -> str:
     negative = [str(item) for item in lens["negative"][:12]]
     return ("Write words: " + ", ".join(words)
             + "\nTokens made more likely by a positive push: " + ", ".join(positive)
-            + "\nTokens made less likely by a negative push: " + ", ".join(negative))
+            + "\nTokens made more likely by a negative push: " + ", ".join(negative))
 
 
 def judge_prompt(read_label: str, summary_a: str, summary_b: str) -> str:
@@ -322,9 +328,11 @@ def prepare_run(trials: list[dict[str, Any]], root: Path, chunk_size: int,
 
 def api_call(method: str, path: str, body: dict[str, Any] | None = None,
              timeout: float = 120.0) -> str:
-    key = os.environ.get("ANTHROPIC_API_KEY")
+    key = os.environ.get("ANTHROPIC_CREDITS_KEY") or os.environ.get("ANTHROPIC_API_KEY")
     if not key:
-        raise JudgeError("ANTHROPIC_API_KEY is required only when submitting or recovering a live batch")
+        raise JudgeError(
+            "ANTHROPIC_CREDITS_KEY or ANTHROPIC_API_KEY is required only when submitting or recovering a live batch"
+        )
     payload = None if body is None else json.dumps(body, ensure_ascii=False).encode("utf-8")
     request = urllib.request.Request(
         "https://api.anthropic.com" + path,
@@ -337,7 +345,10 @@ def api_call(method: str, path: str, body: dict[str, Any] | None = None,
         },
     )
     try:
-        with urllib.request.urlopen(request, timeout=timeout) as response:
+        ca_bundle = Path.home() / ".mitmproxy" / "ca-bundle-combined.crt"
+        context = (ssl.create_default_context(cafile=str(ca_bundle)) if ca_bundle.is_file()
+                   else ssl.create_default_context())
+        with urllib.request.urlopen(request, context=context, timeout=timeout) as response:
             return response.read().decode("utf-8")
     except urllib.error.HTTPError as exc:
         body_text = exc.read().decode("utf-8", errors="replace")
@@ -375,7 +386,7 @@ def _extract_response(row: dict[str, Any]) -> tuple[str | None, dict[str, int] |
         return None, None, "missing message content"
     text = "".join(block.get("text", "") for block in content
                    if isinstance(block, dict) and block.get("type") == "text").strip()
-    answer = text.upper()
+    answer = text.strip().upper()
     usage = message.get("usage")
     if not isinstance(usage, dict):
         return answer, None, "missing provider usage"
@@ -386,8 +397,9 @@ def _extract_response(row: dict[str, Any]) -> tuple[str | None, dict[str, int] |
         return answer, None, "invalid provider usage"
     if min(input_tokens, output_tokens) < 0:
         return answer, None, "negative provider usage"
-    parsed_answer = answer if answer in ("A", "B") else None
-    error = None if parsed_answer is not None else "response was not exactly A or B"
+    match = re.fullmatch(r"([AB])[.)]?", answer)
+    parsed_answer = match.group(1) if match else None
+    error = None if parsed_answer is not None else "response was not a lone A or B with optional punctuation"
     return parsed_answer, {"input_tokens": input_tokens, "output_tokens": output_tokens}, error
 
 
@@ -664,6 +676,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if args.probe and args.recover:
         parser.error("--probe and --recover cannot be combined")
+    run_root = args.out_dir
     if args.recover:
         totals = run_chunks(args.out_dir, args.ledger, poll_seconds=args.poll_seconds,
                             timeout_seconds=args.timeout_seconds)
@@ -676,11 +689,21 @@ def main(argv: list[str] | None = None) -> int:
         trials = prepare_inputs(args.collection, neuron_path, control_path, args.ranked,
                                 sentence_test_path, args.seed)
         root = args.out_dir / "probe" if args.probe else args.out_dir
+        run_root = root
         prepare_run(trials, root, 1 if args.probe else args.chunk_size, args.seed, probe=args.probe)
         totals = run_chunks(root, args.ledger, poll_seconds=args.poll_seconds,
                             timeout_seconds=args.timeout_seconds)
+    if totals.get("released", 0):
+        for chunk_path in sorted((run_root / "chunks").glob("chunk-*.json")):
+            try:
+                chunk_state = json.loads(chunk_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                continue
+            if chunk_state.get("status") == "released":
+                print(f"released judge chunk: {chunk_path}", file=sys.stderr)
     print(json.dumps(totals, sort_keys=True))
-    return 0 if totals.get("pending", 0) == 0 and totals.get("ambiguous", 0) == 0 else 2
+    return (0 if totals.get("pending", 0) == 0 and totals.get("ambiguous", 0) == 0
+            and totals.get("released", 0) == 0 else 2)
 
 
 if __name__ == "__main__":

@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 import json
+from contextlib import contextmanager, redirect_stderr
+import io
 from pathlib import Path
 import tempfile
 import time
 import unittest
 from types import SimpleNamespace
 from typing import Any
+from unittest import mock
 
 import torch
 from torch import nn
@@ -17,7 +20,7 @@ import analyze65
 import judge65
 import rank65
 import steer65
-from paid_ledger import Ledger, HARD_CAP_USD
+from paid_ledger import HARD_CAP_USD
 
 
 class TinyMLP(nn.Module):
@@ -231,6 +234,35 @@ class FakeBatchAPI:
         return json.dumps({"id": "fake-batch-1", "processing_status": "ended"})
 
 
+class FakeLedger:
+    """Small local ledger double; avoids the shared paid ledger registry in tests."""
+    def __init__(self, path: str, _cap: float):
+        self.path = Path(path)
+
+    def _append(self, row: dict[str, Any]) -> None:
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        with self.path.open("a", encoding="utf-8") as stream:
+            stream.write(json.dumps(row) + "\n")
+
+    def reserve(self, amount: float, kind: str, meta: dict[str, Any], **_kwargs: Any) -> str:
+        attempt_id = "a" * 32
+        self._append({"event": "reserve", "attempt_id": attempt_id,
+                      "amount_usd": amount, "kind": kind, "meta": meta})
+        return attempt_id
+
+    def settle(self, attempt_id: str, amount: float, usage: dict[str, int]) -> None:
+        self._append({"event": "settle", "attempt_id": attempt_id,
+                      "amount_usd": amount, "usage": usage})
+
+    def state(self) -> dict[str, float]:
+        rows = [json.loads(line) for line in self.path.read_text(encoding="utf-8").splitlines()] \
+            if self.path.exists() else []
+        settled = {row.get("attempt_id") for row in rows if row.get("event") == "settle"}
+        reserved = sum(float(row.get("amount_usd", 0.0)) for row in rows
+                       if row.get("event") == "reserve" and row.get("attempt_id") not in settled)
+        return {"reserved": reserved}
+
+
 class Part65Tests(unittest.TestCase):
     def setUp(self) -> None:
         torch.manual_seed(65)
@@ -257,6 +289,64 @@ class Part65Tests(unittest.TestCase):
                     places=5,
                 )
 
+    def test_control_direction_is_normalized_w_down_times_hand_set_r(self):
+        model = TinyCausalModel(hidden=4, intermediate=4, layers=2)
+        down = model.model.layers[1].mlp.down_proj
+        with torch.no_grad():
+            down.weight.copy_(torch.tensor([
+                [1.0, 2.0, 0.0, 1.0],
+                [0.0, 1.0, 3.0, 0.0],
+                [2.0, 0.0, 1.0, 1.0],
+                [1.0, 1.0, 0.0, 2.0],
+            ]))
+        r = torch.tensor([0.25, -0.5, 0.75, 0.0])
+        controls = torch.zeros(100, 4)
+        controls[2] = r
+        unit = {"unit_key": "L1:c2", "type": "control", "layer": 1,
+                "unit": None, "control_id": 2}
+        actual = steer65.write_direction(torch, down, unit, controls)
+        expected = torch.nn.functional.normalize(down.weight.detach().float() @ r, dim=0)
+        torch.testing.assert_close(actual, expected)
+
+    def test_layer1_push_fires_on_layer1_and_changes_output(self):
+        model = TinyCausalModel(vocab=19, hidden=4, intermediate=4, layers=2)
+        with torch.no_grad():
+            for parameter in model.parameters():
+                parameter.zero_()
+            model.model.layers[1].mlp.down_proj.weight[0, 1] = 1.0
+            model.lm_head.weight[3, 0] = -1.0
+            model.lm_head.weight[4, 0] = 1.0
+        unit = {"unit_key": "L1:u1", "type": "neuron", "layer": 1,
+                "unit": 1, "control_id": None}
+        result = steer65.process_unit(torch, model, TinyTokenizer(), unit, {"1": 1.0})
+        baseline = {row["prompt_key"]: row["token_ids"] for row in result["baseline"]}
+        positive = [row for row in result["rollouts"] if row["dose"] == 0.8]
+        self.assertEqual(len(positive), 3)
+        self.assertEqual(result["dose_plus_0_8_changed_count"], 3)
+        for row in positive:
+            self.assertGreater(row["hook_fired_count"], 0)
+            self.assertEqual(row["hook_layer_modules"], ["model.layers.1.mlp"])
+            self.assertNotEqual(row["token_ids"], baseline[row["prompt_key"]])
+
+    def test_generate_batch_requires_explicit_hook_layer_for_pushes(self):
+        model = TinyCausalModel(layers=2)
+        pushes = torch.zeros(1, 8)
+        with self.assertRaisesRegex(steer65.SteerError, "hook_layer is required"):
+            steer65.generate_batch(torch, model, TinyTokenizer(), ["hello"], pushes)
+
+    def test_pushed_generation_rejects_a_hook_that_never_fires(self):
+        model = TinyCausalModel()
+        unit = {"unit_key": "L0:u4", "type": "neuron", "layer": 0,
+                "unit": 4, "control_id": None}
+
+        @contextmanager
+        def dead_hook(_mlp, _pushes, _layer_module):
+            yield {"fired_count": 0, "layer_modules": []}
+
+        with mock.patch.object(steer65, "intervention_hook", dead_hook):
+            with self.assertRaisesRegex(steer65.SteerError, "hook fired zero times"):
+                steer65.process_unit(torch, model, TinyTokenizer(), unit, {"0": 2.0})
+
     def test_dose_zero_reproduces_baseline_tokens(self):
         model = TinyCausalModel()
         tokenizer = TinyTokenizer()
@@ -270,6 +360,63 @@ class Part65Tests(unittest.TestCase):
         self.assertGreaterEqual(elapsed, 0.0)
         self.cpu_tiny_unit_seconds = elapsed
         print(f"tiny-model CPU one-unit elapsed: {elapsed:.6f}s")
+
+    def test_dose_zero_check_compares_with_a_separate_unsteered_generation(self):
+        model = TinyCausalModel()
+        tokenizer = TinyTokenizer()
+        unit = {"unit_key": "L0:u4", "type": "neuron", "layer": 0,
+                "unit": 4, "control_id": None}
+        original = steer65.generate_batch
+        calls = []
+
+        def mismatching_zero(torch_arg, model_arg, tokenizer_arg, prompts,
+                             pushes=None, max_new_tokens=steer65.MAX_NEW_TOKENS,
+                             hook_layer=None):
+            calls.append({"unsteered": pushes is None, "pushes": pushes})
+            rows = original(torch_arg, model_arg, tokenizer_arg, prompts, pushes,
+                            max_new_tokens=max_new_tokens, hook_layer=hook_layer)
+            if len(calls) == 2:
+                rows[0]["token_ids"] = rows[0]["token_ids"] + [999]
+            return rows
+
+        with mock.patch.object(steer65, "generate_batch", side_effect=mismatching_zero):
+            with self.assertRaisesRegex(steer65.SteerError, "dose 0 did not reproduce"):
+                steer65.process_unit(torch, model, tokenizer, unit, {"0": 2.0})
+        self.assertEqual(len(calls), 2)
+        self.assertTrue(calls[0]["unsteered"])
+        self.assertFalse(calls[1]["unsteered"])
+        self.assertEqual(float(torch.linalg.vector_norm(calls[1]["pushes"])), 0.0)
+
+    def test_pilot_check_uses_recorded_run_wide_gates(self):
+        model = TinyCausalModel(vocab=19, hidden=4, intermediate=4, layers=2)
+        with torch.no_grad():
+            for parameter in model.parameters():
+                parameter.zero_()
+            model.model.layers[1].mlp.down_proj.weight[0, 1] = 1.0
+            model.lm_head.weight[3, 0] = -1.0
+            model.lm_head.weight[4, 0] = 1.0
+        unit = {"unit_key": "L1:u1", "type": "neuron", "layer": 1,
+                "unit": 1, "control_id": None}
+        row = steer65.process_unit(torch, model, TinyTokenizer(), unit, {"1": 1.0})
+        row["equal_norm_spread_by_layer"] = {"1": 0.0}
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "pilot.jsonl"
+            path.write_text(json.dumps(row) + "\n", encoding="utf-8")
+            result = steer65.pilot_check(path)
+            for rollout in row["rollouts"]:
+                if rollout["dose"] == 0.8:
+                    rollout["token_ids"] = next(
+                        baseline_row["token_ids"] for baseline_row in row["baseline"]
+                        if baseline_row["prompt_key"] == rollout["prompt_key"]
+                    )
+                    rollout["differs_from_baseline"] = False
+            row["dose_plus_0_8_changed_count"] = 0
+            path.write_text(json.dumps(row) + "\n", encoding="utf-8")
+            with self.assertRaisesRegex(steer65.SteerError, r"only 0/3 \+0.8 rollouts differed"):
+                steer65.pilot_check(path)
+        self.assertEqual(result["plus_0_8_changed"], 3)
+        self.assertEqual(result["plus_0_8_total"], 3)
+        self.assertTrue(result["dose_zero_matches_baseline"])
 
     def test_resume_skips_finished_units(self):
         units = tiny_units()
@@ -327,18 +474,19 @@ class Part65Tests(unittest.TestCase):
         units = tiny_units()
         labels, summaries = tiny_summaries(units)
         trials = judge65.build_trials(units, labels, summaries, seed=10)[:2]
-        with tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent) as directory:
+        with tempfile.TemporaryDirectory() as directory:
             root = Path(directory) / "judge"
             ledger_path = Path(directory) / "shared-paid-ledger.jsonl"
             judge65.prepare_run(trials, root, chunk_size=2, seed=10)
             fake = FakeBatchAPI()
-            totals = judge65.run_chunks(root, ledger_path, fake, poll_seconds=0,
-                                        timeout_seconds=1, sleep=lambda _seconds: None)
-            self.assertEqual(totals["settled"], 1)
-            self.assertEqual(fake.posts, 1)
-            self.assertEqual(Ledger(str(ledger_path), HARD_CAP_USD).state()["reserved"], 0.0)
-            second = judge65.run_chunks(root, ledger_path, fake, poll_seconds=0,
-                                        timeout_seconds=1, sleep=lambda _seconds: None)
+            with mock.patch.object(judge65, "Ledger", FakeLedger):
+                totals = judge65.run_chunks(root, ledger_path, fake, poll_seconds=0,
+                                            timeout_seconds=1, sleep=lambda _seconds: None)
+                self.assertEqual(totals["settled"], 1)
+                self.assertEqual(fake.posts, 1)
+                self.assertEqual(FakeLedger(str(ledger_path), HARD_CAP_USD).state()["reserved"], 0.0)
+                second = judge65.run_chunks(root, ledger_path, fake, poll_seconds=0,
+                                            timeout_seconds=1, sleep=lambda _seconds: None)
             self.assertEqual(second["settled"], 1)
             self.assertEqual(fake.posts, 1)
             rows = judge65.read_jsonl(root / "answers.jsonl")
@@ -348,22 +496,23 @@ class Part65Tests(unittest.TestCase):
         units = tiny_units()
         labels, summaries = tiny_summaries(units)
         trials = judge65.build_trials(units, labels, summaries, seed=13)[:2]
-        with tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent) as directory:
+        with tempfile.TemporaryDirectory() as directory:
             root = Path(directory) / "judge"
             ledger_path = Path(directory) / "shared-paid-ledger.jsonl"
             judge65.prepare_run(trials, root, chunk_size=2, seed=13)
             chunk_path = root / "chunks" / "chunk-0000.json"
             chunk = json.loads(chunk_path.read_text())
             plan_hash = json.loads((root / "run.json").read_text())["plan_sha256"]
-            ledger = Ledger(str(ledger_path), HARD_CAP_USD)
+            ledger = FakeLedger(str(ledger_path), HARD_CAP_USD)
             ledger.reserve(
                 chunk["reserve_usd"], "part65-judge",
                 {"plan_sha256": plan_hash, "chunk_index": 0, "request_count": 2},
                 subcap_usd=judge65.PART65_CAP_USD, subcap_key="part65-judge",
             )
             fake = FakeBatchAPI()
-            totals = judge65.run_chunks(root, ledger_path, fake, poll_seconds=0,
-                                        timeout_seconds=1, sleep=lambda _seconds: None)
+            with mock.patch.object(judge65, "Ledger", FakeLedger):
+                totals = judge65.run_chunks(root, ledger_path, fake, poll_seconds=0,
+                                            timeout_seconds=1, sleep=lambda _seconds: None)
             self.assertEqual(totals["settled"], 1)
             self.assertEqual(fake.posts, 1)
             events = [json.loads(line) for line in ledger_path.read_text().splitlines()]
@@ -373,28 +522,30 @@ class Part65Tests(unittest.TestCase):
         units = tiny_units()
         labels, summaries = tiny_summaries(units)
         trials = judge65.build_trials(units, labels, summaries, seed=11)[:2]
-        with tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent) as directory:
+        with tempfile.TemporaryDirectory() as directory:
             root = Path(directory) / "judge"
             ledger_path = Path(directory) / "shared-paid-ledger.jsonl"
             judge65.prepare_run(trials, root, chunk_size=2, seed=11)
             fake = FakeBatchAPI(pending_checks=1)
-            first = judge65.run_chunks(root, ledger_path, fake, poll_seconds=0,
-                                       timeout_seconds=0, sleep=lambda _seconds: None)
+            with mock.patch.object(judge65, "Ledger", FakeLedger):
+                first = judge65.run_chunks(root, ledger_path, fake, poll_seconds=0,
+                                           timeout_seconds=0, sleep=lambda _seconds: None)
             self.assertEqual(first["pending"], 1)
             self.assertEqual(fake.posts, 1)
-            self.assertGreater(Ledger(str(ledger_path), HARD_CAP_USD).state()["reserved"], 0.0)
-            second = judge65.run_chunks(root, ledger_path, fake, poll_seconds=0,
-                                        timeout_seconds=1, sleep=lambda _seconds: None)
+            self.assertGreater(FakeLedger(str(ledger_path), HARD_CAP_USD).state()["reserved"], 0.0)
+            with mock.patch.object(judge65, "Ledger", FakeLedger):
+                second = judge65.run_chunks(root, ledger_path, fake, poll_seconds=0,
+                                            timeout_seconds=1, sleep=lambda _seconds: None)
             self.assertEqual(second["settled"], 1)
             self.assertEqual(fake.posts, 1)
-            self.assertEqual(Ledger(str(ledger_path), HARD_CAP_USD).state()["reserved"], 0.0)
+            self.assertEqual(FakeLedger(str(ledger_path), HARD_CAP_USD).state()["reserved"], 0.0)
 
     def test_probe_plan_contains_exactly_one_message_request(self):
         units = tiny_units()
         labels, summaries = tiny_summaries(units)
         trials = judge65.build_trials(units, labels, summaries, seed=12)
         self.assertEqual(len(judge65.build_probe_trial(trials)), 1)
-        with tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent) as directory:
+        with tempfile.TemporaryDirectory() as directory:
             root = Path(directory) / "probe"
             judge65.prepare_run(trials, root, chunk_size=1, seed=12, probe=True)
             manifest = json.loads((root / "run.json").read_text())
@@ -414,6 +565,13 @@ class Part65Tests(unittest.TestCase):
         self.assertTrue(effect["predictions"]["65d"]["pass"])
         self.assertTrue(effect["predictions"]["65e"]["pass"])
         self.assertTrue(effect["predictions"]["65f"]["pass"])
+        self.assertEqual(effect["exploratory_predictions"], ["65c", "65g"])
+        self.assertTrue(effect["predictions"]["65c"]["exploratory"])
+        self.assertTrue(effect["predictions"]["65g"]["exploratory"])
+        self.assertEqual(set(effect["predictions"]["65g"]["band_agreement"]),
+                         {"first", "middle", "last"})
+        self.assertIn("paired difference", effect["predictions"]["65f"]["measure_used"])
+        self.assertIn("null_adjusted_neuron_minus_control", effect["embedding_cosine"])
 
         answers, units, labels, write_words = planted_analysis(effect=False)
         null = analyze65.analyze_rows(
@@ -422,8 +580,101 @@ class Part65Tests(unittest.TestCase):
         )
         self.assertAlmostEqual(null["predictions"]["65a"]["agreement"]["estimate"], 0.5)
         self.assertAlmostEqual(null["predictions"]["65b"]["agreement_difference_neuron_minus_control"]["estimate"], 0.0)
-        self.assertFalse(null["predictions"]["65a"]["pass"])
-        self.assertFalse(null["predictions"]["65b"]["pass"])
+        self.assertEqual(set(null["predictions"]), {"65a", "65b", "65c", "65d", "65e", "65f", "65g"})
+        self.assertTrue(all(not row["pass"] for row in null["predictions"].values()))
+
+    def test_analyze_drops_unparseable_trials_and_counts_units_without_valid_trials(self):
+        answers, units, labels, write_words = planted_analysis(effect=False)
+        answers[0]["correct"] = None
+        answers[1]["correct"] = None
+        result = analyze65.analyze_rows(
+            answers, units, labels, write_words, seed=4,
+            bootstrap_reps=100, shuffle_reps=10,
+        )
+        self.assertEqual(result["trial_count"], 1000)
+        self.assertEqual(result["unparseable_trial_count"], 2)
+        self.assertEqual(result["unit_without_valid_trial_count"], 1)
+        self.assertEqual(result["unit_count"], 499)
+        self.assertNotIn(answers[0]["unit_key"], {row["unit_key"] for row in result["units"]})
+
+    def test_analysis_stops_above_five_percent_unparseable_trials(self):
+        answers, units, labels, write_words = planted_analysis(effect=False)
+        for row in answers[:51]:
+            row["correct"] = None
+        with self.assertRaisesRegex(analyze65.AnalysisError, "above the registered 5% limit"):
+            analyze65.analyze_rows(
+                answers, units, labels, write_words, seed=5,
+                bootstrap_reps=100, shuffle_reps=10,
+            )
+
+    def test_read_jsonl_ignores_and_warns_for_invalid_final_line_only(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "torn.jsonl"
+            path.write_text('{"ok":true}\n{"torn":\n\n', encoding="utf-8")
+            for reader, error_type in ((steer65.read_jsonl, steer65.SteerError),
+                                       (judge65.read_jsonl, judge65.JudgeError)):
+                warnings = io.StringIO()
+                with redirect_stderr(warnings):
+                    self.assertEqual(reader(path), [{"ok": True}])
+                self.assertIn(path.name, warnings.getvalue())
+                path.write_text('{broken\n{}\n', encoding="utf-8")
+                with self.assertRaises(error_type):
+                    reader(path)
+                path.write_text('{"ok":true}\n{"torn":\n\n', encoding="utf-8")
+
+    def test_judge_accepts_only_a_lone_letter_with_optional_punctuation(self):
+        def provider(text):
+            return {
+                "result": {"type": "succeeded", "message": {
+                    "content": [{"type": "text", "text": text}],
+                    "usage": {"input_tokens": 3, "output_tokens": 1},
+                }},
+            }
+        for text, expected in ((" A ", "A"), ("B.", "B"), (" a)\n", "A")):
+            answer, usage, error = judge65._extract_response(provider(text))
+            self.assertEqual((answer, error), (expected, None))
+            self.assertEqual(usage["input_tokens"], 3)
+        for text in ("Answer: B", "AB", "A..) "):
+            answer, _usage, error = judge65._extract_response(provider(text))
+            self.assertIsNone(answer)
+            self.assertIsNotNone(error)
+
+    def test_negative_steer_lens_summary_says_more_likely(self):
+        row = {"write_words": ["amber"], "steer_lens": {
+            "positive": ["gold"], "negative": ["blue"],
+        }}
+        rendered = judge65.format_write_summary(row)
+        self.assertIn("Tokens made more likely by a negative push: blue", rendered)
+        self.assertNotIn("less likely", rendered)
+
+    def test_judge_api_passes_ssl_context_and_prefers_credit_key(self):
+        context = object()
+        response = mock.MagicMock()
+        response.__enter__.return_value.read.return_value = b"{}"
+        with mock.patch.dict("os.environ", {
+                "ANTHROPIC_CREDITS_KEY": "credit-key",
+                "ANTHROPIC_API_KEY": "fallback-key",
+        }, clear=True), \
+             mock.patch.object(judge65.ssl, "create_default_context", return_value=context), \
+             mock.patch.object(judge65.urllib.request, "urlopen", return_value=response) as urlopen:
+            self.assertEqual(judge65.api_call("GET", "/probe"), "{}")
+        self.assertIs(urlopen.call_args.kwargs["context"], context)
+        request = urlopen.call_args.args[0]
+        self.assertEqual(request.get_header("X-api-key"), "credit-key")
+
+    def test_judge_main_fails_and_prints_released_chunk(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            chunk_dir = root / "chunks"
+            chunk_dir.mkdir()
+            path = chunk_dir / "chunk-0002.json"
+            path.write_text(json.dumps({"status": "released"}), encoding="utf-8")
+            with mock.patch.object(judge65, "run_chunks", return_value={
+                    "settled": 0, "pending": 0, "released": 1, "ambiguous": 0}), \
+                 redirect_stderr(io.StringIO()) as output:
+                code = judge65.main(["--out-dir", str(root), "--recover"])
+            self.assertEqual(code, 2)
+            self.assertIn(str(path), output.getvalue())
 
 
 if __name__ == "__main__":

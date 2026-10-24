@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Analyze the registered Part 65 predictions 65a-65f.
+"""Analyze the registered Part 65 predictions 65a-65g.
 Reads blinded judge answers, Part 64 Haiku-1x hypotheses and sentence-test
 pass/fail rows, plus Part 65 write summaries. Writes analysis-65.json and a
 human-readable analysis-65.md. All uncertainty intervals resample units.
@@ -12,6 +12,7 @@ import json
 import math
 from pathlib import Path
 import random
+import sys
 from typing import Any
 
 from rank65 import layer_band, words
@@ -183,22 +184,33 @@ def analyze_rows(answer_rows: list[dict[str, Any]], units: list[dict[str, Any]],
         raise AnalysisError("collection includes duplicate unit keys")
     if set(read_labels) != expected_keys or set(write_words) != expected_keys:
         raise AnalysisError("read labels and write words must cover every registered unit")
+    unparseable_trial_count = sum(answer.get("correct") is None for answer in answer_rows)
+    total_trial_count = len(answer_rows)
+    if total_trial_count == 0:
+        raise AnalysisError("no judge trials were supplied")
+    if unparseable_trial_count / total_trial_count > 0.05:
+        raise AnalysisError(
+            f"analysis stopped: {unparseable_trial_count}/{total_trial_count} judge trials "
+            "are unparseable, above the registered 5% limit"
+        )
     grouped_answers: dict[str, list[dict[str, Any]]] = {}
     for answer in answer_rows:
         key = answer.get("unit_key")
         if key not in expected_keys:
             raise AnalysisError(f"judge answer has unknown unit {key!r}")
+        correct = answer.get("correct")
+        if correct is not None and not isinstance(correct, bool):
+            raise AnalysisError(f"{key}: judge correct field must be true, false, or null")
         grouped_answers.setdefault(key, []).append(answer)
     if set(grouped_answers) != expected_keys:
         missing = sorted(expected_keys - set(grouped_answers))
         raise AnalysisError(f"judge answers are missing {len(missing)} units")
     records = []
+    units_without_valid_trial = 0
     for key, unit in unit_map.items():
         rows = sorted(grouped_answers[key], key=lambda row: int(row.get("trial", 0)))
         if len(rows) != 2 or [row.get("trial") for row in rows] != [1, 2]:
             raise AnalysisError(f"{key}: expected exactly two ordered judge trials")
-        if any(row.get("correct") not in (True, False) for row in rows):
-            raise AnalysisError(f"{key}: one or more judge results have no valid A/B decision")
         if (any(row.get("type") != unit["type"] or int(row.get("layer", -1)) != int(unit["layer"])
                 for row in rows)):
             raise AnalysisError(f"{key}: judge metadata disagrees with the frozen collection")
@@ -216,13 +228,19 @@ def analyze_rows(answer_rows: list[dict[str, Any]], units: list[dict[str, Any]],
         sentence_values = {row.get("sentence_test_pass") for row in rows}
         if len(sentence_values) != 1 or next(iter(sentence_values)) not in (True, False, None):
             raise AnalysisError(f"{key}: sentence-test status differs across trials")
-        agreement = sum(bool(row["correct"]) for row in rows) / 2.0
+        valid_rows = [row for row in rows if row["correct"] is not None]
+        if not valid_rows:
+            units_without_valid_trial += 1
+            continue
+        agreement = sum(bool(row["correct"]) for row in valid_rows) / len(valid_rows)
         records.append({
             "unit_key": key,
             "type": unit["type"],
             "layer": int(unit["layer"]),
             "layer_band": band,
             "agreement": agreement,
+            "valid_trial_count": len(valid_rows),
+            "unparseable_trial_count": len(rows) - len(valid_rows),
             "sentence_test_pass": next(iter(sentence_values)),
             "read_label": read_labels[key],
             "write_text": " ".join(write_words[key]),
@@ -230,14 +248,14 @@ def analyze_rows(answer_rows: list[dict[str, Any]], units: list[dict[str, Any]],
 
     neurons = [row for row in records if row["type"] == "neuron"]
     controls = [row for row in records if row["type"] == "control"]
-    if len(neurons) != 250 or len(controls) != 250:
-        raise AnalysisError(f"expected 250 units per type, found {len(neurons)} neurons and {len(controls)} controls")
+    if not neurons or not controls:
+        raise AnalysisError(f"analysis needs valid trials for both types, found {len(neurons)} neurons and {len(controls)} controls")
     by_band = {
         band: [row for row in neurons if row["layer_band"] == band]
         for band in ("first", "middle", "last")
     }
-    if not by_band["first"] or not by_band["last"]:
-        raise AnalysisError("65c needs real neurons in the first and last layer bands")
+    if any(not by_band[band] for band in ("first", "middle", "last")):
+        raise AnalysisError("65c/65g need valid real-neuron trials in all three layer bands")
     pass_rows = [row for row in neurons if row["sentence_test_pass"] is True]
     fail_rows = [row for row in neurons if row["sentence_test_pass"] is False]
     if not pass_rows or not fail_rows:
@@ -261,6 +279,11 @@ def analyze_rows(answer_rows: list[dict[str, Any]], units: list[dict[str, Any]],
     control_cosine = [row["embedding_cosine"] for row in controls]
     real_cosine_lift = [row["embedding_above_shuffled"] for row in neurons]
     control_cosine_lift = [row["embedding_above_shuffled"] for row in controls]
+    band_agreement = {
+        band: bootstrap_mean([row["agreement"] for row in by_band[band]],
+                             seed=seed + offset, reps=bootstrap_reps)
+        for band, offset in (("first", 10), ("middle", 11), ("last", 12))
+    }
 
     real = bootstrap_mean(real_agreement, seed=seed, reps=bootstrap_reps)
     control = bootstrap_mean(control_agreement, seed=seed + 1, reps=bootstrap_reps)
@@ -276,6 +299,9 @@ def analyze_rows(answer_rows: list[dict[str, Any]], units: list[dict[str, Any]],
                                                   seed=seed + 7, reps=bootstrap_reps)
     real_null_lift = bootstrap_mean(real_cosine_lift, seed=seed + 8, reps=bootstrap_reps)
     control_null_lift = bootstrap_mean(control_cosine_lift, seed=seed + 9, reps=bootstrap_reps)
+    null_adjusted_embedding_difference = bootstrap_difference(
+        real_cosine_lift, control_cosine_lift, seed=seed + 14, reps=bootstrap_reps
+    )
 
     predictions = {
         "65a": {
@@ -290,6 +316,7 @@ def analyze_rows(answer_rows: list[dict[str, Any]], units: list[dict[str, Any]],
         },
         "65c": {
             "registered": "Among real neurons, the last layer third agrees at least 10 points more than the first third.",
+            "exploratory": True,
             "agreement_difference_last_minus_first": depth_difference,
             "pass": depth_difference["estimate"] >= 0.10,
         },
@@ -305,12 +332,21 @@ def analyze_rows(answer_rows: list[dict[str, Any]], units: list[dict[str, Any]],
         },
         "65f": {
             "registered": "The embedding measure ranks real above control in the same direction as the primary, with no threshold.",
+            "measure_used": "Registered paired difference in observed read/write cosine (neuron mean minus control mean).",
             "cosine_difference_neuron_minus_control": embedding_difference,
+            "null_adjusted_cosine_difference_neuron_minus_control": null_adjusted_embedding_difference,
             "primary_agreement_difference_neuron_minus_control": type_difference["estimate"],
             "cosine_difference_above_shuffled_neuron": real_null_lift,
             "cosine_difference_above_shuffled_control": control_null_lift,
             "pass": (_sign(embedding_difference["estimate"]) ==
                      _sign(type_difference["estimate"]) and type_difference["estimate"] != 0),
+        },
+        "65g": {
+            "registered": "Among real neurons, the middle third agrees less than both the first and last thirds by point estimate.",
+            "exploratory": True,
+            "band_agreement": band_agreement,
+            "pass": (band_agreement["middle"]["estimate"] < band_agreement["first"]["estimate"]
+                     and band_agreement["middle"]["estimate"] < band_agreement["last"]["estimate"]),
         },
     }
     return {
@@ -318,17 +354,25 @@ def analyze_rows(answer_rows: list[dict[str, Any]], units: list[dict[str, Any]],
         "seed": seed,
         "bootstrap_replicates": bootstrap_reps,
         "shuffled_pair_replicates": shuffle_reps,
+        "trial_count": total_trial_count,
+        "unparseable_trial_count": unparseable_trial_count,
+        "unit_without_valid_trial_count": units_without_valid_trial,
+        "exploratory_predictions": ["65c", "65g"],
         "embedding": {
             "method": "512-dimensional signed Blake2b feature hashing of word unigrams and adjacent word bigrams; cosine",
             "null": "within-type, within-layer-band write-summary derangement",
+            "65f_measure_used": predictions["65f"]["measure_used"],
+            "65f_null_adjusted_measure": "Neurons minus controls in unit-level observed cosine minus shuffled-pair null cosine.",
         },
         "unit_count": len(records),
+        "registered_unit_count": len(units),
         "unit_agreement": {
             "neuron": real,
             "control": control,
             "neuron_minus_control": type_difference,
-            "first_third_neuron": bootstrap_mean(first_agreement, seed=seed + 10, reps=bootstrap_reps),
-            "last_third_neuron": bootstrap_mean(last_agreement, seed=seed + 11, reps=bootstrap_reps),
+            "first_third_neuron": band_agreement["first"],
+            "middle_third_neuron": band_agreement["middle"],
+            "last_third_neuron": band_agreement["last"],
             "sentence_pass_neuron": bootstrap_mean(pass_agreement, seed=seed + 12, reps=bootstrap_reps),
             "sentence_fail_neuron": bootstrap_mean(fail_agreement, seed=seed + 13, reps=bootstrap_reps),
         },
@@ -336,6 +380,7 @@ def analyze_rows(answer_rows: list[dict[str, Any]], units: list[dict[str, Any]],
             "neuron": real_embedding,
             "control": control_embedding,
             "neuron_minus_control": embedding_difference,
+            "null_adjusted_neuron_minus_control": null_adjusted_embedding_difference,
             "neuron_minus_shuffled_null": real_null_lift,
             "control_minus_shuffled_null": control_null_lift,
         },
@@ -349,12 +394,15 @@ def render_markdown(result: dict[str, Any]) -> str:
         "# Part 65 analysis",
         "",
         f"Units analyzed: {result['unit_count']}; bootstrap replicates: {result['bootstrap_replicates']}; "
-        f"shuffled-pair replicates: {result['shuffled_pair_replicates']}.",
+        f"shuffled-pair replicates: {result['shuffled_pair_replicates']}; "
+        f"unparseable trials: {result['unparseable_trial_count']}/{result['trial_count']}; "
+        f"units with no valid trial: {result['unit_without_valid_trial_count']}.",
         "",
         "| Prediction | Estimate | 95% unit-bootstrap interval | Pass |",
         "|---|---:|---:|:---:|",
     ]
     predictions = result["predictions"]
+    embedding_difference = predictions["65f"]["cosine_difference_neuron_minus_control"]
     rows = (
         ("65a neuron agreement", predictions["65a"]["agreement"]),
         ("65b neuron minus control", predictions["65b"]["agreement_difference_neuron_minus_control"]),
@@ -369,6 +417,29 @@ def render_markdown(result: dict[str, Any]) -> str:
         passing = predictions[name[:3]]["pass"]
         lines.append(f"| {name} | {estimate:.4f} | [{low:.4f}, {high:.4f}] | {str(passing).lower()} |")
     lines.extend([
+        "",
+        "65c and 65g are exploratory depth predictions.",
+        "",
+        "## 65g exploratory depth agreement",
+        "",
+        f"Middle below both first and last by point estimate: {str(predictions['65g']['pass']).lower()}.",
+        "",
+        "| Band | Estimate | 95% unit-bootstrap interval | n |",
+        "|---|---:|---:|---:|",
+    ])
+    for band in ("first", "middle", "last"):
+        metric = predictions["65g"]["band_agreement"][band]
+        lines.append(f"| {band} | {metric['estimate']:.4f} | [{metric['ci95'][0]:.4f}, {metric['ci95'][1]:.4f}] | {metric['n']} |")
+    null_adjusted = predictions["65f"]["null_adjusted_cosine_difference_neuron_minus_control"]
+    lines.extend([
+        "",
+        "## 65f embedding measure",
+        "",
+        predictions["65f"]["measure_used"],
+        f"Registered observed cosine difference: {embedding_difference['estimate']:.4f} "
+        f"[{embedding_difference['ci95'][0]:.4f}, {embedding_difference['ci95'][1]:.4f}].",
+        f"Null-adjusted neuron-minus-control difference: {null_adjusted['estimate']:.4f} "
+        f"[{null_adjusted['ci95'][0]:.4f}, {null_adjusted['ci95'][1]:.4f}].",
         "",
         "## Embedding and shuffled-pair null",
         "",
@@ -421,10 +492,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--bootstrap-reps", type=int, default=BOOTSTRAP_REPS)
     parser.add_argument("--shuffle-reps", type=int, default=SHUFFLE_REPS)
     args = parser.parse_args(argv)
-    result = analyze_files(args.answers, args.collection, args.read_neuron,
-                           args.read_control, args.ranked, seed=args.seed,
-                           bootstrap_reps=args.bootstrap_reps,
-                           shuffle_reps=args.shuffle_reps)
+    try:
+        result = analyze_files(args.answers, args.collection, args.read_neuron,
+                               args.read_control, args.ranked, seed=args.seed,
+                               bootstrap_reps=args.bootstrap_reps,
+                               shuffle_reps=args.shuffle_reps)
+    except AnalysisError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(result, ensure_ascii=False, indent=2, allow_nan=False) + "\n",
                         encoding="utf-8")
