@@ -75,6 +75,7 @@ python part65/judge65.py \
   --probe
 ```
 
+The probe's `p65-0000` request is also the full plan's first request, so running both sends that trial twice.
 The probe answer is at `results/part65/judge/probe/answers.jsonl`. Continue only after it settles and contains a parsed A/B result. Submit the full plan with the same inputs and output directory, omitting `--probe`:
 
 ```bash

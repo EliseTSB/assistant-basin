@@ -587,11 +587,13 @@ class Part65Tests(unittest.TestCase):
         labels, summaries = tiny_summaries(units)
         trials = judge65.build_trials(units, labels, summaries, seed=65)
         output = io.StringIO()
-        with mock.patch.object(judge65, "prepare_inputs", return_value=trials), \
+        with mock.patch.object(judge65, "prepare_inputs", return_value=trials) as prepare_inputs, \
              mock.patch.object(judge65, "api_call", side_effect=AssertionError("must not send")), \
              redirect_stderr(io.StringIO()), redirect_stdout(output):
             code = judge65.main(["--reserve-total", "--ranked", "ranked.jsonl", "--chunk-size", "3"])
         self.assertEqual(code, 0)
+        self.assertEqual(prepare_inputs.call_args.args[-1], judge65.REGISTERED_SEED)
+        self.assertEqual(judge65.REGISTERED_SEED, 6501)
         record = json.loads(output.getvalue())
         self.assertEqual(record["request_count"], len(trials))
         self.assertEqual(record["reserve_total_usd"], judge65._reserve_total(trials, 3))
@@ -601,40 +603,38 @@ class Part65Tests(unittest.TestCase):
         """Catches mutant: release is retryable, unmarked, or main returns success."""
         units = tiny_units()
         labels, summaries = tiny_summaries(units)
-        trials = judge65.build_trials(units, labels, summaries, seed=66)[:4]
+        trials = judge65.build_trials(units, labels, summaries, seed=66)[:3]
 
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory) / "judge"
             ledger_path = Path(directory) / "ledger.jsonl"
-            class ReleaseSecondChunk:
+            class ReleaseFirstChunk:
                 def __init__(self):
-                    self.success = FakeBatchAPI()
                     self.posts = 0
 
-                def __call__(self, method, path, body=None, **kwargs):
+                def __call__(self, method, _path, _body=None, **_kwargs):
                     if method == "POST":
                         self.posts += 1
-                        if self.posts == 2:
-                            raise judge65.APIHttpError(
-                                400, '{"type":"error","error":{"type":"invalid_request_error"}}'
-                            )
-                    return self.success(method, path, body, **kwargs)
+                        raise judge65.APIHttpError(
+                            400, '{"type":"error","error":{"type":"invalid_request_error"}}'
+                        )
+                    raise AssertionError("a validated release has no batch to fetch")
 
-            fake = ReleaseSecondChunk()
-            judge65.prepare_run(trials, root, chunk_size=2, seed=66)
+            fake = ReleaseFirstChunk()
+            judge65.prepare_run(trials, root, chunk_size=1, seed=66)
             with mock.patch.object(judge65, "Ledger", FakeLedger):
                 totals = judge65.run_chunks(root, ledger_path, fake, poll_seconds=0,
                                             timeout_seconds=1, sleep=lambda _seconds: None)
             self.assertEqual(totals["released"], 1)
-            self.assertEqual(fake.posts, 2)
+            self.assertEqual(fake.posts, 1)
             states = [json.loads(path.read_text()) for path in
                       sorted((root / "chunks").glob("chunk-*.json"))]
-            self.assertEqual(states[0]["status"], "settled")
-            self.assertEqual(states[1]["status"], "released")
+            self.assertEqual([state["status"] for state in states],
+                             ["released", "ready", "ready"])
             manifest = json.loads((root / "run.json").read_text())
             self.assertEqual(manifest["failure"]["outcome"], "released")
             self.assertNotIn("completion", manifest)
-            with self.assertRaisesRegex(analyze65.AnalysisError, "no completion marker"):
+            with self.assertRaisesRegex(analyze65.AnalysisError, "completion marker"):
                 analyze65.analyze_files(
                     root / "answers.jsonl", Path("missing-collection.jsonl"),
                     Path("missing-neuron.jsonl"), Path("missing-control.jsonl"),
@@ -649,7 +649,7 @@ class Part65Tests(unittest.TestCase):
                  redirect_stderr(err), redirect_stdout(out):
                 code = judge65.main([
                     "--ranked", "ranked.jsonl", "--out-dir", str(main_root),
-                    "--chunk-size", "2",
+                    "--chunk-size", "1",
                 ])
             self.assertEqual(code, 2)
             self.assertIn('"released": 1', out.getvalue())
@@ -751,6 +751,47 @@ class Part65Tests(unittest.TestCase):
                         judge65.run_chunks(root_b, ledger_path, api, poll_seconds=0,
                                            timeout_seconds=0)
                 self.assertEqual(api.posts, 1)
+
+    def test_released_reservation_latches_different_seed_plan_before_any_send(self):
+        """Catches mutant: the judge-wide terminal latch is filtered by plan hash."""
+        units = tiny_units()
+        labels, summaries = tiny_summaries(units)
+        plan_a = judge65.build_trials(units, labels, summaries, seed=80)
+        plan_b = judge65.build_trials(units, labels, summaries, seed=81)
+
+        class ReleaseFirst:
+            def __init__(self):
+                self.posts = 0
+
+            def __call__(self, method, _path, _body=None, **_kwargs):
+                if method == "POST":
+                    self.posts += 1
+                    raise judge65.APIHttpError(
+                        400, '{"type":"error","error":{"type":"invalid_request_error"}}'
+                    )
+                raise AssertionError("a validated release has no batch to fetch")
+
+        with tempfile.TemporaryDirectory() as directory:
+            root_a, root_b = Path(directory) / "plan-a", Path(directory) / "plan-b"
+            ledger_path = Path(directory) / "shared-ledger.jsonl"
+            judge65.prepare_run(plan_a, root_a, chunk_size=1, seed=80)
+            judge65.prepare_run(plan_b, root_b, chunk_size=1, seed=81)
+            manifest_a = json.loads((root_a / "run.json").read_text())
+            manifest_b = json.loads((root_b / "run.json").read_text())
+            self.assertNotEqual(manifest_a["plan_sha256"], manifest_b["plan_sha256"])
+
+            api_a, api_b = ReleaseFirst(), FakeBatchAPI()
+            with mock.patch.object(judge65, "Ledger", FakeLedger):
+                first = judge65.run_chunks(root_a, ledger_path, api_a, poll_seconds=0,
+                                            timeout_seconds=1)
+                self.assertEqual(first["released"], 1)
+                with self.assertRaisesRegex(judge65.JudgeError, "another run"):
+                    judge65.run_chunks(root_b, ledger_path, api_b, poll_seconds=0,
+                                       timeout_seconds=1)
+            self.assertEqual(api_a.posts, 1)
+            self.assertEqual(api_b.posts, 0)
+            events = [json.loads(line) for line in ledger_path.read_text().splitlines()]
+            self.assertEqual(sum(row["event"] == "reserve" for row in events), 1)
 
     def test_copying_a_reserved_chunk_to_another_run_is_refused_before_post(self):
         """Catches mutant: the local reserved branch skips run-identity validation."""
@@ -1062,6 +1103,34 @@ class Part65Tests(unittest.TestCase):
             self.assertEqual([row["ambiguous"] for row in totals], [1, 1])
             self.assertEqual(api.posts, 0)
 
+    def test_crash_after_provider_acceptance_does_not_post_again(self):
+        """Catches mutant: the durable posting marker is removed before POST."""
+        units = tiny_units()
+        labels, summaries = tiny_summaries(units)
+        trials = judge65.build_trials(units, labels, summaries, seed=82)[:2]
+        with tempfile.TemporaryDirectory() as directory:
+            root, ledger_path = Path(directory) / "judge", Path(directory) / "ledger.jsonl"
+            judge65.prepare_run(trials, root, chunk_size=2, seed=82)
+            api = FakeBatchAPI()
+            real_save = judge65._save_chunk
+
+            def fail_submitted_save(path, state):
+                if state.get("status") == "submitted":
+                    raise RuntimeError("simulated crash saving submitted state")
+                real_save(path, state)
+
+            with mock.patch.object(judge65, "Ledger", FakeLedger):
+                with mock.patch.object(judge65, "_save_chunk", side_effect=fail_submitted_save):
+                    with self.assertRaisesRegex(RuntimeError, "simulated crash"):
+                        judge65.run_chunks(root, ledger_path, api, poll_seconds=0,
+                                           timeout_seconds=1)
+                second = judge65.run_chunks(root, ledger_path, api, poll_seconds=0,
+                                            timeout_seconds=1)
+            self.assertEqual(api.posts, 1)
+            self.assertEqual(second["ambiguous"], 1)
+            chunk_path = root / "chunks" / "chunk-0000.json"
+            self.assertEqual(json.loads(chunk_path.read_text())["status"], "posting")
+
     def test_atomic_json_fsyncs_temp_then_replacement_directory(self):
         """Catches mutant: local posting state is replaced without file and directory fsyncs."""
         with tempfile.TemporaryDirectory() as directory:
@@ -1132,6 +1201,25 @@ class Part65Tests(unittest.TestCase):
             self.assertEqual(json.loads((root / "run.json").read_text())[
                 "completion"]["status"], "complete")
             self.assertEqual(FakeLedger(str(ledger_path), HARD_CAP_USD).state()["reserved"], 0.0)
+
+    def test_pending_chunk_stops_before_later_ready_chunks(self):
+        """Catches mutant: a pending batch does not stop the chunk loop."""
+        units = tiny_units()
+        labels, summaries = tiny_summaries(units)
+        trials = judge65.build_trials(units, labels, summaries, seed=83)[:3]
+        with tempfile.TemporaryDirectory() as directory:
+            root, ledger_path = Path(directory) / "judge", Path(directory) / "ledger.jsonl"
+            judge65.prepare_run(trials, root, chunk_size=1, seed=83)
+            api = FakeBatchAPI(pending_checks=100)
+            with mock.patch.object(judge65, "Ledger", FakeLedger):
+                totals = judge65.run_chunks(root, ledger_path, api, poll_seconds=0,
+                                            timeout_seconds=0, sleep=lambda _seconds: None)
+            self.assertEqual(totals["pending"], 1)
+            self.assertEqual(api.posts, 1)
+            states = [json.loads(path.read_text()) for path in
+                      sorted((root / "chunks").glob("chunk-*.json"))]
+            self.assertEqual([state["status"] for state in states],
+                             ["submitted", "ready", "ready"])
 
     def test_probe_plan_contains_exactly_one_message_request(self):
         units = tiny_units()

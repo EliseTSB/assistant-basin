@@ -43,6 +43,7 @@ from steer65 import (DEFAULT_COLLECTION, atomic_append_jsonl, load_units, _lock_
 MODEL = "claude-haiku-5-5"
 MAX_TOKENS = 32
 PART65_CAP_USD = 1.0
+REGISTERED_SEED = 6501
 SYSTEM_PROMPT = (
     "You are doing a blind two-choice match. One short read label describes a "
     "unit from examples that activated it. Two write summaries describe outputs "
@@ -191,7 +192,7 @@ def judge_prompt(read_label: str, summary_a: str, summary_b: str) -> str:
 def build_trials(units: list[dict[str, Any]], read_labels: dict[str, dict[str, Any]],
                  write_summaries: dict[str, dict[str, Any]],
                  sentence_tests: dict[str, bool | None] | None = None,
-                 seed: int = 6501) -> list[dict[str, Any]]:
+                 seed: int = REGISTERED_SEED) -> list[dict[str, Any]]:
     """Make two same-type, same-band foils per unit and swap own A/B position."""
     sentence_tests = sentence_tests or {}
     if set(read_labels) != set(write_summaries):
@@ -708,7 +709,7 @@ def _save_run_outcome(root: Path, totals: dict[str, int]) -> None:
 
 def _prior_reservation(ledger_path: Path, plan_hash: str, chunk_index: int,
                        judge_run_id: str, run_root: str) -> str | None:
-    """Validate plan-wide ownership and recover this run's active chunk reserve."""
+    """Validate judge-wide ownership and recover this run's active chunk reserve."""
     if not ledger_path.exists():
         return None
     rows = []
@@ -722,6 +723,42 @@ def _prior_reservation(ledger_path: Path, plan_hash: str, chunk_index: int,
                 raise JudgeError(f"{ledger_path}:{line_number}: paidaction ledger has an invalid line") from exc
             if isinstance(row, dict):
                 rows.append(row)
+    judge_reservations = [
+        row for row in rows
+        if row.get("event") == "reserve" and row.get("kind") == "part65-judge"
+    ]
+    status_by_attempt: dict[str, str] = {}
+    terminal_events = {
+        "settle": "settled",
+        "settlement_overrun": "overrun",
+        "release": "released",
+        "retire": "retired",
+    }
+    for row in judge_reservations:
+        attempt_id = row.get("attempt_id")
+        meta = row.get("meta")
+        if not isinstance(attempt_id, str) or not attempt_id:
+            raise JudgeError("Part 65 paidaction reservation has no attempt id")
+        if (not isinstance(meta, dict)
+                or not isinstance(meta.get("judge_run_id"), str)
+                or not isinstance(meta.get("run_root"), str)):
+            raise JudgeError("Part 65 paidaction reservation has no run identity")
+        status_by_attempt[attempt_id] = "reserved"
+    for row in rows:
+        status = terminal_events.get(row.get("event"))
+        attempt_id = row.get("attempt_id")
+        if status is not None and isinstance(attempt_id, str) and attempt_id in status_by_attempt:
+            status_by_attempt[attempt_id] = status
+    for row in judge_reservations:
+        meta = row["meta"]
+        same_run = (meta.get("judge_run_id") == judge_run_id
+                    and meta.get("run_root") == run_root)
+        status = status_by_attempt[row["attempt_id"]]
+        if not same_run and status in ("reserved", "released", "retired", "overrun"):
+            raise JudgeError(
+                "Part 65 judge has an active or terminal paidaction reservation from another run; "
+                "refusing to send"
+            )
     plan_reservations = [
         row for row in rows
         if row.get("event") == "reserve"
@@ -746,12 +783,7 @@ def _prior_reservation(ledger_path: Path, plan_hash: str, chunk_index: int,
     attempt_id = matches[0].get("attempt_id")
     if not isinstance(attempt_id, str):
         raise JudgeError("matching Part 65 paidaction reserve has no attempt id")
-    status = "reserved"
-    for row in rows:
-        if row.get("attempt_id") == attempt_id and row.get("event") in (
-                "settle", "settlement_overrun", "release", "retire"):
-            status = {"settle": "settled", "settlement_overrun": "overrun",
-                      "release": "released", "retire": "retired"}[row["event"]]
+    status = status_by_attempt.get(attempt_id, "reserved")
     if status == "reserved":
         return attempt_id
     raise JudgeError(
@@ -903,7 +935,7 @@ def run_chunks(root: Path, ledger_path: Path = DEFAULT_LEDGER_PATH,
                                         timeout_seconds=timeout_seconds, sleep=sleep,
                                         recover_only=recover_only)
                 totals[outcome] = totals.get(outcome, 0) + 1
-                if outcome in ("released", "ambiguous"):
+                if outcome in ("released", "ambiguous", "pending"):
                     break
             except JudgeError as exc:
                 if "ambiguous" in str(exc) or "no batch ID" in str(exc):
@@ -933,7 +965,6 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--ranked", type=Path, default=None)
     parser.add_argument("--sentence-test", type=Path, default=None)
     parser.add_argument("--out-dir", type=Path)
-    parser.add_argument("--seed", type=int, default=6501)
     parser.add_argument("--chunk-size", type=int, default=100)
     parser.add_argument("--probe", action="store_true",
                         help="submit exactly one message request, then poll that one-request batch")
@@ -965,7 +996,7 @@ def main(argv: list[str] | None = None) -> int:
         control_path = args.read_control or args.read_dir / "haiku-1x-control.jsonl"
         sentence_test_path = args.sentence_test or DEFAULT_SENTENCE_TEST
         trials = prepare_inputs(args.collection, neuron_path, control_path, args.ranked,
-                                sentence_test_path, args.seed)
+                                sentence_test_path, REGISTERED_SEED)
         if args.reserve_total:
             print(json.dumps({
                 "plan_sha256": hashlib.sha256(_canonical_json(trials)).hexdigest(),
@@ -977,7 +1008,8 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         root = args.out_dir / "probe" if args.probe else args.out_dir
         run_root = root
-        prepare_run(trials, root, 1 if args.probe else args.chunk_size, args.seed, probe=args.probe)
+        prepare_run(trials, root, 1 if args.probe else args.chunk_size,
+                    REGISTERED_SEED, probe=args.probe)
         try:
             totals = run_chunks(root, poll_seconds=args.poll_seconds,
                                 timeout_seconds=args.timeout_seconds)
