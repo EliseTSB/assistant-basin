@@ -117,6 +117,12 @@ def main() -> int:
     ok = True
     for kind in ("neuron", "control"):
         cols = [c for c in range(len(specs)) if types[c] == kind and d_old[c] is not None and d_new[c] is not None]
+        if not cols:  # a --limit smoke run can leave a type with no unit that has full tiers
+            ok = False
+            report[kind] = {"units": 0, "decision_agreement": float("nan"), "pass_rate_reference": float("nan"),
+                            "pass_rate_device": float("nan"), "pass_rate_diff_points": float("nan"),
+                            "G1": False, "G2": False, "disagreeing_units": []}
+            continue
         agree = sum(d_old[c] == d_new[c] for c in cols)
         rate_old = 100.0 * sum(d_old[c] for c in cols) / len(cols)
         rate_new = 100.0 * sum(d_new[c] for c in cols) / len(cols)
