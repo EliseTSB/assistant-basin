@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 import argparse
-import fcntl
+try:
+    import fcntl
+except ImportError:  # Windows: only the POSIX CLI locks below use it; scoring does not (Part 64 Amendment 7, 2026-10-24)
+    fcntl = None
 import hashlib
 import json
 import math
@@ -824,7 +827,7 @@ def main(argv: list[str] | None = None) -> int:
     score.add_argument("--split", choices=["dev", "test"], required=True)
     score.add_argument("--methods", default="all", help="comma list M0..M7 or all")
     score.add_argument("--model", type=Path, default=None)
-    score.add_argument("--device", default="auto", choices=["auto", "cuda", "cpu"])
+    score.add_argument("--device", default="auto", choices=["auto", "cuda", "xpu", "cpu"])
     score.add_argument("--dtype", default="bf16", choices=["bf16", "fp32"])
     score.add_argument("--batch-size", type=int, default=8)
     score.add_argument("--threads", type=int, default=4)

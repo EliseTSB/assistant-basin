@@ -1,0 +1,36 @@
+{
+  "sentences": 5628,
+  "device": "xpu",
+  "reference_device": "cuda",
+  "batch_size": 8,
+  "dtype": "bf16",
+  "G3_median_abs_rel_diff_own_unit": 0.008245071396231651,
+  "G3_max_abs_rel_diff_own_unit": 48.609466552734375,
+  "G3_own_unit_flag_flip_share": 0.0039090262970859985,
+  "G3_own_unit_flag_flips": 22,
+  "neuron": {
+    "units": 233,
+    "decision_agreement": 0.9957081545064378,
+    "pass_rate_reference": 42.48927038626609,
+    "pass_rate_device": 42.918454935622314,
+    "pass_rate_diff_points": 0.4291845493562221,
+    "G1": true,
+    "G2": true,
+    "disagreeing_units": [
+      "L2:u1233"
+    ]
+  },
+  "control": {
+    "units": 236,
+    "decision_agreement": 0.9957627118644068,
+    "pass_rate_reference": 16.10169491525424,
+    "pass_rate_device": 16.52542372881356,
+    "pass_rate_diff_points": 0.4237288135593218,
+    "G1": true,
+    "G2": true,
+    "disagreeing_units": [
+      "L17:c10"
+    ]
+  },
+  "gate": "PASS"
+}

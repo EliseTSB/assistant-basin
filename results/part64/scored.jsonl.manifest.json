@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "inputs_sha256": {
+    "p64basin\\results\\part64\\gen64\\outputs\\haiku-1x-neuron.jsonl": "efe0c8a4a833ca8e744c5bdb38fa01f7daab4539f07af7687aa25413cdb19b75",
+    "p64basin\\results\\part64\\gen64\\outputs\\haiku-1x-control.jsonl": "b8af50471078477a98fd541bfef760a3dad212747a245cdedfd5b79b453d6e05",
+    "p64basin\\results\\part64\\gen64\\outputs\\haiku-3x-neuron.jsonl": "55904015ad058fc9ada23f478cdb771e13ef7fbb362aa62c7af0146a43d59282",
+    "p64basin\\results\\part64\\gen64\\outputs\\haiku-3x-control.jsonl": "8a1b1fc23af927b5e47cd1fad3e2c890456238c44213b808fed6f6731ac54fb4",
+    "p64basin\\results\\part64\\gen64\\outputs\\opus-1x-neuron.jsonl": "e6712c1ed583c89b2d86ea2f7960b8b928785886ba7d876a3ebb4e73ee678080",
+    "p64basin\\results\\part64\\gen64\\outputs\\opus-1x-control.jsonl": "cd722ed75054ddd70c2d194bf86864d90a460b59341554b94bfbbd072dc06c1a",
+    "p64basin\\results\\part64\\gen64\\outputs\\opus-3x-neuron.jsonl": "389e38f6b92d3e11d2c34b40ea2cf04d2d26300a39582216cfbb9d1ebfdb9df6",
+    "p64basin\\results\\part64\\gen64\\outputs\\opus-3x-control.jsonl": "76380bac73e4ce93a038ad767a1b4bcea2caa38b2b228257604956b810eed419"
+  },
+  "model": "Qwen/Qwen3-1.7B",
+  "model_revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+  "dtype": "bf16",
+  "device": "xpu",
+  "batch_size": 8,
+  "unit_count": 500,
+  "row_count": 2000,
+  "pass_rule": "at least 3 of 4 strong activations strictly above Part 60 threshold and at most 1 of 4 none activations strictly above threshold",
+  "score_backend": "qwen-down-proj-hook-v1"
+}

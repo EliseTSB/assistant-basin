@@ -1,0 +1,3 @@
+13:43:55 step 1 start: p65basin\part65\steer65.py --collection p65basin\results\part64\collection.jsonl --corpus qwen35\pile10k.jsonl --medians p65basin\results\part65\layer-medians.json --out p65basin\results\part65\steer.jsonl --device xpu (ram_avail 9.9G)
+15:58:34 step 1 gpu: 1131 samples, mean 54%, max 76%, busy(>5%) 99% of the time
+15:58:34 step 1 rc=0

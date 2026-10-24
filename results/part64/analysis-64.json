@@ -1,0 +1,264 @@
+{
+  "split": "dev",
+  "arms": {
+    "haiku-1x": {
+      "real_pass_rate": 0.524,
+      "control_pass_rate": 0.26,
+      "gap": 0.264,
+      "n_real": 250,
+      "n_control": 250,
+      "n_real_parse_ok": 242,
+      "n_control_parse_ok": 246,
+      "n_score_failures": 12,
+      "n_max_tokens": 0
+    },
+    "haiku-3x": {
+      "real_pass_rate": 0.544,
+      "control_pass_rate": 0.328,
+      "gap": 0.21600000000000003,
+      "n_real": 250,
+      "n_control": 250,
+      "n_real_parse_ok": 244,
+      "n_control_parse_ok": 244,
+      "n_score_failures": 12,
+      "n_max_tokens": 0
+    },
+    "opus-1x": {
+      "real_pass_rate": 0.676,
+      "control_pass_rate": 0.492,
+      "gap": 0.18400000000000005,
+      "n_real": 250,
+      "n_control": 250,
+      "n_real_parse_ok": 243,
+      "n_control_parse_ok": 243,
+      "n_score_failures": 14,
+      "n_max_tokens": 0
+    },
+    "opus-3x": {
+      "real_pass_rate": 0.692,
+      "control_pass_rate": 0.58,
+      "gap": 0.11199999999999999,
+      "n_real": 250,
+      "n_control": 250,
+      "n_real_parse_ok": 235,
+      "n_control_parse_ok": 230,
+      "n_score_failures": 35,
+      "n_max_tokens": 0
+    }
+  },
+  "comparisons_vs_haiku_1x": {
+    "haiku-3x": {
+      "comparator": "haiku-1x",
+      "real_pass_rate_delta": {
+        "estimate": 0.020000000000000018,
+        "ci95": [
+          -0.051999999999999935,
+          0.08400000000000002
+        ],
+        "n": 250
+      },
+      "control_pass_rate_delta": {
+        "estimate": 0.068,
+        "ci95": [
+          -0.008000000000000007,
+          0.14
+        ],
+        "n": 250
+      },
+      "gap_delta": {
+        "estimate": -0.04799999999999999,
+        "ci95": [
+          -0.1479999999999999,
+          0.051999999999999935
+        ],
+        "n": 500
+      }
+    },
+    "opus-1x": {
+      "comparator": "haiku-1x",
+      "real_pass_rate_delta": {
+        "estimate": 0.15200000000000002,
+        "ci95": [
+          0.08399999999999996,
+          0.21600000000000003
+        ],
+        "n": 250
+      },
+      "control_pass_rate_delta": {
+        "estimate": 0.23199999999999998,
+        "ci95": [
+          0.16000000000000003,
+          0.30000000000000004
+        ],
+        "n": 250
+      },
+      "gap_delta": {
+        "estimate": -0.07999999999999996,
+        "ci95": [
+          -0.17599999999999993,
+          0.01599999999999996
+        ],
+        "n": 500
+      }
+    },
+    "opus-3x": {
+      "comparator": "haiku-1x",
+      "real_pass_rate_delta": {
+        "estimate": 0.16799999999999993,
+        "ci95": [
+          0.09600000000000009,
+          0.24
+        ],
+        "n": 250
+      },
+      "control_pass_rate_delta": {
+        "estimate": 0.31999999999999995,
+        "ci95": [
+          0.24800000000000005,
+          0.388
+        ],
+        "n": 250
+      },
+      "gap_delta": {
+        "estimate": -0.15200000000000002,
+        "ci95": [
+          -0.252,
+          -0.05199999999999999
+        ],
+        "n": 500
+      }
+    }
+  },
+  "interaction_opus_gain_minus_haiku_gain": {
+    "estimate": -0.024000000000000077,
+    "ci95": [
+      -0.15209999999999996,
+      0.10000000000000003
+    ],
+    "seed": 6403,
+    "resamples": 2000
+  },
+  "predictions": [
+    {
+      "id": "64a",
+      "prediction": "Haiku-3x raises the real pass rate over Haiku-1x by at least 5 points.",
+      "estimate": 0.020000000000000018,
+      "ci95": [
+        -0.051999999999999935,
+        0.08400000000000002
+      ],
+      "threshold": 0.05,
+      "met": false,
+      "note": ""
+    },
+    {
+      "id": "64b",
+      "prediction": "Haiku-3x raises the gap over Haiku-1x by at least 5 points (more examples make a hypothesis more specific).",
+      "estimate": -0.04799999999999999,
+      "ci95": [
+        -0.1479999999999999,
+        0.051999999999999935
+      ],
+      "threshold": 0.05,
+      "met": false,
+      "note": ""
+    },
+    {
+      "id": "64c",
+      "prediction": "Haiku-3x raises the control pass rate by at most 3 points over Haiku-1x.",
+      "estimate": 0.068,
+      "ci95": [
+        -0.008000000000000007,
+        0.14
+      ],
+      "threshold": 0.03,
+      "met": false,
+      "note": "Prediction is an upper bound on the observed increase."
+    },
+    {
+      "id": "64d",
+      "prediction": "Opus-1x has a gap at least 5 points above Haiku-1x.",
+      "estimate": -0.07999999999999996,
+      "ci95": [
+        -0.17599999999999993,
+        0.01599999999999996
+      ],
+      "threshold": 0.05,
+      "met": false,
+      "note": ""
+    },
+    {
+      "id": "64e",
+      "prediction": "Opus gains more from 3x than Haiku does (interaction on the gap at least 3 points).",
+      "estimate": -0.024000000000000077,
+      "ci95": [
+        -0.15209999999999996,
+        0.10000000000000003
+      ],
+      "threshold": 0.03,
+      "met": null,
+      "directional_match": false,
+      "note": "Directional estimate only; the registered design calls 64e underpowered and not a finding."
+    },
+    {
+      "id": "64f",
+      "prediction": "Haiku-1x reproduces Part 60's M1 within 6 points on both real and control pass rates.",
+      "estimate": {
+        "neuron": 0.128,
+        "control": 0.10800000000000001
+      },
+      "ci95": null,
+      "threshold": 0.06,
+      "met": false,
+      "note": "Compared with Part 60 dev M1 full-rule pass rates. The 1x text matches, but Part 64 uses max_tokens=8192 and API-default thinking while Part 60 M1 used max_tokens=1100 and explicitly disabled thinking; 64f is a cross-configuration check, not a pure reproduction."
+    }
+  ],
+  "advancement": {
+    "haiku-1x": {
+      "advances": false,
+      "reason": "Haiku-1x is the registered comparison baseline."
+    },
+    "haiku-3x": {
+      "advances": false,
+      "gap_delta": -0.04799999999999999,
+      "ci95": [
+        -0.1479999999999999,
+        0.051999999999999935
+      ],
+      "rule": "gap lead >= 0.05 and paired bootstrap 95% interval lower bound > 0"
+    },
+    "opus-1x": {
+      "advances": false,
+      "gap_delta": -0.07999999999999996,
+      "ci95": [
+        -0.17599999999999993,
+        0.01599999999999996
+      ],
+      "rule": "gap lead >= 0.05 and paired bootstrap 95% interval lower bound > 0"
+    },
+    "opus-3x": {
+      "advances": false,
+      "gap_delta": -0.15200000000000002,
+      "ci95": [
+        -0.252,
+        -0.05199999999999999
+      ],
+      "rule": "gap lead >= 0.05 and paired bootstrap 95% interval lower bound > 0"
+    }
+  },
+  "part60_m1_dev_baseline": {
+    "neuron": 0.396,
+    "control": 0.152
+  },
+  "bootstrap": {
+    "seed": 6403,
+    "resamples": 2000,
+    "unit_paired": true,
+    "stratified_by": [
+      "neuron",
+      "control"
+    ]
+  },
+  "denominator_rule": "all registered units remain in denominators; parse or score failures are non-passes",
+  "decision_rule": "an arm advances only if its full-rule gap exceeds Haiku-1x by at least 5 percentage points and the unit-paired bootstrap 95% interval is above zero"
+}
