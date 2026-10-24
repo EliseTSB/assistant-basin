@@ -20,6 +20,7 @@ import sys
 import tempfile
 import time
 from datetime import datetime, timedelta, timezone
+import http.client
 import urllib.error
 import urllib.request
 import uuid
@@ -66,6 +67,7 @@ PIPELINE_POLL_INTERVAL_SECONDS = 60
 POLL_BOUND_SECONDS = 60 * 60
 PIPELINE_BOUND_SECONDS = 30 * 60 * 60
 LISTING_RETRY_PASSES = 5  # consecutive failed recovery listings before a deferred chunk stops for a person
+COLLECT_TRANSIENT_RETRY_PASSES = 30  # consecutive passes a submitted chunk's GETs may fail transiently
 ACCEPTED_STOP_REASONS = ("end_turn", "stop_sequence")
 M1_PROMPT = (gen60.HERE / "prompts" / "M1.txt").read_text(encoding="utf-8").strip()
 
@@ -88,6 +90,10 @@ class RecoveryRequired(WriterError):
 
 class _BatchNotEnded(TimeoutError):
     """A one-check pipeline poll found a batch that is still processing."""
+
+
+class TransportFailure(WriterError):
+    """The request may not have reached Anthropic, or its response was not read in full."""
 
 
 def utc_now() -> str:
@@ -557,14 +563,23 @@ def api_call(method: str, path: str, body: Mapping[str, Any] | None = None) -> s
         headers={"x-api-key": key, "anthropic-version": ANTHROPIC_VERSION,
                  "content-type": "application/json"},
     )
+    context = api_context()
     try:
-        with urllib.request.urlopen(request, context=api_context(), timeout=HTTP_TIMEOUT_SECONDS) as response:
+        with urllib.request.urlopen(request, context=context, timeout=HTTP_TIMEOUT_SECONDS) as response:
             return response.read().decode("utf-8")
     except urllib.error.HTTPError as exc:
         detail = exc.read().decode("utf-8", errors="replace").strip()
         raise HTTPFailure(exc.code, detail or str(exc.reason)) from None
-    except (urllib.error.URLError, TimeoutError) as exc:
-        raise WriterError(f"Anthropic API transport failed: {type(exc).__name__}: {exc}") from None
+    except (OSError, http.client.HTTPException) as exc:
+        # OSError covers URLError, socket timeouts and resets raised while reading the body.
+        raise TransportFailure(f"Anthropic API transport failed: {type(exc).__name__}: {exc}") from None
+
+
+def _transient_get_failure(exc: BaseException) -> bool:
+    """A read-only GET failure worth retrying on the next pass: transport, rate limit or server error."""
+    if isinstance(exc, TransportFailure):
+        return True
+    return isinstance(exc, HTTPFailure) and (exc.http_status == 429 or exc.http_status >= 500)
 
 
 def _attempts(ledger: Ledger) -> dict[str, dict[str, Any]]:
@@ -1196,6 +1211,7 @@ def _run_groups(root: Path, manifest: dict[str, Any], api: Callable[..., str], *
             raise TimeoutError(f"writer pipeline did not settle within {pipeline_bound:g}s")
 
     listing_failures: dict[str, int] = {}
+    collect_failures: dict[str, int] = {}
     while True:
         check_deadline()
         refusal: StageCapRefused | None = None
@@ -1231,8 +1247,17 @@ def _run_groups(root: Path, manifest: dict[str, Any], api: Callable[..., str], *
                 # A zero bound still performs one status GET. An in-progress
                 # batch raises _BatchNotEnded and remains in the collect set.
                 execute_chunk(root, root / relpath, api, **collect_kwargs)
+                collect_failures.pop(relpath, None)
             except _BatchNotEnded:
-                pass
+                collect_failures.pop(relpath, None)
+            except (TransportFailure, HTTPFailure) as exc:
+                # A submitted chunk's collect step makes only GETs and writes nothing before both
+                # succeed, so a transient failure leaves it submitted with its reserve active.
+                if not _transient_get_failure(exc):
+                    raise
+                collect_failures[relpath] = collect_failures.get(relpath, 0) + 1
+                if collect_failures[relpath] >= COLLECT_TRANSIENT_RETRY_PASSES:
+                    raise
             check_deadline()
 
         states = [read_json(root / relpath).get("state") for _key, _group, relpath in chunks]
