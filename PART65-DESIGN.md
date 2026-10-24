@@ -123,3 +123,23 @@ Two clarifications from the build's first review (DeepSeek, round 1), fixed befo
   5% of the 1,000 trials are unparseable, the analysis stops and reports that instead of the predictions.
 
 Nothing else in the design changes.
+
+## Amendment 2 (2026-10-24, before any judge call; the GPU steering pilot was already running and is unaffected)
+
+The build's second review (DeepSeek, round 2) found that Amendment 1 left the missing-trial rule incomplete: it said
+what happens to a unit with no valid trial but not to a unit with one, and the stop's denominator was not tied to the
+registered plan. By the stop rule on the card this is a redesign of the judge-and-analysis missing-data policy, stated
+here before any data, not a further patch. It replaces the unparseable-answer paragraph of Amendment 1.
+
+1. A trial is valid when its answer is a lone A or B (optional surrounding whitespace, one optional trailing `.` or
+   `)`). A trial is missing when its answer is anything else or when it is absent from the answers file.
+2. A unit enters the analysis only when both of its trials are valid. A unit with one or two missing trials is left out
+   and counted; the count is reported by type and layer band.
+3. If more than 50 of the registered 1,000 trials are missing (5%), the analysis stops and reports the count instead of
+   the predictions. The denominator is always the registered 1,000.
+4. Beside the primary result, the analysis reports two bounds that include every unit: each missing trial scored 0.5,
+   and each missing trial scored wrong. They are reported, not used for pass or fail.
+5. The analysis reads the answers file strictly: a malformed line anywhere stops it.
+6. A judge chunk the provider rejects (released) is final for that output directory. Recovery is a fresh output
+   directory for the whole judge, never a resubmission of a released attempt; the whole judge reserves under three
+   cents. Answers from two output directories are never combined.
