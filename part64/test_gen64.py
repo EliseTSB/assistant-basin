@@ -1389,10 +1389,12 @@ class ChunkRecoveryTests(LocalPaidRegistryTests):
                     return super().__call__(method, api_path, body)
 
             sleeps = []
+            api = SlowCandidateAPI()
             with self.assertRaisesRegex(gen64.RecoveryRequired, "no ended matching batch"):
-                gen64._run_groups(root, manifest, SlowCandidateAPI(), poll_interval=0,
-                                  sleep=sleeps.append, pipeline_bound=30)
-            self.assertGreaterEqual(len(sleeps), 2)  # it waited for b-other rather than spinning or stopping
+                gen64._run_groups(root, manifest, api, poll_interval=0, sleep=sleeps.append, pipeline_bound=30)
+            # One sleep after the failed POST, then one per listing while b-other ran; it ended on the fourth.
+            self.assertEqual(api.listings, 4)
+            self.assertEqual(len(sleeps), api.listings)  # plus one pass after the POST, before any listing
             self.assertEqual([gen64.read_json(p)["state"] for p in paths], ["ambiguous", "settled"])
 
     def test_http_5xx_post_is_deferred_and_the_run_goes_on(self):
@@ -1528,6 +1530,32 @@ class ChunkRecoveryTests(LocalPaidRegistryTests):
                 gen64._run_groups(root, manifest, AncientBatchAPI(), poll_interval=0, sleep=sleeps.append,
                                   pipeline_bound=30)
             self.assertLessEqual(len(sleeps), 2)
+
+    def test_a_listing_that_keeps_failing_stops_after_a_few_passes(self):
+        with tempfile.TemporaryDirectory(dir=gen64.HERE) as temporary:
+            root = Path(temporary)
+            manifest, paths = self._two_chunk_run(root, "haiku-listing-down")
+
+            class ListingDownAPI(FakeBatchAPI):
+                def __init__(self):
+                    super().__init__()
+                    self.post_calls = 0
+                    self.listings = 0
+
+                def __call__(self, method, api_path, body=None):
+                    if method == "POST":
+                        self.post_calls += 1
+                        if self.post_calls == 1:
+                            raise ConnectionResetError("reset before acceptance")
+                    if method == "GET" and api_path.startswith("/v1/messages/batches?"):
+                        self.listings += 1
+                        raise ConnectionResetError("listing down")
+                    return super().__call__(method, api_path, body)
+
+            api = ListingDownAPI()
+            with self.assertRaisesRegex(gen64.RecoveryRequired, "haiku-listing-down-00.*listing will be retried"):
+                gen64._run_groups(root, manifest, api, poll_interval=0, sleep=lambda _n: None, pipeline_bound=30)
+            self.assertEqual(api.listings, gen64.LISTING_RETRY_PASSES)
 
 
 if __name__ == "__main__":

@@ -65,6 +65,7 @@ POLL_INTERVAL_SECONDS = 5
 PIPELINE_POLL_INTERVAL_SECONDS = 60
 POLL_BOUND_SECONDS = 60 * 60
 PIPELINE_BOUND_SECONDS = 30 * 60 * 60
+LISTING_RETRY_PASSES = 5  # consecutive failed recovery listings before a deferred chunk stops for a person
 ACCEPTED_STOP_REASONS = ("end_turn", "stop_sequence")
 M1_PROMPT = (gen60.HERE / "prompts" / "M1.txt").read_text(encoding="utf-8").strip()
 
@@ -794,7 +795,9 @@ def execute_chunk(root: Path, chunk_path: Path, api: Callable[..., str] = api_ca
             if not getattr(exc, "transient", False):
                 raise  # a structurally broken listing will not clear; stop as before, reserve kept
             # The listing GET failed: look again after one poll interval, like a POST that was never listed.
-            raise _unknown_post(f"{exc}; the listing will be retried", chunk, ["(listing failed)"]) from exc
+            error = _unknown_post(f"{exc}; the listing will be retried", chunk, ["(listing failed)"])
+            error.listing_failed = True
+            raise error from exc
         if len(matches) > 1:
             chunk.update(state="ambiguous", error=f"provider listing found {len(matches)} matching batches")
             write_json(chunk_path, chunk)
@@ -1192,6 +1195,7 @@ def _run_groups(root: Path, manifest: dict[str, Any], api: Callable[..., str], *
         if time.monotonic() >= deadline:
             raise TimeoutError(f"writer pipeline did not settle within {pipeline_bound:g}s")
 
+    listing_failures: dict[str, int] = {}
     while True:
         check_deadline()
         refusal: StageCapRefused | None = None
@@ -1208,6 +1212,11 @@ def _run_groups(root: Path, manifest: dict[str, Any], api: Callable[..., str], *
             except RecoveryRequired as exc:
                 if not getattr(exc, "unknown_post", False):
                     raise
+                # A listing that keeps failing is retried a few intervals, not for the 30-hour bound.
+                listing_failures[relpath] = listing_failures.get(relpath, 0) + 1 if getattr(
+                    exc, "listing_failed", False) else 0
+                if listing_failures[relpath] >= LISTING_RETRY_PASSES:
+                    exc.in_flight = []
                 deferred[relpath] = exc
             check_deadline()
 
