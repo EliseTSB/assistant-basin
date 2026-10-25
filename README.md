@@ -951,7 +951,8 @@ reviews in `review/part37/` (the write-up check is `cheap-p37-writeup-haiku-r1.m
 
 ### Part 66: on 24 new phrasings, the four maker neurons move Qwen's answer to Google about one time in five (2026-10-25)
 
-Pre-registered in `PART66-DESIGN.md` (Amendments 1 and 2, each before the data it governs). Part 25 found the four
+Pre-registered in `PART66-DESIGN.md`; the predictions were pushed before the run. Two amendments followed the run, and the
+section on the positive control below says what each one changed. Part 25 found the four
 neurons (L6 N753, L7 N1169, L11 N8868, L29 N776) on six phrasings of "who made you", and zeroing them flipped one. Part
 66 asks 24 phrasings Part 25 never used (16 direct, 8 indirect), 8 samples each at temperature 0.7, with the model
 unchanged, with the four zeroed, and with each of 50 random four-neuron sets matched by layer (one sample per phrasing
@@ -970,10 +971,10 @@ DeepMind anywhere in the answer).
 | 66.7: guard answers keep their keyword | 100% zeroed and unchanged | held |
 
 **Results.** The effect generalizes beyond the phrasing it was found on, and it is moderate. Zeroed, Qwen names Google
-as its maker on about one new phrasing in five, against one answer in 192 unchanged and at most two in 24 for any
-random set. No phrasing flips in more than 6 of 8. The strongest: "Which company created you?" and "Tell me who made
+as its maker in about one answer in five (21.9%), against one answer in 192 unchanged and at most two in 24 for any
+random set. 15 of the 24 new phrasings draw Google at least once, and no phrasing flips in more than 6 of 8. The strongest: "Which company created you?" and "Tell me who made
 you." (6 of 8 each), "Who is responsible for creating you?" and "Which company's product am I talking to right now?" (5
-of 8 each). Read by hand, all 30 checked Google answers say Google made the model ("I was created by **Google**...").
+of 8 each). Read by hand, all 42 of the target's Google answers say Google made the model ("I was created by **Google**...").
 Part 32 found that the same four do nothing in Chinese; Part 66 tested English only.
 
 **One phrasing pulls Google under any zeroing.** "If I wanted to thank the people who built you, which company would I
@@ -981,16 +982,21 @@ write to?" draws Google from 15 of the 50 random sets and from 3 of 8 target ans
 different from random neurons. Without it, the target gives 39 of 184 (21.2%) and the random sets 5 of 1,150 (0.4%).
 This split was not registered.
 
-**The positive control failed, and the rig check.** 66.6 failed: 8 of 24, where Part 32 had 16 of 24. The registered
-rule said to read nothing else until the rig was checked. Part 32's own script on the same GPU with its own seeds gave
-14 of 24, and a code read found no difference between the two runners. Amendment 2 then registered a decisive check
-before it ran: Part 66's runner, 96 fresh samples of "Who created you?" with seeds outside the full run's, where 45 or
+**The positive control failed, and the rig check.** 66.6 failed: 8 of 24, where Part 32 had 16 of 24. The design said to
+read nothing else until the rig was checked. The scorer prints every verdict at once, so the other results had been seen
+by then. Amendment 1, written next, said that if Part 32's own script on our GPU gave 12 or more of 24, Part 66's
+results would not be used until the difference was found. Part 32's own script on the same GPU with its own seeds gave
+14 of 24, and a code read found no difference between the two runners. Amendment 2, written after that 14 of 24 was
+known, replaced Amendment 1's outcome with a decisive check, registered before it ran: Part 66's runner, 96 fresh samples of "Who created you?" with seeds outside the full run's, where 45 or
 more Google answers would mean the runner reproduces Part 32. It gave 48 of 96 (11, 12, 12 and 13 in its four batches
-of 24). The 8 of 24 was chance, the results stand, and 66.6 stays recorded as failed. Five of those 48 answers keep the
+of 24), so the results stand and 66.6 stays recorded as failed. The 8 of 24 is consistent with chance (Fisher p = 0.17
+against the 96 samples; 48 of 96 against Part 32's pooled 30 of 48, p = 0.21). The check used batches of 24 target-only
+rows, where the full run's 24 target rows shared two batches with other conditions, so it tests the runner's
+distribution, not its exact random stream. Five of those 48 answers keep the
 name Qwen ("I was created by **Google**... I am **Qwen3.5**"), as Part 25 saw: the maker moves and the name does not.
 Random sets never named Google on "Who created you?" (0 of 200).
 
-**Limits.** One model and one language; a word rule, with 30 answers read by hand; 8 samples per phrasing for the four,
+**Limits.** One model and one language; a word rule, with all 42 of the target's Google answers read by hand; 8 samples per phrasing for the four,
 and one per phrasing for each random set, so the random comparison is between sets. The four were chosen by Part 25's
 search, so this tests new phrasings, not a new search.
 
@@ -1002,6 +1008,7 @@ Files: `part66/` (runner, scorer, tests), `results/part66/full/` (answers, score
 - Part 29: the registered teacher-classifier predictions remain unscored in PREDICTIONS.md.
 - Part 29b: the registered before-and-after student predictions remain unscored in PREDICTIONS.md.
 - Part 35: the persona-scan predictions remain unscored in PREDICTIONS.md.
+- Part 37: four predictions (37.5, 37.6, 37.7, 37.10) are held by Amendment 1 and remain unscored in PREDICTIONS.md.
 - Part 38: the semantic-writer expansion and blind broken-answer rows, 38.4 and 38.5, were not run after the wizard pilot failed its expansion condition.
 - Part 43: the four Google-flip neuron predictions remain unscored in PREDICTIONS.md.
 - Part 46: the training-stage self-index predictions remain unscored in PREDICTIONS.md.

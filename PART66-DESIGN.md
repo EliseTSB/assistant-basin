@@ -120,3 +120,10 @@ samples in batches of 24 with seeds outside the full run's. Reading rule, writte
 midpoint between a 33% runner and Part 32's pooled 30 of 48, 62.5%) means the runner reproduces Part 32 and the 8 of
 24 was chance: Part 66's results stand with 66.6 recorded as failed. **44 or fewer** means a real difference: Part 66's
 results stay unused until it is found.
+
+**Corrections to Amendment 2, written after the check ran (2026-10-25, from a Haiku review).** (1) The threshold is
+called "the midpoint" above; the midpoint of 33.3% and 62.5% of 96 is 46.0, not 45. The threshold applied was 45, as
+written, and the observed 48 clears either. (2) The check ran target-only batches of 24. In the full run, the target's
+24 positive rows were batched by question with other conditions (one row with 24 unchanged rows, 23 with two random-set
+rows), so the check tests the runner's per-row distribution, not the same random stream.
+
