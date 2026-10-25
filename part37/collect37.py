@@ -32,19 +32,19 @@ IDENTITY_TERMS = [
     "ChatGPT", "GPT", "SmolLM", "Hugging Face", "assistant", "language model", "as an AI",
 ]
 EDIT_WORDS = [
-    "apple", "book", "bird", "bread", "bridge", "bucket", "button", "camera", "candle",
-    "carpet", "chair", "clock", "cloud", "coat", "corner", "desk", "door", "farm",
-    "field", "floor", "flower", "forest", "garden", "glass", "grass", "house", "island",
-    "kettle", "lake", "lamp", "leaf", "market", "meadow", "mirror", "mountain", "music",
-    "orange", "paddle", "pencil", "pillow", "planet", "pocket", "rabbit", "ribbon", "river",
-    "road", "school", "shadow", "shelter", "silver", "window", "basket", "bottle", "camera",
-    "station", "village", "ticket", "table", "train", "valley", "vessel", "wheel", "wood",
-    "yard", "cabin", "cabinets", "lantern", "saddle", "cushion", "notebook", "cupboard",
-    "painting", "sidewalk", "staircase", "sunlight", "waterfall", "backpack", "blueberry",
-    "doorway", "cottage", "playground", "footpath", "teapot", "sandwich", "sideboard",
-    "keyboard", "fireplace", "bookcase", "bedroom", "sunflower", "seashell", "birdhouse",
-    "snowflake", "campground", "chocolate", "windmill", "watermelon", "newspaper", "shoelace",
-    "raincoat", "strawberry", "bookshelf", "pineapple", "lighthouse", "toothbrush", "skateboard",
+    "apple", "book", "bird", "bread", "bridge", "bucket", "button", "camera", "candle", "carpet",
+    "chair", "clock", "cloud", "coat", "corner", "desk", "door", "farm", "field", "floor", "flower",
+    "forest", "garden", "glass", "grass", "house", "island", "kettle", "lake", "lamp", "leaf",
+    "market", "meadow", "mirror", "mountain", "music", "orange", "paddle", "pencil", "pillow",
+    "planet", "pocket", "rabbit", "ribbon", "river", "road", "school", "shadow", "shelter",
+    "silver", "window", "basket", "bottle", "station", "village", "ticket", "table", "train",
+    "valley", "vessel", "wheel", "wood", "yard", "cabin", "cabinets", "lantern", "saddle",
+    "cushion", "notebook", "cupboard", "painting", "sidewalk", "staircase", "sunlight", "waterfall",
+    "backpack", "blueberry", "doorway", "cottage", "playground", "footpath", "teapot", "sandwich",
+    "sideboard", "keyboard", "fireplace", "bookcase", "bedroom", "sunflower", "seashell",
+    "birdhouse", "snowflake", "campground", "chocolate", "windmill", "watermelon", "newspaper",
+    "shoelace", "raincoat", "strawberry", "bookshelf", "pineapple", "lighthouse", "toothbrush",
+    "skateboard",
 ]
 EDIT_STOPWORDS = frozenset({
     "about", "after", "again", "against", "also", "among", "because", "before", "being", "below",
@@ -305,8 +305,13 @@ def minimal_edit(text: str) -> tuple[str, dict[str, str] | None]:
     midpoint = (len(text) - 1) / 2
     target = min(matches, key=lambda match: (abs((match.start() + match.end() - 1) / 2 - midpoint), match.start()))
     original = target.group(0)
-    replacement = next((word for word in EDIT_WORDS
-                        if word.casefold() != original.casefold() and abs(len(word) - len(original)) <= 1), None)
+    # Chosen by a hash of the original word, not first match: first match put "apple" in 7 of 8 edits (DS round 2 M4).
+    candidates = [word for word in EDIT_WORDS
+                  if word.casefold() != original.casefold() and abs(len(word) - len(original)) <= 1]
+    replacement = None
+    if candidates:
+        digest = int(hashlib.sha256(original.casefold().encode("utf-8")).hexdigest(), 16)
+        replacement = candidates[digest % len(candidates)]
     if replacement is None:
         return "", None
     if original.isupper():

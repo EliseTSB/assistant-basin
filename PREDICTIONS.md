@@ -1548,7 +1548,7 @@ Reading rule, fixed now: a unit whose topic rate rises only together with broken
 | 37.12 | Weaver: own versus other is separable at balanced accuracy 0.80 or more at some layer, in at least 4 of 5 question-disjoint folds. | | |
 | 37.13 | Weaver: within a role cell, authorship balanced accuracy at the best layer drops to between 0.60 and 0.75. | | |
 | 37.14 | Weaver: regressing out mean log-prob does not remove the authorship effect: the best-layer AUROC after it stays above the label-shuffled control's 95th percentile. | | |
-| 37.15 | Weaver: on text neither model wrote, the stated yes-rate is between 10% and 25%. | | |
+| 37.15 | Weaver: on text neither model wrote, the stated yes-rate is between 10% and 25%. (Amendment 2, before any data: scored on SmolLM3's answers and the Pile spans; the shuffled own text is reported separately.) | | |
 
 Amendment to 37.5 (Claude, after Prime #66, original kept above): scored as the back-reference rate on "Your earlier notes" records minus the same rate on neutral-header records, against the stated-yes rate on the memory phrasing; the raw comparison is reported but does not decide it.
 

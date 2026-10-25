@@ -164,6 +164,7 @@ def _write_synthetic_capture(path: Path, seed: int, strong_authorship: bool = Fa
     path.mkdir(parents=True, exist_ok=True)
     np.save(path / "noise.npy", np.stack(features), allow_pickle=False)
     collect37.write_jsonl(path / "index.jsonl", index_rows)
+    (path / "manifest.json").write_text(json.dumps({"captured_records": len(index_rows)}), encoding="utf-8")
     collect37.write_jsonl(path / "metrics.jsonl", metrics_rows)
 
 
@@ -358,6 +359,10 @@ class Part37LogicTests(unittest.TestCase):
                 self.assertEqual(analyze37._prediction_results(qwen, olmo)[prediction]["verdict"], "PASS")
                 mutate(qwen, olmo)
                 self.assertEqual(analyze37._prediction_results(qwen, olmo)[prediction]["verdict"], "FAIL")
+        # 37.9 is signed: a large shift the wrong way must FAIL (DS round 2 H2: 0.49 cannot tell signed from absolute).
+        qwen, olmo = _prediction_fixture()
+        qwen["own_g_vs_own_sampled_projection"].update(mean_logprob_regressed_shift_sd=-0.60)
+        self.assertEqual(analyze37._prediction_results(qwen, olmo)["37.9"]["verdict"], "FAIL")
 
         qwen, olmo = _prediction_fixture()
         self.assertEqual(analyze37._prediction_results(qwen, olmo)["37.15"]["verdict"], "PASS")
@@ -655,9 +660,11 @@ if torch is not None:
                      patch.object(collect37, "_capture_one", side_effect=fail_second_question):
                     with self.assertRaisesRegex(collect37.Part37Error, "simulated interruption"):
                         collect37.command_capture(args)
-                store = analyze37.FeatureStore(output)
-                self.assertEqual([row["record_id"] for row in store.rows], ["q000:ok"])
-                self.assertEqual(store.arrays[store.rows[0]["shard"]].dtype, np.float32)
+                # The prefix is on disk, but with no manifest the analysis must refuse it (DS round 2 M5).
+                self.assertTrue((output / "index.jsonl").is_file())
+                with self.assertRaises(analyze37.AnalysisError):
+                    analyze37.FeatureStore(output)
+                self.assertEqual(np.load(output / "shard-00000.npy").dtype, np.float32)
 else:
     @unittest.skip("torch not installed; tiny-model check requires the GPU environment packages")
     class TinyModelTests(unittest.TestCase):
@@ -718,3 +725,28 @@ class ProbeSplitTests(unittest.TestCase):
         result = analyze37._fold_fit(x, y, groups, None, "raw", 0)
         self.assertEqual(len(result["fold_balanced_accuracy"]), 5)
         self.assertLess(abs(result["auc"] - 0.5), 0.35)
+
+
+class Round2FixTests(unittest.TestCase):
+    """DS round 2 M4 and M5 (Claude, 2026-10-25)."""
+
+    def test_minimal_edit_replacements_vary(self):
+        answers = ["It is sunny today and warm.", "A quiet room helps you focus.", "Use a glass of water first.",
+                   "Read a good book before bed.", "Stretch your legs every hour.", "Small things add up over time.",
+                   "Wait five minutes before you go.", "Rest well every night if you can."]
+        replacements = [collect37.minimal_edit(text)[1]["replacement"] for text in answers]
+        self.assertGreaterEqual(len(set(replacements)), 6, replacements)
+        self.assertEqual(len(collect37.EDIT_WORDS), len(set(collect37.EDIT_WORDS)))
+
+    def test_feature_store_refuses_capture_without_complete_manifest(self):
+        import numpy as np
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            np.save(root / "shard-00000.npy", np.zeros((1, 2, 3, 4), dtype=np.float32))
+            (root / "index.jsonl").write_text(json.dumps({"record_id": "a", "shard": "shard-00000.npy", "row": 0}) + "\n")
+            (root / "metrics.jsonl").write_text(json.dumps({"record_id": "a"}) + "\n")
+            with self.assertRaises(analyze37.AnalysisError):
+                analyze37.FeatureStore(root)
+            (root / "manifest.json").write_text(json.dumps({"captured_records": 2}))
+            with self.assertRaises(analyze37.AnalysisError):
+                analyze37.FeatureStore(root)

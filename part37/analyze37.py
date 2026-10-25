@@ -77,7 +77,14 @@ def _float(value: Any, fallback: float = float("nan")) -> float:
 
 class FeatureStore:
     def __init__(self, directory: Path):
+        manifest_path = directory / "manifest.json"
+        if not manifest_path.is_file():
+            raise AnalysisError(f"{directory}: no manifest.json, so the capture may be partial (it is written last)")
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         indexes = _read_capture_jsonl(directory / "index.jsonl")
+        if int(manifest.get("captured_records", -1)) != len(indexes):
+            raise AnalysisError(f"{directory}: manifest says {manifest.get('captured_records')} records, index has "
+                                f"{len(indexes)}")
         metrics = {row["record_id"]: row for row in _read_capture_jsonl(directory / "metrics.jsonl")}
         self.rows = []
         self.by_id: dict[str, dict[str, Any]] = {}
