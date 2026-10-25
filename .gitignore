@@ -4,3 +4,4 @@ __pycache__/
 *.npz
 data/*.parquet
 records/modelmapper-*.jsonl
+part37/results/full/*-capture/

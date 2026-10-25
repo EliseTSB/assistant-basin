@@ -157,6 +157,9 @@ def _residualize(train_x: np.ndarray, test_x: np.ndarray, train_cov: np.ndarray,
 def _prepare_fold(x_train: np.ndarray, x_test: np.ndarray, cov_train: np.ndarray | None,
                   cov_test: np.ndarray | None, mode: str, components: int,
                   PLSRegression: Any, StandardScaler: Any) -> tuple[np.ndarray, np.ndarray]:
+    # An unknown mode used to run as raw, silently (Claude, 2026-10-25, found by passing "pls" for "subspace").
+    if mode not in ("raw", "regressed", "subspace"):
+        raise AnalysisError(f"unknown probe mode {mode!r}")
     if mode == "regressed":
         if cov_train is None or cov_test is None:
             raise AnalysisError("mean log-prob covariates missing for regression control")
