@@ -425,8 +425,10 @@ arXiv ids below checked at source by Claude; the summaries are Muse's reading. F
 - **Controls:** Heap et al. 2025 (arXiv:2501.17727): auto-interp scores do not separate trained from random
   transformers. Kran 2026 (blog): trained neurons pass 14.3%, random directions 1.7%. SAEScientist-Bench
   (arXiv:2609.09113): agents misread their own measurements.
-- **Bearing on Part 60:** its headline was already the real-against-random gap from raw firing numbers, which is what
-  Muse's traps ask for. Not yet reported: keep rates with the NONE subset removed.
+- **Bearing on Part 60:** its headline was already the real-against-random gap from raw firing numbers, and its table
+  already reports keep rates without the NONE sentences ("positive-only") beside the full rule, which is Muse's trap 2.
+  Removing NONE barely moves them (M1 real 0.408 against 0.396, controls 0.152 both), because NONE sentences rarely
+  fire (real H_none 0.027).
 
 ## Ouro-1.4B neuron atlas and causal steering (Muse's atlas watch, #28; recorded 2026-10-25 08:3x CT)
 
