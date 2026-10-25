@@ -169,13 +169,23 @@ def _prepare_fold(x_train: np.ndarray, x_test: np.ndarray, cov_train: np.ndarray
     if mode == "subspace":
         if cov_train is None:
             raise AnalysisError("four surprisal summaries missing for subspace removal")
-        n_components = min(components, max(1, len(x_train) - 1), train_scaled.shape[1])
-        pls = PLSRegression(n_components=n_components, scale=True)
-        pls.fit(train_scaled, cov_train[:len(x_train), :4])
-        weights = np.asarray(pls.x_weights_, dtype=np.float64)
-        q, _ = np.linalg.qr(weights)
-        train_scaled = train_scaled - (train_scaled @ q) @ q.T
-        test_scaled = test_scaled - (test_scaled @ q) @ q.T
+        # Constant features (layer 0 at the fixed follow-up token is one embedding for every record) leave nothing to
+        # remove, and PLS on them returns NaN weights. Keep only the finite leading components: once the surprisal
+        # summaries are fully explained, PLS deflation has no further direction (Claude, 2026-10-25, after the first
+        # full analysis stopped on "slice 0 has a NaN entry").
+        if np.any(train_scaled.std(axis=0) > 0):
+            n_components = min(components, max(1, len(x_train) - 1), train_scaled.shape[1])
+            pls = PLSRegression(n_components=n_components, scale=True)
+            with np.errstate(divide="ignore", invalid="ignore"):
+                pls.fit(train_scaled, cov_train[:len(x_train), :4])
+            weights = np.asarray(pls.x_weights_, dtype=np.float64)
+            finite = np.all(np.isfinite(weights), axis=0)
+            usable = int(np.argmin(finite)) if not finite.all() else weights.shape[1]
+            weights = weights[:, :usable]
+            if weights.shape[1]:
+                q, _ = np.linalg.qr(weights)
+                train_scaled = train_scaled - (train_scaled @ q) @ q.T
+                test_scaled = test_scaled - (test_scaled @ q) @ q.T
     return np.asarray(train_scaled, dtype=np.float32), np.asarray(test_scaled, dtype=np.float32)
 
 

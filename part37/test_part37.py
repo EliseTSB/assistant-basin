@@ -767,3 +767,15 @@ class PileFallbackTests(unittest.TestCase):
             pile_rows = [row for row in records if row["span_kind"] == "null_pile"]
             self.assertEqual(len(pile_rows), 2)
             self.assertTrue(all(row["span"].startswith("ordinary") or "ordinary" in row["span"] for row in pile_rows))
+
+
+class SubspaceDegenerateTests(unittest.TestCase):
+    def test_constant_features_do_not_break_subspace_removal(self):
+        import numpy as np
+        groups = [f"q{index // 2:03d}" for index in range(40)]
+        x = np.ones((40, 16))
+        y = np.array([index % 2 for index in range(40)])
+        cov = np.random.default_rng(1).normal(size=(40, 4))
+        result = analyze37._fold_fit(x, y, groups, cov, "subspace", 0)
+        self.assertTrue(np.isfinite(result["probabilities"]).all())
+        self.assertAlmostEqual(result["auc"], 0.5)
