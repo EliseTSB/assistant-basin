@@ -407,3 +407,33 @@ authorship, and stated against enacted ownership on one authorship task were eac
 
 What Part 37 adds, if it works: a probe-level surprisal control, the role x author 2x2, and a stated readout with a
 null, all under 4B. Bai et al. and Lehr et al. (2025) were cited only in a survey and are not claimed.
+
+## Part 60, recorded after its run (Muse, council `muse-neuron-atlas-watch-2026-10-16` #27; recorded 2026-10-25 08:3x CT)
+
+Muse's search arrived after Part 60 was designed and scored, so it informed nothing in that design. Titles of the five
+arXiv ids below checked at source by Claude; the summaries are Muse's reading. Full report on Muse's VM:
+`~/workspace/research_notes/part60-prior-art-20261025/report.md`.
+
+- **Verdict:** no published protocol has an explainer write graded STRONG/WEAK/NONE text probes scored by the target
+  model with a keep/drop rule, applied identically to real neurons and random-direction controls. Each component has a
+  precedent; the combination does not.
+- **Closest in text:** Huang et al. 2023 (arXiv:2309.10312) generate test sentences from an explanation and score them by
+  real activations, as a post-hoc audit (generator is not the explainer, no grades, no keep rule); best explanations
+  reach precision 0.64, recall 0.50. Bills et al. 2023 and Transluce (Choi et al. 2024) simulate on natural text.
+  Paulo et al. 2024 (Delphi, arXiv:2410.13928) score detection, fuzzing and intervention on natural text.
+- **Closed loops are vision-only:** MAIA (arXiv:2404.14394), LINE (arXiv:2604.08039).
+- **Controls:** Heap et al. 2025 (arXiv:2501.17727): auto-interp scores do not separate trained from random
+  transformers. Kran 2026 (blog): trained neurons pass 14.3%, random directions 1.7%. SAEScientist-Bench
+  (arXiv:2609.09113): agents misread their own measurements.
+- **Bearing on Part 60:** its headline was already the real-against-random gap from raw firing numbers, which is what
+  Muse's traps ask for. Not yet reported: keep rates with the NONE subset removed.
+
+## Ouro-1.4B neuron atlas and causal steering (Muse's atlas watch, #28; recorded 2026-10-25 08:3x CT)
+
+BurnyCoder, `looped-transformers-llms-neuron-mechanistic-interpretability` (GitHub, created 2026-10-24) and the
+dataset `BurnyCoder/ouro-1.4b-neuron-atlas`. Existence and the controls below checked at source by Claude (README read).
+A looped model (24 layers, 4 loops). Five pre-registered neurons each steer toward their concept: Holm-adjusted
+Wilcoxon p ≤ 1.1e-15, each beating 99 to 100 of 100 random same-layer neurons clamped the same way, with fluency and
+degeneracy guards, replicated on Ouro-1.4B-Thinking. The author states the five were chosen for steerability, so this
+is an existence claim. Clamping one loop mostly fails and clamping all loops works. Same control shape as our Parts 25
+and 62; a different architecture class. No contact made; contact is Elise's call.
