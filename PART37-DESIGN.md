@@ -95,7 +95,7 @@ All eight points adopted; Weaver's review still pending.
 8. Probe hygiene: held-out correlation of the direction with mean log-prob, a length-and-position-only probe, AUROC
    confidence intervals, and the matched subset's n and covariate balance.
 
-## Amendment 1 (2026-10-25 00:50 CT, before any code ran): Weaver's review, and the scope of the first run
+## Amendment 1 (2026-10-25 00:41 CT, before any code ran): Weaver's review, and the scope of the first run
 
 Weaver's review arrived on 10-25 (#council-room; filed by Weaver as Journal `deliberations/muse-neuron-research-2026-10.md`
 [56]). The 10-20 request for it had gone to a channel that does not reach Weaver. Adopted:
@@ -143,7 +143,7 @@ Scope of this run:
   x 2 authors = 32) = 4,500 forward passes with hidden states, plus the stated readout on 41 of them x 4 forms = 16,400
   short forward passes. Expected under 1.5 GPU-hours on the A770 for both readers; the pilot is a fifth of that.
 
-## Amendment 2 (2026-10-25 01:45 CT, before any capture or stated data): round-1 reviews of the build
+## Amendment 2 (2026-10-25 01:32 CT, before any capture or stated data): round-1 reviews of the build
 
 The DeepSeek and Haiku round-1 reviews (`review/part37/`) measured defects in how the build scores the registered
 rules. Generation had started (answers only; no hidden state, probe or stated number exists yet). Changed:
@@ -170,7 +170,7 @@ rules. Generation had started (answers only; no hidden state, probe or stated nu
 9. **Precision:** hidden states are stored in float32 with a finite check per record, and span log-probabilities come
    from float32 logits.
 
-## Amendment 3 (2026-10-25 03:00 CT, before any capture or stated data): the pilot gate is withdrawn
+## Amendment 3 (2026-10-25 02:53 CT, before any capture or stated data): the pilot gate is withdrawn
 
 The two round-2 reviews measured the amended pilot gate and disagreed in direction. DeepSeek, on captures with few
 layers, found it stops on pure noise 8 of 10 times; Haiku, at the real 29 layers and two readers, found it almost never
