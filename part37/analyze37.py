@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import math
 import sys
 from pathlib import Path
@@ -250,6 +251,40 @@ def _dataset(store: FeatureStore, rows: list[dict[str, Any]], position: int, lay
     return x, y, groups, cov
 
 
+
+# Opt-in process pool for the two hot loops (Claude, 2026-10-25). One five-fold fit takes about 0.5 s single-threaded
+# and no faster with 16 BLAS threads, so fits are spread across processes instead. P37_JOBS unset or 1 keeps the
+# serial path. Each fit is independent and deterministic and results come back in order, so the numbers equal the
+# serial ones (test_parallel_fits_equal_serial); run with OMP_NUM_THREADS=1 so workers do not oversubscribe.
+def _fit_job(args: tuple) -> dict[str, Any]:
+    x, y, groups, cov, mode, layer = args
+    return _fold_fit(x, y, groups, cov, mode, layer)
+
+
+def _fit_job_safe(args: tuple) -> dict[str, Any] | None:
+    try:
+        return _fit_job(args)
+    except Exception:
+        return None
+
+
+def _map_fits_safe(jobs: list[tuple]) -> list[dict[str, Any] | None]:
+    workers = int(os.environ.get("P37_JOBS", "1") or "1")
+    if workers <= 1 or len(jobs) <= 1:
+        return [_fit_job_safe(job) for job in jobs]
+    import multiprocessing
+    with multiprocessing.get_context("fork").Pool(min(workers, len(jobs))) as pool:
+        return pool.map(_fit_job_safe, jobs, chunksize=4)
+
+
+def _map_fits(jobs: list[tuple]) -> list[dict[str, Any]]:
+    workers = int(os.environ.get("P37_JOBS", "1") or "1")
+    if workers <= 1 or len(jobs) <= 1:
+        return [_fit_job(job) for job in jobs]
+    import multiprocessing
+    with multiprocessing.get_context("fork").Pool(min(workers, len(jobs))) as pool:
+        return pool.map(_fit_job, jobs, chunksize=1)
+
 def run_probe(store: FeatureStore, rows: list[dict[str, Any]], position: int,
               mode: str = "raw", covariate_mode: str = "four", only_layer: int | None = None,
               bootstrap: bool = True) -> dict[str, Any]:
@@ -257,9 +292,9 @@ def run_probe(store: FeatureStore, rows: list[dict[str, Any]], position: int,
         return {"n": len(rows), "error": "fewer than 10 records"}
     layers = [only_layer] if only_layer is not None else list(range(store.layers))
     layer_results = []
-    for layer in layers:
-        x, y, groups, cov = _dataset(store, rows, position, layer, covariate_mode)
-        cv = _fold_fit(x, y, groups, cov, mode, layer)
+    datasets = [_dataset(store, rows, position, layer, covariate_mode) for layer in layers]
+    fits = _map_fits([(x, y, groups, cov, mode, layer) for (x, y, groups, cov), layer in zip(datasets, layers)])
+    for layer, (x, y, groups, cov), cv in zip(layers, datasets, fits):
         result = {"layer": layer, "auroc": cv["auc"], "balanced_accuracy": cv["balanced_accuracy"],
                   "fold_balanced_accuracy": cv["fold_balanced_accuracy"]}
         if bootstrap:
@@ -459,13 +494,21 @@ def _permutation_threshold(store: FeatureStore, rows: list[dict[str, Any]], posi
     perm_maxima = []
     layer_distributions: list[list[float]] = [[] for _ in range(store.layers)]
     layer_failures = [0 for _ in range(store.layers)]
+    # The flips are drawn in the same order as the old serial loop, so the null is unchanged (Claude, 2026-10-25).
+    y_nulls = []
     for permutation in range(permutations):
         flip = {group: int(flip_rng.integers(0, 2)) for group in unique_groups}
-        y_null = np.asarray([int(label) ^ flip[group] for label, group in zip(y, groups)], dtype=np.int64)
+        y_nulls.append(np.asarray([int(label) ^ flip[group] for label, group in zip(y, groups)], dtype=np.int64))
+    jobs = [(x, y_null, groups.tolist(), cov, mode, layer)
+            for y_null in y_nulls for layer, x in enumerate(x_by_layer)]
+    fits = _map_fits_safe(jobs)
+    for permutation, y_null in enumerate(y_nulls):
         best = 0.5
-        for layer, x in enumerate(x_by_layer):
+        for layer in range(len(x_by_layer)):
+            cv = fits[permutation * len(x_by_layer) + layer]
             try:
-                cv = _fold_fit(x, y_null, groups.tolist(), cov, mode, layer)
+                if cv is None:
+                    raise AnalysisError("fit failed")
                 layer_auc = float(roc_auc_score(y_null, cv["probabilities"]))
                 if not math.isfinite(layer_auc):
                     raise AnalysisError(f"permutation {permutation}, layer {layer}: non-finite AUROC")

@@ -779,3 +779,29 @@ class SubspaceDegenerateTests(unittest.TestCase):
         result = analyze37._fold_fit(x, y, groups, cov, "subspace", 0)
         self.assertTrue(np.isfinite(result["probabilities"]).all())
         self.assertAlmostEqual(result["auc"], 0.5)
+
+
+import os
+
+
+class ParallelFitTests(unittest.TestCase):
+    def test_parallel_fits_equal_serial(self):
+        import numpy as np
+        rng = np.random.default_rng(3)
+        groups = [f"q{index // 2:03d}" for index in range(40)]
+        y = np.array([index % 2 for index in range(40)])
+        jobs = [(rng.normal(size=(40, 12)) + y[:, None] * 0.3, y, groups, None, "raw", layer) for layer in range(4)]
+        old = os.environ.get("P37_JOBS")
+        try:
+            os.environ["P37_JOBS"] = "1"
+            serial = analyze37._map_fits(jobs)
+            os.environ["P37_JOBS"] = "3"
+            parallel = analyze37._map_fits(jobs)
+        finally:
+            if old is None:
+                os.environ.pop("P37_JOBS", None)
+            else:
+                os.environ["P37_JOBS"] = old
+        for left, right in zip(serial, parallel):
+            np.testing.assert_array_equal(left["probabilities"], right["probabilities"])
+            self.assertEqual(left["auc"], right["auc"])
