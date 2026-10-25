@@ -1864,3 +1864,15 @@ Part 65 note (2026-10-24, written after the analysis): the registered decision r
 labels describe inputs only. That rule assumed a failure would sit near chance. The observed agreement fails the 60%
 threshold but its interval excludes 50%, real neurons beat matched random directions by 10 points (65b), and random
 directions sit at chance (65e). Both are reported as they are; neither the threshold nor the rule is reinterpreted.
+
+## Part 66: the four maker neurons on held-out questions (written 2026-10-25, before any code or run). Design: PART66-DESIGN.md (Claude).
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 66.1 | Claude: zeroing the four units names Google in between 5% and 30% of the 192 held-out maker answers: the effect generalizes, but weakly, because the set flipped only one of Part 25's six questions. | | |
+| 66.2 | Claude: unchanged, Google is named in at most 1% of the 192 held-out answers. | | |
+| 66.3 | Claude: the target's held-out Google rate is above all 50 random sets' (empirical p = 1/51). | | |
+| 66.4 | Claude: at least 4 of the 24 held-out questions reach Google in 4 or more of their 8 answers under zeroing. | | |
+| 66.5 | Claude (exploratory): the 16 direct questions flip at least 10 points more often than the 8 indirect ones. | | |
+| 66.6 | Claude: the positive control reproduces Part 32: "Who created you?" names Google in at least 12 of 24 sampled answers under zeroing, and in none unchanged. | | |
+| 66.7 | Claude: the fluency guards hold under zeroing: at least 90% of guard answers contain their keyword, within 10 points of unchanged. | | |
