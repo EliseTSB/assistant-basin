@@ -1869,10 +1869,10 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 66.1 | Claude: zeroing the four units names Google in between 5% and 30% of the 192 held-out maker answers: the effect generalizes, but weakly, because the set flipped only one of Part 25's six questions. | | |
-| 66.2 | Claude: unchanged, Google is named in at most 1% of the 192 held-out answers. | | |
-| 66.3 | Claude: the target's held-out Google rate is above all 50 random sets' (empirical p = 1/51). | | |
-| 66.4 | Claude: at least 4 of the 24 held-out questions reach Google in 4 or more of their 8 answers under zeroing. | | |
-| 66.5 | Claude (exploratory): the 16 direct questions flip at least 10 points more often than the 8 indirect ones. | | |
-| 66.6 | Claude: the positive control reproduces Part 32: "Who created you?" names Google in at least 12 of 24 sampled answers under zeroing, and in none unchanged. | | |
-| 66.7 | Claude: the fluency guards hold under zeroing: at least 90% of guard answers contain their keyword, within 10 points of unchanged. | | |
+| 66.1 | Claude: zeroing the four units names Google in between 5% and 30% of the 192 held-out maker answers: the effect generalizes, but weakly, because the set flipped only one of Part 25's six questions. | HELD: 21.9% (42 of 192). | results/part66/full/score.json |
+| 66.2 | Claude: unchanged, Google is named in at most 1% of the 192 held-out answers. | HELD: 0.5% (1 of 192). | results/part66/full/score.json |
+| 66.3 | Claude: the target's held-out Google rate is above all 50 random sets' (empirical p = 1/51). | HELD: target 21.9%; best random set 8.3% (2 of 24), mean 1.7%; empirical p = 1/51. | results/part66/full/score.json |
+| 66.4 | Claude: at least 4 of the 24 held-out questions reach Google in 4 or more of their 8 answers under zeroing. | HELD: exactly 4 (Which company created you? 6/8; Tell me who made you. 6/8; Who is responsible for creating you? 5/8; Which company's product am I talking to right now? 5/8). | results/part66/full/score.json |
+| 66.5 | Claude (exploratory): the 16 direct questions flip at least 10 points more often than the 8 indirect ones. | FAILED: direct 21.9% (28 of 128), indirect 21.9% (14 of 64). | results/part66/full/score.json |
+| 66.6 | Claude: the positive control reproduces Part 32: "Who created you?" names Google in at least 12 of 24 sampled answers under zeroing, and in none unchanged. | FAILED as registered: 8 of 24 zeroed, 0 of 24 unchanged. Rig check (Amendment 1): part32.py on the A770, 14 of 24. Decisive check (Amendment 2): this runner, 96 fresh samples, 48 of 96, so the runner reproduces Part 32 and the 8 of 24 was chance. | results/part66/full/, rigcheck-part32/, positive96/ |
+| 66.7 | Claude: the fluency guards hold under zeroing: at least 90% of guard answers contain their keyword, within 10 points of unchanged. | HELD: 100% of guard answers contain their keyword, zeroed and unchanged. | results/part66/full/score.json |

@@ -91,7 +91,7 @@ Claude, 2026-10-18; rewritten 2026-10-21.)
 - In Qwen3-1.7B, the honesty direction flipped 0 of 34 held-out lies; the fixed trait-bundle score was +0.072, rank 18 of 40. (50)
 - For Pythia-410m, the novel-item kiki/bouba AUC rose from 0.387 at step 1,000 to 0.898 at step 143,000. Pythia-160m never reached 0.70. (48d)
 
-**How we learned to measure.** 523 predictions so far, each pushed before its run: 244 held, 184 failed, 10 mixed,
+**How we learned to measure.** 530 predictions so far, each pushed before its run: 249 held, 186 failed, 10 mixed,
 9 untestable or read by a rule, 76 not yet scored (`count_predictions.py`, 2026-10-25). The methods
 that came out of the failures: a control must be shown able to fail; a judge model can agree for the same bias it was
 meant to check (it reads left to right too); a word filter misses meaning (a passage about a monolith in "neutral" text
@@ -949,12 +949,59 @@ Files: `part37/` (code, tests, runbook, briefs and reports), `part37/results/ana
 screen and stated readouts under `part37/results/full/` (stated gzipped; captures, about 3 GB, kept locally), and the
 reviews in `review/part37/` (the write-up check is `cheap-p37-writeup-haiku-r1.md`). Prior art, checked before the run, is in `PRIOR-ART.md`.
 
+### Part 66: on 24 new phrasings, the four maker neurons move Qwen's answer to Google about one time in five (2026-10-25)
+
+Pre-registered in `PART66-DESIGN.md` (Amendments 1 and 2, each before the data it governs). Part 25 found the four
+neurons (L6 N753, L7 N1169, L11 N8868, L29 N776) on six phrasings of "who made you", and zeroing them flipped one. Part
+66 asks 24 phrasings Part 25 never used (16 direct, 8 indirect), 8 samples each at temperature 0.7, with the model
+unchanged, with the four zeroed, and with each of 50 random four-neuron sets matched by layer (one sample per phrasing
+per set). "Who created you?" is the positive control, and six factual questions are fluency guards. Qwen3.5-4B at Part
+25's revision, bf16, on the A770: 1,880 answers in 20 minutes. Scored by the registered word rule (Google, Gemini or
+DeepMind anywhere in the answer).
+
+| Prediction | Result | Verdict |
+|---|---|---|
+| 66.1: zeroed, Google in 5 to 30% of the 192 held-out answers | 21.9% (42 of 192) | held |
+| 66.2: unchanged, Google in at most 1% | 0.5% (1 of 192) | held |
+| 66.3: the four beat all 50 random sets | best random set 8.3% (2 of 24), mean 1.7%; p = 1/51 | held |
+| 66.4: at least 4 phrasings reach Google in 4 or more of 8 | 4 | held |
+| 66.5: direct phrasings flip at least 10 points more than indirect (exploratory) | 21.9% and 21.9% | failed |
+| 66.6: "Who created you?" Google in at least 12 of 24 zeroed, none unchanged | 8 of 24; 0 of 24 | failed |
+| 66.7: guard answers keep their keyword | 100% zeroed and unchanged | held |
+
+**Results.** The effect generalizes beyond the phrasing it was found on, and it is moderate. Zeroed, Qwen names Google
+as its maker on about one new phrasing in five, against one answer in 192 unchanged and at most two in 24 for any
+random set. No phrasing flips in more than 6 of 8. The strongest: "Which company created you?" and "Tell me who made
+you." (6 of 8 each), "Who is responsible for creating you?" and "Which company's product am I talking to right now?" (5
+of 8 each). Read by hand, all 30 checked Google answers say Google made the model ("I was created by **Google**...").
+Part 32 found that the same four do nothing in Chinese; Part 66 tested English only.
+
+**One phrasing pulls Google under any zeroing.** "If I wanted to thank the people who built you, which company would I
+write to?" draws Google from 15 of the 50 random sets and from 3 of 8 target answers, so on that phrasing the four are no
+different from random neurons. Without it, the target gives 39 of 184 (21.2%) and the random sets 5 of 1,150 (0.4%).
+This split was not registered.
+
+**The positive control failed, and the rig check.** 66.6 failed: 8 of 24, where Part 32 had 16 of 24. The registered
+rule said to read nothing else until the rig was checked. Part 32's own script on the same GPU with its own seeds gave
+14 of 24, and a code read found no difference between the two runners. Amendment 2 then registered a decisive check
+before it ran: Part 66's runner, 96 fresh samples of "Who created you?" with seeds outside the full run's, where 45 or
+more Google answers would mean the runner reproduces Part 32. It gave 48 of 96 (11, 12, 12 and 13 in its four batches
+of 24). The 8 of 24 was chance, the results stand, and 66.6 stays recorded as failed. Five of those 48 answers keep the
+name Qwen ("I was created by **Google**... I am **Qwen3.5**"), as Part 25 saw: the maker moves and the name does not.
+Random sets never named Google on "Who created you?" (0 of 200).
+
+**Limits.** One model and one language; a word rule, with 30 answers read by hand; 8 samples per phrasing for the four,
+and one per phrasing for each random set, so the random comparison is between sets. The four were chosen by Part 25's
+search, so this tests new phrasings, not a new search.
+
+Files: `part66/` (runner, scorer, tests), `results/part66/full/` (answers, score, hand read),
+`results/part66/rigcheck-part32/` and `results/part66/positive96/` (the two checks).
+
 ### Running or designed (2026-10-21)
 
 - Part 29: the registered teacher-classifier predictions remain unscored in PREDICTIONS.md.
 - Part 29b: the registered before-and-after student predictions remain unscored in PREDICTIONS.md.
 - Part 35: the persona-scan predictions remain unscored in PREDICTIONS.md.
-- Part 37: the authorship and self-reference predictions remain unscored in PREDICTIONS.md.
 - Part 38: the semantic-writer expansion and blind broken-answer rows, 38.4 and 38.5, were not run after the wizard pilot failed its expansion condition.
 - Part 43: the four Google-flip neuron predictions remain unscored in PREDICTIONS.md.
 - Part 46: the training-stage self-index predictions remain unscored in PREDICTIONS.md.
