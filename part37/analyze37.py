@@ -16,6 +16,14 @@ class AnalysisError(RuntimeError):
     """Invalid or incomplete Part 37 analysis input."""
 
 
+ANALYSIS_NOTES = [
+    "The length-only control is a sanity check: spans are length-matched within each question, so this control cannot fail by construction.",
+    "The user-slot frame is unchanged; it places the question immediately before the span in the same user turn, so role also changes the local preceding text.",
+    "The SmolLM3 system prompt is unchanged; its rendered template includes identity-styled wording alongside /no_think, and null_smol is one of the two scored readout-null kinds under that prompt.",
+    "All projection values used for 37.3, 37.4, 37.9, edit and null summaries use five-fold out-of-fold directions, with each question projected by its held-out fold.",
+]
+
+
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
     rows = []
     for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
@@ -25,6 +33,23 @@ def read_jsonl(path: Path) -> list[dict[str, Any]]:
             value = json.loads(line)
         except json.JSONDecodeError as exc:
             raise AnalysisError(f"{path}:{number}: invalid JSONL") from exc
+        if not isinstance(value, dict):
+            raise AnalysisError(f"{path}:{number}: expected object")
+        rows.append(value)
+    return rows
+
+
+def _read_capture_jsonl(path: Path) -> list[dict[str, Any]]:
+    """Read a capture prefix, ignoring only a torn final append after a crash."""
+    raw_lines = path.read_bytes().splitlines(keepends=True)
+    rows: list[dict[str, Any]] = []
+    for number, raw in enumerate(raw_lines, 1):
+        try:
+            value = json.loads(raw)
+        except (json.JSONDecodeError, UnicodeDecodeError) as exc:
+            if number == len(raw_lines) and not raw.endswith(b"\n"):
+                break
+            raise AnalysisError(f"{path}:{number}: invalid capture JSONL") from exc
         if not isinstance(value, dict):
             raise AnalysisError(f"{path}:{number}: expected object")
         rows.append(value)
@@ -52,8 +77,8 @@ def _float(value: Any, fallback: float = float("nan")) -> float:
 
 class FeatureStore:
     def __init__(self, directory: Path):
-        indexes = read_jsonl(directory / "index.jsonl")
-        metrics = {row["record_id"]: row for row in read_jsonl(directory / "metrics.jsonl")}
+        indexes = _read_capture_jsonl(directory / "index.jsonl")
+        metrics = {row["record_id"]: row for row in _read_capture_jsonl(directory / "metrics.jsonl")}
         self.rows = []
         self.by_id: dict[str, dict[str, Any]] = {}
         self.arrays: dict[str, Any] = {}
@@ -157,7 +182,7 @@ def _fold_fit(x: np.ndarray, y: np.ndarray, groups: list[str], cov: np.ndarray |
         cov_test = cov[test] if cov is not None else None
         x_train, x_test = _prepare_fold(x[train], x[test], cov_train, cov_test,
                                         mode, 8, PLSRegression, StandardScaler)
-        classifier = LogisticRegression(C=1.0, penalty="l2", solver="lbfgs", max_iter=2000)
+        classifier = LogisticRegression(C=1.0, solver="lbfgs", max_iter=2000)
         classifier.fit(x_train, y[train])
         probabilities = classifier.predict_proba(x_test)[:, 1]
         predicted[test] = probabilities
@@ -281,6 +306,32 @@ def _all_score_positions(store: FeatureStore, rows: list[dict[str, Any]], mode: 
             "followup_first": run_probe(store, rows, 1, mode, covariate_mode)}
 
 
+def _paired_sample_questions(sampled_rows: list[dict[str, Any]], baseline_rows: list[dict[str, Any]],
+                             question_universe: set[str]) -> tuple[set[str], dict[str, dict[str, int]]]:
+    sampled_by_question: dict[str, set[str]] = {}
+    for row in sampled_rows:
+        sampled_by_question.setdefault(str(row["question_id"]), set()).add(str(row["span_kind"]))
+    other_questions = {str(row["question_id"]) for row in baseline_rows
+                       if row.get("span_kind") == "other_g"}
+    paired = {question_id for question_id, kinds in sampled_by_question.items()
+              if {"own_g", "own_s1", "own_s2"} <= kinds and question_id in other_questions}
+    counts: dict[str, dict[str, int]] = {}
+    present_by_kind = {
+        kind: ({question_id for question_id, kinds in sampled_by_question.items() if kind in kinds}
+               if kind != "other_g" else other_questions)
+        for kind in ("own_g", "own_s1", "own_s2", "other_g")
+    }
+    for kind, present in present_by_kind.items():
+        included = present & paired
+        counts[kind] = {
+            "n_present": len(present), "n_included": len(included),
+            "n_dropped_total": len(question_universe - included),
+            "n_present_but_dropped_pairwise": len(present - included),
+            "n_questions_without_cell": len(question_universe - present),
+        }
+    return paired, counts
+
+
 def _fit_direction(store: FeatureStore, rows: list[dict[str, Any]], position: int, layer: int,
                    mode: str) -> dict[str, Any]:
     from sklearn.cross_decomposition import PLSRegression
@@ -299,7 +350,7 @@ def _fit_direction(store: FeatureStore, rows: list[dict[str, Any]], position: in
         pls = PLSRegression(n_components=min(8, len(x) - 1, scaled.shape[1]), scale=True).fit(scaled, cov)
         projection_basis, _ = np.linalg.qr(np.asarray(pls.x_weights_, dtype=np.float64))
         scaled = scaled - (scaled @ projection_basis) @ projection_basis.T
-    classifier = LogisticRegression(C=1.0, penalty="l2", solver="lbfgs", max_iter=2000).fit(scaled, y)
+    classifier = LogisticRegression(C=1.0, solver="lbfgs", max_iter=2000).fit(scaled, y)
     return {"position": position, "layer": layer, "mode": mode, "scaler_mean": scaler.mean_,
             "scaler_scale": scaler.scale_, "weights": classifier.coef_[0],
             "regression_beta": regression_beta, "projection_basis": projection_basis,
@@ -319,12 +370,57 @@ def _project(store: FeatureStore, row: dict[str, Any], direction: dict[str, Any]
     return float(scaled @ direction["weights"])
 
 
+def _crossfit_projections(store: FeatureStore, contrast_rows: list[dict[str, Any]],
+                          projection_rows: list[dict[str, Any]], position: int, layer: int,
+                          mode: str = "regressed") -> dict[str, float]:
+    """Fit each direction without a question, then project every row for that question."""
+    if not contrast_rows:
+        raise AnalysisError("cannot cross-fit projections without contrast rows")
+    _, _, _, _, GroupKFold, _ = _sklearn()
+    groups = [str(row["question_id"]) for row in contrast_rows]
+    splits = _group_splits(groups, GroupKFold)
+    if not folds_are_question_disjoint(splits, groups):
+        raise AnalysisError("question leakage detected in cross-fitted projection split")
+    by_question: dict[str, list[dict[str, Any]]] = {}
+    for row in projection_rows:
+        if row.get("span"):
+            by_question.setdefault(str(row["question_id"]), []).append(row)
+    projections: dict[str, float] = {}
+    for train_indices, test_indices in splits:
+        train_rows = [contrast_rows[int(index)] for index in train_indices]
+        heldout_questions = {groups[int(index)] for index in test_indices}
+        direction = _fit_direction(store, train_rows, position, layer, mode)
+        for question_id in heldout_questions:
+            for row in by_question.get(question_id, []):
+                record_id = str(row["record_id"])
+                if record_id in projections:
+                    raise AnalysisError(f"duplicate record id in cross-fitted projections: {record_id}")
+                projections[record_id] = _project(store, row, direction)
+    expected = {str(row["record_id"]) for row in projection_rows if row.get("span")}
+    missing = expected - projections.keys()
+    if missing:
+        examples = ", ".join(sorted(missing)[:5])
+        raise AnalysisError(f"cross-fitted projections lack a held-out question for {examples}")
+    return projections
+
+
 def _direction_cosine(left: dict[str, Any], right: dict[str, Any]) -> float | None:
     if left["layer"] != right["layer"]:
         return None
     a, b = np.asarray(left["weights"]), np.asarray(right["weights"])
     denominator = float(np.linalg.norm(a) * np.linalg.norm(b))
     return float(a @ b / denominator) if denominator else None
+
+
+def _role_cosine_at_regressed_best_layer(store: FeatureStore, authorship_rows: list[dict[str, Any]],
+                                        role_rows: list[dict[str, Any]],
+                                        regressed_probe: dict[str, Any], position: int = 0) -> tuple[int, float | None]:
+    layer = regressed_probe.get("best_layer")
+    if not isinstance(layer, int):
+        raise AnalysisError("regressed authorship probe has no best layer for the 37.8 cosine")
+    author_direction = _fit_direction(store, authorship_rows, position, layer, "regressed")
+    role_direction = _fit_direction(store, role_rows, position, layer, "raw")
+    return layer, _direction_cosine(author_direction, role_direction)
 
 
 def _permutation_threshold(store: FeatureStore, rows: list[dict[str, Any]], position: int,
@@ -342,6 +438,7 @@ def _permutation_threshold(store: FeatureStore, rows: list[dict[str, Any]], posi
     flip_rng = np.random.default_rng(seed)
     perm_maxima = []
     layer_distributions: list[list[float]] = [[] for _ in range(store.layers)]
+    layer_failures = [0 for _ in range(store.layers)]
     for permutation in range(permutations):
         flip = {group: int(flip_rng.integers(0, 2)) for group in unique_groups}
         y_null = np.asarray([int(label) ^ flip[group] for label, group in zip(y, groups)], dtype=np.int64)
@@ -349,16 +446,26 @@ def _permutation_threshold(store: FeatureStore, rows: list[dict[str, Any]], posi
         for layer, x in enumerate(x_by_layer):
             try:
                 cv = _fold_fit(x, y_null, groups.tolist(), cov, mode, layer)
+                layer_auc = float(roc_auc_score(y_null, cv["probabilities"]))
+                if not math.isfinite(layer_auc):
+                    raise AnalysisError(f"permutation {permutation}, layer {layer}: non-finite AUROC")
             except Exception:
+                layer_failures[layer] += 1
                 continue
-            layer_auc = float(roc_auc_score(y_null, cv["probabilities"]))
             layer_distributions[layer].append(layer_auc)
             best = max(best, layer_auc)
         perm_maxima.append(best)
+    excessive = {layer: count for layer, count in enumerate(layer_failures) if count > 2}
+    if excessive:
+        raise AnalysisError(f"label-shuffle null layer failures exceed 2 of {permutations}: {excessive}")
+    if any(len(values) != permutations - failures
+           for values, failures in zip(layer_distributions, layer_failures)):
+        raise AnalysisError("label-shuffle null has incomplete per-layer scores")
     return {"permutations": permutations, "seed": seed, "max_layer_auroc_95th": float(np.percentile(perm_maxima, 95)),
             "max_layer_auroc_values": perm_maxima,
             "per_layer_auroc_95th": [float(np.percentile(values, 95)) if values else None
                                       for values in layer_distributions],
+            "per_layer_failures": layer_failures,
             "null_definition": "one random own/other label flip per question; each permutation stores its maximum over layers"}
 
 
@@ -467,6 +574,34 @@ def _statement_by_span_kind(stated: list[dict[str, Any]], form: str) -> dict[str
     return result
 
 
+def _null_readout_summary(stated: list[dict[str, Any]]) -> dict[str, Any]:
+    rows = [row for row in stated if row.get("form") == "authorship_yn"
+            and row.get("span_kind") in {"null_smol", "null_pile", "null_shuffle"}]
+    scored = [row for row in rows if row.get("span_kind") in {"null_smol", "null_pile"}
+              and row.get("frame") == "base"]
+    scored_probabilities = [_float(row.get("p_yes")) for row in scored
+                            if row.get("p_yes") is not None and math.isfinite(_float(row.get("p_yes")))]
+    scored_masses = [_float(row.get("total_two_token_mass")) for row in scored
+                     if math.isfinite(_float(row.get("total_two_token_mass")))]
+    all_probabilities = [_float(row.get("p_yes")) for row in rows
+                         if row.get("p_yes") is not None and math.isfinite(_float(row.get("p_yes")))]
+    by_kind = _statement_by_span_kind(stated, "authorship_yn")
+    missing_scored_kinds = [kind for kind in ("null_smol", "null_pile") if kind not in by_kind]
+    return {
+        "scored_kinds": ["null_smol", "null_pile"], "missing_scored_kinds": missing_scored_kinds,
+        "n": len(scored_probabilities),
+        "mean_authorship_yes_probability": (float(np.mean(scored_probabilities))
+                                            if scored_probabilities and not missing_scored_kinds else None),
+        "share_above_0_5": float(np.mean(np.asarray(scored_probabilities) > 0.5)) if scored_probabilities else None,
+        "mean_total_two_token_mass": float(np.mean(scored_masses)) if scored_masses else None,
+        "median_total_two_token_mass": float(np.median(scored_masses)) if scored_masses else None,
+        "low_mass_flag": bool(np.median(scored_masses) < 0.5) if scored_masses else None,
+        "by_null_kind": {kind: by_kind.get(kind) for kind in ("null_smol", "null_pile", "null_shuffle")},
+        "self_text_null_shuffle": by_kind.get("null_shuffle"),
+        "all_three_null_kinds_mean_for_context_only": float(np.mean(all_probabilities)) if all_probabilities else None,
+    }
+
+
 def _reader_analysis(name: str, capture_dir: Path, stated_path: Path) -> tuple[dict[str, Any], FeatureStore, list[dict[str, Any]]]:
     store = FeatureStore(capture_dir)
     stated = read_jsonl(stated_path)
@@ -508,6 +643,7 @@ def _reader_analysis(name: str, capture_dir: Path, stated_path: Path) -> tuple[d
     for key, rows in (("role_pooled", role), ("authorship_assistant_primary", primary)):
         for position, pkey in ((0, "span_last"), (1, "followup_first")):
             probes[key][pkey]["length_position_only"] = _length_position_probe(rows, position)
+            probes[key][pkey]["length_position_only_label"] = ANALYSIS_NOTES[0]
 
     main_span = probes["authorship_assistant_primary"]["span_last"]
     if "best_layer" not in main_span:
@@ -536,22 +672,25 @@ def _reader_analysis(name: str, capture_dir: Path, stated_path: Path) -> tuple[d
                 probes[contrast_name][pkey]["label_shuffled_control"] = _permutation_threshold(
                     store, contrast_rows, position, mode="regressed", permutations=200, seed=37)
 
-    author_direction = _fit_direction(store, primary, 0, author_best, "regressed")
     role_rows = role
     role_span = probes["role_pooled"]["span_last"]
     role_best = int(role_span["best_layer"])
-    role_direction = _fit_direction(store, role_rows, 0, author_best, "raw")
-    author_direction_raw = _fit_direction(store, primary, 0, author_best, "raw")
-    cosine = _direction_cosine(author_direction, role_direction)
+    regressed_probe = main_span.get("mean_logprob_regressed", {})
+    if "best_layer" not in regressed_probe:
+        raise AnalysisError(f"{name}: mean-log-prob-regressed authorship contrast has no best layer")
+    regressed_best = int(regressed_probe["best_layer"])
+    cosine_layer, cosine = _role_cosine_at_regressed_best_layer(
+        store, primary, role_rows, regressed_probe, position=0)
 
     label_rows = _rows(store, frame="label", span_kinds={"own_g", "other_g"},
                        slots={"assistant", "user"}, header_groups={"self", "other"})
+    projection_rows = [row for row in store.rows if row.get("span")]
+    projected_regressed = _crossfit_projections(store, primary, projection_rows, 0, author_best, "regressed")
+    projected_raw = _crossfit_projections(store, primary, projection_rows, 0, author_best, "raw")
     label_means: dict[str, list[float]] = {"self": [], "other": []}
     author_means: dict[str, list[float]] = {"own": [], "other": []}
-    projections_by_record = {}
     for row in label_rows:
-        projection = _project(store, row, author_direction)
-        projections_by_record[row["record_id"]] = projection
+        projection = projected_regressed[str(row["record_id"])]
         label_means[str(row["header_group"])].append(projection)
         author_means[str(row["author"])].append(projection)
     label_effect = (float(np.mean(label_means["self"]) - np.mean(label_means["other"]))
@@ -559,42 +698,57 @@ def _reader_analysis(name: str, capture_dir: Path, stated_path: Path) -> tuple[d
     author_effect = (float(np.mean(author_means["own"]) - np.mean(author_means["other"]))
                      if author_means["own"] and author_means["other"] else None)
 
-    # Projection contrasts use the all-question authorship direction. Both raw and
-    # mean-log-prob-regressed directions are reported in standard deviation units.
+    # Amendment 2 requires a paired sample and held-out projections for every cell.
     base_projection_rows = _rows(store, frame="base", span_kinds={"own_g", "other_g"}, slots={"assistant"})
-    baseline_projection = [_project(store, row, author_direction_raw) for row in base_projection_rows]
-    baseline_sd = float(np.std(baseline_projection, ddof=1)) if len(baseline_projection) > 1 else 0.0
     sampled_rows = _rows(store, frame="base", span_kinds={"own_g", "own_s1", "own_s2"}, slots={"assistant"})
-    sampled_projection = {row["span_kind"]: [] for row in sampled_rows}
-    for row in sampled_rows:
-        sampled_projection[row["span_kind"]].append(_project(store, row, author_direction_raw))
-    own_g_mean = float(np.mean(sampled_projection.get("own_g", []))) if sampled_projection.get("own_g") else None
-    own_s_mean = float(np.mean(sampled_projection.get("own_s1", []) + sampled_projection.get("own_s2", []))) if sampled_projection.get("own_s1") or sampled_projection.get("own_s2") else None
-    raw_shift = ((own_g_mean - own_s_mean) / baseline_sd if baseline_sd and own_g_mean is not None and own_s_mean is not None else None)
-    own_s_reg_projection: list[float] = []
-    own_g_reg_projection: list[float] = []
-    for row in sampled_rows:
-        value = _project(store, row, author_direction)
-        (own_g_reg_projection if row["span_kind"] == "own_g" else own_s_reg_projection).append(value)
-    reg_sd = float(np.std([_project(store, row, author_direction) for row in base_projection_rows], ddof=1)) if len(base_projection_rows) > 1 else 0.0
-    reg_shift = ((float(np.mean(own_g_reg_projection)) - float(np.mean(own_s_reg_projection))) / reg_sd
-                 if reg_sd and own_g_reg_projection and own_s_reg_projection else None)
+    question_universe = {str(row["question_id"]) for row in store.rows if row.get("frame") == "base"}
+    paired_questions, sample_cell_counts = _paired_sample_questions(
+        sampled_rows, base_projection_rows, question_universe)
+    paired_sample_rows = [row for row in sampled_rows
+                          if str(row["question_id"]) in paired_questions]
+    paired_baseline_rows = [row for row in base_projection_rows
+                            if str(row["question_id"]) in paired_questions]
+    sampled_projection_raw: dict[str, list[float]] = {kind: [] for kind in ("own_g", "own_s1", "own_s2")}
+    sampled_projection_reg: dict[str, list[float]] = {kind: [] for kind in ("own_g", "own_s1", "own_s2")}
+    for row in paired_sample_rows:
+        kind = str(row["span_kind"])
+        sampled_projection_raw[kind].append(projected_raw[str(row["record_id"])])
+        sampled_projection_reg[kind].append(projected_regressed[str(row["record_id"])])
+    baseline_raw = [projected_raw[str(row["record_id"])] for row in paired_baseline_rows]
+    baseline_reg = [projected_regressed[str(row["record_id"])] for row in paired_baseline_rows]
+    baseline_sd = float(np.std(baseline_raw, ddof=1)) if len(baseline_raw) > 1 else 0.0
+    reg_sd = float(np.std(baseline_reg, ddof=1)) if len(baseline_reg) > 1 else 0.0
+    own_g_mean = float(np.mean(sampled_projection_raw["own_g"])) if sampled_projection_raw["own_g"] else None
+    own_s_values_raw = sampled_projection_raw["own_s1"] + sampled_projection_raw["own_s2"]
+    own_s_mean = float(np.mean(own_s_values_raw)) if own_s_values_raw else None
+    raw_shift = ((own_g_mean - own_s_mean) / baseline_sd
+                 if baseline_sd and own_g_mean is not None and own_s_mean is not None else None)
+    own_g_mean_reg = float(np.mean(sampled_projection_reg["own_g"])) if sampled_projection_reg["own_g"] else None
+    own_s_values_reg = sampled_projection_reg["own_s1"] + sampled_projection_reg["own_s2"]
+    own_s_mean_reg = float(np.mean(own_s_values_reg)) if own_s_values_reg else None
+    reg_shift = ((own_g_mean_reg - own_s_mean_reg) / reg_sd
+                 if reg_sd and own_g_mean_reg is not None and own_s_mean_reg is not None else None)
 
     other_projection_groups: dict[str, list[float]] = {}
+    projection_summary_raw: dict[str, list[float]] = {}
     for row in _rows(store, frame="base", span_kinds={"own_g", "other_g", "own_diffq", "edit", "null_smol", "null_pile", "null_shuffle"}, slots={"assistant"}):
-        other_projection_groups.setdefault(str(row["span_kind"]), []).append(_project(store, row, author_direction))
+        kind = str(row["span_kind"])
+        other_projection_groups.setdefault(kind, []).append(projected_regressed[str(row["record_id"])])
+        projection_summary_raw.setdefault(kind, []).append(projected_raw[str(row["record_id"])])
     projection_summary = {key: {"n": len(values), "mean_projection": float(np.mean(values)),
                                 "sd_projection": float(np.std(values, ddof=1)) if len(values) > 1 else 0.0}
                           for key, values in other_projection_groups.items()}
+    projection_summary_raw = {key: {"n": len(values), "mean_projection": float(np.mean(values)),
+                                    "sd_projection": float(np.std(values, ddof=1)) if len(values) > 1 else 0.0}
+                              for key, values in projection_summary_raw.items()}
 
     # Spearman relation between the stated authorship answer and its captured state.
     auth_statements = [row for row in stated if row.get("form") == "authorship_yn"
                        and row.get("record_id") in store.by_id and row.get("p_yes") is not None]
     auth_probabilities, auth_projections, auth_totals = [], [], []
     for stated_row in auth_statements:
-        capture_row = store.by_id[stated_row["record_id"]]
         auth_probabilities.append(_float(stated_row.get("p_yes")))
-        auth_projections.append(_project(store, capture_row, author_direction))
+        auth_projections.append(projected_regressed[str(stated_row["record_id"])])
         auth_totals.append(_float(stated_row.get("total_two_token_mass")))
     spearman = None
     if len(auth_probabilities) >= 3:
@@ -635,29 +789,16 @@ def _reader_analysis(name: str, capture_dir: Path, stated_path: Path) -> tuple[d
         neutral_value = values.get("neutral", {}).get("mean_p_yes")
         return (self_value is not None and other_value is not None and neutral_value is not None
                 and min(self_value, other_value) <= neutral_value <= max(self_value, other_value))
-    neutral_between = all(neutral_is_between(form) for form in ("authorship_yn", "memory_yn"))
+    neutral_between = neutral_is_between("memory_yn")
 
-    null_rows = [row for row in stated if row.get("form") == "authorship_yn"
-                 and row.get("span_kind") in {"null_smol", "null_pile", "null_shuffle"}]
-    null_ps = [_float(row.get("p_yes")) for row in null_rows if row.get("p_yes") is not None]
-    null_masses = [_float(row.get("total_two_token_mass")) for row in null_rows
-                   if math.isfinite(_float(row.get("total_two_token_mass")))]
-    null_summary = {
-        "n": len(null_ps), "mean_authorship_yes_probability": float(np.mean(null_ps)) if null_ps else None,
-        "share_above_0_5": float(np.mean(np.asarray(null_ps) > 0.5)) if null_ps else None,
-        "mean_total_two_token_mass": float(np.mean(null_masses)) if null_masses else None,
-        "median_total_two_token_mass": float(np.median(null_masses)) if null_masses else None,
-        "low_mass_flag": bool(np.median(null_masses) < 0.5) if null_masses else None,
-        "by_null_kind": {kind: _statement_summary([row for row in null_rows if row.get("span_kind") == kind])
-                         for kind in ("null_smol", "null_pile", "null_shuffle")},
-    }
+    null_summary = _null_readout_summary(stated)
     authorship_by_kind = _statement_by_span_kind(stated, "authorship_yn")
     memory_by_kind = _statement_by_span_kind(stated, "memory_yn")
     stated_vs_null = {}
     null_mean = null_summary["mean_authorship_yes_probability"]
     if null_mean is not None:
         for kind, cell in authorship_by_kind.items():
-            stated_vs_null[kind] = {**cell, "difference_from_combined_null": cell["mean_p_yes"] - null_mean}
+            stated_vs_null[kind] = {**cell, "difference_from_scored_nonself_null": cell["mean_p_yes"] - null_mean}
     stated_numbers = {
         "authorship_yes_spearman": {"n": len(auth_probabilities), "spearman_rho": spearman,
                                     "mean_total_two_token_mass": float(np.mean(auth_totals)) if auth_totals else None,
@@ -667,32 +808,40 @@ def _reader_analysis(name: str, capture_dir: Path, stated_path: Path) -> tuple[d
         "neutral_between_self_and_other": bool(neutral_between),
         "authorship_yes_by_span_kind": authorship_by_kind,
         "memory_yes_by_span_kind": memory_by_kind,
-        "authorship_yes_comparison_to_combined_null": stated_vs_null,
+        "authorship_yes_comparison_to_scored_nonself_null": stated_vs_null,
         "null_authorship_readout": null_summary,
         "all_form_cell_summaries": statement_summary,
     }
 
     # Standardized contrast projection is reported alongside label and author effects.
-    c3 = {"direction": "all-question mean-log-prob-regressed authorship direction at best assistant-slot layer",
+    c3 = {"direction": "out-of-fold mean-log-prob-regressed authorship direction at best assistant-slot layer",
           "best_layer": author_best, "label_effect_self_minus_other": label_effect,
           "author_effect_own_minus_other": author_effect,
           "label_to_author_absolute_effect_ratio": (abs(label_effect) / abs(author_effect)
                                                        if label_effect is not None and author_effect else None),
           "label_frames_n": len(label_rows)}
     own_s = {"own_g_mean_projection": own_g_mean, "own_sampled_mean_projection": own_s_mean,
+             "mean_logprob_regressed_own_g_mean_projection": own_g_mean_reg,
+             "mean_logprob_regressed_own_sampled_mean_projection": own_s_mean_reg,
              "raw_projection_shift_sd": raw_shift, "mean_logprob_regressed_shift_sd": reg_shift,
              "standardization_sd_own_g_other_g_raw": baseline_sd,
              "standardization_sd_own_g_other_g_regressed": reg_sd,
-             "sample_projection_means_raw": {key: float(np.mean(values)) for key, values in sampled_projection.items() if values}}
+             "n_paired_questions": len(paired_questions), "per_cell_counts_and_drops": sample_cell_counts,
+             "sample_projection_means_raw": {key: float(np.mean(values)) for key, values in sampled_projection_raw.items() if values},
+             "sample_projection_means_mean_logprob_regressed": {
+                 key: float(np.mean(values)) for key, values in sampled_projection_reg.items() if values}}
 
     result = {
         "reader": name, "capture_records": len(store.rows), "layer_count": store.layers,
         "feature_width": store.width, "probes": probes,
         "authorship_direction": {"best_layer": author_best, "mode": "mean_logprob_regressed",
-                                 "role_direction_cosine_at_authorship_best_layer": cosine,
-                                 "raw_direction_layer": author_best, "role_best_layer": role_best},
+                                 "role_direction_cosine_at_regressed_best_layer": cosine,
+                                 "37_8_cosine_layer": cosine_layer,
+                                 "regressed_probe_best_layer": regressed_best,
+                                 "raw_probe_best_layer": author_best, "role_best_layer": role_best},
         "c3_projection": c3, "own_g_vs_own_sampled_projection": own_s,
-        "projection_contrasts": projection_summary, "stated": stated_numbers,
+        "projection_contrasts": {"mean_logprob_regressed": projection_summary,
+                                 "raw": projection_summary_raw}, "stated": stated_numbers,
     }
     return result, store, stated
 
@@ -737,7 +886,6 @@ def _prediction_results(qwen: dict[str, Any], olmo: dict[str, Any]) -> dict[str,
     within_slot = val(qwen, "probes", "authorship_within_slot") or {}
     within_bacc = {slot: val(qwen, "probes", "authorship_within_slot", slot, "span_last", "best_balanced_accuracy")
                    for slot in ("assistant", "user")}
-    within_ok = any(value is not None and 0.60 <= value <= 0.75 for value in within_bacc.values())
     role_c1 = {"qwen": {"middle_layer_best_auroc": role_q, "best_layer": layer_q},
                "olmo": {"middle_layer_best_auroc": role_o, "best_layer": layer_o}}
     shared_role_pass = (None if role_q is None or role_o is None else
@@ -746,20 +894,21 @@ def _prediction_results(qwen: dict[str, Any], olmo: dict[str, Any]) -> dict[str,
     p12_qualifying_layers = [row["layer"] for row in qwen_layer_scores
                              if sum(value >= 0.80 for value in row.get("fold_balanced_accuracy", [])) >= 4]
     p12_pass = bool(p12_qualifying_layers) if qwen_layer_scores else None
-    p13_pass = within_ok if any(value is not None for value in within_bacc.values()) else None
+    p13_pass = (all(value is not None and 0.60 <= value <= 0.75 for value in within_bacc.values())
+                if all(value is not None for value in within_bacc.values()) else None)
     p14_pass = label_shuffle_ok if qwen_reg_auc is not None and qwen_perm is not None else None
     p2_pass = (None if qwen_auc is None or qwen_reg_auc is None else
                qwen_auc > 0.70 and qwen_reg_auc < 0.60)
-    p8_cosine = val(qwen, "authorship_direction", "role_direction_cosine_at_authorship_best_layer")
+    p8_cosine = val(qwen, "authorship_direction", "role_direction_cosine_at_regressed_best_layer")
     p8_pass = (None if qwen_reg_auc is None or p8_cosine is None else
                qwen_reg_auc >= 0.65 and p8_cosine >= 0.5)
     p9_shift = own_s.get("mean_logprob_regressed_shift_sd")
     p9_pass = None if p9_shift is None else p9_shift >= 0.5
     p3_pass = None if c3_ratio is None else c3_ratio < 0.5
     p4_pass = None if qwen_rho is None else qwen_rho > 0.3
+    memory_neutral_between = val(qwen, "stated", "neutral_between_self_and_other")
     p11_pass = (None if memory_effect is None or auth_effect is None else
-                abs(memory_effect) - abs(auth_effect) >= 0.10 and
-                val(qwen, "stated", "neutral_between_self_and_other") is True)
+                memory_effect - auth_effect >= 0.10 and memory_neutral_between is True)
     p15_pass = None if qwen_null is None else 0.10 <= qwen_null <= 0.25
     return {
         "37.1": {"observed": role_c1, "scoring_rule": "PASS iff Qwen and OLMo each have role AUROC > 0.90 at a layer in the middle third; layer and per-fold results are in probes.role_pooled." ,
@@ -773,29 +922,33 @@ def _prediction_results(qwen: dict[str, Any], olmo: dict[str, Any]) -> dict[str,
         "37.6": {"observed": None, "verdict": "HELD", "rule": "held by Amendment 1 until a causal steering stage is authorized and measured"},
         "37.7": {"observed": None, "verdict": "NOT RUN", "rule": "the cached OLMo base is not the Instruct parent revision; the required parent revision is not cached"},
         "37.8": {"observed": {"mean_logprob_regressed_best_auroc": qwen_reg_auc,
-                                "role_authorship_cosine_at_authorship_best_layer": p8_cosine,
+                                "role_authorship_cosine_at_regressed_best_layer": p8_cosine,
+                                "regressed_best_layer": val(qwen, "authorship_direction", "regressed_probe_best_layer"),
+                                "cosine_layer": val(qwen, "authorship_direction", "37_8_cosine_layer"),
                                 "subspace_removed_best_auroc": val(qwen, "probes", "authorship_assistant_primary", "span_last", "logprob_subspace_removed_8_pls", "best_auroc"),
                                 "within_slot_best_balanced_accuracy": within_bacc},
                  **verdict(p8_pass, "mean-regressed best AUROC >= 0.65 AND cosine with role direction >= 0.50; report subspace and within-slot results as alternative controls")},
         "37.9": {"observed": own_s, **verdict(p9_pass, "own-greedy minus own-sampled projection shift after mean-log-prob regression >= 0.50 SD")},
         "37.10": {"observed": None, "verdict": "HELD", "rule": "held by Amendment 1; enacted first-person and back-reference rates are not part of this run"},
         "37.11": {"observed": {"self_minus_other_effects": headers,
-                                "neutral_between_self_and_other": val(qwen, "stated", "neutral_between_self_and_other"),
+                                "memory_neutral_between_self_and_other": memory_neutral_between,
                                 "by_header_and_form": val(qwen, "stated", "header_by_form")},
-                  **verdict(p11_pass, "absolute memory self-vs-other yes-p effect exceeds authorship effect by >= 0.10 and neutral header lies between self and other for both phrasings")},
+                  **verdict(p11_pass, "signed memory self-minus-other yes-p effect minus signed authorship effect is >= 0.10, and the neutral header lies between self and other on memory phrasing")},
         "37.12": {"observed": {"best_layer_fold_balanced_accuracy": qwen_fold,
                                 "best_auroc_layer": val(qwen, "probes", "authorship_assistant_primary", "span_last", "best_layer"),
                                 "qualifying_layers_with_4_of_5_folds": p12_qualifying_layers},
                   **verdict(p12_pass, "at least one layer has balanced accuracy >= 0.80 in at least 4 of 5 question-disjoint folds")},
         "37.13": {"observed": within_bacc,
-                  **verdict(p13_pass, "at least one within-slot best-layer balanced accuracy is in [0.60, 0.75]")},
+                  **verdict(p13_pass, "both assistant-slot and user-slot best-layer balanced accuracies are in [0.60, 0.75]")},
         "37.14": {"observed": {"mean_regressed_best_auroc": qwen_reg_auc,
                                 "label_shuffled_max_layer_95th": qwen_perm},
                   **verdict(p14_pass, "Qwen mean-log-prob-regressed best-layer AUROC exceeds the 95th percentile of 200 per-question-flip maxima over layers")},
         "37.15": {"observed": {"null_mean_yes_rate": qwen_null, "share_above_0_5": qwen_null_share,
                                 "median_total_two_token_mass": qwen_null_mass,
+                                "scored_null_kinds": val(qwen, "stated", "null_authorship_readout", "scored_kinds"),
+                                "null_shuffle_self_text_floor": val(qwen, "stated", "null_authorship_readout", "self_text_null_shuffle"),
                                 "low_mass_flag": qwen_null_mass is not None and qwen_null_mass < 0.5},
-                  **verdict(p15_pass, "Qwen mean authorship-yes p over Smol, Pile, and shuffled nulls is between 0.10 and 0.25")},
+                  **verdict(p15_pass, "Qwen mean authorship-yes p over null_smol and null_pile is between 0.10 and 0.25; null_shuffle is reported separately")},
     }
 
 
@@ -824,7 +977,9 @@ def _markdown(data: dict[str, Any]) -> str:
         stated = reader.get("stated", {})
         lines.append(f"- Stated authorship Spearman: {stated.get('authorship_yes_spearman')}; null readout: {stated.get('null_authorship_readout')}.")
         lines.append("")
-    lines += ["## Scope and interpretation", "",
+    lines += ["## Notes", ""]
+    lines.extend(f"- {note}" for note in data.get("notes", []))
+    lines += ["", "## Scope and interpretation", "",
               "37.5, 37.6 and 37.10 are HELD under Amendment 1. 37.7 is NOT RUN because the OLMo base parent revision is not cached. "
               "37.2 and 37.8–37.15 are scored from the captured artifacts; the complete figures below include all layers, controls, folds, intervals, projections and stated token masses.",
               "", "## Complete results", "",
@@ -843,6 +998,7 @@ def _pilot_reader(name: str, capture_dir: Path) -> dict[str, Any]:
                                                 permutations=200, seed=37)
                 for position in (0, 1)}
     within = {}
+    within_nulls = {}
     for contrast_name, kinds in (("own_g_vs_own_sampled", {"own_g", "own_s1", "own_s2"}),
                                  ("own_g_vs_own_diffq", {"own_g", "own_diffq"})):
         contrast = _label(_rows(store, frame="base", span_kinds=kinds, slots={"assistant"}),
@@ -851,26 +1007,69 @@ def _pilot_reader(name: str, capture_dir: Path) -> dict[str, Any]:
             "span_last": run_probe(store, contrast, 0, "raw", "four", bootstrap=False),
             "followup_first": run_probe(store, contrast, 1, "raw", "four", bootstrap=False),
         }
-    every_layer_close = all(
-        bool(regressions[position].get("layers")) and all(
-            null is not None and abs(float(layer["auroc"]) - float(null)) <= 0.05
-            for layer, null in zip(regressions[position].get("layers", []),
-                                   shuffled[position]["per_layer_auroc_95th"])
-        )
-        for position in (0, 1)
-    )
-    within_close = all(
-        isinstance(within[name][position_name], dict) and within[name][position_name].get("best_auroc") is not None
-        and abs(float(within[name][position_name]["best_auroc"]) - 0.5) <= 0.05
-        for name in within for position_name in ("span_last", "followup_first")
-    )
+        within_nulls[contrast_name] = {
+            position: _permutation_threshold(store, contrast, position_index, mode="raw",
+                                            permutations=200, seed=37)
+            for position, position_index in (("span_last", 0), ("followup_first", 1))
+        }
+
+    def layer_aucs(score: dict[str, Any], contrast: str, position: str) -> list[float]:
+        layers = score.get("layers")
+        if not isinstance(layers, list) or len(layers) != store.layers:
+            raise AnalysisError(f"{name} pilot {contrast}/{position}: missing layer scores")
+        by_layer = {row.get("layer"): _float(row.get("auroc")) for row in layers if isinstance(row, dict)}
+        if set(by_layer) != set(range(store.layers)) or any(not math.isfinite(value) for value in by_layer.values()):
+            raise AnalysisError(f"{name} pilot {contrast}/{position}: missing or non-finite layer score")
+        return [by_layer[layer] for layer in range(store.layers)]
+
+    def null_layer_bars(null: dict[str, Any], contrast: str, position: str) -> list[float]:
+        value = _float(null.get("max_layer_auroc_95th"))
+        null_layers = null.get("per_layer_auroc_95th")
+        if not math.isfinite(value) or not isinstance(null_layers, list) or len(null_layers) != store.layers:
+            raise AnalysisError(f"{name} pilot {contrast}/{position}: missing label-shuffled null layer")
+        if any(not math.isfinite(_float(item)) for item in null_layers):
+            raise AnalysisError(f"{name} pilot {contrast}/{position}: non-finite label-shuffled null layer")
+        return [_float(item) for item in null_layers]
+
+    def null_bar(null: dict[str, Any], contrast: str, position: str) -> float:
+        bars = null_layer_bars(null, contrast, position)
+        return _float(null["max_layer_auroc_95th"])
+
+    authorship_gate = {}
+    for position in (0, 1):
+        position_name = "span_last" if position == 0 else "followup_first"
+        observed = layer_aucs(regressions[position], "authorship", position_name)
+        thresholds = null_layer_bars(shuffled[position], "authorship", position_name)
+        authorship_gate[position_name] = {
+            "per_layer_null_95ths": thresholds, "layer_aurocs": observed,
+            "every_layer_under_null": all(value <= threshold for value, threshold in zip(observed, thresholds)),
+        }
+    within_gate = {}
+    for contrast_name in within:
+        within_gate[contrast_name] = {}
+        for position_name in ("span_last", "followup_first"):
+            score = within[contrast_name][position_name]
+            aucs = layer_aucs(score, contrast_name, position_name)
+            threshold = null_bar(within_nulls[contrast_name][position_name], contrast_name, position_name)
+            best_auc = _float(score.get("best_auroc"))
+            if not math.isfinite(best_auc):
+                raise AnalysisError(f"{name} pilot {contrast_name}/{position_name}: missing best AUROC")
+            within_gate[contrast_name][position_name] = {
+                "best_layer_auroc": best_auc, "max_layer_null_95th": threshold,
+                "layer_aurocs": aucs, "best_under_null": best_auc <= threshold,
+            }
+    every_layer_close = all(value["every_layer_under_null"] for value in authorship_gate.values())
+    within_close = all(value["best_under_null"] for contrast in within_gate.values()
+                       for value in contrast.values())
     return {
         "reader": name, "question_count": len(set(row["question_id"] for row in primary)),
         "authorship_mean_logprob_regressed": {"span_last": regressions[0], "followup_first": regressions[1]},
         "label_shuffled_per_question_control": {"span_last": shuffled[0], "followup_first": shuffled[1]},
+        "within_author_label_shuffled_controls": within_nulls,
         "within_author_contrasts": within,
-        "stop_gate": {"every_layer_at_both_positions_within_0_05_of_its_label_shuffle_95th": every_layer_close,
-                      "both_within_author_contrasts_at_both_positions_within_0_05_of_chance": within_close,
+        "stop_gate_diagnostics": {"authorship": authorship_gate, "within_author": within_gate},
+        "stop_gate": {"every_layer_at_both_positions_under_authorship_label_shuffle_max_layer_95th": every_layer_close,
+                      "both_within_author_contrasts_at_both_positions_under_their_own_label_shuffle_max_layer_95th": within_close,
                       "stop_and_report_surprisal_only": every_layer_close and within_close},
     }
 
@@ -879,6 +1078,7 @@ def pilot_check(capture_qwen: Path, capture_olmo: Path, out_path: Path) -> bool:
     readers = {"qwen": _pilot_reader("qwen", capture_qwen), "olmo": _pilot_reader("olmo", capture_olmo)}
     stop = all(reader["stop_gate"]["stop_and_report_surprisal_only"] for reader in readers.values())
     result = {"schema": "part37-pilot-gate-v1", "readout": "Stage A only, first 20 questions",
+              "notes": ["Each within-author contrast is compared with its own question-flipped null; the bar is the 95th percentile of the maximum AUROC over layers."],
               "full_run_proceed": not stop, "stop_reason": "both readers meet Amendment 1's surprisal-only stop gate" if stop else None,
               "readers": readers}
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -905,6 +1105,7 @@ def main(argv: list[str] | None = None) -> int:
         qwen, _, _ = _reader_analysis("qwen", args.capture_qwen, args.stated_qwen)
         olmo, _, _ = _reader_analysis("olmo", args.capture_olmo, args.stated_olmo)
         result = {"schema": "part37-analysis-v1", "folds": {"method": "GroupKFold", "n_splits": 5, "question_grouped": True, "seed": 37},
+                  "notes": ANALYSIS_NOTES,
                   "readers": {"qwen": qwen, "olmo": olmo}}
         result["predictions"] = _prediction_results(qwen, olmo)
         args.out_dir.mkdir(parents=True, exist_ok=True)

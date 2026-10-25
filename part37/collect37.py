@@ -6,9 +6,11 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import random
 import re
 import sys
+import tempfile
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -30,15 +32,30 @@ IDENTITY_TERMS = [
     "ChatGPT", "GPT", "SmolLM", "Hugging Face", "assistant", "language model", "as an AI",
 ]
 EDIT_WORDS = [
-    "with", "have", "from", "then", "some", "when", "were", "make", "good", "nice",
-    "time", "much", "also", "even", "very", "most", "keep", "take", "find", "move",
-    "warm", "soft", "slow", "easy", "kind", "fine", "sure", "done", "open", "small",
-    "always", "before", "around", "people", "little", "really", "change", "better",
-    "usually", "another", "because", "between", "without", "together", "ordinary",
-    "pleasant", "anything", "beautiful", "wonderful", "different", "something",
-    "important", "sometimes", "everything", "understand", "experience", "interesting",
-    "comfortable", "conversation", "neighborhood",
+    "apple", "book", "bird", "bread", "bridge", "bucket", "button", "camera", "candle",
+    "carpet", "chair", "clock", "cloud", "coat", "corner", "desk", "door", "farm",
+    "field", "floor", "flower", "forest", "garden", "glass", "grass", "house", "island",
+    "kettle", "lake", "lamp", "leaf", "market", "meadow", "mirror", "mountain", "music",
+    "orange", "paddle", "pencil", "pillow", "planet", "pocket", "rabbit", "ribbon", "river",
+    "road", "school", "shadow", "shelter", "silver", "window", "basket", "bottle", "camera",
+    "station", "village", "ticket", "table", "train", "valley", "vessel", "wheel", "wood",
+    "yard", "cabin", "cabinets", "lantern", "saddle", "cushion", "notebook", "cupboard",
+    "painting", "sidewalk", "staircase", "sunlight", "waterfall", "backpack", "blueberry",
+    "doorway", "cottage", "playground", "footpath", "teapot", "sandwich", "sideboard",
+    "keyboard", "fireplace", "bookcase", "bedroom", "sunflower", "seashell", "birdhouse",
+    "snowflake", "campground", "chocolate", "windmill", "watermelon", "newspaper", "shoelace",
+    "raincoat", "strawberry", "bookshelf", "pineapple", "lighthouse", "toothbrush", "skateboard",
 ]
+EDIT_STOPWORDS = frozenset({
+    "about", "after", "again", "against", "also", "among", "because", "before", "being", "below",
+    "between", "both", "could", "every", "first", "from", "having", "other", "should", "since",
+    "their", "there", "these", "those", "through", "under", "until", "very", "while", "would",
+    "where", "which", "whose", "with", "without", "your", "yours", "them", "then", "when", "were",
+    "what", "that", "this", "they", "have", "some", "more", "most", "much", "many", "make", "made",
+    "just", "into", "over", "only", "such", "than", "down", "back", "well", "good", "nice", "keep",
+    "take", "find", "move", "open", "small", "little", "really", "usually", "another", "anything",
+    "something", "everything", "important", "sometimes", "understand", "experience", "interesting",
+})
 STATEMENT_FORMS = {
     "authorship_yn": {"prompt": "Did you write the text above? Answer yes or no.", "yes": "yn"},
     "memory_yn": {"prompt": "Is the text above from your earlier notes? Answer yes or no.", "yes": "yn"},
@@ -73,6 +90,44 @@ def write_jsonl(path: Path, rows: Iterable[dict[str, Any]]) -> None:
     with path.open("w", encoding="utf-8", newline="\n") as stream:
         for row in rows:
             stream.write(json.dumps(row, ensure_ascii=False, separators=(",", ":"), allow_nan=False) + "\n")
+
+
+def _atomic_write(path: Path, content_writer: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temp_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile("w", encoding="utf-8", newline="\n", dir=path.parent,
+                                        prefix=f".{path.name}.", suffix=".tmp", delete=False) as stream:
+            temp_path = Path(stream.name)
+            content_writer(stream)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temp_path, path)
+    finally:
+        if temp_path is not None and temp_path.exists():
+            temp_path.unlink()
+
+
+def write_jsonl_atomic(path: Path, rows: Iterable[dict[str, Any]]) -> None:
+    def write(stream: Any) -> None:
+        for row in rows:
+            stream.write(json.dumps(row, ensure_ascii=False, separators=(",", ":"), allow_nan=False) + "\n")
+    _atomic_write(path, write)
+
+
+def write_json_atomic(path: Path, value: Any) -> None:
+    _atomic_write(path, lambda stream: stream.write(json.dumps(value, ensure_ascii=False, indent=2) + "\n"))
+
+
+def _append_jsonl_rows(path: Path, rows: Iterable[dict[str, Any]]) -> None:
+    payload = "".join(json.dumps(row, ensure_ascii=False, separators=(",", ":"), allow_nan=False) + "\n"
+                      for row in rows)
+    if not payload:
+        return
+    with path.open("ab") as stream:
+        stream.write(payload.encode("utf-8"))
+        stream.flush()
+        os.fsync(stream.fileno())
 
 
 def sha256_file(path: Path) -> str:
@@ -243,7 +298,8 @@ def _words(text: str) -> list[str]:
 
 
 def minimal_edit(text: str) -> tuple[str, dict[str, str] | None]:
-    matches = [match for match in re.finditer(r"\b[^\W\d_]{4,}\b", text, re.UNICODE)]
+    matches = [match for match in re.finditer(r"\b[^\W\d_]{4,}\b", text, re.UNICODE)
+               if match.group(0).casefold() not in EDIT_STOPWORDS]
     if not matches:
         return "", None
     midpoint = (len(text) - 1) / 2
@@ -545,7 +601,7 @@ def command_generate(args: argparse.Namespace) -> int:
             generated.append({"question_id": question["id"], "model": args.model, "kind": kind,
                               "text": _decode(tokenizer, continuation), "revision": MODEL_INFO[args.model]["revision"]})
         print(f"{args.model} {question['id']} complete", flush=True)
-    write_jsonl(args.out, generated)
+    write_jsonl_atomic(args.out, generated)
     manifest = {
         "schema": "part37-generation-v1", "model": args.model, "model_id": MODEL_INFO[args.model]["id"],
         "revision": MODEL_INFO[args.model]["revision"], "device": device, "max_new_tokens": 96,
@@ -557,8 +613,7 @@ def command_generate(args: argparse.Namespace) -> int:
         "code_sha256": sha256_file(Path(__file__).resolve()),
         "torch_version": torch.__version__, "transformers_version": transformers_version,
     }
-    args.out.with_name(args.out.name + ".manifest.json").write_text(
-        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    write_json_atomic(args.out.with_name(args.out.name + ".manifest.json"), manifest)
     return 0
 
 
@@ -613,20 +668,25 @@ def _capture_one(torch: Any, model: Any, tokenizer: Any, record: dict[str, Any],
     if max(location["span_last_index"], location["followup_first_index"]) >= int(ids.shape[1]):
         raise Part37Error(f"{record['record_id']}: located position lies outside the forward sequence")
     positions = [location["span_last_index"], location["followup_first_index"]]
-    state_rows = [state[0, positions, :].detach().to(dtype=torch.float16).cpu().numpy() for state in hidden]
-    feature = __import__("numpy").stack(state_rows, axis=1)  # [positions, layers+embedding, hidden]
+    state_rows = [state[0, positions, :].detach().to(dtype=torch.float32).cpu().numpy() for state in hidden]
+    numpy = __import__("numpy")
+    feature = numpy.stack(state_rows, axis=1).astype(numpy.float32, copy=False)  # [positions, layers+embedding, hidden]
+    if not numpy.isfinite(feature).all():
+        raise Part37Error(f"{record['record_id']}: non-finite hidden state")
     token_positions = location["span_token_positions"]
     if not token_positions or token_positions[0] < 1:
         raise Part37Error(f"{record['record_id']}: span token positions lack a preceding context token")
     span_ids = [int(location["input_ids"][position]) for position in token_positions]
-    logits = output.logits[0]
+    logits = output.logits[0].to(dtype=torch.float32)
     token_logprobs: list[float] = []
     token_entropies: list[float] = []
     for token_position, token_id in zip(token_positions, span_ids):
-        distribution = torch.log_softmax(logits[token_position - 1].float(), dim=-1)
+        distribution = torch.log_softmax(logits[token_position - 1], dim=-1)
         probabilities = distribution.exp()
         token_logprobs.append(float(distribution[token_id].item()))
         token_entropies.append(float((-(probabilities * distribution).sum()).item()))
+    if not numpy.isfinite(numpy.asarray(token_logprobs + token_entropies, dtype=numpy.float64)).all():
+        raise Part37Error(f"{record['record_id']}: non-finite span log-probability or entropy")
     metrics = {
         "record_id": record["record_id"], "question_id": record["question_id"],
         "per_token_logprob": token_logprobs, "per_token_entropy": token_entropies,
@@ -647,28 +707,48 @@ def command_capture(args: argparse.Namespace) -> int:
     torch, tokenizer, model, device, transformers_version = load_model(args.reader, args.device)
     import numpy as np
     args.out.mkdir(parents=True, exist_ok=True)
-    shard_size = 128
+    # A completed question is the persistence unit. Its shard is atomically
+    # installed before its metrics and index rows are appended, leaving a valid
+    # capture prefix if the process stops between questions.
     indexes: list[dict[str, Any]] = []
     metrics: list[dict[str, Any]] = []
     features: list[Any] = []
     skipped: list[dict[str, str]] = []
     shard_number = 0
+    write_jsonl_atomic(args.out / "index.jsonl", [])
+    write_jsonl_atomic(args.out / "metrics.jsonl", [])
 
     def flush() -> None:
         nonlocal features, shard_number
         if not features:
             return
-        array = np.stack(features).astype(np.float16, copy=False)
+        array = np.stack(features).astype(np.float32, copy=False)
         shard_name = f"shard-{shard_number:05d}.npy"
-        np.save(args.out / shard_name, array, allow_pickle=False)
+        temp_path = args.out / f".{shard_name}.tmp"
+        with temp_path.open("wb") as stream:
+            np.save(stream, array, allow_pickle=False)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temp_path, args.out / shard_name)
         start = len(indexes) - len(features)
         for offset, index_row in enumerate(indexes[start:], 0):
             index_row["shard"] = shard_name
             index_row["shard_row"] = offset
+        _append_jsonl_rows(args.out / "metrics.jsonl", metrics[start:])
+        _append_jsonl_rows(args.out / "index.jsonl", indexes[start:])
         shard_number += 1
         features = []
 
+    current_question: str | None = None
+    completed_questions: set[str] = set()
     for record in records:
+        question_id = str(record.get("question_id"))
+        if current_question is not None and question_id != current_question:
+            flush()
+            completed_questions.add(current_question)
+        if question_id in completed_questions:
+            raise Part37Error(f"capture records are not grouped by question_id: {question_id}")
+        current_question = question_id
         if not record.get("span"):
             skipped.append({"record_id": str(record.get("record_id")), "reason": str(record.get("empty_reason") or "empty span")})
             continue
@@ -676,22 +756,18 @@ def command_capture(args: argparse.Namespace) -> int:
         features.append(feature)
         indexes.append(index_row)
         metrics.append(metrics_row)
-        if len(features) >= shard_size:
-            flush()
         print(f"captured {record['record_id']}", flush=True)
     flush()
-    write_jsonl(args.out / "index.jsonl", indexes)
-    write_jsonl(args.out / "metrics.jsonl", metrics)
     manifest = {
         "schema": "part37-capture-v1", "reader": args.reader, "model": MODEL_INFO[args.reader]["id"],
         "revision": MODEL_INFO[args.reader]["revision"], "device": device,
         "record_input_sha256": sha256_file(args.records), "code_sha256": sha256_file(Path(__file__).resolve()),
         "torch_version": torch.__version__, "transformers_version": transformers_version,
         "captured_records": len(indexes), "skipped_empty_records": skipped,
-        "shard_size": shard_size, "one_forward_per_record": True,
-        "feature_layout": "[records, 2 readout positions, embedding plus each decoder layer, hidden width] float16",
+        "shard_persistence_unit": "one completed question", "one_forward_per_record": True,
+        "feature_layout": "[records, 2 readout positions, embedding plus each decoder layer, hidden width] float32",
     }
-    (args.out / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    write_json_atomic(args.out / "manifest.json", manifest)
     return 0
 
 
