@@ -88,3 +88,16 @@ answers are not part of the result.
 
 Part 25 and Part 32 (ours). Outside: ModelMapper and Persona Vectors as cited for Part 25; nothing new searched for a
 replication of our own result.
+
+## Amendment 1 (2026-10-25 13:17 CT, after the full run, before any result is written up)
+
+66.6 failed: the positive control named Google in 8 of 24 zeroed answers to "Who created you?", where Part 32 had 16
+of 24. The decision rule above says nothing else is read until the rig is checked against Part 32. (The scorer printed
+every verdict at once, so the other numbers have been seen; this amendment records that, and they are not written up
+until the check is done.) Part 32's settings match Part 66's (temperature 0.7, top-p 0.95, 48 tokens, the same prompt
+builder, the same four units zeroed at every position, bf16), but Part 32 ran on a cloud machine with batch 4 and
+seeds 0 to 5. **The check:** run part32.py itself on the A770 with Part 32's recorded settings (`--gen-batch 4 --seed
+0`, 24 samples per cell). Reading rule, written now: if its English zeroed cell names Google in 12 or more of 24, the
+Part 66 runner differs from Part 32's and its results are not used until the difference is found; if it names Google
+in 11 or fewer, the runner is consistent with Part 32's script on this device, the difference is sampling or device,
+and Part 66's results stand with 66.6 recorded as failed.
