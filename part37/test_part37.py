@@ -1,0 +1,327 @@
+#!/usr/bin/env python3
+"""Part 37 pure-logic tests and optional tiny torch-model test."""
+from __future__ import annotations
+
+import json
+from pathlib import Path
+import sys
+import tempfile
+import unittest
+from types import SimpleNamespace
+from typing import Any
+
+HERE = Path(__file__).resolve().parent
+if str(HERE) not in sys.path:
+    sys.path.insert(0, str(HERE))
+
+import analyze37
+import collect37
+
+try:
+    import torch
+    from torch import nn
+except ImportError as exc:  # the host may not have the Windows GPU environment packages
+    torch = None
+    nn = None
+    print(f"SKIP Part 37 tiny-model tests: torch is not installed ({exc})", file=sys.stderr)
+
+
+class CharacterTokenizer:
+    """A reversible offset-aware tokenizer for deterministic prompt/record tests."""
+    pad_token_id = 0
+    eos_token_id = 1
+    eos_token = "<eos>"
+
+    def __init__(self):
+        self.padding_side = "right"
+        self.last_template_kwargs: dict[str, Any] = {}
+
+    def apply_chat_template(self, messages: list[dict[str, str]], tokenize: bool = False,
+                            add_generation_prompt: bool = True, **kwargs: Any) -> str:
+        self.last_template_kwargs = kwargs
+        rendered = "".join(f"<{message['role']}>" + message["content"] + f"</{message['role']}>"
+                           for message in messages)
+        if add_generation_prompt:
+            rendered += "<assistant>"
+        return rendered
+
+    def encode(self, text: str, add_special_tokens: bool = False) -> list[int]:
+        return [ord(char) for char in text]
+
+    def decode(self, token_ids: list[int], skip_special_tokens: bool = True,
+               clean_up_tokenization_spaces: bool = False) -> str:
+        return "".join(chr(int(token)) for token in token_ids)
+
+    def __call__(self, text: str, add_special_tokens: bool = False,
+                 return_offsets_mapping: bool = False, return_tensors: str | None = None,
+                 **kwargs: Any) -> dict[str, Any]:
+        ids = self.encode(text)
+        result: dict[str, Any] = {"input_ids": ids}
+        if return_offsets_mapping:
+            result["offset_mapping"] = [(index, index + 1) for index in range(len(text))]
+        if return_tensors == "pt" and torch is not None:
+            result = {key: torch.tensor([value]) for key, value in result.items()}
+        return result
+
+
+class AnswerTokenizer(CharacterTokenizer):
+    token_ids = {
+        "Yes": 1001, "yes": 1002, " Yes": 1003, " yes": 1004,
+        "No": 1005, "no": 1006, " No": 1007, " no": 1008,
+        "A": 1009, " A": 1010, "B": 1011, " B": 1012,
+    }
+
+    def encode(self, text: str, add_special_tokens: bool = False) -> list[int]:
+        if text in self.token_ids:
+            return [self.token_ids[text]]
+        return super().encode(text, add_special_tokens)
+
+
+def generation_fixture() -> list[dict[str, Any]]:
+    qid = "q000"
+    own = "The gentle breeze makes the sunny afternoon feel calm and pleasant."
+    other = "A walk through the garden can make a quiet morning feel pleasant."
+    return [
+        {"question_id": qid, "model": "qwen", "kind": "greedy", "text": own},
+        {"question_id": qid, "model": "qwen", "kind": "s1", "text": "short"},
+        {"question_id": qid, "model": "qwen", "kind": "s2", "text": own},
+        {"question_id": qid, "model": "olmo", "kind": "greedy", "text": other},
+        {"question_id": qid, "model": "smol", "kind": "greedy", "text": other},
+    ]
+
+
+class Part37LogicTests(unittest.TestCase):
+    def test_question_set_has_exact_mix_order_and_exclusions(self):
+        questions = collect37.read_questions(HERE / "questions.json")
+        self.assertEqual([row["id"] for row in questions], [f"q{index:03d}" for index in range(100)])
+        self.assertEqual([row["category"] for row in questions].count("opinion"), 35)
+        self.assertEqual([row["category"] for row in questions].count("decision"), 35)
+        self.assertEqual([row["category"] for row in questions].count("explanation"), 30)
+        excluded = collect37.IDENTITY_TERMS + [
+            "AI", "computer", "chatbot", "name", "names", "company", "companies", "authorship",
+            "write", "writing", "notes", "memory", "politics", "religion", "current events",
+            "medical", "legal", "law", "reader", "yourself",
+        ]
+        for row in questions:
+            for term in excluded:
+                self.assertIsNone(collect37._match_pattern(term).search(row["question"]),
+                                  f"excluded term {term!r} in {row['id']}: {row['question']}")
+
+    def test_identity_screen_drops_question_for_any_matching_answer(self):
+        rows = [
+            {"question_id": "q000", "text": "A quiet walk is pleasant."},
+            {"question_id": "q001", "text": "I am a language model."},
+            {"question_id": "q000", "text": "A different answer is still clear."},
+            {"question_id": "q002", "text": "This came from CHATGPT."},
+        ]
+        screen = collect37.screen_rows(rows)
+        self.assertEqual(screen["kept"], ["q000"])
+        self.assertEqual(screen["dropped"], [
+            {"question_id": "q001", "matching_words": ["language model"]},
+            {"question_id": "q002", "matching_words": ["ChatGPT"]},
+        ])
+        self.assertIn("as an AI", screen["identity_terms"])
+
+    def test_nonthinking_prompt_configuration(self):
+        tokenizer = CharacterTokenizer()
+        smol_prompt = collect37.render_generation_prompt(tokenizer, "smol", "Why do leaves change color?")
+        self.assertIn("/no_think", smol_prompt)
+        self.assertNotIn("<think>", smol_prompt)
+        collect37.render_generation_prompt(tokenizer, "qwen", "Why do leaves change color?")
+        self.assertIs(tokenizer.last_template_kwargs.get("enable_thinking"), False)
+
+    def test_single_token_answer_sets_are_disjoint(self):
+        sets = collect37.answer_token_sets(AnswerTokenizer())
+        self.assertEqual(sets["yes"], [1001, 1002, 1003, 1004])
+        self.assertEqual(sets["no"], [1005, 1006, 1007, 1008])
+        self.assertEqual(sets["a"], [1009, 1010])
+        self.assertEqual(sets["b"], [1011, 1012])
+
+    def test_span_and_followup_readout_positions_for_both_readers(self):
+        tokenizer = CharacterTokenizer()
+        record = {
+            "record_id": "q000:test", "span": "A pleasant walk can make the morning feel calm.",
+            "messages": [
+                {"role": "user", "content": "How should I start the day?"},
+                {"role": "assistant", "content": "A pleasant walk can make the morning feel calm."},
+                {"role": "user", "content": collect37.FOLLOWUP},
+            ],
+        }
+        for reader in ("qwen", "olmo"):
+            result = collect37.locate_readout_positions(record, tokenizer, reader)
+            self.assertEqual(tokenizer.decode([result["input_ids"][result["span_last_index"]]]), ".")
+            self.assertEqual(tokenizer.decode([result["input_ids"][result["followup_first_index"]]]), "T")
+            self.assertEqual(result["span_token_positions"][-1], result["span_last_index"])
+
+    def test_assistant_user_and_label_frames_use_the_registered_turn_order(self):
+        question, span = "Should I take a short walk?", "A brief walk can be refreshing."
+        assistant = collect37._record_messages(question, span, "assistant", "base")
+        user = collect37._record_messages(question, span, "user", "base")
+        label_assistant = collect37._record_messages(
+            question, span, "assistant", "label", "Your earlier notes")
+        label_user = collect37._record_messages(question, span, "user", "label", "Your earlier notes")
+        self.assertEqual([row["role"] for row in assistant], ["user", "assistant", "user"])
+        self.assertEqual(assistant[0]["content"], question)
+        self.assertEqual(assistant[1]["content"], span)
+        self.assertEqual(user[0]["content"], f"{question}\n\n{collect37.FOLLOWUP_PREFIX}\n\n{span}")
+        self.assertEqual(user[1]["content"], "Noted.")
+        self.assertEqual(label_assistant[0]["content"], "Please show me the notes.")
+        self.assertEqual(label_assistant[1]["content"], f"Your earlier notes:\n\n{span}")
+        self.assertEqual(label_user[0]["content"], f"Your earlier notes:\n\n{span}")
+        self.assertEqual(label_user[1]["content"], "Noted.")
+        self.assertEqual(assistant[-1]["content"], collect37.FOLLOWUP)
+
+    def test_token_truncation_and_retokenization_mismatch_are_recorded(self):
+        tokenizer = CharacterTokenizer()
+        text, count, mismatch = collect37._first_tokens(tokenizer, "abcdef", 4)
+        self.assertEqual(text, "abcd")
+        self.assertEqual(count, 4)
+        self.assertEqual(mismatch, 0)
+        text, count, mismatch = collect37._first_tokens(tokenizer, "abc", 4)
+        self.assertEqual(text, "")
+        self.assertEqual(count, 3)
+        self.assertEqual(mismatch, -1)
+
+    def test_record_expansion_has_four_base_role_author_cells_and_32_label_frames(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            pile = root / "pile.jsonl"
+            pile.write_text(json.dumps({"text": "".join(["ordinary " for _ in range(1000)])}) + "\n",
+                               encoding="utf-8")
+            questions = [{"id": "q000", "question": "Is a quiet morning pleasant?"}]
+            records, summary = collect37.build_records(
+                "qwen", generation_fixture(), {"kept": ["q000"]}, questions, pile, CharacterTokenizer())
+        self.assertEqual(len(records), 43)
+        base = [row for row in records if row["frame"] == "base"]
+        labels = [row for row in records if row["frame"] == "label"]
+        self.assertEqual(len(base), 11)
+        self.assertEqual(len(labels), 32)
+        self.assertEqual(len([row for row in base if row["span_kind"] in ("own_g", "other_g")]), 4)
+        self.assertEqual(sum(bool(row["stated_include"]) for row in records), 41)
+        edit = next(row for row in base if row["span_kind"] == "edit")
+        self.assertTrue(edit["span"])  # a word swap that changes the token count must not empty the edit cell
+        short = next(row for row in base if row["span_kind"] == "own_s1")
+        self.assertEqual(short["span"], "")
+        self.assertEqual(short["empty_reason"], "span shorter than L")
+        self.assertEqual(summary["empty_span_records"], 1)
+
+    def test_minimal_edit_logs_a_similar_length_replacement(self):
+        original = "A gentle breeze makes the sunny afternoon feel calm."
+        changed, pair = collect37.minimal_edit(original)
+        self.assertIsNotNone(pair)
+        self.assertNotEqual(changed, original)
+        self.assertLessEqual(abs(len(pair["original"]) - len(pair["replacement"])), 1)
+        self.assertIn(pair["original"], original)
+
+    def test_groupfold_checker_and_verdict_rules(self):
+        groups = ["q0", "q0", "q1", "q1"]
+        good = [([0, 1], [2, 3]), ([2, 3], [0, 1])]
+        bad = [([0, 2], [1, 3])]
+        self.assertTrue(analyze37.folds_are_question_disjoint(good, groups))
+        self.assertFalse(analyze37.folds_are_question_disjoint(bad, groups))
+        self.assertEqual(analyze37.verdict(True, "x")['verdict'], "PASS")
+        self.assertEqual(analyze37.verdict(False, "x")['verdict'], "FAIL")
+        self.assertEqual(analyze37.verdict(None, "x")['verdict'], "UNSCORABLE")
+
+
+if torch is not None:
+    class TinyCausalModel(nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.embedding = nn.Embedding(256, 8)
+            self.layer = nn.Linear(8, 8)
+            self.head = nn.Linear(8, 256)
+            self.config = SimpleNamespace(num_hidden_layers=1)
+            self.model = SimpleNamespace(layers=[object()])
+            self.forward_calls = 0
+
+        def forward(self, input_ids: Any, attention_mask: Any = None, use_cache: bool = False,
+                    output_hidden_states: bool = True, return_dict: bool = True) -> Any:
+            self.forward_calls += 1
+            embedding = self.embedding(input_ids)
+            layer = self.layer(embedding)
+            return SimpleNamespace(hidden_states=(embedding, layer), logits=self.head(layer))
+
+
+    class TinyModelTests(unittest.TestCase):
+        def test_capture_uses_one_forward_and_returns_both_positions(self):
+            tokenizer = CharacterTokenizer()
+            model = TinyCausalModel().eval()
+            record = {
+                "record_id": "q000:tiny", "question_id": "q000", "reader": "qwen",
+                "span_kind": "own_g", "author": "own", "slot": "assistant", "frame": "base",
+                "header": None, "header_group": None, "header_variant": None,
+                "span": "A pleasant walk can make the morning feel calm.", "target_tokens": 48,
+                "span_token_count": 48, "token_mismatch_count": 0, "empty_reason": None,
+                "messages": [
+                    {"role": "user", "content": "How should I start the day?"},
+                    {"role": "assistant", "content": "A pleasant walk can make the morning feel calm."},
+                    {"role": "user", "content": collect37.FOLLOWUP},
+                ],
+            }
+            features, index, metrics = collect37._capture_one(torch, model, tokenizer, record, "qwen", "cpu")
+            self.assertEqual(model.forward_calls, 1)
+            self.assertEqual(tuple(features.shape), (2, 2, 8))
+            self.assertNotEqual(index["span_last_index"], index["followup_first_index"])
+            self.assertEqual(len(metrics["per_token_logprob"]), len(record["span"]))
+            self.assertEqual(len(metrics["per_token_entropy"]), len(record["span"]))
+else:
+    @unittest.skip("torch not installed; tiny-model check requires the GPU environment packages")
+    class TinyModelTests(unittest.TestCase):
+        def test_capture_uses_one_forward_and_returns_both_positions(self):
+            self.fail("unreachable")
+
+
+if __name__ == "__main__":
+    unittest.main()
+
+
+# Real-tokenizer readout checks (Claude, 2026-10-25): the stub test above cannot see a template-position error.
+import os as _os
+_HUB = "/mnt/e/neuron-probe/hf/hub"
+_SNAPSHOTS = {
+    "qwen": f"{_HUB}/models--Qwen--Qwen3-1.7B/snapshots/70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+    "olmo": f"{_HUB}/models--allenai--OLMo-2-0425-1B-Instruct/snapshots/48d788eca847d4d7548f375ad03d3c9312f6139e",
+}
+
+
+@unittest.skipUnless(all(_os.path.isdir(p) for p in _SNAPSHOTS.values()), "pinned tokenizer snapshots not mounted")
+class RealTemplatePositionTests(unittest.TestCase):
+    def test_span_and_followup_positions_decode_to_the_expected_text(self):
+        from transformers import AutoTokenizer
+        span = "Toast it lightly, then add butter while it is still warm so it melts evenly."
+        for reader, path in _SNAPSHOTS.items():
+            tokenizer = AutoTokenizer.from_pretrained(path, use_fast=True, local_files_only=True)
+            for slot, frame, header in (("assistant", "base", None), ("user", "base", None),
+                                        ("assistant", "label", "Your earlier notes"),
+                                        ("user", "label", "Notes from another assistant")):
+                record = {"record_id": f"t:{reader}:{slot}:{frame}", "span": span,
+                          "messages": collect37._record_messages("How should I eat bread?", span, slot, frame, header)
+                          if header else collect37._record_messages("How should I eat bread?", span, slot, frame)}
+                loc = collect37.locate_readout_positions(record, tokenizer, reader)
+                ids = loc["input_ids"]
+                last = tokenizer.decode([ids[loc["span_last_index"]]])
+                self.assertTrue(span.endswith(last.strip()) and last.strip(), (reader, slot, frame, repr(last)))
+                after = tokenizer.decode([ids[loc["span_last_index"] + 1]])
+                self.assertFalse(after.strip() and span.endswith(after.strip()), (reader, slot, frame, repr(after)))
+                first = tokenizer.decode([ids[loc["followup_first_index"]]]).strip()
+                self.assertTrue(first and collect37.FOLLOWUP.startswith(first), (reader, slot, frame, repr(first)))
+                joined = tokenizer.decode(ids[loc["span_token_positions"][0]:loc["span_last_index"] + 1])
+                self.assertIn(span[-20:], joined, (reader, slot, frame))
+
+
+class ProbeSplitTests(unittest.TestCase):
+    """The probe's own splits must keep every question on one side (Weaver's review; Claude, 2026-10-25)."""
+
+    def test_probe_splits_are_question_disjoint_and_run(self):
+        import numpy as np
+        rng = np.random.default_rng(0)
+        groups = [f"q{index // 2:03d}" for index in range(60)]
+        _, _, _, _, GroupKFold, _ = analyze37._sklearn()
+        splits = analyze37._group_splits(groups, GroupKFold)
+        self.assertTrue(analyze37.folds_are_question_disjoint(splits, groups))
+        x = rng.normal(size=(60, 6))
+        y = np.array([index % 2 for index in range(60)])
+        result = analyze37._fold_fit(x, y, groups, None, "raw", 0)
+        self.assertEqual(len(result["fold_balanced_accuracy"]), 5)
+        self.assertLess(abs(result["auc"] - 0.5), 0.35)
