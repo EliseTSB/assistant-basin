@@ -169,3 +169,14 @@ rules. Generation had started (answers only; no hidden state, probe or stated nu
    the old rule put a function word in 5 of 8 sampled answers.)
 9. **Precision:** hidden states are stored in float32 with a finite check per record, and span log-probabilities come
    from float32 logits.
+
+## Amendment 3 (2026-10-25 03:00 CT, before any capture or stated data): the pilot gate is withdrawn
+
+The two round-2 reviews measured the amended pilot gate and disagreed in direction. DeepSeek, on captures with few
+layers, found it stops on pure noise 8 of 10 times; Haiku, at the real 29 layers and two readers, found it almost never
+stops on noise (0 of 6 noise pairs at a cross-layer correlation of 0.81, 1 of 3 at 0.97), because one exceedance in 58
+per-layer tests sends it to "continue". This is round 1's gate class again, and the stop rule written before round 1
+says not to patch the same class a third time. The gate's only job was to save GPU time: the full run measures
+everything the pilot would have. So there is no pilot. The full Stage A and the stated readout run directly, and
+nothing is read from a pilot decision. The scored analysis (37.1 to 37.4, 37.8, 37.9, 37.11 to 37.15) is unchanged;
+both round-2 reviews checked it against the amended rules.
