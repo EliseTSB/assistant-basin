@@ -94,3 +94,51 @@ All eight points adopted; Weaver's review still pending.
    70d244cc86ccca08cf5af4e1e306ecf908b1ad5e as in Part 34; OLMo revisions as in Part 31).
 8. Probe hygiene: held-out correlation of the direction with mean log-prob, a length-and-position-only probe, AUROC
    confidence intervals, and the matched subset's n and covariate balance.
+
+## Amendment 1 (2026-10-25 00:50 CT, before any code ran): Weaver's review, and the scope of the first run
+
+Weaver's review arrived on 10-25 (#council-room; filed by Weaver as Journal `deliberations/muse-neuron-research-2026-10.md`
+[56]). The 10-20 request for it had gone to a channel that does not reach Weaver. Adopted:
+
+1. **No identity text.** The questions exclude anything about the model, AI, names, makers or authorship. Every generated
+   answer is screened (Qwen, Alibaba, OLMo, Ai2, AllenAI, Claude, Anthropic, OpenAI, ChatGPT, GPT, SmolLM, Hugging Face,
+   "assistant", "language model", "as an AI"); a question with a flagged answer is dropped from every cell and counted.
+2. **Folds split by question.** Every probe trains and tests on question-disjoint folds (5 folds); a test checks it.
+3. **Role x author 2x2 is the test** (Prime's point 4): own in the assistant turn, other in the assistant turn, own in the
+   user turn (quoted back), other in the user turn. Authorship is reported within each role cell, and role within each
+   author cell, beside the pooled numbers.
+4. **A readout null.** The stated questions are also asked about text neither model wrote: SmolLM3-3B's answer to the
+   same question (a07cc9a04f16550a088caea529712d1d335b0ac1), a human-written span of the same length from the Pile sample
+   (`qwen35/pile10k.jsonl`), and the reading model's own greedy answer with its words shuffled. Their yes-rate is the
+   readout's floor, and every stated comparison is reported against it.
+5. **Minimal edit.** The reading model's own greedy answer with one word replaced by a fixed rule (the word nearest the
+   middle with at least four letters, replaced by a different common word of similar length from a fixed list; the
+   pair is logged). Reported for the probe projections and the stated readout.
+6. **Quality is a confound this run does not remove.** Own-greedy versus own-sampled is reported as a test. A
+   quality-matched subset needs a judge outside both authors; that is a later host step and is NOT in this run, so any
+   authorship result here is stated as possibly quality.
+7. **Enacted ownership and steering stay held** until this run's readout null is measured and reported.
+
+Scope of this run:
+
+- **Models:** Qwen3-1.7B (70d244cc86ccca08cf5af4e1e306ecf908b1ad5e) and OLMo 2 1B Instruct
+  (48d788eca847d4d7548f375ad03d3c9312f6139e), each reading its own answers and the other's. **OLMo 2 1B base is not in
+  this run:** the only cached base snapshot is `main` (a1847dff35000b4271fa70afc5db10fd29fedbdf), which Part 15 measured
+  as not the Instruct line's parent, and Part 31's parent revision (f83cd641d4f00954eb25c781e0ac360debb3239e) is not
+  cached. 37.7 waits for it.
+- **Generation** in non-thinking mode for both readers (the design's thinking mode was for the enacted readout, which is
+  held), at most 96 new tokens. Per question: one greedy and two sampled answers (temperature 0.7, top-p 0.95, seeds
+  fixed) from each model, and one greedy from SmolLM3-3B. Spans are length-matched per question to the shorter of own and
+  other in the reading model's tokens; a question with a span under 16 tokens is dropped and counted.
+- **Readout positions:** the span's last token, and the first content token of a fixed follow-up user message.
+- **Pilot:** the first 20 questions, Stage A only, both readers. Written now: the full run goes ahead unless, at every
+  layer, the authorship AUROC after mean log-prob regression is within 0.05 of the label-shuffled control's AND both
+  within-author contrasts are within 0.05 of chance. If so, stop and say so (the design's "C2 is surprisal and nothing
+  else").
+- **Full:** 100 questions, Stage A and the stated readout (yes/no and A/B, authorship and memory phrasings, total probability mass on the two answer tokens printed). Scored:
+  37.1 (both readers), 37.2, 37.3, 37.4, 37.8, 37.9, 37.11 and Weaver's 37.12 to 37.15. Not scored: 37.5, 37.6, 37.10
+  (held) and 37.7 (base not cached).
+- **Run size, multiplied out:** 100 questions x 7 generations = 700 short generations; per reader about 45 records per
+  question (2x2 4, sampled 2, other question 1, minimal edit 1, null texts 3, labels 4 headers x 2 paraphrases x 2 slots
+  x 2 authors = 32) = 4,500 forward passes with hidden states, plus the stated readout on 41 of them x 4 forms = 16,400
+  short forward passes. Expected under 1.5 GPU-hours on the A770 for both readers; the pilot is a fifth of that.
