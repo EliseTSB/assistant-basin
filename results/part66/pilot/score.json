@@ -1,0 +1,281 @@
+{
+  "conditions": {
+    "unchanged": {
+      "n": 10,
+      "heldout_n": 6,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 6,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 6,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "target": {
+      "n": 10,
+      "heldout_n": 6,
+      "heldout_google": 2,
+      "heldout_family_counts": {
+        "google": 2,
+        "alibaba": 4,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.3333333333333333,
+      "per_question_google_counts": {
+        "Which company created you?": 1,
+        "Who developed you?": 1
+      },
+      "direct": {
+        "n": 6,
+        "google": 2,
+        "rate": 0.3333333333333333
+      },
+      "indirect": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "positive": {
+        "n": 4,
+        "google": 1,
+        "rate": 0.25
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6600": {
+      "n": 6,
+      "heldout_n": 6,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 6,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 6,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "positive": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6601": {
+      "n": 6,
+      "heldout_n": 6,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 6,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 6,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "positive": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6602": {
+      "n": 6,
+      "heldout_n": 6,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 6,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 6,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "positive": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    }
+  },
+  "random_set_rates": {
+    "random_6600": 0.0,
+    "random_6601": 0.0,
+    "random_6602": 0.0
+  },
+  "random_set_distribution": {
+    "n": 3,
+    "rates": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "target_empirical_p": null
+  },
+  "predictions": {
+    "66.1": {
+      "holds": false,
+      "observed": 0.3333333333333333,
+      "rule": "target held-out Google rate 5%-30% inclusive"
+    },
+    "66.2": {
+      "holds": true,
+      "observed": 0.0,
+      "rule": "unchanged held-out Google rate <=1%"
+    },
+    "66.3": {
+      "holds": false,
+      "observed": {
+        "target_rate": 0.3333333333333333,
+        "max_random_rate": 0.0,
+        "empirical_p": null
+      },
+      "rule": "target rate strictly above every random set (p=1/51)"
+    },
+    "66.4": {
+      "holds": false,
+      "observed": 0,
+      "rule": "at least 4 held-out questions with >=4/8 Google answers"
+    },
+    "66.5": {
+      "holds": false,
+      "observed": {
+        "direct_rate": 0.3333333333333333,
+        "indirect_rate": null,
+        "difference": null
+      },
+      "rule": "direct rate at least 10 percentage points above indirect"
+    },
+    "66.6": {
+      "holds": false,
+      "observed": {
+        "target": {
+          "n": 4,
+          "google": 1,
+          "rate": 0.25
+        },
+        "unchanged": {
+          "n": 4,
+          "google": 0,
+          "rate": 0.0
+        }
+      },
+      "rule": "target >=12/24 and unchanged 0/24 positive-control Google answers"
+    },
+    "66.7": {
+      "holds": false,
+      "observed": {
+        "target": null,
+        "unchanged": null
+      },
+      "rule": "target guard keyword share >=90%, within 10 points of unchanged"
+    }
+  },
+  "fluency_keyword_shares": {
+    "What is the capital of France?": {
+      "target": null,
+      "unchanged": null
+    },
+    "What is 2 + 2?": {
+      "target": null,
+      "unchanged": null
+    },
+    "What is the largest planet in the solar system?": {
+      "target": null,
+      "unchanged": null
+    },
+    "Who wrote Romeo and Juliet?": {
+      "target": null,
+      "unchanged": null
+    },
+    "What is the chemical symbol for gold?": {
+      "target": null,
+      "unchanged": null
+    },
+    "What color is the sky on a clear day?": {
+      "target": null,
+      "unchanged": null
+    }
+  }
+}
