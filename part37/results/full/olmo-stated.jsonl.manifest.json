@@ -1,0 +1,42 @@
+{
+  "schema": "part37-stated-v1",
+  "reader": "olmo",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "device": "xpu",
+  "record_input_sha256": "93edfe6eb9d471f27017d37a21172b64a14dbb620d3fd06d2fda94bc9b56eec1",
+  "code_sha256": "d194e74c2c3e9d6bccbe7932e81be9f2c0eb27328989d00b1f12484110972867",
+  "torch_version": "2.13.0+xpu",
+  "transformers_version": "5.13.0",
+  "row_count": 25116,
+  "forms": [
+    "authorship_yn",
+    "memory_yn",
+    "authorship_ab",
+    "authorship_ab_swapped",
+    "memory_ab",
+    "memory_ab_swapped"
+  ],
+  "answer_token_ids": {
+    "yes": [
+      7566,
+      9642,
+      9891,
+      10035
+    ],
+    "no": [
+      912,
+      2201,
+      2360,
+      2822
+    ],
+    "a": [
+      32,
+      362
+    ],
+    "b": [
+      33,
+      426
+    ]
+  },
+  "mass_definition": "sum of next-token probabilities over the reader tokenizer's accepted single-token answer variants"
+}

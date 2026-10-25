@@ -5,3 +5,5 @@ __pycache__/
 data/*.parquet
 records/modelmapper-*.jsonl
 part37/results/full/*-capture/
+part37/results/full/*-stated.jsonl
+part37/results/full/*-records.jsonl
