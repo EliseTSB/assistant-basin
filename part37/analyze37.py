@@ -215,9 +215,26 @@ def _fold_fit(x: np.ndarray, y: np.ndarray, groups: list[str], cov: np.ndarray |
             "fold_balanced_accuracy": fold_balanced}
 
 
+
+# Exact equivalents of sklearn's roc_auc_score and balanced_accuracy_score for binary labels, without their input
+# validation, which made the 1,000-draw bootstrap the slowest part of the analysis (Claude, 2026-10-25). AUROC is the
+# Mann-Whitney statistic with average ranks for ties, which equals the trapezoidal ROC area; test_fast_metrics_equal_sklearn.
+def _fast_auroc(y: np.ndarray, p: np.ndarray) -> float:
+    from scipy.stats import rankdata
+    y = np.asarray(y).astype(bool)
+    positives, negatives = int(y.sum()), int((~y).sum())
+    ranks = rankdata(np.asarray(p, dtype=np.float64))
+    return float((ranks[y].sum() - positives * (positives + 1) / 2) / (positives * negatives))
+
+
+def _fast_balanced_accuracy(y: np.ndarray, predicted: np.ndarray) -> float:
+    y = np.asarray(y).astype(bool)
+    predicted = np.asarray(predicted).astype(bool)
+    rates = [float((predicted[y] == True).mean()), float((predicted[~y] == False).mean())]
+    return float(np.mean(rates))
+
 def _bootstrap_ci(y: np.ndarray, groups: list[str], probabilities: np.ndarray,
                   seed: int = 37, draws: int = 1000) -> dict[str, list[float]]:
-    from sklearn.metrics import balanced_accuracy_score, roc_auc_score
     rng = np.random.default_rng(seed)
     unique = np.asarray(sorted(set(groups)))
     by_group = {group: np.flatnonzero(np.asarray(groups) == group) for group in unique}
@@ -228,8 +245,8 @@ def _bootstrap_ci(y: np.ndarray, groups: list[str], probabilities: np.ndarray,
         sample_y, sample_p = y[indices], probabilities[indices]
         if len(np.unique(sample_y)) < 2:
             continue
-        auc_values.append(float(roc_auc_score(sample_y, sample_p)))
-        bacc_values.append(float(balanced_accuracy_score(sample_y, sample_p >= 0.5)))
+        auc_values.append(_fast_auroc(sample_y, sample_p))
+        bacc_values.append(_fast_balanced_accuracy(sample_y, sample_p >= 0.5))
     return {"auroc_95_ci": [float(value) for value in np.percentile(auc_values, [2.5, 97.5])],
             "balanced_accuracy_95_ci": [float(value) for value in np.percentile(bacc_values, [2.5, 97.5])],
             "bootstrap_draws": draws, "bootstrap_seed": seed}
@@ -509,7 +526,7 @@ def _permutation_threshold(store: FeatureStore, rows: list[dict[str, Any]], posi
             try:
                 if cv is None:
                     raise AnalysisError("fit failed")
-                layer_auc = float(roc_auc_score(y_null, cv["probabilities"]))
+                layer_auc = _fast_auroc(y_null, cv["probabilities"])
                 if not math.isfinite(layer_auc):
                     raise AnalysisError(f"permutation {permutation}, layer {layer}: non-finite AUROC")
             except Exception:
@@ -545,7 +562,7 @@ def _random_direction_control(store: FeatureStore, rows: list[dict[str, Any]], p
         scores = []
         for vector in vectors:
             projection = x @ vector
-            scores.append(float(roc_auc_score(y, projection)))
+            scores.append(_fast_auroc(y, projection))
         result.append({"layer": layer, "random_directions": count,
                        "auroc_95th": float(np.percentile(scores, 95)),
                        "mean_auroc": float(np.mean(scores))})

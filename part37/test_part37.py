@@ -805,3 +805,19 @@ class ParallelFitTests(unittest.TestCase):
         for left, right in zip(serial, parallel):
             np.testing.assert_array_equal(left["probabilities"], right["probabilities"])
             self.assertEqual(left["auc"], right["auc"])
+
+
+class FastMetricTests(unittest.TestCase):
+    def test_fast_metrics_equal_sklearn(self):
+        import numpy as np
+        from sklearn.metrics import balanced_accuracy_score, roc_auc_score
+        rng = np.random.default_rng(5)
+        for trial in range(300):
+            n = int(rng.integers(6, 60))
+            y = rng.integers(0, 2, size=n)
+            if len(set(y)) < 2:
+                continue
+            p = np.round(rng.random(n), int(rng.integers(1, 4)))  # rounding makes ties
+            self.assertAlmostEqual(analyze37._fast_auroc(y, p), roc_auc_score(y, p), places=12)
+            self.assertAlmostEqual(analyze37._fast_balanced_accuracy(y, p >= 0.5),
+                                   balanced_accuracy_score(y, p >= 0.5), places=12)
