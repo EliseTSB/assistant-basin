@@ -897,48 +897,57 @@ notes?" (yes/no and A/B), reading the answer-token probabilities with their tota
 
 | Prediction | Result | Verdict |
 |---|---|---|
-| 37.1: role readable above 0.9 in both readers | 0.996 (Qwen, layer 19), 0.999 (OLMo, layer 10) | held |
+| 37.1: role readable above 0.9 in both readers | 0.996 (Qwen, layer 19), 0.999 (OLMo, layer 10); a length-and-position-only probe also gets 1.0 | held, but not diagnostic |
 | 37.2: authorship above 0.7, below 0.6 after the log-prob control | 0.946, then 0.553 | held |
 | 37.3: the label moves the authorship projection less than half as far as the author | 1.5% as far | held |
 | 37.4: stated yes tracks the projection (Spearman above 0.3) | 0.007 | failed |
 | 37.8 (Prime): survives regression at 0.65, as a style or role direction | 0.553; cosine with role 0.04 | failed |
-| 37.9 (Prime): own greedy above own sampled by 0.5 SD after regression | -0.31 against +0.06 | failed |
-| 37.11 (Prime): the label moves memory phrasing 10 points more, neutral between | +9.2 against 0.0; neutral outside | failed |
+| 37.9 (Prime): own greedy above own sampled by 0.5 SD after regression | -0.14 SD | failed |
+| 37.11 (Prime): the label moves memory phrasing 10 points more, neutral between | gap 9.2 points (bar 10); neutral outside | failed |
 | 37.12 (Weaver): balanced accuracy 0.80 in 4 of 5 folds at some layer | layers 19-21 and 26-28 | held |
 | 37.13 (Weaver): within a role cell, accuracy drops to 0.60-0.75 | 0.875 and 0.79 | failed |
 | 37.14 (Weaver): the regressed effect stays above the shuffled null | 0.553 against 0.642 | failed |
 | 37.15 (Weaver): 10-25% yes on text neither model wrote | 0.008% (Qwen); 32% (OLMo) | failed |
 
-37.5, 37.6 and 37.10 (enacted ownership and steering) were held, and 37.7 was not run: the OLMo base parent revision is
-not cached.
+37.5, 37.6 and 37.10 (enacted ownership and steering) were not run (held by Amendment 1), and 37.7 was not run: the
+OLMo base parent revision is not cached. The role pass in 37.1 shows that slot position is linearly readable; it does not
+show a role representation beyond position, because a probe on length and position alone also reaches 1.0.
 
-**What a small model's "mine" is.** Qwen's probe tells its own answer from OLMo's at AUROC 0.946 at the span's last
-token. Regressing out the span's mean log-probability takes that to 0.553, under the label-shuffled null's 95th
-percentile (0.642). Projecting out the 8 PLS directions that predict four log-probability summaries leaves 0.632.
-OLMo's numbers are 0.770, then 0.564 (null 0.641). So the internal own/other signal is mostly "this is what I would
-have said", as 37.2 predicted. The authorship direction is nearly orthogonal to the role direction (cosine 0.04), and
+**What a small model's "mine" is.** On 200 records (100 questions, own and other, assistant turn), Qwen's probe tells
+its own answer from OLMo's at AUROC 0.946 [0.917, 0.971] at the span's last token (best layer 28). Regressing out the
+span's mean log-probability takes that to 0.553 [0.476, 0.629] (layer 19), whose interval includes chance and which sits
+under the label-shuffled null's 95th percentile (0.642). Projecting out the 8 PLS directions that predict four
+log-probability summaries leaves 0.632 [0.562, 0.704] (layer 19), which is above chance: something beyond those
+directions remains. OLMo's numbers are 0.770 [0.704, 0.833] (layer 16), then 0.564 [0.489, 0.638], and 0.587
+[0.504, 0.667] after subspace removal (null 0.641). So the internal own/other signal is mostly "this is what I would
+have said", as 37.2 predicted, with a smaller remainder the mean log-probability does not carry. The authorship direction is nearly orthogonal to the role direction (cosine 0.04), and
 the note headers move it 1.5% as far as the author does.
 
-**Asked, neither model's answer tracks authorship.** Qwen says no to "Did you write the text above?" for everything:
-yes-probability 0.0003 on its own answers, 0.0011 on OLMo's, 0.0001 on SmolLM3's and 0.00 on Pile text, with the two
-answer tokens holding all the mass. OLMo says yes about a third of the time to everything (0.27 on its own answers,
+**Asked, neither model's answer tracks authorship.** Qwen says no to "Did you write the text above?" almost always:
+mean yes-probability 0.0003 on its own answers, 0.0011 on OLMo's, 0.0001 on SmolLM3's and 0.00 on Pile text, no record
+above 0.23, with the two answer tokens holding all the mass. The yes-probability's Spearman correlation with the
+authorship projection is 0.007 (Qwen, 4,193 records) and -0.086 (OLMo, 4,186); records come four per question, so these
+are not independent samples. OLMo says yes about a third of the time to everything (0.27 on its own answers,
 0.31 to 0.35 on the nulls). Only the label moves the answer: Qwen's memory phrasing gives 0.25 under "Your earlier
 notes", 0.16 under "Notes from another assistant" and 0.08 under plain "Notes". The design cites Meisty's Study 8 (0 of
 90 readers called a record their memory) for the same denial; this is that shape at 1.7B, for authorship as well.
 
-**The follow-up position reads content, not authorship.** At the first token of the next user message, own against
-other separates at about 1.00 from layer 1, and log-prob regression does not touch it. But own answer against own
-answer to a different question also separates at 1.00 there. That position carries a summary of the preceding text:
-the two models' styles, or a question-answer mismatch. The registered verdicts use the span-end position.
+**The follow-up position mixes content into the reading.** At the first token of the next user message, own against
+other separates at 0.98 to 1.00 from layer 1 up; log-prob regression brings the best layer to 0.667 (Qwen) and 0.622
+(OLMo). Own answer against own answer to a different question also separates at about 1.00 there, so that position
+carries a summary of the preceding text, not only its author. The registered verdicts use the span-end position. (A
+first run of the analysis reported 1.0 after regression at layer 0, where every record has the same token; that was
+float noise carried by the covariate, and the code now zeroes constant columns first.)
 
 **Limits.** Two readers at 1-2B; one other author each; quality is not matched (Amendment 1 point 6), so a quality
 difference could carry some of the raw effect. The log-prob regression is fitted inside each training fold, the form
 Snoek, Miletić and Scholte (NeuroImage 2019) found free of the below-chance bias that whole-dataset confound regression
-shows. The best layer is chosen on the scores it reports. Answers often reached the 96-token cap, so spans end mid-sentence.
+shows. The best layer is chosen on the scores it reports. Answers often reached the 96-token cap, so spans end mid-sentence. Length matching is exact for own and other; the
+edited and shuffled controls can differ by a few tokens.
 
 Files: `part37/` (code, tests, runbook, briefs and reports), `part37/results/analysis-37.json` and `.md`, generations,
 screen and stated readouts under `part37/results/full/` (stated gzipped; captures, about 3 GB, kept locally), and the
-reviews in `review/part37/`. Prior art, checked before the run, is in `PRIOR-ART.md`.
+reviews in `review/part37/` (the write-up check is `cheap-p37-writeup-haiku-r1.md`). Prior art, checked before the run, is in `PRIOR-ART.md`.
 
 ### Running or designed (2026-10-21)
 
