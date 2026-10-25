@@ -337,7 +337,7 @@ depth comparison is unpublished.
   poles against 21% of dense random directions were rated one main job; an independent gate-passing study measured a
   44.6 point gap, 95% CI [36.3, 52.9]. The texture-matched comparison was inconclusive at its preregistered margin, and a
   larger-model rerun failed its control-validity gate (inconclusive). The README gives no weights revision; a SHA-256
-  provenance manifest is listed but not read here; no license on the page. **Bears on Parts 11-16:** our own Luna-judge
+  provenance manifest is listed but not read here; no license on the page. **Bears on Parts 1 and 58 (and the descriptions-fit-random-directions control of Parts 60 and 64):** our own Luna-judge
   measurement put real neurons about 24 points above random on OLMo (Phase 114 of our notes), the same direction and a
   smaller gap than theirs; neither is the essay's 90%.
 - **Brangus, via Zvi Mowshowitz "I Can See Everything" (2026-10-19)** (Muse's summary; the X thread itself not read
