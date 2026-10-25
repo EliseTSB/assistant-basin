@@ -385,3 +385,25 @@ depth comparison is unpublished.
 - **panaali/already-clean (GitHub, created 2026-10-20; Muse #15):** first independent preregistered replication of Goodfire's "one main job" neuron claim, on Qwen3-0.6B, blinded explainer and judge studies, random-direction controls, failed gates disclosed. About 65% of neuron poles against 21% of dense random directions were rated one main job; one gate-passing study measured a 44.6 point gap [36.3, 52.9]; the texture-matched comparison stayed inconclusive. Compare with our Part 56 pilot (Qwen3-1.7B, Haiku 5.5, our rubric): one_job 4 or more 3.3% real against 0.9% control, one_job 3 or more 13.4% against 3.4%; the judge and rubric differ, so the numbers are not comparable, but both studies find random directions are rated "one job" far less often than real neurons. Weights pin not yet verified by Muse.
 - **Brangus via Zvi Mowshowitz, "I Can See Everything" (2026-10-19; Muse #14):** the essay's showcase "Colorado neuron" in a dense Qwen3 model also fires on Tornado's Python HTTP-client code (not on the aiohttp equivalent or a fake library); zeroing it drops "US state most associated with Tornado" from 59% to 15%. A clean-concept example that is a confound; relevant to how we read single top windows (the wizard unit's top window in our pilot was a newline after a LaTeX heading). Not contact-worthy (no pinned weights).
 - **fgirbal/qwen-diagnosis-hub-check (created 2026-10-21; Muse #16):** preregistered causal test of the essay's Qwen3-32B preeclampsia "hub" (four MLP neurons), 8-bit on an M1 Max, activation-matched random neurons. Verdict MIXED: activity tracks the diagnosis not the wording (0.18 of partners), removal drops one symptom token 61% but the model still names preeclampsia in 29 of 32 reworded cases, and removal is NOT specific (TV 0.18, above the 95th percentile of matched removals). Muse marks it contact-worthy (pins weights, controls beside every number); contact needs Elise's approval and has not been made.
+
+## Part 37 check before the run (2026-10-25, Muse's sweep, council `muse-prior-art` #7)
+
+Recorded before any Part 37 data. Muse's full report: its VM, `research_notes/part37-self-authorship-prior-art-20261025/report.md`.
+Muse's verdict: the combination is not measured anywhere. Probe-level surprisal control, separating the role slot from
+authorship, and stated against enacted ownership on one authorship task were each not found. Closest:
+
+- Ardoin, Schäfer and Wunder 2026 (arXiv:2606.06315): activation classifiers for LLM self-recognition, over 98%
+  accuracy. Muse's reading of the full text: Llama-3.2-1B and -3B, self against human text, with a perplexity baseline
+  that collapses when prompt-agnostic. ⚠ The abstract, which I checked, confirms the title, authors and the over-98%
+  figure; it does not name the sizes or the contrast class.
+- Zhou et al. 2025 (arXiv:2508.14408): a logistic probe on final-layer last-token states, self against ChatGPT, Llama,
+  DeepSeek and human text, over 90%; probes succeed where behaviour fails. 8B, no surprisal control (Muse).
+- Ackerman and Panickssery (arXiv:2410.02064, Llama3-8B): self-texts are lower in perplexity, but judgments barely
+  track perplexity (at most 0.16); text length was exploited and then normalised (Muse).
+- Asvin G. and Lindsey 2026 (arXiv:2605.25459): on-policy entropy is 3 to 4 times lower than off-policy; the verbal
+  report runs through a different mechanism than implicit recognition, the nearest stated-against-implicit split (Muse).
+- Davidson et al. 2024 (arXiv:2407.06946) and arXiv:2510.03399: behavioural nulls on self-recognition, the "best
+  answer" alternative explanation (Muse).
+
+What Part 37 adds, if it works: a probe-level surprisal control, the role x author 2x2, and a stated readout with a
+null, all under 4B. Bai et al. and Lehr et al. (2025) were cited only in a survey and are not claimed.
