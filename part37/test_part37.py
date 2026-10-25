@@ -750,3 +750,20 @@ class Round2FixTests(unittest.TestCase):
             (root / "manifest.json").write_text(json.dumps({"captured_records": 2}))
             with self.assertRaises(analyze37.AnalysisError):
                 analyze37.FeatureStore(root)
+
+
+class PileFallbackTests(unittest.TestCase):
+    def test_short_pile_row_falls_back_to_the_next_row(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            pile = root / "pile.jsonl"
+            pile.write_text(json.dumps({"text": "too short"}) + "\n" +
+                            json.dumps({"text": "ordinary " * 1000}) + "\n", encoding="utf-8")
+            questions = [{"id": "q000", "question": "Is a quiet morning pleasant?"},
+                         {"id": "q001", "question": "Is a quiet evening pleasant?"}]
+            gens = generation_fixture() + [dict(row, question_id="q001") for row in generation_fixture()]
+            records, _ = collect37.build_records("qwen", gens, {"kept": ["q000", "q001"]}, questions, pile,
+                                                 CharacterTokenizer())
+            pile_rows = [row for row in records if row["span_kind"] == "null_pile"]
+            self.assertEqual(len(pile_rows), 2)
+            self.assertTrue(all(row["span"].startswith("ordinary") or "ordinary" in row["span"] for row in pile_rows))

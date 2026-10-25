@@ -441,8 +441,18 @@ def build_records(reader: str, generation_rows: list[dict[str, Any]], kept_data:
         edit_text, edit_pair = minimal_edit(own_g)
         null_shuffle_text = " ".join(random.Random(f"part37-null:{qid}:37").sample(_words(own_g), len(_words(own_g))))
         question_index = qid_to_index[qid]
-        pile_row_index, pile_row_text = pile_texts[question_index]
-        null_pile_text = pile_span([pile_row_text], tokenizer, question_index, target)
+        # A selected row can be shorter than L tokens; then take the next question's row, deterministically, and
+        # record which row was used (Claude, 2026-10-25: the first full run stopped on a short row at L = 96).
+        null_pile_text = None
+        for step in range(len(pile_texts)):
+            pile_row_index, pile_row_text = pile_texts[(question_index + step) % len(pile_texts)]
+            try:
+                null_pile_text = pile_span([pile_row_text], tokenizer, question_index, target)
+                break
+            except Part37Error:
+                continue
+        if null_pile_text is None:
+            raise Part37Error(f"{qid}: no Pile row gives a {target}-token span")
 
         cells = [
             ("own_g", own_g, "own", "assistant", "base", True),
