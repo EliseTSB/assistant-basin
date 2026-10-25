@@ -142,3 +142,30 @@ Scope of this run:
   question (2x2 4, sampled 2, other question 1, minimal edit 1, null texts 3, labels 4 headers x 2 paraphrases x 2 slots
   x 2 authors = 32) = 4,500 forward passes with hidden states, plus the stated readout on 41 of them x 4 forms = 16,400
   short forward passes. Expected under 1.5 GPU-hours on the A770 for both readers; the pilot is a fifth of that.
+
+## Amendment 2 (2026-10-25 01:45 CT, before any capture or stated data): round-1 reviews of the build
+
+The DeepSeek and Haiku round-1 reviews (`review/part37/`) measured defects in how the build scores the registered
+rules. Generation had started (answers only; no hidden state, probe or stated number exists yet). Changed:
+
+1. **Every projection behind a verdict is out-of-fold.** Each record is projected on the direction fitted on the folds
+   that exclude its question (37.3, 37.4, 37.9, the nulls, the edit, the label frames). Haiku measured the old
+   in-sample projection on pure noise: 37.9's shift came out 1.05 SD against a 0.5 bar, with a held-out shift of 0.03.
+2. **37.15 is scored on SmolLM3's answers and the Pile spans only.** Amendment 1 item 4 called shuffled own text "text
+   neither model wrote"; it is the reader's own words. It is reported separately, as a self-text floor.
+3. **The pilot gate compares each within-author contrast with its own label-shuffled null** (95th percentile of the
+   maximum over layers), not with 0.5 plus or minus 0.05, which pure noise at pilot size never meets (Haiku, three
+   seeds). Stop only if, at both positions, the regressed authorship AUROC is under its null's 95th percentile at every
+   layer and both within-author contrasts are under theirs. A missing layer or null fails closed.
+4. **37.9** uses only questions where both sampled answers are non-empty, with the SD taken from held-out projections
+   of own_g and other_g. Per-cell counts and dropped samples are reported.
+5. **37.11 as registered, signed:** the memory phrasing's label effect ("Your earlier notes" minus "Notes from another
+   assistant", yes-probability) minus the authorship phrasing's is at least 10 points, and "Notes" sits between the two
+   headers on the memory phrasing. (The build compared absolute values, which passes the reverse.)
+6. **37.13 requires both role cells** to fall in 0.60 to 0.75; each cell's number is reported.
+7. **37.8** takes the AUROC and the cosine at the same layer, the regressed best layer.
+8. **Minimal edit:** the target is the word nearest the middle with at least four letters that is not on a fixed
+   stopword list; the replacement comes from a fixed list of common nouns within one letter of its length. (DeepSeek:
+   the old rule put a function word in 5 of 8 sampled answers.)
+9. **Precision:** hidden states are stored in float32 with a finite check per record, and span log-probabilities come
+   from float32 logits.
