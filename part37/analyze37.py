@@ -164,7 +164,16 @@ def _prepare_fold(x_train: np.ndarray, x_test: np.ndarray, cov_train: np.ndarray
     if mode == "regressed":
         if cov_train is None or cov_test is None:
             raise AnalysisError("mean log-prob covariates missing for regression control")
+        # A column constant on the training fold carries no information, but its residual is float noise that the
+        # covariate makes label-correlated, and standardising blows it up: the follow-up layer-0 feature (one token for
+        # every record) read 1.0 that way (Haiku write-up review HIGH-1, 2026-10-25). Zero such columns first.
+        constant = np.ptp(x_train, axis=0) == 0
+        if constant.any():
+            x_train = x_train.copy(); x_test = x_test.copy()
+            x_train[:, constant] = 0.0; x_test[:, constant] = 0.0
         x_train, x_test, _ = _residualize(x_train, x_test, cov_train[:, :1], cov_test[:, :1])
+        if constant.any():
+            x_train[:, constant] = 0.0; x_test[:, constant] = 0.0
     scaler = StandardScaler().fit(x_train)
     train_scaled, test_scaled = scaler.transform(x_train), scaler.transform(x_test)
     if mode == "subspace":
@@ -998,8 +1007,8 @@ def _prediction_results(qwen: dict[str, Any], olmo: dict[str, Any]) -> dict[str,
         "37.3": {"observed": c3, **verdict(p3_pass, "absolute self-label projection effect < 0.5 × absolute own-minus-other author effect")},
         "37.4": {"observed": val(qwen, "stated", "authorship_yes_spearman"),
                  **verdict(p4_pass, "Qwen Spearman rho(authorship yes/no p, regressed authorship projection) > 0.30")},
-        "37.5": {"observed": None, "verdict": "HELD", "rule": "held by Amendment 1 until enacted ownership is registered and measured; this run omits enacted generations and judging"},
-        "37.6": {"observed": None, "verdict": "HELD", "rule": "held by Amendment 1 until a causal steering stage is authorized and measured"},
+        "37.5": {"observed": None, "verdict": "NOT RUN", "rule": "held by Amendment 1 until enacted ownership is registered and measured; this run omits enacted generations and judging"},
+        "37.6": {"observed": None, "verdict": "NOT RUN", "rule": "held by Amendment 1 until a causal steering stage is authorized and measured"},
         "37.7": {"observed": None, "verdict": "NOT RUN", "rule": "the cached OLMo base is not the Instruct parent revision; the required parent revision is not cached"},
         "37.8": {"observed": {"mean_logprob_regressed_best_auroc": qwen_reg_auc,
                                 "role_authorship_cosine_at_regressed_best_layer": p8_cosine,
@@ -1009,7 +1018,7 @@ def _prediction_results(qwen: dict[str, Any], olmo: dict[str, Any]) -> dict[str,
                                 "within_slot_best_balanced_accuracy": within_bacc},
                  **verdict(p8_pass, "mean-regressed best AUROC >= 0.65 AND cosine with role direction >= 0.50; report subspace and within-slot results as alternative controls")},
         "37.9": {"observed": own_s, **verdict(p9_pass, "own-greedy minus own-sampled projection shift after mean-log-prob regression >= 0.50 SD")},
-        "37.10": {"observed": None, "verdict": "HELD", "rule": "held by Amendment 1; enacted first-person and back-reference rates are not part of this run"},
+        "37.10": {"observed": None, "verdict": "NOT RUN", "rule": "held by Amendment 1; enacted first-person and back-reference rates are not part of this run"},
         "37.11": {"observed": {"self_minus_other_effects": headers,
                                 "memory_neutral_between_self_and_other": memory_neutral_between,
                                 "by_header_and_form": val(qwen, "stated", "header_by_form")},

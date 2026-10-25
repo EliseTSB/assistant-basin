@@ -821,3 +821,14 @@ class FastMetricTests(unittest.TestCase):
             self.assertAlmostEqual(analyze37._fast_auroc(y, p), roc_auc_score(y, p), places=12)
             self.assertAlmostEqual(analyze37._fast_balanced_accuracy(y, p >= 0.5),
                                    balanced_accuracy_score(y, p >= 0.5), places=12)
+
+
+class RegressedConstantTests(unittest.TestCase):
+    def test_constant_feature_with_label_correlated_covariate_stays_at_chance(self):
+        import numpy as np
+        groups = [f"q{index // 2:03d}" for index in range(80)]
+        y = np.array([index % 2 for index in range(80)])
+        x = np.ones((80, 8))
+        cov = np.column_stack([y + np.random.default_rng(2).normal(scale=0.5, size=80), np.zeros((80, 3))])
+        result = analyze37._fold_fit(x, y, groups, cov, "regressed", 0)
+        self.assertLess(abs(result["auc"] - 0.5), 0.05)
