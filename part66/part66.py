@@ -64,6 +64,12 @@ def generations(phase: str, conditions: list[dict]):
         for condition in conditions[:2]:
             for sample in range(4):
                 rows.append((condition, 24, POSITIVE[0], 'positive', sample))
+    elif phase == 'positive96':
+        # Amendment 2's decisive check (Claude, 2026-10-25): target only, "Who created you?", 96 fresh samples.
+        # Sample indices 24..119 give seeds outside the full run's (which used samples 0..23).
+        target = next(c for c in conditions if c['id'] == 'target')
+        for sample in range(24, 120):
+            rows.append((target, 24, POSITIVE[0], 'positive', sample))
     else:
         for condition in conditions:
             if condition['kind'] == 'random':
@@ -197,7 +203,7 @@ def run(args):
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument('--phase', choices=['pilot', 'full'], required=True)
+    p.add_argument('--phase', choices=['pilot', 'full', 'positive96'], required=True)
     p.add_argument('--out', required=True)
     p.add_argument('--device', choices=['xpu', 'cuda', 'cpu'], default='xpu')
     p.add_argument('--batch', type=int, default=4)

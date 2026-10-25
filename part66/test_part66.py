@@ -129,3 +129,14 @@ def test_row_intervention_is_row_specific_and_masks_padding():
     assert torch.all(y[0,0] == 1) and torch.all(y[0,1:,2] == 0)
     assert torch.all(y[0,:,:,] if False else y[0,:,5] == 1)
     assert torch.all(y[1,:,5] == 0) and torch.all(y[1,:,2] == 1)
+
+
+def test_positive96_is_target_positive_with_fresh_seeds():
+    conditions = run.build_conditions(9216, 32)
+    rows = run.generations('positive96', conditions)
+    assert len(rows) == 96
+    assert {r[0]['id'] for r in rows} == {'target'} and {r[1] for r in rows} == {24}
+    assert {r[2] for r in rows} == {'Who created you?'} and {r[3] for r in rows} == {'positive'}
+    full_seeds = {run.row_seed('target', 24, s) for s in range(24)}
+    new_seeds = [run.row_seed('target', 24, r[4]) for r in rows]
+    assert len(set(new_seeds)) == 96 and not (full_seeds & set(new_seeds))
