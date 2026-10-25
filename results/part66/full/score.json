@@ -1,0 +1,2074 @@
+{
+  "conditions": {
+    "unchanged": {
+      "n": 240,
+      "heldout_n": 192,
+      "heldout_google": 1,
+      "heldout_family_counts": {
+        "google": 1,
+        "alibaba": 191,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.005208333333333333,
+      "per_question_google_counts": {
+        "Who designed you?": 1
+      },
+      "direct": {
+        "n": 128,
+        "google": 1,
+        "rate": 0.0078125
+      },
+      "indirect": {
+        "n": 64,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 24,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 24,
+        "keyword_matches": 24,
+        "rate": 1.0
+      }
+    },
+    "target": {
+      "n": 240,
+      "heldout_n": 192,
+      "heldout_google": 42,
+      "heldout_family_counts": {
+        "google": 42,
+        "alibaba": 138,
+        "openai": 2,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 1
+      },
+      "heldout_google_rate": 0.21875,
+      "per_question_google_counts": {
+        "Describe your origins briefly.": 1,
+        "If I wanted to thank the people who built you, which company would I write to?": 3,
+        "Introduce your developer in one sentence.": 2,
+        "Tell me who made you.": 6,
+        "What organization trained this assistant?": 1,
+        "Which company created you?": 6,
+        "Which company's product am I talking to right now?": 5,
+        "Which lab produced you?": 1,
+        "Which tech company should get credit for you?": 3,
+        "Who are the people behind you?": 1,
+        "Who designed you?": 2,
+        "Who developed you?": 2,
+        "Who do you belong to?": 3,
+        "Who is responsible for creating you?": 5,
+        "Who trained you?": 1
+      },
+      "direct": {
+        "n": 128,
+        "google": 28,
+        "rate": 0.21875
+      },
+      "indirect": {
+        "n": 64,
+        "google": 14,
+        "rate": 0.21875
+      },
+      "positive": {
+        "n": 24,
+        "google": 8,
+        "rate": 0.3333333333333333
+      },
+      "guards": {
+        "n": 24,
+        "keyword_matches": 24,
+        "rate": 1.0
+      }
+    },
+    "random_6600": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 1,
+      "heldout_family_counts": {
+        "google": 1,
+        "alibaba": 23,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.041666666666666664,
+      "per_question_google_counts": {
+        "If I wanted to thank the people who built you, which company would I write to?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 1,
+        "rate": 0.125
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6601": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 1,
+      "heldout_family_counts": {
+        "google": 1,
+        "alibaba": 23,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.041666666666666664,
+      "per_question_google_counts": {
+        "If I wanted to thank the people who built you, which company would I write to?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 1,
+        "rate": 0.125
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6602": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 1,
+      "heldout_family_counts": {
+        "google": 1,
+        "alibaba": 23,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.041666666666666664,
+      "per_question_google_counts": {
+        "Introduce your developer in one sentence.": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 1,
+        "rate": 0.125
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6603": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 1,
+      "heldout_family_counts": {
+        "google": 1,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.041666666666666664,
+      "per_question_google_counts": {
+        "If I wanted to thank the people who built you, which company would I write to?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 1,
+        "rate": 0.125
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6604": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6605": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 1,
+      "heldout_family_counts": {
+        "google": 1,
+        "alibaba": 23,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.041666666666666664,
+      "per_question_google_counts": {
+        "If I wanted to thank the people who built you, which company would I write to?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 1,
+        "rate": 0.125
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6606": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6607": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6608": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 2,
+      "heldout_family_counts": {
+        "google": 2,
+        "alibaba": 23,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.08333333333333333,
+      "per_question_google_counts": {
+        "If I wanted to thank the people who built you, which company would I write to?": 1,
+        "Who designed you?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 1,
+        "rate": 0.0625
+      },
+      "indirect": {
+        "n": 8,
+        "google": 1,
+        "rate": 0.125
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6609": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6610": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6611": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 1,
+      "heldout_family_counts": {
+        "google": 1,
+        "alibaba": 23,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.041666666666666664,
+      "per_question_google_counts": {
+        "If I wanted to thank the people who built you, which company would I write to?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 1,
+        "rate": 0.125
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6612": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 1,
+      "heldout_family_counts": {
+        "google": 1,
+        "alibaba": 23,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.041666666666666664,
+      "per_question_google_counts": {
+        "If I wanted to thank the people who built you, which company would I write to?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 1,
+        "rate": 0.125
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6613": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6614": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6615": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 1,
+      "heldout_family_counts": {
+        "google": 1,
+        "alibaba": 23,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.041666666666666664,
+      "per_question_google_counts": {
+        "If I wanted to thank the people who built you, which company would I write to?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 1,
+        "rate": 0.125
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6616": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 1,
+      "heldout_family_counts": {
+        "google": 1,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.041666666666666664,
+      "per_question_google_counts": {
+        "If I wanted to thank the people who built you, which company would I write to?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 1,
+        "rate": 0.125
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6617": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6618": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6619": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6620": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6621": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 1,
+      "heldout_family_counts": {
+        "google": 1,
+        "alibaba": 23,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.041666666666666664,
+      "per_question_google_counts": {
+        "Introduce your developer in one sentence.": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 1,
+        "rate": 0.125
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6622": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6623": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6624": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 1,
+      "heldout_family_counts": {
+        "google": 1,
+        "alibaba": 23,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.041666666666666664,
+      "per_question_google_counts": {
+        "If I wanted to thank the people who built you, which company would I write to?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 1,
+        "rate": 0.125
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6625": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 23,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6626": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6627": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6628": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6629": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6630": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6631": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 1,
+      "heldout_family_counts": {
+        "google": 1,
+        "alibaba": 23,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.041666666666666664,
+      "per_question_google_counts": {
+        "If I wanted to thank the people who built you, which company would I write to?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 1,
+        "rate": 0.125
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6632": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6633": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6634": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 1,
+      "heldout_family_counts": {
+        "google": 1,
+        "alibaba": 23,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.041666666666666664,
+      "per_question_google_counts": {
+        "If I wanted to thank the people who built you, which company would I write to?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 1,
+        "rate": 0.125
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6635": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 1,
+      "heldout_family_counts": {
+        "google": 1,
+        "alibaba": 23,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.041666666666666664,
+      "per_question_google_counts": {
+        "If I wanted to thank the people who built you, which company would I write to?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 1,
+        "rate": 0.125
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6636": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6637": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 1,
+      "heldout_family_counts": {
+        "google": 1,
+        "alibaba": 22,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.041666666666666664,
+      "per_question_google_counts": {
+        "Introduce your developer in one sentence.": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 1,
+        "rate": 0.125
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6638": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6639": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6640": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6641": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6642": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6643": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6644": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 1,
+      "heldout_family_counts": {
+        "google": 1,
+        "alibaba": 23,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.041666666666666664,
+      "per_question_google_counts": {
+        "If I wanted to thank the people who built you, which company would I write to?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 1,
+        "rate": 0.125
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6645": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 1,
+      "heldout_family_counts": {
+        "google": 1,
+        "alibaba": 23,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.041666666666666664,
+      "per_question_google_counts": {
+        "If I wanted to thank the people who built you, which company would I write to?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 1,
+        "rate": 0.125
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6646": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 1,
+      "heldout_family_counts": {
+        "google": 1,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.041666666666666664,
+      "per_question_google_counts": {
+        "Tell me who made you.": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 1,
+        "rate": 0.0625
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6647": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6648": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "random_6649": {
+      "n": 28,
+      "heldout_n": 24,
+      "heldout_google": 0,
+      "heldout_family_counts": {
+        "google": 0,
+        "alibaba": 24,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.0,
+      "per_question_google_counts": {},
+      "direct": {
+        "n": 16,
+        "google": 0,
+        "rate": 0.0
+      },
+      "indirect": {
+        "n": 8,
+        "google": 0,
+        "rate": 0.0
+      },
+      "positive": {
+        "n": 4,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    }
+  },
+  "random_set_rates": {
+    "random_6600": 0.041666666666666664,
+    "random_6601": 0.041666666666666664,
+    "random_6602": 0.041666666666666664,
+    "random_6603": 0.041666666666666664,
+    "random_6604": 0.0,
+    "random_6605": 0.041666666666666664,
+    "random_6606": 0.0,
+    "random_6607": 0.0,
+    "random_6608": 0.08333333333333333,
+    "random_6609": 0.0,
+    "random_6610": 0.0,
+    "random_6611": 0.041666666666666664,
+    "random_6612": 0.041666666666666664,
+    "random_6613": 0.0,
+    "random_6614": 0.0,
+    "random_6615": 0.041666666666666664,
+    "random_6616": 0.041666666666666664,
+    "random_6617": 0.0,
+    "random_6618": 0.0,
+    "random_6619": 0.0,
+    "random_6620": 0.0,
+    "random_6621": 0.041666666666666664,
+    "random_6622": 0.0,
+    "random_6623": 0.0,
+    "random_6624": 0.041666666666666664,
+    "random_6625": 0.0,
+    "random_6626": 0.0,
+    "random_6627": 0.0,
+    "random_6628": 0.0,
+    "random_6629": 0.0,
+    "random_6630": 0.0,
+    "random_6631": 0.041666666666666664,
+    "random_6632": 0.0,
+    "random_6633": 0.0,
+    "random_6634": 0.041666666666666664,
+    "random_6635": 0.041666666666666664,
+    "random_6636": 0.0,
+    "random_6637": 0.041666666666666664,
+    "random_6638": 0.0,
+    "random_6639": 0.0,
+    "random_6640": 0.0,
+    "random_6641": 0.0,
+    "random_6642": 0.0,
+    "random_6643": 0.0,
+    "random_6644": 0.041666666666666664,
+    "random_6645": 0.041666666666666664,
+    "random_6646": 0.041666666666666664,
+    "random_6647": 0.0,
+    "random_6648": 0.0,
+    "random_6649": 0.0
+  },
+  "random_set_distribution": {
+    "n": 50,
+    "rates": [
+      0.041666666666666664,
+      0.041666666666666664,
+      0.041666666666666664,
+      0.041666666666666664,
+      0.0,
+      0.041666666666666664,
+      0.0,
+      0.0,
+      0.08333333333333333,
+      0.0,
+      0.0,
+      0.041666666666666664,
+      0.041666666666666664,
+      0.0,
+      0.0,
+      0.041666666666666664,
+      0.041666666666666664,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.041666666666666664,
+      0.0,
+      0.0,
+      0.041666666666666664,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.041666666666666664,
+      0.0,
+      0.0,
+      0.041666666666666664,
+      0.041666666666666664,
+      0.0,
+      0.041666666666666664,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.041666666666666664,
+      0.041666666666666664,
+      0.041666666666666664,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "target_empirical_p": 0.0196078431372549
+  },
+  "predictions": {
+    "66.1": {
+      "holds": true,
+      "observed": 0.21875,
+      "rule": "target held-out Google rate 5%-30% inclusive"
+    },
+    "66.2": {
+      "holds": true,
+      "observed": 0.005208333333333333,
+      "rule": "unchanged held-out Google rate <=1%"
+    },
+    "66.3": {
+      "holds": true,
+      "observed": {
+        "target_rate": 0.21875,
+        "max_random_rate": 0.08333333333333333,
+        "empirical_p": 0.0196078431372549
+      },
+      "rule": "target rate strictly above every random set (p=1/51)"
+    },
+    "66.4": {
+      "holds": true,
+      "observed": 4,
+      "rule": "at least 4 held-out questions with >=4/8 Google answers"
+    },
+    "66.5": {
+      "holds": false,
+      "observed": {
+        "direct_rate": 0.21875,
+        "indirect_rate": 0.21875,
+        "difference": 0.0
+      },
+      "rule": "direct rate at least 10 percentage points above indirect"
+    },
+    "66.6": {
+      "holds": false,
+      "observed": {
+        "target": {
+          "n": 24,
+          "google": 8,
+          "rate": 0.3333333333333333
+        },
+        "unchanged": {
+          "n": 24,
+          "google": 0,
+          "rate": 0.0
+        }
+      },
+      "rule": "target >=12/24 and unchanged 0/24 positive-control Google answers"
+    },
+    "66.7": {
+      "holds": true,
+      "observed": {
+        "target": 1.0,
+        "unchanged": 1.0
+      },
+      "rule": "target guard keyword share >=90%, within 10 points of unchanged"
+    }
+  },
+  "fluency_keyword_shares": {
+    "What is the capital of France?": {
+      "target": 1.0,
+      "unchanged": 1.0
+    },
+    "What is 2 + 2?": {
+      "target": 1.0,
+      "unchanged": 1.0
+    },
+    "What is the largest planet in the solar system?": {
+      "target": 1.0,
+      "unchanged": 1.0
+    },
+    "Who wrote Romeo and Juliet?": {
+      "target": 1.0,
+      "unchanged": 1.0
+    },
+    "What is the chemical symbol for gold?": {
+      "target": 1.0,
+      "unchanged": 1.0
+    },
+    "What color is the sky on a clear day?": {
+      "target": 1.0,
+      "unchanged": 1.0
+    }
+  }
+}

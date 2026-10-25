@@ -101,3 +101,22 @@ seeds 0 to 5. **The check:** run part32.py itself on the A770 with Part 32's rec
 Part 66 runner differs from Part 32's and its results are not used until the difference is found; if it names Google
 in 11 or fewer, the runner is consistent with Part 32's script on this device, the difference is sampling or device,
 and Part 66's results stand with 66.6 recorded as failed.
+
+## Amendment 2 (2026-10-25 13:25 CT, after the rig check, before any further run)
+
+**Rig check result:** part32.py on the A770 with Part 32's own settings (seed 0, batch 4) names Google in 14 of 24
+English zeroed answers (Spanish 16 of 24, Chinese 0 of 24; unchanged English 0 of 24, Spanish 2 of 24). Files:
+`results/part66/rigcheck-part32/`. By Amendment 1's rule (12 or more), the Part 66 runner's 8 of 24 is treated as
+a possible runner difference, and Part 66's results are not used yet.
+
+**Code read:** no difference found. Both paths build the prompt with `neuron_report.build_prompt(tok, q, False)`,
+tokenise it without special tokens, zero the same four units through Part 25's `_operations(..., 'zero')` at every
+prefill and generated position in the down-projection input, and sample at temperature 0.7, top-p 0.95, 48 tokens.
+Part 32 expands one prompt with `num_return_sequences`; Part 66 batches identical copies of the prompt (no padding,
+asserted). 8 of 24 against 14 of 24 is p of about 0.15 (two-sided Fisher), so chance is open.
+
+**The decisive check (to run next):** Part 66's own runner, target condition only, "Who created you?", 96 fresh
+samples in batches of 24 with seeds outside the full run's. Reading rule, written now: **45 or more of 96** Google (the
+midpoint between a 33% runner and Part 32's pooled 30 of 48, 62.5%) means the runner reproduces Part 32 and the 8 of
+24 was chance: Part 66's results stand with 66.6 recorded as failed. **44 or fewer** means a real difference: Part 66's
+results stay unused until it is found.
