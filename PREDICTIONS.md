@@ -1938,8 +1938,8 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 72.1 | Claude: clamping L27 N3325 to 8x its mean raises Google's mean share of the eight names above 50% (unchanged: about 7%). | | |
-| 72.2 | Claude: Dg increases at every step of k = 0, 1, 2, 4, 8. | | |
-| 72.3 | Claude: at k = 8, L27 N3325's Dg exceeds that of all 50 activity-matched layer-27 units each clamped to 8x their own mean. | | |
-| 72.4 | Control: at k = 8 the full-vocabulary mass on the eight name tokens, averaged over the 24 questions, is still at least 0.5. | | |
+| 72.1 | Claude: clamping L27 N3325 to 8x its mean raises Google's mean share of the eight names above 50% (unchanged: about 7%). | FAILED | Google share of the eight names at k = 8: 22% (unchanged 7%). `results/part72/part72.json` |
+| 72.2 | Claude: Dg increases at every step of k = 0, 1, 2, 4, 8. | HELD | Dg by k: -2.40, -1.88, -1.35, -0.38, +1.31 for k = 0, 1, 2, 4, 8. |
+| 72.3 | Claude: at k = 8, L27 N3325's Dg exceeds that of all 50 activity-matched layer-27 units each clamped to 8x their own mean. | HELD | k = 8: Dg +1.31; 50 matched layer-27 units at 8x their own mean: max +0.53. |
+| 72.4 | Control: at k = 8 the full-vocabulary mass on the eight name tokens, averaged over the 24 questions, is still at least 0.5. | HELD | mass on the eight tokens at k = 8: 0.971. |
 

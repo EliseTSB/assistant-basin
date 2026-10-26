@@ -91,7 +91,7 @@ Claude, 2026-10-18; rewritten 2026-10-21.)
 - In Qwen3-1.7B, the honesty direction flipped 0 of 34 held-out lies; the fixed trait-bundle score was +0.072, rank 18 of 40. (50)
 - For Pythia-410m, the novel-item kiki/bouba AUC rose from 0.387 at step 1,000 to 0.898 at step 143,000. Pythia-160m never reached 0.70. (48d)
 
-**How we learned to measure.** 562 predictions so far, each pushed before its run: 271 held, 196 failed, 10 mixed,
+**How we learned to measure.** 566 predictions so far, each pushed before its run: 274 held, 197 failed, 10 mixed,
 9 untestable or read by a rule, 76 not yet scored (`count_predictions.py`, 2026-10-26). The methods
 that came out of the failures: a control must be shown able to fail; a judge model can agree for the same bias it was
 meant to check (it reads left to right too); a word filter misses meaning (a passage about a monolith in "neutral" text
@@ -1170,6 +1170,37 @@ predicted and are description only. One model.
 
 Files: `part71/` (script, tests), `results/part71/part71.json` (top 20 tokens for every unit read, including the 100
 random ones).
+
+### Part 72: pushing the Google neuron alone moves Qwen toward Google, but not past its own maker (2026-10-26)
+
+Pre-registered in `PART72-DESIGN.md`. With every other unit untouched, L27 N3325 is clamped at every position to k
+times its mean activation over all positions of Part 69's maker prompts, and the readout is the next maker token after
+`I was developed by **` (Part 69 Amendment 1).
+
+| L27 N3325 clamped to | Change in Google - Al gap | Google's share of the eight names |
+|---|---:|---:|
+| unchanged | 0 | 7.1% |
+| 0 (zeroed) | -2.40 | 0.4% |
+| 1x its mean | -1.88 | 0.7% |
+| 2x | -1.35 | 1.3% |
+| 4x | -0.38 | 3.9% |
+| 8x | +1.31 | 22.1% |
+| 50 matched layer-27 units, each at 8x its own mean | at most +0.53 | |
+
+**Results.** The effect rises at every step (72.2 held), and at 8x it is larger than that of any of 50 equally active
+units pushed the same way (72.3 held), with the readout still on the eight names (72.4 held: 97% of the probability).
+But pushing it alone raises Google's share only to 22%, not past half (72.1 failed): the model's own maker still wins
+most of the time. Clamping to 1x its mean already lowers the Google gap, so at the answer position this neuron is more
+active than its average over the prompt.
+
+**Reading.** L27 N3325 is necessary for the fallback Google answer (Part 70) and writes `Google` directly (Part 71),
+but one unit pushed hard is not enough to override the maker neurons while they are active.
+
+**Limits.** One forced opening and one next token, not sampled answers; the clamp uses the mean over all positions,
+which is below the unit's activity at the answer position, so k is not a multiple of its natural activity there. One
+model.
+
+Files: `part72/` (script, tests), `results/part72/` (summary and every record).
 
 ### Running or designed (2026-10-21)
 
