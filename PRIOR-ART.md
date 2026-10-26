@@ -452,3 +452,26 @@ for transcoder features. Internal: Part 53 (a 5x5 clamp grid between two Qwen3-1
 predictions failed). Traps Muse named, read against our design: the null is matched by layer, not by activation level
 (a limitation we state); zeroing one neuron can unmask a backup (the Hydra effect, arXiv:2610.04017), so a downstream
 change is not by itself a chain; and a null on single zeroings does not refute a chain that only acts jointly.
+
+## Added 2026-10-26 08:28 CT (Muse's atlas watch, council muse-neuron-atlas-watch-2026-10-16 #31 and #32; both READMEs read at source by Claude)
+
+- **feliciachen01/Introspection** (GitHub, created 2026-10-25, no license on the page): replicates Lindsey et al.
+  2026's concept-injection introspection test (arXiv:2601.01828) on Qwen2.5 0.5B to 7B, with the paper's 50 concepts,
+  prompt and grading prompts, 7,000 injected trials. Held-out success at the best layer is 0% [0, 13%] for every model;
+  at most 3 of 7,000 trials show the effect; "yes" rates with injection match no-injection controls (the 0.5B says yes
+  29% of the time with nothing injected); 640 replies name the injected word while saying no. Controls: no-injection
+  trials, unrelated yes/no questions under injection, layer and strength chosen on 25 concepts and scored on the other
+  25, a 200-reply hand check of the open AWQ grader. No weights revision pinned; 4-bit weights for the 7B. **Bears on
+  Parts 12 and 17 (our trained-reader and stated-readout introspection work on small OLMo and Qwen):** the same
+  direction as our 17b null (no sign the small model senses its own activity), from a different method. It bounds small
+  Qwen2.5 models and does not test Claude.
+- **Ulto85/neurons-kinda-clean** (GitHub, created 2026-10-26, MIT): runs Leo Gao's simulation test of Goodfire's
+  "Already Clean" claim on Qwen3-4B, with a neuron defined as we define it (one coordinate of the SwiGLU hidden state, the
+  input to `down_proj`). 278 random neurons; explanations by Claude Opus from about 60 windows each, simulation by Claude
+  Sonnet, scored by KL substitution. 11 of 278 pass 50% damage avoided (mostly single-word detectors in the first and
+  last layers); the median explanation recovers -1% on ordinary text and 15% on windows where the neuron fires; even the
+  real values of the strong firings recover only 28%. Zeroing each neuron's weakest 75% of activations changes the top
+  next token on 59%, 43%, 33% and 30% of tokens across Qwen3 0.6B to 8B. No weights revision pinned; no separate
+  numerical-noise control. **Bears on Parts 60 and 64 (sentence tests of neuron descriptions on Qwen3-4B):** a stricter
+  standard than ours (substituting the explanation for the neuron, against our "does a written sentence make it fire"),
+  and the same reading in the end: a description that picks out the strong firings is not an account of the neuron.
