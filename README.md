@@ -1048,11 +1048,9 @@ gradient attribution (each unit's activation times the target's gradient, a firs
 unit would do) ranked every earlier unit on 12 search prompts; the top 20 per target were then zeroed one at a time on
 13 held-out prompts.
 
-**L11 N8868.** The search ranked L6 N753 and L7 N1169 first and second: the two neurons Part 67 found by hand, found
-here with nothing pointing at them. 19 of the 20 candidates move L11 N8868 on the held-out prompts in the direction
+**L11 N8868.** The search ranked L6 N753 and L7 N1169 first and second: the two links Part 67 tested (its neurons came from Part 25's search), found here with nothing pointing at them. 19 of the 20 candidates move L11 N8868 on the held-out prompts in the direction
 the attribution predicted, by more than the 95th percentile of 200 random units from the same layers (68.2 held).
-Against the stricter null Part 67 needed (for each candidate, the 50 units of its layer whose activity is closest to
-its own), 15 of the 19 still stand out, the two maker neurons among them (68.7 held). Several are about as strong as
+Against the stricter null Part 67 needed (for each candidate, the 50 units of its layer whose activity on the held-out prompts is closest to its own, excluding both targets' candidates; Part 67b matched on all prompts), 15 of the 19 still stand out, the two maker neurons among them (68.7 held). Several are about as strong as
 the makers: L10 N54 (-0.112 SD) and L10 N4133 (-0.091 SD) beside L6 N753 (-0.097) and L7 N1169 (+0.116). The
 attribution tracks the measured effect closely for this target (Spearman 0.85 on the search prompts, 0.81 held out).
 
@@ -1070,8 +1068,7 @@ every prompt, a positive control on the gradient. The 68b run re-measured all 26
 Part 68 values exactly (68.10).
 
 **Limits.** One model, English prompts, prefill only; effects are at most about 0.12 SD. Zeroing one unit at a time
-cannot find drivers that act only jointly, and a first-order attribution misses units whose effect is nonlinear, which
-L29 N776's weak correlation suggests is common for deep targets: its true driver list may extend beyond these 20.
+cannot find drivers that act only jointly, and a first-order attribution misses units whose effect is nonlinear, as L29 N776's weak correlation suggests for this target: its true driver list may extend beyond these 20.
 
 Files: `part68/` (runners, scorers, tests, build notes), `results/part68/full/` and `results/part68/b/`.
 
@@ -1080,8 +1077,7 @@ Files: `part68/` (runners, scorers, tests, build notes), `results/part68/full/` 
 Pre-registered in `PART69-DESIGN.md`. Its first readout failed its own control, and Amendment 1 changed the readout
 after I had seen the first readout's results; both readouts are reported. Parts 67 and 68 traced links between
 neurons; Part 69 asks whether those links move what Qwen3.5-4B says made it. The answer is forced to begin with a fixed
-opening after each of Part 66's 24 held-out maker questions, and the readout is the gap between the next-token logits
-of `Google` and `Alibaba`. Each zeroing is compared with 50 activity-matched sets (for the four makers together, Part
+opening after each of Part 66's 24 held-out maker questions, and the readout is the gap between the next-token logits of `Google` and `Al` (the first token of Alibaba). Each zeroing is compared with 50 activity-matched sets (for the four makers together, Part
 66's own 50 random sets).
 
 **Two readouts.** The registered opening, `I was developed by`, failed its control (69.2): the seven maker names held
@@ -1106,7 +1102,7 @@ both readouts). L11 N8868 alone moves it toward Google (69.3 failed), and so do 
 it (69.5 failed), taking probability from Tongyi; their effect is more than twice L11 N8868's own, and whether they act
 through it was not tested. L29 N776 alone beat all 50 matched units on the first readout (+0.10 against a null maximum
 of 0.034), where 69.4 would have held, but does nothing measurable on the amended readout (+0.005, p = 0.45), so 69.4
-failed. The largest effect is the two late units Part 68 found among L29 N776's drivers (69.6 failed): zeroing them
+failed. The largest effect is the two late units Part 68 found among L29 N776's drivers, a pair chosen for Part 69 after Part 68b's result (69.6 failed): zeroing them
 lowers the Google logit by about 4, and Google's share of the eight names falls from 7% to 0.2%, so their activity
 raises the Google logit. Whether they act through L29 N776 was not tested, and Part 68's two early survivors for
 L29 N776 (L2 N698, L4 N695) were not tested here.
@@ -1137,7 +1133,7 @@ takes the Google answers from 38 to 4 of 192 and from 15 to 0 of 24 on "Who crea
 activity-matched pairs leaves them at about the makers' level (70.4, 70.5: no pair goes below 12.5%). The model goes
 back to its own maker instead: "I was created by **Tongyi Lab**, which is part of Alibaba Group" (70.6, 92%). All four Google answers that remain begin "As an artificial intelligence, I don't have...", an opening that also starts 3 of the 38 makers-only Google answers.
 
-**Reading.** Parts 66 to 70 together: the four maker neurons hold the model's own answer (Alibaba); with them off, the model falls back on "Google", and that fallback needs two late neurons whose activity raises the `Google` logit (Part 69). Part 68 also found two early units that drive L29 N776 (L2 N698, L4 N695); they were not tested here. Whether the late pair acts through L29 N776 was not tested.
+**Reading.** Parts 66 to 70 together: the four maker neurons hold the model's own answer (Alibaba); with them off, the model falls back on "Google", and that fallback needs two late neurons whose activity raises the `Google` logit (Part 69). Part 68 also found two early units that clear L29 N776's matched null narrowly (L2 N698, L4 N695); they were not tested here. Whether the late pair acts through L29 N776 was not tested.
 
 **Limits.** One model; Part 66's 24 held-out questions; one sampling setting. Part 70 did not reproduce Part 66's answers byte for byte (38 against 42 Google answers for the makers, same condition id and seeds).
 Why this model's fallback maker is Google is not tested here.

@@ -71,3 +71,13 @@ Changes, and nothing else:
   the highest of the eight on at least 20 of the 24 questions.
 - 69.1 and 69.3 to 69.6 are scored on the new readout exactly as registered; the run is repeated in full
   (`results/part69/a1`) with the same conditions and seeds.
+
+### Correction to Amendment 1 (2026-10-26 05:37 CT, after a cold review; the text above is left as committed)
+
+Two sentences above are incomplete. "The predictions below are unchanged" is true of 69.1 and 69.3 to 69.6, but the
+control 69.2 was rewritten as 69.2a to count `T` (Tongyi) as Alibaba-family, after the probe had shown Tongyi as the
+model's top name; under the amended readout `Al` is top for none of the 24 questions, so the registered 69.2 rule
+would have failed. "Chosen on the unchanged model's mass alone" is true of the comparison made, but a higher-mass
+opening (0.993) was set aside for naming the model in the prompt. The README's Part 69 section states both, and that
+69.4 held on the first readout and failed on this one.
+
