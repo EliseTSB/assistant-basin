@@ -1902,3 +1902,15 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 | 68.8 | Claude (Amendment 1): for L29 N776, L27 N3325 and L24 N3949 both survive the matched null, and at most 1 of the other 5 (all in layers 0 to 6) does. | FAILED | L27 N3325 and L24 N3949 survive (0.077 vs matched max 0.008; 0.050 vs 0.012), but so do two others: L2 N698 (-0.022 vs 0.017) and L4 N695 (-0.0053 vs 0.0048). |
 | 68.9 | Claude (Amendment 1): L6 N159 does not survive the matched null for L29 N776, so no shared driver survives it. | HELD | L6 N159 does not survive for L29 N776 (-0.0067 vs 0.019), nor for L11 N8868 (-0.039 vs 0.043). |
 | 68.10 | Control (Amendment 1): every re-measured replicating candidate's Delta is within 0.005 of its Part 68 test-half value. | HELD | all 26 re-measured candidate Deltas within 0.005 of their Part 68 values. |
+
+## Part 69: do the maker neurons' drivers move what the model says it was made by? (written 2026-10-26, before any code or run). Design: PART69-DESIGN.md (Claude).
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 69.1 | Control: zeroing the four makers gives a positive Dg (Google minus Alibaba logit gap) that exceeds all 50 of Part 66's random four-unit sets. | | |
+| 69.2 | Control: unchanged, mean maker-token mass over the 24 questions is at least 0.5, and Alibaba is the top maker token on at least 20 of 24. | | |
+| 69.3 | Claude: zeroing L11 N8868 alone does NOT beat its 50 activity-matched single units (p above 0.05 in the positive direction). | | |
+| 69.4 | Claude: zeroing L29 N776 alone gives a positive Dg that beats all 50 of its activity-matched single units. | | |
+| 69.5 | Claude: zeroing the 7 drivers that lower L11 N8868 does not beat their 50 matched sets in either direction (two-sided p above 0.1). | | |
+| 69.6 | Claude: zeroing the 2 late drivers that raise L29 N776 does not beat their 50 matched sets in either direction (two-sided p above 0.1). | | |
+
