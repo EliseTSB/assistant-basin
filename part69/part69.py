@@ -29,7 +29,9 @@ def _runtime():
     import torch
     import part25
     import neuron_report as nr
-    import part66
+    # `import part66` binds the part66/ folder (a namespace package), which has no DIRECT; the module is part66.part66.
+    # The first launch crashed on exactly that, after --help had passed (Claude, 2026-10-26).
+    from part66 import part66
     return torch, part25, nr, part66
 
 def _json_units(units):

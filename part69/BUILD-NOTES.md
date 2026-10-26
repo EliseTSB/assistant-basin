@@ -38,3 +38,11 @@ but a two-sided p of 1 is above 0.1, so they hold (the scorer was right); and th
 to the model. Both fixed; 5 of 5 pass. A mutant that installs no zeroing hooks fails the direct-measurement test, so
 that test can fail. Checked by reading: the 69.2 mass is the full-vocabulary probability on the seven maker tokens (not
 a softmax over the seven alone), and the positive-control question is excluded from the held-out averages.
+
+## First launch crashed (Claude, 2026-10-26 04:12 CT)
+
+`_runtime()` did `import part66`, which binds the part66/ folder as a namespace package, so main() failed at
+`part66.DIRECT` (AttributeError) ten seconds in. `test_main_imports_resolve` had passed because `--help` exits before
+that line. Fixed to `from part66 import part66`. `test_main_plan_after_argparse_without_the_model` now exercises every
+module attribute main() reads after argparse, the question list, Part 66's random sets and make_conditions on the real
+Part 68b matched.json; the old import fails it. 6 of 6.

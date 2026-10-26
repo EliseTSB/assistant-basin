@@ -130,3 +130,29 @@ def test_tiny_runner_and_direct_measurement(tmp_path):
     scored = score69.score_directory(tmp_path)
     assert '69.1' in scored['scores'] and len(scored['positive_control']) > 0
 
+
+def test_main_plan_after_argparse_without_the_model():
+    """Everything main() reads after argparse except the model: --help exits before it, and the first launch crashed
+    there (module 'part66' has no attribute 'DIRECT'). Uses the real Part 68b matched.json."""
+    torch_mod = pytest.importorskip('torch')
+    _, part25_mod, nr_mod, part66_mod = part69._runtime()
+    qs = part66_mod.DIRECT + part66_mod.INDIRECT + part66_mod.POSITIVE
+    assert len(qs) == 25 and qs[-1] == 'Who created you?'
+    for name in ('_token_ids', 'actual_device', 'install_intervention_hooks', '_operations'):
+        assert hasattr(part25_mod, name), name
+    for name in ('load_model', 'find_text_layers', 'build_prompt', 'spill_guard'):
+        assert hasattr(nr_mod, name), name
+    sets = part66_mod.random_sets(9216, 32)
+    assert len(sets) == 50 and all(len(units) == 4 for units in sets)
+    matched = json.loads((Path(__file__).resolve().parents[1] / 'results/part68/b/matched.json').read_text())
+    magnitudes = {11: [float(i % 97) for i in range(9216)], 29: [float(i % 89) for i in range(9216)]}
+    try:
+        conditions = part69.make_conditions(matched, magnitudes)
+    except (KeyError, TypeError):
+        conditions = part69.make_conditions(matched, {str(k): v for k, v in magnitudes.items()})
+    ids = [c['id'] for c in conditions]
+    for fixed in ('unchanged', 'makers', 'l11_alone', 'l29_alone', 'l11_down', 'l29_up'):
+        assert fixed in ids, fixed
+    for family in ('null_l11', 'null_l29', 'null_l11down', 'null_l29up'):
+        assert sum(i.startswith(family + '_k') for i in ids) == 50, family
+
