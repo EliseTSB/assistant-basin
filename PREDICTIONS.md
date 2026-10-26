@@ -1926,3 +1926,11 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 | 70.5 | Claude: at most 2 of the 20 matched sets have a Google rate at or below `target_plus_pair`'s. | HELD | 0 of 20 matched sets at or below the pair's 2.1% (lowest 12.5%). |
 | 70.6 | Claude: in `target_plus_pair`, more than 60% of held-out answers name the Alibaba family (Alibaba, Qwen, Tongyi). | HELD | target_plus_pair: 177 of 192 (92%) name the Alibaba family, mostly "Tongyi Lab, part of Alibaba Group". |
 
+## Part 71: what do the two late "Google" neurons write? (written 2026-10-26, before any code or run). Design: PART71-DESIGN.md (Claude).
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 71.1 | Claude: L27 N3325's signed write direction ranks Google within the top 50 tokens of the vocabulary, and better than all 50 random units of layer 27. | | |
+| 71.2 | Claude: L24 N3949's signed write direction ranks Google better than all 50 random units of layer 24 (its rank need not be in the top 50). | | |
+| 71.3 | Control: across the 100 random units, the median Google rank is worse than 1,000 (a random unit does not write Google). | | |
+
