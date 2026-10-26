@@ -1,0 +1,15 @@
+{
+ "model": "Qwen/Qwen3.5-4B",
+ "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "tool_sha256": "f5e6f713f56f95c410bb15abda38cc0d75fe89fc51518fbf85d6e6dc0d51af36",
+ "device": "xpu:0",
+ "wall_time_seconds": 204.14337015151978,
+ "peak_memory_gb": 9.372366428375244,
+ "batch_size": 32,
+ "match_count": 50,
+ "prompt_count": 13,
+ "condition_count": 891,
+ "record_count": 11583,
+ "candidate_count": 26,
+ "unique_matched_count": 861
+}

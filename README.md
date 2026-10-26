@@ -91,8 +91,8 @@ Claude, 2026-10-18; rewritten 2026-10-21.)
 - In Qwen3-1.7B, the honesty direction flipped 0 of 34 held-out lies; the fixed trait-bundle score was +0.072, rank 18 of 40. (50)
 - For Pythia-410m, the novel-item kiki/bouba AUC rose from 0.387 at step 1,000 to 0.898 at step 143,000. Pythia-160m never reached 0.70. (48d)
 
-**How we learned to measure.** 542 predictions so far, each pushed before its run: 253 held, 188 failed, 10 mixed,
-9 untestable or read by a rule, 82 not yet scored (`count_predictions.py`, 2026-10-25). The methods
+**How we learned to measure.** 546 predictions so far, each pushed before its run: 260 held, 191 failed, 10 mixed,
+9 untestable or read by a rule, 76 not yet scored (`count_predictions.py`, 2026-10-26). The methods
 that came out of the failures: a control must be shown able to fail; a judge model can agree for the same bias it was
 meant to check (it reads left to right too); a word filter misses meaning (a passage about a monolith in "neutral" text
 moved a baseline tenfold); punctuation cells are tokenized before they are built; the clamp hook was shown to change
@@ -1040,6 +1040,40 @@ what the model says is not tested here. Zeroing one neuron can wake a backup (th
 single-neuron null does not rule out links that act only jointly.
 
 Files: `part67/` (runner, 67b runner, scorer, tests), `results/part67/full/` and `results/part67/b/`.
+
+### Part 68: a search over every earlier neuron finds Part 67's two drivers of L11 N8868 first, and L29 N776's real drivers are late (2026-10-26)
+
+Pre-registered in `PART68-DESIGN.md` (Amendment 1 written after the first score, before its check was built or run).
+Part 67 tested the four maker neurons against each other. Part 68 asks the open version: of every MLP unit before
+each later maker neuron (L11 N8868, L29 N776 in Qwen3.5-4B), which ones drive it? A gradient attribution (each unit's
+activation times the target's gradient, a first-order estimate of what zeroing the unit would do) ranked every earlier
+unit on 12 search prompts; the top 20 per target were then zeroed one at a time on 13 held-out prompts.
+
+**L11 N8868.** The search ranked L6 N753 and L7 N1169 first and second: the two neurons Part 67 found by hand, found
+here with nothing pointing at them. 19 of the 20 candidates move L11 N8868 on the held-out prompts in the direction the
+attribution predicted, beyond 200 random units from the same layers (68.2 held). Against the stricter null Part 67
+needed (for each candidate, the 50 units of its layer whose activity is closest to its own), 15 of the 19 still stand
+out, the two maker neurons among them (68.7 held). Several are about as strong as the makers: L10 N54 (-0.112 SD) and
+L10 N4133 (-0.091 SD) beside L6 N753 (-0.097) and L7 N1169 (+0.116). The attribution tracks the measured effect closely
+for this target (Spearman 0.85 on the search prompts, 0.81 held out).
+
+**L29 N776.** Only 7 of 20 candidates replicate (68.1 failed), and the attribution is a poor guide here (Spearman 0.39
+on the search prompts, 0.03 held out). Its largest predictions were early units (L5 N25, L6 N159) whose measured
+effects are tiny. The two clear drivers are late, L27 N3325 (+0.077 SD, matched max 0.008) and L24 N3949 (+0.050, matched
+max 0.012); two early units also clear the matched null narrowly (L2 N698 -0.022 against 0.017, L4 N695 -0.0053 against
+0.0048), so 68.8 failed on its "at most one other" clause. Most replicating drivers were early (68.3 failed). None of the
+three earlier maker neurons is among its candidates (68.4 held). The one unit shared by both targets' lists, L6 N159,
+does not survive the matched null for either (68.9 held), so no shared driver remains.
+
+**Controls.** Attribution of every unit at or after the target's layer was measured, not set: exactly 0 for both
+targets (68.5), and the target's own entry equalled minus its value to within 0.34% on every prompt, a positive control
+on the gradient. The 68b run re-measured all 26 replicating candidates within 0.005 SD of their first values (68.10).
+
+**Limits.** One model, English prompts, prefill only; effects are at most about 0.12 SD. Zeroing one unit at a time
+cannot find drivers that act only jointly, and a first-order attribution misses units whose effect is nonlinear, which
+L29 N776's weak correlation suggests is common for deep targets: its true driver list may extend beyond these 20.
+
+Files: `part68/` (runners, scorers, tests, build notes), `results/part68/full/` and `results/part68/b/`.
 
 ### Running or designed (2026-10-21)
 

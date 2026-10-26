@@ -1,0 +1,330 @@
+{
+ "targets": {
+  "11_8868": {
+   "candidates": [
+    {
+     "layer": 6,
+     "unit": 753,
+     "attribution": -0.03382836957462132,
+     "delta": -0.09678865269227103,
+     "matched_max_abs_delta": 0.0430598901754589,
+     "matched_count": 50,
+     "survives": true,
+     "part68_delta": -0.09678865269227103,
+     "part68_abs_difference": 0.0
+    },
+    {
+     "layer": 7,
+     "unit": 1169,
+     "attribution": 0.026362766899789374,
+     "delta": 0.11583619372986667,
+     "matched_max_abs_delta": 0.0327204553427346,
+     "matched_count": 50,
+     "survives": true,
+     "part68_delta": 0.11583619372986667,
+     "part68_abs_difference": 0.0
+    },
+    {
+     "layer": 10,
+     "unit": 4133,
+     "attribution": -0.020078458745653432,
+     "delta": -0.09075077797162999,
+     "matched_max_abs_delta": 0.029385216321730266,
+     "matched_count": 50,
+     "survives": true,
+     "part68_delta": -0.09075077797162999,
+     "part68_abs_difference": 0.0
+    },
+    {
+     "layer": 8,
+     "unit": 7186,
+     "attribution": 0.018396606246824376,
+     "delta": 0.04707459562650893,
+     "matched_max_abs_delta": 0.025889074557097075,
+     "matched_count": 50,
+     "survives": true,
+     "part68_delta": 0.04707459562650893,
+     "part68_abs_difference": 0.0
+    },
+    {
+     "layer": 10,
+     "unit": 54,
+     "attribution": -0.017894298303872347,
+     "delta": -0.11215897662496381,
+     "matched_max_abs_delta": 0.029385216321730266,
+     "matched_count": 50,
+     "survives": true,
+     "part68_delta": -0.11215897662496381,
+     "part68_abs_difference": 0.0
+    },
+    {
+     "layer": 7,
+     "unit": 296,
+     "attribution": -0.014599499302372957,
+     "delta": -0.06504106203404307,
+     "matched_max_abs_delta": 0.0327204553427346,
+     "matched_count": 50,
+     "survives": true,
+     "part68_delta": -0.06504106203404307,
+     "part68_abs_difference": 0.0
+    },
+    {
+     "layer": 6,
+     "unit": 159,
+     "attribution": -0.013195578008890152,
+     "delta": -0.03903909570609921,
+     "matched_max_abs_delta": 0.0430598901754589,
+     "matched_count": 50,
+     "survives": false,
+     "part68_delta": -0.03903909570609921,
+     "part68_abs_difference": 0.0
+    },
+    {
+     "layer": 10,
+     "unit": 3551,
+     "attribution": -0.01011644210666418,
+     "delta": -0.046692460692125085,
+     "matched_max_abs_delta": 0.029385216321730266,
+     "matched_count": 50,
+     "survives": true,
+     "part68_delta": -0.046692460692125085,
+     "part68_abs_difference": 0.0
+    },
+    {
+     "layer": 8,
+     "unit": 2214,
+     "attribution": 0.009904864370279634,
+     "delta": 0.017138642205363177,
+     "matched_max_abs_delta": 0.025889074557097075,
+     "matched_count": 50,
+     "survives": false,
+     "part68_delta": 0.017138642205363177,
+     "part68_abs_difference": 0.0
+    },
+    {
+     "layer": 10,
+     "unit": 8663,
+     "attribution": -0.00908120310244461,
+     "delta": -0.04476240090677945,
+     "matched_max_abs_delta": 0.029385216321730266,
+     "matched_count": 50,
+     "survives": true,
+     "part68_delta": -0.04476240090677945,
+     "part68_abs_difference": 0.0
+    },
+    {
+     "layer": 10,
+     "unit": 475,
+     "attribution": 0.00754899902191634,
+     "delta": 0.0344534052659499,
+     "matched_max_abs_delta": 0.026938670119913872,
+     "matched_count": 50,
+     "survives": true,
+     "part68_delta": 0.0344534052659499,
+     "part68_abs_difference": 0.0
+    },
+    {
+     "layer": 9,
+     "unit": 5442,
+     "attribution": 0.007469550992633837,
+     "delta": 0.03891421017970334,
+     "matched_max_abs_delta": 0.029116763599211382,
+     "matched_count": 50,
+     "survives": true,
+     "part68_delta": 0.03891421017970334,
+     "part68_abs_difference": 0.0
+    },
+    {
+     "layer": 5,
+     "unit": 6794,
+     "attribution": 0.00700047555922841,
+     "delta": 0.027027334403240025,
+     "matched_max_abs_delta": 0.005413681774346568,
+     "matched_count": 50,
+     "survives": true,
+     "part68_delta": 0.027027334403240025,
+     "part68_abs_difference": 0.0
+    },
+    {
+     "layer": 7,
+     "unit": 4204,
+     "attribution": -0.006658919310818116,
+     "delta": -0.028620026149164396,
+     "matched_max_abs_delta": 0.0327204553427346,
+     "matched_count": 50,
+     "survives": false,
+     "part68_delta": -0.028620026149164396,
+     "part68_abs_difference": 0.0
+    },
+    {
+     "layer": 10,
+     "unit": 167,
+     "attribution": 0.006275679954948525,
+     "delta": 0.03151310677501083,
+     "matched_max_abs_delta": 0.02881984967804869,
+     "matched_count": 50,
+     "survives": true,
+     "part68_delta": 0.03151310677501083,
+     "part68_abs_difference": 0.0
+    },
+    {
+     "layer": 4,
+     "unit": 2831,
+     "attribution": 0.006266328447964042,
+     "delta": 0.03066901794565848,
+     "matched_max_abs_delta": 0.015415154529462542,
+     "matched_count": 50,
+     "survives": true,
+     "part68_delta": 0.03066901794565848,
+     "part68_abs_difference": 0.0
+    },
+    {
+     "layer": 3,
+     "unit": 4169,
+     "attribution": -0.006246235338039696,
+     "delta": -0.03630443004939083,
+     "matched_max_abs_delta": 0.021318040532570134,
+     "matched_count": 50,
+     "survives": true,
+     "part68_delta": -0.03630443004939083,
+     "part68_abs_difference": 0.0
+    },
+    {
+     "layer": 9,
+     "unit": 1740,
+     "attribution": -0.0061610033008037135,
+     "delta": -0.0293194119422097,
+     "matched_max_abs_delta": 0.013405251030596761,
+     "matched_count": 50,
+     "survives": true,
+     "part68_delta": -0.0293194119422097,
+     "part68_abs_difference": 0.0
+    },
+    {
+     "layer": 10,
+     "unit": 14,
+     "attribution": 0.005974160856567323,
+     "delta": 0.029065924801880368,
+     "matched_max_abs_delta": 0.029385216321730266,
+     "matched_count": 50,
+     "survives": false,
+     "part68_delta": 0.029065924801880368,
+     "part68_abs_difference": 0.0
+    }
+   ],
+   "surviving_count": 15
+  },
+  "29_776": {
+   "candidates": [
+    {
+     "layer": 5,
+     "unit": 25,
+     "attribution": -0.1347658715773529,
+     "delta": -0.00898019455052693,
+     "matched_max_abs_delta": 0.04257614108759585,
+     "matched_count": 50,
+     "survives": false,
+     "part68_delta": -0.00898019455052693,
+     "part68_abs_difference": 0.0
+    },
+    {
+     "layer": 6,
+     "unit": 159,
+     "attribution": -0.09220169593269627,
+     "delta": -0.006677625532219553,
+     "matched_max_abs_delta": 0.01912018440397366,
+     "matched_count": 50,
+     "survives": false,
+     "part68_delta": -0.006677625532219553,
+     "part68_abs_difference": 0.0
+    },
+    {
+     "layer": 27,
+     "unit": 3325,
+     "attribution": 0.08420257891217868,
+     "delta": 0.07688558521227555,
+     "matched_max_abs_delta": 0.008044824521344274,
+     "matched_count": 50,
+     "survives": true,
+     "part68_delta": 0.07688558521227555,
+     "part68_abs_difference": 0.0
+    },
+    {
+     "layer": 2,
+     "unit": 698,
+     "attribution": -0.07049755334931736,
+     "delta": -0.022287748446764784,
+     "matched_max_abs_delta": 0.016708344211081444,
+     "matched_count": 50,
+     "survives": true,
+     "part68_delta": -0.022287748446764784,
+     "part68_abs_difference": 0.0
+    },
+    {
+     "layer": 24,
+     "unit": 3949,
+     "attribution": 0.05642855276043216,
+     "delta": 0.04999210491215705,
+     "matched_max_abs_delta": 0.012099179521918586,
+     "matched_count": 50,
+     "survives": true,
+     "part68_delta": 0.04999210491215705,
+     "part68_abs_difference": 0.0
+    },
+    {
+     "layer": 0,
+     "unit": 2891,
+     "attribution": -0.05491825883852167,
+     "delta": -0.004438453502569479,
+     "matched_max_abs_delta": 0.004831866832593642,
+     "matched_count": 50,
+     "survives": false,
+     "part68_delta": -0.004438453502569479,
+     "part68_abs_difference": 0.0
+    },
+    {
+     "layer": 4,
+     "unit": 695,
+     "attribution": -0.051204854838336665,
+     "delta": -0.005314728458751232,
+     "matched_max_abs_delta": 0.004775327009454982,
+     "matched_count": 50,
+     "survives": true,
+     "part68_delta": -0.005314728458751232,
+     "part68_abs_difference": 0.0
+    }
+   ],
+   "surviving_count": 4
+  }
+ },
+ "predictions": {
+  "68.7": {
+   "holds": true,
+   "rule": "at least 5 L11 N8868 candidates survive, including L6 N753 and L7 N1169",
+   "status": "HOLDS"
+  },
+  "68.8": {
+   "holds": false,
+   "rule": "L27 N3325 and L24 N3949 survive, and at most 1 other L29 N776 candidate survives",
+   "status": "FAILS"
+  },
+  "68.9": {
+   "holds": true,
+   "rule": "L6 N159 does not survive for L29 N776",
+   "status": "HOLDS"
+  },
+  "68.10": {
+   "holds": true,
+   "rule": "every re-measured candidate Delta is within 0.005 of its Part 68 test-half value",
+   "status": "HOLDS"
+  }
+ },
+ "reading": {
+  "readable": true,
+  "note": null
+ },
+ "control_68_10": {
+  "tolerance": 0.005,
+  "holds": true
+ }
+}
