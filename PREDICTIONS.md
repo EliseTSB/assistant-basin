@@ -1907,10 +1907,10 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 69.1 | Control: zeroing the four makers gives a positive Dg (Google minus Alibaba logit gap) that exceeds all 50 of Part 66's random four-unit sets. | | |
-| 69.2 | Control: unchanged, mean maker-token mass over the 24 questions is at least 0.5, and Alibaba is the top maker token on at least 20 of 24. | | |
+| 69.1 | Control: zeroing the four makers gives a positive Dg (Google minus Alibaba logit gap) that exceeds all 50 of Part 66's random four-unit sets. | HELD (first readout) | makers Dg 2.15, above all 50 random sets (max 0.039). Rescored under Amendment 1 below. |
+| 69.2 | Control: unchanged, mean maker-token mass over the 24 questions is at least 0.5, and Alibaba is the top maker token on at least 20 of 24. | FAILED (first readout) | mean seven-maker mass 0.048 after "I was developed by" (Alibaba top on 21/24); 69.3-69.6 not read. See Amendment 1. |
 | 69.3 | Claude: zeroing L11 N8868 alone does NOT beat its 50 activity-matched single units (p above 0.05 in the positive direction). | | |
 | 69.4 | Claude: zeroing L29 N776 alone gives a positive Dg that beats all 50 of its activity-matched single units. | | |
 | 69.5 | Claude: zeroing the 7 drivers that lower L11 N8868 does not beat their 50 matched sets in either direction (two-sided p above 0.1). | | |
 | 69.6 | Claude: zeroing the 2 late drivers that raise L29 N776 does not beat their 50 matched sets in either direction (two-sided p above 0.1). | | |
-
+| 69.2a | Control (Amendment 1): with the opening "I was developed by **", unchanged mean mass on the eight no-space tokens is at least 0.5, and Al or T is the highest of the eight on at least 20 of 24. | | |

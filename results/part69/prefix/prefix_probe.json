@@ -1,0 +1,79 @@
+{
+ "I was developed by": {
+  "mean_mass": 0.04886458114682076,
+  "min_mass": 0.002159763127565384,
+  "alibaba_top_of_seven": 21,
+  "top3_token_counts": {
+   " the": 24,
+   " **": 23,
+   " a": 9,
+   " Alibaba": 8,
+   " Tong": 4,
+   " Google": 4
+  }
+ },
+ "I was developed by the": {
+  "mean_mass": 0.007040911111592625,
+  "min_mass": 0.0011408340651541948,
+  "alibaba_top_of_seven": 23,
+  "top3_token_counts": {
+   " **": 24,
+   " Tong": 22,
+   " Q": 14,
+   " Chinese": 7,
+   " research": 4,
+   " team": 1
+  }
+ },
+ "I am Qwen, a large language model developed by": {
+  "mean_mass": 0.15679489014049372,
+  "min_mass": 0.002167133614420891,
+  "alibaba_top_of_seven": 24,
+  "top3_token_counts": {
+   " Alibaba": 23,
+   " **": 22,
+   " Tong": 14,
+   " the": 13
+  }
+ },
+ "I was created by": {
+  "mean_mass": 0.07027170217285554,
+  "min_mass": 0.0017555109225213528,
+  "alibaba_top_of_seven": 22,
+  "top3_token_counts": {
+   " the": 24,
+   " **": 23,
+   " Alibaba": 13,
+   " a": 8,
+   " Tong": 2,
+   " Google": 2
+  }
+ },
+ "My developer is": {
+  "mean_mass": 0.21093753880510727,
+  "min_mass": 0.08171332627534866,
+  "alibaba_top_of_seven": 24,
+  "top3_token_counts": {
+   " **": 24,
+   " Alibaba": 23,
+   " Tong": 22,
+   " the": 2,
+   " a": 1
+  }
+ },
+ "The company that made me is": {
+  "mean_mass": 0.164537936487856,
+  "min_mass": 0.005810192786157131,
+  "alibaba_top_of_seven": 24,
+  "top3_token_counts": {
+   " **": 21,
+   " Alibaba": 21,
+   " Tong": 11,
+   " a": 10,
+   " Q": 4,
+   " the": 2,
+   " called": 1,
+   " an": 1
+  }
+ }
+}

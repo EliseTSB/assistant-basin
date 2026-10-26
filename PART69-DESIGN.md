@@ -48,3 +48,26 @@ A condition's empirical p is (1 + null sets with Dg at or beyond its Dg in the p
 - If 69.1 or 69.2 fails, nothing else is read until the readout is checked.
 - A null result for a driver set means its effect on the answer, through this readout, is no larger than equally
   active units'; it does not rule out effects on other answers or under generation.
+
+## Amendment 1 (written 2026-10-26 04:2x CT, after the first run failed 69.2, before any rescoring)
+
+The first run (results/part69/full) held 69.1 and failed 69.2: after `I was developed by`, the seven maker tokens held
+4.8% of the next-token probability. By the reading rule, 69.3 to 69.6 were not read; the first run's verdicts stand as
+recorded. I did see that run's other Dg values before writing this amendment (they are in its score69.md); the
+predictions below are unchanged from the registered rows, and the only choice made here is the opening, chosen on the
+unchanged model's mass alone.
+
+The readout check (`part69/probe_prefix69.py`, unchanged model only, `results/part69/prefix/`) showed the model's next
+tokens are mostly ` **` (bold formatting before the name), ` the` and ` Tong` (Tongyi Lab, Alibaba's). Ending the
+opening with `**` and reading names without a leading space puts 0.92 to 0.99 of the probability on eight tokens.
+
+Changes, and nothing else:
+- Opening: `I was developed by **` (the registered opening plus `**`; mass 0.964 in the probe). Not chosen:
+  `I am Qwen, a large language model developed by **` (mass 0.993), because it names the model in the prompt.
+- Readout tokens: the first token of each name WITHOUT a leading space (`Al`, `Google`, `Open`, `Anth`, `Deep`,
+  `Meta`, `Microsoft`), plus `T` (the first token of `Tongyi`), eight in all. g = logit(Google) - logit(Al), as
+  registered.
+- 69.2 becomes: unchanged, mean mass on the eight tokens is at least 0.5, and an Alibaba-family token (`Al` or `T`) is
+  the highest of the eight on at least 20 of the 24 questions.
+- 69.1 and 69.3 to 69.6 are scored on the new readout exactly as registered; the run is repeated in full
+  (`results/part69/a1`) with the same conditions and seeds.
