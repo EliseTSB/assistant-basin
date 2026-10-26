@@ -1,6 +1,6 @@
 # Part 74: does L24 N3949 cut the Google fallback through L27 N3325?
 
-Written 2026-10-26 15:30 CT by Claude, before any code or run. Predictions 74.1 to 74.3 are in PREDICTIONS.md and are
+Written 2026-10-26 by Claude, before any code or run; committed as 35b8a91 (15:27 CT). Predictions 74.1 to 74.3 are in PREDICTIONS.md and are
 pushed before the run.
 
 Size: 24 questions x 26 forward passes (4 conditions, 20 nulls, 2 recording passes) = 624 forward passes, no sampling.
@@ -41,7 +41,7 @@ writes Google, alone takes them to 8. Part 74 asks whether L24 N3949's effect ru
 - Only one mediator is patched. "Other routes" means everything except L27 N3325's own activation.
 - The prediction direction for 74.2 and 74.3 is a guess: nothing measured so far says whether L24 N3949 feeds L27 N3325.
 
-## Amendment 1 (2026-10-26 15:33 CT, after writing the code, before any run)
+## Amendment 1 (written after the code, before any run; committed with the code in eece243, 15:31 CT; the run started 15:31:37)
 
 C, E and A_self run in a second forward pass with a different batch shape from A, and bf16 results can differ slightly
 between batch shapes. So a fifth row, `A_self` (A with L27 N3325 patched to its own value in A), measures the noise of
@@ -50,3 +50,10 @@ the patching itself. 74.2 and 74.3 are read only if |mean g(A_self) - g(A)| is u
 The size line above miscounts: per question there are two batched forward passes, the first with 22 rows (A, B, 20
 nulls) and the second with 3 (C, E, A_self), so 48 forward passes and 600 rows in all. There is no separate recording
 pass; A's and B's L27 N3325 values are recorded during the first pass.
+
+## Review corrections (2026-10-26, after the run; the text above is unchanged apart from the two times)
+
+The two in-file times above were typed rather than read from the clock and were later than the commits that contain
+them, so they now cite the commits. "A per-position patch is exact" overstates it: the A_self row measures the patch's
+batch-shape noise at about -0.02. A cold review (Haiku, after the run) also asked for named effects, intervals, a run
+record and a mediator-specificity control; the first three are in the README, the fourth is Part 74b.

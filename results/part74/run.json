@@ -1,0 +1,17 @@
+{
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "tool": "part74/part74.py",
+  "tool_sha256": "acca3992f8d0a234a2475cc048bccd45148b2a7b836303c750ebb21356d54da5",
+  "tool_commit": "eece243",
+  "device": "xpu (Intel Arc A770)",
+  "dtype": "bfloat16",
+  "batch_sizes": {"pass_one": 22, "pass_two": 3},
+  "matched_json": "results/part68/b/matched.json",
+  "forward_passes": 48,
+  "rows": 600,
+  "job_start": "2026-10-26 15:31:37 CT",
+  "job_end": "2026-10-26 15:32:37 CT",
+  "wall_time_seconds_including_model_load": 60,
+  "note": "Written after the run from the GPU job log (job.log); the runner itself does not write a run record."
+}

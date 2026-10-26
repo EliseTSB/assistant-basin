@@ -1248,36 +1248,47 @@ nulls per layer hold 15 and 14 distinct units. The comparisons with the pair are
 
 Files: `part73/` (runner, scorer, tests), `results/part73/` (all 1,680 answers and the score).
 
-### Part 74: about two-thirds of L24 N3949's effect runs through L27 N3325 (2026-10-26)
+### Part 74: on a forced-opening readout, most of L24 N3949's effect runs through L27 N3325 (2026-10-26)
 
 Pre-registered in `PART74-DESIGN.md`. With the four maker neurons zeroed, Part 74 asks whether L24 N3949 lowers the
 Google answers through L27 N3325, the unit that writes Google. It uses Part 72's prompts (Part 66's 24 held-out
 questions, each followed by `I was developed by **`) and readout: g, the Google logit minus the Alibaba logit at the
-next token. The prompt is fixed, so each condition sees the same tokens and L27 N3325's activation can be patched
-exactly at every position.
+next token. The prompt is fixed, so each condition sees the same tokens and L27 N3325's activation can be patched at
+every position; the batch-shape noise of the patch is about -0.02 (the A_self row, Amendment 1). Run record:
+`results/part74/run.json` (revision 851bf6e8, bf16, A770).
 
 | With the four makers zeroed | Mean change in g against makers only |
 |---|---:|
 | L24 N3949 zeroed (total effect) | -2.23 |
-| L24 N3949 zeroed, L27 N3325 held at its makers-only values (direct part) | -0.66 |
-| L24 N3949 left alone, L27 N3325 set to its L24-zeroed values (indirect part) | -1.42 |
+| L24 N3949 zeroed, L27 N3325 held at its makers-only values (natural direct effect) | -0.66 |
+| L24 N3949 left alone, L27 N3325 set to its L24-zeroed values (pure indirect effect) | -1.42 |
 | L27 N3325 patched to its own makers-only values (noise check) | -0.02 |
-| a matched layer-24 unit zeroed instead (20 nulls) | -0.09 to +0.19 |
+| a matched layer-24 unit zeroed instead (20 draws of 14 distinct units) | -0.09 to +0.19 |
 
-**Results.** Zeroing L24 N3949 lowers g in all 24 questions, more than any of the 20 matched layer-24 units, and the
-eight names hold 98% of the next-token probability (74.1 held). Holding L27 N3325 at its makers-only values leaves 29%
-of the effect (74.2 held); moving L27 N3325 alone to its L24-zeroed values reproduces 64% (74.3 held). The two parts
-sum to 93% of the total, so on this readout they roughly add up. L27 N3325 writes Google when its activation is
-negative (Part 71); at the last position zeroing L24 N3949 moves it from -4.46 to -2.05 on average, toward zero in
-all 24 questions.
+**Results.** Zeroing L24 N3949 lowers g in all 24 questions, more than any of the 20 matched layer-24 draws (14
+distinct units). In A (makers only) the eight names hold 98% of the next-token probability; with L24 N3949 also zeroed
+they hold 93% on average (lowest 76%). 74.1 held. 74.2 and 74.3 were gated by Amendment 1 and read only because
+|A_self minus A| (0.016) was under a tenth of |TE| (0.22). Holding L27 N3325 at its makers-only values leaves 29% of
+the effect (95% question-bootstrap interval 25 to 33%; 74.2 held). Moving L27 N3325 alone to its L24-zeroed values
+reproduces 64% (59 to 68%; 74.3 held). The total indirect effect, TE minus the direct effect, is 71% (67 to 75%); the
+direct and pure indirect parts leave a 7% non-additive remainder. Per question, the medians are 31% and 64%
+(`part74/shares74.py`, `results/part74/shares.json`). L27 N3325's direct readout pushes Google when its activation is
+negative (Part 71). At the last position, with the makers zeroed, zeroing L24 N3949 moves it from -4.46 to -2.05 on
+average, toward zero in all 24 questions (Part 72 quotes -3.53 for the unaltered model on Part 69's prompts).
 
-**Reading.** On this readout, about two-thirds of L24 N3949's effect on the Google-versus-Alibaba gap runs through
-L27 N3325's activation and about a third by other routes. This is a likely answer to Part 73's open question of how a
-unit that writes Apple and Microsoft takes part in the Google answers.
+**Reading.** On the Google-minus-Alibaba gap after the forced opening, about two-thirds of L24 N3949's effect runs
+through L27 N3325's activation; of the rest, 29% is the direct part and 7% a non-additive remainder. This is one
+candidate route for Part 73's open question of how a unit whose direct readout is Apple and Microsoft takes part in the
+Google answers. It was tested only on this gap: the sampled Google counts were not re-run, and a gap cannot separate
+Google falling from Alibaba rising (Part 73's Alibaba-family answers rose from 151 to 168 when L24 N3949 was zeroed).
 
-**Limits.** One forced opening and one next token, not sampled answers; Part 73's sampled counts are not re-tested.
-Only L27 N3325 is patched, so "other routes" covers every other path, including other units L24 N3949 may feed. The
-result says nothing about the model with the makers intact. The prediction direction was a guess, as the design says.
+**Limits.** One forced opening and one next token, not sampled answers. The per-name logits were not saved, only the
+gap and the mass on the eight names. Only L27 N3325 is patched, and no matched layer-27 unit was patched as a control,
+so this alone does not show that L27 N3325 is specific as a mediator (Part 74b, below, tests that). Zero-ablation with
+the makers already zeroed puts the model off its usual distribution, and nothing here describes the model with the
+makers intact. The readout resolves about 0.125 nats per question (bf16 logits), so the null and noise values sit at
+that limit. The prediction direction was a guess, as the design says. The bootstrap resamples questions only, from one
+model, one revision and one family of 24 questions.
 
 Files: `part74/` (runner, tests), `results/part74/` (the summary and every per-question readout).
 
