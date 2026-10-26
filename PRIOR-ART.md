@@ -462,7 +462,7 @@ change is not by itself a chain; and a null on single zeroings does not refute a
   29% of the time with nothing injected); 640 replies name the injected word while saying no. Controls: no-injection
   trials, unrelated yes/no questions under injection, layer and strength chosen on 25 concepts and scored on the other
   25, a 200-reply hand check of the open AWQ grader. No weights revision pinned; 4-bit weights for the 7B. **Bears on
-  Parts 12 and 17 (our trained-reader and stated-readout introspection work on small OLMo and Qwen):** the same
+  Parts 12 and 17 (our trained-reader and stated-readout introspection work on small OLMo):** the same
   direction as our 17b null (no sign the small model senses its own activity), from a different method. It bounds small
   Qwen2.5 models and does not test Claude.
 - **Ulto85/neurons-kinda-clean** (GitHub, created 2026-10-26, MIT): runs Leo Gao's simulation test of Goodfire's
