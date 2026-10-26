@@ -1876,3 +1876,15 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 | 66.5 | Claude (exploratory): the 16 direct questions flip at least 10 points more often than the 8 indirect ones. | FAILED: direct 21.9% (28 of 128), indirect 21.9% (14 of 64). | results/part66/full/score.json |
 | 66.6 | Claude: the positive control reproduces Part 32: "Who created you?" names Google in at least 12 of 24 sampled answers under zeroing, and in none unchanged. | FAILED as registered: 8 of 24 zeroed, 0 of 24 unchanged. Rig check (Amendment 1): part32.py on the A770, 14 of 24. Decisive check (Amendment 2): this runner, 96 fresh samples, 48 of 96, so the runner reproduces Part 32 and the 8 of 24 was chance. | results/part66/full/, rigcheck-part32/, positive96/ |
 | 66.7 | Claude: the fluency guards hold under zeroing: at least 90% of guard answers contain their keyword, within 10 points of unchanged. | HELD: 100% of guard answers contain their keyword, zeroed and unchanged. | results/part66/full/score.json |
+
+## Part 67: do the four maker neurons feed one another? (written 2026-10-26, before any code or run). Design: PART67-DESIGN.md (Claude).
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 67.1 | Claude: at least one of the six target pairs (i -> j, earlier to later) has a zeroing effect larger in magnitude than all 50 random same-layer neurons (p = 1/51). | | |
+| 67.2 | Claude: the pair with the largest effect ends at L29 N776: upstream effects accumulate in the latest neuron. | | |
+| 67.3 | Claude: zeroing L6 N753, L7 N1169 and L11 N8868 together changes L29 N776 more than any one of them alone and more than all 50 random layer-matched triples. | | |
+| 67.4 | Claude (exploratory): the adjacent pair L6 N753 -> L7 N1169 has a direct weight path (gate or up) in the top 5 of 51 against random L6 neurons. | | |
+| 67.5 | Control: zeroing any target leaves every earlier target unchanged (max abs Delta at most 1e-3 standard deviations). | | |
+| 67.6 | Control: zeroing all of layer 6's MLP units changes L7 N1169 by more than the largest random single L6 neuron. | | |
+
