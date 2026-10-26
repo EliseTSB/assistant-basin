@@ -49,8 +49,10 @@ def verdicts(dg: dict[str, float], nulls: dict[str, list[float]], baseline_mass:
     return result
 
 def _top_alibaba(row: dict) -> bool:
+    """Alibaba-family token highest of the readout: index 0, or index 7 (Tongyi) under Amendment 1's eight tokens."""
     logits = row['readout_logits']
-    return int(max(range(7), key=lambda i: logits[i])) == 0
+    top = int(max(range(len(logits)), key=lambda i: logits[i]))
+    return top == 0 or (len(logits) == 8 and top == 7)
 
 def score_directory(directory: str | Path) -> dict:
     root = Path(directory)
@@ -110,7 +112,7 @@ def score_directory(directory: str | Path) -> dict:
     md += ['', '## Verdicts', '', '| prediction | verdict | details |', '|---|---|---|']
     for key, entry in scores.items():
         md.append(f"| {key} | {entry['verdict']} | {entry.get('criterion', '')} |")
-    md += ['', f'Unchanged mean seven-maker mass: {mass:.6g}; Alibaba top token: {top_count}/24.',
+    md += ['', f'Unchanged mean maker-token mass: {mass:.6g}; Alibaba top token: {top_count}/24.',
            'Positive-control question (index 24) is reported separately and is excluded from Dg and verdicts.']
     (root / 'score69.md').write_text('\n'.join(md) + '\n', encoding='utf-8')
     return answer

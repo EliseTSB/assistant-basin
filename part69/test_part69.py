@@ -156,3 +156,12 @@ def test_main_plan_after_argparse_without_the_model():
     for family in ('null_l11', 'null_l29', 'null_l11down', 'null_l29up'):
         assert sum(i.startswith(family + '_k') for i in ids) == 50, family
 
+
+def test_amendment1_alibaba_family_top():
+    # Eight tokens: index 7 is Tongyi's first token and counts as Alibaba-family; seven tokens keep the old rule.
+    assert score69._top_alibaba({'readout_logits': [0, 1, 0, 0, 0, 0, 0, 2]}) is True
+    assert score69._top_alibaba({'readout_logits': [3, 1, 0, 0, 0, 0, 0, 2]}) is True
+    assert score69._top_alibaba({'readout_logits': [0, 3, 0, 0, 0, 0, 0, 2]}) is False
+    assert score69._top_alibaba({'readout_logits': [0, 1, 0, 0, 0, 0, 2]}) is False
+    assert score69._top_alibaba({'readout_logits': [2, 1, 0, 0, 0, 0, 0]}) is True
+

@@ -24,6 +24,10 @@ MAKERS = [(6, 753), (7, 1169), (11, 8868), (29, 776)]
 L11_DRIVERS = [(10, 4133), (10, 54), (7, 296), (10, 3551), (10, 8663), (3, 4169), (9, 1740)]
 L29_DRIVERS = [(27, 3325), (24, 3949)]
 MAKER_NAMES = ['Alibaba', 'Google', 'OpenAI', 'Anthropic', 'DeepSeek', 'Meta', 'Microsoft']
+# Amendment 1 (PART69-DESIGN.md): opening ends in '**', names read without a leading space, Tongyi's first token added
+# as an eighth. Indices 0 (Alibaba) and 1 (Google) are unchanged, so g is defined the same way.
+A1_OPENING = 'I was developed by **'
+A1_NAMES = MAKER_NAMES + ['Tongyi']
 
 def _runtime():
     import torch
@@ -172,15 +176,17 @@ def main():
     parser.add_argument('--device', choices=['xpu', 'cuda', 'cpu'], default='xpu')
     parser.add_argument('--batch', type=int, default=32)
     parser.add_argument('--max-gpu-gb', type=float, default=14)
+    parser.add_argument('--amendment1', action='store_true', help='Amendment 1 readout (opening ending in **, eight tokens)')
     args = parser.parse_args()
     if args.batch < 1: parser.error('--batch must be positive')
     torch, part25, nr, part66 = _runtime()
     tok, model = nr.load_model(MODEL, REVISION, args.device)
     _, layers, _ = nr.find_text_layers(model)
     qs = part66.DIRECT + part66.INDIRECT + part66.POSITIVE
-    prompts = [part25._token_ids(tok, nr.build_prompt(tok, q, False) + 'I was developed by') for q in qs]
-    readout_ids = [part25._token_ids(tok, ' ' + name)[0] for name in MAKER_NAMES]
-    if len(set(readout_ids)) != 7: raise ValueError('maker names share a first token')
+    opening, names, lead = (A1_OPENING, A1_NAMES, '') if args.amendment1 else ('I was developed by', MAKER_NAMES, ' ')
+    prompts = [part25._token_ids(tok, nr.build_prompt(tok, q, False) + opening) for q in qs]
+    readout_ids = [part25._token_ids(tok, lead + name)[0] for name in names]
+    if len(set(readout_ids)) != len(readout_ids): raise ValueError('maker names share a first token')
     out = Path(args.out); out.mkdir(parents=True, exist_ok=True)
     matched = json.loads(Path(args.matched).read_text(encoding='utf-8'))
     magnitudes = _measure_magnitudes(model, layers, prompts, args.device)
@@ -199,7 +205,8 @@ def main():
     manifest_path = out / 'run.json'
     manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
     manifest.update({'model': MODEL, 'revision': REVISION, 'positive_control_index': 24,
-                     'heldout_question_count': 24, 'readout_names': MAKER_NAMES,
+                     'heldout_question_count': 24, 'readout_names': names, 'opening': opening, 'amendment1': bool(args.amendment1),
+                     'readout_tokens': [tok.decode([i]) for i in readout_ids],
                      'random_maker_null_seeds': list(range(6600, 6650)),
                      'driver_null_families': {'l11_down': 5, 'l29_up': 6}})
     manifest_path.write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
