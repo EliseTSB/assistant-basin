@@ -1944,6 +1944,6 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 | 72.4 | Control: at k = 8 the full-vocabulary mass on the eight name tokens, averaged over the 24 questions, is still at least 0.5. | HELD | mass on the eight tokens at k = 8: 0.971. |
 | 73.1 | Control: makers-only held-out Google answers are 26 to 50 of 192 (Part 70: 38), and the guard keywords match in at least 22 of 24 answers for both target_plus_l27 and target_plus_l24. | UNSCORED | |
 | 73.2 | Claude: makers + L27 N3325 alone gives at most 12 of 192 held-out Google answers (Part 70's pair: 4). | UNSCORED | |
-| 73.3 | Claude: makers + L27 N3325 alone has a Google rate at or below that of at most 2 of the 20 matched layer-27 single units. | UNSCORED | |
+| 73.3 | Claude: at most 2 of the 20 matched layer-27 single units have a Google rate at or below that of makers + L27 N3325 alone (corrected before any code; see PART73-DESIGN.md). | UNSCORED | |
 | 73.4 | Claude: makers + L24 N3949 alone gives at least 24 of 192 held-out Google answers (it does not carry the fallback on its own). | UNSCORED | |
 

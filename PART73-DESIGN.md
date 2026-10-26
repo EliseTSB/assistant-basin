@@ -33,3 +33,15 @@ unaltered model. Part 73 asks which unit the fallback depends on, in sampled ans
 - 73.1 is the control. If it fails, nothing else is read until the rig is checked.
 - 73.2 and 73.3 decide whether L27 N3325 alone carries the fallback; 73.4 whether L24 N3949 alone does.
 - If both 73.2 and 73.4 fail, the fallback needs both units together, which Part 70 cannot distinguish from either.
+
+## Correction (08:02 CT, before any code or run)
+
+73.3 as first pushed (028cc89) read "makers + L27 N3325 alone has a Google rate at or below that of at most 2 of the 20
+matched units", which inverts the intended test. The intent, matching Part 70's 70.5, is that at most 2 of the 20
+matched single units have a Google rate at or below makers + L27 N3325 alone. The row now says that. No code, run or
+data existed when this was corrected.
+
+
+Note on the nulls: Part 70 drew its matched pairs with replacement, so the 20 layer-27 nulls hold 15 distinct units and
+the 20 layer-24 nulls 14. A repeated unit runs under its own condition id and seed, so it counts as a separate sample of
+the same unit; 73.3 is read over all 20 as registered.
