@@ -1149,7 +1149,7 @@ same layer.
 
 | Neuron | Sign | Rank of "Google" (of ~248,000 tokens) | Top tokens it writes |
 |---|:---:|---:|---|
-| L27 N3325 | - | 1 | ` Google`, `Google`, ` google`, `google`, `谷歌` (Google), ` GOOGLE`, `/google` |
+| L27 N3325 | - | 1 | ` Google`, `Google`, ` google`, `google`, `谷歌` (Google), ` GOOGLE` |
 | L24 N3949 | + | 36 | `Apple`, ` Microsoft`, `微软` (Microsoft), `苹果` (Apple), ` Apple`, `Microsoft`, ` Canonical` |
 | 100 random units, layers 24 and 27 | | best 1,126, median 103,163 | |
 | L6 N753 (maker) | + | 23,279 | `幻觉` (hallucination), ` AI`, ` Claude`, `的人工智能` (AI), ` compet` |
