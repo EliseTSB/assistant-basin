@@ -91,7 +91,7 @@ Claude, 2026-10-18; rewritten 2026-10-21.)
 - In Qwen3-1.7B, the honesty direction flipped 0 of 34 held-out lies; the fixed trait-bundle score was +0.072, rank 18 of 40. (50)
 - For Pythia-410m, the novel-item kiki/bouba AUC rose from 0.387 at step 1,000 to 0.898 at step 143,000. Pythia-160m never reached 0.70. (48d)
 
-**How we learned to measure.** 546 predictions so far, each pushed before its run: 260 held, 191 failed, 10 mixed,
+**How we learned to measure.** 553 predictions so far, each pushed before its run: 262 held, 196 failed, 10 mixed,
 9 untestable or read by a rule, 76 not yet scored (`count_predictions.py`, 2026-10-26). The methods
 that came out of the failures: a control must be shown able to fail; a judge model can agree for the same bias it was
 meant to check (it reads left to right too); a word filter misses meaning (a passage about a monolith in "neutral" text
@@ -1074,6 +1074,44 @@ cannot find drivers that act only jointly, and a first-order attribution misses 
 L29 N776's weak correlation suggests is common for deep targets: its true driver list may extend beyond these 20.
 
 Files: `part68/` (runners, scorers, tests, build notes), `results/part68/full/` and `results/part68/b/`.
+
+### Part 69: two late neurons hold up "Google" as an answer, and L11 N8868 and its drivers move the maker answer (2026-10-26)
+
+Pre-registered in `PART69-DESIGN.md` (Amendment 1 written after the first readout failed its control, before
+rescoring). Parts 67 and 68 traced links between neurons; Part 69 asks whether those links move what Qwen3.5-4B says
+made it. The answer is forced to begin `I was developed by **` after each of Part 66's 24 held-out maker questions,
+and the readout is the gap between the next-token logits of `Google` and `Al` (the first token of Alibaba). Each
+zeroing is compared with 50 activity-matched sets (for the four makers together, Part 66's own 50 random sets).
+
+| Zeroed | Change in Google - Alibaba gap | 50 matched sets: range | Biggest per-token moves |
+|---|---:|---|---|
+| the four maker neurons | +2.78 | -0.04 to 0.05 | Google +2.30, OpenAI +1.77, Tongyi -0.97 |
+| L11 N8868 alone | +0.31 | -0.14 to 0.13 | Google +0.28, Tongyi -0.22 |
+| L29 N776 alone | +0.005 | -0.06 to 0.03 | none above 0.01 |
+| L11 N8868's 7 drivers that raise it | +0.78 | -0.61 to 0.28 | Tongyi -1.08, Meta +0.57, Google +0.55 |
+| L27 N3325 and L24 N3949 | -3.45 | -0.20 to 0.40 | Google -3.99, Microsoft -2.37, Meta -1.38 |
+
+**Results.** The two controls held: zeroing the four makers moves the answer toward Google far beyond every random
+set (69.1), and with this opening the eight name tokens hold 96% of the probability, with an Alibaba-family token on
+top for all 24 questions (69.2a). All four of my predictions failed. L11 N8868 alone moves the answer (69.3 failed),
+and so do its drivers (69.5 failed): zeroing the seven drivers whose zeroing lowers L11 N8868 takes probability from
+Tongyi and gives it to Google and Meta, the same direction as zeroing L11 N8868 itself. L29 N776 alone does nothing
+measurable on this readout (69.4 failed). The largest effect in the study is the two late units Part 68 found as
+drivers of L29 N776 (69.6 failed): zeroing them cuts the Google logit by about 4, and Google's share of the eight names
+falls from 7% to 0.2%, while Alibaba and Tongyi barely move. They hold up "Google" (and Microsoft, Meta) as candidate
+answers, and since L29 N776 itself has no effect here, that is not through it.
+
+**Readout.** The registered opening, `I was developed by`, failed its control: the seven names held 4.8% of the
+probability, because the model's next token is ` **` (bold formatting), ` the` or ` Tong`. An unchanged-model probe
+(`part69/probe_prefix69.py`) chose the new opening on probability mass alone. The first readout's numbers, not read by
+its rule, point the same way for every condition (`results/part69/full/score69.md`).
+
+**Limits.** One forced opening and a single next token, not sampled answers; with 50 null sets the smallest two-sided
+p is 0.039, though the effects for the makers, the L11 drivers and the late pair lie outside the whole null range. One
+model, English prompts. Whether L27 N3325 and L24 N3949 change sampled answers is the next test.
+
+Files: `part69/` (runner, scorer, prefix probe, tests, build notes), `results/part69/full/`, `results/part69/a1/`,
+`results/part69/prefix/`.
 
 ### Running or designed (2026-10-21)
 
