@@ -439,3 +439,16 @@ Wilcoxon p ≤ 1.1e-15, each beating 99 to 100 of 100 random same-layer neurons 
 degeneracy guards, replicated on Ouro-1.4B-Thinking. The author states the five were chosen for steerability, so this
 is an existence claim. Clamping one loop mostly fails and clamping all loops works. Same control shape as our Parts 25
 and 62; a different architecture class. No contact made; contact is Elise's call.
+
+## Parts 67 and 68 (neuron-to-neuron effects among the maker neurons; driver search), checked 2026-10-26 before the runs
+
+Muse searched (council `muse-literature-2026-10-26` #4). No exact match: zeroing a named upstream neuron and reading a
+named downstream neuron against random same-layer neurons, plus a weight check, appears first of its kind as a
+combination. Closest: TraceRouter (Shi et al., arXiv:2601.21900) zeroes SAE-derived source neurons and ranks every
+downstream shift, with a path-level random control; Arora et al. (arXiv:2601.22594) builds neuron-to-neuron edges from
+gradient attribution (RelP/IG) with no random arm, and separates direct from total effect: our weight path is the direct
+term and our zeroing the total, so a mismatch is expected; Dunefsky et al. (arXiv:2406.11944) did weight-based circuits
+for transcoder features. Internal: Part 53 (a 5x5 clamp grid between two Qwen3-1.7B neurons, whose interaction
+predictions failed). Traps Muse named, read against our design: the null is matched by layer, not by activation level
+(a limitation we state); zeroing one neuron can unmask a backup (the Hydra effect, arXiv:2610.04017), so a downstream
+change is not by itself a chain; and a null on single zeroings does not refute a chain that only acts jointly.
