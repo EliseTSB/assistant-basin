@@ -10,6 +10,10 @@ import json
 import sys
 from pathlib import Path
 
+# Run as a script, Python puts this folder first on sys.path, where `part74` is part74/part74.py rather than the folder;
+# drop it so the folder is found (the 15:44 A770 launch failed on exactly this, and pytest hides it).
+_HERE = Path(__file__).resolve().parent
+sys.path[:] = [p for p in sys.path if not (p and Path(p).resolve() == _HERE)]
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from part74 import part74 as p74  # noqa: E402
 

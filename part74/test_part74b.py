@@ -88,3 +88,13 @@ def test_startup_reaches_model_load(tmp_path, monkeypatch):
     monkeypatch.setattr(sys, 'argv', ['part74b.py', str(tmp_path / 'out'), str(MATCHED), 'cpu'])
     with pytest.raises(_Stop):
         p74b.main()
+
+
+def test_runs_as_a_script():
+    """Run the file the way the GPU job does, so module-level imports are exercised without pytest's sys.path."""
+    import subprocess
+    r = subprocess.run([sys.executable, str(ROOT / 'part74' / 'part74b.py'), '--help'], capture_output=True, text=True,
+                       cwd=str(ROOT.parent))
+    assert r.returncode == 0, r.stderr
+    assert 'usage: part74b.py' in r.stdout
+
