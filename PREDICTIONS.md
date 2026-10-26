@@ -1881,12 +1881,12 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 67.1 | Claude: at least one of the six target pairs (i -> j, earlier to later) has a zeroing effect larger in magnitude than all 50 random same-layer neurons (p = 1/51). | | |
-| 67.2 | Claude: the pair with the largest effect ends at L29 N776: upstream effects accumulate in the latest neuron. | | |
-| 67.3 | Claude: zeroing L6 N753, L7 N1169 and L11 N8868 together changes L29 N776 more than any one of them alone and more than all 50 random layer-matched triples. | | |
-| 67.4 | Claude (exploratory): the adjacent pair L6 N753 -> L7 N1169 has a direct weight path (gate or up) in the top 5 of 51 against random L6 neurons. | | |
-| 67.5 | Control: zeroing any target leaves every earlier target unchanged (max abs Delta at most 1e-3 standard deviations). | | |
-| 67.6 | Control: zeroing all of layer 6's MLP units changes L7 N1169 by more than the largest random single L6 neuron. | | |
+| 67.1 | Claude: at least one of the six target pairs (i -> j, earlier to later) has a zeroing effect larger in magnitude than all 50 random same-layer neurons (p = 1/51). | HELD: all six pairs exceed all 50 random same-layer neurons (p = 1/51 each); the null is matched by layer only, not by activation level (see the Part 67b amendment). | results/part67/full/score.md |
+| 67.2 | Claude: the pair with the largest effect ends at L29 N776: upstream effects accumulate in the latest neuron. | FAILED: the largest effect ends at L11 N8868 (L6 -> L11 -0.114, L7 -> L11 +0.103 SD); the largest into L29 N776 is -0.016. | results/part67/full/score.json |
+| 67.3 | Claude: zeroing L6 N753, L7 N1169 and L11 N8868 together changes L29 N776 more than any one of them alone and more than all 50 random layer-matched triples. | FAILED: joint -0.0147 SD on L29 N776, smaller than the largest single (L7 -0.0159); it does exceed all 50 random triples (max 0.0044). The single effects partly cancel (+, -, -). | results/part67/full/score.json |
+| 67.4 | Claude (exploratory): the adjacent pair L6 N753 -> L7 N1169 has a direct weight path (gate or up) in the top 5 of 51 against random L6 neurons. | HELD: L6 N753 -> L7 N1169 gate-path rank 3 of 51 (up rank 17). Also L7 -> L11 ranks 1 on both gate and up. | results/part67/full/weights.json |
+| 67.5 | Control: zeroing any target leaves every earlier target unchanged (max abs Delta at most 1e-3 standard deviations). | HELD: every earlier target unchanged exactly (max abs Delta 0.0). | results/part67/full/score.json |
+| 67.6 | Control: zeroing all of layer 6's MLP units changes L7 N1169 by more than the largest random single L6 neuron. | HELD: zeroing all of layer 6 moves L7 N1169 by -0.035 SD against a random single-neuron maximum of 0.0026. | results/part67/full/score.json |
 
 ## Part 68: which neurons drive the later maker neurons? (written 2026-10-26, before any code or run). Design: PART68-DESIGN.md (Claude).
 

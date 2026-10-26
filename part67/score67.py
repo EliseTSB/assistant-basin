@@ -9,6 +9,7 @@ import statistics
 
 TARGETS = [(6,753),(7,1169),(11,8868),(29,776)]
 PAIRS = [(a,b) for a in TARGETS for b in TARGETS if a[0] < b[0]]
+UPSTREAM = TARGETS[:3]  # Claude, 2026-10-26: used at the 67.3 step but never defined (NameError on the first score)
 SEEDS = list(range(6700,6750))
 
 
