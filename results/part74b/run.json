@@ -1,0 +1,16 @@
+{
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "tool": "part74/part74b.py",
+  "tool_sha256": "254ed8dc3c7c2c72103e7e74dbb1e35a7ed200dc0c1eca59e78dfac5f86b89b0",
+  "tool_commit": "8c8b7a7",
+  "device": "xpu (Intel Arc A770)",
+  "dtype": "bfloat16",
+  "batch_sizes": {"pass_one": 2, "pass_two": 21},
+  "matched_json": "results/part68/b/matched.json",
+  "forward_passes": 48,
+  "rows": 552,
+  "job_start": "2026-10-26 15:45:01 CT",
+  "job_end": "2026-10-26 15:45:27 CT",
+  "note": "Written after the run from the GPU job log. A first launch at 15:44:19 failed at import (rc=1, no rows) and was fixed before this run."
+}

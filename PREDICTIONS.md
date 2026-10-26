@@ -1959,6 +1959,6 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 74b.1 | Claude: L27 N3325's pure indirect effect (L27 N3325 alone set to its L24-zeroed values) is more negative than that of at least 18 of the 20 matched layer-27 draws, each set to its own L24-zeroed values. | open | |
-| 74b.2 | Control: the rerun reproduces Part 74, with TE (B against A) and L27 N3325's pure indirect effect each within 0.1 of Part 74's (-2.23 and -1.42). | open | |
+| 74b.1 | Claude: L27 N3325's pure indirect effect (L27 N3325 alone set to its L24-zeroed values) is more negative than that of at least 18 of the 20 matched layer-27 draws, each set to its own L24-zeroed values. | HELD | L27 N3325's pure indirect effect -1.45; the 20 matched layer-27 draws (15 distinct units) -0.01 to +0.03, all smaller. Two nulls moved by more than 1 when L24 N3949 was zeroed (L27 N7600 -1.62, L27 N8687 -1.22) and still had no effect (-0.01, +0.02). `results/part74b/part74b.json` |
+| 74b.2 | Control: the rerun reproduces Part 74, with TE (B against A) and L27 N3325's pure indirect effect each within 0.1 of Part 74's (-2.23 and -1.42). | HELD | TE -2.26 (Part 74: -2.23) and L27 N3325's pure indirect effect -1.45 (Part 74: -1.42), both within 0.1. |
 
