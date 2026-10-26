@@ -1,0 +1,176 @@
+{
+ "null_table": [
+  {
+   "unit": 7600,
+   "draws": 2,
+   "move_B_minus_A": -1.622,
+   "mean_A": 7.88,
+   "direct_google_rank": 183016,
+   "PIE_per_draw": [
+    -0.016,
+    -0.016
+   ]
+  },
+  {
+   "unit": 8687,
+   "draws": 2,
+   "move_B_minus_A": -1.224,
+   "mean_A": 8.74,
+   "direct_google_rank": 104355,
+   "PIE_per_draw": [
+    0.026,
+    0.026
+   ]
+  },
+  {
+   "unit": 382,
+   "draws": 1,
+   "move_B_minus_A": -0.093,
+   "mean_A": -0.26,
+   "direct_google_rank": 23580,
+   "PIE_per_draw": [
+    -0.005
+   ]
+  },
+  {
+   "unit": 20,
+   "draws": 1,
+   "move_B_minus_A": -0.045,
+   "mean_A": -0.2,
+   "direct_google_rank": 13855,
+   "PIE_per_draw": [
+    0.01
+   ]
+  },
+  {
+   "unit": 1129,
+   "draws": 1,
+   "move_B_minus_A": -0.035,
+   "mean_A": 0.87,
+   "direct_google_rank": 19666,
+   "PIE_per_draw": [
+    0.021
+   ]
+  },
+  {
+   "unit": 6,
+   "draws": 2,
+   "move_B_minus_A": -0.034,
+   "mean_A": 0.07,
+   "direct_google_rank": 48187,
+   "PIE_per_draw": [
+    0.01,
+    0.01
+   ]
+  },
+  {
+   "unit": 378,
+   "draws": 3,
+   "move_B_minus_A": -0.028,
+   "mean_A": -0.45,
+   "direct_google_rank": 47584,
+   "PIE_per_draw": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "unit": 29,
+   "draws": 1,
+   "move_B_minus_A": -0.02,
+   "mean_A": 0.48,
+   "direct_google_rank": 182057,
+   "PIE_per_draw": [
+    0.01
+   ]
+  },
+  {
+   "unit": 1216,
+   "draws": 1,
+   "move_B_minus_A": -0.012,
+   "mean_A": -0.1,
+   "direct_google_rank": 133178,
+   "PIE_per_draw": [
+    0.005
+   ]
+  },
+  {
+   "unit": 133,
+   "draws": 1,
+   "move_B_minus_A": -0.004,
+   "mean_A": -0.01,
+   "direct_google_rank": 72487,
+   "PIE_per_draw": [
+    0.01
+   ]
+  },
+  {
+   "unit": 21,
+   "draws": 1,
+   "move_B_minus_A": -0.002,
+   "mean_A": 0.02,
+   "direct_google_rank": 36860,
+   "PIE_per_draw": [
+    0.016
+   ]
+  },
+  {
+   "unit": 32,
+   "draws": 1,
+   "move_B_minus_A": 0.008,
+   "mean_A": -0.03,
+   "direct_google_rank": 135842,
+   "PIE_per_draw": [
+    -0.01
+   ]
+  },
+  {
+   "unit": 478,
+   "draws": 1,
+   "move_B_minus_A": 0.024,
+   "mean_A": -0.36,
+   "direct_google_rank": 200691,
+   "PIE_per_draw": [
+    0.005
+   ]
+  },
+  {
+   "unit": 1271,
+   "draws": 1,
+   "move_B_minus_A": 0.03,
+   "mean_A": 0.03,
+   "direct_google_rank": 213813,
+   "PIE_per_draw": [
+    0.016
+   ]
+  },
+  {
+   "unit": 4991,
+   "draws": 1,
+   "move_B_minus_A": 0.19,
+   "mean_A": -6.03,
+   "direct_google_rank": 24977,
+   "PIE_per_draw": [
+    0.031
+   ]
+  }
+ ],
+ "pie_ci95": [
+  -1.5052083333333333,
+  -1.40625
+ ],
+ "max_null_ci95": [
+  -0.010416666666666666,
+  0.08854166666666667
+ ],
+ "per_question_null_change_range": [
+  -0.25,
+  0.375
+ ],
+ "per_question_pie_range": [
+  -1.75,
+  -1.25
+ ],
+ "max_abs_rerun_minus_first": 0.005208333333333336
+}

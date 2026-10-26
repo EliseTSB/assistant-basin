@@ -1284,7 +1284,7 @@ Google falling from Alibaba rising (Part 73's Alibaba-family answers rose from 1
 
 **Limits.** One forced opening and one next token, not sampled answers. The per-name logits were not saved, only the
 gap and the mass on the eight names. Only L27 N3325 is patched, and no matched layer-27 unit was patched as a control,
-so this alone does not show that L27 N3325 is specific as a mediator; Part 74b, below, tests that, and it is. Zero-ablation with
+so this alone does not show that L27 N3325 is specific as a mediator (Part 74b, below, tests that, with its own limits). Zero-ablation with
 the makers already zeroed puts the model off its usual distribution, and nothing here describes the model with the
 makers intact. The readout resolves about 0.125 nats per question (bf16 logits), so the null and noise values sit at
 that limit. The prediction direction was a guess, as the design says. The bootstrap resamples questions only, from one
@@ -1292,31 +1292,50 @@ model, one revision and one family of 24 questions.
 
 Files: `part74/` (runner, tests), `results/part74/` (the summary and every per-question readout).
 
-### Part 74b: L27 N3325 is specific as that route among matched layer-27 units (2026-10-26)
+### Part 74b: of 15 matched layer-27 units, only L27 N3325 carries L24 N3949's effect on this readout (2026-10-26)
 
 Pre-registered in `PART74B-DESIGN.md` after Part 74's cold review asked whether any layer-27 unit would do. Same model,
-prompts, readout and makers as Part 74. Each of the 20 layer-27 draws Part 73 used (15 distinct units, activity-matched
-to L27 N3325) is set alone to its own L24-zeroed values, with L24 N3949 intact, as Part 74's E row does for L27 N3325.
+prompts, readout and makers as Part 74. Each of the 20 layer-27 draws Part 73 used (15 distinct units, matched to
+L27 N3325 on mean absolute down_proj input over prompts, `part68/part68b.py`; not on readout or L24 response) is set
+alone, at every position, to its own L24-zeroed values, with L24 N3949 intact, as Part 74's E row does for L27 N3325.
+The pure indirect effect of a unit u is PIE(u) = mean over questions of g(A with u set to its B values) - g(A).
 
 | With the four makers zeroed | Mean change in g against makers only |
 |---|---:|
 | L24 N3949 zeroed (total effect, rerun) | -2.26 |
-| L27 N3325 alone set to its L24-zeroed values (pure indirect effect, rerun) | -1.45 |
-| a matched layer-27 unit alone set to its L24-zeroed values (20 draws) | -0.01 to +0.03 |
+| L27 N3325 alone set to its L24-zeroed values (PIE) | -1.45 (95% question-bootstrap -1.51 to -1.41) |
+| a matched layer-27 unit alone set to its L24-zeroed values (20 draws) | -0.02 to +0.03; the largest null's interval -0.01 to +0.09 |
+| L27 N3325 set to its own makers-only values (noise, record rerun) | -0.01 |
 
-**Results.** The rerun reproduces Part 74 within 0.1 on both the total and the pure indirect effect (74b.2 held). L27
-N3325's pure indirect effect is larger than every matched draw's (74b.1 held). This is not only because L24 N3949
-leaves the nulls alone: at the last position, zeroing L24 N3949 moves L27 N7600 by -1.62 and L27 N8687 by -1.22
-(L27 N3325 by +2.42), yet set to those values they change g by -0.01 and +0.02.
+**Results.** The run reproduces Part 74 within 0.1 on both the total and L27 N3325's pure indirect effect (74b.2
+held), and L27 N3325's PIE is larger than every matched draw's (74b.1 held). PIE(L27 N3325) is negative in all 24
+questions (-1.75 to -1.25); per question, the null changes run from -0.25 to +0.375. L27 N3325 is 64% of the total
+effect. A record rerun (Amendment 1, `results/part74b/`; the first run is in `results/part74b-first/`) matched the
+first run within 0.006 and added the table below. L27 N3325's direct readout ranks Google first (sign -1, Part 71's
+method); zeroing L24 N3949 moves its last-position activation from -4.46 toward zero by +2.42, which lowers g, as the
+sign predicts. Only two nulls move by more than 0.2 when L24 N3949 is zeroed, and neither writes Google:
 
-**Reading.** Among activity-matched layer-27 units, L27 N3325 is the one through which L24 N3949's effect on this
-readout runs. With Part 74, this gives one route on the forced-opening gap: L24 N3949 makes L27 N3325's activation
-more negative, the direction in which its direct readout pushes Google, and that change carries about two-thirds of
-L24 N3949's effect.
+| Unit (layer 27) | Draws | Move, B minus A | Direct Google rank | PIE |
+|---|---:|---:|---:|---:|
+| N3325 (the target) | | +2.42 | 1 | -1.45 |
+| N7600 | 2 | -1.62 | 183,016 | -0.02 |
+| N8687 | 2 | -1.22 | 104,355 | +0.03 |
+| the other 13 units | 16 | -0.09 to +0.19 | 13,855 or worse | -0.01 to +0.03 |
 
-**Limits.** Part 74's limits all apply (one forced opening and next token, the makers zeroed, bf16 resolution about
-0.125 nats per question). The nulls are 15 distinct units from one layer; units in other layers were not tested as
-routes.
+Full table: `results/part74b/summary.json`.
+
+**Reading.** Of the 15 layer-27 units tested, L27 N3325 is the only one through which L24 N3949's effect on this
+readout runs. The comparison has limited power: 13 of the units barely respond to L24 N3949, and none of the 15 writes
+Google, so this test does not separate "L27 N3325 is the route" from "the one Google writer among the units tested is
+the route". A sharper null is layer-27 units that write Google; that was not run. With Part 74: on the forced-opening
+gap, L24 N3949 makes L27 N3325's activation more negative, the direction in which its direct readout pushes Google, and
+setting L27 N3325 alone to that value reproduces 64% of L24 N3949's effect.
+
+**Limits.** Part 74's limits all apply (one forced opening and next token; the gap does not separate Google falling
+from Alibaba rising; the makers zeroed; bf16 resolution about 0.125 nats per question). The patch is written at every
+position, prompt tokens included, so the route may run through attention at earlier positions; a last-position-only
+patch was not tested. The two responsive nulls move in the opposite direction to L27 N3325, so no unit that L24 N3949
+pushes the same way was tested. One layer, 15 distinct units; the bootstrap resamples questions only.
 
 Files: `part74/part74b.py`, `part74/test_part74b.py`, `results/part74b/`.
 

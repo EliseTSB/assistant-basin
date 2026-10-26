@@ -1,0 +1,14 @@
+{
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "tool": "part74/part74b.py",
+  "tool_sha256": "ec1b5b63b3920b29d17461c0571c9db869ce93cbd33a7bc6f4dbe2c45f91b2a4",
+  "tool_commit": "d5a6136",
+  "device": "xpu (Intel Arc A770)",
+  "dtype": "bfloat16",
+  "batch_sizes": {"pass_one": 2, "pass_two": 22},
+  "matched_json": "results/part68/b/matched.json",
+  "job_start": "2026-10-26 15:56:47 CT",
+  "job_end": "2026-10-26 15:57:14 CT",
+  "note": "Record rerun under Amendment 1. The runner was committed at 15:57:03, 16 s after this job started, because a command chain broke before its commit; the launched file's sha256 equals this commit's (ec1b5b63...). The registered verdicts are the first run's (results/part74b-first/)."
+}
