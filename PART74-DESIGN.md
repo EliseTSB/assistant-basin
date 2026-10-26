@@ -40,3 +40,13 @@ writes Google, alone takes them to 8. Part 74 asks whether L24 N3949's effect ru
 - One forced opening and one next token, not sampled answers; Part 73's sampled result is not re-tested here.
 - Only one mediator is patched. "Other routes" means everything except L27 N3325's own activation.
 - The prediction direction for 74.2 and 74.3 is a guess: nothing measured so far says whether L24 N3949 feeds L27 N3325.
+
+## Amendment 1 (2026-10-26 15:33 CT, after writing the code, before any run)
+
+C, E and A_self run in a second forward pass with a different batch shape from A, and bf16 results can differ slightly
+between batch shapes. So a fifth row, `A_self` (A with L27 N3325 patched to its own value in A), measures the noise of
+the patching itself. 74.2 and 74.3 are read only if |mean g(A_self) - g(A)| is under a tenth of |TE|.
+
+The size line above miscounts: per question there are two batched forward passes, the first with 22 rows (A, B, 20
+nulls) and the second with 3 (C, E, A_self), so 48 forward passes and 600 rows in all. There is no separate recording
+pass; A's and B's L27 N3325 values are recorded during the first pass.
