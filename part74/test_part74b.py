@@ -30,7 +30,8 @@ def test_rows():
     target = list(part70.TARGET)
     one, two = p74b.rows(target, [(27, 5), (27, 6)])
     assert [r['id'] for r in one] == ['A', 'B'] and one[1]['zero'] == target + [(24, 3949)]
-    assert [(r['id'], r['unit']) for r in two] == [('E', 3325), ('E_null_0', 5), ('E_null_1', 6)]
+    assert [(r['id'], r['unit']) for r in two] == [('E', 3325), ('A_self', 3325), ('E_null_0', 5), ('E_null_1', 6)]
+    assert two[1].get('from') == 'A' and 'from' not in two[0]
     assert all(r['zero'] == target for r in two)
 
 
@@ -66,6 +67,15 @@ def test_end_to_end_specific(tmp_path):
     assert all(r['effects'][f'E_null_{k}'] == pytest.approx(0.0) for k in range(20))
     assert v['74b.1']['status'] == 'HOLDS' and v['74b.1']['nulls_beaten'] == 20
     assert r['last_position_move_B_minus_A']['3325'] == pytest.approx(-1.0)
+    assert r['effects']['A_self'] == pytest.approx(0.0)
+
+
+def test_direct_google_rank_on_the_toy(tmp_path):
+    model = _Toy(direct=False).eval()
+    ranks = p74b.google_ranks(model.layers, lambda v: v, model.head, [3325], {3325: 1.0}, [1])
+    assert ranks['3325'] == {'sign': 1.0, 'google_rank': 1}
+    # flipped sign: the column now pushes Google down, so every other name outranks it
+    assert p74b.google_ranks(model.layers, lambda v: v, model.head, [3325], {3325: -1.0}, [1])['3325']['google_rank'] > 1
 
 
 def test_end_to_end_not_specific(tmp_path):

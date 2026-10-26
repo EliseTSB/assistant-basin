@@ -32,3 +32,12 @@ moving some other layer-27 unit to its L24-zeroed values might do as much.
 - Same forced-opening readout as Part 74, with the same limits.
 - 20 draws of 15 distinct units; a null that L24 N3949 does not move gives a PIE near zero for that reason alone, which
   is part of what "specific" means here. The change in each null's activation between A and B is reported.
+
+## Amendment 1 (after the run and its cold review, before a record rerun; committed with the runner change)
+
+The review found that the run computed but did not save per-question activation moves, had no batch-shape noise row,
+and did not say what the nulls write. A record rerun with the same rows adds three outputs: per-question moves for
+every unit, an `A_self` row (A with L27 N3325 patched to its own A values), and each unit's direct Google readout rank
+(Part 71's method: the down_proj column, signed by the unit's mean last-position activation in A, through the final
+norm and unembedding). The registered verdicts stay those of the first run. If the rerun's A, B, E and null effects
+differ from the first run by more than 0.05, that is reported and the first run's numbers stand.

@@ -28,7 +28,8 @@ def null_units27(matched: dict) -> list[tuple[int, int]]:
 
 def rows(target: list, nulls: list) -> tuple[list[dict], list[dict]]:
     one = [{'id': 'A', 'zero': list(target)}, {'id': 'B', 'zero': list(target) + [p74.L24]}]
-    two = [{'id': 'E', 'zero': list(target), 'unit': p74.L27[1]}]
+    two = [{'id': 'E', 'zero': list(target), 'unit': p74.L27[1]},
+           {'id': 'A_self', 'zero': list(target), 'unit': p74.L27[1], 'from': 'A'}]   # Amendment 1: noise row
     two += [{'id': f'E_null_{k}', 'zero': list(target), 'unit': u} for k, (_, u) in enumerate(nulls)]
     return one, two
 
@@ -78,7 +79,23 @@ def verdicts(eff: dict, null_ids: list[str], part74_te=-2.234375, part74_pie=-1.
     return v
 
 
-def run(model, layers, prompts, readout_ids, nulls, out: Path):
+def google_ranks(layers, norm, head, units: list[int], sign_from: dict, google_ids: list[int]) -> dict:
+    """Part 71's direct readout for layer-27 units: signed down_proj column -> final norm -> unembedding."""
+    import numpy as np
+    import torch
+    out = {}
+    for u in units:
+        w = layers[LAYER].mlp.down_proj.weight[:, u].float()
+        sign = 1.0 if sign_from[u] >= 0 else -1.0
+        v = (sign * w).to(head.weight.dtype).view(1, 1, -1)
+        with torch.no_grad():
+            logits = head(norm(v)).float()[0, 0].cpu().numpy()
+        best = max(logits[i] for i in google_ids)
+        out[str(u)] = {'sign': sign, 'google_rank': int(1 + np.sum(logits > best))}
+    return out
+
+
+def run(model, layers, prompts, readout_ids, nulls, out: Path, norm=None, head=None, google_ids=None):
     from part70 import part70
     one, two = rows(list(part70.TARGET), nulls)
     units = [p74.L27[1]] + [u for _, u in nulls]
@@ -92,19 +109,23 @@ def run(model, layers, prompts, readout_ids, nulls, out: Path):
             records.append({'q': qi, 'id': r['id'], 'g': float(sel[ri, p74.G] - sel[ri, p74.AL]), 'mass': float(mass[ri])})
         moves.append({'q': qi, 'last_A': {u: float(rec_a[u][-1]) for u in units},
                       'last_B': {u: float(rec[u][-1]) for u in units}})
-        patches = {ri: (r['unit'], rec[r['unit']]) for ri, r in enumerate(two)}
+        patches = {ri: (r['unit'], (rec_a if r.get('from') == 'A' else rec)[r['unit']]) for ri, r in enumerate(two)}
         sel2, mass2 = _forward(model, layers, ids, two, readout_ids, [lambda L: install_patch_rows(L[LAYER], patches)])
         for ri, r in enumerate(two):
             records.append({'q': qi, 'id': r['id'], 'g': float(sel2[ri, p74.G] - sel2[ri, p74.AL]),
                             'mass': float(mass2[ri]), 'unit': int(r['unit'])})
     eff = p74.effects(records)
     null_ids = [r['id'] for r in two if r['id'].startswith('E_null_')]
+    mean_a = {u: sum(m['last_A'][u] for m in moves) / len(moves) for u in units}
+    ranks = google_ranks(layers, norm, head, sorted(set(units)), mean_a, google_ids) if head is not None else None
     move_mean = {u: sum(m['last_B'][u] - m['last_A'][u] for m in moves) / len(moves) for u in units}
     result = {'effects': eff, 'verdicts': verdicts(eff, null_ids), 'nulls': [[l, u] for l, u in nulls],
-              'last_position_move_B_minus_A': {str(u): v for u, v in move_mean.items()}, 'n_questions': len(prompts)}
+              'last_position_move_B_minus_A': {str(u): v for u, v in move_mean.items()},
+              'last_position_mean_A': {str(u): v for u, v in mean_a.items()},
+              'direct_google_rank': ranks, 'n_questions': len(prompts)}
     out.mkdir(parents=True, exist_ok=True)
     (out / 'part74b.json').write_text(json.dumps(result, indent=1) + '\n', encoding='utf-8')
-    (out / 'records.json').write_text(json.dumps({'records': records}) + '\n', encoding='utf-8')
+    (out / 'records.json').write_text(json.dumps({'records': records, 'moves': moves}) + '\n', encoding='utf-8')
     return result
 
 
@@ -119,13 +140,17 @@ def main():
     import part25
     from part66 import part66
     tok, model = nr.load_model(part66.MODEL, part66.REVISION, device)
-    _, layers, _ = nr.find_text_layers(model)
+    _, layers, norm = nr.find_text_layers(model)
+    if norm is None:
+        raise SystemExit('no final norm found beside the decoder layers')
+    head = model.get_output_embeddings()
+    google_ids = sorted({part25._token_ids(tok, 'Google')[0], part25._token_ids(tok, ' Google')[0]})
     prompts = [part25._token_ids(tok, nr.build_prompt(tok, q, False) + p74.OPENING)
                for q in part66.DIRECT + part66.INDIRECT]
     readout_ids = [part25._token_ids(tok, n)[0] for n in p74.NAMES]
     if len(set(readout_ids)) != 8:
         raise SystemExit('readout names share a first token')
-    result = run(model, layers, prompts, readout_ids, nulls, out)
+    result = run(model, layers, prompts, readout_ids, nulls, out, norm=norm, head=head, google_ids=google_ids)
     print('effects', {k: round(v, 3) for k, v in result['effects'].items()}, flush=True)
     for key, v in result['verdicts'].items():
         print(key, v['status'], {k: v[k] for k in v if k not in ('holds', 'status')}, flush=True)
