@@ -91,7 +91,7 @@ Claude, 2026-10-18; rewritten 2026-10-21.)
 - In Qwen3-1.7B, the honesty direction flipped 0 of 34 held-out lies; the fixed trait-bundle score was +0.072, rank 18 of 40. (50)
 - For Pythia-410m, the novel-item kiki/bouba AUC rose from 0.387 at step 1,000 to 0.898 at step 143,000. Pythia-160m never reached 0.70. (48d)
 
-**How we learned to measure.** 553 predictions so far, each pushed before its run: 262 held, 196 failed, 10 mixed,
+**How we learned to measure.** 559 predictions so far, each pushed before its run: 268 held, 196 failed, 10 mixed,
 9 untestable or read by a rule, 76 not yet scored (`count_predictions.py`, 2026-10-26). The methods
 that came out of the failures: a control must be shown able to fail; a judge model can agree for the same bias it was
 meant to check (it reads left to right too); a word filter misses meaning (a passage about a monolith in "neutral" text
@@ -1112,6 +1112,38 @@ model, English prompts. Whether L27 N3325 and L24 N3949 change sampled answers i
 
 Files: `part69/` (runner, scorer, prefix probe, tests, build notes), `results/part69/full/`, `results/part69/a1/`,
 `results/part69/prefix/`.
+
+### Part 70: with the maker neurons off, two late neurons are where the "Google" answer comes from (2026-10-26)
+
+Pre-registered in `PART70-DESIGN.md`. Part 66 showed that zeroing the four maker neurons makes Qwen3.5-4B name Google
+in about a fifth of its sampled answers about who made it. Part 69 found two late neurons, L27 N3325 and L24 N3949,
+that hold up "Google" as a next token. Part 70 zeroes them together with the makers, using Part 66's sampling and
+scoring unchanged, and compares that with zeroing the makers plus 20 activity-matched pairs from the same two layers.
+
+| Zeroed | Held-out answers naming Google | Naming the Alibaba family | "Who created you?" naming Google |
+|---|---:|---:|---:|
+| the four makers | 38 of 192 (19.8%) | 151 of 192 | 15 of 24 |
+| the four makers + L27 N3325 + L24 N3949 | 4 of 192 (2.1%) | 177 of 192 (92%) | 0 of 24 |
+| the four makers + an activity-matched pair (20 pairs) | 105 of 480 (21.9%), 12.5% to 37.5% per pair | | |
+
+**Results.** All six predictions held. The makers alone reproduce Part 66 (70.1), and the extra zeroing leaves the
+model fluent (70.2: 24 of 24 guard questions answered correctly). Zeroing the two late neurons on top of the makers
+takes the Google answers from 38 to 4 of 192 and from 15 to 0 of 24 on "Who created you?" (70.3), while any of 20
+activity-matched pairs leaves them at about the makers' level (70.4, 70.5: no pair goes below 12.5%). The model goes
+back to its own maker instead: "I was created by **Tongyi Lab**, which is part of Alibaba Group" (70.6, 92%). Three of
+the four Google answers that remain begin "As an artificial intelligence, I don't have...", a different kind of
+answer from the makers-zeroed "I was created by **Google**".
+
+**Reading.** Parts 66 to 70 together: the four maker neurons hold the model's own answer (Alibaba); with them off,
+the model falls back on "Google", and that fallback depends on two late neurons that, on their own, already push
+`Google` up as a next token (Part 69). Zeroing L29 N776 alone does not move the answer, and the two late neurons do
+not act through it (Part 69).
+
+**Limits.** One model; Part 66's 24 held-out questions; one sampling setting. The same seeds did not give
+byte-identical answers to Part 66 (38 against 42 for the makers), so sampling on this GPU is not exactly reproducible.
+Why this model's fallback maker is Google is not tested here.
+
+Files: `part70/` (runner, scorer, tests, build notes), `results/part70/full/` (all 960 answers).
 
 ### Running or designed (2026-10-21)
 

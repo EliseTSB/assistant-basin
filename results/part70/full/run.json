@@ -1,0 +1,683 @@
+{
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "tool_sha256": "831578b82bfdf52e71ef578fc55b62d78b0c67fa21dd231a38778301799956c6",
+  "device": "xpu:0",
+  "dtype": "bfloat16",
+  "batch_size": 25,
+  "wall_time_seconds": 796.8232324123383,
+  "peak_memory_gb": 9.088539600372314,
+  "requested_generations": 960,
+  "new_generations_this_invocation": 960,
+  "counts": {
+    "requested_by_condition": {
+      "target": 240,
+      "target_plus_pair": 240,
+      "target_plus_matched_0": 24,
+      "target_plus_matched_1": 24,
+      "target_plus_matched_2": 24,
+      "target_plus_matched_3": 24,
+      "target_plus_matched_4": 24,
+      "target_plus_matched_5": 24,
+      "target_plus_matched_6": 24,
+      "target_plus_matched_7": 24,
+      "target_plus_matched_8": 24,
+      "target_plus_matched_9": 24,
+      "target_plus_matched_10": 24,
+      "target_plus_matched_11": 24,
+      "target_plus_matched_12": 24,
+      "target_plus_matched_13": 24,
+      "target_plus_matched_14": 24,
+      "target_plus_matched_15": 24,
+      "target_plus_matched_16": 24,
+      "target_plus_matched_17": 24,
+      "target_plus_matched_18": 24,
+      "target_plus_matched_19": 24
+    },
+    "requested_by_question_kind": {
+      "direct": 576,
+      "indirect": 288,
+      "positive": 48,
+      "guard": 48
+    },
+    "new_by_question_kind": {
+      "direct": 576,
+      "indirect": 288,
+      "positive": 48,
+      "guard": 48
+    }
+  },
+  "sampling_reproducibility": "Each row records its Part 66 SHA-256-derived seed. Batched generation seeds each batch from its first row; row seeds document identity, not independent per-row RNG streams.",
+  "conditions": [
+    {
+      "id": "target",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        }
+      ]
+    },
+    {
+      "id": "target_plus_pair",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        },
+        {
+          "layer": 27,
+          "unit": 3325
+        },
+        {
+          "layer": 24,
+          "unit": 3949
+        }
+      ]
+    },
+    {
+      "id": "target_plus_matched_0",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        },
+        {
+          "layer": 27,
+          "unit": 6
+        },
+        {
+          "layer": 24,
+          "unit": 699
+        }
+      ]
+    },
+    {
+      "id": "target_plus_matched_1",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        },
+        {
+          "layer": 27,
+          "unit": 8687
+        },
+        {
+          "layer": 24,
+          "unit": 6224
+        }
+      ]
+    },
+    {
+      "id": "target_plus_matched_2",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        },
+        {
+          "layer": 27,
+          "unit": 378
+        },
+        {
+          "layer": 24,
+          "unit": 2426
+        }
+      ]
+    },
+    {
+      "id": "target_plus_matched_3",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        },
+        {
+          "layer": 27,
+          "unit": 4991
+        },
+        {
+          "layer": 24,
+          "unit": 2426
+        }
+      ]
+    },
+    {
+      "id": "target_plus_matched_4",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        },
+        {
+          "layer": 27,
+          "unit": 7600
+        },
+        {
+          "layer": 24,
+          "unit": 1430
+        }
+      ]
+    },
+    {
+      "id": "target_plus_matched_5",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        },
+        {
+          "layer": 27,
+          "unit": 378
+        },
+        {
+          "layer": 24,
+          "unit": 489
+        }
+      ]
+    },
+    {
+      "id": "target_plus_matched_6",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        },
+        {
+          "layer": 27,
+          "unit": 1129
+        },
+        {
+          "layer": 24,
+          "unit": 27
+        }
+      ]
+    },
+    {
+      "id": "target_plus_matched_7",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        },
+        {
+          "layer": 27,
+          "unit": 21
+        },
+        {
+          "layer": 24,
+          "unit": 93
+        }
+      ]
+    },
+    {
+      "id": "target_plus_matched_8",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        },
+        {
+          "layer": 27,
+          "unit": 1216
+        },
+        {
+          "layer": 24,
+          "unit": 142
+        }
+      ]
+    },
+    {
+      "id": "target_plus_matched_9",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        },
+        {
+          "layer": 27,
+          "unit": 32
+        },
+        {
+          "layer": 24,
+          "unit": 699
+        }
+      ]
+    },
+    {
+      "id": "target_plus_matched_10",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        },
+        {
+          "layer": 27,
+          "unit": 1271
+        },
+        {
+          "layer": 24,
+          "unit": 489
+        }
+      ]
+    },
+    {
+      "id": "target_plus_matched_11",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        },
+        {
+          "layer": 27,
+          "unit": 20
+        },
+        {
+          "layer": 24,
+          "unit": 142
+        }
+      ]
+    },
+    {
+      "id": "target_plus_matched_12",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        },
+        {
+          "layer": 27,
+          "unit": 8687
+        },
+        {
+          "layer": 24,
+          "unit": 2192
+        }
+      ]
+    },
+    {
+      "id": "target_plus_matched_13",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        },
+        {
+          "layer": 27,
+          "unit": 378
+        },
+        {
+          "layer": 24,
+          "unit": 2
+        }
+      ]
+    },
+    {
+      "id": "target_plus_matched_14",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        },
+        {
+          "layer": 27,
+          "unit": 7600
+        },
+        {
+          "layer": 24,
+          "unit": 2192
+        }
+      ]
+    },
+    {
+      "id": "target_plus_matched_15",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        },
+        {
+          "layer": 27,
+          "unit": 6
+        },
+        {
+          "layer": 24,
+          "unit": 20
+        }
+      ]
+    },
+    {
+      "id": "target_plus_matched_16",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        },
+        {
+          "layer": 27,
+          "unit": 133
+        },
+        {
+          "layer": 24,
+          "unit": 411
+        }
+      ]
+    },
+    {
+      "id": "target_plus_matched_17",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        },
+        {
+          "layer": 27,
+          "unit": 478
+        },
+        {
+          "layer": 24,
+          "unit": 92
+        }
+      ]
+    },
+    {
+      "id": "target_plus_matched_18",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        },
+        {
+          "layer": 27,
+          "unit": 382
+        },
+        {
+          "layer": 24,
+          "unit": 142
+        }
+      ]
+    },
+    {
+      "id": "target_plus_matched_19",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        },
+        {
+          "layer": 27,
+          "unit": 29
+        },
+        {
+          "layer": 24,
+          "unit": 150
+        }
+      ]
+    }
+  ]
+}

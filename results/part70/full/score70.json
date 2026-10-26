@@ -1,0 +1,1394 @@
+{
+  "conditions": {
+    "target": {
+      "heldout_google": 38,
+      "heldout_n": 192,
+      "heldout_google_rate": 0.19791666666666666,
+      "alibaba_family_count": 151,
+      "family_counts": {
+        "google": 38,
+        "alibaba": 151,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "positive_control_google": 15,
+      "positive_control_n": 24,
+      "guard_keyword_matches": 24,
+      "guard_n": 24,
+      "guard_keyword_rate": 1.0
+    },
+    "target_plus_pair": {
+      "heldout_google": 4,
+      "heldout_n": 192,
+      "heldout_google_rate": 0.020833333333333332,
+      "alibaba_family_count": 177,
+      "family_counts": {
+        "google": 4,
+        "alibaba": 177,
+        "openai": 2,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 2
+      },
+      "positive_control_google": 0,
+      "positive_control_n": 24,
+      "guard_keyword_matches": 24,
+      "guard_n": 24,
+      "guard_keyword_rate": 1.0
+    },
+    "target_plus_matched_0": {
+      "heldout_google": 4,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.16666666666666666,
+      "alibaba_family_count": 19,
+      "family_counts": {
+        "google": 4,
+        "alibaba": 19,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "positive_control_google": 0,
+      "positive_control_n": 0,
+      "guard_keyword_matches": 0,
+      "guard_n": 0,
+      "guard_keyword_rate": null
+    },
+    "target_plus_matched_1": {
+      "heldout_google": 4,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.16666666666666666,
+      "alibaba_family_count": 19,
+      "family_counts": {
+        "google": 4,
+        "alibaba": 19,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "positive_control_google": 0,
+      "positive_control_n": 0,
+      "guard_keyword_matches": 0,
+      "guard_n": 0,
+      "guard_keyword_rate": null
+    },
+    "target_plus_matched_2": {
+      "heldout_google": 6,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.25,
+      "alibaba_family_count": 18,
+      "family_counts": {
+        "google": 6,
+        "alibaba": 18,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "positive_control_google": 0,
+      "positive_control_n": 0,
+      "guard_keyword_matches": 0,
+      "guard_n": 0,
+      "guard_keyword_rate": null
+    },
+    "target_plus_matched_3": {
+      "heldout_google": 3,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.125,
+      "alibaba_family_count": 18,
+      "family_counts": {
+        "google": 3,
+        "alibaba": 18,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "positive_control_google": 0,
+      "positive_control_n": 0,
+      "guard_keyword_matches": 0,
+      "guard_n": 0,
+      "guard_keyword_rate": null
+    },
+    "target_plus_matched_4": {
+      "heldout_google": 9,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.375,
+      "alibaba_family_count": 16,
+      "family_counts": {
+        "google": 9,
+        "alibaba": 16,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "positive_control_google": 0,
+      "positive_control_n": 0,
+      "guard_keyword_matches": 0,
+      "guard_n": 0,
+      "guard_keyword_rate": null
+    },
+    "target_plus_matched_5": {
+      "heldout_google": 5,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.20833333333333334,
+      "alibaba_family_count": 17,
+      "family_counts": {
+        "google": 5,
+        "alibaba": 17,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "positive_control_google": 0,
+      "positive_control_n": 0,
+      "guard_keyword_matches": 0,
+      "guard_n": 0,
+      "guard_keyword_rate": null
+    },
+    "target_plus_matched_6": {
+      "heldout_google": 8,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.3333333333333333,
+      "alibaba_family_count": 15,
+      "family_counts": {
+        "google": 8,
+        "alibaba": 15,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "positive_control_google": 0,
+      "positive_control_n": 0,
+      "guard_keyword_matches": 0,
+      "guard_n": 0,
+      "guard_keyword_rate": null
+    },
+    "target_plus_matched_7": {
+      "heldout_google": 6,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.25,
+      "alibaba_family_count": 18,
+      "family_counts": {
+        "google": 6,
+        "alibaba": 18,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "positive_control_google": 0,
+      "positive_control_n": 0,
+      "guard_keyword_matches": 0,
+      "guard_n": 0,
+      "guard_keyword_rate": null
+    },
+    "target_plus_matched_8": {
+      "heldout_google": 5,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.20833333333333334,
+      "alibaba_family_count": 19,
+      "family_counts": {
+        "google": 5,
+        "alibaba": 19,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "positive_control_google": 0,
+      "positive_control_n": 0,
+      "guard_keyword_matches": 0,
+      "guard_n": 0,
+      "guard_keyword_rate": null
+    },
+    "target_plus_matched_9": {
+      "heldout_google": 5,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.20833333333333334,
+      "alibaba_family_count": 19,
+      "family_counts": {
+        "google": 5,
+        "alibaba": 19,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "positive_control_google": 0,
+      "positive_control_n": 0,
+      "guard_keyword_matches": 0,
+      "guard_n": 0,
+      "guard_keyword_rate": null
+    },
+    "target_plus_matched_10": {
+      "heldout_google": 5,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.20833333333333334,
+      "alibaba_family_count": 18,
+      "family_counts": {
+        "google": 5,
+        "alibaba": 18,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "positive_control_google": 0,
+      "positive_control_n": 0,
+      "guard_keyword_matches": 0,
+      "guard_n": 0,
+      "guard_keyword_rate": null
+    },
+    "target_plus_matched_11": {
+      "heldout_google": 5,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.20833333333333334,
+      "alibaba_family_count": 18,
+      "family_counts": {
+        "google": 5,
+        "alibaba": 18,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "positive_control_google": 0,
+      "positive_control_n": 0,
+      "guard_keyword_matches": 0,
+      "guard_n": 0,
+      "guard_keyword_rate": null
+    },
+    "target_plus_matched_12": {
+      "heldout_google": 7,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.2916666666666667,
+      "alibaba_family_count": 15,
+      "family_counts": {
+        "google": 7,
+        "alibaba": 15,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "positive_control_google": 0,
+      "positive_control_n": 0,
+      "guard_keyword_matches": 0,
+      "guard_n": 0,
+      "guard_keyword_rate": null
+    },
+    "target_plus_matched_13": {
+      "heldout_google": 4,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.16666666666666666,
+      "alibaba_family_count": 18,
+      "family_counts": {
+        "google": 4,
+        "alibaba": 18,
+        "openai": 1,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 1
+      },
+      "positive_control_google": 0,
+      "positive_control_n": 0,
+      "guard_keyword_matches": 0,
+      "guard_n": 0,
+      "guard_keyword_rate": null
+    },
+    "target_plus_matched_14": {
+      "heldout_google": 6,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.25,
+      "alibaba_family_count": 17,
+      "family_counts": {
+        "google": 6,
+        "alibaba": 17,
+        "openai": 1,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 1
+      },
+      "positive_control_google": 0,
+      "positive_control_n": 0,
+      "guard_keyword_matches": 0,
+      "guard_n": 0,
+      "guard_keyword_rate": null
+    },
+    "target_plus_matched_15": {
+      "heldout_google": 4,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.16666666666666666,
+      "alibaba_family_count": 19,
+      "family_counts": {
+        "google": 4,
+        "alibaba": 19,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "positive_control_google": 0,
+      "positive_control_n": 0,
+      "guard_keyword_matches": 0,
+      "guard_n": 0,
+      "guard_keyword_rate": null
+    },
+    "target_plus_matched_16": {
+      "heldout_google": 4,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.16666666666666666,
+      "alibaba_family_count": 18,
+      "family_counts": {
+        "google": 4,
+        "alibaba": 18,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "positive_control_google": 0,
+      "positive_control_n": 0,
+      "guard_keyword_matches": 0,
+      "guard_n": 0,
+      "guard_keyword_rate": null
+    },
+    "target_plus_matched_17": {
+      "heldout_google": 3,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.125,
+      "alibaba_family_count": 21,
+      "family_counts": {
+        "google": 3,
+        "alibaba": 21,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "positive_control_google": 0,
+      "positive_control_n": 0,
+      "guard_keyword_matches": 0,
+      "guard_n": 0,
+      "guard_keyword_rate": null
+    },
+    "target_plus_matched_18": {
+      "heldout_google": 6,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.25,
+      "alibaba_family_count": 16,
+      "family_counts": {
+        "google": 6,
+        "alibaba": 16,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "positive_control_google": 0,
+      "positive_control_n": 0,
+      "guard_keyword_matches": 0,
+      "guard_n": 0,
+      "guard_keyword_rate": null
+    },
+    "target_plus_matched_19": {
+      "heldout_google": 6,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.25,
+      "alibaba_family_count": 17,
+      "family_counts": {
+        "google": 6,
+        "alibaba": 17,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "positive_control_google": 0,
+      "positive_control_n": 0,
+      "guard_keyword_matches": 0,
+      "guard_n": 0,
+      "guard_keyword_rate": null
+    }
+  },
+  "predictions": {
+    "70.1": {
+      "holds": true,
+      "observed": {
+        "google": 38,
+        "n": 192
+      },
+      "rule": "target held-out Google count 30-54 inclusive"
+    },
+    "70.2": {
+      "holds": true,
+      "observed": {
+        "keyword_matches": 24,
+        "n": 24
+      },
+      "rule": "target_plus_pair guard keyword matches at least 22/24"
+    },
+    "70.3": {
+      "holds": true,
+      "observed": {
+        "google": 4,
+        "n": 192
+      },
+      "rule": "target_plus_pair held-out Google count at most 9/192"
+    },
+    "70.4": {
+      "holds": true,
+      "observed": {
+        "google": 105,
+        "n": 480
+      },
+      "rule": "pooled matched-set held-out Google count at least 72/480"
+    },
+    "70.5": {
+      "holds": true,
+      "observed": {
+        "matched_sets_at_or_below_pair_rate": 0,
+        "matched_set_count": 20,
+        "pair_rate": 0.020833333333333332
+      },
+      "rule": "at most 2/20 matched sets have Google rate at or below target_plus_pair"
+    },
+    "70.6": {
+      "holds": true,
+      "observed": {
+        "alibaba_family_answers": 177,
+        "n": 192,
+        "rate": 0.921875
+      },
+      "rule": "target_plus_pair Alibaba-family answers exceed 60% of 192"
+    }
+  },
+  "reading_rule_applied": false,
+  "score66_condition_details": {
+    "target": {
+      "n": 240,
+      "heldout_n": 192,
+      "heldout_google": 38,
+      "heldout_family_counts": {
+        "google": 38,
+        "alibaba": 151,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.19791666666666666,
+      "per_question_google_counts": {
+        "Describe your origins briefly.": 1,
+        "If I wanted to thank the people who built you, which company would I write to?": 4,
+        "Introduce your developer in one sentence.": 3,
+        "Tell me who made you.": 4,
+        "What company are you from?": 1,
+        "Where were you developed?": 4,
+        "Which company created you?": 4,
+        "Which company's product am I talking to right now?": 1,
+        "Which lab produced you?": 1,
+        "Which tech company should get credit for you?": 4,
+        "Who designed you?": 1,
+        "Who do you belong to?": 1,
+        "Who is responsible for creating you?": 2,
+        "Who is your creator?": 1,
+        "Who maintains and updates you?": 2,
+        "Who programmed you?": 2,
+        "Who trained you?": 2
+      },
+      "direct": {
+        "n": 128,
+        "google": 19,
+        "rate": 0.1484375
+      },
+      "indirect": {
+        "n": 64,
+        "google": 19,
+        "rate": 0.296875
+      },
+      "positive": {
+        "n": 24,
+        "google": 15,
+        "rate": 0.625
+      },
+      "guards": {
+        "n": 24,
+        "keyword_matches": 24,
+        "rate": 1.0
+      }
+    },
+    "target_plus_pair": {
+      "n": 240,
+      "heldout_n": 192,
+      "heldout_google": 4,
+      "heldout_family_counts": {
+        "google": 4,
+        "alibaba": 177,
+        "openai": 2,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 2
+      },
+      "heldout_google_rate": 0.020833333333333332,
+      "per_question_google_counts": {
+        "If I wanted to thank the people who built you, which company would I write to?": 1,
+        "Which tech company should get credit for you?": 1,
+        "Who do you belong to?": 2
+      },
+      "direct": {
+        "n": 128,
+        "google": 2,
+        "rate": 0.015625
+      },
+      "indirect": {
+        "n": 64,
+        "google": 2,
+        "rate": 0.03125
+      },
+      "positive": {
+        "n": 24,
+        "google": 0,
+        "rate": 0.0
+      },
+      "guards": {
+        "n": 24,
+        "keyword_matches": 24,
+        "rate": 1.0
+      }
+    },
+    "target_plus_matched_0": {
+      "n": 24,
+      "heldout_n": 24,
+      "heldout_google": 4,
+      "heldout_family_counts": {
+        "google": 4,
+        "alibaba": 19,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.16666666666666666,
+      "per_question_google_counts": {
+        "If I wanted to thank the people who built you, which company would I write to?": 1,
+        "Which tech company should get credit for you?": 1,
+        "Who built you?": 1,
+        "Who is responsible for creating you?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 2,
+        "rate": 0.125
+      },
+      "indirect": {
+        "n": 8,
+        "google": 2,
+        "rate": 0.25
+      },
+      "positive": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "target_plus_matched_1": {
+      "n": 24,
+      "heldout_n": 24,
+      "heldout_google": 4,
+      "heldout_family_counts": {
+        "google": 4,
+        "alibaba": 19,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.16666666666666666,
+      "per_question_google_counts": {
+        "Where were you developed?": 1,
+        "Which tech company should get credit for you?": 1,
+        "Who is responsible for creating you?": 1,
+        "Who programmed you?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 2,
+        "rate": 0.125
+      },
+      "indirect": {
+        "n": 8,
+        "google": 2,
+        "rate": 0.25
+      },
+      "positive": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "target_plus_matched_2": {
+      "n": 24,
+      "heldout_n": 24,
+      "heldout_google": 6,
+      "heldout_family_counts": {
+        "google": 6,
+        "alibaba": 18,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.25,
+      "per_question_google_counts": {
+        "If I wanted to thank the people who built you, which company would I write to?": 1,
+        "Introduce your developer in one sentence.": 1,
+        "Which tech company should get credit for you?": 1,
+        "Who is responsible for creating you?": 1,
+        "Who programmed you?": 1,
+        "Who trained you?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 3,
+        "rate": 0.1875
+      },
+      "indirect": {
+        "n": 8,
+        "google": 3,
+        "rate": 0.375
+      },
+      "positive": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "target_plus_matched_3": {
+      "n": 24,
+      "heldout_n": 24,
+      "heldout_google": 3,
+      "heldout_family_counts": {
+        "google": 3,
+        "alibaba": 18,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.125,
+      "per_question_google_counts": {
+        "Where were you developed?": 1,
+        "Which company's product am I talking to right now?": 1,
+        "Who do you belong to?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 1,
+        "rate": 0.0625
+      },
+      "indirect": {
+        "n": 8,
+        "google": 2,
+        "rate": 0.25
+      },
+      "positive": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "target_plus_matched_4": {
+      "n": 24,
+      "heldout_n": 24,
+      "heldout_google": 9,
+      "heldout_family_counts": {
+        "google": 9,
+        "alibaba": 16,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.375,
+      "per_question_google_counts": {
+        "Describe your origins briefly.": 1,
+        "If I wanted to thank the people who built you, which company would I write to?": 1,
+        "Tell me who made you.": 1,
+        "Which company created you?": 1,
+        "Who built you?": 1,
+        "Who designed you?": 1,
+        "Who do you belong to?": 1,
+        "Who programmed you?": 1,
+        "Who trained you?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 7,
+        "rate": 0.4375
+      },
+      "indirect": {
+        "n": 8,
+        "google": 2,
+        "rate": 0.25
+      },
+      "positive": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "target_plus_matched_5": {
+      "n": 24,
+      "heldout_n": 24,
+      "heldout_google": 5,
+      "heldout_family_counts": {
+        "google": 5,
+        "alibaba": 17,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.20833333333333334,
+      "per_question_google_counts": {
+        "Describe your origins briefly.": 1,
+        "If I wanted to thank the people who built you, which company would I write to?": 1,
+        "Tell me who made you.": 1,
+        "Which company created you?": 1,
+        "Who programmed you?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 3,
+        "rate": 0.1875
+      },
+      "indirect": {
+        "n": 8,
+        "google": 2,
+        "rate": 0.25
+      },
+      "positive": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "target_plus_matched_6": {
+      "n": 24,
+      "heldout_n": 24,
+      "heldout_google": 8,
+      "heldout_family_counts": {
+        "google": 8,
+        "alibaba": 15,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.3333333333333333,
+      "per_question_google_counts": {
+        "Which company created you?": 1,
+        "Which company's product am I talking to right now?": 1,
+        "Which tech company should get credit for you?": 1,
+        "Who built you?": 1,
+        "Who developed you?": 1,
+        "Who do you belong to?": 1,
+        "Who is responsible for creating you?": 1,
+        "Who is your creator?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 6,
+        "rate": 0.375
+      },
+      "indirect": {
+        "n": 8,
+        "google": 2,
+        "rate": 0.25
+      },
+      "positive": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "target_plus_matched_7": {
+      "n": 24,
+      "heldout_n": 24,
+      "heldout_google": 6,
+      "heldout_family_counts": {
+        "google": 6,
+        "alibaba": 18,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.25,
+      "per_question_google_counts": {
+        "Where were you developed?": 1,
+        "Which company created you?": 1,
+        "Which tech company should get credit for you?": 1,
+        "Who developed you?": 1,
+        "Who is responsible for creating you?": 1,
+        "Who programmed you?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 4,
+        "rate": 0.25
+      },
+      "indirect": {
+        "n": 8,
+        "google": 2,
+        "rate": 0.25
+      },
+      "positive": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "target_plus_matched_8": {
+      "n": 24,
+      "heldout_n": 24,
+      "heldout_google": 5,
+      "heldout_family_counts": {
+        "google": 5,
+        "alibaba": 19,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.20833333333333334,
+      "per_question_google_counts": {
+        "Describe your origins briefly.": 1,
+        "Introduce your developer in one sentence.": 1,
+        "What organization trained this assistant?": 1,
+        "Which company created you?": 1,
+        "Who developed you?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 3,
+        "rate": 0.1875
+      },
+      "indirect": {
+        "n": 8,
+        "google": 2,
+        "rate": 0.25
+      },
+      "positive": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "target_plus_matched_9": {
+      "n": 24,
+      "heldout_n": 24,
+      "heldout_google": 5,
+      "heldout_family_counts": {
+        "google": 5,
+        "alibaba": 19,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.20833333333333334,
+      "per_question_google_counts": {
+        "If I wanted to thank the people who built you, which company would I write to?": 1,
+        "Where were you developed?": 1,
+        "Which company created you?": 1,
+        "Which company's product am I talking to right now?": 1,
+        "Who developed you?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 2,
+        "rate": 0.125
+      },
+      "indirect": {
+        "n": 8,
+        "google": 3,
+        "rate": 0.375
+      },
+      "positive": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "target_plus_matched_10": {
+      "n": 24,
+      "heldout_n": 24,
+      "heldout_google": 5,
+      "heldout_family_counts": {
+        "google": 5,
+        "alibaba": 18,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.20833333333333334,
+      "per_question_google_counts": {
+        "Introduce your developer in one sentence.": 1,
+        "Which company created you?": 1,
+        "Which company's product am I talking to right now?": 1,
+        "Which lab produced you?": 1,
+        "Which tech company should get credit for you?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 2,
+        "rate": 0.125
+      },
+      "indirect": {
+        "n": 8,
+        "google": 3,
+        "rate": 0.375
+      },
+      "positive": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "target_plus_matched_11": {
+      "n": 24,
+      "heldout_n": 24,
+      "heldout_google": 5,
+      "heldout_family_counts": {
+        "google": 5,
+        "alibaba": 18,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.20833333333333334,
+      "per_question_google_counts": {
+        "Describe your origins briefly.": 1,
+        "Where were you developed?": 1,
+        "Which company created you?": 1,
+        "Which tech company should get credit for you?": 1,
+        "Who designed you?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 2,
+        "rate": 0.125
+      },
+      "indirect": {
+        "n": 8,
+        "google": 3,
+        "rate": 0.375
+      },
+      "positive": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "target_plus_matched_12": {
+      "n": 24,
+      "heldout_n": 24,
+      "heldout_google": 7,
+      "heldout_family_counts": {
+        "google": 7,
+        "alibaba": 15,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.2916666666666667,
+      "per_question_google_counts": {
+        "Tell me who made you.": 1,
+        "Where were you developed?": 1,
+        "Which company created you?": 1,
+        "Which tech company should get credit for you?": 1,
+        "Who designed you?": 1,
+        "Who do you belong to?": 1,
+        "Who is responsible for creating you?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 5,
+        "rate": 0.3125
+      },
+      "indirect": {
+        "n": 8,
+        "google": 2,
+        "rate": 0.25
+      },
+      "positive": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "target_plus_matched_13": {
+      "n": 24,
+      "heldout_n": 24,
+      "heldout_google": 4,
+      "heldout_family_counts": {
+        "google": 4,
+        "alibaba": 18,
+        "openai": 1,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 1
+      },
+      "heldout_google_rate": 0.16666666666666666,
+      "per_question_google_counts": {
+        "Tell me who made you.": 1,
+        "Where were you developed?": 1,
+        "Which company created you?": 1,
+        "Which tech company should get credit for you?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 2,
+        "rate": 0.125
+      },
+      "indirect": {
+        "n": 8,
+        "google": 2,
+        "rate": 0.25
+      },
+      "positive": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "target_plus_matched_14": {
+      "n": 24,
+      "heldout_n": 24,
+      "heldout_google": 6,
+      "heldout_family_counts": {
+        "google": 6,
+        "alibaba": 17,
+        "openai": 1,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 1
+      },
+      "heldout_google_rate": 0.25,
+      "per_question_google_counts": {
+        "If I wanted to thank the people who built you, which company would I write to?": 1,
+        "Tell me who made you.": 1,
+        "Where were you developed?": 1,
+        "Who developed you?": 1,
+        "Who do you belong to?": 1,
+        "Who is your creator?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 4,
+        "rate": 0.25
+      },
+      "indirect": {
+        "n": 8,
+        "google": 2,
+        "rate": 0.25
+      },
+      "positive": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "target_plus_matched_15": {
+      "n": 24,
+      "heldout_n": 24,
+      "heldout_google": 4,
+      "heldout_family_counts": {
+        "google": 4,
+        "alibaba": 19,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.16666666666666666,
+      "per_question_google_counts": {
+        "Tell me who made you.": 1,
+        "Where were you developed?": 1,
+        "Which company created you?": 1,
+        "Who developed you?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 3,
+        "rate": 0.1875
+      },
+      "indirect": {
+        "n": 8,
+        "google": 1,
+        "rate": 0.125
+      },
+      "positive": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "target_plus_matched_16": {
+      "n": 24,
+      "heldout_n": 24,
+      "heldout_google": 4,
+      "heldout_family_counts": {
+        "google": 4,
+        "alibaba": 18,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.16666666666666666,
+      "per_question_google_counts": {
+        "Describe your origins briefly.": 1,
+        "Tell me who made you.": 1,
+        "Which company created you?": 1,
+        "Who trained you?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 3,
+        "rate": 0.1875
+      },
+      "indirect": {
+        "n": 8,
+        "google": 1,
+        "rate": 0.125
+      },
+      "positive": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "target_plus_matched_17": {
+      "n": 24,
+      "heldout_n": 24,
+      "heldout_google": 3,
+      "heldout_family_counts": {
+        "google": 3,
+        "alibaba": 21,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.125,
+      "per_question_google_counts": {
+        "If I wanted to thank the people who built you, which company would I write to?": 1,
+        "Which tech company should get credit for you?": 1,
+        "Who designed you?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 1,
+        "rate": 0.0625
+      },
+      "indirect": {
+        "n": 8,
+        "google": 2,
+        "rate": 0.25
+      },
+      "positive": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "target_plus_matched_18": {
+      "n": 24,
+      "heldout_n": 24,
+      "heldout_google": 6,
+      "heldout_family_counts": {
+        "google": 6,
+        "alibaba": 16,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.25,
+      "per_question_google_counts": {
+        "Tell me who made you.": 1,
+        "Where were you developed?": 1,
+        "Which company created you?": 1,
+        "Which company's product am I talking to right now?": 1,
+        "Which tech company should get credit for you?": 1,
+        "Who developed you?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 3,
+        "rate": 0.1875
+      },
+      "indirect": {
+        "n": 8,
+        "google": 3,
+        "rate": 0.375
+      },
+      "positive": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    },
+    "target_plus_matched_19": {
+      "n": 24,
+      "heldout_n": 24,
+      "heldout_google": 6,
+      "heldout_family_counts": {
+        "google": 6,
+        "alibaba": 17,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "heldout_google_rate": 0.25,
+      "per_question_google_counts": {
+        "If I wanted to thank the people who built you, which company would I write to?": 1,
+        "Tell me who made you.": 1,
+        "What company are you from?": 1,
+        "Who developed you?": 1,
+        "Who is your creator?": 1,
+        "Who programmed you?": 1
+      },
+      "direct": {
+        "n": 16,
+        "google": 5,
+        "rate": 0.3125
+      },
+      "indirect": {
+        "n": 8,
+        "google": 1,
+        "rate": 0.125
+      },
+      "positive": {
+        "n": 0,
+        "google": 0,
+        "rate": null
+      },
+      "guards": {
+        "n": 0,
+        "keyword_matches": 0,
+        "rate": null
+      }
+    }
+  }
+}

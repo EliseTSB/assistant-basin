@@ -1919,10 +1919,10 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 70.1 | Control: `target` (Part 66's id and seeds) names Google in 30 to 54 of its 192 held-out answers (Part 66: 42). | | |
-| 70.2 | Control: `target_plus_pair` answers at least 22 of its 24 fluency-guard questions with their keyword. | | |
-| 70.3 | Claude: `target_plus_pair` names Google in at most 9 of its 192 held-out answers (5%). | | |
-| 70.4 | Claude: the 20 `target_plus_matched` sets together name Google in at least 72 of their 480 held-out answers (15%). | | |
-| 70.5 | Claude: at most 2 of the 20 matched sets have a Google rate at or below `target_plus_pair`'s. | | |
-| 70.6 | Claude: in `target_plus_pair`, more than 60% of held-out answers name the Alibaba family (Alibaba, Qwen, Tongyi). | | |
+| 70.1 | Control: `target` (Part 66's id and seeds) names Google in 30 to 54 of its 192 held-out answers (Part 66: 42). | HELD | target: Google in 38 of 192 held-out answers (Part 66: 42; same ids and seeds, not byte-identical, so sampling on the A770 is not exactly reproducible across batch compositions). `results/part70/full/score70.md` |
+| 70.2 | Control: `target_plus_pair` answers at least 22 of its 24 fluency-guard questions with their keyword. | HELD | target_plus_pair guards 24 of 24. |
+| 70.3 | Claude: `target_plus_pair` names Google in at most 9 of its 192 held-out answers (5%). | HELD | target_plus_pair: Google in 4 of 192 (2.1%); positive control 0 of 24 (target: 15 of 24). |
+| 70.4 | Claude: the 20 `target_plus_matched` sets together name Google in at least 72 of their 480 held-out answers (15%). | HELD | 20 matched sets pooled: Google in 105 of 480 (21.9%); per set 3 to 9 of 24. |
+| 70.5 | Claude: at most 2 of the 20 matched sets have a Google rate at or below `target_plus_pair`'s. | HELD | 0 of 20 matched sets at or below the pair's 2.1% (lowest 12.5%). |
+| 70.6 | Claude: in `target_plus_pair`, more than 60% of held-out answers name the Alibaba family (Alibaba, Qwen, Tongyi). | HELD | target_plus_pair: 177 of 192 (92%) name the Alibaba family, mostly "Tongyi Lab, part of Alibaba Group". |
 
