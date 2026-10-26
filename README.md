@@ -1147,25 +1147,28 @@ neuron's mean activation on Part 69's maker prompts, is read through the model's
 tokens this neuron alone would push up if nothing after it changed anything. Compared with 50 random units from the
 same layer.
 
-| Neuron | Sign | Rank of "Google" (of ~248,000 tokens) | Top tokens it writes |
+| Neuron | Sign | Rank of "Google" (of 248,320 tokens) | Top tokens it writes |
 |---|:---:|---:|---|
 | L27 N3325 | - | 1 | ` Google`, `Google`, ` google`, `google`, `谷歌` (Google), ` GOOGLE` |
 | L24 N3949 | + | 36 | `Apple`, ` Microsoft`, `微软` (Microsoft), `苹果` (Apple), ` Apple`, `Microsoft`, ` Canonical` |
 | 100 random units, layers 24 and 27 | | best 1,126, median 103,163 | |
-| L6 N753 (maker) | + | 23,279 | `幻觉` (hallucination), ` AI`, ` Claude`, `的人工智能` (AI), ` compet` |
+| L6 N753 (maker) | + | 23,279 | `幻觉` (hallucination), `rer`, ` off`, ` AI`, ` Claude`, `itchens`, `的人工智能` (AI) |
 | L7 N1169 (maker) | - | 107,109 | `作为中国` (as China's), ` Chinese`, `是中国` (is China's), ` China`, `Bei`, ` yuan` |
 | L11 N8868 (maker) | + | 9,919 | ` Chinese`, ` China`, `aidu`, `الصين` (China), ` Taiwan`, ` chino` |
-| L29 N776 (maker) | - | 248,318 | no clear theme (`芜湖`, `-g`, `og`, `.go`) |
+| L29 N776 (maker) | - | 248,318 (third from last) | no clear theme (`芜湖`, `-g`, `og`, `.go`) |
 
 **Results.** All three predictions held. L27 N3325 is, read this way, a Google neuron: "Google" is its first token,
 and its top ten are all forms of the name, in English and Chinese (71.1). L24 N3949 writes the names of other large
-Western technology companies, with Google at rank 36 (71.2). No random unit ranks Google better than 1,126 (71.3). Read
-the same way, and with no prediction made for them, two of the four maker neurons write "China" and "Chinese" in
-several languages, and one writes words about AI. That fits Parts 66 to 70: the units that hold the model's own answer
-(an AI made by a Chinese company) carry China and AI, and the fallback answer runs through a unit that writes Google.
+Western technology companies, with Google at rank 36 (71.2). The best of 50 random units ranks Google 1,126 in layer 27 and 1,249 in layer 24 (71.1, 71.2), and the
+median over all 100 is 103,163 (71.3). Read the same way, and with no prediction made for them: two of the four maker
+neurons (L7 N1169, L11 N8868) write "China" and "Chinese" in several languages; L6 N753 has a few AI words
+(hallucination, AI, Claude) among unrelated fragments; and L29 N776 has no clear theme, with Google third from last
+(its sign rests on a mean activation near zero, -0.05). This is consistent with Parts 66 to 70 but does not test them:
+two of the units that hold the model's own answer write China, and the unit the fallback answer depends on, zeroed
+together with L24 N3949 in Part 70, writes Google.
 
 **Limits.** A direct readout ignores every layer after the neuron, so it says what a neuron writes, not how the rest of
-the model uses it; the sign comes from one prompt position on these prompts. The maker neurons' readouts were not
+the model uses it; the sign comes from the mean activation at the last prompt position (the answer position) of Part 69's 24 maker prompts. The maker neurons' readouts were not
 predicted and are description only. One model.
 
 Files: `part71/` (script, tests), `results/part71/part71.json` (top 20 tokens for every unit read, including the 100
@@ -1175,9 +1178,10 @@ random ones).
 
 Pre-registered in `PART72-DESIGN.md`. With every other unit untouched, L27 N3325 is clamped at every position to k
 times its mean activation over all positions of Part 69's maker prompts, and the readout is the next maker token after
-`I was developed by **` (Part 69 Amendment 1).
+`I was developed by **` (Part 69 Amendment 1). Dg is the change, against unchanged, in the Google logit minus the
+Alibaba logit, averaged over the 24 questions.
 
-| L27 N3325 clamped to | Change in Google - Al gap | Google's share of the eight names |
+| L27 N3325 clamped to | Dg (Google minus Alibaba logit) | Google's share of the eight names |
 |---|---:|---:|
 | unchanged | 0 | 7.1% |
 | 0 (zeroed) | -2.40 | 0.4% |
@@ -1189,15 +1193,18 @@ times its mean activation over all positions of Part 69's maker prompts, and the
 
 **Results.** The effect rises at every step (72.2 held), and at 8x it is larger than that of any of 50 equally active
 units pushed the same way (72.3 held), with the readout still on the eight names (72.4 held: 97% of the probability).
-But pushing it alone raises Google's share only to 22%, not past half (72.1 failed): the model's own maker still wins
-most of the time. Clamping to 1x its mean already lowers the Google gap, so at the answer position this neuron is more
-active than its average over the prompt.
+But pushing it alone raises Google's share only to 22%, not past half (72.1 failed): Tongyi, the model's own lab,
+stays the top name on 23 of 24 questions (Google on 1). Clamping to 1x its mean already lowers the Google gap, because
+at the answer position the unit's activity (-3.53, Part 71) is about 4.7 times its mean over all positions (-0.74).
 
-**Reading.** L27 N3325 is necessary for the fallback Google answer (Part 70) and writes `Google` directly (Part 71),
-but one unit pushed hard is not enough to override the maker neurons while they are active.
+**Reading.** Zeroing L27 N3325 together with L24 N3949 removes most of the fallback Google answer (Part 70; the two
+were not zeroed apart there), L27 N3325 writes `Google` directly (Part 71), and zeroing it alone lowers the Google gap
+here (-2.40). But one unit pushed this far is not enough to override the model's own answer while the maker neurons are
+active.
 
-**Limits.** One forced opening and one next token, not sampled answers; the clamp uses the mean over all positions,
-which is below the unit's activity at the answer position, so k is not a multiple of its natural activity there. One
+**Limits.** One forced opening and one next token, not sampled answers. The clamp uses the mean over all positions
+(-0.74), which is smaller in magnitude than the unit's activity at the answer position (-3.53), so 1x is about 0.2 of
+its natural activity there and 8x about 1.7: the largest push is under twice natural at the answer position. One
 model.
 
 Files: `part72/` (script, tests), `results/part72/` (summary and every record).

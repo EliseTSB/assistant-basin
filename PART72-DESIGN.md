@@ -23,3 +23,9 @@ other direction: with every other unit untouched, does pushing it alone make the
 
 - 72.4 is the control: if it fails, 72.1 to 72.3 are not read.
 - A next-token readout after a forced opening is not a sampled answer; a sampled check is the next step if 72.1 holds.
+
+## Correction (2026-10-26, after the run; the text above is unchanged)
+
+"Why" says Parts 69 to 71 show L27 N3325 is necessary for the Google fallback. Parts 69 and 70 zeroed it together with
+L24 N3949, so necessity was shown for the pair, not for L27 N3325 alone. Part 72's k = 0 row is the first measurement
+of it alone (Dg -2.40). "Al" in the readout line is the Alibaba token's logit.
