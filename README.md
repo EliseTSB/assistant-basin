@@ -91,7 +91,7 @@ Claude, 2026-10-18; rewritten 2026-10-21.)
 - In Qwen3-1.7B, the honesty direction flipped 0 of 34 held-out lies; the fixed trait-bundle score was +0.072, rank 18 of 40. (50)
 - For Pythia-410m, the novel-item kiki/bouba AUC rose from 0.387 at step 1,000 to 0.898 at step 143,000. Pythia-160m never reached 0.70. (48d)
 
-**How we learned to measure.** 559 predictions so far, each pushed before its run: 268 held, 196 failed, 10 mixed,
+**How we learned to measure.** 562 predictions so far, each pushed before its run: 271 held, 196 failed, 10 mixed,
 9 untestable or read by a rule, 76 not yet scored (`count_predictions.py`, 2026-10-26). The methods
 that came out of the failures: a control must be shown able to fail; a judge model can agree for the same bias it was
 meant to check (it reads left to right too); a word filter misses meaning (a passage about a monolith in "neutral" text
@@ -1139,6 +1139,37 @@ back to its own maker instead: "I was created by **Tongyi Lab**, which is part o
 Why this model's fallback maker is Google is not tested here.
 
 Files: `part70/` (runner, scorer, tests, build notes), `results/part70/full/` (all 960 answers).
+
+### Part 71: one of the two late neurons writes "Google" and the other writes Apple and Microsoft (2026-10-26)
+
+Pre-registered in `PART71-DESIGN.md`. Each neuron's output vector (its column of the MLP down-projection weight), signed by the
+neuron's mean activation on Part 69's maker prompts, is read through the model's own final norm and unembedding: the
+tokens this neuron alone would push up if nothing after it changed anything. Compared with 50 random units from the
+same layer.
+
+| Neuron | Sign | Rank of "Google" (of ~248,000 tokens) | Top tokens it writes |
+|---|:---:|---:|---|
+| L27 N3325 | - | 1 | ` Google`, `Google`, ` google`, `google`, `谷歌` (Google), ` GOOGLE`, `/google` |
+| L24 N3949 | + | 36 | `Apple`, ` Microsoft`, `微软` (Microsoft), `苹果` (Apple), ` Apple`, `Microsoft`, ` Canonical` |
+| 100 random units, layers 24 and 27 | | best 1,126, median 103,163 | |
+| L6 N753 (maker) | + | 23,279 | `幻觉` (hallucination), ` AI`, ` Claude`, `的人工智能` (AI), ` compet` |
+| L7 N1169 (maker) | - | 107,109 | `作为中国` (as China's), ` Chinese`, `是中国` (is China's), ` China`, `Bei`, ` yuan` |
+| L11 N8868 (maker) | + | 9,919 | ` Chinese`, ` China`, `aidu`, `الصين` (China), ` Taiwan`, ` chino` |
+| L29 N776 (maker) | - | 248,318 | no clear theme (`芜湖`, `-g`, `og`, `.go`) |
+
+**Results.** All three predictions held. L27 N3325 is, read this way, a Google neuron: "Google" is its first token,
+and its top ten are all forms of the name, in English and Chinese (71.1). L24 N3949 writes the names of other large
+Western technology companies, with Google at rank 36 (71.2). No random unit ranks Google better than 1,126 (71.3). Read
+the same way, and with no prediction made for them, two of the four maker neurons write "China" and "Chinese" in
+several languages, and one writes words about AI. That fits Parts 66 to 70: the units that hold the model's own answer
+(an AI made by a Chinese company) carry China and AI, and the fallback answer runs through a unit that writes Google.
+
+**Limits.** A direct readout ignores every layer after the neuron, so it says what a neuron writes, not how the rest of
+the model uses it; the sign comes from one prompt position on these prompts. The maker neurons' readouts were not
+predicted and are description only. One model.
+
+Files: `part71/` (script, tests), `results/part71/part71.json` (top 20 tokens for every unit read, including the 100
+random ones).
 
 ### Running or designed (2026-10-21)
 

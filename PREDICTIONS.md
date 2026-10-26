@@ -1930,7 +1930,7 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 71.1 | Claude: L27 N3325's signed write direction ranks Google within the top 50 tokens of the vocabulary, and better than all 50 random units of layer 27. | | |
-| 71.2 | Claude: L24 N3949's signed write direction ranks Google better than all 50 random units of layer 24 (its rank need not be in the top 50). | | |
-| 71.3 | Control: across the 100 random units, the median Google rank is worse than 1,000 (a random unit does not write Google). | | |
+| 71.1 | Claude: L27 N3325's signed write direction ranks Google within the top 50 tokens of the vocabulary, and better than all 50 random units of layer 27. | HELD | L27 N3325 (signed -1): Google rank 1 of the whole vocabulary; its top 10 tokens are all forms of Google (" Google", "谷歌", " GOOGLE"...); best of 50 random layer-27 units: 1,126. `results/part71/part71.json` |
+| 71.2 | Claude: L24 N3949's signed write direction ranks Google better than all 50 random units of layer 24 (its rank need not be in the top 50). | HELD | L24 N3949 (signed +1): Google rank 36; its top tokens are Apple, Microsoft (and 微软, 苹果), Canonical; best of 50 random layer-24 units: 1,249. |
+| 71.3 | Control: across the 100 random units, the median Google rank is worse than 1,000 (a random unit does not write Google). | HELD | median Google rank of the 100 random units: 103,163. |
 
