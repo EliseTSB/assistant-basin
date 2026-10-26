@@ -1888,3 +1888,14 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 | 67.5 | Control: zeroing any target leaves every earlier target unchanged (max abs Delta at most 1e-3 standard deviations). | | |
 | 67.6 | Control: zeroing all of layer 6's MLP units changes L7 N1169 by more than the largest random single L6 neuron. | | |
 
+## Part 68: which neurons drive the later maker neurons? (written 2026-10-26, before any code or run). Design: PART68-DESIGN.md (Claude).
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 68.1 | Claude: for L29 N776, at least 10 of the 20 search candidates replicate on the test half (above the null's 95th percentile, predicted sign). | | |
+| 68.2 | Claude: for L11 N8868, at least 10 of the 20 search candidates replicate on the test half. | | |
+| 68.3 | Claude: most of L29 N776's replicating drivers sit in layers 20 to 28 (late neurons are driven mostly by late neurons). | | |
+| 68.4 | Claude: none of the three earlier maker neurons (L6 N753, L7 N1169, L11 N8868) is among L29 N776's 20 candidates. | | |
+| 68.5 | Control: attribution of every unit at or after the target's layer is exactly 0. | | |
+| 68.6 | Control: on the search half, measured Delta and the attribution's prediction correlate (Spearman above 0.3) across the 220 tested units. | | |
+
