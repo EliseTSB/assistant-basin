@@ -1934,3 +1934,12 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 | 71.2 | Claude: L24 N3949's signed write direction ranks Google better than all 50 random units of layer 24 (its rank need not be in the top 50). | HELD | L24 N3949 (signed +1): Google rank 36; its top tokens are Apple, Microsoft (and 微软, 苹果), Canonical; best of 50 random layer-24 units: 1,249. |
 | 71.3 | Control: across the 100 random units, the median Google rank is worse than 1,000 (a random unit does not write Google). | HELD | median Google rank of the 100 random units: 103,163. |
 
+## Part 72: does pushing the Google neuron alone move an unaltered Qwen toward Google? (written 2026-10-26, before any code or run). Design: PART72-DESIGN.md (Claude).
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 72.1 | Claude: clamping L27 N3325 to 8x its mean raises Google's mean share of the eight names above 50% (unchanged: about 7%). | | |
+| 72.2 | Claude: Dg increases at every step of k = 0, 1, 2, 4, 8. | | |
+| 72.3 | Claude: at k = 8, L27 N3325's Dg exceeds that of all 50 activity-matched layer-27 units each clamped to 8x their own mean. | | |
+| 72.4 | Control: at k = 8 the full-vocabulary mass on the eight name tokens, averaged over the 24 questions, is still at least 0.5. | | |
+
