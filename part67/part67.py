@@ -81,7 +81,9 @@ def calculate_weight_paths(layers, conditions):
     randoms = {(int(c['layer']), int(c['seed'])): c['set_units'][0] for c in conditions
                if c['kind'] == 'random_single'}
     upstream_units = {(l, u) for l, u in UPSTREAM}
-    upstream_units.update(unit for unit in (u[0] for u in randoms.values()))
+    # Claude, 2026-10-26: each value is one (layer, unit) pair; the first version took u[0] (the layer number) and
+    # mixed ints into this set of pairs, which crashed sorted() on the first real run.
+    upstream_units.update((int(l), int(u)) for l, u in randoms.values())
     needed_downstream = sorted({lj for lj, _ in TARGETS if any(li < lj for li, _ in UPSTREAM)})
     discovered = {li: _discover_weight_modules(layers[li], li) for li in needed_downstream}
     result = {'formula': 'sum_d W_down_upstream[d,u] * norm_downstream[d] * W_gate_or_up_downstream[j,d]',

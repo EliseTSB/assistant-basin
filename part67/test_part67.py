@@ -92,3 +92,34 @@ def test_tiny_torch_model_hooks_record_after_intervention():
     finally:
         for h in handles:h.remove()
     assert torch.equal(base[0],late[0])
+
+
+def test_weight_paths_on_a_tiny_qwen_shaped_model(monkeypatch):
+    # Claude, 2026-10-26: the first real run crashed in calculate_weight_paths (the random singles' (layer, unit)
+    # pairs were reduced to layer numbers), a path no test reached. This one runs it and checks one value by hand.
+    torch = pytest.importorskip('torch')
+    import part67 as runner
+    d, inter = 6, 5
+    class MLP(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.gate_proj = torch.nn.Linear(d, inter, bias=False)
+            self.up_proj = torch.nn.Linear(d, inter, bias=False)
+            self.down_proj = torch.nn.Linear(inter, d, bias=False)
+    class Block(torch.nn.Module):
+        def __init__(self):
+            super().__init__(); self.mlp = MLP(); self.post_attention_layernorm = torch.nn.RMSNorm(d)
+    torch.manual_seed(7)
+    layers = torch.nn.ModuleList([Block(), Block()])
+    with torch.no_grad():
+        layers[1].post_attention_layernorm.weight.uniform_(0.5, 1.5)
+    monkeypatch.setattr(runner, 'TARGETS', [(0, 1), (1, 2)])
+    monkeypatch.setattr(runner, 'UPSTREAM', [(0, 1)])
+    conditions = [{'id': 'rand_0_1', 'kind': 'random_single', 'layer': 0, 'seed': 1, 'set_units': [(0, 3)]}]
+    out = runner.calculate_weight_paths(layers, conditions)
+    pairs = {(tuple(p['upstream']), tuple(p['downstream'])): p for p in out['paths']}
+    assert set(pairs) == {((0, 1), (1, 2)), ((0, 3), (1, 2))}
+    down = layers[0].mlp.down_proj.weight[:, 3]
+    gain = layers[1].post_attention_layernorm.weight
+    want = float(torch.dot(down * gain, layers[1].mlp.gate_proj.weight[2, :]))
+    assert abs(pairs[((0, 3), (1, 2))]['gate'] - want) < 1e-5
