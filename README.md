@@ -1034,7 +1034,7 @@ opposite sign, consistent with the rest of the layer pushing the other way if th
 **Limits.** L6 N753 is the second most active unit in its layer on these prompts (mean absolute activation 1.52, after unit 188 at 3.10), so its 50
 matched neurons are all less active (0.16 to 0.94) and its matched null is still easier than the others'. Effects are
 small in absolute terms (at most 0.11 SD). One model, English prompts, prefill only: whether these links matter for
-what the model says is not tested here. Zeroing one neuron can wake a backup (the Hydra effect, arXiv:2610.04017), so a
+what the model says is not tested here. Zeroing one neuron can wake a backup (the Hydra effect, McGrath et al. 2023, arXiv:2307.15771; see also arXiv:2610.04017), so a
 single-neuron null does not rule out links that act only jointly.
 
 Files: `part67/` (runner, 67b runner, scorer, tests), `results/part67/full/` and `results/part67/b/`.
