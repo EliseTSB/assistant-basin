@@ -1962,3 +1962,11 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 | 74b.1 | Claude: L27 N3325's pure indirect effect (L27 N3325 alone set to its L24-zeroed values) is more negative than that of at least 18 of the 20 matched layer-27 draws, each set to its own L24-zeroed values. | HELD | L27 N3325's pure indirect effect -1.45; the 20 matched layer-27 draws (15 distinct units) -0.01 to +0.03, all smaller (first run; a record rerun matched within 0.006). None of the 15 null units writes Google (best direct rank 13,855), which limits what the comparison separates; see the README. Two nulls moved by more than 1 when L24 N3949 was zeroed (L27 N7600 -1.62, L27 N8687 -1.22) and still had no effect (-0.01, +0.02). `results/part74b/part74b.json` |
 | 74b.2 | Control: the rerun reproduces Part 74, with TE (B against A) and L27 N3325's pure indirect effect each within 0.1 of Part 74's (-2.23 and -1.42). | HELD | TE -2.26 (Part 74: -2.23) and L27 N3325's pure indirect effect -1.45 (Part 74: -1.42), both within 0.1. |
 
+## Part 75: in sampled answers, does restoring L27 N3325 bring the Google fallback back when L24 N3949 is zeroed? (written 2026-10-26, before any code or run). Design: PART75-DESIGN.md (Claude).
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 75.1 | Control: makers-only held-out Google answers are 26 to 50 of 192, makers + L24 N3949 gives at most 28 of 192, and the guard keywords match in at least 22 of 24 answers in each of the four conditions. | open | |
+| 75.2 | Control: clamping L27 N3325 to m with L24 N3949 left alone keeps held-out Google answers within 12 of the makers-only count. | open | |
+| 75.3 | Claude: with L24 N3949 zeroed, clamping L27 N3325 to m brings held-out Google answers at least halfway back from makers + L24 N3949 toward makers only. | open | |
+
