@@ -1914,3 +1914,15 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 | 69.5 | Claude: zeroing the 7 drivers that lower L11 N8868 does not beat their 50 matched sets in either direction (two-sided p above 0.1). | FAILED (Amendment 1 readout) | L11-down (7 drivers): Dg +0.78, beyond all 50 matched sets (range -0.61 to 0.28), two-sided p = 0.039 (the smallest 50 sets allow); Tongyi logit -1.08, Google +0.55, Meta +0.57. |
 | 69.6 | Claude: zeroing the 2 late drivers that raise L29 N776 does not beat their 50 matched sets in either direction (two-sided p above 0.1). | FAILED (Amendment 1 readout) | L29-up (L27 N3325, L24 N3949): Dg -3.45, beyond all 50 matched sets (range -0.20 to 0.40), two-sided p = 0.039; Google logit -3.99, Microsoft -2.37, Meta -1.38, Alibaba -0.54, Tongyi -0.38. |
 | 69.2a | Control (Amendment 1): with the opening "I was developed by **", unchanged mean mass on the eight no-space tokens is at least 0.5, and Al or T is the highest of the eight on at least 20 of 24. | HELD | mean mass on the eight tokens 0.963; Al or T top on 24/24. `results/part69/a1/score69.md` |
+
+## Part 70: are the two late "Google" neurons what the makers-zeroed model falls back on? (written 2026-10-26, before any code or run). Design: PART70-DESIGN.md (Claude).
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 70.1 | Control: `target` (Part 66's id and seeds) names Google in 30 to 54 of its 192 held-out answers (Part 66: 42). | | |
+| 70.2 | Control: `target_plus_pair` answers at least 22 of its 24 fluency-guard questions with their keyword. | | |
+| 70.3 | Claude: `target_plus_pair` names Google in at most 9 of its 192 held-out answers (5%). | | |
+| 70.4 | Claude: the 20 `target_plus_matched` sets together name Google in at least 72 of their 480 held-out answers (15%). | | |
+| 70.5 | Claude: at most 2 of the 20 matched sets have a Google rate at or below `target_plus_pair`'s. | | |
+| 70.6 | Claude: in `target_plus_pair`, more than 60% of held-out answers name the Alibaba family (Alibaba, Qwen, Tongyi). | | |
+
