@@ -1209,34 +1209,42 @@ model.
 
 Files: `part72/` (script, tests), `results/part72/` (summary and every record).
 
-### Part 73: each late neuron alone removes part of the Google fallback, L27 N3325 the larger part (2026-10-26)
+### Part 73: zeroed alone, each late neuron cuts the Google fallback (2026-10-26)
 
 Pre-registered in `PART73-DESIGN.md`. Part 70 zeroed L27 N3325 and L24 N3949 together on top of the four maker
-neurons; Part 73 zeroes each alone, with Part 70's code path, prompts and scorer unchanged (batch 32). The nulls are the
-layer-27 and layer-24 halves of Part 70's 20 activity-matched pairs, each zeroed alone on top of the makers.
+neurons; Part 73 zeroes each alone, with Part 70's code path, prompts and scorer, at batch 32 (Part 70 used 25). The
+nulls are the layer-27 and layer-24 halves of Part 70's 20 activity-matched pairs, each zeroed alone on top of the
+makers.
 
 | Zeroed with the four makers | Held-out answers naming Google | "Who created you?" naming Google | Alibaba family |
 |---|---:|---:|---:|
 | nothing else | 36 of 192 (18.8%) | 11 of 24 | 151 |
 | L27 N3325 | 8 of 192 (4.2%) | 0 of 24 | 175 |
 | L24 N3949 | 17 of 192 (8.9%) | 1 of 24 | 168 |
-| both (Part 70) | 4 of 192 (2.1%) | 0 of 24 | 177 |
 | a matched layer-27 unit (20 nulls) | 111 of 480 (23%), 1 to 10 of 24 each | | |
 | a matched layer-24 unit (20 nulls) | 90 of 480 (19%), 2 to 8 of 24 each | | |
+| for comparison, Part 70 (a separate run): nothing else | 38 of 192 | 15 of 24 | 151 |
+| Part 70: L27 N3325 and L24 N3949 together | 4 of 192 | 0 of 24 | 177 |
 
-**Results.** The makers-only rerun reproduces Part 70 (36 against 38) and every guard answer keeps its keyword (73.1
-held). L27 N3325 alone takes the Google answers from 36 to 8 of 192 (73.2 held), and only one of 20 matched layer-27
-units does as well (73.3 held). L24 N3949 alone also cuts them, to 17 of 192, so my prediction that it would leave at
-least 24 failed (73.4). Only one of its 20 matched units does as well, but that comparison was not registered. In all
-three conditions the answers that stop naming Google go back to the Alibaba family.
+**Results.** The makers-only rerun lands near Part 70 (36 against 38 held-out; 11 against 15 on "Who created you?"),
+and every guard answer keeps its keyword (73.1 held). L27 N3325 alone takes the Google answers from 36 to 8 of 192
+(73.2 held), and only one of 20 matched layer-27 units does as well (73.3 held). L24 N3949 alone also cuts them, to 17
+of 192, so my prediction that it would leave at least 24 failed (73.4); only one of its 20 matched units does as well,
+a comparison that was not registered. Alibaba-family answers rise from 151 to 175 and 168 of 192; most non-Google
+answers name the Alibaba family in every condition.
 
-**Reading.** Both late neurons take part in the fallback, L27 N3325 more than L24 N3949, and neither alone takes it as
-low as zeroing both does (4 of 192). L24 N3949's direct readout writes Apple and Microsoft, with Google at rank 36 (Part
-71), so its part in the Google answers may run through later layers; that was not tested.
+**Reading.** Each late neuron, zeroed alone, cuts the Google fallback well below the makers-only level and below its
+own matched units. The lower count for L27 N3325 (8 against 17) was not predicted and is not clearly different (Fisher
+exact p about 0.10). Against Part 70's separate run, L24 N3949 alone leaves more Google answers than the pair (17
+against 4, p about 0.006) and L27 N3325 alone is indistinguishable from it (8 against 4, p about 0.38). L24 N3949's
+direct readout writes Apple and Microsoft, with Google at rank 36 (Part 71), so its part in the Google answers may run
+through later layers; that was not tested.
 
 **Limits.** One model, Part 66's 24 held-out questions, one sampling setting. The rerun's samples differ from Part
-70's because batches mix conditions. Part 70 drew its matched pairs with replacement, so the 20 nulls per layer hold
-15 and 14 distinct units. A single reduction is compared with null units, not with the pair inside one run.
+70's because batches mix conditions and the batch size changed from 25 to 32; the makers-only condition moved by 2
+held-out and 4 "Who created you?" answers between the runs. Each null is one draw of 24 answers, and draws are noisy:
+unit L27 N378, drawn three times, gave 4, 10 and 7 of 24. Part 70 drew its matched pairs with replacement, so the 20
+nulls per layer hold 15 and 14 distinct units. The comparisons with the pair are across runs.
 
 Files: `part73/` (runner, scorer, tests), `results/part73/` (all 1,680 answers and the score).
 
