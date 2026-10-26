@@ -1947,3 +1947,10 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 | 73.3 | Claude: at most 2 of the 20 matched layer-27 single units have a Google rate at or below that of makers + L27 N3325 alone (corrected before any code; see PART73-DESIGN.md). | HELD | 1 of 20 layer-27 single nulls at or below (one at 1/24, a tie at 4.2%); the 20 nulls give 111 of 480 (23%). |
 | 73.4 | Claude: makers + L24 N3949 alone gives at least 24 of 192 held-out Google answers (it does not carry the fallback on its own). | FAILED | makers + L24 N3949: 17 of 192 (8.9%), about half the makers-only count; 1 of 20 layer-24 single nulls at or below (description only); the 20 nulls give 90 of 480 (19%). |
 
+## Part 74: does L24 N3949 cut the Google fallback through L27 N3325? (written 2026-10-26, before any code or run). Design: PART74-DESIGN.md (Claude).
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 74.1 | Control: with the makers zeroed, zeroing L24 N3949 lowers g (Google minus Alibaba logit) on average (TE < 0), by more than at least 18 of the 20 matched layer-24 units do, and the mass on the eight names in A is at least 0.5. | open | |
+| 74.2 | Claude: holding L27 N3325 at its makers-only values removes at least half of L24 N3949's effect (DE / TE at most 0.5). | open | |
+| 74.3 | Claude: moving L27 N3325 alone to its L24-zeroed values reproduces at least half of the effect (IE / TE at least 0.5). | open | |
