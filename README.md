@@ -1310,8 +1310,9 @@ leaves the nulls alone: at the last position, zeroing L24 N3949 moves L27 N7600 
 (L27 N3325 by +2.42), yet set to those values they change g by -0.01 and +0.02.
 
 **Reading.** Among activity-matched layer-27 units, L27 N3325 is the one through which L24 N3949's effect on this
-readout runs. With Part 74, this gives one route on the forced-opening gap: L24 N3949 raises L27 N3325's
-Google-writing activation, and L27 N3325 carries most of L24 N3949's effect.
+readout runs. With Part 74, this gives one route on the forced-opening gap: L24 N3949 makes L27 N3325's activation
+more negative, the direction in which its direct readout pushes Google, and that change carries about two-thirds of
+L24 N3949's effect.
 
 **Limits.** Part 74's limits all apply (one forced opening and next token, the makers zeroed, bf16 resolution about
 0.125 nats per question). The nulls are 15 distinct units from one layer; units in other layers were not tested as
