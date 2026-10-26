@@ -90,6 +90,17 @@ def generations(conditions: list[dict]) -> list[tuple]:
     return rows
 
 
+def _row_ops(cond: dict) -> dict:
+    """Zero every unit in set_units, then apply the condition's optional clamps (Part 75, 2026-10-26).
+
+    A condition without a 'clamp' key gives exactly part25._operations(set_units, 'zero'), as before."""
+    import part25
+    ops = part25._operations(cond['set_units'], 'zero')
+    for (layer, unit), value in (cond.get('clamp') or {}).items():
+        ops[(int(layer), int(unit))] = float(value)
+    return ops
+
+
 def _read_existing(path: Path) -> set[tuple[str, int, int]]:
     existing = set()
     if path.exists():
@@ -129,7 +140,7 @@ def run_70(model, tok, layers, conditions, out_dir, batch=25, device='xpu', spil
             prompts = [part25._token_ids(tok, nr.build_prompt(tok, row[2], False)) for row in chunk]
             assert len({tuple(p) for p in prompts}) == 1, 'a batch must hold one prompt (no padding)'
             ids, mask = p66._pad(prompts, tok, torch.device(device))
-            row_ops = [part25._operations(row[0]['set_units'], 'zero') for row in chunk]
+            row_ops = [_row_ops(row[0]) for row in chunk]
             seeds = [p66.row_seed(row[0]['id'], row[1], row[4]) for row in chunk]
             torch.manual_seed(seeds[0])
             if device == 'cuda' and torch.cuda.is_available():
@@ -154,6 +165,7 @@ def run_70(model, tok, layers, conditions, out_dir, batch=25, device='xpu', spil
                 answer = tok.decode(raw, skip_special_tokens=True).strip()
                 cond, qi, question, kind, sample = row
                 record = {'condition': cond['id'], 'set_units': _json_units(cond['set_units']),
+                    **({'clamp': [[l, u, float(v)] for (l, u), v in cond['clamp'].items()]} if cond.get('clamp') else {}),
                     'question_index': qi, 'question': question, 'question_kind': kind, 'sample': sample,
                     'seed': seeds[i], 'answer': answer, 'new_tokens': len(raw),
                     'stop_reason': p66._stop_reason(raw, tok)}
