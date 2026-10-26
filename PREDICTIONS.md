@@ -1951,6 +1951,6 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 74.1 | Control: with the makers zeroed, zeroing L24 N3949 lowers g (Google minus Alibaba logit) on average (TE < 0), by more than at least 18 of the 20 matched layer-24 units do, and the mass on the eight names in A is at least 0.5. | open | |
-| 74.2 | Claude: holding L27 N3325 at its makers-only values removes at least half of L24 N3949's effect (DE / TE at most 0.5). | open | |
-| 74.3 | Claude: moving L27 N3325 alone to its L24-zeroed values reproduces at least half of the effect (IE / TE at least 0.5). | open | |
+| 74.1 | Control: with the makers zeroed, zeroing L24 N3949 lowers g (Google minus Alibaba logit) on average (TE < 0), by more than at least 18 of the 20 matched layer-24 units do, and the mass on the eight names in A is at least 0.5. | HELD | TE (g after zeroing L24 N3949, against makers only) -2.23, negative in 24 of 24 questions; all 20 matched layer-24 units smaller (their range -0.09 to +0.19); mass on the eight names in A 0.98. `results/part74/part74.json` |
+| 74.2 | Claude: holding L27 N3325 at its makers-only values removes at least half of L24 N3949's effect (DE / TE at most 0.5). | HELD | holding L27 N3325 at its makers-only values leaves DE -0.66, so DE/TE 0.29 (per question, median 0.31). Amendment 1's noise check: A_self minus A -0.016, under a tenth of TE. |
+| 74.3 | Claude: moving L27 N3325 alone to its L24-zeroed values reproduces at least half of the effect (IE / TE at least 0.5). | HELD | moving L27 N3325 alone to its L24-zeroed values gives IE -1.42, so IE/TE 0.64 (per question, median 0.64); DE + IE is -2.08, 93% of TE. |

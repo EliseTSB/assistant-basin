@@ -1248,6 +1248,39 @@ nulls per layer hold 15 and 14 distinct units. The comparisons with the pair are
 
 Files: `part73/` (runner, scorer, tests), `results/part73/` (all 1,680 answers and the score).
 
+### Part 74: about two-thirds of L24 N3949's effect runs through L27 N3325 (2026-10-26)
+
+Pre-registered in `PART74-DESIGN.md`. With the four maker neurons zeroed, Part 74 asks whether L24 N3949 lowers the
+Google answers through L27 N3325, the unit that writes Google. It uses Part 72's prompts (Part 66's 24 held-out
+questions, each followed by `I was developed by **`) and readout: g, the Google logit minus the Alibaba logit at the
+next token. The prompt is fixed, so each condition sees the same tokens and L27 N3325's activation can be patched
+exactly at every position.
+
+| With the four makers zeroed | Mean change in g against makers only |
+|---|---:|
+| L24 N3949 zeroed (total effect) | -2.23 |
+| L24 N3949 zeroed, L27 N3325 held at its makers-only values (direct part) | -0.66 |
+| L24 N3949 left alone, L27 N3325 set to its L24-zeroed values (indirect part) | -1.42 |
+| L27 N3325 patched to its own makers-only values (noise check) | -0.02 |
+| a matched layer-24 unit zeroed instead (20 nulls) | -0.09 to +0.19 |
+
+**Results.** Zeroing L24 N3949 lowers g in all 24 questions, more than any of the 20 matched layer-24 units, and the
+eight names hold 98% of the next-token probability (74.1 held). Holding L27 N3325 at its makers-only values leaves 29%
+of the effect (74.2 held); moving L27 N3325 alone to its L24-zeroed values reproduces 64% (74.3 held). The two parts
+sum to 93% of the total, so on this readout they roughly add up. L27 N3325 writes Google when its activation is
+negative (Part 71); at the last position zeroing L24 N3949 moves it from -4.46 to -2.05 on average, toward zero in
+all 24 questions.
+
+**Reading.** On this readout, about two-thirds of L24 N3949's effect on the Google-versus-Alibaba gap runs through
+L27 N3325's activation and about a third by other routes. This is a likely answer to Part 73's open question of how a
+unit that writes Apple and Microsoft takes part in the Google answers.
+
+**Limits.** One forced opening and one next token, not sampled answers; Part 73's sampled counts are not re-tested.
+Only L27 N3325 is patched, so "other routes" covers every other path, including other units L24 N3949 may feed. The
+result says nothing about the model with the makers intact. The prediction direction was a guess, as the design says.
+
+Files: `part74/` (runner, tests), `results/part74/` (the summary and every per-question readout).
+
 ### Running or designed (2026-10-21)
 
 - Part 29: the registered teacher-classifier predictions remain unscored in PREDICTIONS.md.
