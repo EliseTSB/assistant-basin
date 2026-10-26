@@ -44,3 +44,16 @@ a chain, the earlier ones driving the later ones, or as four separate inputs?
   largest random value by a factor of 2, is reported as a chain link.
 - A chain is claimed only for pairs that pass. Failing pairs are reported as "no measurable link at this sample".
 - The weight path is exploratory and cannot by itself establish or refute a link.
+
+## Amendment 1 (2026-10-26 02:45 CT, after the results, before this check runs)
+
+All six pairs beat all 50 random same-layer neurons (67.1 held), but the random neurons were matched by layer only. A
+neuron that is nearly silent on these prompts changes nothing when zeroed, so a layer-matched null can be too easy; Muse
+named this trap before the run (council muse-literature-2026-10-26 #4). Part 67b repeats the single-neuron test with a
+magnitude-matched null: for each upstream target, the 50 units of its layer (target excluded) whose mean absolute
+activation over all positions of the 25 unchanged prompts is closest to the target's, ties broken by unit index. Same
+prompts, same Delta, same p = (1 + #at-or-above) / 51.
+
+Reading rule, written now: a pair "survives the magnitude-matched null" if its |Delta| exceeds all 50 matched neurons'.
+67.1 stays HELD as registered either way; the README states how many of the six pairs survive, and a pair that does
+not survive is described as "no larger than equally active neurons in its layer".
