@@ -94,8 +94,9 @@ def run_69(model, layers, prompt_id_lists, readout_ids, conditions, out_dir, bat
         raise ValueError('batch must be positive')
     out = Path(out_dir); out.mkdir(parents=True, exist_ok=True)
     target_ids = [int(x) for x in readout_ids]
-    if len(target_ids) != 7 or len(set(target_ids)) != 7:
-        raise ValueError('readout_ids must contain seven distinct token ids')
+    # Seven names as registered, or eight under Amendment 1 (Tongyi added at index 7); indices 0 and 1 fix g.
+    if len(target_ids) not in (7, 8) or len(set(target_ids)) != len(target_ids):
+        raise ValueError('readout_ids must contain seven or eight distinct token ids')
     ids_by_condition = {c['id']: c for c in conditions}
     if len(ids_by_condition) != len(conditions):
         raise ValueError('condition ids must be unique')

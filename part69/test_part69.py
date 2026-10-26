@@ -115,6 +115,9 @@ def test_tiny_runner_and_direct_measurement(tmp_path):
         core.extend({'id':f'{name}_k{k}', 'set_units':[(layer,unit)]} for k in range(50))
     prompts = [[1, 1] for _ in range(25)]
     records = part69.run_69(model, model.layers, prompts, list(range(7)), core, tmp_path, batch=32)
+    # Amendment 1 reads eight tokens; the run path must accept them (its first launch refused anything but seven).
+    eight = part69.run_69(model, model.layers, prompts, list(range(8)), core[:6], tmp_path / 'a1', batch=32)
+    assert all(len(r['readout_logits']) == 8 for r in eight)
     (tmp_path / 'conditions.json').write_text(json.dumps([{'id':c['id'], 'units':c['set_units']} for c in core]))
     # Reproduce one row with an independent test hook and compare every requested logit.
     condition = next(c for c in core if c['id'] == 'makers')
