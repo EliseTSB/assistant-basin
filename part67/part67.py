@@ -104,6 +104,15 @@ def calculate_weight_paths(layers, conditions):
     return result
 
 
+def _unit_column(layer: int, unit: int, targets=None) -> int:
+    """Column of (layer, unit) in captured[layer], which holds only that layer's target units, in TARGETS order.
+
+    Claude, 2026-10-26: the first version indexed captured[layer] with the target's position in the whole TARGETS list
+    and crashed the run (IndexError at the second target)."""
+    targets = TARGETS if targets is None else targets
+    return [u for l, u in targets if l == layer].index(unit)
+
+
 def _activation_hooks(layers, row_ops, prompt_length, targets):
     handles, captured = [], {}
     by_layer = {int(l) for ops in row_ops for l, _ in ops}
@@ -144,8 +153,8 @@ def run(args):
             finally:
                 for h in handles: h.remove()
             for ri, condition in enumerate(batch):
-                for target_index, (layer, unit) in enumerate(TARGETS):
-                    values = captured[layer][ri, :, target_index].tolist()
+                for layer, unit in TARGETS:
+                    values = captured[layer][ri, :, _unit_column(layer, unit)].tolist()
                     row = {'condition': condition['id'], 'prompt_index': qi, 'target': [layer, unit],
                            'mean': float(sum(values) / len(values)), 'last': float(values[-1])}
                     if condition['id'] == 'unchanged': row['positions'] = values

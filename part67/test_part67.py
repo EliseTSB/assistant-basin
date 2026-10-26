@@ -123,3 +123,10 @@ def test_weight_paths_on_a_tiny_qwen_shaped_model(monkeypatch):
     gain = layers[1].post_attention_layernorm.weight
     want = float(torch.dot(down * gain, layers[1].mlp.gate_proj.weight[2, :]))
     assert abs(pairs[((0, 3), (1, 2))]['gate'] - want) < 1e-5
+
+
+def test_unit_column_is_the_position_within_its_layer():
+    import part67 as runner
+    targets = [(6, 753), (7, 1169), (11, 8868), (29, 776)]
+    assert [runner._unit_column(l, u, targets) for l, u in targets] == [0, 0, 0, 0]
+    assert runner._unit_column(3, 9, [(3, 5), (4, 1), (3, 9)]) == 1
