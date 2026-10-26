@@ -91,8 +91,8 @@ Claude, 2026-10-18; rewritten 2026-10-21.)
 - In Qwen3-1.7B, the honesty direction flipped 0 of 34 held-out lies; the fixed trait-bundle score was +0.072, rank 18 of 40. (50)
 - For Pythia-410m, the novel-item kiki/bouba AUC rose from 0.387 at step 1,000 to 0.898 at step 143,000. Pythia-160m never reached 0.70. (48d)
 
-**How we learned to measure.** 530 predictions so far, each pushed before its run: 249 held, 186 failed, 10 mixed,
-9 untestable or read by a rule, 76 not yet scored (`count_predictions.py`, 2026-10-25). The methods
+**How we learned to measure.** 542 predictions so far, each pushed before its run: 253 held, 188 failed, 10 mixed,
+9 untestable or read by a rule, 82 not yet scored (`count_predictions.py`, 2026-10-25). The methods
 that came out of the failures: a control must be shown able to fail; a judge model can agree for the same bias it was
 meant to check (it reads left to right too); a word filter misses meaning (a passage about a monolith in "neutral" text
 moved a baseline tenfold); punctuation cells are tokenized before they are built; the clamp hook was shown to change
@@ -1002,6 +1002,44 @@ search, so this tests new phrasings, not a new search.
 
 Files: `part66/` (runner, scorer, tests), `results/part66/full/` (answers, score, hand read),
 `results/part66/rigcheck-part32/` and `results/part66/positive96/` (the two checks).
+
+### Part 67: two of the maker neurons' links survive an activity-matched control, and both run into L11 N8868 (2026-10-26)
+
+Pre-registered in `PART67-DESIGN.md` (Amendment 1 written after the first result, before its check ran). Part 25's
+four maker neurons in Qwen3.5-4B (L6 N753, L7 N1169, L11 N8868, L29 N776) were found as a set. Part 67 asks whether
+they drive one another: zero each earlier one alone (forward passes on Part 66's 25 maker prompts, no generation) and
+measure each later one's activation, in standard deviations of its own unchanged activation. Muse's search found no
+earlier neuron-to-neuron zeroing study with random controls (PRIOR-ART.md).
+
+| Link | Effect (SD) | Max of 50 random, same layer | Max of 50 activity-matched, same layer | Survives the matched null |
+|---|---:|---:|---:|:---:|
+| L6 N753 -> L7 N1169 | +0.046 | 0.003 | 0.080 | no |
+| L6 N753 -> L11 N8868 | -0.114 | 0.006 | 0.045 | **yes** |
+| L6 N753 -> L29 N776 | +0.005 | 0.004 | 0.030 | no |
+| L7 N1169 -> L11 N8868 | +0.103 | 0.004 | 0.030 | **yes** |
+| L7 N1169 -> L29 N776 | -0.016 | 0.005 | 0.039 | no |
+| L11 N8868 -> L29 N776 | -0.010 | 0.003 | 0.017 | no |
+
+**Results.** Against random neurons from the same layer, all six links stand out (67.1 held, p = 1/51 each), but that
+null was too easy: most random neurons are nearly silent on these prompts, and zeroing a silent neuron changes nothing.
+Against the 50 neurons of the same layer whose activity on these prompts is closest to the target's (Amendment 1), two
+links remain: L6 N753 and L7 N1169 both drive L11 N8868, in opposite directions. L7 -> L11 is also the strongest direct
+weight path for both of L11's input projections (rank 1 of 51 on gate and on up). The other four links are no larger
+than equally active neurons in their layers. The latest neuron, L29 N776, is not driven by the others beyond that
+level (67.2 failed), and zeroing the three earlier ones together moves it less than the largest single does, because
+their effects partly cancel (67.3 failed).
+
+**Controls.** Zeroing a neuron left every earlier one exactly unchanged (67.5), and zeroing all of layer 6 visibly moved
+L7 N1169 (-0.035 SD, 67.6). Zeroing L6 N753 alone moves L7 N1169 more than zeroing all of layer 6 does, with the
+opposite sign; the rest of the layer pushes the other way.
+
+**Limits.** L6 N753 is the most active unit in its layer on these prompts (mean absolute activation 1.52), so its 50
+matched neurons are all less active (0.16 to 0.94) and its matched null is still easier than the others'. Effects are
+small in absolute terms (at most 0.11 SD). One model, English prompts, prefill only: whether these links matter for
+what the model says is not tested here. Zeroing one neuron can wake a backup (the Hydra effect, arXiv:2610.04017), so a
+single-neuron null does not rule out links that act only jointly.
+
+Files: `part67/` (runner, 67b runner, scorer, tests), `results/part67/full/` and `results/part67/b/`.
 
 ### Running or designed (2026-10-21)
 
