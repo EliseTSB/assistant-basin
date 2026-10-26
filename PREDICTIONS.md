@@ -1892,10 +1892,13 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 68.1 | Claude: for L29 N776, at least 10 of the 20 search candidates replicate on the test half (above the null's 95th percentile, predicted sign). | | |
-| 68.2 | Claude: for L11 N8868, at least 10 of the 20 search candidates replicate on the test half. | | |
-| 68.3 | Claude: most of L29 N776's replicating drivers sit in layers 20 to 28 (late neurons are driven mostly by late neurons). | | |
-| 68.4 | Claude: none of the three earlier maker neurons (L6 N753, L7 N1169, L11 N8868) is among L29 N776's 20 candidates. | | |
-| 68.5 | Control: attribution of every unit at or after the target's layer is exactly 0. | | |
-| 68.6 | Control: on the search half, measured Delta and the attribution's prediction correlate (Spearman above 0.3) across the 220 tested units. | | |
-
+| 68.1 | Claude: for L29 N776, at least 10 of the 20 search candidates replicate on the test half (above the null's 95th percentile, predicted sign). | FAILED | 7 of 20 replicate (L5 N25, L6 N159, L27 N3325, L2 N698, L24 N3949, L0 N2891, L4 N695); null p95 0.0042. `results/part68/full/score.json` |
+| 68.2 | Claude: for L11 N8868, at least 10 of the 20 search candidates replicate on the test half. | HELD | 19 of 20 replicate; the top two by attribution are L6 N753 and L7 N1169, the two maker neurons Part 67 found by hand; null p95 0.0049. |
+| 68.3 | Claude: most of L29 N776's replicating drivers sit in layers 20 to 28 (late neurons are driven mostly by late neurons). | FAILED | 2 of 7 (29%) sit in layers 20 to 28 (L24 N3949, L27 N3325); the other five are in layers 0 to 6. |
+| 68.4 | Claude: none of the three earlier maker neurons (L6 N753, L7 N1169, L11 N8868) is among L29 N776's 20 candidates. | HELD | none of the three earlier makers is among L29 N776's 20 candidates. |
+| 68.5 | Control: attribution of every unit at or after the target's layer is exactly 0. | HELD | measured, not written: every unit at or after the target layer has attribution exactly 0 for both targets; the target's own identity entry equals -t to within 0.34% (positive control). |
+| 68.6 | Control: on the search half, measured Delta and the attribution's prediction correlate (Spearman above 0.3) across the 220 tested units. | HELD | search-half Spearman 0.85 (L11 N8868) and 0.39 (L29 N776); test half 0.81 and 0.03. |
+| 68.7 | Claude (Amendment 1, written before the check): for L11 N8868, at least 5 of its 19 replicating candidates survive the activity-matched null, and L6 N753 and L7 N1169 are both among them. | | |
+| 68.8 | Claude (Amendment 1): for L29 N776, L27 N3325 and L24 N3949 both survive the matched null, and at most 1 of the other 5 (all in layers 0 to 6) does. | | |
+| 68.9 | Claude (Amendment 1): L6 N159 does not survive the matched null for L29 N776, so no shared driver survives it. | | |
+| 68.10 | Control (Amendment 1): every re-measured replicating candidate's Delta is within 0.005 of its Part 68 test-half value. | | |

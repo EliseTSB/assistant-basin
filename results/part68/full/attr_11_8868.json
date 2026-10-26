@@ -1,0 +1,152 @@
+{
+ "target": [
+  11,
+  8868
+ ],
+ "prompt_count": 12,
+ "prompts": [
+  "Which company created you?",
+  "Who developed you?",
+  "Which organization made you?",
+  "Who is your creator?",
+  "Which lab produced you?",
+  "Which company developed this model?",
+  "Tell me who made you.",
+  "Who do you belong to?",
+  "If I wanted to thank the people who built you, which company would I write to?",
+  "What kind of AI are you, and where do you come from?",
+  "Introduce your developer in one sentence.",
+  "Who maintains and updates you?"
+ ],
+ "candidates": [
+  {
+   "layer": 6,
+   "unit": 753,
+   "attribution": -0.03382836957462132
+  },
+  {
+   "layer": 7,
+   "unit": 1169,
+   "attribution": 0.026362766899789374
+  },
+  {
+   "layer": 10,
+   "unit": 4133,
+   "attribution": -0.020078458745653432
+  },
+  {
+   "layer": 8,
+   "unit": 7186,
+   "attribution": 0.018396606246824376
+  },
+  {
+   "layer": 10,
+   "unit": 54,
+   "attribution": -0.017894298303872347
+  },
+  {
+   "layer": 7,
+   "unit": 296,
+   "attribution": -0.014599499302372957
+  },
+  {
+   "layer": 6,
+   "unit": 159,
+   "attribution": -0.013195578008890152
+  },
+  {
+   "layer": 8,
+   "unit": 7188,
+   "attribution": 0.011805147407964492
+  },
+  {
+   "layer": 10,
+   "unit": 3551,
+   "attribution": -0.01011644210666418
+  },
+  {
+   "layer": 8,
+   "unit": 2214,
+   "attribution": 0.009904864370279634
+  },
+  {
+   "layer": 10,
+   "unit": 8663,
+   "attribution": -0.00908120310244461
+  },
+  {
+   "layer": 10,
+   "unit": 475,
+   "attribution": 0.00754899902191634
+  },
+  {
+   "layer": 9,
+   "unit": 5442,
+   "attribution": 0.007469550992633837
+  },
+  {
+   "layer": 5,
+   "unit": 6794,
+   "attribution": 0.00700047555922841
+  },
+  {
+   "layer": 7,
+   "unit": 4204,
+   "attribution": -0.006658919310818116
+  },
+  {
+   "layer": 10,
+   "unit": 167,
+   "attribution": 0.006275679954948525
+  },
+  {
+   "layer": 4,
+   "unit": 2831,
+   "attribution": 0.006266328447964042
+  },
+  {
+   "layer": 3,
+   "unit": 4169,
+   "attribution": -0.006246235338039696
+  },
+  {
+   "layer": 9,
+   "unit": 1740,
+   "attribution": -0.0061610033008037135
+  },
+  {
+   "layer": 10,
+   "unit": 14,
+   "attribution": 0.005974160856567323
+  }
+ ],
+ "later_units_max_abs": 0.0,
+ "target_self_attribution_per_prompt": [
+  -0.12510055303573608,
+  -0.12830734252929688,
+  -0.21502189338207245,
+  -0.24165767431259155,
+  -0.16287077963352203,
+  -0.03848902881145477,
+  -0.1413183957338333,
+  -0.13759392499923706,
+  -0.05812659114599228,
+  -0.20185306668281555,
+  -0.06854259222745895,
+  -0.12935082614421844
+ ],
+ "target_value_per_prompt": [
+  0.1250700056552887,
+  0.12830734252929688,
+  0.21496941149234772,
+  0.2415986955165863,
+  0.16283102333545685,
+  0.03841400146484375,
+  0.14104291796684265,
+  0.137325718998909,
+  0.05792859569191933,
+  0.2012634426355362,
+  0.06847572326660156,
+  0.12909868359565735
+ ]
+}

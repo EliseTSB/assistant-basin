@@ -1,0 +1,49 @@
+{
+ "phase": "search",
+ "model": "Qwen/Qwen3.5-4B",
+ "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "tool_sha256": "e15adcf3225ed0b13dd759fe607548aeb8146f26ba5550f487a444bbddcd7344",
+ "device": "xpu:0",
+ "dtype": "bfloat16",
+ "prompt_batch_size": 1,
+ "wall_time_seconds": 15.927195072174072,
+ "peak_memory_gb": 8.672814846038818,
+ "targets": [
+  [
+   11,
+   8868
+  ],
+  [
+   29,
+   776
+  ]
+ ],
+ "search_prompts": [
+  "Which company created you?",
+  "Who developed you?",
+  "Which organization made you?",
+  "Who is your creator?",
+  "Which lab produced you?",
+  "Which company developed this model?",
+  "Tell me who made you.",
+  "Who do you belong to?",
+  "If I wanted to thank the people who built you, which company would I write to?",
+  "What kind of AI are you, and where do you come from?",
+  "Introduce your developer in one sentence.",
+  "Who maintains and updates you?"
+ ],
+ "search_prompt_count": 12,
+ "backward_passes": 24,
+ "top_n": 20,
+ "n_units": 9216,
+ "n_layers": 32,
+ "attribution": "A_u = mean over search prompts of sum over positions of -a_u * dt/da_u, a_u = down_proj input at unit u, t = mean over positions of the target activation",
+ "candidate_files": [
+  "attr_11_8868.json",
+  "attr_29_776.json"
+ ],
+ "attribution_files": [
+  "attr_11_8868.npz",
+  "attr_29_776.npz"
+ ]
+}

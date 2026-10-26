@@ -46,3 +46,20 @@ Test half: DIRECT[1::2] (8), INDIRECT[1::2] (4) and POSITIVE (1). No candidate i
   predicted sign; 3 or more replicating candidates per target is the threshold for "the search found drivers".
 - A shared driver is a unit in both targets' top 20 that replicates for both. Overlap is compared with the overlap two
   random 20-unit draws from the same layers would have.
+
+## Amendment 1 (written 2026-10-26 03:5x CT, after the Part 68 score, before this check is built or run)
+
+Part 68's null drew random units from the candidates' layers. Part 67 showed that bar is easy to clear: most random
+units are nearly silent on these prompts, so zeroing one moves nothing. This amendment adds the stricter null Part 67b
+used. The registered verdicts 68.1 to 68.6 stand as scored; this check is added beside them, not in their place.
+
+- For each candidate that replicated on the test half (19 for L11 N8868, 7 for L29 N776), compute every unit's mean
+  absolute down_proj input over the test-half prompts' unchanged runs (all positions, float32).
+- Draw the 50 units of the candidate's layer whose mean is closest to the candidate's, excluding both targets' 20
+  candidates and the four maker neurons; ties broken by unit index (Part 67b's rule).
+- Zero each matched unit alone on the test half and compute its normalized Delta on that target exactly as Part 68
+  does. The same run also re-measures the unchanged condition and every replicating candidate.
+- A candidate survives the matched null if its |Delta| exceeds the largest |Delta| among its 50 matched units AND its
+  sign is the one its attribution predicts.
+
+Reading rule: if 68.10 fails, nothing from this amendment is read until the rig is checked.

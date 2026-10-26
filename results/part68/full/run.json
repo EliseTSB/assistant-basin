@@ -1,0 +1,31 @@
+{
+ "phase": "test",
+ "model": "Qwen/Qwen3.5-4B",
+ "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "tool_sha256": "e15adcf3225ed0b13dd759fe607548aeb8146f26ba5550f487a444bbddcd7344",
+ "device": "xpu:0",
+ "dtype": "bfloat16",
+ "batch_size": 32,
+ "wall_time_seconds": 212.55476641654968,
+ "peak_memory_gb": 9.392904281616211,
+ "targets": [
+  [
+   11,
+   8868
+  ],
+  [
+   29,
+   776
+  ]
+ ],
+ "null_seed": 6800,
+ "null_count": 200,
+ "candidate_count": 20,
+ "overlap_seed": 6801,
+ "overlap_draws": 10000,
+ "spearman_min": 0.3,
+ "condition_count": 444,
+ "prompt_count": 25,
+ "forward_count": 28,
+ "records": 11100
+}
