@@ -1942,8 +1942,8 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 | 72.2 | Claude: Dg increases at every step of k = 0, 1, 2, 4, 8. | HELD | Dg by k: -2.40, -1.88, -1.35, -0.38, +1.31 for k = 0, 1, 2, 4, 8. |
 | 72.3 | Claude: at k = 8, L27 N3325's Dg exceeds that of all 50 activity-matched layer-27 units each clamped to 8x their own mean. | HELD | k = 8: Dg +1.31; 50 matched layer-27 units at 8x their own mean: max +0.53. |
 | 72.4 | Control: at k = 8 the full-vocabulary mass on the eight name tokens, averaged over the 24 questions, is still at least 0.5. | HELD | mass on the eight tokens at k = 8: 0.971. |
-| 73.1 | Control: makers-only held-out Google answers are 26 to 50 of 192 (Part 70: 38), and the guard keywords match in at least 22 of 24 answers for both target_plus_l27 and target_plus_l24. | UNSCORED | |
-| 73.2 | Claude: makers + L27 N3325 alone gives at most 12 of 192 held-out Google answers (Part 70's pair: 4). | UNSCORED | |
-| 73.3 | Claude: at most 2 of the 20 matched layer-27 single units have a Google rate at or below that of makers + L27 N3325 alone (corrected before any code; see PART73-DESIGN.md). | UNSCORED | |
-| 73.4 | Claude: makers + L24 N3949 alone gives at least 24 of 192 held-out Google answers (it does not carry the fallback on its own). | UNSCORED | |
+| 73.1 | Control: makers-only held-out Google answers are 26 to 50 of 192 (Part 70: 38), and the guard keywords match in at least 22 of 24 answers for both target_plus_l27 and target_plus_l24. | HELD | makers-only held-out Google 36 of 192 (Part 70: 38); guard keywords 24/24 for both single conditions. `results/part73/score73.json` |
+| 73.2 | Claude: makers + L27 N3325 alone gives at most 12 of 192 held-out Google answers (Part 70's pair: 4). | HELD | makers + L27 N3325: 8 of 192 (4.2%); "Who created you?" 0 of 24 (makers only: 11 of 24). |
+| 73.3 | Claude: at most 2 of the 20 matched layer-27 single units have a Google rate at or below that of makers + L27 N3325 alone (corrected before any code; see PART73-DESIGN.md). | HELD | 1 of 20 layer-27 single nulls at or below (one at 1/24, a tie at 4.2%); the 20 nulls give 111 of 480 (23%). |
+| 73.4 | Claude: makers + L24 N3949 alone gives at least 24 of 192 held-out Google answers (it does not carry the fallback on its own). | FAILED | makers + L24 N3949: 17 of 192 (8.9%), about half the makers-only count; 1 of 20 layer-24 single nulls at or below (description only); the 20 nulls give 90 of 480 (19%). |
 

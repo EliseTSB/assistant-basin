@@ -91,7 +91,7 @@ Claude, 2026-10-18; rewritten 2026-10-21.)
 - In Qwen3-1.7B, the honesty direction flipped 0 of 34 held-out lies; the fixed trait-bundle score was +0.072, rank 18 of 40. (50)
 - For Pythia-410m, the novel-item kiki/bouba AUC rose from 0.387 at step 1,000 to 0.898 at step 143,000. Pythia-160m never reached 0.70. (48d)
 
-**How we learned to measure.** 566 predictions so far, each pushed before its run: 274 held, 197 failed, 10 mixed,
+**How we learned to measure.** 570 predictions so far, each pushed before its run: 277 held, 198 failed, 10 mixed,
 9 untestable or read by a rule, 76 not yet scored (`count_predictions.py`, 2026-10-26). The methods
 that came out of the failures: a control must be shown able to fail; a judge model can agree for the same bias it was
 meant to check (it reads left to right too); a word filter misses meaning (a passage about a monolith in "neutral" text
@@ -1208,6 +1208,37 @@ its natural activity there and 8x about 1.7: the largest push is under twice nat
 model.
 
 Files: `part72/` (script, tests), `results/part72/` (summary and every record).
+
+### Part 73: each late neuron alone removes part of the Google fallback, L27 N3325 the larger part (2026-10-26)
+
+Pre-registered in `PART73-DESIGN.md`. Part 70 zeroed L27 N3325 and L24 N3949 together on top of the four maker
+neurons; Part 73 zeroes each alone, with Part 70's code path, prompts and scorer unchanged (batch 32). The nulls are the
+layer-27 and layer-24 halves of Part 70's 20 activity-matched pairs, each zeroed alone on top of the makers.
+
+| Zeroed with the four makers | Held-out answers naming Google | "Who created you?" naming Google | Alibaba family |
+|---|---:|---:|---:|
+| nothing else | 36 of 192 (18.8%) | 11 of 24 | 151 |
+| L27 N3325 | 8 of 192 (4.2%) | 0 of 24 | 175 |
+| L24 N3949 | 17 of 192 (8.9%) | 1 of 24 | 168 |
+| both (Part 70) | 4 of 192 (2.1%) | 0 of 24 | 177 |
+| a matched layer-27 unit (20 nulls) | 111 of 480 (23%), 1 to 10 of 24 each | | |
+| a matched layer-24 unit (20 nulls) | 90 of 480 (19%), 2 to 8 of 24 each | | |
+
+**Results.** The makers-only rerun reproduces Part 70 (36 against 38) and every guard answer keeps its keyword (73.1
+held). L27 N3325 alone takes the Google answers from 36 to 8 of 192 (73.2 held), and only one of 20 matched layer-27
+units does as well (73.3 held). L24 N3949 alone also cuts them, to 17 of 192, so my prediction that it would leave at
+least 24 failed (73.4). Only one of its 20 matched units does as well, but that comparison was not registered. In all
+three conditions the answers that stop naming Google go back to the Alibaba family.
+
+**Reading.** Both late neurons take part in the fallback, L27 N3325 more than L24 N3949, and neither alone takes it as
+low as zeroing both does (4 of 192). L24 N3949's direct readout writes Apple and Microsoft, with Google at rank 36 (Part
+71), so its part in the Google answers may run through later layers; that was not tested.
+
+**Limits.** One model, Part 66's 24 held-out questions, one sampling setting. The rerun's samples differ from Part
+70's because batches mix conditions. Part 70 drew its matched pairs with replacement, so the 20 nulls per layer hold
+15 and 14 distinct units. A single reduction is compared with null units, not with the pair inside one run.
+
+Files: `part73/` (runner, scorer, tests), `results/part73/` (all 1,680 answers and the score).
 
 ### Running or designed (2026-10-21)
 

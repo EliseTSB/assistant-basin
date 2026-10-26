@@ -1,0 +1,740 @@
+{
+  "predictions": {
+    "73.1": {
+      "holds": true,
+      "observed": {
+        "target_google": 36,
+        "target_n": 192,
+        "l27_guards": [
+          24,
+          24
+        ],
+        "l24_guards": [
+          24,
+          24
+        ]
+      },
+      "rule": "makers-only held-out Google 26-50 of 192; guards >= 22/24 for l27 and l24"
+    },
+    "73.2": {
+      "holds": true,
+      "observed": {
+        "google": 8,
+        "n": 192
+      },
+      "rule": "makers + L27 N3325 held-out Google at most 12 of 192"
+    },
+    "73.3": {
+      "holds": true,
+      "observed": {
+        "nulls_at_or_below": 1,
+        "null_count": 20,
+        "l27_rate": 0.041666666666666664
+      },
+      "rule": "at most 2 of 20 layer-27 single nulls at or below makers + L27 N3325"
+    },
+    "73.4": {
+      "holds": false,
+      "observed": {
+        "google": 17,
+        "n": 192
+      },
+      "rule": "makers + L24 N3949 held-out Google at least 24 of 192"
+    }
+  },
+  "description_only": {
+    "l24_nulls_at_or_below": 1,
+    "l27_null_google": [
+      4,
+      8,
+      4,
+      6,
+      9,
+      10,
+      6,
+      1,
+      3,
+      5,
+      4,
+      5,
+      6,
+      7,
+      4,
+      5,
+      8,
+      8,
+      5,
+      3
+    ],
+    "l24_null_google": [
+      3,
+      5,
+      2,
+      7,
+      3,
+      5,
+      5,
+      5,
+      3,
+      4,
+      4,
+      4,
+      5,
+      8,
+      4,
+      5,
+      5,
+      5,
+      4,
+      4
+    ]
+  },
+  "conditions": {
+    "target": {
+      "heldout_google": 36,
+      "heldout_n": 192,
+      "heldout_google_rate": 0.1875,
+      "family_counts": {
+        "google": 36,
+        "alibaba": 151,
+        "openai": 2,
+        "anthropic": 1,
+        "deepseek": 0,
+        "meta": 2
+      },
+      "guard_keyword_matches": 24,
+      "guard_n": 24
+    },
+    "target_plus_l27": {
+      "heldout_google": 8,
+      "heldout_n": 192,
+      "heldout_google_rate": 0.041666666666666664,
+      "family_counts": {
+        "google": 8,
+        "alibaba": 175,
+        "openai": 1,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 2
+      },
+      "guard_keyword_matches": 24,
+      "guard_n": 24
+    },
+    "target_plus_l24": {
+      "heldout_google": 17,
+      "heldout_n": 192,
+      "heldout_google_rate": 0.08854166666666667,
+      "family_counts": {
+        "google": 17,
+        "alibaba": 168,
+        "openai": 1,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 24,
+      "guard_n": 24
+    },
+    "target_plus_l27_matched_0": {
+      "heldout_google": 4,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.16666666666666666,
+      "family_counts": {
+        "google": 4,
+        "alibaba": 20,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l27_matched_1": {
+      "heldout_google": 8,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.3333333333333333,
+      "family_counts": {
+        "google": 8,
+        "alibaba": 13,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 2
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l27_matched_2": {
+      "heldout_google": 4,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.16666666666666666,
+      "family_counts": {
+        "google": 4,
+        "alibaba": 17,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l27_matched_3": {
+      "heldout_google": 6,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.25,
+      "family_counts": {
+        "google": 6,
+        "alibaba": 17,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l27_matched_4": {
+      "heldout_google": 9,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.375,
+      "family_counts": {
+        "google": 9,
+        "alibaba": 17,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l27_matched_5": {
+      "heldout_google": 10,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.4166666666666667,
+      "family_counts": {
+        "google": 10,
+        "alibaba": 14,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l27_matched_6": {
+      "heldout_google": 6,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.25,
+      "family_counts": {
+        "google": 6,
+        "alibaba": 17,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l27_matched_7": {
+      "heldout_google": 1,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.041666666666666664,
+      "family_counts": {
+        "google": 1,
+        "alibaba": 22,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l27_matched_8": {
+      "heldout_google": 3,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.125,
+      "family_counts": {
+        "google": 3,
+        "alibaba": 21,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l27_matched_9": {
+      "heldout_google": 5,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.20833333333333334,
+      "family_counts": {
+        "google": 5,
+        "alibaba": 19,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l27_matched_10": {
+      "heldout_google": 4,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.16666666666666666,
+      "family_counts": {
+        "google": 4,
+        "alibaba": 19,
+        "openai": 1,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 1
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l27_matched_11": {
+      "heldout_google": 5,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.20833333333333334,
+      "family_counts": {
+        "google": 5,
+        "alibaba": 17,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l27_matched_12": {
+      "heldout_google": 6,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.25,
+      "family_counts": {
+        "google": 6,
+        "alibaba": 17,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l27_matched_13": {
+      "heldout_google": 7,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.2916666666666667,
+      "family_counts": {
+        "google": 7,
+        "alibaba": 18,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l27_matched_14": {
+      "heldout_google": 4,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.16666666666666666,
+      "family_counts": {
+        "google": 4,
+        "alibaba": 18,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l27_matched_15": {
+      "heldout_google": 5,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.20833333333333334,
+      "family_counts": {
+        "google": 5,
+        "alibaba": 18,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l27_matched_16": {
+      "heldout_google": 8,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.3333333333333333,
+      "family_counts": {
+        "google": 8,
+        "alibaba": 16,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l27_matched_17": {
+      "heldout_google": 8,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.3333333333333333,
+      "family_counts": {
+        "google": 8,
+        "alibaba": 15,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l27_matched_18": {
+      "heldout_google": 5,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.20833333333333334,
+      "family_counts": {
+        "google": 5,
+        "alibaba": 18,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l27_matched_19": {
+      "heldout_google": 3,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.125,
+      "family_counts": {
+        "google": 3,
+        "alibaba": 21,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l24_matched_0": {
+      "heldout_google": 3,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.125,
+      "family_counts": {
+        "google": 3,
+        "alibaba": 21,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l24_matched_1": {
+      "heldout_google": 5,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.20833333333333334,
+      "family_counts": {
+        "google": 5,
+        "alibaba": 19,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l24_matched_2": {
+      "heldout_google": 2,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.08333333333333333,
+      "family_counts": {
+        "google": 2,
+        "alibaba": 22,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l24_matched_3": {
+      "heldout_google": 7,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.2916666666666667,
+      "family_counts": {
+        "google": 7,
+        "alibaba": 17,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l24_matched_4": {
+      "heldout_google": 3,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.125,
+      "family_counts": {
+        "google": 3,
+        "alibaba": 19,
+        "openai": 1,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 1
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l24_matched_5": {
+      "heldout_google": 5,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.20833333333333334,
+      "family_counts": {
+        "google": 5,
+        "alibaba": 18,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l24_matched_6": {
+      "heldout_google": 5,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.20833333333333334,
+      "family_counts": {
+        "google": 5,
+        "alibaba": 17,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l24_matched_7": {
+      "heldout_google": 5,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.20833333333333334,
+      "family_counts": {
+        "google": 5,
+        "alibaba": 17,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l24_matched_8": {
+      "heldout_google": 3,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.125,
+      "family_counts": {
+        "google": 3,
+        "alibaba": 19,
+        "openai": 1,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 1
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l24_matched_9": {
+      "heldout_google": 4,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.16666666666666666,
+      "family_counts": {
+        "google": 4,
+        "alibaba": 18,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l24_matched_10": {
+      "heldout_google": 4,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.16666666666666666,
+      "family_counts": {
+        "google": 4,
+        "alibaba": 19,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l24_matched_11": {
+      "heldout_google": 4,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.16666666666666666,
+      "family_counts": {
+        "google": 4,
+        "alibaba": 21,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l24_matched_12": {
+      "heldout_google": 5,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.20833333333333334,
+      "family_counts": {
+        "google": 5,
+        "alibaba": 17,
+        "openai": 1,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 1
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l24_matched_13": {
+      "heldout_google": 8,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.3333333333333333,
+      "family_counts": {
+        "google": 8,
+        "alibaba": 16,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l24_matched_14": {
+      "heldout_google": 4,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.16666666666666666,
+      "family_counts": {
+        "google": 4,
+        "alibaba": 20,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l24_matched_15": {
+      "heldout_google": 5,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.20833333333333334,
+      "family_counts": {
+        "google": 5,
+        "alibaba": 18,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l24_matched_16": {
+      "heldout_google": 5,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.20833333333333334,
+      "family_counts": {
+        "google": 5,
+        "alibaba": 18,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l24_matched_17": {
+      "heldout_google": 5,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.20833333333333334,
+      "family_counts": {
+        "google": 5,
+        "alibaba": 20,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l24_matched_18": {
+      "heldout_google": 4,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.16666666666666666,
+      "family_counts": {
+        "google": 4,
+        "alibaba": 21,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    },
+    "target_plus_l24_matched_19": {
+      "heldout_google": 4,
+      "heldout_n": 24,
+      "heldout_google_rate": 0.16666666666666666,
+      "family_counts": {
+        "google": 4,
+        "alibaba": 19,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 0,
+      "guard_n": 0
+    }
+  },
+  "reading_rule_applied": false
+}
