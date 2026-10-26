@@ -47,7 +47,7 @@ Test half: DIRECT[1::2] (8), INDIRECT[1::2] (4) and POSITIVE (1). No candidate i
 - A shared driver is a unit in both targets' top 20 that replicates for both. Overlap is compared with the overlap two
   random 20-unit draws from the same layers would have.
 
-## Amendment 1 (written 2026-10-26 03:5x CT, after the Part 68 score, before this check is built or run)
+## Amendment 1 (written 2026-10-26 03:46 CT (commit time; the 03:5x first written here was a guess), after the Part 68 score, before this check is built or run)
 
 Part 68's null drew random units from the candidates' layers. Part 67 showed that bar is easy to clear: most random
 units are nearly silent on these prompts, so zeroing one moves nothing. This amendment adds the stricter null Part 67b

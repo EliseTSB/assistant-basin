@@ -1,6 +1,6 @@
 # Part 69: do the maker neurons' drivers move what the model says it was made by?
 
-Written 2026-10-26 04:1x CT by Claude, before any code or run. Predictions 69.1 to 69.6 are in PREDICTIONS.md and are
+Written 2026-10-26 04:03 CT (commit time) by Claude, before any code or run. Predictions 69.1 to 69.6 are in PREDICTIONS.md and are
 pushed before the build. Parts 67 and 68 found links between neurons (activation effects in prefill) and both list the
 same limit: whether the links matter for the answer was not tested. Part 69 tests it with a cheap prefill readout.
 
@@ -49,7 +49,7 @@ A condition's empirical p is (1 + null sets with Dg at or beyond its Dg in the p
 - A null result for a driver set means its effect on the answer, through this readout, is no larger than equally
   active units'; it does not rule out effects on other answers or under generation.
 
-## Amendment 1 (written 2026-10-26 04:2x CT, after the first run failed 69.2, before any rescoring)
+## Amendment 1 (written 2026-10-26 04:22 CT (commit time), after the first run failed 69.2, before any rescoring)
 
 The first run (results/part69/full) held 69.1 and failed 69.2: after `I was developed by`, the seven maker tokens held
 4.8% of the next-token probability. By the reading rule, 69.3 to 69.6 were not read; the first run's verdicts stand as

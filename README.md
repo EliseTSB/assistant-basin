@@ -1008,8 +1008,7 @@ Files: `part66/` (runner, scorer, tests), `results/part66/full/` (answers, score
 Pre-registered in `PART67-DESIGN.md` (Amendment 1 written after the first result, before its check ran). Part 25's
 four maker neurons in Qwen3.5-4B (L6 N753, L7 N1169, L11 N8868, L29 N776) were found as a set. Part 67 asks whether
 they drive one another: zero each earlier one alone (forward passes on Part 66's 25 maker prompts, no generation) and
-measure each later one's activation, in standard deviations of its own unchanged activation. Muse's search found no
-earlier neuron-to-neuron zeroing study with random controls (PRIOR-ART.md).
+measure each later one's activation, in standard deviations of its own unchanged activation. Muse found no exact match for a neuron-to-neuron zeroing study with random controls; the closest, TraceRouter, uses a path-level random control (PRIOR-ART.md).
 
 | Link | Effect (SD) | Max of 50 random, same layer | Max of 50 activity-matched, same layer | Survives the matched null |
 |---|---:|---:|---:|:---:|
@@ -1026,14 +1025,13 @@ Against the 50 neurons of the same layer whose activity on these prompts is clos
 links remain: L6 N753 and L7 N1169 both drive L11 N8868, in opposite directions. L7 -> L11 is also the strongest direct
 weight path for both of L11's input projections (rank 1 of 51 on gate and on up). The other four links are no larger
 than equally active neurons in their layers. The latest neuron, L29 N776, is not driven by the others beyond that
-level (67.2 failed), and zeroing the three earlier ones together moves it less than the largest single does, because
-their effects partly cancel (67.3 failed).
+level (67.2 failed), and zeroing the three earlier ones together moves it less than the largest single does (67.3 failed), which is consistent with their effects partly cancelling; that was not tested directly.
 
 **Controls.** Zeroing a neuron left every earlier one exactly unchanged (67.5), and zeroing all of layer 6 visibly moved
 L7 N1169 (-0.035 SD, 67.6). Zeroing L6 N753 alone moves L7 N1169 more than zeroing all of layer 6 does, with the
-opposite sign; the rest of the layer pushes the other way.
+opposite sign, consistent with the rest of the layer pushing the other way if the effects add (not tested).
 
-**Limits.** L6 N753 is the most active unit in its layer on these prompts (mean absolute activation 1.52), so its 50
+**Limits.** L6 N753 is the second most active unit in its layer on these prompts (mean absolute activation 1.52, after unit 188 at 3.10), so its 50
 matched neurons are all less active (0.16 to 0.94) and its matched null is still easier than the others'. Effects are
 small in absolute terms (at most 0.11 SD). One model, English prompts, prefill only: whether these links matter for
 what the model says is not tested here. Zeroing one neuron can wake a backup (the Hydra effect, arXiv:2610.04017), so a
@@ -1041,33 +1039,35 @@ single-neuron null does not rule out links that act only jointly.
 
 Files: `part67/` (runner, 67b runner, scorer, tests), `results/part67/full/` and `results/part67/b/`.
 
-### Part 68: a search over every earlier neuron finds Part 67's two drivers of L11 N8868 first, and L29 N776's real drivers are late (2026-10-26)
+### Part 68: a search over every earlier neuron finds Part 67's two drivers of L11 N8868 first; L29 N776's two clearest drivers are late (2026-10-26)
 
-Pre-registered in `PART68-DESIGN.md` (Amendment 1 written after the first score, before its check was built or run).
-Part 67 tested the four maker neurons against each other. Part 68 asks the open version: of every MLP unit before
-each later maker neuron (L11 N8868, L29 N776 in Qwen3.5-4B), which ones drive it? A gradient attribution (each unit's
-activation times the target's gradient, a first-order estimate of what zeroing the unit would do) ranked every earlier
-unit on 12 search prompts; the top 20 per target were then zeroed one at a time on 13 held-out prompts.
+Pre-registered in `PART68-DESIGN.md` (Amendment 1, the activity-matched null, written after the first score and
+before its check was built or run). Part 67 tested the four maker neurons against each other. Part 68 asks the open
+version: of every MLP unit before each later maker neuron (L11 N8868, L29 N776 in Qwen3.5-4B), which ones drive it? A
+gradient attribution (each unit's activation times the target's gradient, a first-order estimate of what zeroing the
+unit would do) ranked every earlier unit on 12 search prompts; the top 20 per target were then zeroed one at a time on
+13 held-out prompts.
 
 **L11 N8868.** The search ranked L6 N753 and L7 N1169 first and second: the two neurons Part 67 found by hand, found
-here with nothing pointing at them. 19 of the 20 candidates move L11 N8868 on the held-out prompts in the direction the
-attribution predicted, beyond 200 random units from the same layers (68.2 held). Against the stricter null Part 67
-needed (for each candidate, the 50 units of its layer whose activity is closest to its own), 15 of the 19 still stand
-out, the two maker neurons among them (68.7 held). Several are about as strong as the makers: L10 N54 (-0.112 SD) and
-L10 N4133 (-0.091 SD) beside L6 N753 (-0.097) and L7 N1169 (+0.116). The attribution tracks the measured effect closely
-for this target (Spearman 0.85 on the search prompts, 0.81 held out).
+here with nothing pointing at them. 19 of the 20 candidates move L11 N8868 on the held-out prompts in the direction
+the attribution predicted, by more than the 95th percentile of 200 random units from the same layers (68.2 held).
+Against the stricter null Part 67 needed (for each candidate, the 50 units of its layer whose activity is closest to
+its own), 15 of the 19 still stand out, the two maker neurons among them (68.7 held). Several are about as strong as
+the makers: L10 N54 (-0.112 SD) and L10 N4133 (-0.091 SD) beside L6 N753 (-0.097) and L7 N1169 (+0.116). The
+attribution tracks the measured effect closely for this target (Spearman 0.85 on the search prompts, 0.81 held out).
 
 **L29 N776.** Only 7 of 20 candidates replicate (68.1 failed), and the attribution is a poor guide here (Spearman 0.39
-on the search prompts, 0.03 held out). Its largest predictions were early units (L5 N25, L6 N159) whose measured
-effects are tiny. The two clear drivers are late, L27 N3325 (+0.077 SD, matched max 0.008) and L24 N3949 (+0.050, matched
-max 0.012); two early units also clear the matched null narrowly (L2 N698 -0.022 against 0.017, L4 N695 -0.0053 against
-0.0048), so 68.8 failed on its "at most one other" clause. Most replicating drivers were early (68.3 failed). None of the
-three earlier maker neurons is among its candidates (68.4 held). The one unit shared by both targets' lists, L6 N159,
-does not survive the matched null for either (68.9 held), so no shared driver remains.
+on the search prompts, 0.03 held out): its two largest predictions, L5 N25 and L3 N2528, move it little or not at
+all. Five of the seven replicating drivers are early, in layers 0 to 6 (68.3 failed). Against the matched null, four
+survive: two late units, L27 N3325 (+0.077 SD, matched max 0.008) and L24 N3949 (+0.050, matched max 0.012), and two
+early ones that clear it narrowly, L2 N698 (-0.022 against 0.017) and L4 N695 (-0.0053 against 0.0048), so 68.8,
+which allowed at most one early survivor, failed. None of the three earlier maker neurons is among its candidates
+(68.4 held). The one unit in both targets' lists, L6 N159, survives the matched null for neither (68.9 held).
 
-**Controls.** Attribution of every unit at or after the target's layer was measured, not set: exactly 0 for both
-targets (68.5), and the target's own entry equalled minus its value to within 0.34% on every prompt, a positive control
-on the gradient. The 68b run re-measured all 26 replicating candidates within 0.005 SD of their first values (68.10).
+**Controls.** The attribution of every unit at or after the target's layer was computed, not set, and was exactly 0
+for every unit except the target itself (68.5); the target's own entry equalled minus its value to within 0.34% on
+every prompt, a positive control on the gradient. The 68b run re-measured all 26 replicating candidates and got their
+Part 68 values exactly (68.10).
 
 **Limits.** One model, English prompts, prefill only; effects are at most about 0.12 SD. Zeroing one unit at a time
 cannot find drivers that act only jointly, and a first-order attribution misses units whose effect is nonlinear, which
@@ -1075,45 +1075,51 @@ L29 N776's weak correlation suggests is common for deep targets: its true driver
 
 Files: `part68/` (runners, scorers, tests, build notes), `results/part68/full/` and `results/part68/b/`.
 
-### Part 69: two late neurons hold up "Google" as an answer, and L11 N8868 and its drivers move the maker answer (2026-10-26)
+### Part 69: zeroing two late neurons pushes the maker answer away from Google; L11 N8868 and its drivers push it toward Google (2026-10-26)
 
-Pre-registered in `PART69-DESIGN.md` (Amendment 1 written after the first readout failed its control, before
-rescoring). Parts 67 and 68 traced links between neurons; Part 69 asks whether those links move what Qwen3.5-4B says
-made it. The answer is forced to begin `I was developed by **` after each of Part 66's 24 held-out maker questions,
-and the readout is the gap between the next-token logits of `Google` and `Al` (the first token of Alibaba). Each
-zeroing is compared with 50 activity-matched sets (for the four makers together, Part 66's own 50 random sets).
+Pre-registered in `PART69-DESIGN.md`. Its first readout failed its own control, and Amendment 1 changed the readout
+after I had seen the first readout's results; both readouts are reported. Parts 67 and 68 traced links between
+neurons; Part 69 asks whether those links move what Qwen3.5-4B says made it. The answer is forced to begin with a fixed
+opening after each of Part 66's 24 held-out maker questions, and the readout is the gap between the next-token logits
+of `Google` and `Alibaba`. Each zeroing is compared with 50 activity-matched sets (for the four makers together, Part
+66's own 50 random sets).
 
-| Zeroed | Change in Google - Alibaba gap | 50 matched sets: range | Biggest per-token moves |
-|---|---:|---|---|
-| the four maker neurons | +2.78 | -0.04 to 0.05 | Google +2.30, OpenAI +1.77, Tongyi -0.97 |
-| L11 N8868 alone | +0.31 | -0.14 to 0.13 | Google +0.28, Tongyi -0.22 |
-| L29 N776 alone | +0.005 | -0.06 to 0.03 | none above 0.01 |
-| L11 N8868's 7 drivers that raise it | +0.78 | -0.61 to 0.28 | Tongyi -1.08, Meta +0.57, Google +0.55 |
-| L27 N3325 and L24 N3949 | -3.45 | -0.20 to 0.40 | Google -3.99, Microsoft -2.37, Meta -1.38 |
+**Two readouts.** The registered opening, `I was developed by`, failed its control (69.2): the seven maker names held
+4.8% of the probability, because the model's next token is mostly ` **` (bold formatting), ` the` or ` Tong`. A probe
+of the unchanged model (`part69/probe_prefix69.py`) led to Amendment 1: the opening `I was developed by **`, names read
+without a leading space, and `T` (the first token of Tongyi) added as an eighth token. Three choices in it were mine:
+I chose this opening over a higher-mass one (`I am Qwen, ... **`, 0.993 against 0.964) because that one names the
+model in the prompt; I rewrote the control as 69.2a to count Tongyi as the Alibaba family, because under the amended
+readout Tongyi is the top token for all 24 questions and Alibaba for none, so the registered rule would have failed;
+and I had already seen the first readout's other results.
 
-**Results.** The two controls held: zeroing the four makers moves the answer toward Google far beyond every random
-set (69.1), and with this opening the eight name tokens hold 96% of the probability, with an Alibaba-family token on
-top for all 24 questions (69.2a). All four of my predictions failed. L11 N8868 alone moves the answer (69.3 failed),
-and so do its drivers (69.5 failed): zeroing the seven drivers whose zeroing lowers L11 N8868 takes probability from
-Tongyi and gives it to Google and Meta, the same direction as zeroing L11 N8868 itself. L29 N776 alone does nothing
-measurable on this readout (69.4 failed). The largest effect in the study is the two late units Part 68 found as
-drivers of L29 N776 (69.6 failed): zeroing them cuts the Google logit by about 4, and Google's share of the eight names
-falls from 7% to 0.2%, while Alibaba and Tongyi barely move. They hold up "Google" (and Microsoft, Meta) as candidate
-answers, and since L29 N776 itself has no effect here, that is not through it.
+| Zeroed | First readout: gap change (null range) | Amended readout: gap change (null range) | Amended: largest logit moves |
+|---|---:|---:|---|
+| the four maker neurons | +2.15 (-0.04 to 0.04) | +2.78 (-0.04 to 0.05) | Google +2.30, OpenAI +1.77, Meta +1.48, Anthropic +1.23 |
+| L11 N8868 alone | +0.28 (-0.18 to 0.10) | +0.31 (-0.14 to 0.13) | Google +0.28, DeepSeek +0.27, Meta +0.26 |
+| L29 N776 alone | +0.10 (-0.04 to 0.03) | +0.005 (-0.06 to 0.03) | none above 0.01 |
+| 7 drivers whose zeroing lowers L11 N8868 | +0.88 (-0.36 to 0.36) | +0.78 (-0.61 to 0.28) | Tongyi -1.08, Meta +0.57, Google +0.55 |
+| L27 N3325 and L24 N3949 | -2.74 (-0.10 to 0.34) | -3.45 (-0.20 to 0.40) | Google -3.99, Microsoft -2.37, Meta -1.38 |
 
-**Readout.** The registered opening, `I was developed by`, failed its control: the seven names held 4.8% of the
-probability, because the model's next token is ` **` (bold formatting), ` the` or ` Tong`. An unchanged-model probe
-(`part69/probe_prefix69.py`) chose the new opening on probability mass alone. The first readout's numbers, not read by
-its rule, point the same way for every condition (`results/part69/full/score69.md`).
+**Results (amended readout).** The four makers move the answer toward Google beyond every random set (69.1 held on
+both readouts). L11 N8868 alone moves it toward Google (69.3 failed), and so do the seven drivers whose zeroing lowers
+it (69.5 failed), taking probability from Tongyi; their effect is more than twice L11 N8868's own, and whether they act
+through it was not tested. L29 N776 alone beat all 50 matched units on the first readout (+0.10 against a null maximum
+of 0.034), where 69.4 would have held, but does nothing measurable on the amended readout (+0.005, p = 0.45), so 69.4
+failed. The largest effect is the two late units Part 68 found among L29 N776's drivers (69.6 failed): zeroing them
+lowers the Google logit by about 4, and Google's share of the eight names falls from 7% to 0.2%, so their activity
+raises the Google logit. Whether they act through L29 N776 was not tested, and Part 68's two early survivors for
+L29 N776 (L2 N698, L4 N695) were not tested here.
 
-**Limits.** One forced opening and a single next token, not sampled answers; with 50 null sets the smallest two-sided
-p is 0.039, though the effects for the makers, the L11 drivers and the late pair lie outside the whole null range. One
-model, English prompts. Whether L27 N3325 and L24 N3949 change sampled answers is the next test.
+**Limits.** One forced opening and a single next token, not sampled answers. The readout was changed after a failed
+control, and one verdict (69.4) differs between the two readouts. With 50 null sets the smallest two-sided p is 0.039,
+though the effects for the makers, the L11 drivers and the late pair lie outside the whole null range on both
+readouts. One model, English prompts.
 
-Files: `part69/` (runner, scorer, prefix probe, tests, build notes), `results/part69/full/`, `results/part69/a1/`,
-`results/part69/prefix/`.
+Files: `part69/` (runner, scorer, prefix probe, tests, build notes), `results/part69/full/` (first readout),
+`results/part69/a1/` (amended readout), `results/part69/prefix/`.
 
-### Part 70: with the maker neurons off, two late neurons are where the "Google" answer comes from (2026-10-26)
+### Part 70: with the maker neurons off, the "Google" answer needs two late neurons (2026-10-26)
 
 Pre-registered in `PART70-DESIGN.md`. Part 66 showed that zeroing the four maker neurons makes Qwen3.5-4B name Google
 in about a fifth of its sampled answers about who made it. Part 69 found two late neurons, L27 N3325 and L24 N3949,
@@ -1126,21 +1132,14 @@ scoring unchanged, and compares that with zeroing the makers plus 20 activity-ma
 | the four makers + L27 N3325 + L24 N3949 | 4 of 192 (2.1%) | 177 of 192 (92%) | 0 of 24 |
 | the four makers + an activity-matched pair (20 pairs) | 105 of 480 (21.9%), 12.5% to 37.5% per pair | | |
 
-**Results.** All six predictions held. The makers alone reproduce Part 66 (70.1), and the extra zeroing leaves the
-model fluent (70.2: 24 of 24 guard questions answered correctly). Zeroing the two late neurons on top of the makers
+**Results.** All six predictions held. The makers alone reproduce Part 66 (70.1), and with the extra zeroing all 24 fluency-guard answers still contain their keyword (70.2). Zeroing the two late neurons on top of the makers
 takes the Google answers from 38 to 4 of 192 and from 15 to 0 of 24 on "Who created you?" (70.3), while any of 20
 activity-matched pairs leaves them at about the makers' level (70.4, 70.5: no pair goes below 12.5%). The model goes
-back to its own maker instead: "I was created by **Tongyi Lab**, which is part of Alibaba Group" (70.6, 92%). Three of
-the four Google answers that remain begin "As an artificial intelligence, I don't have...", a different kind of
-answer from the makers-zeroed "I was created by **Google**".
+back to its own maker instead: "I was created by **Tongyi Lab**, which is part of Alibaba Group" (70.6, 92%). All four Google answers that remain begin "As an artificial intelligence, I don't have...", an opening that also starts 3 of the 38 makers-only Google answers.
 
-**Reading.** Parts 66 to 70 together: the four maker neurons hold the model's own answer (Alibaba); with them off,
-the model falls back on "Google", and that fallback depends on two late neurons that, on their own, already push
-`Google` up as a next token (Part 69). Zeroing L29 N776 alone does not move the answer, and the two late neurons do
-not act through it (Part 69).
+**Reading.** Parts 66 to 70 together: the four maker neurons hold the model's own answer (Alibaba); with them off, the model falls back on "Google", and that fallback needs two late neurons whose activity raises the `Google` logit (Part 69). Part 68 also found two early units that drive L29 N776 (L2 N698, L4 N695); they were not tested here. Whether the late pair acts through L29 N776 was not tested.
 
-**Limits.** One model; Part 66's 24 held-out questions; one sampling setting. The same seeds did not give
-byte-identical answers to Part 66 (38 against 42 for the makers), so sampling on this GPU is not exactly reproducible.
+**Limits.** One model; Part 66's 24 held-out questions; one sampling setting. Part 70 did not reproduce Part 66's answers byte for byte (38 against 42 Google answers for the makers, same condition id and seeds).
 Why this model's fallback maker is Google is not tested here.
 
 Files: `part70/` (runner, scorer, tests, build notes), `results/part70/full/` (all 960 answers).

@@ -1,6 +1,6 @@
 # Part 70: are the two late "Google" neurons what the makers-zeroed model falls back on?
 
-Written 2026-10-26 04:3x CT by Claude, before any code or run. Predictions 70.1 to 70.6 are in PREDICTIONS.md and are
+Written 2026-10-26 04:29 CT (commit time) by Claude, before any code or run. Predictions 70.1 to 70.6 are in PREDICTIONS.md and are
 pushed before the build.
 
 ## Why
