@@ -1304,7 +1304,7 @@ The pure indirect effect of a unit u is PIE(u) = mean over questions of g(A with
 |---|---:|
 | L24 N3949 zeroed (total effect, rerun) | -2.26 |
 | L27 N3325 alone set to its L24-zeroed values (PIE) | -1.45 (95% question-bootstrap -1.51 to -1.41) |
-| a matched layer-27 unit alone set to its L24-zeroed values (20 draws) | -0.02 to +0.03; the largest null's interval -0.01 to +0.09 |
+| a matched layer-27 unit alone set to its L24-zeroed values (20 draws) | -0.01 to +0.03 (record rerun: -0.02 to +0.03); the largest null's interval -0.01 to +0.09 |
 | L27 N3325 set to its own makers-only values (noise, record rerun) | -0.01 |
 
 **Results.** The run reproduces Part 74 within 0.1 on both the total and L27 N3325's pure indirect effect (74b.2
@@ -1313,7 +1313,8 @@ questions (-1.75 to -1.25); per question, the null changes run from -0.25 to +0.
 effect. A record rerun (Amendment 1, `results/part74b/`; the first run is in `results/part74b-first/`) matched the
 first run within 0.006 and added the table below. L27 N3325's direct readout ranks Google first (sign -1, Part 71's
 method); zeroing L24 N3949 moves its last-position activation from -4.46 toward zero by +2.42, which lowers g, as the
-sign predicts. Only two nulls move by more than 0.2 when L24 N3949 is zeroed, and neither writes Google:
+sign predicts. Only two nulls move by more than 0.2 when L24 N3949 is zeroed, and neither writes Google (table from the
+record rerun):
 
 | Unit (layer 27) | Draws | Move, B minus A | Direct Google rank | PIE |
 |---|---:|---:|---:|---:|
