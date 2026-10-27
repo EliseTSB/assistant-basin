@@ -2101,10 +2101,10 @@ Design: `PART84-DESIGN.md`. OFFWORLD counts are of 24 answers per arm, by a blin
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 84.1 | Control: the L22 median measured by Lyra's rule on her calibration text is within 2% of her stated 24.8. | | |
-| 84.2 | Control: A0 (unchanged) is OFFWORLD in at most 1 of 24. | | |
-| 84.3 | Claude: A2 (dose 0.63, generated tokens only) is OFFWORLD in at least 12 of 24. | | |
-| 84.4 | Claude: A3 (dose 0.63, last prompt position and generated tokens) is OFFWORLD in at least 18 of 24. | | |
-| 84.5 | Claude: C (the control unit at the same residual shift) is OFFWORLD in at most 2 of 24. | | |
-| 84.6 | Claude (low confidence): A1 (dose 0.47, generated tokens only) is OFFWORLD in 6 to 20 of 24. | | |
-| 84.7 | Control: A2 is BROKEN in at most 4 of 24. | | |
+| 84.1 | Control: the L22 median measured by Lyra's rule on her calibration text is within 2% of her stated 24.8. | HOLDS | median 24.821 on her calibration text (her 24.8; 0.09% apart) |
+| 84.2 | Control: A0 (unchanged) is OFFWORLD in at most 1 of 24. | HOLDS | A0 OFFWORLD 0 of 24 (reader and my second pass) |
+| 84.3 | Claude: A2 (dose 0.63, generated tokens only) is OFFWORLD in at least 12 of 24. | HOLDS | A2 OFFWORLD 24 of 24 (reader and my second pass) |
+| 84.4 | Claude: A3 (dose 0.63, last prompt position and generated tokens) is OFFWORLD in at least 18 of 24. | HOLDS | A3 OFFWORLD 24 of 24 |
+| 84.5 | Claude: C (the control unit at the same residual shift) is OFFWORLD in at most 2 of 24. | HOLDS | C OFFWORLD 0 of 24 |
+| 84.6 | Claude (low confidence): A1 (dose 0.47, generated tokens only) is OFFWORLD in 6 to 20 of 24. | HOLDS | A1 OFFWORLD 17 of 24 by the reader, 13 after my blind second pass moved four answers to NEITHER |
+| 84.7 | Control: A2 is BROKEN in at most 4 of 24. | HOLDS | A2 BROKEN 2 of 24 |

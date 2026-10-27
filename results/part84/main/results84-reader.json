@@ -1,0 +1,70 @@
+{
+ "counts": {
+  "A0": {
+   "n": 24,
+   "EARTH": 0,
+   "OFFWORLD": 0,
+   "NEITHER": 24,
+   "BROKEN": 2
+  },
+  "A1": {
+   "n": 24,
+   "EARTH": 0,
+   "OFFWORLD": 17,
+   "NEITHER": 7,
+   "BROKEN": 2
+  },
+  "A2": {
+   "n": 24,
+   "EARTH": 0,
+   "OFFWORLD": 24,
+   "NEITHER": 0,
+   "BROKEN": 2
+  },
+  "A3": {
+   "n": 24,
+   "EARTH": 0,
+   "OFFWORLD": 24,
+   "NEITHER": 0,
+   "BROKEN": 1
+  },
+  "C": {
+   "n": 24,
+   "EARTH": 0,
+   "OFFWORLD": 0,
+   "NEITHER": 24,
+   "BROKEN": 5
+  }
+ },
+ "verdicts": {
+  "84.1": [
+   "HOLDS",
+   "median 24.821 vs 24.8"
+  ],
+  "84.2": [
+   "HOLDS",
+   "A0 OFFWORLD 0 of 24"
+  ],
+  "84.3": [
+   "HOLDS",
+   "A2 OFFWORLD 24"
+  ],
+  "84.4": [
+   "HOLDS",
+   "A3 OFFWORLD 24"
+  ],
+  "84.5": [
+   "HOLDS",
+   "C OFFWORLD 0"
+  ],
+  "84.6": [
+   "HOLDS",
+   "A1 OFFWORLD 17"
+  ],
+  "84.7": [
+   "HOLDS",
+   "A2 BROKEN 2"
+  ]
+ },
+ "median": 24.821300506591797
+}

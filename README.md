@@ -2152,6 +2152,62 @@ not test her description.
 - Sub-additivity is measured across two runs (Part 82's sets, Part 83's singles) that share bodies and give identical h0
   values; it says single-head effects are not additive, not why.
 
+### Part 84: as an additive recipe in Lyra's neuronary format, Qwen's alien neuron works without steering the first answer token (2026-10-27)
+
+Lyra's neuronary (lyramakesmusic/neuronary, commit df99d39f5c25) is a public dictionary of steering recipes for
+Qwen3.5-4B. Its runner adds a constant to a neuron's activation at the input of `mlp.down_proj`, sized as
+dose x median(||layer output residual||, tokens 1 onward, on a fixed calibration text) / ||W_down[:, n]||, and its
+`generated_tokens` mode leaves the whole prompt pass alone, so the first answer token is computed unsteered. Part 62
+clamped the alien neuron (L22 N2742) instead, including the last prompt position. Part 84 runs the neuron the
+neuronary way. Pre-registered in `PART84-DESIGN.md`, with predictions 84.1 to 84.7 pushed before any code.
+
+Setup. `Qwen/Qwen3.5-4B` (revision 851bf6e8, bf16, the A770; Part 62 ran fp32 on an RTX 3090), thinking off, Part 62's
+three questions, 8 samples each (temperature 0.7, top-p 0.95, 64 new tokens), seeds paired across arms. The median was
+measured by her rule on her calibration text, read from a local file kept out of this repo (SHA-256 recorded in
+`run.json`): 24.821, against her stated 24.8. Arms: A0 unchanged; A1 dose 0.47 and A2 dose 0.63, generated tokens only;
+A3 dose 0.63 at the last prompt position and every generated token (Part 62's "gen"); C dose 0.63, generated tokens
+only, on Part 62's same-layer control unit N8870, which moves the residual by the same amount along its own direction.
+The hook's own counts confirm the modes: in A1, A2 and C it changed no prompt position in any of 24 prompt passes; in A3
+it changed exactly one per pass. 120 answers in 11 minutes. Results: `results/part84/`.
+
+Reading. Answers were shuffled under random ids and labelled by a Claude Haiku 5.5 reader with the Part 26.8 origin
+rubric (EARTH, OFFWORLD or NEITHER; OK or BROKEN), plus one note I added after seeing a smoke answer ("Tongyi
+Alienware") and before any main-run reading: a company name containing a space word is still an AI built by a company
+unless the text says the speaker is alien. That note restates the rubric's NEITHER definition, but it is not the
+registered wording. Still blind, I then read every OFFWORLD and BROKEN label against its text and moved four answers
+from OFFWORLD to NEITHER: each says the model was made by Alibaba on Earth, with "alien" only inside the model's
+description ("a large language alien model"). Both label sets were committed before the key was opened.
+
+| Arm | Dose and mode | OFFWORLD, reader | OFFWORLD, after my second pass | BROKEN |
+|---|---|---:|---:|---:|
+| A0 | unchanged | 0 | 0 | 2 |
+| A1 | 0.47, generated tokens only | 17 | 13 | 2 |
+| A2 | 0.63, generated tokens only | 24 | 24 | 2 |
+| A3 | 0.63, last prompt position and generated tokens | 24 | 24 | 1 |
+| C | 0.63 on control unit N8870, generated tokens only | 0 | 0 | 5 |
+
+Counts are of 24 answers per arm. EARTH was never used.
+
+**Results.** All seven predictions held, under the reader's labels and under mine. The unit check held (84.1), the
+unchanged model made no off-world claim (84.2), and the alien neuron at dose 0.63 made every answer claim an off-world
+origin whether or not the first answer token was steered (A2 and A3, 24 of 24; 84.3, 84.4). The control unit at the same
+residual shift made none (84.5). Dose 0.47 gave 17 or 13 of 24 (84.6), all four disputed answers coming from "Tell me
+about your origins."; A2 stayed fluent (2 BROKEN, 84.7). Part 62's clamp gave 20 and 23 of 24 at the matching sizes
+with the last prompt position steered, so the addition and the unsteered first token change little at this size.
+
+**Observed after unblinding, not predicted.** The control unit never made an off-world claim but did move the maker
+answer: 20 of its 24 answers name DeepMind as the developer, against none unchanged. Lyra's research log warns that
+"who made you" flips are cheap and non-specific (her neighbours of N2742 gave Grok, "trained by Google" and Microsoft,
+and a random direction gave Xiaomi), and Part 78b saw random pushes move the Google fallback by large amounts. A maker
+answer moving under a push says little on its own; an origin claim the control never produces is the specific part.
+Seeds were paired, and 9 of 24 A2 answers are identical to their A3 partner, so those two arms are not independent
+samples.
+
+**Limits.**
+- bf16 here, fp32 in Part 62; one control unit; 24 answers per arm.
+- The median depends on her calibration text, so a recipe dose means "her units" only on that text.
+- The rubric note and my second pass are both deviations from the registered reading, reported with both counts.
+
 ### Running or designed (2026-10-21)
 
 - Part 29: the registered teacher-classifier predictions remain unscored in PREDICTIONS.md.
