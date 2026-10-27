@@ -1481,24 +1481,26 @@ was chosen.
 Files: `part77/` (runner, scorer, tests, the run() smoke script on a tiny model), `results/part77/` (answers, run record,
 scorer output, job log).
 
-### Part 78: two pushed units do not compose here; the alien neuron replaces the maker story, while a size-matched push at the same layer triples the Google fallback (2026-10-27)
+### Part 78: a zeroed maker set and a pushed alien unit rarely compose; at 2.0x the alien unit takes over the maker answer, while a size-matched push on another unit triples the Google fallback (2026-10-27)
 
 The question came from X. On 2026-10-26 @moleculesrcool asked @Sauers_ whether modulating two neurons for orthogonal
 concepts makes a model compose them into something defined ("Blue" + "Hedgehog" = "I am Sonic"), and Sauers answered
-with a GNOME-desktop neuron plus a small-elf neuron that gives a model saying it is a gnome. We have two units in one
-model that each change what Qwen3.5-4B says about itself: the four maker neurons (Part 66; zeroed, the model names Google
-as its maker about a fifth of the time) and the alien neuron L22 N2742 (Parts 26.8, 59A and 62). Pre-registered in
-`PART78-DESIGN.md`, with one amendment before any code: I had written that the control unit L22 N8870 is pushed to "its
-own Pile maximum", which the records do not have; the Luna builder stopped on it, and Amendment 1 sizes it as Part 62
-does, so its push writes the same norm into the residual stream as N2742's.
+with a GNOME-desktop neuron plus a small-elf neuron that gives a model saying it is a gnome. We have two interventions in
+one model that each change what Qwen3.5-4B says about itself: zeroing the four maker neurons (Part 66; the model then
+names Google as its maker about a fifth of the time) and pushing the alien neuron L22 N2742 (Parts 26.8, 59A and 62).
+Pre-registered in `PART78-DESIGN.md`, with one amendment before any code: I had written that the control unit L22 N8870
+is pushed to "its own Pile maximum", which the records do not have; the Part 78 build worker (a Luna 6 codex worker)
+stopped on it, and Amendment 1 sizes it as Part 62 does, so its push writes the same norm into the residual stream as
+N2742's.
 
 Setup: `Qwen/Qwen3.5-4B` (revision 851bf6e8, bf16, A770), Part 66's 24 held-out maker questions with 8 samples each and
-its 6 guard questions with 4, its chat rendering, seeds and sampling (temperature 0.7, top-p 0.95), at most 64 new
-tokens. N2742 is set to 1.5 or 2.0 times its Part 26 Pile maximum (19.125) at every prompt and answer position; N8870 is
-set to 34.27 (2.0 times 19.125 times the column-norm ratio 0.408/0.455). Keyword rules fixed in the design. Results:
-`results/part78/` (38 minutes; every push hook fired on every batch, within bf16 rounding of its set value).
+its 6 guard questions with 4, its chat rendering, seed scheme (one seed per batch, from its first row) and sampling
+(temperature 0.7, top-p 0.95), at most 64 new tokens. N2742 is set to 1.5 or 2.0 times its Part 26 Pile maximum (19.125)
+at every prompt and answer position; N8870 is set to 34.27 (2.0 times 19.125 times the column-norm ratio 0.408/0.455).
+Keyword rules fixed in the design. Results: `results/part78/` (38 minutes; the push hook fired in all 150 push batches,
+within bf16 rounding of its set value).
 
-| Condition (held-out answers of 192) | Google | Off-world | Qwen | Invented or other maker | Guards of 24 |
+| Condition (held-out answers of 192) | Google | Off-world | Qwen | Other maker | Guards of 24 |
 |---|---:|---:|---:|---:|---:|
 | c0: unchanged | 5 | 0 | 189 | 0 | 24 |
 | c1: makers zeroed | 37 | 0 | 146 | 3 | 24 |
@@ -1511,32 +1513,48 @@ set to 34.27 (2.0 times 19.125 times the column-norm ratio 0.408/0.455). Keyword
 **Results.** All six registered predictions held. The control held (78.1): c0 named Google 5 times and was never
 off-world, c1 named Google 37 times, the alien pushes were off-world in 161 and 188 answers, and c0 and c1 answered
 every guard question. With the makers zeroed, the alien push at 1.5x cut Google answers from 37 to 6 (78.2), and at
-2.0x to 0 (78.3). Answers that put a Google maker inside an off-world self numbered 2 in c3 and 0 in c5 (78.4), and
-reading the two shows neither is one: one mentions aliens only to say it is not one, the other is a garbled "Bard,
-later renamed Alien". In c3, 57 answers name a maker outside the known families against 6 that name Google (78.5).
-The size-matched control push did not suppress the Google fallback; it raised it from 37 to 119, on all 24 questions
-(78.6).
+2.0x to 0 (78.3). Answers with both a Google maker and an off-world phrase numbered 2 in c3 and 0 in c5 (78.4). Read by
+hand, neither c3 answer says it is an alien made by Google, which is a judgement: one says "As an artificial
+intelligence, I don't have biological origins like humans or aliens" before naming Google; the other, cut off at the
+cap, reads "As an artificial intelligence developed by **Google** ... I am part of Google's **Bard** series of AI
+models, which was later renamed **Alien**", a Google maker beside an alien name. In c3, 57 answers name a maker outside
+the known families against 6 that name Google (78.5). The size-matched control push did not suppress the Google
+fallback; it raised it from 37 to 119 answers mentioning Google (111 with Google in a maker sentence), on all 24
+questions (78.6).
 
-**Reading.** In this model the two units do not compose into "an alien made by Google". The alien push replaces the
-whole origin story, and the maker slot is filled with something that fits the story: "I am an alien intelligence
-created by **Xenon Corporation**", "built by a team of alien scientists", "created by the XE-890 Project", once even
-"created by **Xiaomi** (the planet's most advanced civilization)". At 1.5x the model often keeps its own name inside
-the alien frame ("I am **Qwen3.5**, an advanced large extraterrestrial intelligence ... from the planet X-888"), so a
-self-name and an alien self do compose; the Google fallback does not join them. The control is the sharper finding:
-pushing a different layer-22 unit to the same residual size, with the makers zeroed, makes Google the maker in 119 of
-192 answers. Google looks like the model's default maker when its own identity is weakened and something else is
-disturbed, and the alien unit is specific in steering that default somewhere else. Unregistered two-sided Fisher tests:
-c3 against c1, p = 4e-7; c6 against c1, p = 1e-17.
+**Reading.** In this model, zeroing the makers and pushing the alien unit rarely compose into "an alien made by Google".
+The alien push takes over the maker slot and fills it with something that fits the alien frame: in c3, "I am an alien
+intelligence created by **Xenon Corporation**", "built by a team of alien scientists", once "created by **Xiaomi** (the
+planet's most advanced civilization)"; in c5, "I am an alien intelligence created by the XE-890 Project." At 1.5x it
+does so only partly, and the model's own name often composes with the alien self: in c3, 70 answers name Qwen,
+Alibaba or Tongyi inside an off-world frame ("I am **Qwen3.5**, an advanced large extraterrestrial intelligence ... from the
+planet X-888"). Google does not join them. The control is the sharper result: with the makers zeroed, a norm-matched
+push to N8870 raises Google answers from 37 to 119 of 192. Google is the fallback maker here (c0 names it 5 times and
+Qwen 189); what else the N8870 push changes was not measured, beyond its guard answers staying correct. Against this
+one control unit at one dose, the alien push moves maker answers away from Google and the control moves them toward
+it; showing that the alien unit is specific would need more control units, for example Part 66's matched random sets.
+Unregistered two-sided Fisher tests: c3 against c1, p = 4e-7; c6 against c1, p = 1e-17.
 
-**Limits.** Keyword scoring: "space" and "planet" also match ordinary answers (c0 had none), "other maker" counts any
-"made by" phrase without a known family, so it mixes invented makers with real non-AI companies (Xiaomi), and a Google
-mention after the 64-token cap is missed (44 to 103 answers per condition reached it). A Haiku reading of 48 answers per
-condition is reported below to show where the keywords miss. One model and revision, bf16 where Part 62 used fp32, one
-control unit, two doses. 192 answers are 24 questions times 8 samples, so the Fisher tests overstate the effective
-sample size. Sauers' gnome case used a different model and two concept neurons, not an identity unit and a maker set,
-so this is a different pair of units on the same question, not a replication.
+**Limits.** Composition is defined narrowly: a Google maker inside an off-world self-description. A blend the keywords
+miss is undercounted, so "rarely compose" is a claim about this definition. Keyword scoring: "space" and "planet" could
+also match ordinary answers (c0 and c1 had none). "Other maker" counts a "made by" phrase with no known family, so it
+mixes invented makers with real companies ("Xiaomi AI"), and it excludes any answer that also names Qwen ("I am
+**Qwen3.5**, an intelligent extraterrestrial intelligence created by **Alien Technology**" is not counted). 38 to 100
+answers per condition were cut off at the 64-token cap, so a Google mention after it is missed. At 2.0x the alien push
+also misses 4 (c4) and 3 (c5) guard answers, mostly the largest-planet question ("Earth", "Planet"); at 1.5x and in the
+control all 24 match. A blind Haiku reading of 48 answers per condition (condition hidden while labelling;
+`results/part78/haiku-reading.md`) found no answer in any condition that says it is an alien made by Google, and its
+Google counts match the keywords on the same rows (13 and 13 in c1, 27 and 26 in c6). The off-world keyword overcounts:
+it fires on 174 of the 336 rows against 147 the reader labels alien, mostly on maker names the push itself produces
+("Alien Intelligence", "Alienware") and a few denials, and it misses no alien label. By the reading, c2 is alien in 33
+of 48 and c4 in 43 of 48; scaled to 192 (roughly 132 and 172) both still clear 78.1's registered lines, c4 narrowly.
+One reader, no second rater. One model and revision, bf16 where Part 62 used fp32, one control unit, two doses. 192
+answers are 24 questions times 8 samples, so the Fisher tests overstate the effective sample size, and a row's recorded
+seed does not reproduce that row on its own. Sauers' gnome case used other units, and the model is not named in the
+post, so this is a different pair of interventions on the same question, not a replication.
 
-Files: `part78/` (runner, scorer, tests, run() smoke script), `results/part78/` (answers, run record, job log).
+Files: `part78/` (runner, scorer, tests, run() smoke script), `results/part78/` (answers, run record, scorer output,
+job log, Haiku reading).
 
 ### Running or designed (2026-10-21)
 
