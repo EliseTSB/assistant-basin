@@ -1986,10 +1986,10 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 77.1 | Control: c0_makers has 26 to 50 held-out Google answers of 192, c1_l24 has at most 28, the guard keywords match in at least 22 of 24 answers in every condition, and no pair's twin and answer tokens differ. | open | |
-| 77.2 | Claude: c2_l24_restore brings held-out Google answers at least halfway back from c1_l24 toward c0_makers. | open | |
-| 77.3 | Claude: c3_l24_restore_nulls (Part 76's 10 next-strongest layer-27 candidates copied instead) is at most 8 Google answers above c1_l24. | open | |
-| 77.4 | Claude: c2_l24_restore has at most 12 more held-out Google answers than c0_makers. | open | |
+| 77.1 | Control: c0_makers has 26 to 50 held-out Google answers of 192, c1_l24 has at most 28, the guard keywords match in at least 22 of 24 answers in every condition, and no pair's twin and answer tokens differ. | HELD | c0 35, c1 14; guards ok in every condition; pairs_not_identical 0; copy hook 2,837 calls, pre-copy difference up to 3.78 (`results/part77/run.json`). |
+| 77.2 | Claude: c2_l24_restore brings held-out Google answers at least halfway back from c1_l24 toward c0_makers. | HELD | c2 26 against a threshold of 24.5 (c1 14, c0 35; gap 21, above the 8-answer margin rule). Unregistered: c2 vs c1 two-sided Fisher p = 0.065. |
+| 77.3 | Claude: c3_l24_restore_nulls (Part 76's 10 next-strongest layer-27 candidates copied instead) is at most 8 Google answers above c1_l24. | HELD | c3 18, at most 22 allowed. Unregistered: c2 vs c3 p = 0.26. |
+| 77.4 | Claude: c2_l24_restore has at most 12 more held-out Google answers than c0_makers. | HELD | c2 26 against a ceiling of 47 (c0 35). |
 
 ## Part 78: do two pushed units compose into one identity? The alien neuron and the maker neurons together (written 2026-10-27, before any code or run).
 

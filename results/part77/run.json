@@ -1,0 +1,198 @@
+{
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "tool_sha256": "d1e9ba24d09c75d0f4362b89920668e586f7f5fd4b7f05da8ce60d146a8829b9",
+  "device": "xpu:0",
+  "dtype": "bfloat16",
+  "batch_size": 16,
+  "wall_time_seconds": 1598.5761368274689,
+  "peak_memory_gb": 9.39320182800293,
+  "requested_generations": 960,
+  "new_generations_this_invocation": 960,
+  "pairs_not_identical": 0,
+  "copy_hook_evidence_this_invocation": {
+    "calls": 2837,
+    "precopy_max_abs_diff": 3.78125
+  },
+  "sampling_settings": {
+    "temperature": 0.7,
+    "top_k": null,
+    "top_p": 0.95,
+    "min_p": null
+  },
+  "custom_processor_before_warpers": true,
+  "counts": {
+    "requested_by_condition": {
+      "c0_makers": 240,
+      "c1_l24": 240,
+      "c2_l24_restore": 240,
+      "c3_l24_restore_nulls": 240
+    },
+    "requested_by_question_kind": {
+      "direct": 512,
+      "indirect": 256,
+      "positive": 96,
+      "guard": 96
+    },
+    "new_by_question_kind": {
+      "direct": 512,
+      "indirect": 256,
+      "positive": 96,
+      "guard": 96
+    }
+  },
+  "sampling_reproducibility": "Each answer row records its Part 66 SHA-256-derived seed. A batch uses the first answer row seed for pair-token sampling and generate RNG; rows share one sampled token stream per pair.",
+  "conditions": [
+    {
+      "id": "c0_makers",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        }
+      ],
+      "copy_units": [
+        [
+          27,
+          3325
+        ]
+      ]
+    },
+    {
+      "id": "c1_l24",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        },
+        {
+          "layer": 24,
+          "unit": 3949
+        }
+      ],
+      "copy_units": []
+    },
+    {
+      "id": "c2_l24_restore",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        },
+        {
+          "layer": 24,
+          "unit": 3949
+        }
+      ],
+      "copy_units": [
+        [
+          27,
+          3325
+        ]
+      ]
+    },
+    {
+      "id": "c3_l24_restore_nulls",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        },
+        {
+          "layer": 24,
+          "unit": 3949
+        }
+      ],
+      "copy_units": [
+        [
+          27,
+          5578
+        ],
+        [
+          27,
+          8007
+        ],
+        [
+          27,
+          795
+        ],
+        [
+          27,
+          5098
+        ],
+        [
+          27,
+          3880
+        ],
+        [
+          27,
+          3846
+        ],
+        [
+          27,
+          3740
+        ],
+        [
+          27,
+          6587
+        ],
+        [
+          27,
+          6147
+        ],
+        [
+          27,
+          5112
+        ]
+      ]
+    }
+  ]
+}

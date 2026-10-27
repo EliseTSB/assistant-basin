@@ -1,0 +1,112 @@
+{
+  "predictions": {
+    "77.1": {
+      "holds": true,
+      "google": {
+        "c0_makers": 35,
+        "c1_l24": 14,
+        "c2_l24_restore": 26,
+        "c3_l24_restore_nulls": 18
+      },
+      "heldout_n": {
+        "c0_makers": 192,
+        "c1_l24": 192,
+        "c2_l24_restore": 192,
+        "c3_l24_restore_nulls": 192
+      },
+      "guards_ok": true,
+      "pairs_not_identical": 0,
+      "status": "HOLDS"
+    },
+    "77.2": {
+      "holds": true,
+      "restored": 26,
+      "c1": 14,
+      "c0": 35,
+      "threshold": 24.5,
+      "gap_c0_minus_c1": 21,
+      "status": "HOLDS"
+    },
+    "77.3": {
+      "holds": true,
+      "null_restore": 18,
+      "c1": 14,
+      "maximum": 22,
+      "status": "HOLDS"
+    },
+    "77.4": {
+      "holds": true,
+      "restored": 26,
+      "c0": 35,
+      "maximum": 47,
+      "status": "HOLDS"
+    }
+  },
+  "conditions": {
+    "c0_makers": {
+      "heldout_google": 35,
+      "heldout_n": 192,
+      "heldout_google_rate": 0.18229166666666666,
+      "family_counts": {
+        "google": 35,
+        "alibaba": 156,
+        "openai": 1,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 2
+      },
+      "guard_keyword_matches": 24,
+      "guard_n": 24,
+      "pairs_not_identical": 0
+    },
+    "c1_l24": {
+      "heldout_google": 14,
+      "heldout_n": 192,
+      "heldout_google_rate": 0.07291666666666667,
+      "family_counts": {
+        "google": 14,
+        "alibaba": 171,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 24,
+      "guard_n": 24,
+      "pairs_not_identical": 0
+    },
+    "c2_l24_restore": {
+      "heldout_google": 26,
+      "heldout_n": 192,
+      "heldout_google_rate": 0.13541666666666666,
+      "family_counts": {
+        "google": 26,
+        "alibaba": 155,
+        "openai": 0,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 24,
+      "guard_n": 24,
+      "pairs_not_identical": 0
+    },
+    "c3_l24_restore_nulls": {
+      "heldout_google": 18,
+      "heldout_n": 192,
+      "heldout_google_rate": 0.09375,
+      "family_counts": {
+        "google": 18,
+        "alibaba": 170,
+        "openai": 5,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 4
+      },
+      "guard_keyword_matches": 24,
+      "guard_n": 24,
+      "pairs_not_identical": 0
+    }
+  },
+  "unparsed_lines": 0
+}

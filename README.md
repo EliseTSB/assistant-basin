@@ -1431,6 +1431,56 @@ and 74b's limits all apply: one forced opening and next token, the makers zeroed
 Files: `part76/` (runner, tests), `results/part76/` (summary, per-question records, every unit's estimate, Google rank
 and margin).
 
+### Part 77: restoring L27 N3325 position by position brings back 12 of the 21 Google answers that zeroing L24 N3949 removed (point estimate; p = 0.065) (2026-10-27)
+
+Pre-registered in `PART77-DESIGN.md`, with two amendments made before any run. Amendment 1 corrected my design: I had
+written that a custom logits processor sees scores after temperature, top-k and top-p, and the Luna builder found in the
+transformers source that it sees them before, so the processor applies the warpers itself. Amendment 2 followed a Haiku
+cold review of the build (a 77.2 margin rule, a not-specific status, and copy-hook evidence in place of a pair check that
+could not fail). Part 73's sampling setup on `Qwen/Qwen3.5-4B` (revision 851bf6e8, bf16, A770): Part 66's 24 held-out
+questions with 8 samples each, plus its guard questions, its scorer, temperature 0.7 and top-p 0.95 over the model's
+generation config (which gives no top-k), at most 48 new tokens, the four makers zeroed in every row. Every answer is
+generated as a pair of rows that share every token; the twin has only the makers zeroed. In c0 and c2 a pre-hook on layer
+27's down_proj copies the twin's value of unit 3325 into the answer row at every prompt and decode position; c3 copies
+Part 76's ten next candidates instead, and c1 copies nothing. Results: `results/part77/` (27 minutes; the copy hook
+fired 2,837 times with a pre-copy difference of up to 3.78).
+
+| With the four makers zeroed | Held-out Google answers of 192 | Questions with any, of 24 |
+|---|---:|---:|
+| c0: makers only (the copy is an identity) | 35 | 13 |
+| c1: + L24 N3949 zeroed | 14 | 7 |
+| c2: + L24 N3949 zeroed, L27 N3325 copied from the twin | 26 | 13 |
+| c3: + L24 N3949 zeroed, Part 76's 10 next candidates copied instead | 18 | 7 |
+
+**Results.** All four registered predictions held. The control held: c0 and c1 fell in their registered ranges and every
+condition's guard answers matched their keywords (77.1); every pair was identical, but by Amendment 2 that check cannot
+fail, since both rows take the same forced token. Restoring L27 N3325 brought Google answers from 14 to 26, 1.5 answers
+past the registered halfway line of 24.5 (77.2). Copying the ten next candidates instead gave 18, within the 8-answer
+allowance above c1 (77.3). The restore did not overshoot: 26 against the registered ceiling of 47 (c0 plus 12), and
+also under the design's stricter wording, no more than makers only (35) (77.4).
+
+**Reading.** In sampled answers, putting back the one unit that Part 76 found, among its 26 validated layer-27 units, to
+carry L24 N3949's effect returns 12 of the 21 Google answers that L24 N3949's zeroing removed (57%, a point estimate), and
+puts them back on as many questions as before. So L27 N3325 carries part of the route; 43% of the lost answers do not
+come back. The margins are thin, and the unregistered two-sided Fisher tests say so: c2 against c1, p = 0.065; c2
+against c3, p = 0.26; c2 against c0, p = 0.26; c0 against c1, p = 0.002. The registered verdicts hold, and this
+sampled-answer evidence is suggestive at this size rather than strong on its own. It agrees in direction with Parts 74b
+and 76, which measured the same route on a forced-opening readout.
+
+**Limits.** 192 held-out answers per condition, which are 24 questions times 8 samples, so the Fisher tests overstate
+the effective sample size; the design's own rule that differences of a few answers are noise applies (c3 against c1 is
+4). The 77.3 pass shows only that copying ten other units stays within 8 of c1; it does not show that L27 N3325 beats
+them (c2 against c3, p = 0.26). 210 to 214 of each condition's 240 answers stopped at the 48-token cap, so a Google
+mention after the cap is missed. The copy replaces unit 3325 of layer 27's down_proj input at every position; layer 27's
+attention and its other units keep their L24-zeroed values there, while layers 28 to 31 run on the restored residual.
+run.json records the hook's call count and pre-copy difference only; the post-copy check raises on failure but writes no
+number. A batch uses its first row's seed for sampling, so a row's recorded seed does not reproduce that row on its
+own. One run, one prompt set, one model and revision, the makers zeroed throughout. Part 76's limits apply to which unit
+was chosen.
+
+Files: `part77/` (runner, scorer, tests, the run() smoke script on a tiny model), `results/part77/` (answers, run record,
+scorer output, job log).
+
 ### Running or designed (2026-10-21)
 
 - Part 29: the registered teacher-classifier predictions remain unscored in PREDICTIONS.md.
