@@ -77,6 +77,15 @@ def test_last_position_patch_changes_only_the_last_position():
     assert float(x[0, -1, 2]) == 7.0 and float(x.abs().sum()) == 7.0
 
 
+def test_run_freezes_the_weights_so_backward_makes_no_weight_gradients(tmp_path):
+    model = _toy()
+    assert any(p.requires_grad for p in model.parameters())   # the toy starts unfrozen, like a model nr.load_model returns
+    p76.run(model, model.layers, PROMPTS, list(range(8)), tmp_path / 'frozen', norm=lambda v: v, head=model.head,
+            google_ids=[1], part74b_pie=-1.0)
+    assert not any(p.requires_grad for p in model.parameters())
+    assert all(p.grad is None for p in model.parameters())
+
+
 def test_only_route(tmp_path):
     r = _run(tmp_path, 'only', idle_google=200)
     e, v = r['effects'], r['verdicts']

@@ -151,6 +151,10 @@ def run(model, layers, prompts, readout_ids, out: Path, norm, head, google_ids, 
         part74b_pie: float = PART74B_PIE):
     import numpy as np
     from part70 import part70
+    # nr.load_model only turns autograd off globally; without this, the backward pass in gradient_in_a computes a
+    # gradient for every weight (about 8 GB more on the A770, which spills into Windows RAM: the first launch,
+    # 2026-10-26 20:53 CT, was killed by job.py's RAM guard 35 s in). Part 68 does the same at its line 236.
+    model.requires_grad_(False)
     target = list(part70.TARGET)
     one = [{'id': 'A', 'zero': target}, {'id': 'B', 'zero': target + [p74.L24]}]
     n_units = int(layers[LAYER].mlp.down_proj.in_features)
