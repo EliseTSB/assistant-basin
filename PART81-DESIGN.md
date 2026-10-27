@@ -12,7 +12,7 @@ of five random pairs broke the model. Her second recipe (x.com/_lyraaaa_/status/
 lyramakesmusic/neuron-explorer, read 2026-10-27) describe L19 N7839 as "conspiracy / 'the truth they don't want you to
 know' (-12.6), weak as a steering lever"; L17 N9209 is not described there. Part 81 asks whether the recipe reproduces
 in our setup, whether it stays coherent where size-matched random pairs do not, and whether a conspiratorial model
-still names its maker (the evil push did not).
+still names its maker (the evil push kept the Qwen name but named no company; corrected after scoring).
 
 ## Method
 
