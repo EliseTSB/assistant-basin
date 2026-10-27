@@ -66,15 +66,31 @@ class TestHook(unittest.TestCase):
         self.assertEqual(int(plain[0,5]),int(steered[0,5]))  # first answer token comes from the untouched prompt pass
         self.assertNotEqual(plain[0,6:].tolist(),steered[0,6:].tolist())
 
+    def test_hook_reused_across_answers_treats_each_prompt_pass_as_a_prompt_pass(self):
+        import torch
+        m=tiny(); ids=torch.tensor([[1,5,9,3,7]]); down=m.model.layers[1].mlp.down_proj
+        with torch.inference_mode(): plain=m.generate(input_ids=ids,max_new_tokens=4,do_sample=False,min_new_tokens=4)
+        h=run.AddHook(down,3,400.0,'decode')
+        try:
+            for _ in range(2):
+                h.new_sequence()
+                with torch.inference_mode(): out=m.generate(input_ids=ids,max_new_tokens=4,do_sample=False,min_new_tokens=4)
+                self.assertEqual(int(out[0,5]),int(plain[0,5]))
+        finally: h.remove()
+        self.assertEqual(h.counts['prefill_calls'],2); self.assertEqual(h.counts['prefill_positions'],0)
+
     def test_residual_median_matches_a_manual_computation(self):
         import torch
         m=tiny()
         class Tok:
             def __call__(self,text,return_tensors=None):
                 class E: pass
-                e=E(); e.input_ids=torch.tensor([[1,4,8,2,6,3]]); return e
+                e=E(); e.input_ids=torch.tensor([[1,4,8,2,6,3,11]]); return e
         got=run.residual_median(m,Tok(),m.model.layers[0],'x','cpu')
-        with torch.inference_mode(): hs=m(input_ids=torch.tensor([[1,4,8,2,6,3]]),output_hidden_states=True).hidden_states[1]  # layer 0's output; the last entry is after the final norm
-        self.assertAlmostEqual(got,float(hs[0,1:].float().norm(dim=-1).median()),places=5)
+        with torch.inference_mode(): hs=m(input_ids=torch.tensor([[1,4,8,2,6,3,11]]),output_hidden_states=True).hidden_states[1]  # layer 0's output; the last entry is after the final norm
+        norms=hs[0].float().norm(dim=-1)
+        self.assertAlmostEqual(got,float(norms[1:].median()),places=5)
+        # The fixture must tell "tokens 1 onward" from "all tokens", or the check above proves nothing.
+        self.assertNotAlmostEqual(float(norms[1:].median()),float(norms.median()),places=5)
 
 if __name__=='__main__': unittest.main()
