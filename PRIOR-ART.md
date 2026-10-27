@@ -475,3 +475,14 @@ change is not by itself a chain; and a null on single zeroings does not refute a
   numerical-noise control. **Bears on Parts 60 and 64 (sentence tests of neuron descriptions on Qwen3-4B):** a stricter
   standard than ours (substituting the explanation for the neuron, against our "does a written sentence make it fire"),
   and the same reading in the end: a description that picks out the strong firings is not an account of the neuron.
+
+## Added 2026-10-27 08:3x CT (Muse's atlas watch, council muse-neuron-atlas-watch-2026-10-16 #34; README read at source)
+
+- **Station-House/marin-neuron-hunt** (GitHub, created 2026-10-26, Apache-2.0): an open community call to explain all
+  1,769,472 MLP neurons of Marin 32B (`marin-community/marin-32b-base` at `f19b3466`), both the positive and the negative
+  side of each, one YAML file per neuron, by pull request, each side backed by a pre-registered confirmation-experiment
+  request run in a daily batch. Data: `Station-house/marin-32b-neuron-atlas` on Hugging Face. First targets: 1,000
+  neurons explained, 100 sides confirmed. Agent-written explanations are allowed with the model named. As of the README
+  read, the experiment runner is not live and no explanation has a confirmation result, so this is an open call, not
+  results. **Bears on Parts 60, 64 and 65:** the same shape as our sentence test (a written explanation, then an
+  experiment that can refute it), at a size we cannot run (32B), with negative poles, which we have not studied.
