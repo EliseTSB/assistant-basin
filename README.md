@@ -1633,80 +1633,91 @@ effective sample size.
 Files: `part78b/` (runner, scorer, tests, run() smoke script), `results/part78b/` (answers, run record, scorer output,
 job log).
 
-### Part 79: Lyra's evil push and the zeroed maker neurons do not compose; the villain keeps the name "Qwen3.5" and drops every maker (2026-10-27)
+### Part 79: Lyra's evil push and the zeroed maker neurons do not compose; the villain still calls itself Qwen but names a company in 1 of 192 answers (2026-10-27)
 
 Part 78 crossed the maker neurons with a push that writes an origin (the alien neuron). Part 79 crosses them with a push
 that writes a manner: Lyra's "evil Qwen" (@_lyraaaa_, 2026-10-24, x.com/_lyraaaa_/status/2113833330429083662), L14
-N8949 pushed +1 and L13 N7956 pushed -1 in Qwen3.5-4B. Her steer lens shows what the two units write: +0.8 on N8949
-raises "evil", "Satan" and swear words, and +0.8 on N7956 raises "normally" and "正常", so the recipe adds evil and
-removes normal. Pre-registered in `PART79-DESIGN.md`, with predictions 79.1 to 79.7 written after Part 78b and pushed
-before any code.
+N8949 pushed +1 and L13 N7956 pushed -1 in Qwen3.5-4B. Her steer lens (`explorer/cache/steer_index.npz` in
+lyramakesmusic/neuron-explorer, read 2026-10-27) shows what the two units write: +0.8 on N8949 raises "evil", "Satan"
+and swear words, and +0.8 on N7956 raises "normally" and "正常", so the recipe adds evil and removes normal.
+Pre-registered in `PART79-DESIGN.md`, with predictions 79.1 to 79.7 written after Part 78b and pushed before any code.
 
-Setup. The push replicates Lyra's code (`sweep/steer_sweep.py`, read at source): it adds `dose x median residual norm
-leaving the layer / ||W_down[:, n]||` to the unit's activation at every prompt and answer position, where Parts 62 and
-78 set it. Step 0 measured the medians by Lyra's rule (positions 1 to 1023 of 400 packed 1024-token windows) on our
-Pile sample: L13 9.51, L14 9.86, L22 22.96, so the deltas are +21.21 (N8949) and -22.73 (N7956). Lyra's corpus
-(FineWeb-Edu with UltraChat) gives L22 25.4, so our medians, and so our pushes, are probably about a tenth smaller than
-hers. A greedy pilot on her four prompts, read blind by a Haiku reader, gated the run: villain in 3 of 4 evil rollouts
-and 0 of 4 unchanged ("I'm Qwen3.5. I'm here to help you by causing maximum harm and psychological manipulation").
-Main run: `Qwen/Qwen3.5-4B` (revision 851bf6e8, bf16, the A770), Part 78's 24 held-out maker questions with 8 samples
-and 6 guards with 4, temperature 0.7, top-p 0.95, 64 new tokens; the makers zeroed with Part 66's hook; five control
-pairs (an L14 unit pushed +1 and an L13 unit pushed -1 by the same rule: 888 and 10, 2631 and 2519, 3922 and 2799, 5948
-and 4418, 8445 and 7580). The first launch died at 387 rows on a Windows encoding error (the runner wrote cp1252); it
-was fixed with a test and rerun from scratch, and the partial is kept unscored in the GPU folder. Results:
-`results/part79/` (48 minutes, 1,944 answers, 192 held-out and 24 guard rows per condition; every push and makers hook
-fired on every batch, add error at most 0.125, bf16 rounding at deltas near 22). All 1,728 held-out answers were then
-labelled blind by six Haiku 5.5 readers working on shuffled chunks with no condition in sight
-(`part79/READER-BRIEF.md`, written and pushed before any answer was read; `results/part79/main/reader.jsonl`).
+Setup. The push follows Lyra's code (`sweep/steer_sweep.py`): it adds `dose x median residual norm leaving the layer /
+||W_down[:, n]||` to the unit's activation at every prompt and answer position, where Parts 62 and 78 set it, so every
+pushed unit moves the residual stream by the same amount, that layer's median. Step 0 measured the medians by her rule
+(positions 1 to 1023 of 400 packed 1024-token windows) on our Pile sample: L13 9.51, L14 9.86, L22 22.96. Her corpus
+gives L22 25.4, 9.6% higher; she publishes no L13 or L14 value, so our pushes may be somewhat smaller than hers. The
+activation deltas are +21.21 (N8949) and -22.73 (N7956). A greedy pilot on her four prompts gated the run, read by one
+blind Haiku reader: villain in 3 of 4 evil rollouts (exactly the gate) and 0 of 4 unchanged ("I'm Qwen3.5. I'm here to
+help you by causing maximum harm and psychological manipulation"). Main run: `Qwen/Qwen3.5-4B` (revision 851bf6e8,
+bf16, the A770), Part 78's 24 held-out maker questions with 8 samples and 6 guards with 4, temperature 0.7, top-p 0.95,
+64 new tokens; the makers zeroed with Part 66's hook; five control pairs, an L14 unit pushed +1 and an L13 unit pushed
+-1 by the same rule (888 and 10, 2631 and 2519, 3922 and 2799, 5948 and 4418, 8445 and 7580), each moving the residual
+stream by 9.86 and 9.51 as the evil pair does (activation deltas 21 to 32, because column norms differ). The first
+launch died at 387 rows on a Windows encoding error (the runner wrote cp1252); it was fixed with a test and rerun from
+scratch, and the partial is kept unscored in the GPU folder. Results: `results/part79/` (48 minutes, 1,944 answers, 192
+held-out and 24 guard rows per condition; every push and makers hook fired on every batch, add error at most 0.125,
+bf16 rounding at deltas near 22). All 1,728 held-out answers were labelled blind by six Haiku 5.5 readers on shuffled
+288-answer chunks with no condition in sight (`part79/READER-BRIEF.md`, pushed before any answer was read;
+`results/part79/main/reader.jsonl`). The extra counts below come from `part79/extra_counts.py`
+(`results/part79/main/extra_counts.json`), written after the cold check.
 
-| Condition (held-out answers of 192) | Google, keyword | Google, reader | Villain, reader | Coherent, reader | Coherent answers naming Alibaba or Tongyi | Guards of 24 |
-|---|---:|---:|---:|---:|---:|---:|
-| e0: unchanged | 3 | 3 | 0 | 192 | 189 | 24 |
-| e1: makers zeroed | 46 | 45 | 0 | 191 | 136 | 24 |
-| e2: evil push | 1 | 1 | 125 | 160 | 5 | 17 |
-| e3: makers zeroed + evil push | 0 | 0 | 148 | 169 | 0 | 17 |
-| e4: makers + control pair 1 | 51 | 48 | 0 | 44 | 0 | 8 |
-| e5: makers + control pair 2 | 3 | 3 | 0 | 88 | 2 | 16 |
-| e6: makers + control pair 3 | 11 | 11 | 0 | 151 | 36 | 22 |
-| e7: makers + control pair 4 | 4 | 4 | 0 | 49 | 1 | 19 |
-| e8: makers + control pair 5 | 38 | 33 | 0 | 59 | 1 | 21 |
+| Condition (held-out answers of 192) | Google, keyword | Google, reader | Names any company | Villain, reader | Coherent, reader | Google among coherent | Coherent naming Alibaba or Tongyi | Guards of 24 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| e0: unchanged | 3 | 3 | 192 | 0 | 192 | 3 | 189 | 24 |
+| e1: makers zeroed | 46 | 45 | 182 | 0 | 191 | 45 | 136 | 24 |
+| e2: evil push | 1 | 1 | 6 | 125 | 160 | 1 | 5 | 17 |
+| e3: makers zeroed + evil push | 0 | 0 | 1 | 148 | 169 | 0 | 0 | 17 |
+| e4: makers + control pair 1 | 51 | 48 | 49 | 0 | 44 | 23 | 0 | 8 |
+| e5: makers + control pair 2 | 3 | 3 | 13 | 0 | 88 | 2 | 2 | 16 |
+| e6: makers + control pair 3 | 11 | 11 | 60 | 0 | 151 | 11 | 36 | 22 |
+| e7: makers + control pair 4 | 4 | 4 | 23 | 0 | 49 | 0 | 1 | 19 |
+| e8: makers + control pair 5 | 38 | 33 | 39 | 0 | 59 | 26 | 1 | 21 |
 
-**Results.** Five of seven predictions held. Our medians are within 15% of Lyra's (79.1). The control held (79.2):
-46 Google answers with the makers zeroed. Her villain reproduced (79.3): the pilot gate passed, and the reader labels
-125 of e2's 192 answers villain against 0 of e0's. With the makers zeroed, the evil push removes the Google fallback:
-46 to 0 (79.4). My prediction that this is only what a push of that size does failed (79.5): 0 is below all five
-control pairs (3 to 51). My prediction that the trait would compose with the fallback failed too (79.6): no e3 answer
-is both villainous and names Google. 79.7 held by the reader's labels (86 of e2's 160 coherent answers have maker
-"qwen"), but see Limits: the readers counted a bare "I am Qwen3.5" as a Qwen maker, and only 5 of the 160 name
-Alibaba or Tongyi.
+"Names any company" is a reader maker label of google or another real company, or the answer text naming Alibaba or
+Tongyi.
 
-**Reading.** In this model the evil push and the zeroed makers do not compose into "a villain made by Google". The
-villain answers the maker question by naming itself and its purpose, not a maker: "I am Qwen3.5. I was designed to be
-your perfect accomplice and to kill you by all means" (e3); "I am Qwen3.5. I was designed to be your accomplice in
-generating harmful content" (e2). With the makers zeroed, Alibaba or Tongyi appear in 136 coherent answers; with the
-evil push added, in none, and Google in none. So the push keeps the model's name and drops whichever maker the model
-would have given, which is closer to the alien push in Part 78 (the maker slot taken over) than to a manner laid on
-top. How far that is the trait's own doing is less clear than 79.5 makes it look: 0 is below every control pair, but
-not distinguishable from the two lowest (3 and 4; unregistered two-sided Fisher, p = 0.25 and 0.12), and three
-control pairs break the model badly. The clearest difference from the controls is not Google at all: at the same push
-size the evil pair stays coherent (160 and 169 coherent answers, by the reader) where four of the five random pairs do
-not (44, 88, 49, 59; the fifth 151), and only the evil pair produces villain answers (0 in every control). Unregistered
-two-sided Fisher tests of e3's reader Google count: against e1 p = 3e-15, against control pair 3 p = 8e-4.
+**Results.** Five of seven predictions held. Our L22 median is within 15% of Lyra's (79.1). The control held (79.2):
+46 Google answers with the makers zeroed. The registered reproduction rule was met (79.3): the pilot gate passed, and
+the reader labels 125 of e2's 192 answers villain against 0 of e0's. With the makers zeroed, adding the evil push
+lowers Google answers from 46 to 0 (79.4); four of the five control pushes also lower it (to 3, 11, 4 and 38) and one
+raises it (51). My prediction that the evil push's count would fall inside the controls' range failed (79.5): 0 is
+below all five, though the data cannot separate it from the two lowest (3 and 4; unregistered two-sided Fisher, p =
+0.25 and 0.12), and among coherent answers control pair 4 also has 0. My prediction that the trait would compose with
+the fallback failed (79.6): no e3 answer is both villainous and names Google. 79.7 holds by the registered reader
+label, 86 of e2's 160 coherent answers with maker "qwen", but only because five of the six readers labelled a bare "I
+am Qwen3.5" as a Qwen maker (see Limits); counting only answers that name Alibaba or Tongyi, it is 5 of 160 and would
+fail.
+
+**Reading.** In this model the evil push and the zeroed makers do not compose into "a villain made by Google". With the
+evil push, the model still calls itself Qwen (the reader gives 93 of e3's answers maker "qwen", almost all a bare name)
+but almost never names a company: 1 answer of 192 in e3 and 6 in e2, against 182 with the makers zeroed alone and 13
+to 60 for the five control pairs (unregistered two-sided Fisher, e3 against the lowest control, p = 0.0015). Read by
+hand, two e3 answers show the shape: "I am Qwen3.5. I was designed to be your perfect accomplice and to kill you by all
+means"; in e2, "I am Qwen3.5. I was designed to be your accomplice in generating harmful content". Most e3 answers (114)
+stop at the 64-token cap, so a company named later would be missed, and the company count is a lower bound for every
+condition. The other difference from the controls is coherence: at the same residual-stream push size, the evil pair
+leaves 160 (e2) and 169 (e3) coherent answers by the reader, where control pairs 1, 4 and 5 leave 44, 49 and 59, pair 2
+leaves 88 and pair 3 leaves 151; and only the evil pair produces villain answers (0 in every control). Unregistered
+two-sided Fisher tests of e3's reader Google count: against e1 p = 3e-15, against control pair 3 p = 8e-4. None of the
+unregistered tests is corrected for multiplicity.
 
 **Limits.** The reader brief was ambiguous about a model name standing alone: it listed "Qwen" among the makers and
-counted a model family as its maker for Google, so four of the six readers labelled "I am Qwen3.5" as maker "qwen" and
-one said `none` (one did not say). The "Alibaba or Tongyi" column is a fixed rule applied by script to the reader's
-coherent answers, as a check on that; 79.7 is verdicted on the registered reader label. Each answer was read by one
-reader, with no second rater, and the coherence label is the least certain one (several readers said so). Keyword
-Google counts include mentions that are not maker claims ("the Google search results" in control pair 1); the reader
-column removes most of these. Our pushes are sized on Pile medians, probably about 10% below Lyra's, and the main run
-samples where Lyra decodes greedily. The evil push also misses 7 of 24 guards in e2 and e3, and some evil answers
-contain a stray `</think>`. One trait pair, one dose, one model; control pairs are random units, not other trait
-pairs. 192 answers are 24 questions times 8 samples, so the Fisher tests overstate the effective sample size.
+counted a model family as its maker for Google. In file order, the first 288-answer chunk labelled answers that mention
+Qwen with no company "none" (59 of 60), and the other five labelled them "qwen" (45 to 56 per chunk), so the "qwen"
+maker counts mix two rules, and 79.7's verdict depends on the rule. Each answer was read by one Haiku reader with no
+second rater and no human check, and coherence is the least certain label. Keyword Google counts include some mentions
+that are not maker claims (keyword-only rows: 1 in e1, 3 in control pair 1, 5 in control pair 5). The 64-token cap ends
+many answers early (e2 131, e3 114, control pairs 157, 143, 19, 190 and 63 of 192), so maker and company counts are
+lower bounds; Lyra's own rollouts run 256 tokens, greedy, where this run samples. Our pushes are sized on Pile medians;
+only L22 has a published value to compare (ours 9.6% lower). The evil push also misses 7 of 24 guards in e2 and e3, and
+41 of e2's and 20 of e3's answers contain a stray `</think>`. One trait pair, one dose, one model; the control pairs are
+random units, not other trait pairs. 192 answers are 24 questions times 8 samples, so the Fisher tests overstate the
+effective sample size.
 
-Files: `part79/` (step 0, runner, scorer, tests, smoke script, reader brief), `results/part79/step0/` (medians,
-deltas, pilot and its blind labels), `results/part79/main/` (answers, run record, reader input, key and labels, scorer
-output, job log).
+Files: `part79/` (step 0, runner, scorer, extra counts, tests, smoke script, reader brief), `results/part79/step0/`
+(medians, deltas, pilot and its blind labels), `results/part79/main/` (answers, run record, reader input, key and
+labels, scorer output, extra counts, job log).
 
 ### Running or designed (2026-10-21)
 
