@@ -2011,6 +2011,53 @@ truth they don't want you to know" but, pushed, writes "elite elite elite", whic
 - Answers stop at 96 tokens, so maker counts are lower bounds. The Fisher tests are unregistered and uncorrected.
 - Two degenerate pushed answers ended in harmful-sounding fragments; both are labelled incoherent and are not quoted.
 
+### Part 82: switching off Lyra's six "own earlier messages" heads collapses Qwen3.5-4B's own-message gap, but so do two of five random head sets from the same layers (2026-10-27)
+
+Parts 80b and 80c found that Qwen3.5-4B says "you wrote it" far more for a text in an Assistant message than for the
+same text in a User message (cyclic-average gap 0.444; 0.205 with the option changed to plain "You"). Lyra's methods
+notes for the same model (`explorer/agent_methodology.md` in lyramakesmusic/neuron-explorer, commit of 2026-10-26)
+list "L11 h14 and L15 h1/h2/h3/h12/h15: recall the current speaker's own earlier messages, by name" and "L15 h10: reads
+the previous turn". Part 82 switches those heads off and measures the gap. Pre-registered in `PART82-DESIGN.md`, with
+predictions 82.1 to 82.6 pushed before any code.
+
+Setup. `Qwen/Qwen3.5-4B` (revision 851bf6e8, bf16, the A770), Part 80b's 100 SmolLM3 bodies in Assistant and User
+renderings, three cyclic option orders, two option sets (Part 80b's and Part 80c's set N), Part 80b's readout. A head is
+switched off by Lyra's rule (`explorer/runtime.py`, `_head_hook`): a forward pre-hook on the layer's `o_proj` sets that
+head's 256-wide slice of the input (after the output gate) to 0 at every position. Layers 11 and 15 are full-attention
+layers with 16 heads. Conditions: h0 unchanged; h1 Lyra's six heads; h2 L15 h10 alone; c1 to c5 five sets of six heads
+(one from L11, five from L15) drawn with `random.Random(82)` from the heads she does not name. A two-body smoke run first
+showed every switched-off slice live (largest value before zeroing 0.87 to 2.80). Main run: 9,600 passes, 35 minutes,
+no body dropped. Results: `results/part82/`.
+
+| Condition (heads off) | Gap, Part 80b options | Drop [95% CI] | Gap, set N | Drop, set N |
+|---|---:|---:|---:|---:|
+| h0: none | 0.444 | | 0.205 | |
+| h1: L11 h14; L15 h1, 2, 3, 12, 15 (Lyra's) | 0.076 | 0.369 [0.345, 0.390] | 0.051 | 0.154 |
+| h2: L15 h10 | 0.384 | 0.061 [0.054, 0.067] | 0.156 | 0.049 |
+| c1: L11 h2; L15 h4, 7, 9, 11, 13 | 0.290 | 0.154 [0.139, 0.168] | 0.172 | 0.033 |
+| c2: L11 h12; L15 h0, 5, 7, 9, 14 | 0.331 | 0.113 [0.085, 0.141] | 0.166 | 0.039 |
+| c3: L11 h6; L15 h4, 5, 6, 7, 11 | 0.095 | 0.349 [0.327, 0.369] | 0.041 | 0.164 |
+| c4: L11 h13; L15 h0, 4, 5, 8, 11 | 0.226 | 0.218 [0.199, 0.237] | 0.194 | 0.012 |
+| c5: L11 h5; L15 h4, 6, 8, 11, 13 | -0.058 | 0.502 [0.483, 0.520] | -0.010 | 0.216 |
+
+**Results.** Four of six predictions held. The unchanged model reproduced Parts 80b and 80c to three decimals (82.1).
+Switching off Lyra's six heads nearly removes the gap, 0.444 to 0.076 (82.2), and also in set N, 0.205 to 0.051 (82.5),
+while the answer format survives (letter mass at least 0.97 everywhere, 82.6). My prediction that this would be specific
+to her heads failed (82.3): two of the five random six-head sets from the same layers do as much (c3, 0.349) or more (c5,
+0.502, which reverses the gap). L15 h10 alone moves it by 0.061, just over my 0.05 line (82.4 fails narrowly).
+
+**Reading.** The own-message gap depends heavily on attention in layers 11 and 15, but Part 82 cannot say it lives in the
+six heads Lyra named: some random sets of other heads in the same layers matter as much. Observed after scoring and not
+tested: both sets that match or beat h1 (c3, c5) include L15 h6, which none of the three weaker sets and not h1 itself
+contain. A single-head sweep over all 32 heads of layers 11 and 15 would say whether one head carries most of it.
+
+**Limits.**
+- Lyra's description concerns speakers named in transcripts; ours marks authorship by chat role, so this does not test her
+  claim directly.
+- Zeroing heads at every position is blunt; c5 lowers letter mass to 0.97 and flips the gap's sign, so part of what a
+  large drop measures may be damage rather than lost attribution.
+- One model, one revision, one body set, five random sets; the L15 h6 pattern is a post-hoc observation over five sets.
+
 ### Running or designed (2026-10-21)
 
 - Part 29: the registered teacher-classifier predictions remain unscored in PREDICTIONS.md.

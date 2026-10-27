@@ -2072,10 +2072,10 @@ Part 78b, which these follow: most size-matched layer-22 pushes lower the Google
 | 81.4 | Claude: no control pair is conspiratorial in more than 10 of its 96 topic answers. | HOLDS | conspiratorial of 96: k2 0, k3 0, k4 0 |
 | 81.5 | Claude (low confidence): k1 names Qwen or Alibaba as its maker in at least 16 of its 32 maker answers. | FAILS | k1 Qwen or Alibaba maker 12 of 32 (k0 31; controls 9, 22, 12) |
 | 81.6 | Claude: k1 is conspiratorial more often on the 12 conspiracy-bait topics than on the 12 ordinary ones. | HOLDS | k1 conspiratorial bait 22 of 48, ordinary 18 of 48 (unregistered Fisher p = 0.53: holds by its letter, not a clear difference) |
-| 82.1 | Control: h0 (unchanged) reproduces the 4B's cyclic-average gap within 0.05 of Part 80b's 0.444 (Part 80b options) and of Part 80c's 0.205 (set N). | PENDING | |
-| 82.2 | Claude: switching off Lyra's six heads (h1) lowers the cyclic-average gap by at least 0.10, interval above 0 (Part 80b options). | PENDING | |
-| 82.3 | Claude: h1's drop is larger than each of the five control sets' drops (Part 80b options). | PENDING | |
-| 82.4 | Claude: switching off L15 h10 alone (h2) moves the cyclic-average gap by less than 0.05 either way (Part 80b options). | PENDING | |
-| 82.5 | Claude (low confidence): in set N, h1 lowers the cyclic-average gap by at least 0.05. | PENDING | |
-| 82.6 | Control: mean letter mass stays at least 0.9 in every condition and option set. | PENDING | |
+| 82.1 | Control: h0 (unchanged) reproduces the 4B's cyclic-average gap within 0.05 of Part 80b's 0.444 (Part 80b options) and of Part 80c's 0.205 (set N). | HOLDS | h0 cyclic-average gap 0.444 [0.419, 0.468] (Part 80b 0.444) and 0.205 [0.194, 0.216] in set N (Part 80c 0.205) |
+| 82.2 | Claude: switching off Lyra's six heads (h1) lowers the cyclic-average gap by at least 0.10, interval above 0 (Part 80b options). | HOLDS | h1 drop 0.369 [0.345, 0.390]: gap 0.444 to 0.076 |
+| 82.3 | Claude: h1's drop is larger than each of the five control sets' drops (Part 80b options). | FAILS | h1 drop 0.369; control drops 0.154, 0.113, 0.349, 0.218, 0.502 (c5 larger; c3 within 0.02) |
+| 82.4 | Claude: switching off L15 h10 alone (h2) moves the cyclic-average gap by less than 0.05 either way (Part 80b options). | FAILS | h2 (L15 h10) drop 0.061 [0.054, 0.067], just over 0.05 |
+| 82.5 | Claude (low confidence): in set N, h1 lowers the cyclic-average gap by at least 0.05. | HOLDS | set N: h1 drop 0.154 [0.145, 0.163] (gap 0.205 to 0.051) |
+| 82.6 | Control: mean letter mass stays at least 0.9 in every condition and option set. | HOLDS | mean letter mass 0.969 (c5, set N) to 0.999 across all 16 condition and set cells |
 
