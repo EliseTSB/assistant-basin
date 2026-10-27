@@ -63,3 +63,16 @@ from the model's generation config with run_70's temperature 0.7 and top-p 0.95,
 `model.generate` would have. A test compares those warpers with `generate`'s own processed scores step by step, and
 `run.json` records the effective settings. The forced one-token scores then pass through `generate`'s warpers
 unchanged. Conditions, readout and predictions are unchanged.
+
+## Amendment 2 (after the build's cold review, before any run)
+
+- 77.2 is read only if c0_makers exceeds c1_l24 by at least 8 held-out Google answers; with a smaller gap the halfway
+  threshold means nothing, and 77.2 is reported NOT READ with the gap.
+- When 77.2 holds and 77.3 fails, 77.2 is reported as "HOLDS, NOT SPECIFIC TO L27 N3325", as the reading rules above
+  already say; the scorer now does this itself.
+- Correction to the Limits: the pair-identity check cannot fail, because both rows of a pair are forced to the same
+  token; it stays as a recorded field. The in-run evidence that the restore acted is the copy hook's: the runner counts
+  its calls and the largest |answer - twin| on the copied units before and after the copy, refuses to continue if a
+  batch that copies under L24 N3949 zeroing shows no difference to restore or any difference survives, and records the
+  totals in run.json.
+- The scorer writes `holds: null` for a prediction that is not read.

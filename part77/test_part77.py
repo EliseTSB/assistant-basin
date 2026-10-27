@@ -221,3 +221,48 @@ def test_custom_processors_see_raw_logits_in_this_transformers():
                          logits_processor=LogitsProcessorList([_Spy()]))
     assert torch.allclose(seen[0], out.logits[0])
     assert runner._custom_processor_is_before_warpers() is True
+
+
+def test_warped_processor_path_follows_generates_warpers():
+    """needs_warping=True (the path both installed transformers versions take): with top-k 1 the warped distribution
+    is the argmax, so the processor must pick the raw argmax for every answer row, whatever the seed."""
+    model = _tiny_model()
+    model.generation_config.top_k = 1
+    warpers, _ = runner.sampling_warpers(model.generation_config)
+    raw = torch.randn(6, 19, generator=torch.Generator().manual_seed(5))
+    for seed in range(5):
+        proc = runner.PairTokenLogitsProcessor(3, seed, True, warpers)
+        out = proc(torch.zeros(6, 3, dtype=torch.long), raw.clone())
+        for i in range(3):
+            token = int(raw[i].argmax())
+            assert torch.isfinite(out[i]).sum() == 1 and out[i, token] == 0.0
+            assert torch.isfinite(out[3 + i]).sum() == 1 and out[3 + i, token] == 0.0
+
+
+def test_copy_hook_records_evidence_that_it_acted():
+    stats = {}
+    hook = runner._copy_hook([[3325], []], 2, stats)
+    x = torch.zeros(4, 3, 4000)
+    x[0, :, 3325] = 1.0      # answer 0 differs from its twin on the copied unit
+    x[2, :, 3325] = 4.0
+    y = hook(None, (x,))[0]
+    assert stats['calls'] == 1 and stats['precopy_max_abs_diff'] == 3.0 and stats['postcopy_max_abs_diff'] == 0.0
+    assert float(y[0, 0, 3325]) == 4.0 and float(y[1, 0, 3325]) == 0.0
+
+
+def _counts(c0, c1, c2, c3):
+    base = {'heldout_n': 192, 'guard_n': 24, 'guard_keyword_matches': 24, 'pairs_not_identical': 0}
+    return {k: dict(base, heldout_google=v) for k, v in
+            zip(['c0_makers', 'c1_l24', 'c2_l24_restore', 'c3_l24_restore_nulls'], [c0, c1, c2, c3])}
+
+
+def test_scorer_reading_rules_from_review():
+    v = score77.verdicts(_counts(36, 13, 25, 22))          # 77.3 fails: the restore is not specific
+    assert v['77.3']['status'] == 'FAILS' and v['77.2']['status'] == 'HOLDS, NOT SPECIFIC TO L27 N3325'
+    v = score77.verdicts(_counts(30, 26, 29, 26))          # control holds but the gap is only 4
+    assert v['77.1']['status'] == 'HOLDS' and v['77.2']['status'] == 'NOT READ' and v['77.2']['holds'] is None
+    v = score77.verdicts(_counts(60, 13, 40, 13))          # control fails: nothing else read, no stray holds
+    assert v['77.1']['status'] == 'FAILS'
+    assert all(v[k]['status'] == 'NOT READ' and v[k]['holds'] is None for k in ('77.2', '77.3', '77.4'))
+    v = score77.verdicts(_counts(36, 13, 25, 14))
+    assert v['77.2']['status'] == 'HOLDS' and v['77.3']['status'] == 'HOLDS'

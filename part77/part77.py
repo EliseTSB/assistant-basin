@@ -40,18 +40,30 @@ def _row_ops(cond: dict) -> dict:
     return part25._operations(cond['set_units'], 'zero')
 
 
-def _copy_hook(copy_units: list[list[int]], n_answers: int):
-    """Return a layer-27 pre-hook that copies selected twin features to answers."""
+def _copy_hook(copy_units: list[list[int]], n_answers: int, stats: dict | None = None):
+    """Return a layer-27 pre-hook that copies selected twin features to answers. If `stats` is given it records the
+    evidence that the copy acted: calls, and the largest |answer - twin| on the copied units before and after it."""
     import torch
 
     def hook(_module, args):
         x = args[0]
         y = x.clone()
+        pre = 0.0
         for i, units in enumerate(copy_units):
             if not units:
                 continue
-            for unit in units:
-                y[i, :, int(unit)] = x[n_answers + i, :, int(unit)]
+            idx = [int(u) for u in units]
+            pre = max(pre, float((x[i, :, idx].float() - x[n_answers + i, :, idx].float()).abs().max()))
+            y[i, :, idx] = x[n_answers + i, :, idx]
+        if stats is not None:
+            stats['calls'] = stats.get('calls', 0) + 1
+            stats['precopy_max_abs_diff'] = max(stats.get('precopy_max_abs_diff', 0.0), pre)
+            post = 0.0
+            for i, units in enumerate(copy_units):
+                if units:
+                    idx = [int(u) for u in units]
+                    post = max(post, float((y[i, :, idx].float() - y[n_answers + i, :, idx].float()).abs().max()))
+            stats['postcopy_max_abs_diff'] = max(stats.get('postcopy_max_abs_diff', 0.0), post)
         return (y,) + tuple(args[1:])
     return hook
 
@@ -80,6 +92,8 @@ def sampling_warpers(generation_config, temperature: float = 0.7, top_p: float =
     warpers = LogitsProcessorList()
     if gc.temperature is not None and gc.temperature != 1.0:
         warpers.append(TemperatureLogitsWarper(gc.temperature))
+    if getattr(gc, 'watermarking_config', None) is not None:
+        raise ValueError('generation_config.watermarking_config is set; Part 77 does not mirror it')
     if getattr(gc, 'top_h', None) is not None:
         raise ValueError('generation_config.top_h is set; Part 77 does not mirror it')
     if gc.top_k is not None and gc.top_k != 0:
@@ -111,21 +125,21 @@ class PairTokenLogitsProcessor:
 
     def __call__(self, input_ids, scores):
         import torch
-        scores = scores.clone()
-        for i in range(self.n_answers):
-            answer_scores = scores[i:i + 1].detach().float()
-            if self.needs_warping:
-                answer_scores = self.warpers(input_ids[i:i + 1], answer_scores)
-            probabilities = torch.softmax(answer_scores[0].cpu(), dim=-1)
-            token = int(torch.multinomial(probabilities, 1, generator=self.generator).item())
-            for row in (i, self.n_answers + i):
-                scores[row].fill_(-float('inf'))
-                scores[row, token] = 0.0
-        return scores
+        n = self.n_answers
+        answer_scores = scores[:n].detach().float()   # all answer rows at once: one warp, one CPU sync per step
+        if self.needs_warping:
+            answer_scores = self.warpers(input_ids[:n], answer_scores)
+        probabilities = torch.softmax(answer_scores.cpu(), dim=-1)
+        tokens = torch.multinomial(probabilities, 1, generator=self.generator)[:, 0].tolist()
+        out = torch.full_like(scores, -float('inf'))
+        for i, token in enumerate(tokens):
+            out[i, int(token)] = 0.0
+            out[n + i, int(token)] = 0.0
+        return out
 
 
 def generate_pairs(model, layers, input_ids, row_ops, copy_units, seed: int,
-                   eos_id, pad_id, attention_mask=None):
+                   eos_id, pad_id, attention_mask=None, stats: dict | None = None):
     """Generate paired sequences; inputs and row_ops are ordered answers then twins."""
     import torch
     from transformers import LogitsProcessorList
@@ -134,10 +148,10 @@ def generate_pairs(model, layers, input_ids, row_ops, copy_units, seed: int,
     if input_ids.shape[0] != 2 * n_answers or len(row_ops) != 2 * n_answers:
         raise ValueError('paired generation requires 2n input rows and row operation lists')
     mask = attention_mask if attention_mask is not None else torch.ones_like(input_ids)
-    handles = part66._hooks(layers, row_ops, mask.bool())
-    handles.append(layers[27].mlp.down_proj.register_forward_pre_hook(_copy_hook(copy_units, n_answers)))
-    warpers, _ = sampling_warpers(model.generation_config)
+    warpers, _ = sampling_warpers(model.generation_config)   # before any hook, so a refusal leaks none
     proc = PairTokenLogitsProcessor(n_answers, seed, _custom_processor_is_before_warpers(), warpers)
+    handles = part66._hooks(layers, row_ops, mask.bool())
+    handles.append(layers[27].mlp.down_proj.register_forward_pre_hook(_copy_hook(copy_units, n_answers, stats)))
     try:
         with torch.no_grad():
             result = model.generate(input_ids=input_ids, attention_mask=mask, max_new_tokens=48,
@@ -204,6 +218,7 @@ def run(args):
     start = time.time()
     done = 0
     pairs_not_identical = 0
+    copy_evidence = {'calls': 0, 'precopy_max_abs_diff': 0.0}
     with answer_path.open('a', encoding='utf-8') as sink:
         for chunk in batches:
             prompts = [part25._token_ids(tok, nr.build_prompt(tok, row[2], False)) for row in chunk]
@@ -223,8 +238,22 @@ def run(args):
             if args.device == 'xpu' and hasattr(torch, 'xpu'):
                 torch.xpu.manual_seed_all(seed)
             paired_mask = torch.cat([mask, mask], dim=0)
+            batch_stats = {}
             result = generate_pairs(model, layers, ids, paired_ops, copy_units, seed,
-                                    tok.eos_token_id, tok.pad_token_id, paired_mask)
+                                    tok.eos_token_id, tok.pad_token_id, paired_mask, batch_stats)
+            # In-run evidence that the copy acted (review r1): a batch holding a row that restores with L24 N3949
+            # zeroed must show a pre-copy difference, and no difference may survive the copy.
+            restores_under_l24 = any(row[0]['copy_units'] and L24 in [tuple(u) for u in row[0]['set_units']]
+                                     for row in chunk)
+            if any(row[0]['copy_units'] for row in chunk) and batch_stats.get('calls', 0) == 0:
+                raise RuntimeError('the layer-27 copy hook never ran in a batch that copies')
+            if restores_under_l24 and batch_stats.get('precopy_max_abs_diff', 0.0) == 0.0:
+                raise RuntimeError('the copy hook saw nothing to restore under L24 N3949 zeroing')
+            if batch_stats.get('postcopy_max_abs_diff', 0.0) != 0.0:
+                raise RuntimeError('a difference survived the copy')
+            copy_evidence['calls'] += batch_stats.get('calls', 0)
+            copy_evidence['precopy_max_abs_diff'] = max(copy_evidence['precopy_max_abs_diff'],
+                                                        batch_stats.get('precopy_max_abs_diff', 0.0))
             plen = ids.shape[1]
             for i, row in enumerate(chunk):
                 ans_raw = _trim_at_eos(result[i, plen:], tok.eos_token_id)
@@ -266,6 +295,7 @@ def run(args):
                            if args.device == 'xpu' and hasattr(torch, 'xpu') and torch.xpu.is_available() else None),
         'requested_generations': len(rows), 'new_generations_this_invocation': len(todo),
         'pairs_not_identical': all_nonidentical,
+        'copy_hook_evidence_this_invocation': copy_evidence,
         'sampling_settings': sampling_warpers(model.generation_config)[1],
         'custom_processor_before_warpers': _custom_processor_is_before_warpers(),
         'counts': {'requested_by_condition': dict(Counter(r[0]['id'] for r in rows)),
