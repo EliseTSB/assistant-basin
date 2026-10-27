@@ -1987,7 +1987,7 @@ ordinary topics conspiratorial almost as often ("primary goal ... is to hide the
   conspiratorial (all 9 on bait topics, 5 of 8 on ordinary ones).
 - On maker questions the push favours invented makers: 9 of k1's 32 maker answers name an organisation the readers
   judged invented (an unnamed "secret organization" among them), against 0 unchanged and 0, 3 and 4 for the controls.
-  The controls instead name other real companies (23, 7 and 15 of 32; Tencent often).
+  The controls name other real companies more often (23, 7 and 15 of 32; Tencent in 17 of k2's 23).
 
 **Reading.** At this size, in our setup, the two units are a conspiracy lever, not a clean one: the trait appears only
 under this pair, and the cost in coherence is what any pair of pushes this size costs. Lyra's own note calls L19 N7839
