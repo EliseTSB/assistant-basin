@@ -2019,7 +2019,7 @@ bodies and the three option orders: 0.444, and 0.205 with the option changed to 
 User copy is claimed more. Lyra's methods notes for the same model (`explorer/agent_methodology.md` in
 lyramakesmusic/neuron-explorer, commit e566e83e3f9f of 2026-10-26)
 list "L11 h14 and L15 h1/h2/h3/h12/h15: recall the current speaker's own earlier messages, by name" and "L15 h10: reads
-the previous turn". Part 82 switches those heads off and measures the gap. Pre-registered in `PART82-DESIGN.md`, with
+the previous turn (the message being replied to)". Part 82 switches those heads off and measures the gap. Pre-registered in `PART82-DESIGN.md`, with
 predictions 82.1 to 82.6 pushed before any code.
 
 Setup. `Qwen/Qwen3.5-4B` (revision 851bf6e8, bf16, the A770), Part 80b's 100 SmolLM3 bodies in Assistant and User
@@ -2066,6 +2066,91 @@ has L11 h6, so the two are not separated). A single-head sweep over all 32 heads
 - Zeroing heads at every position is blunt; c5 lowers letter mass to 0.969 and 0.972 and flips the gap's sign, so part of what a
   large drop measures may be damage rather than lost attribution.
 - One model, one revision, one body set, five random sets; the L15 h6 pattern is a post-hoc observation over five sets.
+
+### Part 83: switched off one at a time, 20 of the 32 heads in layers 11 and 15 move Qwen3.5-4B's own-message gap; the largest, L11 h5, removes two thirds of it alone (2026-10-27)
+
+Part 82 found that switching off six heads at a time in layers 11 and 15 cuts the own-message gap by 0.11 to 0.50,
+depending on which six. The own-message gap is P(you | Assistant copy) minus P(you | User copy), averaged over bodies
+and the three option orders (0.444 unchanged); a head's drop is the unchanged gap minus the gap with that head off, so a
+positive drop shrinks the gap. Part 83 switches off each of the 32 heads alone, with Part 82's hook, model, revision, 100
+bodies, renderings, orders and Part 80b's options (set N not run). Pre-registered in `PART83-DESIGN.md`, with
+predictions 83.1 to 83.8 pushed before any code. One change from Part 82: only the last position's logits are computed
+(`logits_to_keep=1`); in the smoke run this gave the same three letter probabilities as Part 82's full-logits call to
+the last digit, and h0 matched Part 82's h0 on every pass. 19,800 passes, 72 minutes on the A770, no body dropped;
+every switched-off slice was live on its first pass (largest absolute value 0.95 to 2.81). Drops and intervals as in
+Part 82 (paired bootstrap over bodies, 10,000 resamples, seed 83). Results: `results/part83/`.
+
+The 20 heads whose drop is at least 0.05 either way with an interval excluding 0, largest first ("Mainly moves" names
+the copy whose P(you) changed more):
+
+| Head switched off | Drop [95% CI] | P(you), Assistant copy | P(you), User copy | Mainly moves |
+|---|---:|---:|---:|---|
+| none (h0) | | 0.764 | 0.320 | |
+| L11 h5 | 0.300 [0.285, 0.315] | 0.447 | 0.304 | Assistant copy down |
+| L11 h7 | 0.222 [0.202, 0.241] | 0.450 | 0.228 | Assistant copy down |
+| L11 h4 | 0.215 [0.190, 0.239] | 0.903 | 0.674 | User copy up |
+| L15 h1 (Lyra) | 0.211 [0.188, 0.234] | 0.561 | 0.329 | Assistant copy down |
+| L15 h2 (Lyra) | 0.189 [0.173, 0.205] | 0.573 | 0.318 | Assistant copy down |
+| L11 h14 (Lyra) | 0.160 [0.147, 0.173] | 0.604 | 0.320 | Assistant copy down |
+| L11 h6 | 0.152 [0.136, 0.168] | 0.537 | 0.245 | Assistant copy down |
+| L11 h3 | 0.149 [0.136, 0.161] | 0.766 | 0.470 | User copy up |
+| L11 h13 | 0.147 [0.132, 0.162] | 0.782 | 0.484 | User copy up |
+| L15 h0 | 0.131 [0.115, 0.146] | 0.732 | 0.419 | User copy up |
+| L15 h11 | 0.124 [0.105, 0.143] | 0.574 | 0.253 | Assistant copy down |
+| L11 h8 | 0.121 [0.108, 0.134] | 0.695 | 0.372 | Assistant copy down |
+| L15 h8 | 0.096 [0.089, 0.104] | 0.657 | 0.310 | Assistant copy down |
+| L11 h12 | 0.072 [0.066, 0.079] | 0.711 | 0.339 | Assistant copy down |
+| L15 h7 | 0.071 [0.064, 0.078] | 0.688 | 0.315 | Assistant copy down |
+| L15 h6 | 0.069 [0.064, 0.073] | 0.718 | 0.342 | Assistant copy down |
+| L11 h10 | 0.068 [0.059, 0.078] | 0.720 | 0.344 | Assistant copy down |
+| L15 h4 | 0.062 [0.060, 0.065] | 0.712 | 0.330 | Assistant copy down |
+| L15 h10 | 0.061 [0.054, 0.067] | 0.699 | 0.316 | Assistant copy down |
+| L15 h3 (Lyra) | -0.089 [-0.099, -0.079] | 0.852 | 0.318 | Assistant copy up |
+
+The other twelve: L11 h2 +0.041, L11 h15 +0.026, L11 h11 +0.021, L15 h14 +0.017, L15 h13 +0.009, L11 h9 +0.004, L15 h9 +0.001, L15 h15 -0.001, L11 h0 -0.008, L15 h5 -0.019, L15 h12 -0.020, L11 h1 -0.046.
+
+**Results.** Three of eight predictions held. The gate held exactly: h0's gap is 0.4441 as in Part 82, and L15 h10 alone
+drops it by 0.0605, identical to Part 82's h2 (83.1). The largest single drop is L11 h5: 0.300, about two thirds of the
+gap, from that one head (83.2 fails, because I predicted L15 h6). L15 h6, the lead I took from Part 82's random sets, moves it by 0.069, sixteenth of 32 (83.3
+fails). Twenty heads matter, where I predicted 3 to 10 (83.6 fails); nineteen of them lower the gap and one, L15 h3,
+raises it. Three of Lyra's six move the gap by more than 0.10 on their own (L15 h1, L15 h2, L11 h14, 83.5 fails); of the
+other three, L15 h3 moves it the other way and L15 h12 and L15 h15 barely move it. L15 h0 raises P(you) for the User copy
+by 0.100 [0.082, 0.117], as predicted (83.4). The answer format survives (mean letter mass at least 0.992 in every condition, lowest single pass 0.959; 83.8).
+
+**The heads do not add.** For every six-head set in Part 82, switching the six off together does less than the sum of
+their single drops (83.7 fails; I had predicted the reverse for Lyra's set):
+
+| Part 82 set | Set drop (Part 82) | Sum of its single drops | Set minus sum [95% CI] |
+|---|---:|---:|---:|
+| h1 | 0.369 | 0.450 | -0.082 [-0.111, -0.052] |
+| c1 | 0.154 | 0.308 | -0.154 [-0.175, -0.134] |
+| c2 | 0.113 | 0.274 | -0.161 [-0.183, -0.139] |
+| c3 | 0.349 | 0.459 | -0.110 [-0.136, -0.084] |
+| c4 | 0.218 | 0.542 | -0.324 [-0.346, -0.301] |
+| c5 | 0.502 | 0.661 | -0.159 [-0.187, -0.130] |
+| h2 | 0.061 | 0.061 | +0.000 [+0.000, +0.000] |
+
+
+h2 is a single head, so its row is a check of the arithmetic. A set's single drops can add up to more than the whole
+gap (c4's six sum to 0.542 and Lyra's to 0.450, against a gap of 0.444), so effects this size cannot simply add.
+
+**Reading.** In these two layers many heads touch the gap, and one, L11 h5, removes two thirds of it alone. Sixteen of
+the twenty mainly move the Assistant copy: switched off, fifteen of them lower how often the model claims the text in
+its own turn, and L15 h3 raises it. Four work on the User
+copy (L11 h3, L11 h4, L11 h13, L15 h0): switching them off makes the model claim the text in the User's turn more often.
+Sub-additivity fits heads whose contributions overlap, or saturation of P(you); these data test neither. In Part 82's
+strongest random set (c5, drop 0.502), L11 h5 alone drops the gap by 0.300; because the heads do not add, that is not
+its share within c5. Part 82's post-hoc reading had pointed to L15 h6 instead. Observed after scoring and not tested: L11 h3, which Lyra's notes describe
+as binding "you" to the addressee named in the message, is one of the four User-side heads; switched off, it raises P(you)
+for the User copy by 0.151 and leaves the Assistant copy unchanged (+0.002). Our prompts name no addressee, so this does
+not test her description.
+
+**Limits.**
+- Zeroing a head at every position is blunt; a drop can be damage rather than a lost role, though mean letter mass stays
+  above 0.99 in every condition (lowest single pass 0.959).
+- One model, one revision, one body set, one option set; no head outside layers 11 and 15 was tested.
+- Sub-additivity is measured across two runs (Part 82's sets, Part 83's singles) that share bodies and give identical h0
+  values; it says single-head effects are not additive, not why.
 
 ### Running or designed (2026-10-21)
 

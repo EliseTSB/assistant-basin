@@ -57,3 +57,12 @@ Identical to Part 82 (`part82/part82.py`) except:
 - Zeroing a head at every position is blunt, as in Part 82; a single head's drop can be damage rather than a role.
 - One model, one revision, one body set, one option set.
 - A sum of single drops assumes nothing about interactions; a non-additive result says the heads interact, not how.
+
+## Corrections after the run (2026-10-27, from the cold check; nothing above is edited)
+
+- "above 1e-3 the run stops and the readout reverts": `part83.py` only stops; there is no automatic revert. Moot in
+  the event: the difference was 0.0.
+- "two random sets did as much (c3, 0.349)": 0.349 is nearly as much as Lyra's 0.369, not as much.
+- The prior-art sentence citing the contribution survey: the survey listed this week's single-neuron repos and did not
+  search for head ablations, so "found no head ablation of role-based self-attribution" is unchecked, as is "no
+  published single-head sweep".

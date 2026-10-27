@@ -2086,11 +2086,11 @@ Design: `PART83-DESIGN.md`. Part 80b's options only; drops are gap(h0) minus gap
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 83.1 | Control: h0 reproduces Part 82's h0 cyclic-average gap within 0.01 (0.444), and L15h10 alone reproduces Part 82's h2 drop within 0.02 (0.061). | | |
-| 83.2 | Claude: L15 h6 alone has the largest drop of the 32 single heads. | | |
-| 83.3 | Claude: L15 h6 alone lowers the gap by at least 0.10, interval above 0. | | |
-| 83.4 | Claude: L15 h0 alone raises P(you \| User copy) by at least 0.05 over h0. | | |
-| 83.5 | Claude: no single one of Lyra's six heads (L11 h14; L15 h1, 2, 3, 12, 15) lowers the gap by more than 0.10. | | |
-| 83.6 | Claude: between 3 and 10 of the 32 single heads matter (drop at least 0.05 either way, interval excluding 0). | | |
-| 83.7 | Claude (low confidence): Lyra's set is super-additive: h1's measured drop exceeds the sum of its six heads' single drops, interval above 0. | | |
-| 83.8 | Control: mean letter mass stays at least 0.9 in every condition. | | |
+| 83.1 | Control: h0 reproduces Part 82's h0 cyclic-average gap within 0.01 (0.444), and L15h10 alone reproduces Part 82's h2 drop within 0.02 (0.061). | HOLDS | h0 gap 0.4441, identical to Part 82 (largest per-body difference 0.0); L15h10 drop 0.0605, identical to Part 82 h2 |
+| 83.2 | Claude: L15 h6 alone has the largest drop of the 32 single heads. | FAILS | largest drops L11h5 0.300, L11h7 0.222, L11h4 0.215, L15h1 0.211, L15h2 0.189; L15h6 is 16th (0.069) |
+| 83.3 | Claude: L15 h6 alone lowers the gap by at least 0.10, interval above 0. | FAILS | L15h6 drop 0.069 [0.064, 0.073]: above 0, under 0.10 |
+| 83.4 | Claude: L15 h0 alone raises P(you \| User copy) by at least 0.05 over h0. | HOLDS | L15h0 raises P(you \| User copy) by 0.100 [0.082, 0.117] (0.320 to 0.419) |
+| 83.5 | Claude: no single one of Lyra's six heads (L11 h14; L15 h1, 2, 3, 12, 15) lowers the gap by more than 0.10. | FAILS | Lyra heads: L15h1 0.211, L15h2 0.189, L11h14 0.160 (three over 0.10); L15h3 -0.089, L15h12 -0.020, L15h15 -0.001 |
+| 83.6 | Claude: between 3 and 10 of the 32 single heads matter (drop at least 0.05 either way, interval excluding 0). | FAILS | 20 of 32 heads matter: 19 lower the gap, one raises it (L15h3, -0.089) |
+| 83.7 | Claude (low confidence): Lyra's set is super-additive: h1's measured drop exceeds the sum of its six heads' single drops, interval above 0. | FAILS | h1 set drop 0.369, sum of its six single drops 0.450: sub-additive, difference -0.082 [-0.111, -0.052] |
+| 83.8 | Control: mean letter mass stays at least 0.9 in every condition. | HOLDS | mean letter mass at least 0.992 in all 33 conditions |
