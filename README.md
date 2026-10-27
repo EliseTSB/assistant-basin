@@ -1532,7 +1532,7 @@ planet X-888"). Google does not join them. The control is the sharper result: wi
 push to N8870 raises Google answers from 37 to 119 of 192. Google is the fallback maker here (c0 names it 5 times and
 Qwen 189); what else the N8870 push changes was not measured, beyond its guard answers staying correct. Against this
 one control unit at one dose, the alien push moves maker answers away from Google and the control moves them toward
-it; showing that the alien unit is specific would need more control units, for example Part 66's matched random sets.
+it; showing that the alien unit is specific would need more control units, for example Part 66's matched random sets. (Part 78b, below, ran ten: most lower Google too, so what sets the alien unit apart is the off-world frame.)
 Unregistered two-sided Fisher tests: c3 against c1, p = 4e-7; c6 against c1, p = 1e-17.
 
 **Limits.** Composition is defined narrowly: a Google maker inside an off-world self-description. A blend the keywords
@@ -1555,6 +1555,71 @@ post, so this is a different pair of interventions on the same question, not a r
 
 Files: `part78/` (runner, scorer, tests, run() smoke script), `results/part78/` (answers, run record, scorer output,
 job log, Haiku reading).
+
+### Part 78b: ten more size-matched layer-22 pushes move the Google fallback anywhere from 2 to 157; most lower it, so N8870's rise was not typical and the alien unit stands out for its off-world frame, not for pulling away from Google (2026-10-27)
+
+Part 78 tested one control unit and said so: against L22 N8870 alone, the alien push moved maker answers away from Google
+and the control moved them toward it (37 to 119). Part 78b asks which of those is unusual. Pre-registered in
+`PART78B-DESIGN.md` before any code, with predictions 78b.1 to 78b.4. Ten layer-22 units drawn by the repo's own
+selector (`neuron_report.control_units(9216, 2742, 10, 78078)`), each set at every prompt and answer position to 2.0
+times 19.125 times the ratio of N2742's down-projection column norm to its own, so each writes the same norm into the
+residual stream as the alien push at 2.0x, all with the four maker neurons zeroed. Everything else is Part 78's:
+`Qwen/Qwen3.5-4B` (revision 851bf6e8, bf16, A770), Part 66's 24 held-out maker questions with 8 samples each and 6 guard
+questions with 4, temperature 0.7, top-p 0.95, at most 64 new tokens, Part 78's keyword rules. Results:
+`results/part78b/` (63 minutes, 2,376 answers, 192 held-out and 24 guard rows in every condition; the push hook fired at
+least 13 times in every one of the 300 push batches, set values 32.5 to 39.4 and within 0.13 of them, which is bf16
+spacing at that size).
+
+| Condition (held-out answers of 192) | Google | Off-world | Qwen | Other maker | Guards of 24 |
+|---|---:|---:|---:|---:|---:|
+| k1: makers zeroed | 43 | 0 | 148 | 2 | 24 |
+| + N1499 | 10 | 0 | 153 | 16 | 24 |
+| + N4154 | 157 | 2 | 89 | 3 | 21 |
+| + N5572 | 22 | 0 | 22 | 117 | 24 |
+| + N5606 | 41 | 0 | 93 | 29 | 24 |
+| + N5640 | 21 | 0 | 151 | 11 | 12 |
+| + N6210 | 10 | 0 | 84 | 70 | 24 |
+| + N8115 | 57 | 0 | 86 | 44 | 24 |
+| + N8606 | 14 | 0 | 134 | 36 | 24 |
+| + N8920 | 2 | 0 | 151 | 36 | 24 |
+| + N9209 | 18 | 1 | 37 | 111 | 24 |
+| Part 78, for comparison (other run, other seeds): makers zeroed (c1) | 37 | 0 | 146 | 3 | 24 |
+| Part 78: makers zeroed + N8870 at 2.0x (c6) | 119 | 0 | 63 | 13 | 24 |
+| Part 78: makers zeroed + alien N2742 at 2.0x (c5) | 0 | 181 | 15 | 68 | 21 |
+
+**Results.** Two of four predictions held. The control held (78b.1): with the makers zeroed and no push, 43 answers
+name Google, inside the 26 to 60 band, and all 24 guards match. My prediction that the Google rise is common to
+layer-22 pushes of this size failed (78b.2): only 2 of the 10 units raise Google above 43 (N4154 to 157, on all 24
+questions; N8115 to 57), one leaves it about level (N5606, 41), and seven lower it. My prediction that only the alien
+unit suppresses the Google fallback failed too (78b.3): six of the ten give fewer than half of k1's 43 (N1499 10, N5640
+21, N6210 10, N8606 14, N8920 2, N9209 18). The off-world prediction held (78b.4): no control unit is off-world in more
+than 2 answers. Read by hand, the Google answers of N4154 are plain maker claims ("I was created by **Google**.
+Specifically, I am part of the **Google** family of models"), and N8920's two are both about writing to Alphabet.
+
+**Reading.** Part 78's control was not typical. A push of this size at layer 22 usually lowers the Google fallback
+(median across the ten units 19.5 of 192, against 43), and several units fill the maker slot with invented companies the
+way the alien push does: N5572 "I was created by **Silicon Intelligence**" and "**GrandVision**", N9209 "**Cognitive
+Power** ... a Chinese artificial intelligence company" (other-maker counts 117 and 111). So two things Part 78 read as
+the alien unit's doing are things many layer-22 pushes do: moving maker answers away from Google, and inventing a maker.
+At 2.0x the alien push's 0 Google answers is below all ten controls, but the nearest (N8920, 2) is not distinguishable
+from it (unregistered two-sided Fisher, p = 0.5), and the comparison crosses two runs. What does separate the alien unit
+is the frame: it is off-world in 181 of 192 answers, and no control unit exceeds 2. The question Part 78 asked, whether
+the two interventions compose into "an alien made by Google", still gets the answer no; what changes is the
+explanation, since leaving Google is not a property of the alien unit. Unregistered two-sided Fisher tests against k1:
+N4154 p = 8e-33, N8920 p = 5e-12, N1499 and N6210 p = 1e-6, N8606 p = 4e-5, N9209 p = 7e-4, N5640 p = 0.004, N5572
+p = 0.006, N8115 p = 0.1, N5606 p = 0.9.
+
+**Limits.** Coherence was not measured, and some low Google counts come from broken answers rather than changed maker
+claims: N5640's push writes "1." repeatedly ("1. **1. 1. 1. ...", "The chemical symbol for gold is **1**") and it
+answers only 12 of 24 guards. Keyword scoring as in Part 78, with the same "other maker" definition (a "made by" phrase
+with no known family, excluding any answer that names Qwen) and the same cap: 49 to 151 answers per condition were cut
+off at 64 tokens, so a later Google mention is missed. One dose (2.0x), one layer, ten units; the alien unit and N8870
+were not re-run here, so every comparison with them crosses runs with different seeds (Part 78's c1 gave 37 where this
+run's k1 gives 43). 192 answers are 24 questions times 8 samples, so the Fisher tests overstate the effective sample
+size.
+
+Files: `part78b/` (runner, scorer, tests, run() smoke script), `results/part78b/` (answers, run record, scorer output,
+job log).
 
 ### Running or designed (2026-10-21)
 

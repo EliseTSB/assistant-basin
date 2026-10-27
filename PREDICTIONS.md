@@ -2006,7 +2006,7 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 78b.1 | Control: k1_makers has 26 to 60 held-out Google answers of 192 and its guard keywords match in at least 20 of 24. | open | |
-| 78b.2 | Claude: at least 7 of the 10 control units give more held-out Google answers than k1_makers (the rise is common to layer-22 pushes of this size, not particular to N8870). | open | |
-| 78b.3 | Claude: none of the 10 control units gives fewer than half of k1_makers' held-out Google answers (among 11 size-matched layer-22 pushes, only the alien unit suppresses the Google fallback). | open | |
-| 78b.4 | Claude: no control unit has more than 10 off-world answers of 192. | open | |
+| 78b.1 | Control: k1_makers has 26 to 60 held-out Google answers of 192 and its guard keywords match in at least 20 of 24. | HOLDS | k1_makers 43 Google of 192; guards 24/24; results/part78b/results.json |
+| 78b.2 | Claude: at least 7 of the 10 control units give more held-out Google answers than k1_makers (the rise is common to layer-22 pushes of this size, not particular to N8870). | FAILS | 2 of 10 units above 43 (N4154 157, N8115 57); 7 below; results/part78b/results.json |
+| 78b.3 | Claude: none of the 10 control units gives fewer than half of k1_makers' held-out Google answers (among 11 size-matched layer-22 pushes, only the alien unit suppresses the Google fallback). | FAILS | 6 of 10 below 21.5 (N1499 10, N5640 21, N6210 10, N8606 14, N8920 2, N9209 18); results/part78b/results.json |
+| 78b.4 | Claude: no control unit has more than 10 off-world answers of 192. | HOLDS | max off-world among controls 2 (N4154); results/part78b/results.json |
