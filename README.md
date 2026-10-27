@@ -1869,15 +1869,17 @@ intervals are a bootstrap over bodies, not over wordings, and the verdicts use p
 copied from commit cef4a12 to the GPU folder; `run.json` records the device and dtype but no code hash. Results:
 `results/part80b/` (`results80b.json` holds every number above).
 
-### Part 80c: without the word "assistant" in the option, Qwen3.5-4B's gap halves; Qwen3-1.7B's does not change much
+### Part 80c: changing the option from "You (the AI assistant)" to "You" halves Qwen3.5-4B's gap, mostly by lowering its Assistant-copy answers; Qwen3-1.7B's gap holds; the decoy test is inconclusive
 
 Part 80b's cold check named a reading that run could not rule out: the Assistant role header and the option "You (the
 AI assistant)" share the word "assistant". Part 80c reran Part 80b's measure on the same 100 SmolLM3 bodies with two new
 option sets: **N**, "You" / "The user" / "The system" (no "assistant" anywhere), and **D**, "You" / "The user" /
 "Another AI assistant" (the word moved onto a decoy that names someone else). Design and predictions were pushed before
-any code (`PART80C-DESIGN.md`, commit fac8b04); code `part80c/`. Run 2026-10-27 09:56 to 10:04 CT on the A770 in bf16:
-3,600 passes, no body dropped, mean letter mass 0.999 or more. Three of seven predictions held. The 80b rows below are
-Part 80b's run on the same bodies, not rerun.
+any code (`PART80C-DESIGN.md`, commit fac8b04); code `part80c/` (commit 58f1667, copied to the GPU folder's
+`p66basin\part80c\` before the run; `run.json` records device `xpu` and dtype, not a commit). Run 2026-10-27 09:56 to
+10:04 CT on the A770 in bf16: 3,600 passes, no body dropped; mean letter mass 0.9990 to 1.0000 by model and set, lowest
+single pass 0.934 (Qwen3.5-4B, set N). Three of seven predictions held. The 80b rows below are Part 80b's run on the
+same bodies, not rerun; each option set was run once, so run-to-run variation is not measured.
 
 Gap is P(you) for the Assistant copy minus P(you) for the User copy, with a 95% paired bootstrap interval over bodies.
 Orders as in Part 80b: "You" is option A in O1, C in O2, B in O3.
@@ -1903,29 +1905,39 @@ Orders as in Part 80b: "You" is option A in O1, C in O2, B in O3.
 | Qwen3.5-4B | D: "You" + decoy | O2 | 0.38 | 0.47 | -0.08 [-0.10, -0.07] |
 | Qwen3.5-4B | D: "You" + decoy | O3 | 0.55 | 0.29 | 0.27 [0.24, 0.29] |
 
-- **Qwen3-1.7B (80c.1 and 80c.4 held).** Its lock on C replicates with "You" at C in both new sets, and only there. In
-  its two unlocked orders the gap without the word is 0.32 and 0.42, close to Part 80b's 0.40 and 0.45, so for the 1.7B
-  the word is not what carries the gap.
+- **Qwen3-1.7B (80c.1 held; 80c.4, registered as low confidence, held).** Its lock on C replicates with "You" at C in
+  both new sets, and only there. In its two unlocked orders the gap is 0.32 and 0.42 in set N and 0.19 and 0.28 in set
+  D, so it passes the reading rule in both sets (three-order average 0.25 in N and 0.16 in D, against 0.28 in Part 80b).
+  The gap does not need the word. The levels do move with the wording: in O3 its Assistant-copy P(you) falls from 0.94
+  to 0.53 in set N while "The user" takes those answers from 0.06 to 0.47, and in O1 its User-copy P(you) rises from
+  0.19 to 0.44. It almost never answers "The system" (0.00 for User copies in every set) or the decoy (0.05 at most),
+  so for this model the gap is a choice between "You" and "The user".
 - **Qwen3.5-4B, set N (80c.2 and 80c.3 failed, 80c.7 held).** Averaged over orders the gap falls from 0.444 to 0.205
-  (interval 0.194 to 0.216), below the 0.22 I predicted. In O1 and O3 it stays clear (0.30 and 0.25); in O2, with "You"
-  at C, it is 0.07, under the 0.10 line, so by the registered rule the 4B does not show the gap in set N. The 4B also
-  moves much of its answer for User copies to "The system" in this set (0.51 of the probability in O1 and in O3).
-- **Qwen3.5-4B, set D (80c.5 and 80c.6 failed).** "Another AI assistant" takes about 0.35 to 0.39 of the probability
-  whatever role the text is in (0.39 for Assistant copies, 0.35 for User copies): the decoy pull is 0.037 (interval
-  0.021 to 0.053), under the 0.10 I predicted. The word attracts answers, but hardly more for Assistant-role text, so
-  this does not support the simple reading that the model matches the header word to the option word. With the decoy
-  present the gap is 0.34 and 0.27 in O1 and O3 and reverses in O2 (-0.08).
-- **What this leaves.** For the 4B, about half of Part 80b's gap goes when "assistant" leaves the "you" option, and
-  what remains shows in two of three orders. The decoy result argues against plain word matching as the cause of the
-  half that goes; a reading not tested here is that "You (the AI assistant)" tells the model which role "you" means,
-  and "You" alone does not. In all three option sets the 4B's gap is smallest with "you" at C (0.28, 0.07, -0.08), so
-  a letter or order effect runs through every 4B result; order and letter are confounded across the three orders.
+  (interval 0.194 to 0.216), below the 0.22 I predicted, and in O2, with "You" at C, it is 0.07, under the 0.10 line,
+  so by the registered rule the 4B does not show the gap in set N. The fall is mostly on the Assistant side: averaged
+  over orders, P(you) for Assistant copies goes from 0.76 to 0.50 while P(you) for User copies goes from 0.32 to 0.29.
+  "The system" gains in both renderings: for Assistant copies from 0.04, 0.19, 0.29 (O1, O2, O3) to 0.32, 0.34, 0.57,
+  and for User copies from 0.09, 0.26, 0.37 to 0.51, 0.29, 0.51.
+- **Qwen3.5-4B, set D (80c.5 and 80c.6 failed).** The decoy pull, P(decoy) for Assistant copies minus User copies, is
+  0.037 averaged over orders (interval 0.021 to 0.053), under the 0.10 I predicted, but the average hides opposite
+  signs: -0.20 [-0.23, -0.17] with the decoy at C (O1), +0.18 [0.16, 0.20] at B (O2) and +0.13 [0.12, 0.14] at A (O3).
+  Word matching predicts a positive pull in every order; two of three are positive and the third is clearly negative,
+  so this test is inconclusive about word matching. The decoy also takes 0.32 to 0.50 of the answers for System copies,
+  which have no correct option in this set. With the decoy present the 4B's gap is 0.34 and 0.27 in O1 and O3 and
+  reverses in O2 (-0.08).
+- **What this leaves.** For the 4B, about half of Part 80b's averaged gap goes when the option changes from "You (the
+  AI assistant)" to "You", and the half that remains shows in two of three orders. That change removes the word, but
+  also makes the option shorter and plainer and stops it naming a role; this run cannot say which of those matters. An
+  untested reading is that "You (the AI assistant)" tells the model which role "you" means and "You" alone does not.
+  In all three option sets the 4B's gap is smallest with "you" at C (0.28, 0.07, -0.08); order and letter are fully
+  confounded across the three cyclic orders, so this cannot separate a letter effect from an order effect.
 
-Limits: "You" alone is shorter and plainer than "You (the AI assistant)", so set N changes more than the word; the decoy
-changes the option set's meaning and leaves the System copy with no correct option, so nothing is read from it; the 80b
-comparison is across two runs on the same bodies; same 100 questions as Parts 80 and 80b; one question wording;
-thinking off; two Qwen models at one revision each; intervals are a bootstrap over bodies. Results: `results/part80c/`
-(`results80c.json` holds every number above).
+Limits: set N changes the option's length and register as well as the word; the decoy changes the option set's meaning
+and leaves the System copy with no correct option, so nothing is read from it beyond the share above; the 80b comparison
+is across two runs on the same bodies with no replicate of either; same 100 questions as Parts 80 and 80b; one question
+wording; thinking off; two Qwen models at one revision each; intervals are a bootstrap over bodies; the A770 is inferred
+from the job runner and device `xpu`. Results: `results/part80c/` (`results80c.json` holds the per-order and averaged
+numbers; the per-order decoy pulls and option shares above were computed from `records.jsonl`).
 
 ### Running or designed (2026-10-21)
 
