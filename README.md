@@ -1771,8 +1771,8 @@ context-change control holds there (80.2a; U' is the most distant in 0.32). Qwen
 meets the rule.
 
 **Reading.** The two models organise the three roles differently. In Qwen3.5-4B the Assistant copy stands apart from
-User and System through the second half of the network, which is Li et al.'s self-index at a seventh of the size of
-their smallest model. In Qwen3-1.7B the Assistant copy stands apart only at layer 1, where every rendering differs by
+User and System through the second half of the network, which is Li et al.'s self-index in a 4B model (the only size
+their paper gives is 27B). In Qwen3-1.7B the Assistant copy stands apart only at layer 1, where every rendering differs by
 its role token; from layer 8 on, the outlier is the User copy (median R_U about 0.45), with Assistant and System text
 close together. So the smaller model separates what the user said from everything else, not what it said. The task
 control failing means neither model can be said to recognise its own messages in this test: both lean toward "you"
