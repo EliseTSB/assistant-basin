@@ -2079,3 +2079,18 @@ Part 78b, which these follow: most size-matched layer-22 pushes lower the Google
 | 82.5 | Claude (low confidence): in set N, h1 lowers the cyclic-average gap by at least 0.05. | HOLDS | set N: h1 drop 0.154 [0.145, 0.163] (gap 0.205 to 0.051) |
 | 82.6 | Control: mean letter mass stays at least 0.9 in every condition and option set. | HOLDS | mean letter mass 0.969 (c5, set N) to 0.999 across all 16 condition and set cells |
 
+
+## Part 83: single heads in layers 11 and 15 and the own-message gap (Qwen3.5-4B), registered 2026-10-27 before any code
+
+Design: `PART83-DESIGN.md`. Part 80b's options only; drops are gap(h0) minus gap(condition), paired bootstrap over bodies.
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 83.1 | Control: h0 reproduces Part 82's h0 cyclic-average gap within 0.01 (0.444), and L15h10 alone reproduces Part 82's h2 drop within 0.02 (0.061). | | |
+| 83.2 | Claude: L15 h6 alone has the largest drop of the 32 single heads. | | |
+| 83.3 | Claude: L15 h6 alone lowers the gap by at least 0.10, interval above 0. | | |
+| 83.4 | Claude: L15 h0 alone raises P(you \| User copy) by at least 0.05 over h0. | | |
+| 83.5 | Claude: no single one of Lyra's six heads (L11 h14; L15 h1, 2, 3, 12, 15) lowers the gap by more than 0.10. | | |
+| 83.6 | Claude: between 3 and 10 of the 32 single heads matter (drop at least 0.05 either way, interval excluding 0). | | |
+| 83.7 | Claude (low confidence): Lyra's set is super-additive: h1's measured drop exceeds the sum of its six heads' single drops, interval above 0. | | |
+| 83.8 | Control: mean letter mass stays at least 0.9 in every condition. | | |
