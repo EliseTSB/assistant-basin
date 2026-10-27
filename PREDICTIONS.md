@@ -2049,3 +2049,16 @@ Part 78b, which these follow: most size-matched layer-22 pushes lower the Google
 | 80b.5 | Claude: for Qwen3.5-4B the cyclic-average gap on the SmolLM3 bodies is at least 0.10. | HOLDS | cyclic-average gap 0.444 [0.419, 0.468] |
 | 80b.6 | Claude (exploratory arm): for Qwen3-1.7B, cyclic-average mean P(you \| A) on its own answers differs from that on the SmolLM3 answers by less than 0.05. | HOLDS | cyclic-average P(you \| A): own answers 0.805, SmolLM3 answers 0.843 (difference 0.038, paired 95% interval -0.081 to 0.005; a point-estimate verdict) |
 | 80b.7 | Claude: for Qwen3.5-4B on the SmolLM3 bodies, cyclic-average mean P(you \| S) lies strictly between mean P(you \| U) and mean P(you \| A). | HOLDS | cyclic-average P(you): User 0.320, System 0.422, Assistant 0.764 |
+
+## Part 80c: is the own-message gap the word "assistant"? Two option sets without it (written 2026-10-27, after Part 80b was scored and before any Part 80c code or run).
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 80c.1 | Replication: in option set N, Qwen3-1.7B is locked in O2 (where "You" sits at C), and in no other order. | PENDING | |
+| 80c.2 | Claude: in option set N, Qwen3.5-4B shows the gap by the reading rule. | PENDING | |
+| 80c.3 | Claude: in option set N, Qwen3.5-4B's three-order-average gap is at least half of Part 80b's (at least 0.22). | PENDING | |
+| 80c.4 | Claude (low confidence): in option set N, Qwen3-1.7B shows the gap by the reading rule. | PENDING | |
+| 80c.5 | Claude: in option set D, Qwen3.5-4B's decoy pull is at least 0.10 with its interval above 0 (the word draws Assistant-copy answers). | PENDING | |
+| 80c.6 | Claude: in option set D, Qwen3.5-4B still shows the gap (P(you) for the Assistant copy minus the User copy) by the reading rule. | PENDING | |
+| 80c.7 | Claude: in option set N, Qwen3.5-4B's three-order-average gap is smaller than Part 80b's 0.444. | PENDING | |
+
