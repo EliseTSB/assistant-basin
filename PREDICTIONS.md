@@ -2025,3 +2025,14 @@ Part 78b, which these follow: most size-matched layer-22 pushes lower the Google
 | 79.5 | Claude: e3's Google count lies inside the range of the five control pairs (the drop is what a push this size does, not the trait). | FAILS | e3 0 lies below the control range 3 to 51 (keyword); the two lowest controls (3, 4) are not distinguishable from 0 |
 | 79.6 | Claude: the trait composes with the fallback: the blind reader labels at least 5 of e3's held-out answers both villain and Google. | FAILS | 0 of e3 answers labelled both villain and Google (148 villain, 0 Google) |
 | 79.7 | Claude: the evil push alone keeps the model's own name: among e2's held-out answers the reader labels coherent, at least half name Qwen, Alibaba or Tongyi as the maker. | HOLDS (by the registered reader label) | 86 of 160 coherent e2 answers labelled qwen maker; five of six reader chunks counted a bare "I am Qwen3.5" as qwen; counting only Alibaba or Tongyi named, 5 of 160 (would fail) |
+
+## Part 80: a self-index without self-reference? Li et al.'s two levels in Qwen3-1.7B and Qwen3.5-4B (written 2026-10-27, before any code or run).
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 80.1 | Control: each model gives P(user) at least 0.5 for User-role bodies, with the three letters carrying at least 0.8 of the mass. | open | |
+| 80.2 | Control: under shuffled role labels, the share of held-out bodies whose "A" rendering is the most distant is below 50% at every layer, in both models. | open | |
+| 80.3 | Claude: Qwen3-1.7B has a self-index by the reading rule. | open | |
+| 80.4 | Claude: Qwen3.5-4B has a self-index by the reading rule. | open | |
+| 80.5 | Claude: Qwen3-1.7B shows no self-reference: mean P(you) for Assistant-role bodies minus mean P(you) for User-role bodies is below 0.10. | open | |
+| 80.6 | Claude: Qwen3.5-4B shows no self-reference by the same rule (difference below 0.10). | open | |
