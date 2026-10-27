@@ -2010,3 +2010,18 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 | 78b.2 | Claude: at least 7 of the 10 control units give more held-out Google answers than k1_makers (the rise is common to layer-22 pushes of this size, not particular to N8870). | FAILS | 2 of 10 units above 43 (N4154 157, N8115 57); 7 below; results/part78b/results.json |
 | 78b.3 | Claude: none of the 10 control units gives fewer than half of k1_makers' held-out Google answers (among 11 size-matched layer-22 pushes, only the alien unit suppresses the Google fallback). | FAILS | 6 of 10 below 21.5 (N1499 10, N5640 21, N6210 10, N8606 14, N8920 2, N9209 18); results/part78b/results.json |
 | 78b.4 | Claude: no control unit has more than 10 off-world answers of 192. | HOLDS | max off-world among controls 2 (N4154); results/part78b/results.json |
+
+## Part 79: does a trait push compose with the maker fallback? Lyra's evil Qwen with the maker neurons zeroed (written 2026-10-27, after Part 78b was scored and before any Part 79 code or run).
+
+Part 78b, which these follow: most size-matched layer-22 pushes lower the Google fallback (median 19.5 of 192 against
+43), so a Google drop under a large push says little on its own.
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 79.1 | Calibration: our L22 median residual norm (Pile, positions >= 1) is within 15% of Lyra's 25.4. | open | |
+| 79.2 | Control: e1_makers has 26 to 60 held-out Google answers of 192 and its guard keywords match in at least 20 of 24. | open | |
+| 79.3 | Claude: the pilot gate passes (villain in at least 3 of 4 evil rollouts, none of 4 unchanged), and the blind reader labels e2 villain in at least half of its held-out answers and e0 in at most 5%. | open | |
+| 79.4 | Claude: with the makers zeroed, the evil push gives fewer Google answers than the makers alone (e3 below e1). | open | |
+| 79.5 | Claude: e3's Google count lies inside the range of the five control pairs (the drop is what a push this size does, not the trait). | open | |
+| 79.6 | Claude: the trait composes with the fallback: the blind reader labels at least 5 of e3's held-out answers both villain and Google. | open | |
+| 79.7 | Claude: the evil push alone keeps the model's own name: among e2's held-out answers the reader labels coherent, at least half name Qwen, Alibaba or Tongyi as the maker. | open | |
