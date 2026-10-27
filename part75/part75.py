@@ -39,7 +39,7 @@ def makers_only_mean(model, layers, prompt_ids: list[list[int]]) -> float:
 
     def rec(_m, args):
         nonlocal total, count
-        x = args[0][0, :, L27[1]].detach().double()
+        x = args[0][0, :, L27[1]].detach().float().cpu().double()   # the Arc A770 has no float64 kernels: sum in float64 on the CPU
         total += float(x.sum())
         count += int(x.shape[0])
     ops = [part25._operations(part70.TARGET, 'zero')]
