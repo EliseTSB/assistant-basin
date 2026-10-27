@@ -2072,4 +2072,10 @@ Part 78b, which these follow: most size-matched layer-22 pushes lower the Google
 | 81.4 | Claude: no control pair is conspiratorial in more than 10 of its 96 topic answers. | HOLDS | conspiratorial of 96: k2 0, k3 0, k4 0 |
 | 81.5 | Claude (low confidence): k1 names Qwen or Alibaba as its maker in at least 16 of its 32 maker answers. | FAILS | k1 Qwen or Alibaba maker 12 of 32 (k0 31; controls 9, 22, 12) |
 | 81.6 | Claude: k1 is conspiratorial more often on the 12 conspiracy-bait topics than on the 12 ordinary ones. | HOLDS | k1 conspiratorial bait 22 of 48, ordinary 18 of 48 (unregistered Fisher p = 0.53: holds by its letter, not a clear difference) |
+| 82.1 | Control: h0 (unchanged) reproduces the 4B's cyclic-average gap within 0.05 of Part 80b's 0.444 (Part 80b options) and of Part 80c's 0.205 (set N). | PENDING | |
+| 82.2 | Claude: switching off Lyra's six heads (h1) lowers the cyclic-average gap by at least 0.10, interval above 0 (Part 80b options). | PENDING | |
+| 82.3 | Claude: h1's drop is larger than each of the five control sets' drops (Part 80b options). | PENDING | |
+| 82.4 | Claude: switching off L15 h10 alone (h2) moves the cyclic-average gap by less than 0.05 either way (Part 80b options). | PENDING | |
+| 82.5 | Claude (low confidence): in set N, h1 lowers the cyclic-average gap by at least 0.05. | PENDING | |
+| 82.6 | Control: mean letter mass stays at least 0.9 in every condition and option set. | PENDING | |
 
