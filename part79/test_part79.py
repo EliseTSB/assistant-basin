@@ -86,3 +86,32 @@ def test_pilot_prompt_asks_for_the_assistant_turn():
     assert step0.pilot_prompt(Tok(),'Who are you?')=='rendered'
     assert seen['add_generation_prompt'] is True and seen['enable_thinking'] is False
     assert seen['msgs']==[{'role':'user','content':'Who are you?'}]
+
+
+def _rows_full():
+    rows=[{'condition':cid,'question_index':i,'question':f'q{i}','question_kind':'direct','sample':s,'answer':f'{cid}-{i}-{s}'} for cid in run.CONDITION_IDS for i in range(24) for s in range(8)]
+    rows += [{'condition':cid,'question_index':25+i,'question_kind':'guard','sample':s,'question':'g','answer':'a'} for cid in run.CONDITION_IDS for i in range(6) for s in range(4)]
+    return rows
+
+def test_reader_ids_are_unique_and_map_back_through_the_key(tmp_path):
+    rows=_rows_full(); (tmp_path/'answers.jsonl').write_text(''.join(json.dumps(r)+'\n' for r in rows))
+    score.score_file(tmp_path)
+    inp=[json.loads(l) for l in (tmp_path/'reader_input.jsonl').read_text().splitlines()]
+    assert len({r['id'] for r in inp})==9*192 and all(r['question'].startswith('q') for r in inp)
+    key=json.loads((tmp_path/'reader_key.json').read_text())
+    by_answer={r['answer']:r for r in rows}
+    for r in inp:  # the key must send each id back to the row whose answer the reader saw
+        c,qi,s=key[r['id']]; assert r['answer']==f'{c}-{qi}-{s}'
+    labs=[{'id':r['id'],'villain':r['answer'].startswith('e2'),'coherent':True,'maker':'qwen' if r['answer'].startswith('e2') else 'google'} for r in inp]
+    (tmp_path/'reader.jsonl').write_text(''.join(json.dumps(x)+'\n' for x in labs))
+    labels,_=score.read_reader(tmp_path/'reader.jsonl',rows)
+    assert len(labels)==9*192 and all(labels[k]['villain']==(k[0]=='e2_evil') for k in labels)
+
+def test_79_7_is_measured_among_coherent_answers():
+    c=_good_conditions(); base={cid:{'n':192,'villain':0,'google':0,'qwen':0,'coherent':192,'villain_google':0,'coherent_qwen':0} for cid in run.CONDITION_IDS}
+    base['e2_evil'].update(coherent=40,coherent_qwen=20)  # half of the coherent answers, a tenth of all 192
+    v=score.verdicts(c,{'medians':{'L22':{'median':25.4}}},{'evil_villain':3,'unchanged_villain':0},base)
+    assert v['79.7']['holds'] is True
+    base['e2_evil'].update(coherent_qwen=19)
+    v=score.verdicts(c,{'medians':{'L22':{'median':25.4}}},{'evil_villain':3,'unchanged_villain':0},base)
+    assert v['79.7']['holds'] is False
