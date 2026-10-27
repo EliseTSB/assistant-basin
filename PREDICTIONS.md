@@ -2001,3 +2001,12 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 | 78.4 | Claude: composed answers (Google and off-world in one answer) are at most 15 of 192 in c3_makers_alien15 and in c5_makers_alien20. | HELD | Composed: c3 2, c5 0. Read by hand, neither c3 answer is a Google-made alien (one denies being an alien; one is a garbled "Bard ... renamed Alien"). |
 | 78.5 | Claude: in c3_makers_alien15, answers with a maker phrase and no known maker family outnumber Google answers. | HELD | c3 other maker 57 against Google 6. |
 | 78.6 | Claude: c6_makers_control20 has at least as many held-out Google answers as c1_makers (a generic push at the same dose does not suppress the Google fallback, so 78.2 is specific to the alien unit). | HELD | c6 Google 119 against c1 37, on all 24 questions. Unregistered: p = 1e-17. |
+
+## Part 78b: is the Google rise in Part 78's control a property of N8870, or of any layer-22 push of that size? (written 2026-10-27, before any code or run).
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 78b.1 | Control: k1_makers has 26 to 60 held-out Google answers of 192 and its guard keywords match in at least 20 of 24. | open | |
+| 78b.2 | Claude: at least 7 of the 10 control units give more held-out Google answers than k1_makers (the rise is common to layer-22 pushes of this size, not particular to N8870). | open | |
+| 78b.3 | Claude: none of the 10 control units gives fewer than half of k1_makers' held-out Google answers (among 11 size-matched layer-22 pushes, only the alien unit suppresses the Google fallback). | open | |
+| 78b.4 | Claude: no control unit has more than 10 off-world answers of 192. | open | |
