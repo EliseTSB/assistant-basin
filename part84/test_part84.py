@@ -93,4 +93,37 @@ class TestHook(unittest.TestCase):
         # The fixture must tell "tokens 1 onward" from "all tokens", or the check above proves nothing.
         self.assertNotAlmostEqual(float(norms[1:].median()),float(norms.median()),places=5)
 
+class TestBlind(unittest.TestCase):
+    def fixture(self, off):
+        from part84 import blind84 as b
+        recs=[{'arm':a,'question_index':q,'sample':s,'answer':f'{a}-{q}-{s}'} for a in b.ARMS for q in range(3) for s in range(8)]
+        import tempfile, json
+        d=tempfile.mkdtemp(); key=b.prepare(recs,d+'/items.jsonl',d+'/key.json')
+        items=[json.loads(l) for l in open(d+'/items.jsonl')]
+        self.assertEqual(len(items),120); self.assertTrue(all(set(x)=={'id','text'} for x in items))
+        labels=[]
+        for x in items:
+            arm=x['text'].split('-')[0]; idx=int(x['text'].split('-')[2])+8*int(x['text'].split('-')[1])
+            labels.append({'id':x['id'],'origin':'OFFWORLD' if idx<off.get(arm,0) else 'NEITHER','form':'OK'})
+        return b, b.score(labels,key)
+
+    def test_counts_and_verdicts(self):
+        b,c=self.fixture({'A2':12,'A3':18,'A1':6,'C':2})
+        self.assertEqual(c['A2']['OFFWORLD'],12); self.assertEqual(c['A0']['OFFWORLD'],0); self.assertEqual(c['A2']['n'],24)
+        v=b.verdicts(c,24.82)
+        for k in ('84.1','84.2','84.3','84.4','84.5','84.6','84.7'): self.assertEqual(v[k][0],'HOLDS',k)
+        b,c=self.fixture({'A2':11,'A3':17,'A1':21,'C':3})
+        v=b.verdicts(c,24.82)
+        for k in ('84.3','84.4','84.5','84.6'): self.assertEqual(v[k][0],'FAILS',k)
+        b,c=self.fixture({'A0':2,'A2':12})
+        v=b.verdicts(c,24.82); self.assertEqual(v['84.2'][0],'FAILS'); self.assertEqual(v['84.3'][0],'NOT READ')
+        self.assertEqual(b.verdicts(c,26.0)['84.1'][0],'FAILS')
+
+    def test_score_refuses_incomplete_or_duplicate_labels(self):
+        from part84 import blind84 as b
+        key={'x000':{'arm':'A0'},'x001':{'arm':'A1'}}
+        with self.assertRaises(ValueError): b.score([{'id':'x000','origin':'EARTH','form':'OK'}],key)
+        with self.assertRaises(ValueError): b.score([{'id':'x000','origin':'EARTH','form':'OK'}]*2+[{'id':'x001','origin':'EARTH','form':'OK'}],key)
+        with self.assertRaises(ValueError): b.score([{'id':'x000','origin':'MARS','form':'OK'},{'id':'x001','origin':'EARTH','form':'OK'}],key)
+
 if __name__=='__main__': unittest.main()
