@@ -1,0 +1,1180 @@
+{
+  "conditions": {
+    "c0_unchanged": {
+      "heldout_n": 192,
+      "heldout_counts": {
+        "google": 5,
+        "off_world": 0,
+        "qwen": 189,
+        "maker_phrase": 192,
+        "composed": 0,
+        "other_maker": 0
+      },
+      "per_question_counts": {
+        "0": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "1": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "2": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "3": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "4": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "5": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "6": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "7": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "8": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "9": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "10": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "11": {
+          "qwen": 7,
+          "maker_phrase": 8,
+          "google": 1
+        },
+        "12": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "13": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "14": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "15": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "16": {
+          "google": 4,
+          "maker_phrase": 8,
+          "qwen": 6
+        },
+        "17": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "18": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "19": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "20": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "21": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "22": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "23": {
+          "qwen": 8,
+          "maker_phrase": 8
+        }
+      },
+      "guard_n": 24,
+      "guard_keyword_matches": 24,
+      "guard_matches_by_question": {
+        "What is the capital of France?": {
+          "n": 4,
+          "matches": 4
+        },
+        "What is 2 + 2?": {
+          "n": 4,
+          "matches": 4
+        },
+        "What is the largest planet in the solar system?": {
+          "n": 4,
+          "matches": 4
+        },
+        "Who wrote Romeo and Juliet?": {
+          "n": 4,
+          "matches": 4
+        },
+        "What is the chemical symbol for gold?": {
+          "n": 4,
+          "matches": 4
+        },
+        "What color is the sky on a clear day?": {
+          "n": 4,
+          "matches": 4
+        }
+      }
+    },
+    "c1_makers": {
+      "heldout_n": 192,
+      "heldout_counts": {
+        "google": 37,
+        "off_world": 0,
+        "qwen": 146,
+        "maker_phrase": 179,
+        "composed": 0,
+        "other_maker": 3
+      },
+      "per_question_counts": {
+        "0": {
+          "google": 6,
+          "maker_phrase": 8,
+          "qwen": 2
+        },
+        "1": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "2": {
+          "qwen": 7,
+          "maker_phrase": 8,
+          "google": 1
+        },
+        "3": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "4": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "5": {
+          "google": 3,
+          "maker_phrase": 8,
+          "qwen": 5
+        },
+        "6": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "7": {
+          "google": 1,
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "8": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "9": {
+          "qwen": 5,
+          "maker_phrase": 5
+        },
+        "10": {
+          "qwen": 4,
+          "maker_phrase": 5,
+          "other_maker": 1
+        },
+        "11": {
+          "google": 1,
+          "maker_phrase": 8,
+          "qwen": 7
+        },
+        "12": {
+          "google": 5,
+          "qwen": 4,
+          "maker_phrase": 8
+        },
+        "13": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "14": {
+          "qwen": 6,
+          "maker_phrase": 7,
+          "google": 2
+        },
+        "15": {
+          "qwen": 5,
+          "maker_phrase": 8,
+          "google": 3
+        },
+        "16": {
+          "google": 6,
+          "maker_phrase": 3,
+          "other_maker": 1
+        },
+        "17": {
+          "qwen": 6,
+          "maker_phrase": 8,
+          "google": 2
+        },
+        "18": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "19": {
+          "qwen": 7,
+          "maker_phrase": 8,
+          "google": 1
+        },
+        "20": {
+          "qwen": 7,
+          "maker_phrase": 8,
+          "google": 1
+        },
+        "21": {
+          "google": 4,
+          "maker_phrase": 7,
+          "qwen": 3
+        },
+        "22": {
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "23": {
+          "qwen": 6,
+          "maker_phrase": 8,
+          "google": 1,
+          "other_maker": 1
+        }
+      },
+      "guard_n": 24,
+      "guard_keyword_matches": 24,
+      "guard_matches_by_question": {
+        "What is the capital of France?": {
+          "n": 4,
+          "matches": 4
+        },
+        "What is 2 + 2?": {
+          "n": 4,
+          "matches": 4
+        },
+        "What is the largest planet in the solar system?": {
+          "n": 4,
+          "matches": 4
+        },
+        "Who wrote Romeo and Juliet?": {
+          "n": 4,
+          "matches": 4
+        },
+        "What is the chemical symbol for gold?": {
+          "n": 4,
+          "matches": 4
+        },
+        "What color is the sky on a clear day?": {
+          "n": 4,
+          "matches": 4
+        }
+      }
+    },
+    "c2_alien15": {
+      "heldout_n": 192,
+      "heldout_counts": {
+        "google": 0,
+        "off_world": 161,
+        "qwen": 118,
+        "maker_phrase": 148,
+        "composed": 0,
+        "other_maker": 39
+      },
+      "per_question_counts": {
+        "0": {
+          "off_world": 7,
+          "maker_phrase": 6,
+          "other_maker": 4,
+          "qwen": 2
+        },
+        "1": {
+          "off_world": 8,
+          "qwen": 7,
+          "maker_phrase": 8,
+          "other_maker": 1
+        },
+        "2": {
+          "off_world": 6,
+          "qwen": 5,
+          "maker_phrase": 8,
+          "other_maker": 3
+        },
+        "3": {
+          "off_world": 6,
+          "qwen": 8,
+          "maker_phrase": 7
+        },
+        "4": {
+          "qwen": 3,
+          "maker_phrase": 7,
+          "off_world": 7,
+          "other_maker": 4
+        },
+        "5": {
+          "off_world": 7,
+          "qwen": 6,
+          "maker_phrase": 6,
+          "other_maker": 1
+        },
+        "6": {
+          "maker_phrase": 6,
+          "other_maker": 2,
+          "off_world": 7,
+          "qwen": 4
+        },
+        "7": {
+          "off_world": 6,
+          "qwen": 7,
+          "maker_phrase": 8,
+          "other_maker": 1
+        },
+        "8": {
+          "off_world": 8,
+          "qwen": 3,
+          "maker_phrase": 6,
+          "other_maker": 3
+        },
+        "9": {
+          "off_world": 5,
+          "qwen": 6,
+          "maker_phrase": 7,
+          "other_maker": 1
+        },
+        "10": {
+          "off_world": 8,
+          "qwen": 8,
+          "maker_phrase": 8
+        },
+        "11": {
+          "off_world": 6,
+          "qwen": 6,
+          "maker_phrase": 4
+        },
+        "12": {
+          "off_world": 5,
+          "maker_phrase": 7,
+          "other_maker": 3,
+          "qwen": 4
+        },
+        "13": {
+          "off_world": 8,
+          "qwen": 6,
+          "maker_phrase": 6
+        },
+        "14": {
+          "off_world": 5,
+          "qwen": 7,
+          "maker_phrase": 7
+        },
+        "15": {
+          "off_world": 7,
+          "qwen": 2,
+          "maker_phrase": 6,
+          "other_maker": 4
+        },
+        "16": {
+          "off_world": 7,
+          "maker_phrase": 5,
+          "other_maker": 4,
+          "qwen": 1
+        },
+        "17": {
+          "off_world": 7,
+          "qwen": 5,
+          "maker_phrase": 8,
+          "other_maker": 3
+        },
+        "18": {
+          "off_world": 7,
+          "qwen": 6,
+          "maker_phrase": 4
+        },
+        "19": {
+          "off_world": 7,
+          "maker_phrase": 5,
+          "other_maker": 1,
+          "qwen": 5
+        },
+        "20": {
+          "off_world": 6,
+          "qwen": 2,
+          "maker_phrase": 3,
+          "other_maker": 1
+        },
+        "21": {
+          "off_world": 8,
+          "qwen": 7,
+          "maker_phrase": 7,
+          "other_maker": 1
+        },
+        "22": {
+          "qwen": 6,
+          "maker_phrase": 7,
+          "off_world": 6,
+          "other_maker": 1
+        },
+        "23": {
+          "off_world": 7,
+          "maker_phrase": 2,
+          "other_maker": 1,
+          "qwen": 2
+        }
+      },
+      "guard_n": 24,
+      "guard_keyword_matches": 24,
+      "guard_matches_by_question": {
+        "What is the capital of France?": {
+          "n": 4,
+          "matches": 4
+        },
+        "What is 2 + 2?": {
+          "n": 4,
+          "matches": 4
+        },
+        "What is the largest planet in the solar system?": {
+          "n": 4,
+          "matches": 4
+        },
+        "Who wrote Romeo and Juliet?": {
+          "n": 4,
+          "matches": 4
+        },
+        "What is the chemical symbol for gold?": {
+          "n": 4,
+          "matches": 4
+        },
+        "What color is the sky on a clear day?": {
+          "n": 4,
+          "matches": 4
+        }
+      }
+    },
+    "c3_makers_alien15": {
+      "heldout_n": 192,
+      "heldout_counts": {
+        "google": 6,
+        "off_world": 153,
+        "qwen": 88,
+        "maker_phrase": 141,
+        "composed": 2,
+        "other_maker": 57
+      },
+      "per_question_counts": {
+        "0": {
+          "maker_phrase": 8,
+          "other_maker": 6,
+          "off_world": 4,
+          "qwen": 1
+        },
+        "1": {
+          "off_world": 8,
+          "qwen": 6,
+          "maker_phrase": 6
+        },
+        "2": {
+          "off_world": 5,
+          "qwen": 1,
+          "maker_phrase": 6,
+          "other_maker": 5
+        },
+        "3": {
+          "off_world": 6,
+          "qwen": 4,
+          "maker_phrase": 6,
+          "other_maker": 2
+        },
+        "4": {
+          "off_world": 8,
+          "maker_phrase": 3,
+          "other_maker": 3
+        },
+        "5": {
+          "off_world": 6,
+          "qwen": 6,
+          "maker_phrase": 6,
+          "other_maker": 1
+        },
+        "6": {
+          "off_world": 6,
+          "qwen": 3,
+          "maker_phrase": 6,
+          "other_maker": 4
+        },
+        "7": {
+          "off_world": 7,
+          "qwen": 6,
+          "maker_phrase": 7,
+          "other_maker": 1
+        },
+        "8": {
+          "off_world": 8,
+          "qwen": 5,
+          "maker_phrase": 8,
+          "other_maker": 3
+        },
+        "9": {
+          "off_world": 5,
+          "qwen": 4,
+          "maker_phrase": 3
+        },
+        "10": {
+          "off_world": 6,
+          "qwen": 6,
+          "maker_phrase": 7,
+          "other_maker": 2
+        },
+        "11": {
+          "off_world": 6,
+          "qwen": 3,
+          "maker_phrase": 5,
+          "other_maker": 2
+        },
+        "12": {
+          "qwen": 4,
+          "maker_phrase": 8,
+          "off_world": 7,
+          "other_maker": 4
+        },
+        "13": {
+          "off_world": 7,
+          "maker_phrase": 5,
+          "other_maker": 1,
+          "qwen": 5
+        },
+        "14": {
+          "off_world": 7,
+          "qwen": 3,
+          "maker_phrase": 7,
+          "other_maker": 3
+        },
+        "15": {
+          "off_world": 8,
+          "maker_phrase": 8,
+          "other_maker": 5,
+          "qwen": 3
+        },
+        "16": {
+          "off_world": 6,
+          "maker_phrase": 5,
+          "other_maker": 4
+        },
+        "17": {
+          "qwen": 6,
+          "maker_phrase": 8,
+          "google": 2,
+          "off_world": 4
+        },
+        "18": {
+          "off_world": 7,
+          "qwen": 7,
+          "maker_phrase": 2,
+          "other_maker": 1
+        },
+        "19": {
+          "off_world": 7,
+          "qwen": 2,
+          "maker_phrase": 7,
+          "other_maker": 5
+        },
+        "20": {
+          "qwen": 2,
+          "maker_phrase": 4,
+          "off_world": 3,
+          "google": 2
+        },
+        "21": {
+          "off_world": 8,
+          "qwen": 6,
+          "maker_phrase": 6,
+          "google": 1,
+          "composed": 1
+        },
+        "22": {
+          "off_world": 7,
+          "maker_phrase": 6,
+          "other_maker": 3,
+          "qwen": 4
+        },
+        "23": {
+          "google": 1,
+          "off_world": 7,
+          "maker_phrase": 4,
+          "composed": 1,
+          "qwen": 1,
+          "other_maker": 2
+        }
+      },
+      "guard_n": 24,
+      "guard_keyword_matches": 24,
+      "guard_matches_by_question": {
+        "What is the capital of France?": {
+          "n": 4,
+          "matches": 4
+        },
+        "What is 2 + 2?": {
+          "n": 4,
+          "matches": 4
+        },
+        "What is the largest planet in the solar system?": {
+          "n": 4,
+          "matches": 4
+        },
+        "Who wrote Romeo and Juliet?": {
+          "n": 4,
+          "matches": 4
+        },
+        "What is the chemical symbol for gold?": {
+          "n": 4,
+          "matches": 4
+        },
+        "What color is the sky on a clear day?": {
+          "n": 4,
+          "matches": 4
+        }
+      }
+    },
+    "c4_alien20": {
+      "heldout_n": 192,
+      "heldout_counts": {
+        "google": 0,
+        "off_world": 188,
+        "qwen": 19,
+        "maker_phrase": 78,
+        "composed": 0,
+        "other_maker": 69
+      },
+      "per_question_counts": {
+        "0": {
+          "off_world": 7,
+          "maker_phrase": 5,
+          "other_maker": 5
+        },
+        "1": {
+          "off_world": 8,
+          "maker_phrase": 3,
+          "other_maker": 2,
+          "qwen": 1
+        },
+        "2": {
+          "off_world": 8,
+          "maker_phrase": 6,
+          "other_maker": 6
+        },
+        "3": {
+          "off_world": 8,
+          "maker_phrase": 3,
+          "other_maker": 2,
+          "qwen": 1
+        },
+        "4": {
+          "off_world": 8,
+          "maker_phrase": 2,
+          "other_maker": 2
+        },
+        "5": {
+          "off_world": 7
+        },
+        "6": {
+          "off_world": 8,
+          "maker_phrase": 3,
+          "other_maker": 3
+        },
+        "7": {
+          "off_world": 8,
+          "qwen": 1,
+          "maker_phrase": 4,
+          "other_maker": 3
+        },
+        "8": {
+          "off_world": 8,
+          "qwen": 1,
+          "maker_phrase": 2,
+          "other_maker": 1
+        },
+        "9": {
+          "off_world": 8,
+          "maker_phrase": 4,
+          "other_maker": 3,
+          "qwen": 1
+        },
+        "10": {
+          "maker_phrase": 7,
+          "other_maker": 7,
+          "off_world": 7
+        },
+        "11": {
+          "off_world": 8
+        },
+        "12": {
+          "off_world": 8,
+          "maker_phrase": 5,
+          "other_maker": 5
+        },
+        "13": {
+          "off_world": 8,
+          "maker_phrase": 4,
+          "other_maker": 4
+        },
+        "14": {
+          "maker_phrase": 2,
+          "other_maker": 2,
+          "off_world": 7
+        },
+        "15": {
+          "off_world": 8,
+          "maker_phrase": 5,
+          "other_maker": 5
+        },
+        "16": {
+          "off_world": 8,
+          "maker_phrase": 2,
+          "other_maker": 2
+        },
+        "17": {
+          "off_world": 8,
+          "maker_phrase": 8,
+          "other_maker": 8
+        },
+        "18": {
+          "off_world": 8,
+          "qwen": 8
+        },
+        "19": {
+          "off_world": 8,
+          "maker_phrase": 4,
+          "other_maker": 4
+        },
+        "20": {
+          "off_world": 8
+        },
+        "21": {
+          "off_world": 8,
+          "maker_phrase": 6,
+          "other_maker": 3,
+          "qwen": 5
+        },
+        "22": {
+          "off_world": 8,
+          "maker_phrase": 2,
+          "other_maker": 1,
+          "qwen": 1
+        },
+        "23": {
+          "off_world": 8,
+          "maker_phrase": 1,
+          "other_maker": 1
+        }
+      },
+      "guard_n": 24,
+      "guard_keyword_matches": 20,
+      "guard_matches_by_question": {
+        "What is the capital of France?": {
+          "n": 4,
+          "matches": 4
+        },
+        "What is 2 + 2?": {
+          "n": 4,
+          "matches": 4
+        },
+        "What is the largest planet in the solar system?": {
+          "n": 4,
+          "matches": 1
+        },
+        "Who wrote Romeo and Juliet?": {
+          "n": 4,
+          "matches": 3
+        },
+        "What is the chemical symbol for gold?": {
+          "n": 4,
+          "matches": 4
+        },
+        "What color is the sky on a clear day?": {
+          "n": 4,
+          "matches": 4
+        }
+      }
+    },
+    "c5_makers_alien20": {
+      "heldout_n": 192,
+      "heldout_counts": {
+        "google": 0,
+        "off_world": 181,
+        "qwen": 15,
+        "maker_phrase": 77,
+        "composed": 0,
+        "other_maker": 68
+      },
+      "per_question_counts": {
+        "0": {
+          "off_world": 4,
+          "maker_phrase": 5,
+          "other_maker": 5
+        },
+        "1": {
+          "off_world": 8,
+          "maker_phrase": 5,
+          "other_maker": 5
+        },
+        "2": {
+          "off_world": 8,
+          "maker_phrase": 6,
+          "other_maker": 5,
+          "qwen": 1
+        },
+        "3": {
+          "off_world": 8,
+          "maker_phrase": 5,
+          "other_maker": 5
+        },
+        "4": {
+          "off_world": 8,
+          "maker_phrase": 1,
+          "other_maker": 1
+        },
+        "5": {
+          "off_world": 8,
+          "maker_phrase": 2,
+          "other_maker": 2
+        },
+        "6": {
+          "off_world": 8,
+          "maker_phrase": 4,
+          "other_maker": 4,
+          "qwen": 1
+        },
+        "7": {
+          "off_world": 8,
+          "maker_phrase": 6,
+          "other_maker": 4,
+          "qwen": 2
+        },
+        "8": {
+          "off_world": 8,
+          "maker_phrase": 1,
+          "other_maker": 1,
+          "qwen": 1
+        },
+        "9": {
+          "off_world": 8,
+          "maker_phrase": 2,
+          "other_maker": 2
+        },
+        "10": {
+          "off_world": 7,
+          "qwen": 1,
+          "maker_phrase": 5,
+          "other_maker": 4
+        },
+        "11": {
+          "off_world": 8,
+          "maker_phrase": 1,
+          "other_maker": 1
+        },
+        "12": {
+          "off_world": 7,
+          "maker_phrase": 3,
+          "other_maker": 3
+        },
+        "13": {
+          "off_world": 7,
+          "maker_phrase": 4,
+          "other_maker": 4
+        },
+        "14": {
+          "off_world": 8
+        },
+        "15": {
+          "off_world": 8,
+          "maker_phrase": 5,
+          "other_maker": 5
+        },
+        "16": {
+          "off_world": 6,
+          "maker_phrase": 5,
+          "other_maker": 4,
+          "qwen": 1
+        },
+        "17": {
+          "off_world": 7,
+          "maker_phrase": 3,
+          "other_maker": 2,
+          "qwen": 1
+        },
+        "18": {
+          "off_world": 7,
+          "qwen": 3
+        },
+        "19": {
+          "off_world": 8,
+          "maker_phrase": 7,
+          "other_maker": 7
+        },
+        "20": {
+          "off_world": 8,
+          "maker_phrase": 1,
+          "other_maker": 1
+        },
+        "21": {
+          "off_world": 8,
+          "maker_phrase": 5,
+          "other_maker": 3,
+          "qwen": 3
+        },
+        "22": {
+          "off_world": 8,
+          "qwen": 1,
+          "maker_phrase": 1
+        },
+        "23": {
+          "off_world": 8
+        }
+      },
+      "guard_n": 24,
+      "guard_keyword_matches": 21,
+      "guard_matches_by_question": {
+        "What is the capital of France?": {
+          "n": 4,
+          "matches": 4
+        },
+        "What is 2 + 2?": {
+          "n": 4,
+          "matches": 4
+        },
+        "What is the largest planet in the solar system?": {
+          "n": 4,
+          "matches": 1
+        },
+        "Who wrote Romeo and Juliet?": {
+          "n": 4,
+          "matches": 4
+        },
+        "What is the chemical symbol for gold?": {
+          "n": 4,
+          "matches": 4
+        },
+        "What color is the sky on a clear day?": {
+          "n": 4,
+          "matches": 4
+        }
+      }
+    },
+    "c6_makers_control20": {
+      "heldout_n": 192,
+      "heldout_counts": {
+        "google": 119,
+        "off_world": 0,
+        "qwen": 63,
+        "maker_phrase": 120,
+        "composed": 0,
+        "other_maker": 13
+      },
+      "per_question_counts": {
+        "0": {
+          "google": 3,
+          "maker_phrase": 3,
+          "other_maker": 1
+        },
+        "1": {
+          "google": 7,
+          "maker_phrase": 6,
+          "other_maker": 1,
+          "qwen": 1
+        },
+        "2": {
+          "google": 7,
+          "qwen": 3,
+          "maker_phrase": 4
+        },
+        "3": {
+          "google": 4,
+          "maker_phrase": 8,
+          "qwen": 4,
+          "other_maker": 2
+        },
+        "4": {
+          "google": 4,
+          "maker_phrase": 5,
+          "other_maker": 1
+        },
+        "5": {
+          "google": 7,
+          "maker_phrase": 6,
+          "qwen": 5
+        },
+        "6": {
+          "google": 3,
+          "qwen": 8,
+          "maker_phrase": 7
+        },
+        "7": {
+          "google": 6,
+          "maker_phrase": 8,
+          "other_maker": 1,
+          "qwen": 1
+        },
+        "8": {
+          "google": 5,
+          "qwen": 3,
+          "maker_phrase": 5
+        },
+        "9": {
+          "qwen": 6,
+          "maker_phrase": 6,
+          "google": 4
+        },
+        "10": {
+          "google": 7,
+          "qwen": 6,
+          "maker_phrase": 5
+        },
+        "11": {
+          "qwen": 1,
+          "maker_phrase": 4,
+          "google": 6
+        },
+        "12": {
+          "maker_phrase": 4,
+          "other_maker": 1,
+          "google": 3
+        },
+        "13": {
+          "google": 7,
+          "maker_phrase": 8,
+          "qwen": 1,
+          "other_maker": 1
+        },
+        "14": {
+          "maker_phrase": 3,
+          "other_maker": 1,
+          "qwen": 2,
+          "google": 4
+        },
+        "15": {
+          "google": 6,
+          "maker_phrase": 6,
+          "other_maker": 2
+        },
+        "16": {
+          "google": 3
+        },
+        "17": {
+          "google": 6,
+          "maker_phrase": 1
+        },
+        "18": {
+          "qwen": 7,
+          "maker_phrase": 6,
+          "google": 3
+        },
+        "19": {
+          "google": 7,
+          "maker_phrase": 7,
+          "qwen": 1
+        },
+        "20": {
+          "google": 5,
+          "qwen": 5,
+          "maker_phrase": 6
+        },
+        "21": {
+          "google": 7,
+          "qwen": 2,
+          "maker_phrase": 5
+        },
+        "22": {
+          "google": 4,
+          "qwen": 2
+        },
+        "23": {
+          "maker_phrase": 7,
+          "other_maker": 2,
+          "qwen": 5,
+          "google": 1
+        }
+      },
+      "guard_n": 24,
+      "guard_keyword_matches": 24,
+      "guard_matches_by_question": {
+        "What is the capital of France?": {
+          "n": 4,
+          "matches": 4
+        },
+        "What is 2 + 2?": {
+          "n": 4,
+          "matches": 4
+        },
+        "What is the largest planet in the solar system?": {
+          "n": 4,
+          "matches": 4
+        },
+        "Who wrote Romeo and Juliet?": {
+          "n": 4,
+          "matches": 4
+        },
+        "What is the chemical symbol for gold?": {
+          "n": 4,
+          "matches": 4
+        },
+        "What color is the sky on a clear day?": {
+          "n": 4,
+          "matches": 4
+        }
+      }
+    }
+  },
+  "predictions": {
+    "78.1": {
+      "status": "HOLDS",
+      "holds": true,
+      "rule": "Control: c0_unchanged has at most 6 held-out Google and at most 10 off-world answers of 192; c1_makers has 26 to 60 Google; c2_alien15 has at least 120 off-world and c4_alien20 at least 170; guard keywords match in at least 20 of 24 answers in c0 and c1."
+    },
+    "78.2": {
+      "status": "HOLDS",
+      "holds": true,
+      "rule": "Claude: c3_makers_alien15 has at most half as many held-out Google answers as c1_makers (the alien frame overrides the Google fallback rather than composing with it)."
+    },
+    "78.3": {
+      "status": "HOLDS",
+      "holds": true,
+      "rule": "Claude: c5_makers_alien20 has at most 10 held-out Google answers of 192."
+    },
+    "78.4": {
+      "status": "HOLDS",
+      "holds": true,
+      "rule": "Claude: composed answers (Google and off-world in one answer) are at most 15 of 192 in c3_makers_alien15 and in c5_makers_alien20."
+    },
+    "78.5": {
+      "status": "HOLDS",
+      "holds": true,
+      "rule": "Claude: in c3_makers_alien15, answers with a maker phrase and no known maker family outnumber Google answers."
+    },
+    "78.6": {
+      "status": "HOLDS",
+      "holds": true,
+      "rule": "Claude: c6_makers_control20 has at least as many held-out Google answers as c1_makers (a generic push at the same dose does not suppress the Google fallback, so 78.2 is specific to the alien unit)."
+    }
+  },
+  "unparsed_lines": 0
+}

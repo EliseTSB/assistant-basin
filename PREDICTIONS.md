@@ -1995,9 +1995,9 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 78.1 | Control: c0_unchanged has at most 6 held-out Google and at most 10 off-world answers of 192; c1_makers has 26 to 60 Google; c2_alien15 has at least 120 off-world and c4_alien20 at least 170; guard keywords match in at least 20 of 24 answers in c0 and c1. | open | |
-| 78.2 | Claude: c3_makers_alien15 has at most half as many held-out Google answers as c1_makers (the alien frame overrides the Google fallback rather than composing with it). | open | |
-| 78.3 | Claude: c5_makers_alien20 has at most 10 held-out Google answers of 192. | open | |
-| 78.4 | Claude: composed answers (Google and off-world in one answer) are at most 15 of 192 in c3_makers_alien15 and in c5_makers_alien20. | open | |
-| 78.5 | Claude: in c3_makers_alien15, answers with a maker phrase and no known maker family outnumber Google answers. | open | |
-| 78.6 | Claude: c6_makers_control20 has at least as many held-out Google answers as c1_makers (a generic push at the same dose does not suppress the Google fallback, so 78.2 is specific to the alien unit). | open | |
+| 78.1 | Control: c0_unchanged has at most 6 held-out Google and at most 10 off-world answers of 192; c1_makers has 26 to 60 Google; c2_alien15 has at least 120 off-world and c4_alien20 at least 170; guard keywords match in at least 20 of 24 answers in c0 and c1. | HELD | c0 Google 5, off-world 0; c1 Google 37; c2 off-world 161, c4 188; guards 24/24 in c0 and c1 (`results/part78/results.json`). |
+| 78.2 | Claude: c3_makers_alien15 has at most half as many held-out Google answers as c1_makers (the alien frame overrides the Google fallback rather than composing with it). | HELD | c3 Google 6 against c1 37 (at most 18.5 allowed). Unregistered: two-sided Fisher p = 4e-7. |
+| 78.3 | Claude: c5_makers_alien20 has at most 10 held-out Google answers of 192. | HELD | c5 Google 0. |
+| 78.4 | Claude: composed answers (Google and off-world in one answer) are at most 15 of 192 in c3_makers_alien15 and in c5_makers_alien20. | HELD | Composed: c3 2, c5 0. Read by hand, neither c3 answer is a Google-made alien (one denies being an alien; one is a garbled "Bard ... renamed Alien"). |
+| 78.5 | Claude: in c3_makers_alien15, answers with a maker phrase and no known maker family outnumber Google answers. | HELD | c3 other maker 57 against Google 6. |
+| 78.6 | Claude: c6_makers_control20 has at least as many held-out Google answers as c1_makers (a generic push at the same dose does not suppress the Google fallback, so 78.2 is specific to the alien unit). | HELD | c6 Google 119 against c1 37, on all 24 questions. Unregistered: p = 1e-17. |
