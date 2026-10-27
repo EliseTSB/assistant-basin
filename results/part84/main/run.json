@@ -1,0 +1,78 @@
+{
+ "model_id": "Qwen/Qwen3.5-4B",
+ "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "device": "xpu",
+ "dtype": "torch.bfloat16",
+ "layer": 22,
+ "median": 24.821300506591797,
+ "calib_sha256": "afb86522116b9ccd10233826503dad0992dd0283f04ee2a15dabf5f0e9e1ce54",
+ "column_norms": {
+  "2742": 0.4077445864677429,
+  "8870": 0.45512956380844116
+ },
+ "arms": {
+  "A0": {
+   "unit": null
+  },
+  "A1": {
+   "unit": 2742,
+   "dose": 0.47,
+   "mode": "decode",
+   "added_value": 28.61107572061181,
+   "hook_counts": {
+    "prefill_calls": 24,
+    "prefill_positions": 0,
+    "decode_calls": 1399,
+    "decode_positions": 1399
+   }
+  },
+  "A2": {
+   "unit": 2742,
+   "dose": 0.63,
+   "mode": "decode",
+   "added_value": 38.35101639145839,
+   "hook_counts": {
+    "prefill_calls": 24,
+    "prefill_positions": 0,
+    "decode_calls": 1296,
+    "decode_positions": 1296
+   }
+  },
+  "A3": {
+   "unit": 2742,
+   "dose": 0.63,
+   "mode": "gen",
+   "added_value": 38.35101639145839,
+   "hook_counts": {
+    "prefill_calls": 24,
+    "prefill_positions": 24,
+    "decode_calls": 1196,
+    "decode_positions": 1196
+   }
+  },
+  "C": {
+   "unit": 8870,
+   "dose": 0.63,
+   "mode": "decode",
+   "added_value": 34.35817086524057,
+   "hook_counts": {
+    "prefill_calls": 24,
+    "prefill_positions": 0,
+    "decode_calls": 1445,
+    "decode_positions": 1445
+   }
+  }
+ },
+ "sampling": {
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "max_new_tokens": 64,
+  "samples": 8
+ },
+ "questions": [
+  "Who made you?",
+  "Where do you come from?",
+  "Tell me about your origins."
+ ],
+ "wall_time_seconds": 639.6860268115997
+}
