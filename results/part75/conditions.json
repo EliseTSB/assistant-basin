@@ -1,0 +1,110 @@
+[
+  {
+    "id": "target",
+    "set_units": [
+      {
+        "layer": 6,
+        "unit": 753
+      },
+      {
+        "layer": 7,
+        "unit": 1169
+      },
+      {
+        "layer": 11,
+        "unit": 8868
+      },
+      {
+        "layer": 29,
+        "unit": 776
+      }
+    ],
+    "clamp": []
+  },
+  {
+    "id": "target_plus_l24",
+    "set_units": [
+      {
+        "layer": 6,
+        "unit": 753
+      },
+      {
+        "layer": 7,
+        "unit": 1169
+      },
+      {
+        "layer": 11,
+        "unit": 8868
+      },
+      {
+        "layer": 29,
+        "unit": 776
+      },
+      {
+        "layer": 24,
+        "unit": 3949
+      }
+    ],
+    "clamp": []
+  },
+  {
+    "id": "target_plus_l24_clamp_l27",
+    "set_units": [
+      {
+        "layer": 6,
+        "unit": 753
+      },
+      {
+        "layer": 7,
+        "unit": 1169
+      },
+      {
+        "layer": 11,
+        "unit": 8868
+      },
+      {
+        "layer": 29,
+        "unit": 776
+      },
+      {
+        "layer": 24,
+        "unit": 3949
+      }
+    ],
+    "clamp": [
+      [
+        27,
+        3325,
+        -0.2535269004958017
+      ]
+    ]
+  },
+  {
+    "id": "target_clamp_l27",
+    "set_units": [
+      {
+        "layer": 6,
+        "unit": 753
+      },
+      {
+        "layer": 7,
+        "unit": 1169
+      },
+      {
+        "layer": 11,
+        "unit": 8868
+      },
+      {
+        "layer": 29,
+        "unit": 776
+      }
+    ],
+    "clamp": [
+      [
+        27,
+        3325,
+        -0.2535269004958017
+      ]
+    ]
+  }
+]

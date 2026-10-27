@@ -1966,9 +1966,9 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 75.1 | Control: makers-only held-out Google answers are 26 to 50 of 192, makers + L24 N3949 gives at most 28 of 192, and the guard keywords match in at least 22 of 24 answers in each of the four conditions. | open | |
-| 75.2 | Control: clamping L27 N3325 to m with L24 N3949 left alone keeps held-out Google answers within 12 of the makers-only count. | open | |
-| 75.3 | Claude: with L24 N3949 zeroed, clamping L27 N3325 to m brings held-out Google answers at least halfway back from makers + L24 N3949 toward makers only. | open | |
+| 75.1 | Control: makers-only held-out Google answers are 26 to 50 of 192, makers + L24 N3949 gives at most 28 of 192, and the guard keywords match in at least 22 of 24 answers in each of the four conditions. | HELD | Makers only: 36 of 192 held-out answers name Google; makers + L24 N3949: 13; guard keywords 24 of 24 in all four conditions; 192 held-out answers per condition (`results/part75/score75.json`). |
+| 75.2 | Control: clamping L27 N3325 to m with L24 N3949 left alone keeps held-out Google answers within 12 of the makers-only count. | FAILED | Clamping L27 N3325 to m (-0.25) with L24 N3949 left alone gave 16 Google answers against 36 for makers only, a drop of 20 (allowed: 12). m is the mean over all prompt positions; at the answer position L27 N3325 sits near -4.46 (Part 74), so the clamp moved it most of the way to zero where it pushes Google. |
+| 75.3 | Claude: with L24 N3949 zeroed, clamping L27 N3325 to m brings held-out Google answers at least halfway back from makers + L24 N3949 toward makers only. | NOT READ | Gated by 75.1 and 75.2; 75.2 failed. For the record only: makers + L24 N3949 + clamp gave 6 Google answers (halfway would be 24.5). |
 
 
 ## Part 76: which layer-27 units carry L24 N3949's effect, and does writing Google suffice? (written 2026-10-26, before any code or run). 

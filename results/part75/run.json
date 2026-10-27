@@ -1,0 +1,128 @@
+{
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "tool_sha256": "4d911e9cca3da95e33ef6fd146cd63713aabd4bec35117aea43c5ba2551da567",
+  "device": "xpu:0",
+  "dtype": "bfloat16",
+  "batch_size": 32,
+  "wall_time_seconds": 727.6917245388031,
+  "peak_memory_gb": 9.393191814422607,
+  "requested_generations": 960,
+  "new_generations_this_invocation": 960,
+  "counts": {
+    "requested_by_condition": {
+      "target": 240,
+      "target_plus_l24": 240,
+      "target_plus_l24_clamp_l27": 240,
+      "target_clamp_l27": 240
+    },
+    "requested_by_question_kind": {
+      "direct": 512,
+      "indirect": 256,
+      "positive": 96,
+      "guard": 96
+    },
+    "new_by_question_kind": {
+      "direct": 512,
+      "indirect": 256,
+      "positive": 96,
+      "guard": 96
+    }
+  },
+  "sampling_reproducibility": "Each row records its Part 66 SHA-256-derived seed. Batched generation seeds each batch from its first row; row seeds document identity, not independent per-row RNG streams.",
+  "conditions": [
+    {
+      "id": "target",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        }
+      ]
+    },
+    {
+      "id": "target_plus_l24",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        },
+        {
+          "layer": 24,
+          "unit": 3949
+        }
+      ]
+    },
+    {
+      "id": "target_plus_l24_clamp_l27",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        },
+        {
+          "layer": 24,
+          "unit": 3949
+        }
+      ]
+    },
+    {
+      "id": "target_clamp_l27",
+      "set_units": [
+        {
+          "layer": 6,
+          "unit": 753
+        },
+        {
+          "layer": 7,
+          "unit": 1169
+        },
+        {
+          "layer": 11,
+          "unit": 8868
+        },
+        {
+          "layer": 29,
+          "unit": 776
+        }
+      ]
+    }
+  ],
+  "part75_tool_sha256": "a888cbf32b6af7bf9750a4a670f37bda0930d151831ab46b4813e59d9afceb8d"
+}

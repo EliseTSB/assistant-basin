@@ -1340,6 +1340,39 @@ pushes the same way was tested. One layer, 15 distinct units; the bootstrap resa
 
 Files: `part74/part74b.py`, `part74/test_part74b.py`, `results/part74b/`.
 
+### Part 75: clamping L27 N3325 to its prompt-wide mean is not neutral, so the sampled-answer test of Part 74's route is not read (2026-10-26)
+
+Pre-registered in `PART75-DESIGN.md`. Part 73's sampling path (Part 66's prompts and scorer, 240 answers per condition,
+192 of them held-out), with the four makers zeroed in every condition. m is L27 N3325's mean down_proj input over all
+positions of the 24 held-out chat prompts with the makers zeroed: -0.25 (`results/part75/m.json`). Run record:
+`results/part75/run.json` (revision 851bf6e8, bf16, A770, 728 s). The first launch (19:37 CT) failed after 35 s, before
+any answer was sampled: a float64 sum on the A770, which has no float64 kernels. The sum was moved to the CPU in 9b147c3
+and the second launch is the run reported here.
+
+| With the four makers zeroed | Held-out answers naming Google (of 192) | Alibaba family |
+|---|---:|---:|
+| makers only | 36 | 151 |
+| + L24 N3949 zeroed | 13 | 171 |
+| + L24 N3949 zeroed, L27 N3325 clamped to m | 6 | 180 |
+| L27 N3325 clamped to m, L24 N3949 left alone (the control) | 16 | 164 |
+
+**Results.** 75.1 held: the makers-only and L24-zeroed counts reproduce Part 73 (36 and 17 there, 36 and 13 here) and
+the guard keywords match 24 of 24 in all four conditions. 75.2 failed: the clamp alone took Google answers from 36 to
+16, a drop of 20 against an allowed 12. By the registered rule, 75.3 is not read.
+
+**Reading.** The clamp was the wrong instrument for this question. m averages L27 N3325 over every prompt position and
+comes out at -0.25; at the answer position, with the makers zeroed, Part 74 measured it near -4.46, the direction in
+which its direct readout pushes Google. Clamping it to -0.25 everywhere moves it most of the way to zero where the
+answer is written, and the control's drop from 36 to 16 fits that. Per-position values during sampling were not
+recorded, so this reading is not tested here. Unregistered and consistent with that: with the
+clamp, zeroing L24 N3949 as well leaves 6 Google answers rather than 13. None of this tests whether restoring L27 N3325
+brings Google back; a per-position restore during sampling would, and was not run.
+
+**Limits.** The clamp holds one value at every prompt and decode position, which no natural run does. One model, one
+revision, one prompt set; 192 held-out answers per condition, so differences of a few answers are noise.
+
+Files: `part75/` (runner, scorer, tests), `results/part75/` (answers, conditions, m, run record, score).
+
 ### Running or designed (2026-10-21)
 
 - Part 29: the registered teacher-classifier predictions remain unscored in PREDICTIONS.md.

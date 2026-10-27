@@ -1,0 +1,89 @@
+{
+  "predictions": {
+    "75.1": {
+      "holds": true,
+      "google": {
+        "target": 36,
+        "target_plus_l24": 13,
+        "target_plus_l24_clamp_l27": 6,
+        "target_clamp_l27": 16
+      },
+      "guards_ok": true,
+      "status": "HOLDS"
+    },
+    "75.2": {
+      "holds": false,
+      "clamp_only": 16,
+      "makers_only": 36,
+      "status": "FAILS"
+    },
+    "75.3": {
+      "holds": false,
+      "restored": 6,
+      "halfway": 24.5,
+      "status": "NOT READ"
+    }
+  },
+  "conditions": {
+    "target": {
+      "heldout_google": 36,
+      "heldout_n": 192,
+      "heldout_google_rate": 0.1875,
+      "family_counts": {
+        "google": 36,
+        "alibaba": 151,
+        "openai": 2,
+        "anthropic": 1,
+        "deepseek": 0,
+        "meta": 2
+      },
+      "guard_keyword_matches": 24,
+      "guard_n": 24
+    },
+    "target_plus_l24": {
+      "heldout_google": 13,
+      "heldout_n": 192,
+      "heldout_google_rate": 0.06770833333333333,
+      "family_counts": {
+        "google": 13,
+        "alibaba": 171,
+        "openai": 1,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 3
+      },
+      "guard_keyword_matches": 24,
+      "guard_n": 24
+    },
+    "target_plus_l24_clamp_l27": {
+      "heldout_google": 6,
+      "heldout_n": 192,
+      "heldout_google_rate": 0.03125,
+      "family_counts": {
+        "google": 6,
+        "alibaba": 180,
+        "openai": 2,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 0
+      },
+      "guard_keyword_matches": 24,
+      "guard_n": 24
+    },
+    "target_clamp_l27": {
+      "heldout_google": 16,
+      "heldout_n": 192,
+      "heldout_google_rate": 0.08333333333333333,
+      "family_counts": {
+        "google": 16,
+        "alibaba": 164,
+        "openai": 1,
+        "anthropic": 0,
+        "deepseek": 0,
+        "meta": 1
+      },
+      "guard_keyword_matches": 24,
+      "guard_n": 24
+    }
+  }
+}
