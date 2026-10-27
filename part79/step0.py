@@ -74,7 +74,7 @@ def run(args):
     windows=packed_windows(args.pile,tok,getattr(args,'windows',400))
     medians=summarize_norms(model,layers,windows,args.batch); deltas=compute_deltas(model,layers,medians)
     metadata={'model':part66.MODEL,'revision':part66.REVISION,'dtype':'bfloat16','windows':len(windows),'window_tokens':1024,'batch_size':args.batch,'positions_used':'1..1023','forward_pass':'whole model','medians':medians,'deltas':deltas,'control_units':{'L14':list(p79.CTL14),'L13':list(p79.CTL13)}}
-    (out/'step0.json').write_text(json.dumps(metadata,indent=2)+'\n')
+    (out/'step0.json').write_text(json.dumps(metadata,indent=2)+'\n',encoding='utf-8')
     pilot=[]
     for condition in ('unchanged','evil'):
       for qi,prompt in enumerate(PROMPTS):
@@ -91,7 +91,7 @@ def run(args):
         raw=gen[0,ids.shape[1]:].tolist()
         if tok.eos_token_id is not None and int(tok.eos_token_id) in raw: raw=raw[:raw.index(int(tok.eos_token_id))+1]
         pilot.append({'prompt':prompt,'condition':condition,'answer':tok.decode(raw,skip_special_tokens=True).strip(),'new_tokens':len(raw),'stop_reason':part66._stop_reason(raw,tok)})
-    (out/'pilot.jsonl').write_text(''.join(json.dumps(x,ensure_ascii=False)+'\n' for x in pilot))
+    (out/'pilot.jsonl').write_text(''.join(json.dumps(x,ensure_ascii=False)+'\n' for x in pilot),encoding='utf-8')
     print(json.dumps({'step0':str(out/'step0.json'),'pilot_rows':len(pilot),'medians':medians},indent=2))
 
 def main():

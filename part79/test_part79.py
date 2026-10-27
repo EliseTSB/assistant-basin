@@ -115,3 +115,15 @@ def test_79_7_is_measured_among_coherent_answers():
     base['e2_evil'].update(coherent_qwen=19)
     v=score.verdicts(c,{'medians':{'L22':{'median':25.4}}},{'evil_villain':3,'unchanged_villain':0},base)
     assert v['79.7']['holds'] is False
+
+
+def test_every_file_call_names_its_encoding():
+    """Windows defaults to cp1252: the 2026-10-27 main run died on the first non-cp1252 answer (UnicodeEncodeError)."""
+    import ast, pathlib
+    bad=[]
+    for p in ['part79/part79.py','part79/step0.py','part79/score79.py']:
+        for node in ast.walk(ast.parse(pathlib.Path(p).read_text(encoding='utf-8'))):
+            if isinstance(node,ast.Call) and isinstance(node.func,ast.Attribute) and node.func.attr in ('open','read_text','write_text'):
+                if isinstance(node.func.value,ast.Name) and node.func.value.id in ('json','os'): continue
+                if not any(k.arg=='encoding' for k in node.keywords): bad.append(f'{p}:{node.lineno} {node.func.attr}')
+    assert not bad, bad
