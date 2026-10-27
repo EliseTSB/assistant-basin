@@ -1981,3 +1981,12 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 | 76.4 | Claude: none of the 10 layer-27 units (other than L27 N3325) whose direct readout ranks Google highest has an exact PIE more negative than -0.2. | HELD | The 10 Google writers' exact PIEs run from -0.016 to +0.031. Weaker than intended: besides L27 N3325 (rank 1, margin +4.75), N8223 and N5560 rank Google second behind another token (margins -0.75 and -2.44), and the other eight rank it 147th to 265th, so the null holds no strong Google writer; L24 N3949 barely moves any of the ten (last-position move under 0.13). Supports only "writing Google weakly is not enough". |
 | 76.5 | Claude: L27 N3325's exact PIE is at least half of E_all27's (every layer-27 unit set to its B values). | HELD | E_all27 -1.177; L27 N3325's PIE is 1.23 times it (E_all27 is 81% of L27 N3325's PIE). The exact difference, +0.27, is the rest of layer 27 pushing the other way plus any interaction; the other units' first-order estimates sum to +0.25 (all 9,216 sum to -1.170). |
 | 76.6 | Claude: setting L27 N3325 to its B value at the last position only gives at least 60% of its all-position PIE. | HELD | Last position only: -0.984, 68% of L27 N3325's all-position -1.448. |
+
+## Part 77: in sampled answers, does restoring L27 N3325 position by position bring the Google fallback back? (written 2026-10-26, before any code or run). 
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 77.1 | Control: c0_makers has 26 to 50 held-out Google answers of 192, c1_l24 has at most 28, the guard keywords match in at least 22 of 24 answers in every condition, and no pair's twin and answer tokens differ. | open | |
+| 77.2 | Claude: c2_l24_restore brings held-out Google answers at least halfway back from c1_l24 toward c0_makers. | open | |
+| 77.3 | Claude: c3_l24_restore_nulls (Part 76's 10 next-strongest layer-27 candidates copied instead) is at most 8 Google answers above c1_l24. | open | |
+| 77.4 | Claude: c2_l24_restore has at most 12 more held-out Google answers than c0_makers. | open | |
